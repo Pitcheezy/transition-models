@@ -216,3 +216,33 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# === Project-specific ===
+
+# Data (keep directory structure via .gitkeep)
+data/raw/*
+data/processed/*
+data/splits/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+!data/splits/.gitkeep
+
+# Outputs (keep directory structure via .gitkeep)
+outputs/checkpoints/*
+outputs/logs/*
+outputs/figures/*
+!outputs/checkpoints/.gitkeep
+!outputs/logs/.gitkeep
+!outputs/figures/.gitkeep
+
+# Reference papers
+references/*.pdf
+
+# W&B
+wandb/
+
+# macOS
+.DS_Store
+
+# Jupyter (redundant guard)
+.ipynb_checkpoints/
