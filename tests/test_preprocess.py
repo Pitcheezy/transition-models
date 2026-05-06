@@ -17,10 +17,13 @@ from src.data.preprocess import (
     apply_subtoken_mask,
     build_model_b_vector,
     build_model_c_vector,
+    build_valid_indices,
     clean_dataframe,
+    compute_batter_ranges,
     derive_base_state,
     extract_labels_4class,
     make_sequences_for_batter,
+    sort_by_batter_and_time,
 )
 
 
@@ -263,3 +266,64 @@ class TestApplySubtokenMask:
         seq = np.ones((400, MODEL_C_DIM), dtype=np.float32)
         _ = apply_subtoken_mask(seq)
         assert np.all(seq[-1, OUTCOME_START:OUTCOME_END] == 1.0)  # 원본 유지
+
+
+# =============================================================================
+# Lazy loading helpers
+# =============================================================================
+
+
+class TestSortByBatterAndTime:
+    def test_sorted_by_batter_then_time(self):
+        df = _make_fake_df(20)
+        df["batter"] = [1, 2, 1, 2] * 5
+        df["game_date"] = pd.to_datetime("2023-06-15")
+        df["at_bat_number"] = list(range(20))
+        df["pitch_number"] = [1] * 20
+        sorted_df = sort_by_batter_and_time(df)
+        batters = sorted_df["batter"].values
+        # 같은 타자끼리 연속
+        assert all(batters[i] <= batters[i + 1] for i in range(len(batters) - 1))
+
+
+class TestComputeBatterRanges:
+    def test_ranges_cover_all_rows(self):
+        df = _make_fake_df(30)
+        df["batter"] = [100] * 15 + [200] * 15
+        df = sort_by_batter_and_time(df)
+        ranges = compute_batter_ranges(df)
+        assert len(ranges) == 2
+        assert ranges[100] == (0, 15)
+        assert ranges[200] == (15, 30)
+
+
+class TestBuildValidIndices:
+    def test_min_length_filter(self):
+        """400 미만 타자는 제외."""
+        ranges = {1: (0, 300), 2: (300, 800)}  # batter 1: 300 pitches, batter 2: 500
+        indices = build_valid_indices(ranges, seq_length=400)
+        # batter 1: 300 < 400 → 제외
+        # batter 2: 500 - 400 + 1 = 101 sequences
+        assert len(indices) == 101
+        assert all(bid == 2 for bid, _ in indices)
+
+    def test_stride(self):
+        """stride=10이면 시퀀스 수 ~1/10."""
+        ranges = {1: (0, 500)}
+        idx_s1 = build_valid_indices(ranges, seq_length=400, stride=1)
+        idx_s10 = build_valid_indices(ranges, seq_length=400, stride=10)
+        assert len(idx_s1) == 101
+        assert len(idx_s10) == 11  # (500-400)//10 + 1
+
+    def test_format(self):
+        """반환 형태 [(int, int), ...]."""
+        ranges = {42: (0, 410)}
+        indices = build_valid_indices(ranges, seq_length=400)
+        assert len(indices) == 11
+        assert indices[0] == (42, 0)
+        assert indices[10] == (42, 10)
+
+    def test_empty_when_all_short(self):
+        ranges = {1: (0, 100), 2: (100, 200)}
+        indices = build_valid_indices(ranges, seq_length=400)
+        assert len(indices) == 0

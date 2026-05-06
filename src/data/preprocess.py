@@ -593,3 +593,76 @@ def apply_subtoken_mask(sequence: np.ndarray) -> np.ndarray:
     seq = sequence.copy()
     seq[-1, OUTCOME_START:OUTCOME_END] = 0.0
     return seq
+
+
+# =============================================================================
+# 9. Lazy loading helpers
+# =============================================================================
+
+
+def sort_by_batter_and_time(df: pd.DataFrame) -> pd.DataFrame:
+    """Sort DataFrame by batter, then chronologically within each batter.
+
+    Args:
+        df: Cleaned DataFrame.
+
+    Returns:
+        Sorted DataFrame with reset index.
+    """
+    return df.sort_values(
+        ["batter", "game_date", "at_bat_number", "pitch_number"]
+    ).reset_index(drop=True)
+
+
+def compute_batter_ranges(df: pd.DataFrame) -> dict[int, tuple[int, int]]:
+    """Compute (start, end) index ranges for each batter in a sorted DataFrame.
+
+    Args:
+        df: DataFrame sorted by batter (via sort_by_batter_and_time).
+
+    Returns:
+        Dict mapping batter_id → (start_idx, end_idx) in the sorted array.
+    """
+    ranges: dict[int, tuple[int, int]] = {}
+    batter_col = df["batter"].values
+    n = len(batter_col)
+    if n == 0:
+        return ranges
+
+    current_batter = batter_col[0]
+    start = 0
+    for i in range(1, n):
+        if batter_col[i] != current_batter:
+            ranges[int(current_batter)] = (start, i)
+            current_batter = batter_col[i]
+            start = i
+    ranges[int(current_batter)] = (start, n)
+    return ranges
+
+
+def build_valid_indices(
+    batter_ranges: dict[int, tuple[int, int]],
+    seq_length: int = 400,
+    stride: int = 1,
+) -> list[tuple[int, int]]:
+    """Generate (batter_id, global_start) pairs for lazy sequence loading.
+
+    Only batters with >= seq_length pitches are included. Each index points
+    to a valid starting position for a seq_length window in the sorted array.
+
+    Args:
+        batter_ranges: Dict from compute_batter_ranges.
+        seq_length: Sequence length (default 400).
+        stride: Step between consecutive windows (default 1).
+
+    Returns:
+        List of (batter_id, global_start_idx) tuples.
+    """
+    indices = []
+    for batter_id, (start, end) in batter_ranges.items():
+        n = end - start
+        if n < seq_length:
+            continue
+        for offset in range(0, n - seq_length + 1, stride):
+            indices.append((batter_id, start + offset))
+    return indices

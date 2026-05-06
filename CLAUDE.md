@@ -64,19 +64,20 @@ tests/          # pytest tests
   - 10-class 매핑 99.96% (660건 truncated_pa → 전처리 시 제거)
   - Hit location 9-class: InPlay 한정 (22.7%)
   - src/data/features.py, tests/test_features.py (27 tests), scripts/03_validate_mapping.py
-- [x] 3.3: Preprocessing pipeline
+- [x] 3.3: Preprocessing pipeline (lazy loading)
   - 1,534,286 → 1,488,976 rows (정제 후, 3.0% 제거)
   - 87차원 Model C vector: 연속(15)+pitch_type(17)+zone(14)+balls(4)+strikes(3)+outs(3)+base(8)+stand(2)+throws(2)+result(10)+hitloc(9)
   - 77차원 Model B vector: 위 68차원 + inning(9)
-  - StandardScaler (train fit), stride=50 sliding window
-  - Sub-token masking: 마지막 pitch의 indices [68:87] → 0 (검증 통과)
+  - StandardScaler (train fit), stride=1 (논문 그대로, lazy loading)
+  - Sub-token masking: __getitem__에서 indices [68:87] → 0
   - Split: Train 749,880 / Val 385,320 / Test 353,776 (날짜 겹침 없음)
   - src/data/preprocess.py, scripts/04_preprocess.py
-- [x] 3.4: PyTorch Dataset
-  - PitchSequenceDataset: Train 10,668 / Val 4,175 / Test 3,686 sequences (400×87)
-  - PitchPointDataset: 동일 pitch 수 (77-dim)
-  - src/data/dataset.py, tests/test_preprocess.py + test_dataset.py (54 tests total)
-  - data/processed/ 총 ~3.2 GB
+- [x] 3.4: PyTorch Dataset (lazy loading)
+  - PitchSequenceDataset: O(1) numpy slice, stride=1
+    - Train 521,680 / Val 199,313 / Test 175,862 sequences
+  - PitchPointDataset: eager (77-dim, 작음)
+  - 디스크: vectors .npy + indices .pkl ≈ 1 GB (이전 3.2 GB에서 축소)
+  - 77 tests all pass
 
 ### Phase 4: Model Implementation
 - [x] 4.1: Common base interface (src/models/base.py)

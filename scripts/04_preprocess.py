@@ -1,11 +1,21 @@
-"""End-to-end preprocessing: raw Parquet → preprocessed tensors.
+"""End-to-end preprocessing: raw Parquet → pre-computed vectors + lazy indices.
+
+Lazy loading approach:
+    - Pre-compute (N, 87) vectors per split as .npy (memory-mappable)
+    - Pre-compute labels/hit_locs as .npy
+    - Save valid_indices (batter_id, global_start) as .pkl
+    - Dataset.__getitem__ slices vectors in O(1) — no sequence pre-generation
 
 Outputs:
-    data/processed/model_c_{split}.pt  — (sequences, labels_10, hit_locs) for Model C
-    data/processed/model_b_{split}.pt  — (vectors, labels_4) for Model B
-    data/processed/scaler.pkl          — fitted StandardScaler
-    data/processed/pitch_types.json    — canonical pitch type list
-    data/processed/preprocessing_summary.json — stats
+    data/processed/vectors_c_{split}.npy   — (N, 87) Model C vectors
+    data/processed/labels_10_{split}.npy   — (N,) 10-class labels
+    data/processed/hit_locs_{split}.npy    — (N,) hit location labels
+    data/processed/batter_ranges_{split}.pkl — batter → (start, end) mapping
+    data/processed/indices_{split}.pkl     — valid sequence start positions
+    data/processed/model_b_{split}.pt      — (vectors, labels) for Model B
+    data/processed/scaler.pkl              — fitted StandardScaler
+    data/processed/pitch_types.json        — canonical pitch type list
+    data/processed/preprocessing_summary.json
 """
 
 import json
@@ -17,19 +27,20 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 import torch
-from tqdm import tqdm
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from src.data.features import MODEL_B_DIM, MODEL_C_DIM, OUTCOME_END, OUTCOME_START
 from src.data.preprocess import (
+    build_valid_indices,
     build_vectors_batch,
     clean_dataframe,
+    compute_batter_ranges,
     extract_hit_location,
     extract_labels_10class,
     extract_labels_4class,
     fit_scaler,
-    make_sequences_for_batter,
+    sort_by_batter_and_time,
     split_by_season,
 )
 from src.utils.logger import get_logger
@@ -37,10 +48,7 @@ from src.utils.logger import get_logger
 logger = get_logger("preprocess", "outputs/logs/preprocess.log")
 
 SEQ_LENGTH = 400
-# stride=1은 메모리 초과 (train만 521K sequences × 400 × 87 × 4B ≈ 72GB)
-# stride=50: 약 10K sequences, ~1.4GB — Mac Mini에서 실행 가능
-# GPU 서버에서 stride를 줄여 데이터 증강 가능
-STRIDE = 50
+STRIDE = 1  # 논문 그대로 (lazy loading이라 메모리 OK)
 OUTPUT_DIR = Path("data/processed")
 
 
@@ -72,7 +80,6 @@ def main():
 
     pitch_types = determine_pitch_types(splits["train"])
 
-    # Scaler 저장
     with open(OUTPUT_DIR / "scaler.pkl", "wb") as f:
         pickle.dump(scaler, f)
     with open(OUTPUT_DIR / "pitch_types.json", "w") as f:
@@ -82,6 +89,8 @@ def main():
     summary = {
         "raw_rows": len(df23) + len(df24),
         "cleaned_rows": sum(len(s) for s in splits.values()),
+        "seq_length": SEQ_LENGTH,
+        "stride": STRIDE,
         "splits": {},
     }
 
@@ -89,17 +98,13 @@ def main():
     for split_name, sdf in splits.items():
         logger.info(f"\n{'='*40} {split_name.upper()} {'='*40}")
 
-        # --- Model B: 77차원 벡터 + 4-class 라벨 ---
+        # --- Model B: 77차원 벡터 + 4-class 라벨 (eager, 작음) ---
         logger.info(f"[{split_name}] Model B 벡터 생성 중...")
         t0 = time.time()
         vectors_b = build_vectors_batch(sdf, scaler, pitch_types, model="B")
         labels_4 = extract_labels_4class(sdf)
         t_b = time.time() - t0
-        logger.info(
-            f"[{split_name}] Model B: {vectors_b.shape}, 4-class labels, {t_b:.1f}s"
-        )
 
-        # 4-class에서 -1(unmapped) 제거
         valid_mask_b = labels_4 >= 0
         vectors_b = vectors_b[valid_mask_b]
         labels_4 = labels_4[valid_mask_b]
@@ -108,114 +113,96 @@ def main():
             {"vectors": vectors_b, "labels": labels_4},
             OUTPUT_DIR / f"model_b_{split_name}.pt",
         )
+        logger.info(f"[{split_name}] Model B: {vectors_b.shape}, {t_b:.1f}s")
 
-        # --- Model C: 87차원 벡터 → sliding window ---
-        logger.info(f"[{split_name}] Model C 벡터 생성 중...")
+        # --- Model C: 정렬 → 벡터 → 인덱스 (lazy loading) ---
+        logger.info(f"[{split_name}] Model C: 타자별 정렬 중...")
         t0 = time.time()
-        vectors_c = build_vectors_batch(sdf, scaler, pitch_types, model="C")
-        labels_10 = extract_labels_10class(sdf)
-        hit_locs = extract_hit_location(sdf)
-        t_c = time.time() - t0
-        logger.info(f"[{split_name}] Model C vectors: {vectors_c.shape}, {t_c:.1f}s")
+        sdf_sorted = sort_by_batter_and_time(sdf)
 
-        # 타자별 그룹핑 + 시간순 정렬 + sliding window
-        logger.info(f"[{split_name}] Sliding window 생성 중 (seq={SEQ_LENGTH})...")
+        # 벡터 생성 (정렬된 순서대로)
+        logger.info(f"[{split_name}] Model C: 87차원 벡터 생성 중...")
+        vectors_c = build_vectors_batch(sdf_sorted, scaler, pitch_types, model="C")
+        labels_10 = extract_labels_10class(sdf_sorted)
+        hit_locs = extract_hit_location(sdf_sorted)
+        t_vec = time.time() - t0
+        logger.info(f"[{split_name}] Model C vectors: {vectors_c.shape}, {t_vec:.1f}s")
+
+        # 타자 범위 계산
+        batter_ranges = compute_batter_ranges(sdf_sorted)
+        logger.info(f"[{split_name}] Batters: {len(batter_ranges)}")
+
+        # Valid indices (stride=1)
         t0 = time.time()
-
-        # 정렬을 위해 원본 인덱스 사용
-        sdf = sdf.copy()
-        sdf["_vec_idx"] = np.arange(len(sdf))
-
-        all_seqs = []
-        all_t10 = []
-        all_thl = []
-
-        batter_groups = sdf.groupby("batter")
-        for batter_id, bdf in tqdm(batter_groups, desc=f"{split_name} batters"):
-            # 시간순 정렬
-            bdf_sorted = bdf.sort_values(
-                ["game_date", "at_bat_number", "pitch_number"]
-            )
-            idx = bdf_sorted["_vec_idx"].values
-
-            batter_vecs = vectors_c[idx]
-            batter_l10 = labels_10[idx]
-            batter_hl = hit_locs[idx]
-
-            seqs, t10, thl = make_sequences_for_batter(
-                batter_vecs, batter_l10, batter_hl,
-                seq_length=SEQ_LENGTH, stride=STRIDE,
-            )
-            all_seqs.extend(seqs)
-            all_t10.extend(t10)
-            all_thl.extend(thl)
-
-        t_sw = time.time() - t0
-
-        if all_seqs:
-            seqs_arr = np.stack(all_seqs)
-            t10_arr = np.array(all_t10, dtype=np.int64)
-            thl_arr = np.array(all_thl, dtype=np.int64)
-        else:
-            seqs_arr = np.zeros((0, SEQ_LENGTH, MODEL_C_DIM), dtype=np.float32)
-            t10_arr = np.zeros(0, dtype=np.int64)
-            thl_arr = np.zeros(0, dtype=np.int64)
-
+        valid_indices = build_valid_indices(batter_ranges, SEQ_LENGTH, STRIDE)
+        t_idx = time.time() - t0
+        n_batters_qualified = sum(
+            1 for _, (s, e) in batter_ranges.items() if e - s >= SEQ_LENGTH
+        )
         logger.info(
-            f"[{split_name}] Model C sequences: {seqs_arr.shape}, {t_sw:.1f}s"
+            f"[{split_name}] Valid indices: {len(valid_indices):,} "
+            f"(stride={STRIDE}, {n_batters_qualified} batters), {t_idx:.1f}s"
         )
 
-        torch.save(
-            {"sequences": seqs_arr, "labels_10": t10_arr, "hit_locs": thl_arr},
-            OUTPUT_DIR / f"model_c_{split_name}.pt",
-        )
+        # .npy 저장 (memory-mappable)
+        np.save(OUTPUT_DIR / f"vectors_c_{split_name}.npy", vectors_c)
+        np.save(OUTPUT_DIR / f"labels_10_{split_name}.npy", labels_10)
+        np.save(OUTPUT_DIR / f"hit_locs_{split_name}.npy", hit_locs)
+        with open(OUTPUT_DIR / f"batter_ranges_{split_name}.pkl", "wb") as f:
+            pickle.dump(batter_ranges, f)
+        with open(OUTPUT_DIR / f"indices_{split_name}.pkl", "wb") as f:
+            pickle.dump(valid_indices, f)
 
         # === Split 통계 ===
         split_stats = {
-            "pitches": len(sdf),
+            "pitches": len(sdf_sorted),
             "model_b": {
                 "vectors_shape": list(vectors_b.shape),
                 "label_4_dist": {
-                    int(k): int(v) for k, v in
-                    zip(*np.unique(labels_4, return_counts=True))
+                    int(k): int(v)
+                    for k, v in zip(*np.unique(labels_4, return_counts=True))
                 },
             },
             "model_c": {
-                "sequences_shape": list(seqs_arr.shape),
-                "n_batters_with_sequences": sum(
-                    1 for _, bdf in batter_groups if len(bdf) >= SEQ_LENGTH
-                ),
-                "label_10_dist": {
-                    int(k): int(v) for k, v in
-                    zip(*np.unique(t10_arr, return_counts=True))
-                } if len(t10_arr) > 0 else {},
+                "vectors_shape": list(vectors_c.shape),
+                "n_sequences": len(valid_indices),
+                "n_batters_qualified": n_batters_qualified,
             },
         }
         summary["splits"][split_name] = split_stats
 
-        # Print 요약
         print(f"\n{'='*60}")
         print(f"  {split_name.upper()}")
         print(f"{'='*60}")
-        print(f"  Pitches: {len(sdf):,}")
+        print(f"  Pitches: {len(sdf_sorted):,}")
         print(f"  Model B: {vectors_b.shape}")
-        print(f"    4-class dist: {split_stats['model_b']['label_4_dist']}")
-        print(f"  Model C: {seqs_arr.shape}")
-        print(f"    10-class dist: {split_stats['model_c']['label_10_dist']}")
+        print(f"    4-class: {split_stats['model_b']['label_4_dist']}")
+        print(f"  Model C vectors: {vectors_c.shape}")
+        print(f"    Sequences (stride={STRIDE}): {len(valid_indices):,}")
+        print(f"    Qualified batters (400+): {n_batters_qualified}")
 
     # === 6. 검증 ===
     logger.info("\n차원 검증...")
     for split_name in ["train", "val", "test"]:
         b_data = torch.load(OUTPUT_DIR / f"model_b_{split_name}.pt", weights_only=False)
-        c_data = torch.load(OUTPUT_DIR / f"model_c_{split_name}.pt", weights_only=False)
-        assert b_data["vectors"].shape[1] == MODEL_B_DIM, f"Model B dim mismatch: {split_name}"
-        if c_data["sequences"].shape[0] > 0:
-            assert c_data["sequences"].shape[1] == SEQ_LENGTH
-            assert c_data["sequences"].shape[2] == MODEL_C_DIM
-            # Sub-token mask 검증: 마지막 pitch의 outcome이 0인지
-            sample = c_data["sequences"][0]
-            assert np.all(sample[-1, OUTCOME_START:OUTCOME_END] == 0.0), \
+        vecs = np.load(OUTPUT_DIR / f"vectors_c_{split_name}.npy")
+        assert b_data["vectors"].shape[1] == MODEL_B_DIM
+        assert vecs.shape[1] == MODEL_C_DIM
+
+        # Sub-token mask 검증: lazy dataset으로 실제 확인
+        with open(OUTPUT_DIR / f"indices_{split_name}.pkl", "rb") as f:
+            indices = pickle.load(f)
+        if indices:
+            labels = np.load(OUTPUT_DIR / f"labels_10_{split_name}.npy")
+            hlocs = np.load(OUTPUT_DIR / f"hit_locs_{split_name}.npy")
+            from src.data.dataset import PitchSequenceDataset
+
+            ds = PitchSequenceDataset(vecs, labels, hlocs, indices, SEQ_LENGTH)
+            item = ds[0]
+            seq_np = item["sequence"].numpy()
+            assert np.all(seq_np[-1, OUTCOME_START:OUTCOME_END] == 0.0), (
                 f"Sub-token mask failed: {split_name}"
+            )
         logger.info(f"  {split_name}: OK")
 
     # Split 경계 검증
@@ -232,11 +219,11 @@ def main():
     elapsed = time.time() - t_start
     summary["total_elapsed_seconds"] = round(elapsed, 1)
 
-    # 파일 크기
-    for f in OUTPUT_DIR.glob("*.pt"):
-        summary.setdefault("file_sizes_mb", {})[f.name] = round(
-            f.stat().st_size / (1024 * 1024), 1
-        )
+    file_sizes = {}
+    for f in sorted(OUTPUT_DIR.glob("*")):
+        if f.name != ".gitkeep":
+            file_sizes[f.name] = round(f.stat().st_size / (1024 * 1024), 1)
+    summary["file_sizes_mb"] = file_sizes
 
     with open(OUTPUT_DIR / "preprocessing_summary.json", "w", encoding="utf-8") as f:
         json.dump(summary, f, ensure_ascii=False, indent=2)
@@ -244,9 +231,8 @@ def main():
     print(f"\n{'='*60}")
     print(f"  전처리 완료! ({elapsed:.1f}초)")
     print(f"{'='*60}")
-    for f in sorted(OUTPUT_DIR.glob("*")):
-        size_mb = f.stat().st_size / (1024 * 1024)
-        print(f"  {f.name:40s} {size_mb:8.1f} MB")
+    for name, size in sorted(file_sizes.items()):
+        print(f"  {name:45s} {size:8.1f} MB")
     print()
 
 
