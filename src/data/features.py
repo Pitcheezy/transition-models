@@ -240,40 +240,20 @@ COUNTS_BALLS: list[int] = [0, 1, 2, 3]  # 4개
 COUNTS_STRIKES: list[int] = [0, 1, 2]  # 3개
 OUTS: list[int] = [0, 1, 2]  # 3개
 HANDEDNESS: list[str] = ["L", "R"]  # 2개 (투수/타자 각각)
-
-# 차원 합계:
-# 연속 15 + pitch_type 17 + zone 14 + balls 4 + strikes 3 + outs 3
-# + stand 2 + p_throws 2 + 기타(inning, score 등) ≈ 87
-# 정확한 87차원 구성은 논문 재확인 후 build_pitch_vector에서 확정
-
+INNINGS: list[int] = list(range(1, 10))  # 1~9 (9개, 연장은 9로 클리핑)
 
 # =============================================================================
-# 5. Vector builder (skeleton)
+# 5. 87차원 / 77차원 벡터 명세
 # =============================================================================
 
+# Model C (MIT Sloan 2025): 87차원 pitch vector
+# 연속(15) + pitch_type(17) + zone(14) + balls(4) + strikes(3) + outs(3)
+# + base_state(8) + stand(2) + p_throws(2) + pitch_result(10) + hit_location(9) = 87
+MODEL_C_DIM = 87
+OUTCOME_START = 68  # pitch_result 시작 인덱스 (15+17+14+4+3+3+8+2+2)
+OUTCOME_END = 87    # hit_location 끝 (68+10+9)
 
-def build_pitch_vector(row: pd.Series, scaler=None) -> np.ndarray:
-    """Convert a single pitch row into an 87-dim feature vector.
-
-    Composition (approximate):
-    - Continuous features (15) — standardized if scaler provided
-    - pitch_type one-hot (17)
-    - zone one-hot (14)
-    - balls one-hot (4)
-    - strikes one-hot (3)
-    - outs one-hot (3)
-    - stand one-hot (2)
-    - p_throws one-hot (2)
-    - Additional context features (~27)
-
-    Args:
-        row: A single row from Statcast DataFrame.
-        scaler: Optional fitted scaler for continuous features.
-
-    Returns:
-        1-D numpy array of shape (87,).
-
-    Raises:
-        NotImplementedError: 현재 골격만 존재, Phase 4에서 구현 예정.
-    """
-    raise NotImplementedError("Phase 4에서 구현 예정")
+# Model B (Otremba 2022): 77차원 pitch vector
+# 연속(15) + pitch_type(17) + zone(14) + balls(4) + strikes(3) + outs(3)
+# + base_state(8) + stand(2) + p_throws(2) + inning(9) = 77
+MODEL_B_DIM = 77
