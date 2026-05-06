@@ -50,7 +50,7 @@ tests/          # pytest tests
 
 - [x] Project scaffolding & environment setup
 - [x] Sanity check (PyTorch, MPS)
-- [ ] Data acquisition (pybaseball / Statcast)
+- [~] Data acquisition (pybaseball / Statcast) — 스크립트 완성, 테스트 통과
 - [ ] Feature engineering pipeline
 - [ ] Model B implementation (Otremba MLP)
 - [ ] Model C implementation (MIT Transformer)
