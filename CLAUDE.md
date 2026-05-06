@@ -85,12 +85,11 @@ tests/          # pytest tests
 - [x] 4.2: Model B — OtrembaMLP (src/models/otremba_mlp.py)
   - 77→128→128→4, ReLU, 27,012 params
   - Sanity check: loss 1.41→1.31 (10 epochs, MPS), softmax 합=1 ✓
-- [ ] 4.3: Model C (MIT Sloan 2025 Transformer)
-  - 87차원 × 400 sequence input
-  - 12-layer Transformer Encoder, d_model=256, 8 heads
-  - Last-pitch residual connection
-  - Multi-task head (10-class + 9-class + 5 continuous)
-  - Multi-task loss: 0.7 × (CE_PR + CE_HL) + 0.3 × MSE_C
+- [x] 4.3: Model C — PitchTransformer (src/models/transformer.py)
+  - 87×400 → embed(256) → 12-layer Encoder → last-token + residual → 24-dim
+  - 9,659,672 params, MPS 호환, 3.3s/epoch (64 seq, batch=8)
+  - Multi-task: pitch_result(10) + hit_location(9) + continuous(5)
+  - Sanity check: loss 19.1→18.0, accuracy 41%→48% (5 epochs)
 
 ### Phase 5: Training
 - [ ] 5.1: Training loop (src/training/train.py)
