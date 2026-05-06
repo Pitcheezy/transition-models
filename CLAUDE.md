@@ -79,10 +79,11 @@ tests/          # pytest tests
   - data/processed/ 총 ~3.2 GB
 
 ### Phase 4: Model Implementation
-- [ ] 4.1: Common base interface (src/models/base.py)
-- [ ] 4.2: Model B (Otremba 2022 MLP)
-  - 77차원 input → 4-class output
-  - 2-layer hidden 128 units, ReLU, Softmax
+- [x] 4.1: Common base interface (src/models/base.py)
+  - TransitionModel ABC: forward, predict_proba, num_classes, model_name
+- [x] 4.2: Model B — OtrembaMLP (src/models/otremba_mlp.py)
+  - 77→128→128→4, ReLU, 27,012 params
+  - Sanity check: loss 1.41→1.31 (10 epochs, MPS), softmax 합=1 ✓
 - [ ] 4.3: Model C (MIT Sloan 2025 Transformer)
   - 87차원 × 400 sequence input
   - 12-layer Transformer Encoder, d_model=256, 8 heads
