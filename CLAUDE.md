@@ -98,9 +98,17 @@ tests/          # pytest tests
 - [x] 5.4: Sanity check learning (CUDA, small subset)
 - [x] 5.5: Full training (in progress — Model B complete, Model C pending)
   - Model B: model_b_full_v1 — best val_loss 0.8730 (epoch 10), val_acc 60.6%, stopped epoch 20
+  - Model C: model_c_full_v2 — best val_loss 1.8334 (epoch 29), val pr_acc 67.1%, 30 epochs 완주 (4h53m)
 
 ### Phase 6: Evaluation & Comparison
-- [ ] 6.1: Metrics (cross entropy, brier score, top-k precision)
-- [ ] 6.2: Per-class performance analysis
-- [ ] 6.3: Comparison report (3 models)
-- [ ] 6.4: Visualization (loss curves, confusion matrices)
+- [x] 6.1: Metrics (cross entropy, brier score, top-k precision)
+  - src/evaluation/metrics.py, evaluate.py, scripts/10_evaluate_models.py
+  - Model B test: top-1 60.8%, CE 0.876 | Model C test: top-1 66.7%, CE 0.880
+  - 13 unit tests all pass
+- [x] 6.2: Per-class performance analysis
+  - Ball/Strike/Walk 80%+, Single-HR 0% (class imbalance)
+  - Confusion matrices 생성
+- [x] 6.3: Comparison report (3 models)
+  - notebooks/05_comparison_results.ipynb (Model A baseline vs B vs C)
+- [x] 6.4: Visualization (loss curves, confusion matrices)
+  - 04 노트북 결과 섹션 완성, 05 노트북 신규 작성
