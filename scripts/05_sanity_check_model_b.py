@@ -9,6 +9,7 @@ import torch.nn as nn
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from src.models.otremba_mlp import OtrembaMLP
+from src.utils.device import get_device
 
 
 def main():
@@ -21,7 +22,7 @@ def main():
     print(f"Label distribution: {dict(zip(*torch.unique(labels, return_counts=True)))}")
 
     # === 디바이스 설정 ===
-    device = "mps" if torch.backends.mps.is_available() else "cpu"
+    device = get_device()
     print(f"Device: {device}")
 
     # === 모델 + 옵티마이저 ===

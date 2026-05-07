@@ -14,10 +14,11 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from src.data.dataset import PitchSequenceDataset
 from src.models.transformer import PitchTransformer
+from src.utils.device import get_device
 
 
 def main():
-    device = torch.device("mps" if torch.backends.mps.is_available() else "cpu")
+    device = get_device()
     print(f"Device: {device}")
 
     # === 작은 subset 로드 ===
