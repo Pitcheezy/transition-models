@@ -92,10 +92,10 @@ tests/          # pytest tests
   - Sanity check: loss 19.1→18.0, accuracy 41%→48% (5 epochs)
 
 ### Phase 5: Training
-- [ ] 5.1: Training loop (src/training/train.py)
-- [ ] 5.2: W&B integration
-- [ ] 5.3: Checkpoint management
-- [ ] 5.4: Sanity check learning (Mac MPS, small subset)
+- [x] 5.1: Training loop (src/training/train.py)
+- [x] 5.2: W&B integration
+- [x] 5.3: Checkpoint management
+- [x] 5.4: Sanity check learning (CUDA, small subset)
 - [ ] 5.5: Full training (학교 GPU 서버 또는 게이밍 노트북)
 
 ### Phase 6: Evaluation & Comparison
