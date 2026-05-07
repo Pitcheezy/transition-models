@@ -68,13 +68,13 @@ tests/          # pytest tests
   - 1,534,286 → 1,488,976 rows (정제 후, 3.0% 제거)
   - 87차원 Model C vector: 연속(15)+pitch_type(17)+zone(14)+balls(4)+strikes(3)+outs(3)+base(8)+stand(2)+throws(2)+result(10)+hitloc(9)
   - 77차원 Model B vector: 위 68차원 + inning(9)
-  - StandardScaler (train fit), stride=1 (논문 그대로, lazy loading)
+  - StandardScaler (train fit), stride=8 (실용적 속도 고려, stride=1은 1 epoch=76분)
   - Sub-token masking: __getitem__에서 indices [68:87] → 0
   - Split: Train 749,880 / Val 385,320 / Test 353,776 (날짜 겹침 없음)
   - src/data/preprocess.py, scripts/04_preprocess.py
 - [x] 3.4: PyTorch Dataset (lazy loading)
-  - PitchSequenceDataset: O(1) numpy slice, stride=1
-    - Train 521,680 / Val 199,313 / Test 175,862 sequences
+  - PitchSequenceDataset: O(1) numpy slice, stride=8
+    - Train 65,418 / Val 25,077 / Test 22,127 sequences (stride=1 대비 8x 감소)
   - PitchPointDataset: eager (77-dim, 작음)
   - 디스크: vectors .npy + indices .pkl ≈ 1 GB (이전 3.2 GB에서 축소)
   - 77 tests all pass

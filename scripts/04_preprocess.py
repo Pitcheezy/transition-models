@@ -48,7 +48,7 @@ from src.utils.logger import get_logger
 logger = get_logger("preprocess", "outputs/logs/preprocess.log")
 
 SEQ_LENGTH = 400
-STRIDE = 1  # 논문 그대로 (lazy loading이라 메모리 OK)
+STRIDE = 8  # stride=1: 521K sequences (1 epoch=76min), stride=8: ~65K (8x speedup)
 OUTPUT_DIR = Path("data/processed")
 
 

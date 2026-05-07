@@ -65,8 +65,8 @@ def main():
         lr=1e-4,
         weight_decay=1e-5,
         early_stopping_patience=5,
-        run_name="model_c_full_v1",
-        wandb_tags=["full", "model_c", "v1"],
+        run_name="model_c_full_v2",
+        wandb_tags=["full", "model_c", "v2", "stride8"],
     )
 
     print("\nStarting training...")
