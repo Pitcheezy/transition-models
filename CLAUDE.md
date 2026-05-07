@@ -96,7 +96,8 @@ tests/          # pytest tests
 - [x] 5.2: W&B integration
 - [x] 5.3: Checkpoint management
 - [x] 5.4: Sanity check learning (CUDA, small subset)
-- [ ] 5.5: Full training (학교 GPU 서버 또는 게이밍 노트북)
+- [x] 5.5: Full training (in progress — Model B complete, Model C pending)
+  - Model B: model_b_full_v1 — best val_loss 0.8730 (epoch 10), val_acc 60.6%, stopped epoch 20
 
 ### Phase 6: Evaluation & Comparison
 - [ ] 6.1: Metrics (cross entropy, brier score, top-k precision)
