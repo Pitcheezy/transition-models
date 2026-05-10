@@ -91,24 +91,54 @@ tests/          # pytest tests
   - Multi-task: pitch_result(10) + hit_location(9) + continuous(5)
   - Sanity check: loss 19.1→18.0, accuracy 41%→48% (5 epochs)
 
-### Phase 5: Training
+### Phase 5: Training ✅
 - [x] 5.1: Training loop (src/training/train.py)
-- [x] 5.2: W&B integration
-- [x] 5.3: Checkpoint management
+  - TrainingConfig dataclass, AdamW + CosineAnnealingLR (per-batch step)
+- [x] 5.2: W&B integration (project=transition-models, entity=pitcheezy)
+- [x] 5.3: Checkpoint management (best + last per run)
 - [x] 5.4: Sanity check learning (CUDA, small subset)
-- [x] 5.5: Full training (in progress — Model B complete, Model C pending)
-  - Model B: model_b_full_v1 — best val_loss 0.8730 (epoch 10), val_acc 60.6%, stopped epoch 20
-  - Model C: model_c_full_v2 — best val_loss 1.8334 (epoch 29), val pr_acc 67.1%, 30 epochs 완주 (4h53m)
+- [x] 5.5: Full training ✅
+  - Model B: model_b_full_v1 — best val_loss 0.8730 (epoch 10), val_acc 60.6%, stopped epoch 20, 8분
+  - Model C: model_c_full_v2 — best val_loss 1.8334 (epoch 29), val pr_acc 67.1%, 30 epochs 완주, 4시간 53분 (stride=8)
 
-### Phase 6: Evaluation & Comparison
+### Phase 6: Evaluation & Comparison ✅
 - [x] 6.1: Metrics (cross entropy, brier score, top-k precision)
   - src/evaluation/metrics.py, evaluate.py, scripts/10_evaluate_models.py
-  - Model B test: top-1 60.8%, CE 0.876 | Model C test: top-1 66.7%, CE 0.880
+  - Model B test: top-1 60.8%, CE 0.876, top-2 83.4%, top-3 96.6%
+  - Model C test: top-1 66.7% (10-class), CE 0.880, top-3 94.6%
   - 13 unit tests all pass
 - [x] 6.2: Per-class performance analysis
-  - Ball/Strike/Walk 80%+, Single-HR 0% (class imbalance)
-  - Confusion matrices 생성
+  - Model B: Ball 90.6%, Strike 62.4%, Foul 23.2%, InPlay 36.7%
+  - Model C: Ball 88.2%, Strike 81.9%, Walk 87.7% / Single-HR 0% (class imbalance)
+  - Confusion matrices 생성, outputs/evaluation_b.npz + evaluation_c.npz 저장
 - [x] 6.3: Comparison report (3 models)
   - notebooks/05_comparison_results.ipynb (Model A baseline vs B vs C)
+  - Model A 35.6% → Model B 60.8% → Model C 66.7%
 - [x] 6.4: Visualization (loss curves, confusion matrices)
-  - 04 노트북 결과 섹션 완성, 05 노트북 신규 작성
+  - 04 노트북 결과 섹션 완성 (per-class bar + confusion matrix)
+  - 05 노트북 신규 작성 (top-1/CE 비교, per-class, confusion matrix)
+
+### Phase 7: Inference & Integration ✅
+- [x] 7.1: Inference wrappers (src/inference/transition_model.py)
+  - TransitionModelB: predict(x: (77,) or (N,77)) → (4,) or (N,4) numpy
+  - TransitionModelC: predict(x: (400,87) or (N,400,87)) → {"pitch_result": (10,), "hit_location": (9,)}
+  - predict_top_k(x, k) → [{"class": str, "probability": float}]
+  - 자동 checkpoint 로드, CUDA/MPS/CPU 자동 감지
+- [x] 7.2: Demo script (scripts/11_inference_demo.py)
+  - Model B + Model C 예측 출력, DQN 패턴 3-step 시뮬레이션
+- [x] 7.3: Documentation (docs/INFERENCE_GUIDE.md, 290 lines)
+  - TL;DR 3줄, 77/87-dim feature 인덱스 표, DQN 환경 통합 코드, 트러블슈팅
+- [x] 7.4: Unit tests (tests/test_inference.py, 8 tests all pass)
+
+### 전체 테스트 검증 (2026-05-08) ✅
+- 116 collected / **114 passed** / 2 skipped (MPS, Windows 정상) / 0 failed
+- 실행 시간: 27.5초
+- 커버리지: features, preprocess, dataset, models, transformer, training, evaluation, inference
+
+### Future Work
+- Class imbalance 처리: weighted loss / focal loss / weighted random sampler
+- Continuous regression target 실제 구현 (현재 placeholder 0)
+- Model A wrapper 구현 (실제 SmartPitch 통합)
+- Data 확장 (2018–2022 추가 후 재학습)
+- Ablation study (sub-token mask, last-pitch residual 효과 분리)
+- 발표 슬라이드 자료 작성 (notebooks/05 활용)
