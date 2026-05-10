@@ -49,6 +49,26 @@ uv run python scripts/05_sanity_check_model_b.py
 uv run python scripts/06_sanity_check_model_c.py
 ```
 
+## Inference (DQN/MDP 팀용)
+
+학습된 모델을 다른 시스템에서 사용하려면:
+
+```python
+from src.inference import TransitionModelC
+
+model = TransitionModelC()          # 자동 checkpoint 로드
+result = model.predict(sequence)    # sequence: (400, 87) numpy
+probs = result["pitch_result"]      # (10,) - 10-class 확률
+```
+
+자세한 사용법: [docs/INFERENCE_GUIDE.md](docs/INFERENCE_GUIDE.md)
+
+데모 실행:
+
+```bash
+uv run python scripts/11_inference_demo.py
+```
+
 ## Project Structure
 
 ```
