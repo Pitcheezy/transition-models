@@ -79,32 +79,48 @@ def clean_dataframe(df: pd.DataFrame) -> pd.DataFrame:
 # =============================================================================
 
 
-def split_by_season(df: pd.DataFrame) -> dict[str, pd.DataFrame]:
+def split_by_season(
+    df: pd.DataFrame,
+    train_years: list[int] | None = None,
+) -> dict[str, pd.DataFrame]:
     """Split data by season and month.
 
-    Train: 2023 전체
-    Val:   2024 3월~6월
-    Test:  2024 7월~10월+
+    Train: all train_years (default [2023])
+    Val:   last year in df, months 1-6
+    Test:  last year in df, months 7+
+
+    With train_years=[2022, 2023] and data covering 2022-2024:
+        Train: 2022 + 2023 full seasons
+        Val:   2024 months 1-6
+        Test:  2024 months 7+
 
     Args:
         df: Cleaned DataFrame with datetime game_date.
+        train_years: List of years for training. Default [2023].
 
     Returns:
         Dict with keys "train", "val", "test".
     """
+    if train_years is None:
+        train_years = [2023]
+
     df["_year"] = df["game_date"].dt.year
     df["_month"] = df["game_date"].dt.month
 
-    train = df[df["_year"] == 2023].copy()
-    val = df[(df["_year"] == 2024) & (df["_month"] <= 6)].copy()
-    test = df[(df["_year"] == 2024) & (df["_month"] >= 7)].copy()
+    test_year = df["_year"].max()
 
-    # 임시 컬럼 제거
+    train = df[df["_year"].isin(train_years)].copy()
+    val = df[(df["_year"] == test_year) & (df["_month"] <= 6)].copy()
+    test = df[(df["_year"] == test_year) & (df["_month"] >= 7)].copy()
+
     for split in [train, val, test]:
         split.drop(columns=["_year", "_month"], inplace=True)
 
-    return {"train": train.reset_index(drop=True), "val": val.reset_index(drop=True),
-            "test": test.reset_index(drop=True)}
+    return {
+        "train": train.reset_index(drop=True),
+        "val": val.reset_index(drop=True),
+        "test": test.reset_index(drop=True),
+    }
 
 
 # =============================================================================

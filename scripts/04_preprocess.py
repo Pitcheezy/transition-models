@@ -18,6 +18,7 @@ Outputs:
     data/processed/preprocessing_summary.json
 """
 
+import argparse
 import json
 import pickle
 import sys
@@ -51,17 +52,53 @@ SEQ_LENGTH = 400
 STRIDE = 8  # stride=1: 521K sequences (1 epoch=76min), stride=8: ~65K (8x speedup)
 OUTPUT_DIR = Path("data/processed")
 
+RAW_DIR = Path("data/raw")
+
+
+def load_seasons(years: list[int]) -> pd.DataFrame:
+    """Load and concatenate Parquet files for each requested year."""
+    frames = []
+    for yr in years:
+        path = RAW_DIR / str(yr) / f"statcast_{yr}.parquet"
+        if not path.exists():
+            logger.error(f"데이터 파일 없음: {path}  → 먼저 다운로드하세요.")
+            sys.exit(1)
+        logger.info(f"  {yr} 로드: {path}")
+        frames.append(pd.read_parquet(path))
+    df = pd.concat(frames, ignore_index=True)
+    logger.info(f"  합산: {len(df):,} rows ({len(years)} 시즌)")
+    return df
+
 
 def main():
+    parser = argparse.ArgumentParser(description="Preprocessing: raw Parquet → vectors + indices")
+    parser.add_argument(
+        "--years",
+        nargs="+",
+        type=int,
+        default=[2023, 2024],
+        help="Seasons to process (default: 2023 2024). Last year = val/test split.",
+    )
+    args = parser.parse_args()
+
+    years = sorted(args.years)
+    if len(years) < 2:
+        logger.error("최소 2개 시즌 필요 (마지막 시즌이 val/test로 분리됩니다).")
+        sys.exit(1)
+
+    train_years = years[:-1]   # 마지막 제외 → 학습
+    test_year = years[-1]      # 마지막 → val / test 분리
+
+    logger.info(f"시즌: {years}  |  Train: {train_years}  |  Val/Test: {test_year}")
+
     t_start = time.time()
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
     # === 1. 데이터 로드 ===
     logger.info("데이터 로드 중...")
-    df23 = pd.read_parquet("data/raw/2023/statcast_2023.parquet")
-    df24 = pd.read_parquet("data/raw/2024/statcast_2024.parquet")
-    df = pd.concat([df23, df24], ignore_index=True)
-    logger.info(f"원본 데이터: {len(df):,} rows")
+    df = load_seasons(years)
+    raw_row_count = len(df)
+    logger.info(f"원본 데이터: {raw_row_count:,} rows")
 
     # === 2. 정제 ===
     logger.info("데이터 정제 중...")
@@ -69,7 +106,7 @@ def main():
     logger.info(f"정제 후: {len(df):,} rows")
 
     # === 3. Train/Val/Test 분할 ===
-    splits = split_by_season(df)
+    splits = split_by_season(df, train_years=train_years)
     for name, sdf in splits.items():
         logger.info(f"  {name}: {len(sdf):,} rows")
 
@@ -87,7 +124,10 @@ def main():
     logger.info("Scaler + pitch_types 저장 완료")
 
     summary = {
-        "raw_rows": len(df23) + len(df24),
+        "years": years,
+        "train_years": train_years,
+        "test_year": test_year,
+        "raw_rows": raw_row_count,
         "cleaned_rows": sum(len(s) for s in splits.values()),
         "seq_length": SEQ_LENGTH,
         "stride": STRIDE,
