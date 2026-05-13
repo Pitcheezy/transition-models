@@ -98,25 +98,26 @@ tests/          # pytest tests
 - [x] 5.3: Checkpoint management (best + last per run)
 - [x] 5.4: Sanity check learning (CUDA, small subset)
 - [x] 5.5: Full training ✅
-  - Model B: model_b_full_v1 — best val_loss 0.8730 (epoch 10), val_acc 60.6%, stopped epoch 20, 8분
-  - Model C: model_c_full_v2 — best val_loss 1.8334 (epoch 29), val pr_acc 67.1%, 30 epochs 완주, 4시간 53분 (stride=8)
+  - Model B v1 (2시즌): model_b_full_v1 — best val_loss 0.8730 (epoch 10), val_acc 60.6%, 8분
+  - Model C v2 (2시즌): model_c_full_v2 — best val_loss 1.8334 (epoch 29), val pr_acc 67.1%, 4시간 53분
+  - Model B v2 (3시즌): model_b_full_v2 — best val_loss 0.8700 (epoch 12), val_acc 61.0%, ~11분
+  - Model C v3 (3시즌): model_c_full_v3 — best val_loss 1.8190 (epoch 21), val pr_acc 67.3%, ~10시간 (RTX 4070, stride=8, 150K seqs)
 
 ### Phase 6: Evaluation & Comparison ✅
 - [x] 6.1: Metrics (cross entropy, brier score, top-k precision)
   - src/evaluation/metrics.py, evaluate.py, scripts/10_evaluate_models.py
-  - Model B test: top-1 60.8%, CE 0.876, top-2 83.4%, top-3 96.6%
-  - Model C test: top-1 66.7% (10-class), CE 0.880, top-3 94.6%
+  - **2시즌** — Model B: top-1 60.8%, CE 0.876 / Model C: top-1 66.7%, CE 0.880
+  - **3시즌** — Model B: top-1 60.9%, CE 0.872 / Model C: top-1 67.2%, CE 0.868
   - 13 unit tests all pass
 - [x] 6.2: Per-class performance analysis
-  - Model B: Ball 90.6%, Strike 62.4%, Foul 23.2%, InPlay 36.7%
-  - Model C: Ball 88.2%, Strike 81.9%, Walk 87.7% / Single-HR 0% (class imbalance)
-  - Confusion matrices 생성, outputs/evaluation_b.npz + evaluation_c.npz 저장
+  - Model B (3시즌): Ball 91.7%, Strike 56.4%, Foul 29.6%, InPlay 38.2%
+  - Model C (3시즌): Ball 87.6%, Strike 82.2%, Walk 85.6%, Strikeout 17.3%, FieldOut 10.7% / Single-HR 0%
+  - evaluation_b.npz + evaluation_c.npz (2시즌), evaluation_b_3season.npz + evaluation_c_3season.npz (3시즌)
 - [x] 6.3: Comparison report (3 models)
   - notebooks/05_comparison_results.ipynb (Model A baseline vs B vs C)
-  - Model A 35.6% → Model B 60.8% → Model C 66.7%
+  - Model A 35.6% → Model B 60.8% (2시즌) / 60.9% (3시즌) → Model C 66.7% (2시즌) / 67.2% (3시즌)
 - [x] 6.4: Visualization (loss curves, confusion matrices)
-  - 04 노트북 결과 섹션 완성 (per-class bar + confusion matrix)
-  - 05 노트북 신규 작성 (top-1/CE 비교, per-class, confusion matrix)
+  - 04 노트북 결과 섹션 완성, 05 노트북 신규 작성
 
 ### Phase 7: Inference & Integration ✅
 - [x] 7.1: Inference wrappers (src/inference/transition_model.py)
@@ -135,10 +136,19 @@ tests/          # pytest tests
 - 실행 시간: 27.5초
 - 커버리지: features, preprocess, dataset, models, transformer, training, evaluation, inference
 
+### Phase 8: 3시즌 데이터 확장 ✅ (2026-05-14)
+- [x] 2022 Statcast 데이터 다운로드 (775,330 pitches, 118 cols)
+- [x] 3시즌 정합성 검증: FT=0, spin_rate 차이 10.4 RPM, 컬럼 완전 일치
+- [x] sac_bunt_double_play → FIELD_OUT 매핑 추가 (2022 신규 이벤트)
+- [x] preprocess.py: split_by_season(train_years) 파라미터화
+- [x] 04_preprocess.py: --years argparse (train=years[:-1], val/test=last year)
+- [x] Model B v2 재학습: top-1 60.8% → 60.9% (+0.1pp), CE 0.876 → 0.872
+- [x] Model C v3 재학습: top-1 66.7% → 67.2% (+0.5pp), CE 0.880 → 0.868
+- [x] 3시즌 evaluation 저장: evaluation_b_3season.npz, evaluation_c_3season.npz
+
 ### Future Work
 - Class imbalance 처리: weighted loss / focal loss / weighted random sampler
 - Continuous regression target 실제 구현 (현재 placeholder 0)
 - Model A wrapper 구현 (실제 SmartPitch 통합)
-- Data 확장 (2018–2022 추가 후 재학습)
 - Ablation study (sub-token mask, last-pitch residual 효과 분리)
 - 발표 슬라이드 자료 작성 (notebooks/05 활용)
