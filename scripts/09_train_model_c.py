@@ -65,20 +65,20 @@ def main():
         lr=1e-4,
         weight_decay=1e-5,
         early_stopping_patience=5,
-        run_name="model_c_full_v2",
-        wandb_tags=["full", "model_c", "v2", "stride8"],
+        run_name="model_c_full_v3",
+        wandb_tags=["full", "model_c", "v3", "stride8", "3season"],
     )
 
     print("\nStarting training...")
-    print("Estimated time: 2-3 hours")
+    print("Estimated time: 2-3 hours (CUDA), 4-5 hours (MPS)")
     print("-" * 60)
     best_val = train(model, train_loader, val_loader, config, "C")
 
     print(f"\n{'=' * 60}")
     print(f"Training complete!")
     print(f"Best val loss: {best_val:.4f}")
-    print(f"Checkpoint: outputs/checkpoints/model_c_full_v1_best.pt")
-    print(f"Log:        outputs/logs/train_model_c_full_v1.log")
+    print(f"Checkpoint: outputs/checkpoints/model_c_full_v3_best.pt")
+    print(f"Log:        outputs/logs/train_model_c_full_v3.log")
     print(f"{'=' * 60}")
 
 

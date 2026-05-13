@@ -51,8 +51,8 @@ def main():
         lr=1e-3,
         weight_decay=1e-5,
         early_stopping_patience=10,
-        run_name="model_b_full_v1",
-        wandb_tags=["full", "model_b", "v1"],
+        run_name="model_b_full_v2",
+        wandb_tags=["full", "model_b", "v2", "3season"],
     )
 
     print("\nStarting training...")
@@ -62,8 +62,8 @@ def main():
     print(f"\n{'=' * 60}")
     print(f"Training complete!")
     print(f"Best val loss: {best_val:.4f}")
-    print(f"Checkpoint: outputs/checkpoints/model_b_full_v1_best.pt")
-    print(f"Log:        outputs/logs/train_model_b_full_v1.log")
+    print(f"Checkpoint: outputs/checkpoints/model_b_full_v2_best.pt")
+    print(f"Log:        outputs/logs/train_model_b_full_v2.log")
     print(f"{'=' * 60}")
 
 
