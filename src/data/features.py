@@ -99,6 +99,7 @@ EVENTS_TO_10CLASS: dict[str, int] = {
     "fielders_choice_out": PitchResult10.FIELD_OUT,
     "sac_fly": PitchResult10.FIELD_OUT,
     "sac_bunt": PitchResult10.FIELD_OUT,
+    "sac_bunt_double_play": PitchResult10.FIELD_OUT,
     "sac_fly_double_play": PitchResult10.FIELD_OUT,
     "triple_play": PitchResult10.FIELD_OUT,
     "field_error": PitchResult10.FIELD_OUT,

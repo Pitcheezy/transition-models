@@ -458,8 +458,8 @@ def build_vectors_batch(
         ).values
         pr_oh = np.zeros((n, PitchResult10.NUM_CLASSES), dtype=np.float32)
         for i, lbl in enumerate(labels_10):
-            if lbl is not None:
-                pr_oh[i, lbl] = 1.0
+            if lbl is not None and not (isinstance(lbl, float) and np.isnan(lbl)):
+                pr_oh[i, int(lbl)] = 1.0
 
         # === hit_location one-hot (9) ===
         hl_vals = df["hit_location"].apply(map_hit_location).values

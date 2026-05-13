@@ -181,9 +181,9 @@ class TestDictionaryCompleteness:
         assert len(DESCRIPTION_TO_4CLASS) == 15
 
     def test_10class_covers_all_events(self):
-        """truncated_pa 제외 21개 events 모두 포함."""
-        # 22개 events 중 truncated_pa 제외 = 21개
-        assert len(EVENTS_TO_10CLASS) == 21
+        """truncated_pa 제외 22개 events 모두 포함."""
+        # sac_bunt_double_play 추가(2022 데이터)로 22개
+        assert len(EVENTS_TO_10CLASS) == 22
 
     def test_4class_values_valid(self):
         """4-class 매핑값이 모두 0~3 범위."""
