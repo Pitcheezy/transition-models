@@ -44,7 +44,7 @@ def evaluate_b():
     test_loader = DataLoader(test_ds, batch_size=256, num_workers=2, pin_memory=True)
 
     ckpt = torch.load(
-        "outputs/checkpoints/model_b_full_v1_best.pt",
+        "outputs/checkpoints/model_b_full_v2_best.pt",
         weights_only=False,
         map_location="cpu",
     )
@@ -95,7 +95,7 @@ def evaluate_b():
     print(f"  Brier score   : {be_brier:.4f}")
 
     np.savez(
-        OUTPUT_DIR / "evaluation_b.npz",
+        OUTPUT_DIR / "evaluation_b_3season.npz",
         probs=res["probs"],
         targets=res["targets"],
         ce=ce,
@@ -115,11 +115,11 @@ def evaluate_b():
         baseline_empirical_brier=be_brier,
         epoch=ckpt["epoch"],
     )
-    print(f"\n→ Saved: {OUTPUT_DIR / 'evaluation_b.npz'}")
+    print(f"\n→ Saved: {OUTPUT_DIR / 'evaluation_b_3season.npz'}")
 
 
 def evaluate_c():
-    ckpt_path = OUTPUT_DIR / "checkpoints" / "model_c_full_v2_best.pt"
+    ckpt_path = OUTPUT_DIR / "checkpoints" / "model_c_full_v3_best.pt"
     if not ckpt_path.exists():
         print(f"\n[SKIP] {ckpt_path} not found. Run after Model C training completes.")
         return
@@ -206,8 +206,8 @@ def evaluate_c():
         epoch=ckpt["epoch"],
     )
     save_kwargs.update(hl_results)
-    np.savez(OUTPUT_DIR / "evaluation_c.npz", **save_kwargs)
-    print(f"\n→ Saved: {OUTPUT_DIR / 'evaluation_c.npz'}")
+    np.savez(OUTPUT_DIR / "evaluation_c_3season.npz", **save_kwargs)
+    print(f"\n→ Saved: {OUTPUT_DIR / 'evaluation_c_3season.npz'}")
 
 
 def main():
