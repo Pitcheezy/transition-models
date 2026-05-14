@@ -2,7 +2,11 @@
 
 DQN/MDP 팀을 위한 전이확률 모델 사용 가이드.
 
-작성: 조현준 | 모델 버전: model_b_full_v1, model_c_full_v2 | 2026-05-08
+작성: 조현준 | 모델 버전: model_b_full_v2, model_c_full_v3 | 최종 업데이트: 2026-05-14
+
+> **🚀 v3 업데이트**: 3시즌 데이터(2022–2024)로 재학습 완료.
+> 자세한 내용은 [UPDATE_V3_3SEASON.md](UPDATE_V3_3SEASON.md) 참고.
+> 추천 체크포인트: `model_c_full_v3_best.pt`
 
 ---
 
