@@ -146,9 +146,57 @@ tests/          # pytest tests
 - [x] Model C v3 재학습: top-1 66.7% → 67.2% (+0.5pp), CE 0.880 → 0.868
 - [x] 3시즌 evaluation 저장: evaluation_b_3season.npz, evaluation_c_3season.npz
 
+### Phase 9: 발표 피드백 반영 — 두 그룹 비교 ✅ (2026-05-23)
+
+**두 비교 그룹**:
+- **Group 1 (10-class)**: Architecture 효과 — LR, LightGBM, MLP, RNN, Transformer
+- **Group 2 (4-class MDP 호환)**: LR, LightGBM, MLP (Model B)
+
+**스크립트**:
+- [x] scripts/13_train_logistic_regression.py (10-class LR)
+- [x] scripts/14_train_lightgbm.py (10-class LightGBM)
+- [x] scripts/15_train_mlp_10class.py (10-class MLP)
+- [x] scripts/16_train_rnn.py (10-class RNN/LSTM)
+- [x] scripts/17_evaluate_all_10cls.py (10-class 종합 평가)
+- [x] scripts/18_train_logistic_regression_4cls.py (4-class LR)
+- [x] scripts/19_train_lightgbm_4cls.py (4-class LightGBM)
+- [x] scripts/20_evaluate_all_4cls.py (4-class 종합 평가)
+
+**학습 결과**:
+- LR 10cls: Top-1 41.1% (collapse — Strike 다수 클래스만 예측)
+- LightGBM 10cls: Top-1 41.1% (collapse — best_iteration=1)
+- MLP 10cls: Top-1 41.1% (collapse — early stopping epoch 7)
+- RNN 10cls: Top-1 ~66.x% (학습 중, epoch ~21, val_acc 66.9%)
+- Transformer 10cls: Top-1 67.2% (기존 결과)
+- LR 4cls: Top-1 57.3%, CE 1.0224
+- LightGBM 4cls: Top-1 60.8%, CE 0.8729
+- MLP 4cls (Model B): Top-1 60.9%, CE 0.8723 (기존 결과)
+
+**핵심 발견**: 10-class에서 i.i.d. 모델(LR/LightGBM/MLP) 전체 collapse.
+class imbalance(Strike 41% vs Triple 0.09%)로 인해 class weight 없는 모델은
+majority class만 예측. Sequence 모델(RNN/Transformer)은 pitch context로 극복.
+
+**노트북**:
+- [x] notebooks/06_logistic_regression.ipynb
+- [x] notebooks/07_lightgbm.ipynb
+- [x] notebooks/08_mlp_10class.ipynb
+- [x] notebooks/09_rnn.ipynb
+- [x] notebooks/10_all_models_comparison.ipynb
+- [x] notebooks/11_mdp_dqn_compatibility.ipynb
+- [x] notebooks/00_project_journey.ipynb Phase 9 섹션 추가
+
+**평가 파일**:
+- outputs/evaluation_lr_10cls.npz, evaluation_lr_4cls.npz
+- outputs/evaluation_lgb_10cls.npz, evaluation_lgb_4cls.npz
+- outputs/evaluation_mlp_10cls.npz
+- outputs/evaluation_rnn_10cls.npz (RNN 완료 후 생성)
+- outputs/all_models_comparison_10cls.json
+- outputs/all_models_comparison_4cls.json
+
 ### Future Work
 - Class imbalance 처리: weighted loss / focal loss / weighted random sampler
 - Continuous regression target 실제 구현 (현재 placeholder 0)
 - Model A wrapper 구현 (실제 SmartPitch 통합)
 - Ablation study (sub-token mask, last-pitch residual 효과 분리)
-- 발표 슬라이드 자료 작성 (notebooks/05 활용)
+- Small Transformer (MDP 호환 가능성 탐색)
+- Transformer embedding → MDP state 통합 (Hybrid 시스템)

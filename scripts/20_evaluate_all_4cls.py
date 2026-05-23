@@ -1,0 +1,124 @@
+"""Phase 9: 4-class 모델 종합 평가 — MDP/DQN 호환 그룹
+
+각 모델의 evaluation_*_4cls.npz + evaluation_b_3season.npz 로드해 비교 표 출력.
+all_models_comparison_4cls.json으로 저장.
+
+모델별 파일이 없으면 graceful skip.
+"""
+
+import json
+import sys
+from pathlib import Path
+
+import numpy as np
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(PROJECT_ROOT))
+
+OUTPUT_DIR = PROJECT_ROOT / "outputs"
+
+CLASS_NAMES = ["Ball", "Strike", "Foul", "InPlay"]
+
+
+def load_npz_safe(path: Path) -> dict | None:
+    if not path.exists():
+        return None
+    data = np.load(path, allow_pickle=True)
+    return {k: data[k] for k in data.files}
+
+
+def scalar(v) -> float:
+    if hasattr(v, "item"):
+        return float(v.item())
+    return float(v)
+
+
+def build_result(data: dict, top1_key: str, top3_key: str, input_desc: str, arch: str, params: str) -> dict:
+    r = {
+        "top1": scalar(data[top1_key]),
+        "top3": scalar(data[top3_key]),
+        "ce": scalar(data["ce"]),
+        "input": input_desc,
+        "arch": arch,
+        "params": params,
+    }
+    if "train_time" in data:
+        r["train_time_min"] = scalar(data["train_time"]) / 60
+    per = data.get("per_class_accuracy")
+    if per is not None:
+        per_arr = np.array(per).flatten()
+        r["per_class_accuracy"] = {CLASS_NAMES[i]: float(per_arr[i]) for i in range(len(per_arr))}
+    return r
+
+
+def main():
+    print("=" * 70)
+    print("Phase 9: 4-class MDP/DQN Compatible Model Comparison")
+    print("=" * 70)
+
+    results: dict[str, dict] = {}
+
+    # 1. Logistic Regression (4-class)
+    data = load_npz_safe(OUTPUT_DIR / "evaluation_lr_4cls.npz")
+    if data:
+        results["Logistic Regression"] = build_result(
+            data, "top1", "top3", "Single pitch (77d)", "Linear", "~308"
+        )
+    else:
+        print("[SKIP] evaluation_lr_4cls.npz not found")
+
+    # 2. LightGBM (4-class)
+    data = load_npz_safe(OUTPUT_DIR / "evaluation_lgb_4cls.npz")
+    if data:
+        results["LightGBM"] = build_result(
+            data, "top1", "top3", "Single pitch (77d)", "Tree (boosting)", "~50K leaves"
+        )
+    else:
+        print("[SKIP] evaluation_lgb_4cls.npz not found")
+
+    # 3. MLP Model B (4-class) — 기존 3시즌 결과 재사용 (top_1/top_3 키)
+    data = load_npz_safe(OUTPUT_DIR / "evaluation_b_3season.npz")
+    if data:
+        results["MLP (Model B)"] = build_result(
+            data, "top_1", "top_3", "Single pitch (77d)", "MLP [128,128]", "~27K"
+        )
+    else:
+        print("[SKIP] evaluation_b_3season.npz not found")
+
+    if not results:
+        print("\nNo evaluation files found. Run training scripts first.")
+        return
+
+    # --- Summary table ---
+    print(f"\n{'Model':<22} {'Top-1':>8} {'Top-3':>8} {'CE':>8}  Input")
+    print("-" * 68)
+    for name, r in results.items():
+        print(
+            f"{name:<22} {r['top1'] * 100:>7.1f}%  {r['top3'] * 100:>7.1f}%  "
+            f"{r['ce']:>7.4f}  {r['input']}"
+        )
+    print("-" * 68)
+
+    # --- Per-class table ---
+    print(f"\n{'Model':<22}", end="")
+    for cls in CLASS_NAMES:
+        print(f"  {cls[:7]:>7}", end="")
+    print()
+    print("-" * (22 + 9 * len(CLASS_NAMES)))
+    for name, r in results.items():
+        pca = r.get("per_class_accuracy", {})
+        print(f"{name:<22}", end="")
+        for cls in CLASS_NAMES:
+            acc = pca.get(cls)
+            print(f"  {acc * 100:>6.1f}%" if acc is not None else "     ---", end="")
+        print()
+
+    # --- Save JSON ---
+    out_path = OUTPUT_DIR / "all_models_comparison_4cls.json"
+    with open(out_path, "w", encoding="utf-8") as f:
+        json.dump(results, f, indent=2, ensure_ascii=False)
+    print(f"\n✅ Saved: {out_path}")
+
+
+if __name__ == "__main__":
+    main()

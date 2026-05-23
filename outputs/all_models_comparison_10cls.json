@@ -1,0 +1,105 @@
+{
+  "Logistic Regression": {
+    "top1": 0.41119804978370667,
+    "top3": 0.8617486953735352,
+    "ce": 1.4612395763397217,
+    "input": "Single pitch (77d)",
+    "arch": "Linear",
+    "params": "~770",
+    "train_time_min": 0.2678283373514811,
+    "per_class_accuracy": {
+      "Ball": 1.697533483847969e-05,
+      "Strike": 0.9999725036776331,
+      "Single": 0.0,
+      "Double": 0.0,
+      "Triple": 0.0,
+      "HomeRun": 0.0,
+      "FieldOut": 0.0,
+      "Strikeout": 0.0,
+      "Walk": 0.0,
+      "HitByPitch": 0.0
+    }
+  },
+  "LightGBM": {
+    "top1": 0.4112037122249603,
+    "top3": 0.8617486953735352,
+    "ce": 1.4606988430023193,
+    "input": "Single pitch (77d)",
+    "arch": "Tree (boosting)",
+    "params": "~50K leaves",
+    "train_time_min": 0.11144611040751139,
+    "per_class_accuracy": {
+      "Ball": 0.0,
+      "Strike": 1.0,
+      "Single": 0.0,
+      "Double": 0.0,
+      "Triple": 0.0,
+      "HomeRun": 0.0,
+      "FieldOut": 0.0,
+      "Strikeout": 0.0,
+      "Walk": 0.0,
+      "HitByPitch": 0.0
+    }
+  },
+  "MLP (10-class)": {
+    "top1": 0.4112037122249603,
+    "top3": 0.8617486953735352,
+    "ce": 1.4608439207077026,
+    "input": "Single pitch (77d)",
+    "arch": "MLP [128,128]",
+    "params": "~27K",
+    "per_class_accuracy": {
+      "Ball": 0.0,
+      "Strike": 1.0,
+      "Single": 0.0,
+      "Double": 0.0,
+      "Triple": 0.0,
+      "HomeRun": 0.0,
+      "FieldOut": 0.0,
+      "Strikeout": 0.0,
+      "Walk": 0.0,
+      "HitByPitch": 0.0
+    }
+  },
+  "RNN (LSTM)": {
+    "top1": 0.668956458568573,
+    "top3": 0.948298454284668,
+    "ce": 0.8727662563323975,
+    "input": "Sequence 400×87",
+    "arch": "LSTM 2-layer",
+    "params": "~590K",
+    "train_time_min": 87.0986572265625,
+    "per_class_accuracy": {
+      "Ball": 0.8715420432758149,
+      "Strike": 0.827653997378768,
+      "Single": 0.0,
+      "Double": 0.0,
+      "Triple": 0.0,
+      "HomeRun": 0.0,
+      "FieldOut": 0.08745684695051784,
+      "Strikeout": 0.16627816627816627,
+      "Walk": 0.8122529644268774,
+      "HitByPitch": 0.109375
+    }
+  },
+  "Transformer (Model C)": {
+    "top1": 0.672029647037556,
+    "top3": 0.9474849731097754,
+    "ce": 0.8681501746177673,
+    "input": "Sequence 400×87",
+    "arch": "Transformer (12-layer)",
+    "params": "9.7M",
+    "per_class_accuracy": {
+      "Ball": 0.8764721993974254,
+      "Strike": 0.8218654434250765,
+      "Single": 0.0,
+      "Double": 0.0,
+      "Triple": 0.0,
+      "HomeRun": 0.0,
+      "FieldOut": 0.10663598005370158,
+      "Strikeout": 0.17327117327117328,
+      "Walk": 0.8557312252964426,
+      "HitByPitch": 0.171875
+    }
+  }
+}

@@ -1,0 +1,157 @@
+"""Phase 9: 5개 모델 종합 평가 — 10-class 통일 비교
+
+각 모델의 evaluation_*_10cls.npz 파일을 로드해 비교 표를 출력하고
+all_models_comparison_10cls.json으로 저장한다.
+
+모델별 npz가 없으면 graceful skip.
+"""
+
+import json
+import sys
+from pathlib import Path
+
+import numpy as np
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(PROJECT_ROOT))
+
+OUTPUT_DIR = PROJECT_ROOT / "outputs"
+
+CLASS_NAMES = ["Ball", "Strike", "Single", "Double", "Triple",
+               "HomeRun", "FieldOut", "Strikeout", "Walk", "HitByPitch"]
+
+
+def load_npz_safe(path: Path) -> dict | None:
+    if not path.exists():
+        return None
+    data = np.load(path, allow_pickle=True)
+    return {k: data[k] for k in data.files}
+
+
+def scalar(v) -> float:
+    """Safely extract scalar from numpy scalar or 0-d array."""
+    if hasattr(v, "item"):
+        return float(v.item())
+    return float(v)
+
+
+def build_result(data: dict, input_desc: str, arch: str, params: str) -> dict:
+    r = {
+        "top1": scalar(data["top1"]),
+        "top3": scalar(data["top3"]),
+        "ce": scalar(data["ce"]),
+        "input": input_desc,
+        "arch": arch,
+        "params": params,
+    }
+    if "train_time" in data:
+        r["train_time_min"] = scalar(data["train_time"]) / 60
+    per = data.get("per_class_accuracy")
+    if per is not None:
+        per_arr = np.array(per).flatten()
+        r["per_class_accuracy"] = {CLASS_NAMES[i]: float(per_arr[i]) for i in range(len(per_arr))}
+    return r
+
+
+def main():
+    print("=" * 70)
+    print("Phase 9: 5-Model Comparison (10-class unified)")
+    print("=" * 70)
+
+    results: dict[str, dict] = {}
+
+    # 1. Logistic Regression
+    data = load_npz_safe(OUTPUT_DIR / "evaluation_lr_10cls.npz")
+    if data:
+        results["Logistic Regression"] = build_result(
+            data, "Single pitch (77d)", "Linear", "~770"
+        )
+    else:
+        print("[SKIP] evaluation_lr_10cls.npz not found")
+
+    # 2. LightGBM
+    data = load_npz_safe(OUTPUT_DIR / "evaluation_lgb_10cls.npz")
+    if data:
+        results["LightGBM"] = build_result(
+            data, "Single pitch (77d)", "Tree (boosting)", "~50K leaves"
+        )
+    else:
+        print("[SKIP] evaluation_lgb_10cls.npz not found")
+
+    # 3. MLP 10-class
+    data = load_npz_safe(OUTPUT_DIR / "evaluation_mlp_10cls.npz")
+    if data:
+        results["MLP (10-class)"] = build_result(
+            data, "Single pitch (77d)", "MLP [128,128]", "~27K"
+        )
+    else:
+        print("[SKIP] evaluation_mlp_10cls.npz not found")
+
+    # 4. RNN
+    data = load_npz_safe(OUTPUT_DIR / "evaluation_rnn_10cls.npz")
+    if data:
+        results["RNN (LSTM)"] = build_result(
+            data, "Sequence 400×87", "LSTM 2-layer", "~590K"
+        )
+    else:
+        print("[SKIP] evaluation_rnn_10cls.npz not found")
+
+    # 5. Transformer — 기존 3시즌 결과 사용
+    data = load_npz_safe(OUTPUT_DIR / "evaluation_c_3season.npz")
+    if data:
+        # evaluation_c_3season.npz has different keys (top_1_pr, top_3_pr, ce_pr)
+        transformer_result = {
+            "top1": scalar(data["top_1_pr"]),
+            "top3": scalar(data["top_3_pr"]),
+            "ce": scalar(data["ce_pr"]),
+            "input": "Sequence 400×87",
+            "arch": "Transformer (12-layer)",
+            "params": "9.7M",
+        }
+        per = data.get("per_class_accuracy_pr")
+        if per is not None:
+            per_arr = np.array(per).flatten()
+            transformer_result["per_class_accuracy"] = {
+                CLASS_NAMES[i]: float(per_arr[i]) for i in range(len(per_arr))
+            }
+        results["Transformer (Model C)"] = transformer_result
+    else:
+        print("[SKIP] evaluation_c_3season.npz not found")
+
+    if not results:
+        print("\nNo evaluation files found. Run training scripts first.")
+        return
+
+    # --- Summary table ---
+    print(f"\n{'Model':<25} {'Top-1':>8} {'Top-3':>8} {'CE':>8}  Input")
+    print("-" * 75)
+    for name, r in results.items():
+        print(
+            f"{name:<25} {r['top1'] * 100:>7.1f}%  {r['top3'] * 100:>7.1f}%  "
+            f"{r['ce']:>7.4f}  {r['input']}"
+        )
+    print("-" * 75)
+
+    # --- Per-class table ---
+    print(f"\n{'Model':<25}", end="")
+    for cls in CLASS_NAMES:
+        print(f"  {cls[:7]:>7}", end="")
+    print()
+    print("-" * (25 + 9 * len(CLASS_NAMES)))
+    for name, r in results.items():
+        pca = r.get("per_class_accuracy", {})
+        print(f"{name:<25}", end="")
+        for cls in CLASS_NAMES:
+            acc = pca.get(cls)
+            print(f"  {acc * 100:>6.1f}%" if acc is not None else "     ---", end="")
+        print()
+
+    # --- Save JSON ---
+    out_path = OUTPUT_DIR / "all_models_comparison_10cls.json"
+    with open(out_path, "w", encoding="utf-8") as f:
+        json.dump(results, f, indent=2, ensure_ascii=False)
+    print(f"\n✅ Saved: {out_path}")
+
+
+if __name__ == "__main__":
+    main()
