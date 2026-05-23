@@ -1,0 +1,34 @@
+{
+  "schema_analysis": {
+    "n_rows": 2983621,
+    "n_cols": 99,
+    "seasons": "2022-2025",
+    "row_counts": {
+      "statcast_input": 2983621,
+      "after_embed_join": 2983621,
+      "final": 2983621,
+      "arsenal_fallback_rows": 45521,
+      "count_cluster_unmapped": 0,
+      "embed_miss": 2171
+    },
+    "new_features": {
+      "umap_5d": 5,
+      "count_cluster": 1,
+      "arsenal": 52
+    }
+  },
+  "compatibility": {
+    "model_b_missing": [],
+    "model_c_missing": [],
+    "feature_compatible": true,
+    "join_keys_present": true,
+    "extra_dims": 58,
+    "v1_seasons": "2022-2025",
+    "own_seasons": "2022-2024"
+  },
+  "scenarios": {
+    "recommended": "B",
+    "fallback": "C"
+  },
+  "parquet_stats": {}
+}
