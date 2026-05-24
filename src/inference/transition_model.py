@@ -2,13 +2,26 @@
 
 DQN/MDP 팀에서 쉽게 사용할 수 있는 high-level API.
 
-Example::
+Example (Model B — 77-dim, 4-class)::
+
+    from src.inference import TransitionModelB
+    model = TransitionModelB()
+    probs = model.predict(x)   # x: (77,) → (4,) [Ball, Strike, Foul, InPlay]
+
+Example (Model C — Transformer, 10-class)::
 
     from src.inference import TransitionModelC
-
-    model = TransitionModelC()          # 자동으로 best checkpoint 로드
+    model = TransitionModelC()
     result = model.predict(sequence)    # sequence: (400, 87) numpy array
     probs = result["pitch_result"]      # (10,) 확률 벡터, 합 = 1
+
+Example (TransitionModelMLP10 — MLP 135-dim, 10-class, focal loss)::
+
+    from src.inference import TransitionModelMLP10
+    model = TransitionModelMLP10()
+    probs = model.predict(x)   # x: (135,) → (10,)
+    # rl-agent에서 UMAP 미보유 시: x[77:82] = 0.0 (평균값으로 대체)
+    # arsenal 벡터: outputs/arsenal_by_pitcher_cluster.json 참조
 """
 
 from __future__ import annotations
@@ -175,3 +188,85 @@ class TransitionModelC:
             probs = probs[0]
         top_idx = np.argsort(probs)[::-1][:k]
         return [{"class": self.pr_classes[i], "probability": float(probs[i])} for i in top_idx]
+
+
+class TransitionModelMLP10:
+    """MLP 135-dim 10-class inference wrapper (focal loss checkpoint).
+
+    rl-agent 팀원을 위한 10-class 전이 모델.
+    Model B의 4-class 한계(InPlay 분해 필요)를 극복하여
+    Single/Double/Triple/HR/Walk/Strikeout 등 직접 예측.
+
+    Input:  135-dim feature vector  [Ball, Strike, Foul, InPlay 확장형]
+    Output: (10,) 확률 [Ball, Strike, Single, Double, Triple, HomeRun, FieldOut, Strikeout, Walk, HitByPitch]
+
+    Feature layout (135-dim):
+        [0:77]    Model B 77-dim features  (scaler.pkl 적용)
+        [77:82]   UMAP 5d                  (rl-agent에서 0.0으로 채울 것)
+        [82:83]   count_cluster_id          (scaler_new58.pkl 적용)
+        [83:115]  arsenal_func_00..31       (scaler_new58.pkl 적용)
+        [115:135] arsenal_moment_00..19     (scaler_new58.pkl 적용)
+
+    arsenal 벡터: outputs/arsenal_by_pitcher_cluster.json 참조.
+
+    Args:
+        checkpoint: Path to .pt checkpoint. Defaults to DEFAULT_CHECKPOINT.
+        device: torch device string. Defaults to auto-detection.
+    """
+
+    DEFAULT_CHECKPOINT = "outputs/checkpoints/model_b3_focal_135dim_10cls_best.pt"
+    INPUT_DIM = 135
+
+    def __init__(
+        self,
+        checkpoint: Union[str, Path, None] = None,
+        device: Union[str, None] = None,
+    ):
+        self.checkpoint_path = Path(checkpoint or self.DEFAULT_CHECKPOINT)
+        self.device = torch.device(device) if device else get_device()
+        self.classes = PITCH_RESULT_CLASSES_10
+        self.num_classes = 10
+
+        ckpt = torch.load(self.checkpoint_path, weights_only=False, map_location="cpu")
+        # dropout=0.2 로 저장된 체크포인트와 Sequential 인덱스를 맞춤
+        # (eval() 시 dropout은 비활성화되므로 추론 결과에 영향 없음)
+        self._model = OtrembaMLP(input_dim=self.INPUT_DIM, hidden_dim=128, n_classes=10, dropout=0.2)
+        self._model.load_state_dict(ckpt["model_state"])
+        self._model = self._model.to(self.device).eval()
+
+    def predict(self, x: np.ndarray) -> np.ndarray:
+        """Predict 10-class pitch outcome probabilities.
+
+        Args:
+            x: (135,) single pitch feature vector, or (N, 135) batch.
+               UMAP 차원 (indices 77-81)을 모를 경우 0.0으로 채울 것.
+
+        Returns:
+            (10,) probabilities for single input, or (N, 10) for batch.
+            Order: [Ball, Strike, Single, Double, Triple, HomeRun, FieldOut, Strikeout, Walk, HitByPitch]
+        """
+        single = x.ndim == 1
+        if single:
+            x = x[np.newaxis]
+
+        tensor = torch.from_numpy(x).float().to(self.device)
+        with torch.no_grad():
+            probs = F.softmax(self._model(tensor), dim=-1).cpu().numpy()
+
+        return probs[0] if single else probs
+
+    def predict_top_k(self, x: np.ndarray, k: int = 3) -> list[dict]:
+        """Return top-k predictions sorted by probability (descending).
+
+        Args:
+            x: (135,) single pitch feature vector.
+            k: number of top predictions.
+
+        Returns:
+            List of {"class": str, "probability": float} dicts.
+        """
+        probs = self.predict(x)
+        if probs.ndim == 2:
+            probs = probs[0]
+        top_idx = np.argsort(probs)[::-1][:k]
+        return [{"class": self.classes[i], "probability": float(probs[i])} for i in top_idx]

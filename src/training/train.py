@@ -28,6 +28,9 @@ class TrainingConfig:
     hl_weight: float = 0.7
     cont_weight: float = 0.3
 
+    use_focal: bool = False   # focal loss 사용 여부 (class imbalance 대응)
+    focal_gamma: float = 2.0  # focal loss gamma (2.0 권장)
+
     val_every: int = 1
     early_stopping_patience: int = 5
 
@@ -40,14 +43,29 @@ class TrainingConfig:
     wandb_tags: list = field(default_factory=list)
 
 
-def compute_loss_b(model, batch, device):
-    """Single-task CE loss for Model B. Batch is (x, y) tuple."""
+def focal_loss(logits: torch.Tensor, y: torch.Tensor, gamma: float = 2.0) -> torch.Tensor:
+    """Focal loss: down-weights easy examples to focus learning on rare classes.
+
+    FL(pt) = (1 - pt)^gamma * CE(logits, y)
+    gamma=0 → standard cross-entropy, gamma=2 → standard focal loss.
+    """
+    ce = F.cross_entropy(logits, y, reduction="none")
+    pt = torch.exp(-ce)  # softmax prob of the correct class
+    return ((1 - pt) ** gamma * ce).mean()
+
+
+def compute_loss_b(model, batch, device, config=None):
+    """Single-task loss for Model B. Batch is (x, y) tuple."""
     x, y = batch[0].to(device), batch[1].to(device)
     logits = model(x)
     valid = y >= 0
     if not valid.any():
         return torch.tensor(0.0, device=device, requires_grad=True), {}
-    loss = F.cross_entropy(logits[valid], y[valid])
+    use_focal = config is not None and getattr(config, "use_focal", False)
+    if use_focal:
+        loss = focal_loss(logits[valid], y[valid], gamma=config.focal_gamma)
+    else:
+        loss = F.cross_entropy(logits[valid], y[valid])
     acc = (logits.argmax(-1)[valid] == y[valid]).float().mean()
     return loss, {"loss": loss.item(), "accuracy": acc.item()}
 
@@ -62,19 +80,28 @@ def compute_loss_c(model, batch, device, config):
     pr_logits = output[:, :10]
     hl_logits = output[:, 10:19]
 
+    use_focal = getattr(config, "use_focal", False)
+    gamma = getattr(config, "focal_gamma", 2.0)
+
     valid_pr = target_pr >= 0
-    loss_pr = (
-        F.cross_entropy(pr_logits[valid_pr], target_pr[valid_pr])
-        if valid_pr.any()
-        else torch.tensor(0.0, device=device)
-    )
+    if valid_pr.any():
+        loss_pr = (
+            focal_loss(pr_logits[valid_pr], target_pr[valid_pr], gamma)
+            if use_focal
+            else F.cross_entropy(pr_logits[valid_pr], target_pr[valid_pr])
+        )
+    else:
+        loss_pr = torch.tensor(0.0, device=device)
 
     valid_hl = target_hl >= 0
-    loss_hl = (
-        F.cross_entropy(hl_logits[valid_hl], target_hl[valid_hl])
-        if valid_hl.any()
-        else torch.tensor(0.0, device=device)
-    )
+    if valid_hl.any():
+        loss_hl = (
+            focal_loss(hl_logits[valid_hl], target_hl[valid_hl], gamma)
+            if use_focal
+            else F.cross_entropy(hl_logits[valid_hl], target_hl[valid_hl])
+        )
+    else:
+        loss_hl = torch.tensor(0.0, device=device)
 
     loss_cont = torch.tensor(0.0, device=device)  # continuous target: 추후 구현
 
@@ -108,7 +135,7 @@ def train_one_epoch(model, loader, optimizer, scheduler, device, config, model_t
     for batch in loader:
         optimizer.zero_grad()
         if model_type == "B":
-            loss, m = compute_loss_b(model, batch, device)
+            loss, m = compute_loss_b(model, batch, device, config)
         else:
             loss, m = compute_loss_c(model, batch, device, config)
         loss.backward()
@@ -129,7 +156,7 @@ def evaluate(model, loader, device, config, model_type):
     with torch.no_grad():
         for batch in loader:
             if model_type == "B":
-                _, m = compute_loss_b(model, batch, device)
+                _, m = compute_loss_b(model, batch, device, config)
             else:
                 _, m = compute_loss_c(model, batch, device, config)
             for k, v in m.items():
