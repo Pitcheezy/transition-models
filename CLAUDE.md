@@ -166,7 +166,7 @@ tests/          # pytest tests
 - LR 10cls: Top-1 41.1% (collapse — Strike 다수 클래스만 예측)
 - LightGBM 10cls: Top-1 41.1% (collapse — best_iteration=1)
 - MLP 10cls: Top-1 41.1% (collapse — early stopping epoch 7)
-- RNN 10cls: Top-1 ~66.x% (학습 중, epoch ~21, val_acc 66.9%)
+- RNN 10cls: Top-1 66.9%, Top-3 94.8%, CE 0.8728 (완료)
 - Transformer 10cls: Top-1 67.2% (기존 결과)
 - LR 4cls: Top-1 57.3%, CE 1.0224
 - LightGBM 4cls: Top-1 60.8%, CE 0.8729
@@ -189,12 +189,64 @@ majority class만 예측. Sequence 모델(RNN/Transformer)은 pitch context로 �
 - outputs/evaluation_lr_10cls.npz, evaluation_lr_4cls.npz
 - outputs/evaluation_lgb_10cls.npz, evaluation_lgb_4cls.npz
 - outputs/evaluation_mlp_10cls.npz
-- outputs/evaluation_rnn_10cls.npz (RNN 완료 후 생성)
+- outputs/evaluation_rnn_10cls.npz
 - outputs/all_models_comparison_10cls.json
 - outputs/all_models_comparison_4cls.json
 
+### Phase 9.5: MDP 호환 10-class 돌파 — 135-dim Arsenal MLP ✅ (2026-05-25)
+
+**동기**: Sequence 모델(RNN/Transformer)은 10-class 67%+를 달성하지만 MDP state 비호환.
+77-dim MLP collapse의 원인이 "feature 부족"인지 "context 부족"인지 분리 실험.
+투수 arsenal 통계(pitcher repertoire embedding)를 정적 feature로 추가해 context를 근사.
+
+**실험 설계**:
+- 입력: 135-dim = 77-dim (Model B) + 5-dim UMAP (0-fill) + 53-dim arsenal
+  - [77:82]: UMAP 5d → inference 시 0.0 (학습 데이터 평균값, 투구 후 측정값 미보유)
+  - [82:83]: count_cluster_id (scaled)
+  - [83:115]: arsenal_func 32d (pitcher pitch type distribution + movement stats)
+  - [115:135]: arsenal_moment 20d (arsenal distribution moments)
+- 손실: Focal Loss (γ=2.0) — Walk/Strikeout/FieldOut 희소 클래스 보정
+- 아키텍처: MLP 135→128→128→10 (dropout=0.2), `TransitionModelMLP10`
+- 스크립트: scripts/24_train_mlp_135dim_10cls_focal.py, scripts/25_evaluate_mlp_135dim_10cls_focal.py
+
+**6-model 비교표** (10-class Top-1):
+
+| 모델 | Input | Top-1 | Top-3 | MDP 호환 | 비고 |
+|------|-------|-------|-------|---------|------|
+| LR | 77d i.i.d. | 41.1% | 86.2% | ✅ | collapse (Strike만 예측) |
+| LightGBM | 77d i.i.d. | 41.1% | 86.2% | ✅ | collapse |
+| MLP (77d) | 77d i.i.d. | 41.1% | 86.2% | ✅ | collapse |
+| **MLP 135d focal** | **135d i.i.d.** | **67.6%** | **—** | **✅** | **MDP 호환 최선** |
+| RNN (LSTM) | 400×87 seq | 66.9% | 94.8% | ❌ | sequence 의존 |
+| Transformer | 400×87 seq | 67.2% | 94.7% | ❌ | sequence 의존 |
+
+**핵심 발견**:
+1. **77-dim collapse ≠ feature 부족**: arsenal 52d 추가만으로 41.1% → 67.6% (+26.5pp).
+   Sequence 모델과 동등 수준 달성. 부족했던 것은 feature가 아니라 "투수 맥락(pitcher context)".
+2. **Arsenal이 sequence context를 근사**: 400-pitch history 없이도 pitcher repertoire 통계로
+   동일한 수준의 pitch outcome 분리 가능. MDP/DQN 호환성 포기 없이 달성.
+3. **Single~HR은 여전히 0%**: Focal Loss로 Walk(85.9%), Strikeout(19.5%), FieldOut(7.3%) 개선됐으나
+   단타~홈런은 0%. 원인: 타자 맥락(batter tendency)이 135-dim에도 없음.
+   타자 arsenal에 해당하는 feature 없는 한 구조적 한계.
+4. **4-class feature saturation 확인**: LR 57.3% → LightGBM 60.8% → MLP 60.9%.
+   77-dim 공간에서 비선형성의 이득은 미미. 61% 천장은 feature expressiveness 한계.
+
+**권장 MDP 모델**: `TransitionModelMLP10` (135-dim focal, 67.6%, MDP 호환)
+- 기존 Model B (4-class, 60.9%)를 rl-agent 통합 시 대체 권장
+- Walk/Strikeout/HitByPitch 직접 예측 가능 (BIP 테이블 의존 탈피 부분적 달성)
+- Single~HR은 BIP 테이블과 병행 권장 (InPlay 확률 × 고정 비율)
+
+**산출물**:
+- outputs/checkpoints/model_b3_focal_135dim_10cls_best.pt (epoch 25, val_focal_loss 0.4505)
+- outputs/evaluation_mlp_135dim_10cls_focal.npz (Top-1 67.6%, per-class accuracy)
+- outputs/arsenal_by_pitcher_cluster.json (4클러스터, pitcher 2,007명 매핑)
+- docs/handoff_to_rl_agent.md (rl-agent 통합 코드 골격 포함)
+- docs/rl_agent_teammate_guide.md (다운로드 및 통합 단계별 가이드)
+- src/inference/transition_model.py — `TransitionModelMLP10` 클래스 추가
+
 ### Future Work
-- Class imbalance 처리: weighted loss / focal loss / weighted random sampler
+- Single~HR 개선: 타자 arsenal feature (batter_func/moment) 추가 → "135+α dim"
+- Weighted sampler + γ=3.0 조합으로 Single~HR > 5% 목표
 - Continuous regression target 실제 구현 (현재 placeholder 0)
 - Model A wrapper 구현 (실제 SmartPitch 통합)
 - Ablation study (sub-token mask, last-pitch residual 효과 분리)

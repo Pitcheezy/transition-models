@@ -2,7 +2,7 @@
 
 **작성일**: 2026-05-25  
 **레포**: https://github.com/Pitcheezy/transition-models  
-**최신 커밋**: `7ea785d`
+**최신 커밋**: `0e82820`
 
 ---
 

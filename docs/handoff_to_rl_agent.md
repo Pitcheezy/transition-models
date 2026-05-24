@@ -9,8 +9,9 @@
 ## 요약
 
 transition-models에서 새로운 10-class 모델(`TransitionModelMLP10`)을 추가했습니다.  
-기존 Model B(4-class)보다 **Single/Double/Triple/HR/Walk/Strikeout을 직접 예측**하므로  
-rl-agent의 MDP-VI가 RE24 보상을 더 정확하게 계산할 수 있습니다.
+기존 Model B(4-class, 60.9%)보다 **Walk/Strikeout/HitByPitch를 직접 예측**하고 Top-1 67.6%를 달성하므로  
+rl-agent의 MDP-VI가 RE24 보상을 더 정확하게 계산할 수 있습니다.  
+※ Single/Double/Triple/HR는 현재 0% — InPlay 확률 × BIP 테이블 병행 권장 (주의사항 참조).
 
 ---
 
@@ -23,8 +24,8 @@ rl-agent의 MDP-VI가 RE24 보상을 더 정확하게 계산할 수 있습니다
 | `scaler.pkl` | `data/processed/` | 77-dim 정규화 scaler |
 | `scaler_new58.pkl` | `data/processed/` | 58-dim (arsenal 등) 정규화 scaler |
 
-> `model_b3_focal_135dim_10cls_best.pt`는 `scripts/24_train_mlp_135dim_10cls_focal.py`  
-> 실행 후 생성됩니다. 학습 완료 후 전달합니다.
+> `model_b3_focal_135dim_10cls_best.pt`는 Git LFS로 관리됩니다.  
+> `git pull` 또는 GitHub 직접 다운로드로 받으세요 (`docs/rl_agent_teammate_guide.md` 참조).
 
 ---
 
