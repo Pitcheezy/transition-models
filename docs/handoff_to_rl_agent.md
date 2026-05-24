@@ -84,7 +84,7 @@ model = TransitionModelMLP10(
 import json
 import numpy as np
 
-with open("path/to/transition-models/outputs/arsenal_by_pitcher_cluster.json") as f:
+with open("path/to/transition-models/outputs/arsenal_by_pitcher_cluster.json", encoding="utf-8") as f:
     arsenal_data = json.load(f)
 ```
 
@@ -92,34 +92,40 @@ with open("path/to/transition-models/outputs/arsenal_by_pitcher_cluster.json") a
 
 ```python
 def build_135dim_feature(
-    base_77: np.ndarray,          # Model B 77-dim 벡터 (기존 build_model_b_feature 결과)
-    pitcher_id: int,               # pitcher MLBAM ID (없으면 None)
+    base_77: np.ndarray,
     arsenal_data: dict,
+    pitcher_cluster: int | None = None,  # rl-agent state의 pitcher_cluster (0-3) — 우선
+    pitcher_id: int | None = None,        # pitcher MLBAM ID — pitcher_cluster 없을 때 사용
 ) -> np.ndarray:
+    """135-dim feature 벡터 생성.
+
+    rl-agent에서는 pitcher_cluster(0-3)를 직접 전달하는 것을 권장.
+    pitcher_id (MLBAM ID)만 있는 경우 JSON 내부 lookup으로 cluster를 조회.
+    둘 다 없으면 cluster "0" (fleet-mean) fallback.
+    """
     vec = np.zeros(135, dtype=np.float32)
     vec[:77] = base_77
     # [77:82] = 0.0  (UMAP unknown — 평균으로 대체)
 
-    # pitcher MLBAM ID로 클러스터 조회, 없으면 cluster "0" 사용
-    cluster_id = arsenal_data["pitcher_to_cluster"].get(str(pitcher_id), "0")
-    cluster = arsenal_data["clusters"][cluster_id]
+    if pitcher_cluster is not None:
+        cluster_id = str(pitcher_cluster)                                    # 0-3 직접 사용
+    elif pitcher_id is not None:
+        cluster_id = arsenal_data["pitcher_to_cluster"].get(str(pitcher_id), "0")  # MLBAM ID lookup
+    else:
+        cluster_id = "0"                                                     # fallback
 
-    vec[82] = cluster["count_cluster_id_scaled"]
-    vec[83:115] = cluster["arsenal_func_scaled"]
+    cluster = arsenal_data["clusters"][cluster_id]
+    vec[82]      = cluster["count_cluster_id_scaled"]
+    vec[83:115]  = cluster["arsenal_func_scaled"]
     vec[115:135] = cluster["arsenal_moment_scaled"]
     return vec
 ```
 
-> **pitcher_cluster vs pitcher_id**  
-> `handoff_v1.parquet`에는 `pitcher_cluster` 컬럼이 없습니다.  
-> 대신 `pitcher` (MLBAM player ID)별로 arsenal을 집계하고  
-> KMeans(k=4)로 클러스터링한 결과를 `pitcher_to_cluster`에 저장했습니다.  
-> rl-agent state의 `pitcher_cluster` (0-3)는 이 JSON의 cluster ID와 동일합니다.
-
 ### 4. 예측
 
 ```python
-feat = build_135dim_feature(base_77, pitcher_cluster=2, arsenal_data=arsenal_data)
+# rl-agent state에 pitcher_cluster (0-3)가 있는 경우 (권장)
+feat = build_135dim_feature(base_77, arsenal_data=arsenal_data, pitcher_cluster=2)
 probs = model.predict(feat)  # (10,) numpy array
 
 classes = ["Ball", "Strike", "Single", "Double", "Triple",
@@ -152,7 +158,7 @@ def _precompute_model_mlp10(self) -> None:
     """MLP 10-class 모델로 전체 (state, action) 쌍 사전 계산."""
     import json
     # arsenal JSON 로드
-    with open("path/to/arsenal_by_pitcher_cluster.json") as f:
+    with open("path/to/arsenal_by_pitcher_cluster.json", encoding="utf-8") as f:
         arsenal_data = json.load(f)
 
     features = []
@@ -161,7 +167,9 @@ def _precompute_model_mlp10(self) -> None:
         for a_idx in range(self.n_actions):
             action = self._idx_to_action(a_idx)
             base_77 = self.feature_builder.build_model_b_feature(*state, *action)
-            feat_135 = build_135dim_feature(base_77, state.pitcher_cluster, arsenal_data)
+            feat_135 = build_135dim_feature(
+                base_77, arsenal_data=arsenal_data, pitcher_cluster=state.pitcher_cluster
+            )
             features.append(feat_135)
 
     features = np.array(features, dtype=np.float32)
@@ -184,8 +192,8 @@ def _precompute_model_mlp10(self) -> None:
 | 항목 | 기존 Model B (4-class) | 새 TransitionModelMLP10 (10-class) |
 |------|----------------------|-----------------------------------|
 | InPlay 처리 | BIP 테이블로 추정 (고정값) | 직접 예측 (타자/투수 맥락 반영) |
-| Single 예측 | 고정 21.74% | 맥락별 변동 |
-| HR 예측 | 고정 4.39% | 맥락별 변동 |
+| Single 예측 | 고정 21.74% | **현재 0%** (주의사항 참조) |
+| HR 예측 | 고정 4.39% | **현재 0%** (주의사항 참조) |
 | Walk 예측 | Ball 4개 누적으로만 | 직접 예측 가능 |
 | Strikeout | Strike 3개 누적으로만 | 직접 예측 가능 |
 | MDP-VI 보상 정확도 | 추정 기반 | 실측 기반 |

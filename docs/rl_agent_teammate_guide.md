@@ -172,25 +172,33 @@ import json
 import numpy as np
 
 # Arsenal JSON 로드 (1회만)
-with open("arsenal_by_pitcher_cluster.json") as f:
+with open("arsenal_by_pitcher_cluster.json", encoding="utf-8") as f:
     arsenal = json.load(f)
 
-def build_135dim_feature(base_77, pitcher_id):
+def build_135dim_feature(base_77, arsenal_data, pitcher_cluster=None, pitcher_id=None):
     """base_77: build_model_b_feature() 결과 (77-dim numpy array)
-    pitcher_id: MLB MLBAM pitcher ID (int). 없으면 None.
+    pitcher_cluster: rl-agent state의 pitcher_cluster (0-3). 있으면 우선 사용.
+    pitcher_id: MLB MLBAM pitcher ID (int). pitcher_cluster 없을 때 사용.
     """
     vec = np.zeros(135, dtype=np.float32)
     vec[:77] = base_77
     # [77:82] = 0.0 (UMAP 미보유 → 학습 데이터 평균값으로 대체)
 
-    # pitcher MLBAM ID로 클러스터 조회 (없으면 cluster "0")
-    cluster_id = arsenal["pitcher_to_cluster"].get(str(pitcher_id), "0")
-    data = arsenal["clusters"][cluster_id]
+    if pitcher_cluster is not None:
+        cluster_id = str(pitcher_cluster)                                        # 0-3 직접 사용
+    elif pitcher_id is not None:
+        cluster_id = arsenal_data["pitcher_to_cluster"].get(str(pitcher_id), "0")  # MLBAM ID lookup
+    else:
+        cluster_id = "0"
 
+    data = arsenal_data["clusters"][cluster_id]
     vec[82]      = data["count_cluster_id_scaled"]
     vec[83:115]  = data["arsenal_func_scaled"]       # 32-dim
     vec[115:135] = data["arsenal_moment_scaled"]     # 20-dim
     return vec
+
+# 사용 예시 (rl-agent에서 pitcher_cluster가 있는 경우)
+# feat = build_135dim_feature(base_77, arsenal, pitcher_cluster=state.pitcher_cluster)
 ```
 
 ---
