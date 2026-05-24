@@ -154,35 +154,54 @@ _CKPT_C = "model_b3_focal_135dim_10cls_best.pt"  # ← 교체
 ### mdp_vi.py에 추가할 함수 골격
 
 ```python
-def _precompute_model_mlp10(self) -> None:
-    """MLP 10-class 모델로 전체 (state, action) 쌍 사전 계산."""
+def _precompute_model_mlp10(self, env: "PitchEnv", verbose: bool = True) -> None:
+    """Batch inference for TransitionModelMLP10 (135-dim, 10-class).
+
+    _precompute_model_b()와 동일한 구조.
+    build_model_b_feature → build_135dim_feature 로만 교체.
+    """
     import json
-    # arsenal JSON 로드
     with open("path/to/arsenal_by_pitcher_cluster.json", encoding="utf-8") as f:
         arsenal_data = json.load(f)
 
-    features = []
+    features: list[np.ndarray] = []
+    index_map: list[tuple[int, int]] = []
+
     for s_idx in range(self.n_states):
-        state = self._idx_to_state(s_idx)
+        balls, strikes, outs, runners, batter, pitcher = self._idx_to_state(s_idx)
+        if outs >= 3:
+            continue
         for a_idx in range(self.n_actions):
-            action = self._idx_to_action(a_idx)
-            base_77 = self.feature_builder.build_model_b_feature(*state, *action)
+            pitch_type, zone = env._actions[a_idx]           # env._actions 직접 접근
+            continuous = env.pitch_feature_means.get(pitch_type)
+            base_77 = build_model_b_feature(                 # self.feature_builder 없음
+                balls, strikes, outs, runners,
+                pitch_type, zone,
+                env.batter_hand, env.pitcher_hand,
+                env.inning, continuous,
+            )
             feat_135 = build_135dim_feature(
-                base_77, arsenal_data=arsenal_data, pitcher_cluster=state.pitcher_cluster
+                base_77, arsenal_data=arsenal_data,
+                pitcher_cluster=pitcher,                      # tuple[5], not state.pitcher_cluster
             )
             features.append(feat_135)
+            index_map.append((s_idx, a_idx))
 
-    features = np.array(features, dtype=np.float32)
-    # 청크 단위 batch inference
-    all_probs = []
-    chunk = 1024
-    for i in range(0, len(features), chunk):
-        probs = self.model.predict(features[i:i+chunk])  # (chunk, 10)
-        all_probs.append(probs)
-    all_probs = np.concatenate(all_probs)  # (n_states*n_actions, 10)
+    feat_matrix = np.array(features, dtype=np.float32)
+    all_probs = np.empty((len(features), 10), dtype=np.float64)
 
-    # _expand_transitions_10class() 그대로 사용 가능
-    self.transition_probs = all_probs.reshape(self.n_states, self.n_actions, 10)
+    for start in range(0, len(feat_matrix), self.batch_size):
+        end = min(start + self.batch_size, len(feat_matrix))
+        raw = env.model.predict(feat_matrix[start:end])      # env.model, not self.model
+        p = np.clip(np.array(raw, dtype=np.float64), 0.0, 1.0)
+        p /= p.sum(axis=1, keepdims=True)
+        all_probs[start:end] = p
+
+    for i, (s_idx, a_idx) in enumerate(index_map):
+        balls, strikes, outs, runners, batter, pitcher = self._idx_to_state(s_idx)
+        self._trans[(s_idx, a_idx)] = self._expand_transitions_10class(
+            balls, strikes, outs, runners, batter, pitcher, all_probs[i]
+        )
 ```
 
 ---
