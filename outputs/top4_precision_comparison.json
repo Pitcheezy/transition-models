@@ -1,0 +1,123 @@
+{
+  "LR": {
+    "overall": 0.9205457690742165,
+    "per_class": {
+      "Ball": 1.0,
+      "Strike": 1.0,
+      "Single": 0.0019400900201769363,
+      "Double": 0.0,
+      "Triple": 0.0,
+      "HomeRun": 0.0,
+      "FieldOut": 1.0,
+      "Strikeout": 0.9979825151311366,
+      "Walk": 0.0,
+      "HitByPitch": 0.0
+    },
+    "n_samples": 353776
+  },
+  "LightGBM": {
+    "overall": 0.6595105377413957,
+    "per_class": {
+      "Ball": 0.7055118912220544,
+      "Strike": 0.7037614968997896,
+      "Single": 0.4783485953748254,
+      "Double": 0.28549141965678626,
+      "Triple": 0.0,
+      "HomeRun": 0.20484040687478078,
+      "FieldOut": 0.6217828450473853,
+      "Strikeout": 0.5431837832644827,
+      "Walk": 0.38310876510626474,
+      "HitByPitch": 0.05708460754332314
+    },
+    "n_samples": 353776
+  },
+  "MLP (77d)": {
+    "overall": 0.9205938220795079,
+    "per_class": {
+      "Ball": 1.0,
+      "Strike": 1.0,
+      "Single": 0.0,
+      "Double": 0.0,
+      "Triple": 0.0,
+      "HomeRun": 0.0,
+      "FieldOut": 1.0,
+      "Strikeout": 1.0,
+      "Walk": 0.0,
+      "HitByPitch": 0.0
+    },
+    "n_samples": 353776
+  },
+  "MLP (135d)": {
+    "overall": 0.9798369652808998,
+    "per_class": {
+      "Ball": 0.9962141790031237,
+      "Strike": 1.0,
+      "Single": 0.8887595093929515,
+      "Double": 0.3739921976592978,
+      "Triple": 0.0,
+      "HomeRun": 0.18146718146718147,
+      "FieldOut": 0.9998315444963181,
+      "Strikeout": 0.9997117878758767,
+      "Walk": 0.9824975691068204,
+      "HitByPitch": 0.9531090723751274
+    },
+    "n_samples": 353667
+  },
+  "RNN": {
+    "overall": 0.9797080489899218,
+    "per_class": {
+      "Ball": 0.9938373048479868,
+      "Strike": 1.0,
+      "Single": 0.9010025062656641,
+      "Double": 0.36486486486486486,
+      "Triple": 0.0,
+      "HomeRun": 0.10404624277456648,
+      "FieldOut": 0.9996164173379364,
+      "Strikeout": 0.9992229992229992,
+      "Walk": 0.9802371541501976,
+      "HitByPitch": 0.921875
+    },
+    "n_samples": 22127
+  },
+  "Transformer": {
+    "overall": 0.979979210918787,
+    "per_class": {
+      "Ball": 0.9963023829087921,
+      "Strike": 1.0,
+      "Single": 0.8959899749373433,
+      "Double": 0.2747747747747748,
+      "Triple": 0.0,
+      "HomeRun": 0.15606936416184972,
+      "FieldOut": 0.9996164173379364,
+      "Strikeout": 0.9976689976689976,
+      "Walk": 0.9901185770750988,
+      "HitByPitch": 0.921875
+    },
+    "n_samples": 22127
+  },
+  "Random": {
+    "overall": 0.3993430871511917,
+    "per_class": {
+      "Ball": 0.40019351881715864,
+      "Strike": 0.3992466007671474,
+      "Single": 0.39702002172900824,
+      "Double": 0.38949557982319294,
+      "Triple": 0.4316109422492401,
+      "HomeRun": 0.40406874780778673,
+      "FieldOut": 0.40075527974214653,
+      "Strikeout": 0.39225670093188586,
+      "Walk": 0.4047784414502014,
+      "HitByPitch": 0.40672782874617736
+    },
+    "n_samples": 353776
+  },
+  "MIT Sloan 2025 (reported)": {
+    "overall": null,
+    "top1": 0.672,
+    "top3": 0.947,
+    "top4": null,
+    "note": "Top-4 미공개; Top-3=94.7% 공개값",
+    "n_samples": null,
+    "per_class": {}
+  }
+}
