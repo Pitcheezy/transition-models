@@ -226,7 +226,7 @@ def slide_04_finding(prs):
     add_image(slide, img_path, left=img_left, top=Inches(1.05), width=img_w)
 
     caption(slide,
-            "조건 통제 검증: Focal Loss γ=2.0 동일 적용 — arsenal feature 52d 추가만으로 +26.5pp",
+            "조건 통제 검증: Focal Loss γ=2.0 동일 적용 — context 58d 추가만으로 +26.5pp",
             y_offset=Inches(7.05))
 
 
@@ -315,9 +315,9 @@ def slide_07_contributions(prs):
         ("① MDP/RL 통합 확장",
          "Otremba: Value Iteration 1개  →  본인: 6개 RL 알고리즘 비교 (MDP-VI / Dyna-Q / DDQN / DQN / PPO / Random)"),
         ("② i.i.d.로 Sequence 모델 수준 달성",
-         "MIT Sloan: Transformer 필수 (MDP 비호환)  →  본인 MLP + arsenal 52d: 동등 성능 + MDP 호환"),
+         "MIT Sloan: Transformer 필수 (MDP 비호환)  →  본인 MLP + context 58d: 동등 성능 + MDP 호환"),
         ("③ Pitcher 맥락 통합  (양측 선행연구 미수행)",
-         "arsenal 52d 추가  →  +26.5pp 정량 검증  (77d 41.1% → 135d 67.6%)"),
+         "context 58d 추가  →  +26.5pp 정량 검증  (77d 41.1% → 135d 67.6%)"),
     ]
 
     BOX_COLORS  = [C_HEADER, RGBColor(0xFD, 0xF2, 0xE9), RGBColor(0xE9, 0xF7, 0xEF)]

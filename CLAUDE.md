@@ -224,7 +224,7 @@ tests/          # pytest tests
 | Transformer | 400×87 seq | 67.2% | 94.7% | ❌ | sequence 의존 |
 
 **핵심 발견**:
-1. **77-dim collapse ≠ feature 부족**: arsenal 52d 추가만으로 41.1% → 67.6% (+26.5pp).
+1. **77-dim collapse ≠ feature 부족**: context 58d 추가만으로 41.1% → 67.6% (+26.5pp).
    Sequence 모델과 동등 수준 달성. 부족했던 것은 feature가 아니라 "투수 맥락(pitcher context)".
 2. **Arsenal이 sequence context를 근사**: 400-pitch history 없이도 pitcher repertoire 통계로
    동일한 수준의 pitch outcome 분리 가능. MDP/DQN 호환성 포기 없이 달성.

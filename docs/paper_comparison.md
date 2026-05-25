@@ -131,7 +131,7 @@
 | **HBP 처리** | Ball에 통합 | 별도 class (9번) | 별도 class (9번) / Ball 통합 (4-class) |
 | **Sequence 활용** | **없음** (단일 투구) | **있음** (400 pitch) | 있음(RNN/Transformer) + 없음(i.i.d. MLP) |
 | **MDP/RL 통합** | **있음** (SmartPitch MDP 원본) | **없음** (1-step prediction) | **있음** (6 RL algorithms) |
-| **Pitcher context** | 기본 구종/구속만 (77d 내) | 없음 | **Arsenal 52d** (투수 레퍼토리 통계) |
+| **Pitcher context** | 기본 구종/구속만 (77d 내) | 없음 | **Context 58d** (투수 레퍼토리 통계) |
 | **Hit_by_pitch** | Ball로 통합 | 별도 class | 별도 class |
 | **학습 데이터** | MLB Statcast (추정 2019~2021) | 미공개 | **2022~2024 (3시즌)** |
 | **Train samples** | 미공개 | 미공개 | **1,494,188 pitches** |
@@ -157,12 +157,12 @@ Otremba는 InPlay를 단일 클래스로 처리하여 Single/Double/Triple/HR/Fi
 
 Otremba의 77-dim은 현재 투구의 물리량 + 게임 상황만 포함.  
 **투수 레퍼토리(arsenal) 정보가 없어** 같은 물리량이라도 투수마다 다른 결과 분포를 학습 불가.  
-본 프로젝트는 arsenal_func 32d + arsenal_moment 20d + count_cluster 1d = **53d를 추가**하여  
+본 프로젝트는 UMAP 5d + arsenal_func 32d + arsenal_moment 20d + count_cluster 1d = **58d를 추가**하여  
 "이 투수가 던지는 직구"와 "저 투수가 던지는 직구"를 구분.  
 → 10-class collapse 극복: **41.1% → 67.6% (+26.5pp)**  
   - Baseline: MLP 77d + Focal Loss (γ=2.0) → 41.1% (`outputs/evaluation_mlp_10cls.npz`)  
   - After:    MLP 135d + Focal Loss (γ=2.0) → 67.6% (`outputs/evaluation_mlp_135dim_10cls_focal.npz`)  
-  - 조건 통제: 두 모델 모두 동일한 Focal Loss 적용. 변수는 입력 feature 58d(=UMAP 5d zero-fill + 53d arsenal) 추가뿐.  
+  - 조건 통제: 두 모델 모두 동일한 Focal Loss 적용. 변수는 입력 feature 58d(=UMAP 5d + arsenal 53d) 추가뿐.  
   - **Focal Loss 단독 효과는 0pp** (77d + focal → 여전히 41.1%). 개선은 전적으로 arsenal feature에 기인.
 
 ### ③ 모델 실패 원인 과학적 분석 + Macro-F1 평가 도입
@@ -214,7 +214,7 @@ MIT Sloan: Transformer 10-class, 67.2%    (sequence 있음, MDP 없음)
 
 핵심 기여:
 1. MDP 호환 + 10-class + 67%+ 동시 달성 (기존 둘 중 하나만 가능)
-2. Pitcher arsenal feature(53d)가 400-pitch sequence context를 근사 가능함을 증명
+2. Pitcher context feature(58d)가 400-pitch sequence context를 근사 가능함을 증명
    → MLP 77d + focal: 41.1% (collapse) vs MLP 135d + focal: 67.6% (+26.5pp) [실측값]
 3. Macro-F1 도입으로 collapse 모델 실패를 정량화
    → Top-1 41.1% → Macro-F1 5.8% (항상 Strike 예측의 실체 폭로)
