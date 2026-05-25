@@ -27,7 +27,7 @@ OUTPUT_DIR = PROJECT_ROOT / "outputs"
 CKPT_DIR = OUTPUT_DIR / "checkpoints"
 
 CLASS_NAMES = [PitchResult10.NAMES[i] for i in range(PitchResult10.NUM_CLASSES)]
-RUN_NAME = "model_b_10cls_v1"
+RUN_NAME = "model_b_10cls_v2_focal"
 
 
 def load_point_dataset(split: str) -> PitchPointDataset:
@@ -81,8 +81,10 @@ def main():
         weight_decay=1e-5,
         early_stopping_patience=5,
         run_name=RUN_NAME,
+        use_focal=True,
+        focal_gamma=2.0,
         use_wandb=False,
-        wandb_tags=["phase9", "mlp", "10cls"],
+        wandb_tags=["phase9", "mlp", "10cls", "focal"],
     )
 
     print("\nStarting training (no wandb)...")
@@ -130,7 +132,7 @@ def main():
         model_name=np.array("MLP_10cls"),
         class_names=np.array(CLASS_NAMES),
     )
-    print(f"\n✅ {OUTPUT_DIR / 'evaluation_mlp_10cls.npz'}")
+    print(f"\n[OK] {OUTPUT_DIR / 'evaluation_mlp_10cls.npz'}")
 
 
 if __name__ == "__main__":

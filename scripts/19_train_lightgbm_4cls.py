@@ -60,6 +60,7 @@ def main():
         "objective": "multiclass",
         "num_class": PitchResult4.NUM_CLASSES,
         "metric": "multi_logloss",
+        "is_unbalance": True,
         "learning_rate": 0.05,
         "num_leaves": 63,
         "max_depth": 8,
@@ -77,7 +78,7 @@ def main():
     booster = lgb.train(
         params,
         train_data,
-        num_boost_round=500,
+        num_boost_round=1000,
         valid_sets=[train_data, val_data],
         valid_names=["train", "val"],
         callbacks=[
@@ -121,7 +122,7 @@ def main():
         model_name=np.array("LightGBM_4cls"),
         class_names=np.array(CLASS_NAMES),
     )
-    print(f"✅ {OUTPUT_DIR / 'evaluation_lgb_4cls.npz'}")
+    print(f"[OK] {OUTPUT_DIR / 'evaluation_lgb_4cls.npz'}")
 
 
 if __name__ == "__main__":

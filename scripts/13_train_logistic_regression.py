@@ -16,6 +16,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
 from sklearn.linear_model import LogisticRegression
+from sklearn.utils.class_weight import compute_class_weight
 
 from src.data.features import PitchResult10
 from src.evaluation.metrics import cross_entropy, per_class_metrics, top_k_accuracy
@@ -56,13 +57,21 @@ def main():
         idx = rng.choice(len(X_train), 500_000, replace=False)
         X_train, y_train = X_train[idx], y_train[idx]
 
+    # Sqrt-balanced weights: softer than inverse frequency to avoid over-correction
+    # with extreme 10-class imbalance (Triple 0.09% vs Strike 41%)
+    classes_arr = np.unique(y_train)
+    raw_w = compute_class_weight("balanced", classes=classes_arr, y=y_train)
+    sqrt_w = {int(c): float(w) for c, w in zip(classes_arr, np.sqrt(raw_w))}
+    print(f"\nClass weights (sqrt-balanced): "
+          + ", ".join(f"{PitchResult10.NAMES[k]}={v:.2f}" for k, v in sorted(sqrt_w.items())))
+
     print("\nTraining LogisticRegression...")
     t_start = time.time()
     model = LogisticRegression(
         solver="lbfgs",
-        max_iter=200,
+        max_iter=500,
         C=1.0,
-        n_jobs=-1,
+        class_weight=sqrt_w,
         random_state=42,
         verbose=1,
     )
@@ -109,7 +118,7 @@ def main():
         model_name=np.array("LogisticRegression"),
         class_names=np.array(CLASS_NAMES),
     )
-    print(f"✅ {OUTPUT_DIR / 'evaluation_lr_10cls.npz'}")
+    print(f"[OK] {OUTPUT_DIR / 'evaluation_lr_10cls.npz'}")
 
 
 if __name__ == "__main__":

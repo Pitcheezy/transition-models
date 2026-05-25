@@ -163,18 +163,21 @@ tests/          # pytest tests
 - [x] scripts/20_evaluate_all_4cls.py (4-class 종합 평가)
 
 **학습 결과**:
-- LR 10cls: Top-1 41.1% (collapse — Strike 다수 클래스만 예측)
-- LightGBM 10cls: Top-1 41.1% (collapse — best_iteration=1)
-- MLP 10cls: Top-1 41.1% (collapse — early stopping epoch 7)
+- LR 10cls: Top-1 41.1% (collapse — sqrt-balanced weight 적용해도 Strike만 예측, CE 1.614)
+- LightGBM 10cls: Top-1 13.0% (역방향 collapse — inverse-freq 과보정, 전 클래스 균등 예측, CE 2.087)
+- MLP 10cls: Top-1 41.1% (collapse — Focal Loss γ=2.0 적용해도 Strike만 예측, CE 1.470)
 - RNN 10cls: Top-1 66.9%, Top-3 94.8%, CE 0.8728 (완료)
 - Transformer 10cls: Top-1 67.2% (기존 결과)
-- LR 4cls: Top-1 57.3%, CE 1.0224
-- LightGBM 4cls: Top-1 60.8%, CE 0.8729
+- LR 4cls: Top-1 56.3%, CE 1.0516 (balanced weights)
+- LightGBM 4cls: Top-1 60.8%, CE 0.8719 (is_unbalance=True)
 - MLP 4cls (Model B): Top-1 60.9%, CE 0.8723 (기존 결과)
 
-**핵심 발견**: 10-class에서 i.i.d. 모델(LR/LightGBM/MLP) 전체 collapse.
-class imbalance(Strike 41% vs Triple 0.09%)로 인해 class weight 없는 모델은
-majority class만 예측. Sequence 모델(RNN/Transformer)은 pitch context로 극복.
+**핵심 발견**: 77-dim 단일 투구 feature는 10-class 분류에 필요한 discriminative signal 자체가 부족.
+- class balancing 미적용: Strike 다수 클래스 collapse (LR 41.1%, MLP 41.1%)
+- class balancing 강적용: 반대 방향 collapse, 전 클래스 균등 예측 (LGB 13%)
+- Focal Loss, sqrt-balanced 등 어떤 최적화 기법도 feature 부재를 보완 불가
+- Sequence 모델(RNN 66.9%, Transformer 67.2%): pitch context로 극복
+- Arsenal features(MLP 135d 67.6%): 투수 맥락 정적 feature로 극복 (Phase 9.5)
 
 **노트북**:
 - [x] notebooks/06_logistic_regression.ipynb
@@ -228,7 +231,7 @@ majority class만 예측. Sequence 모델(RNN/Transformer)은 pitch context로 �
 3. **Single~HR은 여전히 0%**: Focal Loss로 Walk(85.9%), Strikeout(19.5%), FieldOut(7.3%) 개선됐으나
    단타~홈런은 0%. 원인: 타자 맥락(batter tendency)이 135-dim에도 없음.
    타자 arsenal에 해당하는 feature 없는 한 구조적 한계.
-4. **4-class feature saturation 확인**: LR 57.3% → LightGBM 60.8% → MLP 60.9%.
+4. **4-class feature saturation 확인**: LR 56.3% → LightGBM 60.8% → MLP 60.9%.
    77-dim 공간에서 비선형성의 이득은 미미. 61% 천장은 feature expressiveness 한계.
 
 **권장 MDP 모델**: `TransitionModelMLP10` (135-dim focal, 67.6%, MDP 호환)

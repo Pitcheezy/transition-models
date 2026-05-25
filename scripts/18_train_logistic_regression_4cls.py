@@ -63,8 +63,9 @@ def main():
     t_start = time.time()
     model = LogisticRegression(
         solver="lbfgs",
-        max_iter=200,
+        max_iter=500,
         C=1.0,
+        class_weight="balanced",
         n_jobs=-1,
         random_state=42,
         verbose=1,
@@ -110,7 +111,7 @@ def main():
         model_name=np.array("LogisticRegression_4cls"),
         class_names=np.array(CLASS_NAMES),
     )
-    print(f"✅ {OUTPUT_DIR / 'evaluation_lr_4cls.npz'}")
+    print(f"[OK] {OUTPUT_DIR / 'evaluation_lr_4cls.npz'}")
 
 
 if __name__ == "__main__":

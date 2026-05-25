@@ -150,7 +150,7 @@ def main():
     out_path = OUTPUT_DIR / "all_models_comparison_10cls.json"
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump(results, f, indent=2, ensure_ascii=False)
-    print(f"\n✅ Saved: {out_path}")
+    print(f"\n[OK] Saved: {out_path}")
 
 
 if __name__ == "__main__":

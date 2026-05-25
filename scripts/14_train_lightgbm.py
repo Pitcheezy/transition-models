@@ -49,7 +49,12 @@ def main():
     print(f"  Train: {X_train.shape}  Val: {X_val.shape}  Test: {X_test.shape}")
 
     print("\nBuilding LightGBM datasets...")
-    train_data = lgb.Dataset(X_train, label=y_train)
+    # Inverse-frequency sample weights: rarer classes get higher weight
+    class_counts = np.bincount(y_train, minlength=PitchResult10.NUM_CLASSES).astype(float)
+    class_w = len(y_train) / (PitchResult10.NUM_CLASSES * class_counts)
+    sample_w = class_w[y_train]
+    print(f"  Class weights range: min={class_w.min():.2f} max={class_w.max():.2f}")
+    train_data = lgb.Dataset(X_train, label=y_train, weight=sample_w)
     val_data = lgb.Dataset(X_val, label=y_val, reference=train_data)
 
     params = {
@@ -59,7 +64,7 @@ def main():
         "learning_rate": 0.05,
         "num_leaves": 63,
         "max_depth": 8,
-        "min_data_in_leaf": 100,
+        "min_data_in_leaf": 20,
         "feature_fraction": 0.8,
         "bagging_fraction": 0.8,
         "bagging_freq": 5,
@@ -73,7 +78,7 @@ def main():
     booster = lgb.train(
         params,
         train_data,
-        num_boost_round=500,
+        num_boost_round=1000,
         valid_sets=[train_data, val_data],
         valid_names=["train", "val"],
         callbacks=[
@@ -118,7 +123,7 @@ def main():
         model_name=np.array("LightGBM"),
         class_names=np.array(CLASS_NAMES),
     )
-    print(f"✅ {OUTPUT_DIR / 'evaluation_lgb_10cls.npz'}")
+    print(f"[OK] {OUTPUT_DIR / 'evaluation_lgb_10cls.npz'}")
 
 
 if __name__ == "__main__":
