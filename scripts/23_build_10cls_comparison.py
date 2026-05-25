@@ -324,6 +324,71 @@ def slide_04_perclass(prs):
     caption(slide, "빨강 = 0% (해당 클래스 예측 불가)  |  초록 = 유의미한 예측 성능", font_size=13)
 
 
+def slide_04b_top4_table(prs):
+    """Per-class Top-4 Accuracy 테이블 (슬라이드 4와 동일 형식)."""
+    slide = blank_slide(prs)
+    add_slide_title(slide, "Per-class Top-4 Accuracy (%)")
+
+    rows = [
+        ("클래스", "비율", "LR", "LGB", "MLP 77d", "MLP 135d", "RNN", "Transformer"),
+        ("Ball", "33.3%", "100", "70.6", "100", "99.6", "99.4", "99.6"),
+        ("Strike", "41.1%", "100", "70.4", "100", "100", "100", "100"),
+        ("Single", "3.6%", "0.2", "47.8", "0", "88.9", "90.1", "89.6"),
+        ("Double", "1.1%", "0", "28.5", "0", "37.4", "36.5", "27.5"),
+        ("Triple", "0.09%", "0", "0", "0", "0", "0", "0"),
+        ("HomeRun", "0.8%", "0", "20.5", "0", "18.1", "10.4", "15.6"),
+        ("FieldOut", "11.8%", "100", "62.2", "100", "100", "100", "100"),
+        ("Strikeout", "5.9%", "99.8", "54.3", "100", "100", "99.9", "99.8"),
+        ("Walk", "2.0%", "0", "38.3", "0", "98.2", "98.0", "99.0"),
+        ("HBP", "0.3%", "0", "5.7", "0", "95.3", "92.2", "92.2"),
+        ("Overall", "—", "92.1", "66.0", "92.1", "98.0", "98.0", "98.0"),
+    ]
+
+    n_rows, n_cols = len(rows), 8
+    tbl_w = Inches(12.3)
+    tbl_h = Inches(5.8)
+    tbl_left = (SLIDE_W - tbl_w) / 2
+    tbl = slide.shapes.add_table(n_rows, n_cols, tbl_left, Inches(1.1), tbl_w, tbl_h).table
+
+    col_widths = [Inches(1.5), Inches(1.0), Inches(1.2), Inches(1.2), Inches(1.5), Inches(1.6), Inches(1.6), Inches(2.0)]
+    for ci, w in enumerate(col_widths):
+        tbl.columns[ci].width = w
+
+    for ri, row_vals in enumerate(rows):
+        for ci, val in enumerate(row_vals):
+            cell = tbl.cell(ri, ci)
+            is_hdr = ri == 0
+            is_overall = ri == n_rows - 1
+            if is_hdr:
+                cell_color(cell, C_BLUE)
+                set_cell_text(cell, val, font_size=14, bold=True, color=C_WHITE)
+            elif is_overall:
+                cell_color(cell, C_DARK)
+                set_cell_text(cell, val, font_size=14, bold=True, color=C_WHITE)
+            else:
+                is_zero = val == "0" or val == "0.0"
+                is_high = False
+                try:
+                    is_high = float(val) >= 80.0
+                except ValueError:
+                    pass
+                if is_zero:
+                    cell_color(cell, RGBColor(0xFD, 0xED, 0xED))
+                elif ci >= 5 and is_high:
+                    cell_color(cell, C_LGGREEN)
+                elif ci >= 5 and not is_zero and val != "—":
+                    cell_color(cell, C_LGORANGE)
+                else:
+                    cell_color(cell, C_WHITE)
+                set_cell_text(cell, val, font_size=14, bold=False, color=C_DARK)
+
+    caption(
+        slide,
+        "Top-4: 예측 확률 상위 4개 안에 정답 포함 비율  |  LR/MLP 77d Overall 92% = 고빈도 4클래스에 의한 착시",
+        font_size=13,
+    )
+
+
 def slide_05_top4(prs):
     """Top-4 Precision 히트맵 (기존 figure 재사용)."""
     slide = blank_slide(prs)
@@ -401,17 +466,19 @@ def main():
 
     print("10-Class Comparison PPT 생성 중...")
     slide_01_cover(prs)
-    print("  [1/6] 표지")
+    print("  [1/7] 표지")
     slide_02_overview(prs)
-    print("  [2/6] 6모델 비교표")
+    print("  [2/7] 6모델 비교표")
     slide_03_collapse(prs)
-    print("  [3/6] Collapse 분석")
+    print("  [3/7] Collapse 분석")
     slide_04_perclass(prs)
-    print("  [4/6] Per-class Accuracy")
+    print("  [4/7] Per-class Top-1 Accuracy")
+    slide_04b_top4_table(prs)
+    print("  [5/7] Per-class Top-4 Accuracy")
     slide_05_top4(prs)
-    print("  [5/6] Top-4 히트맵")
+    print("  [6/7] Top-4 히트맵")
     slide_06_takeaway(prs)
-    print("  [6/6] 핵심 발견")
+    print("  [7/7] 핵심 발견")
 
     prs.save(str(OUT_PATH))
     sz = OUT_PATH.stat().st_size
