@@ -154,9 +154,6 @@ def slide_01_cover(prs):
     slide = blank_slide(prs)
     add_rect_bg(slide, C_DARK)
 
-    # 오렌지 액센트 바
-    add_rect_bg(slide, C_ORANGE, left=0, top=Inches(3.0), width=SLIDE_W, height=Inches(0.06))
-
     add_textbox(slide, "SmartPitch v3",
                 left=MARGIN, top=Inches(1.2), width=SLIDE_W - MARGIN * 2, height=Inches(1.2),
                 font_size=44, bold=True, color=C_WHITE, align=PP_ALIGN.CENTER)
@@ -204,7 +201,7 @@ def slide_02_problem(prs):
                 left=SLIDE_W - Inches(4.9), top=Inches(2.0), width=Inches(4.3), height=Inches(2.8),
                 font_size=18, italic=True, color=C_BLUE, align=PP_ALIGN.CENTER)
 
-    caption(slide, "재고: 단기 예측 정확도 vs. 장기 전략 보상 최적화", y_offset=Inches(6.9))
+    caption(slide, "참고: 단기 예측 정확도 vs. 장기 전략 보상 최적화", y_offset=Inches(6.9))
 
 
 def slide_03_prior(prs):
@@ -221,7 +218,7 @@ def slide_03_prior(prs):
 def slide_04_finding(prs):
     """슬라이드 4: 핵심 발견 — fig1."""
     slide = blank_slide(prs)
-    add_slide_title(slide, "Pitcher Arsenal 정보가 Sequence 모델을 대체할 수 있다")
+    add_slide_title(slide, "핵심 발견: Arsenal feature의 효과")
 
     img_path = FIG_DIR / "fig1_arsenal_vs_sequence.png"
     img_w = SLIDE_W * 0.90
@@ -239,13 +236,19 @@ def slide_05_top4(prs):
     add_slide_title(slide, "MIT Sloan 2025와 같은 Top-4 평가 기준 적용")
 
     img_path = FIG_DIR / "fig4_top4_precision_heatmap.png"
-    img_w = SLIDE_W * 0.85
+    # fig4 pixel ratio = 4464:3026 = 1.4752
+    # 가용 높이: 7.5 - 1.1(제목) - 0.12(gap) - 0.42(캡션) - 0.1(하단) = 5.76" → 5.5" 사용
+    img_h = Inches(5.5)
+    img_w = Inches(5.5 * 1.4752)   # ≈ 8.11"
     img_left = (SLIDE_W - img_w) / 2
-    add_image(slide, img_path, left=img_left, top=Inches(1.05), width=img_w)
+    img_top  = Inches(1.1)
+    add_image(slide, img_path, left=img_left, top=img_top, width=img_w, height=img_h)
 
+    # 캡션을 이미지 바로 아래 별도 배치 (겹침 방지)
+    cap_top = img_top + img_h + Inches(0.12)
     caption(slide,
             "MLP 135d (i.i.d., MDP 호환) — Walk 98%, Single 89% → Transformer와 동등",
-            y_offset=Inches(7.05), color=C_ORANGE)
+            y_offset=cap_top, color=C_ORANGE, font_size=14)
 
 
 def slide_06_rl(prs):
@@ -341,15 +344,15 @@ def slide_08_closing(prs):
     slide = blank_slide(prs)
     add_slide_title(slide, "향후 작업")
 
-    future = [
-        "Phase 4.4: Model C 환경에서 RL 재실험 (Transformer 전이확률 활용)",
-        "Hit location 예측 추가 (MIT Sloan 참고 — 9-class hit location)",
-        "한국 야구(KBO) 적용 검증",
-    ]
-    for i, line in enumerate(future):
-        add_textbox(slide, f"• {line}",
-                    left=MARGIN, top=Inches(1.3 + i * 0.7), width=SLIDE_W - MARGIN * 2, height=Inches(0.6),
-                    font_size=20, color=C_DARK, align=PP_ALIGN.LEFT)
+    # 세 불릿을 하나의 텍스트박스로 통일 → 들여쓰기/폰트 완전 동일 보장
+    future_text = (
+        "• Phase 4.4: Model C 환경에서 RL 재실험 (Transformer 전이확률 활용)\n\n"
+        "• Hit location 예측 추가 (MIT Sloan 참고 — 9-class hit location)\n\n"
+        "• 한국 야구(KBO) 적용 검증"
+    )
+    add_textbox(slide, future_text,
+                left=MARGIN, top=Inches(1.3), width=SLIDE_W - MARGIN * 2, height=Inches(2.8),
+                font_size=20, color=C_DARK, align=PP_ALIGN.LEFT)
 
     # 감사 박스
     add_rect_bg(slide, C_DARK,
