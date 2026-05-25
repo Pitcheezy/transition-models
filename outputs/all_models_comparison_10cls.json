@@ -6,6 +6,7 @@
     "input": "Single pitch (77d)",
     "arch": "Linear",
     "params": "~770",
+    "macro_f1": 0.05871926363600625,
     "train_time_min": 0.5006741841634115,
     "per_class_accuracy": {
       "Ball": 0.0024444482167410753,
@@ -27,6 +28,7 @@
     "input": "Single pitch (77d)",
     "arch": "Tree (boosting)",
     "params": "~50K leaves",
+    "macro_f1": 0.07224528973009495,
     "train_time_min": 3.8054517110188804,
     "per_class_accuracy": {
       "Ball": 0.13331579215400025,
@@ -48,6 +50,7 @@
     "input": "Single pitch (77d)",
     "arch": "MLP [128,128]",
     "params": "~27K",
+    "macro_f1": 0.058278378711156244,
     "per_class_accuracy": {
       "Ball": 8.487667419239845e-06,
       "Strike": 0.9999862518388165,
@@ -68,6 +71,7 @@
     "input": "Sequence 400×87",
     "arch": "LSTM 2-layer",
     "params": "~590K",
+    "macro_f1": 0.28772597076390716,
     "train_time_min": 89.83515625,
     "per_class_accuracy": {
       "Ball": 0.8715420432758149,
@@ -89,6 +93,7 @@
     "input": "Sequence 400×87",
     "arch": "Transformer (12-layer)",
     "params": "9.7M",
+    "macro_f1": 0.3009390256377538,
     "per_class_accuracy": {
       "Ball": 0.8764721993974254,
       "Strike": 0.8218654434250765,

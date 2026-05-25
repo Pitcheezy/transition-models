@@ -11,6 +11,7 @@ import sys
 from pathlib import Path
 
 import numpy as np
+from sklearn.metrics import f1_score
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
@@ -35,7 +36,19 @@ def scalar(v) -> float:
     return float(v)
 
 
-def build_result(data: dict, input_desc: str, arch: str, params: str) -> dict:
+def macro_f1_from_npz(data: dict, probs_key: str = "probs", targets_key: str = "targets") -> float | None:
+    probs = data.get(probs_key)
+    targets = data.get(targets_key)
+    if probs is None or targets is None:
+        return None
+    y_pred = np.argmax(np.array(probs), axis=1)
+    y_true = np.array(targets).flatten().astype(int)
+    return float(f1_score(y_true, y_pred, average="macro",
+                          labels=list(range(len(CLASS_NAMES))), zero_division=0))
+
+
+def build_result(data: dict, input_desc: str, arch: str, params: str,
+                 probs_key: str = "probs", targets_key: str = "targets") -> dict:
     r = {
         "top1": scalar(data["top1"]),
         "top3": scalar(data["top3"]),
@@ -44,6 +57,9 @@ def build_result(data: dict, input_desc: str, arch: str, params: str) -> dict:
         "arch": arch,
         "params": params,
     }
+    mf1 = macro_f1_from_npz(data, probs_key, targets_key)
+    if mf1 is not None:
+        r["macro_f1"] = mf1
     if "train_time" in data:
         r["train_time_min"] = scalar(data["train_time"]) / 60
     per = data.get("per_class_accuracy")
@@ -108,6 +124,9 @@ def main():
             "arch": "Transformer (12-layer)",
             "params": "9.7M",
         }
+        mf1 = macro_f1_from_npz(data, probs_key="pr_probs", targets_key="pr_targets")
+        if mf1 is not None:
+            transformer_result["macro_f1"] = mf1
         per = data.get("per_class_accuracy_pr")
         if per is not None:
             per_arr = np.array(per).flatten()
@@ -123,14 +142,15 @@ def main():
         return
 
     # --- Summary table ---
-    print(f"\n{'Model':<25} {'Top-1':>8} {'Top-3':>8} {'CE':>8}  Input")
-    print("-" * 75)
+    print(f"\n{'Model':<25} {'Top-1':>8} {'Top-3':>8} {'CE':>8} {'Macro-F1':>10}  Input")
+    print("-" * 85)
     for name, r in results.items():
+        mf1_str = f"{r['macro_f1'] * 100:>8.1f}%" if "macro_f1" in r else "       ---"
         print(
             f"{name:<25} {r['top1'] * 100:>7.1f}%  {r['top3'] * 100:>7.1f}%  "
-            f"{r['ce']:>7.4f}  {r['input']}"
+            f"{r['ce']:>7.4f}  {mf1_str}  {r['input']}"
         )
-    print("-" * 75)
+    print("-" * 85)
 
     # --- Per-class table ---
     print(f"\n{'Model':<25}", end="")
