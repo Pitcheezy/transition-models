@@ -243,7 +243,7 @@ def slide_03_collapse(prs):
     boxes = [
         ("Class balancing 미적용", "LR/MLP → Strike만 예측 (41.1%)\nMacro-F1 = 0.06", C_RED),
         ("Class balancing 과적용", "LightGBM → 전 클래스 균등 (13.0%)\ninverse-freq 과보정", C_ORANGE),
-        ("해결: Context 추가", "Arsenal 52d → 41.1% → 67.6%\n+26.5pp 상승", C_GREEN),
+        ("해결: Context 추가", "Context 58d → 41.1% → 67.6%\n+26.5pp 상승", C_GREEN),
     ]
 
     for i, (title, desc, color) in enumerate(boxes):
@@ -421,7 +421,7 @@ def slide_06_takeaway(prs):
             C_RED,
         ),
         (
-            "② Arsenal 52d 추가로 +26.5pp 돌파",
+            "② Context 58d 추가로 +26.5pp 돌파",
             "투수 repertoire 통계를 정적 feature로 추가 →\n"
             "77d 41.1% → 135d 67.6% (Sequence 모델과 동등)",
             C_GREEN,
