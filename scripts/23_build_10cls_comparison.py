@@ -289,32 +289,18 @@ def slide_03_collapse(prs):
     )
 
 
-def slide_04_perclass(prs):
-    """Per-class Top-1 Accuracy 테이블."""
+def _perclass_table(prs, title, rows, tbl_h, is_context, has_overall=False, cap_text=""):
+    """공통 per-class 테이블 슬라이드 생성 헬퍼."""
     slide = blank_slide(prs)
-    add_slide_title(slide, "Per-class Top-1 Accuracy (%)")
+    add_slide_title(slide, title)
 
-    rows = [
-        ("클래스", "비율", "LR", "LGB", "MLP 77d", "MLP 135d", "RNN", "Transformer"),
-        ("Ball",      CLASS_PCTS["Ball"],       "0.2", "13.3", "0.0", "88.4", "87.2", "87.6"),
-        ("Strike",    CLASS_PCTS["Strike"],     "99.8", "13.1", "100", "83.7", "82.8", "82.2"),
-        ("Single",    CLASS_PCTS["Single"],     "0.0", "12.3", "0.0", "0.0", "0.0", "0.0"),
-        ("Double",    CLASS_PCTS["Double"],     "0.0", "10.7", "0.0", "0.0", "0.0", "0.0"),
-        ("Triple",    CLASS_PCTS["Triple"],     "0.0", "0.0", "0.0", "0.0", "0.0", "0.0"),
-        ("HomeRun",   CLASS_PCTS["HomeRun"],    "0.0", "7.9", "0.0", "0.0", "0.0", "0.0"),
-        ("FieldOut",  CLASS_PCTS["FieldOut"],   "0.0", "13.3", "0.0", "7.3", "8.7", "10.7"),
-        ("Strikeout", CLASS_PCTS["Strikeout"],  "0.0", "12.8", "0.0", "19.5", "16.6", "17.3"),
-        ("Walk",      CLASS_PCTS["Walk"],       "0.0", "12.1", "0.0", "85.9", "81.2", "85.6"),
-        ("HBP",       CLASS_PCTS["HitByPitch"], "0.0", "3.3", "0.0", "2.9", "10.9", "17.2"),
-    ]
-
-    n_rows, n_cols = len(rows), 8
-    tbl_w = Inches(12.3)
-    tbl_h = Inches(5.5)
+    n_rows = len(rows)
+    n_cols = len(rows[0])  # 5 cols: class, pct, model×3
+    tbl_w = Inches(11.4)
     tbl_left = (SLIDE_W - tbl_w) / 2
     tbl = slide.shapes.add_table(n_rows, n_cols, tbl_left, Inches(1.1), tbl_w, tbl_h).table
 
-    col_widths = [Inches(1.5), Inches(1.0), Inches(1.2), Inches(1.2), Inches(1.5), Inches(1.6), Inches(1.6), Inches(2.0)]
+    col_widths = [Inches(1.8), Inches(1.1), Inches(2.83), Inches(2.83), Inches(2.84)]
     for ci, w in enumerate(col_widths):
         tbl.columns[ci].width = w
 
@@ -322,85 +308,134 @@ def slide_04_perclass(prs):
         for ci, val in enumerate(row_vals):
             cell = tbl.cell(ri, ci)
             is_hdr = ri == 0
+            is_overall = has_overall and ri == n_rows - 1
+
             if is_hdr:
                 cell_color(cell, C_BLUE)
-                set_cell_text(cell, val, font_size=14, bold=True, color=C_WHITE)
-            else:
-                # 0 값은 빨간 배경
-                is_zero = val == "0" or val == "0.0"
-                if is_zero:
-                    cell_color(cell, RGBColor(0xFD, 0xED, 0xED))
-                elif ci >= 5 and val not in ("—", "0"):
-                    cell_color(cell, C_LGGREEN)
-                else:
-                    cell_color(cell, C_WHITE)
-                set_cell_text(cell, val, font_size=14, bold=False, color=C_DARK)
-
-    caption(slide, "빨강 = 0% (해당 클래스 예측 불가)  |  초록 = 유의미한 예측 성능", font_size=13)
-
-
-def slide_04b_top4_table(prs):
-    """Per-class Top-4 Accuracy 테이블 (슬라이드 4와 동일 형식)."""
-    slide = blank_slide(prs)
-    add_slide_title(slide, "Per-class Top-4 Accuracy (%)")
-
-    rows = [
-        ("클래스", "비율", "LR", "LGB", "MLP 77d", "MLP 135d", "RNN", "Transformer"),
-        ("Ball",      CLASS_PCTS["Ball"],       "100.0", "70.6", "100.0", "99.6", "99.4", "99.6"),
-        ("Strike",    CLASS_PCTS["Strike"],     "100.0", "70.4", "100.0", "100.0", "100.0", "100.0"),
-        ("Single",    CLASS_PCTS["Single"],     "0.2", "47.8", "0.0", "88.9", "90.1", "89.6"),
-        ("Double",    CLASS_PCTS["Double"],     "0.0", "28.5", "0.0", "37.4", "36.5", "27.5"),
-        ("Triple",    CLASS_PCTS["Triple"],     "0.0", "0.0", "0.0", "0.0", "0.0", "0.0"),
-        ("HomeRun",   CLASS_PCTS["HomeRun"],    "0.0", "20.5", "0.0", "18.1", "10.4", "15.6"),
-        ("FieldOut",  CLASS_PCTS["FieldOut"],   "100.0", "62.2", "100.0", "100.0", "100.0", "100.0"),
-        ("Strikeout", CLASS_PCTS["Strikeout"],  "99.8", "54.3", "100.0", "100.0", "99.9", "99.8"),
-        ("Walk",      CLASS_PCTS["Walk"],       "0.0", "38.3", "0.0", "98.2", "98.0", "99.0"),
-        ("HBP",       CLASS_PCTS["HitByPitch"], "0.0", "5.7", "0.0", "95.3", "92.2", "92.2"),
-        ("Overall",   "—",                      "92.1", "66.0", "92.1", "98.0", "98.0", "98.0"),
-    ]
-
-    n_rows, n_cols = len(rows), 8
-    tbl_w = Inches(12.3)
-    tbl_h = Inches(5.8)
-    tbl_left = (SLIDE_W - tbl_w) / 2
-    tbl = slide.shapes.add_table(n_rows, n_cols, tbl_left, Inches(1.1), tbl_w, tbl_h).table
-
-    col_widths = [Inches(1.5), Inches(1.0), Inches(1.2), Inches(1.2), Inches(1.5), Inches(1.6), Inches(1.6), Inches(2.0)]
-    for ci, w in enumerate(col_widths):
-        tbl.columns[ci].width = w
-
-    for ri, row_vals in enumerate(rows):
-        for ci, val in enumerate(row_vals):
-            cell = tbl.cell(ri, ci)
-            is_hdr = ri == 0
-            is_overall = ri == n_rows - 1
-            if is_hdr:
-                cell_color(cell, C_BLUE)
-                set_cell_text(cell, val, font_size=14, bold=True, color=C_WHITE)
+                set_cell_text(cell, val, font_size=15, bold=True, color=C_WHITE)
             elif is_overall:
                 cell_color(cell, C_DARK)
-                set_cell_text(cell, val, font_size=14, bold=True, color=C_WHITE)
+                set_cell_text(cell, val, font_size=15, bold=True, color=C_WHITE)
             else:
-                is_zero = val == "0" or val == "0.0"
-                is_high = False
+                is_zero = val in ("0", "0.0")
                 try:
-                    is_high = float(val) >= 80.0
+                    fv = float(val)
                 except ValueError:
-                    pass
+                    fv = None
                 if is_zero:
                     cell_color(cell, RGBColor(0xFD, 0xED, 0xED))
-                elif ci >= 5 and is_high:
+                elif is_context and ci >= 2 and fv is not None and fv >= 80.0:
                     cell_color(cell, C_LGGREEN)
-                elif ci >= 5 and not is_zero and val != "—":
+                elif is_context and ci >= 2 and fv is not None and fv > 0:
                     cell_color(cell, C_LGORANGE)
                 else:
                     cell_color(cell, C_WHITE)
-                set_cell_text(cell, val, font_size=14, bold=False, color=C_DARK)
+                set_cell_text(cell, val, font_size=15, bold=False, color=C_DARK)
 
-    caption(
-        slide,
-        "Top-4: 예측 확률 상위 4개 안에 정답 포함 비율  |  LR/MLP 77d Overall 92% = 고빈도 4클래스에 의한 착시",
-        font_size=13,
+    if cap_text:
+        caption(slide, cap_text, font_size=13)
+
+
+# ── 공통 데이터 ──────────────────────────────────────────────────────────────
+_TOP1_IID = [
+    ("클래스",    "비율",                    "LR",   "LGB",  "MLP 77d"),
+    ("Ball",      CLASS_PCTS["Ball"],        "0.2",  "13.3", "0.0"),
+    ("Strike",    CLASS_PCTS["Strike"],      "99.8", "13.1", "100.0"),
+    ("Single",    CLASS_PCTS["Single"],      "0.0",  "12.3", "0.0"),
+    ("Double",    CLASS_PCTS["Double"],      "0.0",  "10.7", "0.0"),
+    ("Triple",    CLASS_PCTS["Triple"],      "0.0",  "0.0",  "0.0"),
+    ("HomeRun",   CLASS_PCTS["HomeRun"],     "0.0",  "7.9",  "0.0"),
+    ("FieldOut",  CLASS_PCTS["FieldOut"],    "0.0",  "13.3", "0.0"),
+    ("Strikeout", CLASS_PCTS["Strikeout"],   "0.0",  "12.8", "0.0"),
+    ("Walk",      CLASS_PCTS["Walk"],        "0.0",  "12.1", "0.0"),
+    ("HBP",       CLASS_PCTS["HitByPitch"],  "0.0",  "3.3",  "0.0"),
+]
+_TOP1_CTX = [
+    ("클래스",    "비율",                    "MLP 135d", "RNN",  "Transformer"),
+    ("Ball",      CLASS_PCTS["Ball"],        "88.4",     "87.2", "87.6"),
+    ("Strike",    CLASS_PCTS["Strike"],      "83.7",     "82.8", "82.2"),
+    ("Single",    CLASS_PCTS["Single"],      "0.0",      "0.0",  "0.0"),
+    ("Double",    CLASS_PCTS["Double"],      "0.0",      "0.0",  "0.0"),
+    ("Triple",    CLASS_PCTS["Triple"],      "0.0",      "0.0",  "0.0"),
+    ("HomeRun",   CLASS_PCTS["HomeRun"],     "0.0",      "0.0",  "0.0"),
+    ("FieldOut",  CLASS_PCTS["FieldOut"],    "7.3",      "8.7",  "10.7"),
+    ("Strikeout", CLASS_PCTS["Strikeout"],   "19.5",     "16.6", "17.3"),
+    ("Walk",      CLASS_PCTS["Walk"],        "85.9",     "81.2", "85.6"),
+    ("HBP",       CLASS_PCTS["HitByPitch"],  "2.9",      "10.9", "17.2"),
+]
+_TOP4_IID = [
+    ("클래스",    "비율",                    "LR",    "LGB",  "MLP 77d"),
+    ("Ball",      CLASS_PCTS["Ball"],        "100.0", "70.6", "100.0"),
+    ("Strike",    CLASS_PCTS["Strike"],      "100.0", "70.4", "100.0"),
+    ("Single",    CLASS_PCTS["Single"],      "0.2",   "47.8", "0.0"),
+    ("Double",    CLASS_PCTS["Double"],      "0.0",   "28.5", "0.0"),
+    ("Triple",    CLASS_PCTS["Triple"],      "0.0",   "0.0",  "0.0"),
+    ("HomeRun",   CLASS_PCTS["HomeRun"],     "0.0",   "20.5", "0.0"),
+    ("FieldOut",  CLASS_PCTS["FieldOut"],    "100.0", "62.2", "100.0"),
+    ("Strikeout", CLASS_PCTS["Strikeout"],   "99.8",  "54.3", "100.0"),
+    ("Walk",      CLASS_PCTS["Walk"],        "0.0",   "38.3", "0.0"),
+    ("HBP",       CLASS_PCTS["HitByPitch"],  "0.0",   "5.7",  "0.0"),
+    ("Overall",   "—",                       "92.1",  "66.0", "92.1"),
+]
+_TOP4_CTX = [
+    ("클래스",    "비율",                    "MLP 135d", "RNN",  "Transformer"),
+    ("Ball",      CLASS_PCTS["Ball"],        "99.6",     "99.4", "99.6"),
+    ("Strike",    CLASS_PCTS["Strike"],      "100.0",    "100.0","100.0"),
+    ("Single",    CLASS_PCTS["Single"],      "88.9",     "90.1", "89.6"),
+    ("Double",    CLASS_PCTS["Double"],      "37.4",     "36.5", "27.5"),
+    ("Triple",    CLASS_PCTS["Triple"],      "0.0",      "0.0",  "0.0"),
+    ("HomeRun",   CLASS_PCTS["HomeRun"],     "18.1",     "10.4", "15.6"),
+    ("FieldOut",  CLASS_PCTS["FieldOut"],    "100.0",    "100.0","100.0"),
+    ("Strikeout", CLASS_PCTS["Strikeout"],   "100.0",    "99.9", "99.8"),
+    ("Walk",      CLASS_PCTS["Walk"],        "98.2",     "98.0", "99.0"),
+    ("HBP",       CLASS_PCTS["HitByPitch"],  "95.3",     "92.2", "92.2"),
+    ("Overall",   "—",                       "98.0",     "98.0", "98.0"),
+]
+
+
+def slide_04_perclass_iid(prs):
+    _perclass_table(
+        prs,
+        title="Per-class Top-1 Accuracy - i.i.d. 모델 (LR / LGB / MLP 77d)",
+        rows=_TOP1_IID,
+        tbl_h=Inches(5.5),
+        is_context=False,
+        cap_text="LR/MLP 77d: Strike만 예측  |  LGB: 전 클래스 균등하게 낮음  |  빨강 = 0%",
+    )
+
+
+def slide_04_perclass_ctx(prs):
+    _perclass_table(
+        prs,
+        title="Per-class Top-1 Accuracy — Context & Sequence 모델",
+        rows=_TOP1_CTX,
+        tbl_h=Inches(5.5),
+        is_context=True,
+        cap_text="빨강 = 0%  |  주황 = 유의미  |  초록 = 80%+  |  Triple/Double/HR은 세 모델 모두 0%",
+    )
+
+
+def slide_05_top4_iid(prs):
+    _perclass_table(
+        prs,
+        title="Per-class Top-4 Accuracy - i.i.d. 모델 (LR / LGB / MLP 77d)",
+        rows=_TOP4_IID,
+        tbl_h=Inches(5.8),
+        is_context=False,
+        has_overall=True,
+        cap_text="LR/MLP 77d Overall 92% = Ball·Strike·FieldOut·Strikeout 4클래스 착시  |  LGB Overall 66%",
+    )
+
+
+def slide_05_top4_ctx(prs):
+    _perclass_table(
+        prs,
+        title="Per-class Top-4 Accuracy — Context & Sequence 모델",
+        rows=_TOP4_CTX,
+        tbl_h=Inches(5.8),
+        is_context=True,
+        has_overall=True,
+        cap_text="MLP 135d: Walk 98.2%, Single 88.9%, HBP 95.3%  →  Transformer와 Top-4 동등 (98.0%)",
     )
 
 
@@ -481,19 +516,23 @@ def main():
 
     print("10-Class Comparison PPT 생성 중...")
     slide_01_cover(prs)
-    print("  [1/7] 표지")
+    print("  [1/9] 표지")
     slide_02_overview(prs)
-    print("  [2/7] 6모델 비교표")
+    print("  [2/9] 6모델 비교표")
     slide_03_collapse(prs)
-    print("  [3/7] Collapse 분석")
-    slide_04_perclass(prs)
-    print("  [4/7] Per-class Top-1 Accuracy")
-    slide_04b_top4_table(prs)
-    print("  [5/7] Per-class Top-4 Accuracy")
+    print("  [3/9] Collapse 분석")
+    slide_04_perclass_iid(prs)
+    print("  [4/9] Per-class Top-1 - i.i.d.")
+    slide_04_perclass_ctx(prs)
+    print("  [5/9] Per-class Top-1 - Context/Seq")
+    slide_05_top4_iid(prs)
+    print("  [6/9] Per-class Top-4 - i.i.d.")
+    slide_05_top4_ctx(prs)
+    print("  [7/9] Per-class Top-4 - Context/Seq")
     slide_05_top4(prs)
-    print("  [6/7] Top-4 히트맵")
+    print("  [8/9] Top-4 히트맵")
     slide_06_takeaway(prs)
-    print("  [7/7] 핵심 발견")
+    print("  [9/9] 핵심 발견")
 
     import sys
     out = OUT_PATH_V2 if "--v2" in sys.argv else OUT_PATH
