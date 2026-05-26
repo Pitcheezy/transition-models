@@ -15,7 +15,22 @@ REPO = Path(__file__).resolve().parent.parent
 FIG_DIR = REPO / "outputs" / "figures"
 OUT_DIR = REPO / "outputs" / "presentations"
 OUT_DIR.mkdir(parents=True, exist_ok=True)
-OUT_PATH = OUT_DIR / "10class_comparison.pptx"
+OUT_PATH    = OUT_DIR / "10class_comparison.pptx"
+OUT_PATH_V2 = OUT_DIR / "10class_comparison_v2.pptx"
+
+# 실측 class 비율 (evaluation_mlp_135dim_10cls_focal.npz 기준, 2dp 통일)
+CLASS_PCTS = {
+    "Ball":       "33.31%",
+    "Strike":     "41.11%",
+    "Single":      "3.64%",
+    "Double":      "1.09%",
+    "Triple":      "0.09%",
+    "HomeRun":     "0.81%",
+    "FieldOut":   "11.75%",
+    "Strikeout":   "5.89%",
+    "Walk":        "2.04%",
+    "HitByPitch":  "0.28%",
+}
 
 # ── 색상 팔레트 ─────────────────────────────────────────────────────────────
 C_ORANGE = RGBColor(0xE6, 0x7E, 0x22)
@@ -225,16 +240,16 @@ def slide_03_collapse(prs):
     add_textbox(
         slide,
         "10개 클래스 분포 (불균형):\n"
-        "  Strike  41.1%  ← 다수 클래스\n"
-        "  Ball    33.4%\n"
-        "  FieldOut 11.9%\n"
-        "  Strikeout 5.9%\n"
-        "  Single   3.7%\n"
-        "  Walk     2.2%\n"
-        "  Double   1.1%\n"
-        "  HomeRun  0.8%\n"
-        "  HBP      0.3%\n"
-        "  Triple   0.1%",
+        "  Strike    41.11%  ← 다수 클래스\n"
+        "  Ball      33.31%\n"
+        "  FieldOut  11.75%\n"
+        "  Strikeout  5.89%\n"
+        "  Single     3.64%\n"
+        "  Walk       2.04%\n"
+        "  Double     1.09%\n"
+        "  HomeRun    0.81%\n"
+        "  HBP        0.28%\n"
+        "  Triple     0.09%",
         left=MARGIN, top=Inches(1.2), width=Inches(5.0), height=Inches(5.5),
         font_size=17,
     )
@@ -281,16 +296,16 @@ def slide_04_perclass(prs):
 
     rows = [
         ("클래스", "비율", "LR", "LGB", "MLP 77d", "MLP 135d", "RNN", "Transformer"),
-        ("Ball", "33.3%", "0.0", "13.3", "0.0", "88.4", "87.2", "87.6"),
-        ("Strike", "41.1%", "99.8", "13.1", "100", "83.7", "82.8", "82.2"),
-        ("Single", "3.6%", "0", "12.3", "0", "0", "0", "0"),
-        ("Double", "1.1%", "0", "10.7", "0", "0", "0", "0"),
-        ("Triple", "0.09%", "0", "0", "0", "0", "0", "0"),
-        ("HomeRun", "0.8%", "0", "7.9", "0", "0", "0", "0"),
-        ("FieldOut", "11.8%", "0", "13.3", "0", "7.3", "8.7", "10.7"),
-        ("Strikeout", "5.9%", "0", "12.8", "0", "19.5", "16.6", "17.3"),
-        ("Walk", "2.0%", "0", "12.1", "0", "85.9", "81.2", "85.6"),
-        ("HBP", "0.3%", "0", "3.3", "0", "2.9", "10.9", "17.2"),
+        ("Ball",      CLASS_PCTS["Ball"],       "0.2", "13.3", "0.0", "88.4", "87.2", "87.6"),
+        ("Strike",    CLASS_PCTS["Strike"],     "99.8", "13.1", "100", "83.7", "82.8", "82.2"),
+        ("Single",    CLASS_PCTS["Single"],     "0.0", "12.3", "0.0", "0.0", "0.0", "0.0"),
+        ("Double",    CLASS_PCTS["Double"],     "0.0", "10.7", "0.0", "0.0", "0.0", "0.0"),
+        ("Triple",    CLASS_PCTS["Triple"],     "0.0", "0.0", "0.0", "0.0", "0.0", "0.0"),
+        ("HomeRun",   CLASS_PCTS["HomeRun"],    "0.0", "7.9", "0.0", "0.0", "0.0", "0.0"),
+        ("FieldOut",  CLASS_PCTS["FieldOut"],   "0.0", "13.3", "0.0", "7.3", "8.7", "10.7"),
+        ("Strikeout", CLASS_PCTS["Strikeout"],  "0.0", "12.8", "0.0", "19.5", "16.6", "17.3"),
+        ("Walk",      CLASS_PCTS["Walk"],       "0.0", "12.1", "0.0", "85.9", "81.2", "85.6"),
+        ("HBP",       CLASS_PCTS["HitByPitch"], "0.0", "3.3", "0.0", "2.9", "10.9", "17.2"),
     ]
 
     n_rows, n_cols = len(rows), 8
@@ -331,17 +346,17 @@ def slide_04b_top4_table(prs):
 
     rows = [
         ("클래스", "비율", "LR", "LGB", "MLP 77d", "MLP 135d", "RNN", "Transformer"),
-        ("Ball", "33.3%", "100", "70.6", "100", "99.6", "99.4", "99.6"),
-        ("Strike", "41.1%", "100", "70.4", "100", "100", "100", "100"),
-        ("Single", "3.6%", "0.2", "47.8", "0", "88.9", "90.1", "89.6"),
-        ("Double", "1.1%", "0", "28.5", "0", "37.4", "36.5", "27.5"),
-        ("Triple", "0.09%", "0", "0", "0", "0", "0", "0"),
-        ("HomeRun", "0.8%", "0", "20.5", "0", "18.1", "10.4", "15.6"),
-        ("FieldOut", "11.8%", "100", "62.2", "100", "100", "100", "100"),
-        ("Strikeout", "5.9%", "99.8", "54.3", "100", "100", "99.9", "99.8"),
-        ("Walk", "2.0%", "0", "38.3", "0", "98.2", "98.0", "99.0"),
-        ("HBP", "0.3%", "0", "5.7", "0", "95.3", "92.2", "92.2"),
-        ("Overall", "—", "92.05", "65.95", "92.06", "97.98", "97.97", "98.00"),
+        ("Ball",      CLASS_PCTS["Ball"],       "100.0", "70.6", "100.0", "99.6", "99.4", "99.6"),
+        ("Strike",    CLASS_PCTS["Strike"],     "100.0", "70.4", "100.0", "100.0", "100.0", "100.0"),
+        ("Single",    CLASS_PCTS["Single"],     "0.2", "47.8", "0.0", "88.9", "90.1", "89.6"),
+        ("Double",    CLASS_PCTS["Double"],     "0.0", "28.5", "0.0", "37.4", "36.5", "27.5"),
+        ("Triple",    CLASS_PCTS["Triple"],     "0.0", "0.0", "0.0", "0.0", "0.0", "0.0"),
+        ("HomeRun",   CLASS_PCTS["HomeRun"],    "0.0", "20.5", "0.0", "18.1", "10.4", "15.6"),
+        ("FieldOut",  CLASS_PCTS["FieldOut"],   "100.0", "62.2", "100.0", "100.0", "100.0", "100.0"),
+        ("Strikeout", CLASS_PCTS["Strikeout"],  "99.8", "54.3", "100.0", "100.0", "99.9", "99.8"),
+        ("Walk",      CLASS_PCTS["Walk"],       "0.0", "38.3", "0.0", "98.2", "98.0", "99.0"),
+        ("HBP",       CLASS_PCTS["HitByPitch"], "0.0", "5.7", "0.0", "95.3", "92.2", "92.2"),
+        ("Overall",   "—",                      "92.1", "66.0", "92.1", "98.0", "98.0", "98.0"),
     ]
 
     n_rows, n_cols = len(rows), 8
@@ -480,9 +495,11 @@ def main():
     slide_06_takeaway(prs)
     print("  [7/7] 핵심 발견")
 
-    prs.save(str(OUT_PATH))
-    sz = OUT_PATH.stat().st_size
-    print(f"\n[OK] 저장 완료: {OUT_PATH}")
+    import sys
+    out = OUT_PATH_V2 if "--v2" in sys.argv else OUT_PATH
+    prs.save(str(out))
+    sz = out.stat().st_size
+    print(f"\n[OK] 저장 완료: {out}")
     print(f"     슬라이드: {len(prs.slides)}장")
     print(f"     크기: {sz // 1024:,} KB")
 
