@@ -270,3 +270,54 @@ class TransitionModelMLP10:
             probs = probs[0]
         top_idx = np.argsort(probs)[::-1][:k]
         return [{"class": self.classes[i], "probability": float(probs[i])} for i in top_idx]
+
+
+def build_135dim_feature(
+    base_77: np.ndarray,
+    arsenal_data: dict,
+    pitcher_cluster: "int | None" = None,
+    pitcher_id: "int | None" = None,
+) -> np.ndarray:
+    """Build 135-dim feature vector for TransitionModelMLP10.
+
+    Combines the 77-dim Model B feature with 58-dim arsenal context.
+    Designed for rl-agent batch inference.
+
+    Args:
+        base_77: (77,) Model B feature vector (already scaler.pkl normalized).
+        arsenal_data: Parsed ``arsenal_by_pitcher_cluster.json`` dict.
+        pitcher_cluster: Pitcher cluster ID (0-3). Takes priority over pitcher_id.
+        pitcher_id: MLB MLBAM pitcher ID (int). Used when pitcher_cluster is None.
+                    Falls back to cluster "0" if ID not in JSON.
+
+    Returns:
+        (135,) float32 feature vector.
+        Indices [77:82] (UMAP 5d) are set to 0.0 — the model was trained to
+        handle this as "average pitch mechanics" at inference time.
+
+    Example::
+
+        import json
+        with open("outputs/arsenal_by_pitcher_cluster.json") as f:
+            arsenal = json.load(f)
+
+        model = TransitionModelMLP10()
+        feat = build_135dim_feature(base_77, arsenal, pitcher_cluster=2)
+        probs = model.predict(feat)  # (10,)
+    """
+    vec = np.zeros(135, dtype=np.float32)
+    vec[:77] = base_77
+    # [77:82] = 0.0  — UMAP unknown at inference, treated as training-data mean
+
+    if pitcher_cluster is not None:
+        cluster_id = str(pitcher_cluster)
+    elif pitcher_id is not None:
+        cluster_id = arsenal_data["pitcher_to_cluster"].get(str(pitcher_id), "0")
+    else:
+        cluster_id = "0"
+
+    cluster = arsenal_data["clusters"][cluster_id]
+    vec[82] = cluster["count_cluster_id_scaled"]
+    vec[83:115] = cluster["arsenal_func_scaled"]    # 32-dim
+    vec[115:135] = cluster["arsenal_moment_scaled"]  # 20-dim
+    return vec

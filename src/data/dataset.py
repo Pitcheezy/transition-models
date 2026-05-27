@@ -70,6 +70,64 @@ class PitchSequenceDataset(Dataset):
         }
 
 
+class PitchSequenceDatasetHybrid(Dataset):
+    """PitchSequenceDataset + static 58-dim context at sequence endpoint.
+
+    static_58 은 vectors_c 와 동일한 행 정렬 (sort_by_batter_and_time).
+    30_align_static58_for_sequence.py 로 생성된 (N_c, 58) 배열을 사용.
+
+    drop_missing_static=True : static_valid[end-1]=False 인 시퀀스 제외 (성능 측정용)
+    drop_missing_static=False: static=0 으로 유지 (G5 fair compare용, N 동일)
+    """
+
+    def __init__(
+        self,
+        vectors: np.ndarray,
+        static_58: np.ndarray,
+        static_valid: np.ndarray,
+        labels_10: np.ndarray,
+        hit_locs: np.ndarray,
+        valid_indices: list[tuple[int, int]],
+        seq_length: int = 400,
+        drop_missing_static: bool = True,
+    ):
+        self.vectors = vectors
+        self.static_58 = static_58
+        self.static_valid = static_valid
+        self.labels_10 = labels_10
+        self.hit_locs = hit_locs
+        self.seq_length = seq_length
+
+        if drop_missing_static:
+            kept = [
+                (bid, start)
+                for bid, start in valid_indices
+                if static_valid[start + seq_length - 1]
+            ]
+            self.valid_indices = kept
+        else:
+            self.valid_indices = list(valid_indices)
+
+    def __len__(self) -> int:
+        return len(self.valid_indices)
+
+    def __getitem__(self, idx: int) -> dict:
+        _, global_start = self.valid_indices[idx]
+        end = global_start + self.seq_length
+
+        seq = self.vectors[global_start:end].copy()
+        seq[-1, OUTCOME_START:OUTCOME_END] = 0.0
+
+        static = self.static_58[end - 1].copy()  # (58,)
+
+        return {
+            "sequence": torch.from_numpy(seq).float(),
+            "static": torch.from_numpy(static).float(),
+            "pitch_result": torch.tensor(int(self.labels_10[end - 1]), dtype=torch.long),
+            "hit_location": torch.tensor(int(self.hit_locs[end - 1]), dtype=torch.long),
+        }
+
+
 class PitchPointDataset(Dataset):
     """Model B: single pitch input, predict 4-class outcome.
 

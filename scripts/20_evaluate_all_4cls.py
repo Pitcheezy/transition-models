@@ -69,37 +69,57 @@ def build_result(data: dict, top1_key: str, top3_key: str, input_desc: str, arch
 
 def main():
     print("=" * 70)
-    print("Phase 9: 4-class MDP/DQN Compatible Model Comparison")
+    print("Phase 10: 4-class MDP/DQN Compatible Model Comparison")
     print("=" * 70)
 
     results: dict[str, dict] = {}
 
-    # 1. Logistic Regression (4-class)
+    # 1. Logistic Regression (4-class, 77d)
     data = load_npz_safe(OUTPUT_DIR / "evaluation_lr_4cls.npz")
     if data:
-        results["Logistic Regression"] = build_result(
+        results["LR (77d)"] = build_result(
             data, "top1", "top3", "Single pitch (77d)", "Linear", "~308"
         )
     else:
         print("[SKIP] evaluation_lr_4cls.npz not found")
 
-    # 2. LightGBM (4-class)
+    # 2. LightGBM (4-class, 77d)
     data = load_npz_safe(OUTPUT_DIR / "evaluation_lgb_4cls.npz")
     if data:
-        results["LightGBM"] = build_result(
+        results["LightGBM (77d)"] = build_result(
             data, "top1", "top3", "Single pitch (77d)", "Tree (boosting)", "~50K leaves"
         )
     else:
         print("[SKIP] evaluation_lgb_4cls.npz not found")
 
-    # 3. MLP Model B (4-class) — 기존 3시즌 결과 재사용 (top_1/top_3 키)
+    # 3. MLP Model B (4-class, 77d) — 기존 3시즌 결과 재사용 (top_1/top_3 키)
     data = load_npz_safe(OUTPUT_DIR / "evaluation_b_3season.npz")
     if data:
-        results["MLP (Model B)"] = build_result(
+        results["MLP Model B (77d)"] = build_result(
             data, "top_1", "top_3", "Single pitch (77d)", "MLP [128,128]", "~27K"
         )
     else:
         print("[SKIP] evaluation_b_3season.npz not found")
+
+    # --- Phase 10: 135-dim iid models ---
+
+    # 4. LR 135d (4-class)
+    data = load_npz_safe(OUTPUT_DIR / "evaluation_lr_135d_4cls.npz")
+    if data:
+        results["LR (135d)"] = build_result(
+            data, "top1", "top3", "Single pitch (135d)", "Linear", "~540"
+        )
+    else:
+        print("[SKIP] evaluation_lr_135d_4cls.npz not found")
+
+    # 5. LightGBM 135d (4-class)
+    data = load_npz_safe(OUTPUT_DIR / "evaluation_lgb_135d_4cls.npz")
+    if data:
+        results["LightGBM (135d)"] = build_result(
+            data, "top1", "top3", "Single pitch (135d)", "Tree (boosting)", "~50K leaves"
+        )
+    else:
+        print("[SKIP] evaluation_lgb_135d_4cls.npz not found")
 
     if not results:
         print("\nNo evaluation files found. Run training scripts first.")

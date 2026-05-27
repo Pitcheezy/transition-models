@@ -71,7 +71,7 @@ def build_result(data: dict, input_desc: str, arch: str, params: str,
 
 def main():
     print("=" * 70)
-    print("Phase 9: 5-Model Comparison (10-class unified)")
+    print("Phase 10: Multi-Model Comparison (10-class unified)")
     print("=" * 70)
 
     results: dict[str, dict] = {}
@@ -120,7 +120,7 @@ def main():
             "top1": scalar(data["top_1_pr"]),
             "top3": scalar(data["top_3_pr"]),
             "ce": scalar(data["ce_pr"]),
-            "input": "Sequence 400×87",
+            "input": "Sequence 400x87",
             "arch": "Transformer (12-layer)",
             "params": "9.7M",
         }
@@ -136,6 +136,71 @@ def main():
         results["Transformer (Model C)"] = transformer_result
     else:
         print("[SKIP] evaluation_c_3season.npz not found")
+
+    # --- Phase 10: 135-dim iid models ---
+
+    # 6. LR 135d (10-class)
+    data = load_npz_safe(OUTPUT_DIR / "evaluation_lr_135d_10cls.npz")
+    if data:
+        results["LR 135d"] = build_result(
+            data, "Single pitch (135d)", "Linear", "~1350"
+        )
+    else:
+        print("[SKIP] evaluation_lr_135d_10cls.npz not found")
+
+    # 7. LightGBM 135d (10-class)
+    data = load_npz_safe(OUTPUT_DIR / "evaluation_lgb_135d_10cls.npz")
+    if data:
+        results["LightGBM 135d"] = build_result(
+            data, "Single pitch (135d)", "Tree (boosting)", "~50K leaves"
+        )
+    else:
+        print("[SKIP] evaluation_lgb_135d_10cls.npz not found")
+
+    # 8. MLP 135d focal (10-class)
+    data = load_npz_safe(OUTPUT_DIR / "evaluation_mlp_135dim_10cls_focal.npz")
+    if data:
+        results["MLP 135d (focal)"] = build_result(
+            data, "Single pitch (135d)", "MLP [128,128]", "~27K"
+        )
+    else:
+        print("[SKIP] evaluation_mlp_135dim_10cls_focal.npz not found")
+
+    # 9. RNN hybrid (drop=True)
+    data = load_npz_safe(OUTPUT_DIR / "evaluation_rnn_hybrid_drop_10cls.npz")
+    if data:
+        results["RNN Hybrid (drop)"] = build_result(
+            data, "Seq 400x87 + static 58d", "LSTM 2-layer + static", "~590K"
+        )
+    else:
+        print("[SKIP] evaluation_rnn_hybrid_drop_10cls.npz not found")
+
+    # 10. RNN hybrid (drop=False, fair compare)
+    data = load_npz_safe(OUTPUT_DIR / "evaluation_rnn_hybrid_fullN_10cls.npz")
+    if data:
+        results["RNN Hybrid (fullN)"] = build_result(
+            data, "Seq 400x87 + static 58d", "LSTM 2-layer + static", "~590K"
+        )
+    else:
+        print("[SKIP] evaluation_rnn_hybrid_fullN_10cls.npz not found")
+
+    # 11. Transformer hybrid (drop=True)
+    data = load_npz_safe(OUTPUT_DIR / "evaluation_transformer_hybrid_drop_10cls.npz")
+    if data:
+        results["Transformer Hybrid (drop)"] = build_result(
+            data, "Seq 400x87 + static 58d", "Transformer 12-layer + static", "9.7M+"
+        )
+    else:
+        print("[SKIP] evaluation_transformer_hybrid_drop_10cls.npz not found")
+
+    # 12. Transformer hybrid (drop=False, fair compare)
+    data = load_npz_safe(OUTPUT_DIR / "evaluation_transformer_hybrid_fullN_10cls.npz")
+    if data:
+        results["Transformer Hybrid (fullN)"] = build_result(
+            data, "Seq 400x87 + static 58d", "Transformer 12-layer + static", "9.7M+"
+        )
+    else:
+        print("[SKIP] evaluation_transformer_hybrid_fullN_10cls.npz not found")
 
     if not results:
         print("\nNo evaluation files found. Run training scripts first.")

@@ -247,11 +247,73 @@ tests/          # pytest tests
 - docs/rl_agent_teammate_guide.md (다운로드 및 통합 단계별 가이드)
 - src/inference/transition_model.py — `TransitionModelMLP10` 클래스 추가
 
+**산출물**:
+- outputs/checkpoints/model_b3_focal_135dim_10cls_best.pt (epoch 25, val_focal_loss 0.4505)
+- outputs/evaluation_mlp_135dim_10cls_focal.npz (Top-1 67.6%, per-class accuracy)
+- outputs/arsenal_by_pitcher_cluster.json (4클러스터, pitcher 2,007명 매핑)
+- docs/handoff_to_rl_agent.md, docs/rl_agent_teammate_guide.md
+- src/inference/transition_model.py — `TransitionModelMLP10` 추가
+
+### Phase 10: 135-dim 전 모델 확장 + Hybrid Sequence ✅ (2026-05-27)
+
+**목표**: Phase 9.5 MLP 135d 성과를 나머지 모델(LR, LightGBM, RNN, Transformer)에도 적용,  
+"context = architecture-agnostic" 가설 입증.
+
+**Phase 10.1 — iid 135d (LR + LightGBM × {10cls, 4cls})**
+- [x] scripts/26_train_logistic_regression_135d_10cls.py — Top-1 **62.4%** (77d 41.1% → +21.3pp)
+- [x] scripts/27_train_lightgbm_135d_10cls.py — Top-1 **67.3%** (77d 13.0% → +54.3pp), Macro-F1 30.5%
+- [x] scripts/28_train_logistic_regression_135d_4cls.py — Top-1 **56.3%** (77d와 동일, 4cls 포화)
+- [x] scripts/29_train_lightgbm_135d_4cls.py — Top-1 **60.9%** (+0.1pp, 4cls 포화)
+
+**Phase 10.2 — 평가 통합**
+- [x] scripts/17_evaluate_all_10cls.py 수정 (135d 모델 + hybrid 모델 7개 추가, graceful skip)
+- [x] scripts/20_evaluate_all_4cls.py 수정 (135d 모델 2개 추가)
+- [x] outputs/baseline_master_comparison.json 신규 (G1~G6' 비교 그룹 통합)
+
+**Phase 10.3 — RNN Hybrid (sequence 87d×400 + static 58d)**
+- [x] scripts/30_align_static58_for_sequence.py — static_58_{train,val,test}.npy 생성 (99.9% 매칭)
+- [x] src/data/dataset.py — PitchSequenceDatasetHybrid 추가
+- [x] src/models/rnn_hybrid.py 신규 — PitchRNNHybrid(seq 87d + static 58d → head concat)
+- [x] scripts/31_train_rnn_hybrid_10cls.py (drop=True) — Top-1 **67.2%**, Top-3 94.9%, CE 0.870 (N=22,119, 1.5h)
+- [x] scripts/31_train_rnn_hybrid_10cls.py (drop=False) — Top-1 **67.1%**, Top-3 94.9%, CE 0.871 (N=22,127, G5 fair compare)
+
+**Phase 10.4 — Transformer Hybrid**
+- [x] src/models/transformer.py 수정 — static_dim 인자 추가 (역호환 유지)
+- [x] scripts/32_train_transformer_hybrid_10cls.py (drop=True) — Top-1 **66.8%** (vs Transformer 77d 67.2%, eager mode 4.2h)
+- [x] scripts/32_train_transformer_hybrid_10cls.py (drop=False) — Top-1 **67.1%**, Top-3 94.8%, CE 0.870 (N=22,127, G5 fair compare)
+
+**전체 비교표 (10-class Top-1)**:
+
+| 그룹 | 모델 | Top-1 | MDP 호환 |
+|------|------|-------|---------|
+| G3: iid 77d | LR / LGB / MLP | 41.1% / 13.0% / 41.1% | ✅ (collapse) |
+| G4: iid 135d | LR / LGB / MLP | 62.4% / 67.3% / **67.6%** | ✅ |
+| G5: seq 87d | RNN / Transformer | 66.9% / 67.2% | ❌ |
+| G6: seq hybrid (drop) | RNN-H / Trans-H | 67.2% / 66.8% | ❌ |
+| G6': seq hybrid (fullN) | RNN-H / Trans-H | 67.1% / 67.1% | ❌ |
+
+**핵심 발견 (확정)**:
+- **iid 모델**: Context 58d 추가만으로 41% → 67%, sequence 모델 동등 달성
+- **Sequence 모델**: Static context 추가 효과 없음 (RNN +0.3pp, Transformer -0.4pp) — sequence가 arsenal context를 내재적으로 학습
+- Architecture 선택보다 context 유무가 10-class 분류 핵심
+- **MDP 최선**: MLP 135d focal (67.6%, MDP 호환)
+
+**산출물**:
+- data/processed/static_58_{train,val,test}.npy (sequence 정렬, 58d)
+- outputs/evaluation_{lr,lgb}_135d_{10,4}cls.npz
+- outputs/evaluation_rnn_hybrid_{drop,fullN}_10cls.npz
+- outputs/evaluation_transformer_hybrid_{drop,fullN}_10cls.npz
+- outputs/checkpoints/rnn_hybrid_{drop,fullN}_10cls_best.pt
+- outputs/checkpoints/transformer_hybrid_{drop,fullN}_10cls_best.pt
+- outputs/all_models_comparison_{10,4}cls.json (업데이트)
+- outputs/baseline_master_comparison.json (신규, G1~G6' 통합)
+- docs/handoff_to_rl_agent.md, docs/rl_agent_teammate_guide.md (Phase 10 반영 업데이트)
+
 ### Future Work
 - Single~HR 개선: 타자 arsenal feature (batter_func/moment) 추가 → "135+α dim"
 - Weighted sampler + γ=3.0 조합으로 Single~HR > 5% 목표
 - Continuous regression target 실제 구현 (현재 placeholder 0)
 - Model A wrapper 구현 (실제 SmartPitch 통합)
 - Ablation study (sub-token mask, last-pitch residual 효과 분리)
-- Small Transformer (MDP 호환 가능성 탐색)
-- Transformer embedding → MDP state 통합 (Hybrid 시스템)
+- UMAP Option C: 50% dropout ablation으로 0-fill 영향 정량화
+- Transformer embedding → MDP state 통합 (Hybrid 시스템, 장기 과제)

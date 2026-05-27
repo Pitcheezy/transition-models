@@ -1,6 +1,7 @@
 # rl-agent 팀원 인수인계 문서
 
-**작성일**: 2026-05-25  
+**최종 업데이트**: 2026-05-27 (Phase 10 완료)
+**최초 작성**: 2026-05-25  
 **작성자**: transition-models 담당  
 **수신자**: rl-agent 담당
 
@@ -12,6 +13,33 @@ transition-models에서 새로운 10-class 모델(`TransitionModelMLP10`)을 추
 기존 Model B(4-class, 60.9%)보다 **Walk/Strikeout/HitByPitch를 직접 예측**하고 Top-1 67.6%를 달성하므로  
 rl-agent의 MDP-VI가 RE24 보상을 더 정확하게 계산할 수 있습니다.  
 ※ Single/Double/Triple/HR는 현재 0% — InPlay 확률 × BIP 테이블 병행 권장 (주의사항 참조).
+
+---
+
+## Phase 10 추가 실험 결과 요약 (2026-05-27)
+
+Phase 9.5에서 MLP 135d가 67.6%를 달성한 이후, **동일한 context feature(58d arsenal)를 나머지 4개 모델에도 적용**하여 "context가 architecture에 무관하게 작동하는가"를 검증했습니다.
+
+### 핵심 발견: Context는 iid 모델에만 유효, Sequence 모델에는 무의미
+
+| 모델 | 입력 | Top-1 | MDP 호환 |
+|------|------|-------|---------|
+| LR (77d baseline) | 단일 투구 | 41.1% ❌ collapse | ✅ |
+| LightGBM (77d baseline) | 단일 투구 | 13.0% ❌ collapse | ✅ |
+| MLP (77d baseline) | 단일 투구 | 41.1% ❌ collapse | ✅ |
+| **LR 135d** | 단일 투구 + context | **62.4%** | ✅ |
+| **LightGBM 135d** | 단일 투구 + context | **67.3%** | ✅ |
+| **MLP 135d focal** | 단일 투구 + context | **67.6%** | ✅ ← 권장 |
+| RNN (87d seq) | 400투구 시퀀스 | 66.9% | ❌ |
+| Transformer (87d seq) | 400투구 시퀀스 | 67.2% | ❌ |
+| RNN Hybrid (135d+seq) | 시퀀스 + context | 67.2% (+0.3pp) | ❌ |
+| Transformer Hybrid drop | 시퀀스 + context | 66.8% (-0.4pp) | ❌ |
+| Transformer Hybrid fullN | 시퀀스 + context | 67.1% (-0.1pp) | ❌ |
+
+**결론 (3가지)**:
+1. **iid 모델**: 77d → 135d로 context 추가 시 41% → 67% 범위로 동반 상승. Sequence 모델과 동등 수준 달성.
+2. **Sequence 모델 + static context**: 이미 400-pitch history를 가진 모델에 정적 context 추가는 효과 없음 (RNN +0.3pp, Transformer -0.4pp). Sequence가 arsenal context를 이미 내재적으로 학습함.
+3. **MDP 권장**: **`TransitionModelMLP10`** (MLP 135d focal, 67.6%) — 가장 높은 정확도 + MDP 호환.
 
 ---
 
@@ -232,7 +260,21 @@ def _precompute_model_mlp10(self, env: "PitchEnv", verbose: bool = True) -> None
 
 ---
 
+## 평가 파일 목록 (outputs/)
+
+| 파일 | 모델 | Top-1 | 비고 |
+|------|------|-------|------|
+| `evaluation_mlp_135dim_10cls_focal.npz` | MLP 135d focal | 67.6% | **MDP 통합 권장** |
+| `evaluation_lgb_135d_10cls.npz` | LightGBM 135d | 67.3% | iid, 참고용 |
+| `evaluation_lr_135d_10cls.npz` | LR 135d | 62.4% | iid, 참고용 |
+| `evaluation_rnn_hybrid_drop_10cls.npz` | RNN Hybrid (drop=True) | 67.2% | 시퀀스 의존 |
+| `evaluation_rnn_hybrid_fullN_10cls.npz` | RNN Hybrid (drop=False) | — | 시퀀스 의존 |
+| `evaluation_transformer_hybrid_drop_10cls.npz` | Transformer Hybrid | — | 시퀀스 의존 |
+| `baseline_master_comparison.json` | 전체 비교 통합 | — | G1~G6 그룹 |
+
+---
+
 ## 문의
 
-성능 결과 (`evaluation_mlp_135dim_10cls_focal.npz`)의 per-class accuracy를 확인하여  
-Single/HR > 5% 달성 여부 확인 후 통합을 권장합니다.
+Phase 10 실험은 완료되었습니다. `baseline_master_comparison.json`에 모든 모델의 metrics가 집계되어 있습니다.  
+Single/HR > 5% 개선이 필요하면 batter arsenal feature 추가를 transition-models 팀에 요청하세요 (CLAUDE.md Future Work 참조).

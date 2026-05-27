@@ -247,3 +247,19 @@ wandb/
 
 # Jupyter (redundant guard)
 .ipynb_checkpoints/
+
+# Training logs and ephemeral files
+outputs/*.txt
+outputs/*.log
+
+# Backup directories
+backup_v1_2season/
+
+# Claude Code memory (project-specific)
+.claude/
+
+# Ad-hoc prompt files
+Phase9_5models_comparison_prompt.md
+
+# Config backups
+*.backup

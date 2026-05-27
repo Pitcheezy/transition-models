@@ -1,0 +1,353 @@
+{
+  "_meta": {
+    "description": "Unified baseline comparison index (presentation excluded). See docs/baseline_comparison_status.md",
+    "updated": "2026-05-28 (Phase 10 fully complete)",
+    "data_seasons": "2022-2024 (3 seasons)",
+    "sources": [
+      "outputs/all_models_comparison_10cls.json",
+      "outputs/all_models_comparison_4cls.json",
+      "outputs/top4_precision_comparison.json",
+      "docs/paper_comparison.md (MLP 135d top1/top3/ce)"
+    ],
+    "artifact_note": "Most evaluation_*.npz and .pt checkpoints are not in git; metrics below come from committed JSON unless re-run."
+  },
+  "comparison_groups": {
+    "G1_4class_mdp_iid_77d": {
+      "description": "Otremba-style 4-class, single pitch 77d, MDP-compatible.",
+      "test_n_samples": 353776,
+      "models": ["LR (77d)", "LightGBM (77d)", "MLP (Model B)"]
+    },
+    "G2_4class_mdp_iid_135d": {
+      "description": "4-class, single pitch 135d (77d + arsenal context). MDP-compatible.",
+      "test_n_samples": 353667,
+      "models": ["LR (135d)", "LightGBM (135d)"]
+    },
+    "G3_10class_iid_77d": {
+      "description": "10-class single pitch 77d. All collapse. Sequence models needed.",
+      "test_n_samples": 353776,
+      "models": ["Logistic Regression", "LightGBM", "MLP (10-class)"]
+    },
+    "G4_10class_iid_135d": {
+      "description": "10-class single pitch 135d (77d + arsenal context). MDP-compatible.",
+      "test_n_samples": 353667,
+      "models": ["LR 135d", "LightGBM 135d", "MLP (135d focal)"]
+    },
+    "G5_10class_sequence_87d": {
+      "description": "MIT Sloan-style sequence models, no context. Different test population.",
+      "test_n_samples": 22127,
+      "models": ["RNN (LSTM)", "Transformer (Model C)"]
+    },
+    "G6_10class_sequence_hybrid_drop": {
+      "description": "Sequence + static 58d context, drop unmatched (~1%). Performance eval.",
+      "test_n_samples_approx": 22000,
+      "models": ["RNN Hybrid (drop)", "Transformer Hybrid (drop)"]
+    },
+    "G6p_10class_sequence_hybrid_fullN": {
+      "description": "Sequence + static 58d, keep all N (static=0 for missing). G5 direct compare.",
+      "test_n_samples": 22127,
+      "models": ["RNN Hybrid (fullN)", "Transformer Hybrid (fullN)"]
+    },
+    "phase6_paper_replica": {
+      "description": "Otremba Model B vs MIT Sloan Model C + empirical Model A",
+      "scripts": ["08_train_model_b.py", "09_train_model_c.py", "10_evaluate_models.py"]
+    }
+  },
+  "models": {
+    "Logistic Regression": {
+      "track": "phase9",
+      "paper": null,
+      "arch": "Linear",
+      "input": "77d iid",
+      "n_classes": 10,
+      "mdp_compatible": true,
+      "metrics_10cls": {
+        "top1": 0.4110312759876251,
+        "top3": 0.8617401719093323,
+        "ce": 1.614238977432251,
+        "macro_f1": 0.05871926363600625,
+        "top4_overall": 0.9205457690742165
+      },
+      "metrics_4cls": {
+        "top1": 0.5628392100334167,
+        "top3": 0.9453354477882385,
+        "ce": 1.0516316890716553,
+        "macro_f1": 0.4838043550655147
+      },
+      "train_script": "scripts/13_train_logistic_regression.py",
+      "eval_npz": "outputs/evaluation_lr_10cls.npz",
+      "status": "trained_metrics_in_json"
+    },
+    "LightGBM": {
+      "track": "phase9",
+      "paper": null,
+      "arch": "Tree",
+      "input": "77d iid",
+      "n_classes": 10,
+      "mdp_compatible": true,
+      "metrics_10cls": {
+        "top1": 0.13013319671154022,
+        "top3": 0.4814911186695099,
+        "ce": 2.0871670246124268,
+        "macro_f1": 0.07224528973009495,
+        "top4_overall": 0.6595105377413957
+      },
+      "metrics_4cls": {
+        "top1": 0.6083199381828308,
+        "top3": 0.9662045836448669,
+        "ce": 0.8718759417533875,
+        "macro_f1": 0.5327167805453903
+      },
+      "train_script": "scripts/14_train_lightgbm.py",
+      "eval_npz": "outputs/evaluation_lgb_10cls.npz",
+      "status": "trained_metrics_in_json",
+      "caveat": "10cls class_weight caused 13% collapse"
+    },
+    "MLP (10-class)": {
+      "track": "phase9",
+      "paper": "Otremba 2022 architecture, 10-class extension",
+      "arch": "OtrembaMLP 77->128->128->10",
+      "class": "src.models.otremba_mlp.OtrembaMLP",
+      "input": "77d iid",
+      "params": "~27K",
+      "loss": "focal_gamma=2",
+      "mdp_compatible": true,
+      "metrics_10cls": {
+        "top1": 0.4112008810043335,
+        "top3": 0.8617486953735352,
+        "ce": 1.4697341918945312,
+        "macro_f1": 0.058278378711156244,
+        "top4_overall": 0.9205938220795079
+      },
+      "train_script": "scripts/15_train_mlp_10class.py",
+      "eval_npz": "outputs/evaluation_mlp_10cls.npz",
+      "status": "trained_metrics_in_json",
+      "caveat": "basic_mlp_baseline_10cls_strike_collapse"
+    },
+    "MLP (Model B)": {
+      "track": "phase6_phase9",
+      "paper": "Otremba 2022 SmartPitch",
+      "arch": "OtrembaMLP 77->128->128->4",
+      "class": "src.models.otremba_mlp.OtrembaMLP",
+      "input": "77d iid",
+      "params": 27012,
+      "paper_reported_val_acc": 0.606,
+      "mdp_compatible": true,
+      "metrics_4cls": {
+        "top1": 0.6088004839220298,
+        "top3": 0.9664787888381349,
+        "ce": 0.8722947239875793,
+        "macro_f1": 0.5375109801570819
+      },
+      "train_script": "scripts/08_train_model_b.py",
+      "eval_npz": "outputs/evaluation_b_3season.npz",
+      "checkpoint": "outputs/checkpoints/model_b_full_v2_best.pt",
+      "status": "paper_faithful_4cls_replicated"
+    },
+    "MLP (135d focal)": {
+      "track": "phase9_5",
+      "paper": null,
+      "note": "Project extension: 77d + 58d context.",
+      "arch": "OtrembaMLP 135->128->128->10",
+      "input": "135d iid",
+      "params": "~32K",
+      "loss": "focal_gamma=2",
+      "mdp_compatible": true,
+      "metrics_10cls": {
+        "top1": 0.676,
+        "top3": 0.948,
+        "ce": 0.926,
+        "macro_f1": 0.278,
+        "n_samples": 353667
+      },
+      "train_script": "scripts/24_train_mlp_135dim_10cls_focal.py",
+      "eval_npz": "outputs/evaluation_mlp_135dim_10cls_focal.npz",
+      "checkpoint": "outputs/checkpoints/model_b3_focal_135dim_10cls_best.pt",
+      "status": "trained_metrics_in_json",
+      "integrated_in_17_evaluate_all_10cls": true
+    },
+    "LR 135d": {
+      "track": "phase10",
+      "paper": null,
+      "arch": "Logistic Regression",
+      "input": "135d iid",
+      "mdp_compatible": true,
+      "metrics_10cls": {
+        "top1": 0.624,
+        "top3": 0.918,
+        "ce": 1.1129,
+        "macro_f1": 0.278,
+        "n_samples": 353667
+      },
+      "metrics_4cls": {
+        "top1": 0.563,
+        "top3": 0.945,
+        "ce": 1.0481,
+        "macro_f1": 0.485,
+        "n_samples": 353667
+      },
+      "train_script_10cls": "scripts/26_train_logistic_regression_135d_10cls.py",
+      "train_script_4cls": "scripts/28_train_logistic_regression_135d_4cls.py",
+      "status": "trained_metrics_in_json"
+    },
+    "LightGBM 135d": {
+      "track": "phase10",
+      "paper": null,
+      "arch": "Tree (boosting)",
+      "input": "135d iid",
+      "mdp_compatible": true,
+      "metrics_10cls": {
+        "top1": 0.673,
+        "top3": 0.947,
+        "ce": 0.8664,
+        "macro_f1": 0.305,
+        "n_samples": 353667
+      },
+      "metrics_4cls": {
+        "top1": 0.609,
+        "top3": 0.966,
+        "ce": 0.8708,
+        "macro_f1": 0.534,
+        "n_samples": 353667
+      },
+      "train_script_10cls": "scripts/27_train_lightgbm_135d_10cls.py",
+      "train_script_4cls": "scripts/29_train_lightgbm_135d_4cls.py",
+      "caveat": "LightGBM CUDA not compiled, CPU fallback. Single/Double/Triple/HR still collapse.",
+      "status": "trained_metrics_in_json"
+    },
+    "RNN Hybrid (drop)": {
+      "track": "phase10",
+      "paper": null,
+      "arch": "LSTM 2-layer + static 58d head concat",
+      "input": "400x87 sequence + static 58d",
+      "params": "~590K",
+      "mdp_compatible": false,
+      "metrics_10cls": {
+        "top1": 0.6715,
+        "top3": 0.9488,
+        "ce": 0.8696,
+        "n_samples": 22119
+      },
+      "train_script": "scripts/31_train_rnn_hybrid_10cls.py --drop-missing true",
+      "eval_npz": "outputs/evaluation_rnn_hybrid_drop_10cls.npz",
+      "checkpoint": "outputs/checkpoints/rnn_hybrid_drop_10cls_best.pt",
+      "status": "trained_metrics_in_json"
+    },
+    "RNN Hybrid (fullN)": {
+      "track": "phase10",
+      "paper": null,
+      "arch": "LSTM 2-layer + static 58d head concat",
+      "input": "400x87 sequence + static 58d",
+      "params": "~590K",
+      "mdp_compatible": false,
+      "metrics_10cls": {
+        "top1": 0.6714,
+        "top3": 0.9488,
+        "ce": 0.8709,
+        "n_samples": 22127
+      },
+      "train_script": "scripts/31_train_rnn_hybrid_10cls.py --drop-missing false",
+      "eval_npz": "outputs/evaluation_rnn_hybrid_fullN_10cls.npz",
+      "checkpoint": "outputs/checkpoints/rnn_hybrid_fullN_10cls_best.pt",
+      "status": "trained_metrics_in_json"
+    },
+    "Transformer Hybrid (drop)": {
+      "track": "phase10",
+      "paper": null,
+      "arch": "Transformer 12-layer + static 58d head concat",
+      "input": "400x87 sequence + static 58d",
+      "params": 9674520,
+      "mdp_compatible": false,
+      "metrics_10cls": {
+        "top1": 0.6680,
+        "top3": 0.9470,
+        "ce": 0.8732,
+        "n_samples": 22119,
+        "caveat": "slightly below base Transformer 67.2% — static context adds no benefit for sequence model"
+      },
+      "train_script": "scripts/32_train_transformer_hybrid_10cls.py --drop-missing true",
+      "eval_npz": "outputs/evaluation_transformer_hybrid_drop_10cls.npz",
+      "checkpoint": "outputs/checkpoints/transformer_hybrid_drop_10cls_best.pt",
+      "status": "trained_metrics_in_json"
+    },
+    "Transformer Hybrid (fullN)": {
+      "track": "phase10",
+      "paper": null,
+      "arch": "Transformer 12-layer + static 58d head concat",
+      "input": "400x87 sequence + static 58d",
+      "params": 9674520,
+      "mdp_compatible": false,
+      "metrics_10cls": {
+        "top1": 0.6710,
+        "top3": 0.9480,
+        "ce": 0.8699,
+        "n_samples": 22127,
+        "caveat": "essentially same as base Transformer 67.2% — static context adds no benefit for sequence models"
+      },
+      "train_script": "scripts/32_train_transformer_hybrid_10cls.py --drop-missing false",
+      "eval_npz": "outputs/evaluation_transformer_hybrid_fullN_10cls.npz",
+      "checkpoint": "outputs/checkpoints/transformer_hybrid_fullN_10cls_best.pt",
+      "status": "trained_metrics_in_json"
+    },
+    "RNN (LSTM)": {
+      "track": "phase9",
+      "paper": null,
+      "arch": "2-layer LSTM",
+      "input": "400x87 sequence",
+      "params": "~590K",
+      "mdp_compatible": false,
+      "metrics_10cls": {
+        "top1": 0.668956458568573,
+        "top3": 0.948298454284668,
+        "ce": 0.8727662563323975,
+        "macro_f1": 0.28772597076390716,
+        "top4_overall": 0.9797080489899218,
+        "n_samples": 22127
+      },
+      "train_script": "scripts/16_train_rnn.py",
+      "eval_npz": "outputs/evaluation_rnn_10cls.npz",
+      "status": "trained_metrics_in_json"
+    },
+    "Transformer (Model C)": {
+      "track": "phase6_phase9",
+      "paper": "MIT Sloan Sports Analytics Conference 2025",
+      "arch": "PitchTransformer 12-layer",
+      "class": "src.models.transformer.PitchTransformer",
+      "input": "400x87 sequence",
+      "params": 9659672,
+      "mdp_compatible": false,
+      "metrics_10cls_pitch_result_only": {
+        "top1": 0.672029647037556,
+        "top3": 0.9474849731097754,
+        "ce": 0.8681501746177673,
+        "macro_f1": 0.3009390256377538,
+        "top4_overall": 0.979979210918787,
+        "n_samples": 22127
+      },
+      "train_script": "scripts/09_train_model_c.py",
+      "eval_npz": "outputs/evaluation_c_3season.npz",
+      "checkpoint": "outputs/checkpoints/model_c_full_v3_best.pt",
+      "status": "paper_faithful_structure_replicated",
+      "caveat": "compare_top1_only_with_iid_models_if_same_pitch_subset"
+    },
+    "Model A (empirical)": {
+      "track": "phase6",
+      "paper": "Otremba non-parametric baseline",
+      "arch": "lookup / frequency",
+      "implementation": "src.evaluation.evaluate.baseline_empirical",
+      "mdp_compatible": true,
+      "metrics_4cls": "see evaluation_b_3season.npz baseline_* keys",
+      "status": "eval_only_no_nn_module"
+    }
+  },
+  "fair_comparison_verdict": {
+    "G1_vs_G2_4cls": "fair — same architecture, 77d vs 135d, N differs by 0.03%",
+    "G3_vs_G4_10cls_iid": "fair — same architecture, same N (353,667 vs 353,776). Core Phase 10 message.",
+    "G5_vs_G6p_seq_hybrid": "fair — same N=22,127. drop=False variant for direct G5 comparison.",
+    "G4_vs_G5_cross": "not directly comparable — different test populations (all pitch vs last-pitch-of-AB)",
+    "phase10_key_finding": "context features (arsenal 58d) close the gap: 41.1% -> 67%+ even for iid LightGBM/MLP. Architecture is not the bottleneck — context was.",
+    "rnn_hybrid_vs_rnn_baseline": "G6p RNN Hybrid fullN 67.1% vs G5 RNN 66.9% — marginal +0.2pp from static context.",
+    "transformer_hybrid_vs_transformer_baseline": "G6 Transformer Hybrid drop 66.8% vs G5 Transformer 67.2% — static context made it WORSE (-0.4pp). Sequence context already captures what static provides.",
+    "hybrid_summary": "Static arsenal context only benefits models WITHOUT sequence history. Sequence models gain nothing (or lose) from it. Context is NOT architecture-agnostic for sequence models.",
+    "recommended_mdp_model": "MLP 135d focal (67.6%, TransitionModelMLP10) — best accuracy + MDP-compatible"
+  }
+}

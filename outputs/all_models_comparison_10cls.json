@@ -90,7 +90,7 @@
     "top1": 0.672029647037556,
     "top3": 0.9474849731097754,
     "ce": 0.8681501746177673,
-    "input": "Sequence 400×87",
+    "input": "Sequence 400x87",
     "arch": "Transformer (12-layer)",
     "params": "9.7M",
     "macro_f1": 0.3009390256377538,
@@ -104,6 +104,159 @@
       "FieldOut": 0.10663598005370158,
       "Strikeout": 0.17327117327117328,
       "Walk": 0.8557312252964426,
+      "HitByPitch": 0.171875
+    }
+  },
+  "LR 135d": {
+    "top1": 0.6244235634803772,
+    "top3": 0.9176372289657593,
+    "ce": 1.112860083580017,
+    "input": "Single pitch (135d)",
+    "arch": "Linear",
+    "params": "~1350",
+    "macro_f1": 0.27810016906682045,
+    "train_time_min": 1.7470662434895834,
+    "per_class_accuracy": {
+      "Ball": 0.9163808909411925,
+      "Strike": 0.6246363555084833,
+      "Single": 0.000543393882937432,
+      "Double": 0.0002600780234070221,
+      "Triple": 0.0,
+      "HomeRun": 0.0,
+      "FieldOut": 0.11876113009577899,
+      "Strikeout": 0.49231434335671054,
+      "Walk": 0.9440200027781637,
+      "HitByPitch": 0.07033639143730887
+    }
+  },
+  "LightGBM 135d": {
+    "top1": 0.6729041934013367,
+    "top3": 0.9465542435646057,
+    "ce": 0.866447925567627,
+    "input": "Single pitch (135d)",
+    "arch": "Tree (boosting)",
+    "params": "~50K leaves",
+    "macro_f1": 0.30526887749370535,
+    "train_time_min": 1.2693711598714192,
+    "per_class_accuracy": {
+      "Ball": 0.8896933994295804,
+      "Strike": 0.8261246329167898,
+      "Single": 0.0,
+      "Double": 0.0,
+      "Triple": 0.0,
+      "HomeRun": 0.0,
+      "FieldOut": 0.06858545507051066,
+      "Strikeout": 0.1825343452781247,
+      "Walk": 0.8487289901375191,
+      "HitByPitch": 0.29561671763506625
+    }
+  },
+  "MLP 135d (focal)": {
+    "top1": 0.676438570022583,
+    "top3": 0.9479057788848877,
+    "ce": 0.9263296127319336,
+    "input": "Single pitch (135d)",
+    "arch": "MLP [128,128]",
+    "params": "~27K",
+    "macro_f1": 0.2776702297733403,
+    "per_class_accuracy": {
+      "Ball": 0.8842183892435149,
+      "Strike": 0.8372798360418974,
+      "Single": 0.0,
+      "Double": 0.0,
+      "Triple": 0.0,
+      "HomeRun": 0.0,
+      "FieldOut": 0.07344659960533283,
+      "Strikeout": 0.19497550196944952,
+      "Walk": 0.8590081955827198,
+      "HitByPitch": 0.02854230377166157
+    }
+  },
+  "RNN Hybrid (drop)": {
+    "top1": 0.6715041399002075,
+    "top3": 0.9488222599029541,
+    "ce": 0.8695725202560425,
+    "input": "Seq 400x87 + static 58d",
+    "arch": "LSTM 2-layer + static",
+    "params": "~590K",
+    "macro_f1": 0.28057763923526774,
+    "train_time_min": 88.25042317708333,
+    "per_class_accuracy": {
+      "Ball": 0.8672784550061635,
+      "Strike": 0.8383606557377049,
+      "Single": 0.0,
+      "Double": 0.0,
+      "Triple": 0.0,
+      "HomeRun": 0.0,
+      "FieldOut": 0.037221795855717575,
+      "Strikeout": 0.24242424242424243,
+      "Walk": 0.8636363636363636,
+      "HitByPitch": 0.0625
+    }
+  },
+  "RNN Hybrid (fullN)": {
+    "top1": 0.6713969111442566,
+    "top3": 0.9488407969474792,
+    "ce": 0.870895504951477,
+    "input": "Seq 400x87 + static 58d",
+    "arch": "LSTM 2-layer + static",
+    "params": "~590K",
+    "macro_f1": 0.2979255833387823,
+    "train_time_min": 63.70906168619792,
+    "per_class_accuracy": {
+      "Ball": 0.8788003286770748,
+      "Strike": 0.8321319353429445,
+      "Single": 0.0,
+      "Double": 0.0,
+      "Triple": 0.0,
+      "HomeRun": 0.0,
+      "FieldOut": 0.06137322593018796,
+      "Strikeout": 0.1585081585081585,
+      "Walk": 0.8715415019762845,
+      "HitByPitch": 0.21875
+    }
+  },
+  "Transformer Hybrid (drop)": {
+    "top1": 0.6682038307189941,
+    "top3": 0.9465617537498474,
+    "ce": 0.8731934428215027,
+    "input": "Seq 400x87 + static 58d",
+    "arch": "Transformer 12-layer + static",
+    "params": "9.7M+",
+    "macro_f1": 0.30567990129591105,
+    "train_time_min": 249.79493815104166,
+    "per_class_accuracy": {
+      "Ball": 0.8776879879468565,
+      "Strike": 0.8031693989071038,
+      "Single": 0.0,
+      "Double": 0.0,
+      "Triple": 0.0,
+      "HomeRun": 0.0,
+      "FieldOut": 0.12432847275518036,
+      "Strikeout": 0.1857031857031857,
+      "Walk": 0.8853754940711462,
+      "HitByPitch": 0.1875
+    }
+  },
+  "Transformer Hybrid (fullN)": {
+    "top1": 0.6710354089736938,
+    "top3": 0.9484792351722717,
+    "ce": 0.8699355125427246,
+    "input": "Seq 400x87 + static 58d",
+    "arch": "Transformer 12-layer + static",
+    "params": "9.7M+",
+    "macro_f1": 0.30534975207375414,
+    "train_time_min": 241.022021484375,
+    "per_class_accuracy": {
+      "Ball": 0.8682552725280746,
+      "Strike": 0.814875491480996,
+      "Single": 0.0,
+      "Double": 0.0,
+      "Triple": 0.0,
+      "HomeRun": 0.0,
+      "FieldOut": 0.1093210586881473,
+      "Strikeout": 0.2463092463092463,
+      "Walk": 0.857707509881423,
       "HitByPitch": 0.171875
     }
   }

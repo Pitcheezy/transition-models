@@ -92,3 +92,35 @@ class TestPitchTransformer:
     def test_single_sample(self, model):
         x = torch.randn(1, 400, 87)
         assert model(x).shape == (1, 24)
+
+
+class TestPitchTransformerHybrid:
+    """Tests for PitchTransformer with static_dim > 0 (Phase 10.4 hybrid mode)."""
+
+    @pytest.fixture
+    def hybrid_model(self):
+        return PitchTransformer(static_dim=58)
+
+    def test_forward_hybrid_shape(self, hybrid_model):
+        x = torch.randn(4, 400, 87)
+        static = torch.randn(4, 58)
+        out = hybrid_model(x, static)
+        assert out.shape == (4, 24)
+
+    def test_hybrid_requires_static(self, hybrid_model):
+        x = torch.randn(2, 400, 87)
+        with pytest.raises(AssertionError):
+            hybrid_model(x)  # static=None should fail when static_dim > 0
+
+    def test_baseline_backward_compat(self):
+        model = PitchTransformer(static_dim=0)
+        x = torch.randn(2, 400, 87)
+        assert model(x).shape == (2, 24)
+
+    def test_hybrid_gradient_flow(self, hybrid_model):
+        x = torch.randn(2, 400, 87)
+        static = torch.randn(2, 58)
+        loss = hybrid_model(x, static).sum()
+        loss.backward()
+        for name, p in hybrid_model.named_parameters():
+            assert p.grad is not None, f"No gradient: {name}"

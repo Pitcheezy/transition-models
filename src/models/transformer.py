@@ -66,6 +66,7 @@ class PitchTransformer(TransitionModel):
         n_pitch_classes: int = 10,
         n_hit_classes: int = 9,
         n_continuous: int = 5,
+        static_dim: int = 0,
     ):
         super().__init__()
 
@@ -74,6 +75,7 @@ class PitchTransformer(TransitionModel):
         self.n_pitch_classes = n_pitch_classes
         self.n_hit_classes = n_hit_classes
         self.n_continuous = n_continuous
+        self.static_dim = static_dim
         self._output_dim = n_pitch_classes + n_hit_classes + n_continuous  # 24
 
         # 1. Linear embedding: 87 → d_model
@@ -97,16 +99,19 @@ class PitchTransformer(TransitionModel):
         # 4. Last-pitch residual projection: 87 → d_model
         self.last_pitch_proj = nn.Linear(input_dim, d_model)
 
-        # 5. FC head: concat(d_model, d_model) → d_model → output_dim
-        self.fc1 = nn.Linear(d_model * 2, d_model)
+        # 5. FC head: concat(d_model, d_model [, static_dim]) → d_model → output_dim
+        # static_dim=0 이면 기존 동작 그대로 (역호환)
+        self.fc1 = nn.Linear(d_model * 2 + static_dim, d_model)
         self.fc2 = nn.Linear(d_model, self._output_dim)
         self.head_dropout = nn.Dropout(dropout)
 
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
+    def forward(self, x: torch.Tensor, static: torch.Tensor | None = None) -> torch.Tensor:
         """Forward pass returning raw 24-dim output.
 
         Args:
-            x: (batch, seq_len, 87) pitch sequence.
+            x:      (batch, seq_len, 87) pitch sequence.
+            static: (batch, static_dim) optional static context. Required when
+                    static_dim > 0 (hybrid mode). Ignored when static_dim == 0.
 
         Returns:
             (batch, 24) — [0:10] pr logits, [10:19] hl logits, [19:24] continuous.
@@ -124,23 +129,28 @@ class PitchTransformer(TransitionModel):
         last_raw = x[:, -1, :]  # (B, 87)
         last_proj = self.last_pitch_proj(last_raw)  # (B, d_model)
 
-        # Concat + FC head
-        combined = torch.cat([last_encoded, last_proj], dim=-1)  # (B, 2*d_model)
+        # Concat + FC head (static_dim=0 이면 기존 동작)
+        parts = [last_encoded, last_proj]
+        if self.static_dim > 0:
+            assert static is not None, "static feature 필요 (static_dim > 0)"
+            parts.append(static)
+        combined = torch.cat(parts, dim=-1)  # (B, 2*d_model + static_dim)
         h = F.relu(self.fc1(combined))
         h = self.head_dropout(h)
         return self.fc2(h)  # (B, 24)
 
-    def predict_proba(self, x: torch.Tensor) -> dict:
+    def predict_proba(self, x: torch.Tensor, static: torch.Tensor | None = None) -> dict:
         """Return per-task probabilities.
 
         Args:
-            x: (batch, seq_len, 87)
+            x:      (batch, seq_len, 87)
+            static: (batch, static_dim) optional, for hybrid mode.
 
         Returns:
             Dict with keys "pitch_result" (B, 10), "hit_location" (B, 9),
             "continuous" (B, 5).
         """
-        logits = self.forward(x)
+        logits = self.forward(x, static)
         pr_end = self.n_pitch_classes
         hl_end = pr_end + self.n_hit_classes
         return {

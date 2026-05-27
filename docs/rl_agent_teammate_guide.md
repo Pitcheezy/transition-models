@@ -1,8 +1,8 @@
 # rl-agent 팀원 가이드 — 다운로드 및 통합 방법
 
-**작성일**: 2026-05-25  
-**레포**: https://github.com/Pitcheezy/transition-models  
-**최신 커밋**: `0e82820`
+**최종 업데이트**: 2026-05-27 (Phase 10 완료)
+**최초 작성**: 2026-05-25  
+**레포**: https://github.com/Pitcheezy/transition-models
 
 ---
 
@@ -112,12 +112,13 @@ https://github.com/Pitcheezy/transition-models/blob/main/docs/handoff_to_rl_agen
 
 ## 4단계: 모델 스펙 요약
 
+### 권장 모델: TransitionModelMLP10 (135d focal, MDP 호환)
+
 | 항목 | 값 |
 |------|-----|
 | 아키텍처 | MLP: 135 → 128 → 128 → 10 (dropout=0.2) |
 | 학습 손실 | Focal Loss (γ=2.0) |
 | Best epoch | 25 / 30 |
-| Val focal loss | 0.4505 |
 | **Top-1** | **67.6%** |
 | Ball | 88.4% |
 | Strike | 83.7% |
@@ -125,7 +126,21 @@ https://github.com/Pitcheezy/transition-models/blob/main/docs/handoff_to_rl_agen
 | Strikeout | 19.5% |
 | FieldOut | 7.3% |
 | HitByPitch | 2.9% |
-| Single / Double / Triple / HR | **0%** (아래 주의사항 참조) |
+| Single / Double / Triple / HR | **0%** (주의사항 참조) |
+
+### Phase 10 전체 비교 (참고)
+
+| 모델 | Top-1 | MDP 호환 | 체크포인트 |
+|------|-------|---------|---------|
+| **MLP 135d focal** | **67.6%** | **✅** | `model_b3_focal_135dim_10cls_best.pt` |
+| LightGBM 135d | 67.3% | ✅ | `lightgbm_135d_10cls.txt` |
+| LR 135d | 62.4% | ✅ | sklearn joblib |
+| RNN Hybrid | ~67.2% | ❌ | `rnn_hybrid_drop_10cls_best.pt` |
+| Transformer Hybrid | 66.8% | ❌ | `transformer_hybrid_drop_10cls_best.pt` |
+| RNN (87d seq) | 66.9% | ❌ | `rnn_10cls_best.pt` |
+| Transformer (87d seq) | 67.2% | ❌ | `model_c_full_v3_best.pt` |
+
+→ **MDP-VI에는 MLP 135d focal을 사용하세요.** LightGBM 135d도 MDP 호환이지만 checkpoint 포맷이 .txt라 별도 로딩 필요.
 
 ### 출력 클래스 순서 (10-class)
 

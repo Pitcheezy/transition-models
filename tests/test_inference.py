@@ -4,7 +4,7 @@ import numpy as np
 import pytest
 from pathlib import Path
 
-from src.inference import TransitionModelB, TransitionModelC
+from src.inference import TransitionModelB, TransitionModelC, TransitionModelMLP10, build_135dim_feature
 
 
 @pytest.fixture
@@ -105,3 +105,46 @@ def test_model_c_top_k(dummy_c):
     assert all("class" in item and "probability" in item for item in top3)
     p = [item["probability"] for item in top3]
     assert p == sorted(p, reverse=True)
+
+
+def _mlp10_available():
+    return Path(TransitionModelMLP10.DEFAULT_CHECKPOINT).exists()
+
+
+def test_build_135dim_feature():
+    """build_135dim_feature returns correct shape and zero-fills UMAP slice."""
+    import json
+
+    arsenal_path = Path("outputs/arsenal_by_pitcher_cluster.json")
+    if not arsenal_path.exists():
+        pytest.skip("arsenal_by_pitcher_cluster.json not found")
+
+    with open(arsenal_path, encoding="utf-8") as f:
+        arsenal = json.load(f)
+
+    base_77 = np.random.randn(77).astype(np.float32)
+    feat = build_135dim_feature(base_77, arsenal, pitcher_cluster=0)
+
+    assert feat.shape == (135,)
+    assert feat.dtype == np.float32
+    assert np.allclose(feat[:77], base_77)
+    assert np.allclose(feat[77:82], 0.0)  # UMAP zero-filled
+
+
+def test_model_mlp10_load():
+    if not _mlp10_available():
+        pytest.skip("MLP10 checkpoint not found")
+    model = TransitionModelMLP10()
+    assert model.num_classes == 10
+    assert len(model.classes) == 10
+
+
+def test_model_mlp10_predict():
+    if not _mlp10_available():
+        pytest.skip("MLP10 checkpoint not found")
+    model = TransitionModelMLP10()
+    x = np.random.randn(135).astype(np.float32)
+    probs = model.predict(x)
+    assert probs.shape == (10,)
+    assert np.allclose(probs.sum(), 1.0, atol=1e-5)
+    assert (probs >= 0).all()
