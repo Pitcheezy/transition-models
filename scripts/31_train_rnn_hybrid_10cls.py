@@ -20,6 +20,7 @@ from pathlib import Path
 
 import numpy as np
 import torch
+import torch._dynamo
 import torch.nn as nn
 import torch.nn.functional as F
 from torch.amp import GradScaler, autocast
@@ -173,13 +174,14 @@ def main(drop_missing: bool):
     print(f"\nModel: PitchRNNHybrid  params={n_params:,}")
 
     if use_cuda:
+        torch._dynamo.config.suppress_errors = True  # Windows: Triton 없으면 eager fallback
         try:
             model = torch.compile(model, mode="reduce-overhead")
             print("torch.compile 적용 (reduce-overhead)")
         except Exception as e:
             print(f"[WARN] torch.compile 실패: {e} — 일반 모드로 진행")
 
-    optimizer = torch.optim.Adam(model.parameters(), lr=LR, weight_decay=WEIGHT_DECAY)
+    optimizer = torch.optim.AdamW(model.parameters(), lr=LR, weight_decay=WEIGHT_DECAY)
     scaler = GradScaler("cuda", enabled=use_cuda)
 
     best_val_loss = float("inf")

@@ -209,9 +209,14 @@ def _precompute_model_mlp10(self, env: "PitchEnv", verbose: bool = True) -> None
                 env.batter_hand, env.pitcher_hand,
                 env.inning, continuous,
             )
+            # WARN: _idx_to_state의 pitcher는 rl-agent 내부 포맷(tuple 또는 int).
+            # build_135dim_feature의 pitcher_cluster는 0-3 정수여야 함.
+            # rl-agent의 _idx_to_state 반환 형식을 확인하여 cluster ID를 추출할 것.
+            # 예: pitcher_cluster=pitcher  (정수인 경우)
+            #     pitcher_cluster=pitcher[CLUSTER_IDX]  (tuple인 경우, CLUSTER_IDX는 rl-agent 정의에 따름)
             feat_135 = build_135dim_feature(
                 base_77, arsenal_data=arsenal_data,
-                pitcher_cluster=pitcher,                      # tuple[5], not state.pitcher_cluster
+                pitcher_cluster=pitcher,  # 수정 필요: pitcher가 int 0-3인지 확인 후 사용
             )
             features.append(feat_135)
             index_map.append((s_idx, a_idx))

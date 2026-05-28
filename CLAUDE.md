@@ -217,7 +217,7 @@ tests/          # pytest tests
 | 모델 | Input | Top-1 | Top-3 | MDP 호환 | 비고 |
 |------|-------|-------|-------|---------|------|
 | LR | 77d i.i.d. | 41.1% | 86.2% | ✅ | collapse (Strike만 예측) |
-| LightGBM | 77d i.i.d. | 41.1% | 86.2% | ✅ | collapse |
+| LightGBM | 77d i.i.d. | 13.0% | — | ✅ | collapse (역방향, 균등 예측) |
 | MLP (77d) | 77d i.i.d. | 41.1% | 86.2% | ✅ | collapse |
 | **MLP 135d focal** | **135d i.i.d.** | **67.6%** | **—** | **✅** | **MDP 호환 최선** |
 | RNN (LSTM) | 400×87 seq | 66.9% | 94.8% | ❌ | sequence 의존 |
@@ -246,13 +246,6 @@ tests/          # pytest tests
 - docs/handoff_to_rl_agent.md (rl-agent 통합 코드 골격 포함)
 - docs/rl_agent_teammate_guide.md (다운로드 및 통합 단계별 가이드)
 - src/inference/transition_model.py — `TransitionModelMLP10` 클래스 추가
-
-**산출물**:
-- outputs/checkpoints/model_b3_focal_135dim_10cls_best.pt (epoch 25, val_focal_loss 0.4505)
-- outputs/evaluation_mlp_135dim_10cls_focal.npz (Top-1 67.6%, per-class accuracy)
-- outputs/arsenal_by_pitcher_cluster.json (4클러스터, pitcher 2,007명 매핑)
-- docs/handoff_to_rl_agent.md, docs/rl_agent_teammate_guide.md
-- src/inference/transition_model.py — `TransitionModelMLP10` 추가
 
 ### Phase 10: 135-dim 전 모델 확장 + Hybrid Sequence ✅ (2026-05-27)
 
