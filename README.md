@@ -4,14 +4,43 @@ SmartPitch MDP의 전이확률(transition probability) 추정 모델 3가지를 
 
 ## Models
 
-| | Model A (SmartPitch MLP) | Model B (Otremba 2022 MLP) | Model C (MIT Sloan 2025 Transformer) |
+### Phase 6 논문 Replica (Track A)
+
+| | Model A (Baseline) | Model B (Otremba 2022 MLP) | Model C (MIT Sloan 2025 Transformer) |
 |---|---|---|---|
-| **Input** | TBD | 77-dim feature vector | 87-dim × 400 sequence |
-| **Output** | TBD | 4-dim (B/S/F/InPlay) | 24-dim (10+9+5 multi-task) |
-| **Architecture** | Existing MLP (wrapper) | 2-layer, 128 units, ReLU | 12-layer Encoder, sub-token masking |
-| **Parameters** | TBD | 27,012 | 9,659,672 |
-| **Status** | - | Implemented | Implemented |
+| **Input** | 경험적 lookup | 77-dim 단일 벡터 | 87-dim × 400 시퀀스 |
+| **Output** | 4-class | 4-class (B/S/F/InPlay) | 24-dim (10+9+5 multi-task) |
+| **Architecture** | Majority prior | 2-layer MLP, 128 units | 12-layer Encoder, sub-token masking |
+| **Parameters** | — | 27,012 | 9,659,672 |
+| **Top-1** | 35.6% | 60.9% | 67.2% |
 | **Reference** | Internal | Otremba 2022 | MIT Sloan 2025 |
+
+### Phase 9 아키텍처 사다리 (Track B) — 10-class 통일 비교
+
+| 모델 | Input | Top-1 | Macro-F1 | MDP 호환 |
+|------|-------|-------|----------|---------|
+| LR (77d) | 단일 77d | 41.1%† | 5.9% | ✅ |
+| LightGBM (77d) | 단일 77d | 13.0%‡ | 7.2% | ✅ |
+| MLP 10-class (77d) | 단일 77d | 41.1%† | 5.8% | ✅ |
+| RNN (LSTM, 87d×400) | 시퀀스 | 66.9% | 28.8% | ❌ |
+| Transformer (87d×400) | 시퀀스 | 67.2% | 30.1% | ❌ |
+
+† Strike majority collapse  ‡ 역방향 collapse (균등 예측)
+
+### Phase 9.5 MDP 호환 돌파 (Track C) — 135-dim Arsenal MLP
+
+| 모델 | Input | Top-1 | MDP 호환 | 권장 |
+|------|-------|-------|---------|------|
+| **TransitionModelMLP10** | **135d (77d+arsenal 58d)** | **67.6%** | **✅** | **⭐ 권장** |
+| LR 135d | 135d | 62.4% | ✅ | |
+| LightGBM 135d | 135d | 67.3% | ✅ | |
+
+### Phase 10 Hybrid Sequence (Track C 확장)
+
+| 모델 | Input | Top-1 | MDP 호환 |
+|------|-------|-------|---------|
+| RNN Hybrid (drop) | 시퀀스 + static 58d | 67.2% | ❌ |
+| Transformer Hybrid (drop) | 시퀀스 + static 58d | 66.8% | ❌ |
 
 ## Data
 
@@ -53,7 +82,26 @@ uv run python scripts/06_sanity_check_model_c.py
 
 ## Inference (DQN/MDP 팀용)
 
-학습된 모델을 다른 시스템에서 사용하려면:
+### ⭐ 권장 모델: TransitionModelMLP10 (135-dim, 10-class, MDP 호환)
+
+```python
+import json
+import numpy as np
+from src.inference import TransitionModelMLP10, build_135dim_feature
+
+model = TransitionModelMLP10()      # 자동 checkpoint 로드 (model_b3_focal_135dim_10cls_best.pt)
+
+with open("outputs/arsenal_by_pitcher_cluster.json", encoding="utf-8") as f:
+    arsenal = json.load(f)
+
+base_77 = np.zeros(77, dtype=np.float32)          # build_model_b_feature() 결과
+feat = build_135dim_feature(base_77, arsenal, pitcher_cluster=2)  # 0-3
+probs = model.predict(feat)                        # (10,) — Ball/Strike/.../HitByPitch
+```
+
+rl-agent 통합 가이드: [docs/handoff_to_rl_agent.md](docs/handoff_to_rl_agent.md)
+
+### Model C (Transformer, 시퀀스 기반)
 
 ```python
 from src.inference import TransitionModelC
@@ -86,7 +134,7 @@ notebooks/      Data exploration
 data/           Raw/processed data (git-ignored)
 outputs/        Checkpoints, logs, figures (git-ignored)
 references/     Papers
-tests/          91 pytest tests
+tests/          121 pytest tests (Phase 10 완료 기준)
 ```
 
 ## Daily Memo
@@ -95,6 +143,9 @@ tests/          91 pytest tests
 
 | 날짜 | 작성자 | 내용 |
 |------|--------|------|
+| 2026-05-27 | 조현준 | **Phase 10: 135-dim Context를 전 모델에 확장 + Hybrid Sequence 학습 완료**<br><br>**한 일**<br>- Phase 10.1: LR/LightGBM 135d 10-class 학습 — LR **62.4%** (+21.3pp), LightGBM **67.3%** (+54.3pp, 역방향 collapse 탈출)<br>- Phase 10.1: LR/LightGBM 135d 4-class 학습 — 56.3% / 60.9% (4-class 포화 확인, 135d 추가 효과 없음)<br>- Phase 10.2: `17_evaluate_all_10cls.py` 에 7개 신규 모델 추가 (graceful skip), `baseline_master_comparison.json` G1~G6' 통합<br>- Phase 10.3: `30_align_static58_for_sequence.py` 구현 — static_58_{train,val,test}.npy 생성 (99.9% 매칭)<br>- Phase 10.3: `PitchSequenceDatasetHybrid` 추가 (drop_missing_static 옵션), `PitchRNNHybrid` 모델 구현<br>- Phase 10.3: RNN Hybrid drop=True **67.2%** (1.5h) / drop=False **67.1%** (G5 fair compare)<br>- Phase 10.4: `PitchTransformer`에 `static_dim` 인자 추가 (역호환 유지)<br>- Phase 10.4: Transformer Hybrid drop=True **66.8%** (torch.compile Triton 우회 후 4.2h 학습) / drop=False **67.1%**<br>- 121 tests 전부 통과 확인 후 커밋·푸시 (`9bdb3b7`, LFS 86MB 포함)<br>- 논리 오류 5건 수정 커밋 (`1c10ac5`): CLAUDE.md 비교표 오기, 중복 섹션, handoff 코드 스켈레톤 버그, RNN 스크립트 Windows 안전장치, Adam→AdamW<br><br>**배운 것**<br>- **Context = Architecture-agnostic**: iid 모델에서 context 58d 추가만으로 41%→67%. 모델 복잡도보다 "투수 맥락 유무"가 10-class 분류의 결정적 인자<br>- **Sequence 모델은 static context 불필요**: RNN/Transformer는 400-pitch history로 arsenal을 이미 내재적으로 학습 → static 추가 효과 없음(+0.3pp / -0.4pp)<br>- **torch.compile + Triton on Windows**: `mode="reduce-overhead"`는 Triton 필요. `torch._dynamo.config.suppress_errors = True`로 eager fallback 강제. `try/except`는 첫 forward pass 오류를 잡지 못함<br>- **Python 함수 스코프**: `import x.y`를 함수 내부에서 쓰면 함수 전체에서 `x`가 local binding → UnboundLocalError. 모듈 레벨로 이동 필요<br><br>**이슈**<br>- Transformer Hybrid torch.compile BackendCompilerFailed → suppress_errors로 해결 (eager mode, 성능 손실 없음)<br>- Single/HR 0% 문제 미해결 (타자 arsenal feature 없음, Future Work) |
+| 2026-05-25 | 조현준 | **Phase 9.5: MDP 호환 10-class 돌파 — 135-dim Arsenal MLP ✅**<br><br>**한 일**<br>- handoff_v1.parquet 분석 (`12_handoff_v1_analysis.py`, `06_handoff_v1_compat.ipynb`) — UMAP 5d, count_cluster_id, arsenal_func 32d, arsenal_moment 20d 58dim 추출, 100% 매칭<br>- `25_extract_arsenal_by_cluster.py`: pitcher 2,007명 → 4클러스터 매핑 + arsenal 벡터 추출 → `arsenal_by_pitcher_cluster.json`<br>- `21_preprocess_135dim.py`: 77d + 58d = 135d 벡터 생성, scaler_new58.pkl fit<br>- `24_train_mlp_135dim_10cls_focal.py`: MLP 135→128→128→10, Focal Loss(γ=2.0), epoch 25 → **Top-1 67.6%** (77d 41.1%에서 +26.5pp, MDP 호환!)<br>- `TransitionModelMLP10` 클래스 추가 (src/inference/transition_model.py)<br>- `build_135dim_feature()` 추가 (UMAP 0-fill, pitcher_cluster/pitcher_id lookup)<br>- docs/handoff_to_rl_agent.md, docs/rl_agent_teammate_guide.md 작성<br>- tests/test_inference.py에 MLP10·build_135dim_feature 테스트 추가<br><br>**배운 것**<br>- **77-dim collapse의 진짜 원인**: feature 수 부족이 아니라 "투수 맥락(pitcher context)" 부재. arsenal 58d로 완전히 해소<br>- **Arsenal이 시퀀스를 근사**: 400-pitch history 없이도 투수 레퍼토리 통계로 동일 분리 가능 → MDP 호환 달성<br>- **Focal Loss의 효과**: Walk 85.9%, Strikeout 19.5%, FieldOut 7.3%로 희소 클래스 개선. 단타-홈런은 타자 맥락 없어 0% 유지<br>- **UMAP 0-fill 전략**: StandardScaler 기준 0 = 학습 데이터 평균 → "평균적 투구 메카닉"으로 합리적 근사<br><br>**이슈**<br>- Single/Double/Triple/HR 여전히 0% (타자 arsenal feature 부재 — Future Work)<br>- UMAP 5d 추론 시 0-fill 영향 미정량화 (Option C ablation 미실시) |
+| 2026-05-23 | 조현준 | **Phase 9: 발표 피드백 반영 — 두 그룹 비교 (10-class 아키텍처 사다리 + 4-class MDP)**<br><br>**한 일**<br>- scripts/13: LR 10-class — Top-1 41.1% (Strike majority collapse, CE 1.614)<br>- scripts/14: LightGBM 10-class — Top-1 13.0% (역방향 collapse, inverse-freq 과보정, CE 2.087)<br>- scripts/15: MLP 10-class — Top-1 41.1% (7 epoch early stop, collapse)<br>- scripts/16: RNN (LSTM 2-layer) 10-class — Top-1 66.9%, Macro-F1 28.8%, CE 0.873 (정상 학습!)<br>- scripts/18-19: LR/LightGBM 4-class — 56.3% / 60.8% (정상, 4-class 분포 균등)<br>- scripts/17,20: 통합 평가 + JSON 생성 (`all_models_comparison_10cls/4cls.json`)<br>- notebooks/06-11: 각 모델별 탐색 + 종합 비교 + MDP 호환성 분석<br><br>**배운 것**<br>- **Macro-F1의 필요성**: Top-1 41.1%는 "나름 성능 있어 보임"이지만 Macro-F1 5.8-5.9% → random classifier 이하. Strike 다수클래스만 예측하는 trivial model 탐지<br>- **10-class i.i.d. collapse 구조 분석**: (a) balancing 미적용 → Strike/Ball collapse (b) inverse-freq balancing → 반대 방향 collapse (균등 예측). 어떤 보정도 feature 부재를 극복 불가<br>- **Sequence context의 결정적 역할**: RNN 66.9% → 400-pitch history 하나만으로 41%→67% 점프. 투구 맥락 정보의 가치 정량적 입증<br>- **MDP/DQN 호환성**: sequence 모델은 pitch selection 전 필요한 400-pitch history 확보 불가 → 실시간 inference 부적합<br><br>**이슈**<br>- 10-class i.i.d. 모델 전체 collapse → 77-dim feature 자체가 single pitch에 너무 적은 context 포함 → Phase 9.5에서 해결 |
 | 2026-05-14 | 조현준 | **Phase 8: 3시즌 데이터 확장 + Model B/C 재학습 완료**<br><br>**한 일**<br>- 2022 Statcast 데이터 다운로드 (775,330 pitches) 및 정합성 검증 (FT=0, spin_rate diff=10.4 RPM, 컬럼 118개 완전 일치)<br>- `sac_bunt_double_play` 이벤트 발견 (2022 신규) → FIELD_OUT 매핑 추가 + NaN guard 수정<br>- `split_by_season(train_years=[...])` 파라미터화 + `04_preprocess.py` argparse 추가<br>- Model B v2 (3시즌) 재학습: 60.8% → **60.9%**, CE 0.876 → 0.872, 11분<br>- Model C v3 (3시즌) 재학습: 66.7% → **67.2%**, CE 0.880 → 0.868, ~10시간<br>- 3시즌 evaluation 저장 (evaluation_b/c_3season.npz), 노트북 00/04/05 업데이트<br>- docs/UPDATE_V3_3SEASON.md 작성 (팀원용 업데이트 가이드)<br><br>**배운 것**<br>- Sequence model이 데이터 양 효과를 5배 더 활용 (Model C +0.5pp vs Model B +0.1pp)<br>- Strikeout/FieldOut 소수 클래스 3-4pp 향상, 그러나 Single-HR 0%는 여전 (class imbalance 한계)<br>- 데이터 확장 전 정합성 검증 (FT 여부, spin_rate 분포, 컬럼 일치)이 핵심<br><br>**이슈**<br>- Class imbalance 근본 해결 미완료 (weighted loss / focal loss 필요) |
 | 2025-05-05 | 조현준 | 나도 어린이라 어린이날을 즐김 |
 | 2025-05-06 | 조현준 | **transition-models 프로젝트 시작 (Phase 1~3.4)**<br><br>**한 일**<br>- 졸업작품용 별도 repo `Pitcheezy/transition-models` 세팅 (uv, pyproject.toml, VS Code, Claude Code 통합)<br>- Statcast 2023-2024 데이터 다운로드 (1,534,286 pitches, 198MB Parquet)<br>- 데이터 탐색 노트북 작성 (9셀, 한국어 주석, 8 deprecated 컬럼 식별, 400+ pitches 타자 586명 확인)<br>- Feature 매핑 모듈 구현 (`src/data/features.py`): 4-class (Otremba 2022) 100% 매핑, 10-class (MIT Sloan 2025) 99.96% 매핑<br>- 전처리 파이프라인 + PyTorch Dataset 1차 구현 (`preprocess.py`, `dataset.py`)<br>- 87차원 Model C vector / 77차원 Model B vector 정의<br>- Train/Val/Test 시즌 기반 분할 (749K / 385K / 354K, 날짜 겹침 없음)<br>- Sub-token masking 구현 + 검증<br>- 단위 테스트 54개 작성 (모두 통과)<br><br>**배운 것**<br>- Statcast description vs events 컬럼의 우선순위 매핑 (events 우선, description fallback)<br>- StandardScaler는 train에만 fit하고 val/test는 transform만 적용해야 data leakage 방지<br>- Sub-token masking은 마지막 pitch의 outcome features만 0 처리해야 함 (직전 399개는 보존)<br><br>**이슈**<br>- stride=1 (논문 그대로)로 시퀀스 미리 만들면 약 521K 시퀀스 × 400 × 87 × 4B ≈ **72GB 메모리 필요** → Mac Mini OOM<br>- 임시방편으로 stride=50 사용 (시퀀스 10K개로 축소, 데이터 1/49 수준) → 다음 날 해결 예정 |
