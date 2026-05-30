@@ -1,7 +1,7 @@
 # SmartPitch MDP — 전이확률 모델 비교 발표
 
-> **역할**: transition-models 파트  
-> **기간**: 2026-05-06 ~ 2026-05-27 (Phase 1~10 완료)  
+> **역할**: transition-models 파트
+> **기간**: 2026-05-06 ~ 2026-05-27 (Phase 1~10 완료)
 > **데이터**: MLB Statcast 2022–2024, 2,983,621 투구
 
 ---
@@ -11,15 +11,15 @@
 ### SmartPitch MDP
 # 전이확률 모델 비교 실험
 
-**목표**: 투구 결과 확률 P(outcome | pitch, context) 추정  
-MDP 전이확률로 활용 → rl-agent의 Value Iteration · DQN · PPO에 공급
+**목표**: 투구 결과 확률 P(outcome | pitch, context) 추정
+rl-agent의 환경 dynamics로 활용 → MDP-VI/Dyna-Q는 직접, DQN/PPO는 PitchEnv를 통해 간접 사용
 
 | 항목 | 내용 |
 |------|------|
 | 데이터 | MLB Statcast 2022–2024, **2,983,621** 투구 |
 | 재현 논문 | Otremba 2022 · MIT Sloan 2025 |
 | 비교 모델 | 12개 (LR → LightGBM → MLP → RNN → Transformer) |
-| 핵심 발견 | Arsenal context 58d → collapse 해소, MDP 호환 유지 |
+| 핵심 발견 | Arsenal context 58d → 10-class i.i.d. collapse 해소, MDP 호환 유지 |
 
 ---
 
@@ -43,7 +43,7 @@ s′       = Ball / Strike / Foul / InPlay (4-class)
 | MIT Sloan 2025 (Transformer) | 10-class 예측 가능하지만 MDP 비호환 (400-pitch history 필요) |
 
 **본 연구의 목표**:
-1. 두 논문을 **동일 환경에서 공정 비교** (같은 데이터, 같은 평가 지표)
+1. 기존 논문/베이스라인을 **비교 가능한 구간끼리 분리 평가** (같은 데이터, 같은 평가 지표)
 2. MDP 호환 + 10-class 동시 달성 탐색
 3. Collapse 원인 규명 및 해소
 
@@ -56,12 +56,12 @@ s′       = Ball / Strike / Foul / InPlay (4-class)
 | 항목 | Otremba 2022 | MIT Sloan 2025 | **본인 (이번 발표)** |
 |------|:---:|:---:|:---:|
 | Sequence 활용 | ❌ (단일 투구) | ✅ (400 pitch) | ❌ (i.i.d. + **context**) |
-| MDP/RL 통합 | ✅ Value Iteration | ❌ 1-step pred | ✅ **MDP-VI · DQN · PPO 등** |
+| MDP/RL 통합 | ✅ Value Iteration | ❌ 1-step pred | ✅ **MDP-VI/Dyna-Q 직접 · DQN/PPO 간접** |
 | Pitcher 맥락 | ❌ | ❌ | ✅ **arsenal 58d** |
 | Outcome class | 4-class | 10-class | **4 + 10 (이중)** |
-| Top-1 성능 | 60.9% (4-cls) | 67.2% (10-cls) | **67.6% (10-cls, MDP ✅)** |
+| Top-1 성능 | 60.9% (4-cls) | 67.2% (10-cls, 내부 재현) | **67.6% (10-cls, MDP ✅)** |
 
-**차별점**: Otremba의 MDP 통합 + MIT Sloan의 10-class 세분화 + **Arsenal Context 58d** (본인 기여)
+**차별점**: Otremba의 MDP 통합 + MIT Sloan-style 10-class 세분화 + **Arsenal Context 58d** (본인 기여)
 
 ---
 
@@ -139,37 +139,39 @@ G4  vs  G5:    N 다름 (iid: 전수, seq: last-pitch-of-AB)  ← 직접 비교 
 - Macro-F1 5.8% → random(10%) 이하 = "Strike 예측기"에 불과
 - class balancing · Focal Loss · sqrt-balanced 모두 무효 → **feature 부재 문제**
 
-**Sequence 모델은 정상 작동**: RNN 66.9%, Transformer 67.2%  
+**Sequence 모델은 정상 작동**: RNN 66.9%, Transformer 67.2%
 → 400-pitch history 내 **pitcher context를 내재적으로 학습**
 
 ---
 
-## Slide 7 — SOTA 비교: 객관적 위치
+## Slide 7 — 베이스라인 비교: 객관적 위치
 
 > **그림**: `outputs/figures/fig4_sota_comparison.png`
 
-### 문헌 비교 (2023–2025)
+### 비교 기준 분리
 
-| 논문 | 방법 | Task | Top-1 | 비고 |
+| 비교군 | 방법 | Task | Top-1 | 해석 |
 |------|------|------|-------|------|
-| Schilamkur et al. | XGBoost 2-tier | **3-class** (Ball/Strike/BIP) | **72.4%** | 더 쉬운 task |
-| Northwestern 2023 | Random Forest | **2-class** (Ball/Strike) | **91.1%** | 훨씬 쉬운 task |
-| Ahn et al. 2025 | LLM (7B) | 10-class (next pitch) | **64.0%** | 유사하나 다른 정의 |
-| **Kneita 2025** (MIT Sloan) | **Transformer** | **10-class** | **67.2%** | **동일 task (우리 재현)** |
-| **본인 MLP 135d** | **MLP + context** | **10-class (MDP ✅)** | **67.6%** | **동일 task + MDP 호환** |
+| 외부 참고 | RF/XGBoost | 2~3-class | 72~91% | 더 쉬운 task라 직접 순위 비교 불가 |
+| 외부 참고 | LLM | 10-class next pitch | 64.0% | 유사하지만 label/state 정의 다름 |
+| 내부 sequence baseline | MIT Sloan-style Transformer | 10-class | 67.2% | 400-pitch history 사용, MDP 직접 호환 어려움 |
+| 내부 iid collapse baseline | MLP 77d | 10-class | 41.1% | pitcher context 부재로 collapse |
+| **본인 최종** | **MLP 135d + arsenal context** | **10-class (MDP ✅)** | **67.6%** | **단일-step, rl-agent 연동 가능** |
 
-**핵심**: 10-class 동일 task 기준으로 **Transformer 67.2% ≈ 본인 MLP 67.6%**  
-→ 파라미터 27K vs 9.7M (360배 차이), MDP 호환 여부 차이
+**핵심**: 외부 문헌은 task가 달라 참고용으로만 사용.
+직접 주장 가능한 비교는 **내부 재현 Transformer 67.2% vs 본인 MLP10 67.6%**이며,
+Top-1은 유사하지만 강점이 다르다.
 
-**우리가 더 정직한 지표 사용**:
-- Kneita 2025: Top-4 정확도 중심 (Top-1 미공개)
-- 본인: Top-1 + Macro-F1 + CE 모두 공개 → rare class 성능까지 투명하게 보고
+| 모델 | 강점 | 약점 |
+|------|------|------|
+| Transformer | Macro-F1/CE 양호, sequence context 학습 | 400-pitch history 필요, MDP 직접 호환 어려움 |
+| MLP10 135d | 단일-step, 빠른 추론, MDP-VI/Dyna-Q 직접 사용 가능 | Single~HR 0% 문제 → MLP10H 보완 필요 |
 
 ---
 
 ## Slide 8 — 핵심 발견 2: Arsenal Context가 Collapse 해소
 
-> **그림**: `outputs/figures/fig1_core_finding_context.png`  
+> **그림**: `outputs/figures/fig1_core_finding_context.png`
 > **그림**: `outputs/figures/fig5_context_effect_detail.png`
 
 ### 135-dim = 77-dim + Arsenal Context 58d
@@ -197,7 +199,7 @@ G4  vs  G5:    N 다름 (iid: 전수, seq: last-pitch-of-AB)  ← 직접 비교 
 | RNN | 66.9% | 67.1% | +0.2pp |
 | Transformer | 67.2% | 67.1% | -0.1pp |
 
-**해석**: Sequence가 400-pitch history에서 arsenal context를 **이미 내재적으로 학습**  
+**해석**: Sequence가 400-pitch history에서 arsenal context를 **이미 내재적으로 학습**
 → 정적 context 추가는 중복 정보
 
 **결론**: Collapse 원인 = Architecture × Feature 수 아님 = **투수 맥락(pitcher context) 부재**
@@ -223,7 +225,7 @@ G4  vs  G5:    N 다름 (iid: 전수, seq: last-pitch-of-AB)  ← 직접 비교 
 | G6: hybrid | RNN Hybrid | 67.2% | 28.1% | ❌ |
 | G6: hybrid | Trans Hybrid | 66.8% | 30.6% | ❌ |
 
-### 최종 권장 모델
+### 최종 모델 해석
 
 ```
 TransitionModelMLP10
@@ -234,25 +236,39 @@ TransitionModelMLP10
   MDP 호환: ✅ (walk/strikeout/HBP 직접 예측)
 ```
 
+**rl-agent 실험 권장**:
+- Raw transition model: `MLP10`
+- Strategy evaluation path: `MLP10H`
+- 이유: MLP10은 Ball/Strike/Walk/K/HBP 구조는 직접 예측하지만 Single~HR이 0%에 가깝다. MLP10H는 MLP10의 BIP 총량을 empirical BIP table로 재분배해 RL 보상 왜곡을 줄인다.
+
 ---
 
 ## Slide 10 — 결론 & 팀 통합
 
 ### 3가지 핵심 발견
 
-**① Collapse 원인 규명**  
-77d i.i.d. 모델의 10-class collapse = feature 수·class balancing 문제 아님  
+**① Collapse 원인 규명**
+77d i.i.d. 모델의 10-class collapse = feature 수·class balancing 문제 아님
 = **투수 맥락(pitcher context) 부재**
 
-**② Context = Architecture-Agnostic (iid 모델 기준)**  
-같은 arsenal 58d context → LR +21pp, LightGBM +54pp, MLP +26pp  
-MLP 27K params ≈ Transformer 9.7M params (context 있을 때)
+**② Context = Architecture-Agnostic (iid 모델 기준)**
+같은 arsenal 58d context → LR +21pp, LightGBM +54pp, MLP +26pp
+Top-1은 Transformer와 유사하고, MLP10은 MDP 호환성과 추론 효율이 강점
 
-**③ Sequence는 context를 내재 학습**  
-RNN/Transformer에 static context 추가 → 효과 없음 또는 소폭 감소  
+**③ Sequence는 context를 내재 학습**
+RNN/Transformer에 static context 추가 → 효과 없음 또는 소폭 감소
 → 400-pitch history가 arsenal context를 이미 학습
 
-### 팀 통합
+### rl-agent에서 사용하는 방식
+
+| 알고리즘 | transition-models 산출물 사용 방식 |
+|----------|-----------------------------------|
+| MDP-VI | 모든 (state, action)의 P(s′|s,a)를 precompute해 직접 사용 |
+| Dyna-Q | planning 단계에서 transition table/cache 사용 |
+| DQN/DDQN | 전이표 직접 사용 X, PitchEnv.step()이 모델로 outcome 샘플링 |
+| PPO | DQN과 동일하게 환경 dynamics로 간접 사용 |
+
+### 팀 통합 코드
 
 ```python
 # rl-agent 통합 (TransitionModelMLP10)
@@ -269,6 +285,7 @@ probs = model.predict(x)                              # shape (10,)
 | 과제 | 기대 효과 |
 |------|----------|
 | 타자 arsenal feature 추가 (batter_func/moment) | Single~HR 현재 0% → 목표 >5% |
+| MLP10H 비교 실험 강화 | BIP 재분배 후 RL 보상 안정화 |
 | Weighted sampler + γ=3.0 | HBP 개선 |
 | Small Transformer 2-layer (MDP 호환 탐색) | 파라미터 효율화 |
 | UMAP 0-fill ablation (50% dropout) | 135d UMAP 기여 정량화 |
@@ -311,7 +328,7 @@ probs = model.predict(x)                              # shape (10,)
 | **Cross-Entropy (CE)** | MDP 전이확률 캘리브레이션 품질 |
 | Top-3 / Top-4 | 보조 지표, MIT Sloan 기준 호환 |
 
-> Macro-F1이 없으면 "Strike만 예측"하는 모델도 Top-1 41%로 준수해 보임  
+> Macro-F1이 없으면 "Strike만 예측"하는 모델도 Top-1 41%로 준수해 보임
 > → **Macro-F1 병행 보고가 핵심 기여 중 하나**
 
 ---

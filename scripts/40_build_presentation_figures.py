@@ -1,13 +1,13 @@
 """
 scripts/40_build_presentation_figures.py
 
-발표용 그래프 7종 생성 (Phase 10 최종 + SOTA 비교 포함).
+발표용 그래프 7종 생성 (Phase 10 최종 + 베이스라인 비교 포함).
 
 출력: outputs/figures/
     fig1_core_finding_context.png     — 핵심 발견: context 추가 효과 (7-bar)
     fig2_paper_positioning.png        — 3-way 논문 포지셔닝 표
     fig3_phase10_12model.png          — Phase 10 전체 12-model 비교
-    fig4_sota_comparison.png          — SOTA 비교 (문헌 vs 본인)
+    fig4_sota_comparison.png          — 외부 참고 + 내부 베이스라인 비교
     fig5_context_effect_detail.png    — G3 vs G4 context 효과 세부
     fig6_per_class_heatmap.png        — Per-class accuracy 히트맵 (6-model)
     fig7_4class_mdp.png               — 4-class MDP 그룹 비교
@@ -156,7 +156,7 @@ def build_fig2():
 
     CELLS = [
         [("없음 (단일 투구)", "neu"), ("있음 (400 pitch)", "pos"), ("없음 (i.i.d. + context)", "pos")],
-        [("있음 (Value Iteration)", "pos"), ("없음 (1-step pred.)", "neg"), ("있음 (MDP-VI·DQN·PPO 등)", "pos")],
+        [("있음 (Value Iteration)", "pos"), ("없음 (1-step pred.)", "neg"), ("MDP-VI/Dyna-Q 직접\nDQN/PPO 환경 간접", "pos")],
         [("없음 (77d 기본)", "neg"), ("없음", "neg"), ("있음 (arsenal 58d)", "pos")],
         [("4-class\n(Ball/Strike/Foul/InPlay)", "neu"), ("10-class\n(세분화)", "pos"), ("4+10 이중\n(MDP 호환 유지)", "pos")],
     ]
@@ -168,7 +168,7 @@ def build_fig2():
     PERF_Y = 0.06
     PERF_DATA = [
         ("Top-1: 60.9%\n(4-class)", "neu"),
-        ("Top-1: 67.2%\n(10-class)", "pos"),
+        ("Top-1: 67.2%\n(10-class, 내부 재현)", "pos"),
         ("Top-1: 67.6%\n(10-class, MDP ✅)", "pos"),
     ]
 
@@ -206,7 +206,7 @@ def build_fig2():
     ax.set_title("논문 비교: Otremba 2022 vs MIT Sloan 2025 vs 본인",
                  fontsize=13, fontweight="bold", pad=12)
     fig.text(0.5, 0.00,
-             "Otremba MDP/RL 통합  +  MIT Sloan 10-class 세분화  +  본인 Arsenal Context 58d  =  차별점",
+             "Otremba MDP/RL 통합  +  MIT Sloan-style 10-class 세분화  +  본인 Arsenal Context 58d  =  차별점",
              ha="center", fontsize=9.5, style="italic", color="#555555")
 
     plt.tight_layout(rect=[0, 0.04, 1, 1])
@@ -313,36 +313,36 @@ def build_fig3():
 
 
 # ═════════════════════════════════════════════════════════════════════════════
-# Fig 4: SOTA 비교 — 문헌 vs 본인
+# Fig 4: 외부 참고 + 내부 베이스라인 비교
 # ═════════════════════════════════════════════════════════════════════════════
 def build_fig4():
     """
-    SOTA 비교표 시각화.
+    비교표 시각화.
     출처:
       - XGBoost 2-tier Tier1 (Ball/Strike/BIP 3-class): 72.4% [Schilamkur et al.]
-      - MIT Sloan 2025 Transformer (Top-1 10-class): 67.2% [Kneita 2025]
+      - MIT Sloan-style Transformer internal reproduction (10-class): 67.2%
       - LLM Neural Sabermetrics (next-pitch 10-class): 64% [Ahn et al. 2025]
       - Random Forest Ball/Strike (2-class): 91.1% [Northwestern EECS 349]
       - 본인 MLP 135d focal: 67.6% (10-class)
-    주의: task가 다르므로 직접 비교 불가 — task complexity 명시
+    주의: 외부 문헌은 task가 다르므로 직접 순위 비교 불가 — task complexity 명시
     """
     # (이름, accuracy, task_desc, 비교가능성, 색상)
-    SOTA_MODELS = [
-        ("Random Forest\n(Ball/Strike 2-class)\n[Northwestern 2023]", 0.911, "2-class", "다른 task", "#cccccc"),
-        ("XGBoost Tier-1\n(Ball/Strike/BIP 3-class)\n[Schilamkur et al.]", 0.724, "3-class", "다른 task", "#aaaaaa"),
-        ("LLM\nNeural Sabermetrics\n[Ahn et al. 2025]", 0.640, "10-class\n(next pitch)", "유사 task", "#9B59B6"),
-        ("MIT Sloan 2025\nTransformer\n[Kneita 2025]", 0.672, "10-class", "동일 task", "#3498DB"),
-        ("본인\nMLP 135d focal\n(이번 발표)", 0.676, "10-class\n(MDP 호환)", "동일 task", "#e67e22"),
+    COMP_MODELS = [
+        ("Random Forest\n(Ball/Strike 2-class)\n[Northwestern]", 0.911, "2-class", "외부 참고", "#cccccc"),
+        ("XGBoost Tier-1\n(Ball/Strike/BIP 3-class)\n[Schilamkur]", 0.724, "3-class", "외부 참고", "#aaaaaa"),
+        ("LLM\nNeural Sabermetrics\n[Ahn et al.]", 0.640, "10-class\n(next pitch)", "외부 참고", "#9B59B6"),
+        ("Internal Transformer\n(MIT Sloan-style)", 0.672, "10-class\n(sequence)", "내부 baseline", "#3498DB"),
+        ("MLP10\n135d focal\n(ours)", 0.676, "10-class\n(MDP-ready)", "본인 모델", "#e67e22"),
     ]
 
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 7),
                                     gridspec_kw={"width_ratios": [3, 2]})
 
-    names = [m[0] for m in SOTA_MODELS]
-    vals = [m[1] for m in SOTA_MODELS]
-    tasks = [m[2] for m in SOTA_MODELS]
-    comp_level = [m[3] for m in SOTA_MODELS]
-    colors = [m[4] for m in SOTA_MODELS]
+    names = [m[0] for m in COMP_MODELS]
+    vals = [m[1] for m in COMP_MODELS]
+    tasks = [m[2] for m in COMP_MODELS]
+    comp_level = [m[3] for m in COMP_MODELS]
+    colors = [m[4] for m in COMP_MODELS]
 
     bars = ax1.bar(range(len(names)), vals, color=colors, alpha=0.85, width=0.6)
     ax1.set_xticks(range(len(names)))
@@ -360,17 +360,18 @@ def build_fig4():
 
     ax1.set_ylim(0, 1.08)
     ax1.set_ylabel("Top-1 Accuracy", fontsize=11)
-    ax1.set_title("SOTA 문헌 비교 (2023–2025)\n※ Task 복잡도 다름 — 직접 비교 주의",
+    ax1.set_title("외부 참고 + 내부 베이스라인 비교\n※ 외부 문헌은 task 정의가 달라 직접 순위 비교 금지",
                   fontsize=12, fontweight="bold")
     ax1.grid(axis="y", alpha=0.3, linestyle=":")
     ax1.set_axisbelow(True)
     ax1.spines[["top", "right"]].set_visible(False)
 
     legend_patches = [
-        mpatches.Patch(color="#cccccc", label="다른 task (2-3 class, 더 쉬움)"),
-        mpatches.Patch(color="#9B59B6", label="유사 task (다른 정의)"),
-        mpatches.Patch(color="#3498DB", label="동일 task (10-class)"),
-        mpatches.Patch(color="#e67e22", label="본인 모델 (10-class, MDP 호환)"),
+        mpatches.Patch(color="#cccccc", label="외부 참고 (2-class)"),
+        mpatches.Patch(color="#aaaaaa", label="외부 참고 (3-class)"),
+        mpatches.Patch(color="#9B59B6", label="외부 참고 (10-class, 다른 정의)"),
+        mpatches.Patch(color="#3498DB", label="내부 sequence baseline"),
+        mpatches.Patch(color="#e67e22", label="본인 MLP10 (MDP-ready)"),
     ]
     ax1.legend(handles=legend_patches, fontsize=9, loc="upper left")
 
@@ -378,11 +379,18 @@ def build_fig4():
     task_complexity = [1, 2, 4, 4, 4]  # 1=2class, 2=3class, 4=10class
     accs = vals
     scatter_colors = colors
-    scatter_labels = ["RF\n(2-cls)", "XGB\n(3-cls)", "LLM\n(10-cls)", "Trans\n(10-cls)", "★본인\n(10-cls)"]
+    scatter_labels = ["RF\n(2-cls)", "XGB\n(3-cls)", "LLM\n(10-cls)", "Trans\nbaseline", "★MLP10"]
 
+    label_offsets = [
+        (0.05, 0.01),
+        (0.05, 0.02),
+        (0.08, -0.015),
+        (-0.45, 0.035),
+        (0.08, 0.005),
+    ]
     for i, (x, y, c, lbl) in enumerate(zip(task_complexity, accs, scatter_colors, scatter_labels)):
         ax2.scatter(x, y, color=c, s=180, zorder=5, edgecolors="white", linewidths=1.5)
-        offset = (0.05, 0.01) if i < 3 else (-0.15, 0.025)
+        offset = label_offsets[i]
         ax2.annotate(lbl, (x, y), (x + offset[0], y + offset[1]), fontsize=8.5)
 
     ax2.set_xlim(0.5, 5)
@@ -396,10 +404,10 @@ def build_fig4():
     ax2.spines[["top", "right"]].set_visible(False)
 
     fig.text(0.5, 0.00,
-             "※ 10-class 동일 task 기준: LLM 64.0% < MIT Sloan Transformer 67.2% ≈ 본인 MLP 135d 67.6% (MDP 호환)",
+             "직접 주장 가능한 비교: 내부 Transformer baseline 67.2% vs MLP10 67.6%; 외부 문헌은 task 정의가 달라 참고용",
              ha="center", fontsize=9.5, color="#333333", style="italic")
 
-    plt.suptitle("SOTA 비교: 본인 모델의 객관적 위치", fontsize=13, fontweight="bold")
+    plt.suptitle("베이스라인 비교: 성능보다 비교 조건을 먼저 분리", fontsize=13, fontweight="bold")
     plt.tight_layout(rect=[0, 0.04, 1, 1])
     fig.savefig(FIG_DIR / "fig4_sota_comparison.png", dpi=300, bbox_inches="tight")
     plt.close(fig)
@@ -617,7 +625,7 @@ def build_fig7():
 # ═════════════════════════════════════════════════════════════════════════════
 if __name__ == "__main__":
     print("=" * 60)
-    print("발표용 그래프 생성 (Phase 10 최종 + SOTA 비교)")
+    print("발표용 그래프 생성 (Phase 10 최종 + 베이스라인 비교)")
     print("=" * 60)
 
     build_fig1()

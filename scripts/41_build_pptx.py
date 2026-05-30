@@ -208,7 +208,7 @@ def make_pptx():
         y += Cm(1.3)
 
     goals = [
-        ("① 공정 비교", "동일 데이터·지표로 두 논문 비교"),
+        ("① 비교 조건 분리", "같은 N·지표끼리만 직접 비교"),
         ("② MDP + 10-class", "MDP 호환 유지하면서 10-class 달성"),
         ("③ Collapse 규명", "원인 분석 및 해결"),
     ]
@@ -239,7 +239,7 @@ def make_pptx():
                     font_size=14, color=C_GRAY, align=PP_ALIGN.CENTER)
 
     add_textbox(sl,
-                "차별점: Otremba MDP/RL 통합  +  MIT Sloan 10-class 세분화  +  본인 Arsenal Context 58d",
+                "차별점: Otremba MDP/RL 통합  +  MIT Sloan-style 10-class 세분화  +  본인 Arsenal Context 58d",
                 MARGIN, H - Cm(1.0), W - MARGIN*2, Cm(0.8),
                 font_size=12, bold=True, color=C_ORANGE, align=PP_ALIGN.CENTER)
 
@@ -405,23 +405,23 @@ def make_pptx():
                 font_size=10.5, color=C_DARK)
 
     # =========================================================
-    # Slide 7 — SOTA 비교
+    # Slide 7 — 베이스라인 비교
     # =========================================================
     sl = prs.slides.add_slide(blank_layout)
     set_slide_bg(sl, C_WHITE)
-    make_slide_header(sl, "SOTA 비교: 객관적 위치", "Slide 7 / 10")
+    make_slide_header(sl, "베이스라인 비교: 객관적 위치", "Slide 7 / 10")
 
     img_ok = add_image_if_exists(sl, "fig4_sota_comparison.png",
                                   MARGIN, BODY_TOP, width=W - MARGIN*2)
     if not img_ok:
         sota_rows = [
-            ("Schilamkur et al.", "XGBoost 2-tier", "3-class", "72.4%", "더 쉬운 task"),
-            ("Northwestern 2023", "Random Forest", "2-class", "91.1%", "훨씬 쉬운 task"),
-            ("Ahn et al. 2025", "LLM (7B)", "10-class", "64.0%", "유사 task"),
-            ("Kneita 2025 (MIT Sloan)", "Transformer", "10-class", "67.2%", "동일 task"),
-            ("★ 본인 MLP 135d focal", "MLP + context", "10-class (MDP)", "67.6%", "동일 task + MDP"),
+            ("외부 참고", "RF/XGBoost", "2~3-class", "72~91%", "직접 순위 비교 금지"),
+            ("외부 참고", "LLM", "10-class next pitch", "64.0%", "label/state 정의 다름"),
+            ("내부 baseline", "Transformer", "10-class seq", "67.2%", "400-pitch history"),
+            ("내부 collapse", "MLP 77d", "10-class iid", "41.1%", "pitcher context 부재"),
+            ("★ 본인 MLP10", "MLP 135d", "10-class MDP", "67.6%", "단일-step, RL 연동"),
         ]
-        sota_hdr = ["논문", "방법", "Task", "Top-1", "비고"]
+        sota_hdr = ["비교군", "방법", "Task", "Top-1", "해석"]
         sota_col_w = [(W - MARGIN*2) * r for r in [0.25, 0.15, 0.15, 0.12, 0.28]]
         sota_col_x = [MARGIN]
         for sw in sota_col_w[:-1]:
@@ -444,7 +444,7 @@ def make_pptx():
             y += row_h
 
     add_textbox(sl,
-                "※ 10-class 동일 task 기준: LLM 64.0% < MIT Sloan 67.2% ≈ 본인 67.6% (MDP 호환 추가)",
+                "직접 주장 가능한 비교: 내부 Transformer baseline 67.2% vs MLP10 67.6%; 외부 문헌은 참고용",
                 MARGIN, H - Cm(1.0), W - MARGIN*2, Cm(0.8),
                 font_size=12, bold=True, color=C_ORANGE, align=PP_ALIGN.CENTER)
 
@@ -493,7 +493,7 @@ def make_pptx():
     add_rect(sl, MARGIN, y2, W - MARGIN*2, Cm(0.9), RGBColor(0xEB, 0xF5, 0xFB))
     add_textbox(sl,
                 "결론: Collapse 원인 = Architecture × Feature 수 아님 = 투수 맥락(pitcher context) 부재\n"
-                "MLP 27K params ≈ Transformer 9.7M params (context 있을 때) — 360배 파라미터 효율",
+                "Top-1은 sequence baseline과 유사, MLP10은 MDP 호환성과 추론 효율이 강점",
                 MARGIN + Cm(0.3), y2 + Cm(0.08), W - MARGIN*2 - Cm(0.6), Cm(0.8),
                 font_size=11, bold=False, color=C_BLUE)
 
@@ -513,13 +513,14 @@ def make_pptx():
     # 최종 권장 모델 박스
     add_rect(sl, MARGIN, y_below2, W - MARGIN*2, Cm(1.6),
              RGBColor(0xE8, 0xF8, 0xE8), line_color=C_GREEN, line_width=Pt(2.5))
-    add_textbox(sl, "✅ 최종 권장: TransitionModelMLP10",
+    add_textbox(sl, "✅ 최종 모델: TransitionModelMLP10 / RL 권장 경로: MLP10H",
                 MARGIN + Cm(0.3), y_below2 + Cm(0.08), Cm(8), Cm(0.55),
                 font_size=14, bold=True, color=C_GREEN)
     add_textbox(sl,
-                "입력: 135d (단일 pitch) | Top-1: 67.6% | Macro-F1: 27.8% | CE: 0.926 | Params: ~32K | 추론: <1ms | MDP 호환: ✅",
+                "MLP10: 135d 단일 pitch, Top-1 67.6%, Macro-F1 27.8%, CE 0.926, MDP 호환\n"
+                "MLP10H: MLP10의 BIP 총량을 empirical BIP table로 재분배해 Single~HR 0% 문제 완화",
                 MARGIN + Cm(0.3), y_below2 + Cm(0.65), W - MARGIN*2 - Cm(0.6), Cm(0.9),
-                font_size=10.5, color=C_DARK)
+                font_size=9.8, color=C_DARK)
 
     # =========================================================
     # Slide 10 — 결론 & 팀 통합
@@ -533,7 +534,7 @@ def make_pptx():
          "77d i.i.d. 모델 collapse = 투수 맥락(pitcher context) 부재\nclass balancing · Focal Loss 모두 무효 — feature 구조 문제",
          C_RED),
         ("② Context = Architecture-Agnostic",
-         "arsenal 58d 추가 → LR +21pp, LGB +54pp, MLP +27pp\nMLP 27K params = Transformer 9.7M params (context 있을 때)",
+         "arsenal 58d 추가 → LR +21pp, LGB +54pp, MLP +27pp\nTop-1은 sequence baseline과 유사, MDP 호환성이 강점",
          C_ORANGE),
         ("③ Sequence는 Context를 내재 학습",
          "RNN/Transformer에 static context 추가 → 효과 없음\n400-pitch history가 arsenal context를 이미 포함",
@@ -552,31 +553,31 @@ def make_pptx():
     add_rect(sl, (W - MARGIN*2) * 0.63, BODY_TOP + Cm(0.2),
              (W - MARGIN*2) * 0.37, Cm(4.0),
              RGBColor(0x1A, 0x2A, 0x3A))
-    add_textbox(sl, "rl-agent 통합",
+    add_textbox(sl, "rl-agent 사용 방식",
                 (W - MARGIN*2) * 0.63 + Cm(0.3), BODY_TOP + Cm(0.3),
                 (W - MARGIN*2) * 0.34, Cm(0.55),
                 font_size=13, bold=True, color=C_ORANGE)
 
     code = (
-        "from src.inference.transition_model import (\n"
-        "    TransitionModelMLP10,\n"
-        "    build_135dim_feature\n"
-        ")\n"
-        "model = TransitionModelMLP10(\n"
-        "    'outputs/checkpoints/...best.pt'\n"
-        ")\n"
-        "x = build_135dim_feature(pitch, arsenal)\n"
-        "probs = model.predict(x)  # shape (10,)"
+        "MDP-VI\n"
+        "  P(s'|s,a) table 직접 precompute\n\n"
+        "Dyna-Q\n"
+        "  planning에서 transition cache 사용\n\n"
+        "DQN / DDQN / PPO\n"
+        "  전이표 직접 사용 X\n"
+        "  PitchEnv.step()이 MLP10/MLP10H로\n"
+        "  outcome을 샘플링"
     )
     add_textbox(sl, code,
                 (W - MARGIN*2) * 0.63 + Cm(0.3), BODY_TOP + Cm(0.9),
                 (W - MARGIN*2) * 0.34, Cm(3.0),
-                font_size=9, color=C_WHITE)
+                font_size=8.8, color=C_WHITE)
 
     # Future Work 간략
-    fw_items = ["타자 arsenal feature → Single~HR 0% 해결",
+    fw_items = ["MLP10H RL 비교 강화 → BIP 보상 안정화",
+                "타자 arsenal feature → Single~HR 0% 해결",
                 "Small Transformer (2-layer) MDP 호환 탐색",
-                "UMAP 0-fill ablation (50% dropout)"]
+                "UMAP 0-fill ablation"]
     y3 = y + Cm(0.3)
     add_textbox(sl, "Future Work", MARGIN, y3, W * 0.55, Cm(0.5),
                 font_size=13, bold=True, color=C_DARK)
