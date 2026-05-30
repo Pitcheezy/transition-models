@@ -2,7 +2,7 @@
 
 > **역할**: transition-models 파트
 > **기간**: 2026-05-06 ~ 2026-05-27 (Phase 1~10 완료)
-> **데이터**: MLB Statcast 2022–2024, 2,983,621 투구
+> **데이터**: MLB Statcast 2022–2024, 학습/평가 2,233,284 투구
 
 ---
 
@@ -16,7 +16,7 @@ rl-agent의 환경 dynamics로 활용 → MDP-VI/Dyna-Q는 직접, DQN/PPO는 Pi
 
 | 항목 | 내용 |
 |------|------|
-| 데이터 | MLB Statcast 2022–2024, **2,983,621** 투구 |
+| 데이터 | MLB Statcast 2022–2024, **2,233,284** train/val/test 투구 |
 | 재현 논문 | Otremba 2022 · MIT Sloan 2025 |
 | 비교 모델 | 12개 (LR → LightGBM → MLP → RNN → Transformer) |
 | 핵심 발견 | Arsenal context 58d → 10-class i.i.d. collapse 해소, MDP 호환 유지 |
@@ -72,8 +72,9 @@ s′       = Ball / Strike / Foul / InPlay (4-class)
 | 항목 | 값 |
 |------|-----|
 | 시즌 | 2022 · 2023 · 2024 (3시즌) |
-| 총 투구 수 | **2,983,621** rows (handoff_v1 기준) |
-| Test set | 353,667–353,776 (2024 H2) |
+| 학습/평가 rows | **2,233,284** = Train 1,494,188 + Val 385,320 + Test 353,776 |
+| 원천 handoff pool | 2,983,621 rows (feature source pool, 발표 성능의 N 아님) |
+| Test set | 353,776 (2024 H2, 일부 실험 353,667) |
 | Feature | 77-dim (Model B) · 87-dim (Model C) · **135-dim** (본인) |
 
 ### 핵심 엔지니어링 결정
@@ -333,4 +334,4 @@ probs = model.predict(x)                              # shape (10,)
 
 ---
 
-*생성일: 2026-05-29 | 데이터: 2022–2024 Statcast | 스크립트: scripts/40_build_presentation_figures.py*
+*생성일: 2026-05-30 | 데이터: 2022–2024 Statcast train/val/test 2,233,284 rows | 스크립트: scripts/40_build_presentation_figures.py*

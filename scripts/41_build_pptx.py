@@ -108,6 +108,34 @@ def add_image_if_exists(slide, fname, left, top, width=None, height=None):
     return False
 
 
+def add_image_fit(slide, fname, left, top, box_w, box_h):
+    """이미지를 box 안에 '비율 보존'으로 맞춰 넣고 중앙 정렬한다.
+
+    width/height를 둘 다 고정하면 python-pptx가 원본 비율을 무시하고 늘려
+    이미지가 찌그러진다. 원본 종횡비를 읽어 box 안에 letterbox fit 한다.
+    """
+    p = FIG_DIR / fname
+    if not p.exists():
+        return False
+    try:
+        from PIL import Image
+        iw, ih = Image.open(p).size
+        ar = iw / ih
+    except Exception:
+        # PIL이 없으면 폭만 고정 (그래도 비율은 보존됨)
+        slide.shapes.add_picture(str(p), left, top, width=box_w)
+        return True
+    w = int(box_w)
+    h = int(round(w / ar))
+    if h > int(box_h):
+        h = int(box_h)
+        w = int(round(h * ar))
+    lx = int(left) + (int(box_w) - w) // 2
+    ty = int(top) + (int(box_h) - h) // 2
+    slide.shapes.add_picture(str(p), lx, ty, w, h)
+    return True
+
+
 # ── 슬라이드 레이아웃 상수 ────────────────────────────────────────────────
 W = Inches(13.33)   # widescreen 16:9
 H = Inches(7.5)
@@ -153,7 +181,7 @@ def make_pptx():
 
     # 하단 정보 박스 3개
     for i, (label, val) in enumerate([
-        ("데이터", "MLB Statcast 2022–2024\n2,983,621 투구"),
+        ("데이터", "MLB Statcast 2022–2024\n2,233,284 train/val/test"),
         ("재현 논문", "Otremba 2022\nMIT Sloan 2025"),
         ("주요 발견", "Arsenal Context 58d\nCollapse 해소 + MDP 호환"),
     ]):
@@ -252,9 +280,10 @@ def make_pptx():
 
     # 왼쪽: 데이터셋 정보
     data_rows = [
-        ("시즌", "2022 · 2023 · 2024 (3시즌)"),
-        ("총 투구 수", "2,983,621 rows"),
-        ("Test set", "353,667–353,776 (2024 H2)"),
+        ("시즌", "2022 · 2023 · 2024"),
+        ("학습/평가", "2,233,284 rows"),
+        ("Split", "1,494,188 / 385,320 / 353,776"),
+        ("handoff pool", "2,983,621 source rows"),
         ("Feature", "77d / 87d / 135d"),
     ]
     y = BODY_TOP + Cm(0.3)
@@ -411,8 +440,8 @@ def make_pptx():
     set_slide_bg(sl, C_WHITE)
     make_slide_header(sl, "베이스라인 비교: 객관적 위치", "Slide 7 / 10")
 
-    img_ok = add_image_if_exists(sl, "fig4_sota_comparison.png",
-                                  MARGIN, BODY_TOP, width=W - MARGIN*2)
+    img_ok = add_image_fit(sl, "fig4_sota_comparison.png",
+                           MARGIN, BODY_TOP, W - MARGIN*2, H - BODY_TOP - Cm(1.3))
     if not img_ok:
         sota_rows = [
             ("외부 참고", "RF/XGBoost", "2~3-class", "72~91%", "직접 순위 비교 금지"),
@@ -455,10 +484,9 @@ def make_pptx():
     set_slide_bg(sl, C_WHITE)
     make_slide_header(sl, "핵심 발견 2: Arsenal Context가 Collapse 해소", "Slide 8 / 10")
 
-    img_ok = add_image_if_exists(sl, "fig1_core_finding_context.png",
-                                  MARGIN, BODY_TOP, width=W - MARGIN*2,
-                                  height=Cm(3.8))
-    y_below = BODY_TOP + Cm(4.0) if img_ok else BODY_TOP + Cm(0.5)
+    img_ok = add_image_fit(sl, "fig1_core_finding_context.png",
+                           MARGIN, BODY_TOP, W - MARGIN*2, Cm(4.4))
+    y_below = BODY_TOP + Cm(4.6) if img_ok else BODY_TOP + Cm(0.5)
 
     # 표: iid 모델 context 효과
     tbl_data = [
@@ -504,11 +532,10 @@ def make_pptx():
     set_slide_bg(sl, C_WHITE)
     make_slide_header(sl, "Phase 10 최종: 12-model 전체 비교", "Slide 9 / 10")
 
-    img_ok = add_image_if_exists(sl, "fig3_phase10_12model.png",
-                                  MARGIN, BODY_TOP, width=W - MARGIN*2,
-                                  height=Cm(4.2))
+    img_ok = add_image_fit(sl, "fig3_phase10_12model.png",
+                           MARGIN, BODY_TOP, W - MARGIN*2, Cm(4.6))
 
-    y_below2 = BODY_TOP + Cm(4.4) if img_ok else BODY_TOP + Cm(0.5)
+    y_below2 = BODY_TOP + Cm(4.8) if img_ok else BODY_TOP + Cm(0.5)
 
     # 최종 권장 모델 박스
     add_rect(sl, MARGIN, y_below2, W - MARGIN*2, Cm(1.6),
