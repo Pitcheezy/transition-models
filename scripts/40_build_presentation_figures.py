@@ -111,7 +111,7 @@ def build_fig1():
 
     ax.text(1.5, 0.85, "i.i.d. (77d) — collapse", ha="center", fontsize=10,
             color="#777777", style="italic")
-    ax.text(4.0, 0.85, "본인 기여\n(i.i.d. + context 58d)", ha="center", fontsize=10,
+    ax.text(4.0, 0.85, "i.i.d. + 상류 context 58d\n(MDP 호환)", ha="center", fontsize=10,
             color="#e67e22", fontweight="bold")
     ax.text(5.5, 0.85, "Sequence 모델\n(MDP 비호환)", ha="center", fontsize=10,
             color="#27ae60", style="italic")
@@ -157,7 +157,7 @@ def build_fig2():
     CELLS = [
         [("없음 (단일 투구)", "neu"), ("있음 (400 pitch)", "pos"), ("없음 (i.i.d. + context)", "pos")],
         [("있음 (Value Iteration)", "pos"), ("없음 (1-step pred.)", "neg"), ("MDP-VI/Dyna-Q 직접\nDQN/PPO 환경 간접", "pos")],
-        [("없음 (77d 기본)", "neg"), ("없음", "neg"), ("있음 (arsenal 58d)", "pos")],
+        [("없음 (77d 기본)", "neg"), ("없음", "neg"), ("있음 (상류 context 활용)", "pos")],
         [("4-class\n(Ball/Strike/Foul/InPlay)", "neu"), ("10-class\n(세분화)", "pos"), ("4+10 이중\n(MDP 호환 유지)", "pos")],
     ]
 
@@ -206,7 +206,7 @@ def build_fig2():
     ax.set_title("논문 비교: Otremba 2022 vs MIT Sloan 2025 vs 본인",
                  fontsize=13, fontweight="bold", pad=12)
     fig.text(0.5, 0.00,
-             "Otremba MDP/RL 통합  +  MIT Sloan-style 10-class 세분화  +  본인 Arsenal Context 58d  =  차별점",
+             "기여: 논문 baseline 재현  +  공정 비교 기준 수립  +  상류 clustering context의 전이확률 개선 효과 검증",
              ha="center", fontsize=9.5, style="italic", color="#555555")
 
     plt.tight_layout(rect=[0, 0.04, 1, 1])

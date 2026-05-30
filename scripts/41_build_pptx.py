@@ -174,16 +174,17 @@ def make_pptx():
 
     add_textbox(sl, "SmartPitch MDP", MARGIN, Cm(1.2), W - MARGIN*2, Cm(1.5),
                 font_size=22, bold=False, color=C_ORANGE, align=PP_ALIGN.CENTER)
-    add_textbox(sl, "전이확률 모델 비교 실험", MARGIN, Cm(2.5), W - MARGIN*2, Cm(1.8),
-                font_size=36, bold=True, color=C_WHITE, align=PP_ALIGN.CENTER)
-    add_textbox(sl, "Transition Probability Model Comparison", MARGIN, Cm(4.1), W - MARGIN*2, Cm(1.0),
-                font_size=16, bold=False, color=C_GRAY, align=PP_ALIGN.CENTER)
+    add_textbox(sl, "투구 결과 전이확률 모델 — 비교·검증", MARGIN, Cm(2.5), W - MARGIN*2, Cm(1.8),
+                font_size=32, bold=True, color=C_WHITE, align=PP_ALIGN.CENTER)
+    add_textbox(sl, "RL 환경이 쓸 P(outcome | state, action, context) 추정 + 어떤 모델이 MDP 보상에 적합한지 비교",
+                MARGIN, Cm(4.1), W - MARGIN*2, Cm(1.0),
+                font_size=14, bold=False, color=C_GRAY, align=PP_ALIGN.CENTER)
 
     # 하단 정보 박스 3개
     for i, (label, val) in enumerate([
         ("데이터", "MLB Statcast 2022–2024\n2,233,284 train/val/test"),
-        ("재현 논문", "Otremba 2022\nMIT Sloan 2025"),
-        ("주요 발견", "Arsenal Context 58d\nCollapse 해소 + MDP 호환"),
+        ("재현 baseline", "Otremba 2022 MLP\nMIT Sloan 2025 Transformer"),
+        ("핵심 기여", "baseline 재현·공정 비교\ncontext 효과 검증·RL handoff"),
     ]):
         bx = Cm(1.2) + i * Cm(4.35)
         add_rect(sl, bx, Cm(5.5), Cm(4.0), Cm(1.8), RGBColor(0x1A, 0x2A, 0x3A))
@@ -201,73 +202,78 @@ def make_pptx():
     # =========================================================
     sl = prs.slides.add_slide(blank_layout)
     set_slide_bg(sl, C_WHITE)
-    make_slide_header(sl, "문제 정의 & 연구 목표", "Slide 2 / 10")
+    make_slide_header(sl, "왜 전이확률인가 + 파트별 기여 분담", "Slide 2 / 10")
 
-    add_textbox(sl, "MDP 전이확률  P(outcome | pitch, context) 추정",
-                MARGIN, BODY_TOP, W - MARGIN*2, Cm(1.0),
-                font_size=18, bold=True, color=C_DARK)
+    # 파이프라인 위치
+    add_rect(sl, MARGIN, BODY_TOP, W - MARGIN*2, Cm(0.85), RGBColor(0xEB, 0xF5, 0xFB))
+    add_textbox(sl, "data  →  clustering  →  [ transition-models ]  →  rl-agent",
+                MARGIN + Cm(0.3), BODY_TOP + Cm(0.1), W - MARGIN*2 - Cm(0.6), Cm(0.65),
+                font_size=14, bold=True, color=C_BLUE, align=PP_ALIGN.CENTER)
 
-    code_txt = (
-        "state s  = 볼카운트 · 주자상황 · 이닝 ...\n"
-        "action a = 투구 종류 · 위치\n"
-        "outcome  = Ball / Strike / Foul / InPlay  (4-class)\n"
-        "         = Ball / Strike / Single / Double / Triple\n"
-        "           / HR / FieldOut / Strikeout / Walk / HBP  (10-class)"
-    )
-    add_rect(sl, MARGIN, BODY_TOP + Cm(1.1), W/2 - MARGIN - Cm(0.5), Cm(2.8),
-             RGBColor(0xF0, 0xF4, 0xF8))
-    add_textbox(sl, code_txt, MARGIN + Cm(0.3), BODY_TOP + Cm(1.2),
-                W/2 - MARGIN - Cm(1.0), Cm(2.6),
-                font_size=11, color=C_DARK)
+    # 전이확률 → 보상 흐름
+    add_rect(sl, MARGIN, BODY_TOP + Cm(1.0), W - MARGIN*2, Cm(0.95), RGBColor(0xFF, 0xF3, 0xE0))
+    add_textbox(sl,
+                "투구 a  →  P(outcome | s, a) [transition-models]  →  다음 상태 + RE24 보상  →  장기 정책   "
+                "(정확/보정이 좋을수록 보상·정책이 정확)",
+                MARGIN + Cm(0.3), BODY_TOP + Cm(1.12), W - MARGIN*2 - Cm(0.6), Cm(0.7),
+                font_size=11.5, bold=False, color=C_DARK, align=PP_ALIGN.CENTER)
 
-    # 기존 논문 한계
-    rows = [
-        ("Otremba 2022 (SmartPitch)", "4-class만 예측, 투수 맥락 feature 없음", C_RED),
-        ("MIT Sloan 2025 (Transformer)", "10-class 가능, MDP 비호환 (400-pitch history 필요)", C_ORANGE),
+    # 기여 분담 표
+    y = BODY_TOP + Cm(2.3)
+    add_textbox(sl, "파트별 기여 분담 (혼동 방지 — 정직하게)", MARGIN, y, W - MARGIN*2, Cm(0.55),
+                font_size=14, bold=True, color=C_DARK)
+    y += Cm(0.7)
+
+    split_rows = [
+        ("handoff_v1.parquet 생성 · 원천 데이터", "data 팀", C_GRAY),
+        ("pitcher arsenal / cluster / UMAP context feature 생성", "clustering 팀", C_GRAY),
+        ("그 context를 77d에 붙여 135d 입력으로 통합", "transition-models", C_BLUE),
+        ("논문 모델(Otremba/MIT Sloan) 재현 + 학습/평가", "transition-models", C_BLUE),
+        ("77d collapse vs 135d 개선 검증 · 12모델 공정 비교", "transition-models", C_BLUE),
+        ("rl-agent용 inference wrapper / handoff 문서", "transition-models", C_BLUE),
+        ("MLP10H BIP 보정 (보상 왜곡 완화)", "rl-agent 통합", C_ORANGE),
     ]
-    y = BODY_TOP + Cm(1.1)
-    for name, desc, c in rows:
-        add_rect(sl, W/2 + Cm(0.3), y, W/2 - MARGIN - Cm(0.3), Cm(1.1), C_LIGHT,
-                 line_color=c, line_width=Pt(2))
-        add_textbox(sl, name, W/2 + Cm(0.6), y + Cm(0.05), W/2 - MARGIN - Cm(0.9), Cm(0.5),
-                    font_size=12, bold=True, color=c)
-        add_textbox(sl, desc, W/2 + Cm(0.6), y + Cm(0.55), W/2 - MARGIN - Cm(0.9), Cm(0.55),
-                    font_size=10, color=C_DARK)
-        y += Cm(1.3)
+    col1_w = (W - MARGIN*2) * 0.72
+    col2_x = MARGIN + col1_w + Cm(0.1)
+    col2_w = (W - MARGIN*2) * 0.28 - Cm(0.1)
+    rh = Cm(0.72)
+    for item, who, c in split_rows:
+        is_tm = (who == "transition-models")
+        bg = RGBColor(0xEB, 0xF5, 0xFB) if is_tm else C_LIGHT
+        add_rect(sl, MARGIN, y, col1_w, rh, bg)
+        add_textbox(sl, item, MARGIN + Cm(0.2), y + Cm(0.12), col1_w - Cm(0.4), rh - Cm(0.1),
+                    font_size=10.5, bold=is_tm, color=C_DARK)
+        add_rect(sl, col2_x, y, col2_w, rh, bg)
+        add_textbox(sl, who, col2_x + Cm(0.15), y + Cm(0.12), col2_w - Cm(0.3), rh - Cm(0.1),
+                    font_size=10.5, bold=True, color=c)
+        y += rh + Cm(0.06)
 
-    goals = [
-        ("① 비교 조건 분리", "같은 N·지표끼리만 직접 비교"),
-        ("② MDP + 10-class", "MDP 호환 유지하면서 10-class 달성"),
-        ("③ Collapse 규명", "원인 분석 및 해결"),
-    ]
-    y2 = BODY_TOP + Cm(3.9)
-    add_textbox(sl, "연구 목표", MARGIN, y2, Cm(12), Cm(0.6),
-                font_size=14, bold=True, color=C_BLUE)
-    for i, (g, d) in enumerate(goals):
-        gx = MARGIN + i * Cm(4.2)
-        add_rect(sl, gx, y2 + Cm(0.7), Cm(3.9), Cm(0.9), RGBColor(0xEB, 0xF5, 0xFB),
-                 line_color=C_BLUE, line_width=Pt(1.5))
-        add_textbox(sl, g, gx + Cm(0.2), y2 + Cm(0.72), Cm(3.5), Cm(0.42),
-                    font_size=12, bold=True, color=C_BLUE)
-        add_textbox(sl, d, gx + Cm(0.2), y2 + Cm(1.15), Cm(3.5), Cm(0.45),
-                    font_size=9.5, color=C_DARK)
+    add_textbox(sl,
+                "⚠️ \"arsenal feature를 내가 만들었다\"가 아니라 → \"그 feature가 전이확률 모델 성능을 실제로 개선하는지 검증했다\"가 정확",
+                MARGIN, y + Cm(0.1), W - MARGIN*2, Cm(0.7),
+                font_size=10.5, bold=True, color=C_ORANGE)
 
     # =========================================================
     # Slide 3 — 논문 포지셔닝
     # =========================================================
     sl = prs.slides.add_slide(blank_layout)
     set_slide_bg(sl, C_WHITE)
-    make_slide_header(sl, "논문 포지셔닝: 3-way 비교", "Slide 3 / 10")
+    make_slide_header(sl, "초기 접근: 기존 연구 2개를 baseline으로 재현", "Slide 3 / 10")
 
-    img_ok = add_image_if_exists(sl, "fig2_paper_positioning.png",
-                                  MARGIN, BODY_TOP, width=W - MARGIN*2)
+    add_textbox(sl,
+                "처음엔 후속 RL보다 \"투구 결과 확률을 잘 예측하는 모델\" 자체에 집중 → 기존 연구를 baseline으로 재현 (새 모델 발명 아님)",
+                MARGIN, BODY_TOP, W - MARGIN*2, Cm(0.8),
+                font_size=12.5, bold=True, color=C_DARK, align=PP_ALIGN.CENTER)
+
+    img_ok = add_image_fit(sl, "fig2_paper_positioning.png",
+                           MARGIN, BODY_TOP + Cm(0.9), W - MARGIN*2, H - BODY_TOP - Cm(2.1))
     if not img_ok:
         add_textbox(sl, "그림: fig2_paper_positioning.png\n(scripts/40_build_presentation_figures.py 실행 필요)",
                     MARGIN, BODY_TOP + Cm(1), W - MARGIN*2, Cm(3),
                     font_size=14, color=C_GRAY, align=PP_ALIGN.CENTER)
 
     add_textbox(sl,
-                "차별점: Otremba MDP/RL 통합  +  MIT Sloan-style 10-class 세분화  +  본인 Arsenal Context 58d",
+                "기여: baseline 재현 + 공정 비교 기준 수립 + 상류 clustering context의 전이확률 개선 효과 검증",
                 MARGIN, H - Cm(1.0), W - MARGIN*2, Cm(0.8),
                 font_size=12, bold=True, color=C_ORANGE, align=PP_ALIGN.CENTER)
 
@@ -482,7 +488,7 @@ def make_pptx():
     # =========================================================
     sl = prs.slides.add_slide(blank_layout)
     set_slide_bg(sl, C_WHITE)
-    make_slide_header(sl, "핵심 발견 2: Arsenal Context가 Collapse 해소", "Slide 8 / 10")
+    make_slide_header(sl, "핵심 발견 2: 상류 context feature가 Collapse 해소 (효과 검증)", "Slide 8 / 10")
 
     img_ok = add_image_fit(sl, "fig1_core_finding_context.png",
                            MARGIN, BODY_TOP, W - MARGIN*2, Cm(4.4))
@@ -518,35 +524,49 @@ def make_pptx():
 
     # 결론 박스
     y2 = y + Cm(0.3)
-    add_rect(sl, MARGIN, y2, W - MARGIN*2, Cm(0.9), RGBColor(0xEB, 0xF5, 0xFB))
+    add_rect(sl, MARGIN, y2, W - MARGIN*2, Cm(1.25), RGBColor(0xEB, 0xF5, 0xFB))
     add_textbox(sl,
-                "결론: Collapse 원인 = Architecture × Feature 수 아님 = 투수 맥락(pitcher context) 부재\n"
-                "Top-1은 sequence baseline과 유사, MLP10은 MDP 호환성과 추론 효율이 강점",
-                MARGIN + Cm(0.3), y2 + Cm(0.08), W - MARGIN*2 - Cm(0.6), Cm(0.8),
-                font_size=11, bold=False, color=C_BLUE)
+                "결론: collapse 원인 = architecture·feature 수 아님 = 투수 맥락(context) 부재 (architecture 무관 +21~54pp)\n"
+                "⚠️ 기여 = context feature 생성(❌, clustering 팀)이 아니라, 같은 모델·같은 test set 통제 실험으로 그 효과를 검증(✅)한 것",
+                MARGIN + Cm(0.3), y2 + Cm(0.1), W - MARGIN*2 - Cm(0.6), Cm(1.1),
+                font_size=10.5, bold=False, color=C_BLUE)
 
     # =========================================================
     # Slide 9 — Phase 10 최종 결과
     # =========================================================
     sl = prs.slides.add_slide(blank_layout)
     set_slide_bg(sl, C_WHITE)
-    make_slide_header(sl, "Phase 10 최종: 12-model 전체 비교", "Slide 9 / 10")
+    make_slide_header(sl, "전이확률 → 장기 보상 → RL handoff (MLP10/MLP10H)", "Slide 9 / 10")
 
-    img_ok = add_image_fit(sl, "fig3_phase10_12model.png",
-                           MARGIN, BODY_TOP, W - MARGIN*2, Cm(4.6))
-
-    y_below2 = BODY_TOP + Cm(4.8) if img_ok else BODY_TOP + Cm(0.5)
-
-    # 최종 권장 모델 박스
-    add_rect(sl, MARGIN, y_below2, W - MARGIN*2, Cm(1.6),
-             RGBColor(0xE8, 0xF8, 0xE8), line_color=C_GREEN, line_width=Pt(2.5))
-    add_textbox(sl, "✅ 최종 모델: TransitionModelMLP10 / RL 권장 경로: MLP10H",
-                MARGIN + Cm(0.3), y_below2 + Cm(0.08), Cm(8), Cm(0.55),
-                font_size=14, bold=True, color=C_GREEN)
+    # Q 수식 박스
+    add_rect(sl, MARGIN, BODY_TOP, W - MARGIN*2, Cm(1.5), RGBColor(0xF0, 0xF4, 0xF8))
     add_textbox(sl,
-                "MLP10: 135d 단일 pitch, Top-1 67.6%, Macro-F1 27.8%, CE 0.926, MDP 호환\n"
-                "MLP10H: MLP10의 BIP 총량을 empirical BIP table로 재분배해 Single~HR 0% 문제 완화",
-                MARGIN + Cm(0.3), y_below2 + Cm(0.65), W - MARGIN*2 - Cm(0.6), Cm(0.9),
+                "Q(s, a) = Σ_outcome  P(outcome | s, a) · [ RE24_reward + γ·V(s′) ]      "
+                "reward = RE24(before) − RE24(after) − runs",
+                MARGIN + Cm(0.3), BODY_TOP + Cm(0.12), W - MARGIN*2 - Cm(0.6), Cm(0.6),
+                font_size=12.5, bold=True, color=C_DARK, align=PP_ALIGN.CENTER)
+    add_textbox(sl,
+                "함의1: Q는 확률의 가중평균 → Top-1보다 확률 보정(CE/Brier)이 핵심   |   "
+                "함의2: RNN/Transformer는 P(·|history,s,a) → 모든 (s,a) 전이표화 어려움 → MDP엔 단일-step iid 모델이 적합",
+                MARGIN + Cm(0.3), BODY_TOP + Cm(0.78), W - MARGIN*2 - Cm(0.6), Cm(0.65),
+                font_size=10, color=C_BLUE, align=PP_ALIGN.CENTER)
+
+    # 12-model 비교 그림
+    img_ok = add_image_fit(sl, "fig3_phase10_12model.png",
+                           MARGIN, BODY_TOP + Cm(1.7), W - MARGIN*2, Cm(3.7))
+    y_below2 = BODY_TOP + Cm(5.5) if img_ok else BODY_TOP + Cm(1.7)
+
+    # RL handoff 후보 박스
+    add_rect(sl, MARGIN, y_below2, W - MARGIN*2, Cm(2.0),
+             RGBColor(0xE8, 0xF8, 0xE8), line_color=C_GREEN, line_width=Pt(2.5))
+    add_textbox(sl, "RL handoff 후보 (MLP10이 '더 좋아서'가 아니라 MDP 전이함수 형태에 맞아서)",
+                MARGIN + Cm(0.3), y_below2 + Cm(0.08), W - MARGIN*2 - Cm(0.6), Cm(0.5),
+                font_size=12.5, bold=True, color=C_GREEN)
+    add_textbox(sl,
+                "MLP10  : 135d 단일-step, Top-1 67.6%, Walk/K/HBP 직접 예측 — 단 Single~HR ≈ 0% → Q가 장타 위험을 0으로 봄(보상 왜곡)\n"
+                "MLP10H : 빈 BIP 질량을 empirical BIP table로 재분배해 왜곡 완화 (rl-agent 통합 측 보정)\n"
+                "→ 최종 RL 비교는 같은 환경에서 Model B vs MLP10 vs MLP10H 의 mean reward / per-class 현실성으로 평가",
+                MARGIN + Cm(0.3), y_below2 + Cm(0.62), W - MARGIN*2 - Cm(0.6), Cm(1.3),
                 font_size=9.8, color=C_DARK)
 
     # =========================================================
@@ -554,27 +574,33 @@ def make_pptx():
     # =========================================================
     sl = prs.slides.add_slide(blank_layout)
     set_slide_bg(sl, C_WHITE)
-    make_slide_header(sl, "결론 & 팀 통합", "Slide 10 / 10")
+    make_slide_header(sl, "결론 & 정직한 기여 정리", "Slide 10 / 10")
 
-    findings = [
-        ("① Collapse 원인 규명",
-         "77d i.i.d. 모델 collapse = 투수 맥락(pitcher context) 부재\nclass balancing · Focal Loss 모두 무효 — feature 구조 문제",
-         C_RED),
-        ("② Context = Architecture-Agnostic",
-         "arsenal 58d 추가 → LR +21pp, LGB +54pp, MLP +27pp\nTop-1은 sequence baseline과 유사, MDP 호환성이 강점",
-         C_ORANGE),
-        ("③ Sequence는 Context를 내재 학습",
-         "RNN/Transformer에 static context 추가 → 효과 없음\n400-pitch history가 arsenal context를 이미 포함",
-         C_BLUE),
+    # 한 문장 결론 배너
+    add_rect(sl, MARGIN, BODY_TOP, (W - MARGIN*2) * 0.6, Cm(1.2),
+             RGBColor(0xFF, 0xF3, 0xE0), line_color=C_ORANGE, line_width=Pt(2))
+    add_textbox(sl,
+                "\"투구를 잘 예측하는 모델\" ≠ \"RL 보상 계산에 쓰기 좋은 전이모델\"\n"
+                "내 파트 = 후자 관점에서 어떤 입력/모델이 적합한지 객관적으로 가려낸 것",
+                MARGIN + Cm(0.3), BODY_TOP + Cm(0.1), (W - MARGIN*2) * 0.57, Cm(1.05),
+                font_size=11.5, bold=True, color=C_DARK)
+
+    # transition-models 기여 5가지 (과장 없이)
+    y = BODY_TOP + Cm(1.5)
+    add_textbox(sl, "transition-models 기여 (과장 없이)", MARGIN, y, (W - MARGIN*2) * 0.6, Cm(0.5),
+                font_size=13, bold=True, color=C_BLUE)
+    y += Cm(0.6)
+    contribs = [
+        "① 논문 baseline 재현 (Otremba MLP · MIT Sloan Transformer)",
+        "② 공정 비교 기준 수립 (Top-1+Macro-F1+CE, 같은 입력조건·test set 그룹)",
+        "③ collapse 분석 (77d 41.1% → Macro-F1 5.8% 폭로)",
+        "④ 상류 context feature 효과 검증 (+26.5pp, 생성❌ 검증✅)",
+        "⑤ RL handoff (MDP 호환 MLP10 + inference wrapper + 문서)",
     ]
-    y = BODY_TOP + Cm(0.2)
-    for title, desc, c in findings:
-        add_rect(sl, MARGIN, y, (W - MARGIN*2) * 0.6, Cm(1.25), C_LIGHT, line_color=c, line_width=Pt(2))
-        add_textbox(sl, title, MARGIN + Cm(0.3), y + Cm(0.08), (W - MARGIN*2) * 0.57, Cm(0.5),
-                    font_size=13, bold=True, color=c)
-        add_textbox(sl, desc, MARGIN + Cm(0.3), y + Cm(0.58), (W - MARGIN*2) * 0.57, Cm(0.65),
-                    font_size=10, color=C_DARK)
-        y += Cm(1.4)
+    for item in contribs:
+        add_textbox(sl, item, MARGIN + Cm(0.1), y, (W - MARGIN*2) * 0.6, Cm(0.55),
+                    font_size=10.8, color=C_DARK)
+        y += Cm(0.62)
 
     # 팀 통합 박스 (오른쪽)
     add_rect(sl, (W - MARGIN*2) * 0.63, BODY_TOP + Cm(0.2),
