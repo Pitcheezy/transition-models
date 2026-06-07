@@ -258,5 +258,3 @@ OUTCOME_END = 87    # hit_location 끝 (68+10+9)
 # 연속(15) + pitch_type(17) + zone(14) + balls(4) + strikes(3) + outs(3)
 # + base_state(8) + stand(2) + p_throws(2) + inning(9) = 77
 MODEL_B_DIM = 77
-
-
