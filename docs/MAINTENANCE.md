@@ -21,7 +21,9 @@ Windows/Linux는 CUDA 12.4 빌드, Mac은 PyPI 빌드이므로 GPU별 bitwise �
 검사 명령은 지원하는 새 경로의 Ruff 검사/포맷 검사와 전체 pytest를 실행한다.
 대형 원본 데이터 없이 실행할 수 있다. 기존 checkpoint를 받지 않은 환경은 관련 추론 테스트를
 건너뛸 수 있지만, LFS 포인터 파일만 남아 있으면 모델 로드가 실패할 수 있다.
-CI는 Ubuntu와 macOS에서 LFS 파일을 받고 `scripts/check_project.py --cpu-only`를 실행한다.
+CI는 Ubuntu 24.04와 macOS 15에서 LFS 파일을 받고
+`scripts/check_project.py --cpu-only`를 실행한다. 검사 종료 시 오래 걸린 테스트를 출력하고,
+테스트 한 건이 120초 넘게 걸리면 진단용 스택을 출력한다.
 GitHub의 Mac 실행기는 MPS를 사용 가능하다고 보고하지만 Transformer 추론에서
 PyTorch 2.11.0과 2.6.0 모두 SIGSEGV가 재현되었다. CPU 모드는 모든 checkpoint 추론을
 실제 실행하고 MPS 전용 2개 테스트만 제외한다. 로컬 기본 명령은 자동 장치 선택과
