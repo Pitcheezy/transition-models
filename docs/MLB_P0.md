@@ -37,6 +37,8 @@ Chrome에서 `http://127.0.0.1:8770`을 연다. 기본 포트가 사용 중이�
 
 영상 없이 실행하려면 `--with-example-video`를 생략한다. 다른 입력은 `--video-url URL`로 지정한다.
 로컬 서버는 127.0.0.1에만 바인딩하며 원격 공개 서버로 운영하는 구성은 아니다.
+연결마다 독립 처리하고 읽기 제한은 5초다. 모델 계산은 한 번에 하나만 실행하며,
+계산 중에도 health 조회와 화면 파일 요청은 응답한다.
 
 ## 필요한 로컬 파일
 
@@ -101,7 +103,7 @@ uv run --frozen python scripts/check_project.py --cpu-only
 node --check src/web/static/app.js
 ```
 
-2026-09-22 Windows CPU 검사: **235 passed, 2 deselected**, Ruff 44개 경로 통과.
+2026-09-22 Windows CPU 검사: **241 passed, 2 deselected**, Ruff 44개 경로 통과.
 2개 제외 항목은 MPS 하드웨어 테스트다. GitHub의 Linux/macOS CPU CI 결과는 커밋별로 확인한다.
 
 실제 모델 예시: 슬라이더 추천, 해당 구종의 다음 투구 피안타 확률 약 7.12%.
@@ -139,5 +141,7 @@ uv run --frozen python scripts/62_check_game_service.py --output outputs/game_se
 
 [MLB_P0_HANDOFF.md](MLB_P0_HANDOFF.md)를 공통 작업 기록으로 사용한다.
 한 번에 한 도구만 파일을 수정하고, 검증한 단위마다 커밋·푸시한다.
-Claude는 이번 첫 호출에서 인증 만료(401)로 실행되지 않았다. 작업을 수행했다고 기록하지 않는다.
-재로그인 후에는 먼저 P0 변경의 독립 리뷰를 맡기고 지적을 검증한 다음 수정한다.
+Claude 첫 호출은 인증 만료(401)로 실행되지 않았다. 재로그인 후에도 외부 코드 전송에 대한
+자동 승인 검토가 실행을 거부해 사용자 승인을 기다리고 있다. Claude가 검토했다고 기록하지 않는다.
+승인 후에는 먼저 P0 변경의 독립 리뷰를 맡기고 지적을 검증한 다음 수정한다.
+[Codex의 로컬 검토·수정 기록](MLB_P0_REVIEW_2026-09-22.md).

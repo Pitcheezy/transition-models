@@ -2,26 +2,39 @@
 
 import json
 import logging
-from http.server import BaseHTTPRequestHandler, HTTPServer
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
+from threading import Lock
 from time import perf_counter
 from urllib.parse import urlparse
 
 STATIC = Path(__file__).parent / "static"
 
 
-def create_server(predictor, example, port=8770, video_url=None):
+def create_server(predictor, example, port=8770, video_url=None, request_timeout=5.0):
     """Construct a local server; the injected predictor is loaded exactly once."""
+    inference_lock = Lock()
 
     class Handler(BaseHTTPRequestHandler):
+        def setup(self):
+            super().setup()
+            self.connection.settimeout(request_timeout)
+
+        def send_bytes(self, code, data, content_type):
+            try:
+                self.send_response(code)
+                self.send_header("Content-Type", content_type + "; charset=utf-8")
+                self.send_header("Content-Length", str(len(data)))
+                self.send_header("Cache-Control", "no-store")
+                self.end_headers()
+                self.wfile.write(data)
+            except (ConnectionError, TimeoutError):
+                # Closing a browser tab while a request runs is a normal disconnect.
+                self.close_connection = True
+
         def send_json(self, code, payload):
             data = json.dumps(payload, ensure_ascii=False, allow_nan=False).encode("utf-8")
-            self.send_response(code)
-            self.send_header("Content-Type", "application/json; charset=utf-8")
-            self.send_header("Content-Length", str(len(data)))
-            self.send_header("Cache-Control", "no-store")
-            self.end_headers()
-            self.wfile.write(data)
+            self.send_bytes(code, data, "application/json")
 
         def valid_host(self):
             return self.headers.get("Host") in {
@@ -50,13 +63,8 @@ def create_server(predictor, example, port=8770, video_url=None):
                     route
                 ]
                 data = (STATIC / filename).read_bytes()
-                self.send_response(200)
                 mime = {"/": "text/html", "/app.js": "text/javascript", "/style.css": "text/css"}
-                self.send_header("Content-Type", mime[route] + "; charset=utf-8")
-                self.send_header("Content-Length", str(len(data)))
-                self.send_header("Cache-Control", "no-store")
-                self.end_headers()
-                self.wfile.write(data)
+                self.send_bytes(200, data, mime[route])
             else:
                 self.send_json(404, {"error": "Not found"})
 
@@ -76,22 +84,32 @@ def create_server(predictor, example, port=8770, video_url=None):
                 self.send_json(415, {"error": "Expected application/json"})
                 return
             try:
-                length = int(self.headers.get("Content-Length", "0"))
+                lengths = self.headers.get_all("Content-Length", [])
+                if len(lengths) != 1 or self.headers.get("Transfer-Encoding") is not None:
+                    raise ValueError("Expected a single Content-Length and no Transfer-Encoding")
+                length = int(lengths[0])
                 if not 0 < length <= 16384:
                     raise ValueError("Request body must be 1–16384 bytes")
-                payload = json.loads(self.rfile.read(length), parse_constant=_reject_constant)
-                start = perf_counter()
-                result = predictor.predict(payload)
-                result["elapsed_ms"] = round((perf_counter() - start) * 1000, 2)
-                result["input_source"] = "manual"
+                body = self.rfile.read(length)
+                if len(body) != length:
+                    raise ValueError("Incomplete request body")
+                payload = json.loads(body, parse_constant=_reject_constant)
+                # Socket reads must not hold up other clients. Serialize only model work.
+                with inference_lock:
+                    start = perf_counter()
+                    result = predictor.predict(payload)
+                    result["elapsed_ms"] = round((perf_counter() - start) * 1000, 2)
+                    result["input_source"] = "manual"
                 self.send_json(200, result)
+            except TimeoutError:
+                self.send_json(408, {"error": "Request body timed out"})
             except (ValueError, UnicodeDecodeError) as exc:
                 self.send_json(400, {"error": str(exc)})
             except Exception:
                 logging.exception("Manual inference failed")
                 self.send_json(500, {"error": "Inference failed; inspect server log"})
 
-    return HTTPServer(("127.0.0.1", port), Handler)
+    return ThreadingHTTPServer(("127.0.0.1", port), Handler)
 
 
 def _reject_constant(value):
