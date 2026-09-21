@@ -38,13 +38,16 @@ def main():
     parser.add_argument(
         "--cpu-only", action="store_true", help="Use CPU inference and exclude MPS hardware tests."
     )
+    parser.add_argument("--test-timeout", type=int, default=600, help="Maximum pytest seconds.")
     args = parser.parse_args()
+    if args.test_timeout <= 0:
+        parser.error("--test-timeout must be positive")
     for command in (("ruff", "check"), ("ruff", "format", "--check")):
         subprocess.run([sys.executable, "-m", *command, *QUALITY_PATHS], cwd=ROOT, check=True)
     if not args.lint_only:
         temporary = ROOT / ".cache" / "project-checks" / uuid4().hex
         temporary.parent.mkdir(parents=True, exist_ok=True)
-        subprocess.run(
+        process = subprocess.Popen(
             [
                 sys.executable,
                 "-m",
@@ -60,8 +63,26 @@ def main():
                 *(["--cpu-only", "-m", "not mps"] if args.cpu_only else []),
             ],
             cwd=ROOT,
-            check=True,
         )
+        try:
+            returncode = process.wait(timeout=args.test_timeout)
+        except subprocess.TimeoutExpired:
+            try:
+                if sys.platform == "darwin":
+                    sample = subprocess.run(
+                        ["sample", str(process.pid), "1"],
+                        capture_output=True,
+                        text=True,
+                        timeout=15,
+                        check=False,
+                    )
+                    print(sample.stdout, sample.stderr, flush=True)
+            finally:
+                process.kill()
+                process.wait()
+            raise SystemExit(f"pytest exceeded {args.test_timeout}s; process terminated.") from None
+        if returncode:
+            raise SystemExit(returncode)
 
 
 if __name__ == "__main__":

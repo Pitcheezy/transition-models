@@ -45,4 +45,4 @@ jobs:
       # Hosted macOS reports MPS available but Transformer inference crashes on it.
       # Keep real checkpoint inference on CPU; run MPS tests on a physical Mac.
       - name: Lint and test on CPU
-        run: uv run --frozen python scripts/check_project.py --cpu-only
+        run: uv run --frozen python scripts/check_project.py --cpu-only --test-timeout 180
