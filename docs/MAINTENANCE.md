@@ -15,8 +15,10 @@ uv run --frozen python scripts/check_project.py
 ```
 
 `pywin32`는 Windows에서만 설치된다. SciPy·PyArrow·threadpoolctl은 직접 의존성으로 선언했다.
-`uv.lock`을 함께 관리하며, 이번 유지보수에서는 기존 패키지 버전을 변경하지 않았다.
-Windows/Linux와 Mac의 PyTorch 빌드는 다를 수 있으므로 GPU별 bitwise 일치를 보장하지 않는다.
+`uv.lock`을 함께 관리하며, PyTorch는 학습에 사용한 **2.6.0**으로 고정한다.
+최초 Mac CI는 기존 lock의 PyTorch 2.11.0으로 Transformer 추론 중 SIGSEGV가 발생했다.
+운영체제별 PyTorch 버전 차이를 없애고 같은 테스트를 실행하도록 수정했다.
+Windows/Linux는 CUDA 12.4 빌드, Mac은 PyPI 빌드이므로 GPU별 bitwise 일치를 보장하지 않는다.
 
 검사 명령은 지원하는 새 경로의 Ruff 검사/포맷 검사와 전체 pytest를 실행한다.
 대형 원본 데이터 없이 실행할 수 있다. 기존 checkpoint를 받지 않은 환경은 관련 추론 테스트를
