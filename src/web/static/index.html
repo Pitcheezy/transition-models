@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="ko">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SmartPitch · MLB Lab</title><link rel="stylesheet" href="/style.css"></head>
+<body>
+<header><a class="brand" href="/">S<span>•</span>P <small>SMARTPITCH</small></a><span class="pill">MLB LAB / P0</span><div id="health" class="health">모델 연결 중</div></header>
+<main>
+<section class="intro"><div><p class="eyebrow">BEFORE THE NEXT PITCH</p><h1>다음 한 구를 위한 판단.</h1><p>투구 전 상황을 입력하고, 구종에 따른 결과 확률을 비교하세요.</p></div><div class="mode"><span class="dot"></span> 수동 입력 시연<small>영상 인식 · 위치 추천은 다음 단계입니다.</small></div></section>
+<div class="workspace">
+<section class="panel state-panel"><div class="section-title"><h2>01 <span>경기 상황</span></h2><button id="example" class="quiet" type="button">검증 예시 불러오기</button></div>
+<form id="state-form">
+<div class="fields"><label>경기 날짜<input type="date" name="game_date" required></label><label>이닝<input type="number" name="inning" min="1" max="30" required></label>
+<label>볼<select name="balls"><option>0</option><option>1</option><option>2</option><option>3</option></select></label><label>스트라이크<select name="strikes"><option>0</option><option>1</option><option>2</option></select></label>
+<label>아웃<select name="outs_when_up"><option>0</option><option>1</option><option>2</option></select></label><label>초 · 말<select name="inning_topbot"><option value="">미입력</option><option value="Top">초</option><option value="Bot">말</option></select></label></div>
+<h3>선수</h3><div class="fields"><label>투수 MLB ID<input type="number" name="pitcher" min="1" required></label><label>타자 MLB ID<input type="number" name="batter" min="1" placeholder="선택 입력"></label>
+<label>투수 손<select name="p_throws"><option value="R">우투</option><option value="L">좌투</option></select></label><label>타자 방향<select name="stand"><option value="R">우타</option><option value="L">좌타</option></select></label></div>
+<h3>주자 <small>빈칸은 주자 없음</small></h3><div class="fields three"><label>1루 주자 ID<input type="number" name="on_1b" min="1"></label><label>2루 주자 ID<input type="number" name="on_2b" min="1"></label><label>3루 주자 ID<input type="number" name="on_3b" min="1"></label></div>
+<details><summary>점수 · 팀 정보</summary><div class="fields"><label>홈 점수<input type="number" name="home_score" min="0"></label><label>원정 점수<input type="number" name="away_score" min="0"></label><label>홈 팀 코드<input name="home_team" maxlength="8" placeholder="ATL"></label><label>원정 팀 코드<input name="away_team" maxlength="8" placeholder="NYM"></label></div></details>
+<button class="primary" id="predict" type="submit">이 상황으로 확률 계산 <span>↗</span></button>
+<p class="micro">타자 ID와 점수는 기록용입니다. 현재 모델은 타자 좌우를 반영합니다.</p>
+</form></section>
+<div class="results-column"><section class="panel result-panel"><div class="section-title"><h2>02 <span>투구 전 예측</span></h2><span id="latency" class="micro">입력을 기다리는 중</span></div>
+<div id="notice" role="status" aria-live="polite">상황을 확인한 뒤 확률 계산을 눌러주세요.</div>
+<div id="prediction" hidden><div class="recommendation"><div><p class="eyebrow">구종 추천</p><h2 id="recommended">—</h2><p id="comparison"></p></div><div class="location"><span>목표 위치</span><strong>미지원</strong><small>위치별 모델 준비 중</small></div></div>
+<div class="candidate-picker"><label for="candidate">확률을 볼 구종</label><select id="candidate"></select></div>
+<div class="metrics"><div class="metric featured"><span>다음 투구 피안타</span><strong id="hit">—</strong><small>단타~홈런 확률 합계</small></div><div class="metric"><span>스트라이크</span><strong>미지원</strong><small>독립 확률 분리 필요</small></div><div class="metric"><span>볼</span><strong>미지원</strong><small>볼넷과 구분 필요</small></div><div class="metric"><span>파울</span><strong>미지원</strong><small>기존 분류에 포함됨</small></div></div>
+<details open class="legacy"><summary>현재 모델의 10종 결과 확률</summary><p class="micro">파울이 포함된 기존 분류입니다. 아래 ‘스트라이크 계열’을 순수 스트라이크 확률로 해석하지 마세요.</p><div id="probabilities" class="probability-list"></div></details>
+<details><summary>구종 후보 비교</summary><div class="table-wrap"><table><thead><tr><th>구종</th><th>추천 대상</th><th>추정 실점 비용</th><th>피안타</th></tr></thead><tbody id="candidates"></tbody></table></div><p class="micro">비용이 낮은 후보를 선택합니다. 실제 실점 감소는 입증되지 않았습니다.</p></details>
+</div></section>
+<section class="panel video-panel"><div class="section-title"><h2>03 <span>중계 입력</span></h2><span class="pill subtle">자동 동기화 없음</span></div><p class="micro">영상 재생과 수동 입력은 독립적입니다. 현재 화면을 자동으로 읽거나 결과를 미리 사용하지 않습니다.</p><video id="video" controls preload="none" hidden></video><p id="video-empty">서버 실행 시 영상 URL을 지정하면 여기서 재생할 수 있습니다.</p><a href="https://www.mlb.com/video/9-30-24-mets-win-epic-game-in-playoff-clincher" target="_blank" rel="noreferrer">MLB 공식 전체 경기 보기 ↗</a></section>
+</div></div><footer>SmartPitch · 2022년 과거 프로필 기반 모델 · 관측 데이터 검증 · 수동 시연</footer>
+</main><script src="/app.js"></script></body></html>

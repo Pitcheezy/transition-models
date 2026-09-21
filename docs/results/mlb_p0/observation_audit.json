@@ -1,0 +1,70 @@
+{
+  "schema": "pitch_observation_v1",
+  "class_order": [
+    "ball",
+    "called_strike",
+    "swinging_strike",
+    "foul",
+    "caught_foul_tip",
+    "hit",
+    "in_play_no_hit",
+    "hit_by_pitch"
+  ],
+  "years": {
+    "2022": {
+      "regular_season_rows": 710210,
+      "eligible": 708466,
+      "class_counts": {
+        "ball": 251299,
+        "foul": 128274,
+        "called_strike": 115882,
+        "in_play_no_hit": 84592,
+        "swinging_strike": 79668,
+        "hit": 39674,
+        "caught_foul_tip": 7031,
+        "hit_by_pitch": 2046
+      },
+      "excluded": {
+        "administrative_no_physical_pitch": 1670,
+        "catcher_interference_requires_separate_transition": 74
+      }
+    },
+    "2023": {
+      "regular_season_rows": 720684,
+      "eligible": 717849,
+      "class_counts": {
+        "ball": 256632,
+        "foul": 128874,
+        "called_strike": 117936,
+        "in_play_no_hit": 83394,
+        "swinging_strike": 80792,
+        "hit": 40839,
+        "caught_foul_tip": 7270,
+        "hit_by_pitch": 2112
+      },
+      "excluded": {
+        "administrative_no_physical_pitch": 2739,
+        "catcher_interference_requires_separate_transition": 96
+      }
+    },
+    "2024": {
+      "regular_season_rows": 711898,
+      "eligible": 709411,
+      "class_counts": {
+        "ball": 250861,
+        "foul": 129855,
+        "called_strike": 116207,
+        "in_play_no_hit": 84378,
+        "swinging_strike": 78900,
+        "hit": 39823,
+        "caught_foul_tip": 7367,
+        "hit_by_pitch": 2020
+      },
+      "excluded": {
+        "administrative_no_physical_pitch": 2387,
+        "catcher_interference_requires_separate_transition": 100
+      }
+    }
+  },
+  "scope": "Label audit only. No new model trained; existing checkpoint unchanged."
+}

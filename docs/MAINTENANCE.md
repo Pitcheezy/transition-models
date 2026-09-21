@@ -34,7 +34,8 @@ GitHub의 Mac 실행기는 MPS를 사용 가능하다고 보고하지만 Transfo
 PyTorch 2.11.0과 2.6.0 모두 SIGSEGV가 재현되었다. CPU 모드는 모든 checkpoint 추론을
 실제 실행하고 MPS 전용 2개 테스트만 제외한다. 로컬 기본 명령은 자동 장치 선택과
 MPS 테스트를 그대로 유지한다. **Mac CPU CI 통과는 실제 맥미니의 MPS 통과를 뜻하지 않는다.**
-맥미니에서도 오류가 나면 검사에는 `--cpu-only`, 학습·추천에는 `--device cpu`를 지정한다.
+맥미니에서도 오류가 나면 검사에는 `--cpu-only`, 학습에는 `--device cpu`를 지정한다.
+57번 추천 CLI와 59번 수동 웹 시연은 CPU를 사용하며 `--device` 옵션이 없다.
 기존 Python 추론 wrapper에는 `device="cpu"`를 넘긴다.
 2026-09-21 유지보수 보완 후 Windows 검사 결과는 **177 passed, 2 skipped**(59.44초)이며,
 경로 이관·중단 결과 보존·설정 불일치 거부·하위 평가 무효화 회귀 테스트를 포함한다.
@@ -52,7 +53,11 @@ MPS 테스트를 그대로 유지한다. **Mac CPU CI 통과는 실제 맥미니
 | 독립 정책 평가 | scripts/54_evaluate_policy.py | src/evaluation/policy_value.py, run_value.py |
 | 전체 실험 실행·재개 | scripts/55_run_operational_validation.py | src/utils/pipeline.py |
 | 저장된 결과 HTML 시연 | scripts/56_build_validation_demo.py | 외부 서버 없는 단일 HTML |
-| 상태 JSON에서 실제 추천 | scripts/57_recommend_operational.py | src/inference/operational.py |
+| 상태 JSON에서 실제 추천 | scripts/57_recommend_operational.py | src/inference/recommendation.py |
+| 투구 ID와 영상 playId 대조 | scripts/58_build_mlb_video_manifest.py | src/data/mlb_video.py |
+| 수동 입력 웹 시연 | scripts/59_serve_manual_demo.py | src/web, 공통 추천 서비스 |
+| 공식 MLB 자료 수집·점검 | scripts/60_prepare_mlb_demo_sources.py | src/data/mlb_sources.py |
+| 새 8종 투구 관찰 정답 | scripts/61_audit_pitch_observations.py | src/data/pitch_observation.py |
 
 13–15번은 공통 학습기의 호환 진입점이다. 44–47번은 과거 발표 그림 생성 도구이며
 기존의 철회된 연구 해석을 재생성할 수 있으므로 현재 발표의 수치 근거로 쓰지 않는다.
@@ -92,6 +97,8 @@ Git에는 코드, 문서, 작은 검증 결과와 시연이 들어간다.
 `evaluation/probability_report.json`/`empirical.pkl`,
 `policy_nuisance_v2/manifest.json`/`propensity.txt`면 된다.
 단순 결과 시연은 Git에 들어 있는 `docs/results/operational_20260921/demo.html` 하나로 열린다.
+수동 입력으로 실제 계산하는 새 화면은 [MLB P0 실행 안내](MLB_P0.md)를 따른다.
+영상 주소는 예시 입력일 뿐이며 모델 특징이나 자동 인식 결과가 아니다.
 
 ```bash
 uv run --frozen python scripts/57_recommend_operational.py --data-dir /Volumes/SSD/operational_data --evaluation-dir /Volumes/SSD/runs/evaluation --nuisance-dir /Volumes/SSD/runs/policy_nuisance_v2 --runs-dir /Volumes/SSD/runs --state-json docs/results/operational_20260921/example_state.json

@@ -30,11 +30,13 @@ recorded hit on the next pitch, **not** probability of a hit conditional on cont
 render as unavailable, never 0%. Exact legacy probabilities remain exposed under
 `legacy_probabilities`, with explicit class meanings in the UI.
 
-P1 should train separate pitch-observation labels (called strike, swinging strike,
-ball, foul, hit, in-play without a hit, HBP, and explicit unsupported/administrative
-events) and preserve terminal PA transitions separately. Ordinary fouls, foul tips,
-two-strike bunts, clock violations and catcher interference require explicit tests;
-do not change only display names on an existing checkpoint.
+`src/data/pitch_observation.py` now defines separate eight-class observation labels:
+ball, called strike, swinging strike, foul, caught foul tip, hit, in-play without a
+hit, HBP. Terminal PA transitions are retained separately. Automatic calls and
+catcher interference are excluded with reasons, unknown events fail closed.
+The future displayed strike marginal is called + swinging + caught foul tip;
+ordinary/bunt fouls remain separate. Two-strike bunt fouls can terminate a PA.
+P1 still needs model training/calibration; do not rename an existing checkpoint.
 
 ## Recommendation scope
 

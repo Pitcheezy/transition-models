@@ -3,6 +3,13 @@
 개발·검사·중단 후 재개·Mac 이관: [유지보수 안내](docs/MAINTENANCE.md).
 기본 검사 명령은 `uv run --frozen python scripts/check_project.py`입니다.
 
+> **MLB P0 — 2026-09-22:** 투구 ID 322건을 공식 경기 feed와 대조하고, 실제 운영 모델을
+> 수동 입력 화면에 연결했습니다. `uv run --frozen python scripts/59_serve_manual_demo.py
+> --with-example-video`로 실행한 뒤 Chrome에서 `http://127.0.0.1:8770`을 엽니다.
+> 기존 운영 모델 파일이 필요합니다. 자동 영상 인식·목표 위치 추천·독립 파울 확률은 아직
+> 구현 전입니다. [실행 안내와 남은 작업](docs/MLB_P0.md) ·
+> [Codex/Claude 인계 기록](docs/MLB_P0_HANDOFF.md) · [입출력 규약](docs/PREPITCH_CONTRACT.md)
+
 > **현재 결과 — 2026-09-21:** 기준선 복구와 운영 모델 9개 학습, 독립 확률 보정,
 > 정책 평가, 시연을 완료했습니다. 운영 MLP의 CE는 경험적 기준선 1.2874 → 1.2743입니다.
 > 다만 정책 실점 차이의 신뢰구간이 0을 포함해 **실점 개선은 입증하지 못했습니다**.

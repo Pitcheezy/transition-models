@@ -10,11 +10,17 @@ ROOT = Path(__file__).resolve().parents[1]
 QUALITY_PATHS = [
     "src/data/point_data.py",
     "src/data/operational.py",
+    "src/data/mlb_video.py",
+    "src/data/mlb_sources.py",
+    "src/data/pitch_observation.py",
     "src/evaluation/point_metrics.py",
     "src/evaluation/operational_metrics.py",
     "src/evaluation/policy_value.py",
     "src/evaluation/run_value.py",
     "src/inference/operational.py",
+    "src/inference/prepitch_contract.py",
+    "src/inference/recommendation.py",
+    "src/web",
     "src/training/point_baselines.py",
     "src/utils/model_prediction.py",
     "src/utils/experiment_paths.py",
@@ -22,12 +28,18 @@ QUALITY_PATHS = [
     "tests/test_point_data.py",
     "tests/test_operational.py",
     "tests/test_maintenance.py",
+    "tests/test_mlb_video.py",
+    "tests/test_mlb_sources.py",
+    "tests/test_pitch_observation.py",
+    "tests/test_prepitch_contract.py",
+    "tests/test_recommendation.py",
+    "tests/test_manual_server.py",
     "tests/conftest.py",
     "scripts/check_project.py",
     *[
         p.relative_to(ROOT).as_posix()
         for p in sorted((ROOT / "scripts").glob("*.py"))
-        if p.name[:2].isdigit() and 48 <= int(p.name[:2]) <= 57
+        if p.name[:2].isdigit() and 48 <= int(p.name[:2]) <= 61
     ],
 ]
 
