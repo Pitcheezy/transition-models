@@ -46,3 +46,7 @@ jobs:
       # Keep real checkpoint inference on CPU; run MPS tests on a physical Mac.
       - name: Lint and test on CPU
         run: uv run --frozen python scripts/check_project.py --cpu-only --test-timeout 180
+      - name: Check browser JavaScript syntax
+        run: |
+          node --check src/web/static/app.js
+          node --check src/web/static/annotation.js

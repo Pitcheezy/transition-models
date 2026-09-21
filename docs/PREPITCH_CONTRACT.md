@@ -51,3 +51,8 @@ Video manifests keep `pre_state` separate from `ground_truth`. Recorded metadata
 may seed a development example, but that is explicitly a replay/manual mode,
 not evidence of video recognition. Broadcast offsets and release instants remain
 null until individually annotated; UTC feed timestamps are not playback offsets.
+Script 63 validates separate `mlb_broadcast_timing_v1` annotations against the exact
+manifest and inspected full-game source. Eight pitches currently have manual timing;
+one lacks an established pre-delivery decision frame. A complete three-pitch PA is
+available. These are approximate visual annotations, not automatic synchronization
+or OCR labels. See `docs/MLB_BROADCAST_TIMING.md` for uncertainty and coverage.

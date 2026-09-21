@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="ko"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SmartPitch · 중계 시각 주석</title>
+<style>
+body{font:16px system-ui;background:#101926;color:#eef4ff;max-width:1180px;margin:24px auto;padding:0 16px}h1{font-size:24px}p{color:#bbcbe0}video{width:100%;max-height:530px;background:black}button,input,select,textarea{font:inherit;padding:8px;border-radius:6px;border:1px solid #61748b;background:#192a40;color:white}button{cursor:pointer}button:disabled{opacity:.4}label{display:inline-grid;gap:5px;margin:8px 12px 8px 0}input[type=number]{width:130px}.row{display:flex;align-items:center;flex-wrap:wrap;gap:8px}.card{background:#152237;padding:16px;margin:14px 0;border-radius:10px}#message{color:#ffda87;min-height:24px}textarea{box-sizing:border-box;width:100%}#reference{white-space:pre-wrap}a{color:#95cfff}.muted{font-size:14px}output{font-variant-numeric:tabular-nums}
+</style>
+<h1>중계 시각 주석 · 수동 검토</h1>
+<p>재생 초를 투구 ID에 연결합니다. 기록 상태는 대조용이며 영상 인식 결과가 아닙니다. 원본 영상은 브라우저에서 스트리밍합니다.</p>
+<p><a id="source" target="_blank" rel="noreferrer">공식 영상 출처</a> · <span id="progress"></span></p>
+<video id="video" controls preload="metadata" muted playsinline></video>
+<div class="row"><output id="clock">0.000초</output><label>이동할 재생 초<input id="seek" type="number" min="0" step="0.05" value="0"></label><button id="jump">이동·일시정지</button><button id="back">−0.1초</button><button id="forward">+0.1초</button><span class="muted">0.1초 이동은 프레임 단위 정확도를 보장하지 않습니다.</span></div>
+<div class="card">
+<label>투구<select id="pitch"></select></label><button id="previous">이전 투구</button><button id="next">다음 투구</button>
+<div id="reference"></div>
+<label>검토자<input id="annotator" placeholder="이름 또는 도구명"></label>
+<label>상태<select id="status"><option value="annotated">판단·릴리스 시각 확인</option><option value="unavailable">이 영상에서 확인 불가</option></select></label>
+<div class="row"><label>판단 시각(초)<input id="decision" type="number" min="0" step="0.001"></label><button id="capture-decision">현재 시각을 판단 시각으로</button><label>릴리스 시각(초)<input id="release" type="number" min="0" step="0.001"></label><button id="capture-release">현재 시각을 릴리스 시각으로</button><label>시각 오차 ±초<input id="uncertainty" type="number" min="0.001" step="0.05" value="0.15"></label></div>
+<label style="display:grid">확인 근거 / 확인 불가 사유<input id="note" placeholder="점수판·타자·투구 순서를 대조한 근거"></label>
+<button id="save">이 투구 저장</button><p id="message" role="status"></p>
+<p class="muted">저장하면 이 브라우저에 임시 보관됩니다. 다른 컴퓨터로 옮기거나 커밋하려면 JSON을 내보내고 CLI 검증을 실행하세요. 불확실한 장면은 확인 불가로 남깁니다.</p>
+</div>
+<div class="card"><button id="export">JSON 내보내기</button><button id="import">아래 JSON 불러오기</button><label style="display:grid">주석 JSON<textarea id="json" rows="5" spellcheck="false"></textarea></label><p class="muted">같은 경기·영상·manifest의 주석만 불러옵니다. 내보낸 파일은 서버에 자동 저장되지 않습니다.</p></div>
+<script id="annotation-data" type="application/json">__ANNOTATION_DATA__</script>
+<script>__ANNOTATION_SCRIPT__</script>
+</html>

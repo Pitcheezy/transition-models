@@ -59,6 +59,7 @@ MPS 테스트를 그대로 유지한다. **Mac CPU CI 통과는 실제 맥미니
 | 공식 MLB 자료 수집·점검 | scripts/60_prepare_mlb_demo_sources.py | src/data/mlb_sources.py |
 | 새 8종 투구 관찰 정답 | scripts/61_audit_pitch_observations.py | src/data/pitch_observation.py |
 | 한 경기 전체 상황의 서비스 점검 | scripts/62_check_game_service.py | 추천 가능 범위·계산 시간, 정확도 평가 아님 |
+| 중계 재생 시각 수동 주석·검증 | scripts/63_annotate_broadcast.py | 모델 없이 실행, JSON으로 다른 컴퓨터에서 재개 |
 
 13–15번은 공통 학습기의 호환 진입점이다. 44–47번은 과거 발표 그림 생성 도구이며
 기존의 철회된 연구 해석을 재생성할 수 있으므로 현재 발표의 수치 근거로 쓰지 않는다.

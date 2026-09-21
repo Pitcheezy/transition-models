@@ -15,6 +15,9 @@
   같은 경기라도 방송사·화면 형식을 공유한다고 가정하지 않는다.
 - 실제 저장된 운영 MLP 앙상블을 로드하는 수동 입력 웹 화면과 HTTP API.
 - 스트라이크·볼·파울을 분리할 새 8종 정답과 투구 ID 기반 학습 준비 파일.
+- 중계 재생 시각 주석 도구와 검증 CLI: 8개 시각 확인, 1개 판단 화면 확인 불가,
+  313개 미검토. 두 번째 타석의 세 투구를 모두 확인했다.
+  [주석 결과와 실행 방법](MLB_BROADCAST_TIMING.md).
 
 ## 시연 실행
 
@@ -75,7 +78,9 @@ uv run --frozen python scripts/58_build_mlb_video_manifest.py --statcast data/ra
 확인된 결과는 [game_747139_manifest.json](results/mlb_p0/game_747139_manifest.json)과
 [media_inspection.json](results/mlb_p0/media_inspection.json)에 있다.
 `event_start_utc`는 경기 feed의 시각이며 방송 영상의 재생 초나 릴리스 시각이 아니다.
-`broadcast_offset_seconds`는 아직 null이다. 322개 전부의 영상 존재·길이·연속성까지 검증한 것은 아니다.
+원본 ID manifest의 `broadcast_offset_seconds`는 null로 유지한다. 확인한 재생 시각은
+출처·manifest 해시를 묶은 별도 [주석 파일](results/mlb_p0/game_747139_timing.json)에 보관한다.
+322개 전부의 영상 존재·길이·연속성까지 검증한 것은 아니다.
 
 ## 새 정답 정의
 
@@ -103,7 +108,7 @@ uv run --frozen python scripts/check_project.py --cpu-only
 node --check src/web/static/app.js
 ```
 
-2026-09-22 Windows CPU 검사: **241 passed, 2 deselected**, Ruff 44개 경로 통과.
+2026-09-22 Windows CPU 검사: **264 passed, 2 deselected**, Ruff 47개 경로 통과.
 2개 제외 항목은 MPS 하드웨어 테스트다. GitHub의 Linux/macOS CPU CI 결과는 커밋별로 확인한다.
 
 실제 모델 예시: 슬라이더 추천, 해당 구종의 다음 투구 피안타 확률 약 7.12%.
@@ -132,7 +137,7 @@ uv run --frozen python scripts/62_check_game_service.py --output outputs/game_se
 
 - 기존 오타니 영상 원본 전체의 ID 재검증(이번에는 저장소 코드와 새 경기 ID 연결을 확인).
 - 경기 시점 이전 자료만으로 투수 프로필 갱신 및 신규 투수 처리(고정 2022 프로필의 한계).
-- 전체 경기 재생 시간 ↔ 322개 투구의 릴리스·판단 시각 주석.
+- 전체 경기 재생 시간 ↔ 투구 시각 주석 확대(현재 시각 8개 확인, 1개 확인 불가, 313개 미검토).
 - 새 8종 모델 학습·보정. 현재 화면의 독립 스트라이크·볼·파울은 미지원(null).
 - 타자 세부 특성, 목표 위치와 제구 오차, 자동 점수판·선수 인식, 실시간 상태 추적.
 - 실제 추천이 실점을 줄이는지 검증. 현재 구종 정책의 개선 효과는 미입증.
