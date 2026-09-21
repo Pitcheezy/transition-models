@@ -22,6 +22,10 @@ jobs:
     env:
       WANDB_MODE: offline
       PYTHONUTF8: '1'
+      # Small regression tests do not need competing native thread pools.
+      OMP_NUM_THREADS: '1'
+      OPENBLAS_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
     steps:
       - uses: actions/checkout@v5
         with:
