@@ -1,0 +1,395 @@
+{
+  "schema": "manual_recommendation_v1",
+  "selected_model": "mlp135",
+  "feature_schema": "prepitch_profiles_2022_v1",
+  "recommendation": "SL",
+  "empirical_recommendation": "SL",
+  "reason": null,
+  "target_location": null,
+  "scope": "One-step predicted run-expectancy cost; observational validation only",
+  "limitations": [
+    "Target-location conditioning and batter-specific ability are not implemented.",
+    "Run reduction has not been established. Scores are not win probabilities.",
+    "Profiles are frozen in 2022; later players can have unsupported repertoires."
+  ],
+  "candidates": [
+    {
+      "action": "FF",
+      "supported": true,
+      "policy_probability": 0.05,
+      "expected_cost": 0.023785165445045872,
+      "probabilities": {
+        "Ball": 1.2907877920738394e-05,
+        "Strike": 0.2954580635738503,
+        "Single": 0.05088923316502176,
+        "Double": 0.01671225785511579,
+        "Triple": 0.001746315247444231,
+        "HomeRun": 0.012025260053309655,
+        "FieldOut": 0.16376767424352137,
+        "Strikeout": 0.22492024937272218,
+        "Walk": 0.22285011999411522,
+        "HitByPitch": 0.011617918616978687
+      },
+      "schema": "prepitch_probabilities_v1",
+      "legacy_probabilities": {
+        "Ball": 1.2907877920738394e-05,
+        "Strike": 0.2954580635738503,
+        "Single": 0.05088923316502176,
+        "Double": 0.01671225785511579,
+        "Triple": 0.001746315247444231,
+        "HomeRun": 0.012025260053309655,
+        "FieldOut": 0.16376767424352137,
+        "Strikeout": 0.22492024937272218,
+        "Walk": 0.22285011999411522,
+        "HitByPitch": 0.011617918616978687
+      },
+      "display_probabilities": {
+        "strike": null,
+        "ball": null,
+        "foul": null,
+        "hit": 0.08137306632089143
+      },
+      "limitations": [
+        "Legacy Strike includes nonterminal fouls; terminal strikeouts are separate.",
+        "Legacy Ball excludes terminal walks; requested strike/ball/foul marginals are unavailable.",
+        "Hit means an unconditional recorded hit on the next pitch, not hit given contact."
+      ]
+    },
+    {
+      "action": "SI",
+      "supported": false,
+      "policy_probability": 0.0,
+      "expected_cost": 0.034214450019309776,
+      "probabilities": {
+        "Ball": 9.151749094890924e-06,
+        "Strike": 0.2821648713641773,
+        "Single": 0.0644245609023772,
+        "Double": 0.017863958677412715,
+        "Triple": 0.0018240813808881305,
+        "HomeRun": 0.011277512700410202,
+        "FieldOut": 0.1854542353956941,
+        "Strikeout": 0.20103001213061913,
+        "Walk": 0.22329105388133572,
+        "HitByPitch": 0.01266056181799066
+      },
+      "schema": "prepitch_probabilities_v1",
+      "legacy_probabilities": {
+        "Ball": 9.151749094890924e-06,
+        "Strike": 0.2821648713641773,
+        "Single": 0.0644245609023772,
+        "Double": 0.017863958677412715,
+        "Triple": 0.0018240813808881305,
+        "HomeRun": 0.011277512700410202,
+        "FieldOut": 0.1854542353956941,
+        "Strikeout": 0.20103001213061913,
+        "Walk": 0.22329105388133572,
+        "HitByPitch": 0.01266056181799066
+      },
+      "display_probabilities": {
+        "strike": null,
+        "ball": null,
+        "foul": null,
+        "hit": 0.09539011366108825
+      },
+      "limitations": [
+        "Legacy Strike includes nonterminal fouls; terminal strikeouts are separate.",
+        "Legacy Ball excludes terminal walks; requested strike/ball/foul marginals are unavailable.",
+        "Hit means an unconditional recorded hit on the next pitch, not hit given contact."
+      ]
+    },
+    {
+      "action": "FC",
+      "supported": false,
+      "policy_probability": 0.0,
+      "expected_cost": 0.015926045574123644,
+      "probabilities": {
+        "Ball": 3.337696139194069e-05,
+        "Strike": 0.2448920859971234,
+        "Single": 0.05038813855684434,
+        "Double": 0.016315605054478623,
+        "Triple": 0.0009663810743545601,
+        "HomeRun": 0.010710384530488035,
+        "FieldOut": 0.16516384180538257,
+        "Strikeout": 0.2548643240226869,
+        "Walk": 0.25308724536598665,
+        "HitByPitch": 0.0035786166312630385
+      },
+      "schema": "prepitch_probabilities_v1",
+      "legacy_probabilities": {
+        "Ball": 3.337696139194069e-05,
+        "Strike": 0.2448920859971234,
+        "Single": 0.05038813855684434,
+        "Double": 0.016315605054478623,
+        "Triple": 0.0009663810743545601,
+        "HomeRun": 0.010710384530488035,
+        "FieldOut": 0.16516384180538257,
+        "Strikeout": 0.2548643240226869,
+        "Walk": 0.25308724536598665,
+        "HitByPitch": 0.0035786166312630385
+      },
+      "display_probabilities": {
+        "strike": null,
+        "ball": null,
+        "foul": null,
+        "hit": 0.07838050921616556
+      },
+      "limitations": [
+        "Legacy Strike includes nonterminal fouls; terminal strikeouts are separate.",
+        "Legacy Ball excludes terminal walks; requested strike/ball/foul marginals are unavailable.",
+        "Hit means an unconditional recorded hit on the next pitch, not hit given contact."
+      ]
+    },
+    {
+      "action": "SL",
+      "supported": true,
+      "policy_probability": 0.9500000000000001,
+      "expected_cost": 0.00829289242264377,
+      "probabilities": {
+        "Ball": 2.0107028087233574e-05,
+        "Strike": 0.20628502838383964,
+        "Single": 0.045480409784108104,
+        "Double": 0.015341125968862697,
+        "Triple": 0.0006299236035065937,
+        "HomeRun": 0.009735687297101918,
+        "FieldOut": 0.16756865801564255,
+        "Strikeout": 0.2740111167465887,
+        "Walk": 0.27823581407829395,
+        "HitByPitch": 0.002692129093968622
+      },
+      "schema": "prepitch_probabilities_v1",
+      "legacy_probabilities": {
+        "Ball": 2.0107028087233574e-05,
+        "Strike": 0.20628502838383964,
+        "Single": 0.045480409784108104,
+        "Double": 0.015341125968862697,
+        "Triple": 0.0006299236035065937,
+        "HomeRun": 0.009735687297101918,
+        "FieldOut": 0.16756865801564255,
+        "Strikeout": 0.2740111167465887,
+        "Walk": 0.27823581407829395,
+        "HitByPitch": 0.002692129093968622
+      },
+      "display_probabilities": {
+        "strike": null,
+        "ball": null,
+        "foul": null,
+        "hit": 0.07118714665357931
+      },
+      "limitations": [
+        "Legacy Strike includes nonterminal fouls; terminal strikeouts are separate.",
+        "Legacy Ball excludes terminal walks; requested strike/ball/foul marginals are unavailable.",
+        "Hit means an unconditional recorded hit on the next pitch, not hit given contact."
+      ]
+    },
+    {
+      "action": "ST",
+      "supported": false,
+      "policy_probability": 0.0,
+      "expected_cost": 0.0009506461687247128,
+      "probabilities": {
+        "Ball": 2.5559867467904197e-05,
+        "Strike": 0.20443183094891243,
+        "Single": 0.03644938094810126,
+        "Double": 0.013303986528348945,
+        "Triple": 0.000468723407911033,
+        "HomeRun": 0.009346590315009996,
+        "FieldOut": 0.14194975713802205,
+        "Strikeout": 0.3002592902225218,
+        "Walk": 0.2895296478959514,
+        "HitByPitch": 0.004235232727753093
+      },
+      "schema": "prepitch_probabilities_v1",
+      "legacy_probabilities": {
+        "Ball": 2.5559867467904197e-05,
+        "Strike": 0.20443183094891243,
+        "Single": 0.03644938094810126,
+        "Double": 0.013303986528348945,
+        "Triple": 0.000468723407911033,
+        "HomeRun": 0.009346590315009996,
+        "FieldOut": 0.14194975713802205,
+        "Strikeout": 0.3002592902225218,
+        "Walk": 0.2895296478959514,
+        "HitByPitch": 0.004235232727753093
+      },
+      "display_probabilities": {
+        "strike": null,
+        "ball": null,
+        "foul": null,
+        "hit": 0.05956868119937123
+      },
+      "limitations": [
+        "Legacy Strike includes nonterminal fouls; terminal strikeouts are separate.",
+        "Legacy Ball excludes terminal walks; requested strike/ball/foul marginals are unavailable.",
+        "Hit means an unconditional recorded hit on the next pitch, not hit given contact."
+      ]
+    },
+    {
+      "action": "CU",
+      "supported": false,
+      "policy_probability": 0.0,
+      "expected_cost": 0.0010984014433413952,
+      "probabilities": {
+        "Ball": 5.5595727895009e-06,
+        "Strike": 0.1954973537040268,
+        "Single": 0.0379830712974308,
+        "Double": 0.012804825687195924,
+        "Triple": 0.0003417549126298203,
+        "HomeRun": 0.007761967564222456,
+        "FieldOut": 0.15017831620771777,
+        "Strikeout": 0.2900895763187896,
+        "Walk": 0.30198470067977845,
+        "HitByPitch": 0.0033528740554188336
+      },
+      "schema": "prepitch_probabilities_v1",
+      "legacy_probabilities": {
+        "Ball": 5.5595727895009e-06,
+        "Strike": 0.1954973537040268,
+        "Single": 0.0379830712974308,
+        "Double": 0.012804825687195924,
+        "Triple": 0.0003417549126298203,
+        "HomeRun": 0.007761967564222456,
+        "FieldOut": 0.15017831620771777,
+        "Strikeout": 0.2900895763187896,
+        "Walk": 0.30198470067977845,
+        "HitByPitch": 0.0033528740554188336
+      },
+      "display_probabilities": {
+        "strike": null,
+        "ball": null,
+        "foul": null,
+        "hit": 0.058891619461479
+      },
+      "limitations": [
+        "Legacy Strike includes nonterminal fouls; terminal strikeouts are separate.",
+        "Legacy Ball excludes terminal walks; requested strike/ball/foul marginals are unavailable.",
+        "Hit means an unconditional recorded hit on the next pitch, not hit given contact."
+      ]
+    },
+    {
+      "action": "KC",
+      "supported": false,
+      "policy_probability": 0.0,
+      "expected_cost": 0.010101103847276477,
+      "probabilities": {
+        "Ball": 3.515460002768926e-06,
+        "Strike": 0.20728342682481635,
+        "Single": 0.03964332612138703,
+        "Double": 0.013963333531191573,
+        "Triple": 0.0005413617234197091,
+        "HomeRun": 0.00855549396926974,
+        "FieldOut": 0.15041968509739528,
+        "Strikeout": 0.27200158695650356,
+        "Walk": 0.30315844014621746,
+        "HitByPitch": 0.004429830169796468
+      },
+      "schema": "prepitch_probabilities_v1",
+      "legacy_probabilities": {
+        "Ball": 3.515460002768926e-06,
+        "Strike": 0.20728342682481635,
+        "Single": 0.03964332612138703,
+        "Double": 0.013963333531191573,
+        "Triple": 0.0005413617234197091,
+        "HomeRun": 0.00855549396926974,
+        "FieldOut": 0.15041968509739528,
+        "Strikeout": 0.27200158695650356,
+        "Walk": 0.30315844014621746,
+        "HitByPitch": 0.004429830169796468
+      },
+      "display_probabilities": {
+        "strike": null,
+        "ball": null,
+        "foul": null,
+        "hit": 0.06270351534526805
+      },
+      "limitations": [
+        "Legacy Strike includes nonterminal fouls; terminal strikeouts are separate.",
+        "Legacy Ball excludes terminal walks; requested strike/ball/foul marginals are unavailable.",
+        "Hit means an unconditional recorded hit on the next pitch, not hit given contact."
+      ]
+    },
+    {
+      "action": "CH",
+      "supported": false,
+      "policy_probability": 0.0,
+      "expected_cost": 0.02074488547105487,
+      "probabilities": {
+        "Ball": 5.0416630542831135e-06,
+        "Strike": 0.2507048303777135,
+        "Single": 0.038545760958374094,
+        "Double": 0.01711000622990381,
+        "Triple": 0.000928202601319441,
+        "HomeRun": 0.011869231266244768,
+        "FieldOut": 0.13924614216280878,
+        "Strikeout": 0.2587241386068548,
+        "Walk": 0.2722347680281527,
+        "HitByPitch": 0.010631878105573669
+      },
+      "schema": "prepitch_probabilities_v1",
+      "legacy_probabilities": {
+        "Ball": 5.0416630542831135e-06,
+        "Strike": 0.2507048303777135,
+        "Single": 0.038545760958374094,
+        "Double": 0.01711000622990381,
+        "Triple": 0.000928202601319441,
+        "HomeRun": 0.011869231266244768,
+        "FieldOut": 0.13924614216280878,
+        "Strikeout": 0.2587241386068548,
+        "Walk": 0.2722347680281527,
+        "HitByPitch": 0.010631878105573669
+      },
+      "display_probabilities": {
+        "strike": null,
+        "ball": null,
+        "foul": null,
+        "hit": 0.06845320105584211
+      },
+      "limitations": [
+        "Legacy Strike includes nonterminal fouls; terminal strikeouts are separate.",
+        "Legacy Ball excludes terminal walks; requested strike/ball/foul marginals are unavailable.",
+        "Hit means an unconditional recorded hit on the next pitch, not hit given contact."
+      ]
+    },
+    {
+      "action": "FS",
+      "supported": false,
+      "policy_probability": 0.0,
+      "expected_cost": 0.01600589610455447,
+      "probabilities": {
+        "Ball": 1.625110679201181e-05,
+        "Strike": 0.23979499792919054,
+        "Single": 0.03478558270362843,
+        "Double": 0.014321898816404543,
+        "Triple": 0.0006287698115988685,
+        "HomeRun": 0.009938967535847056,
+        "FieldOut": 0.12841829817309636,
+        "Strikeout": 0.2668602745926083,
+        "Walk": 0.29660434694605825,
+        "HitByPitch": 0.008630612384775716
+      },
+      "schema": "prepitch_probabilities_v1",
+      "legacy_probabilities": {
+        "Ball": 1.625110679201181e-05,
+        "Strike": 0.23979499792919054,
+        "Single": 0.03478558270362843,
+        "Double": 0.014321898816404543,
+        "Triple": 0.0006287698115988685,
+        "HomeRun": 0.009938967535847056,
+        "FieldOut": 0.12841829817309636,
+        "Strikeout": 0.2668602745926083,
+        "Walk": 0.29660434694605825,
+        "HitByPitch": 0.008630612384775716
+      },
+      "display_probabilities": {
+        "strike": null,
+        "ball": null,
+        "foul": null,
+        "hit": 0.059675218867478896
+      },
+      "limitations": [
+        "Legacy Strike includes nonterminal fouls; terminal strikeouts are separate.",
+        "Legacy Ball excludes terminal walks; requested strike/ball/foul marginals are unavailable.",
+        "Hit means an unconditional recorded hit on the next pitch, not hit given contact."
+      ]
+    }
+  ]
+}
