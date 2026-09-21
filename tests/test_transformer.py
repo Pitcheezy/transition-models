@@ -80,6 +80,7 @@ class TestPitchTransformer:
             out2 = model(x2)
         assert not torch.allclose(out1, out2, atol=1e-4)
 
+    @pytest.mark.mps
     def test_mps_compatible(self, model):
         if not torch.backends.mps.is_available():
             pytest.skip("MPS not available")

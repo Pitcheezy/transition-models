@@ -16,14 +16,18 @@ uv run --frozen python scripts/check_project.py
 
 `pywin32`는 Windows에서만 설치된다. SciPy·PyArrow·threadpoolctl은 직접 의존성으로 선언했다.
 `uv.lock`을 함께 관리하며, PyTorch는 학습에 사용한 **2.6.0**으로 고정한다.
-최초 Mac CI는 기존 lock의 PyTorch 2.11.0으로 Transformer 추론 중 SIGSEGV가 발생했다.
-운영체제별 PyTorch 버전 차이를 없애고 같은 테스트를 실행하도록 수정했다.
 Windows/Linux는 CUDA 12.4 빌드, Mac은 PyPI 빌드이므로 GPU별 bitwise 일치를 보장하지 않는다.
 
 검사 명령은 지원하는 새 경로의 Ruff 검사/포맷 검사와 전체 pytest를 실행한다.
 대형 원본 데이터 없이 실행할 수 있다. 기존 checkpoint를 받지 않은 환경은 관련 추론 테스트를
 건너뛸 수 있지만, LFS 포인터 파일만 남아 있으면 모델 로드가 실패할 수 있다.
-CI는 Ubuntu와 macOS에서 LFS 파일을 받고 같은 명령을 실행한다.
+CI는 Ubuntu와 macOS에서 LFS 파일을 받고 `scripts/check_project.py --cpu-only`를 실행한다.
+GitHub의 Mac 실행기는 MPS를 사용 가능하다고 보고하지만 Transformer 추론에서
+PyTorch 2.11.0과 2.6.0 모두 SIGSEGV가 재현되었다. CPU 모드는 모든 checkpoint 추론을
+실제 실행하고 MPS 전용 2개 테스트만 제외한다. 로컬 기본 명령은 자동 장치 선택과
+MPS 테스트를 그대로 유지한다. **Mac CPU CI 통과는 실제 맥미니의 MPS 통과를 뜻하지 않는다.**
+맥미니에서도 오류가 나면 검사에는 `--cpu-only`, 학습·추천에는 `--device cpu`를 지정한다.
+기존 Python 추론 wrapper에는 `device="cpu"`를 넘긴다.
 2026-09-21 유지보수 보완 후 Windows 검사 결과는 **177 passed, 2 skipped**(59.44초)이며,
 경로 이관·중단 결과 보존·설정 불일치 거부·하위 평가 무효화 회귀 테스트를 포함한다.
 과거 연구 스크립트 전체의 스타일 위반을 한꺼번에 변경한 것은 아니다.

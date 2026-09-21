@@ -52,6 +52,7 @@ indent-style = "space"
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 python_files = "test_*.py"
+markers = ["mps: requires a working Apple Metal GPU backend"]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src"]

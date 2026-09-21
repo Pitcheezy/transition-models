@@ -38,5 +38,7 @@ jobs:
       - name: Report PyTorch runtime
         run: |
           uv run --frozen python -c "import platform, torch; from src.utils.device import get_device; print(platform.platform()); print('torch:', torch.__version__, 'device:', get_device(), 'threads:', torch.get_num_threads(), 'MPS built:', torch.backends.mps.is_built(), 'MPS available:', torch.backends.mps.is_available())"
-      - name: Lint and test
-        run: uv run --frozen python scripts/check_project.py
+      # Hosted macOS reports MPS available but Transformer inference crashes on it.
+      # Keep real checkpoint inference on CPU; run MPS tests on a physical Mac.
+      - name: Lint and test on CPU
+        run: uv run --frozen python scripts/check_project.py --cpu-only

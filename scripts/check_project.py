@@ -22,6 +22,7 @@ QUALITY_PATHS = [
     "tests/test_point_data.py",
     "tests/test_operational.py",
     "tests/test_maintenance.py",
+    "tests/conftest.py",
     "scripts/check_project.py",
     *[
         p.relative_to(ROOT).as_posix()
@@ -34,6 +35,9 @@ QUALITY_PATHS = [
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--lint-only", action="store_true")
+    parser.add_argument(
+        "--cpu-only", action="store_true", help="Use CPU inference and exclude MPS hardware tests."
+    )
     args = parser.parse_args()
     for command in (("ruff", "check"), ("ruff", "format", "--check")):
         subprocess.run([sys.executable, "-m", *command, *QUALITY_PATHS], cwd=ROOT, check=True)
@@ -50,6 +54,7 @@ def main():
                 "no:cacheprovider",
                 "--basetemp",
                 str(temporary),
+                *(["--cpu-only", "-m", "not mps"] if args.cpu_only else []),
             ],
             cwd=ROOT,
             check=True,
