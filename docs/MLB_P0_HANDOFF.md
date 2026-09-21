@@ -9,6 +9,9 @@
 검토 결과는 여기서 확인하지 못했다. 재개할 때 먼저 보존·대조하고,
 [새 Claude 재개 프롬프트](CLAUDE_RESUME_PROMPT.md)를 사용한다.
 [로컬 검토와 HTTP 수정](MLB_P0_REVIEW_2026-09-22.md)을 참고한다.
+2026-09-22 Claude Code가 [재개 프롬프트](CLAUDE_RESUME_PROMPT.md)에 따라 3번 타석 주석을
+추가했다(아래 체크포인트 7). 이전 Claude 전체 점검 세션의 파일 변경은 이 저장소에 없었다
+(작업 트리 깨끗, HEAD 6a07125 확인 후 시작).
 
 ## 교대 원칙
 
@@ -41,6 +44,16 @@
    두 번째 타석의 세 투구는 모두 주석 완료. 1/6은 통계 그래픽 때문에 보류했다.
    [결과·재개 명령](MLB_BROADCAST_TIMING.md). 주석 저장·복원·내보내기·출처 불일치 거부를
    Chrome에서 확인했고 CLI로 투구 ID·시각 순서·완전 타석 여부를 검증했다.
+7. **3번 타석 시각 주석 (Claude Code, 2026-09-22)**: 데스크톱 앱 내장 브라우저에서
+   `http://127.0.0.1:8772` 주석 페이지의 실제 SNY 영상을 재생해 Vientos 타석 3구(3/1, 3/2, 3/3)의
+   판단·릴리스 시각을 추가했다. Git 저장 주석을 먼저 불러와 보존했고 기존 9개 항목은 바뀌지 않았다.
+   누적 **11개 시각 확인, 1개 확인 불가, 310개 미검토**, 완전 타석 2·3.
+   실행한 검사: `63_annotate_broadcast.py check --require-pa 3` 통과(검증 보고서 갱신),
+   `--require-pa 2` 통과, `--require-pa 1` 예상대로 실패, `pytest tests/test_broadcast_timing.py`
+   23 passed. 코드 변경 없음(JSON·검증 보고서·문서만)이라 전체 check_project는 재실행하지 않았다.
+   내장 브라우저 제약: 탐색 직후 스크린샷 타임아웃이 잦고 zoom 크롭 미지원, 입력 포커스 시
+   페이지가 스크롤돼 프레임마다 상단으로 되돌려 캡처했다. 8772는 이미 실행 중이던 같은
+   주석 페이지 서버를 재사용했다.
 
 이 문서와 함께 추가되는 후속 커밋의 해시는 `git log -6 --oneline`으로 확인한다.
 전체 Windows CPU 검사: **264 passed, 2 deselected**, Ruff 47개 경로 통과.
@@ -91,10 +104,22 @@ Chrome에서 `http://127.0.0.1:8770`을 연다. 포트 충돌 시 `--port 8771`.
 
 ## 남은 순서
 
-1. **영상 시간 주석 확대**: 최소 연속 한 타석은 완료했다. 저장된 JSON을 불러와
-   세 번째 타석부터 계속한다. feed UTC 시각을 재생 시간으로 쓰지 않는다.
+1. **영상 시간 주석 확대**: 2·3번 타석을 완료했다. 저장된 JSON을 불러와
+   네 번째 타석부터 계속한다. feed UTC 시각을 재생 시간으로 쓰지 않는다.
    `63_annotate_broadcast.py check --annotations docs/results/mlb_p0/game_747139_timing.json
-   --require-pa 2`로 기존 주석을 먼저 확인한다. 이후 점수판 인식 평가셋으로 연결한다.
+   --require-pa 3`로 기존 주석을 먼저 확인한다. 이후 점수판 인식 평가셋으로 연결한다.
+
+   다음 첫 실행 명령(저장소 루트, 모델·원본 Statcast 불필요):
+
+   ```bash
+   uv run --frozen python scripts/63_annotate_broadcast.py check --annotations docs/results/mlb_p0/game_747139_timing.json --require-pa 3
+   uv run --frozen python scripts/63_annotate_broadcast.py prepare
+   uv run --frozen python -m http.server 8772 --bind 127.0.0.1 --directory outputs/annotation
+   ```
+
+   페이지에서 Git 저장 JSON을 불러온 뒤 4번 타석(투구 4/1부터)을 확인하고, 내보낸 JSON을
+   같은 경로에 저장해 `--require-pa 4 --output docs/results/mlb_p0/game_747139_timing_validation.json`
+   으로 검증 보고서를 갱신한다.
 2. **기존 영상 재검증**: 옛 오타니 수집기는 CSV `iloc[i]`를 사용했다.
    기존 영상 파일명은 재확인 전 정답이 아니다. 원본 확보 후 playId로 재대조한다.
 3. **새 확률 모델**: 8종 정답을 기존 특징에 투구 ID로 연결하고 시간 분할을 유지한다.
