@@ -39,7 +39,7 @@ QUALITY_PATHS = [
     *[
         p.relative_to(ROOT).as_posix()
         for p in sorted((ROOT / "scripts").glob("*.py"))
-        if p.name[:2].isdigit() and 48 <= int(p.name[:2]) <= 61
+        if p.name[:2].isdigit() and 48 <= int(p.name[:2]) <= 62
     ],
 ]
 

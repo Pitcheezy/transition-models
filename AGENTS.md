@@ -5,8 +5,8 @@
 The product goal is pre-pitch broadcast situation recognition, outcome probabilities,
 and eventually pitch-type/target-location recommendations. MLB is the first delivery
 target; KBO comes later. Read docs/MLB_P0.md and docs/MLB_P0_HANDOFF.md for current work.
-Scripts 58–61 cover video identity, manual inference UI, source inspection, and new
-eight-class observation targets. Current UI uses the existing ten-class model and
+Scripts 58–62 cover video identity, manual inference UI, source inspection, new
+eight-class observation targets, and whole-game HTTP checks. Current UI uses the existing ten-class model and
 must leave independent strike/ball/foul and target-location outputs unavailable.
 Never pair video/Statcast rows by list order or trust old pose-video filenames.
 Do not claim OCR, broadcast synchronization, new eight-class model accuracy, or
