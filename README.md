@@ -1,5 +1,21 @@
 # transition-models
 
+개발·검사·중단 후 재개·Mac 이관: [유지보수 안내](docs/MAINTENANCE.md).
+기본 검사 명령은 `uv run --frozen python scripts/check_project.py`입니다.
+
+> **현재 결과 — 2026-09-21:** 기준선 복구와 운영 모델 9개 학습, 독립 확률 보정,
+> 정책 평가, 시연을 완료했습니다. 운영 MLP의 CE는 경험적 기준선 1.2874 → 1.2743입니다.
+> 다만 정책 실점 차이의 신뢰구간이 0을 포함해 **실점 개선은 입증하지 못했습니다**.
+> [최종 검증 보고서](docs/OPERATIONAL_VALIDATION_2026-09-21.md) ·
+> [검증 시연](docs/results/operational_20260921/demo.html) ·
+> [정정한 발표 구성](docs/presentation_slides.md)
+
+> **2026-09-21 정정:** 과거 77d 10-class 실험은 입력과 정답의 순서가 달랐습니다.
+> 아래 Phase 9~10 표는 역사적 기록이며, collapse·Arsenal +26.5pp·MDP 최선 주장의 근거로
+> 사용하면 안 됩니다. 같은 투구로 재학습한 77d MLP CE는 **67.67%, CE 0.8517**,
+> 135d MLP CE는 **67.60%, CE 0.8546**입니다(각 seed 42, 관측된 투구 특징 사용).
+> [수정·재현 결과와 운영 한계](docs/ALIGNMENT_REPAIR_2026-09-21.md)를 먼저 확인하세요.
+
 SmartPitch MDP의 전이확률(transition probability) 추정 모델 3가지를 비교하는 프로젝트.
 
 ## Models
@@ -15,7 +31,7 @@ SmartPitch MDP의 전이확률(transition probability) 추정 모델 3가지를 
 | **Top-1** | 35.6% | 60.9% | 67.2% |
 | **Reference** | Internal | Otremba 2022 | MIT Sloan 2025 |
 
-### Phase 9 아키텍처 사다리 (Track B) — 10-class 통일 비교
+### Phase 9 아키텍처 사다리 (Track B) — 과거 결과, 정렬 오류로 비교 철회
 
 | 모델 | Input | Top-1 | Macro-F1 | MDP 호환 |
 |------|-------|-------|----------|---------|
@@ -27,11 +43,11 @@ SmartPitch MDP의 전이확률(transition probability) 추정 모델 3가지를 
 
 † Strike majority collapse  ‡ 역방향 collapse (균등 예측)
 
-### Phase 9.5 MDP 호환 돌파 (Track C) — 135-dim Arsenal MLP
+### Phase 9.5 (Track C) — 과거 135-dim Arsenal MLP 결과
 
 | 모델 | Input | Top-1 | MDP 호환 | 권장 |
 |------|-------|-------|---------|------|
-| **TransitionModelMLP10** | **135d (77d+arsenal 58d)** | **67.6%** | **✅** | **⭐ 권장** |
+| **TransitionModelMLP10** | **135d (77d+arsenal 58d)** | **67.6%** | 입력 형식 호환 | 과거 모델, 권장 철회 |
 | LR 135d | 135d | 62.4% | ✅ | |
 | LightGBM 135d | 135d | 67.3% | ✅ | |
 
@@ -82,7 +98,11 @@ uv run python scripts/06_sanity_check_model_c.py
 
 ## Inference (DQN/MDP 팀용)
 
-### ⭐ 권장 모델: TransitionModelMLP10 (135-dim, 10-class, MDP 호환)
+### 과거 API: TransitionModelMLP10 (기존 실험 재현 전용)
+
+아래 checkpoint는 새 운영 평가 모델이 아닙니다. 투구 전 추천에는
+[운영 검증 보고서](docs/OPERATIONAL_VALIDATION_2026-09-21.md)와
+`scripts/57_recommend_operational.py`를 사용하세요. 입력 차원이 135로 같아도 특징 의미가 다릅니다.
 
 ```python
 import json

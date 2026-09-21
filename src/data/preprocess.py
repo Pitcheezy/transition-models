@@ -505,10 +505,8 @@ def extract_labels_4class(df: pd.DataFrame) -> np.ndarray:
     Returns:
         np.ndarray of shape (N,) with int values 0-3.
     """
-    labels = df["description"].apply(map_to_4class).values
-    # 매핑 불가 없어야 함 (clean_dataframe 이후)
-    result = np.array([l if l is not None else -1 for l in labels], dtype=np.int64)
-    return result
+    labels = df["description"].apply(map_to_4class)
+    return labels.fillna(-1).to_numpy(dtype=np.int64, copy=True)
 
 
 def extract_labels_10class(df: pd.DataFrame) -> np.ndarray:
@@ -522,9 +520,8 @@ def extract_labels_10class(df: pd.DataFrame) -> np.ndarray:
     """
     labels = df.apply(
         lambda r: map_to_10class(r["description"], r["events"]), axis=1
-    ).values
-    result = np.array([l if l is not None else -1 for l in labels], dtype=np.int64)
-    return result
+    )
+    return labels.fillna(-1).to_numpy(dtype=np.int64, copy=True)
 
 
 def extract_hit_location(df: pd.DataFrame) -> np.ndarray:

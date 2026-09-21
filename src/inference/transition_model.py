@@ -292,8 +292,10 @@ def build_135dim_feature(
 
     Returns:
         (135,) float32 feature vector.
-        Indices [77:82] (UMAP 5d) are set to 0.0 — the model was trained to
-        handle this as "average pitch mechanics" at inference time.
+        Indices [77:82] (UMAP 5d) are set to the normalized training mean (0.0).
+        This is an inference approximation, not an explicitly trained missing-data
+        mechanism. The remaining context uses cluster averages, including the
+        count-cluster field; evaluate this builder separately from observed features.
 
     Example::
 
@@ -312,7 +314,7 @@ def build_135dim_feature(
     if pitcher_cluster is not None:
         cluster_id = str(pitcher_cluster)
     elif pitcher_id is not None:
-        cluster_id = arsenal_data["pitcher_to_cluster"].get(str(pitcher_id), "0")
+        cluster_id = str(arsenal_data["pitcher_to_cluster"].get(str(pitcher_id), "0"))
     else:
         cluster_id = "0"
 

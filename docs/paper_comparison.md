@@ -1,5 +1,10 @@
 # 논문 비교 분석: Otremba 2022 vs MIT Sloan 2025 vs 본인 SmartPitch
 
+> **2026-09-21 정정:** 논문 구조 설명과 별개로, 아래 자체 실험의 77d 기준선 비교는
+> 입력/정답 정렬 오류 때문에 효력 없는 과거 기록입니다. +26.5pp 맥락 효과,
+> 135d 최선 또는 sequence와 동등성 입증을 현재 결론으로 인용하지 마세요.
+> argmax recall 0은 확률 0이 아닙니다. 최신 [운영 검증 보고서](OPERATIONAL_VALIDATION_2026-09-21.md)를 사용합니다.
+
 > 작성일: 2026-05-25  
 > 출처: notebooks/03_model_b_otremba_2022.ipynb, notebooks/04_model_c_mit_sloan_2025.ipynb,  
 >       src/data/features.py, src/models/otremba_mlp.py, CLAUDE.md

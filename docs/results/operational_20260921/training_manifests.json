@@ -1,0 +1,1071 @@
+{
+  "python": "3.12.12",
+  "platform": "Windows",
+  "torch": "2.6.0+cu124",
+  "numpy": "2.4.4",
+  "pandas": "3.0.2",
+  "scipy": "1.17.1",
+  "sklearn": "1.8.0",
+  "lightgbm": "4.6.0",
+  "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU",
+  "runs": {
+    "lgb135_seed42": {
+      "model": "lgb",
+      "data_dir": "data\\operational_20260921_v2",
+      "run_dir": "outputs\\operational_20260921\\lgb135_seed42",
+      "input_dim": 135,
+      "seed": 42,
+      "threads": 3,
+      "loss": "ce",
+      "class_weight": "none",
+      "epochs": 30,
+      "batch_size": 256,
+      "max_train": 0,
+      "max_iter": 500,
+      "rounds": 1000,
+      "device": "auto",
+      "eval_splits": [
+        "val",
+        "cal",
+        "test"
+      ],
+      "git_head": "fc7d6475d78953fbb9a0a7f1e417bc006a4b9f68",
+      "torch_version": "2.6.0+cu124",
+      "numpy_version": "2.4.4",
+      "class_names": [
+        "Ball",
+        "Strike",
+        "Single",
+        "Double",
+        "Triple",
+        "HomeRun",
+        "FieldOut",
+        "Strikeout",
+        "Walk",
+        "HitByPitch"
+      ],
+      "status": "complete",
+      "dataset": {
+        "feature_schema": "prepitch_profiles_2022_v1",
+        "profile_period": "2022 regular season only",
+        "selection": "2024 January-May",
+        "calibration": "2024 June only",
+        "test": "2024 July onward",
+        "action": "pitch type, not intended location",
+        "profile_sha256": "6538080fe55f668a16d1071c5bff6e3f91eeb2d103835c780aa05f0d450443fe",
+        "run_expectancy_training_rows": 627028,
+        "splits": {
+          "train": {
+            "n": 717401,
+            "pitch_ids_sha256": "dd9ae75b3ccadc9fb971e647ded0352d6df148f3ac34448a7115c412a0b91dc3",
+            "min_date": "2023-03-30 00:00:00",
+            "max_date": "2023-10-01 00:00:00",
+            "observed_run_cost_rows": 634912,
+            "at_least_two_supported_actions": 585157
+          },
+          "val": {
+            "n": 250970,
+            "pitch_ids_sha256": "85b77c9e96b185e066b29f5279cf680443f84e5ffaa417c9d64687d2dd1b25e3",
+            "min_date": "2024-03-20 00:00:00",
+            "max_date": "2024-05-31 00:00:00",
+            "observed_run_cost_rows": 221421,
+            "at_least_two_supported_actions": 179892
+          },
+          "cal": {
+            "n": 115884,
+            "pitch_ids_sha256": "276139f67a5f28718b111958d03d2e8aa2a3fe48998d8b900dc820605a0a6bc9",
+            "min_date": "2024-06-01 00:00:00",
+            "max_date": "2024-06-30 00:00:00",
+            "observed_run_cost_rows": 103353,
+            "at_least_two_supported_actions": 77766
+          },
+          "test": {
+            "n": 342054,
+            "pitch_ids_sha256": "a774e192ff8243c4fd9769362152fa48c9e1e6d59a609067ab4e1f4b6b6822a7",
+            "min_date": "2024-07-01 00:00:00",
+            "max_date": "2024-09-30 00:00:00",
+            "observed_run_cost_rows": 302360,
+            "at_least_two_supported_actions": 223211
+          }
+        }
+      },
+      "source_sha256": {
+        "src\\training\\point_baselines.py": "d9bd95ad9e494303fa1379407b83de90b93ec621f1a0cabd4e0fbcbacd1064b6",
+        "src\\data\\point_data.py": "7819921d77eeac194203f116474a32ad72fda9026327629904ecf499110933dd",
+        "src\\models\\otremba_mlp.py": "8e2b2de12f33ec04add8bd381b31b4617f870749c5b6f03ab36cccb70a1e6a0e"
+      },
+      "mlp_hyperparameters": {
+        "hidden_dim": 128,
+        "dropout": 0.2,
+        "lr": 0.001,
+        "weight_decay": 1e-05,
+        "gradient_clip_norm": 1.0,
+        "early_stopping_patience": 5,
+        "focal_gamma": 2.0
+      },
+      "splits": {
+        "train": {
+          "n": 717401,
+          "pitch_ids_sha256": "dd9ae75b3ccadc9fb971e647ded0352d6df148f3ac34448a7115c412a0b91dc3"
+        },
+        "val": {
+          "n": 250970,
+          "pitch_ids_sha256": "85b77c9e96b185e066b29f5279cf680443f84e5ffaa417c9d64687d2dd1b25e3"
+        },
+        "cal": {
+          "n": 115884,
+          "pitch_ids_sha256": "276139f67a5f28718b111958d03d2e8aa2a3fe48998d8b900dc820605a0a6bc9"
+        },
+        "test": {
+          "n": 342054,
+          "pitch_ids_sha256": "a774e192ff8243c4fd9769362152fa48c9e1e6d59a609067ab4e1f4b6b6822a7"
+        }
+      },
+      "best_iteration": 108,
+      "lightgbm_version": "4.6.0",
+      "training_seconds": 198.8028601999995
+    },
+    "lgb77_seed42": {
+      "model": "lgb",
+      "data_dir": "data\\operational_20260921_v2",
+      "run_dir": "outputs\\operational_20260921\\lgb77_seed42",
+      "input_dim": 77,
+      "seed": 42,
+      "threads": 3,
+      "loss": "ce",
+      "class_weight": "none",
+      "epochs": 30,
+      "batch_size": 256,
+      "max_train": 0,
+      "max_iter": 500,
+      "rounds": 1000,
+      "device": "auto",
+      "eval_splits": [
+        "val",
+        "cal",
+        "test"
+      ],
+      "git_head": "fc7d6475d78953fbb9a0a7f1e417bc006a4b9f68",
+      "torch_version": "2.6.0+cu124",
+      "numpy_version": "2.4.4",
+      "class_names": [
+        "Ball",
+        "Strike",
+        "Single",
+        "Double",
+        "Triple",
+        "HomeRun",
+        "FieldOut",
+        "Strikeout",
+        "Walk",
+        "HitByPitch"
+      ],
+      "status": "complete",
+      "dataset": {
+        "feature_schema": "prepitch_profiles_2022_v1",
+        "profile_period": "2022 regular season only",
+        "selection": "2024 January-May",
+        "calibration": "2024 June only",
+        "test": "2024 July onward",
+        "action": "pitch type, not intended location",
+        "profile_sha256": "6538080fe55f668a16d1071c5bff6e3f91eeb2d103835c780aa05f0d450443fe",
+        "run_expectancy_training_rows": 627028,
+        "splits": {
+          "train": {
+            "n": 717401,
+            "pitch_ids_sha256": "dd9ae75b3ccadc9fb971e647ded0352d6df148f3ac34448a7115c412a0b91dc3",
+            "min_date": "2023-03-30 00:00:00",
+            "max_date": "2023-10-01 00:00:00",
+            "observed_run_cost_rows": 634912,
+            "at_least_two_supported_actions": 585157
+          },
+          "val": {
+            "n": 250970,
+            "pitch_ids_sha256": "85b77c9e96b185e066b29f5279cf680443f84e5ffaa417c9d64687d2dd1b25e3",
+            "min_date": "2024-03-20 00:00:00",
+            "max_date": "2024-05-31 00:00:00",
+            "observed_run_cost_rows": 221421,
+            "at_least_two_supported_actions": 179892
+          },
+          "cal": {
+            "n": 115884,
+            "pitch_ids_sha256": "276139f67a5f28718b111958d03d2e8aa2a3fe48998d8b900dc820605a0a6bc9",
+            "min_date": "2024-06-01 00:00:00",
+            "max_date": "2024-06-30 00:00:00",
+            "observed_run_cost_rows": 103353,
+            "at_least_two_supported_actions": 77766
+          },
+          "test": {
+            "n": 342054,
+            "pitch_ids_sha256": "a774e192ff8243c4fd9769362152fa48c9e1e6d59a609067ab4e1f4b6b6822a7",
+            "min_date": "2024-07-01 00:00:00",
+            "max_date": "2024-09-30 00:00:00",
+            "observed_run_cost_rows": 302360,
+            "at_least_two_supported_actions": 223211
+          }
+        }
+      },
+      "source_sha256": {
+        "src\\training\\point_baselines.py": "d9bd95ad9e494303fa1379407b83de90b93ec621f1a0cabd4e0fbcbacd1064b6",
+        "src\\data\\point_data.py": "7819921d77eeac194203f116474a32ad72fda9026327629904ecf499110933dd",
+        "src\\models\\otremba_mlp.py": "8e2b2de12f33ec04add8bd381b31b4617f870749c5b6f03ab36cccb70a1e6a0e"
+      },
+      "mlp_hyperparameters": {
+        "hidden_dim": 128,
+        "dropout": 0.2,
+        "lr": 0.001,
+        "weight_decay": 1e-05,
+        "gradient_clip_norm": 1.0,
+        "early_stopping_patience": 5,
+        "focal_gamma": 2.0
+      },
+      "splits": {
+        "train": {
+          "n": 717401,
+          "pitch_ids_sha256": "dd9ae75b3ccadc9fb971e647ded0352d6df148f3ac34448a7115c412a0b91dc3"
+        },
+        "val": {
+          "n": 250970,
+          "pitch_ids_sha256": "85b77c9e96b185e066b29f5279cf680443f84e5ffaa417c9d64687d2dd1b25e3"
+        },
+        "cal": {
+          "n": 115884,
+          "pitch_ids_sha256": "276139f67a5f28718b111958d03d2e8aa2a3fe48998d8b900dc820605a0a6bc9"
+        },
+        "test": {
+          "n": 342054,
+          "pitch_ids_sha256": "a774e192ff8243c4fd9769362152fa48c9e1e6d59a609067ab4e1f4b6b6822a7"
+        }
+      },
+      "best_iteration": 123,
+      "lightgbm_version": "4.6.0",
+      "training_seconds": 130.9421709999997
+    },
+    "lr77_seed42": {
+      "model": "lr",
+      "data_dir": "data\\operational_20260921_v2",
+      "run_dir": "outputs\\operational_20260921\\lr77_seed42",
+      "input_dim": 77,
+      "seed": 42,
+      "threads": 3,
+      "loss": "ce",
+      "class_weight": "none",
+      "epochs": 30,
+      "batch_size": 256,
+      "max_train": 0,
+      "max_iter": 1000,
+      "rounds": 1000,
+      "device": "auto",
+      "eval_splits": [
+        "val",
+        "cal",
+        "test"
+      ],
+      "git_head": "fc7d6475d78953fbb9a0a7f1e417bc006a4b9f68",
+      "torch_version": "2.6.0+cu124",
+      "numpy_version": "2.4.4",
+      "class_names": [
+        "Ball",
+        "Strike",
+        "Single",
+        "Double",
+        "Triple",
+        "HomeRun",
+        "FieldOut",
+        "Strikeout",
+        "Walk",
+        "HitByPitch"
+      ],
+      "status": "complete",
+      "dataset": {
+        "feature_schema": "prepitch_profiles_2022_v1",
+        "profile_period": "2022 regular season only",
+        "selection": "2024 January-May",
+        "calibration": "2024 June only",
+        "test": "2024 July onward",
+        "action": "pitch type, not intended location",
+        "profile_sha256": "6538080fe55f668a16d1071c5bff6e3f91eeb2d103835c780aa05f0d450443fe",
+        "run_expectancy_training_rows": 627028,
+        "splits": {
+          "train": {
+            "n": 717401,
+            "pitch_ids_sha256": "dd9ae75b3ccadc9fb971e647ded0352d6df148f3ac34448a7115c412a0b91dc3",
+            "min_date": "2023-03-30 00:00:00",
+            "max_date": "2023-10-01 00:00:00",
+            "observed_run_cost_rows": 634912,
+            "at_least_two_supported_actions": 585157
+          },
+          "val": {
+            "n": 250970,
+            "pitch_ids_sha256": "85b77c9e96b185e066b29f5279cf680443f84e5ffaa417c9d64687d2dd1b25e3",
+            "min_date": "2024-03-20 00:00:00",
+            "max_date": "2024-05-31 00:00:00",
+            "observed_run_cost_rows": 221421,
+            "at_least_two_supported_actions": 179892
+          },
+          "cal": {
+            "n": 115884,
+            "pitch_ids_sha256": "276139f67a5f28718b111958d03d2e8aa2a3fe48998d8b900dc820605a0a6bc9",
+            "min_date": "2024-06-01 00:00:00",
+            "max_date": "2024-06-30 00:00:00",
+            "observed_run_cost_rows": 103353,
+            "at_least_two_supported_actions": 77766
+          },
+          "test": {
+            "n": 342054,
+            "pitch_ids_sha256": "a774e192ff8243c4fd9769362152fa48c9e1e6d59a609067ab4e1f4b6b6822a7",
+            "min_date": "2024-07-01 00:00:00",
+            "max_date": "2024-09-30 00:00:00",
+            "observed_run_cost_rows": 302360,
+            "at_least_two_supported_actions": 223211
+          }
+        }
+      },
+      "source_sha256": {
+        "src\\training\\point_baselines.py": "d9bd95ad9e494303fa1379407b83de90b93ec621f1a0cabd4e0fbcbacd1064b6",
+        "src\\data\\point_data.py": "7819921d77eeac194203f116474a32ad72fda9026327629904ecf499110933dd",
+        "src\\models\\otremba_mlp.py": "8e2b2de12f33ec04add8bd381b31b4617f870749c5b6f03ab36cccb70a1e6a0e"
+      },
+      "mlp_hyperparameters": {
+        "hidden_dim": 128,
+        "dropout": 0.2,
+        "lr": 0.001,
+        "weight_decay": 1e-05,
+        "gradient_clip_norm": 1.0,
+        "early_stopping_patience": 5,
+        "focal_gamma": 2.0
+      },
+      "splits": {
+        "train": {
+          "n": 717401,
+          "pitch_ids_sha256": "dd9ae75b3ccadc9fb971e647ded0352d6df148f3ac34448a7115c412a0b91dc3"
+        },
+        "val": {
+          "n": 250970,
+          "pitch_ids_sha256": "85b77c9e96b185e066b29f5279cf680443f84e5ffaa417c9d64687d2dd1b25e3"
+        },
+        "cal": {
+          "n": 115884,
+          "pitch_ids_sha256": "276139f67a5f28718b111958d03d2e8aa2a3fe48998d8b900dc820605a0a6bc9"
+        },
+        "test": {
+          "n": 342054,
+          "pitch_ids_sha256": "a774e192ff8243c4fd9769362152fa48c9e1e6d59a609067ab4e1f4b6b6822a7"
+        }
+      },
+      "n_iter": [
+        211
+      ],
+      "warnings": [],
+      "training_seconds": 103.01585950000026
+    },
+    "mlp135_seed42": {
+      "model": "mlp",
+      "data_dir": "data\\operational_20260921_v2",
+      "run_dir": "outputs\\operational_20260921\\mlp135_seed42",
+      "input_dim": 135,
+      "seed": 42,
+      "threads": 2,
+      "loss": "ce",
+      "class_weight": "none",
+      "epochs": 30,
+      "batch_size": 256,
+      "max_train": 0,
+      "max_iter": 500,
+      "rounds": 1000,
+      "device": "cuda",
+      "eval_splits": [
+        "val",
+        "cal",
+        "test"
+      ],
+      "git_head": "fc7d6475d78953fbb9a0a7f1e417bc006a4b9f68",
+      "torch_version": "2.6.0+cu124",
+      "numpy_version": "2.4.4",
+      "class_names": [
+        "Ball",
+        "Strike",
+        "Single",
+        "Double",
+        "Triple",
+        "HomeRun",
+        "FieldOut",
+        "Strikeout",
+        "Walk",
+        "HitByPitch"
+      ],
+      "status": "complete",
+      "dataset": {
+        "feature_schema": "prepitch_profiles_2022_v1",
+        "profile_period": "2022 regular season only",
+        "selection": "2024 January-May",
+        "calibration": "2024 June only",
+        "test": "2024 July onward",
+        "action": "pitch type, not intended location",
+        "profile_sha256": "6538080fe55f668a16d1071c5bff6e3f91eeb2d103835c780aa05f0d450443fe",
+        "run_expectancy_training_rows": 627028,
+        "splits": {
+          "train": {
+            "n": 717401,
+            "pitch_ids_sha256": "dd9ae75b3ccadc9fb971e647ded0352d6df148f3ac34448a7115c412a0b91dc3",
+            "min_date": "2023-03-30 00:00:00",
+            "max_date": "2023-10-01 00:00:00",
+            "observed_run_cost_rows": 634912,
+            "at_least_two_supported_actions": 585157
+          },
+          "val": {
+            "n": 250970,
+            "pitch_ids_sha256": "85b77c9e96b185e066b29f5279cf680443f84e5ffaa417c9d64687d2dd1b25e3",
+            "min_date": "2024-03-20 00:00:00",
+            "max_date": "2024-05-31 00:00:00",
+            "observed_run_cost_rows": 221421,
+            "at_least_two_supported_actions": 179892
+          },
+          "cal": {
+            "n": 115884,
+            "pitch_ids_sha256": "276139f67a5f28718b111958d03d2e8aa2a3fe48998d8b900dc820605a0a6bc9",
+            "min_date": "2024-06-01 00:00:00",
+            "max_date": "2024-06-30 00:00:00",
+            "observed_run_cost_rows": 103353,
+            "at_least_two_supported_actions": 77766
+          },
+          "test": {
+            "n": 342054,
+            "pitch_ids_sha256": "a774e192ff8243c4fd9769362152fa48c9e1e6d59a609067ab4e1f4b6b6822a7",
+            "min_date": "2024-07-01 00:00:00",
+            "max_date": "2024-09-30 00:00:00",
+            "observed_run_cost_rows": 302360,
+            "at_least_two_supported_actions": 223211
+          }
+        }
+      },
+      "source_sha256": {
+        "src\\training\\point_baselines.py": "d9bd95ad9e494303fa1379407b83de90b93ec621f1a0cabd4e0fbcbacd1064b6",
+        "src\\data\\point_data.py": "7819921d77eeac194203f116474a32ad72fda9026327629904ecf499110933dd",
+        "src\\models\\otremba_mlp.py": "8e2b2de12f33ec04add8bd381b31b4617f870749c5b6f03ab36cccb70a1e6a0e"
+      },
+      "mlp_hyperparameters": {
+        "hidden_dim": 128,
+        "dropout": 0.2,
+        "lr": 0.001,
+        "weight_decay": 1e-05,
+        "gradient_clip_norm": 1.0,
+        "early_stopping_patience": 5,
+        "focal_gamma": 2.0
+      },
+      "splits": {
+        "train": {
+          "n": 717401,
+          "pitch_ids_sha256": "dd9ae75b3ccadc9fb971e647ded0352d6df148f3ac34448a7115c412a0b91dc3"
+        },
+        "val": {
+          "n": 250970,
+          "pitch_ids_sha256": "85b77c9e96b185e066b29f5279cf680443f84e5ffaa417c9d64687d2dd1b25e3"
+        },
+        "cal": {
+          "n": 115884,
+          "pitch_ids_sha256": "276139f67a5f28718b111958d03d2e8aa2a3fe48998d8b900dc820605a0a6bc9"
+        },
+        "test": {
+          "n": 342054,
+          "pitch_ids_sha256": "a774e192ff8243c4fd9769362152fa48c9e1e6d59a609067ab4e1f4b6b6822a7"
+        }
+      },
+      "parameters": 35210,
+      "best_epoch": 25,
+      "epochs_completed": 30,
+      "best_val_loss": 1.2723213589735147,
+      "training_seconds": 431.93556139999964
+    },
+    "mlp135_seed43": {
+      "model": "mlp",
+      "data_dir": "data\\operational_20260921_v2",
+      "run_dir": "outputs\\operational_20260921\\mlp135_seed43",
+      "input_dim": 135,
+      "seed": 43,
+      "threads": 2,
+      "loss": "ce",
+      "class_weight": "none",
+      "epochs": 30,
+      "batch_size": 256,
+      "max_train": 0,
+      "max_iter": 500,
+      "rounds": 1000,
+      "device": "cuda",
+      "eval_splits": [
+        "val",
+        "cal",
+        "test"
+      ],
+      "git_head": "fc7d6475d78953fbb9a0a7f1e417bc006a4b9f68",
+      "torch_version": "2.6.0+cu124",
+      "numpy_version": "2.4.4",
+      "class_names": [
+        "Ball",
+        "Strike",
+        "Single",
+        "Double",
+        "Triple",
+        "HomeRun",
+        "FieldOut",
+        "Strikeout",
+        "Walk",
+        "HitByPitch"
+      ],
+      "status": "complete",
+      "dataset": {
+        "feature_schema": "prepitch_profiles_2022_v1",
+        "profile_period": "2022 regular season only",
+        "selection": "2024 January-May",
+        "calibration": "2024 June only",
+        "test": "2024 July onward",
+        "action": "pitch type, not intended location",
+        "profile_sha256": "6538080fe55f668a16d1071c5bff6e3f91eeb2d103835c780aa05f0d450443fe",
+        "run_expectancy_training_rows": 627028,
+        "splits": {
+          "train": {
+            "n": 717401,
+            "pitch_ids_sha256": "dd9ae75b3ccadc9fb971e647ded0352d6df148f3ac34448a7115c412a0b91dc3",
+            "min_date": "2023-03-30 00:00:00",
+            "max_date": "2023-10-01 00:00:00",
+            "observed_run_cost_rows": 634912,
+            "at_least_two_supported_actions": 585157
+          },
+          "val": {
+            "n": 250970,
+            "pitch_ids_sha256": "85b77c9e96b185e066b29f5279cf680443f84e5ffaa417c9d64687d2dd1b25e3",
+            "min_date": "2024-03-20 00:00:00",
+            "max_date": "2024-05-31 00:00:00",
+            "observed_run_cost_rows": 221421,
+            "at_least_two_supported_actions": 179892
+          },
+          "cal": {
+            "n": 115884,
+            "pitch_ids_sha256": "276139f67a5f28718b111958d03d2e8aa2a3fe48998d8b900dc820605a0a6bc9",
+            "min_date": "2024-06-01 00:00:00",
+            "max_date": "2024-06-30 00:00:00",
+            "observed_run_cost_rows": 103353,
+            "at_least_two_supported_actions": 77766
+          },
+          "test": {
+            "n": 342054,
+            "pitch_ids_sha256": "a774e192ff8243c4fd9769362152fa48c9e1e6d59a609067ab4e1f4b6b6822a7",
+            "min_date": "2024-07-01 00:00:00",
+            "max_date": "2024-09-30 00:00:00",
+            "observed_run_cost_rows": 302360,
+            "at_least_two_supported_actions": 223211
+          }
+        }
+      },
+      "source_sha256": {
+        "src\\training\\point_baselines.py": "d9bd95ad9e494303fa1379407b83de90b93ec621f1a0cabd4e0fbcbacd1064b6",
+        "src\\data\\point_data.py": "7819921d77eeac194203f116474a32ad72fda9026327629904ecf499110933dd",
+        "src\\models\\otremba_mlp.py": "8e2b2de12f33ec04add8bd381b31b4617f870749c5b6f03ab36cccb70a1e6a0e"
+      },
+      "mlp_hyperparameters": {
+        "hidden_dim": 128,
+        "dropout": 0.2,
+        "lr": 0.001,
+        "weight_decay": 1e-05,
+        "gradient_clip_norm": 1.0,
+        "early_stopping_patience": 5,
+        "focal_gamma": 2.0
+      },
+      "splits": {
+        "train": {
+          "n": 717401,
+          "pitch_ids_sha256": "dd9ae75b3ccadc9fb971e647ded0352d6df148f3ac34448a7115c412a0b91dc3"
+        },
+        "val": {
+          "n": 250970,
+          "pitch_ids_sha256": "85b77c9e96b185e066b29f5279cf680443f84e5ffaa417c9d64687d2dd1b25e3"
+        },
+        "cal": {
+          "n": 115884,
+          "pitch_ids_sha256": "276139f67a5f28718b111958d03d2e8aa2a3fe48998d8b900dc820605a0a6bc9"
+        },
+        "test": {
+          "n": 342054,
+          "pitch_ids_sha256": "a774e192ff8243c4fd9769362152fa48c9e1e6d59a609067ab4e1f4b6b6822a7"
+        }
+      },
+      "parameters": 35210,
+      "best_epoch": 8,
+      "epochs_completed": 13,
+      "best_val_loss": 1.2733622343458353,
+      "training_seconds": 133.09005310000066
+    },
+    "mlp135_seed44": {
+      "model": "mlp",
+      "data_dir": "data\\operational_20260921_v2",
+      "run_dir": "outputs\\operational_20260921\\mlp135_seed44",
+      "input_dim": 135,
+      "seed": 44,
+      "threads": 2,
+      "loss": "ce",
+      "class_weight": "none",
+      "epochs": 30,
+      "batch_size": 256,
+      "max_train": 0,
+      "max_iter": 500,
+      "rounds": 1000,
+      "device": "cuda",
+      "eval_splits": [
+        "val",
+        "cal",
+        "test"
+      ],
+      "git_head": "fc7d6475d78953fbb9a0a7f1e417bc006a4b9f68",
+      "torch_version": "2.6.0+cu124",
+      "numpy_version": "2.4.4",
+      "class_names": [
+        "Ball",
+        "Strike",
+        "Single",
+        "Double",
+        "Triple",
+        "HomeRun",
+        "FieldOut",
+        "Strikeout",
+        "Walk",
+        "HitByPitch"
+      ],
+      "status": "complete",
+      "dataset": {
+        "feature_schema": "prepitch_profiles_2022_v1",
+        "profile_period": "2022 regular season only",
+        "selection": "2024 January-May",
+        "calibration": "2024 June only",
+        "test": "2024 July onward",
+        "action": "pitch type, not intended location",
+        "profile_sha256": "6538080fe55f668a16d1071c5bff6e3f91eeb2d103835c780aa05f0d450443fe",
+        "run_expectancy_training_rows": 627028,
+        "splits": {
+          "train": {
+            "n": 717401,
+            "pitch_ids_sha256": "dd9ae75b3ccadc9fb971e647ded0352d6df148f3ac34448a7115c412a0b91dc3",
+            "min_date": "2023-03-30 00:00:00",
+            "max_date": "2023-10-01 00:00:00",
+            "observed_run_cost_rows": 634912,
+            "at_least_two_supported_actions": 585157
+          },
+          "val": {
+            "n": 250970,
+            "pitch_ids_sha256": "85b77c9e96b185e066b29f5279cf680443f84e5ffaa417c9d64687d2dd1b25e3",
+            "min_date": "2024-03-20 00:00:00",
+            "max_date": "2024-05-31 00:00:00",
+            "observed_run_cost_rows": 221421,
+            "at_least_two_supported_actions": 179892
+          },
+          "cal": {
+            "n": 115884,
+            "pitch_ids_sha256": "276139f67a5f28718b111958d03d2e8aa2a3fe48998d8b900dc820605a0a6bc9",
+            "min_date": "2024-06-01 00:00:00",
+            "max_date": "2024-06-30 00:00:00",
+            "observed_run_cost_rows": 103353,
+            "at_least_two_supported_actions": 77766
+          },
+          "test": {
+            "n": 342054,
+            "pitch_ids_sha256": "a774e192ff8243c4fd9769362152fa48c9e1e6d59a609067ab4e1f4b6b6822a7",
+            "min_date": "2024-07-01 00:00:00",
+            "max_date": "2024-09-30 00:00:00",
+            "observed_run_cost_rows": 302360,
+            "at_least_two_supported_actions": 223211
+          }
+        }
+      },
+      "source_sha256": {
+        "src\\training\\point_baselines.py": "d9bd95ad9e494303fa1379407b83de90b93ec621f1a0cabd4e0fbcbacd1064b6",
+        "src\\data\\point_data.py": "7819921d77eeac194203f116474a32ad72fda9026327629904ecf499110933dd",
+        "src\\models\\otremba_mlp.py": "8e2b2de12f33ec04add8bd381b31b4617f870749c5b6f03ab36cccb70a1e6a0e"
+      },
+      "mlp_hyperparameters": {
+        "hidden_dim": 128,
+        "dropout": 0.2,
+        "lr": 0.001,
+        "weight_decay": 1e-05,
+        "gradient_clip_norm": 1.0,
+        "early_stopping_patience": 5,
+        "focal_gamma": 2.0
+      },
+      "splits": {
+        "train": {
+          "n": 717401,
+          "pitch_ids_sha256": "dd9ae75b3ccadc9fb971e647ded0352d6df148f3ac34448a7115c412a0b91dc3"
+        },
+        "val": {
+          "n": 250970,
+          "pitch_ids_sha256": "85b77c9e96b185e066b29f5279cf680443f84e5ffaa417c9d64687d2dd1b25e3"
+        },
+        "cal": {
+          "n": 115884,
+          "pitch_ids_sha256": "276139f67a5f28718b111958d03d2e8aa2a3fe48998d8b900dc820605a0a6bc9"
+        },
+        "test": {
+          "n": 342054,
+          "pitch_ids_sha256": "a774e192ff8243c4fd9769362152fa48c9e1e6d59a609067ab4e1f4b6b6822a7"
+        }
+      },
+      "parameters": 35210,
+      "best_epoch": 25,
+      "epochs_completed": 30,
+      "best_val_loss": 1.27243878577936,
+      "training_seconds": 297.2662240999998
+    },
+    "mlp77_seed42": {
+      "model": "mlp",
+      "data_dir": "data\\operational_20260921_v2",
+      "run_dir": "outputs\\operational_20260921\\mlp77_seed42",
+      "input_dim": 77,
+      "seed": 42,
+      "threads": 2,
+      "loss": "ce",
+      "class_weight": "none",
+      "epochs": 30,
+      "batch_size": 256,
+      "max_train": 0,
+      "max_iter": 500,
+      "rounds": 1000,
+      "device": "cuda",
+      "eval_splits": [
+        "val",
+        "cal",
+        "test"
+      ],
+      "git_head": "fc7d6475d78953fbb9a0a7f1e417bc006a4b9f68",
+      "torch_version": "2.6.0+cu124",
+      "numpy_version": "2.4.4",
+      "class_names": [
+        "Ball",
+        "Strike",
+        "Single",
+        "Double",
+        "Triple",
+        "HomeRun",
+        "FieldOut",
+        "Strikeout",
+        "Walk",
+        "HitByPitch"
+      ],
+      "status": "complete",
+      "dataset": {
+        "feature_schema": "prepitch_profiles_2022_v1",
+        "profile_period": "2022 regular season only",
+        "selection": "2024 January-May",
+        "calibration": "2024 June only",
+        "test": "2024 July onward",
+        "action": "pitch type, not intended location",
+        "profile_sha256": "6538080fe55f668a16d1071c5bff6e3f91eeb2d103835c780aa05f0d450443fe",
+        "run_expectancy_training_rows": 627028,
+        "splits": {
+          "train": {
+            "n": 717401,
+            "pitch_ids_sha256": "dd9ae75b3ccadc9fb971e647ded0352d6df148f3ac34448a7115c412a0b91dc3",
+            "min_date": "2023-03-30 00:00:00",
+            "max_date": "2023-10-01 00:00:00",
+            "observed_run_cost_rows": 634912,
+            "at_least_two_supported_actions": 585157
+          },
+          "val": {
+            "n": 250970,
+            "pitch_ids_sha256": "85b77c9e96b185e066b29f5279cf680443f84e5ffaa417c9d64687d2dd1b25e3",
+            "min_date": "2024-03-20 00:00:00",
+            "max_date": "2024-05-31 00:00:00",
+            "observed_run_cost_rows": 221421,
+            "at_least_two_supported_actions": 179892
+          },
+          "cal": {
+            "n": 115884,
+            "pitch_ids_sha256": "276139f67a5f28718b111958d03d2e8aa2a3fe48998d8b900dc820605a0a6bc9",
+            "min_date": "2024-06-01 00:00:00",
+            "max_date": "2024-06-30 00:00:00",
+            "observed_run_cost_rows": 103353,
+            "at_least_two_supported_actions": 77766
+          },
+          "test": {
+            "n": 342054,
+            "pitch_ids_sha256": "a774e192ff8243c4fd9769362152fa48c9e1e6d59a609067ab4e1f4b6b6822a7",
+            "min_date": "2024-07-01 00:00:00",
+            "max_date": "2024-09-30 00:00:00",
+            "observed_run_cost_rows": 302360,
+            "at_least_two_supported_actions": 223211
+          }
+        }
+      },
+      "source_sha256": {
+        "src\\training\\point_baselines.py": "d9bd95ad9e494303fa1379407b83de90b93ec621f1a0cabd4e0fbcbacd1064b6",
+        "src\\data\\point_data.py": "7819921d77eeac194203f116474a32ad72fda9026327629904ecf499110933dd",
+        "src\\models\\otremba_mlp.py": "8e2b2de12f33ec04add8bd381b31b4617f870749c5b6f03ab36cccb70a1e6a0e"
+      },
+      "mlp_hyperparameters": {
+        "hidden_dim": 128,
+        "dropout": 0.2,
+        "lr": 0.001,
+        "weight_decay": 1e-05,
+        "gradient_clip_norm": 1.0,
+        "early_stopping_patience": 5,
+        "focal_gamma": 2.0
+      },
+      "splits": {
+        "train": {
+          "n": 717401,
+          "pitch_ids_sha256": "dd9ae75b3ccadc9fb971e647ded0352d6df148f3ac34448a7115c412a0b91dc3"
+        },
+        "val": {
+          "n": 250970,
+          "pitch_ids_sha256": "85b77c9e96b185e066b29f5279cf680443f84e5ffaa417c9d64687d2dd1b25e3"
+        },
+        "cal": {
+          "n": 115884,
+          "pitch_ids_sha256": "276139f67a5f28718b111958d03d2e8aa2a3fe48998d8b900dc820605a0a6bc9"
+        },
+        "test": {
+          "n": 342054,
+          "pitch_ids_sha256": "a774e192ff8243c4fd9769362152fa48c9e1e6d59a609067ab4e1f4b6b6822a7"
+        }
+      },
+      "parameters": 27786,
+      "best_epoch": 14,
+      "epochs_completed": 19,
+      "best_val_loss": 1.27351012723857,
+      "training_seconds": 261.0008405999997
+    },
+    "mlp77_seed43": {
+      "model": "mlp",
+      "data_dir": "data\\operational_20260921_v2",
+      "run_dir": "outputs\\operational_20260921\\mlp77_seed43",
+      "input_dim": 77,
+      "seed": 43,
+      "threads": 2,
+      "loss": "ce",
+      "class_weight": "none",
+      "epochs": 30,
+      "batch_size": 256,
+      "max_train": 0,
+      "max_iter": 500,
+      "rounds": 1000,
+      "device": "cuda",
+      "eval_splits": [
+        "val",
+        "cal",
+        "test"
+      ],
+      "git_head": "fc7d6475d78953fbb9a0a7f1e417bc006a4b9f68",
+      "torch_version": "2.6.0+cu124",
+      "numpy_version": "2.4.4",
+      "class_names": [
+        "Ball",
+        "Strike",
+        "Single",
+        "Double",
+        "Triple",
+        "HomeRun",
+        "FieldOut",
+        "Strikeout",
+        "Walk",
+        "HitByPitch"
+      ],
+      "status": "complete",
+      "dataset": {
+        "feature_schema": "prepitch_profiles_2022_v1",
+        "profile_period": "2022 regular season only",
+        "selection": "2024 January-May",
+        "calibration": "2024 June only",
+        "test": "2024 July onward",
+        "action": "pitch type, not intended location",
+        "profile_sha256": "6538080fe55f668a16d1071c5bff6e3f91eeb2d103835c780aa05f0d450443fe",
+        "run_expectancy_training_rows": 627028,
+        "splits": {
+          "train": {
+            "n": 717401,
+            "pitch_ids_sha256": "dd9ae75b3ccadc9fb971e647ded0352d6df148f3ac34448a7115c412a0b91dc3",
+            "min_date": "2023-03-30 00:00:00",
+            "max_date": "2023-10-01 00:00:00",
+            "observed_run_cost_rows": 634912,
+            "at_least_two_supported_actions": 585157
+          },
+          "val": {
+            "n": 250970,
+            "pitch_ids_sha256": "85b77c9e96b185e066b29f5279cf680443f84e5ffaa417c9d64687d2dd1b25e3",
+            "min_date": "2024-03-20 00:00:00",
+            "max_date": "2024-05-31 00:00:00",
+            "observed_run_cost_rows": 221421,
+            "at_least_two_supported_actions": 179892
+          },
+          "cal": {
+            "n": 115884,
+            "pitch_ids_sha256": "276139f67a5f28718b111958d03d2e8aa2a3fe48998d8b900dc820605a0a6bc9",
+            "min_date": "2024-06-01 00:00:00",
+            "max_date": "2024-06-30 00:00:00",
+            "observed_run_cost_rows": 103353,
+            "at_least_two_supported_actions": 77766
+          },
+          "test": {
+            "n": 342054,
+            "pitch_ids_sha256": "a774e192ff8243c4fd9769362152fa48c9e1e6d59a609067ab4e1f4b6b6822a7",
+            "min_date": "2024-07-01 00:00:00",
+            "max_date": "2024-09-30 00:00:00",
+            "observed_run_cost_rows": 302360,
+            "at_least_two_supported_actions": 223211
+          }
+        }
+      },
+      "source_sha256": {
+        "src\\training\\point_baselines.py": "d9bd95ad9e494303fa1379407b83de90b93ec621f1a0cabd4e0fbcbacd1064b6",
+        "src\\data\\point_data.py": "7819921d77eeac194203f116474a32ad72fda9026327629904ecf499110933dd",
+        "src\\models\\otremba_mlp.py": "8e2b2de12f33ec04add8bd381b31b4617f870749c5b6f03ab36cccb70a1e6a0e"
+      },
+      "mlp_hyperparameters": {
+        "hidden_dim": 128,
+        "dropout": 0.2,
+        "lr": 0.001,
+        "weight_decay": 1e-05,
+        "gradient_clip_norm": 1.0,
+        "early_stopping_patience": 5,
+        "focal_gamma": 2.0
+      },
+      "splits": {
+        "train": {
+          "n": 717401,
+          "pitch_ids_sha256": "dd9ae75b3ccadc9fb971e647ded0352d6df148f3ac34448a7115c412a0b91dc3"
+        },
+        "val": {
+          "n": 250970,
+          "pitch_ids_sha256": "85b77c9e96b185e066b29f5279cf680443f84e5ffaa417c9d64687d2dd1b25e3"
+        },
+        "cal": {
+          "n": 115884,
+          "pitch_ids_sha256": "276139f67a5f28718b111958d03d2e8aa2a3fe48998d8b900dc820605a0a6bc9"
+        },
+        "test": {
+          "n": 342054,
+          "pitch_ids_sha256": "a774e192ff8243c4fd9769362152fa48c9e1e6d59a609067ab4e1f4b6b6822a7"
+        }
+      },
+      "parameters": 27786,
+      "best_epoch": 8,
+      "epochs_completed": 13,
+      "best_val_loss": 1.2735640625333207,
+      "training_seconds": 198.54179920000024
+    },
+    "mlp77_seed44": {
+      "model": "mlp",
+      "data_dir": "data\\operational_20260921_v2",
+      "run_dir": "outputs\\operational_20260921\\mlp77_seed44",
+      "input_dim": 77,
+      "seed": 44,
+      "threads": 2,
+      "loss": "ce",
+      "class_weight": "none",
+      "epochs": 30,
+      "batch_size": 256,
+      "max_train": 0,
+      "max_iter": 500,
+      "rounds": 1000,
+      "device": "cuda",
+      "eval_splits": [
+        "val",
+        "cal",
+        "test"
+      ],
+      "git_head": "fc7d6475d78953fbb9a0a7f1e417bc006a4b9f68",
+      "torch_version": "2.6.0+cu124",
+      "numpy_version": "2.4.4",
+      "class_names": [
+        "Ball",
+        "Strike",
+        "Single",
+        "Double",
+        "Triple",
+        "HomeRun",
+        "FieldOut",
+        "Strikeout",
+        "Walk",
+        "HitByPitch"
+      ],
+      "status": "complete",
+      "dataset": {
+        "feature_schema": "prepitch_profiles_2022_v1",
+        "profile_period": "2022 regular season only",
+        "selection": "2024 January-May",
+        "calibration": "2024 June only",
+        "test": "2024 July onward",
+        "action": "pitch type, not intended location",
+        "profile_sha256": "6538080fe55f668a16d1071c5bff6e3f91eeb2d103835c780aa05f0d450443fe",
+        "run_expectancy_training_rows": 627028,
+        "splits": {
+          "train": {
+            "n": 717401,
+            "pitch_ids_sha256": "dd9ae75b3ccadc9fb971e647ded0352d6df148f3ac34448a7115c412a0b91dc3",
+            "min_date": "2023-03-30 00:00:00",
+            "max_date": "2023-10-01 00:00:00",
+            "observed_run_cost_rows": 634912,
+            "at_least_two_supported_actions": 585157
+          },
+          "val": {
+            "n": 250970,
+            "pitch_ids_sha256": "85b77c9e96b185e066b29f5279cf680443f84e5ffaa417c9d64687d2dd1b25e3",
+            "min_date": "2024-03-20 00:00:00",
+            "max_date": "2024-05-31 00:00:00",
+            "observed_run_cost_rows": 221421,
+            "at_least_two_supported_actions": 179892
+          },
+          "cal": {
+            "n": 115884,
+            "pitch_ids_sha256": "276139f67a5f28718b111958d03d2e8aa2a3fe48998d8b900dc820605a0a6bc9",
+            "min_date": "2024-06-01 00:00:00",
+            "max_date": "2024-06-30 00:00:00",
+            "observed_run_cost_rows": 103353,
+            "at_least_two_supported_actions": 77766
+          },
+          "test": {
+            "n": 342054,
+            "pitch_ids_sha256": "a774e192ff8243c4fd9769362152fa48c9e1e6d59a609067ab4e1f4b6b6822a7",
+            "min_date": "2024-07-01 00:00:00",
+            "max_date": "2024-09-30 00:00:00",
+            "observed_run_cost_rows": 302360,
+            "at_least_two_supported_actions": 223211
+          }
+        }
+      },
+      "source_sha256": {
+        "src\\training\\point_baselines.py": "d9bd95ad9e494303fa1379407b83de90b93ec621f1a0cabd4e0fbcbacd1064b6",
+        "src\\data\\point_data.py": "7819921d77eeac194203f116474a32ad72fda9026327629904ecf499110933dd",
+        "src\\models\\otremba_mlp.py": "8e2b2de12f33ec04add8bd381b31b4617f870749c5b6f03ab36cccb70a1e6a0e"
+      },
+      "mlp_hyperparameters": {
+        "hidden_dim": 128,
+        "dropout": 0.2,
+        "lr": 0.001,
+        "weight_decay": 1e-05,
+        "gradient_clip_norm": 1.0,
+        "early_stopping_patience": 5,
+        "focal_gamma": 2.0
+      },
+      "splits": {
+        "train": {
+          "n": 717401,
+          "pitch_ids_sha256": "dd9ae75b3ccadc9fb971e647ded0352d6df148f3ac34448a7115c412a0b91dc3"
+        },
+        "val": {
+          "n": 250970,
+          "pitch_ids_sha256": "85b77c9e96b185e066b29f5279cf680443f84e5ffaa417c9d64687d2dd1b25e3"
+        },
+        "cal": {
+          "n": 115884,
+          "pitch_ids_sha256": "276139f67a5f28718b111958d03d2e8aa2a3fe48998d8b900dc820605a0a6bc9"
+        },
+        "test": {
+          "n": 342054,
+          "pitch_ids_sha256": "a774e192ff8243c4fd9769362152fa48c9e1e6d59a609067ab4e1f4b6b6822a7"
+        }
+      },
+      "parameters": 27786,
+      "best_epoch": 22,
+      "epochs_completed": 27,
+      "best_val_loss": 1.2730218494619916,
+      "training_seconds": 263.0066753000001
+    }
+  }
+}

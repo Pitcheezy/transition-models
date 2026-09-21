@@ -1,0 +1,76 @@
+{
+  "dataset": {
+    "feature_schema": "prepitch_profiles_2022_v1",
+    "profile_period": "2022 regular season only",
+    "selection": "2024 January-May",
+    "calibration": "2024 June only",
+    "test": "2024 July onward",
+    "action": "pitch type, not intended location",
+    "profile_sha256": "6538080fe55f668a16d1071c5bff6e3f91eeb2d103835c780aa05f0d450443fe",
+    "run_expectancy_training_rows": 627028,
+    "splits": {
+      "train": {
+        "n": 717401,
+        "pitch_ids_sha256": "dd9ae75b3ccadc9fb971e647ded0352d6df148f3ac34448a7115c412a0b91dc3",
+        "min_date": "2023-03-30 00:00:00",
+        "max_date": "2023-10-01 00:00:00",
+        "observed_run_cost_rows": 634912,
+        "at_least_two_supported_actions": 585157
+      },
+      "val": {
+        "n": 250970,
+        "pitch_ids_sha256": "85b77c9e96b185e066b29f5279cf680443f84e5ffaa417c9d64687d2dd1b25e3",
+        "min_date": "2024-03-20 00:00:00",
+        "max_date": "2024-05-31 00:00:00",
+        "observed_run_cost_rows": 221421,
+        "at_least_two_supported_actions": 179892
+      },
+      "cal": {
+        "n": 115884,
+        "pitch_ids_sha256": "276139f67a5f28718b111958d03d2e8aa2a3fe48998d8b900dc820605a0a6bc9",
+        "min_date": "2024-06-01 00:00:00",
+        "max_date": "2024-06-30 00:00:00",
+        "observed_run_cost_rows": 103353,
+        "at_least_two_supported_actions": 77766
+      },
+      "test": {
+        "n": 342054,
+        "pitch_ids_sha256": "a774e192ff8243c4fd9769362152fa48c9e1e6d59a609067ab4e1f4b6b6822a7",
+        "min_date": "2024-07-01 00:00:00",
+        "max_date": "2024-09-30 00:00:00",
+        "observed_run_cost_rows": 302360,
+        "at_least_two_supported_actions": 223211
+      }
+    }
+  },
+  "propensity_input": "pre-state 31 + frozen profile 58; excludes action/physics/zone",
+  "training": "2023",
+  "selection": "2024 Jan-May",
+  "calibration": "June",
+  "parameters": {
+    "learning_rate": 0.05,
+    "num_leaves": 31,
+    "max_depth": 6,
+    "min_data_in_leaf": 100,
+    "num_threads": 3,
+    "seed": 42,
+    "deterministic": true,
+    "force_col_wise": true,
+    "verbosity": -1
+  },
+  "status": "complete",
+  "propensity": {
+    "best_iteration": 65,
+    "validation_score": {
+      "multi_logloss": 1.5502946864712428
+    },
+    "temperature": 1.09794610049746,
+    "calibration_ce": 1.5640383411115404
+  },
+  "reward": {
+    "best_iteration": 33,
+    "validation_score": {
+      "l2": 0.06049066949208648
+    }
+  }
+}

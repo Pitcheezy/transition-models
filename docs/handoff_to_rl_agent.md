@@ -1,5 +1,11 @@
 # rl-agent 팀원 인수인계 문서
 
+> **2026-09-21 정정:** 아래 권장 사항은 과거 기록입니다. 77d 기준선의 정답 정렬 오류를
+> 수정하자 77d MLP CE도 67.67%를 달성했습니다. 135d Focal이 MDP에 최선이라는 결론은
+> 철회합니다. 아래 Single~HR 0%는 argmax recall이며 예측 확률이 0이라는 뜻이 아닙니다.
+> 운영 입력의 평균 대체에서는 성능 하락이 확인됐고, 정책 실점 개선은 입증되지 않았습니다.
+> [수정 보고서](ALIGNMENT_REPAIR_2026-09-21.md)를 기준으로 통합 조건을 다시 검증하세요.
+
 **최종 업데이트**: 2026-05-27 (Phase 10 완료)
 **최초 작성**: 2026-05-25  
 **작성자**: transition-models 담당  
@@ -11,8 +17,9 @@
 
 transition-models에서 새로운 10-class 모델(`TransitionModelMLP10`)을 추가했습니다.  
 기존 Model B(4-class, 60.9%)보다 **Walk/Strikeout/HitByPitch를 직접 예측**하고 Top-1 67.6%를 달성하므로  
-rl-agent의 MDP-VI가 RE24 보상을 더 정확하게 계산할 수 있습니다.  
-※ Single/Double/Triple/HR는 현재 0% — InPlay 확률 × BIP 테이블 병행 권장 (주의사항 참조).
+이를 이용한 RE24 보상 계산의 정확도 개선은 별도 정책 평가가 필요합니다.
+※ 과거 Single/Double/Triple/HR의 0%는 argmax recall이다. 예측 확률 0이 아니며,
+이 값만으로 BIP 테이블 대체를 권장하지 않는다.
 
 ---
 
@@ -244,18 +251,18 @@ def _precompute_model_mlp10(self, env: "PitchEnv", verbose: bool = True) -> None
 
 | 항목 | 기존 Model B (4-class) | 새 TransitionModelMLP10 (10-class) |
 |------|----------------------|-----------------------------------|
-| InPlay 처리 | BIP 테이블로 추정 (고정값) | 직접 예측 (타자/투수 맥락 반영) |
-| Single 예측 | 고정 21.74% | **현재 0%** (주의사항 참조) |
-| HR 예측 | 고정 4.39% | **현재 0%** (주의사항 참조) |
+| InPlay 처리 | BIP 테이블로 추정 (고정값) | 사건별 확률 예측; 맥락 효과는 별도 검증 |
+| Single 예측 | 고정 21.74% | 과거 argmax recall 0%; 확률은 0이 아님 |
+| HR 예측 | 고정 4.39% | 과거 argmax recall 0%; 확률은 0이 아님 |
 | Walk 예측 | Ball 4개 누적으로만 | 직접 예측 가능 |
 | Strikeout | Strike 3개 누적으로만 | 직접 예측 가능 |
-| MDP-VI 보상 정확도 | 추정 기반 | 실측 기반 |
+| MDP-VI 보상 정확도 | 추정 기반 | 학습 확률 기반 추정; 정책 정확도를 자동 보장하지 않음 |
 
 ---
 
 ## 주의사항
 
-1. **UMAP 0-fill**: 모델은 UMAP이 0일 때의 성능 저하를 최소화하도록 훈련 데이터의 평균값으로 처리하지만, 완벽하지는 않습니다.
+1. **UMAP 0-fill**: 평균 대체이며, 이 누락 조건에 맞춰 학습했다는 보장은 없습니다.
 
 2. **pitcher_cluster 범위**: JSON의 `n_clusters` 값을 확인하여 유효한 cluster ID 범위를 파악하세요.
 

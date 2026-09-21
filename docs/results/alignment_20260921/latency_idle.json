@@ -1,0 +1,18 @@
+{
+  "device": "cpu",
+  "torch_threads": 1,
+  "scope": "Forward plus softmax only; 200 warmup and 2000 alternating timed calls; excludes feature building and loading",
+  "concurrent_training": false,
+  "runs": {
+    "mlp77_ce_seed42": {
+      "single_p50_ms": 0.0622,
+      "single_p95_ms": 0.0663,
+      "batch1024_p50_ms": 1.4179
+    },
+    "mlp135_ce_seed42": {
+      "single_p50_ms": 0.0628,
+      "single_p95_ms": 0.0667,
+      "batch1024_p50_ms": 1.64405
+    }
+  }
+}

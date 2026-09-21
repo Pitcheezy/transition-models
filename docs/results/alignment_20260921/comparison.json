@@ -1,0 +1,3933 @@
+{
+  "scope": "Retrospective observed-pitch classification, not policy value",
+  "calibration": "Scalar temperature fitted on validation (also used for early stopping); no test fitting. Independent calibration holdout remains future work.",
+  "runs": {
+    "mlp77_ce_seed42": {
+      "manifest": {
+        "model": "mlp",
+        "data_dir": "data\\aligned_20260921",
+        "run_dir": "outputs\\alignment_repair_20260921\\mlp77_ce_seed42",
+        "input_dim": 77,
+        "seed": 42,
+        "threads": 2,
+        "loss": "ce",
+        "class_weight": "none",
+        "epochs": 30,
+        "batch_size": 256,
+        "max_train": 0,
+        "max_iter": 500,
+        "rounds": 1000,
+        "device": "cuda",
+        "git_head": "fc7d6475d78953fbb9a0a7f1e417bc006a4b9f68",
+        "torch_version": "2.6.0+cu124",
+        "numpy_version": "2.4.4",
+        "class_names": [
+          "Ball",
+          "Strike",
+          "Single",
+          "Double",
+          "Triple",
+          "HomeRun",
+          "FieldOut",
+          "Strikeout",
+          "Walk",
+          "HitByPitch"
+        ],
+        "status": "complete",
+        "splits": {
+          "train": {
+            "n": 1493038,
+            "pitch_ids_sha256": "2f9ab2614090b2d882fa01182fcbf92ac5d4b81300fc4bfe0c9a1ee1920519b9"
+          },
+          "val": {
+            "n": 384849,
+            "pitch_ids_sha256": "1879967de0c8ed11286b56aaf0bd150dede355b3ac88a415f1b9ce3c31350248"
+          },
+          "test": {
+            "n": 353667,
+            "pitch_ids_sha256": "f3c785a3642c90b1306a02cdeb3c25b033c3ecc5cd51fe0c94feb48b0635bcd3"
+          }
+        },
+        "parameters": 27786,
+        "best_epoch": 24,
+        "epochs_completed": 29,
+        "best_val_loss": 0.8514690153123791,
+        "training_seconds": 672.9688509
+      },
+      "raw": {
+        "n": 353667,
+        "top1": 0.676721322600073,
+        "top3": 0.9478492480214439,
+        "ce": 0.8516886070007635,
+        "brier": 0.4378802383346594,
+        "ece_15": 0.013571096285533631,
+        "macro_f1": 0.29582485486630383,
+        "confusion_matrix": [
+          [
+            105083,
+            11093,
+            0,
+            0,
+            0,
+            0,
+            203,
+            1390,
+            1,
+            38
+          ],
+          [
+            18418,
+            120819,
+            0,
+            0,
+            0,
+            0,
+            2405,
+            2745,
+            1013,
+            3
+          ],
+          [
+            1006,
+            10194,
+            0,
+            0,
+            0,
+            0,
+            951,
+            633,
+            98,
+            0
+          ],
+          [
+            193,
+            3292,
+            0,
+            0,
+            0,
+            0,
+            205,
+            132,
+            23,
+            0
+          ],
+          [
+            12,
+            271,
+            0,
+            0,
+            0,
+            0,
+            30,
+            14,
+            1,
+            0
+          ],
+          [
+            51,
+            2633,
+            0,
+            0,
+            0,
+            0,
+            104,
+            49,
+            12,
+            0
+          ],
+          [
+            3505,
+            33009,
+            0,
+            0,
+            0,
+            0,
+            2925,
+            1803,
+            312,
+            0
+          ],
+          [
+            6246,
+            8295,
+            0,
+            0,
+            0,
+            0,
+            1381,
+            4161,
+            735,
+            0
+          ],
+          [
+            10,
+            646,
+            0,
+            0,
+            0,
+            0,
+            16,
+            317,
+            6208,
+            2
+          ],
+          [
+            790,
+            7,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            46,
+            138
+          ]
+        ],
+        "per_class": {
+          "Ball": {
+            "support": 117808,
+            "recall": 0.891985264158631,
+            "predicted_count": 135314,
+            "mean_probability": 0.3289494433311387,
+            "observed_frequency": 0.33310430433147564,
+            "brier": 0.07999829225294036,
+            "ece_15": 0.009487823365798531
+          },
+          "Strike": {
+            "support": 145403,
+            "recall": 0.8309250840766697,
+            "predicted_count": 190259,
+            "mean_probability": 0.41109517979372673,
+            "observed_frequency": 0.41112967848286663,
+            "brier": 0.16106878089341875,
+            "ece_15": 0.01065223824361965
+          },
+          "Single": {
+            "support": 12882,
+            "recall": 0.0,
+            "predicted_count": 0,
+            "mean_probability": 0.03729039316283276,
+            "observed_frequency": 0.036424093850995425,
+            "brier": 0.03382148639283633,
+            "ece_15": 0.002133260582366914
+          },
+          "Double": {
+            "support": 3845,
+            "recall": 0.0,
+            "predicted_count": 0,
+            "mean_probability": 0.011346331166764942,
+            "observed_frequency": 0.010871808791886152,
+            "brier": 0.010624328687802572,
+            "ece_15": 0.00047452237487878926
+          },
+          "Triple": {
+            "support": 328,
+            "recall": 0.0,
+            "predicted_count": 0,
+            "mean_probability": 0.0010639668969143331,
+            "observed_frequency": 0.0009274260815965301,
+            "brier": 0.0009255459064545184,
+            "ece_15": 0.00013654081531780306
+          },
+          "HomeRun": {
+            "support": 2849,
+            "recall": 0.0,
+            "predicted_count": 0,
+            "mean_probability": 0.007881400297142599,
+            "observed_frequency": 0.008055600324599128,
+            "brier": 0.007876277951100545,
+            "ece_15": 0.00017420002745652824
+          },
+          "FieldOut": {
+            "support": 41554,
+            "recall": 0.07039033546710305,
+            "predicted_count": 8220,
+            "mean_probability": 0.11938125783202824,
+            "observed_frequency": 0.11749470547153112,
+            "brier": 0.09213019961520111,
+            "ece_15": 0.0037179352908316933
+          },
+          "Strikeout": {
+            "support": 20818,
+            "recall": 0.19987510807954656,
+            "predicted_count": 11244,
+            "mean_probability": 0.060969786429858334,
+            "observed_frequency": 0.058863280995965134,
+            "brier": 0.04359143993873132,
+            "ece_15": 0.002859496135871094
+          },
+          "Walk": {
+            "support": 7199,
+            "recall": 0.8623419919433255,
+            "predicted_count": 8449,
+            "mean_probability": 0.019863248946730205,
+            "observed_frequency": 0.020355305979918963,
+            "brier": 0.005886874914720954,
+            "ece_15": 0.0007352344678115855
+          },
+          "HitByPitch": {
+            "support": 981,
+            "recall": 0.14067278287461774,
+            "predicted_count": 181,
+            "mean_probability": 0.0021589938447540355,
+            "observed_frequency": 0.0027737956891652317,
+            "brier": 0.0019570117814528857,
+            "ece_15": 0.000629154600133081
+          }
+        }
+      },
+      "temperature": 0.9516946435248009,
+      "temperature_scaled": {
+        "n": 353667,
+        "top1": 0.676721322600073,
+        "top3": 0.9478492480214439,
+        "ce": 0.8510741370934912,
+        "brier": 0.43761459879109227,
+        "ece_15": 0.002343851570848201,
+        "macro_f1": 0.29582485486630383,
+        "confusion_matrix": [
+          [
+            105083,
+            11093,
+            0,
+            0,
+            0,
+            0,
+            203,
+            1390,
+            1,
+            38
+          ],
+          [
+            18418,
+            120819,
+            0,
+            0,
+            0,
+            0,
+            2405,
+            2745,
+            1013,
+            3
+          ],
+          [
+            1006,
+            10194,
+            0,
+            0,
+            0,
+            0,
+            951,
+            633,
+            98,
+            0
+          ],
+          [
+            193,
+            3292,
+            0,
+            0,
+            0,
+            0,
+            205,
+            132,
+            23,
+            0
+          ],
+          [
+            12,
+            271,
+            0,
+            0,
+            0,
+            0,
+            30,
+            14,
+            1,
+            0
+          ],
+          [
+            51,
+            2633,
+            0,
+            0,
+            0,
+            0,
+            104,
+            49,
+            12,
+            0
+          ],
+          [
+            3505,
+            33009,
+            0,
+            0,
+            0,
+            0,
+            2925,
+            1803,
+            312,
+            0
+          ],
+          [
+            6246,
+            8295,
+            0,
+            0,
+            0,
+            0,
+            1381,
+            4161,
+            735,
+            0
+          ],
+          [
+            10,
+            646,
+            0,
+            0,
+            0,
+            0,
+            16,
+            317,
+            6208,
+            2
+          ],
+          [
+            790,
+            7,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            46,
+            138
+          ]
+        ],
+        "per_class": {
+          "Ball": {
+            "support": 117808,
+            "recall": 0.891985264158631,
+            "predicted_count": 135314,
+            "mean_probability": 0.33191050884147477,
+            "observed_frequency": 0.33310430433147564,
+            "brier": 0.07983207097354786,
+            "ece_15": 0.005373921011411781
+          },
+          "Strike": {
+            "support": 145403,
+            "recall": 0.8309250840766697,
+            "predicted_count": 190259,
+            "mean_probability": 0.4176738766729112,
+            "observed_frequency": 0.41112967848286663,
+            "brier": 0.16100418170098033,
+            "ece_15": 0.007212396598316453
+          },
+          "Single": {
+            "support": 12882,
+            "recall": 0.0,
+            "predicted_count": 0,
+            "mean_probability": 0.03423430182302779,
+            "observed_frequency": 0.036424093850995425,
+            "brier": 0.033832184793271235,
+            "ece_15": 0.0021916261726070653
+          },
+          "Double": {
+            "support": 3845,
+            "recall": 0.0,
+            "predicted_count": 0,
+            "mean_probability": 0.00983900109347225,
+            "observed_frequency": 0.010871808791886152,
+            "brier": 0.01062641092748055,
+            "ece_15": 0.0010328076984139015
+          },
+          "Triple": {
+            "support": 328,
+            "recall": 0.0,
+            "predicted_count": 0,
+            "mean_probability": 0.0008234519426515945,
+            "observed_frequency": 0.0009274260815965301,
+            "brier": 0.0009255151829038426,
+            "ece_15": 0.00010397413894493559
+          },
+          "HomeRun": {
+            "support": 2849,
+            "recall": 0.0,
+            "predicted_count": 0,
+            "mean_probability": 0.006760229428689144,
+            "observed_frequency": 0.008055600324599128,
+            "brier": 0.007881280538463974,
+            "ece_15": 0.0012953708959099865
+          },
+          "FieldOut": {
+            "support": 41554,
+            "recall": 0.07039033546710305,
+            "predicted_count": 8220,
+            "mean_probability": 0.11609148260095262,
+            "observed_frequency": 0.11749470547153112,
+            "brier": 0.0921237187752398,
+            "ece_15": 0.002351766193222949
+          },
+          "Strikeout": {
+            "support": 20818,
+            "recall": 0.19987510807954656,
+            "predicted_count": 11244,
+            "mean_probability": 0.0606050549568453,
+            "observed_frequency": 0.058863280995965134,
+            "brier": 0.043555655676678996,
+            "ece_15": 0.0021946886850213432
+          },
+          "Walk": {
+            "support": 7199,
+            "recall": 0.8623419919433255,
+            "predicted_count": 8449,
+            "mean_probability": 0.020046831659179705,
+            "observed_frequency": 0.020355305979918963,
+            "brier": 0.005868527041183431,
+            "ece_15": 0.0005042334471537634
+          },
+          "HitByPitch": {
+            "support": 981,
+            "recall": 0.14067278287461774,
+            "predicted_count": 181,
+            "mean_probability": 0.002015260980795572,
+            "observed_frequency": 0.0027737956891652317,
+            "brier": 0.0019650531813422208,
+            "ece_15": 0.0007748968499310217
+          }
+        }
+      }
+    },
+    "mlp135_ce_seed42": {
+      "manifest": {
+        "model": "mlp",
+        "data_dir": "data\\aligned_20260921",
+        "run_dir": "outputs\\alignment_repair_20260921\\mlp135_ce_seed42",
+        "input_dim": 135,
+        "seed": 42,
+        "threads": 2,
+        "loss": "ce",
+        "class_weight": "none",
+        "epochs": 30,
+        "batch_size": 256,
+        "max_train": 0,
+        "max_iter": 500,
+        "rounds": 1000,
+        "device": "cuda",
+        "git_head": "fc7d6475d78953fbb9a0a7f1e417bc006a4b9f68",
+        "torch_version": "2.6.0+cu124",
+        "numpy_version": "2.4.4",
+        "class_names": [
+          "Ball",
+          "Strike",
+          "Single",
+          "Double",
+          "Triple",
+          "HomeRun",
+          "FieldOut",
+          "Strikeout",
+          "Walk",
+          "HitByPitch"
+        ],
+        "status": "complete",
+        "splits": {
+          "train": {
+            "n": 1493038,
+            "pitch_ids_sha256": "2f9ab2614090b2d882fa01182fcbf92ac5d4b81300fc4bfe0c9a1ee1920519b9"
+          },
+          "val": {
+            "n": 384849,
+            "pitch_ids_sha256": "1879967de0c8ed11286b56aaf0bd150dede355b3ac88a415f1b9ce3c31350248"
+          },
+          "test": {
+            "n": 353667,
+            "pitch_ids_sha256": "f3c785a3642c90b1306a02cdeb3c25b033c3ecc5cd51fe0c94feb48b0635bcd3"
+          }
+        },
+        "parameters": 35210,
+        "best_epoch": 11,
+        "epochs_completed": 16,
+        "best_val_loss": 0.8552032397246031,
+        "training_seconds": 364.2603056999999
+      },
+      "raw": {
+        "n": 353667,
+        "top1": 0.6759578925938807,
+        "top3": 0.9476880794645811,
+        "ce": 0.8545778165945931,
+        "brier": 0.43905225099106704,
+        "ece_15": 0.011237555775161476,
+        "macro_f1": 0.29855552453463485,
+        "confusion_matrix": [
+          [
+            105135,
+            11132,
+            0,
+            0,
+            0,
+            0,
+            227,
+            1248,
+            1,
+            65
+          ],
+          [
+            18764,
+            119733,
+            0,
+            0,
+            0,
+            0,
+            2887,
+            2912,
+            1104,
+            3
+          ],
+          [
+            1089,
+            9991,
+            0,
+            0,
+            0,
+            0,
+            1073,
+            629,
+            100,
+            0
+          ],
+          [
+            193,
+            3211,
+            0,
+            0,
+            0,
+            0,
+            262,
+            155,
+            24,
+            0
+          ],
+          [
+            13,
+            276,
+            0,
+            0,
+            0,
+            0,
+            22,
+            16,
+            1,
+            0
+          ],
+          [
+            52,
+            2570,
+            0,
+            0,
+            0,
+            0,
+            152,
+            64,
+            11,
+            0
+          ],
+          [
+            3657,
+            32329,
+            0,
+            0,
+            0,
+            0,
+            3443,
+            1811,
+            314,
+            0
+          ],
+          [
+            6484,
+            7652,
+            0,
+            0,
+            0,
+            0,
+            1602,
+            4351,
+            729,
+            0
+          ],
+          [
+            9,
+            517,
+            0,
+            0,
+            0,
+            0,
+            28,
+            386,
+            6257,
+            2
+          ],
+          [
+            787,
+            2,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            47,
+            145
+          ]
+        ],
+        "per_class": {
+          "Ball": {
+            "support": 117808,
+            "recall": 0.8924266603286704,
+            "predicted_count": 136183,
+            "mean_probability": 0.33289762565670017,
+            "observed_frequency": 0.33310430433147564,
+            "brier": 0.08044729741723897,
+            "ece_15": 0.009729870737336827
+          },
+          "Strike": {
+            "support": 145403,
+            "recall": 0.8234561872863696,
+            "predicted_count": 187413,
+            "mean_probability": 0.4089106549812687,
+            "observed_frequency": 0.41112967848286663,
+            "brier": 0.16165874653089488,
+            "ece_15": 0.009233831241335245
+          },
+          "Single": {
+            "support": 12882,
+            "recall": 0.0,
+            "predicted_count": 0,
+            "mean_probability": 0.039020087680766945,
+            "observed_frequency": 0.036424093850995425,
+            "brier": 0.033858532764369544,
+            "ece_15": 0.002759612214267786
+          },
+          "Double": {
+            "support": 3845,
+            "recall": 0.0,
+            "predicted_count": 0,
+            "mean_probability": 0.009644990016496414,
+            "observed_frequency": 0.010871808791886152,
+            "brier": 0.0106287770036248,
+            "ece_15": 0.0012268187753897378
+          },
+          "Triple": {
+            "support": 328,
+            "recall": 0.0,
+            "predicted_count": 0,
+            "mean_probability": 0.0009838355995824344,
+            "observed_frequency": 0.0009274260815965301,
+            "brier": 0.0009256150704198494,
+            "ece_15": 5.640951798590438e-05
+          },
+          "HomeRun": {
+            "support": 2849,
+            "recall": 0.0,
+            "predicted_count": 0,
+            "mean_probability": 0.008160142829615238,
+            "observed_frequency": 0.008055600324599128,
+            "brier": 0.007880119176839286,
+            "ece_15": 0.00010454250501610884
+          },
+          "FieldOut": {
+            "support": 41554,
+            "recall": 0.08285604273956779,
+            "predicted_count": 9696,
+            "mean_probability": 0.11592704987631275,
+            "observed_frequency": 0.11749470547153112,
+            "brier": 0.09220360513314502,
+            "ece_15": 0.002966643786979926
+          },
+          "Strikeout": {
+            "support": 20818,
+            "recall": 0.20900182534345277,
+            "predicted_count": 11572,
+            "mean_probability": 0.06172688755103798,
+            "observed_frequency": 0.058863280995965134,
+            "brier": 0.043549284822946094,
+            "ece_15": 0.0033353441142199964
+          },
+          "Walk": {
+            "support": 7199,
+            "recall": 0.8691484928462286,
+            "predicted_count": 8588,
+            "mean_probability": 0.020257585075375895,
+            "observed_frequency": 0.020355305979918963,
+            "brier": 0.005928930338870222,
+            "ece_15": 0.0006248243699059244
+          },
+          "HitByPitch": {
+            "support": 981,
+            "recall": 0.14780835881753313,
+            "predicted_count": 215,
+            "mean_probability": 0.002471142497828547,
+            "observed_frequency": 0.0027737956891652317,
+            "brier": 0.0019713427327183674,
+            "ece_15": 0.000464857768894203
+          }
+        }
+      },
+      "temperature": 0.9598600225222369,
+      "temperature_scaled": {
+        "n": 353667,
+        "top1": 0.6759578925938807,
+        "top3": 0.9476880794645811,
+        "ce": 0.8542096458988035,
+        "brier": 0.43886879538262585,
+        "ece_15": 0.0022380546664530617,
+        "macro_f1": 0.29855552453463485,
+        "confusion_matrix": [
+          [
+            105135,
+            11132,
+            0,
+            0,
+            0,
+            0,
+            227,
+            1248,
+            1,
+            65
+          ],
+          [
+            18764,
+            119733,
+            0,
+            0,
+            0,
+            0,
+            2887,
+            2912,
+            1104,
+            3
+          ],
+          [
+            1089,
+            9991,
+            0,
+            0,
+            0,
+            0,
+            1073,
+            629,
+            100,
+            0
+          ],
+          [
+            193,
+            3211,
+            0,
+            0,
+            0,
+            0,
+            262,
+            155,
+            24,
+            0
+          ],
+          [
+            13,
+            276,
+            0,
+            0,
+            0,
+            0,
+            22,
+            16,
+            1,
+            0
+          ],
+          [
+            52,
+            2570,
+            0,
+            0,
+            0,
+            0,
+            152,
+            64,
+            11,
+            0
+          ],
+          [
+            3657,
+            32329,
+            0,
+            0,
+            0,
+            0,
+            3443,
+            1811,
+            314,
+            0
+          ],
+          [
+            6484,
+            7652,
+            0,
+            0,
+            0,
+            0,
+            1602,
+            4351,
+            729,
+            0
+          ],
+          [
+            9,
+            517,
+            0,
+            0,
+            0,
+            0,
+            28,
+            386,
+            6257,
+            2
+          ],
+          [
+            787,
+            2,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            47,
+            145
+          ]
+        ],
+        "per_class": {
+          "Ball": {
+            "support": 117808,
+            "recall": 0.8924266603286704,
+            "predicted_count": 136183,
+            "mean_probability": 0.3353173565514178,
+            "observed_frequency": 0.33310430433147564,
+            "brier": 0.08034714220501374,
+            "ece_15": 0.006735488218024106
+          },
+          "Strike": {
+            "support": 145403,
+            "recall": 0.8234561872863696,
+            "predicted_count": 187413,
+            "mean_probability": 0.4143186432540655,
+            "observed_frequency": 0.41112967848286663,
+            "brier": 0.16157793484752203,
+            "ece_15": 0.005129600518620234
+          },
+          "Single": {
+            "support": 12882,
+            "recall": 0.0,
+            "predicted_count": 0,
+            "mean_probability": 0.03638527774187847,
+            "observed_frequency": 0.036424093850995425,
+            "brier": 0.03385066804005527,
+            "ece_15": 0.0017396764238018117
+          },
+          "Double": {
+            "support": 3845,
+            "recall": 0.0,
+            "predicted_count": 0,
+            "mean_probability": 0.008521885888659483,
+            "observed_frequency": 0.010871808791886152,
+            "brier": 0.010636372344333789,
+            "ece_15": 0.0023499229032266696
+          },
+          "Triple": {
+            "support": 328,
+            "recall": 0.0,
+            "predicted_count": 0,
+            "mean_probability": 0.000793556128298253,
+            "observed_frequency": 0.0009274260815965301,
+            "brier": 0.000925618509238493,
+            "ece_15": 0.00013386995329827702
+          },
+          "HomeRun": {
+            "support": 2849,
+            "recall": 0.0,
+            "predicted_count": 0,
+            "mean_probability": 0.007203387114406464,
+            "observed_frequency": 0.008055600324599128,
+            "brier": 0.007882702768967404,
+            "ece_15": 0.0008533136070717571
+          },
+          "FieldOut": {
+            "support": 41554,
+            "recall": 0.08285604273956779,
+            "predicted_count": 9696,
+            "mean_probability": 0.1132598884915854,
+            "observed_frequency": 0.11749470547153112,
+            "brier": 0.09222635290720275,
+            "ece_15": 0.004387200562621651
+          },
+          "Strikeout": {
+            "support": 20818,
+            "recall": 0.20900182534345277,
+            "predicted_count": 11572,
+            "mean_probability": 0.0614597579584452,
+            "observed_frequency": 0.058863280995965134,
+            "brier": 0.04352684351485862,
+            "ece_15": 0.0027635333390963112
+          },
+          "Walk": {
+            "support": 7199,
+            "recall": 0.8691484928462286,
+            "predicted_count": 8588,
+            "mean_probability": 0.0204068552192911,
+            "observed_frequency": 0.020355305979918963,
+            "brier": 0.005918982647562673,
+            "ece_15": 0.0005091350215256699
+          },
+          "HitByPitch": {
+            "support": 981,
+            "recall": 0.14780835881753313,
+            "predicted_count": 215,
+            "mean_probability": 0.002333391651952325,
+            "observed_frequency": 0.0027737956891652317,
+            "brier": 0.001976177597871069,
+            "ece_15": 0.0004877183411466657
+          }
+        }
+      }
+    },
+    "lr77_ce_seed42": {
+      "manifest": {
+        "model": "lr",
+        "data_dir": "data\\aligned_20260921",
+        "run_dir": "outputs\\alignment_repair_20260921\\lr77_ce_seed42",
+        "input_dim": 77,
+        "seed": 42,
+        "threads": 4,
+        "loss": "ce",
+        "class_weight": "none",
+        "epochs": 30,
+        "batch_size": 256,
+        "max_train": 500000,
+        "max_iter": 500,
+        "rounds": 1000,
+        "device": "auto",
+        "git_head": "fc7d6475d78953fbb9a0a7f1e417bc006a4b9f68",
+        "torch_version": "2.6.0+cu124",
+        "numpy_version": "2.4.4",
+        "class_names": [
+          "Ball",
+          "Strike",
+          "Single",
+          "Double",
+          "Triple",
+          "HomeRun",
+          "FieldOut",
+          "Strikeout",
+          "Walk",
+          "HitByPitch"
+        ],
+        "status": "complete",
+        "splits": {
+          "train": {
+            "n": 500000,
+            "pitch_ids_sha256": "02cb6aef21a0d19174885390d665c1bf11c1e46f68accf650c3fc817909c9b17"
+          },
+          "val": {
+            "n": 384849,
+            "pitch_ids_sha256": "1879967de0c8ed11286b56aaf0bd150dede355b3ac88a415f1b9ce3c31350248"
+          },
+          "test": {
+            "n": 353667,
+            "pitch_ids_sha256": "f3c785a3642c90b1306a02cdeb3c25b033c3ecc5cd51fe0c94feb48b0635bcd3"
+          }
+        },
+        "n_iter": [
+          409
+        ],
+        "warnings": [],
+        "training_seconds": 97.01652130000002
+      },
+      "raw": {
+        "n": 353667,
+        "top1": 0.6435997704054944,
+        "top3": 0.9359878077400493,
+        "ce": 0.9953723593767132,
+        "brier": 0.5040369805716535,
+        "ece_15": 0.004632862491216958,
+        "macro_f1": 0.2324137869356258,
+        "confusion_matrix": [
+          [
+            112304,
+            5325,
+            0,
+            0,
+            0,
+            0,
+            73,
+            104,
+            1,
+            1
+          ],
+          [
+            34407,
+            105746,
+            0,
+            0,
+            0,
+            0,
+            2524,
+            482,
+            2244,
+            0
+          ],
+          [
+            2311,
+            9421,
+            0,
+            0,
+            0,
+            0,
+            813,
+            108,
+            229,
+            0
+          ],
+          [
+            438,
+            3100,
+            0,
+            0,
+            0,
+            0,
+            216,
+            22,
+            69,
+            0
+          ],
+          [
+            30,
+            275,
+            0,
+            0,
+            0,
+            0,
+            17,
+            2,
+            4,
+            0
+          ],
+          [
+            164,
+            2472,
+            0,
+            0,
+            0,
+            0,
+            177,
+            14,
+            22,
+            0
+          ],
+          [
+            7824,
+            30239,
+            0,
+            0,
+            0,
+            0,
+            2348,
+            348,
+            795,
+            0
+          ],
+          [
+            9255,
+            8554,
+            0,
+            0,
+            0,
+            0,
+            1194,
+            427,
+            1388,
+            0
+          ],
+          [
+            15,
+            378,
+            0,
+            0,
+            0,
+            0,
+            7,
+            4,
+            6795,
+            0
+          ],
+          [
+            924,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            53,
+            0
+          ]
+        ],
+        "per_class": {
+          "Ball": {
+            "support": 117808,
+            "recall": 0.953279913078908,
+            "predicted_count": 167672,
+            "mean_probability": 0.33302889926183765,
+            "observed_frequency": 0.33310430433147564,
+            "brier": 0.11465148623849519,
+            "ece_15": 0.005774467526209059
+          },
+          "Strike": {
+            "support": 145403,
+            "recall": 0.7272614732845952,
+            "predicted_count": 165514,
+            "mean_probability": 0.4096428568555019,
+            "observed_frequency": 0.41112967848286663,
+            "brier": 0.181716889837259,
+            "ece_15": 0.008482530773270732
+          },
+          "Single": {
+            "support": 12882,
+            "recall": 0.0,
+            "predicted_count": 0,
+            "mean_probability": 0.03668513861164077,
+            "observed_frequency": 0.036424093850995425,
+            "brier": 0.03426927124691517,
+            "ece_15": 0.00026104476064534276
+          },
+          "Double": {
+            "support": 3845,
+            "recall": 0.0,
+            "predicted_count": 0,
+            "mean_probability": 0.011102722495537093,
+            "observed_frequency": 0.010871808791886152,
+            "brier": 0.010660172601344603,
+            "ece_15": 0.0002348756216943133
+          },
+          "Triple": {
+            "support": 328,
+            "recall": 0.0,
+            "predicted_count": 0,
+            "mean_probability": 0.0009669564132475567,
+            "observed_frequency": 0.0009274260815965301,
+            "brier": 0.0009255606298118794,
+            "ece_15": 3.95303316510266e-05
+          },
+          "HomeRun": {
+            "support": 2849,
+            "recall": 0.0,
+            "predicted_count": 0,
+            "mean_probability": 0.007670150696722006,
+            "observed_frequency": 0.008055600324599128,
+            "brier": 0.00791076906926414,
+            "ece_15": 0.00038544962787712204
+          },
+          "FieldOut": {
+            "support": 41554,
+            "recall": 0.05650478894931896,
+            "predicted_count": 7369,
+            "mean_probability": 0.11764760303507774,
+            "observed_frequency": 0.11749470547153112,
+            "brier": 0.09620331971862765,
+            "ece_15": 0.002876271315475715
+          },
+          "Strikeout": {
+            "support": 20818,
+            "recall": 0.02051109616677875,
+            "predicted_count": 1511,
+            "mean_probability": 0.059970801540379315,
+            "observed_frequency": 0.058863280995965134,
+            "brier": 0.04640013556571148,
+            "ece_15": 0.002770195599988663
+          },
+          "Walk": {
+            "support": 7199,
+            "recall": 0.9438810945964717,
+            "predicted_count": 11600,
+            "mean_probability": 0.02043145869719348,
+            "observed_frequency": 0.020355305979918963,
+            "brier": 0.008612150905688107,
+            "ece_15": 0.000678069057299988
+          },
+          "HitByPitch": {
+            "support": 981,
+            "recall": 0.0,
+            "predicted_count": 1,
+            "mean_probability": 0.0028534123638389317,
+            "observed_frequency": 0.0027737956891652317,
+            "brier": 0.0026872247585362215,
+            "ece_15": 0.00042422667892311005
+          }
+        }
+      },
+      "temperature": 0.9969210449161113,
+      "temperature_scaled": {
+        "n": 353667,
+        "top1": 0.6435997704054944,
+        "top3": 0.9359878077400493,
+        "ce": 0.9953685395043685,
+        "brier": 0.504040073991382,
+        "ece_15": 0.005075322732213422,
+        "macro_f1": 0.2324137869356258,
+        "confusion_matrix": [
+          [
+            112304,
+            5325,
+            0,
+            0,
+            0,
+            0,
+            73,
+            104,
+            1,
+            1
+          ],
+          [
+            34407,
+            105746,
+            0,
+            0,
+            0,
+            0,
+            2524,
+            482,
+            2244,
+            0
+          ],
+          [
+            2311,
+            9421,
+            0,
+            0,
+            0,
+            0,
+            813,
+            108,
+            229,
+            0
+          ],
+          [
+            438,
+            3100,
+            0,
+            0,
+            0,
+            0,
+            216,
+            22,
+            69,
+            0
+          ],
+          [
+            30,
+            275,
+            0,
+            0,
+            0,
+            0,
+            17,
+            2,
+            4,
+            0
+          ],
+          [
+            164,
+            2472,
+            0,
+            0,
+            0,
+            0,
+            177,
+            14,
+            22,
+            0
+          ],
+          [
+            7824,
+            30239,
+            0,
+            0,
+            0,
+            0,
+            2348,
+            348,
+            795,
+            0
+          ],
+          [
+            9255,
+            8554,
+            0,
+            0,
+            0,
+            0,
+            1194,
+            427,
+            1388,
+            0
+          ],
+          [
+            15,
+            378,
+            0,
+            0,
+            0,
+            0,
+            7,
+            4,
+            6795,
+            0
+          ],
+          [
+            924,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            53,
+            0
+          ]
+        ],
+        "per_class": {
+          "Ball": {
+            "support": 117808,
+            "recall": 0.953279913078908,
+            "predicted_count": 167672,
+            "mean_probability": 0.3334184612852937,
+            "observed_frequency": 0.33310430433147564,
+            "brier": 0.1146498221888654,
+            "ece_15": 0.005643866590313764
+          },
+          "Strike": {
+            "support": 145403,
+            "recall": 0.7272614732845952,
+            "predicted_count": 165514,
+            "mean_probability": 0.4099767809427541,
+            "observed_frequency": 0.41112967848286663,
+            "brier": 0.18172034950081611,
+            "ece_15": 0.008787917018888175
+          },
+          "Single": {
+            "support": 12882,
+            "recall": 0.0,
+            "predicted_count": 0,
+            "mean_probability": 0.0364733888658602,
+            "observed_frequency": 0.036424093850995425,
+            "brier": 0.03426941835495447,
+            "ece_15": 0.0002186169884882021
+          },
+          "Double": {
+            "support": 3845,
+            "recall": 0.0,
+            "predicted_count": 0,
+            "mean_probability": 0.01100190671364788,
+            "observed_frequency": 0.010871808791886152,
+            "brier": 0.010660080626757926,
+            "ece_15": 0.00013410189934881525
+          },
+          "Triple": {
+            "support": 328,
+            "recall": 0.0,
+            "predicted_count": 0,
+            "mean_probability": 0.0009510457974408231,
+            "observed_frequency": 0.0009274260815965301,
+            "brier": 0.000925559628938799,
+            "ece_15": 2.3619715844293027e-05
+          },
+          "HomeRun": {
+            "support": 2849,
+            "recall": 0.0,
+            "predicted_count": 0,
+            "mean_probability": 0.0075936582900604345,
+            "observed_frequency": 0.008055600324599128,
+            "brier": 0.007910944474046217,
+            "ece_15": 0.00046194203453869603
+          },
+          "FieldOut": {
+            "support": 41554,
+            "recall": 0.05650478894931896,
+            "predicted_count": 7369,
+            "mean_probability": 0.1173800016333525,
+            "observed_frequency": 0.11749470547153112,
+            "brier": 0.09620511241123025,
+            "ece_15": 0.0029384207831906497
+          },
+          "Strikeout": {
+            "support": 20818,
+            "recall": 0.02051109616677875,
+            "predicted_count": 1511,
+            "mean_probability": 0.05992985224277028,
+            "observed_frequency": 0.058863280995965134,
+            "brier": 0.04639970866172059,
+            "ece_15": 0.0027061980430836867
+          },
+          "Walk": {
+            "support": 7199,
+            "recall": 0.9438810945964717,
+            "predicted_count": 11600,
+            "mean_probability": 0.020453728737971206,
+            "observed_frequency": 0.020355305979918963,
+            "brier": 0.008611788811650378,
+            "ece_15": 0.0006467376133285058
+          },
+          "HitByPitch": {
+            "support": 981,
+            "recall": 0.0,
+            "predicted_count": 1,
+            "mean_probability": 0.002821175490848852,
+            "observed_frequency": 0.0027737956891652317,
+            "brier": 0.0026872893324018637,
+            "ece_15": 0.0003932175466976507
+          }
+        }
+      }
+    },
+    "lgb77_ce_seed42": {
+      "manifest": {
+        "model": "lgb",
+        "data_dir": "data\\aligned_20260921",
+        "run_dir": "outputs\\alignment_repair_20260921\\lgb77_ce_seed42",
+        "input_dim": 77,
+        "seed": 42,
+        "threads": 4,
+        "loss": "ce",
+        "class_weight": "none",
+        "epochs": 30,
+        "batch_size": 256,
+        "max_train": 0,
+        "max_iter": 500,
+        "rounds": 1000,
+        "device": "auto",
+        "git_head": "fc7d6475d78953fbb9a0a7f1e417bc006a4b9f68",
+        "torch_version": "2.6.0+cu124",
+        "numpy_version": "2.4.4",
+        "class_names": [
+          "Ball",
+          "Strike",
+          "Single",
+          "Double",
+          "Triple",
+          "HomeRun",
+          "FieldOut",
+          "Strikeout",
+          "Walk",
+          "HitByPitch"
+        ],
+        "status": "complete",
+        "splits": {
+          "train": {
+            "n": 1493038,
+            "pitch_ids_sha256": "2f9ab2614090b2d882fa01182fcbf92ac5d4b81300fc4bfe0c9a1ee1920519b9"
+          },
+          "val": {
+            "n": 384849,
+            "pitch_ids_sha256": "1879967de0c8ed11286b56aaf0bd150dede355b3ac88a415f1b9ce3c31350248"
+          },
+          "test": {
+            "n": 353667,
+            "pitch_ids_sha256": "f3c785a3642c90b1306a02cdeb3c25b033c3ecc5cd51fe0c94feb48b0635bcd3"
+          }
+        },
+        "best_iteration": 131,
+        "lightgbm_version": "4.6.0",
+        "training_seconds": 145.41652840000006
+      },
+      "raw": {
+        "n": 353667,
+        "top1": 0.6728985175320287,
+        "top3": 0.9466503801598679,
+        "ce": 0.8653414856564271,
+        "brier": 0.4431899146744889,
+        "ece_15": 0.007745861590105607,
+        "macro_f1": 0.30538380782395713,
+        "confusion_matrix": [
+          [
+            104827,
+            11160,
+            0,
+            1,
+            15,
+            9,
+            82,
+            1475,
+            26,
+            213
+          ],
+          [
+            18940,
+            120309,
+            1,
+            2,
+            22,
+            0,
+            2427,
+            2664,
+            1021,
+            17
+          ],
+          [
+            1018,
+            10308,
+            0,
+            0,
+            3,
+            0,
+            854,
+            605,
+            94,
+            0
+          ],
+          [
+            195,
+            3277,
+            2,
+            0,
+            0,
+            0,
+            215,
+            133,
+            23,
+            0
+          ],
+          [
+            12,
+            281,
+            0,
+            0,
+            0,
+            0,
+            24,
+            9,
+            2,
+            0
+          ],
+          [
+            55,
+            2586,
+            1,
+            0,
+            0,
+            1,
+            146,
+            51,
+            9,
+            0
+          ],
+          [
+            3533,
+            33360,
+            2,
+            0,
+            8,
+            0,
+            2596,
+            1757,
+            298,
+            0
+          ],
+          [
+            6379,
+            8827,
+            1,
+            3,
+            10,
+            0,
+            1028,
+            3843,
+            718,
+            9
+          ],
+          [
+            11,
+            721,
+            0,
+            0,
+            1,
+            0,
+            10,
+            317,
+            6121,
+            18
+          ],
+          [
+            652,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            40,
+            285
+          ]
+        ],
+        "per_class": {
+          "Ball": {
+            "support": 117808,
+            "recall": 0.8898122368599756,
+            "predicted_count": 135622,
+            "mean_probability": 0.33642661868347684,
+            "observed_frequency": 0.33310430433147564,
+            "brier": 0.08120112662703984,
+            "ece_15": 0.00634074544436199
+          },
+          "Strike": {
+            "support": 145403,
+            "recall": 0.8274175911088492,
+            "predicted_count": 190833,
+            "mean_probability": 0.40825297255267423,
+            "observed_frequency": 0.41112967848286663,
+            "brier": 0.16328959805404733,
+            "ece_15": 0.008782841297594926
+          },
+          "Single": {
+            "support": 12882,
+            "recall": 0.0,
+            "predicted_count": 7,
+            "mean_probability": 0.03616478874104936,
+            "observed_frequency": 0.036424093850995425,
+            "brier": 0.033934595963800836,
+            "ece_15": 0.0013934414745914617
+          },
+          "Double": {
+            "support": 3845,
+            "recall": 0.0,
+            "predicted_count": 6,
+            "mean_probability": 0.011023138104674958,
+            "observed_frequency": 0.010871808791886152,
+            "brier": 0.010640342109958036,
+            "ece_15": 0.0001513293127888059
+          },
+          "Triple": {
+            "support": 328,
+            "recall": 0.0,
+            "predicted_count": 59,
+            "mean_probability": 0.0010034405033121849,
+            "observed_frequency": 0.0009274260815965301,
+            "brier": 0.0010300778490379488,
+            "ece_15": 0.0003422604338088659
+          },
+          "HomeRun": {
+            "support": 2849,
+            "recall": 0.000351000351000351,
+            "predicted_count": 10,
+            "mean_probability": 0.007518030785994151,
+            "observed_frequency": 0.008055600324599128,
+            "brier": 0.007902462668966662,
+            "ece_15": 0.0006570810430962043
+          },
+          "FieldOut": {
+            "support": 41554,
+            "recall": 0.062472926794051115,
+            "predicted_count": 7382,
+            "mean_probability": 0.11610523535891809,
+            "observed_frequency": 0.11749470547153112,
+            "brier": 0.09297625718024602,
+            "ece_15": 0.005214323606296557
+          },
+          "Strikeout": {
+            "support": 20818,
+            "recall": 0.18459986550100874,
+            "predicted_count": 10854,
+            "mean_probability": 0.06014364768899256,
+            "observed_frequency": 0.058863280995965134,
+            "brier": 0.04392930104098285,
+            "ece_15": 0.003010671600100193
+          },
+          "Walk": {
+            "support": 7199,
+            "recall": 0.85025698013613,
+            "predicted_count": 8352,
+            "mean_probability": 0.02064197438178664,
+            "observed_frequency": 0.020355305979918963,
+            "brier": 0.0061415367990381425,
+            "ece_15": 0.0006323359295615749
+          },
+          "HitByPitch": {
+            "support": 981,
+            "recall": 0.290519877675841,
+            "predicted_count": 542,
+            "mean_probability": 0.0027201531789911486,
+            "observed_frequency": 0.0027737956891652317,
+            "brier": 0.0021446163813712655,
+            "ece_15": 0.0008759526289136675
+          }
+        }
+      },
+      "temperature": 0.9728216468167661,
+      "temperature_scaled": {
+        "n": 353667,
+        "top1": 0.6728985175320287,
+        "top3": 0.9466503801598679,
+        "ce": 0.8651862907950956,
+        "brier": 0.4432530466779573,
+        "ece_15": 0.009354798722456328,
+        "macro_f1": 0.30538380782395713,
+        "confusion_matrix": [
+          [
+            104827,
+            11160,
+            0,
+            1,
+            15,
+            9,
+            82,
+            1475,
+            26,
+            213
+          ],
+          [
+            18940,
+            120309,
+            1,
+            2,
+            22,
+            0,
+            2427,
+            2664,
+            1021,
+            17
+          ],
+          [
+            1018,
+            10308,
+            0,
+            0,
+            3,
+            0,
+            854,
+            605,
+            94,
+            0
+          ],
+          [
+            195,
+            3277,
+            2,
+            0,
+            0,
+            0,
+            215,
+            133,
+            23,
+            0
+          ],
+          [
+            12,
+            281,
+            0,
+            0,
+            0,
+            0,
+            24,
+            9,
+            2,
+            0
+          ],
+          [
+            55,
+            2586,
+            1,
+            0,
+            0,
+            1,
+            146,
+            51,
+            9,
+            0
+          ],
+          [
+            3533,
+            33360,
+            2,
+            0,
+            8,
+            0,
+            2596,
+            1757,
+            298,
+            0
+          ],
+          [
+            6379,
+            8827,
+            1,
+            3,
+            10,
+            0,
+            1028,
+            3843,
+            718,
+            9
+          ],
+          [
+            11,
+            721,
+            0,
+            0,
+            1,
+            0,
+            10,
+            317,
+            6121,
+            18
+          ],
+          [
+            652,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            40,
+            285
+          ]
+        ],
+        "per_class": {
+          "Ball": {
+            "support": 117808,
+            "recall": 0.8898122368599756,
+            "predicted_count": 135622,
+            "mean_probability": 0.338079143337099,
+            "observed_frequency": 0.33310430433147564,
+            "brier": 0.08120362645332796,
+            "ece_15": 0.006591127303572711
+          },
+          "Strike": {
+            "support": 145403,
+            "recall": 0.8274175911088492,
+            "predicted_count": 190833,
+            "mean_probability": 0.4120799792002927,
+            "observed_frequency": 0.41112967848286663,
+            "brier": 0.16332451922877195,
+            "ece_15": 0.010637531869990328
+          },
+          "Single": {
+            "support": 12882,
+            "recall": 0.0,
+            "predicted_count": 7,
+            "mean_probability": 0.03443842765234207,
+            "observed_frequency": 0.036424093850995425,
+            "brier": 0.033943205778549035,
+            "ece_15": 0.002009813839488229
+          },
+          "Double": {
+            "support": 3845,
+            "recall": 0.0,
+            "predicted_count": 6,
+            "mean_probability": 0.010181279583829552,
+            "observed_frequency": 0.010871808791886152,
+            "brier": 0.010641159041183465,
+            "ece_15": 0.0007559520954439001
+          },
+          "Triple": {
+            "support": 328,
+            "recall": 0.0,
+            "predicted_count": 59,
+            "mean_probability": 0.0008997186472313403,
+            "observed_frequency": 0.0009274260815965301,
+            "brier": 0.0010308613817592881,
+            "ece_15": 0.0004409548561838477
+          },
+          "HomeRun": {
+            "support": 2849,
+            "recall": 0.000351000351000351,
+            "predicted_count": 10,
+            "mean_probability": 0.0068986655577586275,
+            "observed_frequency": 0.008055600324599128,
+            "brier": 0.007905433363005757,
+            "ece_15": 0.0012613134030337472
+          },
+          "FieldOut": {
+            "support": 41554,
+            "recall": 0.062472926794051115,
+            "predicted_count": 7382,
+            "mean_probability": 0.11414983745441411,
+            "observed_frequency": 0.11749470547153112,
+            "brier": 0.09298883392386437,
+            "ece_15": 0.004748079831097568
+          },
+          "Strikeout": {
+            "support": 20818,
+            "recall": 0.18459986550100874,
+            "predicted_count": 10854,
+            "mean_probability": 0.05989098101943635,
+            "observed_frequency": 0.058863280995965134,
+            "brier": 0.04391858368867412,
+            "ece_15": 0.002342036387952509
+          },
+          "Walk": {
+            "support": 7199,
+            "recall": 0.85025698013613,
+            "predicted_count": 8352,
+            "mean_probability": 0.02073023843846492,
+            "observed_frequency": 0.020355305979918963,
+            "brier": 0.006145816569921623,
+            "ece_15": 0.000648148967693364
+          },
+          "HitByPitch": {
+            "support": 981,
+            "recall": 0.290519877675841,
+            "predicted_count": 542,
+            "mean_probability": 0.0026517291091313192,
+            "observed_frequency": 0.0027737956891652317,
+            "brier": 0.002151007248899694,
+            "ece_15": 0.0009465616851496375
+          }
+        }
+      }
+    },
+    "lr77_sqrt_seed42": {
+      "manifest": {
+        "model": "lr",
+        "data_dir": "data\\aligned_20260921",
+        "run_dir": "outputs\\alignment_repair_20260921\\lr77_sqrt_seed42",
+        "input_dim": 77,
+        "seed": 42,
+        "threads": 4,
+        "loss": "ce",
+        "class_weight": "sqrt-balanced",
+        "epochs": 30,
+        "batch_size": 256,
+        "max_train": 500000,
+        "max_iter": 500,
+        "rounds": 1000,
+        "device": "auto",
+        "git_head": "fc7d6475d78953fbb9a0a7f1e417bc006a4b9f68",
+        "torch_version": "2.6.0+cu124",
+        "numpy_version": "2.4.4",
+        "class_names": [
+          "Ball",
+          "Strike",
+          "Single",
+          "Double",
+          "Triple",
+          "HomeRun",
+          "FieldOut",
+          "Strikeout",
+          "Walk",
+          "HitByPitch"
+        ],
+        "status": "complete",
+        "splits": {
+          "train": {
+            "n": 500000,
+            "pitch_ids_sha256": "02cb6aef21a0d19174885390d665c1bf11c1e46f68accf650c3fc817909c9b17"
+          },
+          "val": {
+            "n": 384849,
+            "pitch_ids_sha256": "1879967de0c8ed11286b56aaf0bd150dede355b3ac88a415f1b9ce3c31350248"
+          },
+          "test": {
+            "n": 353667,
+            "pitch_ids_sha256": "f3c785a3642c90b1306a02cdeb3c25b033c3ecc5cd51fe0c94feb48b0635bcd3"
+          }
+        },
+        "n_iter": [
+          500
+        ],
+        "warnings": [
+          "lbfgs failed to converge after 500 iteration(s) (status=1):\nSTOP: TOTAL NO. OF ITERATIONS REACHED LIMIT\n\nIncrease the number of iterations to improve the convergence (max_iter=500).\nYou might also want to scale the data as shown in:\n    https://scikit-learn.org/stable/modules/preprocessing.html\nPlease also refer to the documentation for alternative solver options:\n    https://scikit-learn.org/stable/modules/linear_model.html#logistic-regression"
+        ],
+        "training_seconds": 125.16564449999987
+      },
+      "raw": {
+        "n": 353667,
+        "top1": 0.6236996949107494,
+        "top3": 0.9183921598565883,
+        "ce": 1.1141284317614144,
+        "brier": 0.546092650623675,
+        "ece_15": 0.10404639326890924,
+        "macro_f1": 0.2782071125236291,
+        "confusion_matrix": [
+          [
+            107595,
+            4382,
+            1,
+            0,
+            0,
+            0,
+            125,
+            5549,
+            1,
+            155
+          ],
+          [
+            32783,
+            90807,
+            26,
+            0,
+            0,
+            6,
+            6004,
+            13514,
+            2253,
+            10
+          ],
+          [
+            2001,
+            6472,
+            9,
+            0,
+            0,
+            0,
+            1549,
+            2618,
+            229,
+            4
+          ],
+          [
+            374,
+            2175,
+            3,
+            1,
+            0,
+            0,
+            457,
+            766,
+            69,
+            0
+          ],
+          [
+            26,
+            166,
+            0,
+            0,
+            0,
+            0,
+            52,
+            80,
+            4,
+            0
+          ],
+          [
+            149,
+            1775,
+            3,
+            0,
+            0,
+            1,
+            383,
+            516,
+            22,
+            0
+          ],
+          [
+            6804,
+            20540,
+            24,
+            2,
+            0,
+            5,
+            4822,
+            8550,
+            795,
+            12
+          ],
+          [
+            6813,
+            1,
+            12,
+            0,
+            0,
+            0,
+            2117,
+            10481,
+            1388,
+            6
+          ],
+          [
+            14,
+            183,
+            1,
+            0,
+            0,
+            0,
+            21,
+            179,
+            6801,
+            0
+          ],
+          [
+            849,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            13,
+            53,
+            65
+          ]
+        ],
+        "per_class": {
+          "Ball": {
+            "support": 117808,
+            "recall": 0.9133080945266875,
+            "predicted_count": 157408,
+            "mean_probability": 0.28532288632112235,
+            "observed_frequency": 0.33310430433147564,
+            "brier": 0.12131058955229503,
+            "ece_15": 0.04778860961013632
+          },
+          "Strike": {
+            "support": 145403,
+            "recall": 0.6245194390762226,
+            "predicted_count": 126501,
+            "mean_probability": 0.2807102783629227,
+            "observed_frequency": 0.41112967848286663,
+            "brier": 0.20578742387938884,
+            "ece_15": 0.1304194001199439
+          },
+          "Single": {
+            "support": 12882,
+            "recall": 0.0006986492780624127,
+            "predicted_count": 79,
+            "mean_probability": 0.07551010268038554,
+            "observed_frequency": 0.036424093850995425,
+            "brier": 0.036308400214653334,
+            "ece_15": 0.0390892072354898
+          },
+          "Double": {
+            "support": 3845,
+            "recall": 0.0002600780234070221,
+            "predicted_count": 3,
+            "mean_probability": 0.040822626924470654,
+            "observed_frequency": 0.010871808791886152,
+            "brier": 0.012123279606838107,
+            "ece_15": 0.029953332794954716
+          },
+          "Triple": {
+            "support": 328,
+            "recall": 0.0,
+            "predicted_count": 0,
+            "mean_probability": 0.01222494688024359,
+            "observed_frequency": 0.0009274260815965301,
+            "brier": 0.0011804616107545572,
+            "ece_15": 0.01129752079864706
+          },
+          "HomeRun": {
+            "support": 2849,
+            "recall": 0.000351000351000351,
+            "predicted_count": 12,
+            "mean_probability": 0.0341036553099328,
+            "observed_frequency": 0.008055600324599128,
+            "brier": 0.00923080556414511,
+            "ece_15": 0.026048054985333666
+          },
+          "FieldOut": {
+            "support": 41554,
+            "recall": 0.11604177696491312,
+            "predicted_count": 15531,
+            "mean_probability": 0.1349519950286631,
+            "observed_frequency": 0.11749470547153112,
+            "brier": 0.09700248269037991,
+            "ece_15": 0.01745728955713195
+          },
+          "Strikeout": {
+            "support": 20818,
+            "recall": 0.5034585454894802,
+            "predicted_count": 42266,
+            "mean_probability": 0.08537743105815719,
+            "observed_frequency": 0.058863280995965134,
+            "brier": 0.04925714099002232,
+            "ece_15": 0.026514687117624555
+          },
+          "Walk": {
+            "support": 7199,
+            "recall": 0.9447145436866231,
+            "predicted_count": 11615,
+            "mean_probability": 0.0277799077933224,
+            "observed_frequency": 0.020355305979918963,
+            "brier": 0.00966809132729593,
+            "ece_15": 0.007424601813403434
+          },
+          "HitByPitch": {
+            "support": 981,
+            "recall": 0.06625891946992865,
+            "predicted_count": 252,
+            "mean_probability": 0.023196169631536655,
+            "observed_frequency": 0.0027737956891652317,
+            "brier": 0.00422397518790184,
+            "ece_15": 0.020422373942371425
+          }
+        }
+      },
+      "temperature": 0.7419958576205762,
+      "temperature_scaled": {
+        "n": 353667,
+        "top1": 0.6236996949107494,
+        "top3": 0.9183921598565883,
+        "ce": 1.0770564953930921,
+        "brier": 0.5334379606216435,
+        "ece_15": 0.05160480905456238,
+        "macro_f1": 0.2782071125236291,
+        "confusion_matrix": [
+          [
+            107595,
+            4382,
+            1,
+            0,
+            0,
+            0,
+            125,
+            5549,
+            1,
+            155
+          ],
+          [
+            32783,
+            90807,
+            26,
+            0,
+            0,
+            6,
+            6004,
+            13514,
+            2253,
+            10
+          ],
+          [
+            2001,
+            6472,
+            9,
+            0,
+            0,
+            0,
+            1549,
+            2618,
+            229,
+            4
+          ],
+          [
+            374,
+            2175,
+            3,
+            1,
+            0,
+            0,
+            457,
+            766,
+            69,
+            0
+          ],
+          [
+            26,
+            166,
+            0,
+            0,
+            0,
+            0,
+            52,
+            80,
+            4,
+            0
+          ],
+          [
+            149,
+            1775,
+            3,
+            0,
+            0,
+            1,
+            383,
+            516,
+            22,
+            0
+          ],
+          [
+            6804,
+            20540,
+            24,
+            2,
+            0,
+            5,
+            4822,
+            8550,
+            795,
+            12
+          ],
+          [
+            6813,
+            1,
+            12,
+            0,
+            0,
+            0,
+            2117,
+            10481,
+            1388,
+            6
+          ],
+          [
+            14,
+            183,
+            1,
+            0,
+            0,
+            0,
+            21,
+            179,
+            6801,
+            0
+          ],
+          [
+            849,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            13,
+            53,
+            65
+          ]
+        ],
+        "per_class": {
+          "Ball": {
+            "support": 117808,
+            "recall": 0.9133080945266875,
+            "predicted_count": 157408,
+            "mean_probability": 0.3289696515092832,
+            "observed_frequency": 0.33310430433147564,
+            "brier": 0.11862180641805119,
+            "ece_15": 0.04418171296986755
+          },
+          "Strike": {
+            "support": 145403,
+            "recall": 0.6245194390762226,
+            "predicted_count": 126501,
+            "mean_probability": 0.30482557874566285,
+            "observed_frequency": 0.41112967848286663,
+            "brier": 0.19587733601882049,
+            "ece_15": 0.10632612077020655
+          },
+          "Single": {
+            "support": 12882,
+            "recall": 0.0006986492780624127,
+            "predicted_count": 79,
+            "mean_probability": 0.05553732757825374,
+            "observed_frequency": 0.036424093850995425,
+            "brier": 0.035077296774352305,
+            "ece_15": 0.01911323372725831
+          },
+          "Double": {
+            "support": 3845,
+            "recall": 0.0002600780234070221,
+            "predicted_count": 3,
+            "mean_probability": 0.025543626869540332,
+            "observed_frequency": 0.010871808791886152,
+            "brier": 0.011180359150519313,
+            "ece_15": 0.014673923783490233
+          },
+          "Triple": {
+            "support": 328,
+            "recall": 0.0,
+            "predicted_count": 0,
+            "mean_probability": 0.0052809114249638064,
+            "observed_frequency": 0.0009274260815965301,
+            "brier": 0.0009829977064609676,
+            "ece_15": 0.004353485343367276
+          },
+          "HomeRun": {
+            "support": 2849,
+            "recall": 0.000351000351000351,
+            "predicted_count": 12,
+            "mean_probability": 0.02113371302429242,
+            "observed_frequency": 0.008055600324599128,
+            "brier": 0.008400770469372614,
+            "ece_15": 0.013078112699693294
+          },
+          "FieldOut": {
+            "support": 41554,
+            "recall": 0.11604177696491312,
+            "predicted_count": 15531,
+            "mean_probability": 0.12006743136756579,
+            "observed_frequency": 0.11749470547153112,
+            "brier": 0.09662508890998985,
+            "ece_15": 0.011740790114128855
+          },
+          "Strikeout": {
+            "support": 20818,
+            "recall": 0.5034585454894802,
+            "predicted_count": 42266,
+            "mean_probability": 0.09415947935417511,
+            "observed_frequency": 0.058863280995965134,
+            "brier": 0.051911095017916645,
+            "ece_15": 0.03655612082180088
+          },
+          "Walk": {
+            "support": 7199,
+            "recall": 0.9447145436866231,
+            "predicted_count": 11615,
+            "mean_probability": 0.030410165631619256,
+            "observed_frequency": 0.020355305979918963,
+            "brier": 0.01127259310220374,
+            "ece_15": 0.010054859651700295
+          },
+          "HitByPitch": {
+            "support": 981,
+            "recall": 0.06625891946992865,
+            "predicted_count": 252,
+            "mean_probability": 0.014072114494643517,
+            "observed_frequency": 0.0027737956891652317,
+            "brier": 0.003488617053956403,
+            "ece_15": 0.011298318805478281
+          }
+        }
+      }
+    },
+    "mlp77_focal_seed42": {
+      "manifest": {
+        "model": "mlp",
+        "data_dir": "data\\aligned_20260921",
+        "run_dir": "outputs\\alignment_repair_20260921\\mlp77_focal_seed42",
+        "input_dim": 77,
+        "seed": 42,
+        "threads": 2,
+        "loss": "focal",
+        "class_weight": "none",
+        "epochs": 30,
+        "batch_size": 256,
+        "max_train": 0,
+        "max_iter": 500,
+        "rounds": 1000,
+        "device": "cuda",
+        "git_head": "fc7d6475d78953fbb9a0a7f1e417bc006a4b9f68",
+        "torch_version": "2.6.0+cu124",
+        "numpy_version": "2.4.4",
+        "class_names": [
+          "Ball",
+          "Strike",
+          "Single",
+          "Double",
+          "Triple",
+          "HomeRun",
+          "FieldOut",
+          "Strikeout",
+          "Walk",
+          "HitByPitch"
+        ],
+        "status": "complete",
+        "splits": {
+          "train": {
+            "n": 1493038,
+            "pitch_ids_sha256": "2f9ab2614090b2d882fa01182fcbf92ac5d4b81300fc4bfe0c9a1ee1920519b9"
+          },
+          "val": {
+            "n": 384849,
+            "pitch_ids_sha256": "1879967de0c8ed11286b56aaf0bd150dede355b3ac88a415f1b9ce3c31350248"
+          },
+          "test": {
+            "n": 353667,
+            "pitch_ids_sha256": "f3c785a3642c90b1306a02cdeb3c25b033c3ecc5cd51fe0c94feb48b0635bcd3"
+          }
+        },
+        "parameters": 27786,
+        "best_epoch": 13,
+        "epochs_completed": 18,
+        "best_val_loss": 0.450917190293418,
+        "training_seconds": 472.9792745
+      },
+      "raw": {
+        "n": 353667,
+        "top1": 0.6751548773281081,
+        "top3": 0.9473402946839824,
+        "ce": 0.9249579274654939,
+        "brier": 0.4804513906987948,
+        "ece_15": 0.14654052213630717,
+        "macro_f1": 0.2981176614270784,
+        "confusion_matrix": [
+          [
+            106632,
+            9828,
+            0,
+            0,
+            0,
+            0,
+            121,
+            1171,
+            1,
+            55
+          ],
+          [
+            20371,
+            117919,
+            0,
+            0,
+            0,
+            0,
+            3594,
+            2288,
+            1228,
+            3
+          ],
+          [
+            1142,
+            9776,
+            0,
+            0,
+            0,
+            0,
+            1345,
+            510,
+            109,
+            0
+          ],
+          [
+            209,
+            3169,
+            0,
+            0,
+            0,
+            0,
+            323,
+            116,
+            28,
+            0
+          ],
+          [
+            17,
+            265,
+            0,
+            0,
+            0,
+            0,
+            36,
+            8,
+            2,
+            0
+          ],
+          [
+            58,
+            2541,
+            0,
+            0,
+            0,
+            0,
+            202,
+            36,
+            12,
+            0
+          ],
+          [
+            3885,
+            31671,
+            0,
+            0,
+            0,
+            0,
+            4086,
+            1558,
+            354,
+            0
+          ],
+          [
+            6547,
+            8141,
+            0,
+            0,
+            0,
+            0,
+            1701,
+            3579,
+            850,
+            0
+          ],
+          [
+            10,
+            538,
+            0,
+            0,
+            0,
+            0,
+            19,
+            221,
+            6411,
+            0
+          ],
+          [
+            774,
+            5,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            49,
+            153
+          ]
+        ],
+        "per_class": {
+          "Ball": {
+            "support": 117808,
+            "recall": 0.9051337769930735,
+            "predicted_count": 139645,
+            "mean_probability": 0.2884666702521275,
+            "observed_frequency": 0.33310430433147564,
+            "brier": 0.09399565177890577,
+            "ece_15": 0.07349594392475887
+          },
+          "Strike": {
+            "support": 145403,
+            "recall": 0.8109805162204357,
+            "predicted_count": 183853,
+            "mean_probability": 0.3721277294909034,
+            "observed_frequency": 0.41112967848286663,
+            "brier": 0.18217632515740476,
+            "ece_15": 0.09974513549336368
+          },
+          "Single": {
+            "support": 12882,
+            "recall": 0.0,
+            "predicted_count": 0,
+            "mean_probability": 0.05642599233138576,
+            "observed_frequency": 0.036424093850995425,
+            "brier": 0.0344915030376271,
+            "ece_15": 0.020001898480390332
+          },
+          "Double": {
+            "support": 3845,
+            "recall": 0.0,
+            "predicted_count": 0,
+            "mean_probability": 0.01637842167433059,
+            "observed_frequency": 0.010871808791886152,
+            "brier": 0.010691052668227015,
+            "ece_15": 0.005506612882444437
+          },
+          "Triple": {
+            "support": 328,
+            "recall": 0.0,
+            "predicted_count": 0,
+            "mean_probability": 0.0012156370911904873,
+            "observed_frequency": 0.0009274260815965301,
+            "brier": 0.0009258852794103952,
+            "ece_15": 0.00028821100959395727
+          },
+          "HomeRun": {
+            "support": 2849,
+            "recall": 0.0,
+            "predicted_count": 0,
+            "mean_probability": 0.010679175822342573,
+            "observed_frequency": 0.008055600324599128,
+            "brier": 0.007904952476956035,
+            "ece_15": 0.002623575497743446
+          },
+          "FieldOut": {
+            "support": 41554,
+            "recall": 0.09832988400635317,
+            "predicted_count": 11427,
+            "mean_probability": 0.16051766591740735,
+            "observed_frequency": 0.11749470547153112,
+            "brier": 0.0958382246273046,
+            "ece_15": 0.04302596204105122
+          },
+          "Strikeout": {
+            "support": 20818,
+            "recall": 0.17191853203958113,
+            "predicted_count": 9487,
+            "mean_probability": 0.07094010421444236,
+            "observed_frequency": 0.058863280995965134,
+            "brier": 0.045633153682420755,
+            "ece_15": 0.01207682321847724
+          },
+          "Walk": {
+            "support": 7199,
+            "recall": 0.8905403528267815,
+            "predicted_count": 9044,
+            "mean_probability": 0.018209336325368933,
+            "observed_frequency": 0.020355305979918963,
+            "brier": 0.006624325790652393,
+            "ece_15": 0.003998259758761145
+          },
+          "HitByPitch": {
+            "support": 981,
+            "recall": 0.1559633027522936,
+            "predicted_count": 211,
+            "mean_probability": 0.005039268092660224,
+            "observed_frequency": 0.0027737956891652317,
+            "brier": 0.0021703161998859674,
+            "ece_15": 0.0025555181139544103
+          }
+        }
+      },
+      "temperature": 0.6645668898658542,
+      "temperature_scaled": {
+        "n": 353667,
+        "top1": 0.6751548773281081,
+        "top3": 0.9473402946839824,
+        "ce": 0.8847399344713753,
+        "brier": 0.4506500223227421,
+        "ece_15": 0.05650490087468376,
+        "macro_f1": 0.2981176614270784,
+        "confusion_matrix": [
+          [
+            106632,
+            9828,
+            0,
+            0,
+            0,
+            0,
+            121,
+            1171,
+            1,
+            55
+          ],
+          [
+            20371,
+            117919,
+            0,
+            0,
+            0,
+            0,
+            3594,
+            2288,
+            1228,
+            3
+          ],
+          [
+            1142,
+            9776,
+            0,
+            0,
+            0,
+            0,
+            1345,
+            510,
+            109,
+            0
+          ],
+          [
+            209,
+            3169,
+            0,
+            0,
+            0,
+            0,
+            323,
+            116,
+            28,
+            0
+          ],
+          [
+            17,
+            265,
+            0,
+            0,
+            0,
+            0,
+            36,
+            8,
+            2,
+            0
+          ],
+          [
+            58,
+            2541,
+            0,
+            0,
+            0,
+            0,
+            202,
+            36,
+            12,
+            0
+          ],
+          [
+            3885,
+            31671,
+            0,
+            0,
+            0,
+            0,
+            4086,
+            1558,
+            354,
+            0
+          ],
+          [
+            6547,
+            8141,
+            0,
+            0,
+            0,
+            0,
+            1701,
+            3579,
+            850,
+            0
+          ],
+          [
+            10,
+            538,
+            0,
+            0,
+            0,
+            0,
+            19,
+            221,
+            6411,
+            0
+          ],
+          [
+            774,
+            5,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            49,
+            153
+          ]
+        ],
+        "per_class": {
+          "Ball": {
+            "support": 117808,
+            "recall": 0.9051337769930735,
+            "predicted_count": 139645,
+            "mean_probability": 0.3150732044735483,
+            "observed_frequency": 0.33310430433147564,
+            "brier": 0.08483059669733198,
+            "ece_15": 0.0421139173164697
+          },
+          "Strike": {
+            "support": 145403,
+            "recall": 0.8109805162204357,
+            "predicted_count": 183853,
+            "mean_probability": 0.414118238730893,
+            "observed_frequency": 0.41112967848286663,
+            "brier": 0.16597164929797978,
+            "ece_15": 0.050988230545875875
+          },
+          "Single": {
+            "support": 12882,
+            "recall": 0.0,
+            "predicted_count": 0,
+            "mean_probability": 0.030777332382602544,
+            "observed_frequency": 0.036424093850995425,
+            "brier": 0.0338966246810011,
+            "ece_15": 0.005649325796684598
+          },
+          "Double": {
+            "support": 3845,
+            "recall": 0.0,
+            "predicted_count": 0,
+            "mean_probability": 0.005115257536011974,
+            "observed_frequency": 0.010871808791886152,
+            "brier": 0.010685055112254663,
+            "ece_15": 0.005756551255874178
+          },
+          "Triple": {
+            "support": 328,
+            "recall": 0.0,
+            "predicted_count": 0,
+            "mean_probability": 0.00010694454785982382,
+            "observed_frequency": 0.0009274260815965301,
+            "brier": 0.0009269839174179443,
+            "ece_15": 0.0008204815337367063
+          },
+          "HomeRun": {
+            "support": 2849,
+            "recall": 0.0,
+            "predicted_count": 0,
+            "mean_probability": 0.002901561295851898,
+            "observed_frequency": 0.008055600324599128,
+            "brier": 0.007947753113069805,
+            "ece_15": 0.00515403902874723
+          },
+          "FieldOut": {
+            "support": 41554,
+            "recall": 0.09832988400635317,
+            "predicted_count": 11427,
+            "mean_probability": 0.14092457065329933,
+            "observed_frequency": 0.11749470547153112,
+            "brier": 0.09378203962205275,
+            "ece_15": 0.025841869522390835
+          },
+          "Strikeout": {
+            "support": 20818,
+            "recall": 0.17191853203958113,
+            "predicted_count": 9487,
+            "mean_probability": 0.06767700553114037,
+            "observed_frequency": 0.058863280995965134,
+            "brier": 0.044534310956052474,
+            "ece_15": 0.008821069638111774
+          },
+          "Walk": {
+            "support": 7199,
+            "recall": 0.8905403528267815,
+            "predicted_count": 9044,
+            "mean_probability": 0.01996922474335719,
+            "observed_frequency": 0.020355305979918963,
+            "brier": 0.00608215686018363,
+            "ece_15": 0.002098747135461096
+          },
+          "HitByPitch": {
+            "support": 981,
+            "recall": 0.1559633027522936,
+            "predicted_count": 211,
+            "mean_probability": 0.003336660105435607,
+            "observed_frequency": 0.0027737956891652317,
+            "brier": 0.001992852065398059,
+            "ece_15": 0.0008973523449045367
+          }
+        }
+      }
+    },
+    "lgb77_balanced_seed42": {
+      "manifest": {
+        "model": "lgb",
+        "data_dir": "data\\aligned_20260921",
+        "run_dir": "outputs\\alignment_repair_20260921\\lgb77_balanced_seed42",
+        "input_dim": 77,
+        "seed": 42,
+        "threads": 4,
+        "loss": "ce",
+        "class_weight": "balanced",
+        "epochs": 30,
+        "batch_size": 256,
+        "max_train": 0,
+        "max_iter": 500,
+        "rounds": 1000,
+        "device": "auto",
+        "git_head": "fc7d6475d78953fbb9a0a7f1e417bc006a4b9f68",
+        "torch_version": "2.6.0+cu124",
+        "numpy_version": "2.4.4",
+        "class_names": [
+          "Ball",
+          "Strike",
+          "Single",
+          "Double",
+          "Triple",
+          "HomeRun",
+          "FieldOut",
+          "Strikeout",
+          "Walk",
+          "HitByPitch"
+        ],
+        "status": "complete",
+        "splits": {
+          "train": {
+            "n": 1493038,
+            "pitch_ids_sha256": "2f9ab2614090b2d882fa01182fcbf92ac5d4b81300fc4bfe0c9a1ee1920519b9"
+          },
+          "val": {
+            "n": 384849,
+            "pitch_ids_sha256": "1879967de0c8ed11286b56aaf0bd150dede355b3ac88a415f1b9ce3c31350248"
+          },
+          "test": {
+            "n": 353667,
+            "pitch_ids_sha256": "f3c785a3642c90b1306a02cdeb3c25b033c3ecc5cd51fe0c94feb48b0635bcd3"
+          }
+        },
+        "best_iteration": 1000,
+        "lightgbm_version": "4.6.0",
+        "training_seconds": 803.8042502000001
+      },
+      "raw": {
+        "n": 353667,
+        "top1": 0.533077725657186,
+        "top3": 0.8186627533810052,
+        "ce": 1.216252891880404,
+        "brier": 0.5876721652606677,
+        "ece_15": 0.03732847140150359,
+        "macro_f1": 0.3279216770717375,
+        "confusion_matrix": [
+          [
+            93337,
+            6770,
+            804,
+            129,
+            10,
+            110,
+            1169,
+            14072,
+            31,
+            1376
+          ],
+          [
+            17419,
+            63105,
+            11839,
+            8375,
+            203,
+            15144,
+            10160,
+            16518,
+            2551,
+            89
+          ],
+          [
+            616,
+            2626,
+            2192,
+            1180,
+            21,
+            1613,
+            1590,
+            2835,
+            205,
+            4
+          ],
+          [
+            110,
+            816,
+            518,
+            450,
+            13,
+            684,
+            437,
+            769,
+            48,
+            0
+          ],
+          [
+            7,
+            74,
+            40,
+            42,
+            0,
+            50,
+            39,
+            72,
+            4,
+            0
+          ],
+          [
+            38,
+            603,
+            294,
+            361,
+            6,
+            793,
+            241,
+            490,
+            23,
+            0
+          ],
+          [
+            2155,
+            8786,
+            5957,
+            3593,
+            72,
+            5686,
+            5090,
+            9524,
+            683,
+            8
+          ],
+          [
+            1172,
+            2,
+            693,
+            513,
+            17,
+            570,
+            560,
+            16116,
+            1135,
+            40
+          ],
+          [
+            8,
+            52,
+            18,
+            4,
+            1,
+            5,
+            14,
+            269,
+            6813,
+            15
+          ],
+          [
+            290,
+            1,
+            0,
+            0,
+            0,
+            0,
+            2,
+            13,
+            39,
+            636
+          ]
+        ],
+        "per_class": {
+          "Ball": {
+            "support": 117808,
+            "recall": 0.792280660057042,
+            "predicted_count": 115152,
+            "mean_probability": 0.28462766081779023,
+            "observed_frequency": 0.33310430433147564,
+            "brier": 0.09167407767599475,
+            "ece_15": 0.04847664351368547
+          },
+          "Strike": {
+            "support": 145403,
+            "recall": 0.4340006739888448,
+            "predicted_count": 82835,
+            "mean_probability": 0.17662337731585806,
+            "observed_frequency": 0.41112967848286663,
+            "brier": 0.24716726314807952,
+            "ece_15": 0.23450630116700863
+          },
+          "Single": {
+            "support": 12882,
+            "recall": 0.17015991305697872,
+            "predicted_count": 22355,
+            "mean_probability": 0.11266617517159074,
+            "observed_frequency": 0.036424093850995425,
+            "brier": 0.043826355764998756,
+            "ece_15": 0.07624208132059529
+          },
+          "Double": {
+            "support": 3845,
+            "recall": 0.11703511053315994,
+            "predicted_count": 14647,
+            "mean_probability": 0.08605829776992048,
+            "observed_frequency": 0.010871808791886152,
+            "brier": 0.021630661205234825,
+            "ece_15": 0.07518648897803434
+          },
+          "Triple": {
+            "support": 328,
+            "recall": 0.0,
+            "predicted_count": 343,
+            "mean_probability": 0.008248900592337927,
+            "observed_frequency": 0.0009274260815965301,
+            "brier": 0.0013821491790238579,
+            "ece_15": 0.007321474510741399
+          },
+          "HomeRun": {
+            "support": 2849,
+            "recall": 0.2783432783432783,
+            "predicted_count": 24655,
+            "mean_probability": 0.07293877620191554,
+            "observed_frequency": 0.008055600324599128,
+            "brier": 0.01923189235811932,
+            "ece_15": 0.06488317587731642
+          },
+          "FieldOut": {
+            "support": 41554,
+            "recall": 0.12249121624873659,
+            "predicted_count": 19302,
+            "mean_probability": 0.12047821962474754,
+            "observed_frequency": 0.11749470547153112,
+            "brier": 0.09594223852196064,
+            "ece_15": 0.010971968703157763
+          },
+          "Strikeout": {
+            "support": 20818,
+            "recall": 0.774137765395331,
+            "predicted_count": 60678,
+            "mean_probability": 0.10281110560246327,
+            "observed_frequency": 0.058863280995965134,
+            "brier": 0.054603625098557845,
+            "ece_15": 0.04394816089805882
+          },
+          "Walk": {
+            "support": 7199,
+            "recall": 0.946381441866926,
+            "predicted_count": 11532,
+            "mean_probability": 0.02845631094512593,
+            "observed_frequency": 0.020355305979918963,
+            "brier": 0.008537322271892554,
+            "ece_15": 0.008101004965206968
+          },
+          "HitByPitch": {
+            "support": 981,
+            "recall": 0.6483180428134556,
+            "predicted_count": 2168,
+            "mean_probability": 0.0070911759433344036,
+            "observed_frequency": 0.0027737956891652317,
+            "brier": 0.003676580036805659,
+            "ece_15": 0.004317380254169173
+          }
+        }
+      },
+      "temperature": 1.013932983999804,
+      "temperature_scaled": {
+        "n": 353667,
+        "top1": 0.533077725657186,
+        "top3": 0.8186429607512151,
+        "ce": 1.2161590991226512,
+        "brier": 0.5876942218343101,
+        "ece_15": 0.03756616825523812,
+        "macro_f1": 0.3279216770717375,
+        "confusion_matrix": [
+          [
+            93337,
+            6770,
+            804,
+            129,
+            10,
+            110,
+            1169,
+            14072,
+            31,
+            1376
+          ],
+          [
+            17419,
+            63105,
+            11839,
+            8375,
+            203,
+            15144,
+            10160,
+            16518,
+            2551,
+            89
+          ],
+          [
+            616,
+            2626,
+            2192,
+            1180,
+            21,
+            1613,
+            1590,
+            2835,
+            205,
+            4
+          ],
+          [
+            110,
+            816,
+            518,
+            450,
+            13,
+            684,
+            437,
+            769,
+            48,
+            0
+          ],
+          [
+            7,
+            74,
+            40,
+            42,
+            0,
+            50,
+            39,
+            72,
+            4,
+            0
+          ],
+          [
+            38,
+            603,
+            294,
+            361,
+            6,
+            793,
+            241,
+            490,
+            23,
+            0
+          ],
+          [
+            2155,
+            8786,
+            5957,
+            3593,
+            72,
+            5686,
+            5090,
+            9524,
+            683,
+            8
+          ],
+          [
+            1172,
+            2,
+            693,
+            513,
+            17,
+            570,
+            560,
+            16116,
+            1135,
+            40
+          ],
+          [
+            8,
+            52,
+            18,
+            4,
+            1,
+            5,
+            14,
+            269,
+            6813,
+            15
+          ],
+          [
+            290,
+            1,
+            0,
+            0,
+            0,
+            0,
+            2,
+            13,
+            39,
+            636
+          ]
+        ],
+        "per_class": {
+          "Ball": {
+            "support": 117808,
+            "recall": 0.792280660057042,
+            "predicted_count": 115152,
+            "mean_probability": 0.2837729063441285,
+            "observed_frequency": 0.33310430433147564,
+            "brier": 0.09172853180273674,
+            "ece_15": 0.04933139798734716
+          },
+          "Strike": {
+            "support": 145403,
+            "recall": 0.4340006739888448,
+            "predicted_count": 82835,
+            "mean_probability": 0.1764413996602691,
+            "observed_frequency": 0.41112967848286663,
+            "brier": 0.2475105441824472,
+            "ece_15": 0.23468827882259755
+          },
+          "Single": {
+            "support": 12882,
+            "recall": 0.17015991305697872,
+            "predicted_count": 22355,
+            "mean_probability": 0.11307553131898658,
+            "observed_frequency": 0.036424093850995425,
+            "brier": 0.04383124257592893,
+            "ece_15": 0.07665143746799111
+          },
+          "Double": {
+            "support": 3845,
+            "recall": 0.11703511053315994,
+            "predicted_count": 14647,
+            "mean_probability": 0.08649636909834481,
+            "observed_frequency": 0.010871808791886152,
+            "brier": 0.021655784826980266,
+            "ece_15": 0.07562456030645866
+          },
+          "Triple": {
+            "support": 328,
+            "recall": 0.0,
+            "predicted_count": 343,
+            "mean_probability": 0.008460665547794819,
+            "observed_frequency": 0.0009274260815965301,
+            "brier": 0.0013898323922426244,
+            "ece_15": 0.00753323946619829
+          },
+          "HomeRun": {
+            "support": 2849,
+            "recall": 0.2783432783432783,
+            "predicted_count": 24655,
+            "mean_probability": 0.07319168159222586,
+            "observed_frequency": 0.008055600324599128,
+            "brier": 0.019189949116240616,
+            "ece_15": 0.06513608126762672
+          },
+          "FieldOut": {
+            "support": 41554,
+            "recall": 0.12249121624873659,
+            "predicted_count": 19302,
+            "mean_probability": 0.12088118902126897,
+            "observed_frequency": 0.11749470547153112,
+            "brier": 0.09595193935500539,
+            "ece_15": 0.01095509296691038
+          },
+          "Strikeout": {
+            "support": 20818,
+            "recall": 0.774137765395331,
+            "predicted_count": 60678,
+            "mean_probability": 0.1021967172430269,
+            "observed_frequency": 0.058863280995965134,
+            "brier": 0.05429628743297746,
+            "ece_15": 0.04333379207381815
+          },
+          "Walk": {
+            "support": 7199,
+            "recall": 0.946381441866926,
+            "predicted_count": 11532,
+            "mean_probability": 0.028371508069475183,
+            "observed_frequency": 0.020355305979918963,
+            "brier": 0.008477211432675893,
+            "ece_15": 0.00801620208955622
+          },
+          "HitByPitch": {
+            "support": 981,
+            "recall": 0.6483180428134556,
+            "predicted_count": 2168,
+            "mean_probability": 0.007112032104479355,
+            "observed_frequency": 0.0027737956891652317,
+            "brier": 0.0036628987170749076,
+            "ece_15": 0.004338236415314122
+          }
+        }
+      }
+    }
+  },
+  "paired_differences_vs_first_run": {
+    "mlp77_ce_seed42": {
+      "games": 1207,
+      "repetitions": 2000,
+      "ce_delta": 0.0,
+      "ce_delta_95ci": [
+        0.0,
+        0.0
+      ],
+      "accuracy_delta": 0.0,
+      "accuracy_delta_95ci": [
+        0.0,
+        0.0
+      ],
+      "scope": "test-game sampling uncertainty; excludes training-seed uncertainty"
+    },
+    "mlp135_ce_seed42": {
+      "games": 1207,
+      "repetitions": 2000,
+      "ce_delta": 0.002889209659770131,
+      "ce_delta_95ci": [
+        0.0024318244230365597,
+        0.003333090481753934
+      ],
+      "accuracy_delta": -0.0007634300061922656,
+      "accuracy_delta_95ci": [
+        -0.00139465143362448,
+        -0.00012964106622284936
+      ],
+      "scope": "test-game sampling uncertainty; excludes training-seed uncertainty"
+    },
+    "lr77_ce_seed42": {
+      "games": 1207,
+      "repetitions": 2000,
+      "ce_delta": 0.1436837613582611,
+      "ce_delta_95ci": [
+        0.14212792171197303,
+        0.1453055330199139
+      ],
+      "accuracy_delta": -0.03312155219457852,
+      "accuracy_delta_95ci": [
+        -0.034299764355533904,
+        -0.031983441902558696
+      ],
+      "scope": "test-game sampling uncertainty; excludes training-seed uncertainty"
+    },
+    "lgb77_ce_seed42": {
+      "games": 1207,
+      "repetitions": 2000,
+      "ce_delta": 0.013652878813445568,
+      "ce_delta_95ci": [
+        0.01290381090366373,
+        0.014386459617630038
+      ],
+      "accuracy_delta": -0.0038228050680442337,
+      "accuracy_delta_95ci": [
+        -0.004564999593522361,
+        -0.0031367214925833893
+      ],
+      "scope": "test-game sampling uncertainty; excludes training-seed uncertainty"
+    },
+    "lr77_sqrt_seed42": {
+      "games": 1207,
+      "repetitions": 2000,
+      "ce_delta": 0.2624398171901703,
+      "ce_delta_95ci": [
+        0.2603928904644477,
+        0.26453312452581684
+      ],
+      "accuracy_delta": -0.05302162768932357,
+      "accuracy_delta_95ci": [
+        -0.05442754162579133,
+        -0.05165323922000079
+      ],
+      "scope": "test-game sampling uncertainty; excludes training-seed uncertainty"
+    },
+    "mlp77_focal_seed42": {
+      "games": 1207,
+      "repetitions": 2000,
+      "ce_delta": 0.073269322514534,
+      "ce_delta_95ci": [
+        0.07222589304061285,
+        0.07431542970212889
+      ],
+      "accuracy_delta": -0.0015664452719648708,
+      "accuracy_delta_95ci": [
+        -0.0021858363769312788,
+        -0.000938323043039855
+      ],
+      "scope": "test-game sampling uncertainty; excludes training-seed uncertainty"
+    },
+    "lgb77_balanced_seed42": {
+      "games": 1207,
+      "repetitions": 2000,
+      "ce_delta": 0.36456429958343506,
+      "ce_delta_95ci": [
+        0.3614060726117582,
+        0.36770377933860904
+      ],
+      "accuracy_delta": -0.14364359694288695,
+      "accuracy_delta_95ci": [
+        -0.1455240547948824,
+        -0.14170627511876038
+      ],
+      "scope": "test-game sampling uncertainty; excludes training-seed uncertainty"
+    }
+  },
+  "empirical_train_prior": {
+    "n": 353667,
+    "top1": 0.41112967848286663,
+    "top3": 0.8617286882858735,
+    "ce": 1.4607201350893038,
+    "brier": 0.7008220014233572,
+    "ece_15": 0.0022908467775231145,
+    "macro_f1": 0.05826958142144388,
+    "confusion_matrix": [
+      [
+        0,
+        117808,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        145403,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        12882,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        3845,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        328,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        2849,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        41554,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        20818,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        7199,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        981,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    "per_class": {
+      "Ball": {
+        "support": 117808,
+        "recall": 0.0,
+        "predicted_count": 0,
+        "mean_probability": 0.3351827938552545,
+        "observed_frequency": 0.33310430433147564,
+        "brier": 0.2221501468860198,
+        "ece_15": 0.0020784895237788703
+      },
+      "Strike": {
+        "support": 145403,
+        "recall": 1.0,
+        "predicted_count": 353667,
+        "mean_probability": 0.4088388317053435,
+        "observed_frequency": 0.41112967848286663,
+        "brier": 0.24210731393239943,
+        "ece_15": 0.0022908467775231145
+      },
+      "Single": {
+        "support": 12882,
+        "recall": 0.0,
+        "predicted_count": 0,
+        "mean_probability": 0.03632301171831047,
+        "observed_frequency": 0.036424093850995425,
+        "brier": 0.03509738945572686,
+        "ece_15": 0.00010108213268495564
+      },
+      "Double": {
+        "support": 3845,
+        "recall": 0.0,
+        "predicted_count": 0,
+        "mean_probability": 0.011320466589151855,
+        "observed_frequency": 0.010871808791886152,
+        "brier": 0.010753813859297866,
+        "ece_15": 0.000448657797265703
+      },
+      "Triple": {
+        "support": 328,
+        "recall": 0.0,
+        "predicted_count": 0,
+        "mean_probability": 0.0009477257261655356,
+        "observed_frequency": 0.0009274260815965301,
+        "brier": 0.0009265663745352742,
+        "ece_15": 2.0299644569005582e-05
+      },
+      "HomeRun": {
+        "support": 2849,
+        "recall": 0.0,
+        "predicted_count": 0,
+        "mean_probability": 0.007769341642063749,
+        "observed_frequency": 0.008055600324599128,
+        "brier": 0.007990789572042772,
+        "ece_15": 0.0002862586825353791
+      },
+      "FieldOut": {
+        "support": 41554,
+        "recall": 0.0,
+        "predicted_count": 0,
+        "mean_probability": 0.11750593416956454,
+        "observed_frequency": 0.11749470547153112,
+        "brier": 0.10368969978377292,
+        "ece_15": 1.1228698033410867e-05
+      },
+      "Strikeout": {
+        "support": 20818,
+        "recall": 0.0,
+        "predicted_count": 0,
+        "mean_probability": 0.05821313179482508,
+        "observed_frequency": 0.058863280995965134,
+        "brier": 0.05539881784033892,
+        "ece_15": 0.0006501492011400517
+      },
+      "Walk": {
+        "support": 7199,
+        "recall": 0.0,
+        "predicted_count": 0,
+        "mean_probability": 0.020961817704454242,
+        "observed_frequency": 0.020355305979918963,
+        "brier": 0.01994133535485483,
+        "ece_15": 0.0006065117245352795
+      },
+      "HitByPitch": {
+        "support": 981,
+        "recall": 0.0,
+        "predicted_count": 0,
+        "mean_probability": 0.002936945094866341,
+        "observed_frequency": 0.0027737956891652317,
+        "brier": 0.0027661283643685814,
+        "ece_15": 0.00016314940570110945
+      }
+    }
+  },
+  "test_pitch_ids_sha256": "f3c785a3642c90b1306a02cdeb3c25b033c3ecc5cd51fe0c94feb48b0635bcd3",
+  "class_names": [
+    "Ball",
+    "Strike",
+    "Single",
+    "Double",
+    "Triple",
+    "HomeRun",
+    "FieldOut",
+    "Strikeout",
+    "Walk",
+    "HitByPitch"
+  ],
+  "canonical_prediction_verification": {
+    "mlp77_ce_seed42": {
+      "val": {
+        "canonical_ids_and_targets_equal": true,
+        "predictions_sha256": "4e0418c09da044968741b7c2310ad0bcbecf9f3211066bb27932db149da1e863"
+      },
+      "test": {
+        "canonical_ids_and_targets_equal": true,
+        "predictions_sha256": "a7c2d8fdb6004690ba495d3eea9a099511c01732d1b98b2e17612f7be7c8dd7e"
+      }
+    },
+    "mlp135_ce_seed42": {
+      "val": {
+        "canonical_ids_and_targets_equal": true,
+        "predictions_sha256": "81d58fc552087f6148132b8e7d5f83020faae96b472d62164c718a4b58b23058"
+      },
+      "test": {
+        "canonical_ids_and_targets_equal": true,
+        "predictions_sha256": "3809ecd09ce06be379807f4bcdd12cf3f746df08610c92b6eaea4f3dac51ac7b"
+      }
+    },
+    "lr77_ce_seed42": {
+      "val": {
+        "canonical_ids_and_targets_equal": true,
+        "predictions_sha256": "658c5e259c6ef271b5974364d607d6770ec04fe57c9dca7377ad76f308d6fce7"
+      },
+      "test": {
+        "canonical_ids_and_targets_equal": true,
+        "predictions_sha256": "a6991622fc5cbbfac886f00ab72bb9ccbea250c16b210accff95031d2505fd74"
+      }
+    },
+    "lgb77_ce_seed42": {
+      "val": {
+        "canonical_ids_and_targets_equal": true,
+        "predictions_sha256": "42e2bf890d3981f5c14a7a0a7dcfd95ff8ae48d6adb510f0c83bab485fde8ffb"
+      },
+      "test": {
+        "canonical_ids_and_targets_equal": true,
+        "predictions_sha256": "1e09562718d5293e8327560a438a4f2dc800538c9239eabc8e1d83fd3e02f271"
+      }
+    },
+    "lr77_sqrt_seed42": {
+      "val": {
+        "canonical_ids_and_targets_equal": true,
+        "predictions_sha256": "6b836d7560dd78ea96046bfccaa00472bbc471aac501082208c2ee8996ebb4da"
+      },
+      "test": {
+        "canonical_ids_and_targets_equal": true,
+        "predictions_sha256": "bd0af2fe54d3b3ce2cd384ca1244dad85628e628eb32a02d7d4b50a25ebe9fef"
+      }
+    },
+    "mlp77_focal_seed42": {
+      "val": {
+        "canonical_ids_and_targets_equal": true,
+        "predictions_sha256": "1d00708321c0b18a2e5d8a48f7927cf8e15b5658d146d8baa15f22fb5f5306de"
+      },
+      "test": {
+        "canonical_ids_and_targets_equal": true,
+        "predictions_sha256": "88b42be58bb306b427be36621da0be75d5e42a789b7f1e14ce9aca24ee36c8e2"
+      }
+    },
+    "lgb77_balanced_seed42": {
+      "val": {
+        "canonical_ids_and_targets_equal": true,
+        "predictions_sha256": "3c90209f24589b1d3792b5d723df6c3ea87346eaffe6a0a35bfa956ba6b830cf"
+      },
+      "test": {
+        "canonical_ids_and_targets_equal": true,
+        "predictions_sha256": "a55b8443a0e1fc5e5643f979d2fc9514f7dd8e27e8798860bcc513ea1a89d324"
+      }
+    }
+  },
+  "working_tree_changes": true,
+  "source_snapshot_sha256_at_report_time": {
+    "src/data/point_data.py": "7819921d77eeac194203f116474a32ad72fda9026327629904ecf499110933dd",
+    "src/training/point_baselines.py": "10d55f7279c803516ef95c31ebbae35582f3833af8de25acb2f72250ce8dee30",
+    "src/evaluation/point_metrics.py": "9bbab358eb688e550e975503498dec97f3afe559d5ac1460092a9a3062c3f65d",
+    "scripts/04_preprocess.py": "6bbc0d21908db4b880a8d835784e2854c13cd8f44729adf594d8923d2203d620",
+    "scripts/48_prepare_aligned_points.py": "6c43b0373f086a9b7ec2744198cc12c9ebb68ca073cf25c07cdb7679d628eedf",
+    "scripts/49_compare_aligned_runs.py": "9c899b8dc9623eb47f6a26f38c13f980925e58d83cbb3375981544a5aa3ce2a7",
+    "scripts/50_audit_inference_features.py": "b3c27a7bdc5d23949ac94694bec7879030c8d192fd1042470430dca032d33cfc",
+    "src/inference/transition_model.py": "089506ed806ec3571a36c11308f3ff3a28d1c80c6fd3a58537be7b05b291daf4",
+    "src/data/preprocess.py": "f8c4f03e06ecb74ba6ee67081472be4a7d82f292d0f5da5e1ab7e5eff10416ec",
+    "tests/test_point_data.py": "0d50c4b8551e1b92ffe7d11dfd977db6a15698d6278f7f13f743966e0968ece8"
+  },
+  "source_snapshot_note": "Final working tree snapshot, not a claim that all formatting and metadata-only edits preceded training. CUDA training behavior remained fixed between the CE runs."
+}

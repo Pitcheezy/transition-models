@@ -1,5 +1,31 @@
 # SmartPitch MDP Transition Probability Models
 
+## Current operational validation — 2026-09-21
+
+Read [the final validation report](docs/OPERATIONAL_VALIDATION_2026-09-21.md) first.
+Aligned 77d/135d MLPs were repeated with seeds 42/43/44. Nine operational models were
+trained using frozen 2022 profiles, 2023 training, Jan–May 2024 selection, June calibration,
+and July–September test. Selected MLP135 ensemble CE=1.274251 vs empirical=1.287400.
+Policy evaluation is complete, but run-cost improvement is NOT established:
+delta=-0.0862 runs/100 decisions, 95% CI [-0.4046,+0.2304].
+Use scripts 51–57 and src/inference/operational.py for this new schema.
+Never pass old UMAP/Arsenal 135d vectors/checkpoints to the new operational runtime.
+Final dataset: data/operational_20260921_v2; final nuisance: policy_nuisance_v2.
+Maintenance validation: 177 passed, 2 skipped. Run `uv run --frozen python scripts/check_project.py`.
+See docs/MAINTENANCE.md for portable paths, resume, CI, and artifact transfer.
+Old phase conclusions below are historical.
+
+## 2026-09-21 correction — read before interpreting historical results
+
+77d point vectors and batter-sorted sequence labels were incorrectly paired in scripts 13–15.
+Roughly 70% of targets differed. Historical collapse and Arsenal +26.5pp/context-causality claims
+below are withdrawn. The corrected loaders require aligned vectors, labels, pitch IDs, and class
+order in one artifact; never fall back to `labels_10_{split}.npy` for point models.
+Use fresh run directories and `scripts/49_compare_aligned_runs.py` for identity-checked comparisons.
+Corrected seed-42 MLP CE: 77d 67.67% / CE 0.8517; 135d 67.60% / CE 0.8546.
+These are observed-pitch classification results, not demonstrated policy utility or pre-pitch accuracy.
+See [the correction report](docs/ALIGNMENT_REPAIR_2026-09-21.md). The phase checklist below is historical.
+
 ## Project Goal
 
 SmartPitch MDP의 전이확률(transition probability) 추정 모델 3가지를 비교 실험한다.
@@ -172,12 +198,9 @@ tests/          # pytest tests
 - LightGBM 4cls: Top-1 60.8%, CE 0.8719 (is_unbalance=True)
 - MLP 4cls (Model B): Top-1 60.9%, CE 0.8723 (기존 결과)
 
-**핵심 발견**: 77-dim 단일 투구 feature는 10-class 분류에 필요한 discriminative signal 자체가 부족.
-- class balancing 미적용: Strike 다수 클래스 collapse (LR 41.1%, MLP 41.1%)
-- class balancing 강적용: 반대 방향 collapse, 전 클래스 균등 예측 (LGB 13%)
-- Focal Loss, sqrt-balanced 등 어떤 최적화 기법도 feature 부재를 보완 불가
-- Sequence 모델(RNN 66.9%, Transformer 67.2%): pitch context로 극복
-- Arsenal features(MLP 135d 67.6%): 투수 맥락 정적 feature로 극복 (Phase 9.5)
+**2026-09-21 정정**: 위 77d 10-class 실행은 입력/정답 순서가 달라 원인 해석을 철회한다.
+정렬 복구 후 77d MLP는 세 시드 모두 약 67.6%다. 특징 부족, 맥락 효과, sequence 우월성을
+위 과거 비교로 입증할 수 없다. 최종 결과는 docs/OPERATIONAL_VALIDATION_2026-09-21.md 참조.
 
 **노트북**:
 - [x] notebooks/06_logistic_regression.ipynb
@@ -223,21 +246,16 @@ tests/          # pytest tests
 | RNN (LSTM) | 400×87 seq | 66.9% | 94.8% | ❌ | sequence 의존 |
 | Transformer | 400×87 seq | 67.2% | 94.7% | ❌ | sequence 의존 |
 
-**핵심 발견**:
-1. **77-dim collapse ≠ feature 부족**: context 58d 추가만으로 41.1% → 67.6% (+26.5pp).
-   Sequence 모델과 동등 수준 달성. 부족했던 것은 feature가 아니라 "투수 맥락(pitcher context)".
-2. **Arsenal이 sequence context를 근사**: 400-pitch history 없이도 pitcher repertoire 통계로
-   동일한 수준의 pitch outcome 분리 가능. MDP/DQN 호환성 포기 없이 달성.
-3. **Single~HR은 여전히 0%**: Focal Loss로 Walk(85.9%), Strikeout(19.5%), FieldOut(7.3%) 개선됐으나
-   단타~홈런은 0%. 원인: 타자 맥락(batter tendency)이 135-dim에도 없음.
-   타자 arsenal에 해당하는 feature 없는 한 구조적 한계.
-4. **4-class feature saturation 확인**: LR 56.3% → LightGBM 60.8% → MLP 60.9%.
-   77-dim 공간에서 비선형성의 이득은 미미. 61% 천장은 feature expressiveness 한계.
+**해석 정정**:
+1. +26.5pp를 맥락 효과로 해석한 주장은 철회한다. 77d 기준선의 정렬 오류가 확인됐다.
+2. 입력 형식의 MDP 연결 가능성과 운영 성능/정책 효용은 별도 검증 대상이다.
+3. Single~HR의 과거 0%는 argmax recall이다. 해당 사건의 확률은 0이 아니며,
+   타자 특징 부재가 유일한 원인이라는 설명도 검증하지 않았다.
+4. 4-class의 비슷한 정확도만으로 표현력의 한계나 포화를 확정할 수 없다.
 
-**권장 MDP 모델**: `TransitionModelMLP10` (135-dim focal, 67.6%, MDP 호환)
-- 기존 Model B (4-class, 60.9%)를 rl-agent 통합 시 대체 권장
-- Walk/Strikeout/HitByPitch 직접 예측 가능 (BIP 테이블 의존 탈피 부분적 달성)
-- Single~HR은 BIP 테이블과 병행 권장 (InPlay 확률 × 고정 비율)
+**배포 판단**: 기존 `TransitionModelMLP10`을 최선으로 권장하지 않는다.
+독립 calibration과 운영 평가를 수행한 새 schema/model을 별도로 사용한다.
+구형 UMAP/Arsenal 135d checkpoint와 새 운영 135d checkpoint를 혼용하지 않는다.
 
 **산출물**:
 - outputs/checkpoints/model_b3_focal_135dim_10cls_best.pt (epoch 25, val_focal_loss 0.4505)
@@ -250,7 +268,7 @@ tests/          # pytest tests
 ### Phase 10: 135-dim 전 모델 확장 + Hybrid Sequence ✅ (2026-05-27)
 
 **목표**: Phase 9.5 MLP 135d 성과를 나머지 모델(LR, LightGBM, RNN, Transformer)에도 적용,  
-"context = architecture-agnostic" 가설 입증.
+"context = architecture-agnostic" 가설 탐색. 과거 기준선 정렬 오류로 입증 주장은 철회.
 
 **Phase 10.1 — iid 135d (LR + LightGBM × {10cls, 4cls})**
 - [x] scripts/26_train_logistic_regression_135d_10cls.py — Top-1 **62.4%** (77d 41.1% → +21.3pp)
@@ -285,11 +303,10 @@ tests/          # pytest tests
 | G6: seq hybrid (drop) | RNN-H / Trans-H | 67.2% / 66.8% | ❌ |
 | G6': seq hybrid (fullN) | RNN-H / Trans-H | 67.1% / 67.1% | ❌ |
 
-**핵심 발견 (확정)**:
-- **iid 모델**: Context 58d 추가만으로 41% → 67%, sequence 모델 동등 달성
-- **Sequence 모델**: Static context 추가 효과 없음 (RNN +0.3pp, Transformer -0.4pp) — sequence가 arsenal context를 내재적으로 학습
-- Architecture 선택보다 context 유무가 10-class 분류 핵심
-- **MDP 최선**: MLP 135d focal (67.6%, MDP 호환)
+**과거 해석 철회 및 범위**:
+- 41% → 67%를 context 효과로 해석할 수 없다. 복구된 동일 투구 비교를 사용한다.
+- Hybrid의 작은 정확도 차이는 seed/표본 변동을 고려해야 하며 내재적 학습의 증거가 아니다.
+- "MDP 최선"은 확정하지 않는다. 운영 특징과 확률 품질, 독립 정책 평가 결과를 사용한다.
 
 **산출물**:
 - data/processed/static_58_{train,val,test}.npy (sequence 정렬, 58d)

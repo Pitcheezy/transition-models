@@ -1,0 +1,39 @@
+name: validation
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: validation-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-14]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 25
+    env:
+      WANDB_MODE: offline
+      PYTHONUTF8: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: '0.10.4'
+          enable-cache: true
+      - name: Install OpenMP on macOS
+        if: runner.os == 'macOS'
+        run: brew install libomp
+      - name: Install locked Python environment
+        run: uv sync --frozen --python 3.12
+      - name: Lint and test
+        run: uv run --frozen python scripts/check_project.py
