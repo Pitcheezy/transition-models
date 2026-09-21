@@ -15,8 +15,12 @@ uv run --frozen python scripts/check_project.py
 ```
 
 `pywin32`는 Windows에서만 설치된다. SciPy·PyArrow·threadpoolctl은 직접 의존성으로 선언했다.
-`uv.lock`을 함께 관리하며, PyTorch는 학습에 사용한 **2.6.0**으로 고정한다.
-Windows/Linux는 CUDA 12.4 빌드, Mac은 PyPI 빌드이므로 GPU별 bitwise 일치를 보장하지 않는다.
+`uv.lock`을 함께 관리한다. Windows/Linux는 학습에 사용한 **PyTorch 2.6.0 + CUDA 12.4**,
+Mac은 **PyTorch 2.8.0**으로 고정한다. Mac의 Python 3.12 + PyTorch 2.6은 테스트를 통과해도
+DataLoader 사용 후 resource tracker를 기다리며 종료되지 않는 문제가 재현되었다.
+2.8에 포함된 [공식 수정](https://github.com/pytorch/pytorch/blob/v2.8.0/torch/multiprocessing/__init__.py)을
+사용한다([원인 이슈](https://github.com/pytorch/pytorch/issues/153050)).
+플랫폼별 런타임이 다르므로 학습 결과의 bitwise 일치를 보장하지 않는다.
 
 검사 명령은 지원하는 새 경로의 Ruff 검사/포맷 검사와 전체 pytest를 실행한다.
 대형 원본 데이터 없이 실행할 수 있다. 기존 checkpoint를 받지 않은 환경은 관련 추론 테스트를
@@ -24,6 +28,8 @@ Windows/Linux는 CUDA 12.4 빌드, Mac은 PyPI 빌드이므로 GPU별 bitwise �
 CI는 Ubuntu 24.04와 macOS 15에서 LFS 파일을 받고
 `scripts/check_project.py --cpu-only`를 실행한다. 검사 종료 시 오래 걸린 테스트를 출력하고,
 테스트 한 건이 120초 넘게 걸리면 진단용 스택을 출력한다.
+전체 pytest 프로세스는 기본 600초, CI에서는 180초 안에 정상 종료해야 한다.
+시간 초과 시 Mac native 스택을 남기고 실패한다. 느린 개발 PC는 `--test-timeout`을 늘릴 수 있다.
 GitHub의 Mac 실행기는 MPS를 사용 가능하다고 보고하지만 Transformer 추론에서
 PyTorch 2.11.0과 2.6.0 모두 SIGSEGV가 재현되었다. CPU 모드는 모든 checkpoint 추론을
 실제 실행하고 MPS 전용 2개 테스트만 제외한다. 로컬 기본 명령은 자동 장치 선택과

@@ -9,7 +9,8 @@ authors = [
 ]
 
 dependencies = [
-    "torch==2.6.0",
+    "torch==2.6.0; sys_platform != 'darwin'",
+    "torch==2.8.0; sys_platform == 'darwin'",
     "numpy>=1.26.0",
     "pandas>=2.2.0",
     "pybaseball>=2.2.7",

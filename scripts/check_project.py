@@ -76,7 +76,7 @@ def main():
                         timeout=15,
                         check=False,
                     )
-                    print(sample.stdout, sample.stderr, flush=True)
+                    print(sample.stdout.partition("Binary Images:")[0], sample.stderr, flush=True)
             finally:
                 process.kill()
                 process.wait()
