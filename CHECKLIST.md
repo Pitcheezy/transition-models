@@ -29,7 +29,7 @@
 | 항목 | 값 | 갱신 |
 |---|---|---|
 | 브랜치 | `codex/fix-point-label-alignment` | 2026-09-22 |
-| 최신 작업 커밋 | `UNITHASH` (I-0/I-5 준비 + B 평가셋) — 체크리스트만 바꾼 후속 커밋은 `git log -1`로 확인 | 2026-09-22 |
+| 최신 작업 커밋 | `f4ddb58` (I-0/I-5 준비 + B 평가셋) — 체크리스트만 바꾼 후속 커밋은 `git log -1`로 확인 | 2026-09-22 |
 | 파일 수정 권한 | **비어 있음** — 다음 도구가 가져간다 (Claude Code, I-0/I-5 준비·B-1~B-3 완료 후 반납 2026-09-22) | 2026-09-22 |
 | 중계 시각 주석 | 19 확인 / 1 확인 불가 / 302 미검토, 완전 타석 2·3·4·5 | 2026-09-22 |
 | 점수판 평가셋 | 검토 20 / 평가 가능 19(점수판 확인 14·미명시 5) / 가림 1 / 미검토 302 — `docs/results/mlb_p0/game_747139_scoreboard_evalset.json` | 2026-09-22 |
@@ -109,9 +109,9 @@ UTC 외삽은 PA 5에서도 틀렸다(6구 예상 약 475초 vs 실제 453.0초)
 
 ## B. 점수판 인식 평가셋
 
-- [x] B-1. 검증된 주석 시각에 한정한 평가셋의 ID·라벨·가림 상태·오차 집계 규약 정의 — `src/data/scoreboard_evalset.py` (`UNITHASH`)
-- [x] B-2. 규약 검증 코드와 테스트 — `scripts/64_build_scoreboard_evalset.py` build/check/score, `tests/test_scoreboard_evalset.py` (`UNITHASH`)
-- [x] B-3. 확인 불가 사례를 제외해 인식률을 올리지 않는다 — `score_predictions`가 coverage·attempt_rate·accuracy·error_rate·abstain_rate를 분리 보고 (`UNITHASH`)
+- [x] B-1. 검증된 주석 시각에 한정한 평가셋의 ID·라벨·가림 상태·오차 집계 규약 정의 — `src/data/scoreboard_evalset.py` (`f4ddb58`)
+- [x] B-2. 규약 검증 코드와 테스트 — `scripts/64_build_scoreboard_evalset.py` build/check/score, `tests/test_scoreboard_evalset.py` (`f4ddb58`)
+- [x] B-3. 확인 불가 사례를 제외해 인식률을 올리지 않는다 — `score_predictions`가 coverage·attempt_rate·accuracy·error_rate·abstain_rate를 분리 보고 (`f4ddb58`)
 - [ ] B-4. PA 1의 5구는 리뷰어 note에 점수판 언급이 없어 `visible_unstated`다. 영상 재확인으로 `visible_checked` 승격 여부 결정(추정 금지). `[추가되었음 · 2026-09-22 · Claude]` 〔모델: Opus 5〕
 
 > 기록 메타데이터를 OCR이 읽은 결과처럼 넣지 않는다. 실제 장면 확인이 필요한 입력은 미확인으로 남긴다.
