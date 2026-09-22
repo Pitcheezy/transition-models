@@ -82,6 +82,18 @@
    판단-릴리스 간격이 약 2.1초·1.2초. UTC 외삽(6구 예상 ~475초)은 실제 453.0초와 다시 불일치.
    실행한 검사: `check --require-pa 5` 통과(보고서 갱신), `--require-pa 4` 통과,
    `--require-pa 1` 예상대로 실패, `pytest tests/test_broadcast_timing.py` 23 passed. 코드 변경 없음.
+10. **I-0/I-5 통합 준비 + B 점수판 평가셋 (Claude Code, 2026-09-22)**: 동료 레포 `main` 9d09694 재확인(변경 없음).
+    [TEAMMATE_PITCHEEZY_2026-09-22.md](TEAMMATE_PITCHEEZY_2026-09-22.md) §9에 ① 8765 최소 서비스 요청·응답(코드 기준),
+    ② 지원 투수 6명·학습 2023-05-15~2025-04-30·보정 ~06-30·profile_cutoff 2025-04-30과 시점 함의(747139는 학습 창 안이라
+    사전 예측 성능으로 제시 불가), ③ 공통 경기 후보(코호트 선발 42경기, 기본안 2025-08-17 TB@SF Webb)를 사실/기본안/질문으로
+    구분해 기록했고, 이전 분석 정정과 동료 확인 항목(`prepare.py:49`→`pa_rewards` 구원투수 교체 반이닝 오판 가능성, 미측정)을 남겼다.
+    질문은 작성만 하고 전송하지 않았다. 동료 저장소는 읽기 전용으로만 접근했다.
+    B: `src/data/scoreboard_evalset.py`(규약: 검증된 timing 행만, 라벨은 manifest pre_state 기록 메타데이터·OCR 아님,
+    상태 visible_checked/visible_unstated/occluded/unreviewed, 채점은 coverage·attempt·accuracy·error·abstain 분리),
+    `scripts/64_build_scoreboard_evalset.py` build/check/score, `docs/results/mlb_p0/game_747139_scoreboard_evalset.json`
+    (322 중 검토 20 / 평가 가능 19 / 가림 1 / 미검토 302, 완전 타석 2~5).
+    실행한 검사: ruff check/format, `pytest tests/test_scoreboard_evalset.py` 5 passed, `check_project.py --cpu-only` 273 passed, 2 deselected,
+    `64 build` 후 `64 check` 통과. 주석 확대는 하지 않았다(A-4는 공통 경기 결정 전까지 한 타석 단위).
 
 이 문서와 함께 추가되는 후속 커밋의 해시는 `git log -6 --oneline`으로 확인한다.
 전체 Windows CPU 검사: **264 passed, 2 deselected**, Ruff 47개 경로 통과.

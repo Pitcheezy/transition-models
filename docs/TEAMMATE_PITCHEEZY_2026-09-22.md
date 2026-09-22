@@ -41,10 +41,13 @@
 | HitByPitch | hbp | HBP | 동일 |
 
 우리 새 8종 관찰 정답(볼/루킹/헛스윙/파울/파울팁/안타/인플레이 비안타/HBP)은 **어느 쪽에도 없다.**
-루킹·헛스윙·파울팁 구분은 그쪽 `strike`의 세분화이며, `8종 + 카운트 → 11종`은 유도 가능하지만
-`11 → 8`은 손실이고, 서비스 10종의 `double_play`는 만들 수 없다. 팀원 서비스 스택은 10이 최소 6곳에
-하드코딩돼 있어(`minimal_pitch_service.Engine`, `planner`, `refresh_pitch_service`, 평가자들) 8종 헤드는
-드롭인이 아니다.
+루킹·헛스윙·파울팁 구분은 그쪽 `strike`의 세분화다. **정정(2026-09-22)**: 위 표는 *의미 대응 참고*이지
+인덱스 재배열 규칙이 아니다. 우리 10종은 볼넷·삼진을 종결 클래스로 갖고 Strike에 파울을 합치며
+FieldOut에 실책 등 비아웃 사건이 섞여 있고, 그쪽 서비스 10종은 파울·병살을 분리하고 볼넷·삼진을 카운트
+규칙으로 파생한다. 이름·순서만 바꿔 서로 변환하면 안 된다. 또한 우리 8종은 안타 종류를 합치므로
+`8종 + 카운트`만으로 단타·2루타·3루타·홈런을 복원할 수 없고, 서비스 10종의 `double_play`도 만들 수 없다.
+팀원 서비스 스택은 10이 최소 6곳에 하드코딩돼 있어(`minimal_pitch_service.Engine`, `planner`,
+`refresh_pitch_service`, 평가자들) 8종 헤드는 드롭인이 아니다.
 
 ## 4. C·D 이관에 대한 사실 확인
 
@@ -61,6 +64,8 @@
 - `experiments/pitchmdp/scripts/refresh_pitch_service.py`: `--as-of` 날짜 이전 자료만으로 **타자** 프로필
   스냅샷(887명, 2025-08-15까지)과 **90일 내 ≥20구 레퍼토리 마스크**를 만드는 불변 사이드카. 같은 날
   더블헤더 격리, 2026 날짜 가드, 스냅샷 해시 고정 — 시간 정합성 패턴으로 재사용 가치가 크다.
+- 이 사이드카는 **타자 프로필·레퍼토리 마스크**용이며 우리 135d 운영 투수 프로필(고정 2022)과 바로
+  호환되지 않는다. 산출물(스냅샷 JSON)과 책임 범위(누가 우리 feature builder에 붙이는가)를 I-0에서 확인한다.
 - 그러나 **투수 표현 자체는 없다**(서비스 모델에 투수 특성 없음, 지원 투수 6명 고정), 신규 투수는
   4곳에서 의도적으로 차단(HTTP 400 `unsupported_pitcher`). 9회 이후는 데이터·WE 특성·학습 자료 세 층에서
   미지원. → D의 팀원 산출물은 "as-of 프로필/레퍼토리 방식 + 스냅샷 데이터"이고, **우리 운영 135d
@@ -118,3 +123,111 @@ Schwellenbach 680885 / Megill)는 **그 서비스에서 400을 받는다.** 통�
 - 팀원 문서의 모든 수치는 외장 SSD 산출물 기준 자기 보고이며 여기서 재현하지 않았다.
 - `docs/baselines.md`(SmartPitch PDF 미열람)와 `experiments/pitchmdp/docs/RESEARCH_GAP_REVIEW.md`(열람, 타자 성향 사용·
   무주자 0아웃 보상 고정)가 서로 모순 — B1 정의가 원문과 다를 수 있음을 공동 표에 적을 것.
+
+## 9. I-0·I-5 통합 준비 (2026-09-22, 검토 기준 `main` 9d09694 — 재확인 결과 변경 없음)
+
+첫 통합의 완료 기준: **한 타석 영상 → 투구 전 상태 → 동료 서비스 → 확률 표시.**
+전체 경기나 두 UI 동시 완성은 범위 밖. 아래는 "코드로 확인된 사실 / 우리 기본안 / 동료 답변 필요"로 구분한다.
+
+### ① 사용할 서비스와 요청·응답
+
+**코드로 확인된 사실** (`experiments/pitchmdp/scripts/minimal_pitch_service.py`, `MINIMAL_SERVICE.md`)
+- 127.0.0.1:8765. `GET /health`, `GET /metadata`(지원 투수·구종·`profile_order`·`profile_cutoff`·`delivery_draws`·assumptions),
+  `POST /recommend`(JSON 본문 1~65536바이트, 10초 소켓 타임아웃). 서버 없이 `--request file.json`도 가능.
+- 필수 입력(정수는 `type is int`, bool 거부): `inning` 1..99, `topbot` Top/Bot, `outs` 0..2, `bases` 0..7(1루=1, 2루=2, 3루=4),
+  `home_score`/`away_score` 0..999, `balls` 0..3, `strikes` 0..2, `pitcher_id`, `batter_stand` L/R.
+  선택: `top_k`(1..20, 기본 3), `date`(YYYY-MM-DD), `batter_id`(TRAIN 스냅샷 조회) 또는
+  `batter_profile{rates[6], reliabilities[6]}`(순서 contact, swing, walk, strikeout, isolated_power, groundball; 요청 날짜 이전 자료여야 함).
+- 응답: `recommendations[{pitch_type, defensive_we, delta_vs_baseline_policy, outcome_probabilities{ball, strike, foul, out,
+  single, double, triple, home_run, hbp, double_play}}]`, `objective: "full_pa_defensive_we"`, `baseline_defensive_we`,
+  `baseline_policy`(train_repertoire_frequency | uniform_pitch_types), `probability_kind: "model_internal_next_pitch_outcomes"`,
+  `profile_source`, `profile_as_of`, `neural_weight`, `delivery_tiers`, `solver`, `assumptions[8]`, `latency_ms`.
+- 오류: HTTP 400 `{error, message}` — `invalid_request`, `invalid_state`(경기 종료 상태 포함), `unsupported_pitcher`,
+  `unknown_batter`, `profile_date_conflict`; 408 타임아웃; 500 `inference_failed`.
+- 형식 예시(코드 기준으로 우리가 작성; 실제 `example_request.json`/`example_response.json`은 맥미니 SSD에 있어 미확인):
+
+```json
+{"inning": 1, "topbot": "Top", "outs": 0, "bases": 0, "home_score": 0, "away_score": 0,
+ "balls": 0, "strikes": 0, "pitcher_id": 657277, "batter_stand": "R", "date": "2025-08-17", "top_k": 3}
+```
+
+**우리 기본안**
+- 얇은 연결 계층 하나(예: `src/inference/teammate_service.py`): 우리 `PrePitchState`(docs/PREPITCH_CONTRACT.md) →
+  위 요청으로 변환(주자 ID → `bases` 비트마스크, `inning_topbot` → `topbot`, `stand` → `batter_stand`, `batter` → `batter_id`),
+  응답은 **동료 스키마 그대로**(10종 이름·순서, WE 값, `probability_kind`, assumptions) UI에 표시. 우리 legacy 10종으로
+  변환하지 않고, 추천 로직·planner·12카운트 텐서를 우리 쪽에 구현하지 않는다. 서비스 불가/400은 "unavailable"로 표시.
+- 8종 학습 완료로 표시하지 않는다. 이 연결은 "동료 확률 표시"일 뿐이다.
+
+**동료 답변 필요**
+- Q1. 통합 대상은 8765 최소 서비스(관측자 앱 세션 API가 아님)이고, 실행은 맥미니에서 하며 우리는 HTTP로만 호출 — 동의하는가?
+- Q2. `date`·타자 입력 규칙: 우리는 전날까지 프로필을 계산하지 못하므로 `batter_id` 스냅샷 조회로 가고, `profile_date_conflict`를
+  피하려면 요청 `date`가 스냅샷 `as_of` 이후여야 한다 — 시연 경기 전날 기준 refresh 스냅샷을 만들어 줄 수 있는가?
+- Q3. `example_request.json`·`example_response.json` 파일을 공유해 줄 수 있는가(스키마 회귀 테스트 고정용)?
+
+### ② 지원 투수와 모델·프로필 시점
+
+**코드로 확인된 사실**
+- 지원 투수 6명(`experiments/pitchmdp/configs/mlb_cohort_proposal.json`): 657277 Webb, 669302 Gilbert, 621244 Berríos,
+  622491 Castillo, 664285 Valdez, 605135 Bassitt. 그 외 `pitcher_id`는 400 `unsupported_pitcher`.
+- 분할(`pitchmdp/data.py::add_splits`): history <2023-05-15 / **train 2023-05-15~2025-04-30** / **calibration 2025-05-01~06-30** / dev 2025-07-01~.
+  번들 `training_cutoff`·`profile_cutoff` = 2025-04-30(`build_minimal_pitch_service.py`), 온도 보정은 CAL 전용,
+  `model_calibration_cutoff` 2025-06-30. refresh 사이드카(as-of 2025-08-16): 타자 프로필 887명, 90일 ≥20구 레퍼토리 마스크,
+  지원 투수 6명 중 5명 사용 가능(문서 기준).
+- **시점 함의**: 경기 747139(2024-09-30)는 이 모델의 학습 창 안이다. 이 모델을 747139에 적용한 결과를 "당시의 사전 예측
+  성능"으로 제시할 수 없고, 과거 프로필만 넣어도 모델 자체의 시점 문제는 해결되지 않는다. 시연 경기는 **2025-07-01 이후(DEV)**,
+  실질적으로 refresh 스냅샷 이후(2025-08-16~)여야 한다.
+
+**우리 기본안**
+- 동료 서비스 연결 시연은 2025-08-16 이후 코호트 투수 경기로 한정한다. 경기 747139 자산(manifest·주석·평가셋)은 중계 인식(A/B)
+  개발용으로 유지하고 동료 서비스와 연결하지 않는다(분리).
+
+**동료 답변 필요**
+- Q4. 코호트 확장 계획이 있는가(없으면 747139 연결은 포기)? 시연 경기 전날 as-of로 refresh 스냅샷을 만들어 줄 수 있는가?
+
+### ③ 공통 시연 경기와 한 타석
+
+**코드로 확인된 사실**
+- 관측자 카탈로그 규칙(`apps/observer/scripts/build_catalog.py`): 2025-08-16~09-30, 코호트 투수 경기 날짜순, 투수당 최대 3경기,
+  90일 ≥20구 레퍼토리 지원 타석만. 문서상 12경기·249타석·975구(`dataset.json`은 SSD에 있어 미확인).
+- `apps/observer/CONTRACT.md` 예시 view: game **777262**, 2025-08-17, TB @ SF, Logan Webb, PA id 32.
+- 공개 MLB schedule API(probable pitcher 기준, 실제 선발·dataset 포함 여부 미확인)로 조회한 코호트 선발 후보 — 투수별 첫 3경기:
+  Webb 08-17 **776703**(TB@SF) · 08-23 776621 · 08-28 776550 / Gilbert 08-18 776689 · 08-24 776602 · 08-30 776537 /
+  Berríos 08-17 776710 · 08-23 776630 · 09-02 776491 / Castillo 08-20 776662 · 08-26 776577 · 09-01 776504 /
+  Bassitt 08-20 776661 · 08-26 776582 · 09-01 776503 / Valdez 08-20 776673 · 08-27 776571 · 09-02 776489 (창 전체 42경기).
+  **주의**: 08-17 TB@SF의 gamePk가 예시의 777262와 다르다(776703). 예시가 가공 값인지 확인 필요.
+
+**우리 기본안**
+- 첫 통합 타석: **2025-08-17 TB @ SF(Webb 선발)** 의 동료 `dataset.json` 첫 지원 타석(예시의 PA 32가 실제라면 그것).
+  확정 후 순서: MLB 공식 전체 경기 영상 페이지·MP4 점검(60번 방식) → 투구 ID manifest(58번) → 그 타석만 시각 주석(63번) →
+  동료 서비스 호출 → 표시. 공통 경기 확정 전에는 747139 주석을 크게 확대하지 않는다(A-4 한 타석 단위만).
+
+**동료 답변 필요**
+- Q5. `dataset.json`의 경기 목록(game_pk·날짜·타석 id). Webb 08-17 경기가 포함되는가, game_pk는 776703인가 777262인가?
+- Q6. 그 경기의 MLB 공식 전체 영상(또는 사용 가능한 방송 소스) 확보 가능 여부.
+
+### 동료 확인 항목 (연구 스택, 수정 요청 아님)
+
+- `src/pitcheezy/data/prepare.py:49`는 풀 투수(`pitcher_index`)의 투구만 남긴 뒤 `pa_rewards`(같은 파일 152행 이하)로 넘긴다.
+  `pa_rewards`는 남은 타석의 순서로 `same_half`(171행)와 다음 타석 `b_start`(172행)를 계산하므로, **미등록 구원투수로 교체된
+  반이닝**에서는 풀 투수의 마지막 타석 다음 행이 다른 반이닝이 되어 이닝 종료로 오판(`re_next=0`)할 수 있다.
+  RE24 표 자체(`data/re24.py::compute`)는 전체 투수로 계산되지만, 학습 보상 쪽은 위 경로다. 영향 건수와 기존 성능 수치의 변화는
+  **미측정**이며 우리는 수정하지 않는다. → 동료 확인 요청(Q7).
+
+### 이전 분석 정정 (사용자 지적 반영)
+
+- 우리 10종 ↔ 동료 10종은 이름 대응이 아니라 의미가 다르다(볼넷·삼진 종결 처리, 파울, 병살, 실책). 인덱스 재배열 금지.
+- 우리 8종은 안타 종류를 합치므로 8종+카운트로 단타~홈런을 복원할 수 없다(3절 정정).
+- 2025년까지 학습·보정한 동료 모델을 2024년 경기에 적용한 결과는 당시 사전 예측 성능이 아니다.
+- 12카운트 텐서는 동료 planner 내부 계약이다. 우리는 서비스 API만 소비하며 텐서·배치 모드를 구현하지 않는다.
+- 동료의 타자 프로필·레퍼토리 갱신은 우리 135d 투수 프로필과 바로 호환되지 않는다.
+- 위치 추천 proxy는 실제 목표 위치 효과가 입증된 것이 아니다(F-1은 영상 기반 의도 라벨로 재정의).
+
+### 동료에게 보낼 질문 (짧게, 미전송)
+
+1. 통합 대상 = 8765 최소 서비스, 맥미니 실행·우리 HTTP 호출 — OK?
+2. 시연 경기 전날 as-of refresh 스냅샷 생성 가능? `batter_id` 조회 방식으로 가도 되나?
+3. `example_request.json`/`example_response.json` 공유 가능?
+4. 코호트 확장 계획? (없으면 747139 연결 포기)
+5. `dataset.json` 경기 목록 — Webb 08-17 TB@SF 포함? game_pk 776703 vs 777262?
+6. 그 경기 공식 전체 영상 확보 가능?
+7. `prepare.py:49` 풀 필터 → `pa_rewards` same_half 판정에서 미등록 구원투수 교체 반이닝의 이닝 종료 오판 가능성 확인 요청(영향 건수 미측정).
