@@ -29,11 +29,11 @@
 | 항목 | 값 | 갱신 |
 |---|---|---|
 | 브랜치 | `codex/fix-point-label-alignment` | 2026-09-22 |
-| 최신 작업 커밋 | `(이 단위 커밋)` (B-4·B-5 점수판 판정 기준·분모 보완) — 체크리스트만 바꾼 후속 커밋은 `git log -1`로 확인 | 2026-09-22 |
+| 최신 작업 커밋 | `8f82f3c` (B-4·B-5 점수판 판정 기준·분모 보완) — 체크리스트만 바꾼 후속 커밋은 `git log -1`로 확인 | 2026-09-22 |
 | 파일 수정 권한 | **비어 있음** — 다음 도구가 가져간다 (Claude Code, B-4·B-5 완료 후 반납 2026-09-22) | 2026-09-22 |
 | 중계 시각 주석 | 19 확인 / 1 확인 불가 / 302 미검토, 완전 타석 2·3·4·5 | 2026-09-22 |
 | 점수판 평가셋 | timing 20 / 점수판 리뷰 19(10필드 모두 confirmed, 라벨 충돌 0) / 가림 1 / 미검토 302 — v2 `game_747139_scoreboard_evalset.json` + 리뷰 `game_747139_scoreboard_review.json` | 2026-09-22 |
-| 전체 검사 (Windows CPU) | 275 passed, 2 deselected (`(이 단위 커밋)` 기준, `check_project.py --cpu-only` 42초) | 2026-09-22 |
+| 전체 검사 (Windows CPU) | 275 passed, 2 deselected (`8f82f3c` 기준, `check_project.py --cpu-only` 42초) | 2026-09-22 |
 | 정책 효용 | **미입증** — delta −0.0862 runs/100, 95% CI [−0.4046, +0.2304] | 2026-09-21 |
 | Claude 모델 배정 | 항목 태그 참조 — `uv run --frozen python scripts/checklist_model.py --next` | 2026-09-22 |
 | 담당 구분 | **C·D = 팀원(외부)**, 그 외 = Claude/Codex. 통합 검증은 I절 | 2026-09-22 |
@@ -112,10 +112,10 @@ UTC 외삽은 PA 5에서도 틀렸다(6구 예상 약 475초 vs 실제 453.0초)
 - [x] B-1. 검증된 주석 시각에 한정한 평가셋의 ID·라벨·가림 상태·오차 집계 규약 정의 — `src/data/scoreboard_evalset.py` (`f4ddb58`)
 - [x] B-2. 규약 검증 코드와 테스트 — `scripts/64_build_scoreboard_evalset.py` build/check/score, `tests/test_scoreboard_evalset.py` (`f4ddb58`)
 - [x] B-3. 확인 불가 사례를 제외해 인식률을 올리지 않는다 — `score_predictions`가 coverage·attempt_rate·accuracy·error_rate·abstain_rate를 분리 보고 (`f4ddb58`; 분모 정의는 B-5로 통일)
-- [x] B-4. PA 1의 5구는 리뷰어 note에 점수판 언급이 없어 `visible_unstated`였다. 영상 재확인 완료 (`(이 단위 커밋)`) `[추가되었음 · 2026-09-22 · Claude]`
+- [x] B-4. PA 1의 5구는 리뷰어 note에 점수판 언급이 없어 `visible_unstated`였다. 영상 재확인 완료 (`8f82f3c`) `[추가되었음 · 2026-09-22 · Claude]`
       76.0·88.0·102.8·119.0·134.5초 프레임을 캔버스로 받아 점수판 bug를 3배 확대해 읽음: 0-0/0-1/0-2/1-2/2-2, 0아웃, 주자 없음, ▲1, NYM 0·ATL 0 —
       10필드 모두 라벨과 일치. 같은 방법으로 PA 2~5의 14구도 다시 읽어 전부 일치(리뷰 파일에 필드별 기록). PA 1/6은 가림 유지.
-- [x] B-5. 판정 기준·분모 보완 (`(이 단위 커밋)`) `[추가되었음 · 2026-09-22 · Claude]`
+- [x] B-5. 판정 기준·분모 보완 (`8f82f3c`) `[추가되었음 · 2026-09-22 · Claude]`
       note의 "scoreboard" 문자열 판정 제거 → `mlb_scoreboard_review_v1`(`docs/results/mlb_p0/game_747139_scoreboard_review.json`)에
       판단 프레임에서 사람이 읽은 필드별 `observed`·`readability`·검토자·방법 기록. 평가셋 v2는 confirmed 필드만 평가하고
       `excluded`(occluded / scoreboard_unreviewed / no_confirmed_field)·`label_conflicts`를 분리. 분모는 코드 docstring·

@@ -95,7 +95,7 @@
     실행한 검사: ruff check/format, `pytest tests/test_scoreboard_evalset.py` 5 passed, `check_project.py --cpu-only` 273 passed, 2 deselected,
     `64 build` 후 `64 check` 통과. 주석 확대는 하지 않았다(A-4는 공통 경기 결정 전까지 한 타석 단위).
 
-11. `(이 단위 커밋)`: B-4·B-5 점수판 평가셋 판정 기준·분모 보완(Claude Code, 2026-09-22).
+11. `8f82f3c`: B-4·B-5 점수판 평가셋 판정 기준·분모 보완(Claude Code, 2026-09-22).
     note의 "scoreboard" 문자열로 확인 여부를 판정하던 규칙을 없앴다. 새 입력
     `docs/results/mlb_p0/game_747139_scoreboard_review.json`(`mlb_scoreboard_review_v1`)에 판단 프레임에서
     **사람이 점수판 bug를 읽은 값**을 필드별 `observed`(null = 판독 불가)·`readability`·검토자·방법과 함께 적는다.
