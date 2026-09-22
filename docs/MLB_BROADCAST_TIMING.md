@@ -66,7 +66,7 @@ Chrome에서 `http://127.0.0.1:8772`를 연다. 이 서버는 생성된 주석 �
 5. 아래 CLI 검증을 통과한 JSON과 검증 보고서를 함께 커밋한다. 생성 HTML은 Git에서 제외한다.
 
 ```bash
-uv run --frozen python scripts/63_annotate_broadcast.py check --annotations docs/results/mlb_p0/game_747139_timing.json --require-pa 3 --output docs/results/mlb_p0/game_747139_timing_validation.json
+uv run --frozen python scripts/63_annotate_broadcast.py check --annotations docs/results/mlb_p0/game_747139_timing.json --require-pa 4 --output docs/results/mlb_p0/game_747139_timing_validation.json
 ```
 
 검증 보고서를 갱신할 때 `--require-pa`는 방금 완료한 타석 번호로 지정한다.
