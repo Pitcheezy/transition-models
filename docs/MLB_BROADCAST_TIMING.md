@@ -103,8 +103,42 @@ uv run --frozen python scripts/63_annotate_broadcast.py check --annotations docs
 - 경기 747139는 기존 test cohort에 포함된 개발·시연 자료다. 이를 보고 튜닝한 결과를
   새로운 독립 성능으로 보고하지 않는다.
 
-다음 작업은 여섯 번째 타석부터 주석을 늘리고, 이 시각에 한정한 점수판 인식 평가셋을 만드는 것이다.
-확인 불가 사례를 삭제해 인식률을 높이지 말고 coverage와 오류율을 함께 보고한다.
+점수판 인식 평가셋은 아래 절의 규약으로 이 시각에 한정해 만든다. 확인 불가 사례를 삭제해
+인식률을 높이지 말고 coverage와 오류율을 함께 보고한다.
+
+## 점수판 인식 평가셋 (B, 2026-09-22 판정 기준 보완)
+
+입력 세 가지와 역할을 섞지 않는다.
+
+- **manifest `pre_state`** = 기록 메타데이터(Statcast/MLB feed) 라벨. OCR 결과가 아니다.
+- **timing** (`mlb_broadcast_timing_v1`) = 사람이 확인한 판단 프레임(재생 초).
+- **scoreboard review** (`mlb_scoreboard_review_v1`, `docs/results/mlb_p0/game_747139_scoreboard_review.json`)
+  = 그 판단 프레임에서 **사람이 점수판 bug를 읽은 값**. 필드별로 `observed` 값을 적고(`null` = 그 프레임에서
+  판독 불가), `readability`(readable / partial / unreadable)·검토자·방법을 함께 적는다. note 문자열에
+  "scoreboard"가 있는지로 판정하지 않는다. manifest 값을 베껴 넣지 않고, 영상으로 읽지 않은 값은 넣지 않는다.
+
+`scripts/64_build_scoreboard_evalset.py review-check | build | check | score`
+(`src/data/scoreboard_evalset.py`, 스키마 `mlb_scoreboard_evalset_v2`).
+
+- 필드 상태: `confirmed`(읽은 값 = 라벨) / `mismatch`(읽은 값 ≠ 라벨 → `label_conflicts`에 보고, 평가 제외) /
+  `unreadable`. **confirmed 필드만 평가 대상**이다. 필드마다 평가 가능 투구 수가 다르므로 분모도 필드별이다.
+- 제외 목록 `excluded`: `occluded`(timing 확인 불가) / `scoreboard_unreviewed`(시각은 있으나 필드별 리뷰 없음) /
+  `no_confirmed_field`. 제외 투구와 미확인 필드에 대한 예측은 `non_evaluable_attempts`로만 세고 정답·오답에 넣지 않는다.
+- 분모(코드 docstring·이 문서·`score` 출력의 `denominators`가 같은 문자열이어야 하며 테스트가 확인한다):
+
+```
+coverage = evaluable / total_pitches
+attempt_rate = attempted / evaluable
+correct_rate = correct / evaluable
+error_rate = wrong / evaluable
+abstain_rate = abstained / evaluable
+accuracy = correct / attempted
+```
+
+  `evaluable`은 필드별 confirmed 투구 수(`all_fields`는 모든 필드가 confirmed인 투구 수), `abstained = evaluable − attempted`,
+  따라서 `correct_rate + error_rate + abstain_rate = 1`. `accuracy`만 시도 수가 분모이며 시도가 없으면 `null`이다.
+- 2026-09-22 현황(경기 747139): timing 20구 중 19구를 Claude Code가 캔버스 프레임으로 다시 읽어 10개 필드 모두
+  `confirmed`(라벨 충돌 0), 1구(PA 1/6)는 `occluded`. 미검토 302구는 `total_pitches`에만 들어간다.
 
 검증: 주석 관련 23개를 포함한 Windows CPU **264 passed, 2 deselected**(38.20초),
 Ruff 47개 경로와 JavaScript 구문 검사 통과. Chrome에서 저장·새로고침 복원·JSON 내보내기,

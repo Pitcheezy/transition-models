@@ -29,15 +29,15 @@
 | 항목 | 값 | 갱신 |
 |---|---|---|
 | 브랜치 | `codex/fix-point-label-alignment` | 2026-09-22 |
-| 최신 작업 커밋 | `f4ddb58` (I-0/I-5 준비 + B 평가셋) — 체크리스트만 바꾼 후속 커밋은 `git log -1`로 확인 | 2026-09-22 |
-| 파일 수정 권한 | **Claude Code** (B-4 영상 재확인 + B 판정 기준·분모 보완, 착수 2026-09-22) | 2026-09-22 |
+| 최신 작업 커밋 | `(이 단위 커밋)` (B-4·B-5 점수판 판정 기준·분모 보완) — 체크리스트만 바꾼 후속 커밋은 `git log -1`로 확인 | 2026-09-22 |
+| 파일 수정 권한 | **비어 있음** — 다음 도구가 가져간다 (Claude Code, B-4·B-5 완료 후 반납 2026-09-22) | 2026-09-22 |
 | 중계 시각 주석 | 19 확인 / 1 확인 불가 / 302 미검토, 완전 타석 2·3·4·5 | 2026-09-22 |
-| 점수판 평가셋 | 검토 20 / 평가 가능 19(점수판 확인 14·미명시 5) / 가림 1 / 미검토 302 — `docs/results/mlb_p0/game_747139_scoreboard_evalset.json` | 2026-09-22 |
-| 전체 검사 (Windows CPU) | 264 passed, 2 deselected (커밋 d5920d0 기준) | 2026-09-22 |
+| 점수판 평가셋 | timing 20 / 점수판 리뷰 19(10필드 모두 confirmed, 라벨 충돌 0) / 가림 1 / 미검토 302 — v2 `game_747139_scoreboard_evalset.json` + 리뷰 `game_747139_scoreboard_review.json` | 2026-09-22 |
+| 전체 검사 (Windows CPU) | 275 passed, 2 deselected (`(이 단위 커밋)` 기준, `check_project.py --cpu-only` 42초) | 2026-09-22 |
 | 정책 효용 | **미입증** — delta −0.0862 runs/100, 95% CI [−0.4046, +0.2304] | 2026-09-21 |
 | Claude 모델 배정 | 항목 태그 참조 — `uv run --frozen python scripts/checklist_model.py --next` | 2026-09-22 |
 | 담당 구분 | **C·D = 팀원(외부)**, 그 외 = Claude/Codex. 통합 검증은 I절 | 2026-09-22 |
-| 팀원 레포 | SongRoute/pitcheezy `main` 9d09694 대조 완료 — 요약 [docs/TEAMMATE_PITCHEEZY_2026-09-22.md](docs/TEAMMATE_PITCHEEZY_2026-09-22.md). 우리 쪽 참조 0건, 별도 병렬 트랙 | 2026-09-22 |
+| 팀원 레포 | SongRoute/pitcheezy `main` 9d09694 대조 완료, 804f523(문서만 3커밋) 재확인 — 요약 [docs/TEAMMATE_PITCHEEZY_2026-09-22.md](docs/TEAMMATE_PITCHEEZY_2026-09-22.md). 우리 쪽 참조 0건, 별도 병렬 트랙. **지원 투수는 `/metadata` 확정 전 잠정**, 요청 문안 §9 말미(미전송) | 2026-09-22 |
 
 ---
 
@@ -49,7 +49,7 @@ C(새 8종 확률 모델)·D(투수 프로필/추천 지원 범위)는 다른 �
 | 순서 | 단위 | 완료 기준 | 모델 |
 |---|---|---|---|
 | 1 | A-4·A-5 (PA 6–7) | **1회말 완료** = 누적 30구, 완전 타석 2~7 | Opus 5 |
-| 2 | B-1 → B-2 → B-3 | ✅ 2026-09-22 완료(주석 20구 기준). 주석이 늘면 `64 build`로 재생성 | Fable 5.1 |
+| 2 | B-1 → B-5 | ✅ 2026-09-22 완료(timing 20구·리뷰 19구). 주석이 늘면 리뷰 행을 같이 추가하고 `64 review-check` → `64 build`로 재생성(B-6) | Fable 5.1 |
 | 3 | A-w | 점수판 확대 보조 뷰(주석 속도 개선). B와 병행 가능 | Fable 5.1 |
 | 4 | A-6 (PA 8–10, 2회초) ↔ F-3 | 반이닝 주석 추가와 OCR 프로토타입(평가셋 측정)을 번갈아 | Opus 5 / Fable 5.1 |
 | 5 | A-7 (PA 11–26, 2회말~3회) | 3회 종료 = 누적 101구. 이후 범위는 평가셋 요구량으로 결정 | Opus 5 |
@@ -111,9 +111,18 @@ UTC 외삽은 PA 5에서도 틀렸다(6구 예상 약 475초 vs 실제 453.0초)
 
 - [x] B-1. 검증된 주석 시각에 한정한 평가셋의 ID·라벨·가림 상태·오차 집계 규약 정의 — `src/data/scoreboard_evalset.py` (`f4ddb58`)
 - [x] B-2. 규약 검증 코드와 테스트 — `scripts/64_build_scoreboard_evalset.py` build/check/score, `tests/test_scoreboard_evalset.py` (`f4ddb58`)
-- [x] B-3. 확인 불가 사례를 제외해 인식률을 올리지 않는다 — `score_predictions`가 coverage·attempt_rate·accuracy·error_rate·abstain_rate를 분리 보고 (`f4ddb58`)
-- [~] B-4. PA 1의 5구는 리뷰어 note에 점수판 언급이 없어 `visible_unstated`다. 영상 재확인으로 `visible_checked` 승격 여부 결정(추정 금지). `[추가되었음 · 2026-09-22 · Claude]` 〔모델: Opus 5〕
-      (2026-09-22 Claude Code 착수) note 문자열 판정을 버리고 필드별 육안 확인 기록으로 대체하는 작업과 함께 진행.
+- [x] B-3. 확인 불가 사례를 제외해 인식률을 올리지 않는다 — `score_predictions`가 coverage·attempt_rate·accuracy·error_rate·abstain_rate를 분리 보고 (`f4ddb58`; 분모 정의는 B-5로 통일)
+- [x] B-4. PA 1의 5구는 리뷰어 note에 점수판 언급이 없어 `visible_unstated`였다. 영상 재확인 완료 (`(이 단위 커밋)`) `[추가되었음 · 2026-09-22 · Claude]`
+      76.0·88.0·102.8·119.0·134.5초 프레임을 캔버스로 받아 점수판 bug를 3배 확대해 읽음: 0-0/0-1/0-2/1-2/2-2, 0아웃, 주자 없음, ▲1, NYM 0·ATL 0 —
+      10필드 모두 라벨과 일치. 같은 방법으로 PA 2~5의 14구도 다시 읽어 전부 일치(리뷰 파일에 필드별 기록). PA 1/6은 가림 유지.
+- [x] B-5. 판정 기준·분모 보완 (`(이 단위 커밋)`) `[추가되었음 · 2026-09-22 · Claude]`
+      note의 "scoreboard" 문자열 판정 제거 → `mlb_scoreboard_review_v1`(`docs/results/mlb_p0/game_747139_scoreboard_review.json`)에
+      판단 프레임에서 사람이 읽은 필드별 `observed`·`readability`·검토자·방법 기록. 평가셋 v2는 confirmed 필드만 평가하고
+      `excluded`(occluded / scoreboard_unreviewed / no_confirmed_field)·`label_conflicts`를 분리. 분모는 코드 docstring·
+      docs/MLB_BROADCAST_TIMING.md·score 출력 `denominators`가 같은 문자열(테스트 고정): coverage = evaluable / total_pitches,
+      attempt·correct·error·abstain = evaluable 분모, accuracy = correct / attempted. 오답·기권·제외 투구·미확인 필드 시도를 테스트로 검증.
+- [ ] B-6. 새 타석 주석을 추가할 때마다 리뷰 파일에 그 투구의 필드별 판독 행을 같이 넣는다(없으면 `scoreboard_unreviewed`로 제외). 〔모델: Opus 5〕
+      `64 review-check` → `64 build --output docs/results/mlb_p0/game_747139_scoreboard_evalset.json` → `64 check`. `[추가되었음 · 2026-09-22 · Claude]`
 
 > 기록 메타데이터를 OCR이 읽은 결과처럼 넣지 않는다. 실제 장면 확인이 필요한 입력은 미확인으로 남긴다.
 
@@ -187,7 +196,8 @@ feature builder의 고정 2022 프로필을 그 방식으로 갱신하는 코드
       채움 + `play_id`·`decision_seconds`·`uncertainty_seconds`·`note`·`manifest_sha256` 추가, `release_time`(배제 경계) vs
       `release_seconds`(사건 추정) 의미 구분, `usable_for_tracking` 하드코딩·SSD 경로 해제 요청. 조인표는 우리가 제공.
 - [ ] I-4. 타자 특성은 팀원 archetypes/refresh 스냅샷을 소비하는 어댑터(시간 정합 가드 유지) — F-2 대체. `[추가되었음 · 2026-09-22 · Claude]` 〔모델: Fable 5.1〕
-- [ ] I-5. **시연 경기 결정**: 팀원 서비스 번들은 투수 6명(2025-08-16~09-30)만 지원해 경기 747139(2024, Schwellenbach/Megill)는 `[추가되었음 · 2026-09-22 · Claude]` 〔모델: Opus 5〕 — **후보 42경기·기본안(2025-08-17 TB@SF Webb) 정리, 동료 dataset.json 확인 대기**
+- [ ] I-5. **시연 경기 결정**: 팀원 서비스 번들은 코호트 투수(2025-08-16~09-30)만 지원해 경기 747139(2024, Schwellenbach/Megill)는 `[추가되었음 · 2026-09-22 · Claude]` 〔모델: Opus 5〕 — **42경기 잠정 후보·기본안(2025-08-17 TB@SF Webb) 정리, 동료 `/metadata`·dataset.json 확인 대기**
+      (2026-09-22) 지원 투수 6명은 제안 파일(`mlb_cohort_proposal.json`) 기준이라 **잠정**이다. 실제 `/metadata` 출력 또는 동료가 보낸 번들 `metadata.json`으로만 확정한다.
       400을 받는다. (a) 팀원 코호트 확장 (b) 우리 주석·평가셋을 팀원 12경기 중 하나에 추가 (c) 두 데모 분리 유지 — 사용자·팀원 결정.
 - [ ] I-6. 결과 클래스 대응표 코드화: 우리 10종 ↔ 팀원 서비스 10종 ↔ 연구 11종 매핑 + 테스트(우리 Strike의 파울 포함, `[추가되었음 · 2026-09-22 · Claude]` 〔모델: Fable 5.1〕
       Strikeout/Walk 파생, FieldOut=out∪double_play). 투구 키 기준 정렬 검증 패턴(`validate="one_to_one"`)을 따른다.

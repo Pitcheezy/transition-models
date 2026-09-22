@@ -95,6 +95,29 @@
     실행한 검사: ruff check/format, `pytest tests/test_scoreboard_evalset.py` 5 passed, `check_project.py --cpu-only` 273 passed, 2 deselected,
     `64 build` 후 `64 check` 통과. 주석 확대는 하지 않았다(A-4는 공통 경기 결정 전까지 한 타석 단위).
 
+11. `(이 단위 커밋)`: B-4·B-5 점수판 평가셋 판정 기준·분모 보완(Claude Code, 2026-09-22).
+    note의 "scoreboard" 문자열로 확인 여부를 판정하던 규칙을 없앴다. 새 입력
+    `docs/results/mlb_p0/game_747139_scoreboard_review.json`(`mlb_scoreboard_review_v1`)에 판단 프레임에서
+    **사람이 점수판 bug를 읽은 값**을 필드별 `observed`(null = 판독 불가)·`readability`·검토자·방법과 함께 적는다.
+    B-4의 PA 1 다섯 구(76.0·88.0·102.8·119.0·134.5초)를 in-app 브라우저 캔버스 프레임으로 받아 bug를 3배 확대해 읽었고
+    (0-0/0-1/0-2/1-2/2-2, 0아웃, 주자 없음, ▲1, NYM 0·ATL 0), 같은 방법으로 PA 2~5의 14구도 다시 읽었다. 19구 × 10필드
+    전부 manifest 라벨과 일치(`label_conflicts` 0). PA 1/6은 `occluded` 유지. 추정으로 채운 값은 없다.
+    평가셋 v2(`mlb_scoreboard_evalset_v2`, `src/data/scoreboard_evalset.py`): confirmed 필드만 평가 대상이고 분모는 필드별이다.
+    `excluded`(occluded / scoreboard_unreviewed / no_confirmed_field)·`label_conflicts`를 항목과 분리해 싣고, 제외 투구·미확인
+    필드에 대한 예측은 `non_evaluable_attempts`로만 센다. 분모 정의는 모듈 docstring·docs/MLB_BROADCAST_TIMING.md·`score`
+    출력의 `denominators`에 같은 문자열로 들어가며 테스트가 셋을 대조한다: `coverage = evaluable / total_pitches`,
+    `attempt_rate = attempted / evaluable`, `correct_rate = correct / evaluable`, `error_rate = wrong / evaluable`,
+    `abstain_rate = abstained / evaluable`(합 = 1), `accuracy = correct / attempted`(시도 없으면 null).
+    CLI `scripts/64_build_scoreboard_evalset.py`에 `review-check` 모드와 `--review` 입력을 추가했다.
+    동료 문서 §9: 지원 투수 6명은 `mlb_cohort_proposal.json`(제안 파일) 기준이라 **잠정**으로 정정 — 실제 목록은 번들 생성 시
+    `select_cohort()`가 쓴 `metadata.json["pitchers"]`이며 `GET /metadata`로만 확정. 42경기는 잠정 후보 유지. 서비스가
+    127.0.0.1:8765에만 바인딩하는 사실을 기록하고, 우선순위 요청 문안(실제 metadata → 요청·응답 예시 → 지원 경기 목록·영상
+    확보 → 맥미니 주소·실행 위치 → 후순위 질문)을 작성했다(**미전송**). 동료 `main`은 9d09694 → 804f523(문서 3커밋:
+    roadmap.md 신설, decisions D43~D45, plan.md; 코드·번들·서비스 변경 없음)으로 읽기 전용 확인.
+    실행한 검사(실제 결과): 변경 파일 ruff check/format 통과, `pytest tests/test_scoreboard_evalset.py` **7 passed**,
+    `check_project.py --cpu-only` **275 passed, 2 deselected**(42.0초), `64 review-check`(19 readable) → `64 build` →
+    `64 check` 통과. 주석 확대(A-4)는 하지 않았다.
+
 이 문서와 함께 추가되는 후속 커밋의 해시는 `git log -6 --oneline`으로 확인한다.
 전체 Windows CPU 검사: **264 passed, 2 deselected**, Ruff 47개 경로 통과.
 JavaScript 구문 검사 및 Chrome 수동 입력·실제 추론·9회 이후 추천 보류 확인.
@@ -151,7 +174,8 @@ Claude/Codex의 순서는 [../CHECKLIST.md](../CHECKLIST.md)의 "진행 순서" 
 트랙이라 I-0(인터페이스 합의)·I-5(시연 경기)·I-6(클래스 대응표)·G-3(통화)를 A/B와 병행해 먼저 진행한다.
 
 1. **영상 시간 주석 확대**: 2~5번 타석을 완료했다. 저장된 JSON을 불러와
-   여섯 번째 타석부터 계속한다. feed UTC 시각을 재생 시간으로 쓰지 않는다.
+   여섯 번째 타석부터 계속한다. 새 타석마다 `game_747139_scoreboard_review.json`에 필드별 판독 행을 같이
+   추가한다(CHECKLIST B-6). 없으면 평가셋에서 `scoreboard_unreviewed`로 제외된다. feed UTC 시각을 재생 시간으로 쓰지 않는다.
    `63_annotate_broadcast.py check --annotations docs/results/mlb_p0/game_747139_timing.json
    --require-pa 5`로 기존 주석을 먼저 확인한다. 이후 점수판 인식 평가셋으로 연결한다.
 
