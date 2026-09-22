@@ -58,6 +58,19 @@
    페이지가 스크롤돼 프레임마다 상단으로 되돌려 캡처했다. 8772는 이미 실행 중이던 같은
    주석 페이지 서버를 재사용했다.
 
+8. **PA 4 시각 주석 (Claude Code, 2026-09-22)**: 1회말 Megill vs Harris II 2구(4/1, 4/2)를 추가했다.
+   누적 **13개 시각 확인, 1개 확인 불가, 308개 미검토**, 완전 타석 2·3·4.
+   4/1 328.0→331.4초, 4/2 345.0→348.2초, 각 ±0.25초.
+   판독을 위해 브라우저에서 점수판 영역을 canvas로 3배 확대해 카운트·아웃·주자·타자 배너를 확인했다
+   (4/1은 `MEGILL P:0`으로 첫 투구임을 확인). 내보낸 JSON과 저장 파일이 모든 항목의 ID·상태·시각
+   해시까지 일치하는지 대조했다.
+   **중요 관찰**: feed UTC 간격과 영상 재생 초 간격이 맞지 않는다. PA 3 마지막 투구(17:15:15, 영상 293.1초)와
+   PA 4 첫 투구(17:17:41) 사이 wall-clock 146초가 영상에서는 약 35초였다(이닝 교대 구간 편집).
+   UTC 외삽으로 처음 찍은 지점은 PA 5 후반이었다. 탐색 참고로만 쓰라는 기존 규칙이 실제로 필요하다.
+   실행한 검사: `check --require-pa 4` 통과(보고서 갱신), `--require-pa 3`·`2` 통과,
+   `--require-pa 1` 예상대로 실패, `pytest tests/test_broadcast_timing.py` 23 passed. 코드 변경 없음.
+   남은 작업 목록은 [../CHECKLIST.md](../CHECKLIST.md)에서 관리한다.
+
 이 문서와 함께 추가되는 후속 커밋의 해시는 `git log -6 --oneline`으로 확인한다.
 전체 Windows CPU 검사: **264 passed, 2 deselected**, Ruff 47개 경로 통과.
 JavaScript 구문 검사 및 Chrome 수동 입력·실제 추론·9회 이후 추천 보류 확인.
@@ -107,21 +120,21 @@ Chrome에서 `http://127.0.0.1:8770`을 연다. 포트 충돌 시 `--port 8771`.
 
 ## 남은 순서
 
-1. **영상 시간 주석 확대**: 2·3번 타석을 완료했다. 저장된 JSON을 불러와
-   네 번째 타석부터 계속한다. feed UTC 시각을 재생 시간으로 쓰지 않는다.
+1. **영상 시간 주석 확대**: 2·3·4번 타석을 완료했다. 저장된 JSON을 불러와
+   다섯 번째 타석부터 계속한다. feed UTC 시각을 재생 시간으로 쓰지 않는다.
    `63_annotate_broadcast.py check --annotations docs/results/mlb_p0/game_747139_timing.json
-   --require-pa 3`로 기존 주석을 먼저 확인한다. 이후 점수판 인식 평가셋으로 연결한다.
+   --require-pa 4`로 기존 주석을 먼저 확인한다. 이후 점수판 인식 평가셋으로 연결한다.
 
    다음 첫 실행 명령(저장소 루트, 모델·원본 Statcast 불필요):
 
    ```bash
-   uv run --frozen python scripts/63_annotate_broadcast.py check --annotations docs/results/mlb_p0/game_747139_timing.json --require-pa 3
+   uv run --frozen python scripts/63_annotate_broadcast.py check --annotations docs/results/mlb_p0/game_747139_timing.json --require-pa 4
    uv run --frozen python scripts/63_annotate_broadcast.py prepare
    uv run --frozen python -m http.server 8772 --bind 127.0.0.1 --directory outputs/annotation
    ```
 
-   페이지에서 Git 저장 JSON을 불러온 뒤 4번 타석(투구 4/1부터)을 확인하고, 내보낸 JSON을
-   같은 경로에 저장해 `--require-pa 4 --output docs/results/mlb_p0/game_747139_timing_validation.json`
+   페이지에서 Git 저장 JSON을 불러온 뒤 5번 타석(투구 5/1부터)을 확인하고, 내보낸 JSON을
+   같은 경로에 저장해 `--require-pa 5 --output docs/results/mlb_p0/game_747139_timing_validation.json`
    으로 검증 보고서를 갱신한다.
 2. **기존 영상 재검증**: 옛 오타니 수집기는 CSV `iloc[i]`를 사용했다.
    기존 영상 파일명은 재확인 전 정답이 아니다. 원본 확보 후 playId로 재대조한다.

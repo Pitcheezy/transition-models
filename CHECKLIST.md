@@ -23,9 +23,9 @@
 | 항목 | 값 | 갱신 |
 |---|---|---|
 | 브랜치 | `codex/fix-point-label-alignment` | 2026-09-22 |
-| 최신 커밋 | `17133e1` (PA 3 주석) | 2026-09-22 |
-| 파일 수정 권한 | **Claude Code** (작업 A-1 진행 중) | 2026-09-22 |
-| 중계 시각 주석 | 11 확인 / 1 확인 불가 / 310 미검토, 완전 타석 2·3 | 2026-09-22 |
+| 최신 커밋 | `1cf7fea` + PA 4 주석 커밋 | 2026-09-22 |
+| 파일 수정 권한 | **비어 있음** — 다음 도구가 가져간다 | 2026-09-22 |
+| 중계 시각 주석 | 13 확인 / 1 확인 불가 / 308 미검토, 완전 타석 2·3·4 | 2026-09-22 |
 | 전체 검사 (Windows CPU) | 264 passed, 2 deselected (커밋 d5920d0 기준) | 2026-09-22 |
 | 정책 효용 | **미입증** — delta −0.0862 runs/100, 95% CI [−0.4046, +0.2304] | 2026-09-21 |
 
@@ -37,23 +37,35 @@
 
 - [x] A-0. 도구·검증 CLI 구현, PA 1–2 주석 (`d5920d0`)
 - [x] A-1. **PA 3** (Vientos) 3구 주석 — 11 확인 / 1 확인 불가 / 310 미검토 (`17133e1`)
-- [~] A-2. **PA 4** (2구) 주석 ← **다음 한 단위**
-- [ ] A-3. PA 5 이후 계속. 1회초를 먼저 끝내는 것을 우선한다.
+- [x] A-2. **PA 4** (Harris II) 2구 주석 — 13 확인 / 1 확인 불가 / 308 미검토
+- [~] A-3. **PA 5** (6구) 주석 ← **다음 한 단위**. 이후 PA 6(6구)으로 계속한다.
 - [!] A-x. PA 1 / 6구는 통계 그래픽 가림으로 판단 화면 확정 불가. 그대로 `unavailable` 유지.
       삭제해서 커버리지를 높이지 않는다.
 - [ ] A-y. 다른 검토자와의 주석 일치도 측정(현재 단일 검토자) `[추가되었음 · 2026-09-22 · Claude]`
+- [ ] A-z. **feed UTC로 재생 초를 외삽하지 말 것**을 도구/문서에 더 분명히 남기기.
+      PA 3→PA 4 구간에서 wall-clock 146초가 영상 약 35초에 대응했다(이닝 교대 편집).
+      선형 변환이 실제로 깨지는 것을 확인했다. `[추가되었음 · 2026-09-22 · Claude]`
+- [ ] A-w. 주석 페이지에 **점수판 확대(crop+scale) 보조 뷰**를 넣을지 검토.
+      1280x720 원본에서 카운트·아웃·타자 배너를 육안 판독하려면 확대가 필요했고,
+      이번에는 임시 canvas 스크립트로 처리했다. `[추가되었음 · 2026-09-22 · Claude]`
 
 **다음 첫 실행 명령** (저장소 루트, 모델·원본 Statcast 불필요):
 
 ```bash
-uv run --frozen python scripts/63_annotate_broadcast.py check --annotations docs/results/mlb_p0/game_747139_timing.json --require-pa 3
+uv run --frozen python scripts/63_annotate_broadcast.py check --annotations docs/results/mlb_p0/game_747139_timing.json --require-pa 4
 uv run --frozen python scripts/63_annotate_broadcast.py prepare
 uv run --frozen python -m http.server 8772 --bind 127.0.0.1 --directory outputs/annotation
 ```
 
 페이지에서 Git 저장 JSON을 먼저 불러와 기존 주석을 보존한 뒤 새 항목만 추가한다.
+같은 브라우저라면 localStorage에서 자동 복원되지만, 다른 브라우저·기기에서는 JSON을 붙여 넣는다.
 내보낸 JSON을 `docs/results/mlb_p0/game_747139_timing.json`에 저장하고
-`--require-pa 4 --output docs/results/mlb_p0/game_747139_timing_validation.json`으로 검증 보고서를 갱신한다.
+`--require-pa 5 --output docs/results/mlb_p0/game_747139_timing_validation.json`으로 검증 보고서를 갱신한다.
+
+**PA 5 작업 시 참고 (2026-09-22 확인):** 1회말은 영상 약 320초의 Megill 소개 그래픽으로 시작한다.
+PA 4는 328.0/331.4초와 345.0/348.2초다. PA 5(6구, 1아웃)는 그 뒤에 이어지며, 3-2 카운트의
+마지막 투구(볼넷)는 영상 약 436초 부근에서 관찰됐다. 이 숫자는 **탐색 출발점**일 뿐이며
+반드시 확대한 점수판으로 카운트·아웃·타자를 확인한 뒤 기록한다.
 
 ## B. 점수판 인식 평가셋
 
