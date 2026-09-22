@@ -6,6 +6,10 @@ Codex ignores it. A session cannot switch its own model, so the caller compares 
 printed id with its current model and hands the unit off (task chip / model menu) on a
 mismatch instead of starting the work.
 
+Items tagged ``〔담당: 팀원〕`` (or any owner other than Claude/Codex) belong to another
+teammate: they carry no model tag, ``--next`` skips them, and asking for one directly
+exits with code 3.
+
 Usage::
 
     uv run --frozen python scripts/checklist_model.py A-4
@@ -23,6 +27,8 @@ ROOT = Path(__file__).resolve().parents[1]
 MODEL_IDS = {"Opus 5": "claude-opus-5", "Fable 5.1": "claude-fable-5-1"}
 ITEM = re.compile(r"^- \[(?P<state>[ x~!])\] (?P<id>[A-Z]-[a-z0-9]+)\. (?P<text>.*)$")
 TAG = re.compile(r"〔모델: (?P<label>[^〕]+)〕")
+OWNER = re.compile(r"〔담당: (?P<owner>[^〕]+)〕")
+INTERNAL_OWNERS = {"Claude", "Codex", "Claude/Codex", "Claude Code"}
 STATES = {" ": "open", "~": "in_progress", "x": "done", "!": "blocked"}
 
 
@@ -35,12 +41,16 @@ def parse_items(text):
             continue
         tag = TAG.search(match["text"])
         label = tag["label"].strip() if tag else None
+        owner_tag = OWNER.search(match["text"])
+        owner = owner_tag["owner"].strip() if owner_tag else None
         items.append(
             {
                 "id": match["id"],
                 "state": STATES[match["state"]],
                 "label": label,
                 "model": MODEL_IDS.get(label) if label else None,
+                "owner": owner,
+                "external": owner is not None and owner not in INTERNAL_OWNERS,
                 "next_unit": "다음 한 단위" in match["text"],
             }
         )
@@ -48,14 +58,18 @@ def parse_items(text):
 
 
 def next_unit(items):
-    """In-progress item first, then the item marked as the next unit, then the first open one."""
-    for item in items:
+    """In-progress item first, then the item marked as the next unit, then the first open one.
+
+    Teammate-owned (external) items are never a Claude/Codex unit and are skipped.
+    """
+    ours = [item for item in items if not item["external"]]
+    for item in ours:
         if item["state"] == "in_progress":
             return item
-    for item in items:
+    for item in ours:
         if item["state"] == "open" and item["next_unit"]:
             return item
-    for item in items:
+    for item in ours:
         if item["state"] == "open":
             return item
     return None
@@ -80,6 +94,9 @@ def main(argv=None):
     if item is None:
         print("no such checklist item", file=sys.stderr)
         return 1
+    if item["external"]:
+        print(f"{item['id']} is owned by {item['owner']}, not a Claude/Codex unit", file=sys.stderr)
+        return 3
     if item["model"] is None:
         print(f"{item['id']} has no model tag", file=sys.stderr)
         return 2
