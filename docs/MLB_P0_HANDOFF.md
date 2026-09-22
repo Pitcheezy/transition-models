@@ -70,6 +70,18 @@
    실행한 검사: `check --require-pa 4` 통과(보고서 갱신), `--require-pa 3`·`2` 통과,
    `--require-pa 1` 예상대로 실패, `pytest tests/test_broadcast_timing.py` 23 passed. 코드 변경 없음.
    남은 작업 목록은 [../CHECKLIST.md](../CHECKLIST.md)에서 관리한다.
+9. **PA 5 시각 주석 (Claude Code, 2026-09-22)**: 1회말 Megill vs Albies 6구(5/1~5/6)를 추가했다.
+   누적 **19개 시각 확인, 1개 확인 불가, 302개 미검토**, 완전 타석 2·3·4·5.
+   5/1 356.5→358.6, 5/2 370.0→373.2, 5/3 390.0→393.0, 5/4 410.0→413.0, 5/5 430.5→431.65,
+   5/6 450.0→453.0초, 각 ±0.25초. 내장 브라우저 스크린샷이 불안정해 video.crossOrigin=anonymous
+   재로드 후 canvas drawImage로 640px 프레임을 임시 로컬 수신 서버(8799)에 저장해 판독했다
+   (저장소 코드·페이지는 수정하지 않음, 임시 파일은 커밋하지 않음).
+   브라우저 localStorage 복원본은 4/1 note가 커밋본과 달랐다(초안). 기존 14개 항목은 Git 커밋본을
+   유지하고 5/1~5/6만 덧붙였으며 diff는 annotator 문자열 외 순수 추가다.
+   관찰: 5/1은 356.0초 디졸브 직후, 5/5는 글러브 클로즈업 뒤 430.5초에 와이드샷 복귀로
+   판단-릴리스 간격이 약 2.1초·1.2초. UTC 외삽(6구 예상 ~475초)은 실제 453.0초와 다시 불일치.
+   실행한 검사: `check --require-pa 5` 통과(보고서 갱신), `--require-pa 4` 통과,
+   `--require-pa 1` 예상대로 실패, `pytest tests/test_broadcast_timing.py` 23 passed. 코드 변경 없음.
 
 이 문서와 함께 추가되는 후속 커밋의 해시는 `git log -6 --oneline`으로 확인한다.
 전체 Windows CPU 검사: **264 passed, 2 deselected**, Ruff 47개 경로 통과.
@@ -120,21 +132,21 @@ Chrome에서 `http://127.0.0.1:8770`을 연다. 포트 충돌 시 `--port 8771`.
 
 ## 남은 순서
 
-1. **영상 시간 주석 확대**: 2·3·4번 타석을 완료했다. 저장된 JSON을 불러와
-   다섯 번째 타석부터 계속한다. feed UTC 시각을 재생 시간으로 쓰지 않는다.
+1. **영상 시간 주석 확대**: 2~5번 타석을 완료했다. 저장된 JSON을 불러와
+   여섯 번째 타석부터 계속한다. feed UTC 시각을 재생 시간으로 쓰지 않는다.
    `63_annotate_broadcast.py check --annotations docs/results/mlb_p0/game_747139_timing.json
-   --require-pa 4`로 기존 주석을 먼저 확인한다. 이후 점수판 인식 평가셋으로 연결한다.
+   --require-pa 5`로 기존 주석을 먼저 확인한다. 이후 점수판 인식 평가셋으로 연결한다.
 
    다음 첫 실행 명령(저장소 루트, 모델·원본 Statcast 불필요):
 
    ```bash
-   uv run --frozen python scripts/63_annotate_broadcast.py check --annotations docs/results/mlb_p0/game_747139_timing.json --require-pa 4
+   uv run --frozen python scripts/63_annotate_broadcast.py check --annotations docs/results/mlb_p0/game_747139_timing.json --require-pa 5
    uv run --frozen python scripts/63_annotate_broadcast.py prepare
    uv run --frozen python -m http.server 8772 --bind 127.0.0.1 --directory outputs/annotation
    ```
 
-   페이지에서 Git 저장 JSON을 불러온 뒤 5번 타석(투구 5/1부터)을 확인하고, 내보낸 JSON을
-   같은 경로에 저장해 `--require-pa 5 --output docs/results/mlb_p0/game_747139_timing_validation.json`
+   페이지에서 Git 저장 JSON을 불러온 뒤 6번 타석(투구 6/1부터)을 확인하고, 내보낸 JSON을
+   같은 경로에 저장해 `--require-pa 6 --output docs/results/mlb_p0/game_747139_timing_validation.json`
    으로 검증 보고서를 갱신한다.
 2. **기존 영상 재검증**: 옛 오타니 수집기는 CSV `iloc[i]`를 사용했다.
    기존 영상 파일명은 재확인 전 정답이 아니다. 원본 확보 후 playId로 재대조한다.

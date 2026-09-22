@@ -12,8 +12,8 @@ and eventually pitch-type/target-location recommendations. MLB is the first deli
 target; KBO comes later. Read docs/MLB_P0.md and docs/MLB_P0_HANDOFF.md for current work.
 Scripts 58–63 cover video identity, manual inference UI, source inspection, new
 eight-class observation targets, whole-game HTTP checks, and manual broadcast timing.
-Read docs/MLB_BROADCAST_TIMING.md: 13 pitches timed, 1 unavailable, 308 unreviewed;
-PA 2–4 have every pitch timed. This is manual timing, not automatic synchronization.
+Read docs/MLB_BROADCAST_TIMING.md: 19 pitches timed, 1 unavailable, 302 unreviewed;
+PA 2–5 have every pitch timed. This is manual timing, not automatic synchronization.
 Current UI uses the existing ten-class model and
 must leave independent strike/ball/foul and target-location outputs unavailable.
 Never pair video/Statcast rows by list order or trust old pose-video filenames.
