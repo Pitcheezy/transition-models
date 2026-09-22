@@ -1,5 +1,10 @@
 # SmartPitch MDP Transition Probability Models
 
+## Open work
+
+[CHECKLIST.md](CHECKLIST.md) lists every remaining task, the next work unit, and the
+Codex/Claude handoff protocol. Update it in the same commit as the work it tracks.
+
 ## MLB-first P0 — 2026-09-22
 
 The product goal is pre-pitch broadcast situation recognition, outcome probabilities,

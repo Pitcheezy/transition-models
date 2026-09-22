@@ -3,6 +3,10 @@
 Read [AGENTS.md](AGENTS.md) first. It is the single source of project instructions,
 current verified results, coding conventions, and historical experiment corrections.
 
+**[CHECKLIST.md](CHECKLIST.md) is the single list of what is still open.** Start there for
+the next work unit, the current tool holding the edit token, and the handoff protocol.
+Keep it updated in the same commit as the work; mark newly discovered items 추가되었음.
+
 Use [docs/MAINTENANCE.md](docs/MAINTENANCE.md) for supported entry points, checks,
 resume behavior, Windows/Mac path portability, and artifact transfer.
 Use [docs/MLB_P0_HANDOFF.md](docs/MLB_P0_HANDOFF.md) for the active MLB-first work and
