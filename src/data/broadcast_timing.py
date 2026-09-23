@@ -6,6 +6,9 @@ from collections import Counter, defaultdict
 
 SCHEMA = "mlb_broadcast_timing_v1"
 KEYS = ("game_pk", "at_bat_number", "pitch_number")
+# A decision frame less than this far before the release (camera returning late from a cutaway
+# or replay) leaves little time for a pre-pitch system; such pitches are listed, not dropped.
+SHORT_LEAD_SECONDS = 1.5
 
 
 def _positive_integer(value):
@@ -83,7 +86,7 @@ def validate_annotations(document, manifest, sources):
     if not isinstance(document["annotations"], list):
         raise ValueError("annotations must be a list")
     index = {tuple(p[k] for k in KEYS): p for p in manifest["pitches"]}
-    seen, timed, counts = set(), [], Counter()
+    seen, timed, counts, leads = set(), [], Counter(), []
     required = {
         *KEYS,
         "play_id",
@@ -116,6 +119,7 @@ def validate_annotations(document, manifest, sources):
             if release + uncertainty > context["source"]["duration_seconds"]:
                 raise ValueError("Release exceeds source duration")
             timed.append((key, decision - uncertainty, release + uncertainty))
+            leads.append((key, release - decision))
         elif status == "unavailable":
             if any(
                 row[k] is not None
@@ -144,5 +148,12 @@ def validate_annotations(document, manifest, sources):
         "complete_plate_appearances": sorted(
             pa for pa, keys in by_pa.items() if keys <= timed_keys
         ),
+        "short_lead_threshold_seconds": SHORT_LEAD_SECONDS,
+        "short_lead_pitches": [
+            {**dict(zip(KEYS, key, strict=True)), "lead_seconds": round(lead, 3)}
+            for key, lead in sorted(leads)
+            if lead < SHORT_LEAD_SECONDS
+        ],
+        "lead_seconds_min": round(min(lead for _, lead in leads), 3) if leads else None,
         "note": "Manual visual timing only; reference states are recorded metadata, not OCR.",
     }

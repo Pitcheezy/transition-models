@@ -159,6 +159,7 @@ def test_build_splits_confirmed_unconfirmed_and_excluded(sample):
     assert set(by[1]["field_status"].values()) == {"confirmed"}
     assert by[1]["evaluable_fields"] == list(LABEL_FIELDS)
     assert by[1]["frame_seconds"] == 10.0 and by[1]["frame_uncertainty_seconds"] == 0.25
+    assert by[1]["lead_seconds"] == 2.0
     assert by[2]["readability"] == "partial"
     assert by[2]["field_status"]["balls"] == "unreadable"
     assert by[2]["field_status"]["outs"] == "mismatch"

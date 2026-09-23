@@ -59,6 +59,21 @@ def sample():
     return manifest, sources, document
 
 
+def test_short_lead_pitches_are_listed_not_dropped(sample):
+    manifest, sources, document = sample
+    report = validate_annotations(document, manifest, sources)
+    assert report["short_lead_threshold_seconds"] == 1.5
+    assert report["short_lead_pitches"] == [] and report["lead_seconds_min"] == 2.0
+    late_return = next(r for r in document["annotations"] if r["pitch_number"] == 2)
+    late_return["release_seconds"] = late_return["decision_seconds"] + 1.0
+    report = validate_annotations(document, manifest, sources)
+    assert report["annotated"] == 2 and report["complete_plate_appearances"] == [1]
+    assert report["short_lead_pitches"] == [
+        {"game_pk": 7, "at_bat_number": 1, "pitch_number": 2, "lead_seconds": 1.0}
+    ]
+    assert report["lead_seconds_min"] == 1.0
+
+
 def test_identity_join_and_complete_pa_ignore_file_order(sample):
     manifest, sources, document = sample
     report = validate_annotations(document, manifest, sources)

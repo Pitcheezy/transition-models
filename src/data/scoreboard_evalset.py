@@ -217,6 +217,7 @@ def build_evalset(manifest, sources, timing, review):
                 **identity,
                 "frame_seconds": row["decision_seconds"],
                 "frame_uncertainty_seconds": row["uncertainty_seconds"],
+                "lead_seconds": round(row["release_seconds"] - row["decision_seconds"], 3),
                 "readability": reviewed["readability"],
                 "field_status": status,
                 "evaluable_fields": confirmed,
