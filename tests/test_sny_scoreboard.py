@@ -31,6 +31,7 @@ def synthetic_frame(
     draw = ImageDraw.Draw(image)
     if panel:
         draw.rectangle((55, 28, 305, 108), fill=NAVY)
+        draw.rectangle((55, 32, 305, 33), fill=WHITE)  # the bug's white top border line
     else:
         return np.asarray(image)
 
@@ -132,6 +133,13 @@ def test_reads_synthetic_bug_and_abstains_on_unknown_digits():
 def test_no_bug_and_no_templates_abstain_everywhere():
     empty = sb.DigitTemplates()
     fields = sb.read_scoreboard(synthetic_frame(panel=False), empty)
+    assert all(v is None for v in fields.values())
+    # a navy panel full of white text without the top border line (line-score graphic) is not
+    # the count bug: everything abstains, including the structural fields
+    frame = synthetic_frame().copy()
+    frame[32:34, 55:306] = NAVY
+    frame[40:100:4, 140:290] = WHITE
+    fields = sb.read_scoreboard(frame, empty)
     assert all(v is None for v in fields.values())
     fields = sb.read_scoreboard(synthetic_frame(), empty)
     assert all(fields[name] is None for name in sb.DIGIT_FIELDS)

@@ -33,6 +33,7 @@ WINDOWS = {
     "runner_on_2b": (201, 46, 216, 62),
     "runner_on_3b": (184, 63, 199, 79),
     "panel": (130, 36, 300, 106),
+    "top_line": (60, 32, 300, 34),
 }
 DIGIT_FIELDS = ("balls", "strikes", "inning", "away_score", "home_score")
 GLYPH_SHAPE = (16, 12)  # rows, cols after normalisation
@@ -46,7 +47,14 @@ MAX_DISTANCE = 0.12  # mean absolute difference of normalised glyphs
 MIN_MARGIN = 0.15  # best template must beat the runner-up digit by this much
 FILLED = 0.25  # gold fraction above which a circle / diamond counts as filled
 EMPTY = 0.08  # gold fraction below which it counts as empty; in between = abstain
+# Presence gate. The count bug has a navy panel, a thin white border line along its top and
+# little white inside the panel. A line-score graphic (TOP 2ND R H E) at an inning change is
+# also navy but has no top line (white 0.07) and lots of white text (0.36); full-screen stat
+# panels, replays and other cameras fail the navy test. Measured 2026-09-23 on 12 frames of
+# docs/results/mlb_p0/game_747139_scoreboard_negatives.json plus eval-set frames.
 PANEL_NAVY = 0.30  # navy fraction the panel window must reach for the bug to count as present
+TOP_LINE_WHITE = 0.60  # white fraction of the top border line (normal frames 0.86-0.97)
+PANEL_WHITE_MAX = 0.20  # white fraction inside the panel (normal frames <= 0.09)
 TEMPLATE_SCHEMA = "sny_digit_templates_v0"
 
 
@@ -65,8 +73,14 @@ def window(mask, name):
     return mask[y0:y1, x0:x1]
 
 
-def bug_present(navy):
-    return float(window(navy, "panel").mean()) >= PANEL_NAVY
+def bug_present(navy, white):
+    """Navy panel with its white top border and little white inside: the count bug, not a
+    line-score or stat graphic."""
+    return (
+        float(window(navy, "panel").mean()) >= PANEL_NAVY
+        and float(window(white, "top_line").mean()) >= TOP_LINE_WHITE
+        and float(window(white, "panel").mean()) <= PANEL_WHITE_MAX
+    )
 
 
 def _fill_state(gold, name):
@@ -210,7 +224,7 @@ def read_scoreboard(frame, templates):
         "home_score": None,
         "away_score": None,
     }
-    if not bug_present(navy):
+    if not bug_present(navy, white):
         return fields
     fields["outs"] = read_outs(gold)
     fields.update(read_runners(gold))

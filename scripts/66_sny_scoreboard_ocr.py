@@ -34,6 +34,7 @@ from src.data.scoreboard_evalset import (
     validate_evalset,
 )
 from src.vision.frames import frame_path, grab_frame
+from src.vision.negatives import score_negatives, validate_negatives
 from src.vision.sny_scoreboard import (
     DIGIT_FIELDS,
     DigitTemplates,
@@ -75,7 +76,7 @@ def inputs(args):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("mode", choices=("templates", "predict", "score"))
+    parser.add_argument("mode", choices=("templates", "predict", "score", "negatives"))
     parser.add_argument("--manifest", type=Path, default=RESULTS / "game_747139_manifest.json")
     parser.add_argument("--sources", type=Path, default=RESULTS / "game_747139_sources.json")
     parser.add_argument("--timing", type=Path, default=RESULTS / "game_747139_timing.json")
@@ -94,6 +95,9 @@ def main():
     parser.add_argument("--templates", type=Path)
     parser.add_argument("--predictions", type=Path)
     parser.add_argument("--exclude-pas", type=int, nargs="*", default=[])
+    parser.add_argument(
+        "--negatives", type=Path, default=RESULTS / "game_747139_scoreboard_negatives.json"
+    )
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
     manifest, sources, timing, review, evalset = inputs(args)
@@ -160,6 +164,43 @@ def main():
         if args.output:
             write(args.output, predictions)
         print(json.dumps({"predictions": len(predictions), "abstained": dict(abstain)}, indent=2))
+        return
+
+    if args.mode == "negatives":
+        if not args.templates:
+            parser.error("negatives requires --templates")
+        templates = DigitTemplates.from_json(read_json(args.templates))
+        frames = validate_negatives(read_json(args.negatives), evalset)
+        outputs = {}
+        for frame in frames:
+            entry = {"frame_seconds": frame["seconds"]}
+            label_args = argparse.Namespace(**{**vars(args), "frames_label": "neg"})
+            outputs[frame["seconds"]] = read_scoreboard(
+                load_frame(entry, label_args, media_url), templates
+            )
+        result = score_negatives(frames, outputs)
+        result["outputs"] = {str(k): v for k, v in outputs.items()}
+        if args.output:
+            write(args.output, result)
+        print(
+            json.dumps(
+                {
+                    k: result[k]
+                    for k in (
+                        "frames",
+                        "unreadable_fields",
+                        "readable_fields",
+                        "totals",
+                        "abstain_rate_on_unreadable",
+                        "correct_rate_on_readable",
+                    )
+                },
+                indent=2,
+            )
+        )
+        for row in result["per_frame"]:
+            if row["false_reads"] or row["wrong_reads"] or row["missed_reads"]:
+                print(row)
         return
 
     if not args.predictions:
