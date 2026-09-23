@@ -5,21 +5,142 @@
   "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
   "observed_source": "human_reading_of_scoreboard_bug_at_decision_frame_not_ocr",
   "purpose": "Frames outside the decision-frame evaluation set, chosen to test that the scoreboard reader ABSTAINS when the count bug is hidden or replaced, and still reads it when it is visible on a cutaway. Every classification and value below was read by eye from the ffmpeg frame grab at that playback second (scripts/65_grab_broadcast_frames.py --label neg_a / neg_b, 2026-09-23). Nothing is copied from the manifest.",
-  "reviewer": "Claude Code (claude-fable-5-1), in-app review of outputs/frames/neg_a_full.png, neg_b_full.png and neg_b_bug.png",
+  "reviewer": "Claude Code (claude-fable-5-1), in-app review of outputs/frames/neg_a_full.png, neg_b_full.png, neg_b_bug.png and track_full.png",
   "reviewed_at": "2026-09-23",
   "rule": "Fields absent from `readable` must be abstained (null) by a reader; fields present must be read as the given value. A non-null output on an absent field is a false read regardless of its value.",
   "frames": [
-    {"seconds": 150.0, "kind": "graphic", "reason": "PITCH USAGE Statcast panel over an aerial shot; no count bug anywhere in the frame", "readable": {}},
-    {"seconds": 151.8, "kind": "graphic", "reason": "same PITCH USAGE panel; no count bug", "readable": {}},
-    {"seconds": 152.4, "kind": "graphic", "reason": "PITCH USAGE panel dissolving over the live shot; no count bug yet", "readable": {}},
-    {"seconds": 475.0, "kind": "flashback", "reason": "JULY 27 flashback clip of the stands with a date tag; no count bug", "readable": {}},
-    {"seconds": 546.0, "kind": "replay", "reason": "zoomed replay of the previous swing; no count bug", "readable": {}},
-    {"seconds": 780.0, "kind": "line_score", "reason": "TOP 2ND R H E line-score graphic replaces the count bug while Schwellenbach delivers; runs 0 and 0 and the inning are shown, count / outs / runners are not", "readable": {"inning": 2, "inning_topbot": "Top", "away_score": 0, "home_score": 0}},
-    {"seconds": 840.0, "kind": "other_camera", "reason": "low third-base-side live camera on the batter's swing; no count bug in this feed", "readable": {}},
-    {"seconds": 880.0, "kind": "graphic", "reason": "INSIDE THE SEASON SERIES full-screen graphic; no count bug", "readable": {}},
-    {"seconds": 465.0, "kind": "cutaway_readable", "reason": "dugout cutaway (Mets bench); the count bug is fully visible at top-left", "readable": {"balls": 0, "strikes": 0, "outs": 1, "runner_on_1b": true, "runner_on_2b": false, "runner_on_3b": false, "inning": 1, "inning_topbot": "Bot", "away_score": 0, "home_score": 0}},
-    {"seconds": 495.0, "kind": "cutaway_readable", "reason": "pitcher close-up (Megill); the count bug is fully visible at top-left", "readable": {"balls": 0, "strikes": 1, "outs": 1, "runner_on_1b": true, "runner_on_2b": false, "runner_on_3b": false, "inning": 1, "inning_topbot": "Bot", "away_score": 0, "home_score": 0}},
-    {"seconds": 606.0, "kind": "cutaway_readable", "reason": "batter close-up (Ozuna) with a THIS SEASON stat banner at the bottom; the count bug is fully visible at top-left", "readable": {"balls": 2, "strikes": 2, "outs": 1, "runner_on_1b": true, "runner_on_2b": false, "runner_on_3b": false, "inning": 1, "inning_topbot": "Bot", "away_score": 0, "home_score": 0}},
-    {"seconds": 610.0, "kind": "cutaway_readable", "reason": "batter close-up (Ozuna) with the stat banner; the count bug is fully visible at top-left", "readable": {"balls": 2, "strikes": 2, "outs": 1, "runner_on_1b": true, "runner_on_2b": false, "runner_on_3b": false, "inning": 1, "inning_topbot": "Bot", "away_score": 0, "home_score": 0}}
+    {
+      "seconds": 150.0,
+      "kind": "graphic",
+      "reason": "PITCH USAGE Statcast panel over an aerial shot; no count bug anywhere in the frame",
+      "readable": {}
+    },
+    {
+      "seconds": 151.8,
+      "kind": "graphic",
+      "reason": "same PITCH USAGE panel; no count bug",
+      "readable": {}
+    },
+    {
+      "seconds": 152.4,
+      "kind": "graphic",
+      "reason": "PITCH USAGE panel dissolving over the live shot; no count bug yet",
+      "readable": {}
+    },
+    {
+      "seconds": 465.0,
+      "kind": "cutaway_readable",
+      "reason": "dugout cutaway (Mets bench); the count bug is fully visible at top-left",
+      "readable": {
+        "balls": 0,
+        "strikes": 0,
+        "outs": 1,
+        "runner_on_1b": true,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": 1,
+        "inning_topbot": "Bot",
+        "away_score": 0,
+        "home_score": 0
+      }
+    },
+    {
+      "seconds": 470.0,
+      "kind": "graphic",
+      "reason": "OZUNA batter intro full-screen graphic; no count bug",
+      "readable": {}
+    },
+    {
+      "seconds": 475.0,
+      "kind": "flashback",
+      "reason": "JULY 27 flashback clip of the stands with a date tag; no count bug",
+      "readable": {}
+    },
+    {
+      "seconds": 480.0,
+      "kind": "flashback",
+      "reason": "JULY 27 flashback close-up (Ozuna at first) with the date tag; no count bug",
+      "readable": {}
+    },
+    {
+      "seconds": 495.0,
+      "kind": "cutaway_readable",
+      "reason": "pitcher close-up (Megill); the count bug is fully visible at top-left",
+      "readable": {
+        "balls": 0,
+        "strikes": 1,
+        "outs": 1,
+        "runner_on_1b": true,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": 1,
+        "inning_topbot": "Bot",
+        "away_score": 0,
+        "home_score": 0
+      }
+    },
+    {
+      "seconds": 546.0,
+      "kind": "replay",
+      "reason": "zoomed replay of the previous swing; no count bug",
+      "readable": {}
+    },
+    {
+      "seconds": 606.0,
+      "kind": "cutaway_readable",
+      "reason": "batter close-up (Ozuna) with a THIS SEASON stat banner at the bottom; the count bug is fully visible at top-left",
+      "readable": {
+        "balls": 2,
+        "strikes": 2,
+        "outs": 1,
+        "runner_on_1b": true,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": 1,
+        "inning_topbot": "Bot",
+        "away_score": 0,
+        "home_score": 0
+      }
+    },
+    {
+      "seconds": 610.0,
+      "kind": "cutaway_readable",
+      "reason": "batter close-up (Ozuna) with the stat banner; the count bug is fully visible at top-left",
+      "readable": {
+        "balls": 2,
+        "strikes": 2,
+        "outs": 1,
+        "runner_on_1b": true,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": 1,
+        "inning_topbot": "Bot",
+        "away_score": 0,
+        "home_score": 0
+      }
+    },
+    {
+      "seconds": 780.0,
+      "kind": "line_score",
+      "reason": "TOP 2ND R H E line-score graphic replaces the count bug while Schwellenbach delivers; runs 0 and 0 and the inning are shown, count / outs / runners are not",
+      "readable": {
+        "inning": 2,
+        "inning_topbot": "Top",
+        "away_score": 0,
+        "home_score": 0
+      }
+    },
+    {
+      "seconds": 840.0,
+      "kind": "other_camera",
+      "reason": "low third-base-side live camera on the batter's swing; no count bug in this feed",
+      "readable": {}
+    },
+    {
+      "seconds": 880.0,
+      "kind": "graphic",
+      "reason": "INSIDE THE SEASON SERIES full-screen graphic; no count bug",
+      "readable": {}
+    }
   ]
 }

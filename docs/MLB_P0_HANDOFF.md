@@ -156,6 +156,15 @@
     `game_747139_scoreboard_negatives_score_v0.json`. 검사: `pytest tests/test_sny_scoreboard.py tests/test_scoreboard_negatives.py`
     (7 passed), ruff, `check_project.py --cpu-only` 285 passed, 2 deselected.
 
+15. `29eef93`: A-v 리드 시간 파생 필드(Claude Code Fable 5.1, 2026-09-23). `63 check` 보고서에 `short_lead_threshold_seconds`
+    (1.5)·`short_lead_pitches`·`lead_seconds_min`, 평가셋 항목에 `lead_seconds`. 26구 중 짧은 리드 7(PA 5/5, PA 6 전부) —
+    PA 6는 워크플로 주석 에이전트가 "동작 직전 마지막 set 프레임"을 고른 규약 차이로 확인돼 A-v2(가장 이른 set 프레임 규약 확정 +
+    PA 6~10 재검토, Opus 5)를 추가했다. 검사: 관련 pytest 36 passed, `check_project.py --cpu-only` 286 passed.
+16. `(이 단위 커밋)`: F-4 상태 추적 v0(Claude Code Fable 5.1, 2026-09-23). `src/vision/state_tracker.py` + 테스트 3개 +
+    데모 `scripts/67_track_scoreboard_state.py`. PA 6 구간 460~535 s를 5초 간격으로 판독기(v0 템플릿)에 넣어 유지·신선도를 확인:
+    16프레임 중 판독 13·기권 3(470 OZUNA 인트로 그래픽, 475·480 JULY 27 회상 — 눈으로 확인), 기권 구간에서 마지막 확인 상태(0-0·1아웃·1루)를 유지하며 age 5→10→15 s(15 s에서 stale), 485 s 복귀 시 즉시 재확인, 거부 0·suspect 0. 결과 `docs/results/mlb_p0/game_747139_scoreboard_track_demo.json`(시연). 선수 식별은 F-4a로 분리.
+    검사: `pytest tests/test_state_tracker.py`(3 passed), ruff, `check_project.py --cpu-only` 289 passed, 2 deselected.
+
 이 문서와 함께 추가되는 후속 커밋의 해시는 `git log -6 --oneline`으로 확인한다.
 전체 Windows CPU 검사: **264 passed, 2 deselected**, Ruff 47개 경로 통과.
 JavaScript 구문 검사 및 Chrome 수동 입력·실제 추론·9회 이후 추천 보류 확인.

@@ -33,8 +33,8 @@
 | 파일 수정 권한 | **Claude Code** (A-5 PA 7 + A-6 PA 8~10 주석, I-3 스키마 v2 제안서 — 워크플로 에이전트 = 태그 모델 Opus 5, 검증·통합 = Fable 5.1 세션; A-v는 세션 직접, 착수 2026-09-23) | 2026-09-23 |
 | 중계 시각 주석 | 25 확인 / 1 확인 불가 / 296 미검토, 완전 타석 2·3·4·5·6 | 2026-09-23 |
 | 점수판 평가셋 | timing 26 / 점수판 리뷰 25(10필드 모두 confirmed, 라벨 충돌 0) / 가림 1 / 미검토 296 — v2 `game_747139_scoreboard_evalset.json` + 리뷰 `game_747139_scoreboard_review.json` | 2026-09-23 |
-| 점수판 OCR v0 | held-out(PA 3~7, 17구): 10필드 모두 오답 0, 볼 1건 기권(템플릿 없는 "3"), all_fields correct 16/17 — `game_747139_scoreboard_ocr_v0.json`. 음성 12프레임(판독 불가 76필드): 거짓 판독 0, 컷어웨이 40/44 정답·라인스코어 4 기권 — `game_747139_scoreboard_negatives_score_v0.json` | 2026-09-23 |
-| 전체 검사 (Windows CPU) | 286 passed, 2 deselected (`29eef93` 기준, `check_project.py --cpu-only`) | 2026-09-23 |
+| 점수판 OCR v0 | held-out(PA 3~7, 17구): 10필드 모두 오답 0, 볼 1건 기권(템플릿 없는 "3"), all_fields correct 16/17 — `game_747139_scoreboard_ocr_v0.json`. 음성 14프레임(판독 불가 96필드): 거짓 판독 0, 컷어웨이 40/44 정답·라인스코어 4 기권 — `game_747139_scoreboard_negatives_score_v0.json` | 2026-09-23 |
+| 전체 검사 (Windows CPU) | 289 passed, 2 deselected (`(이 단위 커밋)` 기준, `check_project.py --cpu-only`) | 2026-09-23 |
 | 정책 효용 | **미입증** — delta −0.0862 runs/100, 95% CI [−0.4046, +0.2304] | 2026-09-21 |
 | Claude 모델 배정 | 항목 태그 참조 — `uv run --frozen python scripts/checklist_model.py --next` | 2026-09-22 |
 | 담당 구분 | **C·D = 팀원(외부)**, 그 외 = Claude/Codex. 통합 검증은 I절 | 2026-09-22 |
@@ -187,12 +187,19 @@ feature builder의 고정 2022 프로필을 그 방식으로 갱신하는 코드
       (`66 templates --template-pas …` → `predict` → `score --exclude-pas …`). 다른 방송사 레이아웃은 별도 창 측정 필요.
 - [x] F-3b. 판단 프레임 밖에서 OCR이 **기권하는지** 음성 평가셋으로 측정 (`b1ab6a5`) `[추가되었음 · 2026-09-23 · Claude]`
       `docs/results/mlb_p0/game_747139_scoreboard_negatives.json`(`mlb_scoreboard_negatives_v1`, 같은 MP4·manifest에 바인딩): 사람이
-      눈으로 분류한 12프레임 — bug 없음 7(통계 그래픽 150·151.8·152.4, 회상 475, 리플레이 546, 타 카메라 840, 전체화면 그래픽 880),
+      눈으로 분류한 14프레임 — bug 없음 9(통계 그래픽 150·151.8·152.4, 타자 인트로 470, 회상 475·480, 리플레이 546, 타 카메라 840, 전체화면 그래픽 880),
       라인스코어 대체 1(780: 이닝·초말·득점만 판독 가능), 컷어웨이인데 bug 보임 4(465·495·606·610, 10필드 값 기록).
-      `66 negatives` 채점(`src/vision/negatives.py`): 판독 불가 76필드 거짓 판독 **0**(첫 실행은 780의 라인스코어에서 아웃·주자 4건을
+      `66 negatives` 채점(`src/vision/negatives.py`): 판독 불가 96필드 거짓 판독 **0**(첫 실행은 780의 라인스코어에서 아웃·주자 4건을
       자신 있게 0/False로 냈고, bug 상단 흰 경계선·패널 내 흰색 비율 게이트를 추가해 잡음), 판독 가능 44필드 중 40 정답·4 기권(780의
       이닝·초말·득점 — 라인스코어는 bug가 아니므로 전부 기권), 오답 0. 게이트 추가 후 평가셋 점수는 변하지 않았다(16/17, 기권 1).
-- [ ] F-4. 선수·상태 추적 (그래픽·리플레이 중 과거 상태 유지 + 신선도 표시) 〔모델: Fable 5.1〕
+- [x] F-4. 상태 추적 v0 — 그래픽·리플레이 중 마지막 확인 상태 유지 + 신선도 표시 (`(이 단위 커밋)`)
+      `src/vision/state_tracker.py`(`ScoreboardTracker`): 판독기의 null(기권)에는 필드별 마지막 확인값을 유지하고 `age_seconds`·
+      `stale`(기본 10 s 초과)을 함께 낸다. 불가능한 값(볼 4, 스트라이크 3 등)은 거부 목록에, 이닝 감소·득점 감소 같은 역행은 수용하되
+      `suspect`에 기록. 값을 추측하지 않는다. 데모 `scripts/67_track_scoreboard_state.py`(PA 6 구간 460~535 s, 5초 간격 16프레임):
+      16프레임 중 판독 13·기권 3(470 OZUNA 인트로 그래픽, 475·480 JULY 27 회상 — 눈으로 확인), 기권 구간에서 마지막 확인 상태(0-0·1아웃·1루)를 유지하며 age 5→10→15 s(15 s에서 stale), 485 s 복귀 시 즉시 재확인, 거부 0·suspect 0 — `docs/results/mlb_p0/game_747139_scoreboard_track_demo.json`(시연용, 라벨·벤치마크 아님).
+      선수(투수·타자) 추적은 미구현 — 배너 이름 판독은 별도 항목(F-4a).
+- [ ] F-4a. 투수·타자 식별: 하단 배너의 이름/타순 텍스트 판독 또는 feed 기반 대조 규약. `[추가되었음 · 2026-09-23 · Claude]` 〔모델: Fable 5.1〕
+      현재는 manifest의 투수·타자 ID를 그대로 쓰고 화면에서 확인하지 않는다.
 
 ## G. 효용 검증
 
