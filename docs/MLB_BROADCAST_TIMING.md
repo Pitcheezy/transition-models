@@ -168,6 +168,8 @@ SNY bug 전용이다(창 좌표는 4배 격자 크롭에서 눈으로 측정). �
 |---|---|---|
 | held-out (`--exclude-pas 1 2`) | PA 3~7 17구 | 10필드 모두 wrong 0; 볼 attempted 16 / correct 16 / abstained 1; all_fields correct 16, abstained 1 |
 | in-sample | 25구 | all_fields correct 24, abstained 1, wrong 0 |
+| 2026-09-24 v0 재측정 held-out (`--exclude-pas 1 2`) | PA 3~9 26구 | wrong 0; all_fields correct 20, abstained 6(이닝 "2" 템플릿 없음 5, 라인스코어 1) |
+| 2026-09-24 v1 (템플릿 PA 1·2·9, `--exclude-pas 1 2 9`) | PA 3~8 24구 | wrong 0; all_fields correct 22, abstained 2(PA 5/6 "3", PA 8/1 라인스코어); 이닝 필드 23/25 정답·2 기권 |
 
 기권 1건은 PA 5/6의 볼 "3"(템플릿은 0/1/2뿐). 첫 실행에서는 이것이 "2"로 매칭돼 오답이었고 임계값을 조여 기권시켰으므로
 그 1건은 blind가 아니다. 주석이 늘어 새 숫자가 나오면 템플릿을 늘리고(`templates --template-pas …`) 다시 잰다(F-3a).

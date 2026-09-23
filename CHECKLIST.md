@@ -33,7 +33,7 @@
 | 파일 수정 권한 | **Claude Code** (A-6 PA 8~10 주석, A-v2 판단 프레임 규약 재검토(PA 1~7), H-1 Arrow 진단 — 워크플로 에이전트 = 태그 모델, 검증·통합 = Fable 5.1 세션, 2026-09-23) | 2026-09-23 |
 | 중계 시각 주석 | 35 확인 / 1 확인 불가 / 286 미검토, 완전 타석 2~9 (2회초 PA 10 검증 중) | 2026-09-24 |
 | 점수판 평가셋 | timing 36 / 점수판 리뷰 35(34구 10필드 confirmed, PA 8/1은 라인스코어 그래픽으로 이닝·초말·득점만 confirmed, 라벨 충돌 0) / 가림 1 / 미검토 286 — v2 `game_747139_scoreboard_evalset.json` + 리뷰 `game_747139_scoreboard_review.json` | 2026-09-23 |
-| 점수판 OCR v0 | held-out(PA 3~7, 17구): 10필드 모두 오답 0, 볼 1건 기권(템플릿 없는 "3"), all_fields correct 16/17 — `game_747139_scoreboard_ocr_v0.json`. 음성 14프레임(판독 불가 96필드): 거짓 판독 0, 컷어웨이 40/44 정답·라인스코어 4 기권 — `game_747139_scoreboard_negatives_score_v0.json` | 2026-09-23 |
+| 점수판 OCR | v0(템플릿 PA 1~2) held-out PA 3~9 26구: 오답 0, all_fields 20 정답·6 기권(이닝 "2" 템플릿 없음·"3"·라인스코어) — `..._ocr_v0.json`; v1(템플릿 PA 1·2·9) held-out PA 3~8 24구: 오답 0, all_fields 22 정답·2 기권(PA 5/6 "3", PA 8/1 라인스코어; PA 8/2 이닝만 기권) — `..._ocr_v1.json`. 음성 14프레임(판독 불가 96필드): 거짓 판독 0, 컷어웨이 40/44 정답·라인스코어 4 기권 — `game_747139_scoreboard_negatives_score_v0.json` | 2026-09-23 |
 | 전체 검사 (Windows CPU) | 291 passed, 2 deselected (`0bb442e` 기준, `check_project.py --cpu-only`) | 2026-09-24 |
 | 정책 효용 | **미입증** — delta −0.0862 runs/100, 95% CI [−0.4046, +0.2304] | 2026-09-21 |
 | Claude 모델 배정 | 항목 태그 참조 — `uv run --frozen python scripts/checklist_model.py --next` | 2026-09-22 |
@@ -190,8 +190,11 @@ feature builder의 고정 2022 프로필을 그 방식으로 갱신하는 코드
       임계값(MAX_DISTANCE 0.12 / MIN_MARGIN 0.15)은 그 "3"→"2" 오매칭을 보고 조인 것이므로 그 1건은 blind가 아니다.
       결과 `docs/results/mlb_p0/game_747139_scoreboard_ocr_v0.json`(held-out)·`_insample.json`·`_predictions.json`·
       `sny_digit_templates_v0.json`. 한계: 이 방송사 레이아웃·1280x720 전용, 숫자 3~9 템플릿 없음, 그래픽 가림 시 전 필드 기권.
-- [ ] F-3a. OCR v0 확장: 새 숫자(3~9)·2자리 이닝·득점 상황이 생기면 템플릿을 늘리고 held-out을 다시 잰다. `[추가되었음 · 2026-09-23 · Claude]` 〔모델: Fable 5.1〕
+- [~] F-3a. OCR v0 확장: 새 숫자(3~9)·2자리 이닝·득점 상황이 생기면 템플릿을 늘리고 held-out을 다시 잰다. `[추가되었음 · 2026-09-23 · Claude]` 〔모델: Fable 5.1〕
       (`66 templates --template-pas …` → `predict` → `score --exclude-pas …`). 다른 방송사 레이아웃은 별도 창 측정 필요.
+      (2026-09-24, `(이 단위 커밋)`) 2회초 프레임(이닝 "2")이 생겨 재측정: v0 템플릿(PA 1~2)은 held-out PA 3~9 26구에서 오답 0이지만 이닝 "2"를
+      6건 기권. PA 9를 템플릿에 추가한 v1(`sny_digit_templates_v1.json`, 0/1/2 글리프 50개)은 held-out PA 3~8 24구에서 오답 0·기권 2
+      (PA 5/6 볼 "3", PA 8/1 라인스코어 전 필드; PA 8/2 이닝만 기권). 음성 14프레임 거짓 판독 0 유지. 숫자 3~9는 여전히 템플릿 없음.
 - [x] F-3b. 판단 프레임 밖에서 OCR이 **기권하는지** 음성 평가셋으로 측정 (`b1ab6a5`) `[추가되었음 · 2026-09-23 · Claude]`
       `docs/results/mlb_p0/game_747139_scoreboard_negatives.json`(`mlb_scoreboard_negatives_v1`, 같은 MP4·manifest에 바인딩): 사람이
       눈으로 분류한 14프레임 — bug 없음 9(통계 그래픽 150·151.8·152.4, 타자 인트로 470, 회상 475·480, 리플레이 546, 타 카메라 840, 전체화면 그래픽 880),
