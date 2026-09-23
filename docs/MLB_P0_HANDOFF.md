@@ -135,7 +135,7 @@
     `64 build` → `64 check` 통과, `pytest` timing·evalset·grab 3개 파일 33 passed, `check_project.py --cpu-only` 278 passed, 2 deselected.
     다음 한 단위: **A-5 PA 7**(4구, 2아웃, 주자 1루) — 같은 워크플로 방식 권장; 완료 시 1회말 종료(누적 30구).
 
-13. `(이 단위 커밋)`: F-3 점수판 OCR v0 프로토타입(Claude Code Fable 5.1, 2026-09-23, PA 7 주석 워크플로와 병행).
+13. `fc3d18b`: F-3 점수판 OCR v0 프로토타입(Claude Code Fable 5.1, 2026-09-23, PA 7 주석 워크플로와 병행).
     `src/vision/frames.py`(65번의 프레임 추출을 모듈로 이동, 65번은 얇은 CLI), `src/vision/sny_scoreboard.py`(SNY bug 판독기),
     `scripts/66_sny_scoreboard_ocr.py`(templates → predict → score). 아웃·주자·초말은 구조적 판독, 숫자는 검증 프레임의
     글리프 템플릿 최근접 매칭이며 불확실하면 기권(null). 평가셋 25구의 판단 프레임을 `65 --label evalset`로 뽑아 사용.

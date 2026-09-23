@@ -34,7 +34,7 @@
 | 중계 시각 주석 | 25 확인 / 1 확인 불가 / 296 미검토, 완전 타석 2·3·4·5·6 | 2026-09-23 |
 | 점수판 평가셋 | timing 26 / 점수판 리뷰 25(10필드 모두 confirmed, 라벨 충돌 0) / 가림 1 / 미검토 296 — v2 `game_747139_scoreboard_evalset.json` + 리뷰 `game_747139_scoreboard_review.json` | 2026-09-23 |
 | 점수판 OCR v0 | held-out(PA 3~7, 17구): 10필드 모두 오답 0, 볼 1건 기권(템플릿 없는 "3"), all_fields correct 16/17 — `game_747139_scoreboard_ocr_v0.json` | 2026-09-23 |
-| 전체 검사 (Windows CPU) | 283 passed, 2 deselected (`(이 단위 커밋)` 기준, `check_project.py --cpu-only` 81초) | 2026-09-23 |
+| 전체 검사 (Windows CPU) | 283 passed, 2 deselected (`fc3d18b` 기준, `check_project.py --cpu-only` 81초) | 2026-09-23 |
 | 정책 효용 | **미입증** — delta −0.0862 runs/100, 95% CI [−0.4046, +0.2304] | 2026-09-21 |
 | Claude 모델 배정 | 항목 태그 참조 — `uv run --frozen python scripts/checklist_model.py --next` | 2026-09-22 |
 | 담당 구분 | **C·D = 팀원(외부)**, 그 외 = Claude/Codex. 통합 검증은 I절 | 2026-09-22 |
@@ -169,7 +169,7 @@ feature builder의 고정 2022 프로필을 그 방식으로 갱신하는 코드
 - [ ] F-1. 목표 위치와 제구 오차 — 팀원의 관측 위치 재가중 proxy는 정책 효과 음성(−0.019 %p). 〔모델: Fable 5.1〕
       **영상 기반 의도 라벨**로 재정의한 뒤 착수(I-0에서 범위 합의).
 - [ ] F-2. 타자 세부 특성 — 팀원 archetypes(6 성향률+신뢰도, 전날까지 자료)가 완성돼 있어 새로 만들지 않고 I-4로 소비. 〔모델: Fable 5.1〕
-- [x] F-3. 자동 점수판 OCR — **v0 프로토타입** `src/vision/sny_scoreboard.py` + `scripts/66_sny_scoreboard_ocr.py` (`(이 단위 커밋)`)
+- [x] F-3. 자동 점수판 OCR — **v0 프로토타입** `src/vision/sny_scoreboard.py` + `scripts/66_sny_scoreboard_ocr.py` (`fc3d18b`)
       SNY bug 전용 휴리스틱: 아웃·주자 = 고정 창의 금색 채움, 초/말 = 화살표 행 프로파일, 숫자(볼·스트라이크·이닝·점수) =
       검증 프레임에서 잘라낸 글리프 템플릿 최근접 매칭(템플릿 없는 숫자·근소 차는 **기권**). 템플릿은 PA 1~2 프레임(in-sample),
       측정은 PA 3~7 held-out 17구: 10필드 오답 0, 볼 1건 기권(PA 5/6의 "3", 템플릿 0/1/2뿐), all_fields 16/17 정답·1 기권.
