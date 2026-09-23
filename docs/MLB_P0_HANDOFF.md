@@ -201,6 +201,12 @@
     세션 스팟체크 8프레임(216·341.5·525.5·548.95·569.3·663.5·713.75·756.5 s)에서 PA 6/4 문제를 발견해 정정. 검사: `63 check`, `64`, `68`,
     pytest timing·evalset·join·OCR 38 passed, `check_project.py --cpu-only` 291 passed, 2 deselected.
 
+22. `(이 단위 커밋)`: A-6 완료 — PA 10(Martinez) 6구 통합(Claude Code, 2026-09-24). 판단 901.35 / 916.1 / 936.8 / 956.8 / 972.8 / 995.1,
+    릴리스 902.62 / 917.35 / 938.18 / 958.13 / 973.95 / 996.45 s. 1·3·4·6구는 첫 판정에서 "판단 프레임이 이미 레그 킥"으로 반박돼 수리
+    (0.1~0.2 s 앞으로) 후 재검증 통과. Fable 5.1 세션이 12프레임을 다시 뽑아 확인. 결과 40 확인 / 2 확인 불가 / 280 미검토, 완전 타석
+    2·3·4·6~10(2회초 완료). 평가셋 timing 42 / 리뷰 40 / 완전 39 / 충돌 0. 조인표 42행. PA 8~10은 규약 v2 재검토 대상(A-v3).
+    검사: `63 check --require-pa 10`, `64`, `68`, pytest timing·evalset·join·OCR 38 passed, `check_project.py --cpu-only` 291 passed, 2 deselected.
+
 이 문서와 함께 추가되는 후속 커밋의 해시는 `git log -6 --oneline`으로 확인한다.
 전체 Windows CPU 검사: **264 passed, 2 deselected**, Ruff 47개 경로 통과.
 JavaScript 구문 검사 및 Chrome 수동 입력·실제 추론·9회 이후 추천 보류 확인.
@@ -256,7 +262,7 @@ Claude/Codex의 순서는 [../CHECKLIST.md](../CHECKLIST.md)의 "진행 순서" 
 팀원 레포(SongRoute/pitcheezy) 대조 결과는 [TEAMMATE_PITCHEEZY_2026-09-22.md](TEAMMATE_PITCHEEZY_2026-09-22.md) — 우리 쪽 참조가 없는 별도
 트랙이라 I-0(인터페이스 합의)·I-5(시연 경기)·I-6(클래스 대응표)·G-3(통화)를 A/B와 병행해 먼저 진행한다.
 
-1. **영상 시간 주석 확대**: 2~9번 타석을 완료했다(2026-09-24). 2회초 마지막 PA 10(Martinez, 6구)은 검증 재개 중이고, 그 다음은 2회말 PA 11~15.
+1. **영상 시간 주석 확대**: 2~10번 타석을 완료했다(2026-09-24, 2회초 종료). 다음은 2회말 PA 11~15(20구), 규약 v2로 찍는다.
    새 타석마다 `game_747139_scoreboard_review.json`에 필드별 판독 행을 같이 추가한다(CHECKLIST B-6).
    없으면 평가셋에서 `scoreboard_unreviewed`로 제외된다. 프레임 확인은 브라우저 대신
    `uv run --frozen python scripts/65_grab_broadcast_frames.py --label p7scan --times 676 686 696`처럼 ffmpeg로 뽑아
