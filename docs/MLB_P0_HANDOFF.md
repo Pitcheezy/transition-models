@@ -118,7 +118,7 @@
     `check_project.py --cpu-only` **275 passed, 2 deselected**(42.0초), `64 review-check`(19 readable) → `64 build` →
     `64 check` 통과. 주석 확대(A-4)는 하지 않았다.
 
-12. `(이 단위 커밋)`: A-4 PA 6(Ozuna) 6구 시각 주석 + A-w 프레임 추출 도구(Claude Code, 2026-09-23).
+12. `9ff2181`: A-4 PA 6(Ozuna) 6구 시각 주석 + A-w 프레임 추출 도구(Claude Code, 2026-09-23).
     방식: 사용자가 Workflow(ultracode)를 켠 Fable 5.1 세션에서 태그 모델 Opus 5(`claude-opus-5`) 주석 에이전트 1명이
     ffmpeg 단일 프레임 추출(원격 MP4, 재생 초)로 6구의 판단·릴리스 프레임을 찾고, 투구마다 독립 검증 에이전트 2명
     (시각 렌즈: 판단 프레임 정지 자세·릴리스 브래킷 재확인 / 점수판·식별 렌즈: bug 값을 직접 읽어 manifest와 대조)이
