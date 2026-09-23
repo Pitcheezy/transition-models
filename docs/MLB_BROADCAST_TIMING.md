@@ -139,6 +139,17 @@ accuracy = correct / attempted
   따라서 `correct_rate + error_rate + abstain_rate = 1`. `accuracy`만 시도 수가 분모이며 시도가 없으면 `null`이다.
 - 2026-09-22 현황(경기 747139): timing 20구 중 19구를 Claude Code가 캔버스 프레임으로 다시 읽어 10개 필드 모두
   `confirmed`(라벨 충돌 0), 1구(PA 1/6)는 `occluded`. 미검토 302구는 `total_pitches`에만 들어간다.
+- 2026-09-23 PA 6 추가: timing 26구(25 확인 / 1 확인 불가), 리뷰 25구 모두 10필드 `confirmed`, 라벨 충돌 0, 미검토 296.
+
+## 프레임 확인 도구 (2026-09-23)
+
+브라우저 canvas 대신 `scripts/65_grab_broadcast_frames.py --label <이름> --times t1 … t8`로 timing JSON의 media_url에서
+ffmpeg 단일 프레임을 뽑아 `outputs/frames/<label>_full.png`(반크기 전체)·`<label>_bug.png`(SNY 점수판 3배 확대)를 만든다.
+브라우저 캡처와 동일 프레임임을 76.0 s·450.0 s에서 확인했다. 원격 range 읽기가 간헐적으로 "partial file"로 실패하므로
+3회 재시도한다. 프레임은 사람이 보는 검토 보조물이며 OCR·라벨이 아니다. PA 6은 이 도구로 Opus 5 주석 에이전트가 찍고
+투구별 검증 에이전트 2명이 반박을 시도한 뒤(12건 반박 없음) Fable 5.1 세션이 재확인해 기록했다.
+주의: 회상 그래픽(476–480 s "JULY 27") 직후처럼 살아있는 판단 창이 2~3초뿐인 경우, 라이브 광각(572–576 s)과
+중계 기본 앵글의 구분, 견제(601–603 s, 투구 아님)의 존재를 note에 남긴다.
 
 검증: 주석 관련 23개를 포함한 Windows CPU **264 passed, 2 deselected**(38.20초),
 Ruff 47개 경로와 JavaScript 구문 검사 통과. Chrome에서 저장·새로고침 복원·JSON 내보내기,

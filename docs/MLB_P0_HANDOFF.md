@@ -118,6 +118,23 @@
     `check_project.py --cpu-only` **275 passed, 2 deselected**(42.0초), `64 review-check`(19 readable) → `64 build` →
     `64 check` 통과. 주석 확대(A-4)는 하지 않았다.
 
+12. `(이 단위 커밋)`: A-4 PA 6(Ozuna) 6구 시각 주석 + A-w 프레임 추출 도구(Claude Code, 2026-09-23).
+    방식: 사용자가 Workflow(ultracode)를 켠 Fable 5.1 세션에서 태그 모델 Opus 5(`claude-opus-5`) 주석 에이전트 1명이
+    ffmpeg 단일 프레임 추출(원격 MP4, 재생 초)로 6구의 판단·릴리스 프레임을 찾고, 투구마다 독립 검증 에이전트 2명
+    (시각 렌즈: 판단 프레임 정지 자세·릴리스 브래킷 재확인 / 점수판·식별 렌즈: bug 값을 직접 읽어 manifest와 대조)이
+    반박을 시도했다. 12건 모두 반박 없음(high). Fable 5.1 세션이 판단 6장·릴리스 6장을 다시 뽑아 육안 확인 후
+    `docs/results/mlb_p0/game_747139_timing.json`에 6행, `game_747139_scoreboard_review.json`에 필드별 판독 6행을 추가했다.
+    결과: 25 확인 / 1 확인 불가 / 296 미검토, 완전 타석 2~6. 판단 482.5·534.5·556.2·577.3·616.2·671.0 s,
+    릴리스 483.78·535.55·557.33·578.35·617.25·672.28 s(±0.15, 브래킷 0.05~0.10 s). 평가셋 v2: timing 26 / 리뷰 25 /
+    10필드 모두 confirmed / 라벨 충돌 0. feed UTC는 탐색 출발점으로만 썼고 초로 변환하지 않았다.
+    관찰: 476–480 s "JULY 27" 회상 그래픽 뒤 1구의 살아있는 판단 창은 약 2.5초; 572–576 s는 3루측 광각(라이브);
+    601–603 s 1루 견제(투구 아님, P:12 유지); ffmpeg 원격 range 읽기가 간헐적으로 "partial file"로 실패해 재시도 필요.
+    A-w: 페이지 확대 뷰 대신 `scripts/65_grab_broadcast_frames.py`(timing JSON의 media_url 바인딩, 프레임 재사용,
+    3회 재시도, `_full`/`_bug` 몽타주)로 결정. 테스트 3개. `outputs/frames/`는 .gitignore.
+    실행한 검사(실제 결과): `63 check --require-pa 6` 통과(validation.json 갱신), `64 review-check`(25 readable) →
+    `64 build` → `64 check` 통과, `pytest` timing·evalset·grab 3개 파일 33 passed, `check_project.py --cpu-only` 278 passed, 2 deselected.
+    다음 한 단위: **A-5 PA 7**(4구, 2아웃, 주자 1루) — 같은 워크플로 방식 권장; 완료 시 1회말 종료(누적 30구).
+
 이 문서와 함께 추가되는 후속 커밋의 해시는 `git log -6 --oneline`으로 확인한다.
 전체 Windows CPU 검사: **264 passed, 2 deselected**, Ruff 47개 경로 통과.
 JavaScript 구문 검사 및 Chrome 수동 입력·실제 추론·9회 이후 추천 보류 확인.
@@ -173,23 +190,26 @@ Claude/Codex의 순서는 [../CHECKLIST.md](../CHECKLIST.md)의 "진행 순서" 
 팀원 레포(SongRoute/pitcheezy) 대조 결과는 [TEAMMATE_PITCHEEZY_2026-09-22.md](TEAMMATE_PITCHEEZY_2026-09-22.md) — 우리 쪽 참조가 없는 별도
 트랙이라 I-0(인터페이스 합의)·I-5(시연 경기)·I-6(클래스 대응표)·G-3(통화)를 A/B와 병행해 먼저 진행한다.
 
-1. **영상 시간 주석 확대**: 2~5번 타석을 완료했다. 저장된 JSON을 불러와
-   여섯 번째 타석부터 계속한다. 새 타석마다 `game_747139_scoreboard_review.json`에 필드별 판독 행을 같이
-   추가한다(CHECKLIST B-6). 없으면 평가셋에서 `scoreboard_unreviewed`로 제외된다. feed UTC 시각을 재생 시간으로 쓰지 않는다.
+1. **영상 시간 주석 확대**: 2~6번 타석을 완료했다(2026-09-23 PA 6). 일곱 번째 타석(PA 7, 4구)부터 계속한다.
+   새 타석마다 `game_747139_scoreboard_review.json`에 필드별 판독 행을 같이 추가한다(CHECKLIST B-6).
+   없으면 평가셋에서 `scoreboard_unreviewed`로 제외된다. 프레임 확인은 브라우저 대신
+   `uv run --frozen python scripts/65_grab_broadcast_frames.py --label p7scan --times 676 686 696`처럼 ffmpeg로 뽑아
+   `outputs/frames/<label>_bug.png`(점수판 확대)와 `_full.png`를 보면 된다. PA 6 마지막 릴리스는 672.28 s이고
+   676 s에 bug가 0-0·2아웃·주자 1루로 바뀐다. 이 숫자는 탐색 출발점일 뿐이며 반드시 프레임으로 확인한다. feed UTC 시각을 재생 시간으로 쓰지 않는다.
    `63_annotate_broadcast.py check --annotations docs/results/mlb_p0/game_747139_timing.json
-   --require-pa 5`로 기존 주석을 먼저 확인한다. 이후 점수판 인식 평가셋으로 연결한다.
+   --require-pa 6`으로 기존 주석을 먼저 확인한다. 이후 점수판 인식 평가셋으로 연결한다.
 
    다음 첫 실행 명령(저장소 루트, 모델·원본 Statcast 불필요):
 
    ```bash
-   uv run --frozen python scripts/63_annotate_broadcast.py check --annotations docs/results/mlb_p0/game_747139_timing.json --require-pa 5
-   uv run --frozen python scripts/63_annotate_broadcast.py prepare
-   uv run --frozen python -m http.server 8772 --bind 127.0.0.1 --directory outputs/annotation
+   uv run --frozen python scripts/63_annotate_broadcast.py check --annotations docs/results/mlb_p0/game_747139_timing.json --require-pa 6
+   uv run --frozen python scripts/65_grab_broadcast_frames.py --label p7scan --times 676 686 696 706
    ```
 
-   페이지에서 Git 저장 JSON을 불러온 뒤 6번 타석(투구 6/1부터)을 확인하고, 내보낸 JSON을
-   같은 경로에 저장해 `--require-pa 6 --output docs/results/mlb_p0/game_747139_timing_validation.json`
-   으로 검증 보고서를 갱신한다.
+   PA 7(투구 7/1부터)을 프레임으로 확인해 timing JSON과 리뷰 JSON에 행을 추가하고
+   `--require-pa 7 --output docs/results/mlb_p0/game_747139_timing_validation.json`
+   으로 검증 보고서를 갱신한 뒤 `64 review-check` → `64 build` → `64 check`를 돌린다.
+   (브라우저 주석 페이지 `63 prepare` + `http.server 8772`도 여전히 쓸 수 있다.)
 2. **기존 영상 재검증**: 옛 오타니 수집기는 CSV `iloc[i]`를 사용했다.
    기존 영상 파일명은 재확인 전 정답이 아니다. 원본 확보 후 playId로 재대조한다.
 3. **새 확률 모델(팀원 담당, 수신 후 I-1로 통합 검증)**: 8종 정답을 기존 특징에 투구 ID로 연결하고 시간 분할을 유지한다.

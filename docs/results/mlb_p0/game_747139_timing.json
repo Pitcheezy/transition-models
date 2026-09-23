@@ -7,7 +7,7 @@
     "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
     "duration_seconds": 9340.748083
   },
-  "annotator": "Codex visual review PA1-2 + Claude Code visual review PA3-5, 2026-09-22",
+  "annotator": "Codex visual review PA1-2 + Claude Code visual review PA3-5, 2026-09-22 + Claude Code workflow (Opus 5 annotator, Fable 5.1 verification, ffmpeg frame grabs) PA6, 2026-09-23",
   "annotations": [
     {
       "game_pk": 747139,
@@ -228,6 +228,72 @@
       "release_seconds": 453,
       "uncertainty_seconds": 0.25,
       "note": "SNY full game. Bottom 1, Megill vs Albies; 3-2 count, empty bases, one out. Decision frame 450.0s: pitcher set on the rubber, batter in the box, scoreboard bug 3-2 / one out / empty bases / 0:0 and banner MEGILL :02 P:7, 2. ALBIES .247 visibly checked (448.0s already set, leg lift by 452.0s). Release bracketed by sampled frames 452.8s (arm cocked, front foot landing) and 453.2s (follow-through); 453.0s shows the arm extended at release. Ball four: by 458s the bug shows 0-0 with a runner on first. Claude Code in-app browser, canvas frame grabs. Manual timing, not frame-exact."
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 6,
+      "pitch_number": 1,
+      "play_id": "fb9e321e-1c40-4fec-994b-7e6ece2b9936",
+      "status": "annotated",
+      "decision_seconds": 482.5,
+      "release_seconds": 483.78,
+      "uncertainty_seconds": 0.15,
+      "note": "SNY full game. Bottom 1, Megill vs Ozuna; 0-0 count, runner on first, one out. The JULY 27 flashback graphic covers 476.0-480.0 s and the live centre-field shot is back by 481.0 s, so a pre-delivery live frame does exist: at 482.5 s Megill is set from the stretch on the rubber, hands together at his chest and body still, Ozuna is in the box, and the bug is fully readable (0-0, one out, runner on first, MEGILL :04 P:8); the leg lift has not started (it begins by 483.0 s). Release bracketed by sampled frames 483.75 s (arm still cocked above the head, front foot landing) and 483.80 s (arm extended toward the plate, ball gone), with 483.85 s already showing the arm dropping past the body. ffmpeg frame grabs. Manual timing, not frame-exact."
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 6,
+      "pitch_number": 2,
+      "play_id": "eca429e5-5002-4855-9d34-1107e82ea67c",
+      "status": "annotated",
+      "decision_seconds": 534.5,
+      "release_seconds": 535.55,
+      "uncertainty_seconds": 0.15,
+      "note": "SNY full game. Bottom 1, Megill vs Ozuna; 0-1 count, runner on first, one out. Live centre-field shot from 525.0 s on (520.0 s is a dugout cutaway); at 534.5 s Megill is set from the stretch, hands together at his chest and still, Ozuna in the box, and the bug reads 0-1 with one out, a runner on first and MEGILL :03 P:9; the leg lift starts by 535.0 s. Release bracketed by sampled frames 535.50 s (hand still above and behind the head) and 535.60 s (arm fully extended toward the plate, ball gone); 535.55 s shows the arm extending forward. ffmpeg frame grabs. Manual timing, not frame-exact."
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 6,
+      "pitch_number": 3,
+      "play_id": "ac3a65fd-1b28-46eb-b5a4-9d64841cbb25",
+      "status": "annotated",
+      "decision_seconds": 556.2,
+      "release_seconds": 557.33,
+      "uncertainty_seconds": 0.15,
+      "note": "SNY full game. Bottom 1, Megill vs Ozuna; 0-2 count, runner on first, one out. 546.0 s is a zoomed replay of the previous swing; the live centre-field shot runs from 549.0 s, and at 556.2 s Megill is set from the stretch with his hands together at his chest and no motion started, Ozuna in the box, the bug reading 0-2 with one out, a runner on first and MEGILL :02 P:10; the leg lift begins by 556.5 s. Release bracketed by sampled frames 557.30 s (arm coming over the top, hand still behind the head line) and 557.35 s (arm extended toward the plate, ball gone), with 557.40 s already in follow-through. ffmpeg frame grabs. Manual timing, not frame-exact."
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 6,
+      "pitch_number": 4,
+      "play_id": "2e3f6c0e-7e2f-495e-9ed6-cd69ed6c6d8d",
+      "status": "annotated",
+      "decision_seconds": 577.3,
+      "release_seconds": 578.35,
+      "uncertainty_seconds": 0.15,
+      "note": "SNY full game. Bottom 1, Megill vs Ozuna; 1-2 count, runner on first, one out. 566.0-569.0 s are pitcher close-ups and 572.0-576.0 s a live high third-base-side wide angle; the centre-field shot is back by 576.5 s, and at 577.3 s Megill is set from the stretch, hands together at his chest and body still, Ozuna in the box, with the bug reading 1-2, one out, a runner on first and MEGILL :03 P:11; the leg lift starts by 577.6 s. Release bracketed by sampled frames 578.30 s (arm cocked up beside the head) and 578.40 s (arm extended toward the plate, ball gone); 578.50 s shows the arm already down past the body. ffmpeg frame grabs. Manual timing, not frame-exact."
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 6,
+      "pitch_number": 5,
+      "play_id": "15c7216f-3f50-439a-bdf2-1412ba6c50c6",
+      "status": "annotated",
+      "decision_seconds": 616.2,
+      "release_seconds": 617.25,
+      "uncertainty_seconds": 0.15,
+      "note": "SNY full game. Bottom 1, Megill vs Ozuna; 2-2 count, runner on first, one out. The long gap is filled by a pickoff throw to first at 601.0-603.0 s (Alonso applying the tag, Albies diving back, clock :01, P:12 unchanged) and by batter close-ups with a stat graphic at 606.0 and 610.0 s; the live centre-field shot runs from 613.0 s, and at 616.2 s Megill is set from the stretch with his hands together at his chest and no motion started, Ozuna in the box, the bug reading 2-2, one out, a runner on first and MEGILL :05 P:12; the leg lift begins by 616.5 s. Release bracketed by sampled frames 617.20 s (arm cocked beside the head) and 617.30 s (arm extended toward the plate, ball gone), with the ball visible in flight short of the catcher at 617.50 s. ffmpeg frame grabs. Manual timing, not frame-exact."
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 6,
+      "pitch_number": 6,
+      "play_id": "f8675759-7774-4dca-80a2-a9c0e8fe294f",
+      "status": "annotated",
+      "decision_seconds": 671,
+      "release_seconds": 672.28,
+      "uncertainty_seconds": 0.15,
+      "note": "SNY full game. Bottom 1, Megill vs Ozuna; 2-2 count, runner on first, one out. 630.0-658.0 s are home-plate and catcher close-ups after the foul; the live centre-field shot runs from 664.0 s, and at 671.0 s Megill is set from the stretch with his hands together at his chest and body still, Ozuna in the box, the bug reading 2-2, one out, a runner on first and MEGILL P:13 (the pitch-clock field is blank in this frame); the leg lift begins by 671.5 s. Release bracketed by sampled frames 672.25 s (hand still over the top beside the head) and 672.30 s (arm extended toward the plate, ball gone), with the ball visible in flight near the plate at 672.35 s; the bug at 676.0 s reads 0-0 with two outs filled and 88 MPH, confirming the strikeout. ffmpeg frame grabs. Manual timing, not frame-exact."
     }
   ]
 }

@@ -10,8 +10,10 @@ Every open CHECKLIST item carries a `〔모델: …〕` tag naming the Claude mo
 unit (Opus 5 = `claude-opus-5`, Fable 5.1 = `claude-fable-5-1`). Before starting a unit run
 `uv run --frozen python scripts/checklist_model.py --next` (or `<item-id>`) and compare it
 with your own model (`get_session self`). A session cannot switch its own model, so on a
-mismatch do not start the work: spawn the next-unit task chip titled with the model, or ask
-the user to pick it in the model menu, then continue. See CHECKLIST.md "Claude 모델 자동 배정".
+mismatch do not start the work: spawn the next-unit task chip titled with the model, ask
+the user to pick it in the model menu, or (when the user has enabled Workflow/ultracode) run the
+unit's actual work through a Workflow agent with `model` set to the tagged model id while this
+session only verifies, integrates and commits. See CHECKLIST.md "Claude 모델 자동 배정".
 
 Use [docs/MAINTENANCE.md](docs/MAINTENANCE.md) for supported entry points, checks,
 resume behavior, Windows/Mac path portability, and artifact transfer.
