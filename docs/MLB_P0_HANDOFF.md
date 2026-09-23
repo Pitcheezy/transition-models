@@ -185,7 +185,7 @@
     채택: `src/__init__.py` Windows 가드(torch 전 `import pyarrow`), `tests/test_broadcast_timing.py`에 최악 순서 회귀 테스트,
     `broadcast_timing.py` 주석 정정. 문서 `docs/H1_ARROW_CRASH_2026-09-23.md`. 검사: 새 프로세스 테스트 2개 통과, ruff, `check_project.py --cpu-only` 291 passed, 2 deselected.
 
-20. `(이 단위 커밋)`: A-6 부분 — PA 8(Nimmo)·PA 9(Alonso) 6구 통합(Claude Code, 2026-09-24). PA 8~10 워크플로(체크포인트 12 방식,
+20. `0bb442e`: A-6 부분 — PA 8(Nimmo)·PA 9(Alonso) 6구 통합(Claude Code, 2026-09-24). PA 8~10 워크플로(체크포인트 12 방식,
     PA별 Opus 5 주석 에이전트 병렬)가 한도로 두 번 끊겨 `resumeFromRunId`로 재개했고, PA 8·9는 12판정 모두 반박 없음. PA 10은 검증
     재개 중이라 이 커밋에 없다. 결과 35 확인 / 1 확인 불가 / 286 미검토, 완전 타석 2~9. 평가셋 v2 timing 36 / 리뷰 35 / 완전 34
     (PA 8/1은 라인스코어 그래픽 때문에 partial: 이닝·초말·득점만 confirmed) / 충돌 0. 조인표 36행 갱신. Fable 5.1 세션이 판단 6장·릴리스
