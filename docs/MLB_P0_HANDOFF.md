@@ -146,7 +146,7 @@
     템플릿 sny_digit_templates_v0.json. 실행한 검사: `pytest tests/test_sny_scoreboard.py`(5 passed, 합성 bug + 실제 프레임
     구조 필드 대조), `tests/test_grab_broadcast_frames.py`(3 passed), ruff, `check_project.py --cpu-only` 283 passed, 2 deselected.
 
-14. `(이 단위 커밋)`: F-3b 점수판 OCR 음성 평가셋(Claude Code Fable 5.1, 2026-09-23, PA 7·PA 8~10 주석 워크플로와 병행).
+14. `b1ab6a5`: F-3b 점수판 OCR 음성 평가셋(Claude Code Fable 5.1, 2026-09-23, PA 7·PA 8~10 주석 워크플로와 병행).
     `docs/results/mlb_p0/game_747139_scoreboard_negatives.json`: 판단 프레임 밖 12프레임을 65번 프레임으로 뽑아 눈으로 분류
     (bug 없음 7, 라인스코어 대체 1, 컷어웨이인데 bug 보임 4 — 보이는 값은 직접 읽어 기록). `src/vision/negatives.py`
     (검증·채점: false/wrong/correct/missed reads), `66 negatives` 모드. 첫 채점에서 780 s 라인스코어 그래픽이 navy 패널

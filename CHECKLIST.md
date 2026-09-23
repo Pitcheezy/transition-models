@@ -34,7 +34,7 @@
 | 중계 시각 주석 | 25 확인 / 1 확인 불가 / 296 미검토, 완전 타석 2·3·4·5·6 | 2026-09-23 |
 | 점수판 평가셋 | timing 26 / 점수판 리뷰 25(10필드 모두 confirmed, 라벨 충돌 0) / 가림 1 / 미검토 296 — v2 `game_747139_scoreboard_evalset.json` + 리뷰 `game_747139_scoreboard_review.json` | 2026-09-23 |
 | 점수판 OCR v0 | held-out(PA 3~7, 17구): 10필드 모두 오답 0, 볼 1건 기권(템플릿 없는 "3"), all_fields correct 16/17 — `game_747139_scoreboard_ocr_v0.json`. 음성 12프레임(판독 불가 76필드): 거짓 판독 0, 컷어웨이 40/44 정답·라인스코어 4 기권 — `game_747139_scoreboard_negatives_score_v0.json` | 2026-09-23 |
-| 전체 검사 (Windows CPU) | 285 passed, 2 deselected (`(이 단위 커밋)` 기준, `check_project.py --cpu-only` 87초) | 2026-09-23 |
+| 전체 검사 (Windows CPU) | 285 passed, 2 deselected (`b1ab6a5` 기준, `check_project.py --cpu-only` 87초) | 2026-09-23 |
 | 정책 효용 | **미입증** — delta −0.0862 runs/100, 95% CI [−0.4046, +0.2304] | 2026-09-21 |
 | Claude 모델 배정 | 항목 태그 참조 — `uv run --frozen python scripts/checklist_model.py --next` | 2026-09-22 |
 | 담당 구분 | **C·D = 팀원(외부)**, 그 외 = Claude/Codex. 통합 검증은 I절 | 2026-09-22 |
@@ -179,7 +179,7 @@ feature builder의 고정 2022 프로필을 그 방식으로 갱신하는 코드
       `sny_digit_templates_v0.json`. 한계: 이 방송사 레이아웃·1280x720 전용, 숫자 3~9 템플릿 없음, 그래픽 가림 시 전 필드 기권.
 - [ ] F-3a. OCR v0 확장: 새 숫자(3~9)·2자리 이닝·득점 상황이 생기면 템플릿을 늘리고 held-out을 다시 잰다. `[추가되었음 · 2026-09-23 · Claude]` 〔모델: Fable 5.1〕
       (`66 templates --template-pas …` → `predict` → `score --exclude-pas …`). 다른 방송사 레이아웃은 별도 창 측정 필요.
-- [x] F-3b. 판단 프레임 밖에서 OCR이 **기권하는지** 음성 평가셋으로 측정 (`(이 단위 커밋)`) `[추가되었음 · 2026-09-23 · Claude]`
+- [x] F-3b. 판단 프레임 밖에서 OCR이 **기권하는지** 음성 평가셋으로 측정 (`b1ab6a5`) `[추가되었음 · 2026-09-23 · Claude]`
       `docs/results/mlb_p0/game_747139_scoreboard_negatives.json`(`mlb_scoreboard_negatives_v1`, 같은 MP4·manifest에 바인딩): 사람이
       눈으로 분류한 12프레임 — bug 없음 7(통계 그래픽 150·151.8·152.4, 회상 475, 리플레이 546, 타 카메라 840, 전체화면 그래픽 880),
       라인스코어 대체 1(780: 이닝·초말·득점만 판독 가능), 컷어웨이인데 bug 보임 4(465·495·606·610, 10필드 값 기록).
