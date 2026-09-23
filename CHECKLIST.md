@@ -31,10 +31,10 @@
 | 브랜치 | `codex/fix-point-label-alignment` | 2026-09-22 |
 | 최신 작업 커밋 | `9ff2181` (A-4 PA 6 주석 + A-w 프레임 추출 도구) — 체크리스트만 바꾼 후속 커밋은 `git log -1`로 확인 | 2026-09-23 |
 | 파일 수정 권한 | **Claude Code** (A-5 PA 7 + A-6 PA 8~10 주석, I-3 스키마 v2 제안서 — 워크플로 에이전트 = 태그 모델 Opus 5, 검증·통합 = Fable 5.1 세션; A-v는 세션 직접, 착수 2026-09-23) | 2026-09-23 |
-| 중계 시각 주석 | 25 확인 / 1 확인 불가 / 296 미검토, 완전 타석 2·3·4·5·6 | 2026-09-23 |
-| 점수판 평가셋 | timing 26 / 점수판 리뷰 25(10필드 모두 confirmed, 라벨 충돌 0) / 가림 1 / 미검토 296 — v2 `game_747139_scoreboard_evalset.json` + 리뷰 `game_747139_scoreboard_review.json` | 2026-09-23 |
+| 중계 시각 주석 | 29 확인 / 1 확인 불가 / 292 미검토, 완전 타석 2~7 = **1회말 완료** | 2026-09-23 |
+| 점수판 평가셋 | timing 30 / 점수판 리뷰 29(10필드 모두 confirmed, 라벨 충돌 0) / 가림 1 / 미검토 292 — v2 `game_747139_scoreboard_evalset.json` + 리뷰 `game_747139_scoreboard_review.json` | 2026-09-23 |
 | 점수판 OCR v0 | held-out(PA 3~7, 17구): 10필드 모두 오답 0, 볼 1건 기권(템플릿 없는 "3"), all_fields correct 16/17 — `game_747139_scoreboard_ocr_v0.json`. 음성 14프레임(판독 불가 96필드): 거짓 판독 0, 컷어웨이 40/44 정답·라인스코어 4 기권 — `game_747139_scoreboard_negatives_score_v0.json` | 2026-09-23 |
-| 전체 검사 (Windows CPU) | 289 passed, 2 deselected (`f7dcac6` 기준, `check_project.py --cpu-only`) | 2026-09-23 |
+| 전체 검사 (Windows CPU) | 290 passed, 2 deselected (`(이 단위 커밋)` 기준, `check_project.py --cpu-only`) | 2026-09-23 |
 | 정책 효용 | **미입증** — delta −0.0862 runs/100, 95% CI [−0.4046, +0.2304] | 2026-09-21 |
 | Claude 모델 배정 | 항목 태그 참조 — `uv run --frozen python scripts/checklist_model.py --next` | 2026-09-22 |
 | 담당 구분 | **C·D = 팀원(외부)**, 그 외 = Claude/Codex. 통합 검증은 I절 | 2026-09-22 |
@@ -49,7 +49,7 @@ C(새 8종 확률 모델)·D(투수 프로필/추천 지원 범위)는 다른 �
 
 | 순서 | 단위 | 완료 기준 | 모델 |
 |---|---|---|---|
-| 1 | A-4 ✅ → A-5 (PA 7) | **1회말 완료** = 누적 30구, 완전 타석 2~7. A-4는 2026-09-23 완료(26구) | Opus 5 |
+| 1 | A-4 ✅ A-5 ✅ | **1회말 완료** 2026-09-23 — 누적 30구(29 확인 + PA 1/6 가림), 완전 타석 2~7 | Opus 5 |
 | 2 | B-1 → B-5 | ✅ 2026-09-22 완료(timing 20구·리뷰 19구). 주석이 늘면 리뷰 행을 같이 추가하고 `64 review-check` → `64 build`로 재생성(B-6) | Fable 5.1 |
 | 3 | A-w ✅ | 2026-09-23 완료 — 페이지 뷰 대신 `scripts/65_grab_broadcast_frames.py`(ffmpeg 프레임 + 점수판 확대 몽타주) | Fable 5.1 |
 | 4 | A-6 (PA 8–10, 2회초) ↔ F-3 ✅ v0 | 반이닝 주석 추가와 OCR 프로토타입(평가셋 측정)을 번갈아. F-3 v0는 2026-09-23 완료, 주석이 늘면 `66 predict/score` 재실행 | Opus 5 / Fable 5.1 |
@@ -76,8 +76,11 @@ C(새 8종 확률 모델)·D(투수 프로필/추천 지원 범위)는 다른 �
       판단 482.5 / 534.5 / 556.2 / 577.3 / 616.2 / 671.0 s, 릴리스 483.78 / 535.55 / 557.33 / 578.35 / 617.25 / 672.28 s(±0.15).
       특이: 476–480 s "JULY 27" 회상 그래픽 뒤 1구 판단 창이 약 2.5초뿐, 4구 전 572–576 s는 3루측 광각, 4구→5구 사이 601–603 s 견제(P:12 유지).
       리뷰 파일에도 6구 필드별 판독 행 추가(B-6 이행). 다음 한 단위는 **A-5 PA 7**.
-- [~] A-5. **PA 7** (4구) 주석 → 1회말 완료(누적 30구, 완전 타석 2~7). ← **다음 한 단위** `[추가되었음 · 2026-09-22 · Claude]` 〔모델: Opus 5〕
-      (2026-09-23 착수) A-4와 같은 Workflow 방식(Opus 5 주석 에이전트 + 투구별 2렌즈 반박 검증, Fable 5.1 세션 통합).
+- [x] A-5. **PA 7** (Olson, 4구, 2아웃 주자 1루) 주석 → **1회말 완료**(누적 30구, 완전 타석 2~7) (`(이 단위 커밋)`) `[추가되었음 · 2026-09-22 · Claude]`
+      Workflow: Opus 5 주석 에이전트 + 투구별 2렌즈 반박 검증(4구 릴리스는 시각 렌즈가 763.43→763.31로 반박·수리 후 재검증 통과, 총 10판정 반박 없음).
+      판단 700.2 / 718.5 / 740.0 / 762.0 s, 릴리스 701.23 / 719.63 / 740.83 / 763.31 s(±0.15). Fable 5.1 세션이 8프레임을 다시 뽑아 확인.
+      관찰: 삼진 뒤 bug는 3아웃을 표시하지 않고 767 s에 "END 1" 카드로 바뀜; 732 s 타 카메라 광각·736 s 덕아웃·755 s 회상 등 컷어웨이 다수.
+      리뷰 파일에 4구 필드별 판독 행 추가. 이 4구도 "동작 직전 마지막 set 프레임" 규약이라 리드 0.8~1.3 s(A-v2 대상).
       A-4와 같은 방식(Workflow: Opus 5 주석 에이전트 + 투구별 2렌즈 반박 검증) 또는 Opus 5 세션 직접 수행. 리뷰 행 동반(B-6).
       (2026-09-22) 공통 시연 경기(I-5)가 정해지기 전에는 한 타석 단위로만 진행하고 범위를 크게 늘리지 않는다.
 - [~] A-6. **2회초 PA 8–10** (12구) 주석 — F-3와 번갈아 진행. `[추가되었음 · 2026-09-22 · Claude]` 〔모델: Opus 5〕
@@ -229,9 +232,13 @@ feature builder의 고정 2022 프로필을 그 방식으로 갱신하는 코드
       체크포인트와 혼용 금지 확인. 통과 전에는 UI 독립 스트라이크·볼·파울을 null로 유지한다. `[추가되었음 · 2026-09-22 · Claude]`
 - [ ] I-2. D 산출물 수신 시 통합 검증 — 경기 시점 이전 자료만 사용했는지 확인, `scripts/62_check_game_service.py`로 〔모델: Fable 5.1〕
       322상태 재점검(추천/보류 수 변화 기록). `[추가되었음 · 2026-09-22 · Claude]`
-- [~] I-3. 우리 manifest·timing JSON → 팀원 Video Lab **스키마 v2 제안서**: `pitch_id="{game_pk}:{at_bat_number}:{pitch_number}"` `[추가되었음 · 2026-09-22 · Claude]` 〔모델: Opus 5〕
-      채움 + `play_id`·`decision_seconds`·`uncertainty_seconds`·`note`·`manifest_sha256` 추가, `release_time`(배제 경계) vs
-      `release_seconds`(사건 추정) 의미 구분, `usable_for_tracking` 하드코딩·SSD 경로 해제 요청. 조인표는 우리가 제공.
+- [x] I-3. 우리 manifest·timing JSON → 팀원 Video Lab **스키마 v2 제안서** — [docs/VIDEO_LAB_SCHEMA_V2_PROPOSAL.md](docs/VIDEO_LAB_SCHEMA_V2_PROPOSAL.md) (`(이 단위 커밋)`, **미전송**) `[추가되었음 · 2026-09-22 · Claude]
+      Workflow: Opus 5 작성 + 검증 에이전트가 두 레포 파일을 직접 읽어 대조(1차 5건·2차 3건 반박 → 수리), Fable 5.1 세션 확인.
+      내용: `pitch_id="{game_pk}:{at_bat_number}:{pitch_number}"`(팀원 카탈로그 `build_catalog.py:159`와 같은 형식) + `play_id`·
+      `decision_seconds`·`uncertainty_seconds`·`note`·`manifest_sha256`·`source_media{clip_start_seconds}` 추가, `release_time`(배제 경계)
+      vs `release_seconds`(사건 추정) 구분과 파생 규칙, `usable_for_tracking`·SSD 경로 하드코딩 해제 요청, 양쪽 검증 체크리스트 12항, 질문 9개.
+      조인표는 실제 파일로 제공: `docs/results/mlb_p0/game_747139_pitch_timing_join.json`(`scripts/68_export_pitch_timing_join.py`, 테스트 포함).
+      미해결: 원격 스트리밍 소스의 `clip_sha256` 요구(Q3), fps 출처(Q4), 시연 경기 747139 vs 코호트(Q8, I-5와 연결).
 - [ ] I-4. 타자 특성은 팀원 archetypes/refresh 스냅샷을 소비하는 어댑터(시간 정합 가드 유지) — F-2 대체. `[추가되었음 · 2026-09-22 · Claude]` 〔모델: Fable 5.1〕
 - [ ] I-5. **시연 경기 결정**: 팀원 서비스 번들은 코호트 투수(2025-08-16~09-30)만 지원해 경기 747139(2024, Schwellenbach/Megill)는 `[추가되었음 · 2026-09-22 · Claude]` 〔모델: Opus 5〕 — **42경기 잠정 후보·기본안(2025-08-17 TB@SF Webb) 정리, 동료 `/metadata`·dataset.json 확인 대기**
       (2026-09-22) 지원 투수 6명은 제안 파일(`mlb_cohort_proposal.json`) 기준이라 **잠정**이다. 실제 `/metadata` 출력 또는 동료가 보낸 번들 `metadata.json`으로만 확정한다.

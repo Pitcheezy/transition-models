@@ -165,6 +165,20 @@
     16프레임 중 판독 13·기권 3(470 OZUNA 인트로 그래픽, 475·480 JULY 27 회상 — 눈으로 확인), 기권 구간에서 마지막 확인 상태(0-0·1아웃·1루)를 유지하며 age 5→10→15 s(15 s에서 stale), 485 s 복귀 시 즉시 재확인, 거부 0·suspect 0. 결과 `docs/results/mlb_p0/game_747139_scoreboard_track_demo.json`(시연). 선수 식별은 F-4a로 분리.
     검사: `pytest tests/test_state_tracker.py`(3 passed), ruff, `check_project.py --cpu-only` 289 passed, 2 deselected.
 
+17. `(이 단위 커밋)`: A-5 PA 7(Olson) 4구 주석 → **1회말 완료**(Claude Code, 2026-09-23). 방식은 체크포인트 12와 같다
+    (Workflow: Opus 5 주석 에이전트 1명 + 투구별 시각/점수판 렌즈 검증 2명, 반박 시 Opus 5 수리 후 재검증). 사용량 한도로 한 번
+    중단됐다가 `resumeFromRunId`로 재개해 캐시된 에이전트는 재사용했다. 4구는 시각 렌즈가 릴리스 763.43을 반박(브래킷 재확인)해
+    763.31로 수리됐고 재검증 2렌즈 모두 통과. Fable 5.1 세션이 판단 4장·릴리스 4장을 다시 뽑아 육안 확인 후 통합.
+    결과 29 확인 / 1 확인 불가 / 292 미검토, 완전 타석 2~7. 평가셋 v2 timing 30 / 리뷰 29 / 10필드 confirmed / 충돌 0.
+    조인표 `docs/results/mlb_p0/game_747139_pitch_timing_join.json`(`scripts/68_export_pitch_timing_join.py`, 30행) 갱신.
+    검사: `63 check --require-pa 7` 통과, `64 review-check → build → check` 통과, `pytest` timing·evalset·join 3파일 32 passed,
+    `check_project.py --cpu-only` 290 passed, 2 deselected. 다음 주석 단위: A-6(PA 8~10, 2회초) — 별도 워크플로로 진행 중.
+
+18. `(이 단위 커밋)`: I-3 Video Lab 스키마 v2 제안서(Claude Code, 2026-09-23, 미전송). Workflow로 Opus 5 에이전트가
+    `docs/VIDEO_LAB_SCHEMA_V2_PROPOSAL.md`를 쓰고 검증 에이전트가 팀원 레포(`main` 804f523, 읽기 전용 GitHub API)와 우리
+    파일의 경로·행·필드·예시값을 대조(1차 72건 중 5건, 2차 78건 중 3건 반박 → 수리)했다. 조인표는 실제 파일
+    `game_747139_pitch_timing_join.json`(30행)과 `scripts/68`·테스트로 제공. 팀원 레포는 수정·클론·실행하지 않았다.
+
 이 문서와 함께 추가되는 후속 커밋의 해시는 `git log -6 --oneline`으로 확인한다.
 전체 Windows CPU 검사: **264 passed, 2 deselected**, Ruff 47개 경로 통과.
 JavaScript 구문 검사 및 Chrome 수동 입력·실제 추론·9회 이후 추천 보류 확인.
@@ -220,7 +234,7 @@ Claude/Codex의 순서는 [../CHECKLIST.md](../CHECKLIST.md)의 "진행 순서" 
 팀원 레포(SongRoute/pitcheezy) 대조 결과는 [TEAMMATE_PITCHEEZY_2026-09-22.md](TEAMMATE_PITCHEEZY_2026-09-22.md) — 우리 쪽 참조가 없는 별도
 트랙이라 I-0(인터페이스 합의)·I-5(시연 경기)·I-6(클래스 대응표)·G-3(통화)를 A/B와 병행해 먼저 진행한다.
 
-1. **영상 시간 주석 확대**: 2~6번 타석을 완료했다(2026-09-23 PA 6). 일곱 번째 타석(PA 7, 4구)부터 계속한다.
+1. **영상 시간 주석 확대**: 2~7번 타석을 완료해 1회말이 끝났다(2026-09-23). 2회초 PA 8~10(12구)부터 계속한다.
    새 타석마다 `game_747139_scoreboard_review.json`에 필드별 판독 행을 같이 추가한다(CHECKLIST B-6).
    없으면 평가셋에서 `scoreboard_unreviewed`로 제외된다. 프레임 확인은 브라우저 대신
    `uv run --frozen python scripts/65_grab_broadcast_frames.py --label p7scan --times 676 686 696`처럼 ffmpeg로 뽑아
