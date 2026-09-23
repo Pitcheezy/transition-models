@@ -154,6 +154,8 @@ accuracy = correct / attempted
   `confirmed`(라벨 충돌 0), 1구(PA 1/6)는 `occluded`. 미검토 302구는 `total_pitches`에만 들어간다.
 - 2026-09-23 PA 6 추가: timing 26구(25 확인 / 1 확인 불가), 리뷰 25구 모두 10필드 `confirmed`, 라벨 충돌 0, 미검토 296.
 - 2026-09-23 PA 7 추가(1회말 완료): timing 30구(29 확인 / 1 확인 불가), 리뷰 29구 모두 `confirmed`, 충돌 0, 미검토 292.
+- 2026-09-24 PA 8·9 추가: timing 36구(35 확인 / 1 확인 불가), 리뷰 35구(34구 전 필드 `confirmed`; PA 8/1은 라인스코어 그래픽으로
+  이닝·초말·득점만 `confirmed`, 카운트·아웃·주자 `unreadable`), 충돌 0, 미검토 286.
 
 ## 점수판 OCR 프로토타입 v0 (F-3, 2026-09-23)
 

@@ -185,6 +185,13 @@
     채택: `src/__init__.py` Windows 가드(torch 전 `import pyarrow`), `tests/test_broadcast_timing.py`에 최악 순서 회귀 테스트,
     `broadcast_timing.py` 주석 정정. 문서 `docs/H1_ARROW_CRASH_2026-09-23.md`. 검사: 새 프로세스 테스트 2개 통과, ruff, `check_project.py --cpu-only` 291 passed, 2 deselected.
 
+20. `(이 단위 커밋)`: A-6 부분 — PA 8(Nimmo)·PA 9(Alonso) 6구 통합(Claude Code, 2026-09-24). PA 8~10 워크플로(체크포인트 12 방식,
+    PA별 Opus 5 주석 에이전트 병렬)가 한도로 두 번 끊겨 `resumeFromRunId`로 재개했고, PA 8·9는 12판정 모두 반박 없음. PA 10은 검증
+    재개 중이라 이 커밋에 없다. 결과 35 확인 / 1 확인 불가 / 286 미검토, 완전 타석 2~9. 평가셋 v2 timing 36 / 리뷰 35 / 완전 34
+    (PA 8/1은 라인스코어 그래픽 때문에 partial: 이닝·초말·득점만 confirmed) / 충돌 0. 조인표 36행 갱신. Fable 5.1 세션이 판단 6장·릴리스
+    6장을 다시 뽑아 육안 확인. 관찰: 이닝 교대 구간이 수 초로 편집돼 top 2 첫 투구의 판단 창은 약 2초, bug는 플레이보다 2~3초 늦게 갱신됨.
+    검사: `63 check --require-pa 9`, `64 review-check → build → check`, `68`, pytest timing·evalset·join 33 passed, `check_project.py --cpu-only` 291 passed, 2 deselected.
+
 이 문서와 함께 추가되는 후속 커밋의 해시는 `git log -6 --oneline`으로 확인한다.
 전체 Windows CPU 검사: **264 passed, 2 deselected**, Ruff 47개 경로 통과.
 JavaScript 구문 검사 및 Chrome 수동 입력·실제 추론·9회 이후 추천 보류 확인.
@@ -240,7 +247,7 @@ Claude/Codex의 순서는 [../CHECKLIST.md](../CHECKLIST.md)의 "진행 순서" 
 팀원 레포(SongRoute/pitcheezy) 대조 결과는 [TEAMMATE_PITCHEEZY_2026-09-22.md](TEAMMATE_PITCHEEZY_2026-09-22.md) — 우리 쪽 참조가 없는 별도
 트랙이라 I-0(인터페이스 합의)·I-5(시연 경기)·I-6(클래스 대응표)·G-3(통화)를 A/B와 병행해 먼저 진행한다.
 
-1. **영상 시간 주석 확대**: 2~7번 타석을 완료해 1회말이 끝났다(2026-09-23). 2회초 PA 8~10(12구)부터 계속한다.
+1. **영상 시간 주석 확대**: 2~9번 타석을 완료했다(2026-09-24). 2회초 마지막 PA 10(Martinez, 6구)은 검증 재개 중이고, 그 다음은 2회말 PA 11~15.
    새 타석마다 `game_747139_scoreboard_review.json`에 필드별 판독 행을 같이 추가한다(CHECKLIST B-6).
    없으면 평가셋에서 `scoreboard_unreviewed`로 제외된다. 프레임 확인은 브라우저 대신
    `uv run --frozen python scripts/65_grab_broadcast_frames.py --label p7scan --times 676 686 696`처럼 ffmpeg로 뽑아
