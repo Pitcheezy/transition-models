@@ -34,7 +34,7 @@
 | 중계 시각 주석 | 25 확인 / 1 확인 불가 / 296 미검토, 완전 타석 2·3·4·5·6 | 2026-09-23 |
 | 점수판 평가셋 | timing 26 / 점수판 리뷰 25(10필드 모두 confirmed, 라벨 충돌 0) / 가림 1 / 미검토 296 — v2 `game_747139_scoreboard_evalset.json` + 리뷰 `game_747139_scoreboard_review.json` | 2026-09-23 |
 | 점수판 OCR v0 | held-out(PA 3~7, 17구): 10필드 모두 오답 0, 볼 1건 기권(템플릿 없는 "3"), all_fields correct 16/17 — `game_747139_scoreboard_ocr_v0.json`. 음성 14프레임(판독 불가 96필드): 거짓 판독 0, 컷어웨이 40/44 정답·라인스코어 4 기권 — `game_747139_scoreboard_negatives_score_v0.json` | 2026-09-23 |
-| 전체 검사 (Windows CPU) | 289 passed, 2 deselected (`(이 단위 커밋)` 기준, `check_project.py --cpu-only`) | 2026-09-23 |
+| 전체 검사 (Windows CPU) | 289 passed, 2 deselected (`f7dcac6` 기준, `check_project.py --cpu-only`) | 2026-09-23 |
 | 정책 효용 | **미입증** — delta −0.0862 runs/100, 95% CI [−0.4046, +0.2304] | 2026-09-21 |
 | Claude 모델 배정 | 항목 태그 참조 — `uv run --frozen python scripts/checklist_model.py --next` | 2026-09-22 |
 | 담당 구분 | **C·D = 팀원(외부)**, 그 외 = Claude/Codex. 통합 검증은 I절 | 2026-09-22 |
@@ -192,7 +192,7 @@ feature builder의 고정 2022 프로필을 그 방식으로 갱신하는 코드
       `66 negatives` 채점(`src/vision/negatives.py`): 판독 불가 96필드 거짓 판독 **0**(첫 실행은 780의 라인스코어에서 아웃·주자 4건을
       자신 있게 0/False로 냈고, bug 상단 흰 경계선·패널 내 흰색 비율 게이트를 추가해 잡음), 판독 가능 44필드 중 40 정답·4 기권(780의
       이닝·초말·득점 — 라인스코어는 bug가 아니므로 전부 기권), 오답 0. 게이트 추가 후 평가셋 점수는 변하지 않았다(16/17, 기권 1).
-- [x] F-4. 상태 추적 v0 — 그래픽·리플레이 중 마지막 확인 상태 유지 + 신선도 표시 (`(이 단위 커밋)`)
+- [x] F-4. 상태 추적 v0 — 그래픽·리플레이 중 마지막 확인 상태 유지 + 신선도 표시 (`f7dcac6`)
       `src/vision/state_tracker.py`(`ScoreboardTracker`): 판독기의 null(기권)에는 필드별 마지막 확인값을 유지하고 `age_seconds`·
       `stale`(기본 10 s 초과)을 함께 낸다. 불가능한 값(볼 4, 스트라이크 3 등)은 거부 목록에, 이닝 감소·득점 감소 같은 역행은 수용하되
       `suspect`에 기록. 값을 추측하지 않는다. 데모 `scripts/67_track_scoreboard_state.py`(PA 6 구간 460~535 s, 5초 간격 16프레임):
