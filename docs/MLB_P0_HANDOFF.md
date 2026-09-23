@@ -192,7 +192,7 @@
     6장을 다시 뽑아 육안 확인. 관찰: 이닝 교대 구간이 수 초로 편집돼 top 2 첫 투구의 판단 창은 약 2초, bug는 플레이보다 2~3초 늦게 갱신됨.
     검사: `63 check --require-pa 9`, `64 review-check → build → check`, `68`, pytest timing·evalset·join 33 passed, `check_project.py --cpu-only` 291 passed, 2 deselected.
 
-21. `(이 단위 커밋)`: A-v2 판단 프레임 규약 v2 적용(Claude Code, 2026-09-24). Workflow(PA별 Opus 5 에이전트 + 투구별 검증, 한도로 세 번
+21. `faa2eed`: A-v2 판단 프레임 규약 v2 적용(Claude Code, 2026-09-24). Workflow(PA별 Opus 5 에이전트 + 투구별 검증, 한도로 세 번
     재개)로 PA 1~7 29구를 재검토: 27구 이동(옛 값보다 0.25~9 s 앞), PA 1/3 유지, PA 2/2는 옛 프레임(투수 클로즈업)이 규약 위반이라 1.25 s 뒤로,
     PA 6/4는 워크플로 값 569.3 s(3루측 광각, 투수 미표시)를 세션이 프레임 확인 후 576.5 s로 정정, PA 6/2는 9 s 탐색 한도(리드 하한).
     **PA 5/5는 unavailable로 변경** — 카메라가 투수 클로즈업에서 430.5 s에 복귀할 때 이미 레그 킥 정점(검증 4건 일치), v1 값은 note에 보존.
