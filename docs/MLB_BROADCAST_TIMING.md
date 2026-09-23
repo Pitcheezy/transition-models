@@ -141,6 +141,22 @@ accuracy = correct / attempted
   `confirmed`(라벨 충돌 0), 1구(PA 1/6)는 `occluded`. 미검토 302구는 `total_pitches`에만 들어간다.
 - 2026-09-23 PA 6 추가: timing 26구(25 확인 / 1 확인 불가), 리뷰 25구 모두 10필드 `confirmed`, 라벨 충돌 0, 미검토 296.
 
+## 점수판 OCR 프로토타입 v0 (F-3, 2026-09-23)
+
+`scripts/66_sny_scoreboard_ocr.py templates | predict | score`, 판독기 `src/vision/sny_scoreboard.py`.
+SNY bug 전용이다(창 좌표는 4배 격자 크롭에서 눈으로 측정). 아웃·주자는 고정 창의 금색 채움 비율, 초/말은 화살표의
+행 프로파일(꼭짓점 위 = 초), 숫자(볼·스트라이크·이닝·점수)는 검증된 판단 프레임에서 잘라낸 글리프 템플릿과의 최근접
+매칭이며 템플릿이 없는 숫자나 근소 차 매칭은 **기권(null)** 한다. bug가 없으면 전 필드 기권.
+
+| 측정 | 대상 | 결과 |
+|---|---|---|
+| held-out (`--exclude-pas 1 2`) | PA 3~7 17구 | 10필드 모두 wrong 0; 볼 attempted 16 / correct 16 / abstained 1; all_fields correct 16, abstained 1 |
+| in-sample | 25구 | all_fields correct 24, abstained 1, wrong 0 |
+
+기권 1건은 PA 5/6의 볼 "3"(템플릿은 0/1/2뿐). 첫 실행에서는 이것이 "2"로 매칭돼 오답이었고 임계값을 조여 기권시켰으므로
+그 1건은 blind가 아니다. 주석이 늘어 새 숫자가 나오면 템플릿을 늘리고(`templates --template-pas …`) 다시 잰다(F-3a).
+평가셋에 없는 컷어웨이·그래픽 프레임에서의 기권 여부는 아직 재지 않았다(F-3b).
+
 ## 프레임 확인 도구 (2026-09-23)
 
 브라우저 canvas 대신 `scripts/65_grab_broadcast_frames.py --label <이름> --times t1 … t8`로 timing JSON의 media_url에서

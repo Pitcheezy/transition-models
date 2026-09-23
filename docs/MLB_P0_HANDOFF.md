@@ -135,6 +135,17 @@
     `64 build` → `64 check` 통과, `pytest` timing·evalset·grab 3개 파일 33 passed, `check_project.py --cpu-only` 278 passed, 2 deselected.
     다음 한 단위: **A-5 PA 7**(4구, 2아웃, 주자 1루) — 같은 워크플로 방식 권장; 완료 시 1회말 종료(누적 30구).
 
+13. `(이 단위 커밋)`: F-3 점수판 OCR v0 프로토타입(Claude Code Fable 5.1, 2026-09-23, PA 7 주석 워크플로와 병행).
+    `src/vision/frames.py`(65번의 프레임 추출을 모듈로 이동, 65번은 얇은 CLI), `src/vision/sny_scoreboard.py`(SNY bug 판독기),
+    `scripts/66_sny_scoreboard_ocr.py`(templates → predict → score). 아웃·주자·초말은 구조적 판독, 숫자는 검증 프레임의
+    글리프 템플릿 최근접 매칭이며 불확실하면 기권(null). 평가셋 25구의 판단 프레임을 `65 --label evalset`로 뽑아 사용.
+    템플릿은 PA 1~2(in-sample), 측정은 `66 score --exclude-pas 1 2`로 PA 3~7 held-out 17구: 10필드 모두 오답 0,
+    볼 1건 기권(PA 5/6 "3" 템플릿 없음), all_fields correct 16 / abstained 1 / wrong 0. 첫 실행에서는 그 "3"이 "2"로
+    매칭돼 오답 1이었고(거리 0.224, 여유 0.079; 정상 글리프는 거리 ≤0.062·여유 ≥0.28) 임계값을 0.12/0.15로 조여 기권시켰다 —
+    이 1건은 더 이상 blind 측정이 아님을 코드 주석과 CHECKLIST에 적었다. 결과 파일은 docs/results/mlb_p0/…ocr_v0*.json,
+    템플릿 sny_digit_templates_v0.json. 실행한 검사: `pytest tests/test_sny_scoreboard.py`(5 passed, 합성 bug + 실제 프레임
+    구조 필드 대조), `tests/test_grab_broadcast_frames.py`(3 passed), ruff, `check_project.py --cpu-only` 283 passed, 2 deselected.
+
 이 문서와 함께 추가되는 후속 커밋의 해시는 `git log -6 --oneline`으로 확인한다.
 전체 Windows CPU 검사: **264 passed, 2 deselected**, Ruff 47개 경로 통과.
 JavaScript 구문 검사 및 Chrome 수동 입력·실제 추론·9회 이후 추천 보류 확인.
