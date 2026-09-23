@@ -34,7 +34,7 @@
 | 중계 시각 주석 | 29 확인 / 1 확인 불가 / 292 미검토, 완전 타석 2~7 = **1회말 완료** | 2026-09-23 |
 | 점수판 평가셋 | timing 30 / 점수판 리뷰 29(10필드 모두 confirmed, 라벨 충돌 0) / 가림 1 / 미검토 292 — v2 `game_747139_scoreboard_evalset.json` + 리뷰 `game_747139_scoreboard_review.json` | 2026-09-23 |
 | 점수판 OCR v0 | held-out(PA 3~7, 17구): 10필드 모두 오답 0, 볼 1건 기권(템플릿 없는 "3"), all_fields correct 16/17 — `game_747139_scoreboard_ocr_v0.json`. 음성 14프레임(판독 불가 96필드): 거짓 판독 0, 컷어웨이 40/44 정답·라인스코어 4 기권 — `game_747139_scoreboard_negatives_score_v0.json` | 2026-09-23 |
-| 전체 검사 (Windows CPU) | 291 passed, 2 deselected (`(이 단위 커밋)` 기준, `check_project.py --cpu-only`) | 2026-09-23 |
+| 전체 검사 (Windows CPU) | 291 passed, 2 deselected (`bf5f06b` 기준, `check_project.py --cpu-only`) | 2026-09-23 |
 | 정책 효용 | **미입증** — delta −0.0862 runs/100, 95% CI [−0.4046, +0.2304] | 2026-09-21 |
 | Claude 모델 배정 | 항목 태그 참조 — `uv run --frozen python scripts/checklist_model.py --next` | 2026-09-22 |
 | 담당 구분 | **C·D = 팀원(외부)**, 그 외 = Claude/Codex. 통합 검증은 I절 | 2026-09-22 |
@@ -215,7 +215,7 @@ feature builder의 고정 2022 프로필을 그 방식으로 갱신하는 코드
 
 ## H. 운영 · 엔지니어링 부채
 
-- [x] H-1. Arrow 문자열 변환 "멈춤" 원인 규명 → **멈춤이 아니라 크래시** (`(이 단위 커밋)`) — [docs/H1_ARROW_CRASH_2026-09-23.md](docs/H1_ARROW_CRASH_2026-09-23.md)
+- [x] H-1. Arrow 문자열 변환 "멈춤" 원인 규명 → **멈춤이 아니라 크래시** (`bf5f06b`) — [docs/H1_ARROW_CRASH_2026-09-23.md](docs/H1_ARROW_CRASH_2026-09-23.md)
       `hashlib`/`urllib.request`(TLS 슬롯 8개) → `torch` → 첫 pyarrow 문자열 변환 순서에서 pyarrow 24 `arrow.dll`의 mimalloc이 미할당
       TLS 슬롯 63을 읽어 `0xC0000005`로 죽는다(4/4 결정적, 25초 정체 뒤). OpenSSL/OpenMP 중복 아님. 완화 채택: `src/__init__.py`가
       Windows에서 torch보다 먼저 `pyarrow`를 import(3/3 정상), 최악 순서 새 프로세스 회귀 테스트 추가. 안전망 `ARROW_DEFAULT_MEMORY_POOL=system`.

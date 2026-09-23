@@ -179,7 +179,7 @@
     파일의 경로·행·필드·예시값을 대조(1차 72건 중 5건, 2차 78건 중 3건 반박 → 수리)했다. 조인표는 실제 파일
     `game_747139_pitch_timing_join.json`(30행)과 `scripts/68`·테스트로 제공. 팀원 레포는 수정·클론·실행하지 않았다.
 
-19. `(이 단위 커밋)`: H-1 Arrow "멈춤" 원인 규명(Claude Code Fable 5.1, 2026-09-23). Workflow로 새 프로세스 실험 12셀 + 종합 에이전트의
+19. `bf5f06b`: H-1 Arrow "멈춤" 원인 규명(Claude Code Fable 5.1, 2026-09-23). Workflow로 새 프로세스 실험 12셀 + 종합 에이전트의
     TLS 슬롯 덤프·`TlsAlloc` 재현·PE 검사 + 검증 에이전트 재현 4회/완화 3회. 결론: 멈춤이 아니라 `0xC0000005` 크래시 — pyarrow 24
     `arrow.dll` 내 mimalloc v3.2.7이 미할당 TLS 슬롯 63을 읽는데, hashlib가 슬롯 8개를 먼저 쓰면 torch DLL이 그 슬롯에 놓인다.
     채택: `src/__init__.py` Windows 가드(torch 전 `import pyarrow`), `tests/test_broadcast_timing.py`에 최악 순서 회귀 테스트,
