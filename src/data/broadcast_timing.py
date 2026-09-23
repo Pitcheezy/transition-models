@@ -23,8 +23,10 @@ def _number(value, name):
 
 def timing_context(manifest, sources):
     """Bind annotations to an exact manifest and inspected full-game media URL."""
-    # Loading crypto/network DLLs before Torch + Arrow hangs on the Windows runtime.
-    # Offline annotation helpers need these only when validating an actual source.
+    # hashlib/urllib take eight TLS slots; if they load before torch, pyarrow's mimalloc later
+    # reads a torch value from TLS slot 63 and the first Arrow allocation crashes (Windows,
+    # docs/H1_ARROW_CRASH_2026-09-23.md). src/__init__.py now imports pyarrow first; the deferred
+    # import stays because offline annotation helpers only need these for a real source.
     import hashlib
 
     from src.data.mlb_sources import validate_mlb_url

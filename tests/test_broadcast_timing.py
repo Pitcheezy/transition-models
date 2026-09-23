@@ -181,6 +181,25 @@ def test_committed_visual_annotations_are_source_bound():
     assert 1 not in report["complete_plate_appearances"]
 
 
+def test_hashlib_before_src_and_torch_in_fresh_process():
+    # Worst known order (docs/H1_ARROW_CRASH_2026-09-23.md): eight TLS slots taken by hashlib,
+    # then torch, then the first Arrow-backed string conversion. src/__init__.py must load
+    # pyarrow first so this completes instead of dying with an access violation.
+    code = (
+        "import hashlib; import src.data.broadcast_timing; import torch; import pandas as pd; "
+        "assert pd.DataFrame([{'pitch': 'FF'}]).shape == (1, 1); print('ok')"
+    )
+    run = subprocess.run(
+        [sys.executable, "-c", code],
+        cwd=Path(__file__).resolve().parents[1],
+        capture_output=True,
+        text=True,
+        timeout=60,
+    )
+    assert run.returncode == 0, (run.returncode, run.stderr[-800:])
+    assert "ok" in run.stdout
+
+
 def test_import_before_model_runtime_in_fresh_process():
     # Exercise the actual import-order regression, not a warmed-up pytest process.
     code = (

@@ -118,7 +118,8 @@ Git에 저장된 주석을 먼저 불러와 보존하고 새 항목만 추가해
 - 코드가 바뀌면 관련 회귀 검사와 `uv run --frozen python scripts/check_project.py --cpu-only`,
   수정한 JavaScript의 `node --check`를 실행해라. 같은 변경에 통과한 검사를 이유 없이 반복하지 마라.
   주석/문서만 바뀌면 ID·출처·시각·완전 타석 검증을 우선해라.
-- 이 Windows 환경은 조기 crypto/network import 뒤 Torch/Arrow 초기화에서 멈춘 적이 있다.
+- 이 Windows 환경은 조기 crypto/network import 뒤 Torch/Arrow 초기화에서 멈춘 것처럼 보인 적이 있다(실제로는 크래시,
+  원인·완화는 docs/H1_ARROW_CRASH_2026-09-23.md; `src/__init__.py`가 torch보다 먼저 pyarrow를 import한다).
   주석 모듈의 지연 import를 이유 없이 되돌리지 마라. 새 프로세스 회귀 테스트가 있다.
 - `docs/MLB_P0_HANDOFF.md`에 완료/미완료, 현재 커밋, 실제 실행한 검사와 결과,
   막힌 이유, 다음 첫 실행 명령을 갱신해라. 재현하지 못한 결과를 통과로 쓰지 마라.

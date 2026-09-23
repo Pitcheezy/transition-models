@@ -15,6 +15,9 @@ uv run --frozen python scripts/check_project.py
 ```
 
 `pywin32`는 Windows에서만 설치된다. SciPy·PyArrow·threadpoolctl은 직접 의존성으로 선언했다.
+Windows에서는 `src/__init__.py`가 torch보다 먼저 `pyarrow`를 import한다 — `hashlib`/`urllib` 뒤에 torch를 로드하면 첫 Arrow
+문자열 변환이 접근 위반으로 죽는 문제의 완화다([docs/H1_ARROW_CRASH_2026-09-23.md](H1_ARROW_CRASH_2026-09-23.md)). 새 진입점은
+`import src...` 또는 `import pyarrow`를 torch보다 앞에 둔다.
 `uv.lock`을 함께 관리한다. Windows/Linux는 학습에 사용한 **PyTorch 2.6.0 + CUDA 12.4**,
 Mac은 **PyTorch 2.8.0**으로 고정한다. Mac의 Python 3.12 + PyTorch 2.6은 테스트를 통과해도
 DataLoader 사용 후 resource tracker를 기다리며 종료되지 않는 문제가 재현되었다.
