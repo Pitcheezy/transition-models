@@ -34,7 +34,7 @@
 | 중계 시각 주석 | 25 확인 / 1 확인 불가 / 296 미검토, 완전 타석 2·3·4·5·6 | 2026-09-23 |
 | 점수판 평가셋 | timing 26 / 점수판 리뷰 25(10필드 모두 confirmed, 라벨 충돌 0) / 가림 1 / 미검토 296 — v2 `game_747139_scoreboard_evalset.json` + 리뷰 `game_747139_scoreboard_review.json` | 2026-09-23 |
 | 점수판 OCR v0 | held-out(PA 3~7, 17구): 10필드 모두 오답 0, 볼 1건 기권(템플릿 없는 "3"), all_fields correct 16/17 — `game_747139_scoreboard_ocr_v0.json`. 음성 12프레임(판독 불가 76필드): 거짓 판독 0, 컷어웨이 40/44 정답·라인스코어 4 기권 — `game_747139_scoreboard_negatives_score_v0.json` | 2026-09-23 |
-| 전체 검사 (Windows CPU) | 286 passed, 2 deselected (`(이 단위 커밋)` 기준, `check_project.py --cpu-only`) | 2026-09-23 |
+| 전체 검사 (Windows CPU) | 286 passed, 2 deselected (`29eef93` 기준, `check_project.py --cpu-only`) | 2026-09-23 |
 | 정책 효용 | **미입증** — delta −0.0862 runs/100, 95% CI [−0.4046, +0.2304] | 2026-09-21 |
 | Claude 모델 배정 | 항목 태그 참조 — `uv run --frozen python scripts/checklist_model.py --next` | 2026-09-22 |
 | 담당 구분 | **C·D = 팀원(외부)**, 그 외 = Claude/Codex. 통합 검증은 I절 | 2026-09-22 |
@@ -83,7 +83,7 @@ C(새 8종 확률 모델)·D(투수 프로필/추천 지원 범위)는 다른 �
 - [~] A-6. **2회초 PA 8–10** (12구) 주석 — F-3와 번갈아 진행. `[추가되었음 · 2026-09-22 · Claude]` 〔모델: Opus 5〕
       (2026-09-23 착수) Workflow: PA별 Opus 5 주석 에이전트 3명 병렬 + 투구별 2렌즈 반박 검증, Fable 5.1 세션 통합.
 - [ ] A-7. **2회말~3회 PA 11–26** (59구) 주석 → 3회 종료(누적 101구). `[추가되었음 · 2026-09-22 · Claude]` 〔모델: Opus 5〕
-- [x] A-v. 판단-릴리스 간격(리드)이 짧은 사례의 규약 → **파생 필드**로 결정 (`(이 단위 커밋)`) `[추가되었음 · 2026-09-22 · Claude]`
+- [x] A-v. 판단-릴리스 간격(리드)이 짧은 사례의 규약 → **파생 필드**로 결정 (`29eef93`) `[추가되었음 · 2026-09-22 · Claude]`
       note 문구가 아니라 코드가 계산한다: `63 check` 보고서에 `short_lead_threshold_seconds`(1.5), `short_lead_pitches`
       (release − decision < 1.5 s 투구 목록, 삭제하지 않고 나열), `lead_seconds_min`; 평가셋 v2 항목에 `lead_seconds`.
       현재 26구 중 짧은 리드 7: PA 5/5 1.15 s(카메라 늦은 복귀), PA 6/1~6 1.05~1.28 s. **발견**: PA 6 전부가 짧은 이유는 편집이
