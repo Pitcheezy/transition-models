@@ -30,7 +30,7 @@
 |---|---|---|
 | 브랜치 | `codex/fix-point-label-alignment` | 2026-09-22 |
 | 최신 작업 커밋 | `9ff2181` (A-4 PA 6 주석 + A-w 프레임 추출 도구) — 체크리스트만 바꾼 후속 커밋은 `git log -1`로 확인 | 2026-09-23 |
-| 파일 수정 권한 | **Claude Code** (A-5 PA 7 + A-6 PA 8~10 주석 — 워크플로 주석 에이전트 = 태그 모델 Opus 5, 검증·통합 = Fable 5.1 세션, 착수 2026-09-23) | 2026-09-23 |
+| 파일 수정 권한 | **Claude Code** (A-5 PA 7 + A-6 PA 8~10 주석, I-3 스키마 v2 제안서 — 워크플로 에이전트 = 태그 모델 Opus 5, 검증·통합 = Fable 5.1 세션; A-v는 세션 직접, 착수 2026-09-23) | 2026-09-23 |
 | 중계 시각 주석 | 25 확인 / 1 확인 불가 / 296 미검토, 완전 타석 2·3·4·5·6 | 2026-09-23 |
 | 점수판 평가셋 | timing 26 / 점수판 리뷰 25(10필드 모두 confirmed, 라벨 충돌 0) / 가림 1 / 미검토 296 — v2 `game_747139_scoreboard_evalset.json` + 리뷰 `game_747139_scoreboard_review.json` | 2026-09-23 |
 | 점수판 OCR v0 | held-out(PA 3~7, 17구): 10필드 모두 오답 0, 볼 1건 기권(템플릿 없는 "3"), all_fields correct 16/17 — `game_747139_scoreboard_ocr_v0.json`. 음성 12프레임(판독 불가 76필드): 거짓 판독 0, 컷어웨이 40/44 정답·라인스코어 4 기권 — `game_747139_scoreboard_negatives_score_v0.json` | 2026-09-23 |
@@ -83,7 +83,7 @@ C(새 8종 확률 모델)·D(투수 프로필/추천 지원 범위)는 다른 �
 - [~] A-6. **2회초 PA 8–10** (12구) 주석 — F-3와 번갈아 진행. `[추가되었음 · 2026-09-22 · Claude]` 〔모델: Opus 5〕
       (2026-09-23 착수) Workflow: PA별 Opus 5 주석 에이전트 3명 병렬 + 투구별 2렌즈 반박 검증, Fable 5.1 세션 통합.
 - [ ] A-7. **2회말~3회 PA 11–26** (59구) 주석 → 3회 종료(누적 101구). `[추가되었음 · 2026-09-22 · Claude]` 〔모델: Opus 5〕
-- [ ] A-v. 컷어웨이·클로즈업 직후 판단 프레임(5/1 약 2.1초, 5/5 약 1.2초 리드)처럼 판단-릴리스 간격이 〔모델: Fable 5.1〕
+- [~] A-v. 컷어웨이·클로즈업 직후 판단 프레임(5/1 약 2.1초, 5/5 약 1.2초 리드)처럼 판단-릴리스 간격이 〔모델: Fable 5.1〕
       짧은 사례를 구분할 규약(note 문구 또는 별도 필드) 검토. 현재는 note에만 적혀 있다.
       `[추가되었음 · 2026-09-22 · Claude]`
 - [!] A-x. PA 1 / 6구는 통계 그래픽 가림으로 판단 화면 확정 불가. 그대로 `unavailable` 유지.
@@ -216,7 +216,7 @@ feature builder의 고정 2022 프로필을 그 방식으로 갱신하는 코드
       체크포인트와 혼용 금지 확인. 통과 전에는 UI 독립 스트라이크·볼·파울을 null로 유지한다. `[추가되었음 · 2026-09-22 · Claude]`
 - [ ] I-2. D 산출물 수신 시 통합 검증 — 경기 시점 이전 자료만 사용했는지 확인, `scripts/62_check_game_service.py`로 〔모델: Fable 5.1〕
       322상태 재점검(추천/보류 수 변화 기록). `[추가되었음 · 2026-09-22 · Claude]`
-- [ ] I-3. 우리 manifest·timing JSON → 팀원 Video Lab **스키마 v2 제안서**: `pitch_id="{game_pk}:{at_bat_number}:{pitch_number}"` `[추가되었음 · 2026-09-22 · Claude]` 〔모델: Opus 5〕
+- [~] I-3. 우리 manifest·timing JSON → 팀원 Video Lab **스키마 v2 제안서**: `pitch_id="{game_pk}:{at_bat_number}:{pitch_number}"` `[추가되었음 · 2026-09-22 · Claude]` 〔모델: Opus 5〕
       채움 + `play_id`·`decision_seconds`·`uncertainty_seconds`·`note`·`manifest_sha256` 추가, `release_time`(배제 경계) vs
       `release_seconds`(사건 추정) 의미 구분, `usable_for_tracking` 하드코딩·SSD 경로 해제 요청. 조인표는 우리가 제공.
 - [ ] I-4. 타자 특성은 팀원 archetypes/refresh 스냅샷을 소비하는 어댑터(시간 정합 가드 유지) — F-2 대체. `[추가되었음 · 2026-09-22 · Claude]` 〔모델: Fable 5.1〕
