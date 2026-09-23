@@ -34,7 +34,7 @@
 | 중계 시각 주석 | 29 확인 / 1 확인 불가 / 292 미검토, 완전 타석 2~7 = **1회말 완료** | 2026-09-23 |
 | 점수판 평가셋 | timing 30 / 점수판 리뷰 29(10필드 모두 confirmed, 라벨 충돌 0) / 가림 1 / 미검토 292 — v2 `game_747139_scoreboard_evalset.json` + 리뷰 `game_747139_scoreboard_review.json` | 2026-09-23 |
 | 점수판 OCR v0 | held-out(PA 3~7, 17구): 10필드 모두 오답 0, 볼 1건 기권(템플릿 없는 "3"), all_fields correct 16/17 — `game_747139_scoreboard_ocr_v0.json`. 음성 14프레임(판독 불가 96필드): 거짓 판독 0, 컷어웨이 40/44 정답·라인스코어 4 기권 — `game_747139_scoreboard_negatives_score_v0.json` | 2026-09-23 |
-| 전체 검사 (Windows CPU) | 290 passed, 2 deselected (`(이 단위 커밋)` 기준, `check_project.py --cpu-only`) | 2026-09-23 |
+| 전체 검사 (Windows CPU) | 290 passed, 2 deselected (`9271231` 기준, `check_project.py --cpu-only`) | 2026-09-23 |
 | 정책 효용 | **미입증** — delta −0.0862 runs/100, 95% CI [−0.4046, +0.2304] | 2026-09-21 |
 | Claude 모델 배정 | 항목 태그 참조 — `uv run --frozen python scripts/checklist_model.py --next` | 2026-09-22 |
 | 담당 구분 | **C·D = 팀원(외부)**, 그 외 = Claude/Codex. 통합 검증은 I절 | 2026-09-22 |
@@ -76,7 +76,7 @@ C(새 8종 확률 모델)·D(투수 프로필/추천 지원 범위)는 다른 �
       판단 482.5 / 534.5 / 556.2 / 577.3 / 616.2 / 671.0 s, 릴리스 483.78 / 535.55 / 557.33 / 578.35 / 617.25 / 672.28 s(±0.15).
       특이: 476–480 s "JULY 27" 회상 그래픽 뒤 1구 판단 창이 약 2.5초뿐, 4구 전 572–576 s는 3루측 광각, 4구→5구 사이 601–603 s 견제(P:12 유지).
       리뷰 파일에도 6구 필드별 판독 행 추가(B-6 이행). 다음 한 단위는 **A-5 PA 7**.
-- [x] A-5. **PA 7** (Olson, 4구, 2아웃 주자 1루) 주석 → **1회말 완료**(누적 30구, 완전 타석 2~7) (`(이 단위 커밋)`) `[추가되었음 · 2026-09-22 · Claude]`
+- [x] A-5. **PA 7** (Olson, 4구, 2아웃 주자 1루) 주석 → **1회말 완료**(누적 30구, 완전 타석 2~7) (`9271231`) `[추가되었음 · 2026-09-22 · Claude]`
       Workflow: Opus 5 주석 에이전트 + 투구별 2렌즈 반박 검증(4구 릴리스는 시각 렌즈가 763.43→763.31로 반박·수리 후 재검증 통과, 총 10판정 반박 없음).
       판단 700.2 / 718.5 / 740.0 / 762.0 s, 릴리스 701.23 / 719.63 / 740.83 / 763.31 s(±0.15). Fable 5.1 세션이 8프레임을 다시 뽑아 확인.
       관찰: 삼진 뒤 bug는 3아웃을 표시하지 않고 767 s에 "END 1" 카드로 바뀜; 732 s 타 카메라 광각·736 s 덕아웃·755 s 회상 등 컷어웨이 다수.
@@ -232,7 +232,7 @@ feature builder의 고정 2022 프로필을 그 방식으로 갱신하는 코드
       체크포인트와 혼용 금지 확인. 통과 전에는 UI 독립 스트라이크·볼·파울을 null로 유지한다. `[추가되었음 · 2026-09-22 · Claude]`
 - [ ] I-2. D 산출물 수신 시 통합 검증 — 경기 시점 이전 자료만 사용했는지 확인, `scripts/62_check_game_service.py`로 〔모델: Fable 5.1〕
       322상태 재점검(추천/보류 수 변화 기록). `[추가되었음 · 2026-09-22 · Claude]`
-- [x] I-3. 우리 manifest·timing JSON → 팀원 Video Lab **스키마 v2 제안서** — [docs/VIDEO_LAB_SCHEMA_V2_PROPOSAL.md](docs/VIDEO_LAB_SCHEMA_V2_PROPOSAL.md) (`(이 단위 커밋)`, **미전송**) `[추가되었음 · 2026-09-22 · Claude]
+- [x] I-3. 우리 manifest·timing JSON → 팀원 Video Lab **스키마 v2 제안서** — [docs/VIDEO_LAB_SCHEMA_V2_PROPOSAL.md](docs/VIDEO_LAB_SCHEMA_V2_PROPOSAL.md) (`9271231`, **미전송**) `[추가되었음 · 2026-09-22 · Claude]
       Workflow: Opus 5 작성 + 검증 에이전트가 두 레포 파일을 직접 읽어 대조(1차 5건·2차 3건 반박 → 수리), Fable 5.1 세션 확인.
       내용: `pitch_id="{game_pk}:{at_bat_number}:{pitch_number}"`(팀원 카탈로그 `build_catalog.py:159`와 같은 형식) + `play_id`·
       `decision_seconds`·`uncertainty_seconds`·`note`·`manifest_sha256`·`source_media{clip_start_seconds}` 추가, `release_time`(배제 경계)

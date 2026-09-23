@@ -165,7 +165,7 @@
     16프레임 중 판독 13·기권 3(470 OZUNA 인트로 그래픽, 475·480 JULY 27 회상 — 눈으로 확인), 기권 구간에서 마지막 확인 상태(0-0·1아웃·1루)를 유지하며 age 5→10→15 s(15 s에서 stale), 485 s 복귀 시 즉시 재확인, 거부 0·suspect 0. 결과 `docs/results/mlb_p0/game_747139_scoreboard_track_demo.json`(시연). 선수 식별은 F-4a로 분리.
     검사: `pytest tests/test_state_tracker.py`(3 passed), ruff, `check_project.py --cpu-only` 289 passed, 2 deselected.
 
-17. `(이 단위 커밋)`: A-5 PA 7(Olson) 4구 주석 → **1회말 완료**(Claude Code, 2026-09-23). 방식은 체크포인트 12와 같다
+17. `9271231`: A-5 PA 7(Olson) 4구 주석 → **1회말 완료**(Claude Code, 2026-09-23). 방식은 체크포인트 12와 같다
     (Workflow: Opus 5 주석 에이전트 1명 + 투구별 시각/점수판 렌즈 검증 2명, 반박 시 Opus 5 수리 후 재검증). 사용량 한도로 한 번
     중단됐다가 `resumeFromRunId`로 재개해 캐시된 에이전트는 재사용했다. 4구는 시각 렌즈가 릴리스 763.43을 반박(브래킷 재확인)해
     763.31로 수리됐고 재검증 2렌즈 모두 통과. Fable 5.1 세션이 판단 4장·릴리스 4장을 다시 뽑아 육안 확인 후 통합.
@@ -174,7 +174,7 @@
     검사: `63 check --require-pa 7` 통과, `64 review-check → build → check` 통과, `pytest` timing·evalset·join 3파일 32 passed,
     `check_project.py --cpu-only` 290 passed, 2 deselected. 다음 주석 단위: A-6(PA 8~10, 2회초) — 별도 워크플로로 진행 중.
 
-18. `(이 단위 커밋)`: I-3 Video Lab 스키마 v2 제안서(Claude Code, 2026-09-23, 미전송). Workflow로 Opus 5 에이전트가
+18. `9271231`: I-3 Video Lab 스키마 v2 제안서(Claude Code, 2026-09-23, 미전송). Workflow로 Opus 5 에이전트가
     `docs/VIDEO_LAB_SCHEMA_V2_PROPOSAL.md`를 쓰고 검증 에이전트가 팀원 레포(`main` 804f523, 읽기 전용 GitHub API)와 우리
     파일의 경로·행·필드·예시값을 대조(1차 72건 중 5건, 2차 78건 중 3건 반박 → 수리)했다. 조인표는 실제 파일
     `game_747139_pitch_timing_join.json`(30행)과 `scripts/68`·테스트로 제공. 팀원 레포는 수정·클론·실행하지 않았다.
