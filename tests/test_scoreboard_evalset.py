@@ -9,7 +9,7 @@ from pathlib import Path
 import pytest
 
 import src.data.scoreboard_evalset as module
-from src.data.broadcast_timing import timing_context
+from src.data.broadcast_timing import KEYS, timing_context
 from src.data.scoreboard_evalset import (
     DENOMINATORS,
     LABEL_FIELDS,
@@ -411,7 +411,8 @@ def test_real_game_evalset_matches_inputs_and_cli_round_trips(tmp_path):
         == coverage["timing_rows"]
     )
     assert coverage["label_conflicts"] == 0 and doc["label_conflicts"] == []
-    assert all(e["reviewer"].startswith("Claude Code") for e in doc["entries"])
+    reviewers = {tuple(r[k] for k in KEYS): r["reviewer"] for r in review["reviews"]}
+    assert all(e["reviewer"] == reviewers[tuple(e[k] for k in KEYS)] for e in doc["entries"])
     stored = json.loads(
         (RESULTS / "game_747139_scoreboard_evalset.json").read_text(encoding="utf-8-sig")
     )

@@ -5,21 +5,23 @@
 [CHECKLIST.md](CHECKLIST.md) lists every remaining task, the next work unit, and the
 Codex/Claude handoff protocol. Update it in the same commit as the work it tracks.
 
-## MLB-first P0 — 2026-09-22
+## MLB-first P0 — 2026-09-24
 
 The product goal is pre-pitch broadcast situation recognition, outcome probabilities,
 and eventually pitch-type/target-location recommendations. MLB is the first delivery
 target; KBO comes later. Read docs/MLB_P0.md and docs/MLB_P0_HANDOFF.md for current work.
-Codex taking over from Claude Code (2026-09-24): start from docs/CODEX_RESUME_PROMPT.md.
-Scripts 58–63 cover video identity, manual inference UI, source inspection, new
-eight-class observation targets, whole-game HTTP checks, and manual broadcast timing.
-Read docs/MLB_BROADCAST_TIMING.md: 19 pitches timed, 1 unavailable, 302 unreviewed;
-PA 2–5 have every pitch timed. This is manual timing, not automatic synchronization.
+Start from docs/CODEX_RESUME_PROMPT.md; the next unit is PA 16–19 (10 pitches).
+Scripts 58–69 cover video identity, manual inference UI, source inspection, observation
+targets, whole-game checks, manual timing, scoreboard evaluation/OCR, and verified merges.
+Read docs/MLB_BROADCAST_TIMING.md: 60 pitches timed, 2 unavailable, 260 unreviewed;
+PA 2–4 and 6–15 have every pitch timed. PA 11–15 candidates were verified and merged.
+This is manual timing, not automatic synchronization. The SNY scoreboard OCR prototype
+supports one broadcast layout; see the latest handoff/report for measured results.
 Current UI uses the existing ten-class model and
 must leave independent strike/ball/foul and target-location outputs unavailable.
 Never pair video/Statcast rows by list order or trust old pose-video filenames.
-Do not claim OCR, automatic broadcast synchronization, new eight-class model accuracy, or
-actual run reduction has been completed. See the guide for explicitly pending work.
+Do not claim completed general broadcast OCR, automatic broadcast synchronization,
+new eight-class model accuracy, or actual run reduction. See the guide for pending work.
 
 ## Current operational validation — 2026-09-21
 

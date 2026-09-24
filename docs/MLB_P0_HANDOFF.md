@@ -223,8 +223,30 @@
     인계 지시문 `docs/CODEX_RESUME_PROMPT.md`(검증 절차, 병합·OCR 재측정 명령, 주의 투구, 규칙, 보고 형식).
     검사: 관련 pytest 7파일 47 passed, `check_project.py --cpu-only` 294 passed, 2 deselected. 파일 수정 권한은 비워 두었다.
 
+25. `WORK_COMMIT`: A-7 PA 11~15 20구 프레임 검증·병합(Codex, 2026-09-24). 선점 커밋 `9eb1c66`, 기준 후보 `1573268`.
+    기존 JPEG 캐시와 필요한 경계 프레임을 직접 보고 timing·점수판 두 측면을 확인했다. PA 11~12는 세션 확인+추가 릴리스 렌즈,
+    PA 13~15는 독립 작업 에이전트 확인+세션 스팟체크. AI 검토이며 별도 사람 간 일치도 측정은 수행하지 않았다.
+    **PA 11/1 판단 1034.00→1038.00**: 1037.00/1037.25의 흰 bug 전환이 연속성을 끊고 1037.50/1037.75는 아직 조립 중이다.
+    1038.00에서 0-0·0아웃·빈 베이스·2회말·0:0을 직접 읽어 partial→readable로 정정했다(P:N은 이 프레임에서 아직 안 보임).
+    릴리스 정정: PA 11/2 1060.80→1060.85, 11/5 1121.53→1121.58, 12/1 1162.45→1162.50, 12/2 1177.50→1177.55,
+    15/1 1468.44→1468.50, 15/2 1490.82→1490.90 s. 모두 ±0.15초, 공 분리의 프레임 단위 정답은 아니다.
+    PA 13/3의 1258.75 제안은 이미 팔로스루이므로 1258.48 유지. PA 14/1·5의 긴 리드도 표본 검사에서 준비 중단을 발견하지 못해 유지.
+    타자 표시 PA 14 Urshela / PA 15 Arcia를 확인했다. 전수 연속 재생은 아니며 일부 PA 11 표본 간격은 최대 2.25초다.
+    `69` 전체 dry-run 후 PA 11→15 각각 write 및 63/64/68 재생성·검증 통과. **60 확인 / 2 확인 불가 / 260 미검토**, 완전 PA 2~4·6~15.
+    리뷰 60(59 전 필드·PA 8/1 partial), 충돌 0. 후보 rows 0, 원본 후보/과거 notes는 `1573268`, 검증값/수정 전후/증거는
+    `game_747139_timing_verification_pa11_15.json`. 검토용 파일은 `outputs/verification/`로 모아 git-ignore 처리했다.
+    OCR v1 템플릿(PA 1·2·9) 고정: held-out 50구 중 전 필드 평가 가능 49구 **44 정답·5 기권·오답 0**. 새 20구는 17 정답·3 기권
+    (11/1 이닝, 11/2 전 필드, 13/3 볼). 기존 8/2·10/1 이닝 기권이 재실행에서 2로 달라졌으나 과거 프레임 해시 부재로 원인 미확정,
+    모델 개선으로 해석하지 않는다. 현재 캐시의 반복 예측은 60/60 동일. `..._ocr_v1_provenance.json`에 해시·환경·재현 한계를 보존했다.
+    음성 평가: 14프레임, 판독 불가 96필드 거짓 판독 0, 판독 가능 44필드 40 정답·4 기권·오답 0. 템플릿·OCR 코드는 변경하지 않았다.
+    첫 전체 검사에서 검토자를 Claude Code로 고정한 테스트 1건이 실패했다. `tests/test_scoreboard_evalset.py`를 투구 키별로
+    원본 리뷰의 실제 검토자 보존을 확인하도록 고쳐 교대 작업을 지원했다. 최종 `check_project.py --cpu-only` **294 passed, 2 deselected**,
+    Ruff 47경로 및 변경 테스트 파일 Ruff 통과, 문서 반영 후 체크리스트 가드 4 passed. Windows 실행은 `PYTHONIOENCODING=utf-8`, uv 사용자 캐시 접근 제한은
+    `uv --cache-dir .cache/uv run --frozen ...`으로 작업 폴더 캐시를 사용해 해결했다.
+    다음 단위 **PA 16~19 10구**. 수정 권한 반납, 다음 첫 명령은 아래 '남은 순서'와 `CODEX_RESUME_PROMPT.md` 참조.
+
 이 문서와 함께 추가되는 후속 커밋의 해시는 `git log -6 --oneline`으로 확인한다.
-전체 Windows CPU 검사: **264 passed, 2 deselected**, Ruff 47개 경로 통과.
+최신 Windows CPU 검사: **294 passed, 2 deselected**, Ruff 47개 경로 통과(체크포인트 25). 아래 브라우저·서비스 검증은 이전 체크포인트 기록이다.
 JavaScript 구문 검사 및 Chrome 수동 입력·실제 추론·9회 이후 추천 보류 확인.
 GitHub CI 결과는 해당 커밋의 validation 워크플로에서 따로 확인한다.
 주석 모듈을 먼저 import한 새 프로세스에서도 Torch→Pandas 문자열 생성이 성공하는지
@@ -278,27 +300,19 @@ Claude/Codex의 순서는 [../CHECKLIST.md](../CHECKLIST.md)의 "진행 순서" 
 팀원 레포(SongRoute/pitcheezy) 대조 결과는 [TEAMMATE_PITCHEEZY_2026-09-22.md](TEAMMATE_PITCHEEZY_2026-09-22.md) — 우리 쪽 참조가 없는 별도
 트랙이라 I-0(인터페이스 합의)·I-5(시연 경기)·I-6(클래스 대응표)·G-3(통화)를 A/B와 병행해 먼저 진행한다.
 
-1. **영상 시간 주석 확대**: 2~10번 타석을 완료했다(2026-09-24, 2회초 종료, PA 1~10 전부 규약 v2). 2회말 PA 11~15 20구는
-   미검증 후보 파일에 있다 — 프레임으로 검증한 뒤 `scripts/69_append_timing_rows.py`로 타석별 병합한다(CODEX_RESUME_PROMPT.md §1).
-   새 타석마다 `game_747139_scoreboard_review.json`에 필드별 판독 행을 같이 추가한다(CHECKLIST B-6).
-   없으면 평가셋에서 `scoreboard_unreviewed`로 제외된다. 프레임 확인은 브라우저 대신
-   `uv run --frozen python scripts/65_grab_broadcast_frames.py --label p7scan --times 676 686 696`처럼 ffmpeg로 뽑아
-   `outputs/frames/<label>_bug.png`(점수판 확대)와 `_full.png`를 보면 된다. PA 6 마지막 릴리스는 672.28 s이고
-   676 s에 bug가 0-0·2아웃·주자 1루로 바뀐다. 이 숫자는 탐색 출발점일 뿐이며 반드시 프레임으로 확인한다. feed UTC 시각을 재생 시간으로 쓰지 않는다.
-   `63_annotate_broadcast.py check --annotations docs/results/mlb_p0/game_747139_timing.json
-   --require-pa 6`으로 기존 주석을 먼저 확인한다. 이후 점수판 인식 평가셋으로 연결한다.
+1. **영상 시간 주석 확대**: PA 1~15 검토 완료(60 확인·2 확인 불가, 2회말 종료). PA 1/6·5/5는 unavailable이고 완전 타석은 2~4·6~15다.
+   다음은 **PA 16~19 10구**: 새 후보 파일에 미검증 행을 쓰고 timing·점수판 양쪽 실제 프레임 확인 후 `69`로 타석별 병합한다.
+   이전 PA 11~15 후보 파일의 rows는 비어 있으므로 다시 병합하지 않는다. 필드별 판독 리뷰(B-6), OCR 재채점(F-3a)을 동반한다.
 
-   다음 첫 실행 명령(저장소 루트, 모델·원본 Statcast 불필요):
+   다음 첫 실행 명령(저장소 루트, Git 상태 대조·권한 선점 후):
 
    ```bash
-   uv run --frozen python scripts/63_annotate_broadcast.py check --annotations docs/results/mlb_p0/game_747139_timing.json --require-pa 6
-   uv run --frozen python scripts/65_grab_broadcast_frames.py --label p7scan --times 676 686 696 706
+   uv run --frozen python scripts/63_annotate_broadcast.py check --annotations docs/results/mlb_p0/game_747139_timing.json --require-pa 15
+   uv run --frozen python scripts/65_grab_broadcast_frames.py --label pa16_scan --times 1564 1570 1580 1590
    ```
 
-   PA 7(투구 7/1부터)을 프레임으로 확인해 timing JSON과 리뷰 JSON에 행을 추가하고
-   `--require-pa 7 --output docs/results/mlb_p0/game_747139_timing_validation.json`
-   으로 검증 보고서를 갱신한 뒤 `64 review-check` → `64 build` → `64 check`를 돌린다.
-   (브라우저 주석 페이지 `63 prepare` + `http.server 8772`도 여전히 쓸 수 있다.)
+   1563.64 s는 PA 15 마지막 검증 릴리스다. 위 초들은 그 이후를 살펴볼 탐색용 표본이고 PA 16의 확정 시각이 아니다.
+   이닝 휴식은 편집돼 있으므로 feed UTC를 재생 시간으로 변환하지 않는다. 상세 절차는 `CODEX_RESUME_PROMPT.md` §1.
 2. **기존 영상 재검증**: 옛 오타니 수집기는 CSV `iloc[i]`를 사용했다.
    기존 영상 파일명은 재확인 전 정답이 아니다. 원본 확보 후 playId로 재대조한다.
 3. **새 확률 모델(팀원 담당, 수신 후 I-1로 통합 검증)**: 8종 정답을 기존 특징에 투구 ID로 연결하고 시간 분할을 유지한다.

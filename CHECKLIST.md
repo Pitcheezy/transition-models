@@ -29,12 +29,12 @@
 | 항목 | 값 | 갱신 |
 |---|---|---|
 | 브랜치 | `codex/fix-point-label-alignment` | 2026-09-22 |
-| 최신 작업 커밋 | `692bd07` (A-v3 적용 + PA 11~15 후보 + 병합 도구 + Codex 인계 프롬프트) — 체크리스트만 바꾼 후속 커밋은 `git log -1`로 확인 | 2026-09-24 |
-| 파일 수정 권한 | **Codex (2026-09-24, A-7 PA 11~15 후보 프레임 검증·병합)** — Claude 인계 커밋 `1573268`, 깨끗한 작업 트리와 원격 일치 확인 후 착수. 지시문: [docs/CODEX_RESUME_PROMPT.md](docs/CODEX_RESUME_PROMPT.md) | 2026-09-24 |
-| 중계 시각 주석 | 40 확인 / 2 확인 불가(PA 1/6 그래픽, PA 5/5 카메라 늦은 복귀) / 280 미검토, 완전 타석 2·3·4·6~10 = 2회초까지 — 판단 프레임 규약 v2를 PA 1~10 전부에 적용. **2회말 PA 11~15 20구는 미검증 후보**(`game_747139_timing_candidates_pa11_15.json`) | 2026-09-24 |
-| 점수판 평가셋 | timing 42 / 점수판 리뷰 40(39구 10필드 confirmed, PA 8/1은 라인스코어 그래픽으로 이닝·초말·득점만 confirmed, 라벨 충돌 0) / 가림 2 / 미검토 280 — v2 `game_747139_scoreboard_evalset.json` + 리뷰 `game_747139_scoreboard_review.json` | 2026-09-24 |
-| 점수판 OCR | v1(템플릿 PA 1·2·9) held-out PA 3~8·10, 규약 v2 프레임 29구: **오답 0**, all_fields 25 정답·4 기권 — `..._ocr_v1.json`; v0(템플릿 PA 1~2) held-out 31구: 오답 0, 18 정답·13 기권(이닝 "2" 템플릿 없음) — `..._ocr_v0.json`. 음성 14프레임(판독 불가 96필드): 거짓 판독 0, 40/44 정답·4 기권 — `game_747139_scoreboard_negatives_score_v0.json` | 2026-09-24 |
-| 전체 검사 (Windows CPU) | 294 passed, 2 deselected (`692bd07` 기준, `check_project.py --cpu-only`) | 2026-09-24 |
+| 최신 작업 커밋 | `WORK_COMMIT` (A-7 PA 11~15 20구 직접 검증·병합 + OCR 재채점·재현 기록) — 해시 고정 후속 커밋은 `git log -1`로 확인 | 2026-09-24 |
+| 파일 수정 권한 | **비어 있음** — Codex PA 11~15 검증·병합 완료. 다음 도구는 권한 선점 후 PA 16~19부터 진행. [재개 지시문](docs/CODEX_RESUME_PROMPT.md) | 2026-09-24 |
+| 중계 시각 주석 | 60 확인 / 2 확인 불가(PA 1/6 그래픽, PA 5/5 카메라 늦은 복귀) / 260 미검토, 완전 타석 2~4·6~15 = 2회말까지. PA 11~15 후보 20구 검증·병합 완료, 후보 잔여 0. 판단 규약 v2, 수동 시각 | 2026-09-24 |
+| 점수판 평가셋 | timing 62 / 점수판 리뷰 60(59구 10필드 confirmed, PA 8/1은 라인스코어 partial) / 라벨 충돌 0 / 가림 2 / 미검토 260. PA 11/1은 1038 s 새 프레임의 전 필드를 직접 판독 | 2026-09-24 |
+| 점수판 OCR | v1(템플릿 PA 1·2·9 고정): held-out 50구 중 전 필드 평가 가능 49구 **44 정답·5 기권·오답 0**(PA 8/1은 부분 필드만 평가). 새 20구는 17 정답·3 기권. 음성 14프레임/판독 불가 96필드 거짓 판독 0, 판독 가능 44필드 40 정답·4 기권. 기존 PA 8/2·10/1 재실행 변동과 프레임 해시는 `..._ocr_v1_provenance.json` 참조 | 2026-09-24 |
+| 전체 검사 (Windows CPU) | 294 passed, 2 deselected (`check_project.py --cpu-only`), 병합 후 전체 검사 | 2026-09-24 |
 | 정책 효용 | **미입증** — delta −0.0862 runs/100, 95% CI [−0.4046, +0.2304] | 2026-09-21 |
 | Claude 모델 배정 | 항목 태그 참조 — `uv run --frozen python scripts/checklist_model.py --next` | 2026-09-22 |
 | 담당 구분 | **C·D = 팀원(외부)**, 그 외 = Claude/Codex. 통합 검증은 I절 | 2026-09-22 |
@@ -53,7 +53,7 @@ C(새 8종 확률 모델)·D(투수 프로필/추천 지원 범위)는 다른 �
 | 2 | B-1 → B-5 | ✅ 2026-09-22 완료(timing 20구·리뷰 19구). 주석이 늘면 리뷰 행을 같이 추가하고 `64 review-check` → `64 build`로 재생성(B-6) | Fable 5.1 |
 | 3 | A-w ✅ | 2026-09-23 완료 — 페이지 뷰 대신 `scripts/65_grab_broadcast_frames.py`(ffmpeg 프레임 + 점수판 확대 몽타주) | Fable 5.1 |
 | 4 | A-6 ✅ (PA 8–10, 2회초) ↔ F-3 ✅ v0/v1 | 2026-09-24 2회초 완료(12구). OCR은 주석이 늘 때마다 `66 predict/score` 재실행(F-3a) | Opus 5 / Fable 5.1 |
-| 5 | A-7 (PA 11–26, 2회말~3회) | 3회 종료 = 누적 101구. **지금: PA 11~15 후보 20구 검증 → `scripts/69`로 병합**, 이어서 PA 16~19 → 20~26 | Opus 5 |
+| 5 | A-7 (PA 11–26, 2회말~3회) | PA 11~15 20구 검증·병합 ✅. **다음: PA 16~19 10구 후보 작성·검증·병합**, 이후 PA 20~26 29구. 3회 종료 = 누적 101구 | Opus 5 |
 | 6 | E-1, H-1, A-y, A-z, A-v | 사이사이 독립 단위 | 태그 참조 |
 | 7 | I-0 → I-1 → I-2 | 팀원 C·D 산출물 인터페이스 합의·수신·통합 검증 | Opus 5 / Fable 5.1 |
 | ※ | I-0·I-5·I-6·G-3 | I-0·I-5는 **준비 완료, 동료 답변 대기**(TEAMMATE 문서 §9). 첫 통합 완료 기준 = 한 타석 영상 → 투구 전 상태 → 동료 서비스 → 확률 표시 | Opus 5 / Fable 5.1 |
@@ -98,13 +98,16 @@ C(새 8종 확률 모델)·D(투수 프로필/추천 지원 범위)는 다른 �
       세션이 이동한 판단 프레임 8장을 다시 뽑아 확인. 리뷰 판독값도 새 프레임에서 갱신(충돌 0). 이제 PA 1~10 전부 규약 v2.
       리드 최소 1.15 / 중앙값 4.4 / 최대 10.05 s, 1.5 s 미만 2구(PA 2/2 1.15, PA 10/5 1.40). OCR v1 held-out 29구 오답 0·25 정답·4 기권.
 - [~] A-7. **2회말~3회 PA 11–26** (59구) 주석 → 3회 종료(누적 101구). `[추가되었음 · 2026-09-22 · Claude]` 〔모델: Opus 5〕
-      (2026-09-24) 2회말 PA 11~15 20구를 규약 v2 워크플로로 주석했으나 **검증 에이전트 대부분이 사용량 크레딧 소진으로 실패**했다.
-      주석 행은 `docs/results/mlb_p0/game_747139_timing_candidates_pa11_15.json`(`mlb_broadcast_timing_candidates_v1`, 미검증 후보)에만 있고
-      timing 파일에는 넣지 않았다. 행마다 `verification.status`: 양 렌즈 통과(스팟체크 필요) 2구(PA 13/1·2), 한 렌즈만 3구, 없음 15구.
-      병합 도구 `scripts/69_append_timing_rows.py`(모든 투구가 `verified`인 타석만 병합, 테스트 `tests/test_append_timing_rows.py`).
-      **다음 한 단위 = 후보 20구를 프레임으로 검증 → 타석별 병합** — 절차는 [docs/CODEX_RESUME_PROMPT.md](docs/CODEX_RESUME_PROMPT.md) §1.
-      주의: PA 14/1 리드 15.65 s, PA 11/1·2·14/5 리드 8.5~9.3 s(견제·스텝오프 여부 확인), PA 11/1은 라인스코어 그래픽(partial).
-      규약 v2로 찍는다(주석 프롬프트에 명시). 반이닝 단위 워크플로: PA 11~15(20구) → PA 16~19(10구) → PA 20~26(29구).
+      PA 11~15 20구는 검증·병합 완료(A-7a). **다음 한 단위 = PA 16~19 10구** 후보 작성 → 직접 프레임 검증 → 타석별 `scripts/69` 병합.
+      이후 PA 20~26 29구를 진행한다. 규약 v2·필드별 직접 판독·불가/미검증 구분은 [재개 지시문](docs/CODEX_RESUME_PROMPT.md) §1 참조.
+- [x] A-7a. **PA 11~15 후보 20구 직접 검증·병합** (`WORK_COMMIT`) `[추가되었음 · 2026-09-24 · Codex]`
+      Claude의 미검증 후보(양 렌즈 2구·한 렌즈 3구·미검증 15구)를 실제 JPEG/확대 프레임으로 다시 확인했다. 과거 통과 문구는 검증 증거로 사용하지 않았다.
+      PA 11/1 d1034→1038: 중간 흰 점수판 전환으로 연속성이 깨졌고 1038에 전 필드가 읽힘(partial→readable).
+      릴리스 6구 소폭 정정: 11/2 1060.80→1060.85, 11/5 1121.53→1121.58, 12/1 1162.45→1162.50,
+      12/2 1177.50→1177.55, 15/1 1468.44→1468.50, 15/2 1490.82→1490.90 s. 모두 수동 오차 ±0.15 s 유지.
+      PA 14/1 리드 15.65 s·14/5 9.15 s는 표본 프레임에서 견제/스텝오프/컷어웨이를 찾지 못해 유지. 실제 타자 표시는 PA 14 Urshela, PA 15 Arcia.
+      69 dry-run 및 PA별 write로 timing·리뷰·검증·평가셋·조인표 갱신, 후보 rows는 비웠다. 이전 후보는 `1573268`, 새 검증 근거는
+      `game_747139_timing_verification_pa11_15.json`. 연속성은 선택 프레임 검사(일부 최대 2.25초 간격)이며 연속 재생·사람 간 일치도 검증은 아니다.
 - [x] A-v. 판단-릴리스 간격(리드)이 짧은 사례의 규약 → **파생 필드**로 결정 (`29eef93`) `[추가되었음 · 2026-09-22 · Claude]`
       note 문구가 아니라 코드가 계산한다: `63 check` 보고서에 `short_lead_threshold_seconds`(1.5), `short_lead_pitches`
       (release − decision < 1.5 s 투구 목록, 삭제하지 않고 나열), `lead_seconds_min`; 평가셋 v2 항목에 `lead_seconds`.
@@ -130,23 +133,17 @@ C(새 8종 확률 모델)·D(투수 프로필/추천 지원 범위)는 다른 �
       3회 재시도. 브라우저 canvas 방식보다 빠르고 병렬 안전해 A-4 주석·검증과 B-6 리뷰에 사용했다. 테스트 `tests/test_grab_broadcast_frames.py`.
       프레임은 검토 보조물이며 OCR·라벨이 아니다. 1280x720 원본에서 카운트·아웃·타자 배너를 육안 판독하려면 확대가 필요했던 문제의 해결.
 
-**다음 첫 실행 명령** (저장소 루트, 모델·원본 Statcast 불필요):
+**다음 첫 실행 명령** (저장소 루트, 수정 권한 선점 후):
 
 ```bash
-uv run --frozen python scripts/63_annotate_broadcast.py check --annotations docs/results/mlb_p0/game_747139_timing.json --require-pa 5
-uv run --frozen python scripts/63_annotate_broadcast.py prepare
-uv run --frozen python -m http.server 8772 --bind 127.0.0.1 --directory outputs/annotation
+uv run --frozen python scripts/63_annotate_broadcast.py check --annotations docs/results/mlb_p0/game_747139_timing.json --require-pa 15
+uv run --frozen python scripts/65_grab_broadcast_frames.py --label pa16_scan --times 1564 1570 1580 1590
 ```
 
-페이지에서 Git 저장 JSON을 먼저 불러와 기존 주석을 보존한 뒤 새 항목만 추가한다.
-같은 브라우저라면 localStorage에서 자동 복원되지만, 다른 브라우저·기기에서는 JSON을 붙여 넣는다.
-내보낸 JSON을 `docs/results/mlb_p0/game_747139_timing.json`에 저장하고
-`--require-pa 6 --output docs/results/mlb_p0/game_747139_timing_validation.json`으로 검증 보고서를 갱신한다.
-
-**PA 6 작업 시 참고 (2026-09-22 확인):** PA 5 마지막 투구(볼넷) 릴리스는 453.0초이고 458초에
-Albies가 1루로 나간다(점수판 0-0·1루 주자·1아웃). PA 6(6구, 1아웃, 주자 1루)은 그 뒤에 이어진다.
-UTC 외삽은 PA 5에서도 틀렸다(6구 예상 약 475초 vs 실제 453.0초). 이 숫자는 **탐색 출발점**일 뿐이며
-반드시 점수판으로 카운트·아웃·주자·타자를 확인한 뒤 기록한다.
+위 재생 초는 PA 15 마지막 릴리스 1563.64초 이후의 **탐색용 표본**이며 PA 16의 확정 시각이 아니다.
+PA 16~19(3회초 10구)를 새 `game_747139_timing_candidates_pa16_19.json`에 미검증으로 기록하고,
+직접 시각·점수판 확인을 마친 타석만 `69`로 병합한다. manifest 목록 순서나 feed UTC로 시각을 만들지 않는다.
+병합 후 `66 predict/score/negatives`와 전체 검사를 다시 실행한다. 상세 인계: [CODEX_RESUME_PROMPT.md](docs/CODEX_RESUME_PROMPT.md).
 
 ## B. 점수판 인식 평가셋
 
@@ -214,6 +211,10 @@ feature builder의 고정 2022 프로필을 그 방식으로 갱신하는 코드
       (2026-09-24, `342170f`) 2회초 프레임(이닝 "2")이 생겨 재측정: v0 템플릿(PA 1~2)은 held-out PA 3~9 26구에서 오답 0이지만 이닝 "2"를
       6건 기권. PA 9를 템플릿에 추가한 v1(`sny_digit_templates_v1.json`, 0/1/2 글리프 50개)은 held-out PA 3~8 24구에서 오답 0·기권 2
       (PA 5/6 볼 "3", PA 8/1 라인스코어 전 필드; PA 8/2 이닝만 기권). 음성 14프레임 거짓 판독 0 유지. 숫자 3~9는 여전히 템플릿 없음.
+      (2026-09-24, `WORK_COMMIT`) PA 11~15 병합 후 템플릿 변경 없이 재채점: held-out 전 필드 49구 44 정답·5 기권·오답 0.
+      새 20구 중 기권은 PA 11/1 이닝, 11/2 전 필드, 13/3 볼(17구 전 필드 정답). 기존 PA 4/1 이닝·5/6 볼도 기권이고 PA 8/1은 partial이다.
+      기존 PA 8/2·10/1 이닝은 저장된 과거 예측의 null에서 이번 2로 바뀌었다. 과거 입력 해시가 없어 원인은 확정하지 않았으며 모델 개선으로 세지 않는다.
+      현재 캐시·고정 템플릿 반복 예측은 60/60 동일. `game_747139_scoreboard_ocr_v1_provenance.json`에 입력/코드/출력 해시·환경을 남겼다.
 - [x] F-3b. 판단 프레임 밖에서 OCR이 **기권하는지** 음성 평가셋으로 측정 (`b1ab6a5`) `[추가되었음 · 2026-09-23 · Claude]`
       `docs/results/mlb_p0/game_747139_scoreboard_negatives.json`(`mlb_scoreboard_negatives_v1`, 같은 MP4·manifest에 바인딩): 사람이
       눈으로 분류한 14프레임 — bug 없음 9(통계 그래픽 150·151.8·152.4, 타자 인트로 470, 회상 475·480, 리플레이 546, 타 카메라 840, 전체화면 그래픽 880),
@@ -333,7 +334,7 @@ git fetch origin && git status --short --branch && git log -5 --oneline
 `reset --hard`, `git clean`, 강제 푸시로 상태를 맞추지 않는다.
 미커밋 변경이나 로컬 전용 커밋이 있으면 먼저 대조·보존한다.
 그 다음 상태 요약 표의 진행 중 `[~]` 항목이 있으면 그것부터, 없으면 **다음 한 단위**부터 이어간다.
-2026-09-24 기준 다음 한 단위는 **A-7: PA 11~15 후보 20구 검증 → `scripts/69`로 병합**이고, 붙여 넣을 지시문은
+2026-09-24 기준 다음 한 단위는 **A-7: PA 16~19 10구 후보 작성·검증 → `scripts/69`로 병합**이고, 붙여 넣을 지시문은
 [docs/CODEX_RESUME_PROMPT.md](docs/CODEX_RESUME_PROMPT.md)다.
 
 ## 유지해야 할 정보 경계

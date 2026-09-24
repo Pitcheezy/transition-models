@@ -7,7 +7,7 @@
     "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
     "duration_seconds": 9340.748083
   },
-  "annotator": "Codex visual review PA1-2 + Claude Code visual review PA3-5, 2026-09-22 + Claude Code workflow (Opus 5 annotator, Fable 5.1 verification, ffmpeg frame grabs) PA6, 2026-09-23 + Claude Code workflow (Opus 5 annotator, Fable 5.1 verification, ffmpeg frame grabs) PA7, 2026-09-23 + Claude Code workflow (Opus 5 annotator, Fable 5.1 verification, ffmpeg frame grabs) PA8/9, 2026-09-24 + Claude Code workflow (Opus 5 annotator, Fable 5.1 verification, ffmpeg frame grabs) PA10, 2026-09-24",
+  "annotator": "Codex visual review PA1-2 + Claude Code visual review PA3-5, 2026-09-22 + Claude Code workflow (Opus 5 annotator, Fable 5.1 verification, ffmpeg frame grabs) PA6, 2026-09-23 + Claude Code workflow (Opus 5 annotator, Fable 5.1 verification, ffmpeg frame grabs) PA7, 2026-09-23 + Claude Code workflow (Opus 5 annotator, Fable 5.1 verification, ffmpeg frame grabs) PA8/9, 2026-09-24 + Claude Code workflow (Opus 5 annotator, Fable 5.1 verification, ffmpeg frame grabs) PA10, 2026-09-24 + Codex verification PA11-15, 2026-09-24",
   "annotations": [
     {
       "game_pk": 747139,
@@ -470,6 +470,226 @@
       "release_seconds": 996.45,
       "uncertainty_seconds": 0.15,
       "note": "SNY full game. Top 2nd, Schwellenbach vs J.D. Martinez; 2-2 count, bases empty, 2 outs. The broadcast is back on the live centre-field camera by 994.70s and stays there through the pitch; at 995.10s Schwellenbach stands upright on the rubber from the windup, both feet flat and side by side on the rubber, hands together in the glove at the chest, no rocker step yet, with Martinez set in the right-handed box, while by 995.15s the back (left) heel is already off the ground and the body has begun to rock back, so motion onset falls between 995.10s and 995.15s and the leg lift is under way by 995.20s and at its top by 995.45s. Release bracketed by sampled frames 996.40s (back to camera, upper arm horizontal and the throwing hand still cocked beside the cap, no forward extension) and 996.45s (arm fully extended out toward the plate, hand open and empty, ball gone), with follow-through and the arm coming down by 996.50s. ffmpeg frame grabs. Manual timing, not frame-exact. A-v3 (2026-09-24): decision frame moved to the earliest set-window frame 994.35s (was 995.10s); at 994.10s the shot is still the tight catcher/sign close-up (cutaway_or_replay)."
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 11,
+      "pitch_number": 1,
+      "play_id": "09592583-1ca6-4387-96a9-1c6be35aa7e0",
+      "status": "annotated",
+      "decision_seconds": 1038.0,
+      "release_seconds": 1043.3,
+      "uncertainty_seconds": 0.15,
+      "note": "Codex direct frame verification 2026-09-24 (supersedes candidate notes at 1573268): Decision corrected from 1034.00 to 1038.00. Although the BOT 2ND line-score is readable at 1034, the bug becomes a blank white wipe at 1037.00/1037.25, breaking continuity before delivery. At 1037.50/1037.75 the replacement bug is still assembling and has no inning/count; 1038.00 is the first 0.25 s grid point after the wipe with all ten situation fields visible. Pitcher remains stationary on the rubber and batter in the box through the sampled set window. Decision review changed from partial to readable; P:N is not yet visible at 1038.00 (P:18 appears at 1038.25). Codex independent release lens 2026-09-24: at 1043.20 the throwing hand is above/behind the head, at .25 the elbow is leading and the forearm remains folded, .30 shows forward arm extension, and .35/.45 show the arm descending into follow-through. Keep 1043.30 +/-0.15; manual timing, not frame-exact ball separation. Manual selected-frame review; no frame-exact ball separation or continuous-video proof is claimed."
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 11,
+      "pitch_number": 2,
+      "play_id": "1c6c8f43-62b8-42cd-9f50-3955fafd7f51",
+      "status": "annotated",
+      "decision_seconds": 1052.25,
+      "release_seconds": 1060.85,
+      "uncertainty_seconds": 0.15,
+      "note": "Codex direct frame verification 2026-09-24 (supersedes candidate notes at 1573268): 1051.75/1052.00 are a Soler close-up/stat graphic; 1052.25 is the first live centre-field grid frame with pitcher stationary at the rubber and batter in the box. Samples at 1052.75/1055/1057/1058/1059 show the preparation continuing without a cutaway, step-off or pickoff. Direct bug reading: 0-1, empty bases, zero outs, Bot 2, 0:0, P:19. Codex independent release lens 2026-09-24: 1060.80 still has the throwing hand behind the head with the elbow leading; .85 is the sampled forward-extension phase and .90 the extended arm starting down. Move 1060.80 to the directly viewed 1060.85 frame, retaining +/-0.15. The .85-.90 samples only bracket the visible transition; no frame-exact separation claim. Manual selected-frame review; no frame-exact ball separation or continuous-video proof is claimed."
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 11,
+      "pitch_number": 3,
+      "play_id": "f5c96292-f031-48f8-9fc2-26a600853fbe",
+      "status": "annotated",
+      "decision_seconds": 1073.75,
+      "release_seconds": 1078.35,
+      "uncertainty_seconds": 0.15,
+      "note": "Codex direct frame verification 2026-09-24 (supersedes candidate notes at 1573268): 1073.25/1073.50 are a dugout close-up with clinch-scenarios graphic; 1073.75 is live centre-field with a stationary pitcher and batter in the box. Samples through 1077 retain the pre-delivery setup. Direct bug reading: 1-1, zero outs, empty bases, Bot 2, 0:0, P:20. Codex independent release lens 2026-09-24: 1078.25 shows cocked arm, .30 forward extension developing, .35 arm extended forward, and .40 clear descending follow-through. Keep 1078.35 +/-0.15; manual timing. Manual selected-frame review; no frame-exact ball separation or continuous-video proof is claimed."
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 11,
+      "pitch_number": 4,
+      "play_id": "1bd3180d-b25c-4872-881a-632fda19769c",
+      "status": "annotated",
+      "decision_seconds": 1092.75,
+      "release_seconds": 1098.55,
+      "uncertainty_seconds": 0.15,
+      "note": "Codex direct frame verification 2026-09-24 (supersedes candidate notes at 1573268): 1092.25/1092.50 show a seated Mets dugout close-up; 1092.75 returns to the live centre-field shot with the pitcher stationary and batter in the box. Samples through 1097 retain the setup. Direct bug reading: 1-2, zero outs, empty bases, Bot 2, 0:0, P:21. Codex independent release lens 2026-09-24: 1098.45/.50 have the hand cocked behind/above the head, .55 is the forward-extension phase, .60 the arm descending, and .70 follow-through. Keep 1098.55 +/-0.15; manual timing. Manual selected-frame review; no frame-exact ball separation or continuous-video proof is claimed."
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 11,
+      "pitch_number": 5,
+      "play_id": "93b49a1d-8aef-45f6-aa77-2abaf94e44c7",
+      "status": "annotated",
+      "decision_seconds": 1114.0,
+      "release_seconds": 1121.58,
+      "uncertainty_seconds": 0.15,
+      "note": "Codex direct frame verification 2026-09-24 (supersedes candidate notes at 1573268): 1113.50/1113.75 are a Soler close-up; 1114.00 is live with the pitcher bent at the rubber taking the sign and batter in the box. Samples at 1114.50/1116/1118/1120 retain the setup; leg lift is visible at 1120.50. Direct bug reading: 2-2, zero outs, empty bases, Bot 2, 0:0, P:22. Codex independent release lens 2026-09-24: 1121.52/.54/.55 still show a folded throwing forearm behind the head; .57 begins unfolding, .58 is forward extension, .60 reaches fuller extension and .62 descends. Move the earlier 1121.53 candidate to directly inspected 1121.58, retaining +/-0.15; this is the visually appropriate release phase, not a precise claim that ball separation occurred on that frame. Manual selected-frame review; no frame-exact ball separation or continuous-video proof is claimed."
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 12,
+      "pitch_number": 1,
+      "play_id": "65879bdc-832f-4d63-8f3e-f92436f6fd95",
+      "status": "annotated",
+      "decision_seconds": 1158.0,
+      "release_seconds": 1162.5,
+      "uncertainty_seconds": 0.15,
+      "note": "Codex direct frame verification 2026-09-24 (supersedes candidate notes at 1573268): 1157.50/1157.75 show the pitcher close-up; 1158.00 is live centre-field with pitcher stationary and batter in the box. Samples through 1161 retain the set preparation. Direct bug reading: 0-0, one out, empty bases, Bot 2, 0:0, P:23. The earlier 1162.20 release proposal is too early: the throwing arm is still low/behind. Codex independent release lens 2026-09-24: 1162.45 has the throwing hand still behind the head and the forearm folded. At .50 the arm extends out toward the plate; .55/.60 show descending arm/follow-through. Move 1162.45 to 1162.50, retaining +/-0.15. Manual release-phase estimate, not frame-exact separation. Manual selected-frame review; no frame-exact ball separation or continuous-video proof is claimed."
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 12,
+      "pitch_number": 2,
+      "play_id": "be5dbc3b-86ab-4d54-8cf4-80005a305a62",
+      "status": "annotated",
+      "decision_seconds": 1172.75,
+      "release_seconds": 1177.55,
+      "uncertainty_seconds": 0.15,
+      "note": "Codex direct frame verification 2026-09-24 (supersedes candidate notes at 1573268): 1172.25/1172.50 show the Laureano close-up; 1172.75 first shows live centre-field, stationary pitcher and batter in the box. Samples through 1176 retain the set preparation. Direct bug reading: 1-0, one out, empty bases, Bot 2, 0:0, P:24. Codex independent release lens 2026-09-24: 1177.50 has the hand behind the head and the forearm folded. The .55 frame shows forward arm extension; .60/.65 show descending follow-through. Move 1177.50 to 1177.55, retaining +/-0.15; manual release-phase estimate. Manual selected-frame review; no frame-exact ball separation or continuous-video proof is claimed."
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 13,
+      "pitch_number": 1,
+      "play_id": "59a2a6f2-0202-4334-9283-b151e1219f06",
+      "status": "annotated",
+      "decision_seconds": 1214.25,
+      "release_seconds": 1220.08,
+      "uncertainty_seconds": 0.15,
+      "note": "Codex direct frame verification 2026-09-24 (supersedes candidate notes at 1573268): Codex frame recheck 2026-09-24 retained decision 1214.25 and release 1220.08 +/- 0.15: 1213.75/1214.00 are a Mets fielder close-up (the previous identification as Megill is unsupported), 1214.25 first qualifies on the 0.25-second grid; samples through 1219.00 retain the live shot and stationary pitcher until delivery. The arm is behind at 1219.93, forward/extended at 1220.05-1220.10 and in follow-through by 1220.23. Direct bug reading confirms 0-0, one out, first occupied only, Bot 2, 0:0, MEGILL P:25. Exact ball detachment is blurred; this remains manual timing, not frame-exact. Manual selected-frame review; no frame-exact ball separation or continuous-video proof is claimed."
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 13,
+      "pitch_number": 2,
+      "play_id": "050e001f-c25b-4da3-a76b-9c5eaf2e08b0",
+      "status": "annotated",
+      "decision_seconds": 1235.25,
+      "release_seconds": 1239.48,
+      "uncertainty_seconds": 0.15,
+      "note": "Codex direct frame verification 2026-09-24 (supersedes candidate notes at 1573268): Codex frame recheck 2026-09-24 retained decision 1235.25 and release 1239.48 +/- 0.15: 1234.75/1235.00 are batter close-up with the career graphic, 1235.25 first qualifies on the 0.25-second grid, and sampled live frames through 1238.50 retain a stationary pitcher. The throwing hand is still beside/behind the head at 1239.43-1239.45, the arm extends at 1239.48-1239.50 and follow-through follows by 1239.55-1239.63. Direct bug reading confirms 1-0, one out, first occupied only, Bot 2, 0:0, MEGILL P:26 / D'ARNAUD. Exact detachment is blurred; the retained uncertainty covers the visual release bracket. Manual selected-frame review; no frame-exact ball separation or continuous-video proof is claimed."
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 13,
+      "pitch_number": 3,
+      "play_id": "4647956d-c63a-4166-8050-61c0204a23fa",
+      "status": "annotated",
+      "decision_seconds": 1255.75,
+      "release_seconds": 1258.48,
+      "uncertainty_seconds": 0.15,
+      "note": "Codex direct frame verification 2026-09-24 (supersedes candidate notes at 1573268): Codex frame recheck 2026-09-24 retained decision 1255.75 and release 1258.48 +/- 0.15: 1255.25 is flashback celebration and 1255.50 a white transition, while 1255.75 first shows the live set pitcher, batter in box and readable bug; set persists through sampled 1257.50, with leg lift at 1257.75. The arm is behind/bent at 1258.33-1258.45, extending at 1258.48-1258.50, and follow-through by 1258.60-1258.63 and 1258.80. Thus the previous suggested 1258.75 is too late for release and rejected. Direct bug reading confirms 2-0, one out, first occupied only, Bot 2, 0:0, MEGILL P:27 / D'ARNAUD. Exact detachment is blurred; retain manual +/- 0.15 uncertainty. Manual selected-frame review; no frame-exact ball separation or continuous-video proof is claimed."
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 14,
+      "pitch_number": 1,
+      "play_id": "c778da9f-7af2-4ccc-b526-6bcd8de6ed7e",
+      "status": "annotated",
+      "decision_seconds": 1306.25,
+      "release_seconds": 1321.9,
+      "uncertainty_seconds": 0.15,
+      "note": "Codex direct frame verification 2026-09-24 (supersedes candidate notes at 1573268): 1305.75 and 1306.00 are a tight Urshela close-up under the 3B GIO URSHELA graphic. 1306.25 is a live high-home wide shot with the stationary pitcher at the rubber and batter in the box, and the complete count bug. Intermediate samples at 0.25-1 second spacing through 1320.50 show no pickoff, step-off or intervening close-up; the camera cuts directly to centre-field by 1313.75 with the same stationary pre-pitch state. OFFICIAL SCORING: HIT replaces only the lower player strip while the situation bug stays readable. Leg lift is visible at 1321.25. At 1321.75 the throwing arm is back, 1321.85 it is above the head, 1321.90 extended forward, and 1322.05 is follow-through. Retain the 15.65-second lead. Root also checked the early wide-shot pitcher crop and full frame. Direct batter graphic/strip reads GIO URSHELA / 8.URSHELA, correcting the old task naming mismatch. Manual selected-frame review; no frame-exact ball separation or continuous-video proof is claimed."
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 14,
+      "pitch_number": 2,
+      "play_id": "e1e73af7-120a-401f-8577-371a8a6bb7ec",
+      "status": "annotated",
+      "decision_seconds": 1343.5,
+      "release_seconds": 1347.75,
+      "uncertainty_seconds": 0.15,
+      "note": "Codex direct frame verification 2026-09-24 (supersedes candidate notes at 1573268): 1343.00 and 1343.25 show runners/first-base coach with neither pitcher nor batter. 1343.50 returns to a live centre-field shot, pitcher still at the rubber with hands together and batter facing the pitcher in the box. The state persists through 1346.00; leg lift at 1347.00. 1347.60 arm back, 1347.70 arm above the head, 1347.75 forward extension, 1347.90 follow-through. Retain both times. Direct batter graphic/strip reads GIO URSHELA / 8.URSHELA, correcting the old task naming mismatch. Manual selected-frame review; no frame-exact ball separation or continuous-video proof is claimed."
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 14,
+      "pitch_number": 3,
+      "play_id": "88764d87-cbce-4648-a938-e16112ef711e",
+      "status": "annotated",
+      "decision_seconds": 1359,
+      "release_seconds": 1366.8,
+      "uncertainty_seconds": 0.15,
+      "note": "Codex direct frame verification 2026-09-24 (supersedes candidate notes at 1573268): 1358.50 and 1358.75 are a batter/umpire close-up. 1359.00 cuts to a live camera behind home plate looking across the infield: both the stationary pitcher on the mound/rubber and batter in the box are visible. This is not a pitcher-missing cutaway. Intermediate wide samples through 1365.50 preserve the conditions; leg lift at 1366.00. 1366.65 arm back, 1366.75 cocked above head, 1366.80 forward extension, 1366.95 follow-through. Retain both times. Direct batter graphic/strip reads GIO URSHELA / 8.URSHELA, correcting the old task naming mismatch. Manual selected-frame review; no frame-exact ball separation or continuous-video proof is claimed."
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 14,
+      "pitch_number": 4,
+      "play_id": "71fc6568-15bd-47f7-a0f7-13612b9f4b3d",
+      "status": "annotated",
+      "decision_seconds": 1385,
+      "release_seconds": 1393,
+      "uncertainty_seconds": 0.15,
+      "note": "Codex direct frame verification 2026-09-24 (supersedes candidate notes at 1573268): 1384.50 and 1384.75 are a catcher close-up. 1385.00 is the live centre-field shot with pitcher standing at rubber, hands apart, batter in box and bug readable; samples through 1392.00 show continuous pre-motion state, leg lift at 1392.20. Enlarged release samples at 1392.90/.95/.97, 1393.00/.02/.05 show cocked arm, increasing extension, full forward extension at 1393.00 and arm down after .02. Retain 1393.00 with 0.15-second uncertainty; the pixels do not warrant a frame-exact ball-separation claim. Direct batter graphic/strip reads GIO URSHELA / 8.URSHELA, correcting the old task naming mismatch. Manual selected-frame review; no frame-exact ball separation or continuous-video proof is claimed."
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 14,
+      "pitch_number": 5,
+      "play_id": "a640d9b6-1d63-41a8-b737-6269a0f57357",
+      "status": "annotated",
+      "decision_seconds": 1426.5,
+      "release_seconds": 1435.65,
+      "uncertainty_seconds": 0.15,
+      "note": "Codex direct frame verification 2026-09-24 (supersedes candidate notes at 1573268): 1426.00 and 1426.25 are an umpire close-up. 1426.50 cuts to live centre-field with pitcher on rubber, hands apart, batter in box and readable bug. Samples at 1427,1428,1430,1431,1432,1434 show no step-off, pickoff or cutaway; pitch clock progresses to :03 and leg lift appears at 1434.80. 1435.50 arm back, 1435.60 above head, 1435.65 coming forward, 1435.80 follow-through. Retain the 9.15-second lead and release at 1435.65 +/- 0.15. Direct batter graphic/strip reads GIO URSHELA / 8.URSHELA, correcting the old task naming mismatch. Manual selected-frame review; no frame-exact ball separation or continuous-video proof is claimed."
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 15,
+      "pitch_number": 1,
+      "play_id": "a214f2a6-24b1-4ac5-accd-fcb29d503ad7",
+      "status": "annotated",
+      "decision_seconds": 1461.25,
+      "release_seconds": 1468.5,
+      "uncertainty_seconds": 0.15,
+      "note": "Codex direct frame verification 2026-09-24 (supersedes candidate notes at 1573268): Codex visual verification 2026-09-24: decision 1461.25 retained; both d-0.50 and d-0.25 show pitcher close-up, while d and d+0.50 show a live centre-field view with pitcher stationary on the rubber, batter in the box and readable bug. Continuity sampled through the set period at gaps no larger than 1 second showed no step-off, pickoff or cutaway. Release changed from 1468.44 to 1468.50: at 1468.44 the throwing elbow is bent and the hand is still behind the head; 1468.48 is unfolding, 1468.50 is extended forward, and 1468.55 is follow-through. Manual broadcast timing with +/-0.15 s uncertainty; motion blur does not support a frame-exact ball separation claim. Scoreboard independently read as bottom 2, two outs, runners on first and second, NYM 0 / ATL 0, 0-0, MEGILL P:33. The batter line visible on pitches 2-5 reads 9.ARCIA .220, not Urshela. Manual selected-frame review; no frame-exact ball separation or continuous-video proof is claimed."
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 15,
+      "pitch_number": 2,
+      "play_id": "a340a21b-e67f-492a-9d4f-a23e45cbcff0",
+      "status": "annotated",
+      "decision_seconds": 1484.75,
+      "release_seconds": 1490.9,
+      "uncertainty_seconds": 0.15,
+      "note": "Codex direct frame verification 2026-09-24 (supersedes candidate notes at 1573268): Codex visual verification 2026-09-24: decision 1484.75 retained; both d-0.50 and d-0.25 show pitcher close-up, while d and d+0.50 show a live centre-field view with pitcher stationary on the rubber, batter in the box and readable bug. Continuity sampled through the set period at gaps no larger than 1 second showed no step-off, pickoff or cutaway. Release changed from 1490.82 to 1490.90: 1490.80 and 1490.85 show the ball/throwing hand behind the head, 1490.90 shows the arm fully extended forward and 1490.95 shows follow-through. Manual broadcast timing with +/-0.15 s uncertainty; motion blur does not support a frame-exact ball separation claim. Scoreboard independently read as bottom 2, two outs, runners on first and second, NYM 0 / ATL 0, 0-1, MEGILL P:34. The batter line visible on pitches 2-5 reads 9.ARCIA .220, not Urshela. Manual selected-frame review; no frame-exact ball separation or continuous-video proof is claimed."
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 15,
+      "pitch_number": 3,
+      "play_id": "ce5bcac7-c6ba-45cd-a5bc-9bdb2474907e",
+      "status": "annotated",
+      "decision_seconds": 1506.75,
+      "release_seconds": 1512.68,
+      "uncertainty_seconds": 0.15,
+      "note": "Codex direct frame verification 2026-09-24 (supersedes candidate notes at 1573268): Codex visual verification 2026-09-24: decision 1506.75 retained; both d-0.50 and d-0.25 show Mets dugout cutaway, while d and d+0.50 show a live centre-field view with pitcher stationary on the rubber, batter in the box and readable bug. Continuity sampled through the set period at gaps no larger than 1 second showed no step-off, pickoff or cutaway. Release retained: 1512.65 has the throwing arm unfolding and 1512.70 has forward extension; 1512.75 is follow-through. The midpoint candidate 1512.68 remains compatible with this visual bracket. Manual broadcast timing with +/-0.15 s uncertainty; motion blur does not support a frame-exact ball separation claim. Scoreboard independently read as bottom 2, two outs, runners on first and second, NYM 0 / ATL 0, 1-1, MEGILL P:35. The batter line visible on pitches 2-5 reads 9.ARCIA .220, not Urshela. Manual selected-frame review; no frame-exact ball separation or continuous-video proof is claimed."
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 15,
+      "pitch_number": 4,
+      "play_id": "971a8c4a-f205-4aaf-8353-0a0d72fa8e78",
+      "status": "annotated",
+      "decision_seconds": 1528.5,
+      "release_seconds": 1533.99,
+      "uncertainty_seconds": 0.15,
+      "note": "Codex direct frame verification 2026-09-24 (supersedes candidate notes at 1573268): Codex visual verification 2026-09-24: decision 1528.50 retained; both d-0.50 and d-0.25 show Mets dugout cutaway, while d and d+0.50 show a live centre-field view with pitcher stationary on the rubber, batter in the box and readable bug. Continuity sampled through the set period at gaps no larger than 1 second showed no step-off, pickoff or cutaway. Release retained: 1533.94-1533.96 shows arm unfolding, 1533.98 is forward extension and 1534.02 is follow-through; 1533.99 is inside this bracket. Manual broadcast timing with +/-0.15 s uncertainty; motion blur does not support a frame-exact ball separation claim. Scoreboard independently read as bottom 2, two outs, runners on first and second, NYM 0 / ATL 0, 2-1, MEGILL P:36. The batter line visible on pitches 2-5 reads 9.ARCIA .220, not Urshela. Manual selected-frame review; no frame-exact ball separation or continuous-video proof is claimed."
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 15,
+      "pitch_number": 5,
+      "play_id": "fc2215be-bba1-484e-8067-ebe20d0446e9",
+      "status": "annotated",
+      "decision_seconds": 1556.25,
+      "release_seconds": 1563.64,
+      "uncertainty_seconds": 0.15,
+      "note": "Codex direct frame verification 2026-09-24 (supersedes candidate notes at 1573268): Codex visual verification 2026-09-24: decision 1556.25 retained; both d-0.50 and d-0.25 show Braves dugout manager close-up, while d and d+0.50 show a live centre-field view with pitcher stationary on the rubber, batter in the box and readable bug. Continuity sampled through the set period at gaps no larger than 1 second showed no step-off, pickoff or cutaway. Release retained: 1563.60-1563.62 shows throwing-arm unfolding, 1563.65 shows forward extension and 1563.70 is follow-through; 1563.64 is compatible with this bracket. Manual broadcast timing with +/-0.15 s uncertainty; motion blur does not support a frame-exact ball separation claim. Scoreboard independently read as bottom 2, two outs, runners on first and second, NYM 0 / ATL 0, 2-2, MEGILL P:37. The batter line visible on pitches 2-5 reads 9.ARCIA .220, not Urshela. Manual selected-frame review; no frame-exact ball separation or continuous-video proof is claimed."
     }
   ]
 }
