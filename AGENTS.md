@@ -10,11 +10,11 @@ Codex/Claude handoff protocol. Update it in the same commit as the work it track
 The product goal is pre-pitch broadcast situation recognition, outcome probabilities,
 and eventually pitch-type/target-location recommendations. MLB is the first delivery
 target; KBO comes later. Read docs/MLB_P0.md and docs/MLB_P0_HANDOFF.md for current work.
-Start from docs/CODEX_RESUME_PROMPT.md; the next unit is PA 16–19 (10 pitches).
+Start from docs/CODEX_RESUME_PROMPT.md; the next unit is PA 20–26 (29 pitches).
 Scripts 58–69 cover video identity, manual inference UI, source inspection, observation
 targets, whole-game checks, manual timing, scoreboard evaluation/OCR, and verified merges.
-Read docs/MLB_BROADCAST_TIMING.md: 60 pitches timed, 2 unavailable, 260 unreviewed;
-PA 2–4 and 6–15 have every pitch timed. PA 11–15 candidates were verified and merged.
+Read docs/MLB_BROADCAST_TIMING.md: 68 pitches timed, 4 unavailable, 250 unreviewed;
+PA 2–4, 6–15 and 18–19 have every pitch timed. PA 16–19 candidates were reviewed and merged.
 This is manual timing, not automatic synchronization. The SNY scoreboard OCR prototype
 supports one broadcast layout; see the latest handoff/report for measured results.
 Current UI uses the existing ten-class model and

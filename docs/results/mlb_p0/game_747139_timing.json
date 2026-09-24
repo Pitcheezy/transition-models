@@ -7,7 +7,7 @@
     "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
     "duration_seconds": 9340.748083
   },
-  "annotator": "Codex visual review PA1-2 + Claude Code visual review PA3-5, 2026-09-22 + Claude Code workflow (Opus 5 annotator, Fable 5.1 verification, ffmpeg frame grabs) PA6, 2026-09-23 + Claude Code workflow (Opus 5 annotator, Fable 5.1 verification, ffmpeg frame grabs) PA7, 2026-09-23 + Claude Code workflow (Opus 5 annotator, Fable 5.1 verification, ffmpeg frame grabs) PA8/9, 2026-09-24 + Claude Code workflow (Opus 5 annotator, Fable 5.1 verification, ffmpeg frame grabs) PA10, 2026-09-24 + Codex verification PA11-15, 2026-09-24",
+  "annotator": "Codex visual review PA1-2 + Claude Code visual review PA3-5, 2026-09-22 + Claude Code workflow (Opus 5 annotator, Fable 5.1 verification, ffmpeg frame grabs) PA6, 2026-09-23 + Claude Code workflow (Opus 5 annotator, Fable 5.1 verification, ffmpeg frame grabs) PA7, 2026-09-23 + Claude Code workflow (Opus 5 annotator, Fable 5.1 verification, ffmpeg frame grabs) PA8/9, 2026-09-24 + Claude Code workflow (Opus 5 annotator, Fable 5.1 verification, ffmpeg frame grabs) PA10, 2026-09-24 + Codex verification PA11-15, 2026-09-24 + Codex PA16-19 verification, 2026-09-24",
   "annotations": [
     {
       "game_pk": 747139,
@@ -690,6 +690,116 @@
       "release_seconds": 1563.64,
       "uncertainty_seconds": 0.15,
       "note": "Codex direct frame verification 2026-09-24 (supersedes candidate notes at 1573268): Codex visual verification 2026-09-24: decision 1556.25 retained; both d-0.50 and d-0.25 show Braves dugout manager close-up, while d and d+0.50 show a live centre-field view with pitcher stationary on the rubber, batter in the box and readable bug. Continuity sampled through the set period at gaps no larger than 1 second showed no step-off, pickoff or cutaway. Release retained: 1563.60-1563.62 shows throwing-arm unfolding, 1563.65 shows forward extension and 1563.70 is follow-through; 1563.64 is compatible with this bracket. Manual broadcast timing with +/-0.15 s uncertainty; motion blur does not support a frame-exact ball separation claim. Scoreboard independently read as bottom 2, two outs, runners on first and second, NYM 0 / ATL 0, 2-2, MEGILL P:37. The batter line visible on pitches 2-5 reads 9.ARCIA .220, not Urshela. Manual selected-frame review; no frame-exact ball separation or continuous-video proof is claimed."
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 16,
+      "pitch_number": 1,
+      "play_id": "ab03826c-49a8-4b93-a2be-25e9a0973b80",
+      "status": "annotated",
+      "decision_seconds": 1590.5,
+      "release_seconds": 1592.85,
+      "uncertainty_seconds": 0.15,
+      "note": "At 1590.00 the broadcast shows a street/statistics graphic. 1590.25 is still a cross-dissolve with the previous view superimposed; 1590.50 is the first clean live centre-field 0.25 s grid frame with Schwellenbach stationary on the rubber and Taylor facing him in the box. The line-score directly shows Top 3 and 0:0; six absent count/out/base fields remain null. Frames at 1590.75,1591.00,1591.25,1591.50 retain the set scene and readable line-score. Leg lift is visible at 1591.75. The white scoreboard wipe begins around 1592.75, after delivery motion has begun, so it does not interrupt the v2 preparation window. Release bracket: throwing hand behind the head at 1592.75/1592.80, forward extension at1592.85, follow-through at1592.90. Manual estimate1592.85 +/-0.15 s; no frame-exact separation claim. Identity corroborated by the subsequent Taylor close-up with0-1/P25 and pitch2. Selected-frame review, not continuous playback."
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 16,
+      "pitch_number": 2,
+      "play_id": "40ad633a-9d15-4cde-86ce-ba2a702285a9",
+      "status": "unavailable",
+      "decision_seconds": null,
+      "release_seconds": null,
+      "uncertainty_seconds": null,
+      "note": "No valid v2 pre-motion decision frame:1600.00/1605.00/1605.50 show a Taylor close-up and statistics card. At the first live centre-field grid frame1605.75 Schwellenbach already has the front knee raised;1606.00 remains in leg lift and1606.25 onward in delivery. The visible bug0-1/P25,empty bases,0outs,Top3,0:0 and7.TAYLOR identify pitch2 but are not copied into a decision-frame review. The single and Taylor at first withP26 are visible afterward. The close-up-to-motion cut removes the required stationary window. All timing values null; this is directly observed unavailability, not a fetch/verification failure."
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 17,
+      "pitch_number": 1,
+      "play_id": "d65f5863-7b00-493b-964c-7d1105bc5725",
+      "status": "unavailable",
+      "decision_seconds": null,
+      "release_seconds": null,
+      "uncertainty_seconds": null,
+      "note": "A-v2 unavailable: 1630/1640/1650/1653/1654/1654.25 show replays of the preceding Taylor ball/first-base play, not a live stationary pitcher. At 1654.50 and 1654.75 the SNY wipe occludes the pitcher/rubber. At 1655.00 the shrinking logo still obscures the pitcher and the visible lifted rear leg is follow-through, not a pre-pitch leg lift. At 1655.25 the catcher has received the pitch, and 1655.50/1655.75 show the catcher throwing toward second. No eligible live stationary pre-pitch decision frame is available on the checked 0.25-second transition grid. Do not salvage the post-release readable bug as a pre-pitch observation or publish a release-only annotation. Timing fields and all decision-frame observed fields remain null. The subsequent banner directly reads 8.ALVAREZ .237; no manifest pre-state was copied."
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 17,
+      "pitch_number": 2,
+      "play_id": "29d9f246-263c-4b22-8410-d06317e98111",
+      "status": "annotated",
+      "decision_seconds": 1677.75,
+      "release_seconds": 1680.9,
+      "uncertainty_seconds": 0.15,
+      "note": "A-v2 candidate: 1677.25 and 1677.50 remain a tight Alvarez close-up without pitcher/rubber. At 1677.75 the first checked 0.25-second grid frame is a clean live centre-field view with Schwellenbach stationary at the rubber, hands together, Alvarez facing him in the right-handed box, and all ten bug fields readable. Direct samples every 0.25 seconds from 1677.75 to 1679.75, followed by 1680.00, retain the live view and readable bug, with no sampled cutaway, wipe, pickoff or step-off; the pitcher remains set through 1679.50, shifts weight by 1679.75 and has a clear leg lift at 1680.00. Manual release estimate 1680.90, uncertainty +/-0.15 seconds: 1680.75 arm back, 1680.80 hand/forearm cocked behind the head, 1680.85 elbow bent entering forward extension, 1680.90 forward extension, and 1680.95/1681.05 follow-through. This is sampled-frame verification rather than continuous playback or a frame-exact ball-separation label. Observed values were read from the 1677.75 video image, not copied from the manifest."
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 18,
+      "pitch_number": 1,
+      "play_id": "aedd6988-23b4-4768-b911-81e83b9739cf",
+      "status": "annotated",
+      "decision_seconds": 1706.25,
+      "release_seconds": 1717.6,
+      "uncertainty_seconds": 0.15,
+      "note": "Codex direct frame review 2026-09-24. At 1705.75 and 1706.00 the feed shows Mets dugout close-ups, so the live-pitcher/batter condition fails. At 1706.25 the feed has cut to a live high-home wide angle with Schwellenbach stationary at the rubber, a right-handed batter in the box, and a readable bug. This is the first qualifying 0.25-second grid frame after the cut. The bug directly reads 0-0, one out, third base occupied only, top 3, NYM 0 / ATL 0, SCHWELLENBACH P:28. Decision-frame batter line is absent; the live centre-field shot by 1716.00 and later 1720.00 bug identify 9.BADER .239. Samples at no more than 1-second intervals from 1706.25 through 1716.25 show a live shot, stationary pitcher on the rubber and batter in the box with stable readable bug; the camera changes from high-home wide to centre-field between 1715 and 1716 without a sampled interruption. No sampled pickoff, step-off or white bug wipe. By 1716.50 delivery has begun. The throwing arm is back at 1717.45, above/behind the head at 1717.55, extended forward around 1717.60 and down into follow-through at 1717.65-1717.75; report release 1717.60 +/-0.15 rather than frame-exact ball detachment. At 1718.00 the batter is swinging; at 1720.00 the bug shows 88 MPH, and by 1730.00 it shows P:29 with two outs while third remains occupied. These anchors identify this single-pitch PA. Manual selected-frame review; wide-angle player size limits foot-level detail and interruptions between samples cannot be excluded."
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 19,
+      "pitch_number": 1,
+      "play_id": "e5dea17b-a340-461f-9bb1-430ea61a21d8",
+      "status": "annotated",
+      "decision_seconds": 1748.5,
+      "release_seconds": 1752.09,
+      "uncertainty_seconds": 0.15,
+      "note": "A-v2 manual annotation 2026-09-24: decision 1748.50 is the earliest 0.25 s grid point after Mets dugout close-up. Both 1748.00 and 1748.25 are close-ups and fail the live wide-shot condition; 1748.50 and 1749.00 show a live centre-field view with pitcher stationary on the rubber, left-handed batter in the box facing the pitcher and readable scoreboard. Sampled continuity through delivery onset has maximum gap 1.00 s and shows no step-off, pickoff, cutaway or bug wipe. 1752.03 and 1752.04 show the throwing hand behind the head; 1752.06 is unfolding; 1752.09 shows forward extension and 1752.12/1752.15 show the arm coming down. Release 1752.09 is an approximate manual estimate with +/-0.15 s uncertainty, not frame-exact ball separation. Scoreboard directly read as top 3, two outs, third base occupied only, NYM 0 / ATL 0, 0-0, SCHWELLENBACH P:29. The decision bug lacks a batter line; the later 1750.00 live frame reads 1.LINDOR 0-1, and the second-pitch close-up identifies FRANCISCO LINDOR."
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 19,
+      "pitch_number": 2,
+      "play_id": "c60baa74-6d7e-4eff-9d2b-51591ca74754",
+      "status": "annotated",
+      "decision_seconds": 1765.5,
+      "release_seconds": 1769.6,
+      "uncertainty_seconds": 0.15,
+      "note": "A-v2 manual annotation 2026-09-24: decision 1765.50 is the earliest 0.25 s grid point after Lindor close-up with batter statistics. Both 1765.00 and 1765.25 are close-ups and fail the live wide-shot condition; 1765.50 and 1766.00 show a live centre-field view with pitcher stationary on the rubber, left-handed batter in the box facing the pitcher and readable scoreboard. Sampled continuity through delivery onset has maximum gap 1.00 s and shows no step-off, pickoff, cutaway or bug wipe. 1769.50 shows the throwing hand behind the head; 1769.55 is unfolding, 1769.60 shows forward extension and 1769.65 is follow-through. Release 1769.60 is an approximate manual estimate with +/-0.15 s uncertainty, not frame-exact ball separation. Scoreboard directly read as top 3, two outs, third base occupied only, NYM 0 / ATL 0, 0-1, SCHWELLENBACH P:30."
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 19,
+      "pitch_number": 3,
+      "play_id": "876f4958-f635-40e1-97f8-3e8b3f4a81c0",
+      "status": "annotated",
+      "decision_seconds": 1803.0,
+      "release_seconds": 1807.2,
+      "uncertainty_seconds": 0.15,
+      "note": "A-v2 manual annotation 2026-09-24: decision 1803.00 is the earliest 0.25 s grid point after Lindor close-up after time was called. Both 1802.50 and 1802.75 are close-ups and fail the live wide-shot condition; 1803.00 and 1803.50 show a live centre-field view with pitcher stationary on the rubber, left-handed batter in the box facing the pitcher and readable scoreboard. Sampled continuity through delivery onset has maximum gap 1.00 s and shows no step-off, pickoff, cutaway or bug wipe. 1807.10 shows the throwing hand behind the head; 1807.15 is unfolding, 1807.20 shows forward extension and 1807.25 is follow-through. Release 1807.20 is an approximate manual estimate with +/-0.15 s uncertainty, not frame-exact ball separation. Scoreboard directly read as top 3, two outs, third base occupied only, NYM 0 / ATL 0, 0-2, SCHWELLENBACH P:31. The earlier live wide-angle frame at 1790.00 shows the umpire calling time and the batter outside the box; it cannot start the final uninterrupted window. The decision is after the subsequent close-up."
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 19,
+      "pitch_number": 4,
+      "play_id": "a1b9672f-d262-4107-8aab-c81e1f6bd365",
+      "status": "annotated",
+      "decision_seconds": 1817.5,
+      "release_seconds": 1826.75,
+      "uncertainty_seconds": 0.15,
+      "note": "A-v2 manual annotation 2026-09-24: decision 1817.50 is the earliest 0.25 s grid point after runner close-up at third base. Both 1817.00 and 1817.25 are close-ups and fail the live wide-shot condition; 1817.50 and 1818.00 show a live home-plate wide angle with pitcher stationary on the rubber, left-handed batter in the box facing the pitcher and readable scoreboard. Sampled continuity through delivery onset has maximum gap 1.00 s and shows no step-off, pickoff, cutaway or bug wipe. 1826.65 shows the throwing hand behind the head; 1826.70 is unfolding, 1826.75 shows forward extension and 1826.80 is follow-through. Release 1826.75 is an approximate manual estimate with +/-0.15 s uncertainty, not frame-exact ball separation. Scoreboard directly read as top 3, two outs, third base occupied only, NYM 0 / ATL 0, 1-2, SCHWELLENBACH P:32. A live home-plate wide angle is permitted by A-v2. Pitcher and batter remain visible through 1825.50; the centre-field return at 1826.00 is already in the delivery, so waiting for that angle would discard the valid pre-motion window."
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 19,
+      "pitch_number": 5,
+      "play_id": "3cedd8fa-f5c6-4512-9b01-3963e5e5a1e7",
+      "status": "annotated",
+      "decision_seconds": 1848.0,
+      "release_seconds": 1850.16,
+      "uncertainty_seconds": 0.15,
+      "note": "A-v2 manual annotation 2026-09-24: decision 1848.00 is the earliest 0.25 s grid point after catcher close-up. Both 1847.50 and 1847.75 are close-ups and fail the live wide-shot condition; 1848.00 and 1848.50 show a live centre-field view with pitcher stationary on the rubber, left-handed batter in the box facing the pitcher and readable scoreboard. Sampled continuity through delivery onset has maximum gap 0.50 s and shows no step-off, pickoff, cutaway or bug wipe. 1850.10 and 1850.11 show the throwing hand behind the head; 1850.12/1850.14 are unfolding, 1850.16 shows forward extension and 1850.20 is follow-through. Release 1850.16 is an approximate manual estimate with +/-0.15 s uncertainty, not frame-exact ball separation. Scoreboard directly read as top 3, two outs, third base occupied only, NYM 0 / ATL 0, 2-2, SCHWELLENBACH P:33."
     }
   ]
 }

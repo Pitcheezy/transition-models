@@ -1,0 +1,1531 @@
+{
+  "schema": "mlb_broadcast_timing_verification_v1",
+  "game_pk": 747139,
+  "manifest_sha256": "4d036f94f5b5bddc682e846960dbc40de5ae35c4e023581efa12167475e062da",
+  "source": {
+    "page_url": "https://www.mlb.com/video/9-30-24-mets-win-epic-game-in-playoff-clincher",
+    "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+    "duration_seconds": 9340.748083
+  },
+  "reviewed_at": "2026-09-24",
+  "method": "Direct ffmpeg JPEG viewing of timing and scoreboard/identity; PA16 root review plus independent agent cross-check, PA17-19 agent review plus root spot checks.",
+  "limitations": "Selected-frame AI review, not continuous playback or independent human inter-rater measurement. Release estimates have +/-0.15 s manual uncertainty. Same-game development data, not an independent benchmark.",
+  "rows": [
+    {
+      "game_pk": 747139,
+      "at_bat_number": 16,
+      "pitch_number": 1,
+      "play_id": "ab03826c-49a8-4b93-a2be-25e9a0973b80",
+      "verification": {
+        "status": "verified",
+        "by": "Codex root direct timing/scoreboard review; observer_review independently cross-checked PA16",
+        "date": "2026-09-24"
+      },
+      "status": "annotated",
+      "decision_seconds": 1590.5,
+      "release_seconds": 1592.85,
+      "uncertainty_seconds": 0.15,
+      "readability": "partial",
+      "observed": {
+        "balls": null,
+        "strikes": null,
+        "outs": null,
+        "runner_on_1b": null,
+        "runner_on_2b": null,
+        "runner_on_3b": null,
+        "inning": 3,
+        "inning_topbot": "Top",
+        "home_score": 0,
+        "away_score": 0
+      },
+      "bug_text": "TOP 3RD / Mets R0 H0 E0 / Atlanta R0 H2 E0; no count, outs or base indicators",
+      "note": "At 1590.00 the broadcast shows a street/statistics graphic. 1590.25 is still a cross-dissolve with the previous view superimposed; 1590.50 is the first clean live centre-field 0.25 s grid frame with Schwellenbach stationary on the rubber and Taylor facing him in the box. The line-score directly shows Top 3 and 0:0; six absent count/out/base fields remain null. Frames at 1590.75,1591.00,1591.25,1591.50 retain the set scene and readable line-score. Leg lift is visible at 1591.75. The white scoreboard wipe begins around 1592.75, after delivery motion has begun, so it does not interrupt the v2 preparation window. Release bracket: throwing hand behind the head at 1592.75/1592.80, forward extension at1592.85, follow-through at1592.90. Manual estimate1592.85 +/-0.15 s; no frame-exact separation claim. Identity corroborated by the subsequent Taylor close-up with0-1/P25 and pitch2. Selected-frame review, not continuous playback.",
+      "visual_evidence": {
+        "timing_montages": [
+          "outputs/frames/cx24b_pa16_1detail_full.png",
+          "outputs/frames/cx24b_pa16_1arm.png"
+        ],
+        "decision_frame": "outputs/frames/cx24b_pa16_1detail_1590.50.jpg",
+        "previous_grid_frame": "outputs/frames/cx24b_pa16_1detail_1590.25.jpg",
+        "release_frame": "outputs/frames/cx24b_pa16_1detail_1592.85.jpg",
+        "preparation_sample_times": [
+          1590,
+          1590.25,
+          1590.5,
+          1590.75,
+          1591,
+          1591.25,
+          1591.5,
+          1591.75
+        ],
+        "release_sample_times": [
+          1592.7,
+          1592.75,
+          1592.8,
+          1592.85,
+          1592.9
+        ],
+        "max_preparation_sample_gap_seconds": 0.25,
+        "root_spot_check": "Completed: source frames, line-score, transition boundary and throwing-arm sequence directly viewed."
+      },
+      "canonical_frame_hashes": [
+        {
+          "frame_seconds": 1590.5,
+          "path": "outputs/frames/cx24b_fraction_individual_1590.50.jpg",
+          "sha256": "1a81c09d920feafea4e5926b53897db4754b859997e03de901fd7bbc06caa06e"
+        },
+        {
+          "frame_seconds": 1592.85,
+          "path": "outputs/frames/cx24b_fraction_individual_1592.85.jpg",
+          "sha256": "2e171f41eaafacf97fc788feccf9681d815d0f814260e31447e317ed9f368aca"
+        }
+      ]
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 16,
+      "pitch_number": 2,
+      "play_id": "40ad633a-9d15-4cde-86ce-ba2a702285a9",
+      "verification": {
+        "status": "verified",
+        "by": "Codex root direct timing/scoreboard review; observer_review independently cross-checked PA16",
+        "date": "2026-09-24"
+      },
+      "status": "unavailable",
+      "decision_seconds": null,
+      "release_seconds": null,
+      "uncertainty_seconds": null,
+      "readability": null,
+      "observed": null,
+      "bug_text": null,
+      "note": "No valid v2 pre-motion decision frame:1600.00/1605.00/1605.50 show a Taylor close-up and statistics card. At the first live centre-field grid frame1605.75 Schwellenbach already has the front knee raised;1606.00 remains in leg lift and1606.25 onward in delivery. The visible bug0-1/P25,empty bases,0outs,Top3,0:0 and7.TAYLOR identify pitch2 but are not copied into a decision-frame review. The single and Taylor at first withP26 are visible afterward. The close-up-to-motion cut removes the required stationary window. All timing values null; this is directly observed unavailability, not a fetch/verification failure.",
+      "visual_evidence": {
+        "timing_montages": [
+          "outputs/frames/cx24b_pa16_2detail_full.png"
+        ],
+        "last_closeup_frame": "outputs/frames/cx24b_pa16_2detail_1605.50.jpg",
+        "first_live_motion_frame": "outputs/frames/cx24b_pa16_2detail_1605.75.jpg",
+        "frames_examined": [
+          1600,
+          1605,
+          1605.5,
+          1605.75,
+          1606,
+          1606.25,
+          1606.5,
+          1606.75,
+          1607,
+          1607.25,
+          1607.5,
+          1607.75,
+          1608,
+          1608.25,
+          1608.5,
+          1608.75,
+          1609,
+          1610,
+          1615
+        ],
+        "root_spot_check": "Completed: source frames, line-score, transition boundary and throwing-arm sequence directly viewed."
+      }
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 17,
+      "pitch_number": 1,
+      "play_id": "d65f5863-7b00-493b-964c-7d1105bc5725",
+      "status": "unavailable",
+      "decision_seconds": null,
+      "release_seconds": null,
+      "uncertainty_seconds": null,
+      "readability": "unreadable",
+      "observed": {
+        "away_score": null,
+        "home_score": null,
+        "balls": null,
+        "strikes": null,
+        "outs": null,
+        "inning": null,
+        "inning_topbot": null,
+        "runner_on_1b": null,
+        "runner_on_2b": null,
+        "runner_on_3b": null
+      },
+      "bug_text": "No eligible decision-frame bug. Identity/context only, excluded from observed: 1654.75 shows SCHWELLENBACH P:26, 0-0, Top 3, 0:0, two unlit out circles, first-base diamond gold; 1660 shows 0-1 and 95 MPH; 1665 shows P:27 and second-base diamond gold.",
+      "note": "A-v2 unavailable: 1630/1640/1650/1653/1654/1654.25 show replays of the preceding Taylor ball/first-base play, not a live stationary pitcher. At 1654.50 and 1654.75 the SNY wipe occludes the pitcher/rubber. At 1655.00 the shrinking logo still obscures the pitcher and the visible lifted rear leg is follow-through, not a pre-pitch leg lift. At 1655.25 the catcher has received the pitch, and 1655.50/1655.75 show the catcher throwing toward second. No eligible live stationary pre-pitch decision frame is available on the checked 0.25-second transition grid. Do not salvage the post-release readable bug as a pre-pitch observation or publish a release-only annotation. Timing fields and all decision-frame observed fields remain null. The subsequent banner directly reads 8.ALVAREZ .237; no manifest pre-state was copied.",
+      "verification": {
+        "status": "verified",
+        "by": "Codex PA agent direct timing and scoreboard review, followed by root direct image spot check",
+        "date": "2026-09-24",
+        "root_spot_check": "Completed: decision/cut boundary, release and readable bug or unavailability evidence directly viewed."
+      },
+      "prior_verification": "candidate_unmerged_pending_parent_spot_check",
+      "visual_evidence": {
+        "decision_frames": [
+          {
+            "time": 1654,
+            "path": "outputs/frames/cx24b_pa17_p1_boundary_1654.00.jpg"
+          },
+          {
+            "time": 1654.25,
+            "path": "outputs/frames/cx24b_pa17_p1_gap_1654.25.jpg"
+          },
+          {
+            "time": 1654.5,
+            "path": "outputs/frames/cx24b_pa17_p1_boundary_1654.50.jpg"
+          },
+          {
+            "time": 1654.75,
+            "path": "outputs/frames/cx24b_pa17_p1_boundary_1654.75.jpg"
+          },
+          {
+            "time": 1655,
+            "path": "outputs/frames/cx24b_pa17_scan2_1655.00.jpg"
+          },
+          {
+            "time": 1655.25,
+            "path": "outputs/frames/cx24b_pa17_p1_boundary_1655.25.jpg"
+          },
+          {
+            "time": 1655.5,
+            "path": "outputs/frames/cx24b_pa17_p1_boundary_1655.50.jpg"
+          },
+          {
+            "time": 1655.75,
+            "path": "outputs/frames/cx24b_pa17_p1_boundary_1655.75.jpg"
+          }
+        ],
+        "release_frames": [],
+        "continuity_frames": [],
+        "earlier_replay_samples": [
+          {
+            "time": 1630,
+            "path": "outputs/frames/cx24b_pa17_scan1_1630.00.jpg"
+          },
+          {
+            "time": 1640,
+            "path": "outputs/frames/cx24b_pa17_scan2_1640.00.jpg"
+          },
+          {
+            "time": 1650,
+            "path": "outputs/frames/cx24b_pa17_scan1_1650.00.jpg"
+          },
+          {
+            "time": 1653,
+            "path": "outputs/frames/cx24b_pa17_p1_boundary_1653.00.jpg"
+          }
+        ],
+        "post_pitch_identity_samples": [
+          {
+            "time": 1660,
+            "path": "outputs/frames/cx24b_pa17_scan2_1660.00.jpg"
+          },
+          {
+            "time": 1665,
+            "path": "outputs/frames/cx24b_pa17_scan2_1665.00.jpg"
+          }
+        ],
+        "boundary_grid_max_gap_seconds": 0.25,
+        "eight_frame_montage": "outputs/frames/cx24b_pa17_p1_review_full.png",
+        "bug_montage": "outputs/frames/cx24b_pa17_p1_review_bug.png"
+      }
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 17,
+      "pitch_number": 2,
+      "play_id": "29d9f246-263c-4b22-8410-d06317e98111",
+      "status": "annotated",
+      "decision_seconds": 1677.75,
+      "release_seconds": 1680.9,
+      "uncertainty_seconds": 0.15,
+      "readability": "readable",
+      "observed": {
+        "away_score": 0,
+        "home_score": 0,
+        "balls": 0,
+        "strikes": 1,
+        "outs": 0,
+        "inning": 3,
+        "inning_topbot": "Top",
+        "runner_on_1b": false,
+        "runner_on_2b": true,
+        "runner_on_3b": false
+      },
+      "bug_text": "At 1677.75: Mets 0 / Braves 0; upward triangle 3; 0-1; both out circles unlit; only second-base diamond gold; SCHWELLENBACH :07 P:27 / 8.ALVAREZ .237. Right-handed batter in box and right-handed pitcher on rubber.",
+      "note": "A-v2 candidate: 1677.25 and 1677.50 remain a tight Alvarez close-up without pitcher/rubber. At 1677.75 the first checked 0.25-second grid frame is a clean live centre-field view with Schwellenbach stationary at the rubber, hands together, Alvarez facing him in the right-handed box, and all ten bug fields readable. Direct samples every 0.25 seconds from 1677.75 to 1679.75, followed by 1680.00, retain the live view and readable bug, with no sampled cutaway, wipe, pickoff or step-off; the pitcher remains set through 1679.50, shifts weight by 1679.75 and has a clear leg lift at 1680.00. Manual release estimate 1680.90, uncertainty +/-0.15 seconds: 1680.75 arm back, 1680.80 hand/forearm cocked behind the head, 1680.85 elbow bent entering forward extension, 1680.90 forward extension, and 1680.95/1681.05 follow-through. This is sampled-frame verification rather than continuous playback or a frame-exact ball-separation label. Observed values were read from the 1677.75 video image, not copied from the manifest.",
+      "verification": {
+        "status": "verified",
+        "by": "Codex PA agent direct timing and scoreboard review, followed by root direct image spot check",
+        "date": "2026-09-24",
+        "root_spot_check": "Completed: decision/cut boundary, release and readable bug or unavailability evidence directly viewed."
+      },
+      "prior_verification": "candidate_unmerged_pending_parent_spot_check",
+      "visual_evidence": {
+        "decision_frames": [
+          {
+            "time": 1677.25,
+            "path": "outputs/frames/cx24b_pa17_p2_boundary_1677.25.jpg"
+          },
+          {
+            "time": 1677.5,
+            "path": "outputs/frames/cx24b_pa17_p2_boundary_1677.50.jpg"
+          },
+          {
+            "time": 1677.75,
+            "path": "outputs/frames/cx24b_pa17_p2_boundary_1677.75.jpg"
+          },
+          {
+            "time": 1678.25,
+            "path": "outputs/frames/cx24b_pa17_p2_boundary_1678.25.jpg"
+          }
+        ],
+        "release_frames": [
+          {
+            "time": 1680.75,
+            "path": "outputs/frames/cx24b_pa17_p2_boundary_1680.75.jpg"
+          },
+          {
+            "time": 1680.8,
+            "path": "outputs/frames/cx24b_pa17_p2_release_1680.80.jpg"
+          },
+          {
+            "time": 1680.85,
+            "path": "outputs/frames/cx24b_pa17_p2_release_1680.85.jpg"
+          },
+          {
+            "time": 1680.9,
+            "path": "outputs/frames/cx24b_pa17_p2_release_1680.90.jpg"
+          },
+          {
+            "time": 1680.95,
+            "path": "outputs/frames/cx24b_pa17_p2_release_1680.95.jpg"
+          },
+          {
+            "time": 1681.05,
+            "path": "outputs/frames/cx24b_pa17_p2_release_1681.05.jpg"
+          }
+        ],
+        "continuity_frames": [
+          {
+            "time": 1677.75,
+            "path": "outputs/frames/cx24b_pa17_p2_boundary_1677.75.jpg"
+          },
+          {
+            "time": 1678,
+            "path": "outputs/frames/cx24b_pa17_p2_scan_1678.00.jpg"
+          },
+          {
+            "time": 1678.25,
+            "path": "outputs/frames/cx24b_pa17_p2_boundary_1678.25.jpg"
+          },
+          {
+            "time": 1678.5,
+            "path": "outputs/frames/cx24b_pa17_p2_boundary_1678.50.jpg"
+          },
+          {
+            "time": 1678.75,
+            "path": "outputs/frames/cx24b_pa17_p2_boundary_1678.75.jpg"
+          },
+          {
+            "time": 1679,
+            "path": "outputs/frames/cx24b_pa17_p2_scan_1679.00.jpg"
+          },
+          {
+            "time": 1679.25,
+            "path": "outputs/frames/cx24b_pa17_p2_boundary_1679.25.jpg"
+          },
+          {
+            "time": 1679.5,
+            "path": "outputs/frames/cx24b_pa17_p2_boundary_1679.50.jpg"
+          },
+          {
+            "time": 1679.75,
+            "path": "outputs/frames/cx24b_pa17_p2_boundary_1679.75.jpg"
+          },
+          {
+            "time": 1680,
+            "path": "outputs/frames/cx24b_pa17_scan2_1680.00.jpg"
+          }
+        ],
+        "continuity_max_gap_seconds": 0.25,
+        "eight_frame_montage": "outputs/frames/cx24b_pa17_p2_review_full.png",
+        "bug_montage": "outputs/frames/cx24b_pa17_p2_review_bug.png",
+        "arm_montage": "outputs/frames/cx24b_pa17_p2_arm.png"
+      },
+      "canonical_frame_hashes": [
+        {
+          "frame_seconds": 1677.75,
+          "path": "outputs/frames/cx24b_pa17_p2_boundary_1677.75.jpg",
+          "sha256": "edd68ab486158a6efbc6eb7b930bf55d09acadbf1dff6ceb6e7bfd809991e77b"
+        },
+        {
+          "frame_seconds": 1680.9,
+          "path": "outputs/frames/cx24b_pa17_p2_release_1680.90.jpg",
+          "sha256": "6e5157bded93933f40611a0eceb0f0f868325a399798bfaa3eca80e1bcc2a80a"
+        }
+      ]
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 18,
+      "pitch_number": 1,
+      "play_id": "aedd6988-23b4-4768-b911-81e83b9739cf",
+      "status": "annotated",
+      "decision_seconds": 1706.25,
+      "release_seconds": 1717.6,
+      "uncertainty_seconds": 0.15,
+      "readability": "readable",
+      "observed": {
+        "balls": 0,
+        "strikes": 0,
+        "outs": 1,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": true,
+        "inning": 3,
+        "inning_topbot": "Top",
+        "home_score": 0,
+        "away_score": 0
+      },
+      "bug_text": "NYM 0 / ATL 0 / up-3 / one gold out circle / third-base diamond gold only / 0-0 / SCHWELLENBACH P:28 (no batter line at decision)",
+      "pcount_seen": 28,
+      "failing_condition_before": "cutaway_or_replay",
+      "note": "Codex direct frame review 2026-09-24. At 1705.75 and 1706.00 the feed shows Mets dugout close-ups, so the live-pitcher/batter condition fails. At 1706.25 the feed has cut to a live high-home wide angle with Schwellenbach stationary at the rubber, a right-handed batter in the box, and a readable bug. This is the first qualifying 0.25-second grid frame after the cut. The bug directly reads 0-0, one out, third base occupied only, top 3, NYM 0 / ATL 0, SCHWELLENBACH P:28. Decision-frame batter line is absent; the live centre-field shot by 1716.00 and later 1720.00 bug identify 9.BADER .239. Samples at no more than 1-second intervals from 1706.25 through 1716.25 show a live shot, stationary pitcher on the rubber and batter in the box with stable readable bug; the camera changes from high-home wide to centre-field between 1715 and 1716 without a sampled interruption. No sampled pickoff, step-off or white bug wipe. By 1716.50 delivery has begun. The throwing arm is back at 1717.45, above/behind the head at 1717.55, extended forward around 1717.60 and down into follow-through at 1717.65-1717.75; report release 1717.60 +/-0.15 rather than frame-exact ball detachment. At 1718.00 the batter is swinging; at 1720.00 the bug shows 88 MPH, and by 1730.00 it shows P:29 with two outs while third remains occupied. These anchors identify this single-pitch PA. Manual selected-frame review; wide-angle player size limits foot-level detail and interruptions between samples cannot be excluded.",
+      "frames_examined": [
+        1700,
+        1703,
+        1705.75,
+        1706,
+        1706.25,
+        1706.5,
+        1706.75,
+        1707,
+        1707.25,
+        1707.5,
+        1707.75,
+        1708,
+        1708.25,
+        1708.5,
+        1708.75,
+        1709,
+        1710,
+        1711,
+        1712,
+        1713,
+        1714,
+        1715,
+        1716,
+        1716.25,
+        1716.5,
+        1717,
+        1717.3,
+        1717.4,
+        1717.45,
+        1717.5,
+        1717.55,
+        1717.6,
+        1717.65,
+        1717.7,
+        1717.75,
+        1717.8,
+        1717.9,
+        1718,
+        1720,
+        1730
+      ],
+      "verification": {
+        "status": "verified",
+        "by": "Codex PA agent direct timing and scoreboard review, followed by root direct image spot check",
+        "date": "2026-09-24",
+        "root_spot_check": "Completed: decision/cut boundary, release and readable bug or unavailability evidence directly viewed."
+      },
+      "visual_evidence": {
+        "frames": [
+          {
+            "time": 1700,
+            "path": "outputs/frames/cx24b_pa18v_scan1_1700.00.jpg"
+          },
+          {
+            "time": 1703,
+            "path": "outputs/frames/cx24b_pa18v_scan1_1703.00.jpg"
+          },
+          {
+            "time": 1705.75,
+            "path": "outputs/frames/cx24b_pa18v_refine_1705.75.jpg"
+          },
+          {
+            "time": 1706,
+            "path": "outputs/frames/cx24b_pa18v_scan1_1706.00.jpg"
+          },
+          {
+            "time": 1706.25,
+            "path": "outputs/frames/cx24b_pa18v_fine_1706.25.jpg"
+          },
+          {
+            "time": 1706.5,
+            "path": "outputs/frames/cx24b_pa18v_boundary_1706.50.jpg"
+          },
+          {
+            "time": 1706.75,
+            "path": "outputs/frames/cx24b_pa18v_fine_1706.75.jpg"
+          },
+          {
+            "time": 1707,
+            "path": "outputs/frames/cx24b_pa18v_boundary_1707.00.jpg"
+          },
+          {
+            "time": 1707.25,
+            "path": "outputs/frames/cx24b_pa18v_fine_1707.25.jpg"
+          },
+          {
+            "time": 1707.5,
+            "path": "outputs/frames/cx24b_pa18v_boundary_1707.50.jpg"
+          },
+          {
+            "time": 1707.75,
+            "path": "outputs/frames/cx24b_pa18v_fine_1707.75.jpg"
+          },
+          {
+            "time": 1708,
+            "path": "outputs/frames/cx24b_pa18v_boundary_1708.00.jpg"
+          },
+          {
+            "time": 1708.25,
+            "path": "outputs/frames/cx24b_pa18v_fine_1708.25.jpg"
+          },
+          {
+            "time": 1708.5,
+            "path": "outputs/frames/cx24b_pa18v_fine_1708.50.jpg"
+          },
+          {
+            "time": 1708.75,
+            "path": "outputs/frames/cx24b_pa18v_fine_1708.75.jpg"
+          },
+          {
+            "time": 1709,
+            "path": "outputs/frames/cx24b_pa18v_scan1_1709.00.jpg"
+          },
+          {
+            "time": 1710,
+            "path": "outputs/frames/cx24b_pa17_scan1_1710.00.jpg"
+          },
+          {
+            "time": 1711,
+            "path": "outputs/frames/cx24b_pa18v_boundary_1711.00.jpg"
+          },
+          {
+            "time": 1712,
+            "path": "outputs/frames/cx24b_pa18v_scan1_1712.00.jpg"
+          },
+          {
+            "time": 1713,
+            "path": "outputs/frames/cx24b_pa18v_boundary_1713.00.jpg"
+          },
+          {
+            "time": 1714,
+            "path": "outputs/frames/cx24b_pa18v_boundary_1714.00.jpg"
+          },
+          {
+            "time": 1715,
+            "path": "outputs/frames/cx24b_pa18v_scan1_1715.00.jpg"
+          },
+          {
+            "time": 1716,
+            "path": "outputs/frames/cx24b_pa18v_boundary_1716.00.jpg"
+          },
+          {
+            "time": 1716.25,
+            "path": "outputs/frames/cx24b_pa18v_refine_1716.25.jpg"
+          },
+          {
+            "time": 1716.5,
+            "path": "outputs/frames/cx24b_pa18v_fine_1716.50.jpg"
+          },
+          {
+            "time": 1717,
+            "path": "outputs/frames/cx24b_pa18v_fine_1717.00.jpg"
+          },
+          {
+            "time": 1717.3,
+            "path": "outputs/frames/cx24b_pa18v_fine_1717.30.jpg"
+          },
+          {
+            "time": 1717.4,
+            "path": "outputs/frames/cx24b_pa18v_fine_1717.40.jpg"
+          },
+          {
+            "time": 1717.45,
+            "path": "outputs/frames/cx24b_pa18v_refine_1717.45.jpg"
+          },
+          {
+            "time": 1717.5,
+            "path": "outputs/frames/cx24b_pa18v_fine_1717.50.jpg"
+          },
+          {
+            "time": 1717.55,
+            "path": "outputs/frames/cx24b_pa18v_refine_1717.55.jpg"
+          },
+          {
+            "time": 1717.6,
+            "path": "outputs/frames/cx24b_pa18v_fine_1717.60.jpg"
+          },
+          {
+            "time": 1717.65,
+            "path": "outputs/frames/cx24b_pa18v_refine_1717.65.jpg"
+          },
+          {
+            "time": 1717.7,
+            "path": "outputs/frames/cx24b_pa18v_fine_1717.70.jpg"
+          },
+          {
+            "time": 1717.75,
+            "path": "outputs/frames/cx24b_pa18v_refine_1717.75.jpg"
+          },
+          {
+            "time": 1717.8,
+            "path": "outputs/frames/cx24b_pa18v_fine_1717.80.jpg"
+          },
+          {
+            "time": 1717.9,
+            "path": "outputs/frames/cx24b_pa18v_fine_1717.90.jpg"
+          },
+          {
+            "time": 1718,
+            "path": "outputs/frames/cx24b_pa18v_scan1_1718.00.jpg"
+          },
+          {
+            "time": 1720,
+            "path": "outputs/frames/cx24b_pa18_scan2_1720.00.jpg"
+          },
+          {
+            "time": 1730,
+            "path": "outputs/frames/cx24b_pa17_scan1_1730.00.jpg"
+          }
+        ],
+        "decision_boundary_seconds": [
+          1705.75,
+          1706.0,
+          1706.25,
+          1706.75
+        ],
+        "continuity_seconds": [
+          1706.25,
+          1706.75,
+          1707.75,
+          1708.75,
+          1709,
+          1710,
+          1711,
+          1712,
+          1713,
+          1714,
+          1715,
+          1716,
+          1716.25
+        ],
+        "maximum_continuity_gap_seconds": 1.0,
+        "release_bracket_seconds": [
+          1717.45,
+          1717.55,
+          1717.6,
+          1717.65,
+          1717.75
+        ],
+        "parent_eight_frame_montage": "outputs/frames/cx24b_pa18v_parent_full.png",
+        "parent_bug_montage": "outputs/frames/cx24b_pa18v_parent_bug.png",
+        "decision_full": "outputs/frames/cx24b_pa18v_fine_1706.25.jpg",
+        "decision_bug": "outputs/frames/cx24b_pa18v_decision_bug.png",
+        "continuity_montages": [
+          "outputs/frames/cx24b_pa18v_boundary_full.png",
+          "outputs/frames/cx24b_pa18v_fine_full.png"
+        ],
+        "limitations": [
+          "Selected-frame continuity at maximum 1-second gaps; no continuous-video proof.",
+          "High-home wide view shows stationary mound position and batter in box, but player pixels are small.",
+          "Release is manual +/-0.15-second estimate, not exact ball detachment.",
+          "Final parent spot check required before verified merge."
+        ]
+      },
+      "prior_verification": {
+        "status": "two_lens_passed_needs_spot_check",
+        "by": "Codex verify_pa13 subagent, PA18 direct frame review",
+        "date": "2026-09-24",
+        "timing_lens": "pass by direct viewing; earliest-cut boundary and pre-motion continuity sampled",
+        "scoreboard_identity_lens": "pass by direct bug reading and P28 to P29 transition; observed fields not copied from manifest",
+        "root_spot_check": "pending"
+      },
+      "canonical_frame_hashes": [
+        {
+          "frame_seconds": 1706.25,
+          "path": "outputs/frames/cx24b_pa18v_fine_1706.25.jpg",
+          "sha256": "3f6c799d29201669415c664bb0b710c8022d04ce84ce4e0d08d346be858e4e74"
+        },
+        {
+          "frame_seconds": 1717.6,
+          "path": "outputs/frames/cx24b_pa18v_fine_1717.60.jpg",
+          "sha256": "c7e11c2487f530a48f759d335dd0256de4cb0f35f294e0ebefd0f89c2645c36b"
+        }
+      ]
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 19,
+      "pitch_number": 1,
+      "play_id": "e5dea17b-a340-461f-9bb1-430ea61a21d8",
+      "status": "annotated",
+      "decision_seconds": 1748.5,
+      "release_seconds": 1752.09,
+      "uncertainty_seconds": 0.15,
+      "lead_seconds": 3.59,
+      "readability": "readable",
+      "observed": {
+        "inning": 3,
+        "inning_topbot": "Top",
+        "away_score": 0,
+        "home_score": 0,
+        "outs": 2,
+        "balls": 0,
+        "strikes": 0,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": true
+      },
+      "pcount_seen": 29,
+      "batter_stance_observed": "L",
+      "batter_name_observed": "1.LINDOR 0-1",
+      "bug_text": "NYM 0 / ATL 0; upward triangle 3; two gold out dots; left third-base diamond gold, second and first empty; 0-0; SCHWELLENBACH P:29",
+      "failing_condition_before": "close_up",
+      "note": "A-v2 manual annotation 2026-09-24: decision 1748.50 is the earliest 0.25 s grid point after Mets dugout close-up. Both 1748.00 and 1748.25 are close-ups and fail the live wide-shot condition; 1748.50 and 1749.00 show a live centre-field view with pitcher stationary on the rubber, left-handed batter in the box facing the pitcher and readable scoreboard. Sampled continuity through delivery onset has maximum gap 1.00 s and shows no step-off, pickoff, cutaway or bug wipe. 1752.03 and 1752.04 show the throwing hand behind the head; 1752.06 is unfolding; 1752.09 shows forward extension and 1752.12/1752.15 show the arm coming down. Release 1752.09 is an approximate manual estimate with +/-0.15 s uncertainty, not frame-exact ball separation. Scoreboard directly read as top 3, two outs, third base occupied only, NYM 0 / ATL 0, 0-0, SCHWELLENBACH P:29. The decision bug lacks a batter line; the later 1750.00 live frame reads 1.LINDOR 0-1, and the second-pitch close-up identifies FRANCISCO LINDOR.",
+      "verification": {
+        "status": "verified",
+        "by": "Codex PA agent direct timing and scoreboard review, followed by root direct image spot check",
+        "date": "2026-09-24",
+        "root_spot_check": "Completed: decision/cut boundary, release and readable bug or unavailability evidence directly viewed."
+      },
+      "prior_verification": {
+        "status": "candidate_for_parent_spotcheck",
+        "by": "Codex PA19 visual annotator",
+        "date": "2026-09-24",
+        "method": "Actual view_image inspection of original video JPEGs, full-frame montages and scoreboard crops. Observed values manually transcribed from pixels before using manifest identity keys; no UTC interpolation."
+      },
+      "visual_evidence": {
+        "decision_times": [
+          1748.0,
+          1748.25,
+          1748.5,
+          1749.0
+        ],
+        "release_times": [
+          1751.94,
+          1752.04,
+          1752.09,
+          1752.24
+        ],
+        "continuity_times": [
+          1748.5,
+          1748.75,
+          1749,
+          1749.25,
+          1749.5,
+          1750,
+          1751
+        ],
+        "frames": [
+          {
+            "time": 1748.0,
+            "path": "outputs/frames/cx24b_pa19_fine12_1748.00.jpg",
+            "sha256": "0452bbc06e710aad682e5fd759968bed87427490802975ecfc1a88e714aa4eaa"
+          },
+          {
+            "time": 1748.25,
+            "path": "outputs/frames/cx24b_pa19_fine12_1748.25.jpg",
+            "sha256": "025d1bd378bce6b7790bce6d69ad299108fb89f3c1061c50ed7fefe943225d89"
+          },
+          {
+            "time": 1748.5,
+            "path": "outputs/frames/cx24b_pa19_fine12_1748.50.jpg",
+            "sha256": "7fcd4d460d2a79bbc7b0685bc68a2ae14aaed3a465885245f1fb7c24642f35d5"
+          },
+          {
+            "time": 1749.0,
+            "path": "outputs/frames/cx24b_pa19_fine12_1749.00.jpg",
+            "sha256": "f4bbca074f4ae8a35f290ac4c1d95a1d2a9df5c62c8acd0e7336da8b376dd479"
+          },
+          {
+            "time": 1751.94,
+            "path": "outputs/frames/cx24b_pa19_bracket12_1751.94.jpg",
+            "sha256": "535b7679b3f7a0cbfe5e876a923bba3a3b77920d26f3915a6ec9adab89c62cec"
+          },
+          {
+            "time": 1752.04,
+            "path": "outputs/frames/cx24b_pa19_bracket12_1752.04.jpg",
+            "sha256": "07590c6966eb5e9654bec29a254027e9910aa68699cf82ce2e610f8af92bb678"
+          },
+          {
+            "time": 1752.09,
+            "path": "outputs/frames/cx24b_pa19_fine12_1752.09.jpg",
+            "sha256": "28ff71cb47ea5c427289b4326ea6ce83ead239be8939188ae15cc88ca462e609"
+          },
+          {
+            "time": 1752.24,
+            "path": "outputs/frames/cx24b_pa19_bracket12_1752.24.jpg",
+            "sha256": "2788e15f11b6c7e47e56317462cac95a038f13d32886eb462686c99f22477ba7"
+          }
+        ],
+        "continuity_frames": [
+          {
+            "time": 1748.5,
+            "path": "outputs/frames/cx24b_pa19_fine12_1748.50.jpg"
+          },
+          {
+            "time": 1748.75,
+            "path": "outputs/frames/cx24b_pa19_fine12_1748.75.jpg"
+          },
+          {
+            "time": 1749,
+            "path": "outputs/frames/cx24b_pa19_fine12_1749.00.jpg"
+          },
+          {
+            "time": 1749.25,
+            "path": "outputs/frames/cx24b_pa19_fine12_1749.25.jpg"
+          },
+          {
+            "time": 1749.5,
+            "path": "outputs/frames/cx24b_pa19_fine12_1749.50.jpg"
+          },
+          {
+            "time": 1750,
+            "path": "outputs/frames/cx24b_pa19_fine12_1750.00.jpg"
+          },
+          {
+            "time": 1751,
+            "path": "outputs/frames/cx24b_pa19_p1scan_1751.00.jpg"
+          }
+        ],
+        "files": [
+          "outputs/frames/cx24b_pa19_p1_review_full.png",
+          "outputs/frames/cx24b_pa19_p1_review_bug.png",
+          "outputs/frames/cx24b_pa19_decisions_bug.png",
+          "outputs/frames/cx24b_pa19_cont13_full.png"
+        ],
+        "continuity_max_sample_gap_seconds": 1,
+        "limitation": "Sampled continuity, not exhaustive every-frame or continuous playback review. Release is an approximate arm-motion estimate subject to compression and blur; +/-0.15 s is not a statistical confidence interval."
+      },
+      "canonical_frame_hashes": [
+        {
+          "frame_seconds": 1748.5,
+          "path": "outputs/frames/cx24b_pa19_fine12_1748.50.jpg",
+          "sha256": "7fcd4d460d2a79bbc7b0685bc68a2ae14aaed3a465885245f1fb7c24642f35d5"
+        },
+        {
+          "frame_seconds": 1752.09,
+          "path": "outputs/frames/cx24b_pa19_fine12_1752.09.jpg",
+          "sha256": "28ff71cb47ea5c427289b4326ea6ce83ead239be8939188ae15cc88ca462e609"
+        }
+      ]
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 19,
+      "pitch_number": 2,
+      "play_id": "c60baa74-6d7e-4eff-9d2b-51591ca74754",
+      "status": "annotated",
+      "decision_seconds": 1765.5,
+      "release_seconds": 1769.6,
+      "uncertainty_seconds": 0.15,
+      "lead_seconds": 4.1,
+      "readability": "readable",
+      "observed": {
+        "inning": 3,
+        "inning_topbot": "Top",
+        "away_score": 0,
+        "home_score": 0,
+        "outs": 2,
+        "balls": 0,
+        "strikes": 1,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": true
+      },
+      "pcount_seen": 30,
+      "batter_stance_observed": "L",
+      "batter_name_observed": "1.LINDOR 0-1",
+      "bug_text": "NYM 0 / ATL 0; upward triangle 3; two gold out dots; left third-base diamond gold, second and first empty; 0-1; SCHWELLENBACH P:30",
+      "failing_condition_before": "close_up",
+      "note": "A-v2 manual annotation 2026-09-24: decision 1765.50 is the earliest 0.25 s grid point after Lindor close-up with batter statistics. Both 1765.00 and 1765.25 are close-ups and fail the live wide-shot condition; 1765.50 and 1766.00 show a live centre-field view with pitcher stationary on the rubber, left-handed batter in the box facing the pitcher and readable scoreboard. Sampled continuity through delivery onset has maximum gap 1.00 s and shows no step-off, pickoff, cutaway or bug wipe. 1769.50 shows the throwing hand behind the head; 1769.55 is unfolding, 1769.60 shows forward extension and 1769.65 is follow-through. Release 1769.60 is an approximate manual estimate with +/-0.15 s uncertainty, not frame-exact ball separation. Scoreboard directly read as top 3, two outs, third base occupied only, NYM 0 / ATL 0, 0-1, SCHWELLENBACH P:30.",
+      "verification": {
+        "status": "verified",
+        "by": "Codex PA agent direct timing and scoreboard review, followed by root direct image spot check",
+        "date": "2026-09-24",
+        "root_spot_check": "Completed: decision/cut boundary, release and readable bug or unavailability evidence directly viewed."
+      },
+      "prior_verification": {
+        "status": "candidate_for_parent_spotcheck",
+        "by": "Codex PA19 visual annotator",
+        "date": "2026-09-24",
+        "method": "Actual view_image inspection of original video JPEGs, full-frame montages and scoreboard crops. Observed values manually transcribed from pixels before using manifest identity keys; no UTC interpolation."
+      },
+      "visual_evidence": {
+        "decision_times": [
+          1765.0,
+          1765.25,
+          1765.5,
+          1766.0
+        ],
+        "release_times": [
+          1769.45,
+          1769.55,
+          1769.6,
+          1769.75
+        ],
+        "continuity_times": [
+          1765.5,
+          1765.75,
+          1766,
+          1767,
+          1768,
+          1768.5,
+          1769.35
+        ],
+        "frames": [
+          {
+            "time": 1765.0,
+            "path": "outputs/frames/cx24b_pa19_d12_1765.00.jpg",
+            "sha256": "1007f91a4147fe65b366242cf2475813d59735d21789ec856d5dad96ba4ea73b"
+          },
+          {
+            "time": 1765.25,
+            "path": "outputs/frames/cx24b_pa19_fine12_1765.25.jpg",
+            "sha256": "1c30b9e707d08066bee98edeaf2bef13b270cdb69e6d9753179b8c4fc5cbae29"
+          },
+          {
+            "time": 1765.5,
+            "path": "outputs/frames/cx24b_pa19_d12_1765.50.jpg",
+            "sha256": "eec13d155533459c72f3bff25934d85d6ac364459690478ca466134d5ba32695"
+          },
+          {
+            "time": 1766.0,
+            "path": "outputs/frames/cx24b_pa19_fine12_1766.00.jpg",
+            "sha256": "b0fed1c2cf31ba156564345022a0a804198eacfad9c62681a9b3aa8e648b7d63"
+          },
+          {
+            "time": 1769.45,
+            "path": "outputs/frames/cx24b_pa19_bracket12_1769.45.jpg",
+            "sha256": "9cc6c56b22d3b612ad2a2c15bc58207ea85016148364568c0f1e9cb5b1c46f3d"
+          },
+          {
+            "time": 1769.55,
+            "path": "outputs/frames/cx24b_pa19_fine12_1769.55.jpg",
+            "sha256": "7308a92b6ec5dd753669513e641025a77e93888a24f5f11386a141fba18390a2"
+          },
+          {
+            "time": 1769.6,
+            "path": "outputs/frames/cx24b_pa19_fine12_1769.60.jpg",
+            "sha256": "a2659214113a00f25adf62ae9aaa54322ac6a833ad06516dd21203b6db0385a0"
+          },
+          {
+            "time": 1769.75,
+            "path": "outputs/frames/cx24b_pa19_fine12_1769.75.jpg",
+            "sha256": "8f75f39febb1974352b742fed5fe30ba4a8fdebc3966fe43d46e1140fdfa606e"
+          }
+        ],
+        "continuity_frames": [
+          {
+            "time": 1765.5,
+            "path": "outputs/frames/cx24b_pa19_fine12_1765.50.jpg"
+          },
+          {
+            "time": 1765.75,
+            "path": "outputs/frames/cx24b_pa19_fine12_1765.75.jpg"
+          },
+          {
+            "time": 1766,
+            "path": "outputs/frames/cx24b_pa19_p2scan_1766.00.jpg"
+          },
+          {
+            "time": 1767,
+            "path": "outputs/frames/cx24b_pa19_fine12_1767.00.jpg"
+          },
+          {
+            "time": 1768,
+            "path": "outputs/frames/cx24b_pa19_p2scan_1768.00.jpg"
+          },
+          {
+            "time": 1768.5,
+            "path": "outputs/frames/cx24b_pa19_fine12_1768.50.jpg"
+          },
+          {
+            "time": 1769.35,
+            "path": "outputs/frames/cx24b_pa19_r12_1769.35.jpg"
+          }
+        ],
+        "files": [
+          "outputs/frames/cx24b_pa19_p2_review_full.png",
+          "outputs/frames/cx24b_pa19_p2_review_bug.png",
+          "outputs/frames/cx24b_pa19_decisions_bug.png",
+          "outputs/frames/cx24b_pa19_p2db_full.png",
+          "outputs/frames/cx24b_pa19_p2rb_full.png"
+        ],
+        "continuity_max_sample_gap_seconds": 1,
+        "limitation": "Sampled continuity, not exhaustive every-frame or continuous playback review. Release is an approximate arm-motion estimate subject to compression and blur; +/-0.15 s is not a statistical confidence interval."
+      },
+      "canonical_frame_hashes": [
+        {
+          "frame_seconds": 1765.5,
+          "path": "outputs/frames/cx24b_pa19_d12_1765.50.jpg",
+          "sha256": "eec13d155533459c72f3bff25934d85d6ac364459690478ca466134d5ba32695"
+        },
+        {
+          "frame_seconds": 1769.6,
+          "path": "outputs/frames/cx24b_pa19_fine12_1769.60.jpg",
+          "sha256": "a2659214113a00f25adf62ae9aaa54322ac6a833ad06516dd21203b6db0385a0"
+        }
+      ]
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 19,
+      "pitch_number": 3,
+      "play_id": "876f4958-f635-40e1-97f8-3e8b3f4a81c0",
+      "status": "annotated",
+      "decision_seconds": 1803.0,
+      "release_seconds": 1807.2,
+      "uncertainty_seconds": 0.15,
+      "lead_seconds": 4.2,
+      "readability": "readable",
+      "observed": {
+        "inning": 3,
+        "inning_topbot": "Top",
+        "away_score": 0,
+        "home_score": 0,
+        "outs": 2,
+        "balls": 0,
+        "strikes": 2,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": true
+      },
+      "pcount_seen": 31,
+      "batter_stance_observed": "L",
+      "batter_name_observed": "1.LINDOR 0-1",
+      "bug_text": "NYM 0 / ATL 0; upward triangle 3; two gold out dots; left third-base diamond gold, second and first empty; 0-2; SCHWELLENBACH P:31",
+      "failing_condition_before": "close_up",
+      "note": "A-v2 manual annotation 2026-09-24: decision 1803.00 is the earliest 0.25 s grid point after Lindor close-up after time was called. Both 1802.50 and 1802.75 are close-ups and fail the live wide-shot condition; 1803.00 and 1803.50 show a live centre-field view with pitcher stationary on the rubber, left-handed batter in the box facing the pitcher and readable scoreboard. Sampled continuity through delivery onset has maximum gap 1.00 s and shows no step-off, pickoff, cutaway or bug wipe. 1807.10 shows the throwing hand behind the head; 1807.15 is unfolding, 1807.20 shows forward extension and 1807.25 is follow-through. Release 1807.20 is an approximate manual estimate with +/-0.15 s uncertainty, not frame-exact ball separation. Scoreboard directly read as top 3, two outs, third base occupied only, NYM 0 / ATL 0, 0-2, SCHWELLENBACH P:31. The earlier live wide-angle frame at 1790.00 shows the umpire calling time and the batter outside the box; it cannot start the final uninterrupted window. The decision is after the subsequent close-up.",
+      "verification": {
+        "status": "verified",
+        "by": "Codex PA agent direct timing and scoreboard review, followed by root direct image spot check",
+        "date": "2026-09-24",
+        "root_spot_check": "Completed: decision/cut boundary, release and readable bug or unavailability evidence directly viewed."
+      },
+      "prior_verification": {
+        "status": "candidate_for_parent_spotcheck",
+        "by": "Codex PA19 visual annotator",
+        "date": "2026-09-24",
+        "method": "Actual view_image inspection of original video JPEGs, full-frame montages and scoreboard crops. Observed values manually transcribed from pixels before using manifest identity keys; no UTC interpolation."
+      },
+      "visual_evidence": {
+        "decision_times": [
+          1802.5,
+          1802.75,
+          1803.0,
+          1803.5
+        ],
+        "release_times": [
+          1807.05,
+          1807.15,
+          1807.2,
+          1807.35
+        ],
+        "continuity_times": [
+          1803,
+          1803.25,
+          1803.5,
+          1803.75,
+          1804,
+          1804.25,
+          1805,
+          1806,
+          1806.5
+        ],
+        "frames": [
+          {
+            "time": 1802.5,
+            "path": "outputs/frames/cx24b_pa19_fine3_1802.50.jpg",
+            "sha256": "b4d9ff3b19add20674d98d2610c248d0933f6b6e2c6699a51e643ac9aaaa3b85"
+          },
+          {
+            "time": 1802.75,
+            "path": "outputs/frames/cx24b_pa19_fine3_1802.75.jpg",
+            "sha256": "f093bbf8718fec36706b5afb9661db266bc947c3d195cb8a346e3af5d4fe0bea"
+          },
+          {
+            "time": 1803.0,
+            "path": "outputs/frames/cx24b_pa19_fine3_1803.00.jpg",
+            "sha256": "dca57b4e65d05f5f5805451178f2f0be7b0a43e94388c103511aa6b6115cdedd"
+          },
+          {
+            "time": 1803.5,
+            "path": "outputs/frames/cx24b_pa19_fine3_1803.50.jpg",
+            "sha256": "b080a3b5516f393810fb201476528af3e1aba6843fbbde5161b0b6aa5f555e53"
+          },
+          {
+            "time": 1807.05,
+            "path": "outputs/frames/cx24b_pa19_fine3_1807.05.jpg",
+            "sha256": "22b597667d7172b165b05e0b1ee0de3590300e5c787a753662e5e0ccbdeb85f3"
+          },
+          {
+            "time": 1807.15,
+            "path": "outputs/frames/cx24b_pa19_fine3_1807.15.jpg",
+            "sha256": "90434082fe1008a0729254b6e37246bebbd6ed6eb5840623f1ba1a6600f54379"
+          },
+          {
+            "time": 1807.2,
+            "path": "outputs/frames/cx24b_pa19_fine3_1807.20.jpg",
+            "sha256": "ea851a8679f46e96d043f1b563856bdd2904dac03df71405686487d354873b41"
+          },
+          {
+            "time": 1807.35,
+            "path": "outputs/frames/cx24b_pa19_bracket35_1807.35.jpg",
+            "sha256": "fb592979c4303e3f8ed14bc1b151fa38979bf514f2712d77e4c9db84465574a7"
+          }
+        ],
+        "continuity_frames": [
+          {
+            "time": 1803,
+            "path": "outputs/frames/cx24b_pa19_fine3_1803.00.jpg"
+          },
+          {
+            "time": 1803.25,
+            "path": "outputs/frames/cx24b_pa19_fine3_1803.25.jpg"
+          },
+          {
+            "time": 1803.5,
+            "path": "outputs/frames/cx24b_pa19_fine3_1803.50.jpg"
+          },
+          {
+            "time": 1803.75,
+            "path": "outputs/frames/cx24b_pa19_fine3_1803.75.jpg"
+          },
+          {
+            "time": 1804,
+            "path": "outputs/frames/cx24b_pa19_fine3_1804.00.jpg"
+          },
+          {
+            "time": 1804.25,
+            "path": "outputs/frames/cx24b_pa19_fine3_1804.25.jpg"
+          },
+          {
+            "time": 1805,
+            "path": "outputs/frames/cx24b_pa19_p3scan_1805.00.jpg"
+          },
+          {
+            "time": 1806,
+            "path": "outputs/frames/cx24b_pa19_p3scan_1806.00.jpg"
+          },
+          {
+            "time": 1806.5,
+            "path": "outputs/frames/cx24b_pa19_fine3_1806.50.jpg"
+          }
+        ],
+        "files": [
+          "outputs/frames/cx24b_pa19_p3_review_full.png",
+          "outputs/frames/cx24b_pa19_p3_review_bug.png",
+          "outputs/frames/cx24b_pa19_decisions_bug.png",
+          "outputs/frames/cx24b_pa19_cont13_full.png",
+          "outputs/frames/cx24b_pa19_cont13_end_full.png"
+        ],
+        "continuity_max_sample_gap_seconds": 1,
+        "limitation": "Sampled continuity, not exhaustive every-frame or continuous playback review. Release is an approximate arm-motion estimate subject to compression and blur; +/-0.15 s is not a statistical confidence interval."
+      },
+      "canonical_frame_hashes": [
+        {
+          "frame_seconds": 1803.0,
+          "path": "outputs/frames/cx24b_pa19_fine3_1803.00.jpg",
+          "sha256": "dca57b4e65d05f5f5805451178f2f0be7b0a43e94388c103511aa6b6115cdedd"
+        },
+        {
+          "frame_seconds": 1807.2,
+          "path": "outputs/frames/cx24b_pa19_fine3_1807.20.jpg",
+          "sha256": "ea851a8679f46e96d043f1b563856bdd2904dac03df71405686487d354873b41"
+        }
+      ]
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 19,
+      "pitch_number": 4,
+      "play_id": "a1b9672f-d262-4107-8aab-c81e1f6bd365",
+      "status": "annotated",
+      "decision_seconds": 1817.5,
+      "release_seconds": 1826.75,
+      "uncertainty_seconds": 0.15,
+      "lead_seconds": 9.25,
+      "readability": "readable",
+      "observed": {
+        "inning": 3,
+        "inning_topbot": "Top",
+        "away_score": 0,
+        "home_score": 0,
+        "outs": 2,
+        "balls": 1,
+        "strikes": 2,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": true
+      },
+      "pcount_seen": 32,
+      "batter_stance_observed": "L",
+      "batter_name_observed": "1.LINDOR 0-1",
+      "bug_text": "NYM 0 / ATL 0; upward triangle 3; two gold out dots; left third-base diamond gold, second and first empty; 1-2; SCHWELLENBACH P:32",
+      "failing_condition_before": "close_up",
+      "note": "A-v2 manual annotation 2026-09-24: decision 1817.50 is the earliest 0.25 s grid point after runner close-up at third base. Both 1817.00 and 1817.25 are close-ups and fail the live wide-shot condition; 1817.50 and 1818.00 show a live home-plate wide angle with pitcher stationary on the rubber, left-handed batter in the box facing the pitcher and readable scoreboard. Sampled continuity through delivery onset has maximum gap 1.00 s and shows no step-off, pickoff, cutaway or bug wipe. 1826.65 shows the throwing hand behind the head; 1826.70 is unfolding, 1826.75 shows forward extension and 1826.80 is follow-through. Release 1826.75 is an approximate manual estimate with +/-0.15 s uncertainty, not frame-exact ball separation. Scoreboard directly read as top 3, two outs, third base occupied only, NYM 0 / ATL 0, 1-2, SCHWELLENBACH P:32. A live home-plate wide angle is permitted by A-v2. Pitcher and batter remain visible through 1825.50; the centre-field return at 1826.00 is already in the delivery, so waiting for that angle would discard the valid pre-motion window.",
+      "verification": {
+        "status": "verified",
+        "by": "Codex PA agent direct timing and scoreboard review, followed by root direct image spot check",
+        "date": "2026-09-24",
+        "root_spot_check": "Completed: decision/cut boundary, release and readable bug or unavailability evidence directly viewed."
+      },
+      "prior_verification": {
+        "status": "candidate_for_parent_spotcheck",
+        "by": "Codex PA19 visual annotator",
+        "date": "2026-09-24",
+        "method": "Actual view_image inspection of original video JPEGs, full-frame montages and scoreboard crops. Observed values manually transcribed from pixels before using manifest identity keys; no UTC interpolation."
+      },
+      "visual_evidence": {
+        "decision_times": [
+          1817.0,
+          1817.25,
+          1817.5,
+          1818.0
+        ],
+        "release_times": [
+          1826.6,
+          1826.7,
+          1826.75,
+          1826.9
+        ],
+        "continuity_times": [
+          1817.5,
+          1817.75,
+          1818,
+          1818.5,
+          1819,
+          1820,
+          1821,
+          1822,
+          1823,
+          1824,
+          1825,
+          1825.5,
+          1826
+        ],
+        "frames": [
+          {
+            "time": 1817.0,
+            "path": "outputs/frames/cx24b_pa19_fine4_1817.00.jpg",
+            "sha256": "e90b3a89b6b7bdeeb5aa0c37960b3673dc607788cf20faa17e45cf92ab7bfebc"
+          },
+          {
+            "time": 1817.25,
+            "path": "outputs/frames/cx24b_pa19_fine4_1817.25.jpg",
+            "sha256": "8c3d0b959f92cfcccc0609bc22463c0b470be6453f9dd6ea586ab1851c080bb4"
+          },
+          {
+            "time": 1817.5,
+            "path": "outputs/frames/cx24b_pa19_fine4_1817.50.jpg",
+            "sha256": "a51d8089daffe43da395d2a15dee2fec4cfcf397e7666cf743f38efd90bd852a"
+          },
+          {
+            "time": 1818.0,
+            "path": "outputs/frames/cx24b_pa19_fine4_1818.00.jpg",
+            "sha256": "ea4bbf4c9aa4956caafaa15285c292f1209e72245b720312fbe5b8906615a254"
+          },
+          {
+            "time": 1826.6,
+            "path": "outputs/frames/cx24b_pa19_fine4_1826.60.jpg",
+            "sha256": "cf8ab3b81e02404c569af12f29c2365e22bc7abb49c0ccda73e7ecf9b50d737d"
+          },
+          {
+            "time": 1826.7,
+            "path": "outputs/frames/cx24b_pa19_fine4_1826.70.jpg",
+            "sha256": "92e0863a2132a9468405fc8db59023d83d31758524e573b6c0967157160be0a4"
+          },
+          {
+            "time": 1826.75,
+            "path": "outputs/frames/cx24b_pa19_fine4_1826.75.jpg",
+            "sha256": "2a7c5e90932510cb1efd4e6383d5cb482ff31c872a05ad9ea895d0a39a8bf15d"
+          },
+          {
+            "time": 1826.9,
+            "path": "outputs/frames/cx24b_pa19_fine4_1826.90.jpg",
+            "sha256": "e77825c1b80edc0754c98ca0a525add2b85d18cf365791fed5bb6a4d65bdf732"
+          }
+        ],
+        "continuity_frames": [
+          {
+            "time": 1817.5,
+            "path": "outputs/frames/cx24b_pa19_fine4_1817.50.jpg"
+          },
+          {
+            "time": 1817.75,
+            "path": "outputs/frames/cx24b_pa19_fine4_1817.75.jpg"
+          },
+          {
+            "time": 1818,
+            "path": "outputs/frames/cx24b_pa19_p4scan_1818.00.jpg"
+          },
+          {
+            "time": 1818.5,
+            "path": "outputs/frames/cx24b_pa19_fine4_1818.50.jpg"
+          },
+          {
+            "time": 1819,
+            "path": "outputs/frames/cx24b_pa19_p4grid_1819.00.jpg"
+          },
+          {
+            "time": 1820,
+            "path": "outputs/frames/cx24b_pa19_p4grid_1820.00.jpg"
+          },
+          {
+            "time": 1821,
+            "path": "outputs/frames/cx24b_pa19_p4scan_1821.00.jpg"
+          },
+          {
+            "time": 1822,
+            "path": "outputs/frames/cx24b_pa19_p4grid_1822.00.jpg"
+          },
+          {
+            "time": 1823,
+            "path": "outputs/frames/cx24b_pa19_p4grid_1823.00.jpg"
+          },
+          {
+            "time": 1824,
+            "path": "outputs/frames/cx24b_pa19_p4scan_1824.00.jpg"
+          },
+          {
+            "time": 1825,
+            "path": "outputs/frames/cx24b_pa19_p4grid_1825.00.jpg"
+          },
+          {
+            "time": 1825.5,
+            "path": "outputs/frames/cx24b_pa19_fine4_1825.50.jpg"
+          },
+          {
+            "time": 1826,
+            "path": "outputs/frames/cx24b_pa19_p4scan_1826.00.jpg"
+          }
+        ],
+        "files": [
+          "outputs/frames/cx24b_pa19_p4_review_full.png",
+          "outputs/frames/cx24b_pa19_p4_review_bug.png",
+          "outputs/frames/cx24b_pa19_decisions_bug.png",
+          "outputs/frames/cx24b_pa19_p4db_full.png",
+          "outputs/frames/cx24b_pa19_p4start_full.png",
+          "outputs/frames/cx24b_pa19_p4cont_full.png"
+        ],
+        "continuity_max_sample_gap_seconds": 1,
+        "limitation": "Sampled continuity, not exhaustive every-frame or continuous playback review. Release is an approximate arm-motion estimate subject to compression and blur; +/-0.15 s is not a statistical confidence interval."
+      },
+      "canonical_frame_hashes": [
+        {
+          "frame_seconds": 1817.5,
+          "path": "outputs/frames/cx24b_pa19_fine4_1817.50.jpg",
+          "sha256": "a51d8089daffe43da395d2a15dee2fec4cfcf397e7666cf743f38efd90bd852a"
+        },
+        {
+          "frame_seconds": 1826.75,
+          "path": "outputs/frames/cx24b_pa19_fine4_1826.75.jpg",
+          "sha256": "2a7c5e90932510cb1efd4e6383d5cb482ff31c872a05ad9ea895d0a39a8bf15d"
+        }
+      ]
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 19,
+      "pitch_number": 5,
+      "play_id": "3cedd8fa-f5c6-4512-9b01-3963e5e5a1e7",
+      "status": "annotated",
+      "decision_seconds": 1848.0,
+      "release_seconds": 1850.16,
+      "uncertainty_seconds": 0.15,
+      "lead_seconds": 2.16,
+      "readability": "readable",
+      "observed": {
+        "inning": 3,
+        "inning_topbot": "Top",
+        "away_score": 0,
+        "home_score": 0,
+        "outs": 2,
+        "balls": 2,
+        "strikes": 2,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": true
+      },
+      "pcount_seen": 33,
+      "batter_stance_observed": "L",
+      "batter_name_observed": "1.LINDOR 0-1",
+      "bug_text": "NYM 0 / ATL 0; upward triangle 3; two gold out dots; left third-base diamond gold, second and first empty; 2-2; SCHWELLENBACH P:33",
+      "failing_condition_before": "close_up",
+      "note": "A-v2 manual annotation 2026-09-24: decision 1848.00 is the earliest 0.25 s grid point after catcher close-up. Both 1847.50 and 1847.75 are close-ups and fail the live wide-shot condition; 1848.00 and 1848.50 show a live centre-field view with pitcher stationary on the rubber, left-handed batter in the box facing the pitcher and readable scoreboard. Sampled continuity through delivery onset has maximum gap 0.50 s and shows no step-off, pickoff, cutaway or bug wipe. 1850.10 and 1850.11 show the throwing hand behind the head; 1850.12/1850.14 are unfolding, 1850.16 shows forward extension and 1850.20 is follow-through. Release 1850.16 is an approximate manual estimate with +/-0.15 s uncertainty, not frame-exact ball separation. Scoreboard directly read as top 3, two outs, third base occupied only, NYM 0 / ATL 0, 2-2, SCHWELLENBACH P:33.",
+      "verification": {
+        "status": "verified",
+        "by": "Codex PA agent direct timing and scoreboard review, followed by root direct image spot check",
+        "date": "2026-09-24",
+        "root_spot_check": "Completed: decision/cut boundary, release and readable bug or unavailability evidence directly viewed."
+      },
+      "prior_verification": {
+        "status": "candidate_for_parent_spotcheck",
+        "by": "Codex PA19 visual annotator",
+        "date": "2026-09-24",
+        "method": "Actual view_image inspection of original video JPEGs, full-frame montages and scoreboard crops. Observed values manually transcribed from pixels before using manifest identity keys; no UTC interpolation."
+      },
+      "visual_evidence": {
+        "decision_times": [
+          1847.5,
+          1847.75,
+          1848.0,
+          1848.5
+        ],
+        "release_times": [
+          1850.01,
+          1850.11,
+          1850.16,
+          1850.31
+        ],
+        "continuity_times": [
+          1848,
+          1848.5,
+          1849,
+          1849.5
+        ],
+        "frames": [
+          {
+            "time": 1847.5,
+            "path": "outputs/frames/cx24b_pa19_p5grid_1847.50.jpg",
+            "sha256": "c8bf9c5b7463d8324fb5a0e1bef44a947360d09b3d7a193089e334732efe6684"
+          },
+          {
+            "time": 1847.75,
+            "path": "outputs/frames/cx24b_pa19_p5grid_1847.75.jpg",
+            "sha256": "8adef9e7a96dd8e7ddde40ff67ab77dfb4aaf186e25f084ecdbcb765528a169c"
+          },
+          {
+            "time": 1848.0,
+            "path": "outputs/frames/cx24b_pa19_p5grid_1848.00.jpg",
+            "sha256": "84266eabdcb2407a8e986f334c4443db01c5f7c11e39bbaf014aceffb0dc06d0"
+          },
+          {
+            "time": 1848.5,
+            "path": "outputs/frames/cx24b_pa19_p5grid_1848.50.jpg",
+            "sha256": "b6ad3cee553b429ee788863285a47d85abee0ea0e038d419a1f615976c6a96ea"
+          },
+          {
+            "time": 1850.01,
+            "path": "outputs/frames/cx24b_pa19_bracket5_1850.01.jpg",
+            "sha256": "4a40c53d18d512ca728fc66b10bba31ce24584700a3f7aeec28c30d6c7d7898b"
+          },
+          {
+            "time": 1850.11,
+            "path": "outputs/frames/cx24b_pa19_bracket5_1850.11.jpg",
+            "sha256": "668d758c3d104dcf74d6efc489a5f6a908f723ca6970261e242a5842d7e11a54"
+          },
+          {
+            "time": 1850.16,
+            "path": "outputs/frames/cx24b_pa19_fine5_1850.16.jpg",
+            "sha256": "ce914ecdf2f3ed578af9221064c3a215280ae495dd04737a30c01176350581d7"
+          },
+          {
+            "time": 1850.31,
+            "path": "outputs/frames/cx24b_pa19_bracket5_1850.31.jpg",
+            "sha256": "40fa132e9be457b2f8a0730cbeff6bd50b9c4a2c0c335f147e4f9c4ce21a7be4"
+          }
+        ],
+        "continuity_frames": [
+          {
+            "time": 1848,
+            "path": "outputs/frames/cx24b_pa19_p5scan_1848.00.jpg"
+          },
+          {
+            "time": 1848.5,
+            "path": "outputs/frames/cx24b_pa19_p5grid_1848.50.jpg"
+          },
+          {
+            "time": 1849,
+            "path": "outputs/frames/cx24b_pa19_p5scan_1849.00.jpg"
+          },
+          {
+            "time": 1849.5,
+            "path": "outputs/frames/cx24b_pa19_p5grid_1849.50.jpg"
+          }
+        ],
+        "files": [
+          "outputs/frames/cx24b_pa19_p5_review_full.png",
+          "outputs/frames/cx24b_pa19_p5_review_bug.png",
+          "outputs/frames/cx24b_pa19_decisions_bug.png",
+          "outputs/frames/cx24b_pa19_cont5_full.png"
+        ],
+        "continuity_max_sample_gap_seconds": 0.5,
+        "limitation": "Sampled continuity, not exhaustive every-frame or continuous playback review. Release is an approximate arm-motion estimate subject to compression and blur; +/-0.15 s is not a statistical confidence interval."
+      },
+      "canonical_frame_hashes": [
+        {
+          "frame_seconds": 1848.0,
+          "path": "outputs/frames/cx24b_pa19_p5grid_1848.00.jpg",
+          "sha256": "84266eabdcb2407a8e986f334c4443db01c5f7c11e39bbaf014aceffb0dc06d0"
+        },
+        {
+          "frame_seconds": 1850.16,
+          "path": "outputs/frames/cx24b_pa19_fine5_1850.16.jpg",
+          "sha256": "ce914ecdf2f3ed578af9221064c3a215280ae495dd04737a30c01176350581d7"
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "reviewed": 10,
+    "annotated": 8,
+    "unavailable": 2,
+    "partial_review": [
+      "16/1"
+    ],
+    "max_preparation_sample_gap_seconds": 1.0,
+    "root_spot_checks": "All 10 outcomes; decision boundaries and release sequences for 8 annotated pitches, cut/replay evidence for 2 unavailable pitches."
+  },
+  "extraction_validation": {
+    "method": "A task-local ffmpeg split/trim helper reads one bounded input range for multiple requested timestamps. Canonical scripts/65 remains the portable reproduction command.",
+    "single_frame_tool_matches": [
+      {
+        "frame_seconds": 1590.5,
+        "paths": [
+          "outputs\\frames\\cx24b_fraction_individual_1590.50.jpg",
+          "outputs\\frames\\cx24b_pa16_1detail_1590.50.jpg"
+        ],
+        "sha256": [
+          "1a81c09d920feafea4e5926b53897db4754b859997e03de901fd7bbc06caa06e",
+          "1a81c09d920feafea4e5926b53897db4754b859997e03de901fd7bbc06caa06e"
+        ],
+        "identical": true
+      },
+      {
+        "frame_seconds": 1592.85,
+        "paths": [
+          "outputs\\frames\\cx24b_fraction_individual_1592.85.jpg",
+          "outputs\\frames\\cx24b_pa16_1detail_1592.85.jpg"
+        ],
+        "sha256": [
+          "2e171f41eaafacf97fc788feccf9681d815d0f814260e31447e317ed9f368aca",
+          "2e171f41eaafacf97fc788feccf9681d815d0f814260e31447e317ed9f368aca"
+        ],
+        "identical": true
+      }
+    ],
+    "additional_integer_matches": [
+      1591,
+      1592
+    ]
+  },
+  "starting_commit": "0746fab",
+  "starting_commit_meaning": "Clean pre-annotation reference; PA16-19 candidates were newly created during this task, not present in that commit."
+}

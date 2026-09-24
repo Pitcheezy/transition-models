@@ -1,4 +1,11 @@
-# Claude Code 재개 프롬프트 — 2026-09-22
+# Claude Code 재개 안내 — 2026-09-24
+
+현재 재개 절차는 **[CODEX_RESUME_PROMPT.md](CODEX_RESUME_PROMPT.md)** 를 사용한다.
+Claude는 작업자 이름을 Claude로 기록하고 [CHECKLIST.md](../CHECKLIST.md)의 Claude 모델 배정을 따른다.
+최신 완료 구간은 PA 19까지이며 다음 단위는 PA 20~26(3회말 29구)다.
+Git 동기화·수정 권한 선점·직접 프레임 확인·타석별 병합·검사·커밋 규칙은 공통이다.
+
+## 역사 기록 — 2026-09-22 프롬프트, 현재 실행하지 않음
 
 > 2026-09-22 갱신: 3번·4번 타석 주석은 완료·커밋됐다(docs/MLB_P0_HANDOFF.md 체크포인트 7·8).
 > 남은 작업과 다음 단위는 **[CHECKLIST.md](../CHECKLIST.md)** 가 단일 기준이다(현재 A-3 = 5번 타석).

@@ -11,7 +11,7 @@ from src.data.scoreboard_evalset import _labels
 
 ROOT = Path(__file__).resolve().parents[1]
 RESULTS = ROOT / "docs" / "results" / "mlb_p0"
-PA = 20  # bottom of the 3rd: far from every annotated or candidate row
+PA = 20  # Synthetic merge target; merge_inputs isolates it from later real annotations.
 
 
 def load_module():
@@ -32,6 +32,15 @@ def inputs():
         "game_747139_scoreboard_review.json",
     )
     return [json.loads((RESULTS / n).read_text(encoding="utf-8-sig")) for n in names]
+
+
+@pytest.fixture
+def merge_inputs(inputs):
+    """Keep synthetic merge rows independent of ongoing annotation progress."""
+    manifest, sources, timing, review = deepcopy(inputs)
+    timing["annotations"] = [r for r in timing["annotations"] if r["at_bat_number"] < PA]
+    review["reviews"] = [r for r in review["reviews"] if r["at_bat_number"] < PA]
+    return manifest, sources, timing, review
 
 
 def candidates(manifest, timing, status="verified"):
@@ -63,9 +72,9 @@ def candidates(manifest, timing, status="verified"):
     }
 
 
-def test_verified_rows_are_appended_and_validate(inputs):
+def test_verified_rows_are_appended_and_validate(merge_inputs):
     module = load_module()
-    manifest, sources, timing, review = inputs
+    manifest, sources, timing, review = merge_inputs
     before = deepcopy(timing)
     new_timing, new_review, report = module.merge(
         manifest, sources, timing, review, candidates(manifest, timing), [PA], "test", "2026-09-24"
@@ -79,9 +88,9 @@ def test_verified_rows_are_appended_and_validate(inputs):
     assert {r["observed"]["inning_topbot"] for r in reviews} == {"Bot"}
 
 
-def test_refuses_unverified_missing_and_duplicate_rows(inputs):
+def test_refuses_unverified_missing_and_duplicate_rows(merge_inputs):
     module = load_module()
-    manifest, sources, timing, review = inputs
+    manifest, sources, timing, review = merge_inputs
     unverified = candidates(manifest, timing, status="two_lens_passed_needs_spot_check")
     with pytest.raises(ValueError, match="not verified"):
         module.merge(manifest, sources, timing, review, unverified, [PA], "t", "d")
@@ -100,9 +109,11 @@ def test_refuses_unverified_missing_and_duplicate_rows(inputs):
         module.merge(manifest, sources, timing, review, wrong, [PA], "t", "d")
 
 
-def test_stored_candidates_file_is_well_formed(inputs):
+@pytest.mark.parametrize(
+    "path", sorted(RESULTS.glob("game_747139_timing_candidates_pa*.json")), ids=lambda p: p.stem
+)
+def test_stored_candidates_file_is_well_formed(inputs, path):
     manifest, _, timing, _ = inputs
-    path = RESULTS / "game_747139_timing_candidates_pa11_15.json"
     doc = json.loads(path.read_text(encoding="utf-8-sig"))
     assert doc["schema"] == "mlb_broadcast_timing_candidates_v1"
     assert doc["manifest_sha256"] == timing["manifest_sha256"]

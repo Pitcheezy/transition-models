@@ -245,8 +245,28 @@
     `uv --cache-dir .cache/uv run --frozen ...`으로 작업 폴더 캐시를 사용해 해결했다.
     다음 단위 **PA 16~19 10구**. 수정 권한 반납, 다음 첫 명령은 아래 '남은 순서'와 `CODEX_RESUME_PROMPT.md` 참조.
 
+26. `WORK_COMMIT`: A-7b 3회초 PA 16~19 10구 검토·병합(Codex, 2026-09-24). 기준 `1796873`, 선점 `0746fab`.
+    PA 16은 세션 직접 판독 뒤 다른 에이전트 교차검토, PA 17~19는 타석 담당 에이전트 판독 뒤 세션이 판단/릴리스/bug 증거를 직접 확인.
+    **8구 annotated + 2구 unavailable**. PA 16/2는 클로즈업에서 레그 킥 이후 복귀, PA 17/1은 리플레이/로고가 투구 전 창을 가림.
+    불가 2구의 시각은 null이며 리뷰/평가 입력을 만들지 않았다. PA 16/1 d1590.50 라인스코어는 읽히는 4필드만 기록(partial).
+    PA 18/1 d1706.25·PA 19/4 d1817.50은 투수/타자/bug를 포함하는 라이브 광각. PA 19/3은 타임 후 새 창 d1803.00.
+    최종 PA 19/5 릴리스 **1850.16 s**. 모든 새 릴리스 수동 오차 ±0.15 s. 준비 구간 최대 1초 간격 표본 검토이며 연속 재생·사람 간 일치도 검증 아님.
+    69 dry-run, PA별 write와 63/64/68 재생성 통과. **68 확인 / 4 불가 / 250 미검토**, 완전 PA 2~4·6~15·18~19.
+    리뷰 68(66 전 필드, PA 8/1·16/1 partial), 충돌 0. 기존 62 timing행과 60 review행 보존. 새 후보 rows 0,
+    검증 근거는 `game_747139_timing_verification_pa16_19.json`; 프레임은 로컬 캐시이며 전체 MP4를 받지 않았다.
+    원격 지연을 줄인 임시 split/trim 추출은 기존 65의 단일 프레임과 1590.50·1591·1592·1592.85 s JPEG 바이트 일치 확인.
+    OCR v1 템플릿(PA 1·2·9) 고정: held-out 58구 중 전 필드 56구 **44 정답·12 기권·오답 0**.
+    새 8구 중 6구 이닝 3만 기권, PA 19/2 전 필드 기권(원인 미진단), PA 16/1 라인스코어의 4필드 기권.
+    새 판독 가능 74필드 = 54 정답·20 기권·오답 0. 이닝 3 템플릿 부재를 새 한계로 확인했고 이번 데이터로 튜닝하지 않았다.
+    음성 14프레임/판독 불가 96필드 거짓 판독 0; 판독 가능 44필드 40 정답·4 기권. 기존 60구 예측 불변, 68구 반복 실행 동일.
+    최신 provenance에 현재 입력·출력·코드·템플릿·프레임 해시 및 과거 8/2·10/1 미해결 변동의 Git 기록을 연결했다.
+    유지보수: 합성 PA 20 병합 시험을 실제 PA 20 이후 주석과 분리하고 모든 후보 파일을 검사. 실제 전체 주석 검사는 유지한다.
+    검사: `check_project.py --cpu-only` **295 passed, 2 deselected**, 변경 테스트 Ruff 통과. 임시 캐시 정리 중 Windows 기본 cp949 읽기 오류는
+    UTF-8 명시 후 해결했고, 캐시 복사/예측/채점을 다시 실행한 최종 결과만 위에 기록했다.
+    수정 권한 반납. 다음 단위 **PA 20~26(3회말 29구)**; F-3a에는 숫자 3용 v2를 별도 평가하는 후속 작업을 기록했다.
+
 이 문서와 함께 추가되는 후속 커밋의 해시는 `git log -6 --oneline`으로 확인한다.
-최신 Windows CPU 검사: **294 passed, 2 deselected**, Ruff 47개 경로 통과(체크포인트 25). 아래 브라우저·서비스 검증은 이전 체크포인트 기록이다.
+최신 Windows CPU 검사: **295 passed, 2 deselected**, Ruff 47개 경로 통과(체크포인트 26). 아래 브라우저·서비스 검증은 이전 체크포인트 기록이다.
 JavaScript 구문 검사 및 Chrome 수동 입력·실제 추론·9회 이후 추천 보류 확인.
 GitHub CI 결과는 해당 커밋의 validation 워크플로에서 따로 확인한다.
 주석 모듈을 먼저 import한 새 프로세스에서도 Torch→Pandas 문자열 생성이 성공하는지
@@ -277,8 +297,9 @@ Chrome에서 `http://127.0.0.1:8770`을 연다. 포트 충돌 시 `--port 8771`.
 
 ## Claude 재로그인 후 첫 작업
 
-아래는 이전 읽기 전용 리뷰 요청이다. **사용자가 5시간 제한 이후 최신 구현을 이어가려는
-경우에는 [CLAUDE_RESUME_PROMPT.md](CLAUDE_RESUME_PROMPT.md)를 우선한다.**
+아래는 이전 읽기 전용 리뷰 요청이다. **최신 구현을 이어갈 때는 CHECKLIST와
+[CODEX_RESUME_PROMPT.md](CODEX_RESUME_PROMPT.md)를 우선한다.** Claude도 같은 절차에서 작업자 이름과
+CHECKLIST의 Claude 모델 배정을 적용한다. `CLAUDE_RESUME_PROMPT.md`의 옛 본문은 역사 기록이다.
 
 우선 읽기 전용 리뷰를 맡긴다. 기존 입력 규약을 새로 만들라는 오래된 지시는 사용하지 않는다.
 아래 내용을 Claude Code에 전달할 수 있다.
@@ -300,19 +321,18 @@ Claude/Codex의 순서는 [../CHECKLIST.md](../CHECKLIST.md)의 "진행 순서" 
 팀원 레포(SongRoute/pitcheezy) 대조 결과는 [TEAMMATE_PITCHEEZY_2026-09-22.md](TEAMMATE_PITCHEEZY_2026-09-22.md) — 우리 쪽 참조가 없는 별도
 트랙이라 I-0(인터페이스 합의)·I-5(시연 경기)·I-6(클래스 대응표)·G-3(통화)를 A/B와 병행해 먼저 진행한다.
 
-1. **영상 시간 주석 확대**: PA 1~15 검토 완료(60 확인·2 확인 불가, 2회말 종료). PA 1/6·5/5는 unavailable이고 완전 타석은 2~4·6~15다.
-   다음은 **PA 16~19 10구**: 새 후보 파일에 미검증 행을 쓰고 timing·점수판 양쪽 실제 프레임 확인 후 `69`로 타석별 병합한다.
-   이전 PA 11~15 후보 파일의 rows는 비어 있으므로 다시 병합하지 않는다. 필드별 판독 리뷰(B-6), OCR 재채점(F-3a)을 동반한다.
+1. **영상 시간 주석 확대**: PA 1~19 검토 완료(68 확인·4 불가, 3회초 종료). 다음은 **PA 20~26 29구**를 타석별로 검증·병합한다.
 
-   다음 첫 실행 명령(저장소 루트, Git 상태 대조·권한 선점 후):
+```bash
+uv run --frozen python scripts/63_annotate_broadcast.py check --annotations docs/results/mlb_p0/game_747139_timing.json --require-pa 19
+uv run --frozen python scripts/65_grab_broadcast_frames.py --label pa20_scan --times 1851 1860 1870 1880
+```
 
-   ```bash
-   uv run --frozen python scripts/63_annotate_broadcast.py check --annotations docs/results/mlb_p0/game_747139_timing.json --require-pa 15
-   uv run --frozen python scripts/65_grab_broadcast_frames.py --label pa16_scan --times 1564 1570 1580 1590
-   ```
+1850.16 s는 PA 19 마지막 검증 릴리스다. 위 초들은 이닝 교대 이후를 찾기 위한 탐색 표본이며 PA 20의 확정 시각이 아니다.
+PA 20~26(3회말 29구, 투수 Megill)을 새 `game_747139_timing_candidates_pa20_26.json`에 미검증으로 기록하고,
+직접 확인한 타석부터 `69`로 병합한다. 기존 PA 11~15·16~19 후보 파일은 비었으므로 재병합하지 않는다.
+feed UTC를 재생 초로 보간하지 않는다. 상세 절차는 [CODEX_RESUME_PROMPT.md](CODEX_RESUME_PROMPT.md).
 
-   1563.64 s는 PA 15 마지막 검증 릴리스다. 위 초들은 그 이후를 살펴볼 탐색용 표본이고 PA 16의 확정 시각이 아니다.
-   이닝 휴식은 편집돼 있으므로 feed UTC를 재생 시간으로 변환하지 않는다. 상세 절차는 `CODEX_RESUME_PROMPT.md` §1.
 2. **기존 영상 재검증**: 옛 오타니 수집기는 CSV `iloc[i]`를 사용했다.
    기존 영상 파일명은 재확인 전 정답이 아니다. 원본 확보 후 playId로 재대조한다.
 3. **새 확률 모델(팀원 담당, 수신 후 I-1로 통합 검증)**: 8종 정답을 기존 특징에 투구 ID로 연결하고 시간 분할을 유지한다.
