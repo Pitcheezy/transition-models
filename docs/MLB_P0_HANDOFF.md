@@ -277,7 +277,7 @@
     검사: `check_project.py --cpu-only` **296 passed, 2 deselected**(새 후보 파일이 매개변수 시험에 추가).
     남은 단위: PA 20(7구)·21(5구)·24(5구)·26(5구) — 워크플로 반박·수리 진행 중. PA 20 릴리스는 약 0.2초 이르게 적혀 시각 렌즈가 반박했다.
 
-28. (이 커밋): A-7 PA 21·24·26 15구 검증·병합(Claude Code, 2026-09-25). 기준 `5f69f26`. 15구 모두 annotated.
+28. `ca76e65`: A-7 PA 21·24·26 15구 검증·병합(Claude Code, 2026-09-25). 기준 `5f69f26`. 15구 모두 annotated.
     반박→수리 후 세션 확인: 21/3 d2071.75(홈 뒤 라이브 항공 샷, 한계적), 26/1 d2586.00(타자가 투수를 향한 첫 격자), 21/1·21/4·26/2 동작 시작.
     세션 정정: 24/4 d2460.25(워크플로 2460.50; 양발이 러버에 놓인 첫 격자, 창 안 회전과 같은 기준, 대안은 note), 26/4 note 배너 시각.
     **89 확인 / 5 불가 / 228 미검토**, 완전 PA 2~4·6~15·18~19·21·23~26. 리뷰 89(87 전 필드), 충돌 0. 기존 79 timing행 보존.
@@ -286,8 +286,19 @@
     검사: `check_project.py --cpu-only` **296 passed, 2 deselected**, Ruff 통과; 63 check --require-pa 26, 64 review-check/check, 68 조인 재생성 일치.
     남은 단위: **PA 20(7구)** — 20/6 unavailable 확인, 20/4 판단 프레임은 워크플로 3차 검증 중(렌즈 제안 1949.00~1949.25, 세션 기준 1947.75).
 
+29. (이 커밋): A-7 PA 20 7구 검증·병합 → **A-7 완료, 3회 종료**(Claude Code, 2026-09-25). 기준 `ca76e65`.
+    6 annotated + 20/6 unavailable(클로즈업 중 와인드업 시작). 20/1·2·3·5·7 릴리스는 렌즈 반박→수리, 세션 크롭으로 확인.
+    세션 정정: 20/4 d1949.25→1947.75(러버 도착 경계 해석, 24/4와 동일; 엄격한 대안은 note), 20/6 note 릴리스·observed null.
+    **95 확인 / 6 불가 / 221 미검토**(101구 검토), 리뷰 95(93 전 필드), 충돌 0. 후보 rows 0, merge_history에 PA 20~26 전부.
+    PA 20~26 합계: 27 확인·2 불가, 세션 정정 5행(20/4·20/6·22/1·24/4·26/4), 리드 최소 1.60 s.
+    OCR v1 고정: held-out 전 필드 83구 **44 정답·39 기권·오답 0**; 3회말 27구 전부 이닝 3 기권, PA 24/5 홈 득점 기권(미진단),
+    PA 19/2 전 필드 기권 유지(미진단). 기존 89구 예측 불변, 95구 반복 동일, 음성 거짓 판독 0. provenance 기준 `ca76e65`.
+    검사: `check_project.py --cpu-only` **296 passed, 2 deselected**, Ruff 통과; 63 check --require-pa 26, 64 review-check/check, 68 조인 재생성 일치.
+    한계: 선택 프레임 AI 검토(연속 재생·사람 간 일치도 아님), 수동 ±0.15 s, 같은 경기 개발 데이터. 러버 도착 경계 해석은 A-y에서 재확인 필요.
+    수정 권한 반납. 다음 한 단위: F-3a OCR v2(숫자 3 템플릿, v1과 분리 평가) 또는 진행 순서 표의 독립 단위.
+
 이 문서와 함께 추가되는 후속 커밋의 해시는 `git log -6 --oneline`으로 확인한다.
-최신 Windows CPU 검사: **296 passed, 2 deselected**(체크포인트 28, `check_project.py --cpu-only`, Ruff 통과). 아래 브라우저·서비스 검증은 이전 체크포인트 기록이다.
+최신 Windows CPU 검사: **296 passed, 2 deselected**(체크포인트 29, `check_project.py --cpu-only`, Ruff 통과). 아래 브라우저·서비스 검증은 이전 체크포인트 기록이다.
 JavaScript 구문 검사 및 Chrome 수동 입력·실제 추론·9회 이후 추천 보류 확인.
 GitHub CI 결과는 해당 커밋의 validation 워크플로에서 따로 확인한다.
 주석 모듈을 먼저 import한 새 프로세스에서도 Torch→Pandas 문자열 생성이 성공하는지
@@ -342,7 +353,7 @@ Claude/Codex의 순서는 [../CHECKLIST.md](../CHECKLIST.md)의 "진행 순서" 
 팀원 레포(SongRoute/pitcheezy) 대조 결과는 [TEAMMATE_PITCHEEZY_2026-09-22.md](TEAMMATE_PITCHEEZY_2026-09-22.md) — 우리 쪽 참조가 없는 별도
 트랙이라 I-0(인터페이스 합의)·I-5(시연 경기)·I-6(클래스 대응표)·G-3(통화)를 A/B와 병행해 먼저 진행한다.
 
-1. **영상 시간 주석 확대**: PA 1~19·21~26 검토 완료(89 확인·5 불가). 다음은 **PA 20 7구**를 검증·병합하면 3회가 끝난다.
+1. **영상 시간 주석 확대**: 3회 종료(PA 1~26, 101구: 95 확인·6 불가). 4회초(PA 27~)는 CHECKLIST에 새 단위로 올린 뒤 같은 절차로 진행한다.
 
 ```bash
 uv run --frozen python scripts/63_annotate_broadcast.py check --annotations docs/results/mlb_p0/game_747139_timing.json --require-pa 19

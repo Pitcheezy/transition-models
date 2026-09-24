@@ -8,7 +8,7 @@
     "duration_seconds": 9340.748083
   },
   "convention": "decision-frame convention v2 (docs/MLB_BROADCAST_TIMING.md: earliest 0.25 s grid frame with live shot + pitcher still on the rubber + batter in the box + readable bug, continuous until motion)",
-  "status": "PA20-26 candidates: PAs 21, 22, 23, 24, 25 and 26 are verified and merged (see merge_history and game_747139_timing_verification_pa20_26.json); no rows are pending in this file. PA 20 is still in workflow verification (pitch 4 decision frame) and has not been written here yet; add it as UNVERIFIED rows and merge only after every pitch has verification.status 'verified' (scripts/69 refuses anything else).",
+  "status": "PA20-26 candidates: merged PAs [20, 21, 22, 23, 24, 25, 26] (see merge_history and game_747139_timing_verification_pa20_26.json); no pending rows.",
   "produced_by": "Claude Code 2026-09-25: one Opus 5 workflow annotator per PA from ffmpeg frame grabs, two independent verifier lenses per pitch (timing, scoreboard_identity), final direct frame review by the Claude Code session before any merge",
   "rows": [],
   "merge_history": [
@@ -53,7 +53,7 @@
       "pitches": 5,
       "annotated": 5,
       "unavailable": 0,
-      "work_commit": "(this unit commit)",
+      "work_commit": "ca76e65",
       "verification_report": "game_747139_timing_verification_pa20_26.json"
     },
     {
@@ -64,7 +64,7 @@
       "pitches": 5,
       "annotated": 5,
       "unavailable": 0,
-      "work_commit": "(this unit commit)",
+      "work_commit": "ca76e65",
       "verification_report": "game_747139_timing_verification_pa20_26.json"
     },
     {
@@ -75,6 +75,17 @@
       "pitches": 5,
       "annotated": 5,
       "unavailable": 0,
+      "work_commit": "ca76e65",
+      "verification_report": "game_747139_timing_verification_pa20_26.json"
+    },
+    {
+      "date": "2026-09-25",
+      "plate_appearances": [
+        20
+      ],
+      "pitches": 7,
+      "annotated": 6,
+      "unavailable": 1,
       "work_commit": "(this unit commit)",
       "verification_report": "game_747139_timing_verification_pa20_26.json"
     }
@@ -188,6 +199,28 @@
         "3": "both_lenses_passed",
         "4": "both_lenses_passed",
         "5": "both_lenses_passed"
+      }
+    },
+    "20": {
+      "annotator_problems": [
+        "Pitch 6 has no valid v2 decision frame and is reported unavailable. The broadcast held extreme close-ups of Megill alone (no batter, no rubber) from about 1982.0 through 1984.75 and cut back to the centre-field shot at exactly 1985.00, by which point the leg lift had already begun. I verified this directly on the raw 1985.00 frame. Its release was nevertheless observed (bracket 1985.75 / 1985.90) and is recorded in the note only, with the row's times left null per the convention.",
+        "At the pitch-1 decision frame (1894.25) the lower banner shows only 'MEGILL :09 P:38'; the '1. HARRIS II 0-1' batter line is not yet displayed. It first appears at 1896.50 and is present at every later decision frame in the PA, so the batter identity at 1894.25 rests on the live image plus the banner 2.25 s later rather than on a banner in that frame.",
+        "Pitches 5 and 6 both read 2-2 on the bug; they are distinguished only by the pitch-count banner (P:42 vs P:43) and by order in time. The banner lags plays by 2-3 s, so this separation, while directly read, inherits that lag.",
+        "Outcomes were not verified independently of the bug. What I read is the count progression 0-0 -> 1-0 (after pitch 1), 1-0 -> 1-1 (after pitch 2), 1-1 -> 1-2 (after pitch 3), 1-2 -> 2-2 (after pitch 4), 2-2 held after pitches 5 and 6, and a runner on first with the count reset after pitch 7. This is consistent with the expected ball / swinging_strike / foul / ball / foul / foul / single sequence but does not by itself confirm swinging_strike vs called strike, or foul vs foul tip.",
+        "The bug is fully white during a transition wipe at 1893.50 (unreadable). That frame lies before the pitch-1 decision frame and outside every continuity window, so it affects nothing, but it is the only wipe I saw in this PA.",
+        "Release times rest on 0.05-0.10 s brackets from a remote MP4 read by ffmpeg seek; sub-frame alignment was not attempted and uncertainty_seconds is 0.15 for every annotated pitch. Decision frames are on the 0.25 s grid, so the true shot-change and motion-start instants lie within 0.25 s below the reported values.",
+        "No repository file was created, edited or committed; only frame images were written under outputs/frames (labels p20_scanA/B/C/D/E/F/G, p20_1back, p20_1rel, p20_2back, p20_2rel, p20_3ab, p20_4back, p20_4ab, p20_5back, p20_5rel, p20_6a, p20_7a, p20_7b)."
+      ],
+      "end_of_pa_evidence": "Pitch 7 is put in play at 2006.10. At 2008.00 the feed cuts to a high wide shot of the whole infield with the ball in play, fielders converging and a runner down the first-base line; the bug reads MEGILL 79 MPH. At 2012.00 (bug crop read directly) the scoreboard shows NYM 0 / ATL 0, down-arrow 3, two empty out circles (0 outs), the lower-right diamond filled gold (runner on first) with second and third empty, count reset to 0-0 and MEGILL 79 MPH - i.e. Harris reached first and the PA ended with a single, no run scored, still 0 outs. At 2014.00 the same runner-on-first / 0-0 / 0-outs bug is up with the banner now reading MEGILL P:45, confirming PA 21 has begun.",
+      "last_release_seconds": 2006.1,
+      "workflow_outcome": {
+        "1": "both_lenses_passed",
+        "2": "both_lenses_passed",
+        "3": "both_lenses_passed",
+        "4": "both_lenses_passed",
+        "5": "both_lenses_passed",
+        "6": "both_lenses_passed",
+        "7": "both_lenses_passed"
       }
     }
   }
