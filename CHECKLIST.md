@@ -30,7 +30,7 @@
 |---|---|---|
 | 브랜치 | `codex/fix-point-label-alignment` | 2026-09-22 |
 | 최신 작업 커밋 | `692bd07` (A-v3 적용 + PA 11~15 후보 + 병합 도구 + Codex 인계 프롬프트) — 체크리스트만 바꾼 후속 커밋은 `git log -1`로 확인 | 2026-09-24 |
-| 파일 수정 권한 | **비어 있음** — Codex가 가져간다. Claude Code는 2026-09-24 사용량 크레딧 소진으로 반납. 첫 지시문: [docs/CODEX_RESUME_PROMPT.md](docs/CODEX_RESUME_PROMPT.md) | 2026-09-24 |
+| 파일 수정 권한 | **Codex (2026-09-24, A-7 PA 11~15 후보 프레임 검증·병합)** — Claude 인계 커밋 `1573268`, 깨끗한 작업 트리와 원격 일치 확인 후 착수. 지시문: [docs/CODEX_RESUME_PROMPT.md](docs/CODEX_RESUME_PROMPT.md) | 2026-09-24 |
 | 중계 시각 주석 | 40 확인 / 2 확인 불가(PA 1/6 그래픽, PA 5/5 카메라 늦은 복귀) / 280 미검토, 완전 타석 2·3·4·6~10 = 2회초까지 — 판단 프레임 규약 v2를 PA 1~10 전부에 적용. **2회말 PA 11~15 20구는 미검증 후보**(`game_747139_timing_candidates_pa11_15.json`) | 2026-09-24 |
 | 점수판 평가셋 | timing 42 / 점수판 리뷰 40(39구 10필드 confirmed, PA 8/1은 라인스코어 그래픽으로 이닝·초말·득점만 confirmed, 라벨 충돌 0) / 가림 2 / 미검토 280 — v2 `game_747139_scoreboard_evalset.json` + 리뷰 `game_747139_scoreboard_review.json` | 2026-09-24 |
 | 점수판 OCR | v1(템플릿 PA 1·2·9) held-out PA 3~8·10, 규약 v2 프레임 29구: **오답 0**, all_fields 25 정답·4 기권 — `..._ocr_v1.json`; v0(템플릿 PA 1~2) held-out 31구: 오답 0, 18 정답·13 기권(이닝 "2" 템플릿 없음) — `..._ocr_v0.json`. 음성 14프레임(판독 불가 96필드): 거짓 판독 0, 40/44 정답·4 기권 — `game_747139_scoreboard_negatives_score_v0.json` | 2026-09-24 |
