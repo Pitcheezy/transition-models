@@ -13,6 +13,9 @@
 추가했다(아래 체크포인트 7). 이전 Claude 전체 점검 세션의 파일 변경은 이 저장소에 없었다
 (작업 트리 깨끗, HEAD 6a07125 확인 후 시작).
 
+**2026-09-24 Codex 인계**: Claude Code가 사용량 크레딧 소진으로 멈췄다. Codex는 [CODEX_RESUME_PROMPT.md](CODEX_RESUME_PROMPT.md)를
+그대로 받아 이어간다(체크포인트 23·24).
+
 남은 작업의 단일 목록은 [../CHECKLIST.md](../CHECKLIST.md)다. 이 문서는 교대 기록이고,
 체크리스트는 현재 상태와 다음 한 단위를 담는다. 둘을 같은 커밋에서 함께 갱신한다.
 
@@ -207,6 +210,19 @@
     2·3·4·6~10(2회초 완료). 평가셋 timing 42 / 리뷰 40 / 완전 39 / 충돌 0. 조인표 42행. PA 8~10은 규약 v2 재검토 대상(A-v3).
     검사: `63 check --require-pa 10`, `64`, `68`, pytest timing·evalset·join·OCR 38 passed, `check_project.py --cpu-only` 291 passed, 2 deselected.
 
+23. `(이 단위 커밋)`: A-v3 — PA 8~10 판단 프레임에 규약 v2 적용(Claude Code, 2026-09-24). Workflow(PA별 Opus 5 에이전트 + 투구별 검증,
+    한도로 한 번 재개)로 12구 중 9구를 앞당기고(최대 5.25 s) 3구는 유지. 12판정 반박 없음, 세션이 이동한 8프레임을 다시 뽑아 확인.
+    이제 PA 1~10 전부 규약 v2. 리드 최소 1.15 / 중앙값 4.4 / 최대 10.05 s. OCR 재측정: v1 held-out 29구 오답 0·25 정답·4 기권,
+    v0 31구 오답 0·18 정답·13 기권, 음성 14프레임 거짓 판독 0. 적용은 세션 스크립트(scratch `apply_av2.py`)로 했고 결과만 커밋한다.
+24. `(이 단위 커밋)`: A-7 부분 — PA 11~15 후보와 병합 도구, Codex 인계(Claude Code, 2026-09-24). 2회말 20구를 규약 v2 워크플로로
+    주석했으나 검증 에이전트 대부분이 **사용량 크레딧 소진**으로 실패했다. 워크플로 로직이 "한 렌즈만 반환"을 통과로 셌던 것도
+    발견했다(PA 12/1·2, PA 13/3). 그래서 20구 전부를 timing에 넣지 않고 `docs/results/mlb_p0/game_747139_timing_candidates_pa11_15.json`
+    (미검증 후보, 행별 `verification.status`와 반환된 판정 원문, PA별 주석자 문제점·타석 종료 증거)에 보존했다.
+    `scripts/69_append_timing_rows.py`: 후보 파일에서 **모든 투구가 `verified`인 타석만** timing·리뷰에 추가하고 파생 파일을 재생성한다
+    (미검증·누락·이미 있는 타석·manifest 불일치 거부). 테스트 `tests/test_append_timing_rows.py` 3개.
+    인계 지시문 `docs/CODEX_RESUME_PROMPT.md`(검증 절차, 병합·OCR 재측정 명령, 주의 투구, 규칙, 보고 형식).
+    검사: 관련 pytest 7파일 47 passed, `check_project.py --cpu-only` 294 passed, 2 deselected. 파일 수정 권한은 비워 두었다.
+
 이 문서와 함께 추가되는 후속 커밋의 해시는 `git log -6 --oneline`으로 확인한다.
 전체 Windows CPU 검사: **264 passed, 2 deselected**, Ruff 47개 경로 통과.
 JavaScript 구문 검사 및 Chrome 수동 입력·실제 추론·9회 이후 추천 보류 확인.
@@ -262,7 +278,8 @@ Claude/Codex의 순서는 [../CHECKLIST.md](../CHECKLIST.md)의 "진행 순서" 
 팀원 레포(SongRoute/pitcheezy) 대조 결과는 [TEAMMATE_PITCHEEZY_2026-09-22.md](TEAMMATE_PITCHEEZY_2026-09-22.md) — 우리 쪽 참조가 없는 별도
 트랙이라 I-0(인터페이스 합의)·I-5(시연 경기)·I-6(클래스 대응표)·G-3(통화)를 A/B와 병행해 먼저 진행한다.
 
-1. **영상 시간 주석 확대**: 2~10번 타석을 완료했다(2026-09-24, 2회초 종료). 다음은 2회말 PA 11~15(20구), 규약 v2로 찍는다.
+1. **영상 시간 주석 확대**: 2~10번 타석을 완료했다(2026-09-24, 2회초 종료, PA 1~10 전부 규약 v2). 2회말 PA 11~15 20구는
+   미검증 후보 파일에 있다 — 프레임으로 검증한 뒤 `scripts/69_append_timing_rows.py`로 타석별 병합한다(CODEX_RESUME_PROMPT.md §1).
    새 타석마다 `game_747139_scoreboard_review.json`에 필드별 판독 행을 같이 추가한다(CHECKLIST B-6).
    없으면 평가셋에서 `scoreboard_unreviewed`로 제외된다. 프레임 확인은 브라우저 대신
    `uv run --frozen python scripts/65_grab_broadcast_frames.py --label p7scan --times 676 686 696`처럼 ffmpeg로 뽑아

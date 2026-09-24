@@ -168,6 +168,9 @@ accuracy = correct / attempted
   이닝·초말·득점만 `confirmed`, 카운트·아웃·주자 `unreadable`), 충돌 0, 미검토 286.
 - 2026-09-24 규약 v2 적용 후: timing 36구(34 확인 / 2 확인 불가 — PA 5/5 추가), 리뷰 34구, 충돌 0.
 - 2026-09-24 PA 10 추가(2회초 완료): timing 42구(40 확인 / 2 확인 불가), 리뷰 40구, 충돌 0, 미검토 280.
+- 2026-09-24 A-v3: PA 8~10에도 규약 v2 적용(9구 이동, 3구 유지) — 이제 timing의 모든 행이 규약 v2.
+- 2026-09-24 PA 11~15 20구는 **미검증 후보**(`game_747139_timing_candidates_pa11_15.json`)로만 존재한다. 검증 뒤
+  `scripts/69_append_timing_rows.py --candidates … --pa N`로 병합한다(모든 투구가 `verified`여야 함).
 
 ## 점수판 OCR 프로토타입 v0 (F-3, 2026-09-23)
 

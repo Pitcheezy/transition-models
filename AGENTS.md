@@ -10,6 +10,7 @@ Codex/Claude handoff protocol. Update it in the same commit as the work it track
 The product goal is pre-pitch broadcast situation recognition, outcome probabilities,
 and eventually pitch-type/target-location recommendations. MLB is the first delivery
 target; KBO comes later. Read docs/MLB_P0.md and docs/MLB_P0_HANDOFF.md for current work.
+Codex taking over from Claude Code (2026-09-24): start from docs/CODEX_RESUME_PROMPT.md.
 Scripts 58–63 cover video identity, manual inference UI, source inspection, new
 eight-class observation targets, whole-game HTTP checks, and manual broadcast timing.
 Read docs/MLB_BROADCAST_TIMING.md: 19 pitches timed, 1 unavailable, 302 unreviewed;
