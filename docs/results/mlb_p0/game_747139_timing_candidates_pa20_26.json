@@ -8,7 +8,7 @@
     "duration_seconds": 9340.748083
   },
   "convention": "decision-frame convention v2 (docs/MLB_BROADCAST_TIMING.md: earliest 0.25 s grid frame with live shot + pitcher still on the rubber + batter in the box + readable bug, continuous until motion)",
-  "status": "PA20-26 candidates: PAs 22, 23 and 25 are verified and merged (see merge_history and game_747139_timing_verification_pa20_26.json); no rows are pending in this file. PAs 20, 21, 24 and 26 are still in workflow verification/repair and have not been written here yet; add them as UNVERIFIED rows and merge a plate appearance only after every pitch has verification.status 'verified' (scripts/69 refuses anything else).",
+  "status": "PA20-26 candidates: PAs 21, 22, 23, 24, 25 and 26 are verified and merged (see merge_history and game_747139_timing_verification_pa20_26.json); no rows are pending in this file. PA 20 is still in workflow verification (pitch 4 decision frame) and has not been written here yet; add it as UNVERIFIED rows and merge only after every pitch has verification.status 'verified' (scripts/69 refuses anything else).",
   "produced_by": "Claude Code 2026-09-25: one Opus 5 workflow annotator per PA from ffmpeg frame grabs, two independent verifier lenses per pitch (timing, scoreboard_identity), final direct frame review by the Claude Code session before any merge",
   "rows": [],
   "merge_history": [
@@ -20,7 +20,7 @@
       "pitches": 2,
       "annotated": 1,
       "unavailable": 1,
-      "work_commit": "(this unit commit)",
+      "work_commit": "5f69f26",
       "verification_report": "game_747139_timing_verification_pa20_26.json"
     },
     {
@@ -31,7 +31,7 @@
       "pitches": 4,
       "annotated": 4,
       "unavailable": 0,
-      "work_commit": "(this unit commit)",
+      "work_commit": "5f69f26",
       "verification_report": "game_747139_timing_verification_pa20_26.json"
     },
     {
@@ -41,6 +41,39 @@
       ],
       "pitches": 1,
       "annotated": 1,
+      "unavailable": 0,
+      "work_commit": "5f69f26",
+      "verification_report": "game_747139_timing_verification_pa20_26.json"
+    },
+    {
+      "date": "2026-09-25",
+      "plate_appearances": [
+        26
+      ],
+      "pitches": 5,
+      "annotated": 5,
+      "unavailable": 0,
+      "work_commit": "(this unit commit)",
+      "verification_report": "game_747139_timing_verification_pa20_26.json"
+    },
+    {
+      "date": "2026-09-25",
+      "plate_appearances": [
+        21
+      ],
+      "pitches": 5,
+      "annotated": 5,
+      "unavailable": 0,
+      "work_commit": "(this unit commit)",
+      "verification_report": "game_747139_timing_verification_pa20_26.json"
+    },
+    {
+      "date": "2026-09-25",
+      "plate_appearances": [
+        24
+      ],
+      "pitches": 5,
+      "annotated": 5,
       "unavailable": 0,
       "work_commit": "(this unit commit)",
       "verification_report": "game_747139_timing_verification_pa20_26.json"
@@ -94,6 +127,67 @@
         "2": "both_lenses_passed",
         "3": "both_lenses_passed",
         "4": "both_lenses_passed"
+      }
+    },
+    "26": {
+      "annotator_problems": [
+        "Pitch 1 decision is a judgement call on the batter, not on the shot. The live high third-base-side wide angle (pitcher on the rubber and batter both visible) already starts at 2582.50, but d'Arnaud is bent over at the waist adjusting his gear at 2583.50 and 2584.00 and only straightens up facing the pitcher at 2584.25. I treated 'bent over, looking down' as failing condition (3). A reviewer who counts a batter who is physically inside the box regardless of posture would push pitch 1's decision back to 2582.50.",
+        "Two of the five decision frames are not on the centre-field camera. Pitch 1 uses a live high third-base-side wide angle (first base is screen-right there); the feed cuts to the centre-field camera at 2590.75, i.e. after the decision and before the motion start, and I did not treat that live-to-live cut as a continuity break. Pitch 5 uses a live high upper-deck-behind-home wide angle in which the pitcher and batter are only about 30-40 px tall at 2689.75; I verified from enlarged crops that Megill is on the rubber and still and that d'Arnaud is in the box with the bat up, but the readability of the players (not the bug) is weaker than on the centre-field shots.",
+        "At pitch 4's decision frame (2669.50) the bug's lower banner is replaced by 'OFFICIAL SCORING: PASSED BALL', so the pitcher name, pitch clock, P:65 and the batter line are not printed there. The score, runners, outs, inning and count are all fully visible, so I recorded readability 'readable' with every observed field filled; P:65 was read on the same uninterrupted live shot at 2673.00 and 2674.50 and the batter banner at 2674.00.",
+        "The runners' advance from first-and-second to second-and-third between pitch 3 and pitch 4 is a passed ball as read on screen, not a steal: the SNY 'OFFICIAL SCORING: PASSED BALL' graphic is up from 2668.00 to 2672.00, the catcher is chasing the ball up the line at 2644.00, and a Braves runner is standing at third with third-base coach Tuiasosopo (89) at 2646.00. The bug's runner diamonds change from top+lower-right gold (2610-2640) to top+left gold (2668 onward), matching second and third with first base empty.",
+        "Pitch 5's motion start (2694.25) falls on the overhead wide angle and the feed cuts to the centre-field camera between 2694.50 and 2695.00, i.e. after the motion has already begun, so the last 1.2 s before release were reviewed across a camera change. This does not affect the decision frame but means the leg-lift frame and the release frame come from different cameras.",
+        "Timing precision limits: the decision search is on the 0.25 s grid and release brackets are 0.05-0.10 s wide, all from ffmpeg still grabs. Anything that happened strictly between two sampled frames (a very brief step-off, a one-frame white bug wipe) would not be visible, so continuity is asserted only at the sampled times listed in prep_sample_times."
+      ],
+      "end_of_pa_evidence": "Pitch 5 is a swinging strike three that ends the inning, confirmed on frames I opened. At 2696.50 the centre-field shot shows d'Arnaud having swung through with the bat wrapped over his shoulder and the catcher holding the ball, and the bug reads NYM 0 / ATL 2 / runners on second and third / down-3 / 2 outs / 2-2 / MEGILL 97 MPH. At 2697.00 the batter is turning away from the plate and the catcher is up and moving. By 2698.00 the bug has changed to NYM 0 / ATL 2 / bases empty (all three diamonds outline) / 'END 3' in place of the inning arrow / 0-0 with both out circles cleared, over a Mets crowd shot; 2700.00 shows the same 'END 3' bug over a Braves dugout close-up. So the third out and the end of the bottom of the third are confirmed between 2696.50 and 2698.00.",
+      "last_release_seconds": 2695.48,
+      "workflow_outcome": {
+        "1": "both_lenses_passed",
+        "2": "both_lenses_passed",
+        "3": "both_lenses_passed",
+        "4": "both_lenses_passed",
+        "5": "both_lenses_passed"
+      }
+    },
+    "21": {
+      "annotator_problems": [
+        "The task's anchor list did not mention a pickoff: Megill's motion at about 2104.75-2105.30 is a throw to first base, not pitch 4. The first-base camera at 2105.40-2105.55 shows Alonso taking the throw with Harris II diving back, and the bug still reads 1-2 P:48 at 2108. A naive reading of the anchors would have timed pitch 4 at roughly 2105.5 instead of 2124.9. The pickoff broke the otherwise valid window that had opened at 2101.50 (previous grid 2101.25 was a booth-to-field cross-dissolve).",
+        "Pitch 3's previous_grid frame (2077.00) is judgement-dependent. It is a LIVE high third-base-side aerial of the whole park, not a replay or a graphic, and the bug is readable; zoomed in, the batter, catcher and umpire are identifiable and a figure is standing on the mound, but the pitcher is only a few pixels and I could not confirm his pivot foot on the rubber or that he was still rather than starting. I therefore treated it as failing condition (1)/(2) and set the decision at 2077.25 (centre-field camera). If a reviewer accepts that aerial as a valid live wide angle, pitch 3's decision would move back to roughly 2069-2070, when the aerial began.",
+        "The bug's speed field for pitch 4 reads 97 MPH at 2128.00. That is high for Megill and I report it only as read; I did not verify it against any other source.",
+        "At pitch 1's decision frame (2040.75) the bug's second line is still the MLB.TV logo, so no batter banner is present there; '2. ALBIES BB' is first legible at 2041.00. All score/count/base/out/inning fields were readable at 2040.75, so readability is 'readable' rather than 'partial', but the batter identification for pitch 1 comes from a neighbouring frame.",
+        "Pitch 1's previous_grid failure (2040.50) is an animated SNY transition wipe painted over the live picture rather than a true cutaway; 2040.25 is the same wipe covering nearly the whole frame. I classified it as cutaway_or_replay because the convention names a transition wipe as not usable.",
+        "The small pitch-clock digits on the bug are the least reliable field at this resolution; neighbouring 0.25 s frames occasionally read ambiguously between :06 and :07. The count, P:N, base diamonds, out circles, inning arrow and scores were unambiguous at every decision frame.",
+        "All times are manual estimates from selected ffmpeg frame grabs at 0.05 s spacing around release and 0.25 s spacing on the decision grid, not continuous playback; uncertainty_seconds is 0.15 for every row and none of these should be treated as frame-exact. Motion-start values are the first SAMPLED frame showing the leg lift, so the true onset can be up to one sampling step earlier."
+      ],
+      "end_of_pa_evidence": "Pitch 5 was hit out. At 2150.00 the camera is on the left-centre-field wall with the ball carrying over it and the bug banner reads \"84 MPH\" with the count still 1-2 and the runner still shown on first (bug lag). At 2175.00 the bug has updated to NYM 0 / ATL 2, all three base diamonds white (bases empty), two empty out circles (0 outs), down-arrow 3, count 0-0, and the lower banner reads \"EXIT VELOCITY 103.1 MPH\"; the picture shows Albies being met at home plate by teammates, confirming a two-run home run. At 2185.00 the feed is a replay of the swing. At 2205.00 the bug reads NYM 0 / ATL 2, bases empty, 0 outs, down-3, count 0-1, \"MEGILL P:51\" with the batter line \"3. OZUNA\", i.e. the plate appearance is over and the next batter is already one pitch in.",
+      "last_release_seconds": 2146.7,
+      "workflow_outcome": {
+        "1": "both_lenses_passed",
+        "2": "both_lenses_passed",
+        "3": "both_lenses_passed",
+        "4": "both_lenses_passed",
+        "5": "both_lenses_passed"
+      }
+    },
+    "24": {
+      "annotator_problems": [
+        "Pitch 4 decision frame is the least clean of the five: at 2459.75 Megill is at the rubber but appears to be settling his feet onto it rather than fully still (at 2460.00 he is unambiguously standing on it). A stricter reading of condition 2 would move decision_seconds to 2460.00. Reported 2459.75 because he is already on the rubber, facing the plate, with no rocker step or leg lift.",
+        "The bug alternates the pitch clock and the P:N field, so at the pitch 3 and pitch 4 decision frames (2440.75, 2459.75) no pitch clock was displayed; P:58 and P:59 were read directly from those same frames, not from neighbours.",
+        "The batter banner was not visible at two decision frames: absent at 2396.25 (it appears at 2397.50 as '5. SOLER  0-1') and covered by the MLB.TV logo at 2487.50 (read as 's. SOLER  0-1' at 2476.00). Reported as batter_banner_seen text rather than claimed as read at the decision second.",
+        "Pitch 5 has a very short pre-pitch window: the broadcast is on an on-deck/dugout cutaway from 2478 through 2487.25 and returns only 0.75 s before the leg lift, so prep_sample_times has only three frames (2487.50, 2488.00, 2488.25).",
+        "The 0.25 s grid search means the true cut back to the live shot can be up to 0.25 s earlier than each reported decision second; I verified the preceding grid point is a cutaway in all five cases but did not sample below 0.25 s resolution.",
+        "Release times are manual brackets: the pre-release and post-release frames are 0.05-0.10 s apart, so 0.15 s uncertainty is claimed and no frame-exact release is asserted.",
+        "The SNY bug lags play by 2-3 s, so outcome-driven changes trail the pitch (e.g. 95 MPH / 0-1 first appears at 2404 for the pitch released at 2400.60, 88 MPH at 2490.00 for the pitch released at 2489.10). Decision-frame readings are unaffected because the count had settled well before each delivery.",
+        "Megill's uniform number reads as '33' or '39' in some motion-blurred frames (2463, 2464) but is clearly 38 in sharp frames; this is motion blur, not a different pitcher.",
+        "Observed values matched the stated expectation at every decision frame (NYM 0 / ATL 2, 1 out, runner on 1B only, bottom 3, counts 0-0/0-1/0-2/1-2/2-2 with P:56-P:60). Nothing was copied from the expectation - each was read off the enlarged bug crop - but nothing contradicted it either, so there is no discrepancy to flag."
+      ],
+      "end_of_pa_evidence": "At 2505.00 s the shot is a close-up near the first-base line (a Braves coach in white and a Mets player in the grey road uniform) and the bug reads NYM 0 / ATL 2, down-arrow 3, the lower-right diamond still gold (runner on first), BOTH out circles now gold (2 outs), count reset to 0-0, MEGILL P:61 - i.e. the plate appearance ended with the second out of the inning, the runner held at first and no run scored. Supporting frames: at 2490.00/2490.50 the bug still shows 2-2 with '88 MPH' while the ball is in the air (bug lag), and the next live pre-pitch state after the PA is the 0-0 / two-out / P:61 bug at 2505.00.",
+      "last_release_seconds": 2489.1,
+      "workflow_outcome": {
+        "1": "both_lenses_passed",
+        "2": "both_lenses_passed",
+        "3": "both_lenses_passed",
+        "4": "both_lenses_passed",
+        "5": "both_lenses_passed"
       }
     }
   }

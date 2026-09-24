@@ -2,11 +2,11 @@
   "schema": "mlb_scoreboard_ocr_provenance_v1",
   "game_pk": 747139,
   "recorded_at": "2026-09-25",
-  "recorded_by": "Claude Code pa22_23_25 merge audit",
-  "scope": "Fixed v1 templates (PA 1, 2, 9); field-level results and exact local input hashes after merging PAs [22, 23, 25]. No template or code change, no tuning on new frames.",
+  "recorded_by": "Claude Code pa21_24_26 merge audit",
+  "scope": "Fixed v1 templates (PA 1, 2, 9); field-level results and exact local input hashes after merging PAs [21, 24, 26]. No template or code change, no tuning on new frames.",
   "git_reference": {
-    "commit": "3e395b2",
-    "meaning": "Pre-merge predictions (68 rows) and unchanged v1 code/templates."
+    "commit": "5f69f26",
+    "meaning": "Pre-merge predictions (74 rows) and unchanged v1 code/templates."
   },
   "runtime": {
     "python_version": "3.12.12",
@@ -46,28 +46,28 @@
   "artifacts": [
     {
       "path": "docs/results/mlb_p0/game_747139_scoreboard_evalset.json",
-      "sha256": "72b1f93f62b31e9d47b87d6a38e1fc75b109516e1d3a6a0a0d24ad0e54e7d15e",
-      "bytes": 188730
+      "sha256": "16e9fdc12ae4454f9cbf199893502ba7758c98c162fdc041b5961bb55f555f27",
+      "bytes": 241426
     },
     {
       "path": "docs/results/mlb_p0/game_747139_scoreboard_ocr_v1_predictions.json",
-      "sha256": "a8f7cd34b083bb33988194bf58c00e5188f063dccee64ab7578dcb314d912514",
-      "bytes": 30449
+      "sha256": "7a3598078c16ecf37e68805bc982a88a66f57b7430ea3e91363ad93bb287761c",
+      "bytes": 36642
     },
     {
       "path": "docs/results/mlb_p0/game_747139_scoreboard_ocr_v1.json",
-      "sha256": "b97a2137ea0c15f9e2ec7a4ec62c292feb3aad05d7c502d589f94aeb290f572f",
-      "bytes": 5947
+      "sha256": "46b86512b53a8589f9e10ac47b4ae6b9dfa7c624d827b4e78f4b36623fe7b6c0",
+      "bytes": 6117
     },
     {
       "path": "docs/results/mlb_p0/game_747139_scoreboard_review.json",
-      "sha256": "4f88f68c20c4082ad6275809fdce94380c2f31ebe8c5b9a8330ca4fbc9551848",
-      "bytes": 72773
+      "sha256": "8640cfc4ffcc77151cf9c9682b8fea41400ccb3b43c8b5aed7534e99178899d7",
+      "bytes": 88095
     },
     {
       "path": "docs/results/mlb_p0/game_747139_timing.json",
-      "sha256": "3b6c04ac691e1889482142af3b424cc9357d72caf9b071bd3eacfd62de6c8159",
-      "bytes": 95824
+      "sha256": "e07f849f3e4e9be47c2a43a05b4754b0001147b33d7e85d26e80cc601b6218ce",
+      "bytes": 128012
     },
     {
       "path": "docs/results/mlb_p0/game_747139_scoreboard_negatives_score_v0.json",
@@ -77,7 +77,7 @@
   ],
   "frame_cache": {
     "path_rule": "outputs/frames/evalset_<frame_seconds:.2f>.jpg",
-    "frame_count": 74,
+    "frame_count": 89,
     "complete": true,
     "hash_algorithm": "sha256",
     "scope": "Exact current JPEG bytes, not a full-video hash. Cache must be transferred separately.",
@@ -764,6 +764,56 @@
       },
       {
         "game_pk": 747139,
+        "at_bat_number": 21,
+        "pitch_number": 1,
+        "play_id": "1156d224-4059-4d58-89c0-7dcfd755d786",
+        "frame_seconds": 2040.75,
+        "path": "outputs/frames/evalset_2040.75.jpg",
+        "sha256": "121be0545e3cb76f91a78ed72bcc979f67f261ff87e73c1adc869f22aeda9892",
+        "bytes": 116845
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 21,
+        "pitch_number": 2,
+        "play_id": "34e10cb9-8d48-4ec9-82e5-0f937526f47f",
+        "frame_seconds": 2059.75,
+        "path": "outputs/frames/evalset_2059.75.jpg",
+        "sha256": "eef80fa7cc549a06a3b1a9482a9dc8b2f440144094196c7ceed0e643910a7f69",
+        "bytes": 147599
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 21,
+        "pitch_number": 3,
+        "play_id": "89c85f79-85e2-4940-8271-b28a87f0dd69",
+        "frame_seconds": 2071.75,
+        "path": "outputs/frames/evalset_2071.75.jpg",
+        "sha256": "f0d6c902804e38e4c508598a1f284e29161accbcd44f6f4e6aff7dcc5bd67c55",
+        "bytes": 208186
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 21,
+        "pitch_number": 4,
+        "play_id": "330370f3-e1ed-4158-af57-fb3e6039de78",
+        "frame_seconds": 2123,
+        "path": "outputs/frames/evalset_2123.00.jpg",
+        "sha256": "46436d793bcb601b8ba241d49f7f53bcf9eed089d47819b390a3d53380a9499f",
+        "bytes": 118162
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 21,
+        "pitch_number": 5,
+        "play_id": "acc0aeb1-175d-4dfb-95a1-b07cf73e8ab8",
+        "frame_seconds": 2140.75,
+        "path": "outputs/frames/evalset_2140.75.jpg",
+        "sha256": "c3744f25279c5a083672cdafa71f09db313a014ff3f226f5f5ff1f65888eb35d",
+        "bytes": 133648
+      },
+      {
+        "game_pk": 747139,
         "at_bat_number": 22,
         "pitch_number": 2,
         "play_id": "618cf6eb-e183-425f-a99a-1caa69add2d9",
@@ -814,6 +864,56 @@
       },
       {
         "game_pk": 747139,
+        "at_bat_number": 24,
+        "pitch_number": 1,
+        "play_id": "355f3c74-8e06-440f-bd8f-b265342674ad",
+        "frame_seconds": 2396.25,
+        "path": "outputs/frames/evalset_2396.25.jpg",
+        "sha256": "3da4ce892acb63bd7c5a39ac623bbe6845163bc986ae5114358768c33031ce34",
+        "bytes": 137828
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 24,
+        "pitch_number": 2,
+        "play_id": "3825a8fc-ec3a-4a07-aebd-857805ae6c4e",
+        "frame_seconds": 2412.5,
+        "path": "outputs/frames/evalset_2412.50.jpg",
+        "sha256": "9470c4984474521188386104aa06da5b89d05fcd94ff5682692a44a06b2bd821",
+        "bytes": 142193
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 24,
+        "pitch_number": 3,
+        "play_id": "1b182e36-da26-4e13-9d5b-a01c93b5da49",
+        "frame_seconds": 2440.75,
+        "path": "outputs/frames/evalset_2440.75.jpg",
+        "sha256": "c9d7151e3630a0972a26ef555a0e7846c3a912196f49b876391b02ff4f34c165",
+        "bytes": 139413
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 24,
+        "pitch_number": 4,
+        "play_id": "e5eb1428-cf22-4a2c-9cd4-82d4a7a45d28",
+        "frame_seconds": 2460.25,
+        "path": "outputs/frames/evalset_2460.25.jpg",
+        "sha256": "31020d111ecb5450dee5b86738b5b49aec0a2a23f7fceda836651c394e8c5c68",
+        "bytes": 154394
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 24,
+        "pitch_number": 5,
+        "play_id": "262f21a8-e25a-44a2-90de-e6d11345ebcc",
+        "frame_seconds": 2487.5,
+        "path": "outputs/frames/evalset_2487.50.jpg",
+        "sha256": "32520f5ebcf09c0746131455a31ed6a2f4aef63780a2cf61214c4113b98612dc",
+        "bytes": 137608
+      },
+      {
+        "game_pk": 747139,
         "at_bat_number": 25,
         "pitch_number": 1,
         "play_id": "92104379-7ef8-4f9b-86bc-8dac06bea8f3",
@@ -821,54 +921,92 @@
         "path": "outputs/frames/evalset_2521.25.jpg",
         "sha256": "405448857f87f0a1ba5cdc368394fd9ff2fcd6dc01d878e0b1f9a136157e068c",
         "bytes": 142174
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 26,
+        "pitch_number": 1,
+        "play_id": "47f278be-0a80-47e2-8127-a1c4567aca8c",
+        "frame_seconds": 2586,
+        "path": "outputs/frames/evalset_2586.00.jpg",
+        "sha256": "e9b0be375cc993a172ef686299cdd4e67cffe03c777ad5f761ab273b729dce90",
+        "bytes": 197185
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 26,
+        "pitch_number": 2,
+        "play_id": "e4dea209-d135-4093-9c62-fbe55a5435ff",
+        "frame_seconds": 2610.25,
+        "path": "outputs/frames/evalset_2610.25.jpg",
+        "sha256": "b958c20152fb9aec03a646f261a5a7465583837db17f5a8542c7696496f69239",
+        "bytes": 127856
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 26,
+        "pitch_number": 3,
+        "play_id": "1f2076e4-9c5f-4489-aa7e-e7bf0ba3cc37",
+        "frame_seconds": 2635.25,
+        "path": "outputs/frames/evalset_2635.25.jpg",
+        "sha256": "3c36bf1ce3972f17a03a10f932b27cc43aba69847347777dfdfae2d0457a27ab",
+        "bytes": 138063
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 26,
+        "pitch_number": 4,
+        "play_id": "ea0465f2-9989-41a6-a936-c71bec4e9f22",
+        "frame_seconds": 2669.5,
+        "path": "outputs/frames/evalset_2669.50.jpg",
+        "sha256": "9f19517190090b046a0ff45133b3c064a9b78aa5cfd46d6dc8cc77f999882dbe",
+        "bytes": 138217
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 26,
+        "pitch_number": 5,
+        "play_id": "f71af92f-0d50-4dbf-b02a-69ace6e2ab79",
+        "frame_seconds": 2689.75,
+        "path": "outputs/frames/evalset_2689.75.jpg",
+        "sha256": "1b59aef16f7a3cd701ecbc3734908afefc1ee9c6aa1ec1cc21cbc7d892cd7d14",
+        "bytes": 225852
       }
     ]
   },
   "current_repeat_check": {
-    "prediction_rows": 74,
-    "matching_rows": 74,
+    "prediction_rows": 89,
+    "matching_rows": 89,
     "parsed_documents_equal": true,
     "repeat_output": {
-      "path": "outputs/verification/ocr_pa22_23_25_repeat.json",
-      "sha256": "a8f7cd34b083bb33988194bf58c00e5188f063dccee64ab7578dcb314d912514",
-      "bytes": 30449
+      "path": "outputs/verification/ocr_pa21_24_26_repeat.json",
+      "sha256": "7a3598078c16ecf37e68805bc982a88a66f57b7430ea3e91363ad93bb287761c",
+      "bytes": 36642
     }
   },
   "previous_prediction_comparison": {
-    "reference_commit": "3e395b2",
-    "previous_rows": 68,
-    "current_rows": 74,
-    "shared_rows": 68,
-    "identical_shared_rows": 68,
+    "reference_commit": "5f69f26",
+    "previous_rows": 74,
+    "current_rows": 89,
+    "shared_rows": 74,
+    "identical_shared_rows": 74,
     "changed_shared_rows": 0,
-    "new_rows": 6,
+    "new_rows": 15,
     "removed_rows": 0,
     "changes": []
   },
-  "new_pa22_23_25_comparison": {
-    "pitch_count": 6,
-    "fully_evaluable_pitches": 6,
+  "new_pa21_24_26_comparison": {
+    "pitch_count": 15,
+    "fully_evaluable_pitches": 15,
     "all_fields_correct_pitches": 0,
     "pitches_with_wrong_field": 0,
-    "pitches_with_abstention": 6,
+    "pitches_with_abstention": 15,
     "pitches": [
       {
         "game_pk": 747139,
-        "at_bat_number": 22,
-        "pitch_number": 2,
-        "frame_seconds": 2209.25,
-        "evaluable_fields": 10,
-        "correct_fields": 9,
-        "wrong_fields": [],
-        "abstained_fields": [
-          "inning"
-        ]
-      },
-      {
-        "game_pk": 747139,
-        "at_bat_number": 23,
+        "at_bat_number": 21,
         "pitch_number": 1,
-        "frame_seconds": 2253.75,
+        "frame_seconds": 2040.75,
         "evaluable_fields": 10,
         "correct_fields": 9,
         "wrong_fields": [],
@@ -878,9 +1016,9 @@
       },
       {
         "game_pk": 747139,
-        "at_bat_number": 23,
+        "at_bat_number": 21,
         "pitch_number": 2,
-        "frame_seconds": 2269,
+        "frame_seconds": 2059.75,
         "evaluable_fields": 10,
         "correct_fields": 9,
         "wrong_fields": [],
@@ -890,9 +1028,9 @@
       },
       {
         "game_pk": 747139,
-        "at_bat_number": 23,
+        "at_bat_number": 21,
         "pitch_number": 3,
-        "frame_seconds": 2296.75,
+        "frame_seconds": 2071.75,
         "evaluable_fields": 10,
         "correct_fields": 9,
         "wrong_fields": [],
@@ -902,9 +1040,9 @@
       },
       {
         "game_pk": 747139,
-        "at_bat_number": 23,
+        "at_bat_number": 21,
         "pitch_number": 4,
-        "frame_seconds": 2318.25,
+        "frame_seconds": 2123,
         "evaluable_fields": 10,
         "correct_fields": 9,
         "wrong_fields": [],
@@ -914,9 +1052,130 @@
       },
       {
         "game_pk": 747139,
-        "at_bat_number": 25,
+        "at_bat_number": 21,
+        "pitch_number": 5,
+        "frame_seconds": 2140.75,
+        "evaluable_fields": 10,
+        "correct_fields": 9,
+        "wrong_fields": [],
+        "abstained_fields": [
+          "inning"
+        ]
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 24,
         "pitch_number": 1,
-        "frame_seconds": 2521.25,
+        "frame_seconds": 2396.25,
+        "evaluable_fields": 10,
+        "correct_fields": 9,
+        "wrong_fields": [],
+        "abstained_fields": [
+          "inning"
+        ]
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 24,
+        "pitch_number": 2,
+        "frame_seconds": 2412.5,
+        "evaluable_fields": 10,
+        "correct_fields": 9,
+        "wrong_fields": [],
+        "abstained_fields": [
+          "inning"
+        ]
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 24,
+        "pitch_number": 3,
+        "frame_seconds": 2440.75,
+        "evaluable_fields": 10,
+        "correct_fields": 9,
+        "wrong_fields": [],
+        "abstained_fields": [
+          "inning"
+        ]
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 24,
+        "pitch_number": 4,
+        "frame_seconds": 2460.25,
+        "evaluable_fields": 10,
+        "correct_fields": 9,
+        "wrong_fields": [],
+        "abstained_fields": [
+          "inning"
+        ]
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 24,
+        "pitch_number": 5,
+        "frame_seconds": 2487.5,
+        "evaluable_fields": 10,
+        "correct_fields": 8,
+        "wrong_fields": [],
+        "abstained_fields": [
+          "inning",
+          "home_score"
+        ]
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 26,
+        "pitch_number": 1,
+        "frame_seconds": 2586,
+        "evaluable_fields": 10,
+        "correct_fields": 9,
+        "wrong_fields": [],
+        "abstained_fields": [
+          "inning"
+        ]
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 26,
+        "pitch_number": 2,
+        "frame_seconds": 2610.25,
+        "evaluable_fields": 10,
+        "correct_fields": 9,
+        "wrong_fields": [],
+        "abstained_fields": [
+          "inning"
+        ]
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 26,
+        "pitch_number": 3,
+        "frame_seconds": 2635.25,
+        "evaluable_fields": 10,
+        "correct_fields": 9,
+        "wrong_fields": [],
+        "abstained_fields": [
+          "inning"
+        ]
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 26,
+        "pitch_number": 4,
+        "frame_seconds": 2669.5,
+        "evaluable_fields": 10,
+        "correct_fields": 9,
+        "wrong_fields": [],
+        "abstained_fields": [
+          "inning"
+        ]
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 26,
+        "pitch_number": 5,
+        "frame_seconds": 2689.75,
         "evaluable_fields": 10,
         "correct_fields": 9,
         "wrong_fields": [],
@@ -936,10 +1195,15 @@
       "commit": "3e395b2",
       "path": "docs/results/mlb_p0/game_747139_scoreboard_ocr_v1_provenance.json",
       "note": "Previous provenance (Codex PA16-19 merge audit, 2026-09-24) with its own new-row comparison; kept in Git."
+    },
+    {
+      "commit": "5f69f26",
+      "path": "docs/results/mlb_p0/game_747139_scoreboard_ocr_v1_provenance.json",
+      "note": "Previous provenance (Claude Code pa22_23_25 merge audit, 2026-09-25) with its own new-row comparison; kept in Git."
     }
   ],
   "reproduction_commands": [
-    "python scripts/66_sny_scoreboard_ocr.py predict --templates docs/results/mlb_p0/sny_digit_templates_v1.json --no-grab --output outputs/verification/ocr_pa22_23_25_repeat.json",
+    "python scripts/66_sny_scoreboard_ocr.py predict --templates docs/results/mlb_p0/sny_digit_templates_v1.json --no-grab --output outputs/verification/ocr_pa21_24_26_repeat.json",
     "python scripts/66_sny_scoreboard_ocr.py score --predictions docs/results/mlb_p0/game_747139_scoreboard_ocr_v1_predictions.json --exclude-pas 1 2 9 --output docs/results/mlb_p0/game_747139_scoreboard_ocr_v1.json"
   ],
   "limitations": [
