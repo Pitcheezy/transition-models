@@ -1,0 +1,100 @@
+{
+  "schema": "mlb_broadcast_timing_candidates_v1",
+  "game_pk": 747139,
+  "manifest_sha256": "4d036f94f5b5bddc682e846960dbc40de5ae35c4e023581efa12167475e062da",
+  "source": {
+    "page_url": "https://www.mlb.com/video/9-30-24-mets-win-epic-game-in-playoff-clincher",
+    "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+    "duration_seconds": 9340.748083
+  },
+  "convention": "decision-frame convention v2 (docs/MLB_BROADCAST_TIMING.md: earliest 0.25 s grid frame with live shot + pitcher still on the rubber + batter in the box + readable bug, continuous until motion)",
+  "status": "PA20-26 candidates: PAs 22, 23 and 25 are verified and merged (see merge_history and game_747139_timing_verification_pa20_26.json); no rows are pending in this file. PAs 20, 21, 24 and 26 are still in workflow verification/repair and have not been written here yet; add them as UNVERIFIED rows and merge a plate appearance only after every pitch has verification.status 'verified' (scripts/69 refuses anything else).",
+  "produced_by": "Claude Code 2026-09-25: one Opus 5 workflow annotator per PA from ffmpeg frame grabs, two independent verifier lenses per pitch (timing, scoreboard_identity), final direct frame review by the Claude Code session before any merge",
+  "rows": [],
+  "merge_history": [
+    {
+      "date": "2026-09-25",
+      "plate_appearances": [
+        22
+      ],
+      "pitches": 2,
+      "annotated": 1,
+      "unavailable": 1,
+      "work_commit": "(this unit commit)",
+      "verification_report": "game_747139_timing_verification_pa20_26.json"
+    },
+    {
+      "date": "2026-09-25",
+      "plate_appearances": [
+        23
+      ],
+      "pitches": 4,
+      "annotated": 4,
+      "unavailable": 0,
+      "work_commit": "(this unit commit)",
+      "verification_report": "game_747139_timing_verification_pa20_26.json"
+    },
+    {
+      "date": "2026-09-25",
+      "plate_appearances": [
+        25
+      ],
+      "pitches": 1,
+      "annotated": 1,
+      "unavailable": 0,
+      "work_commit": "(this unit commit)",
+      "verification_report": "game_747139_timing_verification_pa20_26.json"
+    }
+  ],
+  "pa_notes": {
+    "25": {
+      "annotator_problems": [
+        "The batter banner line is not on screen at the decision frame 2521.25 (the bug shows only MEGILL :09 P:61 there). The batter identity '6. LAUREANO  1-1' was read from nearby frames in the same uninterrupted shot, 2524.00 through 2527.55, so the identification of the batter for this pitch relies on those nearby frames rather than the decision frame itself.",
+        "The pitch clock on the bug does not tick in step with playback seconds: it reads :10 at 2521.00, :09 from 2521.25 through 2522.00, :08 at 2523.00, :07 at 2524.00, :06 at 2525.00, :05 at 2526.00 and then holds :04 from 2526.25 all the way to 2527.55. The bug's refresh is coarse, so the clock cannot be used to refine sub-second timing.",
+        "The bug lags the play as expected: at 2530.00, 2531.00 and 2533.00 the ball is already in the outfield and Olson is running, yet the count still reads 0-0 and the banner still shows P:61 / 96 MPH. The updated state (runners on first and second, P:62) only appears by 2536.00.",
+        "Release timing is a manual estimate from grabs 0.05 s apart, so 2527.25 could be off by up to about 0.15 s; the true release may fall between 2527.20 and 2527.30.",
+        "Only one pitch exists in this PA, so there is no release(n) < decision(n+1) check available within the row set; the single pitch satisfies decision 2521.25 < release 2527.25."
+      ],
+      "end_of_pa_evidence": "Directly viewed: at 2530.00 the centre-field/outfield shot shows the ball on the grass with the banner reading MEGILL 96 MPH while the bug still lags at 0-0 / runner on first; at 2531.00 the bug's diamonds have flipped to gold at 2B (top) and 1B (lower-right) with 3B white, two gold outs, down-3, NYM 0 / ATL 2, banner MEGILL 96 MPH; at 2533.00 Olson (ATL 28) is running with Lindor (NYM 12) nearby, consistent with the runner advancing on a single. The settled post-PA bug is confirmed at 2536.00 and 2539.00: NYM 0, ATL 2, gold diamonds at 2B and 1B (3B white), two gold out circles, down-arrow 3, count 0-0, banner MEGILL P:62 — i.e. PA 25 ended with the batter reaching, runners now on first and second with two outs, and the pitch count advanced from 61 to 62 for the next plate appearance.",
+      "last_release_seconds": 2527.25,
+      "workflow_outcome": {
+        "1": "both_lenses_passed"
+      }
+    },
+    "22": {
+      "annotator_problems": [
+        "Pitch 1 has no valid decision frame under convention v2 and is reported unavailable: the broadcast holds an Albies home-run close-up through 2196.60, an SNY logo transition wipe covers the pitcher and most of the batter from 2196.75 through 2197.35, and the first clear live frames at 2197.40/2197.45 already show Megill in his delivery (release bracketed 2197.70-2197.80). This is a directly observed absence, not a fetch or viewing failure.",
+        "The bug's lower banner flickers between the pitch clock, P:N and the speed readout, and single frames catch it mid-redraw (e.g. 2197.85, 2211.40, 2211.45 show a partly drawn clock field). Every value reported was confirmed on at least two neighbouring frames.",
+        "Speed readings differ from the brief's anchor wording: I read 89 MPH on the bug from 2198.25 to 2200.50 (pitch 1) and 96 MPH from 2212.50 to 2216.00 (pitch 2). The brief described the 2215 frame's 96 MPH as following pitch 1; what I read is that 96 MPH belongs to pitch 2 and 89 MPH to pitch 1.",
+        "The batter line reads '3. OZUNA   0-1'; that trailing 0-1 is his game line, not the count. The count field in the bug reads 0-0 before pitch 1 and 0-1 before pitch 2.",
+        "Half-size montage tiles are easy to misjudge: I first mistook the pitch-1 follow-through at 2198.00 for a leg lift and read the p22_p2a frames as non-monotonic. Both were resolved by opening the raw 1280x720 frames, and only raw-frame readings are reported, but it is a reminder that montage-only posture calls are unreliable.",
+        "Sampling is 0.05 s at best and the source is a remote MP4 read frame by frame, so release times are manual estimates with uncertainty 0.15 s, not frame-exact; the pitch-2 motion start at 2210.35 is likewise the first sampled frame with movement (2210.30 was still)."
+      ],
+      "end_of_pa_evidence": "Pitch 2 is hit into play: 2212.50 shows Megill's follow-through with the bug still 0-1 / 0 outs / bases empty / down-3 / NYM 0 / ATL 2 and MEGILL 96 MPH, and 2214.00/2214.50 show a high wide angle of the ball being played in the outfield with the same bug. By 2220.00 the bug has updated to NYM 0 / ATL 2, three dark diamonds (bases empty), down-arrow 3, ONE gold out circle (1 out), count 0-0 and MEGILL P:52 (behind a Mets/Vientos graphic), i.e. the PA ended with the first out of the inning; 2225.00 is a batter/catcher close-up and 2230.00 a transition wipe, both with no readable bug.",
+      "last_release_seconds": 2211.5,
+      "workflow_outcome": {
+        "1": "both_lenses_passed",
+        "2": "both_lenses_passed"
+      }
+    },
+    "23": {
+      "annotator_problems": [
+        "The half-size <label>_full.png montage is not reliable for pose reading: at that scale I first read the 2273.00 cell as a leg lift, but the raw 1280x720 frame shows Megill standing still on the rubber with the glove at his chest. Every pose judgement in this report was therefore re-made on raw jpgs or on full-resolution crops; the montage was used only for the enlarged bug strips.",
+        "The pitch clock in the bug freezes and lags rather than ticking with playback (:06 held across 2273.00-2274.75, :04 held across 2320.50-2322.00, :10 held across 2253.75-2255.00), so it cannot be used as an independent timing cross-check and I did not use it as one.",
+        "At the pitch 1 and pitch 4 decision frames the bug's second banner line (the batter) was not on screen - only the MEGILL pitcher line. '4. OLSON  0-1' was read 1.25 s later at 2255.00 for pitch 1 and 0.25 s later at 2318.50 for pitch 4, both inside the same continuous live shot, so batter identity at the decision frame rests on the visible left-handed hitter plus that nearby banner rather than on the banner at t itself.",
+        "Release times are bracketed to 0.05-0.10 s but the true ball-leaves-hand instant lies inside the bracket, and the reported uncertainty of 0.15 s is a manual estimate; these are not frame-exact.",
+        "This is selected-frame review, not continuous playback. A break shorter than the sampling step (under 0.25 s at a decision boundary, under 0.50-1.00 s inside a prep window) could have been missed, particularly in the pitch 2 and pitch 3 prep windows where the gap reaches 1.00 s.",
+        "Megill's back number read as '39' at native resolution in two centre-field frames; a 4x enlargement of the 2269.50 frame resolved it as 'MEGILL 38'. I flag it because the raw-resolution reading was genuinely ambiguous.",
+        "All four readings match the expected PA 23 state (1 out, bases empty, bottom 3, NYM 0 / ATL 2, counts 0-0 / 0-1 / 1-1 / 2-1 with P:52 / P:53 / P:54 / P:55), so there is no discrepancy to report - but the values above are what I read on screen, not the expectation copied in."
+      ],
+      "end_of_pa_evidence": "At 2328.00 the shot is a Mets outfielder relaying the ball back in and the bug reads NYM 0 / ATL 2, down-3, 1 out (left circle gold, right open), count reset to 0-0, MEGILL 96 MPH, and the lower-right diamond is gold - a runner on first. At 2330.00, 2332.00, 2334.00 and 2336.00 the bug still shows the runner on first, 1 out, 0-0 and MEGILL P:56. That is consistent with Olson putting pitch 4 in play and reaching first, ending PA 23; I did not see a replay or a graphic naming the hit type, so the single is inferred from the bug's runner and count reset rather than read as text.",
+      "last_release_seconds": 2323.1,
+      "workflow_outcome": {
+        "1": "both_lenses_passed",
+        "2": "both_lenses_passed",
+        "3": "both_lenses_passed",
+        "4": "both_lenses_passed"
+      }
+    }
+  }
+}
