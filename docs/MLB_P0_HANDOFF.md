@@ -297,8 +297,18 @@
     한계: 선택 프레임 AI 검토(연속 재생·사람 간 일치도 아님), 수동 ±0.15 s, 같은 경기 개발 데이터. 러버 도착 경계 해석은 A-y에서 재확인 필요.
     수정 권한 반납. 다음 한 단위: F-3a OCR v2(숫자 3 템플릿, v1과 분리 평가) 또는 진행 순서 표의 독립 단위.
 
+30. (이 커밋): F-3a **OCR v2**(Claude Code, 2026-09-25). 선점 `64b6b56`. CHECKLIST 태그 모델 Fable 5.1 → 실제 작업은 Fable 5.1 워크플로 에이전트
+    (제안자 2·심판·진단·빌더·수리), 검증은 세션 모델 렌즈 3개(무결성·판독 정확성·진단) 2라운드, 통합·커밋은 세션(Opus 5.5).
+    사전 등록 템플릿 PA = 1·2·9·18(PA 18/1의 이닝 '3' 1개와 '0' 4개 추가). 코드·임계값·v1 파일 불변(출처 기록에 기준 대비 동일 확인).
+    같은 held-out(PA 1·2·9·18 제외) 전 필드 82구: v1 44·38·0 → **v2 75 정답·7 기권·오답 0**; 이닝 None→3 32구 외 변화 0. 음성 거짓 판독 0.
+    세션 직접 확인: v2 채점 재실행 바이트 동일, '3' 템플릿 렌더링, 3회 bug 10장, 13/3 고립 픽셀(0.129→잘라내면 0.076), 19/2·11/2 윗선·4/1·11/1 테두리 이미지.
+    진단 검증 2라운드에서 남은 차단 3건은 진단 보고서 서술(13/3 주원인·휘도 수치·개수) 오류였고 v2 파일과 무관; 정정된 원인만 문서화했다.
+    위험: '3' 템플릿 1개, 3-2 여유 최소 0.177, 이닝 '2'의 2위가 '3'으로 바뀌어 13/3 여유 0.171. 새 항목 F-3c(v3 수정)·A-8(4회 19구 주석) 추가.
+    새 시험: 저장된 held-out 점수가 템플릿 PA를 제외하는지(v1·v2) 구조 검사. `check_project.py --cpu-only` **298 passed, 2 deselected**, Ruff 통과. 파일: `sny_digit_templates_v2.json`, `..._ocr_v2*.json`, `..._negatives_score_v2.json`.
+    수정 권한 반납. 다음 한 단위: **A-8**(Opus 5), 이어서 그 프레임으로 F-3c v3(Fable 5.1).
+
 이 문서와 함께 추가되는 후속 커밋의 해시는 `git log -6 --oneline`으로 확인한다.
-최신 Windows CPU 검사: **296 passed, 2 deselected**(체크포인트 29, `check_project.py --cpu-only`, Ruff 통과). 아래 브라우저·서비스 검증은 이전 체크포인트 기록이다.
+최신 Windows CPU 검사: **298 passed, 2 deselected**(체크포인트 30, `check_project.py --cpu-only`, Ruff 통과). 아래 브라우저·서비스 검증은 이전 체크포인트 기록이다.
 JavaScript 구문 검사 및 Chrome 수동 입력·실제 추론·9회 이후 추천 보류 확인.
 GitHub CI 결과는 해당 커밋의 validation 워크플로에서 따로 확인한다.
 주석 모듈을 먼저 import한 새 프로세스에서도 Torch→Pandas 문자열 생성이 성공하는지
@@ -353,7 +363,7 @@ Claude/Codex의 순서는 [../CHECKLIST.md](../CHECKLIST.md)의 "진행 순서" 
 팀원 레포(SongRoute/pitcheezy) 대조 결과는 [TEAMMATE_PITCHEEZY_2026-09-22.md](TEAMMATE_PITCHEEZY_2026-09-22.md) — 우리 쪽 참조가 없는 별도
 트랙이라 I-0(인터페이스 합의)·I-5(시연 경기)·I-6(클래스 대응표)·G-3(통화)를 A/B와 병행해 먼저 진행한다.
 
-1. **영상 시간 주석 확대**: 3회 종료(PA 1~26, 101구: 95 확인·6 불가). 4회초(PA 27~)는 CHECKLIST에 새 단위로 올린 뒤 같은 절차로 진행한다.
+1. **영상 시간 주석 확대**: 3회 종료(PA 1~26, 101구: 95 확인·6 불가). 다음은 CHECKLIST **A-8(4회 PA 27–32, 19구)**이며 같은 절차로 진행한다.
 
 ```bash
 uv run --frozen python scripts/63_annotate_broadcast.py check --annotations docs/results/mlb_p0/game_747139_timing.json --require-pa 19

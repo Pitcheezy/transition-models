@@ -207,3 +207,27 @@ def test_real_frames_structural_fields_match_labels():
             )
         checked += 1
     assert checked > 0
+
+
+@pytest.mark.parametrize("version", ["v1", "v2"])
+def test_stored_heldout_score_excludes_its_template_plate_appearances(version):
+    """A stored held-out score must exclude every plate appearance its templates were cut from."""
+    results = ROOT / "docs/results/mlb_p0"
+    templates = json.loads(
+        (results / f"sny_digit_templates_{version}.json").read_text(encoding="utf-8")
+    )
+    sb.DigitTemplates.from_json(templates)
+    sources = sorted(templates["source"]["template_plate_appearances"])
+    score = json.loads(
+        (results / f"game_747139_scoreboard_ocr_{version}.json").read_text(encoding="utf-8")
+    )
+    assert sorted(score["holdout"]["excluded_plate_appearances"]) == sources
+    assert score["all_fields"]["wrong"] == 0
+    if version == "v2":
+        assert "3" in templates["templates"]
+        comparison = json.loads(
+            (results / "game_747139_scoreboard_ocr_v2_comparison.json").read_text(encoding="utf-8")
+        )
+        assert comparison["heldout_identical_for_v1_and_v2"] is True
+        assert sorted(comparison["heldout_excluded_pas"]) == sources
+        assert comparison["preregistration"]["decided_before_any_v2_prediction"] is True
