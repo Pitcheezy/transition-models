@@ -307,7 +307,7 @@
     새 시험: 저장된 held-out 점수가 템플릿 PA를 제외하는지(v1·v2) 구조 검사. `check_project.py --cpu-only` **298 passed, 2 deselected**, Ruff 통과. 파일: `sny_digit_templates_v2.json`, `..._ocr_v2*.json`, `..._negatives_score_v2.json`.
     수정 권한 반납. 다음 한 단위: **A-8**(Opus 5), 이어서 그 프레임으로 F-3c v3(Fable 5.1).
 
-31. (이 커밋): H-4 **주석·OCR 유지보수 도구**(Claude Code, 2026-09-25). 선점 `31a9352`(A-8 착수와 함께). 태그 모델 Fable 5.1 워크플로가 구현.
+31. `43c4d45`: H-4 **주석·OCR 유지보수 도구**(Claude Code, 2026-09-25). 선점 `31a9352`(A-8 착수와 함께). 태그 모델 Fable 5.1 워크플로가 구현.
     `scripts/70_refresh_ocr_reports.py`: 병합 후 버전별(v1·v2) 66 predict/score/negatives + 반복 예측 + provenance를 한 번에. `--reference`는 SHA로 확인하고,
     필드별 오답·음성 거짓 판독·공유 행 변경/삭제·평가셋에 없는 새 행·반복 불일치면 exit 1. `scripts/71_timing_review_sheet.py`: 투구별 검토 시트.
     순수 함수 `src/vision/ocr_reports.py`·`review_sheet.py`, 시험 23건. 입력이 같을 때 v1·v2 예측·채점·음성 파일이 커밋본과 바이트 동일.
@@ -322,7 +322,7 @@
     OCR은 `scripts/70 --reference 43c4d45`로 처음 운영 사용: v1 전 필드 93구 44·49·0, v2 92구 75·17·0, 새 10구 이닝 숫자 4만 기권, 음성 거짓 판독 0,
     기존 95구 예측 불변·105구 반복 동일. 검사 **322 passed, 2 deselected**. 남은 A-8: PA 27(2구)·29(7구, 29/6 unavailable 후보).
 
-33. (이 커밋): **A-8 완료** — PA 27·29 9구 검증·병합(Claude Code, 2026-09-25). 기준 `a0388de`. 8 annotated + 29/6 unavailable.
+33. `119f0c3`: **A-8 완료** — PA 27·29 9구 검증·병합(Claude Code, 2026-09-25). 기준 `a0388de`. 8 annotated + 29/6 unavailable.
     반박→수리 후 세션 확인: 27/2·29/2·29/3·29/5·29/7(동작 시작·릴리스·29/5 타자 판단). 세션 정정: 29/6 불가 행의 시각·observed null.
     **113 확인 / 7 불가 / 202 미검토**(4회까지 120구), 리뷰 113(111 전 필드), 충돌 0. A-8 19구: 18 확인·1 불가, 세션 정정 3행.
     짧은 리드 목록에 27/1(1.37 s) 추가. OCR(`scripts/70 --reference a0388de`): v1 101구 44·57·0, v2 100구 75·25·0, 음성 거짓 판독 0;
