@@ -7,7 +7,7 @@
     "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
     "duration_seconds": 9340.748083
   },
-  "annotator": "Codex visual review PA1-2 + Claude Code visual review PA3-5, 2026-09-22 + Claude Code workflow (Opus 5 annotator, Fable 5.1 verification, ffmpeg frame grabs) PA6, 2026-09-23 + Claude Code workflow (Opus 5 annotator, Fable 5.1 verification, ffmpeg frame grabs) PA7, 2026-09-23 + Claude Code workflow (Opus 5 annotator, Fable 5.1 verification, ffmpeg frame grabs) PA8/9, 2026-09-24 + Claude Code workflow (Opus 5 annotator, Fable 5.1 verification, ffmpeg frame grabs) PA10, 2026-09-24 + Codex verification PA11-15, 2026-09-24 + Codex PA16-19 verification, 2026-09-24 + Claude Code workflow (Opus 5 annotator, Opus 5.5 verifier lenses, ffmpeg frame grabs) + session frame review PA20-26, 2026-09-25 + Claude Code workflow (Opus 5 annotator, Opus 5.5 verifier lenses, ffmpeg frame grabs) + session frame review PA27-32 (4th inning), 2026-09-25",
+  "annotator": "Codex visual review PA1-2 + Claude Code visual review PA3-5, 2026-09-22 + Claude Code workflow (Opus 5 annotator, Fable 5.1 verification, ffmpeg frame grabs) PA6, 2026-09-23 + Claude Code workflow (Opus 5 annotator, Fable 5.1 verification, ffmpeg frame grabs) PA7, 2026-09-23 + Claude Code workflow (Opus 5 annotator, Fable 5.1 verification, ffmpeg frame grabs) PA8/9, 2026-09-24 + Claude Code workflow (Opus 5 annotator, Fable 5.1 verification, ffmpeg frame grabs) PA10, 2026-09-24 + Codex verification PA11-15, 2026-09-24 + Codex PA16-19 verification, 2026-09-24 + Claude Code workflow (Opus 5 annotator, Opus 5.5 verifier lenses, ffmpeg frame grabs) + session frame review PA20-26, 2026-09-25 + Claude Code workflow (Opus 5 annotator, Opus 5.5 verifier lenses, ffmpeg frame grabs) + session frame review PA27-32 (4th inning), 2026-09-25 + Claude Code workflow (Opus 5 annotator, Opus 5.5 verifier lenses, ffmpeg frame grabs) + session frame review PA33-40 (5th inning), 2026-09-25",
   "annotations": [
     {
       "game_pk": 747139,
@@ -1328,6 +1328,127 @@
       "release_seconds": 2948.15,
       "uncertainty_seconds": 0.15,
       "note": "SNY full game. Top 4, Schwellenbach vs Nimmo; 3-2 count, bases empty, 2 outs. Re-grabbed and re-viewed (labels p29_rep7a/b/c). At 2945.50 and at the previous grid second 2945.75 the shot is a head-and-shoulders close-up of Schwellenbach, so condition (1) fails. 2946.00 is the first live centre-field frame: the pitcher stands on the rubber with both feet planted and the glove at his chest, Nimmo is upright in the left-handed box facing him with the bat up, and the bug is readable at 3-2 / P:44 / 2 outs / bases empty / up-arrow 4 / NYM 0 ATL 2. Continuity samples 2946.00, 2946.50 and 2946.75 (max gap 0.50 s) are the same unbroken live shot with no step-off, cutaway or white wipe; at 2947.00 the lead knee is up and the foot is off the dirt, so the motion starts there. Release bracket, corrected after enlarged crops of the throwing arm: at 2948.05 and 2948.10 the hand is cocked at the back of the cap with the ball visible against the crown, at 2948.12 the forearm is a blur crossing above the cap, and at 2948.13 (identical frame at 2948.14, so the source runs about 60 fps) the forearm is still a horizontal blur at head height with the elbow bent, not yet extended. 2948.15 (identical at 2948.16) is the first frame with the arm straight and extended forward and up toward the plate, the hand out past the head and empty; 2948.17 and 2948.18 show the arm further out and beginning to descend, 2948.20 and 2948.22 have it whipping down, and 2948.25 is follow-through across the body. Release is therefore 2948.15, bracketed by 2948.13 and 2948.17, which is 0.05 s later than my earlier 2948.10 cocked-arm frame. Nimmo swings and misses for the strikeout and the third out. ffmpeg frame grabs; selected-frame review, not continuous playback. Manual timing, not frame-exact."
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 38,
+      "pitch_number": 1,
+      "play_id": "80033ef6-bbbf-44bc-9272-a15bf6df8d00",
+      "status": "annotated",
+      "decision_seconds": 3733.5,
+      "release_seconds": 3735.92,
+      "uncertainty_seconds": 0.15,
+      "note": "SNY full game. Bottom 5, Megill vs Albies; 0-0 count, bases empty, 0 outs. At 3733.25 the scoreboard bug is still mid-wipe - the scores, three empty diamonds and two empty circles are drawn but the inning arrow carries no digit, the count is truncated to \"0-\" and the pitcher line reads \"MEGILL\" with no pitch count - so condition (4) fails there (3733.00 is almost entirely a white wipe block). At 3733.50 the live centre-field camera shows Megill standing on the rubber, hands together, with his pivot foot planted against the rubber and the trailing foot down beside it, and Albies in the batter's box facing him with the bat up; the bug is fully drawn: NYM 0 / ATL 2, three empty diamonds, two empty out circles, down-arrow 5, 0-0, MEGILL P:7 with the last pitch-count digit still rendering (P:75 reads cleanly from 3733.75 on). Continuity sampled at 3733.50, 3733.75, 3734.00, 3734.25 and 3734.50, maximum gap 0.25 s, same live shot throughout with no step-off, time-out, cutaway or further wipe; both feet are still down at 3734.50 and the leg lift is clearly up at 3734.75. Release bracket (3x crops of the hand against the MLB.tv sign): 3735.75 shows the glove arm out front with the throwing hand still low behind, 3735.80 and 3735.83 show the ball plainly in the hand with the arm cocked high beside the head, 3735.85 and 3735.87 show the arm coming over the top with the ball not yet free, 3735.90 and 3735.91 show the forearm extended forward with only a bright motion blur at the fingertips, 3735.92 shows a distinct white ball at the fingertips just separating, 3735.93 has it a touch clear of the fingers and 3735.94-3735.95 show it round and free in flight in front of the MLB.tv batter silhouette - so release is taken at 3735.92, bracketed by 3735.91 and 3735.94. This corrects my earlier 3735.80, where the arm is still cocked with the ball in hand. ffmpeg frame grabs; selected-frame review, not continuous playback. Manual timing, not frame-exact."
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 38,
+      "pitch_number": 2,
+      "play_id": "e16f7800-a708-41f1-8a13-58cd06a82684",
+      "status": "annotated",
+      "decision_seconds": 3747,
+      "release_seconds": 3749.25,
+      "uncertainty_seconds": 0.15,
+      "note": "SNY full game. Bottom 5, Megill vs Albies; 1-0 count, bases empty, 0 outs. I re-grabbed the boundary at 0.05 s spacing and looked at 8x-14x crops of the feet. At 3746.50 Megill's free (screen-left) foot is plainly in the air, sole showing above the rubber, and at 3746.65/3746.70 it is still coming down and sliding in from the left. At the previously claimed decision frame 3746.75 condition (2) still fails: the free shoe has arrived behind the planted pivot shoe but is not yet at rest. Measuring the rightmost bright shoe pixel of the free shoe in the band y=550-570, its toe sits at x=477/479 at 3746.65/3746.70, x=486 at 3746.75, x=488 at 3746.80, and then exactly 488 at 3746.85, 3746.90 and 3746.95; the top edge of that shoe at column x=484 is y=563 at 3746.75 and y=566 from 3746.80 on, and at x=488 the shoe does not reach that column at all at 3746.75 while it is at y=569 from 3746.80 onward and stays there. So at 3746.75 the free foot is still about 2 px short and 3 px high of the settled position it reaches at 3746.80 and then holds frozen, and the frame also shows the ghosted, translucent look of motion blur; a control patch on the dirt/rubber and the planted pivot shoe both drift only about 1 px per frame downward from the camera's slow zoom, so the free-foot displacement is real motion, not zoom. I therefore agree with the verifier and move the decision to the next grid frame. At 3747.00 all four conditions hold: the live centre-field camera shows Megill set on the rubber with both feet planted and still, Albies in the box facing him with the bat up, and the bug readable as NYM 0 / ATL 2, three empty diamonds, two empty out circles, down-arrow 5, 1-0, MEGILL :08 P:76 (no batter line at this frame; '2. ALBIES 1-1' first appears in my samples at 3748.10). Continuity sampled at 3747.00, 3747.25, 3747.50, 3747.75, 3747.90 and 3748.00, maximum gap 0.25 s, with no step-off, pickoff, time-out, batter leaving the box, cutaway or white bug wipe. Motion start: at 3747.75 and 3747.90 he is still with both legs straight and together and the glove only rising to the chest, and at 3748.00 the free leg has swung forward with the knee bent and the leg blurred off the ground, full leg lift by 3748.10, so motion_start = 3748.00. Release bracket: at 3749.10 the throwing arm is cocked back behind him, at 3749.20 the hand is up by the head with the arm still bent and no ball visible, at 3749.25 the arm is extended forward and high toward the plate with the blurred hand at the end of the extension, and at 3749.30 the ball is clearly separated in flight in front of the MLB.tv batter silhouette (further toward the plate at 3749.40), so release = 3749.25. ffmpeg frame grabs; selected-frame review, not continuous playback. Manual timing, not frame-exact."
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 38,
+      "pitch_number": 3,
+      "play_id": "e208202f-3e40-49d6-8161-dbf8ddbd0538",
+      "status": "annotated",
+      "decision_seconds": 3765.75,
+      "release_seconds": 3768.15,
+      "uncertainty_seconds": 0.15,
+      "note": "SNY full game. Bottom 5, Megill vs Albies; 2-0 count, bases empty, 0 outs. At 3765.50 the feed is on a tight close-up of Megill's face against the infield dirt (the cutaway runs from about 3755 to 3765.50), so condition (1) fails; the live centre-field shot returns between 3765.50 and 3765.75. At 3765.75 the centre-field camera shows Megill on the rubber with both feet planted (checked in a 3x crop) and hands together at the chest, Albies in the box in his stance facing the pitcher, and the bug readable: NYM 0 / ATL 2, bases empty, down-arrow 5, two empty out circles, 2-0, MEGILL :03 P:77, 2.ALBIES 1-1. Continuity sampled at 3765.75, 3766.00, 3766.25, 3766.50 and 3766.75, maximum gap 0.25 s, with no step-off, time-out, cutaway or bug wipe; the knee first starts to lift at 3767.00 (3766.75 still shows both feet down). Release bracket: 3767.90 shows the stride with the glove out front and the throwing arm back and low, 3768.00 has the arm coming up with the hand behind the head, 3768.10 shows the arm over the top and extended with the hand blurred and no ball yet separated, and at 3768.20 the ball is clearly in flight well in front of the hand (confirmed in a 3x crop), so the release falls between 3768.10 and 3768.20 and is reported as 3768.15; 3768.30 shows the follow-through with the ball nearer the plate. ffmpeg frame grabs; selected-frame review, not continuous playback. Manual timing, not frame-exact."
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 38,
+      "pitch_number": 4,
+      "play_id": "ab659245-f891-4916-870d-4d05c57cc016",
+      "status": "annotated",
+      "decision_seconds": 3778.5,
+      "release_seconds": 3785.6,
+      "uncertainty_seconds": 0.15,
+      "note": "SNY full game. Bottom 5, Megill vs Albies; 3-0 count, bases empty, 0 outs. At 3778.25 the feed is still on the close-up of Albies beside the umpire (the cutaway runs from about 3771 to 3778.25), so condition (1) fails; the live centre-field shot returns between 3778.25 and 3778.50. At 3778.50 the centre-field camera shows Megill standing still on the rubber with both feet planted (checked in a 3x crop of the feet; he is looking down, which the rule allows), Albies in the box facing him with the bat up, and the bug readable: NYM 0 / ATL 2, bases empty, down-arrow 5, two empty out circles, 3-0, MEGILL :09 P:78, 2.ALBIES 1-1. Continuity sampled at 3778.50, 3779.00, 3779.25, 3779.50, 3779.75, 3780.00, 3780.50, 3781.00, 3781.50, 3782.00, 3783.00, 3784.00 and 3784.25, maximum gap 1.0 s, with no step-off, pickoff, time-out, batter stepping out, cutaway or bug wipe anywhere in the stretch; the leg lift first appears at 3784.50 (3784.25 still shows him set with both feet down). Release bracket: 3785.00 shows the front leg starting down, 3785.50 shows the arm coming over the top with the ball still in the hand above the cap (3x crop), 3785.60 shows the arm extended forward toward the plate with the hand open and the ball separated just in front of it (3x crop), and by 3786.00 the ball is at the plate and the pitcher is in the follow-through. ffmpeg frame grabs; selected-frame review, not continuous playback. Manual timing, not frame-exact."
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 39,
+      "pitch_number": 1,
+      "play_id": "ab8d295d-ddb5-4bf6-ac79-c84ee11b8f69",
+      "status": "annotated",
+      "decision_seconds": 3814.75,
+      "release_seconds": 3827.15,
+      "uncertainty_seconds": 0.15,
+      "note": "SNY full game. Bottom 5, Megill vs Ozuna; 0-0 count, runner on first, 0 outs. At previous_grid_seconds 3814.50 the broadcast is still on a tight head-and-shoulders close-up of Megill (and 3813.00/3813.50/3814.00 the same, 3812.00 also close-up, 3809.00/3810.00 a Mets dugout cutaway), so condition (1) fails there. The centre-field camera returns at 3814.75: Megill is on the rubber with both feet flat (verified in a 3x enlarged crop of the feet against 3816.00 and 3817.00 - identical foot position with the rubber edge just right of the back foot, no raised heel), Ozuna is in the box facing the pitcher with the bat up, and the bug is fully readable, so decision_seconds = 3814.75. Continuity sampled at 3814.75, 3815, 3816, 3817, 3818, 3819, 3820, 3821, 3822, 3823, 3824, 3825, 3826 (max gap 1.0 s) with no step-off, pickoff, time-out, batter leaving the box, cutaway or white bug wipe; the leg lift first appears at 3826.25 (he is still in the set with both feet planted at 3826.00), so motion_start_seconds = 3826.25. Release is bracketed by 3827.10, where the throwing hand is still up behind/above the head while the glove arm already points at the plate (the trap from the previous unit), and 3827.25, where the ball is clearly separated in flight over the MLB.tv sign; 3827.15 is the first frame with the arm extended forward and the ball at the fingertips, so release_seconds = 3827.15. ffmpeg frame grabs; selected-frame review, not continuous playback. Manual timing, not frame-exact."
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 39,
+      "pitch_number": 2,
+      "play_id": "236fbd73-f202-46c2-a448-f8f2044c7e98",
+      "status": "unavailable",
+      "decision_seconds": null,
+      "release_seconds": null,
+      "uncertainty_seconds": null,
+      "note": "SNY full game. Bottom 5, Megill vs Ozuna; 0-1 count, runner on first, 0 outs. No valid v2 decision frame exists for this pitch. After pitch 1 the centre-field shot ends with Megill walking off the rubber (3830.00, condition 2 already failing), then 3832.00-3838.00 is a tight Ozuna close-up with the 'DH MARCELL OZUNA 0 FOR 2' stat graphic (condition 1 fails), and from 3839.00 through 3848.00 (checked at 3839, 3840, 3840.5, 3841, 3842, 3844, 3846, 3847, 3847.25, 3847.5, 3847.75, 3848) the broadcast is on the high third-base-side camera that looks toward first base: it is live and shows Megill on the rubber and the runner leading off first, but home plate is out of frame and the batter is not visible anywhere in it, so condition (1) ('clearly shows the pitcher on the rubber AND the batter') fails throughout. Megill is still in the set at 3847.50 and the leg lift is up at 3847.75, so motion_start_seconds = 3847.75, and the cut back to the centre-field camera only happens between 3848.00 and 3848.10, i.e. after the motion start - hence status unavailable, decision_seconds null. Identity was read on that angle at 3847.00. Release is bracketed by 3848.25 (arm sweeping forward, hand not yet at full extension, no separated ball) and 3848.35 (ball clearly separated in flight at the MLB.tv sign, arm in follow-through); 3848.30 shows the arm extended forward with the ball at the fingertips, so release_seconds = 3848.30. ffmpeg frame grabs; selected-frame review, not continuous playback. Manual timing, not frame-exact. Session correction 2026-09-25: the workflow row kept a release time (3848.3) and observed values although the status is unavailable; per the convention (and the timing validator) an unavailable row has null times and no decision-frame reading, so they are set to null. The delivery was seen (release about 3848.3, note only)."
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 39,
+      "pitch_number": 3,
+      "play_id": "651024e3-4fc2-4a15-8412-0e3b6fc979c4",
+      "status": "annotated",
+      "decision_seconds": 3867,
+      "release_seconds": 3868.35,
+      "uncertainty_seconds": 0.15,
+      "note": "SNY full game. Bottom 5, Megill vs Ozuna; 1-1 count, runner on first, 0 outs. At previous_grid_seconds 3866.75 the broadcast is a waist-up close-up of Megill with the 'CLINCH SCENARIOS' graphic over it (the same shot at 3866.50, 3866.25, 3866.00, 3864.00, 3862.00 and 3860.00), so condition (1) fails. The centre-field camera cuts in between 3866.75 and 3867.00: at 3867.00 Megill is on the rubber in the come-set with both feet planted and still, Ozuna is in the box facing him with the bat up, and the bug reads NYM 0 / ATL 2, runner on 1B, 0 outs, down-5, 1-1, MEGILL :04 P:81, 3.OZUNA 0-2, so decision_seconds = 3867.00. The window is short: continuity sampled at 3867.00 and 3867.25 (max gap 0.25 s, both feet still planted, no break), and the front leg is already lifting at 3867.50, so motion_start_seconds = 3867.50. Release is bracketed by 3868.30 (throwing arm still coming over, hand behind and above the head) and 3868.40 (deep follow-through with the ball gone); 3868.35 is the first frame with the arm fully extended toward the plate and the ball at the fingertips while Ozuna starts his swing, so release_seconds = 3868.35. ffmpeg frame grabs; selected-frame review, not continuous playback. Manual timing, not frame-exact."
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 39,
+      "pitch_number": 4,
+      "play_id": "c63bc8a6-467c-4671-88dd-65f5afb185c9",
+      "status": "unavailable",
+      "decision_seconds": null,
+      "release_seconds": null,
+      "uncertainty_seconds": null,
+      "note": "SNY full game. Bottom 5, Megill vs Ozuna; 1-2 count, runner on first, 0 outs. No valid v2 decision frame exists for this pitch either. 3878.00 and 3881.00 are field-level cutaways of the runner and the first baseman, and from 3884.00 through 3889.50 (checked at 3884, 3886, 3887, 3888, 3889, 3889.25, 3889.5) the broadcast is again on the high third-base-side camera looking toward first base, which shows Megill on the rubber and the runner but never the batter, so condition (1) fails throughout. Megill is still in the set at 3888.00 and the front foot is already off the ground at 3889.00, so motion_start_seconds = 3889.00 (bracketed only at 1 s here, since the row is unavailable anyway), and the cut back to the centre-field camera happens between 3889.50 and 3889.75, after the motion start. Identity was read on that angle at 3889.00. Release is bracketed by 3889.70 (arm coming over, hand not yet extended, no separated ball) and 3890.00 (ball well in flight near the plate, arm in follow-through); 3889.75 is the frame with the arm fully extended forward and the ball at the fingertips, so release_seconds = 3889.75. ffmpeg frame grabs; selected-frame review, not continuous playback. Manual timing, not frame-exact. Session correction 2026-09-25: the workflow row kept a release time (3889.75) and observed values although the status is unavailable; per the convention (and the timing validator) an unavailable row has null times and no decision-frame reading, so they are set to null. The delivery was seen (release about 3889.75, note only)."
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 39,
+      "pitch_number": 5,
+      "play_id": "356fef6e-b53b-4702-a6b9-db2b53d3ee11",
+      "status": "annotated",
+      "decision_seconds": 3905.25,
+      "release_seconds": 3910.55,
+      "uncertainty_seconds": 0.15,
+      "note": "SNY full game. Bottom 5, Megill vs Ozuna; 2-2 count, runner on first, 0 outs. At previous_grid_seconds 3905.00 the broadcast is a bullpen cutaway of Huascar Brazoban stretching against the pink T-Mobile wall (the same cutaway at 3904.00, 3902.00, 3900.00, 3898.00 and 3896.00, with a 'BULLPEN HUASCAR BRAZOBAN - RHP' lower third), so condition (1) fails; before that, 3892.00 and 3894.00 are the centre-field post-pitch shot with Megill off the rubber. The centre-field camera returns between 3905.00 and 3905.25: at 3905.25 Megill stands on the rubber with both feet planted, taking the sign, Ozuna is in the box facing him with the bat up, and the bug reads NYM 0 / ATL 2, runner on 1B, 0 outs, down-5, 2-2, MEGILL :07 P:83, so decision_seconds = 3905.25. Continuity sampled at 3905.25, 3905.5, 3905.75, 3906, 3907, 3908, 3909, 3909.25 and 3909.5 (max gap 1.0 s) with no step-off, time-out, cutaway or white bug wipe; the leg lift first appears at 3909.75 (still set at 3909.50), so motion_start_seconds = 3909.75. Release is bracketed by 3910.45 (throwing arm still back and low behind the hip, no ball visible ahead of the hand) and 3910.60 (follow-through with the ball separated); at 3910.55 the arm is extended forward and the ball has just cleared the fingertips, so release_seconds = 3910.55 - release may in truth be a frame earlier (~3910.50), which is inside the stated uncertainty. ffmpeg frame grabs; selected-frame review, not continuous playback. Manual timing, not frame-exact."
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 40,
+      "pitch_number": 1,
+      "play_id": "5609f287-87df-472a-94e8-01957068f7a3",
+      "status": "annotated",
+      "decision_seconds": 3939.75,
+      "release_seconds": 3945.4,
+      "uncertainty_seconds": 0.15,
+      "note": "SNY full game. Bottom 5, Megill vs Olson; 0-0 count, bases empty, 2 outs. At the previous grid second 3939.50 the shot is still the tight head-and-shoulders close-up of Olson behind the plate with the \"1B MATT OLSON / 1 FOR 2 SINGLE\" stat card and no pitcher in frame, so condition (1) fails there (3939.25 is the same close-up); the cut to the centre-field camera has landed by 3939.75, where an enlarged crop of the mound shows Megill standing at the rubber with both shoes flat on the dirt and still, an enlarged crop of the box shows Olson upright in the left-handed box facing the mound with the bat up, and the bug is fully readable as NYM 0 / ATL 2, three empty diamonds, two gold out circles, down-arrow 5, 0-0, MEGILL :10 P:84, so 3939.75 is the earliest valid grid second. Continuity samples 3939.75, 3940.00, 3940.50, 3941.25, 3942.00, 3942.75, 3943.50, 3943.75, 3944.00 and 3944.25 (largest gap 0.75 s) are all the same live centre-field shot with Megill on the rubber taking the sign and coming set and Olson in the box - no step-off, pickoff, time-out, cutaway or white bug wipe anywhere in the stretch - and the second banner line \"4. OLSON 1-2\" appears from 3941.25 onward (absent at 3939.75, 3940.00 and 3940.50). Correcting my earlier row: in a 3x enlargement of 3943.75, 3944.00, 3944.25 and 3944.50 Megill is side-on with both feet planted at 3943.75 and 3944.00, while at 3944.25 his front (left) foot is already off the dirt with the knee bent and rising, and it is high at 3944.50, so the motion start is 3944.25, not 3944.50 (I had skipped 3944.25). Release bracket at 0.05 s: 3945.30 shows the throwing arm still down/behind with the torso coiled, 3945.35 shows the hand cocked beside the cap with the ball still in it, 3945.40 is the first frame with the throwing arm extended up and forward toward the plate and the hand at the end of it open, 3945.45 has the arm further forward and foreshortened, and 3945.50 and 3945.55 are follow-through across the body, so release is 3945.40 (the ball itself is only a white smudge at this resolution). ffmpeg frame grabs; selected-frame review, not continuous playback. Manual timing, not frame-exact."
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 40,
+      "pitch_number": 2,
+      "play_id": "9f4ef026-48d0-4a6e-ac82-266913664e5c",
+      "status": "annotated",
+      "decision_seconds": 3955.75,
+      "release_seconds": 3967,
+      "uncertainty_seconds": 0.15,
+      "note": "SNY full game. Bottom 5, Megill vs Olson; 0-1 count, bases empty, 2 outs. Re-grabbing the frames refuted my earlier claim that condition (1) failed at 3959.75: from about 3954 through 3959.75 the broadcast is one continuous live high-home wide angle slowly zooming in, and in 4-5x enlarged crops it clearly shows Megill standing still at the rubber with both feet planted (rosin bag beside his left foot) and Olson upright in the left-handed box with the catcher crouched and the umpire set, so that angle satisfies (1) and is not a scenic cutaway; the 3959.75 to 3960.00 transition is only a cut between two valid live angles. Searching backwards on that same wide angle, at the previous grid second 3955.50 condition (3) fails - a 16x crop shows Olson leaning forward with both hands raised in front of his face (adjusting his gloves), head tipped down, not upright facing the pitcher - and 3955.25 and 3955.00 are worse, with him bent over at the waist across the plate. At 3955.75 he is upright in the box, head up, bat coming up, with Megill standing still at the rubber (head down, both feet planted, allowed) and the bug fully readable as NYM 0 / ATL 2, bases empty, down-5, 2 outs, 0-1, MEGILL P:85, 4. OLSON 1-2, so 3955.75 is the earliest valid grid second. Continuity samples 3955.75, 3956.25, 3956.75, 3957.25, 3957.50, 3958.00, 3959.00 and 3959.75 (wide angle) then 3960.00, 3961.00, 3962.00, 3963.00, 3964.00, 3965.00, 3965.50, 3965.75 and 3966.00 (centre-field), largest gap 1.00 s, all show the pitcher at the rubber and Olson in the box with no step-off, pickoff, time-out, batter leaving the box, cutaway or white bug wipe; 3965.00 through 3965.75 are the come-set with both feet still planted and the leg lift is first seen at 3966.00, the motion start. Release bracket: 3966.80 and 3966.85 show the stride with the hand breaking low behind the hip, 3966.90 and 3966.95 show the throwing hand cocked above and behind the cap with the ball still in it, 3967.00 shows the arm come over the top and extended forward toward the plate at head height, 3967.05 shows the arm extended further with the hand open and empty and 3967.10 is already the follow-through with the arm down across the body, so release is 3967.00. ffmpeg frame grabs; selected-frame review, not continuous playback. Manual timing, not frame-exact."
     }
   ]
 }

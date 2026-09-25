@@ -336,8 +336,13 @@
     코드: `sny_scoreboard.read_scoreboard`에 옵션 인자(없으면 기존 경로), `66 templates --reader-options`, `ocr_reports.VERSIONS`에 v3, 시험 추가. 검사 **329 passed, 2 deselected**.
     수정 권한 반납. 다음 한 단위: **A-9 5회 33구**(Opus 5), 그 새 프레임으로 **F-3d v4**(필드 묶음별 템플릿) 사전 등록·첫 blind 평가.
 
+35. (이 커밋): A-9 중 **5회말 PA 38~40 11구** 검증·병합(Claude Code, 2026-09-25). 선점 `0b0562b`. 주석 워크플로 v4(Opus 5) → 두 렌즈 → 세션이 시트·압축 몽타주 확인.
+    9 annotated + 39/2·39/4 unavailable(1루 쪽 카메라로 타자 미표시 상태에서 투구 시작; 불가 행의 릴리스·observed는 세션이 null로 정정). 수리 후 재검증: 38/1·38/2·40/1·40/2.
+    **122 확인 / 9 불가 / 191 미검토**. OCR `scripts/70`: 새 9구 v1·v2·v3 오답 0, 이닝 '5' 기권; 38/4 볼 '3'은 v3만 정답(첫 blind 성공 1건).
+    검사 **330 passed, 2 deselected**. 5회초 PA 33~37(22구)은 워크플로 진행 중.
+
 이 문서와 함께 추가되는 후속 커밋의 해시는 `git log -6 --oneline`으로 확인한다.
-최신 Windows CPU 검사: **329 passed, 2 deselected**(체크포인트 34, `check_project.py --cpu-only`, Ruff 69경로 통과). 아래 브라우저·서비스 검증은 이전 체크포인트 기록이다.
+최신 Windows CPU 검사: **330 passed, 2 deselected**(체크포인트 35, `check_project.py --cpu-only`, Ruff 69경로 통과). 아래 브라우저·서비스 검증은 이전 체크포인트 기록이다.
 JavaScript 구문 검사 및 Chrome 수동 입력·실제 추론·9회 이후 추천 보류 확인.
 GitHub CI 결과는 해당 커밋의 validation 워크플로에서 따로 확인한다.
 주석 모듈을 먼저 import한 새 프로세스에서도 Torch→Pandas 문자열 생성이 성공하는지
