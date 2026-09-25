@@ -50,6 +50,26 @@ VERSIONS = {
         "negatives": "game_747139_scoreboard_negatives_score_v2.json",
         "provenance": "game_747139_scoreboard_ocr_v2_provenance.json",
     },
+    # v3 (F-3c): templates PA 1 2 9 18 29 plus opt-in reader_options inside the template file.
+    "v3": {
+        "templates": "sny_digit_templates_v3.json",
+        "predictions": "game_747139_scoreboard_ocr_v3_predictions.json",
+        "score": "game_747139_scoreboard_ocr_v3.json",
+        "negatives": "game_747139_scoreboard_negatives_score_v3.json",
+        "provenance": "game_747139_scoreboard_ocr_v3_provenance.json",
+    },
+}
+# What the ``score --exclude-pas`` set of a version is, when it is NOT purely held-out. A version
+# listed here has its provenance ``scope`` say "exclude-pas score" instead of "held-out score"
+# and gets the note appended to a fresh document's ``limitations``; versions without an entry
+# (v1, v2) keep their documents bit for bit.
+SCORE_SET_NOTES = {
+    "v3": (
+        "The v3 score file (score --exclude-pas 1 2 9 18 29) covers 94 fully evaluable pitches "
+        "= 75 held-out headline pitches + 19 seen/diagnosed pitches whose v2 failure was "
+        "pixel-diagnosed before the v3 rule was fixed. It is a mixed set: only the 75 are "
+        "held-out evidence, and the split is in game_747139_scoreboard_ocr_v3_comparison.json."
+    ),
 }
 
 # 재계산되는 최상위 키의 표준 순서. 기존 파일의 다른 키는 제자리에 그대로 옮긴다.
@@ -282,23 +302,30 @@ def runtime_info():
 
 
 def reproduction_commands(
-    version, template_pas, out_dir=RESULTS_DIR, no_grab=True, repeat_path=None
+    version, template_pas, out_dir=RESULTS_DIR, no_grab=True, repeat_path=None, reader_options=None
 ):
     """The documented ``scripts/66`` commands for one version.
 
     The first command rebuilds the templates from their source plate appearances (``scripts/70``
     does not run it: the committed templates are an input); the others are what ``scripts/70``
-    runs: predict, held-out score, negatives and the repeat predict.
+    runs: predict, ``score --exclude-pas``, negatives and the repeat predict. A template file
+    that carries a non-empty ``reader_options`` object (v3) gets it echoed as
+    ``--reader-options '<json>'``.
     """
     files = VERSIONS[version]
     templates = f"{RESULTS_DIR}/{files['templates']}"
     grab = " --no-grab" if no_grab else ""
     out = Path(out_dir).as_posix()
     pas = " ".join(str(pa) for pa in template_pas)
+    options = (
+        f" --reader-options '{json.dumps(reader_options, separators=(',', ':'))}'"
+        if reader_options
+        else ""
+    )
     repeat_path = repeat_path or f"outputs/verification/ocr_{version}_repeat.json"
     return [
-        f"python scripts/66_sny_scoreboard_ocr.py templates --template-pas {pas} --no-grab "
-        f"--output {templates}",
+        f"python scripts/66_sny_scoreboard_ocr.py templates --template-pas {pas} --no-grab"
+        f"{options} --output {templates}",
         f"python scripts/66_sny_scoreboard_ocr.py predict --templates {templates}{grab} "
         f"--output {out}/{files['predictions']}",
         f"python scripts/66_sny_scoreboard_ocr.py score --predictions {out}/{files['predictions']} "
@@ -416,6 +443,10 @@ def build_provenance(
     """
     files = VERSIONS[version]
     provenance_path = f"{RESULTS_DIR}/{files['provenance']}"
+    score_note = SCORE_SET_NOTES.get(version)
+    score_phrase = "held-out score"
+    if score_note:
+        score_phrase = "exclude-pas score (a mixed set, see limitations)"
     computed = {
         "schema": PROVENANCE_SCHEMA,
         "game_pk": evalset["game_pk"],
@@ -423,7 +454,7 @@ def build_provenance(
         "recorded_by": recorded_by,
         "scope": (
             f"Refresh {label!r} of OCR {version} (templates from PAs {template_pas}) by "
-            "scripts/70_refresh_ocr_reports.py: predictions, held-out score, negatives and a "
+            f"scripts/70_refresh_ocr_reports.py: predictions, {score_phrase}, negatives and a "
             "repeat check regenerated after the eval set changed. Code and template equality "
             "with the reference commit is recorded in code_and_templates."
         ),
@@ -451,7 +482,7 @@ def build_provenance(
         "reproduction_commands": commands,
     }
     if not existing or "limitations" not in existing:
-        computed["limitations"] = list(DEFAULT_LIMITATIONS)
+        computed["limitations"] = list(DEFAULT_LIMITATIONS) + ([score_note] if score_note else [])
     carried = _carried_from_previous(existing)
     if carried is not None:
         computed["carried_from_previous"] = carried

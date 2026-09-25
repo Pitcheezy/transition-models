@@ -1,0 +1,3773 @@
+{
+  "schema": "mlb_scoreboard_ocr_version_comparison_v1",
+  "game_pk": 747139,
+  "preregistration": {
+    "template_pas": [
+      1,
+      2,
+      9,
+      18,
+      29
+    ],
+    "v2_template_pas": [
+      1,
+      2,
+      9,
+      18
+    ],
+    "added_pa": 29,
+    "reader_options": {
+      "top_line_gate": {
+        "aggregate": "max_row",
+        "threshold": 0.6
+      },
+      "border_sliver_max_width": 2
+    },
+    "decided_before_any_v3_prediction": true,
+    "registered": "OCR v3 pre-registration (judge decision, 2026-09-25), fixed before any v3 template file, glyph distance, prediction, score or negatives run existed; only v2 gate values, segmentation geometry, glyph box sizes and labels were consulted.",
+    "template_rule": "v3 = v2 source plate appearances 1, 2, 9, 18 unchanged plus exactly one added PA: among eval-set plate appearances whose every entry has readability 'readable', all ten field_status 'confirmed', passes the v2 presence gate on the cached frame (navy >= 0.30, top_line mean >= 0.60, panel white <= 0.20) and segments each of the five DIGIT_FIELDS into exactly the label's digit count, take those with labels.inning == 4; prefer the one that also contains a confirmed balls == 3 entry, then the one whose inning glyphs cover the most bounding-box variants seen on the 18 fourth-inning frames (17x10, 16x10, 17x9), then the fewest entries. Result: PA 29 (29/1-5, 29/7). Fallback had no balls-3 PA existed: PA 32. PA 5 is never a source. Templates are cut exactly as in v1/v2 (default segment_glyphs, no options applied at template time); pooled digit->glyph layout, TEMPLATE_SCHEMA sny_digit_templates_v0 and glyph_shape [16,12] kept.",
+    "reader_options_rule": "Stored ONLY in the v3 template document under reader_options and applied ONLY at read time (predict, negatives) by read_scoreboard when the loaded DigitTemplates carries them; a template file without the key (v1, v2) takes the previous code path bit for bit. top_line_gate max_row: bug_present passes the top-line test when the white fraction of ANY single row of the top_line window (rows 32, 33) is >= 0.60 instead of the mean over both rows (targets 11/2 rows 0.204/0.967 and 19/2 rows 0.183/0.967; measured before registration: no other eval or negatives frame has mean < 0.60 with a row >= 0.60). border_sliver_max_width 2: in segment_glyphs a column group of width <= 2 whose first column is 0 or whose last column is the window's last column is discarded before the MIN_GLYPH_WIDTH/HEIGHT tests (targets the 2x26 right-border group at inning-window columns 13-14 at 4/1 and 11/1). No other reader change: probe-edge trimming and per-field-group matching are explicitly NOT part of v3.",
+    "thresholds_unchanged": {
+      "MAX_DISTANCE": 0.12,
+      "MIN_MARGIN": 0.15,
+      "presence_gate": {
+        "PANEL_NAVY": 0.3,
+        "TOP_LINE_WHITE": 0.6,
+        "PANEL_WHITE_MAX": 0.2
+      },
+      "MIN_GLYPH_WIDTH": 2,
+      "MIN_GLYPH_HEIGHT": 8,
+      "GLYPH_SHAPE": [
+        16,
+        12
+      ],
+      "WINDOWS_FILLED_EMPTY": "unchanged"
+    },
+    "code_changed": {
+      "opt_in_reader_options_only": true,
+      "detail": "src/vision/sny_scoreboard.py gained validate_reader_options, top_line_passes, an options argument on bug_present/segment_glyphs/read_number, and DigitTemplates.reader_options (read from / written to the template document only when present); scripts/66 templates gained --reader-options; src/vision/ocr_reports.VERSIONS gained the v3 row and reproduction_commands echoes --reader-options; scripts/70 passes the template file's reader_options through. Defaults reproduce the previous behaviour: scripts/70 for v1 and v2 was run into a scratch --out-dir before and after the code change and the predictions, score and negatives files are byte-identical to the committed ones (outputs/verification/f3c/v12_before, outputs/verification/f3c/v12)."
+    },
+    "evaluation_order": "build v3 templates -> predict all 113 -> score --exclude-pas 1 2 9 18 29 -> negatives with v3 -> repeat predict (all by scripts/70 --version v3); v2 predictions re-scored with the same exclusion list for the comparison. Three disjoint blocks: (a) held-out headline = 75 v2-correct pitches (no-regression check, pass = 75 correct / 0 wrong / 0 abstained; any new abstention or wrong field is a v3 regression, never tuned away); (b) seen/diagnosed = 19 fully evaluable pitches with a pixel-diagnosed v2 failure plus the two partial line-score entries, 'first computed after the rule was fixed'; (c) in-sample = the 17 template-source pitches. Negatives: 0 false reads required. No template, option or threshold may be edited after any v3 number is seen; a failed check is reported as a failed v3.",
+    "blindness": "Not blind: every v3 number on the current eval set is 'rule fixed, then first-computed'. Blind evidence for the new '4', count-font '3', score-font '2', gate and sliver behaviour can only come from frames that did not exist at registration (the A-9 inning-5+ decision frames), scored later with the same exclusion list and never merged into the 75."
+  },
+  "verdict": {
+    "heldout_headline_passed": false,
+    "heldout_headline_result": "73 correct / 0 wrong / 2 abstained of 75 (v2: 75 / 0 / 0 on the same 75)",
+    "exclude_pas_set_94_is_mixed": "91 / 0 / 3 of 94 (v2: 75 / 0 / 19) is the 75 held-out + 19 seen/diagnosed set of score --exclude-pas; its gain over v2 is entirely from seen cases and it is never the held-out result",
+    "summary": "v3 FAILED its pre-registered no-regression check on the 75-pitch held-out headline: 73 correct / 0 wrong / 2 abstained (PA 20/5, 20/7 balls '2' -> None: margin against the new count-font '3' 0.1325 < 0.15). Everything else behaved as registered: 0 wrong reads anywhere, negatives 0 false reads and per-frame identical to v2, all 19 seen/diagnosed pitches first-computed as expected (18 recovered, 13/3 unchanged as not targeted), 17/17 in-sample. Per-field template grouping (rejected for v3) becomes the pre-registered candidate for v4; nothing was edited after these numbers were seen."
+  },
+  "templates": {
+    "v2": {
+      "file": "docs/results/mlb_p0/sny_digit_templates_v2.json",
+      "digit_counts": {
+        "0": 35,
+        "1": 12,
+        "2": 7,
+        "3": 1
+      },
+      "reader_options": null
+    },
+    "v3": {
+      "file": "docs/results/mlb_p0/sny_digit_templates_v3.json",
+      "digit_counts": {
+        "0": 45,
+        "1": 14,
+        "2": 18,
+        "3": 2,
+        "4": 6
+      },
+      "fields_used": 85,
+      "fields_skipped": [],
+      "reader_options": {
+        "top_line_gate": {
+          "aggregate": "max_row",
+          "threshold": 0.6
+        },
+        "border_sliver_max_width": 2
+      },
+      "v2_glyphs_are_a_prefix_of_v3": true
+    }
+  },
+  "excluded_pas": [
+    1,
+    2,
+    9,
+    18,
+    29
+  ],
+  "excluded_pas_note": "template-source plate appearances removed by score --exclude-pas 1 2 9 18 29 (17 pitches, scored only in in_sample_17)",
+  "exclude_pas_scored_set_94": {
+    "label": "exclude-pas scored set: the 94 fully evaluable pitches that score --exclude-pas 1 2 9 18 29 leaves = 75 held-out headline pitches + 19 seen/diagnosed pitches (v2 failure pixel-diagnosed before the v3 rule was fixed). A MIXED set, not the held-out headline: the held-out result is heldout_headline_75 alone (73 correct / 0 wrong / 2 abstained), and every v3 gain over v2 on this set comes from the 19 seen pitches. The two partial line-score entries 8/1, 16/1 are outside the all_fields denominator as in v1/v2. These are the numbers of game_747139_scoreboard_ocr_v3.json and of scripts/70's score_all_fields line.",
+    "composition": {
+      "heldout_headline_75": 75,
+      "seen_diagnosed_fully_evaluable": 19
+    },
+    "all_fields_correct_by_block": {
+      "v2": {
+        "heldout_headline_75": 75,
+        "seen_diagnosed": 0,
+        "total": 75
+      },
+      "v3": {
+        "heldout_headline_75": 73,
+        "seen_diagnosed": 18,
+        "total": 91
+      }
+    },
+    "coverage_counts": {
+      "total_pitches": 322,
+      "timing_rows": 120,
+      "timing_annotated": 113,
+      "timing_unavailable": 7,
+      "timing_unreviewed": 202,
+      "scoreboard_reviewed": 96,
+      "evaluable_pitches": 96,
+      "fully_evaluable_pitches": 94,
+      "per_field_evaluable": {
+        "balls": 94,
+        "strikes": 94,
+        "outs": 94,
+        "runner_on_1b": 94,
+        "runner_on_2b": 94,
+        "runner_on_3b": 94,
+        "inning": 96,
+        "inning_topbot": 96,
+        "home_score": 96,
+        "away_score": 96
+      },
+      "excluded": {
+        "occluded": 7,
+        "scoreboard_unreviewed": 17,
+        "no_confirmed_field": 0
+      },
+      "label_conflicts": 0,
+      "complete_plate_appearances": [
+        2,
+        3,
+        4,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        18,
+        19,
+        21,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        30,
+        31,
+        32
+      ]
+    },
+    "identical_for_v2_and_v3": true,
+    "per_field": {
+      "balls": {
+        "v2": {
+          "evaluable": 94,
+          "attempted": 90,
+          "correct": 90,
+          "wrong": 0,
+          "abstained": 4
+        },
+        "v3": {
+          "evaluable": 94,
+          "attempted": 91,
+          "correct": 91,
+          "wrong": 0,
+          "abstained": 3
+        }
+      },
+      "strikes": {
+        "v2": {
+          "evaluable": 94,
+          "attempted": 92,
+          "correct": 92,
+          "wrong": 0,
+          "abstained": 2
+        },
+        "v3": {
+          "evaluable": 94,
+          "attempted": 94,
+          "correct": 94,
+          "wrong": 0,
+          "abstained": 0
+        }
+      },
+      "outs": {
+        "v2": {
+          "evaluable": 94,
+          "attempted": 92,
+          "correct": 92,
+          "wrong": 0,
+          "abstained": 2
+        },
+        "v3": {
+          "evaluable": 94,
+          "attempted": 94,
+          "correct": 94,
+          "wrong": 0,
+          "abstained": 0
+        }
+      },
+      "runner_on_1b": {
+        "v2": {
+          "evaluable": 94,
+          "attempted": 92,
+          "correct": 92,
+          "wrong": 0,
+          "abstained": 2
+        },
+        "v3": {
+          "evaluable": 94,
+          "attempted": 94,
+          "correct": 94,
+          "wrong": 0,
+          "abstained": 0
+        }
+      },
+      "runner_on_2b": {
+        "v2": {
+          "evaluable": 94,
+          "attempted": 92,
+          "correct": 92,
+          "wrong": 0,
+          "abstained": 2
+        },
+        "v3": {
+          "evaluable": 94,
+          "attempted": 94,
+          "correct": 94,
+          "wrong": 0,
+          "abstained": 0
+        }
+      },
+      "runner_on_3b": {
+        "v2": {
+          "evaluable": 94,
+          "attempted": 92,
+          "correct": 92,
+          "wrong": 0,
+          "abstained": 2
+        },
+        "v3": {
+          "evaluable": 94,
+          "attempted": 94,
+          "correct": 94,
+          "wrong": 0,
+          "abstained": 0
+        }
+      },
+      "inning": {
+        "v2": {
+          "evaluable": 96,
+          "attempted": 78,
+          "correct": 78,
+          "wrong": 0,
+          "abstained": 18
+        },
+        "v3": {
+          "evaluable": 96,
+          "attempted": 94,
+          "correct": 94,
+          "wrong": 0,
+          "abstained": 2
+        }
+      },
+      "inning_topbot": {
+        "v2": {
+          "evaluable": 96,
+          "attempted": 92,
+          "correct": 92,
+          "wrong": 0,
+          "abstained": 4
+        },
+        "v3": {
+          "evaluable": 96,
+          "attempted": 94,
+          "correct": 94,
+          "wrong": 0,
+          "abstained": 2
+        }
+      },
+      "home_score": {
+        "v2": {
+          "evaluable": 96,
+          "attempted": 91,
+          "correct": 91,
+          "wrong": 0,
+          "abstained": 5
+        },
+        "v3": {
+          "evaluable": 96,
+          "attempted": 94,
+          "correct": 94,
+          "wrong": 0,
+          "abstained": 2
+        }
+      },
+      "away_score": {
+        "v2": {
+          "evaluable": 96,
+          "attempted": 92,
+          "correct": 92,
+          "wrong": 0,
+          "abstained": 4
+        },
+        "v3": {
+          "evaluable": 96,
+          "attempted": 94,
+          "correct": 94,
+          "wrong": 0,
+          "abstained": 2
+        }
+      }
+    },
+    "per_field_note": "inning v3 94/96 includes the 12 seen inning-4 recoveries; the held-out inning field is 75/75 on both versions (see heldout_headline_75)",
+    "all_fields": {
+      "v2": {
+        "total_pitches": 322,
+        "evaluable": 94,
+        "attempted": 75,
+        "correct": 75,
+        "wrong": 0,
+        "abstained": 19,
+        "coverage": 0.2919254658385093,
+        "attempt_rate": 0.7978723404255319,
+        "correct_rate": 0.7978723404255319,
+        "error_rate": 0.0,
+        "abstain_rate": 0.20212765957446807,
+        "accuracy": 1.0
+      },
+      "v3": {
+        "total_pitches": 322,
+        "evaluable": 94,
+        "attempted": 91,
+        "correct": 91,
+        "wrong": 0,
+        "abstained": 3,
+        "coverage": 0.2919254658385093,
+        "attempt_rate": 0.9680851063829787,
+        "correct_rate": 0.9680851063829787,
+        "error_rate": 0.0,
+        "abstain_rate": 0.031914893617021274,
+        "accuracy": 1.0
+      }
+    },
+    "wrong_reads_v3": [],
+    "remaining_v3_abstentions": [
+      {
+        "key": "PA13/3",
+        "block": "seen",
+        "fields": [
+          "balls"
+        ]
+      },
+      {
+        "key": "PA20/5",
+        "block": "heldout_75",
+        "fields": [
+          "balls"
+        ]
+      },
+      {
+        "key": "PA20/7",
+        "block": "heldout_75",
+        "fields": [
+          "balls"
+        ]
+      }
+    ],
+    "files": {
+      "v3": "docs/results/mlb_p0/game_747139_scoreboard_ocr_v3.json",
+      "v2_rescored_with_the_same_exclusion": "outputs/verification/f3c/ocr_v2_on_v3_exclude_pas.json"
+    }
+  },
+  "v2_committed_score_reference": {
+    "excluded_pas": [
+      1,
+      2,
+      9,
+      18
+    ],
+    "file": "docs/results/mlb_p0/game_747139_scoreboard_ocr_v2.json",
+    "all_fields": {
+      "evaluable": 100,
+      "attempted": 75,
+      "correct": 75,
+      "wrong": 0,
+      "abstained": 25
+    },
+    "note": "v2's committed score on v2's own exclusion list (100 fully evaluable pitches); file untouched by v3"
+  },
+  "heldout_headline_75": {
+    "label": "held-out headline (no-regression check on the 75 v2-correct pitches; all numbers first computed after the rule was fixed)",
+    "definition": "Universe: the 113 eval-set entries (PA 1-32). Removed as template sources: PA 1 (5), 2 (3), 9 (2), 18 (1), 29 (6) = 17 pitches. Reported only in the seen/diagnosed block: the 19 fully evaluable pitches whose v2 failure was pixel-diagnosed before this rule plus the two partial line-score entries 8/1, 16/1. Held-out headline = the remaining 75 pitches (inning 1: 18, inning 2: 26, inning 3: 31; ten confirmed fields each; exactly the 75 pitches v2 read fully correctly).",
+    "pitches": [
+      "PA3/1",
+      "PA3/2",
+      "PA3/3",
+      "PA4/2",
+      "PA5/1",
+      "PA5/2",
+      "PA5/3",
+      "PA5/4",
+      "PA6/1",
+      "PA6/2",
+      "PA6/3",
+      "PA6/4",
+      "PA6/5",
+      "PA6/6",
+      "PA7/1",
+      "PA7/2",
+      "PA7/3",
+      "PA7/4",
+      "PA8/2",
+      "PA8/3",
+      "PA8/4",
+      "PA10/1",
+      "PA10/2",
+      "PA10/3",
+      "PA10/4",
+      "PA10/5",
+      "PA10/6",
+      "PA11/3",
+      "PA11/4",
+      "PA11/5",
+      "PA12/1",
+      "PA12/2",
+      "PA13/1",
+      "PA13/2",
+      "PA14/1",
+      "PA14/2",
+      "PA14/3",
+      "PA14/4",
+      "PA14/5",
+      "PA15/1",
+      "PA15/2",
+      "PA15/3",
+      "PA15/4",
+      "PA15/5",
+      "PA17/2",
+      "PA19/1",
+      "PA19/3",
+      "PA19/4",
+      "PA19/5",
+      "PA20/1",
+      "PA20/2",
+      "PA20/3",
+      "PA20/4",
+      "PA20/5",
+      "PA20/7",
+      "PA21/1",
+      "PA21/2",
+      "PA21/3",
+      "PA21/4",
+      "PA21/5",
+      "PA22/2",
+      "PA23/1",
+      "PA23/2",
+      "PA23/3",
+      "PA23/4",
+      "PA24/1",
+      "PA24/2",
+      "PA24/3",
+      "PA24/4",
+      "PA25/1",
+      "PA26/1",
+      "PA26/2",
+      "PA26/3",
+      "PA26/4",
+      "PA26/5"
+    ],
+    "pass_criterion": "75 correct / 0 wrong / 0 abstained",
+    "result": {
+      "pitches": 75,
+      "v2_all_fields_correct": 75,
+      "v3_all_fields_correct": 73,
+      "v3_wrong_fields": 0,
+      "v3_new_abstained_fields": 2,
+      "v3_pitches_with_new_abstention": 2,
+      "passed": false
+    },
+    "verdict": "FAILED the pre-registered no-regression check: 73 correct / 0 wrong / 2 abstained (PA 20/5 and 20/7 balls). Reported as a v3 regression; no template, option or threshold was edited after seeing it.",
+    "regressions": [
+      {
+        "key": "PA20/5",
+        "frame_seconds": 1969.75,
+        "fields": {
+          "balls": {
+            "label": 2,
+            "v2": 2,
+            "v3": null
+          }
+        },
+        "kind": "new_abstention",
+        "glyph_matching": [
+          {
+            "field": "balls",
+            "glyph_shape": [
+              17,
+              11
+            ],
+            "v2": {
+              "decided": "2",
+              "best_digit": "2",
+              "distance": 0.0816,
+              "runner_up_digit": "3",
+              "runner_up_distance": 0.3201,
+              "margin": 0.2385,
+              "all": {
+                "2": 0.0816,
+                "3": 0.3201,
+                "0": 0.3573,
+                "1": 0.4596
+              }
+            },
+            "v3": {
+              "decided": null,
+              "best_digit": "2",
+              "distance": 0.076,
+              "runner_up_digit": "3",
+              "runner_up_distance": 0.2085,
+              "margin": 0.1325,
+              "all": {
+                "2": 0.076,
+                "3": 0.2085,
+                "0": 0.3573,
+                "1": 0.4596,
+                "4": 0.538
+              }
+            }
+          }
+        ],
+        "cause": "count-font balls '2' (17x11): v3 still matches '2' best (d 0.0760 <= 0.12) but the count-font '3' template cut from PA 29/7 (17x11) is now the runner-up at 0.2085, margin 0.1325 < MIN_MARGIN 0.15 -> abstain; under v2 the runner-up was the inning-font '3' (margin 0.2385). This is the balls=2 / strikes=2 exposure named in the pre-registration."
+      },
+      {
+        "key": "PA20/7",
+        "frame_seconds": 2000.75,
+        "fields": {
+          "balls": {
+            "label": 2,
+            "v2": 2,
+            "v3": null
+          }
+        },
+        "kind": "new_abstention",
+        "glyph_matching": [
+          {
+            "field": "balls",
+            "glyph_shape": [
+              17,
+              11
+            ],
+            "v2": {
+              "decided": "2",
+              "best_digit": "2",
+              "distance": 0.0869,
+              "runner_up_digit": "3",
+              "runner_up_distance": 0.3254,
+              "margin": 0.2385,
+              "all": {
+                "2": 0.0869,
+                "3": 0.3254,
+                "0": 0.3538,
+                "1": 0.4649
+              }
+            },
+            "v3": {
+              "decided": null,
+              "best_digit": "2",
+              "distance": 0.0813,
+              "runner_up_digit": "3",
+              "runner_up_distance": 0.2138,
+              "margin": 0.1325,
+              "all": {
+                "2": 0.0813,
+                "3": 0.2138,
+                "0": 0.3538,
+                "1": 0.4649,
+                "4": 0.5347
+              }
+            }
+          }
+        ],
+        "cause": "count-font balls '2' (17x11): v3 still matches '2' best (d 0.0813 <= 0.12) but the count-font '3' template cut from PA 29/7 (17x11) is now the runner-up at 0.2138, margin 0.1325 < MIN_MARGIN 0.15 -> abstain; under v2 the runner-up was the inning-font '3' (margin 0.2385). This is the balls=2 / strikes=2 exposure named in the pre-registration."
+      }
+    ],
+    "wrong_reads_v3": [],
+    "unchanged_pitches": 73
+  },
+  "seen_diagnosed": {
+    "label": "first computed after the rule was fixed; not held-out evidence for the fix that targeted each case",
+    "all_outcomes_as_expected": true,
+    "groups": {
+      "inning4": {
+        "targeted_by": "inning '4' templates from PA 29 (17x10, 16x10, 17x9)",
+        "expected": "inning None -> 4; other nine fields v2-correct and must stay so",
+        "totals": {
+          "pitches": 12,
+          "fully_evaluable": 12,
+          "v2_all_fields_correct": 0,
+          "v3_all_fields_correct": 12,
+          "v2_pitches_with_abstention": 12,
+          "v3_pitches_with_abstention": 0,
+          "v2_pitches_with_wrong": 0,
+          "v3_pitches_with_wrong": 0,
+          "v2_abstained_fields": 12,
+          "v3_abstained_fields": 0,
+          "v2_wrong_fields": 0,
+          "v3_wrong_fields": 0
+        },
+        "rows": [
+          {
+            "key": "PA27/1",
+            "frame_seconds": 2747,
+            "confirmed_fields": 10,
+            "v2_abstained": [
+              "inning"
+            ],
+            "v3_abstained": [],
+            "v2_wrong": [],
+            "v3_wrong": [],
+            "changed_fields": {
+              "inning": {
+                "label": 4,
+                "v2": null,
+                "v3": 4
+              }
+            },
+            "outcome_as_expected": true
+          },
+          {
+            "key": "PA27/2",
+            "frame_seconds": 2759.75,
+            "confirmed_fields": 10,
+            "v2_abstained": [
+              "inning"
+            ],
+            "v3_abstained": [],
+            "v2_wrong": [],
+            "v3_wrong": [],
+            "changed_fields": {
+              "inning": {
+                "label": 4,
+                "v2": null,
+                "v3": 4
+              }
+            },
+            "outcome_as_expected": true
+          },
+          {
+            "key": "PA28/1",
+            "frame_seconds": 2788,
+            "confirmed_fields": 10,
+            "v2_abstained": [
+              "inning"
+            ],
+            "v3_abstained": [],
+            "v2_wrong": [],
+            "v3_wrong": [],
+            "changed_fields": {
+              "inning": {
+                "label": 4,
+                "v2": null,
+                "v3": 4
+              }
+            },
+            "outcome_as_expected": true
+          },
+          {
+            "key": "PA28/2",
+            "frame_seconds": 2801.25,
+            "confirmed_fields": 10,
+            "v2_abstained": [
+              "inning"
+            ],
+            "v3_abstained": [],
+            "v2_wrong": [],
+            "v3_wrong": [],
+            "changed_fields": {
+              "inning": {
+                "label": 4,
+                "v2": null,
+                "v3": 4
+              }
+            },
+            "outcome_as_expected": true
+          },
+          {
+            "key": "PA30/1",
+            "frame_seconds": 2973.75,
+            "confirmed_fields": 10,
+            "v2_abstained": [
+              "inning"
+            ],
+            "v3_abstained": [],
+            "v2_wrong": [],
+            "v3_wrong": [],
+            "changed_fields": {
+              "inning": {
+                "label": 4,
+                "v2": null,
+                "v3": 4
+              }
+            },
+            "outcome_as_expected": true
+          },
+          {
+            "key": "PA30/2",
+            "frame_seconds": 2994.25,
+            "confirmed_fields": 10,
+            "v2_abstained": [
+              "inning"
+            ],
+            "v3_abstained": [],
+            "v2_wrong": [],
+            "v3_wrong": [],
+            "changed_fields": {
+              "inning": {
+                "label": 4,
+                "v2": null,
+                "v3": 4
+              }
+            },
+            "outcome_as_expected": true
+          },
+          {
+            "key": "PA30/3",
+            "frame_seconds": 3016.75,
+            "confirmed_fields": 10,
+            "v2_abstained": [
+              "inning"
+            ],
+            "v3_abstained": [],
+            "v2_wrong": [],
+            "v3_wrong": [],
+            "changed_fields": {
+              "inning": {
+                "label": 4,
+                "v2": null,
+                "v3": 4
+              }
+            },
+            "outcome_as_expected": true
+          },
+          {
+            "key": "PA31/1",
+            "frame_seconds": 3042.5,
+            "confirmed_fields": 10,
+            "v2_abstained": [
+              "inning"
+            ],
+            "v3_abstained": [],
+            "v2_wrong": [],
+            "v3_wrong": [],
+            "changed_fields": {
+              "inning": {
+                "label": 4,
+                "v2": null,
+                "v3": 4
+              }
+            },
+            "outcome_as_expected": true
+          },
+          {
+            "key": "PA31/2",
+            "frame_seconds": 3061.5,
+            "confirmed_fields": 10,
+            "v2_abstained": [
+              "inning"
+            ],
+            "v3_abstained": [],
+            "v2_wrong": [],
+            "v3_wrong": [],
+            "changed_fields": {
+              "inning": {
+                "label": 4,
+                "v2": null,
+                "v3": 4
+              }
+            },
+            "outcome_as_expected": true
+          },
+          {
+            "key": "PA31/3",
+            "frame_seconds": 3079.25,
+            "confirmed_fields": 10,
+            "v2_abstained": [
+              "inning"
+            ],
+            "v3_abstained": [],
+            "v2_wrong": [],
+            "v3_wrong": [],
+            "changed_fields": {
+              "inning": {
+                "label": 4,
+                "v2": null,
+                "v3": 4
+              }
+            },
+            "outcome_as_expected": true
+          },
+          {
+            "key": "PA31/4",
+            "frame_seconds": 3102,
+            "confirmed_fields": 10,
+            "v2_abstained": [
+              "inning"
+            ],
+            "v3_abstained": [],
+            "v2_wrong": [],
+            "v3_wrong": [],
+            "changed_fields": {
+              "inning": {
+                "label": 4,
+                "v2": null,
+                "v3": 4
+              }
+            },
+            "outcome_as_expected": true
+          },
+          {
+            "key": "PA32/1",
+            "frame_seconds": 3130.25,
+            "confirmed_fields": 10,
+            "v2_abstained": [
+              "inning"
+            ],
+            "v3_abstained": [],
+            "v2_wrong": [],
+            "v3_wrong": [],
+            "changed_fields": {
+              "inning": {
+                "label": 4,
+                "v2": null,
+                "v3": 4
+              }
+            },
+            "outcome_as_expected": true
+          }
+        ]
+      },
+      "gate": {
+        "targeted_by": "reader option top_line_gate max_row",
+        "expected": "all ten fields None -> label",
+        "totals": {
+          "pitches": 2,
+          "fully_evaluable": 2,
+          "v2_all_fields_correct": 0,
+          "v3_all_fields_correct": 2,
+          "v2_pitches_with_abstention": 2,
+          "v3_pitches_with_abstention": 0,
+          "v2_pitches_with_wrong": 0,
+          "v3_pitches_with_wrong": 0,
+          "v2_abstained_fields": 20,
+          "v3_abstained_fields": 0,
+          "v2_wrong_fields": 0,
+          "v3_wrong_fields": 0
+        },
+        "rows": [
+          {
+            "key": "PA11/2",
+            "frame_seconds": 1052.25,
+            "confirmed_fields": 10,
+            "v2_abstained": [
+              "balls",
+              "strikes",
+              "outs",
+              "runner_on_1b",
+              "runner_on_2b",
+              "runner_on_3b",
+              "inning",
+              "inning_topbot",
+              "home_score",
+              "away_score"
+            ],
+            "v3_abstained": [],
+            "v2_wrong": [],
+            "v3_wrong": [],
+            "changed_fields": {
+              "balls": {
+                "label": 0,
+                "v2": null,
+                "v3": 0
+              },
+              "strikes": {
+                "label": 1,
+                "v2": null,
+                "v3": 1
+              },
+              "outs": {
+                "label": 0,
+                "v2": null,
+                "v3": 0
+              },
+              "runner_on_1b": {
+                "label": false,
+                "v2": null,
+                "v3": false
+              },
+              "runner_on_2b": {
+                "label": false,
+                "v2": null,
+                "v3": false
+              },
+              "runner_on_3b": {
+                "label": false,
+                "v2": null,
+                "v3": false
+              },
+              "inning": {
+                "label": 2,
+                "v2": null,
+                "v3": 2
+              },
+              "inning_topbot": {
+                "label": "Bot",
+                "v2": null,
+                "v3": "Bot"
+              },
+              "home_score": {
+                "label": 0,
+                "v2": null,
+                "v3": 0
+              },
+              "away_score": {
+                "label": 0,
+                "v2": null,
+                "v3": 0
+              }
+            },
+            "outcome_as_expected": true
+          },
+          {
+            "key": "PA19/2",
+            "frame_seconds": 1765.5,
+            "confirmed_fields": 10,
+            "v2_abstained": [
+              "balls",
+              "strikes",
+              "outs",
+              "runner_on_1b",
+              "runner_on_2b",
+              "runner_on_3b",
+              "inning",
+              "inning_topbot",
+              "home_score",
+              "away_score"
+            ],
+            "v3_abstained": [],
+            "v2_wrong": [],
+            "v3_wrong": [],
+            "changed_fields": {
+              "balls": {
+                "label": 0,
+                "v2": null,
+                "v3": 0
+              },
+              "strikes": {
+                "label": 1,
+                "v2": null,
+                "v3": 1
+              },
+              "outs": {
+                "label": 2,
+                "v2": null,
+                "v3": 2
+              },
+              "runner_on_1b": {
+                "label": false,
+                "v2": null,
+                "v3": false
+              },
+              "runner_on_2b": {
+                "label": false,
+                "v2": null,
+                "v3": false
+              },
+              "runner_on_3b": {
+                "label": true,
+                "v2": null,
+                "v3": true
+              },
+              "inning": {
+                "label": 3,
+                "v2": null,
+                "v3": 3
+              },
+              "inning_topbot": {
+                "label": "Top",
+                "v2": null,
+                "v3": "Top"
+              },
+              "home_score": {
+                "label": 0,
+                "v2": null,
+                "v3": 0
+              },
+              "away_score": {
+                "label": 0,
+                "v2": null,
+                "v3": 0
+              }
+            },
+            "outcome_as_expected": true
+          }
+        ]
+      },
+      "sliver": {
+        "targeted_by": "reader option border_sliver_max_width 2",
+        "expected": "inning None -> label",
+        "totals": {
+          "pitches": 2,
+          "fully_evaluable": 2,
+          "v2_all_fields_correct": 0,
+          "v3_all_fields_correct": 2,
+          "v2_pitches_with_abstention": 2,
+          "v3_pitches_with_abstention": 0,
+          "v2_pitches_with_wrong": 0,
+          "v3_pitches_with_wrong": 0,
+          "v2_abstained_fields": 2,
+          "v3_abstained_fields": 0,
+          "v2_wrong_fields": 0,
+          "v3_wrong_fields": 0
+        },
+        "rows": [
+          {
+            "key": "PA4/1",
+            "frame_seconds": 327.75,
+            "confirmed_fields": 10,
+            "v2_abstained": [
+              "inning"
+            ],
+            "v3_abstained": [],
+            "v2_wrong": [],
+            "v3_wrong": [],
+            "changed_fields": {
+              "inning": {
+                "label": 1,
+                "v2": null,
+                "v3": 1
+              }
+            },
+            "outcome_as_expected": true
+          },
+          {
+            "key": "PA11/1",
+            "frame_seconds": 1038.0,
+            "confirmed_fields": 10,
+            "v2_abstained": [
+              "inning"
+            ],
+            "v3_abstained": [],
+            "v2_wrong": [],
+            "v3_wrong": [],
+            "changed_fields": {
+              "inning": {
+                "label": 2,
+                "v2": null,
+                "v3": 2
+              }
+            },
+            "outcome_as_expected": true
+          }
+        ]
+      },
+      "count3": {
+        "targeted_by": "count-font '3' template from PA 29/7 (17x11)",
+        "expected": "balls None -> 3",
+        "totals": {
+          "pitches": 1,
+          "fully_evaluable": 1,
+          "v2_all_fields_correct": 0,
+          "v3_all_fields_correct": 1,
+          "v2_pitches_with_abstention": 1,
+          "v3_pitches_with_abstention": 0,
+          "v2_pitches_with_wrong": 0,
+          "v3_pitches_with_wrong": 0,
+          "v2_abstained_fields": 1,
+          "v3_abstained_fields": 0,
+          "v2_wrong_fields": 0,
+          "v3_wrong_fields": 0
+        },
+        "rows": [
+          {
+            "key": "PA5/6",
+            "frame_seconds": 446.75,
+            "confirmed_fields": 10,
+            "v2_abstained": [
+              "balls"
+            ],
+            "v3_abstained": [],
+            "v2_wrong": [],
+            "v3_wrong": [],
+            "changed_fields": {
+              "balls": {
+                "label": 3,
+                "v2": null,
+                "v3": 3
+              }
+            },
+            "outcome_as_expected": true
+          }
+        ]
+      },
+      "score2": {
+        "targeted_by": "six score-font '2' templates from PA 29 (18x12)",
+        "expected": "home_score None -> 2",
+        "totals": {
+          "pitches": 1,
+          "fully_evaluable": 1,
+          "v2_all_fields_correct": 0,
+          "v3_all_fields_correct": 1,
+          "v2_pitches_with_abstention": 1,
+          "v3_pitches_with_abstention": 0,
+          "v2_pitches_with_wrong": 0,
+          "v3_pitches_with_wrong": 0,
+          "v2_abstained_fields": 1,
+          "v3_abstained_fields": 0,
+          "v2_wrong_fields": 0,
+          "v3_wrong_fields": 0
+        },
+        "rows": [
+          {
+            "key": "PA24/5",
+            "frame_seconds": 2487.5,
+            "confirmed_fields": 10,
+            "v2_abstained": [
+              "home_score"
+            ],
+            "v3_abstained": [],
+            "v2_wrong": [],
+            "v3_wrong": [],
+            "changed_fields": {
+              "home_score": {
+                "label": 2,
+                "v2": null,
+                "v3": 2
+              }
+            },
+            "outcome_as_expected": true
+          }
+        ]
+      },
+      "untargeted": {
+        "targeted_by": "NOT targeted (probe-edge trim rejected for v3)",
+        "expected": "balls stays None",
+        "totals": {
+          "pitches": 1,
+          "fully_evaluable": 1,
+          "v2_all_fields_correct": 0,
+          "v3_all_fields_correct": 0,
+          "v2_pitches_with_abstention": 1,
+          "v3_pitches_with_abstention": 1,
+          "v2_pitches_with_wrong": 0,
+          "v3_pitches_with_wrong": 0,
+          "v2_abstained_fields": 1,
+          "v3_abstained_fields": 1,
+          "v2_wrong_fields": 0,
+          "v3_wrong_fields": 0
+        },
+        "rows": [
+          {
+            "key": "PA13/3",
+            "frame_seconds": 1255.75,
+            "confirmed_fields": 10,
+            "v2_abstained": [
+              "balls"
+            ],
+            "v3_abstained": [
+              "balls"
+            ],
+            "v2_wrong": [],
+            "v3_wrong": [],
+            "changed_fields": {},
+            "outcome_as_expected": true
+          }
+        ]
+      },
+      "line_score": {
+        "targeted_by": "abstain by design (line-score graphic, max_row gate cannot rescue: max row <= 0.071)",
+        "expected": "unchanged abstention; partial entries outside the all_fields denominator",
+        "totals": {
+          "pitches": 2,
+          "fully_evaluable": 0,
+          "v2_all_fields_correct": 0,
+          "v3_all_fields_correct": 0,
+          "v2_pitches_with_abstention": 2,
+          "v3_pitches_with_abstention": 2,
+          "v2_pitches_with_wrong": 0,
+          "v3_pitches_with_wrong": 0,
+          "v2_abstained_fields": 8,
+          "v3_abstained_fields": 8,
+          "v2_wrong_fields": 0,
+          "v3_wrong_fields": 0
+        },
+        "rows": [
+          {
+            "key": "PA8/1",
+            "frame_seconds": 777.5,
+            "confirmed_fields": 4,
+            "v2_abstained": [
+              "inning",
+              "inning_topbot",
+              "home_score",
+              "away_score"
+            ],
+            "v3_abstained": [
+              "inning",
+              "inning_topbot",
+              "home_score",
+              "away_score"
+            ],
+            "v2_wrong": [],
+            "v3_wrong": [],
+            "changed_fields": {},
+            "outcome_as_expected": true
+          },
+          {
+            "key": "PA16/1",
+            "frame_seconds": 1590.5,
+            "confirmed_fields": 4,
+            "v2_abstained": [
+              "inning",
+              "inning_topbot",
+              "home_score",
+              "away_score"
+            ],
+            "v3_abstained": [
+              "inning",
+              "inning_topbot",
+              "home_score",
+              "away_score"
+            ],
+            "v2_wrong": [],
+            "v3_wrong": [],
+            "changed_fields": {},
+            "outcome_as_expected": true
+          }
+        ]
+      }
+    }
+  },
+  "in_sample_17": {
+    "pitches": [
+      "PA1/1",
+      "PA1/2",
+      "PA1/3",
+      "PA1/4",
+      "PA1/5",
+      "PA2/1",
+      "PA2/2",
+      "PA2/3",
+      "PA9/1",
+      "PA9/2",
+      "PA18/1",
+      "PA29/1",
+      "PA29/2",
+      "PA29/3",
+      "PA29/4",
+      "PA29/5",
+      "PA29/7"
+    ],
+    "totals": {
+      "pitches": 17,
+      "fully_evaluable": 17,
+      "v2_all_fields_correct": 11,
+      "v3_all_fields_correct": 17,
+      "v2_pitches_with_abstention": 6,
+      "v3_pitches_with_abstention": 0,
+      "v2_pitches_with_wrong": 0,
+      "v3_pitches_with_wrong": 0,
+      "v2_abstained_fields": 7,
+      "v3_abstained_fields": 0,
+      "v2_wrong_fields": 0,
+      "v3_wrong_fields": 0
+    },
+    "score_all_entries_no_exclusion": {
+      "file": "outputs/verification/f3c/ocr_v3_insample_all.json",
+      "all_fields": {
+        "total_pitches": 322,
+        "evaluable": 111,
+        "attempted": 108,
+        "correct": 108,
+        "wrong": 0,
+        "abstained": 3,
+        "coverage": 0.3447204968944099,
+        "attempt_rate": 0.972972972972973,
+        "correct_rate": 0.972972972972973,
+        "error_rate": 0.0,
+        "abstain_rate": 0.02702702702702703,
+        "accuracy": 1.0
+      },
+      "per_field": {
+        "balls": {
+          "evaluable": 111,
+          "attempted": 108,
+          "correct": 108,
+          "wrong": 0,
+          "abstained": 3
+        },
+        "strikes": {
+          "evaluable": 111,
+          "attempted": 111,
+          "correct": 111,
+          "wrong": 0,
+          "abstained": 0
+        },
+        "outs": {
+          "evaluable": 111,
+          "attempted": 111,
+          "correct": 111,
+          "wrong": 0,
+          "abstained": 0
+        },
+        "runner_on_1b": {
+          "evaluable": 111,
+          "attempted": 111,
+          "correct": 111,
+          "wrong": 0,
+          "abstained": 0
+        },
+        "runner_on_2b": {
+          "evaluable": 111,
+          "attempted": 111,
+          "correct": 111,
+          "wrong": 0,
+          "abstained": 0
+        },
+        "runner_on_3b": {
+          "evaluable": 111,
+          "attempted": 111,
+          "correct": 111,
+          "wrong": 0,
+          "abstained": 0
+        },
+        "inning": {
+          "evaluable": 113,
+          "attempted": 111,
+          "correct": 111,
+          "wrong": 0,
+          "abstained": 2
+        },
+        "inning_topbot": {
+          "evaluable": 113,
+          "attempted": 111,
+          "correct": 111,
+          "wrong": 0,
+          "abstained": 2
+        },
+        "home_score": {
+          "evaluable": 113,
+          "attempted": 111,
+          "correct": 111,
+          "wrong": 0,
+          "abstained": 2
+        },
+        "away_score": {
+          "evaluable": 113,
+          "attempted": 111,
+          "correct": 111,
+          "wrong": 0,
+          "abstained": 2
+        }
+      }
+    },
+    "score_template_pas_only": {
+      "restricted_to_plate_appearances": [
+        1,
+        2,
+        9,
+        18,
+        29
+      ],
+      "all_fields": {
+        "total_pitches": 322,
+        "evaluable": 111,
+        "attempted": 17,
+        "correct": 17,
+        "wrong": 0,
+        "abstained": 94,
+        "coverage": 0.3447204968944099,
+        "attempt_rate": 0.15315315315315314,
+        "correct_rate": 0.15315315315315314,
+        "error_rate": 0.0,
+        "abstain_rate": 0.8468468468468469,
+        "accuracy": 1.0
+      },
+      "per_field": {
+        "balls": {
+          "evaluable": 111,
+          "attempted": 17,
+          "correct": 17,
+          "wrong": 0,
+          "abstained": 94
+        },
+        "strikes": {
+          "evaluable": 111,
+          "attempted": 17,
+          "correct": 17,
+          "wrong": 0,
+          "abstained": 94
+        },
+        "outs": {
+          "evaluable": 111,
+          "attempted": 17,
+          "correct": 17,
+          "wrong": 0,
+          "abstained": 94
+        },
+        "runner_on_1b": {
+          "evaluable": 111,
+          "attempted": 17,
+          "correct": 17,
+          "wrong": 0,
+          "abstained": 94
+        },
+        "runner_on_2b": {
+          "evaluable": 111,
+          "attempted": 17,
+          "correct": 17,
+          "wrong": 0,
+          "abstained": 94
+        },
+        "runner_on_3b": {
+          "evaluable": 111,
+          "attempted": 17,
+          "correct": 17,
+          "wrong": 0,
+          "abstained": 94
+        },
+        "inning": {
+          "evaluable": 113,
+          "attempted": 17,
+          "correct": 17,
+          "wrong": 0,
+          "abstained": 96
+        },
+        "inning_topbot": {
+          "evaluable": 113,
+          "attempted": 17,
+          "correct": 17,
+          "wrong": 0,
+          "abstained": 96
+        },
+        "home_score": {
+          "evaluable": 113,
+          "attempted": 17,
+          "correct": 17,
+          "wrong": 0,
+          "abstained": 96
+        },
+        "away_score": {
+          "evaluable": 113,
+          "attempted": 17,
+          "correct": 17,
+          "wrong": 0,
+          "abstained": 96
+        }
+      }
+    }
+  },
+  "changed_pitches": [
+    {
+      "key": "PA4/1",
+      "frame_seconds": 327.75,
+      "block": "seen",
+      "changed_fields": [
+        "inning"
+      ],
+      "v2_fields": {
+        "balls": 0,
+        "strikes": 0,
+        "outs": 0,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": null,
+        "inning_topbot": "Bot",
+        "home_score": 0,
+        "away_score": 0
+      },
+      "v3_fields": {
+        "balls": 0,
+        "strikes": 0,
+        "outs": 0,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": 1,
+        "inning_topbot": "Bot",
+        "home_score": 0,
+        "away_score": 0
+      },
+      "labels": {
+        "balls": 0,
+        "strikes": 0,
+        "outs": 0,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": 1,
+        "inning_topbot": "Bot",
+        "home_score": 0,
+        "away_score": 0
+      },
+      "v3_matches_labels_on_changed_fields": true
+    },
+    {
+      "key": "PA5/6",
+      "frame_seconds": 446.75,
+      "block": "seen",
+      "changed_fields": [
+        "balls"
+      ],
+      "v2_fields": {
+        "balls": null,
+        "strikes": 2,
+        "outs": 1,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": 1,
+        "inning_topbot": "Bot",
+        "home_score": 0,
+        "away_score": 0
+      },
+      "v3_fields": {
+        "balls": 3,
+        "strikes": 2,
+        "outs": 1,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": 1,
+        "inning_topbot": "Bot",
+        "home_score": 0,
+        "away_score": 0
+      },
+      "labels": {
+        "balls": 3,
+        "strikes": 2,
+        "outs": 1,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": 1,
+        "inning_topbot": "Bot",
+        "home_score": 0,
+        "away_score": 0
+      },
+      "v3_matches_labels_on_changed_fields": true
+    },
+    {
+      "key": "PA11/1",
+      "frame_seconds": 1038.0,
+      "block": "seen",
+      "changed_fields": [
+        "inning"
+      ],
+      "v2_fields": {
+        "balls": 0,
+        "strikes": 0,
+        "outs": 0,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": null,
+        "inning_topbot": "Bot",
+        "home_score": 0,
+        "away_score": 0
+      },
+      "v3_fields": {
+        "balls": 0,
+        "strikes": 0,
+        "outs": 0,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": 2,
+        "inning_topbot": "Bot",
+        "home_score": 0,
+        "away_score": 0
+      },
+      "labels": {
+        "balls": 0,
+        "strikes": 0,
+        "outs": 0,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": 2,
+        "inning_topbot": "Bot",
+        "home_score": 0,
+        "away_score": 0
+      },
+      "v3_matches_labels_on_changed_fields": true
+    },
+    {
+      "key": "PA11/2",
+      "frame_seconds": 1052.25,
+      "block": "seen",
+      "changed_fields": [
+        "balls",
+        "strikes",
+        "outs",
+        "runner_on_1b",
+        "runner_on_2b",
+        "runner_on_3b",
+        "inning",
+        "inning_topbot",
+        "home_score",
+        "away_score"
+      ],
+      "v2_fields": {
+        "balls": null,
+        "strikes": null,
+        "outs": null,
+        "runner_on_1b": null,
+        "runner_on_2b": null,
+        "runner_on_3b": null,
+        "inning": null,
+        "inning_topbot": null,
+        "home_score": null,
+        "away_score": null
+      },
+      "v3_fields": {
+        "balls": 0,
+        "strikes": 1,
+        "outs": 0,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": 2,
+        "inning_topbot": "Bot",
+        "home_score": 0,
+        "away_score": 0
+      },
+      "labels": {
+        "balls": 0,
+        "strikes": 1,
+        "outs": 0,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": 2,
+        "inning_topbot": "Bot",
+        "home_score": 0,
+        "away_score": 0
+      },
+      "v3_matches_labels_on_changed_fields": true
+    },
+    {
+      "key": "PA19/2",
+      "frame_seconds": 1765.5,
+      "block": "seen",
+      "changed_fields": [
+        "balls",
+        "strikes",
+        "outs",
+        "runner_on_1b",
+        "runner_on_2b",
+        "runner_on_3b",
+        "inning",
+        "inning_topbot",
+        "home_score",
+        "away_score"
+      ],
+      "v2_fields": {
+        "balls": null,
+        "strikes": null,
+        "outs": null,
+        "runner_on_1b": null,
+        "runner_on_2b": null,
+        "runner_on_3b": null,
+        "inning": null,
+        "inning_topbot": null,
+        "home_score": null,
+        "away_score": null
+      },
+      "v3_fields": {
+        "balls": 0,
+        "strikes": 1,
+        "outs": 2,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": true,
+        "inning": 3,
+        "inning_topbot": "Top",
+        "home_score": 0,
+        "away_score": 0
+      },
+      "labels": {
+        "balls": 0,
+        "strikes": 1,
+        "outs": 2,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": true,
+        "inning": 3,
+        "inning_topbot": "Top",
+        "home_score": 0,
+        "away_score": 0
+      },
+      "v3_matches_labels_on_changed_fields": true
+    },
+    {
+      "key": "PA20/5",
+      "frame_seconds": 1969.75,
+      "block": "heldout_75",
+      "changed_fields": [
+        "balls"
+      ],
+      "v2_fields": {
+        "balls": 2,
+        "strikes": 2,
+        "outs": 0,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": 3,
+        "inning_topbot": "Bot",
+        "home_score": 0,
+        "away_score": 0
+      },
+      "v3_fields": {
+        "balls": null,
+        "strikes": 2,
+        "outs": 0,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": 3,
+        "inning_topbot": "Bot",
+        "home_score": 0,
+        "away_score": 0
+      },
+      "labels": {
+        "balls": 2,
+        "strikes": 2,
+        "outs": 0,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": 3,
+        "inning_topbot": "Bot",
+        "home_score": 0,
+        "away_score": 0
+      },
+      "v3_matches_labels_on_changed_fields": true
+    },
+    {
+      "key": "PA20/7",
+      "frame_seconds": 2000.75,
+      "block": "heldout_75",
+      "changed_fields": [
+        "balls"
+      ],
+      "v2_fields": {
+        "balls": 2,
+        "strikes": 2,
+        "outs": 0,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": 3,
+        "inning_topbot": "Bot",
+        "home_score": 0,
+        "away_score": 0
+      },
+      "v3_fields": {
+        "balls": null,
+        "strikes": 2,
+        "outs": 0,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": 3,
+        "inning_topbot": "Bot",
+        "home_score": 0,
+        "away_score": 0
+      },
+      "labels": {
+        "balls": 2,
+        "strikes": 2,
+        "outs": 0,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": 3,
+        "inning_topbot": "Bot",
+        "home_score": 0,
+        "away_score": 0
+      },
+      "v3_matches_labels_on_changed_fields": true
+    },
+    {
+      "key": "PA24/5",
+      "frame_seconds": 2487.5,
+      "block": "seen",
+      "changed_fields": [
+        "home_score"
+      ],
+      "v2_fields": {
+        "balls": 2,
+        "strikes": 2,
+        "outs": 1,
+        "runner_on_1b": true,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": 3,
+        "inning_topbot": "Bot",
+        "home_score": null,
+        "away_score": 0
+      },
+      "v3_fields": {
+        "balls": 2,
+        "strikes": 2,
+        "outs": 1,
+        "runner_on_1b": true,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": 3,
+        "inning_topbot": "Bot",
+        "home_score": 2,
+        "away_score": 0
+      },
+      "labels": {
+        "balls": 2,
+        "strikes": 2,
+        "outs": 1,
+        "runner_on_1b": true,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": 3,
+        "inning_topbot": "Bot",
+        "home_score": 2,
+        "away_score": 0
+      },
+      "v3_matches_labels_on_changed_fields": true
+    },
+    {
+      "key": "PA27/1",
+      "frame_seconds": 2747,
+      "block": "seen",
+      "changed_fields": [
+        "inning"
+      ],
+      "v2_fields": {
+        "balls": 0,
+        "strikes": 0,
+        "outs": 0,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": null,
+        "inning_topbot": "Top",
+        "home_score": 2,
+        "away_score": 0
+      },
+      "v3_fields": {
+        "balls": 0,
+        "strikes": 0,
+        "outs": 0,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": 4,
+        "inning_topbot": "Top",
+        "home_score": 2,
+        "away_score": 0
+      },
+      "labels": {
+        "balls": 0,
+        "strikes": 0,
+        "outs": 0,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": 4,
+        "inning_topbot": "Top",
+        "home_score": 2,
+        "away_score": 0
+      },
+      "v3_matches_labels_on_changed_fields": true
+    },
+    {
+      "key": "PA27/2",
+      "frame_seconds": 2759.75,
+      "block": "seen",
+      "changed_fields": [
+        "inning"
+      ],
+      "v2_fields": {
+        "balls": 0,
+        "strikes": 1,
+        "outs": 0,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": null,
+        "inning_topbot": "Top",
+        "home_score": 2,
+        "away_score": 0
+      },
+      "v3_fields": {
+        "balls": 0,
+        "strikes": 1,
+        "outs": 0,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": 4,
+        "inning_topbot": "Top",
+        "home_score": 2,
+        "away_score": 0
+      },
+      "labels": {
+        "balls": 0,
+        "strikes": 1,
+        "outs": 0,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": 4,
+        "inning_topbot": "Top",
+        "home_score": 2,
+        "away_score": 0
+      },
+      "v3_matches_labels_on_changed_fields": true
+    },
+    {
+      "key": "PA28/1",
+      "frame_seconds": 2788,
+      "block": "seen",
+      "changed_fields": [
+        "inning"
+      ],
+      "v2_fields": {
+        "balls": 0,
+        "strikes": 0,
+        "outs": 1,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": null,
+        "inning_topbot": "Top",
+        "home_score": 2,
+        "away_score": 0
+      },
+      "v3_fields": {
+        "balls": 0,
+        "strikes": 0,
+        "outs": 1,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": 4,
+        "inning_topbot": "Top",
+        "home_score": 2,
+        "away_score": 0
+      },
+      "labels": {
+        "balls": 0,
+        "strikes": 0,
+        "outs": 1,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": 4,
+        "inning_topbot": "Top",
+        "home_score": 2,
+        "away_score": 0
+      },
+      "v3_matches_labels_on_changed_fields": true
+    },
+    {
+      "key": "PA28/2",
+      "frame_seconds": 2801.25,
+      "block": "seen",
+      "changed_fields": [
+        "inning"
+      ],
+      "v2_fields": {
+        "balls": 0,
+        "strikes": 1,
+        "outs": 1,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": null,
+        "inning_topbot": "Top",
+        "home_score": 2,
+        "away_score": 0
+      },
+      "v3_fields": {
+        "balls": 0,
+        "strikes": 1,
+        "outs": 1,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": 4,
+        "inning_topbot": "Top",
+        "home_score": 2,
+        "away_score": 0
+      },
+      "labels": {
+        "balls": 0,
+        "strikes": 1,
+        "outs": 1,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": 4,
+        "inning_topbot": "Top",
+        "home_score": 2,
+        "away_score": 0
+      },
+      "v3_matches_labels_on_changed_fields": true
+    },
+    {
+      "key": "PA29/1",
+      "frame_seconds": 2835.5,
+      "block": "in_sample",
+      "changed_fields": [
+        "inning"
+      ],
+      "v2_fields": {
+        "balls": 0,
+        "strikes": 0,
+        "outs": 2,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": null,
+        "inning_topbot": "Top",
+        "home_score": 2,
+        "away_score": 0
+      },
+      "v3_fields": {
+        "balls": 0,
+        "strikes": 0,
+        "outs": 2,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": 4,
+        "inning_topbot": "Top",
+        "home_score": 2,
+        "away_score": 0
+      },
+      "labels": {
+        "balls": 0,
+        "strikes": 0,
+        "outs": 2,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": 4,
+        "inning_topbot": "Top",
+        "home_score": 2,
+        "away_score": 0
+      },
+      "v3_matches_labels_on_changed_fields": true
+    },
+    {
+      "key": "PA29/2",
+      "frame_seconds": 2847.5,
+      "block": "in_sample",
+      "changed_fields": [
+        "inning"
+      ],
+      "v2_fields": {
+        "balls": 1,
+        "strikes": 0,
+        "outs": 2,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": null,
+        "inning_topbot": "Top",
+        "home_score": 2,
+        "away_score": 0
+      },
+      "v3_fields": {
+        "balls": 1,
+        "strikes": 0,
+        "outs": 2,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": 4,
+        "inning_topbot": "Top",
+        "home_score": 2,
+        "away_score": 0
+      },
+      "labels": {
+        "balls": 1,
+        "strikes": 0,
+        "outs": 2,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": 4,
+        "inning_topbot": "Top",
+        "home_score": 2,
+        "away_score": 0
+      },
+      "v3_matches_labels_on_changed_fields": true
+    },
+    {
+      "key": "PA29/3",
+      "frame_seconds": 2864,
+      "block": "in_sample",
+      "changed_fields": [
+        "inning"
+      ],
+      "v2_fields": {
+        "balls": 2,
+        "strikes": 0,
+        "outs": 2,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": null,
+        "inning_topbot": "Top",
+        "home_score": 2,
+        "away_score": 0
+      },
+      "v3_fields": {
+        "balls": 2,
+        "strikes": 0,
+        "outs": 2,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": 4,
+        "inning_topbot": "Top",
+        "home_score": 2,
+        "away_score": 0
+      },
+      "labels": {
+        "balls": 2,
+        "strikes": 0,
+        "outs": 2,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": 4,
+        "inning_topbot": "Top",
+        "home_score": 2,
+        "away_score": 0
+      },
+      "v3_matches_labels_on_changed_fields": true
+    },
+    {
+      "key": "PA29/4",
+      "frame_seconds": 2881.25,
+      "block": "in_sample",
+      "changed_fields": [
+        "inning"
+      ],
+      "v2_fields": {
+        "balls": 2,
+        "strikes": 1,
+        "outs": 2,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": null,
+        "inning_topbot": "Top",
+        "home_score": 2,
+        "away_score": 0
+      },
+      "v3_fields": {
+        "balls": 2,
+        "strikes": 1,
+        "outs": 2,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": 4,
+        "inning_topbot": "Top",
+        "home_score": 2,
+        "away_score": 0
+      },
+      "labels": {
+        "balls": 2,
+        "strikes": 1,
+        "outs": 2,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": 4,
+        "inning_topbot": "Top",
+        "home_score": 2,
+        "away_score": 0
+      },
+      "v3_matches_labels_on_changed_fields": true
+    },
+    {
+      "key": "PA29/5",
+      "frame_seconds": 2899.75,
+      "block": "in_sample",
+      "changed_fields": [
+        "inning"
+      ],
+      "v2_fields": {
+        "balls": 2,
+        "strikes": 2,
+        "outs": 2,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": null,
+        "inning_topbot": "Top",
+        "home_score": 2,
+        "away_score": 0
+      },
+      "v3_fields": {
+        "balls": 2,
+        "strikes": 2,
+        "outs": 2,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": 4,
+        "inning_topbot": "Top",
+        "home_score": 2,
+        "away_score": 0
+      },
+      "labels": {
+        "balls": 2,
+        "strikes": 2,
+        "outs": 2,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": 4,
+        "inning_topbot": "Top",
+        "home_score": 2,
+        "away_score": 0
+      },
+      "v3_matches_labels_on_changed_fields": true
+    },
+    {
+      "key": "PA29/7",
+      "frame_seconds": 2946,
+      "block": "in_sample",
+      "changed_fields": [
+        "balls",
+        "inning"
+      ],
+      "v2_fields": {
+        "balls": null,
+        "strikes": 2,
+        "outs": 2,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": null,
+        "inning_topbot": "Top",
+        "home_score": 2,
+        "away_score": 0
+      },
+      "v3_fields": {
+        "balls": 3,
+        "strikes": 2,
+        "outs": 2,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": 4,
+        "inning_topbot": "Top",
+        "home_score": 2,
+        "away_score": 0
+      },
+      "labels": {
+        "balls": 3,
+        "strikes": 2,
+        "outs": 2,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": 4,
+        "inning_topbot": "Top",
+        "home_score": 2,
+        "away_score": 0
+      },
+      "v3_matches_labels_on_changed_fields": true
+    },
+    {
+      "key": "PA30/1",
+      "frame_seconds": 2973.75,
+      "block": "seen",
+      "changed_fields": [
+        "inning"
+      ],
+      "v2_fields": {
+        "balls": 0,
+        "strikes": 0,
+        "outs": 0,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": null,
+        "inning_topbot": "Bot",
+        "home_score": 2,
+        "away_score": 0
+      },
+      "v3_fields": {
+        "balls": 0,
+        "strikes": 0,
+        "outs": 0,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": 4,
+        "inning_topbot": "Bot",
+        "home_score": 2,
+        "away_score": 0
+      },
+      "labels": {
+        "balls": 0,
+        "strikes": 0,
+        "outs": 0,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": 4,
+        "inning_topbot": "Bot",
+        "home_score": 2,
+        "away_score": 0
+      },
+      "v3_matches_labels_on_changed_fields": true
+    },
+    {
+      "key": "PA30/2",
+      "frame_seconds": 2994.25,
+      "block": "seen",
+      "changed_fields": [
+        "inning"
+      ],
+      "v2_fields": {
+        "balls": 0,
+        "strikes": 1,
+        "outs": 0,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": null,
+        "inning_topbot": "Bot",
+        "home_score": 2,
+        "away_score": 0
+      },
+      "v3_fields": {
+        "balls": 0,
+        "strikes": 1,
+        "outs": 0,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": 4,
+        "inning_topbot": "Bot",
+        "home_score": 2,
+        "away_score": 0
+      },
+      "labels": {
+        "balls": 0,
+        "strikes": 1,
+        "outs": 0,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": 4,
+        "inning_topbot": "Bot",
+        "home_score": 2,
+        "away_score": 0
+      },
+      "v3_matches_labels_on_changed_fields": true
+    },
+    {
+      "key": "PA30/3",
+      "frame_seconds": 3016.75,
+      "block": "seen",
+      "changed_fields": [
+        "inning"
+      ],
+      "v2_fields": {
+        "balls": 0,
+        "strikes": 2,
+        "outs": 0,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": null,
+        "inning_topbot": "Bot",
+        "home_score": 2,
+        "away_score": 0
+      },
+      "v3_fields": {
+        "balls": 0,
+        "strikes": 2,
+        "outs": 0,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": 4,
+        "inning_topbot": "Bot",
+        "home_score": 2,
+        "away_score": 0
+      },
+      "labels": {
+        "balls": 0,
+        "strikes": 2,
+        "outs": 0,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": 4,
+        "inning_topbot": "Bot",
+        "home_score": 2,
+        "away_score": 0
+      },
+      "v3_matches_labels_on_changed_fields": true
+    },
+    {
+      "key": "PA31/1",
+      "frame_seconds": 3042.5,
+      "block": "seen",
+      "changed_fields": [
+        "inning"
+      ],
+      "v2_fields": {
+        "balls": 0,
+        "strikes": 0,
+        "outs": 1,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": null,
+        "inning_topbot": "Bot",
+        "home_score": 2,
+        "away_score": 0
+      },
+      "v3_fields": {
+        "balls": 0,
+        "strikes": 0,
+        "outs": 1,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": 4,
+        "inning_topbot": "Bot",
+        "home_score": 2,
+        "away_score": 0
+      },
+      "labels": {
+        "balls": 0,
+        "strikes": 0,
+        "outs": 1,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": 4,
+        "inning_topbot": "Bot",
+        "home_score": 2,
+        "away_score": 0
+      },
+      "v3_matches_labels_on_changed_fields": true
+    },
+    {
+      "key": "PA31/2",
+      "frame_seconds": 3061.5,
+      "block": "seen",
+      "changed_fields": [
+        "inning"
+      ],
+      "v2_fields": {
+        "balls": 0,
+        "strikes": 1,
+        "outs": 1,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": null,
+        "inning_topbot": "Bot",
+        "home_score": 2,
+        "away_score": 0
+      },
+      "v3_fields": {
+        "balls": 0,
+        "strikes": 1,
+        "outs": 1,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": 4,
+        "inning_topbot": "Bot",
+        "home_score": 2,
+        "away_score": 0
+      },
+      "labels": {
+        "balls": 0,
+        "strikes": 1,
+        "outs": 1,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": 4,
+        "inning_topbot": "Bot",
+        "home_score": 2,
+        "away_score": 0
+      },
+      "v3_matches_labels_on_changed_fields": true
+    },
+    {
+      "key": "PA31/3",
+      "frame_seconds": 3079.25,
+      "block": "seen",
+      "changed_fields": [
+        "inning"
+      ],
+      "v2_fields": {
+        "balls": 1,
+        "strikes": 1,
+        "outs": 1,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": null,
+        "inning_topbot": "Bot",
+        "home_score": 2,
+        "away_score": 0
+      },
+      "v3_fields": {
+        "balls": 1,
+        "strikes": 1,
+        "outs": 1,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": 4,
+        "inning_topbot": "Bot",
+        "home_score": 2,
+        "away_score": 0
+      },
+      "labels": {
+        "balls": 1,
+        "strikes": 1,
+        "outs": 1,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": 4,
+        "inning_topbot": "Bot",
+        "home_score": 2,
+        "away_score": 0
+      },
+      "v3_matches_labels_on_changed_fields": true
+    },
+    {
+      "key": "PA31/4",
+      "frame_seconds": 3102,
+      "block": "seen",
+      "changed_fields": [
+        "inning"
+      ],
+      "v2_fields": {
+        "balls": 1,
+        "strikes": 2,
+        "outs": 1,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": null,
+        "inning_topbot": "Bot",
+        "home_score": 2,
+        "away_score": 0
+      },
+      "v3_fields": {
+        "balls": 1,
+        "strikes": 2,
+        "outs": 1,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": 4,
+        "inning_topbot": "Bot",
+        "home_score": 2,
+        "away_score": 0
+      },
+      "labels": {
+        "balls": 1,
+        "strikes": 2,
+        "outs": 1,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": 4,
+        "inning_topbot": "Bot",
+        "home_score": 2,
+        "away_score": 0
+      },
+      "v3_matches_labels_on_changed_fields": true
+    },
+    {
+      "key": "PA32/1",
+      "frame_seconds": 3130.25,
+      "block": "seen",
+      "changed_fields": [
+        "inning"
+      ],
+      "v2_fields": {
+        "balls": 0,
+        "strikes": 0,
+        "outs": 2,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": null,
+        "inning_topbot": "Bot",
+        "home_score": 2,
+        "away_score": 0
+      },
+      "v3_fields": {
+        "balls": 0,
+        "strikes": 0,
+        "outs": 2,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": 4,
+        "inning_topbot": "Bot",
+        "home_score": 2,
+        "away_score": 0
+      },
+      "labels": {
+        "balls": 0,
+        "strikes": 0,
+        "outs": 2,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": 4,
+        "inning_topbot": "Bot",
+        "home_score": 2,
+        "away_score": 0
+      },
+      "v3_matches_labels_on_changed_fields": true
+    }
+  ],
+  "changed_pitches_count": 26,
+  "wrong_reads_v3_insample": [],
+  "negatives": {
+    "v2": {
+      "file": "docs/results/mlb_p0/game_747139_scoreboard_negatives_score_v2.json",
+      "frames": 14,
+      "unreadable_fields": 96,
+      "readable_fields": 44,
+      "false_reads": 0,
+      "wrong_reads": 0,
+      "correct_reads": 40,
+      "missed_reads": 4,
+      "abstain_rate_on_unreadable": 1.0,
+      "correct_rate_on_readable": 0.9090909090909091
+    },
+    "v3": {
+      "file": "docs/results/mlb_p0/game_747139_scoreboard_negatives_score_v3.json",
+      "frames": 14,
+      "unreadable_fields": 96,
+      "readable_fields": 44,
+      "false_reads": 0,
+      "wrong_reads": 0,
+      "correct_reads": 40,
+      "missed_reads": 4,
+      "abstain_rate_on_unreadable": 1.0,
+      "correct_rate_on_readable": 0.9090909090909091
+    },
+    "per_frame_identical": true,
+    "outputs_identical": true
+  },
+  "reader_option_effects": {
+    "top_line_gate_max_row": {
+      "eval_frames_flipped": [
+        {
+          "key": "PA11/2",
+          "frame_seconds": 1052.25,
+          "navy": 0.8425,
+          "top_line_mean": 0.5854,
+          "top_line_rows": [
+            0.2042,
+            0.9667
+          ],
+          "panel_white": 0.0855
+        },
+        {
+          "key": "PA19/2",
+          "frame_seconds": 1765.5,
+          "navy": 0.7969,
+          "top_line_mean": 0.575,
+          "top_line_rows": [
+            0.1833,
+            0.9667
+          ],
+          "panel_white": 0.0856
+        }
+      ],
+      "eval_frames_failing_both_gates": [
+        {
+          "key": "PA8/1",
+          "top_line_mean": 0.0688,
+          "top_line_rows": [
+            0.0667,
+            0.0708
+          ],
+          "panel_white": 0.355
+        },
+        {
+          "key": "PA16/1",
+          "top_line_mean": 0.0,
+          "top_line_rows": [
+            0.0,
+            0.0
+          ],
+          "panel_white": 0.3479
+        }
+      ],
+      "negatives_frames_flipped": [],
+      "negatives_max_row_among_non_bug_frames": 0.0792,
+      "negatives_rows": [
+        {
+          "seconds": 150.0,
+          "kind": "graphic",
+          "navy": 0.1008,
+          "top_line_mean": 0.0271,
+          "top_line_rows": [
+            0.0417,
+            0.0125
+          ],
+          "panel_white": 0.0513,
+          "bug_present_default": false,
+          "bug_present_v3": false
+        },
+        {
+          "seconds": 151.8,
+          "kind": "graphic",
+          "navy": 0.0897,
+          "top_line_mean": 0.0271,
+          "top_line_rows": [
+            0.0375,
+            0.0167
+          ],
+          "panel_white": 0.0499,
+          "bug_present_default": false,
+          "bug_present_v3": false
+        },
+        {
+          "seconds": 152.4,
+          "kind": "graphic",
+          "navy": 0.2595,
+          "top_line_mean": 0.0521,
+          "top_line_rows": [
+            0.0625,
+            0.0417
+          ],
+          "panel_white": 0.0266,
+          "bug_present_default": false,
+          "bug_present_v3": false
+        },
+        {
+          "seconds": 465.0,
+          "kind": "cutaway_readable",
+          "navy": 0.8234,
+          "top_line_mean": 0.9583,
+          "top_line_rows": [
+            0.95,
+            0.9667
+          ],
+          "panel_white": 0.0767,
+          "bug_present_default": true,
+          "bug_present_v3": true
+        },
+        {
+          "seconds": 470.0,
+          "kind": "graphic",
+          "navy": 0.0,
+          "top_line_mean": 0.0,
+          "top_line_rows": [
+            0.0,
+            0.0
+          ],
+          "panel_white": 0.001,
+          "bug_present_default": false,
+          "bug_present_v3": false
+        },
+        {
+          "seconds": 475.0,
+          "kind": "flashback",
+          "navy": 0.0942,
+          "top_line_mean": 0.0,
+          "top_line_rows": [
+            0.0,
+            0.0
+          ],
+          "panel_white": 0.1066,
+          "bug_present_default": false,
+          "bug_present_v3": false
+        },
+        {
+          "seconds": 480.0,
+          "kind": "flashback",
+          "navy": 0.0028,
+          "top_line_mean": 0.0021,
+          "top_line_rows": [
+            0.0042,
+            0.0
+          ],
+          "panel_white": 0.108,
+          "bug_present_default": false,
+          "bug_present_v3": false
+        },
+        {
+          "seconds": 495.0,
+          "kind": "cutaway_readable",
+          "navy": 0.8064,
+          "top_line_mean": 0.9667,
+          "top_line_rows": [
+            0.9667,
+            0.9667
+          ],
+          "panel_white": 0.074,
+          "bug_present_default": true,
+          "bug_present_v3": true
+        },
+        {
+          "seconds": 546.0,
+          "kind": "replay",
+          "navy": 0.0,
+          "top_line_mean": 0.0,
+          "top_line_rows": [
+            0.0,
+            0.0
+          ],
+          "panel_white": 0.0006,
+          "bug_present_default": false,
+          "bug_present_v3": false
+        },
+        {
+          "seconds": 606.0,
+          "kind": "cutaway_readable",
+          "navy": 0.8045,
+          "top_line_mean": 0.9667,
+          "top_line_rows": [
+            0.9667,
+            0.9667
+          ],
+          "panel_white": 0.0776,
+          "bug_present_default": true,
+          "bug_present_v3": true
+        },
+        {
+          "seconds": 610.0,
+          "kind": "cutaway_readable",
+          "navy": 0.8033,
+          "top_line_mean": 0.875,
+          "top_line_rows": [
+            0.7833,
+            0.9667
+          ],
+          "panel_white": 0.0771,
+          "bug_present_default": true,
+          "bug_present_v3": true
+        },
+        {
+          "seconds": 780.0,
+          "kind": "line_score",
+          "navy": 0.5422,
+          "top_line_mean": 0.0646,
+          "top_line_rows": [
+            0.0625,
+            0.0667
+          ],
+          "panel_white": 0.356,
+          "bug_present_default": false,
+          "bug_present_v3": false
+        },
+        {
+          "seconds": 840.0,
+          "kind": "other_camera",
+          "navy": 0.0,
+          "top_line_mean": 0.0,
+          "top_line_rows": [
+            0.0,
+            0.0
+          ],
+          "panel_white": 0.0,
+          "bug_present_default": false,
+          "bug_present_v3": false
+        },
+        {
+          "seconds": 880.0,
+          "kind": "graphic",
+          "navy": 0.2124,
+          "top_line_mean": 0.0729,
+          "top_line_rows": [
+            0.0667,
+            0.0792
+          ],
+          "panel_white": 0.2307,
+          "bug_present_default": false,
+          "bug_present_v3": false
+        }
+      ],
+      "note": "Exactly the two pre-registered frames flip (11/2, 19/2); the line-score frames 8/1, 16/1 and 780 s and every other negatives frame stay below the threshold on both rows."
+    },
+    "border_sliver_max_width_2": {
+      "segmentation_outcome_changes": [
+        {
+          "key": "PA4/1",
+          "field": "inning",
+          "dropped_groups_cols": [
+            [
+              13,
+              14
+            ]
+          ],
+          "glyphs_default": 2,
+          "glyphs_v3": 1,
+          "kept_by_default_path": [
+            true
+          ]
+        },
+        {
+          "key": "PA11/1",
+          "field": "inning",
+          "dropped_groups_cols": [
+            [
+              13,
+              14
+            ]
+          ],
+          "glyphs_default": 2,
+          "glyphs_v3": 1,
+          "kept_by_default_path": [
+            true
+          ]
+        }
+      ],
+      "edge_groups_of_width_le_2_also_dropped_by_default_size_tests": 150,
+      "note": "Only the 2x26 right-border group at inning-window columns 13-14 on 4/1 and 11/1 changes a glyph count (2 -> 1). The other edge-touching groups of width <= 2 in the eval set (the B-S dash entering strikes windows at columns 0-1, 1-px specks at inning column 14) are already discarded by MIN_GLYPH_WIDTH/MIN_GLYPH_HEIGHT on the default path, so the option changes nothing there."
+    }
+  },
+  "match_margins": {
+    "note": "Per glyph: normalise + per-digit min mean-abs distance with the v2 and the v3 template sets (src.vision.sny_scoreboard.DigitTemplates.match logic); thresholds MAX_DISTANCE 0.12 / MIN_MARGIN 0.15. 'seen' rows are the diagnosed pitches, 'in_sample' the PA 29 source glyphs (distance ~0 by construction).",
+    "new_digits": {
+      "inning_4_seen_12": {
+        "note": "12 fourth-inning pitches PA 27/28/30/31/32 (same font as the PA 29 source, not generalisation evidence)",
+        "n": 12,
+        "v3": {
+          "decided": [
+            "4"
+          ],
+          "distance_min": 0.0001,
+          "distance_max": 0.0066,
+          "margin_min": 0.4037,
+          "margin_max": 0.4172,
+          "runner_up_digits": [
+            "1"
+          ]
+        },
+        "v2": {
+          "decided": [
+            "None"
+          ],
+          "distance_min": 0.4064,
+          "distance_max": 0.4194,
+          "margin_min": 0.0971,
+          "margin_max": 0.1125,
+          "runner_up_digits": [
+            "3"
+          ]
+        },
+        "glyph_shapes": [
+          [
+            16,
+            10
+          ],
+          [
+            17,
+            10
+          ]
+        ]
+      },
+      "inning_4_in_sample_6": {
+        "note": "PA 29 source glyphs",
+        "n": 6,
+        "v3": {
+          "decided": [
+            "4"
+          ],
+          "distance_min": 0.0001,
+          "distance_max": 0.0001,
+          "margin_min": 0.3567,
+          "margin_max": 0.4172,
+          "runner_up_digits": [
+            "1"
+          ]
+        },
+        "v2": {
+          "decided": [
+            "None"
+          ],
+          "distance_min": 0.3568,
+          "distance_max": 0.4173,
+          "margin_min": 0.0971,
+          "margin_max": 0.1282,
+          "runner_up_digits": [
+            "3"
+          ]
+        },
+        "glyph_shapes": [
+          [
+            16,
+            10
+          ],
+          [
+            17,
+            9
+          ],
+          [
+            17,
+            10
+          ]
+        ]
+      },
+      "count_font_3_seen_5_6": {
+        "note": "PA 5/6 balls '3' 17x11, single seen pitch",
+        "n": 1,
+        "v3": {
+          "decided": [
+            "3"
+          ],
+          "distance_min": 0.0163,
+          "distance_max": 0.0163,
+          "margin_min": 0.2351,
+          "margin_max": 0.2351,
+          "runner_up_digits": [
+            "2"
+          ]
+        },
+        "v2": {
+          "decided": [
+            "None"
+          ],
+          "distance_min": 0.1984,
+          "distance_max": 0.1984,
+          "margin_min": 0.0585,
+          "margin_max": 0.0585,
+          "runner_up_digits": [
+            "2"
+          ]
+        },
+        "glyph_shapes": [
+          [
+            17,
+            11
+          ]
+        ]
+      },
+      "count_font_3_in_sample_29_7": {
+        "note": "PA 29/7 source glyph",
+        "n": 1,
+        "v3": {
+          "decided": [
+            "3"
+          ],
+          "distance_min": 0.0001,
+          "distance_max": 0.0001,
+          "margin_min": 0.2462,
+          "margin_max": 0.2462,
+          "runner_up_digits": [
+            "2"
+          ]
+        },
+        "v2": {
+          "decided": [
+            "None"
+          ],
+          "distance_min": 0.1932,
+          "distance_max": 0.1932,
+          "margin_min": 0.0587,
+          "margin_max": 0.0587,
+          "runner_up_digits": [
+            "2"
+          ]
+        },
+        "glyph_shapes": [
+          [
+            17,
+            11
+          ]
+        ]
+      },
+      "score_font_2_seen_24_5": {
+        "note": "PA 24/5 home_score '2' 18x12",
+        "n": 1,
+        "v3": {
+          "decided": [
+            "2"
+          ],
+          "distance_min": 0.0278,
+          "distance_max": 0.0278,
+          "margin_min": 0.2982,
+          "margin_max": 0.2982,
+          "runner_up_digits": [
+            "3"
+          ]
+        },
+        "v2": {
+          "decided": [
+            "None"
+          ],
+          "distance_min": 0.1204,
+          "distance_max": 0.1204,
+          "margin_min": 0.2238,
+          "margin_max": 0.2238,
+          "runner_up_digits": [
+            "0"
+          ]
+        },
+        "glyph_shapes": [
+          [
+            18,
+            12
+          ]
+        ]
+      },
+      "score_font_2_seen_fourth_inning": {
+        "note": "home_score '2' on the 12 seen fourth-inning pitches (v2 already read them: d 0.096-0.118 against count-font '2')",
+        "n": 12,
+        "v3": {
+          "decided": [
+            "2"
+          ],
+          "distance_min": 0.0,
+          "distance_max": 0.0231,
+          "margin_min": 0.3002,
+          "margin_max": 0.3117,
+          "runner_up_digits": [
+            "3"
+          ]
+        },
+        "v2": {
+          "decided": [
+            "2"
+          ],
+          "distance_min": 0.0964,
+          "distance_max": 0.1179,
+          "margin_min": 0.215,
+          "margin_max": 0.2283,
+          "runner_up_digits": [
+            "0"
+          ]
+        },
+        "glyph_shapes": [
+          [
+            18,
+            12
+          ]
+        ]
+      }
+    },
+    "exposures_named_in_preregistration": {
+      "heldout_inning_3_31": {
+        "note": "31 inning-3 held-out pitches: unchanged (the new '4' and score-font '2' are not the runner-up)",
+        "n": 31,
+        "v3": {
+          "decided": [
+            "3"
+          ],
+          "distance_min": 0.0189,
+          "distance_max": 0.0676,
+          "margin_min": 0.1769,
+          "margin_max": 0.2117,
+          "runner_up_digits": [
+            "2"
+          ]
+        },
+        "v2": {
+          "decided": [
+            "3"
+          ],
+          "distance_min": 0.0189,
+          "distance_max": 0.0676,
+          "margin_min": 0.1769,
+          "margin_max": 0.2117,
+          "runner_up_digits": [
+            "2"
+          ]
+        },
+        "glyph_shapes": [
+          [
+            17,
+            9
+          ]
+        ]
+      },
+      "heldout_inning_2_26": {
+        "note": "26 inning-2 held-out glyphs: unchanged",
+        "n": 26,
+        "v3": {
+          "decided": [
+            "2"
+          ],
+          "distance_min": 0.0001,
+          "distance_max": 0.1187,
+          "margin_min": 0.1781,
+          "margin_max": 0.2179,
+          "runner_up_digits": [
+            "3"
+          ]
+        },
+        "v2": {
+          "decided": [
+            "2"
+          ],
+          "distance_min": 0.0001,
+          "distance_max": 0.1187,
+          "margin_min": 0.1781,
+          "margin_max": 0.2179,
+          "runner_up_digits": [
+            "3"
+          ]
+        },
+        "glyph_shapes": [
+          [
+            16,
+            9
+          ],
+          [
+            17,
+            9
+          ]
+        ]
+      },
+      "heldout_inning_1_18": {
+        "note": "18 inning-1 held-out glyphs: runner-up now '4' on some, margin still >= 0.32",
+        "n": 18,
+        "v3": {
+          "decided": [
+            "1"
+          ],
+          "distance_min": 0.0,
+          "distance_max": 0.0326,
+          "margin_min": 0.3202,
+          "margin_max": 0.3621,
+          "runner_up_digits": [
+            "3",
+            "4"
+          ]
+        },
+        "v2": {
+          "decided": [
+            "1"
+          ],
+          "distance_min": 0.0,
+          "distance_max": 0.0326,
+          "margin_min": 0.3357,
+          "margin_max": 0.3754,
+          "runner_up_digits": [
+            "3"
+          ]
+        },
+        "glyph_shapes": [
+          [
+            16,
+            4
+          ],
+          [
+            16,
+            5
+          ],
+          [
+            17,
+            5
+          ]
+        ]
+      },
+      "heldout_balls_2_14": {
+        "note": "14 balls=2 held-out glyphs: margin now against the count-font '3'; two fall below 0.15 (the regression), one at 0.1542 (PA 10/6)",
+        "n": 14,
+        "v3": {
+          "decided": [
+            "2",
+            "None"
+          ],
+          "distance_min": 0.0001,
+          "distance_max": 0.0813,
+          "margin_min": 0.1325,
+          "margin_max": 0.297,
+          "runner_up_digits": [
+            "3"
+          ]
+        },
+        "v2": {
+          "decided": [
+            "2"
+          ],
+          "distance_min": 0.0001,
+          "distance_max": 0.0869,
+          "margin_min": 0.2385,
+          "margin_max": 0.333,
+          "runner_up_digits": [
+            "0",
+            "3"
+          ]
+        },
+        "glyph_shapes": [
+          [
+            17,
+            10
+          ],
+          [
+            17,
+            11
+          ]
+        ]
+      },
+      "heldout_strikes_2_30": {
+        "note": "30 strikes=2 held-out glyphs: margin shrank (min 0.2678 -> 0.1764 at PA 6/3), all still decided",
+        "n": 30,
+        "v3": {
+          "decided": [
+            "2"
+          ],
+          "distance_min": 0.0001,
+          "distance_max": 0.0489,
+          "margin_min": 0.1764,
+          "margin_max": 0.297,
+          "runner_up_digits": [
+            "3"
+          ]
+        },
+        "v2": {
+          "decided": [
+            "2"
+          ],
+          "distance_min": 0.0001,
+          "distance_max": 0.0544,
+          "margin_min": 0.2678,
+          "margin_max": 0.3401,
+          "runner_up_digits": [
+            "0",
+            "3"
+          ]
+        },
+        "glyph_shapes": [
+          [
+            17,
+            10
+          ],
+          [
+            17,
+            11
+          ]
+        ]
+      },
+      "heldout_home_score_2_15": {
+        "note": "15 home_score=2 held-out pitches 22/2, 23/1-4, 24/1-4, 25/1, 26/1-5: distance 0.097-0.118 -> 0.000-0.019 with the score-font templates, margin up",
+        "n": 15,
+        "v3": {
+          "decided": [
+            "2"
+          ],
+          "distance_min": 0.0,
+          "distance_max": 0.0188,
+          "margin_min": 0.2981,
+          "margin_max": 0.3117,
+          "runner_up_digits": [
+            "3"
+          ]
+        },
+        "v2": {
+          "decided": [
+            "2"
+          ],
+          "distance_min": 0.0969,
+          "distance_max": 0.1179,
+          "margin_min": 0.215,
+          "margin_max": 0.2278,
+          "runner_up_digits": [
+            "0"
+          ]
+        },
+        "glyph_shapes": [
+          [
+            18,
+            12
+          ]
+        ]
+      },
+      "heldout_count_1_47": {
+        "note": "count-font '1'",
+        "n": 47,
+        "v3": {
+          "decided": [
+            "1"
+          ],
+          "distance_min": 0.0,
+          "distance_max": 0.0246,
+          "margin_min": 0.3271,
+          "margin_max": 0.3503,
+          "runner_up_digits": [
+            "3"
+          ]
+        },
+        "v2": {
+          "decided": [
+            "1"
+          ],
+          "distance_min": 0.0,
+          "distance_max": 0.0246,
+          "margin_min": 0.3366,
+          "margin_max": 0.3503,
+          "runner_up_digits": [
+            "3"
+          ]
+        },
+        "glyph_shapes": [
+          [
+            16,
+            5
+          ]
+        ]
+      },
+      "heldout_count_0_59": {
+        "note": "count-font '0'",
+        "n": 59,
+        "v3": {
+          "decided": [
+            "0"
+          ],
+          "distance_min": 0.0,
+          "distance_max": 0.0649,
+          "margin_min": 0.262,
+          "margin_max": 0.3189,
+          "runner_up_digits": [
+            "2",
+            "3"
+          ]
+        },
+        "v2": {
+          "decided": [
+            "0"
+          ],
+          "distance_min": 0.0001,
+          "distance_max": 0.0706,
+          "margin_min": 0.2563,
+          "margin_max": 0.3402,
+          "runner_up_digits": [
+            "2"
+          ]
+        },
+        "glyph_shapes": [
+          [
+            17,
+            10
+          ],
+          [
+            17,
+            12
+          ]
+        ]
+      },
+      "heldout_score_0_135": {
+        "note": "score-font '0'",
+        "n": 135,
+        "v3": {
+          "decided": [
+            "0"
+          ],
+          "distance_min": 0.0001,
+          "distance_max": 0.0925,
+          "margin_min": 0.2217,
+          "margin_max": 0.3285,
+          "runner_up_digits": [
+            "2",
+            "3"
+          ]
+        },
+        "v2": {
+          "decided": [
+            "0"
+          ],
+          "distance_min": 0.0001,
+          "distance_max": 0.0925,
+          "margin_min": 0.2217,
+          "margin_max": 0.3433,
+          "runner_up_digits": [
+            "2",
+            "3"
+          ]
+        },
+        "glyph_shapes": [
+          [
+            18,
+            13
+          ],
+          [
+            19,
+            13
+          ]
+        ]
+      }
+    },
+    "heldout_balls_2_per_glyph": [
+      {
+        "key": "PA20/5",
+        "glyph_shape": [
+          17,
+          11
+        ],
+        "v2_margin": 0.2385,
+        "v3_margin": 0.1325,
+        "v3_distance": 0.076,
+        "v3_runner_up": "3",
+        "v3_decided": null
+      },
+      {
+        "key": "PA20/7",
+        "glyph_shape": [
+          17,
+          11
+        ],
+        "v2_margin": 0.2385,
+        "v3_margin": 0.1325,
+        "v3_distance": 0.0813,
+        "v3_runner_up": "3",
+        "v3_decided": null
+      },
+      {
+        "key": "PA10/6",
+        "glyph_shape": [
+          17,
+          11
+        ],
+        "v2_margin": 0.2476,
+        "v3_margin": 0.1542,
+        "v3_distance": 0.0651,
+        "v3_runner_up": "3",
+        "v3_decided": "2"
+      },
+      {
+        "key": "PA19/5",
+        "glyph_shape": [
+          17,
+          10
+        ],
+        "v2_margin": 0.2978,
+        "v3_margin": 0.2724,
+        "v3_distance": 0.0119,
+        "v3_runner_up": "3",
+        "v3_decided": "2"
+      },
+      {
+        "key": "PA6/5",
+        "glyph_shape": [
+          17,
+          10
+        ],
+        "v2_margin": 0.333,
+        "v3_margin": 0.2842,
+        "v3_distance": 0.0062,
+        "v3_runner_up": "3",
+        "v3_decided": "2"
+      },
+      {
+        "key": "PA6/6",
+        "glyph_shape": [
+          17,
+          10
+        ],
+        "v2_margin": 0.333,
+        "v3_margin": 0.2842,
+        "v3_distance": 0.0062,
+        "v3_runner_up": "3",
+        "v3_decided": "2"
+      },
+      {
+        "key": "PA15/5",
+        "glyph_shape": [
+          17,
+          10
+        ],
+        "v2_margin": 0.3093,
+        "v3_margin": 0.2843,
+        "v3_distance": 0.0115,
+        "v3_runner_up": "3",
+        "v3_decided": "2"
+      },
+      {
+        "key": "PA5/4",
+        "glyph_shape": [
+          17,
+          11
+        ],
+        "v2_margin": 0.3046,
+        "v3_margin": 0.2917,
+        "v3_distance": 0.0054,
+        "v3_runner_up": "3",
+        "v3_decided": "2"
+      },
+      {
+        "key": "PA10/5",
+        "glyph_shape": [
+          17,
+          10
+        ],
+        "v2_margin": 0.333,
+        "v3_margin": 0.2962,
+        "v3_distance": 0.0001,
+        "v3_runner_up": "3",
+        "v3_decided": "2"
+      },
+      {
+        "key": "PA11/5",
+        "glyph_shape": [
+          17,
+          10
+        ],
+        "v2_margin": 0.3216,
+        "v3_margin": 0.2962,
+        "v3_distance": 0.0058,
+        "v3_runner_up": "3",
+        "v3_decided": "2"
+      },
+      {
+        "key": "PA26/5",
+        "glyph_shape": [
+          17,
+          10
+        ],
+        "v2_margin": 0.3216,
+        "v3_margin": 0.2962,
+        "v3_distance": 0.0058,
+        "v3_runner_up": "3",
+        "v3_decided": "2"
+      },
+      {
+        "key": "PA15/4",
+        "glyph_shape": [
+          17,
+          11
+        ],
+        "v2_margin": 0.3252,
+        "v3_margin": 0.297,
+        "v3_distance": 0.0054,
+        "v3_runner_up": "3",
+        "v3_decided": "2"
+      },
+      {
+        "key": "PA23/4",
+        "glyph_shape": [
+          17,
+          11
+        ],
+        "v2_margin": 0.3252,
+        "v3_margin": 0.297,
+        "v3_distance": 0.0107,
+        "v3_runner_up": "3",
+        "v3_decided": "2"
+      },
+      {
+        "key": "PA26/4",
+        "glyph_shape": [
+          17,
+          11
+        ],
+        "v2_margin": 0.3252,
+        "v3_margin": 0.297,
+        "v3_distance": 0.0054,
+        "v3_runner_up": "3",
+        "v3_decided": "2"
+      }
+    ],
+    "heldout_strikes_2_lowest_margins": [
+      {
+        "key": "PA6/3",
+        "glyph_shape": [
+          17,
+          11
+        ],
+        "v2_margin": 0.274,
+        "v3_margin": 0.1764,
+        "v3_decided": "2"
+      },
+      {
+        "key": "PA19/3",
+        "glyph_shape": [
+          17,
+          11
+        ],
+        "v2_margin": 0.3178,
+        "v3_margin": 0.2293,
+        "v3_decided": "2"
+      },
+      {
+        "key": "PA7/3",
+        "glyph_shape": [
+          17,
+          11
+        ],
+        "v2_margin": 0.321,
+        "v3_margin": 0.2301,
+        "v3_decided": "2"
+      },
+      {
+        "key": "PA20/5",
+        "glyph_shape": [
+          17,
+          11
+        ],
+        "v2_margin": 0.321,
+        "v3_margin": 0.2301,
+        "v3_decided": "2"
+      },
+      {
+        "key": "PA26/5",
+        "glyph_shape": [
+          17,
+          10
+        ],
+        "v2_margin": 0.2678,
+        "v3_margin": 0.231,
+        "v3_decided": "2"
+      }
+    ]
+  },
+  "files": {
+    "v2_rescored_on_v3_exclude_pas": "outputs/verification/f3c/ocr_v2_on_v3_exclude_pas.json",
+    "v3_exclude_pas_score_mixed_94": "docs/results/mlb_p0/game_747139_scoreboard_ocr_v3.json",
+    "v3_predictions": "docs/results/mlb_p0/game_747139_scoreboard_ocr_v3_predictions.json",
+    "v3_provenance": "docs/results/mlb_p0/game_747139_scoreboard_ocr_v3_provenance.json",
+    "v3_insample_all": "outputs/verification/f3c/ocr_v3_insample_all.json",
+    "analysis": "outputs/verification/f3c/analysis_v3.json",
+    "v1_v2_identity_check": [
+      "outputs/verification/f3c/v12_before",
+      "outputs/verification/f3c/v12"
+    ]
+  },
+  "note": "Layout-specific template matcher for the SNY count bug of game 747139; not a general OCR and not automatic sync. Scores are on the verified eval set only. Blind held-out today: 0 pitches (the A-9 inning-5+ decision frames, scored later with --exclude-pas 1 2 9 18 29 and reported separately from the 75; on those the inning field abstains by design, no 5-9 template)."
+}

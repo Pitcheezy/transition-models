@@ -66,6 +66,7 @@ def test_versions_point_at_existing_files():
         for name in files.values():
             assert (ROOT / reports.RESULTS_DIR / name).exists(), name
     assert reports.VERSIONS["v1"]["negatives"].endswith("_v0.json")  # legacy name kept
+    assert set(reports.VERSIONS) == {"v1", "v2", "v3"}
     for path in reports.CODE_PATHS + reports.SHARED_INPUTS:
         assert (ROOT / (path if "/" in path else f"{reports.RESULTS_DIR}/{path}")).exists()
 
@@ -312,6 +313,47 @@ def test_build_provenance_with_dict_audit_and_without_existing():
     assert list(fresh) == [k for k in reports.PROVENANCE_ORDER if k != "carried_from_previous"]
     assert fresh["historical_audit"] == []
     assert fresh["limitations"] == reports.DEFAULT_LIMITATIONS
+    assert "held-out score" in fresh["scope"] and "exclude-pas score" not in fresh["scope"]
+
+
+def test_score_set_note_labels_only_the_versions_that_carry_one():
+    """v3's exclude-pas score is a mixed set (75 held-out + 19 seen); v1/v2 documents unchanged."""
+    assert set(reports.SCORE_SET_NOTES) == {"v3"} and set(reports.SCORE_SET_NOTES) <= set(
+        reports.VERSIONS
+    )
+    note = reports.SCORE_SET_NOTES["v3"]
+    assert "75 held-out" in note and "19 seen/diagnosed" in note and "mixed set" in note
+    for version in ("v1", "v2"):
+        document = reports.build_provenance(None, **{**provenance_kwargs(None), "version": version})
+        assert "held-out score" in document["scope"]
+        assert "exclude-pas" not in document["scope"]
+        assert document["limitations"] == reports.DEFAULT_LIMITATIONS
+        # an existing document's limitations are kept as they are (v1/v2 refresh path)
+        kept = reports.build_provenance(
+            {"limitations": ["kept"]}, **{**provenance_kwargs(None), "version": version}
+        )
+        assert kept["limitations"] == ["kept"]
+    v3 = reports.build_provenance(
+        None, **{**provenance_kwargs(None), "version": "v3", "template_pas": [1, 2, 9, 18, 29]}
+    )
+    assert "exclude-pas score (a mixed set, see limitations)" in v3["scope"]
+    assert "held-out score" not in v3["scope"]
+    assert v3["limitations"] == [*reports.DEFAULT_LIMITATIONS, note]
+    # the committed v3 provenance carries exactly this labelling
+    stored = json.loads(
+        (ROOT / reports.RESULTS_DIR / reports.VERSIONS["v3"]["provenance"]).read_text(
+            encoding="utf-8"
+        )
+    )
+    assert "exclude-pas score (a mixed set, see limitations)" in stored["scope"]
+    assert stored["limitations"][-1] == note
+    for version in ("v1", "v2"):
+        committed = json.loads(
+            (ROOT / reports.RESULTS_DIR / reports.VERSIONS[version]["provenance"]).read_text(
+                encoding="utf-8"
+            )
+        )
+        assert "held-out score" in committed["scope"] and note not in committed["limitations"]
 
 
 def test_build_provenance_passes_or_nests_an_existing_carried_block():
@@ -356,6 +398,25 @@ def test_reproduction_commands_and_score_summary():
     )
     assert commands[3].endswith("out/game_747139_scoreboard_negatives_score_v0.json")
     assert commands[4].endswith("outputs/verification/ocr_v1_repeat.json")
+    assert not any("--reader-options" in c for c in commands)
+    # a template file that carries reader_options (v3) has them echoed on the templates command
+    options = {
+        "top_line_gate": {"aggregate": "max_row", "threshold": 0.6},
+        "border_sliver_max_width": 2,
+    }
+    v3 = reports.reproduction_commands("v3", [1, 2, 9, 18, 29], reader_options=options)
+    assert v3[0] == (
+        "python scripts/66_sny_scoreboard_ocr.py templates --template-pas 1 2 9 18 29 --no-grab "
+        '--reader-options \'{"top_line_gate":{"aggregate":"max_row","threshold":0.6},'
+        '"border_sliver_max_width":2}\' --output docs/results/mlb_p0/sny_digit_templates_v3.json'
+    )
+    assert sum("--reader-options" in c for c in v3) == 1
+    assert "--exclude-pas 1 2 9 18 29" in v3[2]
+    assert v3[2].endswith("game_747139_scoreboard_ocr_v3.json")
+    assert v3[3].endswith("game_747139_scoreboard_negatives_score_v3.json")
+    assert reports.reproduction_commands("v3", [1], reader_options={})[0].endswith(
+        "--no-grab --output docs/results/mlb_p0/sny_digit_templates_v3.json"
+    )
     score = {
         "all_fields": {"evaluable": 5, "correct": 3, "abstained": 1, "wrong": 1, "coverage": 0.1},
         "per_field": {"balls": {"wrong": 1}, "strikes": {"wrong": 0}},

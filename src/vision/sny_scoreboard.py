@@ -56,6 +56,49 @@ PANEL_NAVY = 0.30  # navy fraction the panel window must reach for the bug to co
 TOP_LINE_WHITE = 0.60  # white fraction of the top border line (normal frames 0.86-0.97)
 PANEL_WHITE_MAX = 0.20  # white fraction inside the panel (normal frames <= 0.09)
 TEMPLATE_SCHEMA = "sny_digit_templates_v0"
+# Opt-in reader options (F-3c, OCR v3). They live ONLY in a template document under
+# ``reader_options`` and are applied at read time by ``read_scoreboard`` when the loaded
+# ``DigitTemplates`` carries them; a template file without the key (v1, v2) and every function
+# default reproduce the v0-v2 behaviour bit for bit. They never apply when templates are cut.
+#
+# * ``top_line_gate``: ``{"aggregate": "mean" | "max_row", "threshold": float}``. ``mean`` is the
+#   default gate (mean white fraction of the top_line window >= threshold); ``max_row`` passes when
+#   ANY single row of the window reaches the threshold (a camera-cut frame whose top line sits on
+#   one of the two rows only).
+# * ``border_sliver_max_width``: int >= 0. In ``segment_glyphs`` a column group of at most this
+#   width whose first column is 0 or whose last column is the window's last column is discarded
+#   before the MIN_GLYPH_WIDTH/HEIGHT tests (a panel border entering the window after a wipe).
+#   0 (the default) discards nothing.
+TOP_LINE_AGGREGATES = ("mean", "max_row")
+READER_OPTION_KEYS = ("top_line_gate", "border_sliver_max_width")
+
+
+def validate_reader_options(options):
+    """Return a plain-dict copy of ``options`` (``None``/empty = no options) or raise ValueError."""
+    if options is None:
+        return {}
+    if not isinstance(options, dict):
+        raise ValueError("reader_options must be an object")
+    unknown = sorted(set(options) - set(READER_OPTION_KEYS))
+    if unknown:
+        raise ValueError(f"Unknown reader option(s): {unknown}")
+    gate = options.get("top_line_gate")
+    if gate is not None:
+        if not isinstance(gate, dict) or set(gate) - {"aggregate", "threshold"}:
+            raise ValueError("top_line_gate must be {aggregate, threshold}")
+        if gate.get("aggregate", "mean") not in TOP_LINE_AGGREGATES:
+            raise ValueError(f"top_line_gate.aggregate must be one of {TOP_LINE_AGGREGATES}")
+        threshold = gate.get("threshold", TOP_LINE_WHITE)
+        if isinstance(threshold, bool) or not isinstance(threshold, (int, float)):
+            raise ValueError("top_line_gate.threshold must be a number")
+        if not 0.0 <= float(threshold) <= 1.0:
+            raise ValueError("top_line_gate.threshold must be within [0, 1]")
+    sliver = options.get("border_sliver_max_width")
+    if sliver is not None and (
+        isinstance(sliver, bool) or not isinstance(sliver, int) or sliver < 0
+    ):
+        raise ValueError("border_sliver_max_width must be a non-negative integer")
+    return {k: options[k] for k in READER_OPTION_KEYS if k in options}
 
 
 def masks(frame):
@@ -73,12 +116,24 @@ def window(mask, name):
     return mask[y0:y1, x0:x1]
 
 
-def bug_present(navy, white):
+def top_line_passes(white, options=None):
+    """The top border line test of the presence gate; ``options`` may carry ``top_line_gate``."""
+    gate = (options or {}).get("top_line_gate")
+    if not gate:
+        return float(window(white, "top_line").mean()) >= TOP_LINE_WHITE
+    threshold = float(gate.get("threshold", TOP_LINE_WHITE))
+    line = window(white, "top_line")
+    if gate.get("aggregate", "mean") == "max_row":
+        return float(line.mean(axis=1).max()) >= threshold
+    return float(line.mean()) >= threshold
+
+
+def bug_present(navy, white, options=None):
     """Navy panel with its white top border and little white inside: the count bug, not a
-    line-score or stat graphic."""
+    line-score or stat graphic. ``options`` (reader options) may replace the top-line test."""
     return (
         float(window(navy, "panel").mean()) >= PANEL_NAVY
-        and float(window(white, "top_line").mean()) >= TOP_LINE_WHITE
+        and top_line_passes(white, options)
         and float(window(white, "panel").mean()) <= PANEL_WHITE_MAX
     )
 
@@ -121,8 +176,12 @@ def read_topbot(white):
     return None
 
 
-def segment_glyphs(mask_window):
-    """Connected column groups of white pixels, left to right, cropped to their row extent."""
+def segment_glyphs(mask_window, options=None):
+    """Connected column groups of white pixels, left to right, cropped to their row extent.
+
+    With the reader option ``border_sliver_max_width`` = N > 0, a group at most N columns wide
+    that touches the window's left or right edge is dropped first (a border sliver, not a digit).
+    """
     columns = np.where(mask_window.any(axis=0))[0]
     groups = []
     for c in columns:
@@ -130,6 +189,12 @@ def segment_glyphs(mask_window):
             groups[-1][1] = c
         else:
             groups.append([c, c])
+    sliver = int((options or {}).get("border_sliver_max_width") or 0)
+    if sliver:
+        last = mask_window.shape[1] - 1
+        groups = [
+            (c0, c1) for c0, c1 in groups if not (c1 - c0 + 1 <= sliver and (c0 == 0 or c1 == last))
+        ]
     glyphs = []
     for c0, c1 in groups:
         if c1 - c0 + 1 < MIN_GLYPH_WIDTH:
@@ -153,11 +218,13 @@ def normalise(glyph):
 class DigitTemplates:
     """Nearest-template digit matcher; ``templates[digit]`` is a list of normalised glyphs."""
 
-    def __init__(self, templates=None):
+    def __init__(self, templates=None, reader_options=None):
         self.templates = {
             str(k): [np.asarray(g, dtype=np.float32) for g in v]
             for k, v in (templates or {}).items()
         }
+        # Opt-in read-time options (see ``validate_reader_options``); {} = v0-v2 behaviour.
+        self.reader_options = validate_reader_options(reader_options)
 
     def add(self, digit, glyph):
         self.templates.setdefault(str(digit), []).append(normalise(glyph))
@@ -178,13 +245,16 @@ class DigitTemplates:
         return digit, best, margin
 
     def to_json(self):
-        return {
+        document = {
             "schema": TEMPLATE_SCHEMA,
             "glyph_shape": list(GLYPH_SHAPE),
             "templates": {
                 d: [np.round(g, 3).tolist() for g in gl] for d, gl in self.templates.items()
             },
         }
+        if self.reader_options:  # the key is absent (v1/v2 layout) unless options were given
+            document["reader_options"] = dict(self.reader_options)
+        return document
 
     @classmethod
     def from_json(cls, document):
@@ -192,12 +262,12 @@ class DigitTemplates:
             raise ValueError(f"Expected {TEMPLATE_SCHEMA}")
         if list(document.get("glyph_shape", [])) != list(GLYPH_SHAPE):
             raise ValueError("Template glyph shape does not match this reader")
-        return cls(document["templates"])
+        return cls(document["templates"], document.get("reader_options"))
 
 
-def read_number(white, name, templates):
+def read_number(white, name, templates, options=None):
     """Digits left to right; abstain unless every glyph matches a template."""
-    glyphs = segment_glyphs(window(white, name))
+    glyphs = segment_glyphs(window(white, name), options)
     if not glyphs:
         return None
     digits = []
@@ -210,7 +280,12 @@ def read_number(white, name, templates):
 
 
 def read_scoreboard(frame, templates):
-    """Read every label field from an RGB frame; ``None`` = abstain."""
+    """Read every label field from an RGB frame; ``None`` = abstain.
+
+    The reader options carried by ``templates`` (``DigitTemplates.reader_options``, set only by
+    a template document with ``reader_options``) apply here; none = v0-v2 behaviour.
+    """
+    options = getattr(templates, "reader_options", None) or {}
     white, gold, navy = masks(frame)
     fields = {
         "balls": None,
@@ -224,13 +299,13 @@ def read_scoreboard(frame, templates):
         "home_score": None,
         "away_score": None,
     }
-    if not bug_present(navy, white):
+    if not bug_present(navy, white, options):
         return fields
     fields["outs"] = read_outs(gold)
     fields.update(read_runners(gold))
     fields["inning_topbot"] = read_topbot(white)
     for name in DIGIT_FIELDS:
-        fields[name] = read_number(white, name, templates)
+        fields[name] = read_number(white, name, templates, options)
     return fields
 
 

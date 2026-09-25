@@ -12,7 +12,15 @@ eval-set frame (grabbing missing ones with ffmpeg from the eval set's media_url)
 prediction per pitch with ``null`` for every abstention. ``score`` runs
 ``score_predictions``; with ``--exclude-pas`` the template-source plate appearances are removed
 from the review before the eval set is rebuilt, so they count as ``scoreboard_unreviewed`` and
-the reported rates are held-out. Frames are read from ``<frames-dir>/<label>_<t>.jpg``.
+the reported rates are held-out with respect to the templates. They are held-out evidence only
+for pitches whose failure was not already diagnosed before the version's rule was fixed: the v3
+set mixes 75 held-out and 19 seen/diagnosed pitches (``ocr_reports.SCORE_SET_NOTES``), and the
+split is reported in the version's comparison file, never by this score alone. Frames are read
+from ``<frames-dir>/<label>_<t>.jpg``.
+
+``templates --reader-options '<json>'`` (OCR v3, F-3c) stores opt-in read-time options in the
+template file under ``reader_options``; ``predict`` and ``negatives`` apply them only when the
+loaded template file carries the key. Glyphs are always cut with the default segmentation.
 """
 
 import argparse
@@ -41,6 +49,7 @@ from src.vision.sny_scoreboard import (
     glyphs_for_label,
     masks,
     read_scoreboard,
+    validate_reader_options,
 )
 
 RESULTS = Path("docs/results/mlb_p0")
@@ -92,6 +101,12 @@ def main():
         "--no-grab", action="store_true", help="fail instead of grabbing missing frames"
     )
     parser.add_argument("--template-pas", type=int, nargs="*", default=[1, 2])
+    parser.add_argument(
+        "--reader-options",
+        help="templates mode: JSON object written into the template file as reader_options "
+        "(opt-in read-time options, see src.vision.sny_scoreboard.validate_reader_options); "
+        "omitted = no key, i.e. the v1/v2 file layout and behaviour",
+    )
     parser.add_argument("--templates", type=Path)
     parser.add_argument("--predictions", type=Path)
     parser.add_argument("--exclude-pas", type=int, nargs="*", default=[])
@@ -104,7 +119,14 @@ def main():
     media_url = evalset["source"]["media_url"]
 
     if args.mode == "templates":
-        templates = DigitTemplates()
+        reader_options = None
+        if args.reader_options:
+            try:
+                reader_options = validate_reader_options(json.loads(args.reader_options))
+            except ValueError as error:
+                parser.error(f"--reader-options: {error}")
+        # options ride on the document only; glyphs are cut with the default segmentation
+        templates = DigitTemplates(reader_options=reader_options)
         used, skipped = [], []
         for entry in evalset["entries"]:
             if entry["at_bat_number"] not in args.template_pas:
@@ -139,6 +161,7 @@ def main():
                     "digits": {d: len(g) for d, g in templates.templates.items()},
                     "fields_used": len(used),
                     "fields_skipped": skipped,
+                    "reader_options": templates.reader_options,
                 },
                 indent=2,
             )

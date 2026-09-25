@@ -329,8 +329,15 @@
     새 8구 이닝 '4' 기권, 29/7 볼 '3' 기권(F-3c 사례 추가). 기존 105구 예측 불변·113구 반복 동일. 검사 **322 passed, 2 deselected**.
     수정 권한 반납. 다음 한 단위: **F-3c OCR v3**(Fable 5.1) — 규칙을 먼저 등록하고 5회 이후 새 프레임으로 채점.
 
+34. (이 커밋): F-3c **OCR v3 — 사전 등록 무회귀 기준 실패, 기록 보존**(Claude Code, 2026-09-25). 선점 `a9acb41`. Fable 5.1 워크플로 + 세션 모델 검증 3관점×2라운드.
+    사전 등록: 템플릿 PA 1·2·9·18·29, v3 템플릿 파일의 opt-in `reader_options`(윗선 게이트 max_row, 가장자리 조각 ≤2 무시). v1·v2 경로·출력 바이트 동일(`scripts/70` 확인).
+    held-out 75구 73·0·2(PA 20/5·20/7 볼 '2' 기권, margin 0.1325), 오답 0, 음성 거짓 판독 0; 진단된 19구 중 18 복구(held-out 아님); in-sample 17/17.
+    정직성 검증 1라운드에서 94구 혼합 집합을 held-out처럼 쓴 표기를 잡아 '혼합 집합'으로 고쳤다(수치 변경 없음). 세션이 새 템플릿('4'·'3'·'2')과 회귀 2구 bug를 직접 확인.
+    코드: `sny_scoreboard.read_scoreboard`에 옵션 인자(없으면 기존 경로), `66 templates --reader-options`, `ocr_reports.VERSIONS`에 v3, 시험 추가. 검사 **329 passed, 2 deselected**.
+    수정 권한 반납. 다음 한 단위: **A-9 5회 33구**(Opus 5), 그 새 프레임으로 **F-3d v4**(필드 묶음별 템플릿) 사전 등록·첫 blind 평가.
+
 이 문서와 함께 추가되는 후속 커밋의 해시는 `git log -6 --oneline`으로 확인한다.
-최신 Windows CPU 검사: **322 passed, 2 deselected**(체크포인트 33, `check_project.py --cpu-only`, Ruff 69경로 통과). 아래 브라우저·서비스 검증은 이전 체크포인트 기록이다.
+최신 Windows CPU 검사: **329 passed, 2 deselected**(체크포인트 34, `check_project.py --cpu-only`, Ruff 69경로 통과). 아래 브라우저·서비스 검증은 이전 체크포인트 기록이다.
 JavaScript 구문 검사 및 Chrome 수동 입력·실제 추론·9회 이후 추천 보류 확인.
 GitHub CI 결과는 해당 커밋의 validation 워크플로에서 따로 확인한다.
 주석 모듈을 먼저 import한 새 프로세스에서도 Torch→Pandas 문자열 생성이 성공하는지
