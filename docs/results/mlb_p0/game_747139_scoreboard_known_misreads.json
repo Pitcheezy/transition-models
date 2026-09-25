@@ -51,6 +51,364 @@
       "evidence": "outputs/frames/evalset_4058.75.jpg (and outputs/verification/a10_42_1_bug.png, a10_42_1_frames.png): a clean live centre-field frame whose bug shows the left out circle filled (1 out), matching the manifest pre-state and both verifier lenses; the label is right and the reader is wrong.",
       "cause": "The filled out circle is drawn pale at the decision frame, one grid step after the SNY logo transition wipe (4058.50): its centre pixel is RGB 167/180/126, which fails the gold mask's r - b > 50 test (41), so the out_1 window has gold fraction 0.059 <= EMPTY 0.08 and reads as empty; with out_2 empty the reader returns outs 0 instead of abstaining. The same circle reaches 0.367 at 4059.00 and 0.497 at 4060.00. The structural reader is shared by v1-v4, so every version makes this read.",
       "follow_up": "A successor version could abstain when an out or runner window is neither clearly gold nor clearly navy (e.g. a pale-fill band) instead of reading empty; that is a new pre-registered version, not a patch of v1-v4."
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 56,
+      "pitch_number": 3,
+      "play_id": "02c7d4fa-f676-4dca-bdf3-80151eeb04e0",
+      "frame_seconds": 5342.25,
+      "field": "inning_topbot",
+      "read": "Bot",
+      "label": "Top",
+      "versions": [
+        "v3"
+      ],
+      "first_seen": {
+        "date": "2026-09-26",
+        "refresh_label": "pa56_65",
+        "reference_commit": "10250bc",
+        "note": "Top-of-the-8th rows added by A-12; new rows for every version (no pre-registered version was pending)."
+      },
+      "evidence": "outputs/frames/evalset_5342.25.jpg shows the up arrow and 8 (top of the 8th) in the session's compact montages (outputs/verification/a12_g1_compact.png, a12_g2_compact.png, a12_g3_compact.png); the label is right and the reader is wrong.",
+      "cause": "Same mechanism as 34/3 plus the wider inning digit: the up arrow starts at x 264 (the default arrow window starts at x 266, clipping its base rows to 8 px), and on 8th-inning frames the left column of the inning '8' reaches into the window, adding 1 px to the apex rows. When JPEG jitter leaves the base rows tied at 8 px, the widest-row argmax takes the first tied row at 0.333 of the arrow span, under the 0.4 threshold, and returns Bot. v4 (arrow_window from x 262 plus the blob-slope rule) reads every one of these frames as Top.",
+      "follow_up": "Already fixed by the v4 reader options (which read these rows correctly); v1-v3 keep the read as recorded measurements."
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 56,
+      "pitch_number": 7,
+      "play_id": "74672311-685d-4c36-8ade-d9e32f5d128a",
+      "frame_seconds": 5413.25,
+      "field": "inning_topbot",
+      "read": "Bot",
+      "label": "Top",
+      "versions": [
+        "v1",
+        "v2",
+        "v3"
+      ],
+      "first_seen": {
+        "date": "2026-09-26",
+        "refresh_label": "pa56_65",
+        "reference_commit": "10250bc",
+        "note": "Top-of-the-8th rows added by A-12; new rows for every version (no pre-registered version was pending)."
+      },
+      "evidence": "outputs/frames/evalset_5413.25.jpg shows the up arrow and 8 (top of the 8th) in the session's compact montages (outputs/verification/a12_g1_compact.png, a12_g2_compact.png, a12_g3_compact.png); the label is right and the reader is wrong.",
+      "cause": "Same mechanism as 34/3 plus the wider inning digit: the up arrow starts at x 264 (the default arrow window starts at x 266, clipping its base rows to 8 px), and on 8th-inning frames the left column of the inning '8' reaches into the window, adding 1 px to the apex rows. When JPEG jitter leaves the base rows tied at 8 px, the widest-row argmax takes the first tied row at 0.333 of the arrow span, under the 0.4 threshold, and returns Bot. v4 (arrow_window from x 262 plus the blob-slope rule) reads every one of these frames as Top.",
+      "follow_up": "Already fixed by the v4 reader options (which read these rows correctly); v1-v3 keep the read as recorded measurements."
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 56,
+      "pitch_number": 10,
+      "play_id": "91b75300-57e6-414d-8304-0ee53a2026b9",
+      "frame_seconds": 5453.25,
+      "field": "inning_topbot",
+      "read": "Bot",
+      "label": "Top",
+      "versions": [
+        "v1",
+        "v2",
+        "v3"
+      ],
+      "first_seen": {
+        "date": "2026-09-26",
+        "refresh_label": "pa56_65",
+        "reference_commit": "10250bc",
+        "note": "Top-of-the-8th rows added by A-12; new rows for every version (no pre-registered version was pending)."
+      },
+      "evidence": "outputs/frames/evalset_5453.25.jpg shows the up arrow and 8 (top of the 8th) in the session's compact montages (outputs/verification/a12_g1_compact.png, a12_g2_compact.png, a12_g3_compact.png); the label is right and the reader is wrong.",
+      "cause": "Same mechanism as 34/3 plus the wider inning digit: the up arrow starts at x 264 (the default arrow window starts at x 266, clipping its base rows to 8 px), and on 8th-inning frames the left column of the inning '8' reaches into the window, adding 1 px to the apex rows. When JPEG jitter leaves the base rows tied at 8 px, the widest-row argmax takes the first tied row at 0.333 of the arrow span, under the 0.4 threshold, and returns Bot. v4 (arrow_window from x 262 plus the blob-slope rule) reads every one of these frames as Top.",
+      "follow_up": "Already fixed by the v4 reader options (which read these rows correctly); v1-v3 keep the read as recorded measurements."
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 57,
+      "pitch_number": 2,
+      "play_id": "b6afb772-f0cd-4232-9794-36db043f7816",
+      "frame_seconds": 5596.25,
+      "field": "inning_topbot",
+      "read": "Bot",
+      "label": "Top",
+      "versions": [
+        "v1",
+        "v2",
+        "v3"
+      ],
+      "first_seen": {
+        "date": "2026-09-26",
+        "refresh_label": "pa56_65",
+        "reference_commit": "10250bc",
+        "note": "Top-of-the-8th rows added by A-12; new rows for every version (no pre-registered version was pending)."
+      },
+      "evidence": "outputs/frames/evalset_5596.25.jpg shows the up arrow and 8 (top of the 8th) in the session's compact montages (outputs/verification/a12_g1_compact.png, a12_g2_compact.png, a12_g3_compact.png); the label is right and the reader is wrong.",
+      "cause": "Same mechanism as 34/3 plus the wider inning digit: the up arrow starts at x 264 (the default arrow window starts at x 266, clipping its base rows to 8 px), and on 8th-inning frames the left column of the inning '8' reaches into the window, adding 1 px to the apex rows. When JPEG jitter leaves the base rows tied at 8 px, the widest-row argmax takes the first tied row at 0.333 of the arrow span, under the 0.4 threshold, and returns Bot. v4 (arrow_window from x 262 plus the blob-slope rule) reads every one of these frames as Top.",
+      "follow_up": "Already fixed by the v4 reader options (which read these rows correctly); v1-v3 keep the read as recorded measurements."
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 58,
+      "pitch_number": 3,
+      "play_id": "7dccad35-8849-4144-8dfc-834c3478fcff",
+      "frame_seconds": 5695.25,
+      "field": "inning_topbot",
+      "read": "Bot",
+      "label": "Top",
+      "versions": [
+        "v1",
+        "v2",
+        "v3"
+      ],
+      "first_seen": {
+        "date": "2026-09-26",
+        "refresh_label": "pa56_65",
+        "reference_commit": "10250bc",
+        "note": "Top-of-the-8th rows added by A-12; new rows for every version (no pre-registered version was pending)."
+      },
+      "evidence": "outputs/frames/evalset_5695.25.jpg shows the up arrow and 8 (top of the 8th) in the session's compact montages (outputs/verification/a12_g1_compact.png, a12_g2_compact.png, a12_g3_compact.png); the label is right and the reader is wrong.",
+      "cause": "Same mechanism as 34/3 plus the wider inning digit: the up arrow starts at x 264 (the default arrow window starts at x 266, clipping its base rows to 8 px), and on 8th-inning frames the left column of the inning '8' reaches into the window, adding 1 px to the apex rows. When JPEG jitter leaves the base rows tied at 8 px, the widest-row argmax takes the first tied row at 0.333 of the arrow span, under the 0.4 threshold, and returns Bot. v4 (arrow_window from x 262 plus the blob-slope rule) reads every one of these frames as Top.",
+      "follow_up": "Already fixed by the v4 reader options (which read these rows correctly); v1-v3 keep the read as recorded measurements."
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 59,
+      "pitch_number": 3,
+      "play_id": "2017b82e-871c-418a-a7ea-2e7768095a21",
+      "frame_seconds": 5837.75,
+      "field": "inning_topbot",
+      "read": "Bot",
+      "label": "Top",
+      "versions": [
+        "v1",
+        "v2",
+        "v3"
+      ],
+      "first_seen": {
+        "date": "2026-09-26",
+        "refresh_label": "pa56_65",
+        "reference_commit": "10250bc",
+        "note": "Top-of-the-8th rows added by A-12; new rows for every version (no pre-registered version was pending)."
+      },
+      "evidence": "outputs/frames/evalset_5837.75.jpg shows the up arrow and 8 (top of the 8th) in the session's compact montages (outputs/verification/a12_g1_compact.png, a12_g2_compact.png, a12_g3_compact.png); the label is right and the reader is wrong.",
+      "cause": "Same mechanism as 34/3 plus the wider inning digit: the up arrow starts at x 264 (the default arrow window starts at x 266, clipping its base rows to 8 px), and on 8th-inning frames the left column of the inning '8' reaches into the window, adding 1 px to the apex rows. When JPEG jitter leaves the base rows tied at 8 px, the widest-row argmax takes the first tied row at 0.333 of the arrow span, under the 0.4 threshold, and returns Bot. v4 (arrow_window from x 262 plus the blob-slope rule) reads every one of these frames as Top.",
+      "follow_up": "Already fixed by the v4 reader options (which read these rows correctly); v1-v3 keep the read as recorded measurements."
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 60,
+      "pitch_number": 1,
+      "play_id": "31305347-3b22-4856-be77-f2b60424c087",
+      "frame_seconds": 5933.5,
+      "field": "inning_topbot",
+      "read": "Bot",
+      "label": "Top",
+      "versions": [
+        "v1",
+        "v2",
+        "v3"
+      ],
+      "first_seen": {
+        "date": "2026-09-26",
+        "refresh_label": "pa56_65",
+        "reference_commit": "10250bc",
+        "note": "Top-of-the-8th rows added by A-12; new rows for every version (no pre-registered version was pending)."
+      },
+      "evidence": "outputs/frames/evalset_5933.50.jpg shows the up arrow and 8 (top of the 8th) in the session's compact montages (outputs/verification/a12_g1_compact.png, a12_g2_compact.png, a12_g3_compact.png); the label is right and the reader is wrong.",
+      "cause": "Same mechanism as 34/3 plus the wider inning digit: the up arrow starts at x 264 (the default arrow window starts at x 266, clipping its base rows to 8 px), and on 8th-inning frames the left column of the inning '8' reaches into the window, adding 1 px to the apex rows. When JPEG jitter leaves the base rows tied at 8 px, the widest-row argmax takes the first tied row at 0.333 of the arrow span, under the 0.4 threshold, and returns Bot. v4 (arrow_window from x 262 plus the blob-slope rule) reads every one of these frames as Top.",
+      "follow_up": "Already fixed by the v4 reader options (which read these rows correctly); v1-v3 keep the read as recorded measurements."
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 60,
+      "pitch_number": 2,
+      "play_id": "94bd7dfc-cb02-482c-b830-1d9e462e7518",
+      "frame_seconds": 5948.75,
+      "field": "inning_topbot",
+      "read": "Bot",
+      "label": "Top",
+      "versions": [
+        "v1",
+        "v2",
+        "v3"
+      ],
+      "first_seen": {
+        "date": "2026-09-26",
+        "refresh_label": "pa56_65",
+        "reference_commit": "10250bc",
+        "note": "Top-of-the-8th rows added by A-12; new rows for every version (no pre-registered version was pending)."
+      },
+      "evidence": "outputs/frames/evalset_5948.75.jpg shows the up arrow and 8 (top of the 8th) in the session's compact montages (outputs/verification/a12_g1_compact.png, a12_g2_compact.png, a12_g3_compact.png); the label is right and the reader is wrong.",
+      "cause": "Same mechanism as 34/3 plus the wider inning digit: the up arrow starts at x 264 (the default arrow window starts at x 266, clipping its base rows to 8 px), and on 8th-inning frames the left column of the inning '8' reaches into the window, adding 1 px to the apex rows. When JPEG jitter leaves the base rows tied at 8 px, the widest-row argmax takes the first tied row at 0.333 of the arrow span, under the 0.4 threshold, and returns Bot. v4 (arrow_window from x 262 plus the blob-slope rule) reads every one of these frames as Top.",
+      "follow_up": "Already fixed by the v4 reader options (which read these rows correctly); v1-v3 keep the read as recorded measurements."
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 61,
+      "pitch_number": 3,
+      "play_id": "d77609ba-144a-4743-bb46-38395ae9b037",
+      "frame_seconds": 6077.5,
+      "field": "inning_topbot",
+      "read": "Bot",
+      "label": "Top",
+      "versions": [
+        "v1",
+        "v2",
+        "v3"
+      ],
+      "first_seen": {
+        "date": "2026-09-26",
+        "refresh_label": "pa56_65",
+        "reference_commit": "10250bc",
+        "note": "Top-of-the-8th rows added by A-12; new rows for every version (no pre-registered version was pending)."
+      },
+      "evidence": "outputs/frames/evalset_6077.50.jpg shows the up arrow and 8 (top of the 8th) in the session's compact montages (outputs/verification/a12_g1_compact.png, a12_g2_compact.png, a12_g3_compact.png); the label is right and the reader is wrong.",
+      "cause": "Same mechanism as 34/3 plus the wider inning digit: the up arrow starts at x 264 (the default arrow window starts at x 266, clipping its base rows to 8 px), and on 8th-inning frames the left column of the inning '8' reaches into the window, adding 1 px to the apex rows. When JPEG jitter leaves the base rows tied at 8 px, the widest-row argmax takes the first tied row at 0.333 of the arrow span, under the 0.4 threshold, and returns Bot. v4 (arrow_window from x 262 plus the blob-slope rule) reads every one of these frames as Top.",
+      "follow_up": "Already fixed by the v4 reader options (which read these rows correctly); v1-v3 keep the read as recorded measurements."
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 62,
+      "pitch_number": 3,
+      "play_id": "a20b83f8-8419-49e9-8735-8e6d2717baee",
+      "frame_seconds": 6187.5,
+      "field": "inning_topbot",
+      "read": "Bot",
+      "label": "Top",
+      "versions": [
+        "v1",
+        "v2",
+        "v3"
+      ],
+      "first_seen": {
+        "date": "2026-09-26",
+        "refresh_label": "pa56_65",
+        "reference_commit": "10250bc",
+        "note": "Top-of-the-8th rows added by A-12; new rows for every version (no pre-registered version was pending)."
+      },
+      "evidence": "outputs/frames/evalset_6187.50.jpg shows the up arrow and 8 (top of the 8th) in the session's compact montages (outputs/verification/a12_g1_compact.png, a12_g2_compact.png, a12_g3_compact.png); the label is right and the reader is wrong.",
+      "cause": "Same mechanism as 34/3 plus the wider inning digit: the up arrow starts at x 264 (the default arrow window starts at x 266, clipping its base rows to 8 px), and on 8th-inning frames the left column of the inning '8' reaches into the window, adding 1 px to the apex rows. When JPEG jitter leaves the base rows tied at 8 px, the widest-row argmax takes the first tied row at 0.333 of the arrow span, under the 0.4 threshold, and returns Bot. v4 (arrow_window from x 262 plus the blob-slope rule) reads every one of these frames as Top.",
+      "follow_up": "Already fixed by the v4 reader options (which read these rows correctly); v1-v3 keep the read as recorded measurements."
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 62,
+      "pitch_number": 4,
+      "play_id": "19bd823b-1d2a-4512-813c-07b582a7c6aa",
+      "frame_seconds": 6205.5,
+      "field": "inning_topbot",
+      "read": "Bot",
+      "label": "Top",
+      "versions": [
+        "v1",
+        "v2",
+        "v3"
+      ],
+      "first_seen": {
+        "date": "2026-09-26",
+        "refresh_label": "pa56_65",
+        "reference_commit": "10250bc",
+        "note": "Top-of-the-8th rows added by A-12; new rows for every version (no pre-registered version was pending)."
+      },
+      "evidence": "outputs/frames/evalset_6205.50.jpg shows the up arrow and 8 (top of the 8th) in the session's compact montages (outputs/verification/a12_g1_compact.png, a12_g2_compact.png, a12_g3_compact.png); the label is right and the reader is wrong.",
+      "cause": "Same mechanism as 34/3 plus the wider inning digit: the up arrow starts at x 264 (the default arrow window starts at x 266, clipping its base rows to 8 px), and on 8th-inning frames the left column of the inning '8' reaches into the window, adding 1 px to the apex rows. When JPEG jitter leaves the base rows tied at 8 px, the widest-row argmax takes the first tied row at 0.333 of the arrow span, under the 0.4 threshold, and returns Bot. v4 (arrow_window from x 262 plus the blob-slope rule) reads every one of these frames as Top.",
+      "follow_up": "Already fixed by the v4 reader options (which read these rows correctly); v1-v3 keep the read as recorded measurements."
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 63,
+      "pitch_number": 1,
+      "play_id": "152d59ed-5b23-4dd2-b180-ac571fd01621",
+      "frame_seconds": 6334,
+      "field": "inning_topbot",
+      "read": "Bot",
+      "label": "Top",
+      "versions": [
+        "v1",
+        "v2",
+        "v3"
+      ],
+      "first_seen": {
+        "date": "2026-09-26",
+        "refresh_label": "pa56_65",
+        "reference_commit": "10250bc",
+        "note": "Top-of-the-8th rows added by A-12; new rows for every version (no pre-registered version was pending)."
+      },
+      "evidence": "outputs/frames/evalset_6334.00.jpg shows the up arrow and 8 (top of the 8th) in the session's compact montages (outputs/verification/a12_g1_compact.png, a12_g2_compact.png, a12_g3_compact.png); the label is right and the reader is wrong.",
+      "cause": "Same mechanism as 34/3 plus the wider inning digit: the up arrow starts at x 264 (the default arrow window starts at x 266, clipping its base rows to 8 px), and on 8th-inning frames the left column of the inning '8' reaches into the window, adding 1 px to the apex rows. When JPEG jitter leaves the base rows tied at 8 px, the widest-row argmax takes the first tied row at 0.333 of the arrow span, under the 0.4 threshold, and returns Bot. v4 (arrow_window from x 262 plus the blob-slope rule) reads every one of these frames as Top.",
+      "follow_up": "Already fixed by the v4 reader options (which read these rows correctly); v1-v3 keep the read as recorded measurements."
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 64,
+      "pitch_number": 4,
+      "play_id": "d79dbd74-c770-46dc-9333-d913555ed157",
+      "frame_seconds": 6485.5,
+      "field": "inning_topbot",
+      "read": "Bot",
+      "label": "Top",
+      "versions": [
+        "v1",
+        "v2",
+        "v3"
+      ],
+      "first_seen": {
+        "date": "2026-09-26",
+        "refresh_label": "pa56_65",
+        "reference_commit": "10250bc",
+        "note": "Top-of-the-8th rows added by A-12; new rows for every version (no pre-registered version was pending)."
+      },
+      "evidence": "outputs/frames/evalset_6485.50.jpg shows the up arrow and 8 (top of the 8th) in the session's compact montages (outputs/verification/a12_g1_compact.png, a12_g2_compact.png, a12_g3_compact.png); the label is right and the reader is wrong.",
+      "cause": "Same mechanism as 34/3 plus the wider inning digit: the up arrow starts at x 264 (the default arrow window starts at x 266, clipping its base rows to 8 px), and on 8th-inning frames the left column of the inning '8' reaches into the window, adding 1 px to the apex rows. When JPEG jitter leaves the base rows tied at 8 px, the widest-row argmax takes the first tied row at 0.333 of the arrow span, under the 0.4 threshold, and returns Bot. v4 (arrow_window from x 262 plus the blob-slope rule) reads every one of these frames as Top.",
+      "follow_up": "Already fixed by the v4 reader options (which read these rows correctly); v1-v3 keep the read as recorded measurements."
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 64,
+      "pitch_number": 6,
+      "play_id": "9ffc9f57-e55d-42b1-90fe-4d3efcf26ab2",
+      "frame_seconds": 6529.25,
+      "field": "inning_topbot",
+      "read": "Bot",
+      "label": "Top",
+      "versions": [
+        "v1",
+        "v2",
+        "v3"
+      ],
+      "first_seen": {
+        "date": "2026-09-26",
+        "refresh_label": "pa56_65",
+        "reference_commit": "10250bc",
+        "note": "Top-of-the-8th rows added by A-12; new rows for every version (no pre-registered version was pending)."
+      },
+      "evidence": "outputs/frames/evalset_6529.25.jpg shows the up arrow and 8 (top of the 8th) in the session's compact montages (outputs/verification/a12_g1_compact.png, a12_g2_compact.png, a12_g3_compact.png); the label is right and the reader is wrong.",
+      "cause": "Same mechanism as 34/3 plus the wider inning digit: the up arrow starts at x 264 (the default arrow window starts at x 266, clipping its base rows to 8 px), and on 8th-inning frames the left column of the inning '8' reaches into the window, adding 1 px to the apex rows. When JPEG jitter leaves the base rows tied at 8 px, the widest-row argmax takes the first tied row at 0.333 of the arrow span, under the 0.4 threshold, and returns Bot. v4 (arrow_window from x 262 plus the blob-slope rule) reads every one of these frames as Top.",
+      "follow_up": "Already fixed by the v4 reader options (which read these rows correctly); v1-v3 keep the read as recorded measurements."
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 65,
+      "pitch_number": 2,
+      "play_id": "d6914717-8f79-452d-b594-3adff253cb62",
+      "frame_seconds": 6579.75,
+      "field": "inning_topbot",
+      "read": "Bot",
+      "label": "Top",
+      "versions": [
+        "v1",
+        "v2",
+        "v3"
+      ],
+      "first_seen": {
+        "date": "2026-09-26",
+        "refresh_label": "pa56_65",
+        "reference_commit": "10250bc",
+        "note": "Top-of-the-8th rows added by A-12; new rows for every version (no pre-registered version was pending)."
+      },
+      "evidence": "outputs/frames/evalset_6579.75.jpg shows the up arrow and 8 (top of the 8th) in the session's compact montages (outputs/verification/a12_g1_compact.png, a12_g2_compact.png, a12_g3_compact.png); the label is right and the reader is wrong.",
+      "cause": "Same mechanism as 34/3 plus the wider inning digit: the up arrow starts at x 264 (the default arrow window starts at x 266, clipping its base rows to 8 px), and on 8th-inning frames the left column of the inning '8' reaches into the window, adding 1 px to the apex rows. When JPEG jitter leaves the base rows tied at 8 px, the widest-row argmax takes the first tied row at 0.333 of the arrow span, under the 0.4 threshold, and returns Bot. v4 (arrow_window from x 262 plus the blob-slope rule) reads every one of these frames as Top.",
+      "follow_up": "Already fixed by the v4 reader options (which read these rows correctly); v1-v3 keep the read as recorded measurements."
     }
   ]
 }
