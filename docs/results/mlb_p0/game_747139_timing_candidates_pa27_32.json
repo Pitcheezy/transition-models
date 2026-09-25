@@ -1,0 +1,127 @@
+{
+  "schema": "mlb_broadcast_timing_candidates_v1",
+  "game_pk": 747139,
+  "manifest_sha256": "4d036f94f5b5bddc682e846960dbc40de5ae35c4e023581efa12167475e062da",
+  "source": {
+    "page_url": "https://www.mlb.com/video/9-30-24-mets-win-epic-game-in-playoff-clincher",
+    "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+    "duration_seconds": 9340.748083
+  },
+  "convention": "decision-frame convention v2 (docs/MLB_BROADCAST_TIMING.md: earliest 0.25 s grid frame with live shot + pitcher still on the rubber + batter in the box + readable bug, continuous until motion)",
+  "status": "PA27-32 (4th inning) candidates: PAs 28, 30, 31 and 32 are verified and merged (see merge_history and game_747139_timing_verification_pa27_32.json); no rows are pending in this file. PAs 27 and 29 are still in workflow verification/repair and have not been written here yet; add them as UNVERIFIED rows and merge a plate appearance only after every pitch has verification.status 'verified' (scripts/69 refuses anything else).",
+  "produced_by": "Claude Code: one Opus 5 workflow annotator per PA from ffmpeg frame grabs, two independent verifier lenses per pitch (timing, scoreboard_identity), final direct frame review by the Claude Code session before any merge",
+  "rows": [],
+  "merge_history": [
+    {
+      "date": "2026-09-25",
+      "plate_appearances": [
+        32
+      ],
+      "pitches": 1,
+      "annotated": 1,
+      "unavailable": 0,
+      "work_commit": "(this unit commit)",
+      "verification_report": "game_747139_timing_verification_pa27_32.json"
+    },
+    {
+      "date": "2026-09-25",
+      "plate_appearances": [
+        28
+      ],
+      "pitches": 2,
+      "annotated": 2,
+      "unavailable": 0,
+      "work_commit": "(this unit commit)",
+      "verification_report": "game_747139_timing_verification_pa27_32.json"
+    },
+    {
+      "date": "2026-09-25",
+      "plate_appearances": [
+        31
+      ],
+      "pitches": 4,
+      "annotated": 4,
+      "unavailable": 0,
+      "work_commit": "(this unit commit)",
+      "verification_report": "game_747139_timing_verification_pa27_32.json"
+    },
+    {
+      "date": "2026-09-25",
+      "plate_appearances": [
+        30
+      ],
+      "pitches": 3,
+      "annotated": 3,
+      "unavailable": 0,
+      "work_commit": "(this unit commit)",
+      "verification_report": "game_747139_timing_verification_pa27_32.json"
+    }
+  ],
+  "pa_notes": {
+    "32": {
+      "annotator_problems": [
+        "The pre-pitch window is short: the broadcast only cut to the live centre-field camera at about 3129.0 via an SNY wipe, and the batter was still digging in until 3130.25, so only ~6.4 s of valid pre-motion window exists before the 3136.70 leg lift.",
+        "At the decision frame 3130.25 the bug's lower banner shows only 'MEGILL  P:74' with no batter line; the batter banner '1. HARRIS II' was read at 3133.50, 3136.50 and 3137.00, all inside the same continuous window and the same at-bat.",
+        "The '1-2' shown on the batter line next to '1. HARRIS II' is his game hitting line (1-for-2), not a ball-strike count; the count field on the bug reads 0-0 throughout the window, as expected for this pitch.",
+        "3129.25 is the live centre-field shot but still carries a fading SNY transition graphic over the infield; it is moot here because condition (3) fails there anyway (batter bent over), but it was not counted as a clean live frame.",
+        "The boundary between 3130.00 and 3130.25 is a judgement call on batter posture (hunched with head down vs upright and facing the pitcher) rather than a sharp event; the stated 0.15 s uncertainty covers it."
+      ],
+      "end_of_pa_evidence": "At 3140 the shot is a high wide angle of the ball in play while the bug still lags at down-4 / 2 outs / bases empty / 0-0 / 'MEGILL 96 MPH' with '1. HARRIS II 1-2'; at 3143 a Mets outfielder (#44) is set to catch near the 400 marker; at 3146 the bug has updated to 'NYM 0 / ATL 2 / bases empty / END 4 / 0-0' with both out circles now hollow, i.e. the field out ended the half-inning; at 3150 a line-score graphic reads 'END 4TH  METS 0 1 0 / BRAVES 2 6 0'; at 3154 the 'DUE UP ALONSO' graphic is on screen.",
+      "last_release_seconds": 3137.85,
+      "workflow_outcome": {
+        "1": "both_lenses_passed"
+      }
+    },
+    "28": {
+      "annotator_problems": [
+        "Pitch 1: the bug's second (batter) line was NOT displayed at the decision frame 2788.00 - the bug showed only 'SCHWELLENBACH   P:36'. The batter identity comes from nearby frames: the full-screen graphic at 2784.00-2787.75 reads '3B MARK VIENTOS / 0 FOR 1 STRIKEOUT' and the bug shows '3.VIENTOS 0-1' from 2789.50 onward. batter_banner_seen for pitch 1 is therefore reported from those nearby frames, not from the decision frame itself.",
+        "The '0-1' on the bug's second line is Vientos's day line (0 for 1), not a count - confirmed against the 2785.00 full-screen graphic '0 FOR 1 STRIKEOUT'. It is present alongside a 0-0 count at 2789.50-2790.80 and should not be misread as the count.",
+        "Pitch 2's valid pre-pitch window is very short: the cut from the pitcher close-up lands between 2801.00 and 2801.25, so decision_seconds 2801.25 is only 1.25 s before the leg lift and 2.30 s before release. The exact cut point is inside that 0.25 s interval; on the 0.25 s grid 2801.25 is the earliest valid frame.",
+        "Motion start is bracketed, not pinned: for pitch 1 the leg lift begins between 2789.00 (still set, both feet down) and 2789.50 (knee up), and for pitch 2 between 2802.00 (still set) and 2802.50 (knee up). I report the first SAMPLED frame showing the lift, as the convention specifies.",
+        "Bug lag confirmed and worked around: at 2792.00 the bug still read 0-0 while already showing '82 MPH' for pitch 1 (count flipped to 0-1 only by 2796.00), and at 2808.00 it still read 1 out while the live shot already showed the out being made at first base. All counts/outs used for identity were read at the decision frames, before the pitch.",
+        "The pitch clock (:10 at 2789.50-2790.80, :09 at 2801.00-2803.50) is visibly frozen across those stretches and was not used for any timing check, per instructions.",
+        "No 'partial file' fetch failures occurred, and no white transition-wipe bug frame fell inside either continuity window. All observed bug values matched the expected PA 28 state (1 out, bases empty, top 4, NYM 0 / ATL 2, 0-0 P:36 then 0-1 P:37); nothing contradicted the expectation."
+      ],
+      "end_of_pa_evidence": "At t=2812.00 the bug reads NYM 0 / ATL 2, three empty diamonds (bases empty), up-arrow 4, TWO outs (both circles gold), the count reset to 0-0, and 'SCHWELLENBACH   P:38' - i.e. PA 28 is over and Vientos made the second out, and the next pitch will be pitch 1 of PA 29. The play itself is visible at t=2808.00: a live high-first-base shot shows Vientos running through the first-base bag with the Braves first baseman holding the throw at the base (a fielded ground out), while the lagging bug still shows 1 out and '89 MPH' for the pitch. The bug at t=2804.00 (ball just off the bat) still read 0-1 / 1 out / P:37, confirming the 2-3 s bug lag.",
+      "last_release_seconds": 2803.55,
+      "workflow_outcome": {
+        "1": "both_lenses_passed",
+        "2": "both_lenses_passed"
+      }
+    },
+    "31": {
+      "annotator_problems": [
+        "Pitch 1's decision frame (3042.50) renders only the 'MEGILL P:70' banner line - the '9. ARCIA' batter line is not drawn there. Batter identity at that frame is from the man in the box plus the banner read at 3044.50 onward and the 'SS ORLANDO ARCIA' stat card at 3040-3042.25; batter_banner_seen is therefore null for pitch 1.",
+        "In all four pitches the limiting condition is the camera cut, not the pitcher: the live centre-field shot begins only 3.5 s (p1), 4.75 s (p2), 5.0 s (p3) and 5.0 s (p4) before the leg lift. No earlier live pre-motion frame exists for any pitch of this PA, so the decision seconds are cut-bound and would move if the cut point were re-judged at finer than 0.25 s.",
+        "Pitch 3's decision frame 3079.25 is only ~0.1-0.25 s after the cut (3079.00 is still the close-up). Arcia is upright in the box facing the pitcher with the bat up, but his stance is not yet fully loaded; I judged condition (3) satisfied (bat position alone does not matter per the stated rule), but this is the least comfortable of the four decision frames.",
+        "Release times are bracketed at 0.05 s and the true release lies inside each 0.05 s bracket; the stated 0.15 s uncertainty covers frame-selection and my visual judgement of arm extension. Pitch 1's bracket (3047.10 not extended / 3047.15 extended) is the tightest and could be 0.02-0.03 s late.",
+        "Motion-start values are grid-resolution only: for pitch 2 the leg is already noticeably high at the first lift frame (3066.25) while 3066.00 is clearly still, so the true rocker step is probably ~3066.05-3066.15. Same caveat, smaller, for pitches 1, 3 and 4.",
+        "All readings matched the expected PA-31 state (1 out, bases empty, 4th bottom, NYM 0 / ATL 2, counts 0-0/0-1/1-1/1-2 with P:70/71/72/73); no discrepancy to flag. The bug lag is visible as expected (e.g. at 3048.00 it still shows 0-0 with '86 MPH' after the pitch-1 swinging strike)."
+      ],
+      "end_of_pa_evidence": "Pitch 4 (release 3108.10) is the strikeout. At 3110.00 the bug still lags, showing 1-2 with 'MEGILL 96 MPH'. By 3112.00 and 3114.00 the bug has updated to NYM 0 / ATL 2 / bases empty / down-4 / TWO outs (both circles gold) / 0-0 / MEGILL 96 MPH, and at 3116.00 it reads the same state with 'MEGILL P:74' - i.e. the count has reset to 0-0, the out count has gone 1 -> 2 and Megill's pitch total has advanced to 74, confirming the PA ended on pitch 4 as a strikeout. At 3118.00 the bug is inside a transition wipe and unreadable. The live shot at 3110.00 already shows Megill walking off the back of the mound with the Braves batter leaving the box.",
+      "last_release_seconds": 3108.1,
+      "workflow_outcome": {
+        "1": "both_lenses_passed",
+        "2": "both_lenses_passed",
+        "3": "both_lenses_passed",
+        "4": "both_lenses_passed"
+      }
+    },
+    "30": {
+      "annotator_problems": [
+        "Pitch 1: at the decision frame 2973.75 the bug was still finishing its transition wipe, so the trailing pitch-count digit was clipped ('P:6_'); every other field (score, diamonds, outs, down-4, 0-0) was readable, and P:67 was confirmed 0.25 s later at 2974.00. I judged this 'readable' rather than 'partial'; a stricter reading of condition (4) would move pitch 1's decision to 2974.00.",
+        "Pitch 1's window is short: a Mets dugout close-up runs until 2973.00-2973.25 and the cut to the live centre-field camera happens at ~2973.5, so only 1.25 s of valid pre-motion time exists before the 2975.00 leg lift. This is a broadcast-cut limit, not a search limit.",
+        "Pitch 1: the bug at the decision frame was still the one-line pitcher banner ('MEGILL :04 P:6_'); the '8. URSHELA' batter line only appears later in the PA (read at 2994.00 and 3016.75), so batter_banner_seen is null for pitch 1 and the batter was identified from the live shot plus the pitch 2/3 banners and the 2982-2993 '3B GIO URSHELA' stat card.",
+        "All three release times rest on 0.05 s brackets between one frame with the hand still at/above the head and the next with the arm extended and the hand empty; the true release lies inside that 0.05 s window, and the stated uncertainty of 0.15 s covers seek/decoding slop as well. Not frame-exact.",
+        "Every bug reading matched the expected state (0 outs, bases empty, down-4, NYM 0 / ATL 2, counts 0-0 / 0-1 / 0-2 with P:67 / P:68 / P:69); no discrepancy to flag."
+      ],
+      "end_of_pa_evidence": "At 3019.00 Megill is in follow-through and the bug still reads 0-2 / 0 outs / P:69 (lag). At 3020.00 the bug reads NYM 0 / ATL 2 / bases empty / down-4 / 0 outs / 0-2 / MEGILL 96 MPH while Urshela has already turned away from the plate. By 3022.00 the bug has updated to NYM 0 / ATL 2 / bases empty / down-4 / ONE gold out circle (1 out) / 0-0 / MEGILL 96 MPH, with Urshela walking back toward the dugout carrying his bat and the next Braves hitter approaching. At 3025.00 the bug reads 1 out / 0-0 / MEGILL P:70, confirming the swinging strikeout on pitch 3 ended PA 30 as the first out of the inning.",
+      "last_release_seconds": 3018.55,
+      "workflow_outcome": {
+        "1": "both_lenses_passed",
+        "2": "both_lenses_passed",
+        "3": "both_lenses_passed"
+      }
+    }
+  }
+}

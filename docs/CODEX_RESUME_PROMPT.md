@@ -28,7 +28,8 @@ git log -8 --oneline
 
 ## 1. 주석 단위 절차 (PA 20~26 완료 기록 — 다음 반이닝에도 같은 절차)
 
-현재 timing은 101구(95 annotated / 6 unavailable), 미검토 221구다 — **3회 종료, A-7 완료(2026-09-25 Claude Code)**.
+현재 timing은 111구(105 annotated / 6 unavailable), 미검토 211구다 — 3회 종료(A-7) 후 **A-8(4회) 진행 중: PA 28·30~32 병합, PA 27·29 남음**.
+병합 뒤 OCR은 `scripts/70_refresh_ocr_reports.py --reference <병합 전 커밋> --label <단위> --date <날짜>`로 v1·v2와 provenance를 한 번에 갱신한다(docs/MAINTENANCE.md).
 완전 타석은 PA 2~4·6~15·18~19·21·23~26. PA 1/6·5/5·16/2·17/1·20/6·22/1은 판단 화면 불가, PA 8/1·16/1은 라인스코어 partial이다.
 PA 11~15·16~19·20~26 후보 파일의 rows는 모두 비어 있으므로 다시 병합하지 않는다(PA 20~26 근거: `game_747139_timing_verification_pa20_26.json`).
 아래 PA 20~26용 명령은 절차 예시로 남긴다. 4회초는 마지막 릴리스 **2695.48 s**(PA 26/5) 이후를 찾는다.

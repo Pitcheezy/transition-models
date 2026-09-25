@@ -1,0 +1,1973 @@
+{
+  "schema": "mlb_broadcast_timing_verification_v1",
+  "game_pk": 747139,
+  "manifest_sha256": "4d036f94f5b5bddc682e846960dbc40de5ae35c4e023581efa12167475e062da",
+  "source": {
+    "page_url": "https://www.mlb.com/video/9-30-24-mets-win-epic-game-in-playoff-clincher",
+    "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+    "duration_seconds": 9340.748083
+  },
+  "reviewed_at": "2026-09-25",
+  "method": "Opus 5 workflow annotator per PA from ffmpeg frame grabs; two independent verifier lenses per pitch (timing, scoreboard_identity) that both had to return and pass; then the Claude Code session built a review sheet per pitch (decision boundary frames, bug crops, continuity samples, release crops) and looked at it directly before marking a row verified.",
+  "limitations": "Selected-frame AI review, not continuous playback or independent human inter-rater measurement. Release estimates have +/-0.15 s manual uncertainty. Same-game development data, not an independent benchmark.",
+  "starting_commit": "31a9352",
+  "starting_commit_meaning": "Claim commit before PA27-32 (4th inning) annotation; candidates were created during this task.",
+  "rows": [
+    {
+      "game_pk": 747139,
+      "at_bat_number": 28,
+      "pitch_number": 1,
+      "play_id": "7fa4e2a5-3c10-415b-a274-09ecd5cf9c43",
+      "verification": {
+        "status": "verified",
+        "by": "Claude Code session (Opus 5.5) direct frame review of decision boundary, continuity samples, scoreboard bug and release sequence, after an Opus 5 workflow annotator and two independent verifier lenses (timing, scoreboard_identity)",
+        "date": "2026-09-25"
+      },
+      "prior_verification": {
+        "workflow_status": "workflow_two_lens_passed_needs_session_review",
+        "verdicts": [
+          {
+            "round": 1,
+            "row_decision_seconds": 2788,
+            "row_release_seconds": 2790.5,
+            "lens": "timing",
+            "refuted": true,
+            "confidence": "high",
+            "issues": [
+              "Criterion (c) is met. Motion has already started at 2789.25 s: in the enlarged pitcher crops the left (screen-left) shoe is off the dirt with the knee bending at 2789.25. The heel first lifts at about 2789.20, and he is still set with both feet down at 2789.10 and 2789.15. The claimed motion_start_seconds 2789.50 is 0.25 s late (the knee is already high at 2789.50) and should be 2789.25. The note's statement 'at 2789.50 the leg lift has begun' should say the lift began at 2789.25.",
+              "The decision frame 2788.00 checks out. At 2787.50 and 2787.75 the shot is the Vientos close-up with the '3B MARK VIENTOS / 0 FOR 1 STRIKEOUT' graphic, so condition (1) fails there. At 2788.00 the live centre-field camera shows Schwellenbach with both feet planted at the rubber and the glove at his belt, Vientos upright in the box with the bat up, and a readable bug. Samples 2788.25, 2788.50, 2788.75, 2789.00, 2789.10 and 2789.15 stay on the same shot. The feet do not move there, only the torso turns side-on (allowed), and there is no break.",
+              "The release at 2790.50 checks out. At 2790.40 and 2790.45 the arm is cocked behind the head. At 2790.50 the right arm is extended up and forward. At 2790.55 the ball is in flight about 30 px beyond the 2790.50 hand position, and it reaches the mitt at about 2790.95-2791.05, a flight of about 0.45 s, consistent with 82 MPH.",
+              "Identity checks out. The bug at 2788.00 reads 0-0, 1 out, bases empty, top 4, NYM 0 / ATL 2, SCHWELLENBACH P:36. The batter line '3. VIENTOS' first appears at 2789.25, so it is not shown at the decision frame itself."
+            ],
+            "suggested_decision_seconds": 2788,
+            "suggested_release_seconds": 2790.5,
+            "image_paths": [
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/p28_vT28_1a_full.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/p28_vT28_1a_bug.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/p28_vT28_1a_2788.00.jpg",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/p28_vT28_1a_2788.75.jpg",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/p28_vT28_1a_2789.25.jpg",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/p28_vT28_1b_full.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/p28_vT28_1b_bug.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/p28_vT28_1c_full.png",
+              "C:/Users/zpfh1/AppData/Local/Temp/claude/C--Users-zpfh1-Projects/789f73ca-11f1-4334-95b4-01773f4f4dc7/scratchpad/p28_1_pitcher.png",
+              "C:/Users/zpfh1/AppData/Local/Temp/claude/C--Users-zpfh1-Projects/789f73ca-11f1-4334-95b4-01773f4f4dc7/scratchpad/p28_1_release.png",
+              "C:/Users/zpfh1/AppData/Local/Temp/claude/C--Users-zpfh1-Projects/789f73ca-11f1-4334-95b4-01773f4f4dc7/scratchpad/p28_1_ball.png",
+              "C:/Users/zpfh1/AppData/Local/Temp/claude/C--Users-zpfh1-Projects/789f73ca-11f1-4334-95b4-01773f4f4dc7/scratchpad/p28_1_flight.png"
+            ]
+          },
+          {
+            "round": 1,
+            "row_decision_seconds": 2788,
+            "row_release_seconds": 2790.5,
+            "lens": "scoreboard_identity",
+            "refuted": false,
+            "confidence": "high",
+            "issues": [],
+            "suggested_decision_seconds": 2788,
+            "suggested_release_seconds": null,
+            "image_paths": [
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vS28_1_bug.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vS28_1_full.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vS28_1_2788.00.jpg"
+            ]
+          },
+          {
+            "round": 2,
+            "row_decision_seconds": 2788,
+            "row_release_seconds": 2790.5,
+            "lens": "timing",
+            "refuted": false,
+            "confidence": "high",
+            "issues": [],
+            "suggested_decision_seconds": 2788,
+            "suggested_release_seconds": 2790.5,
+            "image_paths": [
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT28_1a_full.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT28_1a_bug.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT28_1a_2788.00.jpg",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT28_1a_2788.95.jpg",
+              "C:/Users/zpfh1/AppData/Local/Temp/claude/C--Users-zpfh1-Projects/789f73ca-11f1-4334-95b4-01773f4f4dc7/scratchpad/v28_1a_crops.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT28_1b_full.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT28_1b_bug.png",
+              "C:/Users/zpfh1/AppData/Local/Temp/claude/C--Users-zpfh1-Projects/789f73ca-11f1-4334-95b4-01773f4f4dc7/scratchpad/v28_1b_crops.png",
+              "C:/Users/zpfh1/AppData/Local/Temp/claude/C--Users-zpfh1-Projects/789f73ca-11f1-4334-95b4-01773f4f4dc7/scratchpad/v28_1b_hand.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT28_1c_full.png",
+              "C:/Users/zpfh1/AppData/Local/Temp/claude/C--Users-zpfh1-Projects/789f73ca-11f1-4334-95b4-01773f4f4dc7/scratchpad/v28_1c_motion.png"
+            ]
+          },
+          {
+            "round": 2,
+            "row_decision_seconds": 2788,
+            "row_release_seconds": 2790.5,
+            "lens": "scoreboard_identity",
+            "refuted": false,
+            "confidence": "high",
+            "issues": [],
+            "suggested_decision_seconds": 2788,
+            "suggested_release_seconds": null,
+            "image_paths": [
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vS28_1_bug.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vS28_1_full.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vS28_1_2788.00.jpg"
+            ]
+          }
+        ]
+      },
+      "status": "annotated",
+      "decision_seconds": 2788,
+      "release_seconds": 2790.5,
+      "uncertainty_seconds": 0.15,
+      "readability": "readable",
+      "observed": {
+        "balls": 0,
+        "strikes": 0,
+        "outs": 1,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": 4,
+        "inning_topbot": "Top",
+        "home_score": 2,
+        "away_score": 0
+      },
+      "bug_text": "NYM 0 / ATL 2 / bases empty / up-4 / 1 out / 0-0 / SCHWELLENBACH P:36 (no batter line and no pitch clock shown at 2788.00; ':10' appears at 2788.75)",
+      "note": "SNY full game. Top 4, Spencer Schwellenbach vs Mark Vientos; 0-0 count, bases empty, 1 out. At previous_grid_seconds 2787.75 condition (1) fails: the shot is a tight cutaway close-up of Vientos in the box under the full-screen '3B MARK VIENTOS / 0 FOR 1 STRIKEOUT / .268 AVG / 27 HR / 70 RBI / .842 OPS' stat graphic with no pitcher in frame, and 2787.50 is the same close-up. The broadcast cuts to the live centre-field camera at 2788.00, which is the decision frame: it shows the pitcher on the rubber and the batter together, Schwellenbach standing still with BOTH feet planted flat at the rubber (verified in a 7x foot crop at 2788.00, 2788.25, 2788.50 and 2788.75 - the shoes do not move) and the ball in the glove at his belt, Vientos upright in the box facing the pitcher with the bat up (verified in a 4x batter crop, both feet inside the chalk), and the bug fully readable. Continuity samples 2788.00, 2788.25, 2788.50, 2788.75, 2789.00, 2789.10, 2789.15, 2789.17, 2789.18, 2789.19, 2789.20 (max gap 0.25 s) all stay on the same live centre-field shot with no step-off, pickoff, time-out, batter leaving the box, cutaway or white bug wipe; only his torso turns side-on, which is allowed. Motion start: in an 8x-14x crop of the lead (screen-left) foot the shoe sole rests on the dirt through 2789.15 (a white-pixel track of the shoe's lowest row gives 552 at 2789.00, 2789.10 and 2789.15), rises 2 px to 550 at 2789.17-2789.18, and at 2789.19-2789.20 the sole is clearly off the dirt at 547 with daylight under it, then 543 at 2789.21, 539 at 2789.22-2789.23 and 534 at 2789.25 with the knee driving up, so motion_start_seconds = 2789.20 (the earliest 2 px hint of the heel coming up is at 2789.17; by 2789.40 the knee is high). This corrects my earlier 2789.50, which was 0.25-0.30 s late, and is also 0.05 s earlier than the verifier's suggested 2789.25 because the lead foot already has daylight under it at 2789.19-2789.20. Release bracket, sampled 0.05 s apart: at 2790.35 and 2790.40 the throwing arm is back and the hand is beside/behind the head, at 2790.45 the hand is still up at the head with the arm not extended (glove side only - NOT release), at 2790.50 the right arm has come over the top and is extended up and forward toward the plate with the hand out in front and a white blur at the fingertips, and at 2790.55 the arm has already swung down out of the upper body crop into the follow-through; the ball is then visible in flight moving up and toward the plate at 2790.60, 2790.65 and 2790.70, so release_seconds = 2790.50 (bracketed by 2790.45 not-yet and 2790.55 already-past). ffmpeg frame grabs; selected-frame review, not continuous playback. Manual timing, not frame-exact.",
+      "changed_by_session": {},
+      "session_check": "Session review sheet (scripts/71): 2787.50 and 2787.75 are a Vientos close-up with the '3B MARK VIENTOS / 0 FOR 1 STRIKEOUT' card, so the live-shot condition fails; 2788.00 is the live centre-field shot with Schwellenbach standing on the rubber and Vientos in the right-handed box facing him, bug NYM 0 / ATL 2, up-4, bases empty, one out, 0-0, P:36 (37th pitch). 2788.50 and 2789.00 are the same live shot, still; the leg starts to lift at about 2789.20 (repaired motion start; the knee is bending at 2789.25 and up at 2789.50). Release: arm cocked behind the head at 2790.45, extended toward the plate at 2790.50, follow-through from 2790.55; 2790.50 +/-0.15 s holds.",
+      "visual_evidence": {
+        "review_sheet": "outputs/verification/rv28_1_review_sheet.png",
+        "extra_sheets": [],
+        "decision_frame": "outputs/frames/p28_rep1c_2788.00.jpg",
+        "previous_grid_frame": "outputs/frames/p28_c_2787.75.jpg",
+        "continuity_frames": [
+          "outputs/frames/p28_d_2788.50.jpg",
+          "outputs/frames/p28_a_2789.00.jpg",
+          "outputs/frames/p28_rep1a_2789.25.jpg",
+          "outputs/frames/p28_c_2789.50.jpg"
+        ],
+        "release_frames": [
+          "outputs/frames/p28_c_2790.40.jpg",
+          "outputs/frames/p28_rep1d_2790.45.jpg",
+          "outputs/frames/p28_c_2790.50.jpg",
+          "outputs/frames/p28_rep1d_2790.55.jpg",
+          "outputs/frames/p28_c_2790.60.jpg"
+        ],
+        "workflow_prep_sample_times": [
+          2788,
+          2788.25,
+          2788.5,
+          2788.75,
+          2789,
+          2789.1,
+          2789.15,
+          2789.17,
+          2789.18,
+          2789.19,
+          2789.2
+        ],
+        "workflow_max_prep_gap_seconds": 0.25,
+        "workflow_release_sample_times": [
+          2790.35,
+          2790.4,
+          2790.45,
+          2790.5,
+          2790.55,
+          2790.6,
+          2790.65,
+          2790.7
+        ]
+      },
+      "canonical_frame_hashes": [
+        {
+          "path": "outputs/frames/p28_rep1c_2788.00.jpg",
+          "sha256": "4a3d71393a56a050e8634458640d0743a950a95e3b3e41a4876815e72604346a"
+        },
+        {
+          "path": "outputs/frames/p28_c_2787.75.jpg",
+          "sha256": "33d0d4d409edc6931f00f2ad1bb86a3257f504fca85020bbbeaf98ceccdb205c"
+        },
+        {
+          "path": "outputs/frames/p28_d_2788.50.jpg",
+          "sha256": "9e739d6d61f9ac978f03a1303368738f5cd4842562fe0153017253f2e02997dc"
+        },
+        {
+          "path": "outputs/frames/p28_a_2789.00.jpg",
+          "sha256": "6b781db797b740df6e2df54b3829e04ed86a1f8bbd4c429ffef56fe46e24b78e"
+        },
+        {
+          "path": "outputs/frames/p28_rep1a_2789.25.jpg",
+          "sha256": "ac90c7933d2398ae44906643034debfddd6de125b83f928e5fe028742a035272"
+        },
+        {
+          "path": "outputs/frames/p28_c_2789.50.jpg",
+          "sha256": "e2dab144a4fdd58ce9a215edbc8cd90491c0c645ededa27d63caac25b2b42fb5"
+        },
+        {
+          "path": "outputs/frames/p28_c_2790.40.jpg",
+          "sha256": "c29a9c86055e342d6c3cebe802294054c86b311a814d2f3d4bf75a5db961d564"
+        },
+        {
+          "path": "outputs/frames/p28_rep1d_2790.45.jpg",
+          "sha256": "4c4f53dd853389b441d78cd48db127adaf72c21f3f9e851fe718725142a610d2"
+        },
+        {
+          "path": "outputs/frames/p28_c_2790.50.jpg",
+          "sha256": "248fa750727c03066559970236405198b006ecee1c8a57fb1a3b4391651b5681"
+        },
+        {
+          "path": "outputs/frames/p28_rep1d_2790.55.jpg",
+          "sha256": "37491cd2489afb2b46cb5f0362be1e4f10c39f84227ee8e8b639e946001146fc"
+        },
+        {
+          "path": "outputs/frames/p28_c_2790.60.jpg",
+          "sha256": "d4c12af61f30ff2302db4ea071e43b85cf5a2f2782443996c389c82813de6f9d"
+        }
+      ]
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 28,
+      "pitch_number": 2,
+      "play_id": "baa06642-8b25-4754-9e1f-1bd5b5769f2a",
+      "verification": {
+        "status": "verified",
+        "by": "Claude Code session (Opus 5.5) direct frame review of decision boundary, continuity samples, scoreboard bug and release sequence, after an Opus 5 workflow annotator and two independent verifier lenses (timing, scoreboard_identity)",
+        "date": "2026-09-25"
+      },
+      "prior_verification": {
+        "workflow_status": "workflow_two_lens_passed_needs_session_review",
+        "verdicts": [
+          {
+            "round": 1,
+            "row_decision_seconds": 2801.25,
+            "row_release_seconds": 2803.55,
+            "lens": "timing",
+            "refuted": true,
+            "confidence": "high",
+            "issues": [
+              "Motion start is wrong: the claimed motion_start_seconds is 2802.50, but the leg lift has already begun by 2802.25. At 2802.10 both feet are still flat. At 2802.20 the front-foot heel is off the dirt and the knee is flexing. At 2802.25 the foot is lifting with the knee bent. At 2802.30 the foot is clearly in the air. At 2802.40 and 2802.50 the leg is at knee height. Refute criterion (c), motion already started at 2802.25 s, applies. On the 0.25 s grid the motion start is 2802.25 (first movement about 2802.20).",
+              "The note says at 2802.00 he is 'still set' and gives 2802.50 as the first leg-lift frame, but no frame between those two was sampled. The pre-motion window really ends at about 2802.10-2802.20, not just before 2802.50.",
+              "Minor: the note puts the ball in the glove 'at his belt', but at 2801.25-2802.10 the glove is at chest height (come-set/stretch). This does not affect condition (2).",
+              "The decision frame is correct: 2800.75 and 2801.00 are both the tight Schwellenbach close-up, so condition (1) fails there. 2801.25 is the first centre-field frame and meets all four conditions. The release at 2803.55 is also confirmed. Only the motion start is in error."
+            ],
+            "suggested_decision_seconds": 2801.25,
+            "suggested_release_seconds": 2803.55,
+            "image_paths": [
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/p28_vT28_2a_full.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/p28_vT28_2a_bug.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/p28_vT28_2a_2801.25.jpg",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/p28_vT28_2a_2802.25.jpg",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/p28_vT28_2b_full.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/p28_vT28_2c_full.png",
+              "C:/Users/zpfh1/AppData/Local/Temp/claude/C--Users-zpfh1-Projects/789f73ca-11f1-4334-95b4-01773f4f4dc7/scratchpad/v28_2a_crop.png",
+              "C:/Users/zpfh1/AppData/Local/Temp/claude/C--Users-zpfh1-Projects/789f73ca-11f1-4334-95b4-01773f4f4dc7/scratchpad/v28_2c_crop.png",
+              "C:/Users/zpfh1/AppData/Local/Temp/claude/C--Users-zpfh1-Projects/789f73ca-11f1-4334-95b4-01773f4f4dc7/scratchpad/v28_2b_crop.png",
+              "C:/Users/zpfh1/AppData/Local/Temp/claude/C--Users-zpfh1-Projects/789f73ca-11f1-4334-95b4-01773f4f4dc7/scratchpad/v28_2b_hand.png"
+            ]
+          },
+          {
+            "round": 1,
+            "row_decision_seconds": 2801.25,
+            "row_release_seconds": 2803.55,
+            "lens": "scoreboard_identity",
+            "refuted": false,
+            "confidence": "high",
+            "issues": [],
+            "suggested_decision_seconds": 2801.25,
+            "suggested_release_seconds": null,
+            "image_paths": [
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vS28_2_bug.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vS28_2_full.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vS28_2_2801.25.jpg"
+            ]
+          },
+          {
+            "round": 2,
+            "row_decision_seconds": 2801.25,
+            "row_release_seconds": 2803.55,
+            "lens": "timing",
+            "refuted": false,
+            "confidence": "high",
+            "issues": [],
+            "suggested_decision_seconds": null,
+            "suggested_release_seconds": null,
+            "image_paths": [
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT28_2a_full.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT28_2a_bug.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT28_2a_2801.25.jpg",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT28_2b_full.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT28_2b_2803.55.jpg",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT28_2b_2803.60.jpg",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT28_2c_full.png",
+              "C:/Users/zpfh1/AppData/Local/Temp/claude/C--Users-zpfh1-Projects/789f73ca-11f1-4334-95b4-01773f4f4dc7/scratchpad/vT28_2a_feet_batter.png",
+              "C:/Users/zpfh1/AppData/Local/Temp/claude/C--Users-zpfh1-Projects/789f73ca-11f1-4334-95b4-01773f4f4dc7/scratchpad/vT28_2b_pitcher.png",
+              "C:/Users/zpfh1/AppData/Local/Temp/claude/C--Users-zpfh1-Projects/789f73ca-11f1-4334-95b4-01773f4f4dc7/scratchpad/vT28_2c_pitcher.png"
+            ]
+          },
+          {
+            "round": 2,
+            "row_decision_seconds": 2801.25,
+            "row_release_seconds": 2803.55,
+            "lens": "scoreboard_identity",
+            "refuted": false,
+            "confidence": "high",
+            "issues": [],
+            "suggested_decision_seconds": null,
+            "suggested_release_seconds": null,
+            "image_paths": [
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vS28_2_bug.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vS28_2_full.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vS28_2_2801.25.jpg"
+            ]
+          }
+        ]
+      },
+      "status": "annotated",
+      "decision_seconds": 2801.25,
+      "release_seconds": 2803.55,
+      "uncertainty_seconds": 0.15,
+      "readability": "readable",
+      "observed": {
+        "balls": 0,
+        "strikes": 1,
+        "outs": 1,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": 4,
+        "inning_topbot": "Top",
+        "home_score": 2,
+        "away_score": 0
+      },
+      "bug_text": "NYM 0 / ATL 2 / bases empty / up-4 / 1 out / 0-1 / SCHWELLENBACH :09 P:37 / 3. VIENTOS",
+      "note": "SNY full game. Top 4, Spencer Schwellenbach vs Mark Vientos; 0-1 count, bases empty, 1 out. At previous_grid_seconds 2801.00 condition (1) fails: the shot is a tight head-and-shoulders close-up of Schwellenbach (the same close-up is on at 2800.75), with no batter and no rubber in frame. The cut to the live centre-field camera lands at 2801.25, which is the decision frame: pitcher and batter are both in shot, Schwellenbach stands still at the rubber with BOTH feet flat on the dirt (checked in a 16x foot crop, trail shoe sole fully down beside the plant foot) and the ball in the glove at chest height, Vientos is upright in the box facing the pitcher with the bat up (batter crop at 2801.25, 2801.50, 2802.00 and 2802.15 shows the same upright stance, never bent over digging in), and the bug is fully readable. Continuity samples 2801.25, 2801.50, 2802.00, 2802.05, 2802.10, 2802.12, 2802.15, 2802.20 (max gap 0.50 s) are all the same live centre-field shot with no step-off, time-out, cutaway or white bug wipe. Motion start corrected after re-grabbing the 0.05 s ladder: at 2802.00, 2802.05, 2802.10 and 2802.12 both feet are still flat (the trail shoe's white mass sits on the same ground rows in a measured brightness profile), at 2802.15 the shoe has shifted up only about one pixel, which is inside the noise and not yet a lift, and at 2802.20 the trail foot is unmistakably off the dirt with the heel up and the knee flexing, rising further at 2802.25 and 2802.30; motion_start_seconds = 2802.20 (my earlier 2802.50 was ~0.3 s late and is withdrawn). The leg-lift start does not move the decision frame, since all four conditions hold continuously from 2801.25 to 2802.20. Release bracket: at 2803.40 he is striding with the throwing arm back and the glove out front, at 2803.50 the arm is still cocked up behind the head (blurred, NOT release), at 2803.55 the right arm is extended over the top forward toward the plate with the hand blur at the fingertips, and at 2803.60 the arm has already swung down out of the crop with a distinct white ball blur visible in flight over the infield dirt, followed by full follow-through at 2803.65 and 2803.70, so release_seconds = 2803.55. ffmpeg frame grabs; selected-frame review, not continuous playback. Manual timing, not frame-exact.",
+      "changed_by_session": {},
+      "session_check": "Session review sheet (scripts/71): 2800.75 and 2801.00 are a Schwellenbach close-up (no batter), so the live-shot condition fails; 2801.25 is the live centre-field shot with Schwellenbach on the rubber and Vientos in the box, bug NYM 0 / ATL 2, up-4, bases empty, one out, 0-1, :09 P:37 (38th pitch), 3. VIENTOS. 2801.50 and 2802.00 are the same live shot, still; the leg starts to lift at about 2802.20 (repaired motion start; knee up by 2802.50). Release: arm cocked at 2803.50, extended toward the plate at 2803.55, follow-through from 2803.60; 2803.55 +/-0.15 s holds.",
+      "visual_evidence": {
+        "review_sheet": "outputs/verification/rv28_2_review_sheet.png",
+        "extra_sheets": [],
+        "decision_frame": "outputs/frames/p28_c_2801.25.jpg",
+        "previous_grid_frame": "outputs/frames/p28_b_2801.00.jpg",
+        "continuity_frames": [
+          "outputs/frames/p28_b_2801.50.jpg",
+          "outputs/frames/p28_b_2802.00.jpg",
+          "outputs/frames/p28_rep2a_2802.25.jpg",
+          "outputs/frames/p28_b_2802.50.jpg"
+        ],
+        "release_frames": [
+          "outputs/frames/rv28_2_2803.45.jpg",
+          "outputs/frames/p28_b_2803.50.jpg",
+          "outputs/frames/p28_d_2803.55.jpg",
+          "outputs/frames/p28_d_2803.60.jpg",
+          "outputs/frames/p28_d_2803.65.jpg"
+        ],
+        "workflow_prep_sample_times": [
+          2801.25,
+          2801.5,
+          2802,
+          2802.05,
+          2802.1,
+          2802.12,
+          2802.15,
+          2802.2
+        ],
+        "workflow_max_prep_gap_seconds": 0.5,
+        "workflow_release_sample_times": [
+          2803.4,
+          2803.5,
+          2803.55,
+          2803.6,
+          2803.65,
+          2803.7
+        ]
+      },
+      "canonical_frame_hashes": [
+        {
+          "path": "outputs/frames/p28_c_2801.25.jpg",
+          "sha256": "515497a884b474b67e1530961c9ca2a3722e348c9d3503530f7fed2289f83543"
+        },
+        {
+          "path": "outputs/frames/p28_b_2801.00.jpg",
+          "sha256": "dcc06eb5daf33347620f654380def56a1429482b082a056d74cba4554a49f460"
+        },
+        {
+          "path": "outputs/frames/p28_b_2801.50.jpg",
+          "sha256": "82d5a99f6f625362a8bbd8d87c87ca308fa878ac39c33954f8a29662bf550dca"
+        },
+        {
+          "path": "outputs/frames/p28_b_2802.00.jpg",
+          "sha256": "622dbbc36962c1210d1fb09513fed1e9869a19aada785796b7cd95bf19219177"
+        },
+        {
+          "path": "outputs/frames/p28_rep2a_2802.25.jpg",
+          "sha256": "2c96b9a2eb52c7c0506c29af1e9ec833d22975796eb4f45ba9d8aa74d1dae89f"
+        },
+        {
+          "path": "outputs/frames/p28_b_2802.50.jpg",
+          "sha256": "c66611316e6357904f5570fa3e6642144979c57c96903a5242d3e1bc32b92b36"
+        },
+        {
+          "path": "outputs/frames/rv28_2_2803.45.jpg",
+          "sha256": "9fdebcfbde1a616d076f48cfa193626b057e982df6c90658a464439ea7b5e909"
+        },
+        {
+          "path": "outputs/frames/p28_b_2803.50.jpg",
+          "sha256": "1866546e4673185c38f111a3ff44f3acd615d39d296d264e78679283389edf39"
+        },
+        {
+          "path": "outputs/frames/p28_d_2803.55.jpg",
+          "sha256": "4d6526cee6b9dc29ad2421f1e4a23e47cbf84f910352189f4232e2ab2b58da9a"
+        },
+        {
+          "path": "outputs/frames/p28_d_2803.60.jpg",
+          "sha256": "954b3d60f93596ba6d8e05d2c06b794352baf1fd958c49aae22d3839fcaf70c7"
+        },
+        {
+          "path": "outputs/frames/p28_d_2803.65.jpg",
+          "sha256": "ffdeb20d74d7ed9df827c876291b8973d3a7d8aa744710abb37bc9602be832ff"
+        }
+      ]
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 30,
+      "pitch_number": 1,
+      "play_id": "85c6ab92-afc1-4f92-af7d-1557eb72e7ba",
+      "verification": {
+        "status": "verified",
+        "by": "Claude Code session (Opus 5.5) direct frame review of decision boundary, continuity samples, scoreboard bug and release sequence, after an Opus 5 workflow annotator and two independent verifier lenses (timing, scoreboard_identity)",
+        "date": "2026-09-25"
+      },
+      "prior_verification": {
+        "workflow_status": "workflow_two_lens_passed_needs_session_review",
+        "verdicts": [
+          {
+            "round": 1,
+            "row_decision_seconds": 2973.75,
+            "row_release_seconds": 2976.2,
+            "lens": "timing",
+            "refuted": false,
+            "confidence": "high",
+            "issues": [
+              "The note is wrong about 2973.25. It says 2973.00-2973.25 is a Mets dugout close-up, but 2973.25 is already the live centre-field shot. It still fails condition (4) there: the bug is mostly white from the wipe, showing only NYM 0 / ATL 2, part of the diamonds and :05. The decision time is unaffected; only the wording in the note is inaccurate.",
+              "At 2973.50 condition (2) also fails, not just (4). Megill is still stepping in side-on with the trailing heel raised. Both feet are first planted together at the rubber at 2973.75, so the claimed failing condition is right but incomplete.",
+              "At 2973.75 the pitch-count digit is clipped by the wipe (reads 'P:6'). The full P:67 is only readable from 2974.00. Every other bug field is readable at 2973.75.",
+              "Tracking the ball puts the real release slightly before 2976.20. At 2976.20 the ball is already about 20 px (full frame) ahead of the empty hand. Its path continues at 2976.25 (y~280), 2976.30 (~264), 2976.35 (~249), 2976.40 (~240) and 2976.50 (~228, in front of the catcher). Extrapolating back gives release at about 2976.16-2976.18, well inside the +/-0.15 s tolerance. Arrival near 2976.55-2976.60 matches the start of the swing at 2976.60 and a ~0.40 s flight at 94 MPH."
+            ],
+            "suggested_decision_seconds": 2973.75,
+            "suggested_release_seconds": 2976.2,
+            "image_paths": [
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT30_1a_full.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT30_1a_bug.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT30_1a_2973.25.jpg",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT30_1a_2973.50.jpg",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT30_1a_2973.75.jpg",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT30_1a_2974.50.jpg",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT30_1a_2974.75.jpg",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT30_1b_full.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT30_1b_2976.05.jpg",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT30_1b_2976.15.jpg",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT30_1b_2976.20.jpg",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT30_1b_2976.25.jpg"
+            ]
+          },
+          {
+            "round": 1,
+            "row_decision_seconds": 2973.75,
+            "row_release_seconds": 2976.2,
+            "lens": "scoreboard_identity",
+            "refuted": false,
+            "confidence": "high",
+            "issues": [
+              "At 2973.75 the P: count's last digit is still clipped as the bug animates in ('P:6'). The full P:67 is first readable in my grab at 2974.25; the annotator cites 2974.00, which I did not grab.",
+              "No batter-name banner is on the bug at 2973.75 or 2974.25, so the batter is identified from P:67 and the game state, plus a right-handed batter in the box. His name is not read."
+            ],
+            "suggested_decision_seconds": 2973.75,
+            "suggested_release_seconds": null,
+            "image_paths": [
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vS30_1_bug.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vS30_1_full.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vS30_1_2973.75.jpg"
+            ]
+          }
+        ]
+      },
+      "status": "annotated",
+      "decision_seconds": 2973.75,
+      "release_seconds": 2976.2,
+      "uncertainty_seconds": 0.15,
+      "readability": "readable",
+      "observed": {
+        "balls": 0,
+        "strikes": 0,
+        "outs": 0,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": 4,
+        "inning_topbot": "Bot",
+        "home_score": 2,
+        "away_score": 0
+      },
+      "bug_text": "NYM 0 / ATL 2 / bases empty / down-4 / 0 outs / 0-0 / MEGILL :04 P:6_ (trailing digit clipped by the wipe; P:67 at 2974.00)",
+      "note": "SNY full game. Bottom 4, Megill vs Urshela; 0-0 count, bases empty, 0 outs. At the previous grid second 2973.50 the broadcast has just cut to the centre-field camera but the scoreboard bug is still mid transition wipe - only 'NYM 0 / ATL 2', the diamonds and a truncated '0-' are drawn, with no inning digit and no pitch count - so condition (4) fails there; 2973.00 and 2973.25 are a Mets dugout close-up (condition 1). At 2973.75 the centre-field camera shows Megill standing still with both feet planted on the rubber and Urshela upright in the right-handed box facing him, and the bug reads NYM 0 / ATL 2 / bases empty / down-4 / 0 outs / 0-0 / MEGILL :04 P:6_ with only the last pitch-count digit still clipped by the wipe (P:67 read at 2974.00 and 2974.50). Continuity samples 2973.75, 2974.00, 2974.50, 2974.75 are the same uninterrupted live centre-field shot, no step-off, cutaway or white wipe, max gap 0.50 s; the leg lift is first visible at 2975.00. Release bracket: at 2976.10 the throwing arm is still up over the top with the ball in the hand behind the head, at 2976.15 the arm is coming over with the hand still beside the head, and at 2976.20 the arm is extended forward toward the plate with the hand empty (by 2976.30 he is in full follow-through), so release_seconds = 2976.20. ffmpeg frame grabs; selected-frame review, not continuous playback. Manual timing, not frame-exact.",
+      "changed_by_session": {},
+      "session_check": "Session review sheet (scripts/71): 2973.25 and 2973.50 already show the live centre-field shot but the bug is mid transition wipe (blank panel, then no inning digit and '0-' only), so condition (4) fails; at 2973.75 every label field is readable: NYM 0 / ATL 2, down-4, bases empty, no outs, 0-0 (P:6_ last digit still drawing; P:67 = 68th pitch). Megill on the rubber, Urshela in the right-handed box. 2974.00-2974.75 same live shot, still; leg lift at 2975.00. Release: arm cocked at 2976.15, extended toward the plate at 2976.20, follow-through from 2976.25; 2976.20 +/-0.15 s holds.",
+      "visual_evidence": {
+        "review_sheet": "outputs/verification/rv30_1_review_sheet.png",
+        "extra_sheets": [],
+        "decision_frame": "outputs/frames/p30_p1b_2973.75.jpg",
+        "previous_grid_frame": "outputs/frames/p30_p1a_2973.50.jpg",
+        "continuity_frames": [
+          "outputs/frames/p30_scan1_2974.00.jpg",
+          "outputs/frames/p30_p1a_2974.50.jpg",
+          "outputs/frames/p30_p1c_2974.75.jpg",
+          "outputs/frames/p30_p1b_2975.00.jpg"
+        ],
+        "release_frames": [
+          "outputs/frames/p30_p1c_2976.10.jpg",
+          "outputs/frames/p30_p1c_2976.15.jpg",
+          "outputs/frames/p30_p1c_2976.20.jpg",
+          "outputs/frames/p30_p1c_2976.25.jpg",
+          "outputs/frames/p30_p1b_2976.30.jpg"
+        ],
+        "workflow_prep_sample_times": [
+          2973.75,
+          2974,
+          2974.5,
+          2974.75
+        ],
+        "workflow_max_prep_gap_seconds": 0.5,
+        "workflow_release_sample_times": [
+          2975.5,
+          2976,
+          2976.1,
+          2976.15,
+          2976.2,
+          2976.3
+        ]
+      },
+      "canonical_frame_hashes": [
+        {
+          "path": "outputs/frames/p30_p1b_2973.75.jpg",
+          "sha256": "bdabfd6c94313c440c5f80526fbeb2fef68095c08369dd0e97fa18039ff75c66"
+        },
+        {
+          "path": "outputs/frames/p30_p1a_2973.50.jpg",
+          "sha256": "257a1dda902dcf9341658344453de97211188db93093562e5d01220090c46d6d"
+        },
+        {
+          "path": "outputs/frames/p30_scan1_2974.00.jpg",
+          "sha256": "3810e3c0dcf8bd46235e399e50d1f25846e12d666fb2ce6b7cadffc39b6c7cb1"
+        },
+        {
+          "path": "outputs/frames/p30_p1a_2974.50.jpg",
+          "sha256": "e8e7929f0169c79e9baee56fefa8c839c2f39001caaea57a11b7f42152c3ef05"
+        },
+        {
+          "path": "outputs/frames/p30_p1c_2974.75.jpg",
+          "sha256": "ae5058f2ab87601aa7e338ec380dfe65dd7823901d5688c4ac6fd26b5ea8ac00"
+        },
+        {
+          "path": "outputs/frames/p30_p1b_2975.00.jpg",
+          "sha256": "308043c06b6d3bb8fc1d28c7e9f62c6347c30d74f02753613b3acd358a73b265"
+        },
+        {
+          "path": "outputs/frames/p30_p1c_2976.10.jpg",
+          "sha256": "778ee15afab98dfc3e91bb05d70033642f0550c899daa20efc7ee23408ffee06"
+        },
+        {
+          "path": "outputs/frames/p30_p1c_2976.15.jpg",
+          "sha256": "645d09884fcf9832ec408c5ed397c2120b52e6db3db6b4eda73418a05f2d62e6"
+        },
+        {
+          "path": "outputs/frames/p30_p1c_2976.20.jpg",
+          "sha256": "85f73b8e3a638186f2248fe4e9af5be864d573747d2172547224cf7c9225b986"
+        },
+        {
+          "path": "outputs/frames/p30_p1c_2976.25.jpg",
+          "sha256": "1883a01e8182b95bb0d2744ab93e90dcc24f9852c298e1bc662ff72b1e16f21a"
+        },
+        {
+          "path": "outputs/frames/p30_p1b_2976.30.jpg",
+          "sha256": "ef0bb531a458365a3cc98977b1e59230cdb155b6a7030f9f77267a8dd8ca6f46"
+        }
+      ]
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 30,
+      "pitch_number": 2,
+      "play_id": "2f4e0c44-4441-4980-b1f2-42f897ea625e",
+      "verification": {
+        "status": "verified",
+        "by": "Claude Code session (Opus 5.5) direct frame review of decision boundary, continuity samples, scoreboard bug and release sequence, after an Opus 5 workflow annotator and two independent verifier lenses (timing, scoreboard_identity)",
+        "date": "2026-09-25"
+      },
+      "prior_verification": {
+        "workflow_status": "workflow_two_lens_passed_needs_session_review",
+        "verdicts": [
+          {
+            "round": 1,
+            "row_decision_seconds": 2994,
+            "row_release_seconds": 3001.4,
+            "lens": "timing",
+            "refuted": true,
+            "confidence": "high",
+            "issues": [
+              "Motion start is wrong. At 3000.25 s Megill's left (stride) foot is clearly off the dirt with the knee raised, so the leg lift is already under way (raw frame vT30_2a_3000.25.jpg and the enlarged pitcher crop). He is still set with the glove at his chest and both feet planted at 2999.50, 2999.75 and 3000.00. The first sampled frame with the leg lift is therefore 3000.25, not 3000.50. The claimed continuity sample at 3000.25 ('pitcher on the rubber, still set at 3000.25') is false, which triggers refutation criterion (c).",
+              "Condition (3) is borderline at 2994.00. Urshela is upright in the box, but the bat is lowered across his hip with the barrel pointing down, and his head is tilted down toward his hands while he adjusts his gloves. Lesson (c) treats that as a fail. From 2994.25 his hands are raised to his chest with the bat up and his face turned to the pitcher (the same at 2994.50 and 2995.00). A conservative decision is 2994.25; 2994.00 is defensible only if the head-down, bat-lowered pose is read as facing the pitcher.",
+              "Condition (1) does fail before the decision, as claimed. 2993.50 and 2993.75 are the Urshela close-up with the '3B GIO URSHELA 0 FOR 1 STRIKEOUT' stat card, with no pitcher in frame. At 2994.00 the bug's second line is still drawing in (garbled '8. URSHELA'), but the main fields are readable.",
+              "The release is within tolerance and not refuted. At 3001.35 the throwing hand is cocked beside the head with the ball visible. At 3001.40 the arm is coming through at head height, motion-blurred. At 3001.45 the arm is extended forward toward the plate with the hand empty. At 3001.55 he is in follow-through. At 3001.25 he is still striding with the arm low and back. Release falls at about 3001.40-3001.45, inside 3001.40 +/- 0.15."
+            ],
+            "suggested_decision_seconds": 2994.25,
+            "suggested_release_seconds": 3001.4,
+            "image_paths": [
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT30_2a_full.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT30_2a_bug.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT30_2a_2994.00.jpg",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT30_2a_3000.25.jpg",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT30_2b_full.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT30_2c_full.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT30_2c_bug.png",
+              "C:/Users/zpfh1/AppData/Local/Temp/claude/C--Users-zpfh1-Projects/789f73ca-11f1-4334-95b4-01773f4f4dc7/scratchpad/bat_2994.00.png",
+              "C:/Users/zpfh1/AppData/Local/Temp/claude/C--Users-zpfh1-Projects/789f73ca-11f1-4334-95b4-01773f4f4dc7/scratchpad/pit_2994.00.png",
+              "C:/Users/zpfh1/AppData/Local/Temp/claude/C--Users-zpfh1-Projects/789f73ca-11f1-4334-95b4-01773f4f4dc7/scratchpad/bat_2997.25.png",
+              "C:/Users/zpfh1/AppData/Local/Temp/claude/C--Users-zpfh1-Projects/789f73ca-11f1-4334-95b4-01773f4f4dc7/scratchpad/bat_3000.25.png",
+              "C:/Users/zpfh1/AppData/Local/Temp/claude/C--Users-zpfh1-Projects/789f73ca-11f1-4334-95b4-01773f4f4dc7/scratchpad/pit_2997.25.png"
+            ]
+          },
+          {
+            "round": 1,
+            "row_decision_seconds": 2994,
+            "row_release_seconds": 3001.4,
+            "lens": "scoreboard_identity",
+            "refuted": false,
+            "confidence": "high",
+            "issues": [
+              "At 2994.00 the second bug line (batter banner) is still animating in: only the lower halves of '8. URSHELA' and '0-1' are drawn. It becomes fully readable at 2994.50 ('8. URSHELA 0-1'). The annotator's banner reading is correct, but at 2994.00 it is only a partial reading, confirmed by 2994.50.",
+              "Not refuting. At 2993.75 the shot is a close-up of Urshela with a '3B GIO URSHELA 0 FOR 1 STRIKEOUT' stat card (not live wide), so 2994.00 is the first live centre-field frame. That fits the claimed decision; the timing lens should confirm continuity to the motion start."
+            ],
+            "suggested_decision_seconds": null,
+            "suggested_release_seconds": null,
+            "image_paths": [
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vS30_2_bug.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vS30_2_full.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vS30_2_2993.75.jpg",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vS30_2_2994.00.jpg",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vS30_2_2994.50.jpg",
+              "C:/Users/zpfh1/AppData/Local/Temp/claude/C--Users-zpfh1-Projects/789f73ca-11f1-4334-95b4-01773f4f4dc7/scratchpad/vS30_2_bugcrop_2994.00.png",
+              "C:/Users/zpfh1/AppData/Local/Temp/claude/C--Users-zpfh1-Projects/789f73ca-11f1-4334-95b4-01773f4f4dc7/scratchpad/vS30_2_bugcrop_2994.50.png"
+            ]
+          },
+          {
+            "round": 2,
+            "row_decision_seconds": 2994.25,
+            "row_release_seconds": 3001.44,
+            "lens": "timing",
+            "refuted": false,
+            "confidence": "high",
+            "issues": [
+              "Note inaccuracy: the claim says Megill is 'side-on and set with the glove at his chest from about 2995.50'. In 2996.00, 2996.75 and 2997.25 he is actually squared to the plate, back to the camera with #38 visible and the glove at his chest (taking the sign). He is side-on and set only at 3000.00. This is descriptive only and does not change any time.",
+              "Between 2995.25 and 2996.00 Megill turns from side-on (feet together) to square: the free left foot moves out to widen his stance, while the pivot foot stays along the front edge of the rubber in the same spot. I read this as the turning that lesson (b) allows, not a step-off or a re-arrival. A stricter reading of 'foot off the dirt' could question it, but it is not a clear break.",
+              "Condition (3) at 2994.00 is borderline but defensible: Urshela's hands are low at his hip, the bat is lowered and his head is angled down toward his hands. Either way refutation (b) cannot apply, because 2993.75 is the home-plate close-up under the '3B GIO URSHELA 0 FOR 1 STRIKEOUT' stat card, with no pitcher in frame, so condition (1) fails there.",
+              "My own continuity samples leave a 2.75 s gap between 2997.25 and 3000.00 (my extra-frame budget was used on the feet check and the release bracket). Both endpoints are clean: live centre-field shot, pitcher on the rubber, batter in the box with the bat up, bug normal and not white."
+            ],
+            "suggested_decision_seconds": 2994.25,
+            "suggested_release_seconds": 3001.44,
+            "image_paths": [
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT30_2a_full.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT30_2a_bug.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT30_2a_2994.00.jpg",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT30_2a_2994.25.jpg",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT30_2b_full.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT30_2b_bug.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT30_2c_full.png",
+              "C:/Users/zpfh1/AppData/Local/Temp/claude/C--Users-zpfh1-Projects/789f73ca-11f1-4334-95b4-01773f4f4dc7/scratchpad/crop30_2a.png",
+              "C:/Users/zpfh1/AppData/Local/Temp/claude/C--Users-zpfh1-Projects/789f73ca-11f1-4334-95b4-01773f4f4dc7/scratchpad/crop30_batter.png",
+              "C:/Users/zpfh1/AppData/Local/Temp/claude/C--Users-zpfh1-Projects/789f73ca-11f1-4334-95b4-01773f4f4dc7/scratchpad/crop30_bhead.png",
+              "C:/Users/zpfh1/AppData/Local/Temp/claude/C--Users-zpfh1-Projects/789f73ca-11f1-4334-95b4-01773f4f4dc7/scratchpad/crop30_feet.png",
+              "C:/Users/zpfh1/AppData/Local/Temp/claude/C--Users-zpfh1-Projects/789f73ca-11f1-4334-95b4-01773f4f4dc7/scratchpad/crop30_feet2.png"
+            ]
+          },
+          {
+            "round": 2,
+            "row_decision_seconds": 2994.25,
+            "row_release_seconds": 3001.44,
+            "lens": "scoreboard_identity",
+            "refuted": false,
+            "confidence": "high",
+            "issues": [],
+            "suggested_decision_seconds": null,
+            "suggested_release_seconds": null,
+            "image_paths": [
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vS30_2_bug.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vS30_2_full.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vS30_2_2994.25.jpg",
+              "C:/Users/zpfh1/AppData/Local/Temp/claude/C--Users-zpfh1-Projects/789f73ca-11f1-4334-95b4-01773f4f4dc7/scratchpad/vS30_2_bugzoom.png"
+            ]
+          }
+        ]
+      },
+      "status": "annotated",
+      "decision_seconds": 2994.25,
+      "release_seconds": 3001.44,
+      "uncertainty_seconds": 0.15,
+      "readability": "readable",
+      "observed": {
+        "balls": 0,
+        "strikes": 1,
+        "outs": 0,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": 4,
+        "inning_topbot": "Bot",
+        "home_score": 2,
+        "away_score": 0
+      },
+      "bug_text": "NYM 0 / ATL 2 / bases empty / down-4 / 0 outs / 0-1 / MEGILL :09 P:68 / 8. URSHELA 0-1",
+      "note": "SNY full game. Bottom 4, Megill vs Urshela; 0-1 count, bases empty, 0 outs. At the previous grid second 2994.00 the shot is already the live centre-field camera (Megill standing on the rubber with both feet planted, ball in hand at the waist), but in an enlarged crop of the batter Urshela's hands are still down at his hip with the bat lowered and his head clearly tilted down toward his gloves, so condition (3) fails there by lesson (c); 2993.75 and earlier are the home-plate close-up of Urshela under the \"3B GIO URSHELA 0 FOR 1 STRIKEOUT\" stat card with no pitcher in frame, so condition (1) fails as well. At 2994.25 the same live centre-field shot has Urshela's hands raised to his chest with the bat up and his head level, turned toward the pitcher, while Megill stays planted on the rubber; the bug reads NYM 0 / ATL 2 / bases empty / down-4 / 0 outs / 0-1 / MEGILL :09 P:68 with the second line 8. URSHELA 0-1. Continuity samples 2994.25, 2994.50, 2995.00, 2995.50, 2996.00, 2996.50, 2997.00, 2997.50, 2998.00, 2998.50, 2999.00, 2999.75, 3000.00 are all the same live centre-field shot, pitcher on the rubber (side-on and set with the glove at his chest from about 2995.50) and batter in the box facing him - no step-off, pickoff, time-out, cutaway or white bug wipe - max gap 0.75 s; at 3000.00 he is still set with both feet planted, and at 3000.25 the stride leg is clearly lifted (knee up, left foot off the dirt in the raw frame), so motion_start_seconds = 3000.25 (correcting my earlier 3000.50 and the false \"still set at 3000.25\" claim). Release bracket (the clip runs at 60 fps; 3001.40 and 3001.41 are the same frame, as are 3001.42 and 3001.43): 3001.25 striding with the arm low and back, 3001.35 the arm cocked beside/above the head, 3001.40/3001.41 the arm coming through blurred at shoulder-to-head height but not yet extended (lesson (a): this is where I logged too early before), 3001.42/3001.43 nearing extension, 3001.44 the arm extended forward toward the plate with the hand empty at maximum reach, 3001.45 the arm already starting to pronate down and 3001.50/3001.55 full follow-through - so release_seconds = 3001.44. ffmpeg frame grabs; selected-frame review, not continuous playback. Manual timing, not frame-exact.",
+      "changed_by_session": {},
+      "session_check": "Session review sheet (scripts/71) plus batter and release crops of the repaired row: 2993.50 and 2993.75 are an Urshela close-up with the stat card (condition 1 fails); 2994.00 is live centre-field but Urshela has the bat lowered and his head down toward his gloves (condition 3 fails, same rule as PA 3/1 and 26/1); 2994.25 he is upright with the bat up facing Megill, who is planted on the rubber; bug NYM 0 / ATL 2, down-4, bases empty, no outs, 0-1, :09 P:68 (69th pitch). 2994.50-3000.00 same live shot, set by about 2995.50; leg lift at 3000.25 (repaired). Release: arm cocked at 3001.40, coming forward at 3001.42, extended toward the plate at 3001.44, follow-through from 3001.47; repaired 3001.44 +/-0.15 s holds. The workflow's first decision 2994.00 was refuted by the timing lens and repaired.",
+      "visual_evidence": {
+        "review_sheet": "outputs/verification/rv30_2r_review_sheet.png",
+        "extra_sheets": [
+          "outputs/verification/rv30_2_batter_crop.png",
+          "outputs/verification/rv30_2_rel_crop.png"
+        ],
+        "decision_frame": "outputs/frames/p30_p2b_2994.25.jpg",
+        "previous_grid_frame": "outputs/frames/p30_rep2a_2994.00.jpg",
+        "continuity_frames": [
+          "outputs/frames/p30_p2a_2994.50.jpg",
+          "outputs/frames/p30_p2a_2995.00.jpg",
+          "outputs/frames/p30_p2b_2996.00.jpg",
+          "outputs/frames/p30_p2b_2997.00.jpg",
+          "outputs/frames/p30_rep2b_2998.00.jpg",
+          "outputs/frames/p30_p2b_2999.00.jpg",
+          "outputs/frames/a8scanB_3000.00.jpg",
+          "outputs/frames/p30_p2d_3000.25.jpg"
+        ],
+        "release_frames": [
+          "outputs/frames/rv30_2c_3001.38.jpg",
+          "outputs/frames/p30_p2c_3001.40.jpg",
+          "outputs/frames/p30_rep2d_3001.42.jpg",
+          "outputs/frames/p30_rep2d_3001.44.jpg",
+          "outputs/frames/rv30_2c_3001.47.jpg"
+        ],
+        "workflow_prep_sample_times": [
+          2994.25,
+          2994.5,
+          2995,
+          2995.5,
+          2996,
+          2996.5,
+          2997,
+          2997.5,
+          2998,
+          2998.5,
+          2999,
+          2999.75,
+          3000
+        ],
+        "workflow_max_prep_gap_seconds": 0.75,
+        "workflow_release_sample_times": [
+          3001.25,
+          3001.3,
+          3001.35,
+          3001.4,
+          3001.41,
+          3001.42,
+          3001.43,
+          3001.44,
+          3001.45,
+          3001.5,
+          3001.55
+        ]
+      },
+      "canonical_frame_hashes": [
+        {
+          "path": "outputs/frames/p30_p2b_2994.25.jpg",
+          "sha256": "3b51be01cc7fc82052faad50502616f0725abdca29bd49521f025f0901876976"
+        },
+        {
+          "path": "outputs/frames/p30_rep2a_2994.00.jpg",
+          "sha256": "b5d9c731026b8b6ee87a0a975d80817468f9d7ce88b60a583a4ee602a4f16848"
+        },
+        {
+          "path": "outputs/frames/p30_p2a_2994.50.jpg",
+          "sha256": "d9fb973fc0f11e66a199f419e747a7ae35bb237d4ab9bfa7fe6fc655a35f47a9"
+        },
+        {
+          "path": "outputs/frames/p30_p2a_2995.00.jpg",
+          "sha256": "8dcc10d2c5798c5f2315708388e11a980074f5b6aefcf9a8c6384749a8b7176d"
+        },
+        {
+          "path": "outputs/frames/p30_p2b_2996.00.jpg",
+          "sha256": "6f84712b545f14c0042fc31d0800d67e7cc96947dae21808a4a2497ec828d97e"
+        },
+        {
+          "path": "outputs/frames/p30_p2b_2997.00.jpg",
+          "sha256": "67b9ca150d90767896ba7b734f0473d2a5b4a5c4a613d08837038771263604af"
+        },
+        {
+          "path": "outputs/frames/p30_rep2b_2998.00.jpg",
+          "sha256": "3ed0778b13a40d3adf24b7cc2297073279c98cb729392f09e25c269cf1add415"
+        },
+        {
+          "path": "outputs/frames/p30_p2b_2999.00.jpg",
+          "sha256": "62bfd28d930fed885e7a389dfcb25b1d3a417bcb056c350c91ad536771ecb041"
+        },
+        {
+          "path": "outputs/frames/a8scanB_3000.00.jpg",
+          "sha256": "92ada813d16ab54d93c4680956f99d7cf89531bdc5b2d23e912128912bb4fc4e"
+        },
+        {
+          "path": "outputs/frames/p30_p2d_3000.25.jpg",
+          "sha256": "7be98aff0bbd59ab31ca3913d04b187a08d19225dd2d0513f4d9c6d9a1267c6f"
+        },
+        {
+          "path": "outputs/frames/rv30_2c_3001.38.jpg",
+          "sha256": "f6b65063817482c0286a66c6eb07414fbe8e525a2845570e053e6eb54df6fdb5"
+        },
+        {
+          "path": "outputs/frames/p30_p2c_3001.40.jpg",
+          "sha256": "3ee7dc3804dfcfaeb4437ea9d57205f9849e3822d8adfe0c2975225a02b11416"
+        },
+        {
+          "path": "outputs/frames/p30_rep2d_3001.42.jpg",
+          "sha256": "81552da5852eeb51f8a7cd64f4c2fce931aa44eb0a1a456ff263725b78c5b47d"
+        },
+        {
+          "path": "outputs/frames/p30_rep2d_3001.44.jpg",
+          "sha256": "027ad71864022ab6ca8ddc9ad12eddc97fc243dc6f34f6754cf4990a21e0a3cd"
+        },
+        {
+          "path": "outputs/frames/rv30_2c_3001.47.jpg",
+          "sha256": "e2e949e8bf64a5a660f0ed38c824def6269621741d256c13c765cb5dbe13a2c9"
+        }
+      ]
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 30,
+      "pitch_number": 3,
+      "play_id": "acb5e8bc-8899-4d8d-a0bd-d3e5f71638c3",
+      "verification": {
+        "status": "verified",
+        "by": "Claude Code session (Opus 5.5) direct frame review of decision boundary, continuity samples, scoreboard bug and release sequence, after an Opus 5 workflow annotator and two independent verifier lenses (timing, scoreboard_identity)",
+        "date": "2026-09-25"
+      },
+      "prior_verification": {
+        "workflow_status": "workflow_two_lens_passed_needs_session_review",
+        "verdicts": [
+          {
+            "round": 1,
+            "row_decision_seconds": 3016.75,
+            "row_release_seconds": 3018.55,
+            "lens": "timing",
+            "refuted": false,
+            "confidence": "high",
+            "issues": [
+              "Minor wording error in the note: at 3016.75-3017.25 Megill's glove is at the belt/chest (set position), not at his waist. This does not change the timing.",
+              "The leg lift has already started at 3017.40: the left knee is up and the foot is off the dirt. At 3017.25 he is still set, so the claimed 3017.50 is right as the first grid sample showing motion. The actual motion start falls between 3017.25 and 3017.40.",
+              "The release description is a little generous. At 3018.55 the throwing arm is still coming over the top: the forearm is at head level and blurred, and no separate ball is visible. The arm is first extended forward toward the plate at 3018.60. The ball is first clearly in flight at 3018.65, about (680,285), then about (665,265) at 3018.70 and (650,248) at 3018.75. Tracing that path backwards puts the release at about 3018.57-3018.60, not at 3018.55. The note is also wrong that 3018.60 is follow-through: 3018.60 is the extension frame, and follow-through starts at 3018.65. This gap is 0.03-0.05 s, well inside +/-0.15, so it does not refute the claim."
+            ],
+            "suggested_decision_seconds": 3016.75,
+            "suggested_release_seconds": 3018.6,
+            "image_paths": [
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT30_3a_full.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT30_3a_bug.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT30_3a_3016.75.jpg",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT30_3a_3017.25.jpg",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT30_3b_full.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT30_3b_3018.40.jpg",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT30_3b_3018.50.jpg",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT30_3b_3018.55.jpg",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT30_3b_3018.60.jpg",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT30_3c_full.png",
+              "C:/Users/zpfh1/AppData/Local/Temp/claude/C--Users-zpfh1-Projects/789f73ca-11f1-4334-95b4-01773f4f4dc7/scratchpad/rel_crop.png",
+              "C:/Users/zpfh1/AppData/Local/Temp/claude/C--Users-zpfh1-Projects/789f73ca-11f1-4334-95b4-01773f4f4dc7/scratchpad/rel_crop2.png"
+            ]
+          },
+          {
+            "round": 1,
+            "row_decision_seconds": 3016.75,
+            "row_release_seconds": 3018.55,
+            "lens": "scoreboard_identity",
+            "refuted": false,
+            "confidence": "high",
+            "issues": [],
+            "suggested_decision_seconds": 3016.75,
+            "suggested_release_seconds": null,
+            "image_paths": [
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vS30_3_bug.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vS30_3_full.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vS30_3_3016.75.jpg"
+            ]
+          }
+        ]
+      },
+      "status": "annotated",
+      "decision_seconds": 3016.75,
+      "release_seconds": 3018.6,
+      "uncertainty_seconds": 0.15,
+      "readability": "readable",
+      "observed": {
+        "balls": 0,
+        "strikes": 2,
+        "outs": 0,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": 4,
+        "inning_topbot": "Bot",
+        "home_score": 2,
+        "away_score": 0
+      },
+      "bug_text": "NYM 0 / ATL 2 / bases empty / down-4 / 0 outs / 0-2 / MEGILL :04 P:69 / 8. URSHELA 0-1",
+      "note": "SNY full game. Bottom 4, Megill vs Urshela; 0-2 count, bases empty, 0 outs. At the previous grid second 3016.50 the shot is a tight head-and-shoulders close-up of Megill with no batter and no rubber in frame, so condition (1) fails (the same close-up runs back through 3014). At 3016.75 the broadcast is on the live centre-field camera: Megill stands still with both feet planted on the rubber, glove at his waist, and Urshela is upright in the right-handed box facing him; the bug reads NYM 0 / ATL 2 / bases empty / down-4 / 0 outs / 0-2 / MEGILL :04 P:69 / 8. URSHELA 0-1 and is fully drawn (it stayed up through the close-up, so there is no wipe here). Continuity samples 3016.75, 3017.00, 3017.25 are the same live shot with no break, max gap 0.25 s; the leg lift is first visible at 3017.50 (still set at 3017.25). Release bracket: at 3018.50 the throwing arm is over the top with the hand still above the head, at 3018.55 the arm is extended forward toward the plate with the hand empty (3018.60 is follow-through), so release_seconds = 3018.55. ffmpeg frame grabs; selected-frame review, not continuous playback. Manual timing, not frame-exact. Session correction 2026-09-25: release moved from 3018.55 to 3018.60: fine crops show the throwing arm still coming over the top at head height at 3018.55-3018.57 and first extended forward toward the plate at 3018.60 (the timing verifier traced the ball back to about 3018.57-3018.60).",
+      "changed_by_session": {
+        "release_seconds": {
+          "before": 3018.55,
+          "after": 3018.6
+        },
+        "note": {
+          "before": "SNY full game. Bottom 4, Megill vs Urshela; 0-2 count, bases empty, 0 outs. At the previous grid second 3016.50 the shot is a tight head-and-shoulders close-up of Megill with no batter and no rubber in frame, so condition (1) fails (the same close-up runs back through 3014). At 3016.75 the broadcast is on the live centre-field camera: Megill stands still with both feet planted on the rubber, glove at his waist, and Urshela is upright in the right-handed box facing him; the bug reads NYM 0 / ATL 2 / bases empty / down-4 / 0 outs / 0-2 / MEGILL :04 P:69 / 8. URSHELA 0-1 and is fully drawn (it stayed up through the close-up, so there is no wipe here). Continuity samples 3016.75, 3017.00, 3017.25 are the same live shot with no break, max gap 0.25 s; the leg lift is first visible at 3017.50 (still set at 3017.25). Release bracket: at 3018.50 the throwing arm is over the top with the hand still above the head, at 3018.55 the arm is extended forward toward the plate with the hand empty (3018.60 is follow-through), so release_seconds = 3018.55. ffmpeg frame grabs; selected-frame review, not continuous playback. Manual timing, not frame-exact.",
+          "after": "SNY full game. Bottom 4, Megill vs Urshela; 0-2 count, bases empty, 0 outs. At the previous grid second 3016.50 the shot is a tight head-and-shoulders close-up of Megill with no batter and no rubber in frame, so condition (1) fails (the same close-up runs back through 3014). At 3016.75 the broadcast is on the live centre-field camera: Megill stands still with both feet planted on the rubber, glove at his waist, and Urshela is upright in the right-handed box facing him; the bug reads NYM 0 / ATL 2 / bases empty / down-4 / 0 outs / 0-2 / MEGILL :04 P:69 / 8. URSHELA 0-1 and is fully drawn (it stayed up through the close-up, so there is no wipe here). Continuity samples 3016.75, 3017.00, 3017.25 are the same live shot with no break, max gap 0.25 s; the leg lift is first visible at 3017.50 (still set at 3017.25). Release bracket: at 3018.50 the throwing arm is over the top with the hand still above the head, at 3018.55 the arm is extended forward toward the plate with the hand empty (3018.60 is follow-through), so release_seconds = 3018.55. ffmpeg frame grabs; selected-frame review, not continuous playback. Manual timing, not frame-exact. Session correction 2026-09-25: release moved from 3018.55 to 3018.60: fine crops show the throwing arm still coming over the top at head height at 3018.55-3018.57 and first extended forward toward the plate at 3018.60 (the timing verifier traced the ball back to about 3018.57-3018.60)."
+        }
+      },
+      "session_check": "Session review sheet (scripts/71) plus fine release crops: 3016.25 and 3016.50 are a Megill close-up, so the live-shot condition fails; 3016.75 is the live centre-field shot with Megill set on the rubber and Urshela in the box, bug NYM 0 / ATL 2, down-4, bases empty, no outs, 0-2, :04 P:69 (70th pitch). 3017.00 and 3017.25 same live shot, still; leg lift between 3017.25 and 3017.40 (first grid frame 3017.50). Release: arm cocked behind the head at 3018.55, coming forward at 3018.57, extended toward the plate at 3018.60, follow-through from 3018.63; release corrected to 3018.60 +/-0.15 s.",
+      "visual_evidence": {
+        "review_sheet": "outputs/verification/rv30_3_review_sheet.png",
+        "extra_sheets": [
+          "outputs/verification/rv30_3_rel_crop.png"
+        ],
+        "decision_frame": "outputs/frames/p30_p3a_3016.75.jpg",
+        "previous_grid_frame": "outputs/frames/p30_p3a_3016.50.jpg",
+        "continuity_frames": [
+          "outputs/frames/p30_scan3_3017.00.jpg",
+          "outputs/frames/p30_p3b_3017.25.jpg",
+          "outputs/frames/p30_p3a_3017.50.jpg"
+        ],
+        "release_frames": [
+          "outputs/frames/p30_p3b_3018.50.jpg",
+          "outputs/frames/p30_p3b_3018.55.jpg",
+          "outputs/frames/rv30_3_3018.57.jpg",
+          "outputs/frames/p30_p3a_3018.60.jpg",
+          "outputs/frames/rv30_3_3018.63.jpg"
+        ],
+        "workflow_prep_sample_times": [
+          3016.75,
+          3017,
+          3017.25
+        ],
+        "workflow_max_prep_gap_seconds": 0.25,
+        "workflow_release_sample_times": [
+          3018.2,
+          3018.4,
+          3018.45,
+          3018.5,
+          3018.55,
+          3018.6
+        ]
+      },
+      "canonical_frame_hashes": [
+        {
+          "path": "outputs/frames/p30_p3a_3016.75.jpg",
+          "sha256": "a829f1c9e844c684cb8faddee3dfdbc56cd468a1ff3e8ff665c1c51ebf1ef97d"
+        },
+        {
+          "path": "outputs/frames/p30_p3a_3016.50.jpg",
+          "sha256": "37854de0108250cc8967a33e19adaf3d3ef366bf7cd1af02c06df2d6cdb68405"
+        },
+        {
+          "path": "outputs/frames/p30_scan3_3017.00.jpg",
+          "sha256": "13fd2a377660e596db923dcce8fd6fd59abbbd844e6c80f42cef5abe5b86a85c"
+        },
+        {
+          "path": "outputs/frames/p30_p3b_3017.25.jpg",
+          "sha256": "1e7902e77bf40021b57eb33e2aad0d1f8694724080be5ee1a8d1a31c25c15aee"
+        },
+        {
+          "path": "outputs/frames/p30_p3a_3017.50.jpg",
+          "sha256": "da067966957eb31345c1de5ae7459346b94b922f6b53e06b08d384a76d39562b"
+        },
+        {
+          "path": "outputs/frames/p30_p3b_3018.50.jpg",
+          "sha256": "a707a80a8867012e2770c04b6ca38a5f2864a5daeca0fa27768e7a11eecd1d9f"
+        },
+        {
+          "path": "outputs/frames/p30_p3b_3018.55.jpg",
+          "sha256": "23ae67cc5e9cbc027d0b2daa5b7b24c9bed3e2779b798d81813db82c5a549b00"
+        },
+        {
+          "path": "outputs/frames/rv30_3_3018.57.jpg",
+          "sha256": "255551f5e51a59bc5802b58960b0ebbedbd1e17d6ae07ded1095932190ff2857"
+        },
+        {
+          "path": "outputs/frames/p30_p3a_3018.60.jpg",
+          "sha256": "9ebe6b9909ddcd7260d5139b58ded30bdb5acaee0cb5547fe675120b9585ca77"
+        },
+        {
+          "path": "outputs/frames/rv30_3_3018.63.jpg",
+          "sha256": "4b808787ffebc8612b18c27a983bb59c402cf09d5c2212b90c0e43a4f8259ad7"
+        }
+      ]
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 31,
+      "pitch_number": 1,
+      "play_id": "f83f6cca-4aba-439d-b19f-9d7bfda8cd0d",
+      "verification": {
+        "status": "verified",
+        "by": "Claude Code session (Opus 5.5) direct frame review of decision boundary, continuity samples, scoreboard bug and release sequence, after an Opus 5 workflow annotator and two independent verifier lenses (timing, scoreboard_identity)",
+        "date": "2026-09-25"
+      },
+      "prior_verification": {
+        "workflow_status": "workflow_two_lens_passed_needs_session_review",
+        "verdicts": [
+          {
+            "round": 1,
+            "row_decision_seconds": 3042.5,
+            "row_release_seconds": 3047.15,
+            "lens": "timing",
+            "refuted": false,
+            "confidence": "high",
+            "issues": [
+              "Minor: at 3042.50 the lower bug banner shows a thin blue sliver where the pitch-clock box is animating in, but all fields (score, bases, outs, inning, count, MEGILL P:70) are readable. Does not affect the claim.",
+              "Minor: the batter line '9. ARCIA 0-1' is not on the bug at 3042.50. It first appears in the samples at 3045.75. Arcia is identified by the close-up stat card at 3042.00/3042.25 and by the bug line later. The claim does not depend on it."
+            ],
+            "suggested_decision_seconds": 3042.5,
+            "suggested_release_seconds": 3047.15,
+            "image_paths": [
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT31_1a_full.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT31_1a_bug.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT31_1a_3042.50.jpg",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT31_1a_3044.25.jpg",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT31_1a_3045.75.jpg",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT31_1b_full.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT31_1b_3047.00.jpg",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT31_1b_3047.10.jpg",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT31_1b_3047.15.jpg",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT31_1b_3047.20.jpg",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT31_1b_3047.30.jpg",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT31_1c_full.png"
+            ]
+          },
+          {
+            "round": 1,
+            "row_decision_seconds": 3042.5,
+            "row_release_seconds": 3047.15,
+            "lens": "scoreboard_identity",
+            "refuted": false,
+            "confidence": "high",
+            "issues": [],
+            "suggested_decision_seconds": null,
+            "suggested_release_seconds": null,
+            "image_paths": [
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vS31_1_bug.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vS31_1_full.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vS31_1_3042.50.jpg"
+            ]
+          }
+        ]
+      },
+      "status": "annotated",
+      "decision_seconds": 3042.5,
+      "release_seconds": 3047.15,
+      "uncertainty_seconds": 0.15,
+      "readability": "readable",
+      "observed": {
+        "balls": 0,
+        "strikes": 0,
+        "outs": 1,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": 4,
+        "inning_topbot": "Bot",
+        "home_score": 2,
+        "away_score": 0
+      },
+      "bug_text": "NYM 0 / ATL 2 / bases empty / down-4 / 1 out / 0-0 / MEGILL P:70 (no batter line rendered at this frame)",
+      "note": "SNY full game. Bottom 4, Megill vs Arcia; 0-0 count, bases empty, 1 out. At previous_grid_seconds 3042.25 the shot is still the Orlando Arcia close-up with the 'SS ORLANDO ARCIA / 0 FOR 1 / STRIKEOUT' stat card, so condition (1) fails (cutaway/graphic). The cut to the live centre-field camera lands by 3042.50: Megill stands on the rubber with both feet planted and the ball in his glove, Arcia is in the right-handed box upright and facing the pitcher, and the bug reads NYM 0 / ATL 2 / bases empty / down-4 / 1 out / 0-0 / MEGILL P:70. Continuity samples 3042.50, 3043.00, 3043.50, 3044.00, 3044.25, 3044.50, 3045.00, 3045.50, 3045.75, 3045.85 (max gap 0.50 s) are all the same live centre-field shot with the pitcher still on the rubber and Arcia in the box - no step-off, time-out or white bug wipe. Motion start is the leg lift first seen at 3046.00 (still standing at 3045.85). Release bracket: at 3047.10 the throwing arm is still behind/over the head with the body rotating, at 3047.15 the throwing arm is extended forward toward the plate and the hand is empty, and by 3047.20 the arm has swept down into the follow-through - release logged at 3047.15. ffmpeg frame grabs; selected-frame review, not continuous playback. Manual timing, not frame-exact.",
+      "changed_by_session": {},
+      "session_check": "Session review sheet (scripts/71): 3042.00 and 3042.25 are an Arcia close-up with the 'SS ORLANDO ARCIA 0 FOR 1 STRIKEOUT' card, so the live-shot condition fails; 3042.50 is the live centre-field shot with Megill on the rubber and Arcia in the right-handed box, bug NYM 0 / ATL 2, down-4, bases empty, one out, 0-0, P:70 (71st pitch). 3043.00-3045.85 same live shot, still; leg lift at 3046.00. Release: arm cocked at 3047.10, extended toward the plate at 3047.15, follow-through from 3047.20; 3047.15 +/-0.15 s holds.",
+      "visual_evidence": {
+        "review_sheet": "outputs/verification/rv31_1_review_sheet.png",
+        "extra_sheets": [],
+        "decision_frame": "outputs/frames/p31_p1c_3042.50.jpg",
+        "previous_grid_frame": "outputs/frames/p31_p1d_3042.25.jpg",
+        "continuity_frames": [
+          "outputs/frames/p31_p1c_3043.00.jpg",
+          "outputs/frames/p31_p1c_3044.00.jpg",
+          "outputs/frames/p31_p1a_3045.00.jpg",
+          "outputs/frames/p31_p1a_3045.50.jpg",
+          "outputs/frames/p31_p1d_3045.85.jpg",
+          "outputs/frames/p31_p1a_3046.00.jpg"
+        ],
+        "release_frames": [
+          "outputs/frames/p31_p1b_3047.05.jpg",
+          "outputs/frames/p31_p1b_3047.10.jpg",
+          "outputs/frames/p31_p1b_3047.15.jpg",
+          "outputs/frames/p31_p1b_3047.20.jpg",
+          "outputs/frames/p31_p1b_3047.25.jpg"
+        ],
+        "workflow_prep_sample_times": [
+          3042.5,
+          3043,
+          3043.5,
+          3044,
+          3044.25,
+          3044.5,
+          3045,
+          3045.5,
+          3045.75,
+          3045.85,
+          3046
+        ],
+        "workflow_max_prep_gap_seconds": 0.5,
+        "workflow_release_sample_times": [
+          3047,
+          3047.05,
+          3047.1,
+          3047.15,
+          3047.2,
+          3047.25,
+          3047.3,
+          3047.35,
+          3047.4,
+          3047.5
+        ]
+      },
+      "canonical_frame_hashes": [
+        {
+          "path": "outputs/frames/p31_p1c_3042.50.jpg",
+          "sha256": "4757a37d8d42d937e35be562d4a33a6a0731ded19c0f7ec9dc1a562452108c2f"
+        },
+        {
+          "path": "outputs/frames/p31_p1d_3042.25.jpg",
+          "sha256": "1d39bc81e74a8cb566407174e83f9fb52ae5c39122b64827e698640e53ccbd20"
+        },
+        {
+          "path": "outputs/frames/p31_p1c_3043.00.jpg",
+          "sha256": "35db78a7d794f9cbb956e9ca63f9a9d4345222cba2a61e76e2a318c7fe5295e9"
+        },
+        {
+          "path": "outputs/frames/p31_p1c_3044.00.jpg",
+          "sha256": "1cf48aec82838ea3b2d4a3afb0ec27015ad0221c5f8203187da5a105580a6f81"
+        },
+        {
+          "path": "outputs/frames/p31_p1a_3045.00.jpg",
+          "sha256": "245a23c74ef3a3f82f098b81c6b3616c6b0cf37abd5768b19b716c66152fa549"
+        },
+        {
+          "path": "outputs/frames/p31_p1a_3045.50.jpg",
+          "sha256": "afafa785eb4181816f77b61f82076005195bbaebe2084543eacd136e96bfea34"
+        },
+        {
+          "path": "outputs/frames/p31_p1d_3045.85.jpg",
+          "sha256": "58190515d61fa2ccc4972a89a7f7cebefa4ebde0b73039ecae27252e2cce0034"
+        },
+        {
+          "path": "outputs/frames/p31_p1a_3046.00.jpg",
+          "sha256": "4e3f4b8d4314a34fefe0bd61d1e2bdf78b6e12e1e5ea930282ba0142e9610eaf"
+        },
+        {
+          "path": "outputs/frames/p31_p1b_3047.05.jpg",
+          "sha256": "fd5a2c0fa30c2d0730335d37bf6b2f2a35997d439bfdd999642beb3b46951877"
+        },
+        {
+          "path": "outputs/frames/p31_p1b_3047.10.jpg",
+          "sha256": "e6fa481a3b137dc1ab29ee9f90ff23bc300027116407f643fce779b9361d5f8a"
+        },
+        {
+          "path": "outputs/frames/p31_p1b_3047.15.jpg",
+          "sha256": "617716e802c2bbac96172150c0e6612172c767cbcc5ca15fa7d0c78070e9cea6"
+        },
+        {
+          "path": "outputs/frames/p31_p1b_3047.20.jpg",
+          "sha256": "d60d216ce4e4250b8528243cc4b098260020dac21efde2d6c39f7f500dc91b93"
+        },
+        {
+          "path": "outputs/frames/p31_p1b_3047.25.jpg",
+          "sha256": "81afafcf7afb471f2a2ba939fa758cca372ca409074affe98dacea218f3f6444"
+        }
+      ]
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 31,
+      "pitch_number": 2,
+      "play_id": "3068016b-76f8-447f-8c6f-99e9c305509d",
+      "verification": {
+        "status": "verified",
+        "by": "Claude Code session (Opus 5.5) direct frame review of decision boundary, continuity samples, scoreboard bug and release sequence, after an Opus 5 workflow annotator and two independent verifier lenses (timing, scoreboard_identity)",
+        "date": "2026-09-25"
+      },
+      "prior_verification": {
+        "workflow_status": "workflow_two_lens_passed_needs_session_review",
+        "verdicts": [
+          {
+            "round": 1,
+            "row_decision_seconds": 3061.5,
+            "row_release_seconds": 3067.4,
+            "lens": "timing",
+            "refuted": false,
+            "confidence": "high",
+            "issues": [
+              "Minor, within tolerance: at 3067.40 the ball is already in flight about 37 px (1280x720) ahead of and above the hand, at orig (702,295), just right of the plate near Arcia's front foot. At 3067.32 the hand is still cocked at the cap with the ball, and at 3067.37 the arm is extended up and to the right with no separate ball visible. The true release is therefore in (3067.32, 3067.40], likely around 3067.35-3067.37. That is at most about 0.05-0.08 s before the logged 3067.40, well inside +/-0.15.",
+              "The claim describes 3067.35 as 'hand still up by the head'. In my crop at 3067.35 the arm is a motion blur already coming over the top above the head on screen right; at 3067.30-3067.32 it was cocked behind the head. This does not change the bracket."
+            ],
+            "suggested_decision_seconds": null,
+            "suggested_release_seconds": null,
+            "image_paths": [
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT31_2a_full.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT31_2a_bug.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT31_2a_3061.50.jpg",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT31_2a_3064.00.jpg",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT31_2a_3066.00.jpg",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT31_2b_full.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT31_2d_full.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT31_2d_bug.png",
+              "C:/Users/zpfh1/AppData/Local/Temp/claude/C--Users-zpfh1-Projects/789f73ca-11f1-4334-95b4-01773f4f4dc7/scratchpad/vT31_crop_3061.50.png",
+              "C:/Users/zpfh1/AppData/Local/Temp/claude/C--Users-zpfh1-Projects/789f73ca-11f1-4334-95b4-01773f4f4dc7/scratchpad/vT31_rel.png",
+              "C:/Users/zpfh1/AppData/Local/Temp/claude/C--Users-zpfh1-Projects/789f73ca-11f1-4334-95b4-01773f4f4dc7/scratchpad/vT31_rel2.png",
+              "C:/Users/zpfh1/AppData/Local/Temp/claude/C--Users-zpfh1-Projects/789f73ca-11f1-4334-95b4-01773f4f4dc7/scratchpad/vT31_rel3.png"
+            ]
+          },
+          {
+            "round": 1,
+            "row_decision_seconds": 3061.5,
+            "row_release_seconds": 3067.4,
+            "lens": "scoreboard_identity",
+            "refuted": false,
+            "confidence": "high",
+            "issues": [],
+            "suggested_decision_seconds": 3061.5,
+            "suggested_release_seconds": null,
+            "image_paths": [
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vS31_2_bug.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vS31_2_full.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vS31_2_3061.50.jpg",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vS31_2_3062.00.jpg"
+            ]
+          }
+        ]
+      },
+      "status": "annotated",
+      "decision_seconds": 3061.5,
+      "release_seconds": 3067.4,
+      "uncertainty_seconds": 0.15,
+      "readability": "readable",
+      "observed": {
+        "balls": 0,
+        "strikes": 1,
+        "outs": 1,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": 4,
+        "inning_topbot": "Bot",
+        "home_score": 2,
+        "away_score": 0
+      },
+      "bug_text": "NYM 0 / ATL 2 / bases empty / down-4 / 1 out / 0-1 / MEGILL :09 P:71 / 9. ARCIA 0-1",
+      "note": "SNY full game. Bottom 4, Megill vs Arcia; 0-1 count, bases empty, 1 out. At previous_grid_seconds 3061.25 the shot is still the tight Arcia/umpire close-up behind the plate, so condition (1) fails (cutaway). At 3061.50 the live centre-field camera is up: Megill is on the rubber with both feet planted (head down, taking the sign), Arcia is in the box with the bat up facing the pitcher, and the bug reads NYM 0 / ATL 2 / bases empty / down-4 / 1 out / 0-1 / MEGILL :09 P:71 / 9. ARCIA 0-1. Continuity samples 3061.50, 3061.75, 3062.00, 3063.00, 3063.50, 3064.00, 3064.50, 3065.00, 3066.00 (max gap 1.00 s) are all the same unbroken live centre-field shot with the pitcher on the rubber and Arcia in the box; no step-off, cutaway or bug wipe. Motion start is the leg lift first seen at 3066.25 (standing at 3066.00). Release bracket: at 3067.35 the throwing hand is still up by the head with the arm not yet extended, at 3067.40 the arm is extended forward toward the plate with the hand empty, and 3067.45/3067.50 are already follow-through - release logged at 3067.40. ffmpeg frame grabs; selected-frame review, not continuous playback. Manual timing, not frame-exact.",
+      "changed_by_session": {},
+      "session_check": "Session review sheet (scripts/71): 3061.00 and 3061.25 are an Arcia/umpire close-up, so the live-shot condition fails; 3061.50 is the live centre-field shot with Megill on the rubber (head down taking the sign) and Arcia in the box, bug NYM 0 / ATL 2, down-4, bases empty, one out, 0-1, :09 P:71 (72nd pitch). 3062.00-3066.00 same live shot, still; leg lift at 3066.25. Release: arm cocked at 3067.35, extended toward the plate at 3067.40, follow-through from 3067.45; 3067.40 +/-0.15 s holds.",
+      "visual_evidence": {
+        "review_sheet": "outputs/verification/rv31_2_review_sheet.png",
+        "extra_sheets": [],
+        "decision_frame": "outputs/frames/p31_p2b_3061.50.jpg",
+        "previous_grid_frame": "outputs/frames/p31_p2b_3061.25.jpg",
+        "continuity_frames": [
+          "outputs/frames/p31_p2a_3062.00.jpg",
+          "outputs/frames/p31_p2a_3063.00.jpg",
+          "outputs/frames/p31_scan1_3064.00.jpg",
+          "outputs/frames/p31_p2a_3065.00.jpg",
+          "outputs/frames/p31_p2a_3066.00.jpg",
+          "outputs/frames/p31_p2b_3066.25.jpg"
+        ],
+        "release_frames": [
+          "outputs/frames/p31_p2c_3067.30.jpg",
+          "outputs/frames/p31_p2c_3067.35.jpg",
+          "outputs/frames/p31_p2b_3067.40.jpg",
+          "outputs/frames/p31_p2c_3067.45.jpg",
+          "outputs/frames/p31_p2c_3067.50.jpg"
+        ],
+        "workflow_prep_sample_times": [
+          3061.5,
+          3061.75,
+          3062,
+          3063,
+          3063.5,
+          3064,
+          3064.5,
+          3065,
+          3066,
+          3066.25
+        ],
+        "workflow_max_prep_gap_seconds": 1,
+        "workflow_release_sample_times": [
+          3067,
+          3067.2,
+          3067.25,
+          3067.3,
+          3067.35,
+          3067.4,
+          3067.45,
+          3067.5
+        ]
+      },
+      "canonical_frame_hashes": [
+        {
+          "path": "outputs/frames/p31_p2b_3061.50.jpg",
+          "sha256": "58ac75c1c109a7977ecb43fec9848fb16f8b6694ef3d8d493ca6ceeb74336b36"
+        },
+        {
+          "path": "outputs/frames/p31_p2b_3061.25.jpg",
+          "sha256": "437570c6ba25270e36dea90765639f7648e2b10b39b5ceecd6bdf24fa7d3d38b"
+        },
+        {
+          "path": "outputs/frames/p31_p2a_3062.00.jpg",
+          "sha256": "b060edf9635401339461a48e2a0701c25a632697b3c108560b662ec91178f806"
+        },
+        {
+          "path": "outputs/frames/p31_p2a_3063.00.jpg",
+          "sha256": "45d3d58824aeaf590ac557b8d52cb18fca614b5f12e4ac9921fd6f7f08f5051d"
+        },
+        {
+          "path": "outputs/frames/p31_scan1_3064.00.jpg",
+          "sha256": "9960a4dc89f114abc4026021dfd413cee796ab0c16aecd8611494813946199a1"
+        },
+        {
+          "path": "outputs/frames/p31_p2a_3065.00.jpg",
+          "sha256": "9f4fdbc5437a196d9758f78e80017fad49380c283f444182c8cdcd40c53db142"
+        },
+        {
+          "path": "outputs/frames/p31_p2a_3066.00.jpg",
+          "sha256": "951a809bbbb755d6b54e446beb14b893ad707d87e930337e1d28d0aff40ce3a5"
+        },
+        {
+          "path": "outputs/frames/p31_p2b_3066.25.jpg",
+          "sha256": "ffb7edfc1e55e03897efc0a82dcb416a958350753201a4071791f7d68e0c49e6"
+        },
+        {
+          "path": "outputs/frames/p31_p2c_3067.30.jpg",
+          "sha256": "40dff485b658c1e7ac353448f208b4e67adc88fe1d02e3192eb0616687e95462"
+        },
+        {
+          "path": "outputs/frames/p31_p2c_3067.35.jpg",
+          "sha256": "f52e14431d16087563ee54f051800983a650119f367385f468656a1be5e63c37"
+        },
+        {
+          "path": "outputs/frames/p31_p2b_3067.40.jpg",
+          "sha256": "945863216a414d46f86d38f1f2b2d72969aabdb56b1d5074302150c0982bbd1e"
+        },
+        {
+          "path": "outputs/frames/p31_p2c_3067.45.jpg",
+          "sha256": "77f91de657c20270a628e6614a2d35687c66b3cf3423215a95ca87728ded706e"
+        },
+        {
+          "path": "outputs/frames/p31_p2c_3067.50.jpg",
+          "sha256": "b6d640458fde8eec8bcfbe793e58bbdfe8217eb1169934f78806a47376664f2c"
+        }
+      ]
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 31,
+      "pitch_number": 3,
+      "play_id": "9919d231-a4b5-4ca5-ba54-bd9aced80707",
+      "verification": {
+        "status": "verified",
+        "by": "Claude Code session (Opus 5.5) direct frame review of decision boundary, continuity samples, scoreboard bug and release sequence, after an Opus 5 workflow annotator and two independent verifier lenses (timing, scoreboard_identity)",
+        "date": "2026-09-25"
+      },
+      "prior_verification": {
+        "workflow_status": "workflow_two_lens_passed_needs_session_review",
+        "verdicts": [
+          {
+            "round": 1,
+            "row_decision_seconds": 3079.25,
+            "row_release_seconds": 3085.45,
+            "lens": "timing",
+            "refuted": false,
+            "confidence": "high",
+            "issues": [],
+            "suggested_decision_seconds": 3079.25,
+            "suggested_release_seconds": 3085.45,
+            "image_paths": [
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT31_3a_full.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT31_3a_bug.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT31_3a_3079.25.jpg",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT31_3b_full.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT31_3c_full.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT31_3c_bug.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT31_3d_full.png",
+              "C:/Users/zpfh1/AppData/Local/Temp/claude/C--Users-zpfh1-Projects/789f73ca-11f1-4334-95b4-01773f4f4dc7/scratchpad/crop_3079.25.png",
+              "C:/Users/zpfh1/AppData/Local/Temp/claude/C--Users-zpfh1-Projects/789f73ca-11f1-4334-95b4-01773f4f4dc7/scratchpad/crop_3081.75.png",
+              "C:/Users/zpfh1/AppData/Local/Temp/claude/C--Users-zpfh1-Projects/789f73ca-11f1-4334-95b4-01773f4f4dc7/scratchpad/crop_3084.00.png",
+              "C:/Users/zpfh1/AppData/Local/Temp/claude/C--Users-zpfh1-Projects/789f73ca-11f1-4334-95b4-01773f4f4dc7/scratchpad/rel_strip.png",
+              "C:/Users/zpfh1/AppData/Local/Temp/claude/C--Users-zpfh1-Projects/789f73ca-11f1-4334-95b4-01773f4f4dc7/scratchpad/rel_grid2.png"
+            ]
+          },
+          {
+            "round": 1,
+            "row_decision_seconds": 3079.25,
+            "row_release_seconds": 3085.45,
+            "lens": "scoreboard_identity",
+            "refuted": false,
+            "confidence": "high",
+            "issues": [],
+            "suggested_decision_seconds": null,
+            "suggested_release_seconds": null,
+            "image_paths": [
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vS31_3_bug.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vS31_3_full.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vS31_3_3079.25.jpg"
+            ]
+          }
+        ]
+      },
+      "status": "annotated",
+      "decision_seconds": 3079.25,
+      "release_seconds": 3085.45,
+      "uncertainty_seconds": 0.15,
+      "readability": "readable",
+      "observed": {
+        "balls": 1,
+        "strikes": 1,
+        "outs": 1,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": 4,
+        "inning_topbot": "Bot",
+        "home_score": 2,
+        "away_score": 0
+      },
+      "bug_text": "NYM 0 / ATL 2 / bases empty / down-4 / 1 out / 1-1 / MEGILL :07 P:72 / 9. ARCIA 0-1",
+      "note": "SNY full game. Bottom 4, Megill vs Arcia; 1-1 count, bases empty, 1 out. At previous_grid_seconds 3079.00 the shot is still the Arcia close-up from behind the plate, so condition (1) fails (cutaway). At 3079.25 the live centre-field camera is up: Megill stands on the rubber with both feet planted and the ball in his glove, Arcia is upright in the right-handed box facing the pitcher with the bat up, and the bug reads NYM 0 / ATL 2 / bases empty / down-4 / 1 out / 1-1 / MEGILL :07 P:72 / 9. ARCIA 0-1. Continuity samples 3079.25, 3079.50, 3079.75, 3080.00, 3081.00, 3082.00, 3083.00, 3084.00 (max gap 1.00 s) are all the same live centre-field shot with the pitcher on the rubber and the batter in the box; no step-off, cutaway or white bug wipe. Motion start is the leg lift first seen at 3084.25 (standing at 3084.00). Release bracket: at 3085.40 the throwing arm is still coming over with the hand behind/by the head, at 3085.45 the arm is extended forward toward the plate with the hand empty, and 3085.50 is already the follow-through with the arm swept down - release logged at 3085.45. ffmpeg frame grabs; selected-frame review, not continuous playback. Manual timing, not frame-exact.",
+      "changed_by_session": {},
+      "session_check": "Session review sheet (scripts/71): 3078.75 and 3079.00 are an Arcia close-up, so the live-shot condition fails; 3079.25 is the live centre-field shot with Megill on the rubber and Arcia upright in the box with the bat up, bug NYM 0 / ATL 2, down-4, bases empty, one out, 1-1, :07 P:72 (73rd pitch). 3079.50-3084.00 same live shot, still; leg lift at 3084.25. Release: arm cocked at 3085.40, extended toward the plate at 3085.45, follow-through from 3085.50; 3085.45 +/-0.15 s holds.",
+      "visual_evidence": {
+        "review_sheet": "outputs/verification/rv31_3_review_sheet.png",
+        "extra_sheets": [],
+        "decision_frame": "outputs/frames/p31_p3c_3079.25.jpg",
+        "previous_grid_frame": "outputs/frames/p31_p3b_3079.00.jpg",
+        "continuity_frames": [
+          "outputs/frames/p31_p3b_3079.50.jpg",
+          "outputs/frames/a8scanC_3080.00.jpg",
+          "outputs/frames/p31_p3a_3081.00.jpg",
+          "outputs/frames/p31_p3a_3082.00.jpg",
+          "outputs/frames/p31_p3a_3083.00.jpg",
+          "outputs/frames/p31_p3a_3084.00.jpg",
+          "outputs/frames/p31_p3c_3084.25.jpg"
+        ],
+        "release_frames": [
+          "outputs/frames/p31_p3c_3085.35.jpg",
+          "outputs/frames/p31_p3d_3085.40.jpg",
+          "outputs/frames/p31_p3d_3085.45.jpg",
+          "outputs/frames/p31_p3b_3085.50.jpg",
+          "outputs/frames/rv31_3_3085.55.jpg"
+        ],
+        "workflow_prep_sample_times": [
+          3079.25,
+          3079.5,
+          3079.75,
+          3080,
+          3081,
+          3082,
+          3083,
+          3084,
+          3084.25
+        ],
+        "workflow_max_prep_gap_seconds": 1,
+        "workflow_release_sample_times": [
+          3085.1,
+          3085.15,
+          3085.2,
+          3085.25,
+          3085.3,
+          3085.35,
+          3085.4,
+          3085.45,
+          3085.5
+        ]
+      },
+      "canonical_frame_hashes": [
+        {
+          "path": "outputs/frames/p31_p3c_3079.25.jpg",
+          "sha256": "66372eeccf2ec9d070fbcf38fa8031ac41ac224b270c48a7fadb1258d3eac474"
+        },
+        {
+          "path": "outputs/frames/p31_p3b_3079.00.jpg",
+          "sha256": "25270d3bdfe7fdbd3efd0c2f17515190f6daadc279d2174c48882dfc8c121041"
+        },
+        {
+          "path": "outputs/frames/p31_p3b_3079.50.jpg",
+          "sha256": "e28a68759d527973ea2759b2bb6de13eb31a1bcee59db8cecf26cd146df48f29"
+        },
+        {
+          "path": "outputs/frames/a8scanC_3080.00.jpg",
+          "sha256": "01161b4e7afc11a764170633ff801f54764450e2e3ca4fe9ea11ea7cb2bf54d1"
+        },
+        {
+          "path": "outputs/frames/p31_p3a_3081.00.jpg",
+          "sha256": "ef7c6c1ad9d5634875400cb6e58ca4d2650f602c8d986de741bae7fade138d9e"
+        },
+        {
+          "path": "outputs/frames/p31_p3a_3082.00.jpg",
+          "sha256": "b12a2e3571383e030a365aa47f097b828e0d128b5f7c9b987fd393e0045831c5"
+        },
+        {
+          "path": "outputs/frames/p31_p3a_3083.00.jpg",
+          "sha256": "5f26aeb13de7cdd926870d35f42d59df17c759f401b85c62efdf88b2645aba70"
+        },
+        {
+          "path": "outputs/frames/p31_p3a_3084.00.jpg",
+          "sha256": "39852a5d28a31bf9d78e602e9a24afa7b3a121e860378fddaa3afc6d8e885f3d"
+        },
+        {
+          "path": "outputs/frames/p31_p3c_3084.25.jpg",
+          "sha256": "730d4f1123365e524779f2fe5c4a25a8e1c6b59e2c34fb19dfad861e12d196b0"
+        },
+        {
+          "path": "outputs/frames/p31_p3c_3085.35.jpg",
+          "sha256": "52deaed6e41e0049dd5cfd4f540f7ac6d77e565a6bc1bce87a706348d000d2ac"
+        },
+        {
+          "path": "outputs/frames/p31_p3d_3085.40.jpg",
+          "sha256": "305593a84c05e58101daac8864c4a1e38f8ee75988d5f29594a273c08661d9d8"
+        },
+        {
+          "path": "outputs/frames/p31_p3d_3085.45.jpg",
+          "sha256": "0cb377d9c6b9b739f90c798d76974b93bab8f4601c3cbb7bc1a9dd189f259919"
+        },
+        {
+          "path": "outputs/frames/p31_p3b_3085.50.jpg",
+          "sha256": "cc41a027c095293b23d7bc7935e3a43689ba21abffd8bec6df116fc9dd68ea61"
+        },
+        {
+          "path": "outputs/frames/rv31_3_3085.55.jpg",
+          "sha256": "8f21e376b69ece5aa9f58c25c9daf2fac91dc0ec619ce7d09fac0845c585c23c"
+        }
+      ]
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 31,
+      "pitch_number": 4,
+      "play_id": "26ab7634-f0c0-43b4-a023-8a9770ba5004",
+      "verification": {
+        "status": "verified",
+        "by": "Claude Code session (Opus 5.5) direct frame review of decision boundary, continuity samples, scoreboard bug and release sequence, after an Opus 5 workflow annotator and two independent verifier lenses (timing, scoreboard_identity)",
+        "date": "2026-09-25"
+      },
+      "prior_verification": {
+        "workflow_status": "workflow_two_lens_passed_needs_session_review",
+        "verdicts": [
+          {
+            "round": 1,
+            "row_decision_seconds": 3102,
+            "row_release_seconds": 3108.1,
+            "lens": "timing",
+            "refuted": false,
+            "confidence": "high",
+            "issues": [
+              "Minor wording error in the release description: at 3108.10 the forearm is still whipping forward at shoulder height and the hand is blurred, not yet fully extended. The arm is first fully extended up and forward at 3108.12/3108.13, which look like the same video frame, and no separate ball is visible yet. The ball first appears clearly out of the hand at 3108.15. Best release estimate is about 3108.12, 0.02 s after the claimed 3108.10, so well inside +/-0.15.",
+              "Note overstates the ball position: at 3108.15/3108.20 the ball has only just left the hand and is in early flight near the pitcher's hand in the image, not 'over the plate'. It reaches the catcher/batter area around 3108.40.",
+              "The leg lift starts somewhere between 3106.75 (set, both feet planted) and 3107.00 (knee already well up), so 3107.00 is the first sampled motion frame, not the exact onset. This is acceptable under the convention."
+            ],
+            "suggested_decision_seconds": 3102,
+            "suggested_release_seconds": 3108.12,
+            "image_paths": [
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT31_4a_full.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT31_4a_bug.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT31_4a_3102.00.jpg",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT31_4b_full.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT31_4d_full.png",
+              "C:/Users/zpfh1/AppData/Local/Temp/claude/C--Users-zpfh1-Projects/789f73ca-11f1-4334-95b4-01773f4f4dc7/scratchpad/vT31_4a_crops.png",
+              "C:/Users/zpfh1/AppData/Local/Temp/claude/C--Users-zpfh1-Projects/789f73ca-11f1-4334-95b4-01773f4f4dc7/scratchpad/vT31_4b_crops.png",
+              "C:/Users/zpfh1/AppData/Local/Temp/claude/C--Users-zpfh1-Projects/789f73ca-11f1-4334-95b4-01773f4f4dc7/scratchpad/vT31_4b_zoom.png",
+              "C:/Users/zpfh1/AppData/Local/Temp/claude/C--Users-zpfh1-Projects/789f73ca-11f1-4334-95b4-01773f4f4dc7/scratchpad/vT31_4c_zoom.png",
+              "C:/Users/zpfh1/AppData/Local/Temp/claude/C--Users-zpfh1-Projects/789f73ca-11f1-4334-95b4-01773f4f4dc7/scratchpad/vT31_4c_hand.png",
+              "C:/Users/zpfh1/AppData/Local/Temp/claude/C--Users-zpfh1-Projects/789f73ca-11f1-4334-95b4-01773f4f4dc7/scratchpad/vT31_4d_batter.png"
+            ]
+          },
+          {
+            "round": 1,
+            "row_decision_seconds": 3102,
+            "row_release_seconds": 3108.1,
+            "lens": "scoreboard_identity",
+            "refuted": false,
+            "confidence": "high",
+            "issues": [],
+            "suggested_decision_seconds": 3102,
+            "suggested_release_seconds": null,
+            "image_paths": [
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vS31_4_bug.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vS31_4_full.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vS31_4_3102.00.jpg"
+            ]
+          }
+        ]
+      },
+      "status": "annotated",
+      "decision_seconds": 3102,
+      "release_seconds": 3108.13,
+      "uncertainty_seconds": 0.15,
+      "readability": "readable",
+      "observed": {
+        "balls": 1,
+        "strikes": 2,
+        "outs": 1,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": 4,
+        "inning_topbot": "Bot",
+        "home_score": 2,
+        "away_score": 0
+      },
+      "bug_text": "NYM 0 / ATL 2 / bases empty / down-4 / 1 out / 1-2 / MEGILL :05 P:73 / 9. ARCIA 0-1",
+      "note": "SNY full game. Bottom 4, Megill vs Arcia; 1-2 count, bases empty, 1 out. At previous_grid_seconds 3101.75 the shot is still the tight Luis Megill head-and-shoulders close-up (3100.00-3101.75 all close-up), so condition (1) fails (cutaway/close-up). At 3102.00 the live centre-field camera is up: Megill is on the rubber with both feet planted and the ball in his glove, Arcia is in the box facing the pitcher with the bat up, and the bug reads NYM 0 / ATL 2 / bases empty / down-4 / 1 out / 1-2 / MEGILL :05 P:73 / 9. ARCIA 0-1. Continuity samples 3102.00, 3102.25, 3103.00, 3104.00, 3105.00, 3106.00, 3106.50, 3106.75 (max gap 1.00 s) are all the same unbroken live centre-field shot; at 3106.75 he has come set with the hands together but both feet are still planted and there is no leg lift. Motion start is the leg lift first seen at 3107.00. Release bracket: at 3108.05 the throwing arm is still cocked behind the head, at 3108.10 the arm is extended forward toward the plate with the hand empty, and by 3108.15/3108.20 the ball is already in flight over the plate with the arm in follow-through - release logged at 3108.10. ffmpeg frame grabs; selected-frame review, not continuous playback. Manual timing, not frame-exact. Session correction 2026-09-25: release moved from 3108.10 to 3108.13: fine crops show the arm still cocked behind the head at 3108.10, coming forward at 3108.12 and extended toward the plate by the next video frame (3108.13-3108.15); the timing verifier independently estimated about 3108.12.",
+      "changed_by_session": {
+        "release_seconds": {
+          "before": 3108.1,
+          "after": 3108.13
+        },
+        "note": {
+          "before": "SNY full game. Bottom 4, Megill vs Arcia; 1-2 count, bases empty, 1 out. At previous_grid_seconds 3101.75 the shot is still the tight Luis Megill head-and-shoulders close-up (3100.00-3101.75 all close-up), so condition (1) fails (cutaway/close-up). At 3102.00 the live centre-field camera is up: Megill is on the rubber with both feet planted and the ball in his glove, Arcia is in the box facing the pitcher with the bat up, and the bug reads NYM 0 / ATL 2 / bases empty / down-4 / 1 out / 1-2 / MEGILL :05 P:73 / 9. ARCIA 0-1. Continuity samples 3102.00, 3102.25, 3103.00, 3104.00, 3105.00, 3106.00, 3106.50, 3106.75 (max gap 1.00 s) are all the same unbroken live centre-field shot; at 3106.75 he has come set with the hands together but both feet are still planted and there is no leg lift. Motion start is the leg lift first seen at 3107.00. Release bracket: at 3108.05 the throwing arm is still cocked behind the head, at 3108.10 the arm is extended forward toward the plate with the hand empty, and by 3108.15/3108.20 the ball is already in flight over the plate with the arm in follow-through - release logged at 3108.10. ffmpeg frame grabs; selected-frame review, not continuous playback. Manual timing, not frame-exact.",
+          "after": "SNY full game. Bottom 4, Megill vs Arcia; 1-2 count, bases empty, 1 out. At previous_grid_seconds 3101.75 the shot is still the tight Luis Megill head-and-shoulders close-up (3100.00-3101.75 all close-up), so condition (1) fails (cutaway/close-up). At 3102.00 the live centre-field camera is up: Megill is on the rubber with both feet planted and the ball in his glove, Arcia is in the box facing the pitcher with the bat up, and the bug reads NYM 0 / ATL 2 / bases empty / down-4 / 1 out / 1-2 / MEGILL :05 P:73 / 9. ARCIA 0-1. Continuity samples 3102.00, 3102.25, 3103.00, 3104.00, 3105.00, 3106.00, 3106.50, 3106.75 (max gap 1.00 s) are all the same unbroken live centre-field shot; at 3106.75 he has come set with the hands together but both feet are still planted and there is no leg lift. Motion start is the leg lift first seen at 3107.00. Release bracket: at 3108.05 the throwing arm is still cocked behind the head, at 3108.10 the arm is extended forward toward the plate with the hand empty, and by 3108.15/3108.20 the ball is already in flight over the plate with the arm in follow-through - release logged at 3108.10. ffmpeg frame grabs; selected-frame review, not continuous playback. Manual timing, not frame-exact. Session correction 2026-09-25: release moved from 3108.10 to 3108.13: fine crops show the arm still cocked behind the head at 3108.10, coming forward at 3108.12 and extended toward the plate by the next video frame (3108.13-3108.15); the timing verifier independently estimated about 3108.12."
+        }
+      },
+      "session_check": "Session review sheet (scripts/71) plus fine release crops: 3101.50 and 3101.75 are a Megill close-up, so the live-shot condition fails; 3102.00 is the live centre-field shot with Megill on the rubber and Arcia in the box with the bat up, bug NYM 0 / ATL 2, down-4, bases empty, one out, 1-2, :05 P:73 (74th pitch). 3103.00-3106.75 same live shot, set by 3106.75; leg lift at 3107.00. Release: arm cocked at 3108.10, coming forward at 3108.12, extended at 3108.15; release corrected to 3108.13 +/-0.15 s.",
+      "visual_evidence": {
+        "review_sheet": "outputs/verification/rv31_4_review_sheet.png",
+        "extra_sheets": [
+          "outputs/verification/rv31_4_rel_crop.png"
+        ],
+        "decision_frame": "outputs/frames/p31_p4a_3102.00.jpg",
+        "previous_grid_frame": "outputs/frames/p31_p4b_3101.75.jpg",
+        "continuity_frames": [
+          "outputs/frames/p31_p4c_3103.00.jpg",
+          "outputs/frames/p31_p4a_3104.00.jpg",
+          "outputs/frames/p31_p4a_3105.00.jpg",
+          "outputs/frames/p31_p4a_3106.00.jpg",
+          "outputs/frames/p31_p4b_3106.75.jpg",
+          "outputs/frames/p31_p4a_3107.00.jpg"
+        ],
+        "release_frames": [
+          "outputs/frames/p31_p4c_3108.05.jpg",
+          "outputs/frames/p31_p4c_3108.10.jpg",
+          "outputs/frames/rv31_4_3108.12.jpg",
+          "outputs/frames/p31_p4c_3108.15.jpg",
+          "outputs/frames/rv31_4_3108.18.jpg"
+        ],
+        "workflow_prep_sample_times": [
+          3102,
+          3102.25,
+          3103,
+          3104,
+          3105,
+          3106,
+          3106.5,
+          3106.75,
+          3107
+        ],
+        "workflow_max_prep_gap_seconds": 1,
+        "workflow_release_sample_times": [
+          3108,
+          3108.05,
+          3108.1,
+          3108.15,
+          3108.2,
+          3108.3
+        ]
+      },
+      "canonical_frame_hashes": [
+        {
+          "path": "outputs/frames/p31_p4a_3102.00.jpg",
+          "sha256": "2d8bab366d77333950edd04572a34356a8aa044d5e5d54b9d28692a345985f87"
+        },
+        {
+          "path": "outputs/frames/p31_p4b_3101.75.jpg",
+          "sha256": "f15c37c8e74bdc9bd86479c846d36bca33aeeba34d1800557bf7df4526645389"
+        },
+        {
+          "path": "outputs/frames/p31_p4c_3103.00.jpg",
+          "sha256": "35faf539ad7bf25e529a9e45d0c2efe6a6ad5bc255750b10bc52564f6a53447c"
+        },
+        {
+          "path": "outputs/frames/p31_p4a_3104.00.jpg",
+          "sha256": "08ba7b0400fc9166fda368470d9bf4ab026a38b2d890c8aa2c491176848d10a0"
+        },
+        {
+          "path": "outputs/frames/p31_p4a_3105.00.jpg",
+          "sha256": "9ffc959180dbc834e4aea919ff25d0a2ea7af9bce454175d34ce55423a3daa48"
+        },
+        {
+          "path": "outputs/frames/p31_p4a_3106.00.jpg",
+          "sha256": "40b6cf093f435ef0355d120d58fa96f755ff1d8290d1a386299a7fd27d3c22f4"
+        },
+        {
+          "path": "outputs/frames/p31_p4b_3106.75.jpg",
+          "sha256": "3c184cd0a7e82139355fdf234f2452c8ed7fef9caec32b5be13c323e7d5c36fc"
+        },
+        {
+          "path": "outputs/frames/p31_p4a_3107.00.jpg",
+          "sha256": "a57642946733f326b9dcc8f1cc21e5e82afb12c7ef66f2e0faf346dd5b227a01"
+        },
+        {
+          "path": "outputs/frames/p31_p4c_3108.05.jpg",
+          "sha256": "6f004ec97d25f6e05b0b55e9422a17ed0b99f2ac4207e5e57885d961800a353e"
+        },
+        {
+          "path": "outputs/frames/p31_p4c_3108.10.jpg",
+          "sha256": "d99374b5a053144aae56f542c2c9f41351f5924deaea324716c96734e6178ad6"
+        },
+        {
+          "path": "outputs/frames/rv31_4_3108.12.jpg",
+          "sha256": "5ab6c7edc8f39dfa9666462fb2801ccb1ed8b5f83108e8aef1ac219003d9bf25"
+        },
+        {
+          "path": "outputs/frames/p31_p4c_3108.15.jpg",
+          "sha256": "b9e1010110ff3186f838cdd26824dad02c678c17aa52f787362f0bf50a4d08ce"
+        },
+        {
+          "path": "outputs/frames/rv31_4_3108.18.jpg",
+          "sha256": "fe6e298ffca68b95316e94049b9d0aaec28b0e2fb6dbc83f920d6b4fafc1591c"
+        }
+      ]
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 32,
+      "pitch_number": 1,
+      "play_id": "c9790f0b-6e08-49eb-a671-137ec716b3e6",
+      "verification": {
+        "status": "verified",
+        "by": "Claude Code session (Opus 5.5) direct frame review of decision boundary, continuity samples, scoreboard bug and release sequence, after an Opus 5 workflow annotator and two independent verifier lenses (timing, scoreboard_identity)",
+        "date": "2026-09-25"
+      },
+      "prior_verification": {
+        "workflow_status": "workflow_two_lens_passed_needs_session_review",
+        "verdicts": [
+          {
+            "round": 1,
+            "row_decision_seconds": 3130.25,
+            "row_release_seconds": 3137.85,
+            "lens": "timing",
+            "refuted": false,
+            "confidence": "medium",
+            "issues": [
+              "Motion start is probably 3136.60, not 3136.70. In the enlarged leg crop at 3136.60, Megill's front (left) leg is already motion-blurred with the knee bent forward and the heel coming off the dirt. At 3136.45 both legs are straight and still. The note's line 'still fully set with his hands together at 3136.60' is true for the hands but not for the legs. This does not affect the decision or release refutation checks, since 3136.45 is still fully set.",
+              "Condition (3) is borderline from 3130.25 to 3131.0. Harris II is upright in the box with his chest and head toward the pitcher, but he is still fiddling with his batting gloves: at 3130.50 his right glove is at his mouth, and at 3131.00 his hands are low at the waist with the bat not visible. His head stays level and faces the pitcher, so I judged (3) to hold under 'bat position alone does not matter'. A stricter reader could call this settling.",
+              "The batter banner '1. HARRIS II 1-2' is not on the bug at the 3130.25 decision frame. It first appears in my samples at 3132.50, and the identity check for the batter relies on that later frame."
+            ],
+            "suggested_decision_seconds": 3130.25,
+            "suggested_release_seconds": 3137.85,
+            "image_paths": [
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT32_1a_full.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT32_1a_bug.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT32_1a_3129.75.jpg",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT32_1a_3130.00.jpg",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT32_1a_3130.25.jpg",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT32_1a_3133.50.jpg",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT32_1a_3136.45.jpg",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT32_1b_full.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT32_1b_bug.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT32_1c_full.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vT32_1c_bug.png",
+              "C:/Users/zpfh1/AppData/Local/Temp/claude/C--Users-zpfh1-Projects/789f73ca-11f1-4334-95b4-01773f4f4dc7/scratchpad/v32_crop_dec.png"
+            ]
+          },
+          {
+            "round": 1,
+            "row_decision_seconds": 3130.25,
+            "row_release_seconds": 3137.85,
+            "lens": "scoreboard_identity",
+            "refuted": false,
+            "confidence": "high",
+            "issues": [
+              "Minor bug_text discrepancy: in the full frames the second banner line '1. HARRIS II 1-2' is already visible at 3132.50, not first at 3133.50. The _bug crop cuts that line off, so it has to be read from the full/raw frames.",
+              "Timing-lens note, outside this lens: at 3130.75 the batter holds the bat lowered with its tip near the ground and the umpire is standing upright. The batter's head looks turned toward the pitcher, so condition (3) probably still holds, but the timing verifier should check it. At 3130.00 the batter's hands are up near his helmet/gloves and the umpire is adjusting his mask. That is consistent with 3130.00 failing and 3130.25 being the first valid frame.",
+              "The batter banner is absent at the decision frame 3130.25 itself. The batter identity rests on a left-handed hitter standing on the screen-left (first-base) side, the same player continuing in the box, and the '1. HARRIS II' banner that appears from 3132.50."
+            ],
+            "suggested_decision_seconds": null,
+            "suggested_release_seconds": null,
+            "image_paths": [
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vS32_1_bug.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vS32_1_full.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vS32_1_3130.00.jpg",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vS32_1_3130.25.jpg",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vS32_1_3130.75.jpg",
+              "C:/Users/zpfh1/AppData/Local/Temp/claude/C--Users-zpfh1-Projects/789f73ca-11f1-4334-95b4-01773f4f4dc7/scratchpad/vS32_1_crops.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vS32_1b_bug.png",
+              "C:/Users/zpfh1/Projects/transition-models/outputs/frames/vS32_1b_full.png"
+            ]
+          }
+        ]
+      },
+      "status": "annotated",
+      "decision_seconds": 3130.25,
+      "release_seconds": 3137.85,
+      "uncertainty_seconds": 0.15,
+      "readability": "readable",
+      "observed": {
+        "balls": 0,
+        "strikes": 0,
+        "outs": 2,
+        "runner_on_1b": false,
+        "runner_on_2b": false,
+        "runner_on_3b": false,
+        "inning": 4,
+        "inning_topbot": "Bot",
+        "home_score": 2,
+        "away_score": 0
+      },
+      "bug_text": "NYM 0 / ATL 2 / bases empty / down-4 / 2 outs / 0-0 / MEGILL P:74 (at 3130.25; the second banner line '1. HARRIS II 1-2' is absent at 3130.25 and appears at 3133.50, 3136.50 and 3137.00)",
+      "note": "SNY full game. Bottom 4, Megill vs Harris II; 0-0 count, bases empty, 2 outs. At previous_grid_seconds 3130.00 condition (3) fails: an enlarged crop of the batter shows Harris II still hunched forward over the plate with his head down and the bat dropped, finishing his dig-in; he is not yet set facing the pitcher (the pitcher already has both feet planted at the rubber there, so (2) holds). Earlier still fails harder: 3129.75/3129.50/3129.25 show the same bent-over batter, 3129.00 is an SNY logo wipe transition, and 3128.50/3128.00/3126.00/3124.00 are a tight close-up of Harris II walking up, not a live wide shot. The decision frame 3130.25 is the centre-field camera showing both the pitcher standing still on the rubber (both feet planted, glove at his side, no rocker step) and the batter now upright in the left-handed box facing the pitcher, bat up, with a readable bug: NYM 0 / ATL 2 / all three diamonds hollow / down-arrow 4 / two gold out circles / 0-0 / MEGILL P:74. Continuity from 3130.25 to the motion start was sampled at 3130.25, 3130.30, 3130.50, 3130.75, 3131.00, 3131.50, 3132.00, 3133.00, 3133.50, 3134.00, 3134.50, 3135.00, 3136.00, 3136.50, 3136.60 and 3136.70 (largest gap 1.0 s); every sample is the same live centre-field shot with the pitcher at the rubber, the batter in the box and the bug readable - no step-off, pickoff, time-out, cutaway or white bug wipe. Megill is still fully set with his hands together at 3136.60; at 3136.70 the lead knee is clearly lifted, so motion starts at 3136.70. Release bracket: at 3137.80 the throwing (right) arm is still cocked with the forearm above and behind the head and the ball in hand; at 3137.85 the arm is over the top and extended forward toward the plate with a pale ball blur just in front of the empty hand; by 3137.90 the ball is already in flight near the catcher and the arm is coming down - release 3137.85 bracketed by 3137.80 and 3137.90. ffmpeg frame grabs; selected-frame review, not continuous playback. Manual timing, not frame-exact.",
+      "changed_by_session": {},
+      "session_check": "Session review sheet (scripts/71) plus batter crop: 3129.75 Harris II is bent over the plate digging in, 3130.00 still crouched with his head down and the bat not up, so condition (3) fails there; 3130.25 is the live centre-field shot with Megill standing on the rubber and Harris upright in the left-handed box with the bat up, bug NYM 0 / ATL 2, down-4, bases empty, two outs, 0-0, P:74 (75th pitch). 3131.00-3136.60 are the same live shot, still; leg lift at 3136.70. Release: arm cocked at 3137.80, extended toward the plate at 3137.85, follow-through from 3137.90 with the ball near the plate at 3138.00; 3137.85 +/-0.15 s holds.",
+      "visual_evidence": {
+        "review_sheet": "outputs/verification/rv32_1_review_sheet.png",
+        "extra_sheets": [
+          "outputs/verification/rv32_1_batter_crop.png"
+        ],
+        "decision_frame": "outputs/frames/p32_back2_3130.25.jpg",
+        "previous_grid_frame": "outputs/frames/p32_scan1_3130.00.jpg",
+        "continuity_frames": [
+          "outputs/frames/p32_back1_3131.00.jpg",
+          "outputs/frames/p32_back1_3132.00.jpg",
+          "outputs/frames/p32_mot1_3133.50.jpg",
+          "outputs/frames/p32_back1_3135.00.jpg",
+          "outputs/frames/p32_back1_3136.00.jpg",
+          "outputs/frames/p32_rel2_3136.50.jpg",
+          "outputs/frames/p32_mot1_3136.60.jpg",
+          "outputs/frames/p32_mot1_3136.70.jpg"
+        ],
+        "release_frames": [
+          "outputs/frames/rv32_1_3137.75.jpg",
+          "outputs/frames/p32_rel1_3137.80.jpg",
+          "outputs/frames/p32_rel2_3137.85.jpg",
+          "outputs/frames/p32_rel2_3137.90.jpg",
+          "outputs/frames/p32_rel1_3138.00.jpg"
+        ],
+        "workflow_prep_sample_times": [
+          3130.25,
+          3130.3,
+          3130.5,
+          3130.75,
+          3131,
+          3131.5,
+          3132,
+          3133,
+          3133.5,
+          3134,
+          3134.5,
+          3135,
+          3136,
+          3136.5,
+          3136.6,
+          3136.7
+        ],
+        "workflow_max_prep_gap_seconds": 1,
+        "workflow_release_sample_times": [
+          3137,
+          3137.2,
+          3137.4,
+          3137.6,
+          3137.8,
+          3137.85,
+          3137.9,
+          3137.95,
+          3138,
+          3138.05,
+          3138.1,
+          3138.15,
+          3138.2,
+          3138.5
+        ]
+      },
+      "canonical_frame_hashes": [
+        {
+          "path": "outputs/frames/p32_back2_3130.25.jpg",
+          "sha256": "c222af625b32108baf013a5b627e635e61a7ddbb8fac9ea059997284b3b8ac71"
+        },
+        {
+          "path": "outputs/frames/p32_scan1_3130.00.jpg",
+          "sha256": "cf477bcc3727763beb929d20128f9e684f8c90a3bada042f421206434fdb57ed"
+        },
+        {
+          "path": "outputs/frames/p32_back1_3131.00.jpg",
+          "sha256": "1b7f4817d97cf8d3405a5eb1373b994ba424b328689084bf2e69b426e929a634"
+        },
+        {
+          "path": "outputs/frames/p32_back1_3132.00.jpg",
+          "sha256": "9cbd5cdd400820c09ee631cbf8a33169417d69c70f3b0a4e62ee9a9153e429e7"
+        },
+        {
+          "path": "outputs/frames/p32_mot1_3133.50.jpg",
+          "sha256": "ddb4b49fa9c8997d44bcefc35c5c7223ed1d97c22726c5c8526396de9a8aab52"
+        },
+        {
+          "path": "outputs/frames/p32_back1_3135.00.jpg",
+          "sha256": "254225633e1497a76a47017c4b1c02746d3605494c0de86fc652efd9cb7bef5b"
+        },
+        {
+          "path": "outputs/frames/p32_back1_3136.00.jpg",
+          "sha256": "fc64106de2b25e2dcdc8faf86d41701dc17e21aedc5930898eaee4cde8b92843"
+        },
+        {
+          "path": "outputs/frames/p32_rel2_3136.50.jpg",
+          "sha256": "ff370d3e71d0df7d792cbc746d7fcafed6af7767edf2afc4380d2653ff37c6a2"
+        },
+        {
+          "path": "outputs/frames/p32_mot1_3136.60.jpg",
+          "sha256": "02bbd1945110dee0820f5e7d6fa169c543290ee65fb31244e4c6f7b04c4c4447"
+        },
+        {
+          "path": "outputs/frames/p32_mot1_3136.70.jpg",
+          "sha256": "0569c3a2c7cb65fee3c4b7d3d89ea64a64b4d3f6d08fad710c85c8b7778c5e35"
+        },
+        {
+          "path": "outputs/frames/rv32_1_3137.75.jpg",
+          "sha256": "4957fb48ad9f5e3dcf94f5d1aa490ba4d36e8146c05a95ddbecdfa9911c7f331"
+        },
+        {
+          "path": "outputs/frames/p32_rel1_3137.80.jpg",
+          "sha256": "605a2f63ca28820c50509dd85b809f53a2df826509bd72ab688bbf54b8bc4c97"
+        },
+        {
+          "path": "outputs/frames/p32_rel2_3137.85.jpg",
+          "sha256": "babb7ae52356986470cff91e25d6a13c985fb043bb8567ea302ae7e05cadf2f0"
+        },
+        {
+          "path": "outputs/frames/p32_rel2_3137.90.jpg",
+          "sha256": "9c29ed20311c692e977f62634a0683b0dc2cdc99b0722a5eeb75561e2199d344"
+        },
+        {
+          "path": "outputs/frames/p32_rel1_3138.00.jpg",
+          "sha256": "019a878045aa75b28d9fd9898f5e755302e6b258f539f0bce763380a60650d6a"
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "reviewed": 10,
+    "annotated": 10,
+    "unavailable": 0,
+    "partial_review": [],
+    "session_corrections": [
+      "30/3",
+      "31/4"
+    ]
+  }
+}

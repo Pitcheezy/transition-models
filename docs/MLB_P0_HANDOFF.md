@@ -315,8 +315,15 @@
     미커밋 주석 입력까지 되돌림 — 모두 고침. `check_project.py` lint 범위를 scripts 64–71·src/vision·관련 시험으로 확장(69경로 통과).
     검사: **321 passed, 2 deselected**. A-8(4회 19구)은 같은 선점 아래 진행 중이며 이 커밋에 주석 변경은 없다.
 
+32. (이 커밋): A-8 4회 중 **PA 28·30·31·32 10구** 검증·병합(Claude Code, 2026-09-25). 선점 `31a9352`, 도구 기준 `43c4d45`.
+    주석 워크플로 v4(Opus 5, A-7 교훈 반영) → 두 렌즈 → 세션이 `scripts/71` 시트·세밀 크롭 직접 확인. 10구 모두 annotated.
+    반박→수리: 28/1·28/2 동작 시작, 30/2 d2994.25(타자 장갑)·r3001.44. 세션 정정: 30/3 r3018.60, 31/4 r3108.13.
+    **105 확인 / 6 불가 / 211 미검토**, 리뷰 105(103 전 필드), 충돌 0. 기존 timing 101행 보존. 근거 `game_747139_timing_verification_pa27_32.json`.
+    OCR은 `scripts/70 --reference 43c4d45`로 처음 운영 사용: v1 전 필드 93구 44·49·0, v2 92구 75·17·0, 새 10구 이닝 숫자 4만 기권, 음성 거짓 판독 0,
+    기존 95구 예측 불변·105구 반복 동일. 검사 **322 passed, 2 deselected**. 남은 A-8: PA 27(2구)·29(7구, 29/6 unavailable 후보).
+
 이 문서와 함께 추가되는 후속 커밋의 해시는 `git log -6 --oneline`으로 확인한다.
-최신 Windows CPU 검사: **321 passed, 2 deselected**(체크포인트 31, `check_project.py --cpu-only`, Ruff 69경로 통과). 아래 브라우저·서비스 검증은 이전 체크포인트 기록이다.
+최신 Windows CPU 검사: **322 passed, 2 deselected**(체크포인트 32, `check_project.py --cpu-only`, Ruff 69경로 통과). 아래 브라우저·서비스 검증은 이전 체크포인트 기록이다.
 JavaScript 구문 검사 및 Chrome 수동 입력·실제 추론·9회 이후 추천 보류 확인.
 GitHub CI 결과는 해당 커밋의 validation 워크플로에서 따로 확인한다.
 주석 모듈을 먼저 import한 새 프로세스에서도 Torch→Pandas 문자열 생성이 성공하는지
