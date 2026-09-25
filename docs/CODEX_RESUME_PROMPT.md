@@ -2,8 +2,8 @@
 
 A-7(PA 11~26, 3회 종료)까지 검토·병합한 뒤 다음 단위를 이어가기 위한 지시문이다(Claude도 작업자 이름만 바꿔 사용).
 아래 `---` 이하를 다음 도구에 전달한다. 남은 작업의 기준은 [CHECKLIST.md](../CHECKLIST.md),
-최신 결과는 [MLB_P0_HANDOFF.md](MLB_P0_HANDOFF.md) 체크포인트 37이다. **다음 한 단위는 CHECKLIST A-10(6회 PA 41–49, 34구, 절차는 §1)** 이고,
-병합 뒤 v4 첫 blind 채점을 사전 등록 기준으로 판정한다(§2). 병합 뒤 OCR은 `scripts/70` 한 번으로 모든 버전을 갱신한다(v3는 사전 등록 기준 실패로 기록된 비교용 버전).
+최신 결과는 [MLB_P0_HANDOFF.md](MLB_P0_HANDOFF.md) 체크포인트 38이다. **다음 한 단위는 CHECKLIST A-11(7회 PA 50–55, 18구, 절차는 §1)** 이다.
+OCR v4는 A-10에서 사전 등록 기준 (1) 실패로 판정됐다(§2). 새 OCR 버전(F-3e)은 A-11 주석 전에 사전 등록해야 7회가 blind가 된다. 병합 뒤 OCR은 `scripts/70` 한 번으로 모든 버전을 갱신한다(v3는 사전 등록 기준 실패로 기록된 비교용 버전).
 `scripts/70`이 오판독으로 실패하면 프레임을 직접 보고, 라벨이 맞고 판독기가 틀린 경우에만 원인·증거와 함께 `game_747139_scoreboard_known_misreads.json`에 올린다(판독 버전은 고치지 않는다).
 
 ---
@@ -29,8 +29,8 @@ git log -8 --oneline
 
 ## 1. 주석 단위 절차 (PA 20~26 완료 기록 — 다음 반이닝에도 같은 절차)
 
-현재 timing은 153구(142 annotated / 11 unavailable), 미검토 169구다 — **5회 종료(A-9 완료, 2026-09-25)**. 다음 주석 단위는 6회(PA 41~49, CHECKLIST A-10; F-3d v4 사전 등록은 완료).
-마지막 검증 릴리스는 PA 40/2 3967.00 s이며 6회초는 그 뒤 'END 5' 이후에서 찾는다.
+현재 timing은 187구(174 annotated / 13 unavailable), 미검토 135구다 — **6회 종료(A-10 완료, 2026-09-25)**. 다음 주석 단위는 7회(PA 50~55, CHECKLIST A-11).
+마지막 검증 릴리스는 PA 49/6 4848.00 s이며 7회초는 그 뒤 'END 6' 이후(4900 s 부근)에서 찾는다. 원격 MP4 읽기가 느릴 때 에이전트 수를 줄이고, 주석자가 시간 초과로 끝내지 못한 행은 수리 행과 세션 확인으로 채운다.
 병합 뒤 OCR은 `scripts/70_refresh_ocr_reports.py --reference <병합 전 커밋> --label <단위> --date <날짜>`로 v1·v2와 provenance를 한 번에 갱신한다(docs/MAINTENANCE.md).
 완전 타석은 PA 2~4·6~15·18~19·21·23~26. PA 1/6·5/5·16/2·17/1·20/6·22/1은 판단 화면 불가, PA 8/1·16/1은 라인스코어 partial이다.
 PA 11~15·16~19·20~26 후보 파일의 rows는 모두 비어 있으므로 다시 병합하지 않는다(PA 20~26 근거: `game_747139_timing_verification_pa20_26.json`).
@@ -104,7 +104,12 @@ uv run --frozen python scripts/check_project.py --cpu-only
 오답(`wrong`)을 숨기지 말고 CHECKLIST F-3a에 사례로 기록한다. 템플릿을 늘리려면 해당 타석을 held-out에서 빼야 한다.
 이 판독기는 SNY 한 화면 형식의 프로토타입이며 보편적인 중계 OCR 완료를 의미하지 않는다.
 
-## 2. OCR v4 판정 (A-10 병합 뒤)
+## 2. OCR v4 판정 결과 (A-10, 2026-09-25)
+
+- **실패**(기준 (1)): 6회 blind 32구에서 42/1 아웃 오판독 1건(v1~v4 공통). (2)~(5) 통과. 필드 정답·기권·오답 v4 246·61·1, v3 240·67·1, v2 232·75·1.
+  `docs/results/mlb_p0/game_747139_scoreboard_ocr_v4_acceptance.json`. 현행 v2 유지. 다음 버전(F-3e v5)은 새로 사전 등록하고 1~6회는 개발 집합으로만 쓴다.
+
+### (기록) OCR v4 판정 절차
 
 - F-3d에서 v4를 사전 등록했다(`docs/results/mlb_p0/game_747139_scoreboard_ocr_v4_preregistration.json`). A-10 병합 뒤 `scripts/70`을 모든 버전으로 한 번 돌리고,
   그 파일의 `acceptance_criterion_for_A10` (1)~(5)를 그대로 적용한다. (1)~(3)은 `ocr_reports.new_rows_acceptance`, (5)는 `scripts/66 predict --diagnostics`.

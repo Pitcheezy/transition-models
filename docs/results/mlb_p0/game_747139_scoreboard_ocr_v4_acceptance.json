@@ -1,0 +1,428 @@
+{
+  "schema": "mlb_scoreboard_ocr_acceptance_v1",
+  "game_pk": 747139,
+  "version": "v4",
+  "preregistration": {
+    "file": "docs/results/mlb_p0/game_747139_scoreboard_ocr_v4_preregistration.json",
+    "registered_commit": "05a9bd9",
+    "criterion": "acceptance_criterion_for_A10"
+  },
+  "judged": {
+    "date": "2026-09-25",
+    "by": "Claude Code session (Opus 5.5) after the A-10 merge; the criterion was applied as registered, v4 was not re-optioned, re-templated or re-thresholded"
+  },
+  "inputs": {
+    "reference_commit": "139275e",
+    "reference_meaning": "A-10 claim commit, the last commit before any 6th-inning row was merged; scripts/70_refresh_ocr_reports.py --reference 139275e --label pa41_49 wrote the new_rows_comparison blocks judged here",
+    "new_rows": "PA 41-49: 34 pitches, 32 with a decision frame in the eval set (47/1 and 48/5 are unavailable timing rows and have no eval-set entry); all 32 rows were blind for every version (no 6th-inning frame was looked at before 05a9bd9)",
+    "diagnostics": "scripts/66_sny_scoreboard_ocr.py predict --templates docs/results/mlb_p0/sny_digit_templates_v4.json --diagnostics <path> --no-grab (identical predictions to the committed v4 file)"
+  },
+  "verdict": "FAILED",
+  "verdict_reason": "Criterion (1): one wrong read on a new row - 42/1 outs read 0, label 1. Every version (v1-v4) makes this read; its cause is the shared structural out-circle rule, not a v4 option (game_747139_scoreboard_known_misreads.json). Criteria (2)-(5) pass.",
+  "criteria": {
+    "1_no_wrong_read": {
+      "passes": false,
+      "new_pitches_with_wrong_field": 1,
+      "wrong_reads_all_v4_rows": [
+        {
+          "at_bat_number": 42,
+          "pitch_number": 1,
+          "field": "outs",
+          "read": 0,
+          "label": 1
+        }
+      ]
+    },
+    "2_per_field_correct_at_least_v2_and_v3": {
+      "passes": true,
+      "per_field_correct": {
+        "balls": {
+          "candidate": 30,
+          "v2": 25,
+          "v3": 30
+        },
+        "strikes": {
+          "candidate": 30,
+          "v2": 30,
+          "v3": 30
+        },
+        "outs": {
+          "candidate": 28,
+          "v2": 28,
+          "v3": 28
+        },
+        "runner_on_1b": {
+          "candidate": 30,
+          "v2": 30,
+          "v3": 30
+        },
+        "runner_on_2b": {
+          "candidate": 30,
+          "v2": 30,
+          "v3": 30
+        },
+        "runner_on_3b": {
+          "candidate": 30,
+          "v2": 30,
+          "v3": 30
+        },
+        "inning": {
+          "candidate": 0,
+          "v2": 0,
+          "v3": 0
+        },
+        "inning_topbot": {
+          "candidate": 30,
+          "v2": 24,
+          "v3": 24
+        },
+        "home_score": {
+          "candidate": 8,
+          "v2": 5,
+          "v3": 8
+        },
+        "away_score": {
+          "candidate": 30,
+          "v2": 30,
+          "v3": 30
+        }
+      }
+    },
+    "3_negatives": {
+      "passes": true
+    },
+    "4_shared_rows_and_isolation": {
+      "passes": true,
+      "detail": {
+        "v1": {
+          "changed_shared_rows": 0,
+          "removed_rows": 0,
+          "new_rows": 32,
+          "repeat_equal": true,
+          "templates_identical": true,
+          "negatives_identical": true,
+          "shared_row_wrong_reads": [
+            [
+              34,
+              3,
+              "inning_topbot",
+              "Bot"
+            ]
+          ],
+          "new_row_wrong_reads": [
+            [
+              42,
+              1,
+              "outs",
+              0,
+              1
+            ]
+          ]
+        },
+        "v2": {
+          "changed_shared_rows": 0,
+          "removed_rows": 0,
+          "new_rows": 32,
+          "repeat_equal": true,
+          "templates_identical": true,
+          "negatives_identical": true,
+          "shared_row_wrong_reads": [
+            [
+              34,
+              3,
+              "inning_topbot",
+              "Bot"
+            ]
+          ],
+          "new_row_wrong_reads": [
+            [
+              42,
+              1,
+              "outs",
+              0,
+              1
+            ]
+          ]
+        },
+        "v3": {
+          "changed_shared_rows": 0,
+          "removed_rows": 0,
+          "new_rows": 32,
+          "repeat_equal": true,
+          "templates_identical": true,
+          "negatives_identical": true,
+          "shared_row_wrong_reads": [
+            [
+              34,
+              3,
+              "inning_topbot",
+              "Bot"
+            ]
+          ],
+          "new_row_wrong_reads": [
+            [
+              42,
+              1,
+              "outs",
+              0,
+              1
+            ]
+          ]
+        },
+        "v4": {
+          "changed_shared_rows": 0,
+          "removed_rows": 0,
+          "new_rows": 32,
+          "repeat_equal": true
+        }
+      }
+    },
+    "5_abstention_causes": {
+      "passes": true,
+      "failures": [],
+      "notes": [
+        "41/1 gate failed (excluded)",
+        "44/1 gate failed (excluded)"
+      ]
+    }
+  },
+  "new_row_field_counts": {
+    "v1": {
+      "balls": {
+        "correct": 25,
+        "abstained": 5,
+        "wrong": 0
+      },
+      "strikes": {
+        "correct": 30,
+        "abstained": 0,
+        "wrong": 0
+      },
+      "outs": {
+        "correct": 28,
+        "abstained": 1,
+        "wrong": 1
+      },
+      "runner_on_1b": {
+        "correct": 30,
+        "abstained": 0,
+        "wrong": 0
+      },
+      "runner_on_2b": {
+        "correct": 30,
+        "abstained": 0,
+        "wrong": 0
+      },
+      "runner_on_3b": {
+        "correct": 30,
+        "abstained": 0,
+        "wrong": 0
+      },
+      "inning": {
+        "correct": 0,
+        "abstained": 32,
+        "wrong": 0
+      },
+      "inning_topbot": {
+        "correct": 24,
+        "abstained": 8,
+        "wrong": 0
+      },
+      "home_score": {
+        "correct": 5,
+        "abstained": 27,
+        "wrong": 0
+      },
+      "away_score": {
+        "correct": 30,
+        "abstained": 2,
+        "wrong": 0
+      }
+    },
+    "v2": {
+      "balls": {
+        "correct": 25,
+        "abstained": 5,
+        "wrong": 0
+      },
+      "strikes": {
+        "correct": 30,
+        "abstained": 0,
+        "wrong": 0
+      },
+      "outs": {
+        "correct": 28,
+        "abstained": 1,
+        "wrong": 1
+      },
+      "runner_on_1b": {
+        "correct": 30,
+        "abstained": 0,
+        "wrong": 0
+      },
+      "runner_on_2b": {
+        "correct": 30,
+        "abstained": 0,
+        "wrong": 0
+      },
+      "runner_on_3b": {
+        "correct": 30,
+        "abstained": 0,
+        "wrong": 0
+      },
+      "inning": {
+        "correct": 0,
+        "abstained": 32,
+        "wrong": 0
+      },
+      "inning_topbot": {
+        "correct": 24,
+        "abstained": 8,
+        "wrong": 0
+      },
+      "home_score": {
+        "correct": 5,
+        "abstained": 27,
+        "wrong": 0
+      },
+      "away_score": {
+        "correct": 30,
+        "abstained": 2,
+        "wrong": 0
+      }
+    },
+    "v3": {
+      "balls": {
+        "correct": 30,
+        "abstained": 0,
+        "wrong": 0
+      },
+      "strikes": {
+        "correct": 30,
+        "abstained": 0,
+        "wrong": 0
+      },
+      "outs": {
+        "correct": 28,
+        "abstained": 1,
+        "wrong": 1
+      },
+      "runner_on_1b": {
+        "correct": 30,
+        "abstained": 0,
+        "wrong": 0
+      },
+      "runner_on_2b": {
+        "correct": 30,
+        "abstained": 0,
+        "wrong": 0
+      },
+      "runner_on_3b": {
+        "correct": 30,
+        "abstained": 0,
+        "wrong": 0
+      },
+      "inning": {
+        "correct": 0,
+        "abstained": 32,
+        "wrong": 0
+      },
+      "inning_topbot": {
+        "correct": 24,
+        "abstained": 8,
+        "wrong": 0
+      },
+      "home_score": {
+        "correct": 8,
+        "abstained": 24,
+        "wrong": 0
+      },
+      "away_score": {
+        "correct": 30,
+        "abstained": 2,
+        "wrong": 0
+      }
+    },
+    "v4": {
+      "balls": {
+        "correct": 30,
+        "abstained": 0,
+        "wrong": 0
+      },
+      "strikes": {
+        "correct": 30,
+        "abstained": 0,
+        "wrong": 0
+      },
+      "outs": {
+        "correct": 28,
+        "abstained": 1,
+        "wrong": 1
+      },
+      "runner_on_1b": {
+        "correct": 30,
+        "abstained": 0,
+        "wrong": 0
+      },
+      "runner_on_2b": {
+        "correct": 30,
+        "abstained": 0,
+        "wrong": 0
+      },
+      "runner_on_3b": {
+        "correct": 30,
+        "abstained": 0,
+        "wrong": 0
+      },
+      "inning": {
+        "correct": 0,
+        "abstained": 32,
+        "wrong": 0
+      },
+      "inning_topbot": {
+        "correct": 30,
+        "abstained": 2,
+        "wrong": 0
+      },
+      "home_score": {
+        "correct": 8,
+        "abstained": 24,
+        "wrong": 0
+      },
+      "away_score": {
+        "correct": 30,
+        "abstained": 2,
+        "wrong": 0
+      }
+    }
+  },
+  "new_row_totals": {
+    "v1": {
+      "correct": 232,
+      "abstained": 75,
+      "wrong": 1
+    },
+    "v2": {
+      "correct": 232,
+      "abstained": 75,
+      "wrong": 1
+    },
+    "v3": {
+      "correct": 240,
+      "abstained": 67,
+      "wrong": 1
+    },
+    "v4": {
+      "correct": 246,
+      "abstained": 61,
+      "wrong": 1
+    }
+  },
+  "observations": [
+    "Blind 6th-inning rows, fields (correct/abstained/wrong): v4 246/61/1, v3 240/67/1, v2 232/75/1, v1 232/75/1. The single wrong field is the same 42/1 outs read for all four.",
+    "The v4 options did what they were registered for on unseen frames: inning_topbot 30 correct / 2 abstained (the 2 are gate failures on the line-score frames 41/1 and 44/1) against 24/8 for v1-v3; balls 30/0 against 25/5 for v1-v2 (v3 also 30/0 here); no margin abstention on a gate-passing row.",
+    "Home score '3' (from PA 46 on) has no template, so home_score abstains there for every version, as pre-registered; inning '6' abstains for every version.",
+    "Current reader stays v2. The PA 41-49 rows are no longer blind for any successor version."
+  ],
+  "reproduction": "uv run --frozen python scripts/70_refresh_ocr_reports.py --reference 139275e --label pa41_49 --date 2026-09-25 --no-grab; then src.vision.ocr_reports.new_rows_acceptance(evalset, v4_block, {'v2': v2_block, 'v3': v3_block}, negatives_totals=v4 negatives totals, wrong_reads=ocr_reports.wrong_reads(evalset, v4 predictions)) for (1)-(3), previous_prediction_comparison/current_repeat_check and git diff --quiet 139275e on the v1-v3 template and negatives files for (4), and the scripts/66 predict --diagnostics dump for (5)."
+}

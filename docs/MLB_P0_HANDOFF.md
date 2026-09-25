@@ -357,8 +357,16 @@
     해시 8개 일치, v4 오판독 0을 직접 확인. 테스트 정리 2곳(개발 수치는 사전 등록 기록에 고정, v4 오판독 기록을 막는 단언 제거). 검사 **344 passed, 2 deselected**.
     수정 권한 반납. 다음 한 단위: **A-10 6회 34구**(Opus 5). 병합 뒤 v4 첫 blind 채점·판정(기준·옵션은 결과를 보고 바꾸지 않음).
 
+38. (이 커밋): **A-10 완료 + OCR v4 판정**(Claude Code, 2026-09-25). 선점 `139275e`. 6회 PA 41~49 34구: 32 annotated + 47/1·48/5 unavailable, 41/1·44/1 partial.
+    워크플로 v4 세 개 → 두 렌즈(수리 최대 3라운드) → 세션이 몽타주·연속성 띠·릴리스·경계 확대를 직접 확인. 경계: 42/2 4072.25(대안 4071.00), 43/1 4115.50(대안 4115.75), 46/5 4351.00, 49/6 상단 광각.
+    릴리스 +0.05 s의 포수 옆 흰 점은 날아가는 공(49/6에서 0.40 s 뒤 홈 도착)으로 확인 — 규약 일관. 짧은 리드 49/4 1.10 s. PA 47 병합의 재생성 단계 1회 실패 → 재실행.
+    **174 확인 / 13 불가 / 135 미검토**(6회까지 187구), 리뷰 174(169 전 필드), 충돌 0.
+    OCR `scripts/70 --reference 139275e`: 6회 blind 32구 필드 정답·기권·오답 v4 246·61·1, v3 240·67·1, v2·v1 232·75·1. 42/1 아웃을 모든 버전이 0으로 오판독(아웃 원이 옅게 그려져 금색 조건 미달) →
+    알려진 오판독 목록(v1~v4). **v4 사전 등록 판정: 실패**(기준 (1)), (2)~(5) 통과 — `game_747139_scoreboard_ocr_v4_acceptance.json`. 현행 v2 유지. 검사 **345 passed, 2 deselected**.
+    수정 권한 반납. 다음 한 단위: **A-11 7회 18구**(Opus 5). OCR v5(F-3e, Fable 5.1)를 할 거면 그 사전 등록을 A-11 전에 커밋.
+
 이 문서와 함께 추가되는 후속 커밋의 해시는 `git log -6 --oneline`으로 확인한다.
-최신 Windows CPU 검사: **344 passed, 2 deselected**(체크포인트 37, `check_project.py --cpu-only`, Ruff 69경로 통과). 아래 브라우저·서비스 검증은 이전 체크포인트 기록이다.
+최신 Windows CPU 검사: **345 passed, 2 deselected**(체크포인트 38, `check_project.py --cpu-only`, Ruff 69경로 통과). 아래 브라우저·서비스 검증은 이전 체크포인트 기록이다.
 JavaScript 구문 검사 및 Chrome 수동 입력·실제 추론·9회 이후 추천 보류 확인.
 GitHub CI 결과는 해당 커밋의 validation 워크플로에서 따로 확인한다.
 주석 모듈을 먼저 import한 새 프로세스에서도 Torch→Pandas 문자열 생성이 성공하는지
@@ -413,7 +421,7 @@ Claude/Codex의 순서는 [../CHECKLIST.md](../CHECKLIST.md)의 "진행 순서" 
 팀원 레포(SongRoute/pitcheezy) 대조 결과는 [TEAMMATE_PITCHEEZY_2026-09-22.md](TEAMMATE_PITCHEEZY_2026-09-22.md) — 우리 쪽 참조가 없는 별도
 트랙이라 I-0(인터페이스 합의)·I-5(시연 경기)·I-6(클래스 대응표)·G-3(통화)를 A/B와 병행해 먼저 진행한다.
 
-1. **영상 시간 주석 확대**: 5회 종료(PA 1~40, 153구: 142 확인·11 불가). 다음 주석은 6회(PA 41~49, CHECKLIST A-10)이며 같은 절차로 진행한다(F-3d v4 사전 등록 완료, 병합 때 v4 첫 blind 채점).
+1. **영상 시간 주석 확대**: 6회 종료(PA 1~49, 187구: 174 확인·13 불가). 다음 주석은 7회(PA 50~55, CHECKLIST A-11)이며 같은 절차로 진행한다.
 
 ```bash
 uv run --frozen python scripts/63_annotate_broadcast.py check --annotations docs/results/mlb_p0/game_747139_timing.json --require-pa 19

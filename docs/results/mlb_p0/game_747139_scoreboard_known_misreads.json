@@ -12,7 +12,11 @@
       "field": "inning_topbot",
       "read": "Bot",
       "label": "Top",
-      "versions": ["v1", "v2", "v3"],
+      "versions": [
+        "v1",
+        "v2",
+        "v3"
+      ],
       "first_seen": {
         "date": "2026-09-25",
         "refresh_label": "pa33_37",
@@ -22,6 +26,31 @@
       "evidence": "outputs/frames/evalset_3314.50.jpg (ffmpeg grab at the decision frame) shows the up arrow and 5 plainly (top of the 5th, 0-2, runner on first, 0 outs); the label is right and the reader is wrong.",
       "cause": "read_topbot takes the widest row of the arrow window (x 266-279, y 46-64). The up arrow starts at x 264 on every top-of-inning frame, so the window cuts its left corner and the lower rows all measure 7-9 px. On this frame JPEG blur makes the two base rows 8 and 7 px instead of 9 and 9, so four rows tie at 8 px; argmax takes the first of them at 0.375 of the arrow span, under the 0.4 threshold, and returns Bot. The same clipping leaves 37/5 at 0.5 (abstain).",
       "follow_up": "CHECKLIST F-3d (OCR v4): a tie-robust apex rule and/or a window that covers the whole up arrow, as an opt-in reader option evaluated on frames the rule was not fixed on; v1-v3 keep this read."
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 42,
+      "pitch_number": 1,
+      "play_id": "23f4afe5-fcec-40ae-baae-30f770e869a7",
+      "frame_seconds": 4058.75,
+      "field": "outs",
+      "read": 0,
+      "label": 1,
+      "versions": [
+        "v1",
+        "v2",
+        "v3",
+        "v4"
+      ],
+      "first_seen": {
+        "date": "2026-09-25",
+        "refresh_label": "pa41_49",
+        "reference_commit": "139275e",
+        "note": "Found on the A-10 6th-inning rows, the first blind rows for the pre-registered v4 (and new rows for v1-v3). It is the wrong read that fails v4's pre-registered criterion (1); see game_747139_scoreboard_ocr_v4_acceptance.json. Recorded after the failure was judged, for every version that makes it, so scripts/70 keeps its gate."
+      },
+      "evidence": "outputs/frames/evalset_4058.75.jpg (and outputs/verification/a10_42_1_bug.png, a10_42_1_frames.png): a clean live centre-field frame whose bug shows the left out circle filled (1 out), matching the manifest pre-state and both verifier lenses; the label is right and the reader is wrong.",
+      "cause": "The filled out circle is drawn pale at the decision frame, one grid step after the SNY logo transition wipe (4058.50): its centre pixel is RGB 167/180/126, which fails the gold mask's r - b > 50 test (41), so the out_1 window has gold fraction 0.059 <= EMPTY 0.08 and reads as empty; with out_2 empty the reader returns outs 0 instead of abstaining. The same circle reaches 0.367 at 4059.00 and 0.497 at 4060.00. The structural reader is shared by v1-v4, so every version makes this read.",
+      "follow_up": "A successor version could abstain when an out or runner window is neither clearly gold nor clearly navy (e.g. a pale-fill band) instead of reading empty; that is a new pre-registered version, not a patch of v1-v4."
     }
   ]
 }
