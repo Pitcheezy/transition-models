@@ -63,6 +63,16 @@ MPS 테스트를 그대로 유지한다. **Mac CPU CI 통과는 실제 맥미니
 | 새 8종 투구 관찰 정답 | scripts/61_audit_pitch_observations.py | src/data/pitch_observation.py |
 | 한 경기 전체 상황의 서비스 점검 | scripts/62_check_game_service.py | 추천 가능 범위·계산 시간, 정확도 평가 아님 |
 | 중계 재생 시각 수동 주석·검증 | scripts/63_annotate_broadcast.py | 모델 없이 실행, JSON으로 다른 컴퓨터에서 재개 |
+| 중계 프레임 추출·확대 몽타주 | scripts/65_grab_broadcast_frames.py | src/vision/frames.py, 재생 초 기준(feed UTC 변환 금지) |
+| 점수판 평가셋·리뷰 검사 | scripts/64_build_scoreboard_evalset.py | review-check / build / check |
+| 점수판 OCR 템플릿·예측·채점 | scripts/66_sny_scoreboard_ocr.py | src/vision/sny_scoreboard.py (SNY 전용, 기권 우선) |
+| 투구-시각 조인표 | scripts/68_export_pitch_timing_join.py | game_pk + at_bat_number + pitch_number + play_id |
+| 검증된 주석 후보 병합 | scripts/69_append_timing_rows.py | 모든 투구가 verified인 타석만, dry-run 후 --write |
+| 병합 후 OCR 재채점·출처 기록(버전별) | scripts/70_refresh_ocr_reports.py | src/vision/ocr_reports.py; `--reference` = 대체되는 예측의 커밋(보통 HEAD) |
+| 투구별 판단·릴리스 검토 시트 | scripts/71_timing_review_sheet.py | src/vision/review_sheet.py; 라벨이 아닌 검토 보조 |
+
+주석 한 타석을 병합한 뒤의 순서: `69 --pa N`(dry-run) → `69 --pa N --write` → `70 --reference <병합 전 커밋> --label <단위> --date <날짜> --no-grab`.
+70은 기본값으로 `docs/results/mlb_p0`의 보고서를 덮어쓴다. 실패하면 보고서 파일만 되돌리고 디렉터리 전체는 되돌리지 않는다(미커밋 주석 입력이 같은 곳에 있다).
 
 13–15번은 공통 학습기의 호환 진입점이다. 44–47번은 과거 발표 그림 생성 도구이며
 기존의 철회된 연구 해석을 재생성할 수 있으므로 현재 발표의 수치 근거로 쓰지 않는다.

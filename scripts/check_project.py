@@ -26,6 +26,8 @@ QUALITY_PATHS = [
     "src/utils/model_prediction.py",
     "src/utils/experiment_paths.py",
     "src/utils/pipeline.py",
+    "src/vision",
+    "src/data/scoreboard_evalset.py",
     "tests/test_point_data.py",
     "tests/test_operational.py",
     "tests/test_maintenance.py",
@@ -37,11 +39,17 @@ QUALITY_PATHS = [
     "tests/test_recommendation.py",
     "tests/test_manual_server.py",
     "tests/conftest.py",
+    "tests/test_sny_scoreboard.py",
+    "tests/test_ocr_reports.py",
+    "tests/test_review_sheet.py",
+    "tests/test_append_timing_rows.py",
+    "tests/test_scoreboard_evalset.py",
+    "tests/test_pitch_timing_join.py",
     "scripts/check_project.py",
     *[
         p.relative_to(ROOT).as_posix()
         for p in sorted((ROOT / "scripts").glob("*.py"))
-        if p.name[:2].isdigit() and 48 <= int(p.name[:2]) <= 63
+        if p.name[:2].isdigit() and 48 <= int(p.name[:2]) <= 71
     ],
 ]
 

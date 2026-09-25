@@ -34,7 +34,7 @@
 | 중계 시각 주석 | **95 확인 / 6 확인 불가(PA 1/6·5/5·16/2·17/1·20/6·22/1) / 221 미검토** — 3회 종료까지 101구 검토. 완전 타석 2~4·6~15·18~19·21·23~26. PA 20~26 후보 잔여 0. 규약 v2, 수동 시각 | 2026-09-25 |
 | 점수판 평가셋 | timing 101 / 리뷰 95(93구 10필드 confirmed, PA 8/1·16/1 라인스코어 partial) / 라벨 충돌 0 / 판단 화면 불가 6 / 미검토 221 | 2026-09-25 |
 | 점수판 OCR | **v2**(템플릿 PA 1·2·9·18, 결과 계산 전 규칙 사전 등록, 코드·임계값 불변): held-out 84구 중 전 필드 82구 **75 정답·7 기권·오답 0**. 같은 held-out에서 v1은 44·38·0 — 이닝 3 기권 32건이 정답으로 바뀌고 다른 필드 변화 0. 음성 96필드 거짓 판독 0(v1과 동일). 남은 기권 7구 원인은 F-3c. v1 결과·파일은 보존 | 2026-09-25 |
-| 전체 검사 (Windows CPU) | 298 passed, 2 deselected (`check_project.py --cpu-only`, Ruff 통과), F-3a OCR v2 후 전체 검사(새 held-out 구조 시험 2건 포함) | 2026-09-25 |
+| 전체 검사 (Windows CPU) | 321 passed, 2 deselected (`check_project.py --cpu-only`, Ruff 69경로 통과), H-4 도구 추가 후 | 2026-09-25 |
 | 정책 효용 | **미입증** — delta −0.0862 runs/100, 95% CI [−0.4046, +0.2304] | 2026-09-21 |
 | Claude 모델 배정 | 항목 태그 참조 — `uv run --frozen python scripts/checklist_model.py --next` | 2026-09-22 |
 | 담당 구분 | **C·D = 팀원(외부)**, 그 외 = Claude/Codex. 통합 검증은 I절 | 2026-09-22 |
@@ -303,8 +303,14 @@ feature builder의 고정 2022 프로필을 그 방식으로 갱신하는 코드
       미검증: 슬롯에 1을 쓰는 torch DLL의 정체, 20초 정체의 정확한 원인, 최신 pyarrow에서의 수정 여부.
       현재는 59번 서버 + HTTP 경로를 정상 경로로 유지한다.
 - [ ] H-2. 주석 모듈의 지연 import 유지 (되돌리지 않는다. 회귀 테스트 있음) 〔모델: Opus 5〕
-- [ ] H-4. 주석·OCR 유지보수 도구: OCR 버전별 재채점+출처 기록을 한 명령으로(`scripts/70`), 판단 프레임 검토 시트 생성기(`scripts/71`). `[추가되었음 · 2026-09-25 · Claude]` 〔모델: Fable 5.1〕
+- [x] H-4. 주석·OCR 유지보수 도구: OCR 버전별 재채점+출처 기록을 한 명령으로(`scripts/70`), 판단 프레임 검토 시트 생성기(`scripts/71`). `[추가되었음 · 2026-09-25 · Claude]` 〔모델: Fable 5.1〕
       지금은 병합마다 v1·v2 predict/score/negatives와 두 provenance를 손으로 갱신한다. 동작은 기존 66 명령·기존 provenance 스키마와 같아야 하고 시험을 둔다.
+      (2026-09-25, 이 커밋) Fable 5.1 워크플로가 구현, 세션 모델 검토 3관점×2라운드 + 다듬기 1라운드. `scripts/70_refresh_ocr_reports.py`(버전별 66 predict/score/negatives·반복 예측·
+      provenance, 기준 커밋을 SHA로 확인, 필드별 오답·음성 거짓 판독·변경/삭제 행·평가셋 누락 행이면 exit 1)와 `scripts/71_timing_review_sheet.py`, 순수 함수
+      `src/vision/ocr_reports.py`·`review_sheet.py`, 시험 23건. 동등성: 입력이 같을 때 v1·v2 예측·채점·음성 파일이 커밋본과 바이트 동일.
+      검토에서 잡힌 결함(오답 검사가 all_fields만 봄, 잘못된 기준 커밋이 조용히 '이전 없음'이 됨, 복구 안내가 미커밋 입력까지 되돌림)은 모두 고쳤다.
+      provenance에 `carried_from_previous`·`new_rows_comparison`(고정 키)·`"carried": true` 산출물이 생길 수 있다(스키마 id 불변). 사용법은 docs/MAINTENANCE.md.
+      `check_project.py`의 lint 범위를 scripts 64–71·`src/vision`·점수판/주석 시험까지 넓혔다(이미 모두 통과, 이후 변경이 흐트러지지 않게).
 - [ ] H-3. KBO 확장 (MLB 완성 후) 〔모델: Fable 5.1〕
 
 ## I. 팀원 산출물 통합 (C·D 이관에 따라 신설)

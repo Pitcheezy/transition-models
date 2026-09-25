@@ -307,8 +307,16 @@
     새 시험: 저장된 held-out 점수가 템플릿 PA를 제외하는지(v1·v2) 구조 검사. `check_project.py --cpu-only` **298 passed, 2 deselected**, Ruff 통과. 파일: `sny_digit_templates_v2.json`, `..._ocr_v2*.json`, `..._negatives_score_v2.json`.
     수정 권한 반납. 다음 한 단위: **A-8**(Opus 5), 이어서 그 프레임으로 F-3c v3(Fable 5.1).
 
+31. (이 커밋): H-4 **주석·OCR 유지보수 도구**(Claude Code, 2026-09-25). 선점 `31a9352`(A-8 착수와 함께). 태그 모델 Fable 5.1 워크플로가 구현.
+    `scripts/70_refresh_ocr_reports.py`: 병합 후 버전별(v1·v2) 66 predict/score/negatives + 반복 예측 + provenance를 한 번에. `--reference`는 SHA로 확인하고,
+    필드별 오답·음성 거짓 판독·공유 행 변경/삭제·평가셋에 없는 새 행·반복 불일치면 exit 1. `scripts/71_timing_review_sheet.py`: 투구별 검토 시트.
+    순수 함수 `src/vision/ocr_reports.py`·`review_sheet.py`, 시험 23건. 입력이 같을 때 v1·v2 예측·채점·음성 파일이 커밋본과 바이트 동일.
+    검토(세션 모델 3관점×2 + 다듬기 2관점)에서 잡은 결함: all_fields만 보던 오답 검사, 오타 기준 커밋이 조용히 '이전 없음'이 됨, 복구 안내가
+    미커밋 주석 입력까지 되돌림 — 모두 고침. `check_project.py` lint 범위를 scripts 64–71·src/vision·관련 시험으로 확장(69경로 통과).
+    검사: **321 passed, 2 deselected**. A-8(4회 19구)은 같은 선점 아래 진행 중이며 이 커밋에 주석 변경은 없다.
+
 이 문서와 함께 추가되는 후속 커밋의 해시는 `git log -6 --oneline`으로 확인한다.
-최신 Windows CPU 검사: **298 passed, 2 deselected**(체크포인트 30, `check_project.py --cpu-only`, Ruff 통과). 아래 브라우저·서비스 검증은 이전 체크포인트 기록이다.
+최신 Windows CPU 검사: **321 passed, 2 deselected**(체크포인트 31, `check_project.py --cpu-only`, Ruff 69경로 통과). 아래 브라우저·서비스 검증은 이전 체크포인트 기록이다.
 JavaScript 구문 검사 및 Chrome 수동 입력·실제 추론·9회 이후 추천 보류 확인.
 GitHub CI 결과는 해당 커밋의 validation 워크플로에서 따로 확인한다.
 주석 모듈을 먼저 import한 새 프로세스에서도 Torch→Pandas 문자열 생성이 성공하는지
