@@ -2,8 +2,8 @@
 
 A-7(PA 11~26, 3회 종료)까지 검토·병합한 뒤 다음 단위를 이어가기 위한 지시문이다(Claude도 작업자 이름만 바꿔 사용).
 아래 `---` 이하를 다음 도구에 전달한다. 남은 작업의 기준은 [CHECKLIST.md](../CHECKLIST.md),
-최신 결과는 [MLB_P0_HANDOFF.md](MLB_P0_HANDOFF.md) 체크포인트 30이다. **다음 한 단위는 CHECKLIST A-8(4회 PA 27–32, 19구)** 이고 절차는 §1,
-그다음 OCR 단위는 §2(F-3c v3)다. F-3a OCR v2는 2026-09-25 완료됐다.
+최신 결과는 [MLB_P0_HANDOFF.md](MLB_P0_HANDOFF.md) 체크포인트 33이다. **다음 한 단위는 CHECKLIST F-3c(OCR v3)** 이고 절차는 §2,
+주석을 이어갈 때는 §1(A-8까지 완료, 5회부터). 병합 뒤 OCR은 `scripts/70` 한 번으로 갱신한다.
 
 ---
 
@@ -28,7 +28,8 @@ git log -8 --oneline
 
 ## 1. 주석 단위 절차 (PA 20~26 완료 기록 — 다음 반이닝에도 같은 절차)
 
-현재 timing은 111구(105 annotated / 6 unavailable), 미검토 211구다 — 3회 종료(A-7) 후 **A-8(4회) 진행 중: PA 28·30~32 병합, PA 27·29 남음**.
+현재 timing은 120구(113 annotated / 7 unavailable), 미검토 202구다 — **4회 종료(A-8 완료, 2026-09-25)**. 다음 주석 단위는 5회(PA 33~, CHECKLIST에 A-9로 추가 후).
+마지막 검증 릴리스는 PA 32/1 3137.85 s이며 5회초는 그 뒤 'END 4' 이후에서 찾는다.
 병합 뒤 OCR은 `scripts/70_refresh_ocr_reports.py --reference <병합 전 커밋> --label <단위> --date <날짜>`로 v1·v2와 provenance를 한 번에 갱신한다(docs/MAINTENANCE.md).
 완전 타석은 PA 2~4·6~15·18~19·21·23~26. PA 1/6·5/5·16/2·17/1·20/6·22/1은 판단 화면 불가, PA 8/1·16/1은 라인스코어 partial이다.
 PA 11~15·16~19·20~26 후보 파일의 rows는 모두 비어 있으므로 다시 병합하지 않는다(PA 20~26 근거: `game_747139_timing_verification_pa20_26.json`).

@@ -315,15 +315,22 @@
     미커밋 주석 입력까지 되돌림 — 모두 고침. `check_project.py` lint 범위를 scripts 64–71·src/vision·관련 시험으로 확장(69경로 통과).
     검사: **321 passed, 2 deselected**. A-8(4회 19구)은 같은 선점 아래 진행 중이며 이 커밋에 주석 변경은 없다.
 
-32. (이 커밋): A-8 4회 중 **PA 28·30·31·32 10구** 검증·병합(Claude Code, 2026-09-25). 선점 `31a9352`, 도구 기준 `43c4d45`.
+32. `a0388de`: A-8 4회 중 **PA 28·30·31·32 10구** 검증·병합(Claude Code, 2026-09-25). 선점 `31a9352`, 도구 기준 `43c4d45`.
     주석 워크플로 v4(Opus 5, A-7 교훈 반영) → 두 렌즈 → 세션이 `scripts/71` 시트·세밀 크롭 직접 확인. 10구 모두 annotated.
     반박→수리: 28/1·28/2 동작 시작, 30/2 d2994.25(타자 장갑)·r3001.44. 세션 정정: 30/3 r3018.60, 31/4 r3108.13.
     **105 확인 / 6 불가 / 211 미검토**, 리뷰 105(103 전 필드), 충돌 0. 기존 timing 101행 보존. 근거 `game_747139_timing_verification_pa27_32.json`.
     OCR은 `scripts/70 --reference 43c4d45`로 처음 운영 사용: v1 전 필드 93구 44·49·0, v2 92구 75·17·0, 새 10구 이닝 숫자 4만 기권, 음성 거짓 판독 0,
     기존 95구 예측 불변·105구 반복 동일. 검사 **322 passed, 2 deselected**. 남은 A-8: PA 27(2구)·29(7구, 29/6 unavailable 후보).
 
+33. (이 커밋): **A-8 완료** — PA 27·29 9구 검증·병합(Claude Code, 2026-09-25). 기준 `a0388de`. 8 annotated + 29/6 unavailable.
+    반박→수리 후 세션 확인: 27/2·29/2·29/3·29/5·29/7(동작 시작·릴리스·29/5 타자 판단). 세션 정정: 29/6 불가 행의 시각·observed null.
+    **113 확인 / 7 불가 / 202 미검토**(4회까지 120구), 리뷰 113(111 전 필드), 충돌 0. A-8 19구: 18 확인·1 불가, 세션 정정 3행.
+    짧은 리드 목록에 27/1(1.37 s) 추가. OCR(`scripts/70 --reference a0388de`): v1 101구 44·57·0, v2 100구 75·25·0, 음성 거짓 판독 0;
+    새 8구 이닝 '4' 기권, 29/7 볼 '3' 기권(F-3c 사례 추가). 기존 105구 예측 불변·113구 반복 동일. 검사 **322 passed, 2 deselected**.
+    수정 권한 반납. 다음 한 단위: **F-3c OCR v3**(Fable 5.1) — 규칙을 먼저 등록하고 5회 이후 새 프레임으로 채점.
+
 이 문서와 함께 추가되는 후속 커밋의 해시는 `git log -6 --oneline`으로 확인한다.
-최신 Windows CPU 검사: **322 passed, 2 deselected**(체크포인트 32, `check_project.py --cpu-only`, Ruff 69경로 통과). 아래 브라우저·서비스 검증은 이전 체크포인트 기록이다.
+최신 Windows CPU 검사: **322 passed, 2 deselected**(체크포인트 33, `check_project.py --cpu-only`, Ruff 69경로 통과). 아래 브라우저·서비스 검증은 이전 체크포인트 기록이다.
 JavaScript 구문 검사 및 Chrome 수동 입력·실제 추론·9회 이후 추천 보류 확인.
 GitHub CI 결과는 해당 커밋의 validation 워크플로에서 따로 확인한다.
 주석 모듈을 먼저 import한 새 프로세스에서도 Torch→Pandas 문자열 생성이 성공하는지
@@ -378,7 +385,7 @@ Claude/Codex의 순서는 [../CHECKLIST.md](../CHECKLIST.md)의 "진행 순서" 
 팀원 레포(SongRoute/pitcheezy) 대조 결과는 [TEAMMATE_PITCHEEZY_2026-09-22.md](TEAMMATE_PITCHEEZY_2026-09-22.md) — 우리 쪽 참조가 없는 별도
 트랙이라 I-0(인터페이스 합의)·I-5(시연 경기)·I-6(클래스 대응표)·G-3(통화)를 A/B와 병행해 먼저 진행한다.
 
-1. **영상 시간 주석 확대**: 3회 종료(PA 1~26, 101구: 95 확인·6 불가). 다음은 CHECKLIST **A-8(4회 PA 27–32, 19구)**이며 같은 절차로 진행한다.
+1. **영상 시간 주석 확대**: 4회 종료(PA 1~32, 120구: 113 확인·7 불가). 다음 주석은 5회(PA 33~)이며 CHECKLIST에 A-9로 올린 뒤 같은 절차로 진행한다.
 
 ```bash
 uv run --frozen python scripts/63_annotate_broadcast.py check --annotations docs/results/mlb_p0/game_747139_timing.json --require-pa 19

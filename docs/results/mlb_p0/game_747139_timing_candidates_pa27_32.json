@@ -8,7 +8,7 @@
     "duration_seconds": 9340.748083
   },
   "convention": "decision-frame convention v2 (docs/MLB_BROADCAST_TIMING.md: earliest 0.25 s grid frame with live shot + pitcher still on the rubber + batter in the box + readable bug, continuous until motion)",
-  "status": "PA27-32 (4th inning) candidates: PAs 28, 30, 31 and 32 are verified and merged (see merge_history and game_747139_timing_verification_pa27_32.json); no rows are pending in this file. PAs 27 and 29 are still in workflow verification/repair and have not been written here yet; add them as UNVERIFIED rows and merge a plate appearance only after every pitch has verification.status 'verified' (scripts/69 refuses anything else).",
+  "status": "PA27-32 (4th inning) candidates: merged PAs [27, 28, 29, 30, 31, 32] (see merge_history and game_747139_timing_verification_pa27_32.json); no pending rows.",
   "produced_by": "Claude Code: one Opus 5 workflow annotator per PA from ffmpeg frame grabs, two independent verifier lenses per pitch (timing, scoreboard_identity), final direct frame review by the Claude Code session before any merge",
   "rows": [],
   "merge_history": [
@@ -20,7 +20,7 @@
       "pitches": 1,
       "annotated": 1,
       "unavailable": 0,
-      "work_commit": "(this unit commit)",
+      "work_commit": "a0388de",
       "verification_report": "game_747139_timing_verification_pa27_32.json"
     },
     {
@@ -31,7 +31,7 @@
       "pitches": 2,
       "annotated": 2,
       "unavailable": 0,
-      "work_commit": "(this unit commit)",
+      "work_commit": "a0388de",
       "verification_report": "game_747139_timing_verification_pa27_32.json"
     },
     {
@@ -42,7 +42,7 @@
       "pitches": 4,
       "annotated": 4,
       "unavailable": 0,
-      "work_commit": "(this unit commit)",
+      "work_commit": "a0388de",
       "verification_report": "game_747139_timing_verification_pa27_32.json"
     },
     {
@@ -53,6 +53,28 @@
       "pitches": 3,
       "annotated": 3,
       "unavailable": 0,
+      "work_commit": "a0388de",
+      "verification_report": "game_747139_timing_verification_pa27_32.json"
+    },
+    {
+      "date": "2026-09-25",
+      "plate_appearances": [
+        27
+      ],
+      "pitches": 2,
+      "annotated": 2,
+      "unavailable": 0,
+      "work_commit": "(this unit commit)",
+      "verification_report": "game_747139_timing_verification_pa27_32.json"
+    },
+    {
+      "date": "2026-09-25",
+      "plate_appearances": [
+        29
+      ],
+      "pitches": 7,
+      "annotated": 6,
+      "unavailable": 1,
       "work_commit": "(this unit commit)",
       "verification_report": "game_747139_timing_verification_pa27_32.json"
     }
@@ -121,6 +143,43 @@
         "1": "both_lenses_passed",
         "2": "both_lenses_passed",
         "3": "both_lenses_passed"
+      }
+    },
+    "27": {
+      "annotator_problems": [
+        "Pitch 1: the bug is unreadable (white transition wipe) from about 2745.75 to 2746.75, which cuts the usable pre-pitch window down to 0.20 s (decision 2747.00, motion start 2747.20). The live centre-field shot itself was already up from 2744.00, so a convention that treated the line-score graphic plus the wipe as acceptable would give a much earlier decision (~2744.50, once Iglesias stops digging in). Flagging because the reported 2747.00 is driven entirely by condition (4), not by the camera.",
+        "Pitch 1: at the 2747.00 decision frame the lower banner was still wiping in, so 'P:' was visible but the digits were not; P:34 was read 0.10 s later at 2747.10. All identity fields (0-0, 0 outs, bases empty, up-arrow 4, NYM 0 / ATL 2) were fully readable at 2747.00, so I marked readability 'readable' rather than 'partial'.",
+        "Neither pitch showed a batter line on the SNY bug during this PA (only the SCHWELLENBACH pitcher banner). The batter was identified from the '2B JOSE IGLESIAS 0 FOR 1 STRIKEOUT' stat card at 2742.00-2743.75 and from the right-handed number 11 Mets batter in the box, not from a '2. IGLESIAS' banner - so the expected banner text was never actually seen.",
+        "Release times are bracketed to adjacent video frames (~0.033 s apart) but the ball is small and motion-blurred at 1280x720; at 2748.33 and 2761.27 the arm is already extended forward and the ball may have just left the hand, so the true release could be one frame earlier than logged. uncertainty_seconds 0.15 covers this.",
+        "The pitch clock on the bug is inconsistent with the timings (it reads :09 frozen across 2746.75-2747.25 for pitch 1 and :08 frozen across 2759.75-2760.25 for pitch 2); as instructed I did not use it as a timing check.",
+        "Everything else matched the expectation: pitch 1 0-0 / P:34 called strike (bug goes to 0-1 by 2754.00), pitch 2 0-1 / P:35 hit into play for the first out (bug goes to 1 out / 0-0 / P:36 by 2769.00)."
+      ],
+      "end_of_pa_evidence": "Pitch 2 is put in play: at 2762.00 the ball is between the mound and the plate with Iglesias starting his swing, at 2762.25 the swing is through and at 2762.50 the feed cuts to a high wide field shot with the ball in play, the bug reading 'NYM 0 / ATL 2 / bases empty / up-4 / 0 outs / 0-1 / SCHWELLENBACH 96 MPH' (the bug still lags at 2764.00 and 2766.00, unchanged at 0-1 / 96 MPH). By 2769.00 the bug has updated to 'NYM 0 / ATL 2 / bases empty / up-4 / 1 out (left circle gold, right circle empty) / 0-0 / SCHWELLENBACH P:36', and it still reads that at 2772.00, 2775.00 and 2778.00 - i.e. PA 27 ended as a field out for the first out of the top of the 4th, and PA 28 (Schwellenbach's 37th pitch) is under way.",
+      "last_release_seconds": 2761.3,
+      "workflow_outcome": {
+        "1": "both_lenses_passed",
+        "2": "both_lenses_passed"
+      }
+    },
+    "29": {
+      "annotator_problems": [
+        "Pitch 6 has no valid pre-motion live frame at all: the feed sat on an extreme close-up of the pitcher's hand/glove continuously from 2918 through 2932.00 (sampled at 1 s spacing from 2918 to 2932) and the centre-field camera only returned at 2932.25 with the front leg already lifted. decision_seconds is therefore null. I did keep motion_start_seconds (2932.25, the first live frame, already in the leg lift) and release_seconds (~2932.90, bracketed 2932.80 cocked / 2933.00 follow-through) because those were directly observed on live frames; if the benchmark requires every time on an 'unavailable' row to be null, drop those two values.",
+        "Pitch 3: the previous grid second 2863.75 is a live centre-field image of the pitcher on the rubber and the batter in the box, but the SNY logo transition wipe is still fading across the middle of the picture. I scored that as failing condition (1) (transition graphic), which puts the decision at 2864.00. If a fading wipe over an otherwise live shot is acceptable, the decision would be 2863.75 (0.25 s earlier).",
+        "Pitch 5: the decision at 2899.50 rests on a judgement about the batter. At 2898.50, 2899.00 and 2899.25 Nimmo is bent over the plate with his head down and the bat low (fails condition (3) per the batter lesson); at 2899.50 he is upright with his head up facing the pitcher although the bat is still fairly low. The live shot itself had already started before 2898.50, so if the bent-over frames were accepted the decision would move about 1.0-1.25 s earlier.",
+        "Pitch 5 release is bracketed only on the late side: 2904.50 (stride, arm back) and 2904.70 (arm extended, hand empty), with 2904.75/2904.80/2904.85/2904.90 all deeper follow-through. The 2904.60 frame was not sampled, so the true release could be a few hundredths earlier than 2904.70. Pitch 6's release is similarly bracketed by 2932.80 and 2933.00 only.",
+        "The pitch-clock digits on the bug were read (they visibly freeze and lag, e.g. :06 held across 2836.00-2837.25) and were never used as a timing check, per the instructions.",
+        "No reading contradicted the expected PA state: every readable bug in the window showed NYM 0 / ATL 2, three empty diamonds, two gold out circles, up-arrow 4, and the counts/pitch counts ran 0-0 P:38, 1-0 P:39, 2-0 P:40, 2-1 P:41, 2-2 P:42, 2-2 P:43, 3-2 P:44 in that order. The batter line '4. NIMMO  0-1' was visible on the bug for pitches 2 and 3 and on the same live shot moments after the decision frame for pitch 1; for pitches 4-7 the bug showed no batter line at the decision frame, so batter identity there rests on the continuous PA and the visible left-handed Mets hitter."
+      ],
+      "end_of_pa_evidence": "At 2950.00 the centre-field shot shows Nimmo already walking away from the plate toward the visiting dugout while the bug still reads NYM 0 / ATL 2, bases empty, up-arrow 4, two gold out circles, 3-2, 'SCHWELLENBACH 90 MPH' (bug lag after the swinging strike). At 2952.00 the bug has flipped to 'MID 4' with the count reset to 0-0, both out circles empty and NYM 0 / ATL 2, and the Braves are walking off the infield; the pitcher is leaving the field at 2954.00. From 2954.00 through 2960.00 a line-score banner reads 'MID 4TH  METS 0 1 0 / BRAVES 2 6 0', confirming the strikeout was the third out and ended the top of the 4th.",
+      "last_release_seconds": 2948.1,
+      "workflow_outcome": {
+        "1": "both_lenses_passed",
+        "2": "both_lenses_passed",
+        "3": "both_lenses_passed",
+        "4": "both_lenses_passed",
+        "5": "both_lenses_passed",
+        "6": "both_lenses_passed",
+        "7": "both_lenses_passed"
       }
     }
   }
