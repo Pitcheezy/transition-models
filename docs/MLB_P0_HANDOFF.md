@@ -350,8 +350,15 @@
     기존 122구 예측 불변·142구 반복 동일. 검사 **335 passed, 2 deselected**. 수정 권한 반납.
     다음 한 단위: **F-3d v4 사전 등록**(Fable 5.1). 5회 프레임은 이미 봤으므로 v4 첫 blind 채점은 **A-10(6회 PA 41~49, 34구)** 병합 때 `scripts/70`이 기록.
 
+37. (이 커밋): F-3d **OCR v4 사전 등록**(Claude Code, 2026-09-25). 선점 `f8689f6`. Fable 5.1 워크플로(설계 2·심판·빌더·검증 2관점, 수리 1회 후 통과) + 세션 직접 확인.
+    v4 = v3 템플릿 그대로 + opt-in `min_margin_by_field`(카운트 0.10), `arrow_window`(x262~), `topbot_rule` blob_slope. 필드 묶음별 템플릿은 측정상 효과가 없어 기각.
+    개발 집합(이미 본 142구·음성 14): v3 대비 6행 변경 모두 라벨로, 오판독 0, 음성 거짓 판독 0, exclude-pas 122구 93 정답 — blind 아님.
+    [사전 등록](results/mlb_p0/game_747139_scoreboard_ocr_v4_preregistration.json): 템플릿 규칙, 옵션, A-10 판정 기준 (1)~(5), LF 정규화 해시, 위험. 세션이 v1~v3를 새 코드로 다시 돌려 9개 보고서 동일,
+    해시 8개 일치, v4 오판독 0을 직접 확인. 테스트 정리 2곳(개발 수치는 사전 등록 기록에 고정, v4 오판독 기록을 막는 단언 제거). 검사 **344 passed, 2 deselected**.
+    수정 권한 반납. 다음 한 단위: **A-10 6회 34구**(Opus 5). 병합 뒤 v4 첫 blind 채점·판정(기준·옵션은 결과를 보고 바꾸지 않음).
+
 이 문서와 함께 추가되는 후속 커밋의 해시는 `git log -6 --oneline`으로 확인한다.
-최신 Windows CPU 검사: **335 passed, 2 deselected**(체크포인트 36, `check_project.py --cpu-only`, Ruff 69경로 통과). 아래 브라우저·서비스 검증은 이전 체크포인트 기록이다.
+최신 Windows CPU 검사: **344 passed, 2 deselected**(체크포인트 37, `check_project.py --cpu-only`, Ruff 69경로 통과). 아래 브라우저·서비스 검증은 이전 체크포인트 기록이다.
 JavaScript 구문 검사 및 Chrome 수동 입력·실제 추론·9회 이후 추천 보류 확인.
 GitHub CI 결과는 해당 커밋의 validation 워크플로에서 따로 확인한다.
 주석 모듈을 먼저 import한 새 프로세스에서도 Torch→Pandas 문자열 생성이 성공하는지
@@ -406,7 +413,7 @@ Claude/Codex의 순서는 [../CHECKLIST.md](../CHECKLIST.md)의 "진행 순서" 
 팀원 레포(SongRoute/pitcheezy) 대조 결과는 [TEAMMATE_PITCHEEZY_2026-09-22.md](TEAMMATE_PITCHEEZY_2026-09-22.md) — 우리 쪽 참조가 없는 별도
 트랙이라 I-0(인터페이스 합의)·I-5(시연 경기)·I-6(클래스 대응표)·G-3(통화)를 A/B와 병행해 먼저 진행한다.
 
-1. **영상 시간 주석 확대**: 5회 종료(PA 1~40, 153구: 142 확인·11 불가). 다음 주석은 6회(PA 41~49, CHECKLIST A-10)이며 F-3d 사전 등록 뒤 같은 절차로 진행한다.
+1. **영상 시간 주석 확대**: 5회 종료(PA 1~40, 153구: 142 확인·11 불가). 다음 주석은 6회(PA 41~49, CHECKLIST A-10)이며 같은 절차로 진행한다(F-3d v4 사전 등록 완료, 병합 때 v4 첫 blind 채점).
 
 ```bash
 uv run --frozen python scripts/63_annotate_broadcast.py check --annotations docs/results/mlb_p0/game_747139_timing.json --require-pa 19

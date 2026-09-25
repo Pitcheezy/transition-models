@@ -63,17 +63,36 @@ VERSIONS = {
         "negatives": "game_747139_scoreboard_negatives_score_v3.json",
         "provenance": "game_747139_scoreboard_ocr_v3_provenance.json",
     },
+    # v4 (F-3d): the v3 templates plus min_margin_by_field / arrow_window / topbot_rule options
+    # inside the template file; pre-registered before any 6th-inning frame was annotated.
+    "v4": {
+        "templates": "sny_digit_templates_v4.json",
+        "predictions": "game_747139_scoreboard_ocr_v4_predictions.json",
+        "score": "game_747139_scoreboard_ocr_v4.json",
+        "negatives": "game_747139_scoreboard_negatives_score_v4.json",
+        "provenance": "game_747139_scoreboard_ocr_v4_provenance.json",
+    },
 }
 # What the ``score --exclude-pas`` set of a version is, when it is NOT purely held-out. A version
-# listed here has its provenance ``scope`` say "exclude-pas score" instead of "held-out score"
-# and gets the note appended to a fresh document's ``limitations``; versions without an entry
-# (v1, v2) keep their documents bit for bit.
+# listed here has its provenance ``scope`` say "exclude-pas score (<kind>, see limitations)"
+# instead of "held-out score" and gets the note appended to a fresh document's ``limitations``;
+# versions without an entry (v1, v2) keep their documents bit for bit.
+SCORE_SET_KINDS = {"v3": "a mixed set", "v4": "a development set"}
 SCORE_SET_NOTES = {
     "v3": (
         "The v3 score file (score --exclude-pas 1 2 9 18 29) covers 94 fully evaluable pitches "
         "= 75 held-out headline pitches + 19 seen/diagnosed pitches whose v2 failure was "
         "pixel-diagnosed before the v3 rule was fixed. It is a mixed set: only the 75 are "
         "held-out evidence, and the split is in game_747139_scoreboard_ocr_v3_comparison.json."
+    ),
+    "v4": (
+        "The v4 score file (score --exclude-pas 1 2 9 18 29; 122 fully evaluable pitches of "
+        "PA 1-40, 93 all-fields-correct) is a DEVELOPMENT set with 0 held-out pitches: every "
+        "eval-set and negatives frame that existed on 2026-09-25 was seen and its v1-v3 "
+        "failures diagnosed before the v4 reader options were chosen, so nothing in it is "
+        "held-out, blind or generalisation evidence. The first blind evidence for v4 is the "
+        "new-row comparison on the A-10 6th-inning rows (PA 41-49), judged by the criterion in "
+        "game_747139_scoreboard_ocr_v4_preregistration.json."
     ),
 }
 
@@ -451,7 +470,7 @@ def build_provenance(
     score_note = SCORE_SET_NOTES.get(version)
     score_phrase = "held-out score"
     if score_note:
-        score_phrase = "exclude-pas score (a mixed set, see limitations)"
+        score_phrase = f"exclude-pas score ({SCORE_SET_KINDS[version]}, see limitations)"
     computed = {
         "schema": PROVENANCE_SCHEMA,
         "game_pk": evalset["game_pk"],
@@ -536,6 +555,77 @@ def wrong_reads(evalset, predictions):
 
 def _misread_key(item):
     return (*(item[k] for k in KEYS), item["field"])
+
+
+def new_rows_field_counts(evalset, block):
+    """Per-field ``{correct, abstained, wrong}`` over the pitches of a ``new_rows_comparison`` block.
+
+    A field counts for a pitch only when the eval-set entry confirms it; ``correct`` is the
+    confirmed count minus the pitches listing the field in ``abstained_fields`` or
+    ``wrong_fields``. Pitches missing from the eval set contribute nothing.
+    """
+    entries = {row_key(e): e for e in evalset["entries"]}
+    counts = {f: {"correct": 0, "abstained": 0, "wrong": 0} for f in LABEL_FIELDS}
+    for pitch in block["pitches"]:
+        entry = entries.get(row_key(pitch))
+        if entry is None:
+            continue
+        for field in LABEL_FIELDS:
+            if entry["field_status"][field] != "confirmed":
+                continue
+            if field in pitch["wrong_fields"]:
+                counts[field]["wrong"] += 1
+            elif field in pitch["abstained_fields"]:
+                counts[field]["abstained"] += 1
+            else:
+                counts[field]["correct"] += 1
+    return counts
+
+
+def new_rows_acceptance(evalset, candidate, baselines, negatives_totals=None, wrong_reads=None):
+    """The pre-registered F-3d pass/fail rule on new rows (criteria 1-3 of the v4 document).
+
+    ``candidate`` and every value of ``baselines`` (``{version: block}``) are
+    ``new_rows_comparison`` blocks over the same new pitches. The candidate passes only when no
+    new pitch has a wrong field, ``wrong_reads`` (the candidate's ``wrong_reads`` list over ALL
+    its prediction rows, when given) is empty, its per-field correct count is at least every
+    baseline's for every label field (no exclusion clause) and, when ``negatives_totals`` is
+    given, that document has 0 false and 0 wrong reads. The check is invalid (``valid`` false,
+    never a pass) when ``new_rows_missing_from_evalset`` > 0 (the eval set was not rebuilt; the
+    check is rerun, not judged) or when a baseline block covers other pitches than the candidate.
+    """
+    totals = candidate["totals"]
+    reasons, invalid = [], []
+    if totals.get("new_rows_missing_from_evalset", 0):
+        invalid.append(f"{totals['new_rows_missing_from_evalset']} new row(s) not in the eval set")
+    keys = {row_key(p) for p in candidate["pitches"]}
+    for version, block in baselines.items():
+        if {row_key(p) for p in block["pitches"]} != keys:
+            invalid.append(f"{version} block covers other pitches than the candidate")
+    if totals["pitches_with_wrong_field"]:
+        reasons.append(f"{totals['pitches_with_wrong_field']} new pitch(es) have a wrong field")
+    if wrong_reads:
+        reasons.append(f"{len(wrong_reads)} wrong read(s) over all candidate rows")
+    counts = new_rows_field_counts(evalset, candidate)
+    per_field = {f: {"candidate": counts[f]["correct"]} for f in LABEL_FIELDS}
+    for version, block in baselines.items():
+        base = new_rows_field_counts(evalset, block)
+        for field in LABEL_FIELDS:
+            per_field[field][version] = base[field]["correct"]
+            if counts[field]["correct"] < base[field]["correct"]:
+                reasons.append(
+                    f"{field}: candidate correct {counts[field]['correct']} < "
+                    f"{version} {base[field]['correct']}"
+                )
+    for name in ("false_reads", "wrong_reads"):
+        if negatives_totals and negatives_totals.get(name):
+            reasons.append(f"negatives have {negatives_totals[name]} {name.replace('_', ' ')}")
+    return {
+        "valid": not invalid,
+        "passes": not invalid and not reasons,
+        "reasons": invalid + reasons,
+        "per_field_correct": per_field,
+    }
 
 
 def known_misreads(register, version):

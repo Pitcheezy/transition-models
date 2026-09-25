@@ -344,7 +344,13 @@ held-out 75구(모두 v2 정답)의 무회귀 기준은 73 정답·0 오답·2 �
 이미 원인을 본 19구 중 18구가 복구됐지만 이는 held-out 증거가 아니다. 결과를 본 뒤 조정하지 않았고 현행 판독은 v2다.
 다음 후보는 필드 묶음별 템플릿(v4, F-3d)이며 5회 이후 새 프레임으로 처음 평가한다. 근거: [v3 비교](results/mlb_p0/game_747139_scoreboard_ocr_v3_comparison.json).
 
-v1 수치는 [v1 채점 보고서](results/mlb_p0/game_747139_scoreboard_ocr_v1.json), v2 수치는 [v2 채점 보고서](results/mlb_p0/game_747139_scoreboard_ocr_v2.json), v3는 [v3 채점 보고서](results/mlb_p0/game_747139_scoreboard_ocr_v3.json)와 대조한다.
+**OCR v4 (F-3d, 2026-09-25) — 사전 등록만, 성능 미판정.** 5회(A-9)에서 34/3 ▲ 오판독과 v3의 볼 '2' 기권 재현을 본 뒤 규칙을 정했으므로 1~5회 프레임은 v4의 개발 집합이다.
+측정해 보니 필드 묶음별 템플릿은 볼 '2' 기권을 고치지 못했다(원인은 카운트 '2' 템플릿 사이 퍼짐). 확정안은 v3 템플릿 그대로에 opt-in 옵션 세 개:
+카운트 칸 margin 하한 0.10(거리 상한 0.12 유지), 화살표 창 x262부터, 화살표 덩어리 행 폭의 기울기 부호로 초말 판정.
+개발 집합에서 v3 대비 6행만 바뀌고 모두 라벨과 같으며 오판독·음성 거짓 판독 0이지만, 이 값들을 보고 정한 규칙이라 blind 증거가 아니다.
+첫 blind 채점은 A-10(6회) 병합 때이며 판정 기준은 [v4 사전 등록](results/mlb_p0/game_747139_scoreboard_ocr_v4_preregistration.json)에 먼저 고정했다. 현행 판독은 여전히 v2다.
+
+v1 수치는 [v1 채점 보고서](results/mlb_p0/game_747139_scoreboard_ocr_v1.json), v2 수치는 [v2 채점 보고서](results/mlb_p0/game_747139_scoreboard_ocr_v2.json), v3는 [v3 채점 보고서](results/mlb_p0/game_747139_scoreboard_ocr_v3.json), v4는 [v4 채점 보고서](results/mlb_p0/game_747139_scoreboard_ocr_v4.json)(개발 집합)와 대조한다.
 직전 PA 11~15 병합 당시의 20구만 보면 전 필드 정답 17구, 기권 3구, 오답 0구다. 기권 원인은
 PA 11/1의 이닝, PA 11/2의 bug 전체, PA 13/3의 볼 필드다. 이 재실행에서 템플릿은 변경하지 않았다.
 기존 PA 8/2·10/1의 이닝 출력이 `null`에서 `2`로 달라졌지만 원인은 아직 확정하지 않았다.

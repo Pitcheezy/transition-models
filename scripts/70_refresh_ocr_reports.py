@@ -16,8 +16,9 @@ Written files (names from ``VERSIONS``, per version, into ``--out-dir``)::
 
     game_747139_scoreboard_ocr_<version>_predictions.json   predict
     game_747139_scoreboard_ocr_<version>.json               score --exclude-pas <template PAs>
-        (held-out for v1/v2; for a version in ``ocr_reports.SCORE_SET_NOTES`` (v3) a mixed
-        set of held-out and already-diagnosed pitches, named so in the provenance scope)
+        (held-out for v1/v2; for a version in ``ocr_reports.SCORE_SET_NOTES`` a mixed set of
+        held-out and already-diagnosed pitches (v3) or a development set with no held-out
+        pitch at all (v4), named so in the provenance scope)
     game_747139_scoreboard_negatives_score_<version>.json   negatives
         (v1 keeps its legacy name game_747139_scoreboard_negatives_score_v0.json)
     game_747139_scoreboard_ocr_<version>_provenance.json    provenance (unless --skip-provenance)
@@ -41,7 +42,7 @@ that still exist on disk are re-hashed and kept with ``"carried": true``, ``hist
 gets one entry for the replaced document, and the per-unit new-row comparison lives under
 ``new_rows_comparison``. A version without an existing provenance (a new version such as v3)
 gets a fresh document, and when its predictions do not exist at ``--reference`` every row
-counts as new. A template file carrying ``reader_options`` (v3) has them echoed in the
+counts as new. A template file carrying ``reader_options`` (v3, v4) has them echoed in the
 templates reproduction command; predict/score/negatives read them from the file.
 
 Inputs are always read from ``docs/results/mlb_p0``; ``--out-dir`` only chooses where the
@@ -141,7 +142,7 @@ def refresh_version(version, args):
     templates_path = RESULTS / files["templates"]
     templates_doc = read_json(templates_path)
     template_pas = reports.template_plate_appearances(templates_doc)
-    reader_options = templates_doc.get("reader_options") or None  # v3 carries them; v1/v2 not
+    reader_options = templates_doc.get("reader_options") or None  # v3/v4 carry them; v1/v2 not
     out = {name: args.out_dir / files[name] for name in ("predictions", "score", "negatives")}
     repeat_path = VERIFICATION / f"ocr_{version}_repeat.json"
     grab = ["--no-grab"] if args.no_grab else []

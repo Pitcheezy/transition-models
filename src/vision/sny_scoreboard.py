@@ -16,6 +16,8 @@ This is not a general OCR. It produces predictions to be scored with
 ``src.data.scoreboard_evalset.score_predictions``; it never produces labels.
 """
 
+import math
+
 import numpy as np
 
 # (x0, y0, x1, y1) in frame pixels; windows exclude neighbouring glyphs (the dash of B-S, the
@@ -69,8 +71,42 @@ TEMPLATE_SCHEMA = "sny_digit_templates_v0"
 #   width whose first column is 0 or whose last column is the window's last column is discarded
 #   before the MIN_GLYPH_WIDTH/HEIGHT tests (a panel border entering the window after a wipe).
 #   0 (the default) discards nothing.
+#
+# Opt-in reader options (F-3d, OCR v4), same rules: only through a template document's
+# ``reader_options``, consulted only when present, never at template-cut time. A document with
+# only the two v3 keys (v3) or none (v1, v2) reads exactly as before.
+#
+# * ``min_margin_by_field``: ``{DIGIT_FIELD: float in [0, 1]}``. Per-field replacement for
+#   MIN_MARGIN in ``read_number``; fields not listed keep MIN_MARGIN and MAX_DISTANCE is untouched
+#   (a probe farther than 0.12 from every template still abstains). Templates stay pooled across
+#   fields. v4: {"balls": 0.10, "strikes": 0.10} for the count-font '2' whose margin to the
+#   single count-font '3' template lands at 0.1325-0.1432 (measured on seen frames, 2026-09-25).
+# * ``arrow_window``: ``[x0, y0, x1, y1]`` replacing WINDOWS["arrow"] for ``read_topbot`` only
+#   (x1/y1 exclusive like ``window``). The up arrow's left edge is x 269 in the 1st inning and
+#   264/265 in innings 2-5, so the default x0 266 clips 1-2 columns of its base rows; v4 uses
+#   [262, 46, 279, 64].
+# * ``topbot_rule``: ``{"method": "blob_slope", "min_slope": float > 0, "min_rows": int >= 2}``.
+#   Replaces the widest-row argmax of ``read_topbot`` with the sign of the least-squares slope of
+#   the row widths of the arrow blob (``_topbot_blob_slope``): a tie among clipped base rows
+#   cannot flip a slope. v4: min_slope 0.4 (finite, > 0), min_rows 6.
+#
+# A key set to ``null`` counts as absent for every option (``read_number`` and ``read_topbot``
+# fall back to the constants), so a document may list a key without enabling it.
 TOP_LINE_AGGREGATES = ("mean", "max_row")
-READER_OPTION_KEYS = ("top_line_gate", "border_sliver_max_width")
+TOPBOT_METHODS = ("blob_slope",)
+TOPBOT_RULE_KEYS = ("method", "min_slope", "min_rows")
+FRAME_SHAPE = (720, 1280)  # rows, cols of the broadcast frame; bounds for arrow_window
+READER_OPTION_KEYS = (
+    "top_line_gate",
+    "border_sliver_max_width",
+    "min_margin_by_field",
+    "arrow_window",
+    "topbot_rule",
+)
+
+
+def _is_number(value):
+    return not isinstance(value, bool) and isinstance(value, int | float)
 
 
 def validate_reader_options(options):
@@ -98,6 +134,46 @@ def validate_reader_options(options):
         isinstance(sliver, bool) or not isinstance(sliver, int) or sliver < 0
     ):
         raise ValueError("border_sliver_max_width must be a non-negative integer")
+    margins = options.get("min_margin_by_field")
+    if margins is not None:
+        if not isinstance(margins, dict):
+            raise ValueError("min_margin_by_field must be an object {digit field: margin}")
+        for field, value in margins.items():
+            if field not in DIGIT_FIELDS:
+                raise ValueError(
+                    f"min_margin_by_field: unknown field {field!r} (expected one of {DIGIT_FIELDS})"
+                )
+            if not _is_number(value) or not 0.0 <= float(value) <= 1.0:
+                raise ValueError(f"min_margin_by_field[{field!r}] must be a number within [0, 1]")
+    arrow = options.get("arrow_window")
+    if arrow is not None:
+        if (
+            not isinstance(arrow, list | tuple)
+            or len(arrow) != 4
+            or any(isinstance(v, bool) or not isinstance(v, int) for v in arrow)
+        ):
+            raise ValueError("arrow_window must be [x0, y0, x1, y1] with four integers")
+        x0, y0, x1, y1 = arrow
+        if not (0 <= x0 < x1 <= FRAME_SHAPE[1] and 0 <= y0 < y1 <= FRAME_SHAPE[0]):
+            raise ValueError(
+                f"arrow_window must satisfy 0 <= x0 < x1 <= {FRAME_SHAPE[1]} and "
+                f"0 <= y0 < y1 <= {FRAME_SHAPE[0]}"
+            )
+    rule = options.get("topbot_rule")
+    if rule is not None:
+        if not isinstance(rule, dict):
+            raise ValueError("topbot_rule must be {method, min_slope, min_rows}")
+        unknown = sorted(set(rule) - set(TOPBOT_RULE_KEYS))
+        if unknown:
+            raise ValueError(f"topbot_rule: unknown key(s) {unknown}")
+        if rule.get("method") not in TOPBOT_METHODS:
+            raise ValueError(f"topbot_rule.method must be one of {TOPBOT_METHODS}")
+        slope = rule.get("min_slope")
+        if not _is_number(slope) or not math.isfinite(slope) or not slope > 0:
+            raise ValueError("topbot_rule.min_slope must be a finite number > 0")
+        rows = rule.get("min_rows")
+        if isinstance(rows, bool) or not isinstance(rows, int) or rows < 2:
+            raise ValueError("topbot_rule.min_rows must be an integer >= 2")
     return {k: options[k] for k in READER_OPTION_KEYS if k in options}
 
 
@@ -160,9 +236,53 @@ def read_runners(gold):
     }
 
 
-def read_topbot(white):
-    """Apex position of the inning arrow: widest row at the bottom = up arrow = Top."""
-    widths = window(white, "arrow").sum(axis=1)
+def _topbot_blob_slope(arrow, min_slope, min_rows):
+    """``topbot_rule`` blob_slope: the sign of the row-width trend of the arrow blob.
+
+    The blob is the widest connected column group of white in the arrow window (ties: the
+    leftmost; groups are built as in ``segment_glyphs`` but without the size tests or the sliver
+    option), cropped to its non-empty rows, so the inning digit's edge column and narrower
+    strays drop out. Fewer than ``min_rows`` rows abstain. The least-squares slope of the row
+    widths against the row index is >= ``min_slope`` for an up arrow (rows widen downward =
+    Top), <= -``min_slope`` for a down arrow (Bot) and abstains in between. Clipping by the
+    window scales the widths but not the sign of the trend.
+    """
+    columns = np.where(arrow.any(axis=0))[0]
+    groups = []
+    for c in columns:
+        if groups and c == groups[-1][1] + 1:
+            groups[-1][1] = c
+        else:
+            groups.append([c, c])
+    if not groups:
+        return None
+    c0, c1 = max(groups, key=lambda g: g[1] - g[0])  # first maximum = leftmost on ties
+    blob = arrow[:, c0 : c1 + 1]
+    rows = np.where(blob.any(axis=1))[0]
+    if len(rows) < min_rows:
+        return None
+    widths = blob[rows[0] : rows[-1] + 1].sum(axis=1).astype(np.float64)
+    slope = float(np.polyfit(np.arange(len(widths)), widths, 1)[0])
+    if slope >= min_slope:
+        return "Top"
+    if slope <= -min_slope:
+        return "Bot"
+    return None
+
+
+def read_topbot(white, options=None):
+    """Apex position of the inning arrow: widest row at the bottom = up arrow = Top.
+
+    Reader options (v4): ``arrow_window`` replaces WINDOWS["arrow"] and ``topbot_rule`` replaces
+    the widest-row rule below with ``_topbot_blob_slope``; without them this is the v0-v3 body.
+    """
+    options = options or {}
+    x0, y0, x1, y1 = options.get("arrow_window") or WINDOWS["arrow"]
+    arrow = white[y0:y1, x0:x1]
+    rule = options.get("topbot_rule")
+    if rule:
+        return _topbot_blob_slope(arrow, float(rule["min_slope"]), int(rule["min_rows"]))
+    widths = arrow.sum(axis=1)
     rows = np.where(widths >= 2)[0]
     if len(rows) < 6:
         return None
@@ -229,8 +349,12 @@ class DigitTemplates:
     def add(self, digit, glyph):
         self.templates.setdefault(str(digit), []).append(normalise(glyph))
 
-    def match(self, glyph):
-        """Return (digit, distance, margin) or (None, distance, margin) when abstaining."""
+    def match(self, glyph, min_margin=MIN_MARGIN):
+        """Return (digit, distance, margin) or (None, distance, margin) when abstaining.
+
+        ``min_margin`` is the margin floor (``read_number`` passes a per-field one from the
+        ``min_margin_by_field`` option); MAX_DISTANCE always applies.
+        """
         if not self.templates:
             return None, None, None
         probe = normalise(glyph)
@@ -240,9 +364,26 @@ class DigitTemplates:
         )
         best, digit = scores[0]
         margin = (scores[1][0] - best) if len(scores) > 1 else 1.0
-        if best > MAX_DISTANCE or margin < MIN_MARGIN:
+        if best > MAX_DISTANCE or margin < min_margin:
             return None, best, margin
         return digit, best, margin
+
+    def nearest(self, glyph):
+        """(best digit, distance, margin) with no threshold applied: diagnostics only.
+
+        The same scores as ``match`` (which stays the read path), but the best digit is
+        reported even when ``match`` abstains, so a per-glyph dump can say whether an
+        abstention came from MAX_DISTANCE or from the margin floor.
+        """
+        if not self.templates:
+            return None, None, None
+        probe = normalise(glyph)
+        scores = sorted(
+            (min(float(np.mean(np.abs(probe - t))) for t in glyphs), digit)
+            for digit, glyphs in self.templates.items()
+        )
+        best, digit = scores[0]
+        return digit, best, (scores[1][0] - best) if len(scores) > 1 else 1.0
 
     def to_json(self):
         document = {
@@ -270,13 +411,39 @@ def read_number(white, name, templates, options=None):
     glyphs = segment_glyphs(window(white, name), options)
     if not glyphs:
         return None
+    min_margin = ((options or {}).get("min_margin_by_field") or {}).get(name, MIN_MARGIN)
     digits = []
     for glyph in glyphs:
-        digit, _, _ = templates.match(glyph)
+        digit, _, _ = templates.match(glyph, min_margin=min_margin)
         if digit is None:
             return None
         digits.append(digit)
     return int("".join(digits))
+
+
+def digit_field_diagnostics(white, name, templates, options=None):
+    """Per-glyph ``{best, distance, margin, min_margin, read}`` of a digit window (diagnostics).
+
+    Same segmentation and margin floor as ``read_number`` (an empty list = no glyph cut), with
+    ``DigitTemplates.nearest`` for the best digit even where ``read`` abstained. Used by
+    ``scripts/66 predict --diagnostics`` for the F-3d criterion (5): an abstention is explained
+    by ``distance`` > MAX_DISTANCE, by ``margin`` < ``min_margin`` or by no glyph.
+    """
+    options = options or {}
+    min_margin = (options.get("min_margin_by_field") or {}).get(name, MIN_MARGIN)
+    diagnostics = []
+    for glyph in segment_glyphs(window(white, name), options):
+        best, distance, margin = templates.nearest(glyph)
+        diagnostics.append(
+            {
+                "best": best,
+                "distance": distance,
+                "margin": margin,
+                "min_margin": min_margin,
+                "read": templates.match(glyph, min_margin=min_margin)[0],
+            }
+        )
+    return diagnostics
 
 
 def read_scoreboard(frame, templates):
@@ -303,7 +470,7 @@ def read_scoreboard(frame, templates):
         return fields
     fields["outs"] = read_outs(gold)
     fields.update(read_runners(gold))
-    fields["inning_topbot"] = read_topbot(white)
+    fields["inning_topbot"] = read_topbot(white, options)
     for name in DIGIT_FIELDS:
         fields[name] = read_number(white, name, templates, options)
     return fields

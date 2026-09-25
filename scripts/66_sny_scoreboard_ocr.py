@@ -18,9 +18,18 @@ set mixes 75 held-out and 19 seen/diagnosed pitches (``ocr_reports.SCORE_SET_NOT
 split is reported in the version's comparison file, never by this score alone. Frames are read
 from ``<frames-dir>/<label>_<t>.jpg``.
 
-``templates --reader-options '<json>'`` (OCR v3, F-3c) stores opt-in read-time options in the
-template file under ``reader_options``; ``predict`` and ``negatives`` apply them only when the
-loaded template file carries the key. Glyphs are always cut with the default segmentation.
+``templates --reader-options '<json>'`` (OCR v3, F-3c; extended for OCR v4, F-3d) stores opt-in
+read-time options in the template file under ``reader_options``; ``predict`` and ``negatives``
+apply them only when the loaded template file carries the key. Glyphs are always cut with the
+default segmentation. The v4 file was cut with the v3 options plus ``min_margin_by_field``
+{"balls": 0.1, "strikes": 0.1}, ``arrow_window`` [262, 46, 279, 64] and ``topbot_rule``
+{"method": "blob_slope", "min_slope": 0.4, "min_rows": 6} (see
+``docs/results/mlb_p0/game_747139_scoreboard_ocr_v4_preregistration.json``); its ``templates``
+key equals the v3 file's. The ``score --exclude-pas`` set of v4 is a development set with 0
+held-out pitches (every frame was seen before the options were chosen). ``predict --diagnostics
+<path>`` also dumps, per pitch and digit field, every segmented glyph's best digit, distance,
+margin, margin floor and read (``digit_field_diagnostics``) plus the presence-gate result: the
+per-glyph evidence the F-3d acceptance criterion (5) asks for on the A-10 rows.
 """
 
 import argparse
@@ -46,6 +55,8 @@ from src.vision.negatives import score_negatives, validate_negatives
 from src.vision.sny_scoreboard import (
     DIGIT_FIELDS,
     DigitTemplates,
+    bug_present,
+    digit_field_diagnostics,
     glyphs_for_label,
     masks,
     read_scoreboard,
@@ -108,6 +119,13 @@ def main():
         "omitted = no key, i.e. the v1/v2 file layout and behaviour",
     )
     parser.add_argument("--templates", type=Path)
+    parser.add_argument(
+        "--diagnostics",
+        type=Path,
+        help="predict mode: also write per-pitch, per-digit-field glyph diagnostics "
+        "(best digit, distance, margin, floor, read) and whether the presence gate passed; "
+        "the per-glyph dump the F-3d criterion (5) asks for",
+    )
     parser.add_argument("--predictions", type=Path)
     parser.add_argument("--exclude-pas", type=int, nargs="*", default=[])
     parser.add_argument(
@@ -172,9 +190,10 @@ def main():
         if not args.templates:
             parser.error("predict requires --templates")
         templates = DigitTemplates.from_json(read_json(args.templates))
-        predictions, abstain = [], Counter()
+        predictions, abstain, diagnostics = [], Counter(), []
         for entry in evalset["entries"]:
-            fields = read_scoreboard(load_frame(entry, args, media_url), templates)
+            frame = load_frame(entry, args, media_url)
+            fields = read_scoreboard(frame, templates)
             for name in LABEL_FIELDS:
                 abstain[name] += fields[name] is None
             predictions.append(
@@ -184,8 +203,27 @@ def main():
                     "fields": {name: fields[name] for name in LABEL_FIELDS},
                 }
             )
+            if args.diagnostics:
+                white, _, navy = masks(frame)
+                options = templates.reader_options
+                gate = bug_present(navy, white, options)
+                diagnostics.append(
+                    {
+                        **{k: entry[k] for k in KEYS},
+                        "frame_seconds": entry["frame_seconds"],
+                        "gate_passed": gate,
+                        "fields": {
+                            name: digit_field_diagnostics(white, name, templates, options)
+                            for name in DIGIT_FIELDS
+                        }
+                        if gate
+                        else {},
+                    }
+                )
         if args.output:
             write(args.output, predictions)
+        if args.diagnostics:
+            write(args.diagnostics, diagnostics)
         print(json.dumps({"predictions": len(predictions), "abstained": dict(abstain)}, indent=2))
         return
 

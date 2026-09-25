@@ -66,7 +66,8 @@ def test_versions_point_at_existing_files():
         for name in files.values():
             assert (ROOT / reports.RESULTS_DIR / name).exists(), name
     assert reports.VERSIONS["v1"]["negatives"].endswith("_v0.json")  # legacy name kept
-    assert set(reports.VERSIONS) == {"v1", "v2", "v3"}
+    assert set(reports.VERSIONS) == {"v1", "v2", "v3", "v4"}
+    assert reports.VERSIONS["v4"]["negatives"] == "game_747139_scoreboard_negatives_score_v4.json"
     for path in reports.CODE_PATHS + reports.SHARED_INPUTS:
         assert (ROOT / (path if "/" in path else f"{reports.RESULTS_DIR}/{path}")).exists()
 
@@ -317,12 +318,29 @@ def test_build_provenance_with_dict_audit_and_without_existing():
 
 
 def test_score_set_note_labels_only_the_versions_that_carry_one():
-    """v3's exclude-pas score is a mixed set (75 held-out + 19 seen); v1/v2 documents unchanged."""
-    assert set(reports.SCORE_SET_NOTES) == {"v3"} and set(reports.SCORE_SET_NOTES) <= set(
+    """v3's exclude-pas score is a mixed set (75 held-out + 19 seen), v4's a development set
+    (0 held-out); v1/v2 documents unchanged."""
+    assert set(reports.SCORE_SET_NOTES) == {"v3", "v4"} and set(reports.SCORE_SET_NOTES) <= set(
         reports.VERSIONS
     )
+    assert set(reports.SCORE_SET_KINDS) == set(reports.SCORE_SET_NOTES)
     note = reports.SCORE_SET_NOTES["v3"]
     assert "75 held-out" in note and "19 seen/diagnosed" in note and "mixed set" in note
+    v4_note = reports.SCORE_SET_NOTES["v4"]
+    assert "DEVELOPMENT set" in v4_note and "0 held-out" in v4_note and "A-10" in v4_note
+    v4 = reports.build_provenance(
+        None, **{**provenance_kwargs(None), "version": "v4", "template_pas": [1, 2, 9, 18, 29]}
+    )
+    assert "exclude-pas score (a development set, see limitations)" in v4["scope"]
+    assert "held-out score" not in v4["scope"] and "mixed" not in v4["scope"]
+    assert v4["limitations"] == [*reports.DEFAULT_LIMITATIONS, v4_note]
+    stored_v4 = json.loads(
+        (ROOT / reports.RESULTS_DIR / reports.VERSIONS["v4"]["provenance"]).read_text(
+            encoding="utf-8"
+        )
+    )
+    assert "exclude-pas score (a development set, see limitations)" in stored_v4["scope"]
+    assert stored_v4["limitations"][-1] == v4_note
     for version in ("v1", "v2"):
         document = reports.build_provenance(None, **{**provenance_kwargs(None), "version": version})
         assert "held-out score" in document["scope"]
@@ -417,6 +435,11 @@ def test_reproduction_commands_and_score_summary():
     assert reports.reproduction_commands("v3", [1], reader_options={})[0].endswith(
         "--no-grab --output docs/results/mlb_p0/sny_digit_templates_v3.json"
     )
+    v4_options = {**options, "arrow_window": [262, 46, 279, 64]}
+    v4 = reports.reproduction_commands("v4", [1, 2, 9, 18, 29], reader_options=v4_options)
+    assert '"arrow_window":[262,46,279,64]' in v4[0]
+    assert v4[0].endswith("--output docs/results/mlb_p0/sny_digit_templates_v4.json")
+    assert v4[3].endswith("game_747139_scoreboard_negatives_score_v4.json")
     score = {
         "all_fields": {"evaluable": 5, "correct": 3, "abstained": 1, "wrong": 1, "coverage": 0.1},
         "per_field": {"balls": {"wrong": 1}, "strikes": {"wrong": 0}},
@@ -631,3 +654,62 @@ def test_script_rejects_unknown_reference_before_running_anything(tmp_path):
     assert run.returncode == 2
     assert "ca76e6x" in run.stderr and "does not name a commit" in run.stderr
     assert not out_dir.exists()
+
+
+def test_new_rows_field_counts_and_acceptance_rule():
+    """The pre-registered A-10 rule: no wrong field, per-field correct >= every baseline."""
+    evalset = {"entries": [entry(41, 1), entry(41, 2, unconfirmed=("home_score",)), entry(41, 3)]}
+    keys = [(1, 41, 1), (1, 41, 2), (1, 41, 3)]
+    candidate = reports.new_rows_comparison(
+        evalset, [row(41, 1, inning=None), row(41, 2, inning=None), row(41, 3, inning=None)], keys
+    )
+    counts = reports.new_rows_field_counts(evalset, candidate)
+    assert counts["inning"] == {"correct": 0, "abstained": 3, "wrong": 0}
+    assert counts["home_score"] == {"correct": 2, "abstained": 0, "wrong": 0}
+    assert counts["balls"] == {"correct": 3, "abstained": 0, "wrong": 0}
+    weaker = reports.new_rows_comparison(
+        evalset,
+        [row(41, 1, inning=None, balls=None), row(41, 2, inning=None), row(41, 3, inning=None)],
+        keys,
+    )
+    verdict = reports.new_rows_acceptance(evalset, candidate, {"v2": weaker, "v3": weaker})
+    assert verdict["passes"] is True and verdict["valid"] is True and verdict["reasons"] == []
+    assert verdict["per_field_correct"]["balls"] == {"candidate": 3, "v2": 2, "v3": 2}
+    # v2 reading the inning by luck where the candidate abstains fails it (no exclusion clause)
+    lucky = reports.new_rows_comparison(evalset, [row(41, 1), row(41, 2), row(41, 3)], keys)
+    verdict = reports.new_rows_acceptance(evalset, candidate, {"v2": lucky})
+    assert verdict["passes"] is False
+    assert verdict["reasons"] == ["inning: candidate correct 0 < v2 3"]
+    # any wrong field fails, and so do negatives false/wrong reads
+    wrong = reports.new_rows_comparison(
+        evalset, [row(41, 1, balls=3), row(41, 2), row(41, 3)], keys
+    )
+    verdict = reports.new_rows_acceptance(
+        evalset, wrong, {}, negatives_totals={"false_reads": 1, "wrong_reads": 0}
+    )
+    assert verdict["passes"] is False
+    assert verdict["reasons"] == [
+        "1 new pitch(es) have a wrong field",
+        "negatives have 1 false reads",
+    ]
+    # a wrong read anywhere in the candidate's rows (not only on the new rows) fails too
+    verdict = reports.new_rows_acceptance(
+        evalset, candidate, {}, wrong_reads=reports.wrong_reads(evalset, [row(41, 1, balls=3)])
+    )
+    assert verdict["passes"] is False
+    assert verdict["reasons"] == ["1 wrong read(s) over all candidate rows"]
+    assert reports.new_rows_acceptance(evalset, candidate, {}, wrong_reads=[])["passes"] is True
+    # a new row the eval set does not know makes the check invalid, not failed
+    stale = reports.new_rows_comparison(evalset, [row(41, 1), row(41, 9)], [(1, 41, 1), (1, 41, 9)])
+    verdict = reports.new_rows_acceptance(evalset, stale, {})
+    assert verdict["valid"] is False and verdict["passes"] is False
+    assert verdict["reasons"] == ["1 new row(s) not in the eval set"]
+    # so does a baseline block over other pitches than the candidate's
+    partial = reports.new_rows_comparison(evalset, [row(41, 1), row(41, 2)], keys[:2])
+    verdict = reports.new_rows_acceptance(evalset, candidate, {"v2": lucky, "v3": partial})
+    assert verdict["valid"] is False and verdict["passes"] is False
+    assert verdict["reasons"][0] == "v3 block covers other pitches than the candidate"
+    assert verdict["reasons"][1:] == [
+        "inning: candidate correct 0 < v2 3",
+        "inning: candidate correct 0 < v3 2",
+    ]

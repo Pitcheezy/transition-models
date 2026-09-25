@@ -76,6 +76,8 @@ MPS 테스트를 그대로 유지한다. **Mac CPU CI 통과는 실제 맥미니
 새 판단 프레임이 생긴 병합이면 `--no-grab`을 빼서 프레임부터 추출한다(캐시가 없으면 `--no-grab`은 실패한다).
 70이 오판독으로 실패하면 해당 프레임을 직접 본다. 라벨이 맞고 판독기가 틀린 경우에만 `docs/results/mlb_p0/game_747139_scoreboard_known_misreads.json`에 원인·증거·해당 버전과 함께 올리고, 판독 버전(v1~v3)은 고치지 않는다(수정은 새 버전).
 목록 밖 오판독과, 목록에 있는데 더는 같은 값으로 일어나지 않는 항목은 70이 실패로 알린다.
+사전 등록된 버전(v4: `game_747139_scoreboard_ocr_v4_preregistration.json`)은 다음 주석 병합 뒤 그 파일의 판정 기준을 그대로 적용한다:
+새 행 비교는 `src/vision/ocr_reports.py`의 `new_rows_acceptance`, 글리프별 거리·margin은 `66 predict --templates <v4 템플릿> --diagnostics <경로> --no-grab`.
 
 13–15번은 공통 학습기의 호환 진입점이다. 44–47번은 과거 발표 그림 생성 도구이며
 기존의 철회된 연구 해석을 재생성할 수 있으므로 현재 발표의 수치 근거로 쓰지 않는다.
