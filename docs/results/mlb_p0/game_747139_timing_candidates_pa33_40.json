@@ -8,10 +8,65 @@
     "duration_seconds": 9340.748083
   },
   "convention": "decision-frame convention v2 (docs/MLB_BROADCAST_TIMING.md: earliest 0.25 s grid frame with live shot + pitcher still on the rubber + batter in the box + readable bug, continuous until motion)",
-  "status": "PA33-40 (5th inning) candidates: PAs 38, 39 and 40 are verified and merged (see merge_history and game_747139_timing_verification_pa33_40.json); no rows are pending in this file. PAs 33-37 are still in workflow verification and not written here yet.",
+  "status": "PA33-40 (5th inning) candidates: merged PAs [33, 34, 35, 36, 37, 38, 39, 40] (see merge_history and game_747139_timing_verification_pa33_40.json); no pending rows.",
   "produced_by": "Claude Code: one Opus 5 workflow annotator per PA from ffmpeg frame grabs, two independent verifier lenses per pitch (timing, scoreboard_identity), final direct frame review by the Claude Code session before any merge",
   "rows": [],
   "merge_history": [
+    {
+      "date": "2026-09-25",
+      "plate_appearances": [
+        33
+      ],
+      "pitches": 6,
+      "annotated": 5,
+      "unavailable": 1,
+      "work_commit": "(this unit commit)",
+      "verification_report": "game_747139_timing_verification_pa33_40.json"
+    },
+    {
+      "date": "2026-09-25",
+      "plate_appearances": [
+        34
+      ],
+      "pitches": 5,
+      "annotated": 5,
+      "unavailable": 0,
+      "work_commit": "(this unit commit)",
+      "verification_report": "game_747139_timing_verification_pa33_40.json"
+    },
+    {
+      "date": "2026-09-25",
+      "plate_appearances": [
+        35
+      ],
+      "pitches": 5,
+      "annotated": 4,
+      "unavailable": 1,
+      "work_commit": "(this unit commit)",
+      "verification_report": "game_747139_timing_verification_pa33_40.json"
+    },
+    {
+      "date": "2026-09-25",
+      "plate_appearances": [
+        36
+      ],
+      "pitches": 1,
+      "annotated": 1,
+      "unavailable": 0,
+      "work_commit": "(this unit commit)",
+      "verification_report": "game_747139_timing_verification_pa33_40.json"
+    },
+    {
+      "date": "2026-09-25",
+      "plate_appearances": [
+        37
+      ],
+      "pitches": 5,
+      "annotated": 5,
+      "unavailable": 0,
+      "work_commit": "(this unit commit)",
+      "verification_report": "game_747139_timing_verification_pa33_40.json"
+    },
     {
       "date": "2026-09-25",
       "plate_appearances": [
@@ -20,7 +75,7 @@
       "pitches": 4,
       "annotated": 4,
       "unavailable": 0,
-      "work_commit": "(this unit commit)",
+      "work_commit": "862ec01",
       "verification_report": "game_747139_timing_verification_pa33_40.json"
     },
     {
@@ -31,7 +86,7 @@
       "pitches": 5,
       "annotated": 3,
       "unavailable": 2,
-      "work_commit": "(this unit commit)",
+      "work_commit": "862ec01",
       "verification_report": "game_747139_timing_verification_pa33_40.json"
     },
     {
@@ -42,7 +97,7 @@
       "pitches": 2,
       "annotated": 2,
       "unavailable": 0,
-      "work_commit": "(this unit commit)",
+      "work_commit": "862ec01",
       "verification_report": "game_747139_timing_verification_pa33_40.json"
     }
   ],
@@ -101,6 +156,97 @@
       "workflow_outcome": {
         "1": "both_lenses_passed",
         "2": "both_lenses_passed"
+      }
+    },
+    "35": {
+      "annotator_problems": [
+        "Pitch 1 is genuinely unavailable, not a fetch failure: 3376-3390 are replays of the previous plate appearance (no bug), 3392-3393.5 is a high overhead scenic wide shot with no scoreboard bug at all, 3393.75-3394.25 is a full-screen SNY logo transition wipe over the field, and at 3394.25 (still under the logo) the front knee is already lifted. The first clean live frame, 3394.50, already shows a full leg lift, so no live pre-motion frame exists. The delivery frames put the release at roughly 3395.15, but per convention no release time is recorded for an unavailable decision.",
+        "Possible sub-0.1 s stamp jitter in the remote-MP4 grabs. In the pitch 3 batch the ball is already next to the plate in the frame stamped 3430.75, only 0.05 s after the release frame stamped 3430.70, which is impossible for a ~0.4 s pitch flight; the arm-phase progression within each batch is internally consistent, so I treated the arm mechanics as authoritative for release and flag that individual sub-0.1 s stamps may carry ~0.1-0.2 s error. This is at the edge of the stated +/-0.15 s manual uncertainty.",
+        "Every decision frame sits immediately after a hard cut from a cutaway or graphic (3408.00, 3426.25, 3448.00, 3477.00 all fail), so the true earliest valid instant could be up to 0.25 s earlier than the reported decision second in each case; the reported value is the earliest 0.25 s grid frame that I verified.",
+        "The bug's second line reads '7. TAYLOR 1-1', where '1-1' is the batter's day line (1 for 1), not a count; the batter ID graphic at 3466-3477.0 confirms 'RF TYRONE TAYLOR / 1 FOR 1 SINGLE, STOLEN BASE'. Similarly the '89 MPH' / '94 MPH' / '83 MPH' banner readings are last-pitch speeds and the banner alternates with P:N, so P:56 was not visible on every frame (P:57, P:58, P:59, P:60 were all read at their own decision frames).",
+        "Pitch 5's decision frame (3477.25) shows no batter line on the bug, only the pitcher row; readability is still full for the 10 scoreboard fields, and the batter identity comes from the adjacent ID graphic. Reported as readable rather than partial.",
+        "All readings matched the expected state exactly (top 5, up arrow, NYM 0 / ATL 2, 0 outs, runners on first and second, counts 0-0 / 1-0 / 2-0 / 2-1 / 2-2 with P:56-60). No conflict with the expected labels was found."
+      ],
+      "end_of_pa_evidence": "At 3486.00 the bug reads NYM 0 / ATL 2, runners still on first and second (2B and 1B diamonds gold, 3B open), ONE gold out circle and one open circle (1 out), up-arrow 5, count reset to 0-0, banner 'SCHWELLENBACH 83 MPH' over a close-up of Schwellenbach; at 3490.00 the same bug state reads 0-0 with 1 out and 'SCHWELLENBACH P:61' over a close-up of Taylor walking off with his head down; 3494.00 is a replay of Taylor's swing with the catcher blocking the pitch in the dirt. This confirms pitch 5 (2-2, P:60, 83 mph) ended the plate appearance as a strikeout for the first out of the inning, with both runners held.",
+      "last_release_seconds": 3481.2,
+      "workflow_outcome": {
+        "1": "both_lenses_passed",
+        "2": "refuted",
+        "3": "both_lenses_passed",
+        "4": "both_lenses_passed",
+        "5": "both_lenses_passed"
+      }
+    },
+    "36": {
+      "annotator_problems": [
+        "Inter-call seek jitter: frames requested at the same nominal time in different grab calls did not line up - the pitcher's pose in the frame labelled t=3512.25 from one call matched t=3512.30-3512.40 from another, and a frame labelled 3512.25 showed the ball already at the plate while the single-call sequence puts release at ~3512.15. I therefore bracketed the release entirely inside one grab call; the residual offset (up to ~0.1 s) is covered by the 0.15 s uncertainty.",
+        "At the decision frame 3507.00 a faint residual SNY transition-wipe logo outline is still drawn over centre field. The live centre-field camera, the pitcher on the rubber, the batter in the box and every bug field are fully visible and readable, so I counted 3507.00 as valid; a stricter reading of condition (1) would push the decision to 3507.25, where the wipe is completely gone (everything else identical).",
+        "The bug's batter line is blank at the decision frame 3507.00 (only \"SCHWELLENBACH  P:61\"); the batter banner \"8. ALVAREZ\" was read at 3507.50 and 3508.00, i.e. from nearby frames.",
+        "The pitch clock on the bug is inconsistent (:08 at 3511.75 and still :08 at 3512.15, :09 at 3507.25-3510.50), confirming it lags/freezes; it was not used for any timing.",
+        "All readings matched the stated expectation (NYM 0 / ATL 2, top 5, 1 out, runners on first and second, 0-0, P:61), so nothing was flagged as a discrepancy."
+      ],
+      "end_of_pa_evidence": "At 3522.00 (dugout close-up of a Mets player) and again at 3526.00 (live infield shot with runners standing on second and third) the bug reads NYM 0 / ATL 2, up-arrow 5, count 0-0, BOTH out circles gold (2 outs), the 2B and 3B diamonds gold with 1B open, and the banner \"SCHWELLENBACH  P:62\" - i.e. the pitch was put in play for an out, the runners advanced to second and third, and the pitch count incremented from P:61 to P:62. The transition is already visible at 3516.00, where the bug shows \"SCHWELLENBACH  88 MPH\" over the ball in play.",
+      "last_release_seconds": 3512.15,
+      "workflow_outcome": {
+        "1": "both_lenses_passed"
+      }
+    },
+    "37": {
+      "annotator_problems": [
+        "Pitch 4 has an unusually short valid pre-pitch window, only 0.75 s (decision 3657.50 to motion start 3658.25). SNY held a tight close-up of Bader and the plate umpire through 3657.25 and cut to the centre-field camera barely a second before the leg lift. Earlier live frames exist at 3646.00 and 3658-prior, but they are separated from the pitch by the crowd cutaway at 3652.00 and that batter close-up, so under the continuity rule the window starts after the last break.",
+        "Pitch 1 is preceded by a long 0-0 stretch (the session scan shows 3520-3580 at 0-0). The broadcast was on a Mets dugout close-up at 3576.00-3576.50, so the decision frame is 3576.75; I did not search back past that cut because condition (1) fails there, but the pre-pitch delay itself is longer than the 4.0 s window I report.",
+        "Release times are bracketed at 0.05 s, and in every case the pitcher goes from 'arm cocked at/behind the head' to 'arm extended forward, hand empty' within a single 0.05 s step. The reported release is the first extended-forward frame, so true ball release could plausibly be up to ~0.05 s earlier than stated; uncertainty_seconds is 0.15 as instructed.",
+        "The exact cut-in instants are sub-grid: pitch 1 cuts in between 3576.50 and 3576.75, pitch 2 between 3598.00 and 3598.25, pitch 3 between 3619.75 and 3620.00, pitch 4 between 3657.25 and 3657.50, pitch 5 between 3682.00 and 3682.25. Decision seconds are reported at the first 0.25 s grid point that is fully live, per the convention.",
+        "Every bug reading matched the expected PA state (NYM 0 / ATL 2, runners on 2B and 3B with 1B empty, 2 outs, top of the 5th, counts 0-0 / 0-1 / 0-2 / 1-2 / 1-2 and P:62 / 63 / 64 / 65 / 66, batter banner '9. BADER'). No discrepancy to flag. The batter banner reads BADER, i.e. Harrison Bader (MLBAM 664056), consistent with the brief.",
+        "Tooling note, not a data issue: a helper crop script I wrote into the session scratchpad as crop.py was replaced by a different script with a different argument signature partway through the run (an unrelated process appears to share that directory). I re-created it under a distinct name (p37crop.py) and continued; no repository file was touched."
+      ],
+      "end_of_pa_evidence": "Pitch 5 is put in play. At 3688.00 Schwellenbach is in full follow-through; at 3690.00 the feed has cut to a wide shot down the first-base line with the bug showing '95 MPH' and the pitcher running to cover first; at 3692.00 Schwellenbach is on the first-base bag taking the throw with Bader (NYM #44) running through, and the first-base umpire is in position - a ground-ball out to the right side. At 3696.00 the scoreboard bug is gone entirely and the broadcast is on the dugout area with a mid-inning line-score graphic reading 'MID 5TH  R  H  E / METS 0 3 0 / BRAVES 2 6 0', confirming the third out and the end of the top of the 5th. Consistent with the session scan, no bug is present at 3700-3730.",
+      "last_release_seconds": 3687.65,
+      "workflow_outcome": {
+        "1": "both_lenses_passed",
+        "2": "both_lenses_passed",
+        "3": "both_lenses_passed",
+        "4": "both_lenses_passed",
+        "5": "both_lenses_passed"
+      }
+    },
+    "33": {
+      "annotator_problems": [
+        "Pitch 3 has no valid v2 decision frame, so its row is status unavailable. The broadcast is on a tight close-up of the pitcher's hand and glove at 3192.00, 3194.25 and 3194.50 (no rubber, no batter), and the very next grid frame 3194.75 - the first live centre-field frame - already shows the pitcher at the peak of his leg lift. Nothing on the 0.25 s grid satisfies conditions (1) and (2) simultaneously before the motion. Release (3195.70) is still reported because it was observed directly.",
+        "Pitch 1 readability is only partial: the scoreboard bug is replaced by the 'TOP 5TH R H E' line-score graphic for the whole pre-pitch window (3165.25 through about 3168.4), so only the inning (Top 5) and the scores (NYM 0, ATL 2) are readable at the decision frame; balls, strikes, outs and runners are null there. The 0-0 count, bases empty and 0 outs were read at 3169.50/3170.00, the first frames where the normal bug returns.",
+        "P:45 was never displayed for pitch 1. Between 3170.00 and 3174.00 the banner shows 'SCHWELLENBACH 82 MPH' (the speed of pitch 1) and it only switches to 'P:46' at 3176.00, so pcount_seen for pitch 1 is null. The expected P:45 could not be confirmed.",
+        "The session-scan anchors given in the task are off by several seconds for most pitches, presumably because of the 2-3 s bug lag. Measured releases are 3168.40 (not 'near 3170-3178'), 3183.20, 3195.70, 3210.25, 3234.25 and 3248.05; in particular the anchors '3230 = 2-2' and '3240 and 3250 = 3-2' sit before pitches 5 and 6 rather than after them, and by 3255.00 the PA is already over.",
+        "The pitch-clock digits on the bug freeze and lag as warned (for example ':07' is held unchanged from 3180.00 through 3183.50 while the delivery happens), so they were ignored; I mention it only because the ':09 / :08 / :07' readings quoted in bug_text should not be treated as timing evidence.",
+        "A minor tooling oddity, not a data problem: the small PIL crop helper I wrote into the session scratchpad came back with different contents on a later call and had to be rewritten (as crop2.py). It affected only my own enlargement step; no repository file and no frame data were touched."
+      ],
+      "end_of_pa_evidence": "Pitch 6 is put in play at 3248.05; the shot cuts to the right-centre outfield at 3250.00-3253.00 where the ball drops in and is fielded, and the bug still reads 3-2 / 89 MPH at 3250.00 before flipping. At 3252.00 and 3253.00 the bug already shows a gold diamond at the lower-right position (runner on first), 0 outs, up-arrow 5, count 0-0. At 3255.00 and 3257.00 it is fully settled and readable: 'NYM 0 / ATL 2 / runner on 1B / up-5 / 0 outs / 0-0 / SCHWELLENBACH P:51', over Mets dugout and Alonso-at-first shots, and a slow-motion replay of the hit runs at 3261.00. That is PA 33 ending on a single by Alonso, with the next plate appearance (PA 34) starting 0-0 with a runner on first.",
+      "last_release_seconds": 3248.05,
+      "workflow_outcome": {
+        "1": "both_lenses_passed",
+        "2": "both_lenses_passed",
+        "3": "both_lenses_passed",
+        "4": "both_lenses_passed",
+        "5": "both_lenses_passed",
+        "6": "both_lenses_passed"
+      }
+    },
+    "34": {
+      "annotator_problems": [
+        "Pitch 3's previous-grid frame (3317.75) is a judgement call: it is a LIVE high wide shot of Truist Park from the first-base side in which the pitcher and batter are technically in frame but are tiny and partly hidden behind foreground spectators. I treated it as failing condition (1) because it does not 'clearly show' the pitcher on the rubber and the batter. If that shot were accepted as a valid live wide angle, the decision second for pitch 3 would move earlier (the shot starts around 3314.8), so this one value is less robust than the other four.",
+        "At pitch 1's decision frame (3276.75) the bug shows only the pitcher line 'SCHWELLENBACH  P:51' - there is no batter line yet. The batter identity there comes from the full-screen graphic that was on screen just before ('DH J.D. MARTINEZ / 0 FOR 1 LINEOUT', 3270-3276.50) and from the bug line '6. MARTINEZ  0-1' that appears from 3283.30 onward. All other pitches show '6. MARTINEZ' on the bug at their own decision frame.",
+        "The pitch-clock field on the bug is inconsistent and lagging across this PA (:10 at 3280 and again at 3295.25, :06 at 3318.00, :05 at 3338.50, :08 at 3354.75); as instructed it was not used for any timing and is reported only as part of the raw bug_text.",
+        "Every reading matched the stated expectation (0 outs, runner on 1B only, top of the 5th, NYM 0 / ATL 2; counts 0-0/0-1/0-2/0-2/1-2 with P:51/52/53/54/55). No discrepancy with the expected state was found.",
+        "Release for pitch 1 was initially mis-bracketed near 3283.3 before the enlarged crops showed that the ball was already at the plate by 3282.80; the reported 3282.65 comes from the corrected 0.05 s bracket (3282.60 hand still up beside the cap / 3282.70 ball clearly in flight). Same failure mode was checked for and avoided on pitches 3-5.",
+        "Frame grabs are at 0.05 s granularity at best and the broadcast is 30 fps interlaced-looking material, so all times carry the stated 0.15 s manual uncertainty; none of these are frame-exact."
+      ],
+      "end_of_pa_evidence": "Pitch 5 (release 3359.15) is hit into play. At t=3362.00 the feed cuts to an outfield shot with the ball on the grass and fielders converging, bug still 1-2 / P:55 with '88 MPH'. At t=3364.00 the bug has updated to NYM 0 / ATL 2, count 0-0, two white out circles (0 outs), up-arrow 5, with GOLD diamonds at both the top position (2B) and the lower-right position (1B) and the left (3B) diamond white - i.e. runners on first and second, confirming the single and the start of PA 35. At t=3368.00 and t=3370.00 (Mets dugout celebration shots) the bug still reads NYM 0 / ATL 2, 0-0, 0 outs, up-arrow 5, runners on first and second, banner 'SCHWELLENBACH  P:56'.",
+      "last_release_seconds": 3359.15,
+      "workflow_outcome": {
+        "1": "both_lenses_passed",
+        "2": "both_lenses_passed",
+        "3": "both_lenses_passed",
+        "4": "both_lenses_passed",
+        "5": "both_lenses_passed"
       }
     }
   }

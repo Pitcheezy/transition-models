@@ -1,0 +1,27 @@
+{
+  "schema": "mlb_scoreboard_known_misreads_v1",
+  "game_pk": 747139,
+  "purpose": "Wrong reads of human-confirmed scoreboard fields that the frozen OCR versions make and that were looked at and kept on record. A version is a fixed measurement, so its reader is not patched in place; a reader fix becomes a new version (reader_options in its template file). scripts/70_refresh_ocr_reports.py prints listed reads as NOTE, and fails on any wrong read that is not listed and on any listed read that no longer happens with the same value.",
+  "misreads": [
+    {
+      "game_pk": 747139,
+      "at_bat_number": 34,
+      "pitch_number": 3,
+      "play_id": "6f1f6855-d675-468a-af70-97d8d1df25b1",
+      "frame_seconds": 3314.5,
+      "field": "inning_topbot",
+      "read": "Bot",
+      "label": "Top",
+      "versions": ["v1", "v2", "v3"],
+      "first_seen": {
+        "date": "2026-09-25",
+        "refresh_label": "pa33_37",
+        "reference_commit": "862ec01",
+        "note": "First wrong (not abstained) read of a confirmed field by any version on a verified eval-set frame; found on frames added by the A-9 merge (top of the 5th), which none of the versions had seen."
+      },
+      "evidence": "outputs/frames/evalset_3314.50.jpg (ffmpeg grab at the decision frame) shows the up arrow and 5 plainly (top of the 5th, 0-2, runner on first, 0 outs); the label is right and the reader is wrong.",
+      "cause": "read_topbot takes the widest row of the arrow window (x 266-279, y 46-64). The up arrow starts at x 264 on every top-of-inning frame, so the window cuts its left corner and the lower rows all measure 7-9 px. On this frame JPEG blur makes the two base rows 8 and 7 px instead of 9 and 9, so four rows tie at 8 px; argmax takes the first of them at 0.375 of the arrow span, under the 0.4 threshold, and returns Bot. The same clipping leaves 37/5 at 0.5 (abstain).",
+      "follow_up": "CHECKLIST F-3d (OCR v4): a tie-robust apex rule and/or a window that covers the whole up arrow, as an opt-in reader option evaluated on frames the rule was not fixed on; v1-v3 keep this read."
+    }
+  ]
+}

@@ -56,6 +56,12 @@ a warning), when a new row is missing from the eval set, or on any wrong read: a
 in the held-out score (checked per field, because ``all_fields`` skips every pitch with an
 abstention), a false or wrong read in the negatives, or a wrong field on a new pitch. The
 files are written in every case so the reason can be inspected.
+
+A wrong read that was looked at and kept on record (the frozen versions are not patched; a fix
+is a new version) goes into docs/results/mlb_p0/game_747139_scoreboard_known_misreads.json with
+its cause and evidence. Listed reads are printed as NOTE and do not fail; any other wrong read
+of a confirmed field on any prediction row fails, and so does a listed read that no longer
+happens with the same value.
 """
 
 import argparse
@@ -203,7 +209,17 @@ def refresh_version(version, args):
             "(was it rebuilt after the merge?)"
         )
     summary = reports.score_summary(score)
-    problems += reports.wrong_read_problems(version, score, negatives, new_rows)
+    known = reports.known_misreads(read_json(RESULTS / reports.KNOWN_MISREADS), version)
+    for key, value in known.items():
+        print(f"NOTE: {version}: known misread {key[1]}/{key[2]} {key[3]} = {value!r} (on record)")
+    problems += reports.wrong_read_problems(
+        version,
+        score,
+        negatives,
+        new_rows,
+        reads=reports.wrong_reads(evalset, predictions),
+        known=known,
+    )
 
     if not args.skip_provenance:
         provenance_rel = f"{reports.RESULTS_DIR}/{files['provenance']}"

@@ -465,22 +465,114 @@ def test_wrong_read_problems_sees_per_field_negatives_and_new_rows():
     ]
 
 
+def known_register():
+    return read_json(ROOT / reports.RESULTS_DIR / reports.KNOWN_MISREADS)
+
+
 def test_wrong_read_on_pitch_with_abstention_is_caught_by_real_scorer():
     """Reviewer case: (747139, 4, 1) with a wrong ``balls`` beside an abstained ``inning``."""
     results = ROOT / reports.RESULTS_DIR
     evalset = read_json(results / "game_747139_scoreboard_evalset.json")
     predictions = read_json(results / reports.VERSIONS["v1"]["predictions"])
+    known = reports.known_misreads(known_register(), "v1")
     key = (747139, 4, 1)
     (target,) = [p for p in predictions if reports.row_key(p) == key]
     entry = {reports.row_key(e): e for e in evalset["entries"]}[key]
     assert entry["field_status"]["balls"] == "confirmed"
     assert target["fields"]["inning"] is None, "the case needs an abstention on the same pitch"
+    before = reports.score_summary(score_predictions(evalset, predictions))["wrong_per_field"]
     target["fields"]["balls"] = (entry["labels"]["balls"] + 1) % 4
     score = score_predictions(evalset, predictions)
     assert score["all_fields"]["wrong"] == 0  # why the old all_fields check missed it
-    assert reports.score_summary(score)["wrong_per_field"] == {"balls": 1}
-    problems = reports.wrong_read_problems("v1", score, negatives_doc(), new_rows_doc())
-    assert len(problems) == 1 and '"balls": 1' in problems[0]
+    assert reports.score_summary(score)["wrong_per_field"] == {**before, "balls": 1}
+    reads = reports.wrong_reads(evalset, predictions)
+    problems = reports.wrong_read_problems(
+        "v1", score, negatives_doc(), new_rows_doc(), reads=reads, known=known
+    )
+    assert len(problems) == 2, problems
+    assert '"balls": 1' in problems[0] and "wrong read 4/1 balls = 1 is not in" in problems[1]
+
+
+def misread(pa, pitch, field, read, label):
+    return {
+        "game_pk": 747139,
+        "at_bat_number": pa,
+        "pitch_number": pitch,
+        "field": field,
+        "read": read,
+        "label": label,
+    }
+
+
+def register(*items, versions=("v2",)):
+    return {
+        "schema": reports.KNOWN_MISREADS_SCHEMA,
+        "misreads": [{**m, "versions": list(versions)} for m in items],
+    }
+
+
+def test_known_misreads_pass_and_stale_or_unknown_ones_fail():
+    listed = misread(34, 3, "inning_topbot", "Bot", "Top")
+    known = reports.known_misreads(register(listed), "v2")
+    assert known == {(747139, 34, 3, "inning_topbot"): "Bot"}
+    assert reports.known_misreads(register(listed), "v1") == {}
+    new_rows = {
+        "totals": {"pitch_count": 2, "pitches_with_wrong_field": 1},
+        "pitches": [
+            {**misread(34, 3, "x", 0, 0), "wrong_fields": ["inning_topbot"]},
+            {**misread(34, 4, "x", 0, 0), "wrong_fields": []},
+        ],
+    }
+    score = score_doc(per_field_wrong=["inning_topbot"])
+    problems = reports.wrong_read_problems(
+        "v2", score, negatives_doc(), new_rows, reads=[listed], known=known
+    )
+    assert problems == []
+    # the same wrong read without the register fails in the score, the new rows and the reads
+    problems = reports.wrong_read_problems("v2", score, negatives_doc(), new_rows, reads=[listed])
+    assert len(problems) == 3 and "34/3 inning_topbot = 'Bot' is not in" in problems[2]
+    # a listed read inside an excluded (template) plate appearance is not expected in the score
+    held = {**score_doc(), "holdout": {"excluded_plate_appearances": [34]}}
+    problems = reports.wrong_read_problems(
+        "v2", held, negatives_doc(), new_rows_doc(), reads=[listed], known=known
+    )
+    assert problems == []
+    # a listed read that no longer happens (or reads another value) fails: the register stays true
+    (stale,) = reports.wrong_read_problems(
+        "v2", held, negatives_doc(), new_rows_doc(), reads=[], known=known
+    )
+    assert "known misread 34/3 inning_topbot = 'Bot' no longer happens (now None)" in stale
+    with pytest.raises(ValueError, match="schema"):
+        reports.known_misreads({"schema": "other", "misreads": []}, "v2")
+
+
+def test_wrong_reads_skip_abstentions_unconfirmed_fields_and_unknown_rows():
+    entry = {
+        **misread(1, 1, "x", 0, 0),
+        "labels": dict(FIELDS),
+        "field_status": {f: "confirmed" for f in LABEL_FIELDS} | {"outs": "unreadable"},
+    }
+    rows = [
+        {**misread(1, 1, "x", 0, 0), "fields": {**FIELDS, "balls": 3, "outs": 2, "strikes": None}},
+        {**misread(9, 9, "x", 0, 0), "fields": {**FIELDS, "balls": 3}},
+    ]
+    assert reports.wrong_reads({"entries": [entry]}, rows) == [misread(1, 1, "balls", 3, 0)]
+
+
+@pytest.mark.parametrize("version", sorted(reports.VERSIONS))
+def test_committed_register_lists_exactly_the_committed_wrong_reads(version):
+    """The register and the stored predictions agree, so a refresh starts from a clean gate."""
+    results = ROOT / reports.RESULTS_DIR
+    evalset = read_json(results / "game_747139_scoreboard_evalset.json")
+    predictions = read_json(results / reports.VERSIONS[version]["predictions"])
+    reads = {
+        (r["game_pk"], r["at_bat_number"], r["pitch_number"], r["field"]): r["read"]
+        for r in reports.wrong_reads(evalset, predictions)
+    }
+    assert reads == reports.known_misreads(known_register(), version)
+    for item in known_register()["misreads"]:
+        assert set(item["versions"]) <= set(reports.VERSIONS)
+        assert item["read"] != item["label"] and item["cause"] and item["evidence"]
 
 
 def test_resolve_reference_returns_short_sha_or_none():

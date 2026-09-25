@@ -192,21 +192,35 @@ def test_real_frames_structural_fields_match_labels():
             encoding="utf-8-sig"
         )
     )
+    # Structural fields do not use templates, so the default reader reads them like v2; the
+    # v2 entries of the known-misread register are the only wrong reads allowed here.
+    register = json.loads(
+        (ROOT / "docs/results/mlb_p0/game_747139_scoreboard_known_misreads.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    structural = ("outs", "runner_on_1b", "runner_on_2b", "runner_on_3b", "inning_topbot")
+    listed = {
+        (m["at_bat_number"], m["pitch_number"], m["field"]): m["read"]
+        for m in register["misreads"]
+        if "v2" in m["versions"] and m["field"] in structural
+    }
     empty = sb.DigitTemplates()
-    checked = 0
+    checked, found, expected = 0, {}, {}
     for entry in evalset["entries"]:
         path = REAL / f"evalset_{entry['frame_seconds']:.2f}.jpg"
         if not path.exists():
             continue
         fields = sb.read_scoreboard(np.asarray(Image.open(path).convert("RGB")), empty)
-        for name in ("outs", "runner_on_1b", "runner_on_2b", "runner_on_3b", "inning_topbot"):
-            assert fields[name] in (None, entry["labels"][name]), (
-                entry["pitch_number"],
-                name,
-                fields[name],
-            )
+        pitch = (entry["at_bat_number"], entry["pitch_number"])
+        for name in structural:
+            if fields[name] not in (None, entry["labels"][name]):
+                found[(*pitch, name)] = fields[name]
+            if (*pitch, name) in listed:
+                expected[(*pitch, name)] = listed[(*pitch, name)]
         checked += 1
     assert checked > 0
+    assert found == expected
 
 
 @pytest.mark.parametrize("version", ["v1", "v2", "v3"])

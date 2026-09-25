@@ -336,13 +336,22 @@
     코드: `sny_scoreboard.read_scoreboard`에 옵션 인자(없으면 기존 경로), `66 templates --reader-options`, `ocr_reports.VERSIONS`에 v3, 시험 추가. 검사 **329 passed, 2 deselected**.
     수정 권한 반납. 다음 한 단위: **A-9 5회 33구**(Opus 5), 그 새 프레임으로 **F-3d v4**(필드 묶음별 템플릿) 사전 등록·첫 blind 평가.
 
-35. (이 커밋): A-9 중 **5회말 PA 38~40 11구** 검증·병합(Claude Code, 2026-09-25). 선점 `0b0562b`. 주석 워크플로 v4(Opus 5) → 두 렌즈 → 세션이 시트·압축 몽타주 확인.
+35. `862ec01`: A-9 중 **5회말 PA 38~40 11구** 검증·병합(Claude Code, 2026-09-25). 선점 `0b0562b`. 주석 워크플로 v4(Opus 5) → 두 렌즈 → 세션이 시트·압축 몽타주 확인.
     9 annotated + 39/2·39/4 unavailable(1루 쪽 카메라로 타자 미표시 상태에서 투구 시작; 불가 행의 릴리스·observed는 세션이 null로 정정). 수리 후 재검증: 38/1·38/2·40/1·40/2.
     **122 확인 / 9 불가 / 191 미검토**. OCR `scripts/70`: 새 9구 v1·v2·v3 오답 0, 이닝 '5' 기권; 38/4 볼 '3'은 v3만 정답(첫 blind 성공 1건).
     검사 **330 passed, 2 deselected**. 5회초 PA 33~37(22구)은 워크플로 진행 중.
 
+36. (이 커밋): **A-9 완료** — 5회초 PA 33~37 22구 검증·병합(Claude Code, 2026-09-25). 기준 `862ec01`. 20 annotated + 33/3·35/1 unavailable.
+    35/2는 워크플로 3라운드 뒤에도 반박으로 남아 세션이 신발 가장자리를 픽셀로 재서 판단 3408.75로 정정; 불가 두 행의 observed·판독성 null 정정. 33/1 라인스코어 partial.
+    **142 확인 / 11 불가 / 169 미검토**(5회까지 153구), 리뷰 142(139 전 필드), 충돌 0. 새 짧은 리드 없음.
+    OCR(`scripts/70 --reference 862ec01`): 새 20구에서 **첫 실제 오판독** 34/3 초말 Top→Bot(v1·v2·v3 공통, ▲가 판독 창에 잘려 최대폭 행 동률).
+    판독 버전은 고치지 않고 `game_747139_scoreboard_known_misreads.json`에 원인·증거 기록; `ocr_reports.wrong_reads`·`known_misreads`와 `scripts/70` 게이트가 목록 밖 오판독과
+    더는 일어나지 않는 목록 항목에서 실패하도록 바꿨다(시험 5개 추가·2개 수정). 5회 29구: v1·v2 246·37·1, v3 248·35·1(v3는 볼 '3'·점수 '2' +4, 볼 '2' 33/5·35/5 기권).
+    기존 122구 예측 불변·142구 반복 동일. 검사 **335 passed, 2 deselected**. 수정 권한 반납.
+    다음 한 단위: **F-3d v4 사전 등록**(Fable 5.1). 5회 프레임은 이미 봤으므로 v4 첫 blind 채점은 **A-10(6회 PA 41~49, 34구)** 병합 때 `scripts/70`이 기록.
+
 이 문서와 함께 추가되는 후속 커밋의 해시는 `git log -6 --oneline`으로 확인한다.
-최신 Windows CPU 검사: **330 passed, 2 deselected**(체크포인트 35, `check_project.py --cpu-only`, Ruff 69경로 통과). 아래 브라우저·서비스 검증은 이전 체크포인트 기록이다.
+최신 Windows CPU 검사: **335 passed, 2 deselected**(체크포인트 36, `check_project.py --cpu-only`, Ruff 69경로 통과). 아래 브라우저·서비스 검증은 이전 체크포인트 기록이다.
 JavaScript 구문 검사 및 Chrome 수동 입력·실제 추론·9회 이후 추천 보류 확인.
 GitHub CI 결과는 해당 커밋의 validation 워크플로에서 따로 확인한다.
 주석 모듈을 먼저 import한 새 프로세스에서도 Torch→Pandas 문자열 생성이 성공하는지
@@ -397,7 +406,7 @@ Claude/Codex의 순서는 [../CHECKLIST.md](../CHECKLIST.md)의 "진행 순서" 
 팀원 레포(SongRoute/pitcheezy) 대조 결과는 [TEAMMATE_PITCHEEZY_2026-09-22.md](TEAMMATE_PITCHEEZY_2026-09-22.md) — 우리 쪽 참조가 없는 별도
 트랙이라 I-0(인터페이스 합의)·I-5(시연 경기)·I-6(클래스 대응표)·G-3(통화)를 A/B와 병행해 먼저 진행한다.
 
-1. **영상 시간 주석 확대**: 4회 종료(PA 1~32, 120구: 113 확인·7 불가). 다음 주석은 5회(PA 33~)이며 CHECKLIST에 A-9로 올린 뒤 같은 절차로 진행한다.
+1. **영상 시간 주석 확대**: 5회 종료(PA 1~40, 153구: 142 확인·11 불가). 다음 주석은 6회(PA 41~49, CHECKLIST A-10)이며 F-3d 사전 등록 뒤 같은 절차로 진행한다.
 
 ```bash
 uv run --frozen python scripts/63_annotate_broadcast.py check --annotations docs/results/mlb_p0/game_747139_timing.json --require-pa 19

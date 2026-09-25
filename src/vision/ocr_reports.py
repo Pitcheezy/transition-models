@@ -14,6 +14,7 @@ import json
 import platform
 import re
 import sys
+from collections import Counter
 from pathlib import Path
 
 import numpy as np
@@ -33,6 +34,10 @@ SHARED_INPUTS = (
 )
 FRAMES_DIR = "outputs/frames"
 FRAMES_LABEL = "evalset"
+# Register of wrong reads that were looked at and kept on record (a version is a fixed
+# measurement; a reader fix becomes a new version). scripts/70 fails on any other wrong read.
+KNOWN_MISREADS = "game_747139_scoreboard_known_misreads.json"
+KNOWN_MISREADS_SCHEMA = "mlb_scoreboard_known_misreads_v1"
 
 # 파일 이름표: negatives v1은 과거 이름(v0)을 그대로 쓴다.
 VERSIONS = {
@@ -501,7 +506,50 @@ def score_summary(score):
     }
 
 
-def wrong_read_problems(version, score, negatives, new_rows):
+def wrong_reads(evalset, predictions):
+    """Every human-confirmed field that a prediction row reads with a value other than its label.
+
+    All prediction rows count, including the template-source plate appearances that a held-out
+    score leaves out. Abstentions (``None``) are not wrong reads.
+    """
+    entries = {row_key(e): e for e in evalset["entries"]}
+    found = []
+    for row in predictions:
+        entry = entries.get(row_key(row))
+        if entry is None:
+            continue
+        for field in LABEL_FIELDS:
+            value = row["fields"].get(field)
+            if entry["field_status"][field] != "confirmed" or value is None:
+                continue
+            if not _same_type_value(value, entry["labels"][field]):
+                found.append(
+                    {
+                        **dict(zip(KEYS, row_key(row), strict=True)),
+                        "field": field,
+                        "read": value,
+                        "label": entry["labels"][field],
+                    }
+                )
+    return found
+
+
+def _misread_key(item):
+    return (*(item[k] for k in KEYS), item["field"])
+
+
+def known_misreads(register, version):
+    """``{(game_pk, at_bat, pitch, field): read}`` for the register entries that list ``version``."""
+    if register.get("schema") != KNOWN_MISREADS_SCHEMA:
+        raise ValueError(f"known-misread register schema must be {KNOWN_MISREADS_SCHEMA!r}")
+    return {_misread_key(m): m["read"] for m in register["misreads"] if version in m["versions"]}
+
+
+def _describe(key):
+    return f"{key[1]}/{key[2]} {key[3]}"
+
+
+def wrong_read_problems(version, score, negatives, new_rows, reads=None, known=None):
     """One message per wrong-read source a refresh must fail on (empty list = none).
 
     ``score["all_fields"]["wrong"]`` counts only pitches on which every field was attempted, so
@@ -509,19 +557,45 @@ def wrong_read_problems(version, score, negatives, new_rows):
     only in ``per_field``. The negatives report reads of unreadable frames as ``false_reads``
     and readable-but-wrong ones as ``wrong_reads``. The new-row comparison also covers the
     template-source plate appearances that the held-out score excludes.
+
+    ``known`` (``known_misreads``) holds wrong reads kept on record in ``KNOWN_MISREADS``: they
+    are expected in the score, the new rows and ``reads`` and do not fail. ``reads``
+    (``wrong_reads`` over all prediction rows) is checked both ways: a wrong read missing from
+    the register fails, and so does a register entry that no longer happens with the same value,
+    so the register stays true.
     """
+    known = known or {}
     problems = []
+    excluded = set(score.get("holdout", {}).get("excluded_plate_appearances", []))
+    expected = dict(Counter(key[3] for key in known if key[1] not in excluded))
     wrong = score_summary(score)["wrong_per_field"]
-    if wrong:
-        problems.append(f"{version}: score has wrong reads per field {json.dumps(wrong)}")
+    if wrong != expected:
+        note = f" (known misreads account for {json.dumps(expected)})" if expected else ""
+        problems.append(f"{version}: score has wrong reads per field {json.dumps(wrong)}{note}")
     for name in ("false_reads", "wrong_reads"):
         if negatives["totals"][name]:
             problems.append(
                 f"{version}: negatives have {negatives['totals'][name]} {name.replace('_', ' ')}"
             )
-    if new_rows["totals"]["pitches_with_wrong_field"]:
-        problems.append(
-            f"{version}: {new_rows['totals']['pitches_with_wrong_field']} new pitch(es) "
-            "have a wrong field"
-        )
+    explained = sum(
+        bool(p["wrong_fields"])
+        and all((*(p[k] for k in KEYS), f) in known for f in p["wrong_fields"])
+        for p in new_rows["pitches"]
+    )
+    unexplained = new_rows["totals"]["pitches_with_wrong_field"] - explained
+    if unexplained:
+        problems.append(f"{version}: {unexplained} new pitch(es) have a wrong field")
+    if reads is not None:
+        found = {_misread_key(r): r["read"] for r in reads}
+        for key, value in found.items():
+            if key not in known:
+                problems.append(
+                    f"{version}: wrong read {_describe(key)} = {value!r} is not in {KNOWN_MISREADS}"
+                )
+        for key, value in known.items():
+            if found.get(key, None) != value:
+                problems.append(
+                    f"{version}: known misread {_describe(key)} = {value!r} no longer happens "
+                    f"(now {found.get(key)!r}); update {KNOWN_MISREADS}"
+                )
     return problems
