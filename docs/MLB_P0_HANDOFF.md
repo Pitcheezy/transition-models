@@ -365,8 +365,14 @@
     알려진 오판독 목록(v1~v4). **v4 사전 등록 판정: 실패**(기준 (1)), (2)~(5) 통과 — `game_747139_scoreboard_ocr_v4_acceptance.json`. 현행 v2 유지. 검사 **345 passed, 2 deselected**.
     수정 권한 반납. 다음 한 단위: **A-11 7회 18구**(Opus 5). OCR v5(F-3e, Fable 5.1)를 할 거면 그 사전 등록을 A-11 전에 커밋.
 
+39. (이 커밋): **A-11 완료** — 7회 PA 50~55 18구(Claude Code, 2026-09-26). 선점 `f7e0a1e`. 17 annotated + 52/2 unavailable(불펜 컷어웨이 중 투구 시작).
+    워크플로 v4 두 개 → 두 렌즈(수리 최대 3라운드) → 세션이 몽타주·연속성·릴리스·경계 확대 확인. 55/1~55/3은 Ottavino의 러버 위 발 고쳐 딛기 뒤 첫 격자(수리 후 통과),
+    50/1·53/1은 점수판 재생성 직후, 52/3은 0.5 s 창. **191 확인 / 14 불가 / 117 미검토**(7회까지 205구), 리뷰 191(186 전 필드), 충돌 0. 새 짧은 리드 없음.
+    OCR `scripts/70 --reference f7e0a1e`: 새 17구 v1~v4 오답 0(v3·v4 135·35·0, v1·v2 134·36·0). 기존 행 불변·반복 동일. 검사 **346 passed, 2 deselected**.
+    수정 권한 반납. 다음 한 단위: **A-12 8회초 PA 56~65 44구**(Opus 5), 그 뒤 A-13 8회말 33구.
+
 이 문서와 함께 추가되는 후속 커밋의 해시는 `git log -6 --oneline`으로 확인한다.
-최신 Windows CPU 검사: **345 passed, 2 deselected**(체크포인트 38, `check_project.py --cpu-only`, Ruff 69경로 통과). 아래 브라우저·서비스 검증은 이전 체크포인트 기록이다.
+최신 Windows CPU 검사: **346 passed, 2 deselected**(체크포인트 39, `check_project.py --cpu-only`, Ruff 69경로 통과). 아래 브라우저·서비스 검증은 이전 체크포인트 기록이다.
 JavaScript 구문 검사 및 Chrome 수동 입력·실제 추론·9회 이후 추천 보류 확인.
 GitHub CI 결과는 해당 커밋의 validation 워크플로에서 따로 확인한다.
 주석 모듈을 먼저 import한 새 프로세스에서도 Torch→Pandas 문자열 생성이 성공하는지
@@ -421,7 +427,7 @@ Claude/Codex의 순서는 [../CHECKLIST.md](../CHECKLIST.md)의 "진행 순서" 
 팀원 레포(SongRoute/pitcheezy) 대조 결과는 [TEAMMATE_PITCHEEZY_2026-09-22.md](TEAMMATE_PITCHEEZY_2026-09-22.md) — 우리 쪽 참조가 없는 별도
 트랙이라 I-0(인터페이스 합의)·I-5(시연 경기)·I-6(클래스 대응표)·G-3(통화)를 A/B와 병행해 먼저 진행한다.
 
-1. **영상 시간 주석 확대**: 6회 종료(PA 1~49, 187구: 174 확인·13 불가). 다음 주석은 7회(PA 50~55, CHECKLIST A-11)이며 같은 절차로 진행한다.
+1. **영상 시간 주석 확대**: 7회 종료(PA 1~55, 205구: 191 확인·14 불가). 다음 주석은 8회초(PA 56~65, CHECKLIST A-12)이며 같은 절차로 진행한다.
 
 ```bash
 uv run --frozen python scripts/63_annotate_broadcast.py check --annotations docs/results/mlb_p0/game_747139_timing.json --require-pa 19
