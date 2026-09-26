@@ -383,8 +383,13 @@
     OCR `scripts/70 --reference 2bf9a26`: 새 29구 v1~v4 오답 0(초말 ▼ 전부 정답; v4 203·87·0, v3 202·88·0, v1·v2 201·89·0). 검사 **348 passed, 2 deselected**.
     저장소 public 전환(사용자 요청; 비밀 패턴 검색 0건) → Actions validation 재실행 성공(ubuntu·macOS). 수정 권한 반납. 다음 한 단위: **A-14 9회초 PA 74~78 21구**(Opus 5), 그 뒤 A-15 9회말 19구.
 
+42. (이 커밋): **A-14 완료** — 9회초 PA 74~78 21구(Claude Code, 2026-09-26; 세션 Fable 5.1). 선점 `7990c47`. 21 annotated, unavailable 0.
+    워크플로 v4 두 그룹(Opus 5 주석, Fable 5.1 렌즈; 51+17 에이전트) → 세션 확인. 세션 정정 76/1 판단 7800.00→7796.50(홈 뒤 상단 라이브 광각, 규약 v2·선례 61/3; 대안 7800.00 기록).
+    1라운드 렌즈 반박 7건은 전부 동작 시작 지연 → 수리 후 통과. **280 확인 / 23 불가 / 19 미검토**(9회초까지 303구), 리뷰 280(275 전 필드), 충돌 0. 9회초 리드 최소 1.55 / 중앙값 5.05 / 최대 8.40 s(짧은 리드 목록 추가 없음).
+    OCR `scripts/70 --reference 7990c47`: v1~v4 모두 오답 0, 초말 ▲9는 v1~v4 전부 정답(8회초 ▲ 오판독은 이닝 '8' 열 문제였음; 필드 v4 147·63·0, v3 146·64·0, v1·v2 143·67·0), 공유 행 변화 0. 검사 **349 passed, 2 deselected**. 수정 권한 반납. 다음 한 단위: **A-15 9회말 PA 79~82 19구**(Opus 5; 전 경기 마지막, 끝나면 322구 요약 문서화).
+
 이 문서와 함께 추가되는 후속 커밋의 해시는 `git log -6 --oneline`으로 확인한다.
-최신 Windows CPU 검사: **348 passed, 2 deselected**(체크포인트 41, `check_project.py --cpu-only`, Ruff 69경로 통과). 아래 브라우저·서비스 검증은 이전 체크포인트 기록이다.
+최신 Windows CPU 검사: **349 passed, 2 deselected**(체크포인트 42, `check_project.py --cpu-only`, Ruff 69경로 통과). 아래 브라우저·서비스 검증은 이전 체크포인트 기록이다.
 JavaScript 구문 검사 및 Chrome 수동 입력·실제 추론·9회 이후 추천 보류 확인.
 GitHub CI 결과는 해당 커밋의 validation 워크플로에서 따로 확인한다.
 주석 모듈을 먼저 import한 새 프로세스에서도 Torch→Pandas 문자열 생성이 성공하는지
@@ -439,7 +444,7 @@ Claude/Codex의 순서는 [../CHECKLIST.md](../CHECKLIST.md)의 "진행 순서" 
 팀원 레포(SongRoute/pitcheezy) 대조 결과는 [TEAMMATE_PITCHEEZY_2026-09-22.md](TEAMMATE_PITCHEEZY_2026-09-22.md) — 우리 쪽 참조가 없는 별도
 트랙이라 I-0(인터페이스 합의)·I-5(시연 경기)·I-6(클래스 대응표)·G-3(통화)를 A/B와 병행해 먼저 진행한다.
 
-1. **영상 시간 주석 확대**: 8회 종료(PA 1~73, 282구: 259 확인·23 불가). 다음 주석은 9회초(PA 74~78, CHECKLIST A-14)이며 같은 절차로 진행한다.
+1. **영상 시간 주석 확대**: 9회초 종료(PA 1~78, 303구: 280 확인·23 불가). 다음 주석은 9회말(PA 79~82, CHECKLIST A-15)이며 같은 절차로 진행한다. 그 단위로 전 경기 322구 검토가 끝난다.
 
 ```bash
 uv run --frozen python scripts/63_annotate_broadcast.py check --annotations docs/results/mlb_p0/game_747139_timing.json --require-pa 19
