@@ -10,8 +10,8 @@ Usage::
 ``--dec`` lists the boundary frames around the decision frame together with the decision
 frame itself; ``--prep`` the preparation frames and ``--rel`` the release candidates. Frames
 are grabbed with ffmpeg from the timing document's ``source.media_url`` unless a frame of the
-same second already exists under ``outputs/frames`` (``*_<t>.jpg``; ``evalset_`` and ``neg_``
-frames are used only when nothing else exists). New grabs are named ``<label>_<t>.jpg``.
+same source/time has a verified image hash. New grabs use a source-specific directory and
+millisecond filenames with receipts; unbound legacy JPGs are preserved and never reused.
 The sheet is ``<out-dir>/<label>_review_sheet.png``: decision frames three per row at half
 size, their scoreboard bugs enlarged, preparation frames four per row and release crops of the
 pitcher box five per row. It is a review aid for manual timing and produces no labels.
@@ -29,8 +29,8 @@ from PIL import Image
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from src.data.scoreboard_evalset import read_json  # noqa: E402
-from src.vision.frames import SNY_BUG_BOX, frame_path, grab_frame  # noqa: E402
-from src.vision.review_sheet import DEFAULT_PITCHER_BOX, cached_frame, compose_sheet  # noqa: E402
+from src.vision.frames import SNY_BUG_BOX, resolve_frame  # noqa: E402
+from src.vision.review_sheet import DEFAULT_PITCHER_BOX, compose_sheet  # noqa: E402
 
 DEFAULT_TIMING = Path("docs/results/mlb_p0/game_747139_timing.json")
 DEFAULT_FRAMES = Path("outputs/frames")
@@ -41,10 +41,9 @@ def load_frames(times, args, media_url):
     """Return ``(t, image, path)`` per time, reusing cached frames and grabbing the rest."""
     frames = []
     for t in times:
-        path = cached_frame(args.frames_dir, t)
-        if path is None:
-            path = frame_path(args.frames_dir, args.label, t)
-            grab_frame(media_url, t, path, args.ffmpeg)
+        path = resolve_frame(
+            media_url, t, args.frames_dir, args.label, ffmpeg=args.ffmpeg, no_grab=args.no_grab
+        )
         frames.append((t, Image.open(path).convert("RGB"), path))
     return frames
 
@@ -90,6 +89,7 @@ def main():
     parser.add_argument("--frames-dir", type=Path, default=DEFAULT_FRAMES)
     parser.add_argument("--out-dir", type=Path, default=DEFAULT_OUT)
     parser.add_argument("--ffmpeg", default="ffmpeg")
+    parser.add_argument("--no-grab", action="store_true", help="require verified cached frames")
     args = parser.parse_args()
     times = [*args.dec, *args.prep, *args.rel]
     if not times:

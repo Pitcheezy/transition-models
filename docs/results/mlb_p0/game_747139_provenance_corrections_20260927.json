@@ -1,0 +1,398 @@
+{
+  "schema": "mlb_provenance_corrections_v1",
+  "game_pk": 747139,
+  "recorded_at": "2026-09-27",
+  "recorded_by": "Codex cross-agent audit",
+  "audit_reference_commit": "0087671b351343a99d45ee817778a4e78edd675c",
+  "audit_claim_commit": "db7327946f1846e04b4b784210a3ac34649c219f",
+  "purpose": "Informational provenance corrections based on committed metadata, Git history and handoff records. This sidecar does not replace any annotation, change any result, or certify a new visual review or an independent reviewer response.",
+  "baseline": {
+    "protocol_path": "docs/results/mlb_p0/game_747139_blind_review_protocol.json",
+    "study_id": "game_747139_ay_v1",
+    "baseline_commit": "ed56f9b1ac7d943ec7ffa217fafeb31cfbbbb55d",
+    "baseline_kind": "AI-assisted manual reference; not frame-exact ground truth",
+    "frozen_inputs": {
+      "manifest": {
+        "path": "docs/results/mlb_p0/game_747139_manifest.json",
+        "canonical_sha256": "4d036f94f5b5bddc682e846960dbc40de5ae35c4e023581efa12167475e062da"
+      },
+      "sources": {
+        "path": "docs/results/mlb_p0/game_747139_sources.json",
+        "canonical_sha256": "cbda58b32a18fd97aac4dcc72a57c1a7e3526e22782e4bb2d6d94c465010f2c0"
+      },
+      "timing": {
+        "path": "docs/results/mlb_p0/game_747139_timing.json",
+        "canonical_sha256": "820d18012f418e35699ebe8187be3a9fe891644f4966707ae4489d0538e997a1"
+      },
+      "review": {
+        "path": "docs/results/mlb_p0/game_747139_scoreboard_review.json",
+        "canonical_sha256": "7cf83fd2f010edc3174197c39d5b3867bdaaca56fce49542c7596d19dcb4c1b0"
+      }
+    },
+    "preservation_rule": "Keep all four frozen input documents and their canonical hashes unchanged. This informational sidecar is not a new reference version and must not be included in the source-only blind reviewer package."
+  },
+  "confirmed_corrections": [
+    {
+      "id": "a14_starting_commit_and_context",
+      "path": "docs/results/mlb_p0/game_747139_timing_verification_pa74_78.json",
+      "recorded": {
+        "starting_commit": "3e395b2",
+        "starting_commit_meaning": "Claim commit before PA20-26 annotation; candidates were created during this task."
+      },
+      "verified_interpretation": {
+        "starting_commit": "7990c47ac8c753ec7d472e6faa2d707e2c00d9c9",
+        "starting_commit_meaning": "A-14 claim before PA74-78 (top of the 9th) verification and merge."
+      },
+      "evidence": [
+        {
+          "commit": "3e395b2b2c91185083e2d43ecc97756ae4157920",
+          "subject": "docs: claim A-7 PA 20-26 (bottom of the 3rd) in CHECKLIST.md",
+          "committed_at": "2026-09-25T05:56:34+09:00"
+        },
+        {
+          "commit": "7990c47ac8c753ec7d472e6faa2d707e2c00d9c9",
+          "subject": "docs: claim A-14 (top of the 9th, PA 74-78)",
+          "committed_at": "2026-09-26T18:38:12+09:00"
+        },
+        {
+          "commit": "8b99385f31ee43815096c770bbc7842add02f71a",
+          "subject": "A-14 complete: verify and merge the top of the 9th (PA 74-78, 21 pitches)",
+          "committed_at": "2026-09-26T21:36:37+09:00"
+        },
+        {
+          "path": "docs/MLB_P0_HANDOFF.md",
+          "checkpoint": 42,
+          "recorded_in_commit": "8b99385f31ee43815096c770bbc7842add02f71a"
+        }
+      ],
+      "reason": "The recorded hash resolves to the A-7 PA20-26 claim. The verification file contains only PA74-78 and was introduced by the A-14 work commit, whose body and handoff both identify 7990c47 as the A-14 reference/claim. The original file is preserved; use this sidecar when interpreting its provenance.",
+      "data_effect": "None. Pitch keys, timestamps, observed values and OCR scores are unchanged."
+    }
+  ],
+  "verification_header_audit": [
+    {
+      "path": "docs/results/mlb_p0/game_747139_timing_verification_pa11_15.json",
+      "recorded_starting_commit": null,
+      "recorded_starting_commit_meaning": null,
+      "resolved_recorded_commit": null,
+      "verified_claim": {
+        "commit": "9eb1c667e42395a13a31bb47a5a77cf5b9532027",
+        "subject": "docs: claim PA 11-15 verification in CHECKLIST.md",
+        "committed_at": "2026-09-24T18:00:01+09:00"
+      },
+      "verification_file_added_in": "06abd0c99872c02e4d7b9fff985bed69ced9b51a",
+      "finding": "field_not_recorded_no_replacement",
+      "note": "The file has no starting_commit field. The identified claim starts the Codex verification/merge, not the earlier Claude candidate annotation; this is not reported as a wrong recorded value.",
+      "earlier_candidate_claim": "18629459baf5caf97100052a588f909ae34c822e",
+      "candidate_handoff_commit": "692bd070a30b808cf0ce36aa65095cbf01670023"
+    },
+    {
+      "path": "docs/results/mlb_p0/game_747139_timing_verification_pa16_19.json",
+      "recorded_starting_commit": "0746fab",
+      "recorded_starting_commit_meaning": "Clean pre-annotation reference; PA16-19 candidates were newly created during this task, not present in that commit.",
+      "resolved_recorded_commit": "0746fab7a388799120f03c75b1b2785fe11d618b",
+      "verified_claim": {
+        "commit": "0746fab7a388799120f03c75b1b2785fe11d618b",
+        "subject": "docs: claim PA 16-19 annotation in CHECKLIST.md",
+        "committed_at": "2026-09-24T19:05:24+09:00"
+      },
+      "verification_file_added_in": "eb1cdf635ded2268213bd658fa0ee9a02e2765c5",
+      "finding": "recorded_commit_and_context_match_claim"
+    },
+    {
+      "path": "docs/results/mlb_p0/game_747139_timing_verification_pa20_26.json",
+      "recorded_starting_commit": "3e395b2",
+      "recorded_starting_commit_meaning": "Claim commit before PA20-26 annotation; candidates were created during this task.",
+      "resolved_recorded_commit": "3e395b2b2c91185083e2d43ecc97756ae4157920",
+      "verified_claim": {
+        "commit": "3e395b2b2c91185083e2d43ecc97756ae4157920",
+        "subject": "docs: claim A-7 PA 20-26 (bottom of the 3rd) in CHECKLIST.md",
+        "committed_at": "2026-09-25T05:56:34+09:00"
+      },
+      "verification_file_added_in": "5f69f26247849949479fdf2e3b842edb5dc6d04d",
+      "finding": "recorded_commit_and_context_match_claim"
+    },
+    {
+      "path": "docs/results/mlb_p0/game_747139_timing_verification_pa27_32.json",
+      "recorded_starting_commit": "31a9352",
+      "recorded_starting_commit_meaning": "Claim commit before PA27-32 (4th inning) annotation; candidates were created during this task.",
+      "resolved_recorded_commit": "31a9352e1d0c4d92c98f9f51b2d31b3650d049ab",
+      "verified_claim": {
+        "commit": "31a9352e1d0c4d92c98f9f51b2d31b3650d049ab",
+        "subject": "docs: claim A-8 (4th inning, PA 27-32) and add H-4 maintenance tooling item",
+        "committed_at": "2026-09-25T09:57:05+09:00"
+      },
+      "verification_file_added_in": "a0388de2aa475d23790ee6bcc955c09801cf5434",
+      "finding": "recorded_commit_and_context_match_claim"
+    },
+    {
+      "path": "docs/results/mlb_p0/game_747139_timing_verification_pa33_40.json",
+      "recorded_starting_commit": "0b0562b",
+      "recorded_starting_commit_meaning": "Claim commit before PA33-40 (5th inning) annotation; candidates were created during this task.",
+      "resolved_recorded_commit": "0b0562be4bcecfa414e23edd14781ede457c66d5",
+      "verified_claim": {
+        "commit": "0b0562be4bcecfa414e23edd14781ede457c66d5",
+        "subject": "docs: claim A-9 (5th inning, PA 33-40) in CHECKLIST.md",
+        "committed_at": "2026-09-25T13:00:13+09:00"
+      },
+      "verification_file_added_in": "862ec019bbf3ad7d78f70d377632ead7ea5e7db3",
+      "finding": "recorded_commit_and_context_match_claim"
+    },
+    {
+      "path": "docs/results/mlb_p0/game_747139_timing_verification_pa41_49.json",
+      "recorded_starting_commit": "139275e",
+      "recorded_starting_commit_meaning": "Claim commit before PA41-49 (6th inning) annotation; candidates were created during this task.",
+      "resolved_recorded_commit": "139275eee175d242a25488a3787879ad053d0fe8",
+      "verified_claim": {
+        "commit": "139275eee175d242a25488a3787879ad053d0fe8",
+        "subject": "docs: claim A-10 (6th inning, PA 41-49) in CHECKLIST.md",
+        "committed_at": "2026-09-25T18:22:28+09:00"
+      },
+      "verification_file_added_in": "1c7f2bc7ca45a8fb76f21b422d6ae131436849b9",
+      "finding": "recorded_commit_and_context_match_claim"
+    },
+    {
+      "path": "docs/results/mlb_p0/game_747139_timing_verification_pa50_55.json",
+      "recorded_starting_commit": "f7e0a1e",
+      "recorded_starting_commit_meaning": "Claim commit before PA50-55 (7th inning) annotation; candidates were created during this task.",
+      "resolved_recorded_commit": "f7e0a1e24221589ed37a4b696f9e594fbf8e9c00",
+      "verified_claim": {
+        "commit": "f7e0a1e24221589ed37a4b696f9e594fbf8e9c00",
+        "subject": "docs: claim A-11 (7th inning, PA 50-55) in CHECKLIST.md",
+        "committed_at": "2026-09-25T23:20:45+09:00"
+      },
+      "verification_file_added_in": "19ca8d2aaa748ced27b7a1687adfd1210395ee08",
+      "finding": "recorded_commit_and_context_match_claim"
+    },
+    {
+      "path": "docs/results/mlb_p0/game_747139_timing_verification_pa56_65.json",
+      "recorded_starting_commit": "10250bc",
+      "recorded_starting_commit_meaning": "Claim commit before PA56-65 (top of the 8th) annotation; candidates were created during this task.",
+      "resolved_recorded_commit": "10250bc36fd0ee26456f18b5a55931c3229bd360",
+      "verified_claim": {
+        "commit": "10250bc36fd0ee26456f18b5a55931c3229bd360",
+        "subject": "docs: claim A-12 (top of the 8th, PA 56-65) in CHECKLIST.md",
+        "committed_at": "2026-09-26T02:08:52+09:00"
+      },
+      "verification_file_added_in": "4c6e3c79cca381d621fef4004a340936352e15c0",
+      "finding": "recorded_commit_and_context_match_claim"
+    },
+    {
+      "path": "docs/results/mlb_p0/game_747139_timing_verification_pa66_73.json",
+      "recorded_starting_commit": "2bf9a26",
+      "recorded_starting_commit_meaning": "Claim commit before PA66-73 (bottom of the 8th) annotation; candidates were created during this task.",
+      "resolved_recorded_commit": "2bf9a26aeea11c7488baf1ca82e6df09bd3b02c0",
+      "verified_claim": {
+        "commit": "2bf9a26aeea11c7488baf1ca82e6df09bd3b02c0",
+        "subject": "docs: claim A-13 (bottom of the 8th, PA 66-73); disk note updated",
+        "committed_at": "2026-09-26T12:18:01+09:00"
+      },
+      "verification_file_added_in": "33943630627d3368565c1d4fc6dc7d3827e45255",
+      "finding": "recorded_commit_and_context_match_claim"
+    },
+    {
+      "path": "docs/results/mlb_p0/game_747139_timing_verification_pa74_78.json",
+      "recorded_starting_commit": "3e395b2",
+      "recorded_starting_commit_meaning": "Claim commit before PA20-26 annotation; candidates were created during this task.",
+      "resolved_recorded_commit": "3e395b2b2c91185083e2d43ecc97756ae4157920",
+      "verified_claim": {
+        "commit": "7990c47ac8c753ec7d472e6faa2d707e2c00d9c9",
+        "subject": "docs: claim A-14 (top of the 9th, PA 74-78)",
+        "committed_at": "2026-09-26T18:38:12+09:00"
+      },
+      "verification_file_added_in": "8b99385f31ee43815096c770bbc7842add02f71a",
+      "finding": "copied_context_corrected_below"
+    },
+    {
+      "path": "docs/results/mlb_p0/game_747139_timing_verification_pa79_82.json",
+      "recorded_starting_commit": "16e0b18",
+      "recorded_starting_commit_meaning": "Codex A-15 claim before any PA79-82 merge; contains the 303-row timing and previous OCR reports.",
+      "resolved_recorded_commit": "16e0b18988f201300d9f579009257254599cfd36",
+      "verified_claim": {
+        "commit": "16e0b18988f201300d9f579009257254599cfd36",
+        "subject": "docs: claim A-15 final inning verification (CHECKLIST.md)",
+        "committed_at": "2026-09-26T22:55:09+09:00"
+      },
+      "verification_file_added_in": "a708d48db4f4370fcca08daee13d3d63be0ba77a",
+      "finding": "recorded_commit_and_context_match_claim"
+    }
+  ],
+  "date_caveats": {
+    "interpretation": "The following stored review dates differ from handoff work dates or contain mixed row dates. A commit timestamp establishes when a record was committed, not when its image was viewed. The stored dates lack a timezone. Neither cross-midnight work nor copied dates can be ruled out from these records alone; no replacement review date is asserted.",
+    "records": [
+      {
+        "path": "docs/results/mlb_p0/game_747139_timing_verification_pa50_55.json",
+        "recorded_reviewed_at": "2026-09-25",
+        "recorded_row_verification_dates": {
+          "2026-09-25": 18
+        },
+        "work_commit": {
+          "commit": "19ca8d2aaa748ced27b7a1687adfd1210395ee08",
+          "subject": "A-11 complete: verify and merge the 7th inning (PA 50-55, 18 pitches)",
+          "committed_at": "2026-09-26T02:07:48+09:00"
+        },
+        "handoff_checkpoint": 39,
+        "handoff_work_date": "2026-09-26",
+        "verified_replacement": null,
+        "status": "unresolved_date_provenance_preserved"
+      },
+      {
+        "path": "docs/results/mlb_p0/game_747139_timing_verification_pa56_65.json",
+        "recorded_reviewed_at": "2026-09-25",
+        "recorded_row_verification_dates": {
+          "2026-09-25": 44
+        },
+        "work_commit": {
+          "commit": "4c6e3c79cca381d621fef4004a340936352e15c0",
+          "subject": "A-12 complete: verify and merge the top of the 8th (PA 56-65, 44 pitches)",
+          "committed_at": "2026-09-26T07:22:03+09:00"
+        },
+        "handoff_checkpoint": 40,
+        "handoff_work_date": "2026-09-26",
+        "verified_replacement": null,
+        "status": "unresolved_date_provenance_preserved"
+      },
+      {
+        "path": "docs/results/mlb_p0/game_747139_timing_verification_pa66_73.json",
+        "recorded_reviewed_at": "2026-09-25",
+        "recorded_row_verification_dates": {
+          "2026-09-25": 33
+        },
+        "work_commit": {
+          "commit": "33943630627d3368565c1d4fc6dc7d3827e45255",
+          "subject": "A-13 complete: verify and merge the bottom of the 8th (PA 66-73, 33 pitches)",
+          "committed_at": "2026-09-26T17:04:15+09:00"
+        },
+        "handoff_checkpoint": 41,
+        "handoff_work_date": "2026-09-26",
+        "verified_replacement": null,
+        "status": "unresolved_date_provenance_preserved"
+      },
+      {
+        "path": "docs/results/mlb_p0/game_747139_timing_verification_pa74_78.json",
+        "recorded_reviewed_at": "2026-09-25",
+        "recorded_row_verification_dates": {
+          "2026-09-25": 20,
+          "2026-09-26": 1
+        },
+        "work_commit": {
+          "commit": "8b99385f31ee43815096c770bbc7842add02f71a",
+          "subject": "A-14 complete: verify and merge the top of the 9th (PA 74-78, 21 pitches)",
+          "committed_at": "2026-09-26T21:36:37+09:00"
+        },
+        "handoff_checkpoint": 42,
+        "handoff_work_date": "2026-09-26",
+        "verified_replacement": null,
+        "status": "unresolved_date_provenance_preserved"
+      }
+    ]
+  },
+  "review_source_interpretation": {
+    "status": "legacy_human_wording_does_not_certify_human_review",
+    "verified_interpretation": "The recorded scoreboard reference was produced through AI-assisted visual review by Claude Code and Codex sessions, as identified by row reviewer fields and handoff records. Legacy human_reading and human reading strings distinguish stored visual reference readings from OCR predictions; they must not be interpreted as evidence that a human annotated these rows or that independent human inter-rater agreement was measured.",
+    "preferred_description": "AI-assisted visual reading of the scoreboard in selected video frames; not OCR output or certified human annotation.",
+    "affected_artifacts": [
+      {
+        "path": "docs/results/mlb_p0/game_747139_scoreboard_review.json",
+        "json_pointer": "/observed_source",
+        "recorded_value": "human_reading_of_scoreboard_bug_at_decision_frame_not_ocr"
+      },
+      {
+        "path": "docs/results/mlb_p0/game_747139_scoreboard_evalset.json",
+        "json_pointer": "/observed_source",
+        "recorded_value": "human_reading_of_scoreboard_bug_at_decision_frame_not_ocr"
+      },
+      {
+        "path": "docs/results/mlb_p0/game_747139_scoreboard_negatives.json",
+        "json_pointer": "/observed_source",
+        "recorded_value": "human_reading_of_scoreboard_bug_at_decision_frame_not_ocr"
+      },
+      {
+        "path": "docs/results/mlb_p0/game_747139_scoreboard_evalset.json",
+        "json_pointer": "/note",
+        "recorded_value": "labels are recorded metadata; field_status comes from a human reading of the bug; neither is OCR output"
+      },
+      {
+        "path": "docs/results/mlb_p0/game_747139_scoreboard_ocr_v0.json",
+        "json_pointer": "/note",
+        "recorded_value": "evaluable is per field (confirmed by a human reading); excluded pitches and unconfirmed fields are never counted as correct or wrong"
+      },
+      {
+        "path": "docs/results/mlb_p0/game_747139_scoreboard_ocr_v0_insample.json",
+        "json_pointer": "/note",
+        "recorded_value": "evaluable is per field (confirmed by a human reading); excluded pitches and unconfirmed fields are never counted as correct or wrong"
+      },
+      {
+        "path": "docs/results/mlb_p0/game_747139_scoreboard_ocr_v1.json",
+        "json_pointer": "/note",
+        "recorded_value": "evaluable is per field (confirmed by a human reading); excluded pitches and unconfirmed fields are never counted as correct or wrong"
+      },
+      {
+        "path": "docs/results/mlb_p0/game_747139_scoreboard_ocr_v2.json",
+        "json_pointer": "/note",
+        "recorded_value": "evaluable is per field (confirmed by a human reading); excluded pitches and unconfirmed fields are never counted as correct or wrong"
+      },
+      {
+        "path": "docs/results/mlb_p0/game_747139_scoreboard_ocr_v3.json",
+        "json_pointer": "/note",
+        "recorded_value": "evaluable is per field (confirmed by a human reading); excluded pitches and unconfirmed fields are never counted as correct or wrong"
+      },
+      {
+        "path": "docs/results/mlb_p0/game_747139_scoreboard_ocr_v4.json",
+        "json_pointer": "/note",
+        "recorded_value": "evaluable is per field (confirmed by a human reading); excluded pitches and unconfirmed fields are never counted as correct or wrong"
+      }
+    ],
+    "generated_output_rule": "Apply this interpretation to every report generated by the current scoreboard_evalset helpers that repeats these literals, including historical v0 reports and future regeneration of the current schemas. No numerical result or denominator changes as a consequence of this wording correction.",
+    "generators": [
+      {
+        "path": "src/data/scoreboard_evalset.py",
+        "symbols": [
+          "OBSERVED_SOURCE",
+          "validate_review",
+          "build_evalset",
+          "score_predictions"
+        ]
+      }
+    ],
+    "evidence": [
+      {
+        "path": "docs/results/mlb_p0/game_747139_scoreboard_review.json",
+        "json_pointer": "/reviews/*/reviewer",
+        "review_count": 297,
+        "detail": "Every recorded reviewer identifies a Claude Code or Codex session."
+      },
+      {
+        "path": "docs/results/mlb_p0/game_747139_scoreboard_negatives.json",
+        "json_pointer": "/reviewer",
+        "detail": "The negative-set reviewer is explicitly Claude Code (claude-fable-5-1)."
+      },
+      {
+        "path": "docs/MLB_P0_HANDOFF.md",
+        "checkpoints": [
+          11,
+          12,
+          14,
+          40,
+          41,
+          42,
+          43,
+          45
+        ],
+        "reference_commit": "0087671b351343a99d45ee817778a4e78edd675c"
+      },
+      {
+        "path": "docs/results/mlb_p0/game_747139_blind_review_protocol.json",
+        "json_pointer": "/baseline_kind",
+        "recorded_value": "AI-assisted manual reference; not frame-exact ground truth"
+      }
+    ],
+    "independent_agreement_status": "No independent response is certified by this sidecar; A-y agreement measurement remains pending."
+  },
+  "limitations": [
+    "Metadata audit only. This artifact does not create or certify new visual annotations.",
+    "AI verifier lenses and main-session checks do not establish independent human inter-rater agreement.",
+    "The existing game is development/demo material. Provenance corrections do not make its frames unseen again.",
+    "All existing documents remain unchanged; consumers must read this sidecar alongside legacy provenance."
+  ]
+}

@@ -9,7 +9,7 @@ Every field returns ``None`` (abstain) when the reading is not confident:
 * outs / runners come from the gold fill inside fixed windows (structural, no training);
 * top/bottom comes from the arrow's row profile (apex up = top of the inning);
 * digits (balls, strikes, inning number, both scores) are matched against glyph templates cut
-  from frames whose labels were verified by a human; a digit with no template abstains, and so
+  from manually reviewed frames (including AI review); a digit with no template abstains, and so
   does a match that is not clearly better than the runner-up.
 
 This is not a general OCR. It produces predictions to be scored with

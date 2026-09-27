@@ -16,7 +16,7 @@ the reported rates are held-out with respect to the templates. They are held-out
 for pitches whose failure was not already diagnosed before the version's rule was fixed: the v3
 set mixes 75 held-out and 19 seen/diagnosed pitches (``ocr_reports.SCORE_SET_NOTES``), and the
 split is reported in the version's comparison file, never by this score alone. Frames are read
-from ``<frames-dir>/<label>_<t>.jpg``.
+from source/time/hash-verified cache entries; unbound legacy JPGs are not reused.
 
 ``templates --reader-options '<json>'`` (OCR v3, F-3c; extended for OCR v4, F-3d) stores opt-in
 read-time options in the template file under ``reader_options``; ``predict`` and ``negatives``
@@ -50,7 +50,7 @@ from src.data.scoreboard_evalset import (
     score_predictions,
     validate_evalset,
 )
-from src.vision.frames import frame_path, grab_frame
+from src.vision.frames import resolve_frame
 from src.vision.negatives import score_negatives, validate_negatives
 from src.vision.sny_scoreboard import (
     DIGIT_FIELDS,
@@ -67,11 +67,9 @@ RESULTS = Path("docs/results/mlb_p0")
 
 
 def load_frame(entry, args, media_url):
-    path = frame_path(args.frames_dir, args.frames_label, entry["frame_seconds"])
-    if not path.exists():
-        if args.no_grab:
-            raise FileNotFoundError(path)
-        grab_frame(media_url, entry["frame_seconds"], path)
+    path = resolve_frame(
+        media_url, entry["frame_seconds"], args.frames_dir, args.frames_label, no_grab=args.no_grab
+    )
     from PIL import Image
 
     return np.asarray(Image.open(path).convert("RGB"))

@@ -29,7 +29,7 @@ def main():
     parser.add_argument("--protocol", type=Path, default=DEFAULT_PROTOCOL)
     parser.add_argument("--baseline-commit", help="Required for freeze; full immutable git SHA")
     parser.add_argument(
-        "--output", type=Path, default=ROOT / "outputs/blind_review/game_747139_ay_v1"
+        "--output", type=Path, default=ROOT / "outputs/blind_review/game_747139_ay_v2"
     )
     parser.add_argument("--response", type=Path)
     parser.add_argument("--require-complete", action="store_true")

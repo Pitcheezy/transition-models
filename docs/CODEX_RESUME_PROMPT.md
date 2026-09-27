@@ -5,16 +5,17 @@ PA 79–82의 마지막 19구는 17구 시각 확인·2구 판단 화면 불가�
 [MLB_P0_HANDOFF.md](MLB_P0_HANDOFF.md) 체크포인트 43과 [MLB_BROADCAST_TIMING.md](MLB_BROADCAST_TIMING.md)를 따른다.
 **A-z도 완료했다.** 주석 화면과 scripts 63·65·71의 안내에 영상 재생 초와 feed UTC의 구분을 명시했다.
 JS 동작·주석 값·OCR 결과는 바꾸지 않았다. 최신 인계와 실제 검사 수치는 HANDOFF 체크포인트 44를 따른다.
-남은 작업의 기준은 [CHECKLIST.md](../CHECKLIST.md)이며, **A-y 준비는 완료했고 다음 한 단위는 실제 별도 검토자 응답 수신·검증 후 고정 규약으로 비교**다.
-44구(일반32 + 진단12)의 검토자 ZIP·빈 양식은 scripts72로 재현한다. [고정 규약](BLIND_REVIEW_PROTOCOL.md)과 HANDOFF 체크포인트45를 읽는다.
-A-y 전체는 아직 미완료다. 별도 검토자의 실제 결과를 받기 전에는 일치도 수치를 만들지 않는다.
-아래 `---` 이하를 다음 도구에 전달한다. Claude도 작업자 이름과 CHECKLIST 모델 태그를 적용해 사용할 수 있다.
+최근 Claude/Codex 작업은 [대조 감사](CROSS_AGENT_AUDIT_2026-09-27.md)와 HANDOFF 체크포인트46을 따른다.
+H-5에서 병합 경로·영상 캐시 출처·A-y 안내 자산 바인딩을 보강했다. A-y 실제 응답은 아직 없고 측정은 대기다.
+검토 묶음은 v2이며 scripts72의 기본 출력 `outputs/blind_review/game_747139_ay_v2/`를 사용한다.
+원본 주석·기준4파일·OCR 결과는 보존했다. 다음 독립 단위는 **I-6 결과 클래스의 의미 계약 코드화**다.
+남은 작업 기준은 [CHECKLIST.md](../CHECKLIST.md)이며, C·D는 팀원 담당이다.
 
 ---
 
-저장소 `Pitcheezy/transition-models`, 브랜치 `codex/fix-point-label-alignment`에서 **CHECKLIST A-y의 실제 별도 검토자 응답**을 확인해라.
-준비는 끝났다. 실제 제출 파일이 없으면 결과 대기로 보고하고 수치를 만들지 않는다. 응답이 있으면 원문을 보존하고
-기준 커밋·사전 등록 규약에 따라 검사·비교·문서화·커밋·푸시한다.
+저장소 `Pitcheezy/transition-models`, 브랜치 `codex/fix-point-label-alignment`에서 **CHECKLIST I-6**을 진행해라.
+이름/순서가 비슷한 확률 벡터를 같은 의미로 처리하지 않도록 계약·검사·변환 불가 사유를 코드화한다.
+새 모델 학습이나 실제 외부 서비스 연결은 이번 범위가 아니다. 동료 저장소를 수정하거나 메시지를 보내지 않는다.
 
 ## 0. 시작 전 확인
 
@@ -28,40 +29,34 @@ git log -8 --oneline
 - `reset --hard`, `git clean`, 강제 푸시는 금지한다. 미커밋 변경·로컬 전용 커밋이 있으면 먼저 대조하고 보존한다.
 - 읽을 문서: `AGENTS.md`, `CHECKLIST.md`의 상태 표·진행 순서·A-y·교대 프로토콜,
   `docs/MLB_P0_HANDOFF.md` 최신 체크포인트, `docs/MLB_BROADCAST_TIMING.md`의 판단 프레임 규약 v2·프레임 확인 도구·리드 시간 규약.
-- 상태 표의 파일 수정 권한을 `Codex (착수 날짜, A-y 응답 검증)`로 바꾸는 작은 커밋을 먼저 푸시한다.
+- 상태 표의 파일 수정 권한을 `Codex (착수 날짜, I-6 의미 계약)`로 바꾸는 작은 커밋을 먼저 푸시한다.
   다른 작업자가 권한을 잡고 있으면 파일 수정 없이 상태를 대조한다.
 
-## 1. 다음 작업: A-y 실제 응답 수신·검증 후 비교
+## 1. 다음 작업: I-6 결과 클래스의 의미 계약 코드화
 
-준비 산출물과 판정 규칙은 [BLIND_REVIEW_PROTOCOL.md](BLIND_REVIEW_PROTOCOL.md), 고정 입력·표본·비교 방법은
-`docs/results/mlb_p0/game_747139_blind_review_protocol.json`에 있다. 기준 커밋은 `ed56f9b1ac7d943ec7ffa217fafeb31cfbbbb55d`다.
-준비와 측정은 다른 단계다. 일반32·진단12 = 44구이며 모든 응답은 아직 비어 있다.
+읽을 자료: `src/data/features.py`, `src/data/point_data.py`, `src/data/pitch_observation.py`,
+`src/inference/prepitch_contract.py`, `docs/TEAMMATE_PITCHEEZY_2026-09-22.md` §2·3·9.
+동료 계약은 고정된 검토 커밋의 사실과 최신 서비스 합의 여부를 구분한다.
+
+1. 우리10종·팀원서비스10종·연구11종의 이름/순서를 명시적으로 선언하고, 확률의 누락/추가/중복/비유한값/합계를 검사한다.
+   행이 있다면 투구 키로 정렬하며 목록 순서로 붙이지 않는다. 런타임 연결을 하지 않는 독립 모듈로 시작한다.
+2. 대응 가능한 의미와 세분화 불가능한 의미를 구분한다. 우리 Strike에는 비종결 파울이 포함되고,
+   FieldOut에는 실책 등이 섞이며 Walk에는 catcher_interf, Strikeout에는 strikeout_double_play가 포함된다.
+   팀원 서비스는 파울·병살을 따로 두고 볼넷·삼진은 카운트로 파생한다. 단순 순서 변경 또는 카운트만으로
+   완전 변환이 된다고 주장하지 않는다. 새8종으로 안타의 세부 종류를 복원하지 않는다.
+3. 잘못된 클래스 순서와 손실성 변환 요청을 명확히 거부하는 테스트를 추가한다. 현재 UI의 독립 strike/ball/foul,
+   목표 위치 미지원 상태는 유지한다. 동료의 실제 응답을 검증한 것처럼 합성 fixture를 보고하지 않는다.
+4. CHECKLIST/HANDOFF에 완료 범위·검증·남은 I-0/I-1/I-2 의존성을 적고 함께 커밋·푸시한다.
+
+A-y에 실제 별도 검토자 응답이 먼저 도착했다면 원문을 보존하고 아래처럼 검사한다.
 
 ```bash
-uv run --frozen python scripts/72_prepare_blind_review.py build
-uv run --frozen python scripts/72_prepare_blind_review.py check-package
-# 실제 응답 경로를 받은 뒤에만 실행한다.
 uv run --frozen python scripts/72_prepare_blind_review.py check-response --response <받은_JSON_경로>
 ```
 
-1. 실제 응답이 없으면 작업 대기로 남긴다. 빈 양식이나 UI 시험용 합성 기록을 재검토 결과로 사용하지 않는다.
-   검토자에게 줄 것은 생성된 `reviewer.zip`뿐이다. 이 인계문·등록 파일·원본 주석·정답 표시 이미지는 함께 보내지 않는다.
-   이번 지시만으로 외부 메시지나 파일 전송을 하지 않는다.
-2. 실제 응답 원문을 별도 경로에 보존한다. check-response의 source·manifest·protocol·package 해시,
-   투구 키/play_id·시각·판독값·검토자 정보 검사를 통과시킨다. `--require-complete`는 미검토 행을 거부한다.
-   부분 결과도 미검토를 유지하며, 형식 통과를 직접 영상 확인의 인증으로 표현하지 않는다.
-3. 원본은 AI-assisted 기준이다. human/ai/mixed·기존 정답 노출 여부를 확인하고 사람 간 일치도와 구분한다.
-   답을 이미 본 에이전트·사람을 새 독립 검토자로 간주하지 않는다. 노출된 응답을 삭제하지 말고 따로 표시한다.
-4. 등록된 비교 방법에 맞는 키 기반 비교 코드를 구현·검증한다. 일반32와 진단12를 따로 보고하고 상태 교차표,
-   공동 annotated 분모의 시각 차이/허용 폭, 필드별 양쪽 판독·한쪽 null·양쪽 null을 구분한다.
-   기준 PA1/3의 격자 밖 기록과 수동 오차·서로 다른 프레임에서의 판독 차이를 보고한다.
-   임계값·표본·기준을 결과에 맞춰 고치거나 null/null을 정답으로 계산하지 않는다.
-5. CHECKLIST/HANDOFF를 작업과 같은 커밋에 갱신하고 결과와 한계를 보고한다. 독립성 확인·실제 결과가 부족하면
-   A-y를 완료로 표시하지 않는다. 전 경기 timing·scoreboard·OCR 자료는 덮어쓰지 않는다.
-
-단계 6의 H-1·A-v·A-z는 완료됐다. E-1은 옛 수집 영상 원본 확보 후 playId 재대조가 필요하다.
-I-0·I-5는 동료 답변 대기이며, 다음 통합의 완료 기준은 한 타석 영상 → 투구 전 상태 → 동료 서비스 → 확률 표시다.
-이번 단위에 C·D 또는 외부 서비스 통합을 섞지 않는다.
+이후 [고정 비교 규약](BLIND_REVIEW_PROTOCOL.md)을 그대로 적용한다. v1 응답은 자동 변환하지 않는다.
+응답이 없으면 수치를 만들지 않는다. 기존 정답을 이미 본 이번 감사 세션이나 합성 시험은 독립 응답이 아니다.
+A-y의 선택 표본·비교 규칙·기준 주석은 바꾸지 않는다. 다른 사람에게 묶음을 보내는 것은 별도 요청이 있을 때만 한다.
 
 ## 2. 이후 영상 주석을 추가할 때의 규약
 

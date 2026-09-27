@@ -44,6 +44,8 @@ QUALITY_PATHS = [
     "tests/test_sny_scoreboard.py",
     "tests/test_ocr_reports.py",
     "tests/test_review_sheet.py",
+    "tests/test_frame_cache.py",
+    "tests/test_grab_broadcast_frames.py",
     "tests/test_append_timing_rows.py",
     "tests/test_scoreboard_evalset.py",
     "tests/test_pitch_timing_join.py",

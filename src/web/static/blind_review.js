@@ -71,8 +71,9 @@
   }
 
   function validateImport(incoming) {
+    if (!incoming || incoming.schema !== initial.schema) fail("검토자 자료 버전이 다릅니다. 안내문·화면 버전을 고정하지 않은 v1 파일은 v2 묶음에 불러올 수 없습니다.");
     if (!sameKeys(incoming, Object.keys(initial).sort())) fail("묶음 필드 구성이 다릅니다.");
-    for (const name of ["schema", "study_id", "manifest_sha256", "protocol_sha256", "package_id"]) {
+    for (const name of ["schema", "study_id", "manifest_sha256", "protocol_sha256", "reviewer_assets_sha256", "package_id"]) {
       if (incoming[name] !== initial[name]) fail(`${name}: 다른 묶음을 불러올 수 없습니다.`);
     }
     if (!sameKeys(incoming.source, Object.keys(initial.source).sort()) || Object.keys(initial.source).some((name) => incoming.source[name] !== initial.source[name])) fail("영상 출처 또는 길이가 원래 묶음과 다릅니다.");

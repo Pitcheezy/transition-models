@@ -8,6 +8,7 @@ import pytest
 
 from src.data.blind_review import (
     INPUTS,
+    REVIEWER_ASSETS,
     ROOT,
     build_package,
     check_package,
@@ -132,7 +133,7 @@ def test_response_requires_exact_identity_roster(template, change):
 
 
 @pytest.mark.parametrize(
-    "change", ["source", "package", "top-extra", "row-extra", "reviewer-extra"]
+    "change", ["source", "package", "assets", "top-extra", "row-extra", "reviewer-extra"]
 )
 def test_reject_source_changes_and_extra_fields(template, change):
     response = deepcopy(template)
@@ -140,6 +141,8 @@ def test_reject_source_changes_and_extra_fields(template, change):
         response["source"]["media_url"] += "?different"
     elif change == "package":
         response["package_id"] = "different"
+    elif change == "assets":
+        response["reviewer_assets_sha256"] = "0" * 64
     elif change == "top-extra":
         response["ground_truth"] = {}
     elif change == "row-extra":
@@ -225,3 +228,52 @@ def test_empty_selection_and_changed_protocol_are_rejected(protocol, template):
     bad["comparison"]["threshold_role"] = "Changed after review"
     with pytest.raises(ValueError, match="match package"):
         validate_response(template, template_from_protocol(bad))
+
+
+def copy_reviewer_assets(tmp_path, monkeypatch):
+    """Use isolated assets so regressions never modify the actual reviewer package."""
+    for name in REVIEWER_ASSETS:
+        content = (ROOT / name).read_text(encoding="utf-8")
+        target = tmp_path / name
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes(content.encode("utf-8"))
+    monkeypatch.setattr("src.data.blind_review.ROOT", tmp_path)
+
+
+@pytest.mark.parametrize("asset", REVIEWER_ASSETS)
+def test_asset_changes_bind_package_and_reject_previous_response(
+    protocol, tmp_path, monkeypatch, asset
+):
+    copy_reviewer_assets(tmp_path, monkeypatch)
+    original_protocol = deepcopy(protocol)
+    previous = template_from_protocol(protocol)
+    target = tmp_path / asset
+    target.write_bytes(target.read_bytes() + b"\nChanged reviewer instructions or renderer.\n")
+    current = template_from_protocol(protocol)
+    assert current["reviewer_assets_sha256"] != previous["reviewer_assets_sha256"]
+    assert current["package_id"] != previous["package_id"]
+    assert current["protocol_sha256"] == previous["protocol_sha256"]
+    assert current["rows"] == previous["rows"]
+    assert protocol == original_protocol
+    assert json.loads(package_files(protocol)["review.json"]) == current
+    with pytest.raises(ValueError, match="match package"):
+        validate_response(previous, current)
+
+
+def test_asset_binding_and_package_content_are_newline_independent(protocol, tmp_path, monkeypatch):
+    copy_reviewer_assets(tmp_path, monkeypatch)
+    lf_template = template_from_protocol(protocol)
+    lf_files = package_files(protocol)
+    for name in REVIEWER_ASSETS:
+        target = tmp_path / name
+        target.write_bytes(target.read_bytes().replace(b"\n", b"\r\n"))
+    assert template_from_protocol(protocol) == lf_template
+    assert package_files(protocol) == lf_files
+
+
+def test_unbound_v1_response_is_explicitly_rejected(template):
+    old_response = deepcopy(template)
+    old_response["schema"] = "mlb_blind_review_v1"
+    old_response.pop("reviewer_assets_sha256")
+    with pytest.raises(ValueError, match="unbound v1 responses are unsupported"):
+        validate_response(old_response, template)

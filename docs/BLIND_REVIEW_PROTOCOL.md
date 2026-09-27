@@ -53,10 +53,15 @@ uv run --frozen python scripts/72_prepare_blind_review.py check-package
 Windows에서 사용자 캐시가 막히면 `uv --cache-dir .cache/uv run --frozen ...`을 사용하고
 PowerShell에서 `$env:PYTHONIOENCODING='utf-8'`을 설정한다.
 
-산출물: `outputs/blind_review/game_747139_ay_v1/`의 `index.html`, 빈 `review.json`, `README.md`, `reviewer.zip`.
+산출물: `outputs/blind_review/game_747139_ay_v2/`의 `index.html`, 빈 `review.json`, `README.md`, `reviewer.zip`.
 ZIP에는 앞의 3파일만 있다. 서버 없이 `index.html`을 브라우저로 열 수 있고, 공식 영상을 스트리밍하거나
 출처가 확인된 동일 편집본 로컬 파일을 선택할 수 있다. 기록은 JSON으로 자주 내보낸다.
 기존 응답을 덮어쓰지 않도록 build는 변경된 파일이 있는 출력 폴더를 거부한다. 다시 빌드할 때는 다른 `--output` 경로를 사용한다.
+
+2026-09-27 H-5 감사 보강: 응답 계약은 `mlb_blind_review_v2`다. HTML·JS·README의 LF 정규화 내용 해시를
+`reviewer_assets_sha256`와 `package_id`에 포함하므로 안내가 다른 응답을 섞을 수 없다. 최초 v1 빈 묶음은
+`outputs/blind_review/game_747139_ay_v1/`에 보존했으며 사용을 중단한다. 실제 응답이 없을 때 별도 v2 폴더로 교체했다.
+기존 응답을 새 schema/hash로 수동 변환하지 않는다. 선정 목록·기준 주석·비교 규약과 study_id는 변경하지 않았다.
 
 `freeze --baseline-commit <전체 SHA>`는 최초 등록용이다. Git의 해당 커밋과 현재 4입력의 canonical 내용이 같은지 확인하고,
 이미 등록된 파일과 내용이 다르면 거부한다. 결과 수신 후 freeze를 다시 실행하거나 등록 파일을 수정하지 않는다.
@@ -72,7 +77,7 @@ uv run --frozen python scripts/72_prepare_blind_review.py check-response --respo
 ```
 
 첫 명령은 부분 결과도 남겨 검사한다. 두 번째 명령은 미검토가 있으면 실패한다.
-검사기는 source·manifest·protocol·package 해시와 전체 키/play_id 집합, 자료형, 시각 범위·순서·격자,
+검사기는 source·manifest·protocol·검토 자산·package 해시와 전체 키/play_id 집합, 자료형, 시각 범위·순서·격자,
 판독 가능성과 null의 일관성, 검토자 메타데이터를 확인한다. 행 순서는 달라도 키로 연결한다.
 **형식 통과는 실제 영상 확인이나 독립성을 인증하지 않는다.** 노출 `true`인 응답도 보존하되 독립 결과와 구분한다.
 실제 응답 수신 후 고정한 규칙으로 비교 코드를 구현·검증하고 CHECKLIST A-y를 갱신한다.
@@ -80,6 +85,6 @@ uv run --frozen python scripts/72_prepare_blind_review.py check-response --respo
 
 ## 검증 기록
 
-Python의 답 유출·출처/규약 변조·키 정합·자료형·빈 양식·파일 보호 회귀 검사를 추가했다.
-실제 실행 수치와 브라우저 검증 범위는 [HANDOFF 체크포인트 45](MLB_P0_HANDOFF.md)에 기록한다.
+Python의 답 유출·출처/규약/안내 자산 변조·키 정합·자료형·빈 양식·파일 보호 회귀 검사를 추가했다.
+최초 준비는 HANDOFF 체크포인트45, 자산 바인딩 보강은 [체크포인트46](MLB_P0_HANDOFF.md)에 기록한다.
 원본 timing·scoreboard review·OCR 데이터는 수정하지 않았다.

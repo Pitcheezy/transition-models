@@ -21,19 +21,33 @@ def load_module():
     return module
 
 
-def synthetic_frame(path, shade):
+def synthetic_frame(path, shade, media_url, t):
+    import hashlib
+
+    path.parent.mkdir(parents=True, exist_ok=True)
     image = Image.new("RGB", (1280, 720), (shade, shade, shade))
     image.paste(Image.new("RGB", (255, 110), (20, 40, 120)), (55, 25))
     image.save(path, quality=90)
+    path.with_suffix(".jpg.json").write_text(
+        json.dumps(
+            {
+                "schema": "broadcast_frame_cache_v1",
+                "media_url": media_url,
+                "frame_seconds": t,
+                "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+            }
+        )
+    )
 
 
 def test_montages_from_existing_frames(tmp_path):
     module = load_module()
     frames = []
+    media_url = "https://example.invalid/none.mp4"
     for i, t in enumerate((10.0, 10.5, 11.0)):
-        path = module.frame_path(tmp_path, "unit", t)
-        synthetic_frame(path, 60 + 40 * i)
-        assert module.grab_frame("https://example.invalid/none.mp4", t, path) is False
+        path = module.frame_path(tmp_path, "unit", t, media_url)
+        synthetic_frame(path, 60 + 40 * i, media_url, t)
+        assert module.grab_frame(media_url, t, path) is False
         frames.append((t, path))
     full_path, bug_path = module.build_montages(frames, tmp_path, "unit")
     full = Image.open(full_path)
@@ -58,7 +72,8 @@ def test_cli_reuses_frames_and_rejects_out_of_range(tmp_path):
     )
     out = tmp_path / "frames"
     out.mkdir()
-    synthetic_frame(module.frame_path(out, "cli", 5.0), 90)
+    media_url = "https://example.invalid/none.mp4"
+    synthetic_frame(module.frame_path(out, "cli", 5.0, media_url), 90, media_url, 5.0)
     run = subprocess.run(
         [
             sys.executable,

@@ -1,4 +1,4 @@
-"""Pure helpers behind ``scripts/70_refresh_ocr_reports.py`` (no subprocess, no git).
+"""Report helpers behind ``scripts/70_refresh_ocr_reports.py``.
 
 Every scoreboard OCR version has a fixed set of report files (``VERSIONS``). After the eval set
 changes, the reports are regenerated with the documented ``scripts/66`` commands and a provenance
@@ -22,7 +22,7 @@ import PIL
 
 from src.data.broadcast_timing import KEYS
 from src.data.scoreboard_evalset import LABEL_FIELDS, _same_type_value
-from src.vision.frames import frame_path
+from src.vision.frames import frame_path, resolve_frame
 
 RESULTS_DIR = "docs/results/mlb_p0"
 PROVENANCE_SCHEMA = "mlb_scoreboard_ocr_provenance_v1"
@@ -184,7 +184,7 @@ def new_row_keys(reference_rows, current_rows):
 
 
 def new_rows_comparison(evalset, predictions, keys):
-    """Per-pitch result on the given (new) pitches; only human-confirmed fields are counted.
+    """Per-pitch result on the given (new) pitches; only reviewer-confirmed fields are counted.
 
     A new pitch whose key is not in the eval set has no evaluable field and is counted in
     ``totals["new_rows_missing_from_evalset"]``: the eval set was probably not rebuilt after
@@ -278,22 +278,32 @@ def code_entry(root, path, reference_bytes):
 
 
 def frame_cache(evalset, root, frames_dir=FRAMES_DIR, frames_label=FRAMES_LABEL):
-    """Exact hashes of the cached eval-set frames; ``complete`` is false when any is missing."""
+    """Hash the frames selected by the same source-bound resolver used for prediction."""
     frames, complete = [], True
+    root = Path(root).resolve()
+    directory = root / frames_dir
+    media_url = evalset["source"]["media_url"]
     for entry in evalset["entries"]:
-        path = frame_path(frames_dir, frames_label, entry["frame_seconds"])
+        t = entry["frame_seconds"]
+        try:
+            path = resolve_frame(media_url, t, directory, frames_label, no_grab=True, root=root)
+            content = path.read_bytes()
+        except FileNotFoundError:
+            path = frame_path(directory, frames_label, t, media_url)
+            content = None
+            complete = False
+        displayed = path.relative_to(root) if path.is_relative_to(root) else path
         frame = {
             **{k: entry[k] for k in (*KEYS, "play_id", "frame_seconds")},
-            "path": path.as_posix(),
+            "path": displayed.as_posix(),
         }
-        if (Path(root) / path).exists():
-            frame.update({k: v for k, v in digest_file(root, path).items() if k != "path"})
+        if content is not None:
+            frame.update({"sha256": sha256_bytes(content), "bytes": len(content)})
         else:
-            complete = False
             frame.update({"sha256": None, "bytes": None})
         frames.append(frame)
     return {
-        "path_rule": f"{frames_dir}/{frames_label}_<frame_seconds:.2f>.jpg",
+        "path_rule": "Source/time/hash-verified resolver; actual selected path is recorded per frame",
         "frame_count": len(frames),
         "complete": complete,
         "hash_algorithm": "sha256",
@@ -526,7 +536,7 @@ def score_summary(score):
 
 
 def wrong_reads(evalset, predictions):
-    """Every human-confirmed field that a prediction row reads with a value other than its label.
+    """Every reviewer-confirmed field a prediction reads with a value other than its label.
 
     All prediction rows count, including the template-source plate appearances that a held-out
     score leaves out. Abstentions (``None``) are not wrong reads.

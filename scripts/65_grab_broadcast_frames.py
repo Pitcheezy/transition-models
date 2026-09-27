@@ -7,13 +7,13 @@ Usage::
 
 The media URL is read from the timing document (``docs/results/mlb_p0/game_747139_timing.json``
 by default), so frames always come from the inspected MP4 that the annotations are bound to.
-Per call it writes ``<out>/<label>_<t>.jpg`` (one 1280x720 frame per time), ``<label>_full.png``
+Per call it writes source-bound cached JPGs and receipts, ``<label>_full.png``
 (half-size frames in two columns, time-stamped) and ``<label>_bug.png`` (the scoreboard bug
 crop enlarged for reading the count / outs / runners / inning / score by eye).
 
 These montages are review aids for manual timing and scoreboard reading. They are not OCR and
 they produce no labels. Times are playback seconds of that MP4; never derive them from feed UTC.
-Existing frame files are reused, so re-running with the same label and times costs nothing.
+Only source/time/hash-verified frames are reused; unbound legacy files are preserved.
 """
 
 import argparse
@@ -23,7 +23,13 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from src.data.scoreboard_evalset import read_json
-from src.vision.frames import SNY_BUG_BOX, build_montages, frame_path, grab_frame  # noqa: F401
+from src.vision.frames import (  # noqa: F401
+    SNY_BUG_BOX,
+    build_montages,
+    frame_path,
+    grab_frame,
+    resolve_frame,
+)
 
 DEFAULT_TIMING = Path("docs/results/mlb_p0/game_747139_timing.json")
 DEFAULT_OUT = Path("outputs/frames")
@@ -61,8 +67,7 @@ def main():
     args.out.mkdir(parents=True, exist_ok=True)
     frames = []
     for t in args.times:
-        path = frame_path(args.out, args.label, t)
-        grab_frame(media_url, t, path, args.ffmpeg)
+        path = resolve_frame(media_url, t, args.out, args.label, ffmpeg=args.ffmpeg)
         frames.append((t, path))
     full_path, bug_path = build_montages(frames, args.out, args.label, tuple(args.bug_box))
     print(full_path)

@@ -29,12 +29,12 @@
 | 항목 | 값 | 갱신 |
 |---|---|---|
 | 브랜치 | `codex/fix-point-label-alignment` | 2026-09-22 |
-| 최신 작업 커밋 | `41c9679` (A-y 준비). 선점 `73b476d`, 기준 `ed56f9b`; A-z 본 `c4ce22d` | 2026-09-27 |
-| 파일 수정 권한 | **Codex** — 2026-09-27 Claude/Codex 대조 감사와 H-5 출처·경로·묶음 버전 보강 | 2026-09-27 |
+| 최신 작업 커밋 | 이번 커밋(H-5 감사·보강), 선점 `db73279`; A-y 준비 `41c9679`, 동결 기준 `ed56f9b` | 2026-09-27 |
+| 파일 수정 권한 | **비어 있음** — H-5 완료, 다음 I-6 의미 계약. A-y 실제 응답 대기 | 2026-09-27 |
 | 중계 시각 주석 | **297 확인 / 25 확인 불가 / 0 미검토** — 전 경기 322구 검토 완료. 완전 타석 2~4·6~15·18~19·21·23~28·30~32·34·36~38·40~46·49~51·53~55·57~63·65~69·71·74~79·81. 불가 목록·반이닝 집계·리드 분포는 [전 경기 요약](docs/MLB_BROADCAST_TIMING.md). 규약 v2, 수동 시각 | 2026-09-27 |
 | 점수판 평가셋 | timing 322 / 리뷰 297(292구 10필드 confirmed, PA 8/1·16/1·33/1·41/1·44/1 partial) / 라벨 충돌 0 / 판단 화면 불가 25 / 미검토 0 | 2026-09-27 |
 | 점수판 OCR | **현행 v2 유지**. A-15 새 17구: 새 판단 프레임 17구의 필드 정답·기권·오답: v1 119·51·0 / v2 119·51·0 / v3 117·53·0 / v4 119·51·0. unavailable 2구는 예측 대상이 아니다. 공유 280행 변화 0·반복 297행 일치·음성 거짓 판독 0. 이전 오판독은 [알려진 목록](docs/results/mlb_p0/game_747139_scoreboard_known_misreads.json)에 유지. v3 무회귀·v4 사전 등록 기준 실패 유지. 747139는 전 경기 개발 자료; 새 버전 독립 검증은 새 미검토 영상 필요 | 2026-09-27 |
-| 전체 검사 (Windows CPU) | 386 passed, 2 deselected (`check_project.py --cpu-only`, Ruff 72경로 통과) | 2026-09-27 |
+| 전체 검사 (Windows CPU) | 421 passed, 2 deselected (`check_project.py --cpu-only`, Ruff 74경로 통과) | 2026-09-27 |
 | 정책 효용 | **미입증** — delta −0.0862 runs/100, 95% CI [−0.4046, +0.2304] | 2026-09-21 |
 | Claude 모델 배정 | 항목 태그 참조 — `uv run --frozen python scripts/checklist_model.py --next` | 2026-09-22 |
 | 담당 구분 | **C·D = 팀원(외부)**, 그 외 = Claude/Codex. 통합 검증은 I절 | 2026-09-22 |
@@ -227,6 +227,7 @@ C(새 8종 확률 모델)·D(투수 프로필/추천 지원 범위)는 다른 �
       2026-09-27 (`41c9679`): 기준 `ed56f9b`, ID 해시 선정 일반 32구 + 진단 12구 = 44구(중복0) 등록. scripts72로 정답을 제외한 HTML·빈 JSON·안내 ZIP 생성/검사.
       입력/규약/묶음 해시·키/play_id·출처·null·시각·검토자 검증, 수정된 응답 덮어쓰기 차단. 외부 전송 없음.
       [고정 비교 규약·재현 명령](docs/BLIND_REVIEW_PROTOCOL.md). 기존 시각·점수판·OCR 자료 보존. 일치도 수치 없음.
+      H-5(이번 커밋): 안내문·HTML·JS 해시를 포함하는 v2 계약으로 별도 묶음 생성. v1/다른 자산 응답은 CLI·UI 모두 거부. 표본44구·기준4입력·비교 규약 불변.
 - [x] A-z. **feed UTC로 재생 초를 외삽하지 말 것**을 실제 입력 UI·CLI·문서에 명시 (`c4ce22d`).
       2026-09-27: annotation.html 이동 입력 안내·판단/릴리스 재생 초 라벨, scripts63 설명·65 --times·71 --dec/--prep/--rel 도움말 보완.
       실제 prepare 생성 HTML와 CLI 도움말 확인. JS·시간값·UTC 변환 로직은 변경 없음.
@@ -242,13 +243,12 @@ C(새 8종 확률 모델)·D(투수 프로필/추천 지원 범위)는 다른 �
 
 ```bash
 uv run --frozen python scripts/checklist_model.py --next
-uv run --frozen python scripts/72_prepare_blind_review.py build
-uv run --frozen python scripts/72_prepare_blind_review.py check-package
+git diff -- src/data/features.py src/data/pitch_observation.py src/inference/prepitch_contract.py
 ```
 
 A-y 준비는 완료했다. 실제 별도 검토자 JSON을 받은 뒤 scripts72 check-response로 검사하고 고정 규약으로 비교한다.
 응답이 없으면 일치도 수치를 만들거나 A-y를 완료로 바꾸지 않는다. 전 경기 주석은 끝났으므로 빈 후보를 다시 병합하지 않는다.
-H-1·A-v·A-z는 완료, E-1은 원본 확보 필요다. 상세 절차는 [CODEX_RESUME_PROMPT.md](docs/CODEX_RESUME_PROMPT.md).
+H-1·H-5·A-v·A-z는 완료, E-1은 원본 확보 필요다. 다음은 I-6 의미 계약이다. 상세 절차는 [CODEX_RESUME_PROMPT.md](docs/CODEX_RESUME_PROMPT.md).
 
 ## B. 점수판 인식 평가셋
 
@@ -398,7 +398,9 @@ feature builder의 고정 2022 프로필을 그 방식으로 갱신하는 코드
 
 ## H. 운영 · 엔지니어링 부채
 
-- [~] H-5. **다음 한 단위: Claude/Codex 대조 감사 후 출처·경로·묶음 버전 보강.** scripts69의 사용자 입력 경로 전달, 영상 출처별 캐시 격리, A-y 안내 자산 해시 바인딩, 검증 출처 기록 정정. `[추가되었음 · 2026-09-27 · Codex]` 〔모델: Fable 5.1〕
+- [x] H-5. **Claude/Codex 대조 감사 후 출처·경로·묶음 버전 보강 완료**(이번 커밋). `[추가되었음 · 2026-09-27 · Codex]` 〔모델: Fable 5.1〕
+      scripts69의 사용자 입력·출력 절대 경로 전파와 충돌 보호, URL/시각/해시 기반 프레임 캐시, A-y 자산 해시 v2 계약을 적용했다.
+      원본 데이터 보존·출처 정정 사이드카 추가. 현재 주석·OCR 보고 재현 일치, 전체421 passed·2 deselected. [감사 결과·차이·한계](docs/CROSS_AGENT_AUDIT_2026-09-27.md), HANDOFF46 참조.
 
 - [x] H-1. Arrow 문자열 변환 "멈춤" 원인 규명 → **멈춤이 아니라 크래시** (`bf5f06b`) — [docs/H1_ARROW_CRASH_2026-09-23.md](docs/H1_ARROW_CRASH_2026-09-23.md)
       `hashlib`/`urllib.request`(TLS 슬롯 8개) → `torch` → 첫 pyarrow 문자열 변환 순서에서 pyarrow 24 `arrow.dll`의 mimalloc이 미할당
@@ -440,8 +442,9 @@ feature builder의 고정 2022 프로필을 그 방식으로 갱신하는 코드
 - [ ] I-5. **시연 경기 결정**: 팀원 서비스 번들은 코호트 투수(2025-08-16~09-30)만 지원해 경기 747139(2024, Schwellenbach/Megill)는 `[추가되었음 · 2026-09-22 · Claude]` 〔모델: Opus 5〕 — **42경기 잠정 후보·기본안(2025-08-17 TB@SF Webb) 정리, 동료 `/metadata`·dataset.json 확인 대기**
       (2026-09-22) 지원 투수 6명은 제안 파일(`mlb_cohort_proposal.json`) 기준이라 **잠정**이다. 실제 `/metadata` 출력 또는 동료가 보낸 번들 `metadata.json`으로만 확정한다.
       400을 받는다. (a) 팀원 코호트 확장 (b) 우리 주석·평가셋을 팀원 12경기 중 하나에 추가 (c) 두 데모 분리 유지 — 사용자·팀원 결정.
-- [ ] I-6. 결과 클래스 대응표 코드화: 우리 10종 ↔ 팀원 서비스 10종 ↔ 연구 11종 매핑 + 테스트(우리 Strike의 파울 포함, `[추가되었음 · 2026-09-22 · Claude]` 〔모델: Fable 5.1〕
-      Strikeout/Walk 파생, FieldOut=out∪double_play). 투구 키 기준 정렬 검증 패턴(`validate="one_to_one"`)을 따른다.
+- [ ] I-6. **다음 한 단위: 결과 클래스 의미 계약 코드화.** 우리10종·팀원서비스10종·연구11종의 이름/순서/확률 검사와 변환 불가 조건·테스트. `[추가되었음 · 2026-09-22 · Claude]` 〔모델: Fable 5.1〕
+      우리 Strike의 파울 포함, FieldOut의 실책 등 포함, catcher_interf→Walk, strikeout_double_play→Strikeout을 명시한다.
+      카운트만으로 완전 변환하거나 새8종에서 안타 세부 종류를 복원하지 않는다. 행은 투구 키로 정렬한다. 실제 HTTP 연결·C/D 학습은 별도 합의/산출물 대기.
 
 ---
 
@@ -501,7 +504,7 @@ git fetch origin && git status --short --branch && git log -5 --oneline
 미커밋 변경이나 로컬 전용 커밋이 있으면 먼저 대조·보존한다.
 그 다음 상태 요약 표의 진행 중 `[~]` 항목이 있으면 그것부터, 없으면 **다음 한 단위**부터 이어간다.
 2026-09-26 기준 A-7~A-14(9회초까지 303구), F-3a(OCR v2)·F-3c(v3 실패 기록)·F-3d(v4 사전 등록, A-10에서 판정 실패 기록)·H-4(유지보수 도구)는 완료됐다.
-다음 한 단위는 **A-y: 실제 별도 검토자 응답 수신·검증 후 고정 규약으로 비교**다. 묶음 준비는 완료했다. 실제 독립 검토자의 결과 없이는 일치도 측정 완료로 표시하지 않는다. C·D는 팀원 담당, I-0·I-5는 답변 대기다. 새 OCR 버전(F-3e)의 독립 검증에는 새 미검토 영상이 필요하다. 공개 저장소에 비밀·개인정보를 커밋하지 않는다.
+다음 한 단위는 **I-6 결과 클래스 의미 계약**이다. H-5 감사·보강은 완료했고 A-y는 실제 별도 검토자 응답 대기다. 실제 독립 검토자의 결과 없이는 일치도 측정 완료로 표시하지 않는다. C·D는 팀원 담당, I-0·I-5는 답변 대기다. 새 OCR 버전(F-3e)의 독립 검증에는 새 미검토 영상이 필요하다. 공개 저장소에 비밀·개인정보를 커밋하지 않는다.
 [docs/CODEX_RESUME_PROMPT.md](docs/CODEX_RESUME_PROMPT.md)다.
 
 ## 유지해야 할 정보 경계

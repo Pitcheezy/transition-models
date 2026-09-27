@@ -164,13 +164,28 @@ def test_repeat_check_and_code_entry(tmp_path):
 
 
 def test_frame_cache_reports_missing_frames(tmp_path):
-    evalset = {"entries": [entry(1, 1), entry(1, 2)]}
+    from src.vision.frames import frame_path
+
+    media_url = "https://example.invalid/frame-cache.mp4"
+    evalset = {"source": {"media_url": media_url}, "entries": [entry(1, 1), entry(1, 2)]}
     frames = tmp_path / "frames"
     frames.mkdir()
-    (frames / "evalset_11.00.jpg").write_bytes(b"jpeg")
+    path = frame_path(frames, "evalset", 11.0, media_url)
+    path.parent.mkdir()
+    path.write_bytes(b"jpeg")
+    path.with_suffix(".jpg.json").write_text(
+        json.dumps(
+            {
+                "schema": "broadcast_frame_cache_v1",
+                "media_url": media_url,
+                "frame_seconds": 11.0,
+                "sha256": reports.sha256_bytes(b"jpeg"),
+            }
+        )
+    )
     cache = reports.frame_cache(evalset, tmp_path, frames_dir="frames")
     assert cache["frame_count"] == 2 and cache["complete"] is False
-    assert cache["frames"][0]["path"] == "frames/evalset_11.00.jpg"
+    assert cache["frames"][0]["path"] == path.relative_to(tmp_path).as_posix()
     assert cache["frames"][0]["bytes"] == 4 and cache["frames"][1]["sha256"] is None
 
 

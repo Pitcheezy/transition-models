@@ -418,8 +418,25 @@
     영상 전체의 재검토·독립 일치도 측정은 수행하지 않았다. 공개 저장소 협조 블라인드, 기준은 AI-assisted임을 안내한다.
     생성 묶음/응답은 outputs/blind_review 아래 Git 제외. 실제 응답을 받은 뒤 고정 규약으로 비교하는 것이 다음 한 단위다. 외부 전송 없음, 수정 권한 반납.
 
+46. 이번 커밋: **H-5 Claude/Codex 대조 감사·출처/경로/묶음 보강 완료** (Codex, 2026-09-27; 선점 `db73279`, 감사 기준 `0087671`).
+    [대조 감사](CROSS_AGENT_AUDIT_2026-09-27.md): timing322/review297 정합, PA11~82 검증280행 일치, 기존303행 보존,
+    OCR v1~v4 저장 예측 재채점이 보고서와 일치. Claude PA76/1·Codex PA81/3 검토 시트를 표본 확인했으며 새 독립 일치도 검사는 아니다.
+    Claude의 두 관점 검증과 Codex A-15 직접 검토를 구분하고, AI 검토를 사람 검증으로 해석하지 않도록 명시했다.
+    scripts69는 입력 절대 경로를 모든 자식 CLI에 전달하고 사용자 입력일 때 별도 timing/review·보고서 경로를 요구한다.
+    입력/출력/기본 파일 별칭 충돌·source·play_id 검사를 추가했으며, 다른 작업 디렉터리에서 실제 자식5명령 재생성을 검증했다.
+    scripts65/66/67/71 및 OCR provenance는 URL·시각·이미지 SHA가 일치하는 캐시만 사용한다.
+    기존 JPG는 커밋된 provenance와 정확히 일치할 때 재사용하고, 새 프레임은 URL별 폴더에 `.jpg.json` 출처 영수증과 함께 저장한다.
+    공식 원본에서 음성14프레임을 실제로 새 추출하고 `--no-grab`으로 재실행했다. 두 보고서 모두 기존 v2 음성 보고서와 JSON 동일:
+    판독불가96필드 거짓 판독0, 판독가능44필드 정답40·기권4·오답0. 새 JPG/영수증·진단 보고서는 outputs 아래 Git 제외.
+    A-y v2 계약은 LF 정규화 HTML/JS/안내문 해시를 package_id에 포함한다. v1/다른 자산 응답을 Python·실제 브라우저 양쪽에서 거부했다.
+    별도 `outputs/blind_review/game_747139_ay_v2` build/check-package 통과, 44 unreviewed·complete=false. v1 묶음·동결4입력·표본선정·비교 규약은 보존.
+    검증 헤더11개 출처 감사: A14 시작 커밋은 실제 `7990c47`로 [정정 사이드카](results/mlb_p0/game_747139_provenance_corrections_20260927.json)에 명시,
+    불확실한 날짜는 미확정으로 남겼다. 원본 JSON과 호환 human_reading 식별자는 변경하지 않았다.
+    전체 **421 passed, 2 deselected**, Ruff74경로·JS 구문 검사 통과. 집중 검사69병합27·블라인드42·캐시/호출49 통과(전체에 포함, 합산하지 않음).
+    A-y 실제 별도 응답·팀원 I-0/I-5 답변은 계속 대기다. 다음 단위는 **I-6 결과 클래스 의미 계약**. 외부 전송 없음, 수정 권한 반납.
+
 이 문서와 함께 추가되는 후속 커밋의 해시는 `git log -6 --oneline`으로 확인한다.
-최신 Windows CPU 검사: **386 passed, 2 deselected (`check_project.py --cpu-only`, Ruff 72경로 통과)**(체크포인트 45). 아래 브라우저·서비스 검증은 이전 체크포인트 기록이다.
+최신 Windows CPU 검사: **421 passed, 2 deselected (`check_project.py --cpu-only`, Ruff 74경로 통과)**(체크포인트 46). 아래 브라우저·서비스 검증은 이전 체크포인트 기록이다.
 JavaScript 구문 검사 및 Chrome 수동 입력·실제 추론·9회 이후 추천 보류 확인.
 GitHub CI 결과는 해당 커밋의 validation 워크플로에서 따로 확인한다.
 주석 모듈을 먼저 import한 새 프로세스에서도 Torch→Pandas 문자열 생성이 성공하는지
@@ -474,12 +491,12 @@ Claude/Codex의 순서는 [../CHECKLIST.md](../CHECKLIST.md)의 "진행 순서" 
 팀원 레포(SongRoute/pitcheezy) 대조 결과는 [TEAMMATE_PITCHEEZY_2026-09-22.md](TEAMMATE_PITCHEEZY_2026-09-22.md) — 우리 쪽 참조가 없는 별도
 트랙이라 I-0(인터페이스 합의)·I-5(시연 경기)·I-6(클래스 대응표)·G-3(통화)를 A/B와 병행해 먼저 진행한다.
 
-1. **영상 시간 주석: 전 경기 완료** — PA1~82, 322구(297 확인·25 불가·미검토0). A-z 입력 안내와 A-y 재검토 묶음 준비도 완료했다. 실제 다른 검토자 응답을 받아 고정 규약으로 비교하는 단계가 남아 있다.
+1. **다음 한 단위 I-6: 결과 클래스 의미 계약** — 클래스 이름/순서/확률 검사와 변환 불가 조건을 코드화한다. H-5 감사·보강은 완료했다.
+   영상 시간 주석은 PA1~82, 322구(297 확인·25 불가·미검토0) 완료. A-y는 v2 묶음 준비 완료 후 실제 다른 검토자 응답을 기다린다.
 
 ```bash
 uv run --frozen python scripts/checklist_model.py --next
-uv run --frozen python scripts/72_prepare_blind_review.py build
-uv run --frozen python scripts/72_prepare_blind_review.py check-package
+git diff -- src/data/features.py src/data/pitch_observation.py src/inference/prepitch_contract.py
 ```
 
 PA82에는 unavailable이 있으므로 `--require-pa 82`는 통과 조건이 아니다. 기존 후보 rows는 비었으므로 재병합하지 않는다.

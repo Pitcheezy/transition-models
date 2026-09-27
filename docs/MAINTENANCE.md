@@ -70,10 +70,32 @@ MPS 테스트를 그대로 유지한다. **Mac CPU CI 통과는 실제 맥미니
 | 검증된 주석 후보 병합 | scripts/69_append_timing_rows.py | 모든 투구가 verified인 타석만, dry-run 후 --write |
 | 병합 후 OCR 재채점·출처 기록(버전별) | scripts/70_refresh_ocr_reports.py | src/vision/ocr_reports.py; `--reference` = 대체되는 예측의 커밋(보통 HEAD) |
 | 투구별 판단·릴리스 검토 시트 | scripts/71_timing_review_sheet.py | src/vision/review_sheet.py; 라벨이 아닌 검토 보조 |
+| 독립 재검토 묶음·응답 검사 | scripts/72_prepare_blind_review.py | 자산 해시가 포함된 v2; 실제 응답 없이 일치도 산출 금지 |
 
 주석 한 타석을 병합한 뒤의 순서: `69 --pa N`(dry-run) → `69 --pa N --write` → `70 --reference <병합 전 커밋> --label <단위> --date <날짜> --no-grab`.
 70은 기본값으로 `docs/results/mlb_p0`의 보고서를 덮어쓴다. 실패하면 보고서 파일만 되돌리고 디렉터리 전체는 되돌리지 않는다(미커밋 주석 입력이 같은 곳에 있다).
 새 판단 프레임이 생긴 병합이면 `--no-grab`을 빼서 프레임부터 추출한다(캐시가 없으면 `--no-grab`은 실패한다).
+
+**2026-09-27 H-5 경로·캐시 보강**
+
+- scripts69에 사용자 입력을 지정하면 manifest/sources/timing/review를 모든 재생성 명령에 동일하게 전달한다.
+  다른 입력으로 작업할 때 timing과 review도 별도 파일이어야 한다. 새 출력은 timing 옆에서 파일명 접두어를 따라 생성하며
+  `--validation-output`, `--evalset-output`, `--join-output`으로 지정할 수도 있다. 기본 경기 파일이나 입력과 출력의 경로가
+  겹치면 쓰기 전에 거부한다. 후보에는 동일 source와 명시적 play_id가 필요하다.
+- scripts65·66·67·71은 영상 URL·재생 초·JPEG SHA256이 맞는 캐시만 사용한다.
+  새 JPG와 `.jpg.json` 영수증은 `outputs/frames/source_<URL의 SHA256>/` 아래에 함께 저장한다.
+  영상이 다르면 같은 시각·label도 다른 경로다. 새 파일명은 ffmpeg에 넘기는 밀리초 정밀도를 보존한다.
+- 기존 evalset JPG는 Git HEAD에 커밋된 v1~v4 provenance의 영상 URL·재생 초·해시가 실제 JPEG와 일치할 때만 재사용한다.
+  출처가 기록되지 않은 옛 검토용/음성 프레임은 이름만 믿고 옮기거나 영수증을 붙이지 않는다. 필요하면 공식 원본에서 새 캐시로 추출한다.
+  이 경우 `--no-grab`은 의도적으로 실패한다. 기존 JPG·과거 점수 보고서는 자동 변경하지 않는다.
+- 캐시를 다른 PC로 옮길 때 source 폴더의 JPG와 영수증을 같이 옮긴다. 새 위치에 있는 영수증 없는 파일은 검증된 캐시가 아니다.
+  손상됐거나 미완성인 캐시를 덮어쓰지 않으므로 복구 시 별도의 frames 디렉터리를 사용한다.
+- A-y 최초 v1 빈 묶음은 보존하되 v2를 사용한다. 기본 출력은 `outputs/blind_review/game_747139_ay_v2/`다.
+  안내문·HTML·JS가 바뀌면 응답의 묶음 ID도 달라진다. 예전 응답의 schema/hash를 수동 치환하지 않는다.
+
+감사 근거·현재 결과의 한계는 [Claude/Codex 대조 보고서](CROSS_AGENT_AUDIT_2026-09-27.md)와
+[출처 정정 기록](results/mlb_p0/game_747139_provenance_corrections_20260927.json)을 따른다.
+
 70이 오판독으로 실패하면 해당 프레임을 직접 본다. 라벨이 맞고 판독기가 틀린 경우에만 `docs/results/mlb_p0/game_747139_scoreboard_known_misreads.json`에 원인·증거·해당 버전과 함께 올리고, 판독 버전(v1~v3)은 고치지 않는다(수정은 새 버전).
 목록 밖 오판독과, 목록에 있는데 더는 같은 값으로 일어나지 않는 항목은 70이 실패로 알린다.
 사전 등록된 버전(v4: `game_747139_scoreboard_ocr_v4_preregistration.json`)은 다음 주석 병합 뒤 그 파일의 판정 기준을 그대로 적용한다:

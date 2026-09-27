@@ -14,8 +14,11 @@ Start from docs/CODEX_RESUME_PROMPT.md. A-z is complete: the annotation UI and C
 explicitly prohibit deriving playback seconds from feed UTC (handoff checkpoint 44).
 CHECKLIST A-y preparation is complete: script 72 builds a source-only reviewer package
 for 44 pitches (32 core + 12 diagnostic). Read docs/BLIND_REVIEW_PROTOCOL.md and handoff
-checkpoint 45. The next unit is receiving and validating an actual independent response,
-then comparing it under the frozen protocol. A-y remains incomplete until those results exist;
+checkpoint 45. H-5 audit and source/path/package hardening are complete (checkpoint 46;
+docs/CROSS_AGENT_AUDIT_2026-09-27.md). Reviewer packages now use asset-bound v2;
+the frozen study and labels are unchanged. The next independent unit is I-6: explicit outcome
+class contracts and rejection of unsupported conversions. A-y awaits an actual independent
+response, then comparison under the frozen protocol. It remains incomplete until those results exist;
 do not invent agreement scores or call AI-only cross-checks human inter-rater agreement.
 Scripts 58–72 cover video identity, manual inference UI, source inspection, observation
 targets, whole-game checks, manual timing, scoreboard evaluation/OCR, verified merges,

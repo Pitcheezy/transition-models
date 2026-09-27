@@ -5,8 +5,8 @@ Usage::
     uv run --frozen python scripts/67_track_scoreboard_state.py --label track --times 460 465 470 475 480 485 490 495 \
         --templates docs/results/mlb_p0/sny_digit_templates_v0.json --output docs/results/mlb_p0/game_747139_scoreboard_track_demo.json
 
-Frames are ``<frames-dir>/<label>_<t>.jpg`` (grabbed with scripts/65; missing ones are grabbed
-from the timing document's media_url). For every frame the reader's fields (null = abstain)
+Frames are verified against the timing document's media_url, playback time and image hash;
+missing verified entries are captured into a source-specific cache. The reader's fields (null = abstain)
 and the tracker's held state with per-field age / stale flags are written. This is a
 demonstration of holding state through cutaways and graphics; it is not a benchmark and the
 readings are not labels.
@@ -22,7 +22,7 @@ import numpy as np
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from src.data.scoreboard_evalset import read_json
-from src.vision.frames import frame_path, grab_frame
+from src.vision.frames import resolve_frame
 from src.vision.sny_scoreboard import DigitTemplates, read_scoreboard
 from src.vision.state_tracker import FIELDS, ScoreboardTracker
 
@@ -48,11 +48,7 @@ def main():
     from PIL import Image
 
     for t in sorted(args.times):
-        path = frame_path(args.frames_dir, args.label, t)
-        if not path.exists():
-            if args.no_grab:
-                raise FileNotFoundError(path)
-            grab_frame(media_url, t, path)
+        path = resolve_frame(media_url, t, args.frames_dir, args.label, no_grab=args.no_grab)
         reading = read_scoreboard(np.asarray(Image.open(path).convert("RGB")), templates)
         state = tracker.update(t, reading)
         rows.append(

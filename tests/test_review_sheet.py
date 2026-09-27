@@ -10,6 +10,7 @@ import pytest
 from PIL import Image
 
 from src.vision import review_sheet as rs
+from src.vision.frames import frame_path
 
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPT = ROOT / "scripts" / "71_timing_review_sheet.py"
@@ -19,6 +20,25 @@ def frame(shade):
     image = Image.new("RGB", (1280, 720), (shade, shade, shade))
     image.paste(Image.new("RGB", (255, 110), (20, 40, 120)), (55, 25))
     return image
+
+
+def bound_frame(frames, t, media_url, label="scan"):
+    import hashlib
+
+    path = frame_path(frames, label, t, media_url)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    frame(70).save(path, quality=90)
+    path.with_suffix(".jpg.json").write_text(
+        json.dumps(
+            {
+                "schema": "broadcast_frame_cache_v1",
+                "media_url": media_url,
+                "frame_seconds": t,
+                "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+            }
+        )
+    )
+    return path
 
 
 def strip_height(n, tile, per_row):
@@ -58,22 +78,27 @@ def test_compose_sheet_skips_empty_sections_and_rejects_nothing():
         rs.compose_sheet([], [], [], title="empty")
 
 
-def test_cached_frame_prefers_review_grabs_over_ocr_caches(tmp_path):
-    assert rs.cached_frame(tmp_path, 5.0) is None
+def test_cached_frame_rejects_unbound_files_and_other_sources(tmp_path):
+    media_url = "https://example.invalid/x.mp4"
+    assert rs.cached_frame(tmp_path, 5.0, media_url) is None
     (tmp_path / "evalset_5.00.jpg").write_bytes(b"x")
-    assert rs.cached_frame(tmp_path, 5.0).name == "evalset_5.00.jpg"
     (tmp_path / "neg_5.00.jpg").write_bytes(b"x")
     (tmp_path / "p22_scan_5.00.jpg").write_bytes(b"x")
-    assert rs.cached_frame(tmp_path, 5.0).name == "p22_scan_5.00.jpg"
-    assert rs.cached_frame(tmp_path, 5.5) is None
+    assert rs.cached_frame(tmp_path, 5.0, media_url) is None
+    bound_frame(tmp_path, 5.0, "https://example.invalid/other.mp4")
+    assert rs.cached_frame(tmp_path, 5.0, media_url) is None
+    expected = bound_frame(tmp_path, 5.0, media_url)
+    assert rs.cached_frame(tmp_path, 5.0, media_url) == expected
+    assert rs.cached_frame(tmp_path, 5.5, media_url) is None
 
 
 def test_cli_reuses_cached_frames_without_ffmpeg(tmp_path):
     frames = tmp_path / "frames"
     frames.mkdir()
+    media_url = "https://example.invalid/x.mp4"
     for t in (20.0, 20.25):
-        frame(70).save(frames / f"scan_{t:.2f}.jpg", quality=90)
-    frame(70).save(frames / "evalset_21.00.jpg", quality=90)
+        bound_frame(frames, t, media_url)
+    bound_frame(frames, 21.0, media_url, label="evalset")
     timing = tmp_path / "timing.json"
     timing.write_text(
         json.dumps(
@@ -102,7 +127,7 @@ def test_cli_reuses_cached_frames_without_ffmpeg(tmp_path):
     run = subprocess.run(command, cwd=ROOT, capture_output=True, text=True, encoding="utf-8")
     assert run.returncode == 0, run.stderr
     sheet = tmp_path / "out" / "unit_review_sheet.png"
-    assert sheet.exists() and "scan_20.25.jpg" in run.stdout and "evalset_21.00.jpg" in run.stdout
+    assert sheet.exists() and "scan_20.250.jpg" in run.stdout and "evalset_21.000.jpg" in run.stdout
     assert Image.open(sheet).width == 2 * rs.BUG_TILE[0] + rs.GAP  # widest strip
     # a time without any cached frame needs ffmpeg
     run = subprocess.run(command + ["--prep", "22"], cwd=ROOT, capture_output=True, text=True)

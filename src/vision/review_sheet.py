@@ -6,11 +6,10 @@ frames (small) and release crops of the pitcher box. It is a review aid for manu
 produces no labels.
 """
 
-from pathlib import Path
-
 from PIL import Image, ImageDraw
 
 from src.vision.frames import SNY_BUG_BOX
+from src.vision.frames import cached_frame as verified_cached_frame
 
 DEFAULT_PITCHER_BOX = (430, 190, 850, 610)
 DECISION_TILE, DECISION_PER_ROW = (640, 360), 3
@@ -20,18 +19,11 @@ RELEASE_TILE, RELEASE_PER_ROW = (252, 252), 5
 GAP = 6
 HEADER = 24
 TITLE = 28
-SKIP_PREFIXES = ("evalset_", "neg_")
 
 
-def cached_frame(frames_dir, t, skip_prefixes=SKIP_PREFIXES):
-    """An existing ``<frames_dir>/*_<t>.jpg`` for the same second, or ``None``.
-
-    Frames grabbed for eye review are preferred; eval-set and negatives frames (``skip_prefixes``)
-    are used only when nothing else exists, so review batches never depend on the OCR caches.
-    """
-    matches = sorted(Path(frames_dir).glob(f"*_{t:.2f}.jpg"))
-    preferred = [p for p in matches if not p.name.startswith(skip_prefixes)]
-    return (preferred or matches or [None])[0]
+def cached_frame(frames_dir, t, media_url):
+    """Return a frame only after checking its exact source, playback time and image hash."""
+    return verified_cached_frame(frames_dir, media_url, t)
 
 
 def _stamp(image, text):

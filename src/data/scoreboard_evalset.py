@@ -2,11 +2,14 @@
 
 Inputs
 ------
-* ``mlb_broadcast_timing_v1`` — human-verified decision frames (playback seconds) per pitch.
-* ``mlb_scoreboard_review_v1`` — for a timed pitch, what a human reviewer *read on the
+* ``mlb_broadcast_timing_v1`` — manually reviewed decision frames (playback seconds) per pitch.
+* ``mlb_scoreboard_review_v1`` — for a timed pitch, what the recorded reviewer *read on the
   scoreboard bug* at that decision frame: a readability grade and one observed value per
   label field (``null`` = that field was not legible in the frame). Reviews are typed from
   the video; they are never OCR output and never copied from the manifest.
+  Reviewers may be AI sessions: the v1 ``human_reading`` identifier and output notes are
+  historical compatibility strings, not proof of human review. Consult reviewer metadata
+  and docs/results/mlb_p0/game_747139_provenance_corrections_20260927.json for this game.
 * identity manifest — the recorded pre-pitch state (Statcast / MLB feed) = label metadata.
 
 A field is **confirmed** when the reviewer's observed value equals the recorded label. Only
@@ -39,6 +42,7 @@ SCHEMA = "mlb_scoreboard_evalset_v2"
 SCORE_SCHEMA = "mlb_scoreboard_evalset_score_v2"
 REVIEW_SCHEMA = "mlb_scoreboard_review_v1"
 LABEL_SOURCE = "manifest_pre_state_recorded_metadata_not_ocr"
+# Keep the v1 literal for frozen artifacts; it does not certify the reviewer as human.
 OBSERVED_SOURCE = "human_reading_of_scoreboard_bug_at_decision_frame_not_ocr"
 LABEL_FIELDS = (
     "balls",
@@ -121,7 +125,7 @@ def validate_review(review, manifest, timing):
         if review.get(field) != timing.get(field):
             raise ValueError(f"Scoreboard review {field} does not match the timing annotations")
     if review.get("observed_source") != OBSERVED_SOURCE:
-        raise ValueError("Scoreboard review must declare observed values as human readings")
+        raise ValueError("Scoreboard review must declare the expected v1 observed_source")
     rows = {tuple(r[k] for k in KEYS): r for r in timing["annotations"]}
     labels = {tuple(p[k] for k in KEYS): _labels(p["pre_state"]) for p in manifest["pitches"]}
     reviews = {}

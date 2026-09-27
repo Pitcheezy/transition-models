@@ -11,10 +11,15 @@ from zipfile import ZIP_DEFLATED, ZipFile
 from src.data.broadcast_timing import KEYS, timing_context, validate_annotations
 from src.data.scoreboard_evalset import LABEL_FIELDS, validate_review
 
-SCHEMA = "mlb_blind_review_v1"
+SCHEMA = "mlb_blind_review_v2"
 STUDY = "game_747139_ay_v1"
 SEED = "ay-v1|20260927"
 ROOT = Path(__file__).resolve().parents[2]
+REVIEWER_ASSETS = (
+    "src/web/static/blind_review.html",
+    "src/web/static/blind_review.js",
+    "docs/templates/BLIND_REVIEW_README.md",
+)
 INPUTS = {
     name: f"docs/results/mlb_p0/game_747139_{suffix}.json"
     for name, suffix in (
@@ -49,6 +54,26 @@ def canonical_hash(value):
     return hashlib.sha256(
         json.dumps(value, sort_keys=True, ensure_ascii=False, allow_nan=False).encode("utf-8")
     ).hexdigest()
+
+
+def _reviewer_assets():
+    """Read reviewer instructions and renderer with platform-independent newlines."""
+    return {
+        path: (ROOT / path).read_bytes().decode("utf-8").replace("\r\n", "\n").replace("\r", "\n")
+        for path in REVIEWER_ASSETS
+    }
+
+
+def _reviewer_assets_hash(assets):
+    """Bind the normalized content of every reviewer asset, including instructions."""
+    import hashlib
+
+    return canonical_hash(
+        {
+            path: hashlib.sha256(content.encode("utf-8")).hexdigest()
+            for path, content in assets.items()
+        }
+    )
 
 
 def read_json(path):
@@ -151,6 +176,11 @@ def freeze_protocol(inputs, baseline_commit):
 
 def template_from_protocol(protocol):
     """Use an explicit allow-list, never serialize the reference or organizer document."""
+    return _template_from_protocol(protocol, _reviewer_assets_hash(_reviewer_assets()))
+
+
+def _template_from_protocol(protocol, reviewer_assets_sha256):
+    """Bind a blank response to a frozen protocol and the reviewed asset version."""
     from src.data.mlb_sources import validate_mlb_url
 
     if protocol.get("schema") != "mlb_blind_review_protocol_v1" or protocol["study_id"] != STUDY:
@@ -190,6 +220,7 @@ def template_from_protocol(protocol):
         "study_id": protocol["study_id"],
         "protocol_sha256": canonical_hash(protocol),
         "manifest_sha256": protocol["manifest_sha256"],
+        "reviewer_assets_sha256": reviewer_assets_sha256,
         "source": source,
         "identities": [index[k] for k in sorted(index)],
     }
@@ -242,6 +273,10 @@ def _observed(observed):
 
 def validate_response(document, template, require_complete=False):
     """Validate source, exact identities and typed readings without scoring agreement."""
+    if not isinstance(document, dict) or document.get("schema") != SCHEMA:
+        raise ValueError(
+            f"Expected asset-bound response schema {SCHEMA}; unbound v1 responses are unsupported"
+        )
     _fields(document, template, "document")
     for name in set(template) - {"reviewer", "rows"}:
         if canonical_hash(document[name]) != canonical_hash(template[name]):
@@ -328,18 +363,19 @@ def validate_response(document, template, require_complete=False):
 
 def package_files(protocol):
     """Render only reviewer files; organizer selection and reference answers stay out."""
-    template = template_from_protocol(protocol)
+    assets = _reviewer_assets()
+    template = _template_from_protocol(protocol, _reviewer_assets_hash(assets))
     validate_response(template, template)
     data = json.dumps(template, ensure_ascii=False, indent=2, allow_nan=False)
-    html = (ROOT / "src/web/static/blind_review.html").read_text(encoding="utf-8")
-    js = (ROOT / "src/web/static/blind_review.js").read_text(encoding="utf-8")
+    html = assets["src/web/static/blind_review.html"]
+    js = assets["src/web/static/blind_review.js"]
     html = html.replace("__BLIND_REVIEW_JS__", js).replace(
         "__BLIND_REVIEW_JSON__", data.replace("<", "\\u003c")
     )
     return {
         "index.html": html.encode("utf-8"),
         "review.json": (data + "\n").encode("utf-8"),
-        "README.md": (ROOT / "docs/templates/BLIND_REVIEW_README.md").read_bytes(),
+        "README.md": assets["docs/templates/BLIND_REVIEW_README.md"].encode("utf-8"),
     }
 
 
