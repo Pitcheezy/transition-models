@@ -52,7 +52,15 @@ may seed a development example, but that is explicitly a replay/manual mode,
 not evidence of video recognition. Broadcast offsets and release instants remain
 null until individually annotated; UTC feed timestamps are not playback offsets.
 Script 63 validates separate `mlb_broadcast_timing_v1` annotations against the exact
-manifest and inspected full-game source. Eight pitches currently have manual timing;
-one lacks an established pre-delivery decision frame. A complete three-pitch PA is
-available. These are approximate visual annotations, not automatic synchronization
-or OCR labels. See `docs/MLB_BROADCAST_TIMING.md` for uncertainty and coverage.
+manifest and inspected full-game source. These are approximate visual annotations,
+not automatic synchronization or OCR labels. See `docs/MLB_BROADCAST_TIMING.md` for
+current uncertainty and coverage; the edited game has now been reviewed throughout.
+
+## Player identity evidence
+
+Manifest player IDs are recorded feed/Statcast metadata, not IDs read from pixels.
+The [player identity protocol](PLAYER_IDENTITY_PROTOCOL.md) keeps literal screen-name
+readings separate from a frozen game roster and reference pitcher/batter IDs.
+Unique name-to-roster matching is an explicit replay lookup; ambiguous, absent or stale
+evidence remains an abstention. The final feed does not prove real-time availability.
+This preparation does not enable an automatic player recognizer or change runtime inputs.

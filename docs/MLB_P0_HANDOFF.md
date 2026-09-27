@@ -447,8 +447,22 @@
     MLB_P0 안내의 낡은 주석 수치를 297확인/25불가/0미검토로 맞췄다. 다음은 **F-4a 선수 식별 규약·평가 준비**.
     A-y 실제 독립 응답과 I-0/I-5 합의·산출물은 대기하며 동료 C/D 구현·외부 전송은 수행하지 않았다.
 
+48. 이번 커밋(후속 해시 고정): **F-4a 첫 단위: 선수 식별 규약·PA6 평가 준비 완료** (Codex, 2026-09-27; 선점 `bf706dd`).
+    [식별 규약](PLAYER_IDENTITY_PROTOCOL.md), `src/data/player_identity.py`, scripts73 build/check/summary와 PA6 수동 review/evalset을 추가했다.
+    실제 판단 화면 481/525.50/548.95/576.50/611.45/663.50초를 직접 확인했다. 6프레임×2역할=12기회 중 투수6·타자5의 이름을 읽었고,
+    첫 타자1은 배너 부재로 기권했다. 470초 소개 이름은 부분 가림으로 문맥 기록만 남겼다. 이후 이름으로 첫 타자를 채우지 않았다.
+    전체 경기의 고정 이름 사전에서 정확 일치로 대응한11건은 최종 feed 기준과 일치, 불일치0·held0·기권1이다.
+    투구 키·play_id·입력/이미지 해시로 연결하며 정답 ID/기대 역할로 이름 후보를 줄이지 않는다. 타순은 화면 부가 정보만 보존한다.
+    최종 feed의 일반 프로필 등번호/나이는 경기 이후 정보일 수 있고, 최종 타순도 시작 라인업이 아니다. 당시 실시간 명단 가용성은 미검증이다.
+    모든 연속성은 unknown이다. 모호성/부분 이름/교체 타석/미래 증거를 보수적으로 거부하고, 상태 유지는 같은 타석의 확인된 연속성과 신선도에서만 허용한다.
+    교차 검토에서 발견한 동일 시각 다른 캐시 파일의 거짓 거부, 모순된 관찰 팀으로의 상태 유지, 출력 경로의 입력 덮어쓰기를 수정했다.
+    원본 feed와7이미지에 대한 전체 재생성·출처/바이트 검사, 원본 feed 없는 구조 재계산, 다른 작업 폴더에서 실행을 각각 검증했다.
+    신규32검사 통과(전체에 포함), 전체 **522 passed, 2 deselected**, Ruff79경로 통과.
+    AI-assisted 비블라인드 개발 자료이며 자동 선수 OCR·추적·실시간 동기화 성능이 아니다. F-4a는 부분 완료, 다음 한 단위는 **SNY 이름 패널 판독 기준선**.
+    기존 timing/review/OCR 결과·UI는 보존했다. A-y 실제 독립 응답과 I-0/I-5 답변은 대기, 외부 전송 없음, 수정 권한 반납.
+
 이 문서와 함께 추가되는 후속 커밋의 해시는 `git log -6 --oneline`으로 확인한다.
-최신 Windows CPU 검사: **490 passed, 2 deselected (`check_project.py --cpu-only`, Ruff 76경로 통과)**(체크포인트 47). 아래 브라우저·서비스 검증은 이전 체크포인트 기록이다.
+최신 Windows CPU 검사: **522 passed, 2 deselected (`check_project.py --cpu-only`, Ruff 79경로 통과)**(체크포인트 48). 아래 브라우저·서비스 검증은 이전 체크포인트 기록이다.
 JavaScript 구문 검사 및 Chrome 수동 입력·실제 추론·9회 이후 추천 보류 확인.
 GitHub CI 결과는 해당 커밋의 validation 워크플로에서 따로 확인한다.
 주석 모듈을 먼저 import한 새 프로세스에서도 Torch→Pandas 문자열 생성이 성공하는지
@@ -503,12 +517,12 @@ Claude/Codex의 순서는 [../CHECKLIST.md](../CHECKLIST.md)의 "진행 순서" 
 팀원 레포(SongRoute/pitcheezy) 대조 결과는 [TEAMMATE_PITCHEEZY_2026-09-22.md](TEAMMATE_PITCHEEZY_2026-09-22.md) — 우리 쪽 참조가 없는 별도
 트랙이라 I-0(인터페이스 합의)·I-5(시연 경기)·I-6(클래스 대응표)·G-3(통화)를 A/B와 병행해 먼저 진행한다.
 
-1. **다음 한 단위 F-4a: 선수 식별 규약·평가 준비** — feed 기준값과 화면 관찰값을 구분하고, 한 타석의 실제 배너 확인과 작은 평가 규약부터 진행한다. H-5 감사·보강과 I-6 의미 계약은 완료했다.
+1. **다음 한 단위 F-4a: SNY 선수 이름 패널 판독 기준선** — 규약·PA6 수동 평가 준비는 완료했다. 이 개발 자료의 원문을 보존한 채 실제 이름 판독 경로와 별도 예측 보고서를 만든다. 자동 인식·F-4a 전체는 미완료다.
    영상 시간 주석은 PA1~82, 322구(297 확인·25 불가·미검토0) 완료. A-y는 v2 묶음 준비 완료 후 실제 다른 검토자 응답을 기다린다.
 
 ```bash
 uv run --frozen python scripts/checklist_model.py --next
-git diff -- src/data/mlb_video.py src/vision/state_tracker.py
+uv run --frozen python scripts/73_build_player_identity_evalset.py check --verify-frames
 ```
 
 PA82에는 unavailable이 있으므로 `--require-pa 82`는 통과 조건이 아니다. 기존 후보 rows는 비었으므로 재병합하지 않는다.

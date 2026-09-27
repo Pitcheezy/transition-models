@@ -93,6 +93,21 @@ def _legacy_receipts(root):
     return receipts
 
 
+def verify_cached_frame(path, media_url, t, *, root=ROOT):
+    """Verify this exact file's source/time/hash without selecting another cached image."""
+    second = _seek(t)
+    if not isinstance(media_url, str) or not media_url.strip():
+        raise ValueError("A media URL is required to bind cached frames")
+    path = Path(path)
+    if _verified(path, media_url, t):
+        return True
+    legacy = _legacy_receipts(str(Path(root).resolve())).get((media_url, second), ())
+    try:
+        return (path.name, _sha256(path.read_bytes())) in legacy
+    except OSError:
+        return False
+
+
 def cached_frame(out, media_url, t, label=None, root=ROOT):
     """Reuse only source/time/hash-verified frames, including recorded legacy eval frames."""
     second = _seek(t)
