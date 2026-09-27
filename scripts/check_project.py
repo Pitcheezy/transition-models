@@ -12,6 +12,7 @@ QUALITY_PATHS = [
     "src/data/operational.py",
     "src/data/mlb_video.py",
     "src/data/broadcast_timing.py",
+    "src/data/blind_review.py",
     "src/data/mlb_sources.py",
     "src/data/pitch_observation.py",
     "src/evaluation/point_metrics.py",
@@ -33,6 +34,7 @@ QUALITY_PATHS = [
     "tests/test_maintenance.py",
     "tests/test_mlb_video.py",
     "tests/test_broadcast_timing.py",
+    "tests/test_blind_review.py",
     "tests/test_mlb_sources.py",
     "tests/test_pitch_observation.py",
     "tests/test_prepitch_contract.py",
@@ -49,7 +51,7 @@ QUALITY_PATHS = [
     *[
         p.relative_to(ROOT).as_posix()
         for p in sorted((ROOT / "scripts").glob("*.py"))
-        if p.name[:2].isdigit() and 48 <= int(p.name[:2]) <= 71
+        if p.name[:2].isdigit() and 48 <= int(p.name[:2]) <= 72
     ],
 ]
 

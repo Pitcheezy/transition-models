@@ -405,8 +405,21 @@
     350 passed, 2 deselected (`check_project.py --cpu-only`, Ruff 69경로 통과). A-15 이후 데이터 파일 변경 0. 수정 권한 반납. 다음은 **A-y: 다른 검토자용 블라인드 재검토 묶음 준비**다.
     실제 별도 검토자의 결과를 받기 전에는 일치도 측정 완료나 사람 간 일치도 수치를 주장하지 않는다.
 
+45. 이번 커밋: **A-y 준비 완료 / 실제 별도 검토자 결과 대기** (Codex, 2026-09-27; 선점 `73b476d`).
+    기준 `ed56f9b1ac7d943ec7ffa217fafeb31cfbbbb55d`의 4입력 canonical 해시·원본 영상 출처·비교 규칙을
+    [등록 JSON](results/mlb_p0/game_747139_blind_review_protocol.json)에 고정했다. 키 해시 선정 일반32 + 진단12 = 44구, 겹침0.
+    [비교 규약·명령](BLIND_REVIEW_PROTOCOL.md), scripts72 freeze/build/check-package/check-response와 입력 검증 모듈을 추가했다.
+    reviewer.zip에는 source-only index.html·빈 review.json·독립 README만 포함한다. 기존 시각/판정/점수판 답/노트/그룹 정보는 제외한다.
+    manifest·protocol·package 해시, 키/play_id·출처·시각·자료형·null·검토자 검증 및 수정된 응답 덮어쓰기 차단을 구현했다.
+    `build`/`check-package`/빈 양식 `check-response` 통과(44 unreviewed, complete=false). 기준 4파일의 git diff 0, OCR 재실행·수정 없음.
+    신규 Python 회귀검사36 통과, 전체 **386 passed, 2 deselected**, Ruff72경로 통과. 체크리스트 모델 가드4 통과.
+    JS 구문 검사·에이전트의 Node DOM 모의27건 통과. 실제 IAB에서 원본 영상 로딩·12.25초 탐색·투구 이동·메모 저장/복원을 확인했고,
+    빈 시각 저장 및 최종 빌드의 검토자 정보 없는 unavailable 저장이 차단됐다. 합성 UI 시험은 결과로 내보내지 않았고 브라우저 임시 기록을 폐기했다.
+    영상 전체의 재검토·독립 일치도 측정은 수행하지 않았다. 공개 저장소 협조 블라인드, 기준은 AI-assisted임을 안내한다.
+    생성 묶음/응답은 outputs/blind_review 아래 Git 제외. 실제 응답을 받은 뒤 고정 규약으로 비교하는 것이 다음 한 단위다. 외부 전송 없음, 수정 권한 반납.
+
 이 문서와 함께 추가되는 후속 커밋의 해시는 `git log -6 --oneline`으로 확인한다.
-최신 Windows CPU 검사: **350 passed, 2 deselected (`check_project.py --cpu-only`, Ruff 69경로 통과)**(체크포인트 44). 아래 브라우저·서비스 검증은 이전 체크포인트 기록이다.
+최신 Windows CPU 검사: **386 passed, 2 deselected (`check_project.py --cpu-only`, Ruff 72경로 통과)**(체크포인트 45). 아래 브라우저·서비스 검증은 이전 체크포인트 기록이다.
 JavaScript 구문 검사 및 Chrome 수동 입력·실제 추론·9회 이후 추천 보류 확인.
 GitHub CI 결과는 해당 커밋의 validation 워크플로에서 따로 확인한다.
 주석 모듈을 먼저 import한 새 프로세스에서도 Torch→Pandas 문자열 생성이 성공하는지
@@ -461,12 +474,12 @@ Claude/Codex의 순서는 [../CHECKLIST.md](../CHECKLIST.md)의 "진행 순서" 
 팀원 레포(SongRoute/pitcheezy) 대조 결과는 [TEAMMATE_PITCHEEZY_2026-09-22.md](TEAMMATE_PITCHEEZY_2026-09-22.md) — 우리 쪽 참조가 없는 별도
 트랙이라 I-0(인터페이스 합의)·I-5(시연 경기)·I-6(클래스 대응표)·G-3(통화)를 A/B와 병행해 먼저 진행한다.
 
-1. **영상 시간 주석: 전 경기 완료** — PA1~82, 322구(297 확인·25 불가·미검토0). A-z 입력 안내도 완료했다. 다음은 A-y의 블라인드 재검토 묶음 준비이며 실제 다른 검토자 판정을 받아야 일치도를 측정한다.
+1. **영상 시간 주석: 전 경기 완료** — PA1~82, 322구(297 확인·25 불가·미검토0). A-z 입력 안내와 A-y 재검토 묶음 준비도 완료했다. 실제 다른 검토자 응답을 받아 고정 규약으로 비교하는 단계가 남아 있다.
 
 ```bash
 uv run --frozen python scripts/checklist_model.py --next
-uv run --frozen python scripts/63_annotate_broadcast.py check --annotations docs/results/mlb_p0/game_747139_timing.json --require-pa 81
-uv run --frozen python scripts/64_build_scoreboard_evalset.py check
+uv run --frozen python scripts/72_prepare_blind_review.py build
+uv run --frozen python scripts/72_prepare_blind_review.py check-package
 ```
 
 PA82에는 unavailable이 있으므로 `--require-pa 82`는 통과 조건이 아니다. 기존 후보 rows는 비었으므로 재병합하지 않는다.

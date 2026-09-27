@@ -12,12 +12,14 @@ and eventually pitch-type/target-location recommendations. MLB is the first deli
 target; KBO comes later. Read docs/MLB_P0.md and docs/MLB_P0_HANDOFF.md for current work.
 Start from docs/CODEX_RESUME_PROMPT.md. A-z is complete: the annotation UI and CLI help
 explicitly prohibit deriving playback seconds from feed UTC (handoff checkpoint 44).
-The next unit is preparation within CHECKLIST A-y: build a blind re-review package for a
-different reviewer. A-y remains incomplete until actual independent review results exist;
+CHECKLIST A-y preparation is complete: script 72 builds a source-only reviewer package
+for 44 pitches (32 core + 12 diagnostic). Read docs/BLIND_REVIEW_PROTOCOL.md and handoff
+checkpoint 45. The next unit is receiving and validating an actual independent response,
+then comparing it under the frozen protocol. A-y remains incomplete until those results exist;
 do not invent agreement scores or call AI-only cross-checks human inter-rater agreement.
-Scripts 58–71 cover video identity, manual inference UI, source inspection, observation
+Scripts 58–72 cover video identity, manual inference UI, source inspection, observation
 targets, whole-game checks, manual timing, scoreboard evaluation/OCR, verified merges,
-OCR report refresh, and timing review sheets.
+OCR report refresh, timing review sheets, and blind reviewer packages.
 Read docs/MLB_BROADCAST_TIMING.md: all 322 pitches reviewed, with 297 timed,
 25 unavailable, and 0 unreviewed. A-15 (PA 79–82) completes this game's manual review;
 see handoff checkpoint 43 for the verification results and limitations.
