@@ -49,6 +49,13 @@ FieldOut에 실책 등 비아웃 사건이 섞여 있고, 그쪽 서비스 10종
 팀원 서비스 스택은 10이 최소 6곳에 하드코딩돼 있어(`minimal_pitch_service.Engine`, `planner`,
 `refresh_pitch_service`, 평가자들) 8종 헤드는 드롭인이 아니다.
 
+**2026-09-27 I-6 코드 대조 보완:** 고정 검토 커밋 `9d096940b6fe065051979cd7ef4dbfde006e35c6`의
+실제 코드에서 `foul_bunt`는 서비스10에서 2스트라이크 때 strike가 되고, 관찰8에서는 foul로 남는다.
+우리 `catcher_interf→Walk`와 연구11의 `hit_into_play+catcher_interf→in_play_out`도 다르다.
+연구11의 `in_play_out`은 안타 이외 인플레이의 미지 사건까지 합치고, 서비스 out/double_play는 사건 지원 범위가 더 좁다.
+위 표의 같은 이름·의미 대응을 같은 모집단의 확률 또는 자동 변환으로 해석하면 안 된다.
+[버전별 계약·실제 반례·사용법](OUTCOME_CLASS_CONTRACTS.md)을 따른다. 최신 서비스 합의나 실제 응답 검증은 별도 대기다.
+
 ## 4. C·D 이관에 대한 사실 확인
 
 ### C (새 8종 확률 모델)

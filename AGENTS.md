@@ -16,8 +16,11 @@ CHECKLIST A-y preparation is complete: script 72 builds a source-only reviewer p
 for 44 pitches (32 core + 12 diagnostic). Read docs/BLIND_REVIEW_PROTOCOL.md and handoff
 checkpoint 45. H-5 audit and source/path/package hardening are complete (checkpoint 46;
 docs/CROSS_AGENT_AUDIT_2026-09-27.md). Reviewer packages now use asset-bound v2;
-the frozen study and labels are unchanged. The next independent unit is I-6: explicit outcome
-class contracts and rejection of unsupported conversions. A-y awaits an actual independent
+the frozen study and labels are unchanged. I-6 explicit outcome contracts and rejection of
+unsupported conversions are complete (checkpoint 47; docs/OUTCOME_CLASS_CONTRACTS.md).
+They are standalone guards, not a live teammate-service integration. The next independent
+unit is F-4a: source-aware pitcher/batter identity rules and a small evaluation preparation.
+A-y awaits an actual independent
 response, then comparison under the frozen protocol. It remains incomplete until those results exist;
 do not invent agreement scores or call AI-only cross-checks human inter-rater agreement.
 Scripts 58–72 cover video identity, manual inference UI, source inspection, observation

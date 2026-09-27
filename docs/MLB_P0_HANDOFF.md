@@ -435,8 +435,20 @@
     전체 **421 passed, 2 deselected**, Ruff74경로·JS 구문 검사 통과. 집중 검사69병합27·블라인드42·캐시/호출49 통과(전체에 포함, 합산하지 않음).
     A-y 실제 별도 응답·팀원 I-0/I-5 답변은 계속 대기다. 다음 단위는 **I-6 결과 클래스 의미 계약**. 외부 전송 없음, 수정 권한 반납.
 
+47. 이번 커밋: **I-6 결과 클래스 의미 계약 코드화** (Codex, 2026-09-27; 선점 `bc8e92b`).
+    [계약 안내](OUTCOME_CLASS_CONTRACTS.md)와 `src/inference/outcome_contracts.py`에서 우리10종·팀원서비스10종·연구11종·관찰8의 schema/순서/의미를 고정했다.
+    동료5소스는 로컬 clone의 고정 `9d096940b6fe065051979cd7ef4dbfde006e35c6` blob과 추출본을 대조했다. 최신 원격/실제 서비스 응답을 검사한 것은 아니다.
+    확률 객체는 정확한 키, 배열은 명시된 정확한 class_names로 검사한다. 비유한값/bool/범위/합계 오류를 거부하며 재정규화하지 않는다.
+    같은 schema의 표현 이동만 허용하고 다른 schema 전체의 자동 변환은 사유와 함께 거부한다. 의미 대응표는 변환 행렬이 아니다.
+    포수 타격 방해·파울 번트 삼진·실책·미지 인플레이·행정 콜 반례를 명시했다. 투구 키·play_id 1:1 정렬도 목록 순서와 독립적으로 검사한다.
+    합성 입력 기반 계약 검사이며 새 모델·확률 품질·실연동 성과가 아니다. UI의 독립 strike/ball/foul·목표 위치 미지원 상태는 유지했다.
+    신규69검사·문서 합성 예제 통과, 전체 **490 passed, 2 deselected**, Ruff76경로 통과. 교차 검토에서 잡은 무순서 set 수용을 수정했고
+    길이10·합계1의 set/frozenset/dict_keys가 거부됨을 별도 재현했다. 기존 UI·주석·OCR 산출물 변경0. 수정 권한 반납.
+    MLB_P0 안내의 낡은 주석 수치를 297확인/25불가/0미검토로 맞췄다. 다음은 **F-4a 선수 식별 규약·평가 준비**.
+    A-y 실제 독립 응답과 I-0/I-5 합의·산출물은 대기하며 동료 C/D 구현·외부 전송은 수행하지 않았다.
+
 이 문서와 함께 추가되는 후속 커밋의 해시는 `git log -6 --oneline`으로 확인한다.
-최신 Windows CPU 검사: **421 passed, 2 deselected (`check_project.py --cpu-only`, Ruff 74경로 통과)**(체크포인트 46). 아래 브라우저·서비스 검증은 이전 체크포인트 기록이다.
+최신 Windows CPU 검사: **490 passed, 2 deselected (`check_project.py --cpu-only`, Ruff 76경로 통과)**(체크포인트 47). 아래 브라우저·서비스 검증은 이전 체크포인트 기록이다.
 JavaScript 구문 검사 및 Chrome 수동 입력·실제 추론·9회 이후 추천 보류 확인.
 GitHub CI 결과는 해당 커밋의 validation 워크플로에서 따로 확인한다.
 주석 모듈을 먼저 import한 새 프로세스에서도 Torch→Pandas 문자열 생성이 성공하는지
@@ -491,12 +503,12 @@ Claude/Codex의 순서는 [../CHECKLIST.md](../CHECKLIST.md)의 "진행 순서" 
 팀원 레포(SongRoute/pitcheezy) 대조 결과는 [TEAMMATE_PITCHEEZY_2026-09-22.md](TEAMMATE_PITCHEEZY_2026-09-22.md) — 우리 쪽 참조가 없는 별도
 트랙이라 I-0(인터페이스 합의)·I-5(시연 경기)·I-6(클래스 대응표)·G-3(통화)를 A/B와 병행해 먼저 진행한다.
 
-1. **다음 한 단위 I-6: 결과 클래스 의미 계약** — 클래스 이름/순서/확률 검사와 변환 불가 조건을 코드화한다. H-5 감사·보강은 완료했다.
+1. **다음 한 단위 F-4a: 선수 식별 규약·평가 준비** — feed 기준값과 화면 관찰값을 구분하고, 한 타석의 실제 배너 확인과 작은 평가 규약부터 진행한다. H-5 감사·보강과 I-6 의미 계약은 완료했다.
    영상 시간 주석은 PA1~82, 322구(297 확인·25 불가·미검토0) 완료. A-y는 v2 묶음 준비 완료 후 실제 다른 검토자 응답을 기다린다.
 
 ```bash
 uv run --frozen python scripts/checklist_model.py --next
-git diff -- src/data/features.py src/data/pitch_observation.py src/inference/prepitch_contract.py
+git diff -- src/data/mlb_video.py src/vision/state_tracker.py
 ```
 
 PA82에는 unavailable이 있으므로 `--require-pa 82`는 통과 조건이 아니다. 기존 후보 rows는 비었으므로 재병합하지 않는다.

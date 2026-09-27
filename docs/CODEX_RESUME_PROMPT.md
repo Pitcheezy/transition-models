@@ -4,17 +4,18 @@ A-15까지 병합해 경기 747139의 322구를 모두 검토했다: **297 annot
 PA 79–82의 마지막 19구는 17구 시각 확인·2구 판단 화면 불가다. A-15 결과는
 [MLB_P0_HANDOFF.md](MLB_P0_HANDOFF.md) 체크포인트 43과 [MLB_BROADCAST_TIMING.md](MLB_BROADCAST_TIMING.md)를 따른다.
 **A-z도 완료했다.** 주석 화면과 scripts 63·65·71의 안내에 영상 재생 초와 feed UTC의 구분을 명시했다.
-JS 동작·주석 값·OCR 결과는 바꾸지 않았다. 최신 인계와 실제 검사 수치는 HANDOFF 체크포인트 44를 따른다.
+JS 동작·주석 값·OCR 결과는 바꾸지 않았다. A-z 결과는 HANDOFF 체크포인트44를 따른다.
 최근 Claude/Codex 작업은 [대조 감사](CROSS_AGENT_AUDIT_2026-09-27.md)와 HANDOFF 체크포인트46을 따른다.
 H-5에서 병합 경로·영상 캐시 출처·A-y 안내 자산 바인딩을 보강했다. A-y 실제 응답은 아직 없고 측정은 대기다.
 검토 묶음은 v2이며 scripts72의 기본 출력 `outputs/blind_review/game_747139_ay_v2/`를 사용한다.
-원본 주석·기준4파일·OCR 결과는 보존했다. 다음 독립 단위는 **I-6 결과 클래스의 의미 계약 코드화**다.
+원본 주석·기준4파일·OCR 결과는 보존했다. I-6의 의미 계약·검사·변환 거부도 구현했다(HANDOFF47,
+[계약 안내](OUTCOME_CLASS_CONTRACTS.md)). 다음 독립 단위는 **F-4a 투수·타자 식별 규약과 평가 준비**다.
 남은 작업 기준은 [CHECKLIST.md](../CHECKLIST.md)이며, C·D는 팀원 담당이다.
 
 ---
 
-저장소 `Pitcheezy/transition-models`, 브랜치 `codex/fix-point-label-alignment`에서 **CHECKLIST I-6**을 진행해라.
-이름/순서가 비슷한 확률 벡터를 같은 의미로 처리하지 않도록 계약·검사·변환 불가 사유를 코드화한다.
+저장소 `Pitcheezy/transition-models`, 브랜치 `codex/fix-point-label-alignment`에서 **CHECKLIST F-4a**를 진행해라.
+점수판 상태만으로는 선수 ID가 확인되지 않는다. 화면에서 읽은 선수 정보와 feed 기준값의 출처를 구분하는 규약·평가 준비부터 한다.
 새 모델 학습이나 실제 외부 서비스 연결은 이번 범위가 아니다. 동료 저장소를 수정하거나 메시지를 보내지 않는다.
 
 ## 0. 시작 전 확인
@@ -29,24 +30,23 @@ git log -8 --oneline
 - `reset --hard`, `git clean`, 강제 푸시는 금지한다. 미커밋 변경·로컬 전용 커밋이 있으면 먼저 대조하고 보존한다.
 - 읽을 문서: `AGENTS.md`, `CHECKLIST.md`의 상태 표·진행 순서·A-y·교대 프로토콜,
   `docs/MLB_P0_HANDOFF.md` 최신 체크포인트, `docs/MLB_BROADCAST_TIMING.md`의 판단 프레임 규약 v2·프레임 확인 도구·리드 시간 규약.
-- 상태 표의 파일 수정 권한을 `Codex (착수 날짜, I-6 의미 계약)`로 바꾸는 작은 커밋을 먼저 푸시한다.
+- 상태 표의 파일 수정 권한을 `Codex (착수 날짜, F-4a 선수 식별)`로 바꾸는 작은 커밋을 먼저 푸시한다.
   다른 작업자가 권한을 잡고 있으면 파일 수정 없이 상태를 대조한다.
 
-## 1. 다음 작업: I-6 결과 클래스의 의미 계약 코드화
+## 1. 다음 작업: F-4a 선수 식별 규약·평가 준비
 
-읽을 자료: `src/data/features.py`, `src/data/point_data.py`, `src/data/pitch_observation.py`,
-`src/inference/prepitch_contract.py`, `docs/TEAMMATE_PITCHEEZY_2026-09-22.md` §2·3·9.
-동료 계약은 고정된 검토 커밋의 사실과 최신 서비스 합의 여부를 구분한다.
+읽을 자료: `src/data/mlb_video.py`, `src/data/broadcast_timing.py`, `src/data/scoreboard_evalset.py`,
+`src/vision/state_tracker.py`, `docs/PREPITCH_CONTRACT.md`, 경기747139 manifest/source/timing/review.
+I-6 모듈은 실제 HTTP 연결 없이 독립적으로 준비된 검사기다. 현재 UI를 동료 계약으로 임의 교체하지 않는다.
 
-1. 우리10종·팀원서비스10종·연구11종의 이름/순서를 명시적으로 선언하고, 확률의 누락/추가/중복/비유한값/합계를 검사한다.
-   행이 있다면 투구 키로 정렬하며 목록 순서로 붙이지 않는다. 런타임 연결을 하지 않는 독립 모듈로 시작한다.
-2. 대응 가능한 의미와 세분화 불가능한 의미를 구분한다. 우리 Strike에는 비종결 파울이 포함되고,
-   FieldOut에는 실책 등이 섞이며 Walk에는 catcher_interf, Strikeout에는 strikeout_double_play가 포함된다.
-   팀원 서비스는 파울·병살을 따로 두고 볼넷·삼진은 카운트로 파생한다. 단순 순서 변경 또는 카운트만으로
-   완전 변환이 된다고 주장하지 않는다. 새8종으로 안타의 세부 종류를 복원하지 않는다.
-3. 잘못된 클래스 순서와 손실성 변환 요청을 명확히 거부하는 테스트를 추가한다. 현재 UI의 독립 strike/ball/foul,
-   목표 위치 미지원 상태는 유지한다. 동료의 실제 응답을 검증한 것처럼 합성 fixture를 보고하지 않는다.
-4. CHECKLIST/HANDOFF에 완료 범위·검증·남은 I-0/I-1/I-2 의존성을 적고 함께 커밋·푸시한다.
+1. 기존 선수 ID가 manifest/feed에서 온 값인지 화면 판독으로 확인된 값인지 조사하고 명시적으로 구분한다.
+   이름·팀·타순·시점·근거 프레임·확인 상태를 가진 작은 식별 평가 규약을 먼저 만든다. 투구 키와 play_id로 연결한다.
+2. 이미 확인된 한 타석에서 투구 전 배너가 있는지 실제 프레임으로 확인한다. 없으면 범위를 무작정 넓히지 말고
+   불가/미확인으로 기록한다. feed ID를 복사한 값을 화면 판독 정답으로 만들지 않는다.
+3. 인식값과 정답 분리·기권·선수 교체·모호한 이름·오래된 상태를 다룬다. 수동 시각으로 정렬된 개발 자료를
+   실시간 feed 동기화나 자동 선수 인식 완료라고 부르지 않는다. OCR 구현은 이 근거와 작은 평가셋 뒤에 진행한다.
+4. 첫 단위는 규약·작은 검증 가능한 평가 준비까지다. F-4a 전체는 실제 선수 식별 경로가 검증돼야 완료한다.
+   CHECKLIST/HANDOFF에 부분 완료·검증·남은 사항을 적고 함께 커밋·푸시한다.
 
 A-y에 실제 별도 검토자 응답이 먼저 도착했다면 원문을 보존하고 아래처럼 검사한다.
 
