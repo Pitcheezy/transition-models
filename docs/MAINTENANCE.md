@@ -72,6 +72,7 @@ MPS 테스트를 그대로 유지한다. **Mac CPU CI 통과는 실제 맥미니
 | 투구별 판단·릴리스 검토 시트 | scripts/71_timing_review_sheet.py | src/vision/review_sheet.py; 라벨이 아닌 검토 보조 |
 | 독립 재검토 묶음·응답 검사 | scripts/72_prepare_blind_review.py | 자산 해시가 포함된 v2; 실제 응답 없이 일치도 산출 금지 |
 | 선수 이름 평가 준비 | scripts/73_build_player_identity_evalset.py | 화면 문자열·경기 이름 목록·feed 기준 ID 분리; [규약·재현](PLAYER_IDENTITY_PROTOCOL.md) |
+| 선수 이름 OCR 개발 평가 | scripts/74_evaluate_player_identity_ocr.py | predict는 Windows OCR en-US 필요, score/check는 저장된 예측으로 실행; [환경·재현](PLAYER_IDENTITY_OCR.md) |
 
 주석 한 타석을 병합한 뒤의 순서: `69 --pa N`(dry-run) → `69 --pa N --write` → `70 --reference <병합 전 커밋> --label <단위> --date <날짜> --no-grab`.
 70은 기본값으로 `docs/results/mlb_p0`의 보고서를 덮어쓴다. 실패하면 보고서 파일만 되돌리고 디렉터리 전체는 되돌리지 않는다(미커밋 주석 입력이 같은 곳에 있다).

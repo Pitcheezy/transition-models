@@ -63,4 +63,5 @@ The [player identity protocol](PLAYER_IDENTITY_PROTOCOL.md) keeps literal screen
 readings separate from a frozen game roster and reference pitcher/batter IDs.
 Unique name-to-roster matching is an explicit replay lookup; ambiguous, absent or stale
 evidence remains an abstention. The final feed does not prove real-time availability.
-This preparation does not enable an automatic player recognizer or change runtime inputs.
+The separate [SNY name OCR baseline](PLAYER_IDENTITY_OCR.md) now reads these development frames,
+but it does not change runtime inputs or establish general/live player recognition.

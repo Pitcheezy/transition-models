@@ -1,4 +1,4 @@
-# Codex 재개 프롬프트 — 2026-09-27
+# Codex 재개 프롬프트 — 2026-09-28
 
 A-15까지 병합해 경기 747139의 322구를 모두 검토했다: **297 annotated / 25 unavailable / 0 unreviewed**.
 PA 79–82의 마지막 19구는 17구 시각 확인·2구 판단 화면 불가다. A-15 결과는
@@ -11,13 +11,15 @@ H-5에서 병합 경로·영상 캐시 출처·A-y 안내 자산 바인딩을 �
 원본 주석·기준4파일·OCR 결과는 보존했다. I-6의 의미 계약·검사·변환 거부도 구현했다(HANDOFF47,
 [계약 안내](OUTCOME_CLASS_CONTRACTS.md)). F-4a의 [식별 규약·PA6 평가 준비](PLAYER_IDENTITY_PROTOCOL.md)도 완료했다(HANDOFF48).
 6판단 프레임×2역할=12건 중 11개 이름을 직접 읽었고 첫 투구 타자 1건은 기권했다. 자동 인식 결과가 아니다.
-다음 한 단위는 **F-4a SNY 선수 이름 패널 판독 기준선**이다. F-4a 전체는 아직 부분 완료다.
+SNY 이름 OCR v1도 구현·개발 평가했다(HANDOFF49, [OCR 안내](PLAYER_IDENTITY_OCR.md)).
+PA6 이름/ID12건 중9정답·3기권, 타순6건 중4정답·2기권이며 허용된 오답0이다. OCR 원문과 기권을 그대로 보존한다.
+다음 한 단위는 **F-4a PA61 네 투구의 이름 근거·고정 v1 검증**이다. F-4a 전체는 아직 부분 완료다.
 남은 작업 기준은 [CHECKLIST.md](../CHECKLIST.md)이며, C·D는 팀원 담당이다.
 
 ---
 
 저장소 `Pitcheezy/transition-models`, 브랜치 `codex/fix-point-label-alignment`에서 **CHECKLIST F-4a**를 진행해라.
-점수판 상태만으로는 선수 ID가 확인되지 않는다. 완성된 수동 평가 준비를 이용해 SNY 이름 패널 판독 기준선을 구현한다.
+점수판 상태만으로는 선수 ID가 확인되지 않는다. 완성된 v1을 고정하고 PA61의 이름 판독 근거·모호성 사례를 검증한다.
 새 모델 학습이나 실제 외부 서비스 연결은 이번 범위가 아니다. 동료 저장소를 수정하거나 메시지를 보내지 않는다.
 
 ## 0. 시작 전 확인
@@ -35,24 +37,28 @@ git log -8 --oneline
 - 상태 표의 파일 수정 권한을 `Codex (착수 날짜, F-4a 선수 식별)`로 바꾸는 작은 커밋을 먼저 푸시한다.
   다른 작업자가 권한을 잡고 있으면 파일 수정 없이 상태를 대조한다.
 
-## 1. 다음 작업: F-4a SNY 선수 이름 패널 판독 기준선
+## 1. 다음 작업: F-4a PA61 네 투구의 이름 근거·고정 v1 검증
 
-읽을 자료: `docs/PLAYER_IDENTITY_PROTOCOL.md`, `src/data/player_identity.py`, `scripts/73_build_player_identity_evalset.py`,
-`src/vision/sny_scoreboard.py`, `src/vision/frames.py`, `docs/PREPITCH_CONTRACT.md`, 경기747139의 PA6 player_identity review/evalset.
+읽을 자료: `docs/PLAYER_IDENTITY_PROTOCOL.md`, `docs/PLAYER_IDENTITY_OCR.md`, `src/data/player_identity.py`,
+`src/vision/sny_player_names.py`, `src/evaluation/player_identity_ocr.py`, scripts73/74,
+`docs/PREPITCH_CONTRACT.md`, 경기747139의 PA6 player_identity review/evalset와 OCR 예측/보고서.
 I-6 모듈은 실제 HTTP 연결 없이 독립적으로 준비된 검사기다. 현재 UI를 동료 계약으로 임의 교체하지 않는다.
 
-1. scripts73 `check --verify-frames`로 PA6 자료를 확인한다. 원본 feed나 이미지가 없는 구조 검사와 실제 바이트 검사를 구분한다.
-   수동 review/evalset의 판독값을 모델 출력에 맞춰 바꾸지 않는다. PA6의 481초 타자 이름 부재와 470초 부분 가림을 그대로 둔다.
-2. 현재 설치된 로컬 OCR·이미지 도구를 확인하고 투수 이름과 타자 이름/타순 패널의 작은 판독기를 만든다.
-   한 SNY 형식·PA6 범위에서 시작한다. 판독기는 영상 프레임만 입력받고 예상 선수 ID·정답 이름·PA 번호로 답을 선택하지 않는다.
-   정답 문자열을 하드코딩해 이름 인식이라고 부르지 않는다. 유료 외부 API·클라우드 업로드는 이번 범위가 아니다.
-3. 판독 문자열과 선수 ID 대응을 분리하고 전체 경기 이름 사전의 정확 일치/모호성 기권 규약을 사용한다.
-   이름 사전은 최종 feed에서 고정한 replay 자료이며 실시간 가용성이 확인된 명단이 아니다. 이름 없는 프레임을 미래 관찰로 채우지 않는다.
-4. 예측은 수동 review와 별도 파일에 투구 키·play_id·출처·판독 상태를 보존한다. 12역할 기회에 대해 시도·정답·오답·기권을 구분하고
-   원문 문자열 판독과 ID 대응을 각각 보고한다. 보이지 않는 타자 이름·부분 이름에는 거짓 판독 여부를 확인한다.
-   이 이미지를 보고 만든 기준선은 개발 성능이다. 독립 정확도나 일반 중계 OCR·자동 동기화·실시간 선수 추적 완료로 발표하지 않는다.
-5. 이번 한 단위는 이름 패널 판독 기준선과 재현 가능한 개발 보고서까지다. 타석 범위·실서비스 연결을 임의 확대하지 않는다.
-   실제 교체/모호성/신선도 사례와 새 영상 검증이 남으면 F-4a는 부분 완료로 유지한다. CHECKLIST/HANDOFF를 함께 커밋·푸시한다.
+1. scripts74 `check --verify-frames`로 기존 PA6 결과를 확인한다. v1 코드·설정·원문 예측·수동 기준을 고정하고 현재 해시를 기록한다.
+   새 화면을 보며 v1 crop/파서/이름 규약을 바꾸지 않는다. 필요 개선은 별도 후속 단위로 기록한다.
+2. **PA61 네 투구만** 기존 timing의 판단 프레임으로 확인한다. feed replay 기준은 Raisel Iglesias 대 Mark Vientos지만,
+   화면 이름·타순·가림/부재는 이미지를 직접 읽어 별도 `...player_identity_review_pa61.json`에 기록한다. 보이지 않는 이름을 feed로 채우지 않는다.
+   PA60에는 `pitching_substitution` 이벤트가 있어 현 생성기가 거부한다. 이를 우회하려고 교체 guard를 제거하지 않는다.
+3. 모든 명단의 이름을 사용한다. `IGLESIAS`는 Raisel/Jose 두 후보가 되므로 투수 역할이나 정답 ID로 하나를 고르지 않는다.
+   이름 문자열 정답과 ID 모호성 기권을 구분한다. 해당 프레임에서 팀이 실제로 읽혀도 v1 reader는 팀을 인식하지 않으므로
+   수동 팀 정보를 자동 예측에 끼워 넣지 않는다. 최종 feed 명단은 실시간 가용성을 입증하지 않는다.
+4. scripts73 build에 `--review ...pa61.json --output ...evalset_pa61.json`을 명시한다. scripts74도 새 `--evalset`,
+   별도 `--predictions ...ocr_v1_pa61_predictions.json`, `--report ...ocr_v1_pa61_report.json`을 지정해 PA6 파일을 보존한다.
+   이름·ID·타순 각각 기회/시도/정답/오답/기권과 엔진 오류를 보고하고 raw_text를 유지한다. 이름 오류를 ID 기권으로 숨기지 않는다.
+5. prediction은 설치된 Windows OCR en-US가 필요하다. Mac에서는 저장 결과의 채점만 가능하며 새 인식을 실행했다고 보고하지 않는다.
+   이미지·엔진이 없으면 해당 실행 제한을 인계하고 합성 예측을 실제 결과로 저장하지 않는다. 유료 API/외부 이미지 전송은 이번 범위가 아니다.
+6. 이 경기는 이미 전 경기 검토된 개발 자료다. 새 이름 사례라도 독립 검증 성능으로 발표하지 않는다. 한 타석의 근거·평가까지 마무리하고
+   교체/상태 추적·새 영상·실시간 UI가 남는 한 F-4a는 부분 완료로 둔다. CHECKLIST/HANDOFF를 함께 커밋·푸시한다.
 
 A-y에 실제 별도 검토자 응답이 먼저 도착했다면 원문을 보존하고 아래처럼 검사한다.
 

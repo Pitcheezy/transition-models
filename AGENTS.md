@@ -5,7 +5,7 @@
 [CHECKLIST.md](CHECKLIST.md) lists every remaining task, the next work unit, and the
 Codex/Claude handoff protocol. Update it in the same commit as the work it tracks.
 
-## MLB-first P0 — 2026-09-27
+## MLB-first P0 — 2026-09-28
 
 The product goal is pre-pitch broadcast situation recognition, outcome probabilities,
 and eventually pitch-type/target-location recommendations. MLB is the first delivery
@@ -21,14 +21,18 @@ unsupported conversions are complete (checkpoint 47; docs/OUTCOME_CLASS_CONTRACT
 They are standalone guards, not a live teammate-service integration. F-4a's source-aware
 identity protocol and PA6 preparation are complete (checkpoint 48; docs/PLAYER_IDENTITY_PROTOCOL.md):
 12 player-role opportunities, 11 manually readable names and 1 abstention. This is not automatic OCR.
-F-4a remains partial. Next implement a small SNY name-panel reader baseline on these development frames,
-keeping observed text, frozen final-feed roster lookup, and reference IDs separate.
+F-4a now also has a small SNY name-panel OCR baseline (checkpoint 49; docs/PLAYER_IDENTITY_OCR.md),
+keeping OCR text, frozen final-feed roster lookup, and reference IDs separate. Prediction currently needs
+Windows OCR en-US; saved-result scoring is portable. This remains partial, developed on six PA6 frames.
+Next prepare PA61's four-pitch name evidence and check the frozen v1 baseline on its ambiguous pitcher surname.
+PA60 contains a pitching substitution and remains unsupported by the conservative reference builder.
+Do not turn this already reviewed game's new name cases into an independent validation claim.
 A-y awaits an actual independent
 response, then comparison under the frozen protocol. It remains incomplete until those results exist;
 do not invent agreement scores or call AI-only cross-checks human inter-rater agreement.
-Scripts 58–73 cover video identity, manual inference UI, source inspection, observation
+Scripts 58–74 cover video identity, manual inference UI, source inspection, observation
 targets, whole-game checks, manual timing, scoreboard evaluation/OCR, verified merges,
-OCR report refresh, timing review sheets, blind reviewer packages, and player identity evaluation.
+OCR report refresh, timing review sheets, blind reviewer packages, and player identity/OCR evaluation.
 Read docs/MLB_BROADCAST_TIMING.md: all 322 pitches reviewed, with 297 timed,
 25 unavailable, and 0 unreviewed. A-15 (PA 79–82) completes this game's manual review;
 see handoff checkpoint 43 for the verification results and limitations.

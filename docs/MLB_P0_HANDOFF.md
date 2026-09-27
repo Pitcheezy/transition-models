@@ -461,8 +461,23 @@
     AI-assisted 비블라인드 개발 자료이며 자동 선수 OCR·추적·실시간 동기화 성능이 아니다. F-4a는 부분 완료, 다음 한 단위는 **SNY 이름 패널 판독 기준선**.
     기존 timing/review/OCR 결과·UI는 보존했다. A-y 실제 독립 응답과 I-0/I-5 답변은 대기, 외부 전송 없음, 수정 권한 반납.
 
+49. 이번 커밋(후속 해시 고정): **F-4a 두 번째 단위: SNY 이름 OCR v1·PA6 개발 평가 완료** (Codex, 2026-09-28; 선점 `93f6b38`).
+    [OCR 안내](PLAYER_IDENTITY_OCR.md), `src/vision/sny_player_names.py`, Windows OCR en-US bridge, 별도 평가 모듈·scripts74를 추가했다.
+    기존 Windows PowerShell5.1/WinRT 엔진을 로컬 호출한다. 새 의존성·유료 API·영상 외부 전송 없음. Mac 새 예측 backend는 미구현이며 저장 예측 채점은 이식 가능하다.
+    이미지 전용 crop/패널 gate/문자열 파서와 전체 명단 ID 대응을 분리했다. crop 하단의 구분선 오인식을 보고 y131→129/y153→151로 조정한 개발 결과다.
+    PA6 여섯 프레임·12역할에서 이름/ID 각각9정답·0오답·3기권, 이름이 보인11건 중9성공. 전체 이름 처리율75%이며 조건부100%를 전체 정확도로 표현하지 않는다.
+    투수6건 성공, 타자3건 성공. 첫 타자는 배너 없음, 611.45초 빈 원문, 663.50초 `3.0ZUNA`는 이름 기권·타순3 유지. 정답 보정/0→O 치환 없음.
+    타순6기회 중4정답·0오답·2기권. 본 부재1건과 별도470초 문맥1건에서 이름/ID/타순 거짓 판독0, 엔진 오류0. 다양한 음성 장면을 검증한 것은 아니다.
+    실제 predict→score→check --verify-frames 통과, 새 native 실행의12역할+문맥1건 JSON 완전 일치. 기존 수동 review/evalset·timing·숫자 OCR 산출물 보존.
+    교차 검토에서 이름 기권 중 타순 판독을 거부하던 채점 계약을 수정했다. PS5 배열 중첩을 실제 배치 실행으로 수정했고 빈/단일/복수 batch 검사도 추가했다.
+    코드 해시는 LF/CRLF에 동일하게 계산하며 잘못된 투구/출처/누락/중복과 원본 출력 덮어쓰기를 거부한다. 합성 오류/모호성 검사와 실제 판독 지표는 분리했다.
+    신규51검사 통과(전체에 포함), 전체 **573 passed, 2 deselected**, Ruff84경로 통과. 다른 작업 폴더에서 저장 결과 check도 통과했다.
+    기준선은 같은 PA6에서 조정했으며 일반 OCR·실시간 tracker·자동 동기화 완성이 아니다.
+    다음 한 단위는 **PA61 네 투구의 이름 근거·고정 v1 검증**. 투수 IGLESIAS의 전체 명단 모호성을 정답 역할로 해결하지 않는지 확인한다.
+    PA60은 투수 교체 이벤트가 있어 현 기준 생성기가 거부하므로 다음 단위에서 우회하지 않는다. A-y 실제 독립 응답·I-0/I-5 답변 대기, 수정 권한 반납.
+
 이 문서와 함께 추가되는 후속 커밋의 해시는 `git log -6 --oneline`으로 확인한다.
-최신 Windows CPU 검사: **522 passed, 2 deselected (`check_project.py --cpu-only`, Ruff 79경로 통과)**(체크포인트 48). 아래 브라우저·서비스 검증은 이전 체크포인트 기록이다.
+최신 Windows CPU 검사: **573 passed, 2 deselected (`check_project.py --cpu-only`, Ruff 84경로 통과)**(체크포인트 49). 아래 브라우저·서비스 검증은 이전 체크포인트 기록이다.
 JavaScript 구문 검사 및 Chrome 수동 입력·실제 추론·9회 이후 추천 보류 확인.
 GitHub CI 결과는 해당 커밋의 validation 워크플로에서 따로 확인한다.
 주석 모듈을 먼저 import한 새 프로세스에서도 Torch→Pandas 문자열 생성이 성공하는지
@@ -517,12 +532,12 @@ Claude/Codex의 순서는 [../CHECKLIST.md](../CHECKLIST.md)의 "진행 순서" 
 팀원 레포(SongRoute/pitcheezy) 대조 결과는 [TEAMMATE_PITCHEEZY_2026-09-22.md](TEAMMATE_PITCHEEZY_2026-09-22.md) — 우리 쪽 참조가 없는 별도
 트랙이라 I-0(인터페이스 합의)·I-5(시연 경기)·I-6(클래스 대응표)·G-3(통화)를 A/B와 병행해 먼저 진행한다.
 
-1. **다음 한 단위 F-4a: SNY 선수 이름 패널 판독 기준선** — 규약·PA6 수동 평가 준비는 완료했다. 이 개발 자료의 원문을 보존한 채 실제 이름 판독 경로와 별도 예측 보고서를 만든다. 자동 인식·F-4a 전체는 미완료다.
+1. **다음 한 단위 F-4a: PA61 네 투구의 이름 근거·고정 v1 검증** — PA6 기준선·별도 예측 보고서는 완료했다. IGLESIAS 이름 모호성의 새 개발 사례를 검토하며 기존 v1·PA6 자료를 보존한다. F-4a 전체는 미완료다.
    영상 시간 주석은 PA1~82, 322구(297 확인·25 불가·미검토0) 완료. A-y는 v2 묶음 준비 완료 후 실제 다른 검토자 응답을 기다린다.
 
 ```bash
 uv run --frozen python scripts/checklist_model.py --next
-uv run --frozen python scripts/73_build_player_identity_evalset.py check --verify-frames
+uv run --frozen python scripts/74_evaluate_player_identity_ocr.py check --verify-frames
 ```
 
 PA82에는 unavailable이 있으므로 `--require-pa 82`는 통과 조건이 아니다. 기존 후보 rows는 비었으므로 재병합하지 않는다.
