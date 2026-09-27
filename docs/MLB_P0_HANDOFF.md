@@ -461,7 +461,7 @@
     AI-assisted 비블라인드 개발 자료이며 자동 선수 OCR·추적·실시간 동기화 성능이 아니다. F-4a는 부분 완료, 다음 한 단위는 **SNY 이름 패널 판독 기준선**.
     기존 timing/review/OCR 결과·UI는 보존했다. A-y 실제 독립 응답과 I-0/I-5 답변은 대기, 외부 전송 없음, 수정 권한 반납.
 
-49. 이번 커밋(후속 해시 고정): **F-4a 두 번째 단위: SNY 이름 OCR v1·PA6 개발 평가 완료** (Codex, 2026-09-28; 선점 `93f6b38`).
+49. `f5962d7`: **F-4a 두 번째 단위: SNY 이름 OCR v1·PA6 개발 평가 완료** (Codex, 2026-09-28; 선점 `93f6b38`).
     [OCR 안내](PLAYER_IDENTITY_OCR.md), `src/vision/sny_player_names.py`, Windows OCR en-US bridge, 별도 평가 모듈·scripts74를 추가했다.
     기존 Windows PowerShell5.1/WinRT 엔진을 로컬 호출한다. 새 의존성·유료 API·영상 외부 전송 없음. Mac 새 예측 backend는 미구현이며 저장 예측 채점은 이식 가능하다.
     이미지 전용 crop/패널 gate/문자열 파서와 전체 명단 ID 대응을 분리했다. crop 하단의 구분선 오인식을 보고 y131→129/y153→151로 조정한 개발 결과다.
