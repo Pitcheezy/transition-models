@@ -398,7 +398,7 @@
     v2 유지, v3/v4의 과거 채택 기준 실패 유지. 350 passed, 2 deselected (`check_project.py --cpu-only`, Ruff 69경로 통과). 수정 권한 반납. 다음 **A-z**(CHECKLIST 순서6).
     시각·점수판 두 측면을 직접 봤지만 새로운 두 독립 검증 에이전트나 사람 간 일치도 측정을 수행했다는 뜻은 아니다.
 
-44. `(이 커밋)`: **A-z 완료** (Codex, 2026-09-27; 선점 `8180d3b`).
+44. `c4ce22d`: **A-z 완료** (Codex, 2026-09-27; 선점 `8180d3b`).
     주석 화면의 이동 입력 근처에 영상 재생 초를 직접 확인하고 feed UTC에서 변환·보간하지 말라는 안내를 추가했다.
     판단·릴리스 라벨을 재생 초로 바꾸고 scripts63 설명·65 --times·71 --dec/--prep/--rel 도움말에 같은 구분을 명시했다.
     JS의 video.currentTime 저장, 시간값·투구 ID·OCR 코드/템플릿은 변경하지 않았다. 3 CLI --help와 scripts63 prepare로 실제 생성 HTML 문구를 확인했다.
