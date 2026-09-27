@@ -5,18 +5,24 @@
 [CHECKLIST.md](CHECKLIST.md) lists every remaining task, the next work unit, and the
 Codex/Claude handoff protocol. Update it in the same commit as the work it tracks.
 
-## MLB-first P0 — 2026-09-24
+## MLB-first P0 — 2026-09-27
 
 The product goal is pre-pitch broadcast situation recognition, outcome probabilities,
 and eventually pitch-type/target-location recommendations. MLB is the first delivery
 target; KBO comes later. Read docs/MLB_P0.md and docs/MLB_P0_HANDOFF.md for current work.
-Start from docs/CODEX_RESUME_PROMPT.md; the next unit is PA 20–26 (29 pitches).
-Scripts 58–69 cover video identity, manual inference UI, source inspection, observation
-targets, whole-game checks, manual timing, scoreboard evaluation/OCR, and verified merges.
-Read docs/MLB_BROADCAST_TIMING.md: 68 pitches timed, 4 unavailable, 250 unreviewed;
-PA 2–4, 6–15 and 18–19 have every pitch timed. PA 16–19 candidates were reviewed and merged.
+Start from docs/CODEX_RESUME_PROMPT.md; the next unit is CHECKLIST A-z: make the
+prohibition on converting feed UTC to video playback seconds explicit in the tools and docs.
+Scripts 58–71 cover video identity, manual inference UI, source inspection, observation
+targets, whole-game checks, manual timing, scoreboard evaluation/OCR, verified merges,
+OCR report refresh, and timing review sheets.
+Read docs/MLB_BROADCAST_TIMING.md: all 322 pitches reviewed, with 297 timed,
+25 unavailable, and 0 unreviewed. A-15 (PA 79–82) completes this game's manual review;
+see handoff checkpoint 43 for the verification results and limitations.
 This is manual timing, not automatic synchronization. The SNY scoreboard OCR prototype
 supports one broadcast layout; see the latest handoff/report for measured results.
+Game 747139 has now been reviewed throughout and is development/demo material. New OCR
+versions need unseen video for new blind validation; these frames cannot become unseen again.
+CHECKLIST C and D belong to the teammate. Integration awaits the agreed interface/artifacts.
 Current UI uses the existing ten-class model and
 must leave independent strike/ball/foul and target-location outputs unavailable.
 Never pair video/Statcast rows by list order or trust old pose-video filenames.

@@ -1,17 +1,17 @@
-# Codex 재개 프롬프트 — 2026-09-25
+# Codex 재개 프롬프트 — 2026-09-27
 
-A-7(PA 11~26, 3회 종료)까지 검토·병합한 뒤 다음 단위를 이어가기 위한 지시문이다(Claude도 작업자 이름만 바꿔 사용).
-아래 `---` 이하를 다음 도구에 전달한다. 남은 작업의 기준은 [CHECKLIST.md](../CHECKLIST.md),
-최신 결과는 [MLB_P0_HANDOFF.md](MLB_P0_HANDOFF.md) 체크포인트 42이다. **다음 한 단위는 CHECKLIST A-15(9회말 PA 79–82, 19구, 절차는 §1)** 이며 이것으로 전 경기 322구가 끝난다.
-OCR v4는 A-10에서 사전 등록 기준 (1) 실패로 판정됐다(§2). 새 OCR 버전(F-3e)은 A-11 주석 전에 사전 등록해야 7회가 blind가 된다. 병합 뒤 OCR은 `scripts/70` 한 번으로 모든 버전을 갱신한다(v3는 사전 등록 기준 실패로 기록된 비교용 버전).
-`scripts/70`이 오판독으로 실패하면 프레임을 직접 보고, 라벨이 맞고 판독기가 틀린 경우에만 원인·증거와 함께 `game_747139_scoreboard_known_misreads.json`에 올린다(판독 버전은 고치지 않는다).
+A-15까지 병합해 경기 747139의 322구를 모두 검토했다: **297 annotated / 25 unavailable / 0 unreviewed**.
+PA 79–82의 마지막 19구는 17구 시각 확인·2구 판단 화면 불가다. 최신 결과와 실제 검사 수치는
+[MLB_P0_HANDOFF.md](MLB_P0_HANDOFF.md) 체크포인트 43과 [MLB_BROADCAST_TIMING.md](MLB_BROADCAST_TIMING.md)를 따른다.
+남은 작업의 기준은 [CHECKLIST.md](../CHECKLIST.md)이며, **다음 한 단위는 A-z: feed UTC를 재생 초로 외삽하지 말라는 안내를 도구·문서에 명확히 남기기**다.
+아래 `---` 이하를 다음 도구에 전달한다. Claude도 작업자 이름과 CHECKLIST 모델 태그를 적용해 사용할 수 있다.
 
 ---
 
-저장소 `Pitcheezy/transition-models`, 브랜치 `codex/fix-point-label-alignment`에서 MLB P0 중계 시각 주석(CHECKLIST A-7)을
-이어서 진행해라. 분석만 하고 끝내지 말고, 검증을 통과한 작은 단위를 커밋·푸시까지 끝내라.
+저장소 `Pitcheezy/transition-models`, 브랜치 `codex/fix-point-label-alignment`에서 **CHECKLIST A-z**를 진행해라.
+기존 주석과 평가 결과를 보존하고, 이 작은 단위를 검증·문서화·커밋·푸시까지 끝내라.
 
-## 0. 시작 전 확인 (반드시 이 순서)
+## 0. 시작 전 확인
 
 ```bash
 git fetch origin
@@ -21,134 +21,93 @@ git log -8 --oneline
 
 - 작업 트리가 깨끗하고 로컬 전용 커밋이 없을 때만 `git pull --ff-only`로 맞춘다.
 - `reset --hard`, `git clean`, 강제 푸시는 금지한다. 미커밋 변경·로컬 전용 커밋이 있으면 먼저 대조하고 보존한다.
-- 읽을 문서: `AGENTS.md`, `CHECKLIST.md`(상태 요약 표, 진행 순서, A-7·A-v2·A-v3·B·F-3a, 도구 교대 프로토콜),
-  `docs/MLB_P0_HANDOFF.md` 최신 체크포인트, `docs/MLB_BROADCAST_TIMING.md`("판단 프레임 규약 v2", "프레임 확인 도구",
-  "점수판 OCR 프로토타입", "리드 시간 규약").
-- 상태 요약 표의 '파일 수정 권한'을 `Codex (착수 날짜, 단위)`로 바꾸는 작은 커밋을 먼저 푸시한 뒤 작업한다.
-  Claude Code나 다른 작업자가 권한을 잡고 있으면 파일을 수정하지 말고 읽기 전용으로만 진행한다.
+- 읽을 문서: `AGENTS.md`, `CHECKLIST.md`의 상태 표·진행 순서·A-z·교대 프로토콜,
+  `docs/MLB_P0_HANDOFF.md` 최신 체크포인트, `docs/MLB_BROADCAST_TIMING.md`의 판단 프레임 규약 v2·프레임 확인 도구·리드 시간 규약.
+- 상태 표의 파일 수정 권한을 `Codex (착수 날짜, A-z)`로 바꾸는 작은 커밋을 먼저 푸시한다.
+  다른 작업자가 권한을 잡고 있으면 파일 수정 없이 상태를 대조한다.
 
-## 1. 주석 단위 절차 (PA 20~26 완료 기록 — 다음 반이닝에도 같은 절차)
+## 1. 다음 작업: A-z
 
-현재 timing은 303구(280 annotated / 23 unavailable), 미검토 19구다 — **9회초 종료(A-14 완료, 2026-09-26)**. 다음 주석 단위는 9회말(PA 79~82, CHECKLIST A-15, 전 경기 마지막).
-마지막 검증 릴리스는 PA 78/10 8140.90 s이며 9회말은 그 뒤(8180 s 부근)에서 찾는다; 경기는 PA 82/5(약 8615 s)로 끝나 8620 s부터 점수판이 없다. 라이브 광각(홈 뒤 상단 등)도 투수·타자·점수판 조건이 확대 크롭에서 성립하면 판단 프레임이다(76/1, 61/3). 워크플로 에이전트에게는 사용자의 마지막 메시지가 함께 전달되므로, 주석 단위 중에는 무관한 질문을 섞지 않는다(섞이면 에이전트가 그 질문을 임무로 오인한다). 타석 중 주자·점수가 바뀌면 인자에 투구별 `expected`를 넣는다. 원격 MP4 읽기가 느릴 때 에이전트 수를 줄이고, 주석자가 시간 초과로 끝내지 못한 행은 수리 행과 세션 확인으로 채운다.
-병합 뒤 OCR은 `scripts/70_refresh_ocr_reports.py --reference <병합 전 커밋> --label <단위> --date <날짜>`로 v1·v2와 provenance를 한 번에 갱신한다(docs/MAINTENANCE.md).
-완전 타석은 PA 2~4·6~15·18~19·21·23~26. PA 1/6·5/5·16/2·17/1·20/6·22/1은 판단 화면 불가, PA 8/1·16/1은 라인스코어 partial이다.
-PA 11~15·16~19·20~26 후보 파일의 rows는 모두 비어 있으므로 다시 병합하지 않는다(PA 20~26 근거: `game_747139_timing_verification_pa20_26.json`).
-아래 PA 20~26용 명령은 절차 예시로 남긴다. 4회초는 마지막 릴리스 **2695.48 s**(PA 26/5) 이후를 찾는다.
-투수가 러버로 걸어 들어오는 경계(PA 20/4 1947.25~1947.60, PA 24/4 2459.75~2460.10)는 양발이 러버에 놓인 첫 격자를 판단 프레임으로 잡았다(PA 24/4 note 참조).
-주의: PA 20 워크플로 주석은 릴리스를 약 0.2초 이르게(글러브 팔 전진을 릴리스로) 적는 경향이 있었다. 릴리스는 던지는 팔이 머리 위에서 앞으로 뻗고 공이 손을 떠난 프레임으로 잡는다.
+feed UTC는 실제 경기 시각이고, `decision_seconds`·`release_seconds`와 도구의 `--times`는 해당 영상의 재생 초다.
+영상 편집으로 두 축은 선형으로 대응하지 않는다. PA 3→4에서 실제 시간 146초가 영상 약 35초로 줄어든 사례가 이미 확인됐다.
+UTC는 경기 사건의 순서와 신원을 대조하는 참고 정보이며, 재생 초를 계산·외삽·보간하는 입력으로 사용하지 않는다.
 
-수정 권한 확보 후 기존 PA 19를 검증하고 그 이후를 영상에서 찾는다.
+수정 권한 확보 후 첫 확인 명령:
 
 ```bash
-uv run --frozen python scripts/63_annotate_broadcast.py check --annotations docs/results/mlb_p0/game_747139_timing.json --require-pa 19
-uv run --frozen python scripts/65_grab_broadcast_frames.py --label pa20_scan --times 1851 1860 1870 1880
+rg -n "UTC|event_start_utc|playback|재생|외삽|보간" scripts/63_annotate_broadcast.py scripts/65_grab_broadcast_frames.py scripts/71_timing_review_sheet.py src/web/static/annotation.html src/web/static/annotation.js docs/MLB_BROADCAST_TIMING.md
 ```
 
-- 마지막 검증 릴리스는 **1850.16 s**다. 이닝 교대가 편집되어 있으므로 feed UTC를 재생 초로 변환·보간하지 않는다.
-- PA 20~26은 3회말 29구, 투수 Megill이다. 카운트·P:N·아웃·주자·이닝·타자 표시를 대조해 각 투구를 식별한다.
-- 새 파일 `docs/results/mlb_p0/game_747139_timing_candidates_pa20_26.json`을 `mlb_broadcast_timing_candidates_v1`로 만들고
-  source·manifest 해시를 기존 파일과 맞춘다. 모든 행은 미검증으로 시작한다.
-- `game_pk + at_bat_number + pitch_number` 및 `play_id`로 연결한다. 목록 순서로 짝짓지 않는다.
-- manifest pre_state/ground_truth는 탐색·정합성 확인용이다. 화면 observed로 복사하지 않는다.
-- 한도가 부족하면 완료한 타석까지 병합·검사·커밋하고 남은 후보는 미검증으로 인계한다. A-7 전체는 PA 26까지 끝나야 완료다.
+1. 주석 화면의 시간 입력·저장 안내와 관련 CLI 도움말을 읽고, UTC와 재생 초의 구분이 빠진 사용 지점을 찾는다.
+2. 실제 입력 지점과 문서에 같은 의미의 짧은 안내를 넣는다. 재생 초를 직접 영상에서 확인해야 한다는 점과 편집 사례를 연결한다.
+3. 기존 시간값·투구 ID·주석 상태·OCR 템플릿을 바꾸지 않는다. 새 동기화 기능이나 UTC 변환 함수를 추가하지 않는다.
+4. 변경한 CLI 도움말과 화면 문구를 확인하고, 변경 범위에 맞는 기존 검사를 실행한다.
+   `scripts/check_project.py --cpu-only`의 실제 결과를 기록한다. 이전 단위의 통과 수를 재사용하지 않는다.
+5. CHECKLIST A-z와 HANDOFF를 같은 커밋에서 갱신하고 푸시한다. A-y(다른 검토자 일치도)는 AI 에이전트 교차검토만으로 완료 처리하지 않는다.
 
-투구마다 다음을 **직접 프레임을 보고** 확인한다. 이미지를 볼 수 없는 환경이면 `verified`로 바꾸지 말고 멈춰서 보고한다.
+단계 6의 H-1·A-v는 완료됐다. E-1은 옛 수집 영상 원본 확보 후 playId 재대조가 필요하다.
+I-0·I-5는 동료 답변 대기이며, 다음 통합의 완료 기준은 한 타석 영상 → 투구 전 상태 → 동료 서비스 → 확률 표시다.
+이번 단위에 C·D 또는 외부 서비스 통합을 섞지 않는다.
 
-```bash
-uv run --frozen python scripts/65_grab_broadcast_frames.py --label cx20_1d --times <d-0.5> <d-0.25> <d> <d+0.5>
-uv run --frozen python scripts/65_grab_broadcast_frames.py --label cx20_1r --times <r-0.15> <r-0.05> <r> <r+0.15>
-```
+## 2. 이후 영상 주석을 추가할 때의 규약
 
-(`outputs/frames/<label>_full.png` = 반크기 프레임, `<label>_bug.png` = 점수판 3배 확대. 한 번에 1~8개, 원격 요청은 수십 초 걸릴 수 있으므로 동일 MP4/시각 캐시를 재사용한다.
-원격 MP4 range 읽기가 가끔 "partial file"로 실패하며 도구가 3회 재시도한다. Windows에서는 `PYTHONIOENCODING=utf-8`.)
+경기 747139에는 미검토 투구가 없다. 아래는 **새 영상 또는 명시적으로 지정된 재검토**에만 쓰는 절차다.
+완료된 후보 파일을 다시 병합하거나 과거 PA 20 등의 탐색 시각을 현재 작업 지시로 사용하지 않는다.
 
-1. **판단 프레임(규약 v2)**: `d`에서 네 조건이 모두 성립 — 라이브 중계 샷(리플레이·회상·통계 그래픽·클로즈업 아님), 투수가
-   러버 위에서 정지(사인 확인 또는 come-set, 레그 킥 전), 타자가 타석 안, 점수판 판독 가능. 라인스코어 그래픽으로
-   일부 필드만 읽히면 `partial`로 허용하되 안 보이는 필드는 `null`로 둔다. `d-0.25`에서는 적어도 한 조건이 깨져야 한다.
-   이전 프레임도 통과하면 더 앞에서 실패 경계를 찾아 가장 이른 0.25초 격자 프레임을 고른다. 임의의 탐색 한도에 걸린 시각을
-   최초 프레임으로 확정하지 않는다. `d`부터 투구 동작 시작까지 중간 프레임도 본다. 견제·스텝오프·타자 이탈·컷어웨이뿐
-   아니라 점수판 전체가 하얗게 지워지는 전환도 조건을 끊는다. 이때 마지막 단절 이후의 첫 유효 프레임을 찾는다.
-   다른 라이브 광각도 투수와 타자가 보이면 허용하고 note에 적는다. 확인한 시각과 표본 간격·한계를 남긴다.
-2. **점수판 판독**: `d` 프레임의 bug를 직접 읽어 후보의 `observed`와 비교한다(manifest 값을 베끼지 않는다).
-3. **릴리스**: 전후 프레임의 팔 위치·공 분리·팔로스루로 브래킷한다. 후보가 벗어나면 추가 프레임을 확인해 고친다.
-   방송 영상의 흐림을 감안해 양의 오차 범위를 유지하고 프레임 단위 정답으로 주장하지 않는다.
-4. **검증 증거**: 각 투구에 timing 렌즈와 scoreboard/identity 렌즈의 실제 확인 결과·이미지 경로·시각을 기록한다.
-   한 렌즈만 반환되었거나 사용량 제한·오류로 결과가 없으면 통과가 아니다. 통과 문구만 믿지 말고,
-   최종 병합 담당 세션이 판단·릴리스·점수판 증거를 직접 스팟체크한다. 실제로 수행하지 않은 독립 검증을 적지 않는다.
-5. 두 검증 측면과 최종 점검이 끝난 행에만 `verification`의 `"status": "verified"`, 실제 검토자 `by`, 검토 날짜 `date`를
-   쓴다. 값이 바뀌면 이전값·새값·이유를 note에 남긴다. 직접 확인한 결과 유효 판단 창이 없으면 `status`는 `unavailable`,
-   시각 세 개는 `null`로 두고 근거를 남긴다. 영상을 못 봤다는 이유만으로 unavailable 판정을 만들지 않는다.
+- `(game_pk, at_bat_number, pitch_number)`와 `play_id`로 연결한다. 목록 순서로 짝짓지 않는다.
+- 후보 스키마 `mlb_broadcast_timing_candidates_v1`의 source·manifest 해시를 실제 입력과 맞추고 모든 새 행은 미검증으로 시작한다.
+- manifest의 pre_state/ground_truth는 식별·정합성 대조용이다. `observed`는 판단 프레임의 bug를 직접 읽어 기록한다.
+- 이미지를 볼 수 없으면 verified로 바꾸지 말고 미검증 후보와 한계를 인계한다. 추출 실패를 unavailable로 바꾸지 않는다.
 
-한 타석의 모든 투구가 `verified`면 병합한다(검증 안 된 행이 있으면 스크립트가 거부한다):
+투구마다 다음을 직접 확인한다.
 
-```bash
-uv run --frozen python scripts/69_append_timing_rows.py --candidates docs/results/mlb_p0/game_747139_timing_candidates_pa20_26.json --pa 20 --reviewer "Codex direct frame review" --annotator-suffix "Codex PA20, YYYY-MM-DD" --date YYYY-MM-DD
-uv run --frozen python scripts/69_append_timing_rows.py --candidates docs/results/mlb_p0/game_747139_timing_candidates_pa20_26.json --pa 20 --reviewer "Codex direct frame review" --annotator-suffix "Codex PA20, YYYY-MM-DD" --date YYYY-MM-DD --write
-```
+1. **판단 프레임 v2:** 라이브 화면·러버 위에서 정지한 투수·타석 안 타자·판독 가능한 점수판의 네 조건이 동시에 성립하는
+   가장 이른 0.25초 격자를 고른다. 직전 격자는 적어도 한 조건을 깨야 한다. 다른 라이브 광각도 허용하되 식별 한계를 남긴다.
+   라인스코어로 일부 필드만 보이면 partial, 보이지 않는 필드는 null이다.
+2. **연속성:** 판단부터 동작 시작까지 최대 1초 간격으로 확인한다. 견제·스텝오프·타자 이탈·컷어웨이·점수판 전환으로
+   조건이 끊기면 마지막 단절 이후의 첫 유효 프레임을 찾는다. 표본 검사임을 기록하며 연속 재생 검증으로 표현하지 않는다.
+3. **릴리스:** 약 0.05초 간격의 전후 프레임에서 던지는 팔·공 분리·팔로스루를 확인한다. 수동 오차 범위를 유지하고
+   프레임 단위 정답이라고 주장하지 않는다. 글러브 팔 전진을 릴리스로 오인하지 않는다.
+4. **검증 증거:** timing과 scoreboard/identity 두 측면의 실제 확인 결과·이미지 경로·시각·한계를 기록한다.
+   한 렌즈만 반환되거나 오류로 결과가 없으면 통과가 아니다. 병합 담당 세션도 이미지를 직접 확인한다.
+   AI 에이전트 검토를 사람 간 일치도 측정이라고 적지 않는다.
+5. 검증이 끝난 행만 `verification.status=verified`와 실제 검토자·날짜를 적는다. 수정 시 이전값·새값·이유를 남긴다.
+   직접 확인한 결과 유효 판단 창이 없으면 unavailable로 두며 decision/release/uncertainty·observed/readability/bug_text는 null,
+   비판단 화면에서 얻은 식별 정보는 note에만 남긴다.
 
-`--write`는 timing·리뷰 파일을 저장하고 검증 보고서·평가셋·조인표를 다시 만든다. 병합한 타석의 행은 **후보 파일에서 제거**하고
-(테스트 `tests/test_append_timing_rows.py`가 후보와 timing의 중복을 막는다) 파일 상단 `status` 문장에 병합 기록(날짜·PA·커밋)을 남긴다.
+`scripts/65_grab_broadcast_frames.py`는 1~8개의 재생 초를 받아 전체/bug 확대 몽타주를 만든다.
+`scripts/71_timing_review_sheet.py`로 경계·연속성·릴리스를 묶고 기존 프레임 캐시를 재사용한다.
+타석의 모든 행이 verified이면 `scripts/69_append_timing_rows.py`를 dry-run 후 `--write`로 실행한다.
+검증 보고서·평가셋·조인표 재생성을 확인한 뒤 병합 행은 검증 기록에 보존하고 후보 rows에서 제거하며 merge_history를 남긴다.
+큰 이미지·영상은 Git에 넣지 않는다.
 
-위 PA 20 예시는 타석별로 반복하며 검토자·날짜는 실제 수행한 내용으로 적는다.
-병합 후 점수판 OCR을 다시 잰다(새 판단 프레임은 자동으로 받는다). 최신 수치는 실행 결과와 인계 문서가 기준이며,
-이전 PA 범위의 수치를 새 평가셋에 그대로 쓰지 않는다.
+## 3. OCR 평가와 결과 해석
 
-```bash
-uv run --frozen python scripts/66_sny_scoreboard_ocr.py predict --templates docs/results/mlb_p0/sny_digit_templates_v1.json --output docs/results/mlb_p0/game_747139_scoreboard_ocr_v1_predictions.json
-uv run --frozen python scripts/66_sny_scoreboard_ocr.py score --predictions docs/results/mlb_p0/game_747139_scoreboard_ocr_v1_predictions.json --exclude-pas 1 2 9 --output docs/results/mlb_p0/game_747139_scoreboard_ocr_v1.json
-uv run --frozen python scripts/66_sny_scoreboard_ocr.py negatives --templates docs/results/mlb_p0/sny_digit_templates_v1.json --output docs/results/mlb_p0/game_747139_scoreboard_negatives_score_v0.json
-uv run --frozen python scripts/check_project.py --cpu-only
-```
+- 현행 판독기는 SNY 한 화면 형식의 **v2**다. v1~v4와 각각의 템플릿·provenance를 보존한다.
+- v3는 무회귀 기준 실패, v4는 A-10에서 사전 등록 기준 (1) 실패로 기록됐다. 후속 프레임의 개선으로 과거 판정을 바꾸지 않는다.
+- 새 주석 병합 후에는 `scripts/70_refresh_ocr_reports.py --reference <병합 전 커밋> --label <단위> --date <실행 날짜>`로
+  모든 버전의 보고서를 갱신한다. 실행 전 커밋 해시를 고정하고 실제 산출물의 분모·정답·기권·오답을 보고한다.
+- scripts/70이 새 오판독으로 실패하면 프레임을 직접 본다. 라벨이 맞고 판독기가 틀렸을 때만 원인·증거와 함께
+  `game_747139_scoreboard_known_misreads.json`에 기록한다. 실패를 숨기기 위해 템플릿·라벨을 고치지 않는다.
+- 경기 747139는 기존 test cohort에 포함됐고 이제 전 경기 프레임을 검토한 **개발·시연 자료**다.
+  새 OCR 버전을 이 경기로 수정한 뒤 이 프레임을 새 blind 검증이라고 부를 수 없다.
+  새 blind 증거에는 규칙·기준을 사전 등록한 뒤 보는 새 미검토 영상이 필요하다.
+- 수동 시각 주석·이 레이아웃의 OCR 결과는 자동 방송 동기화·일반 중계 OCR·독립 모델 성능을 입증하지 않는다.
 
-오답(`wrong`)을 숨기지 말고 CHECKLIST F-3a에 사례로 기록한다. 템플릿을 늘리려면 해당 타석을 held-out에서 빼야 한다.
-이 판독기는 SNY 한 화면 형식의 프로토타입이며 보편적인 중계 OCR 완료를 의미하지 않는다.
+## 4. 공통 운영 규칙과 마지막 보고
 
-## 2. OCR v4 판정 결과 (A-10, 2026-09-25)
+- CHECKLIST C·D는 팀원 담당이다. 팀원 저장소(SongRoute/pitcheezy)는 읽기 전용이며 메시지를 보내지 않는다.
+  질문 문안은 `docs/TEAMMATE_PITCHEEZY_2026-09-22.md` §9와 `docs/VIDEO_LAB_SCHEMA_V2_PROPOSAL.md`에 미전송으로 남아 있다.
+- 현재 UI의 독립 스트라이크·볼·파울 및 목표 위치 미지원 상태를 유지한다. 실제 실점 개선은 입증되지 않았다.
+- CHECKLIST와 HANDOFF를 작업과 같은 커밋에서 갱신한다. 새 항목은 `[추가되었음 · 날짜 · Codex]`를 붙이고
+  Claude 실행 모델 태그도 넣는다. 커밋 메시지에 파일 목록을 적고 푸시·원격 동기화를 확인한다.
+- 끝내거나 멈출 때 파일 수정 권한을 `비어 있음`으로 돌리고 다음 도구의 첫 행동을 남긴다.
+- Windows에서는 `PYTHONIOENCODING=utf-8`, 사용자 캐시가 막히면 `uv --cache-dir .cache/uv run --frozen ...`을 쓴다.
 
-- **실패**(기준 (1)): 6회 blind 32구에서 42/1 아웃 오판독 1건(v1~v4 공통). (2)~(5) 통과. 필드 정답·기권·오답 v4 246·61·1, v3 240·67·1, v2 232·75·1.
-  `docs/results/mlb_p0/game_747139_scoreboard_ocr_v4_acceptance.json`. 현행 v2 유지. 다음 버전(F-3e v5)은 새로 사전 등록하고 1~6회는 개발 집합으로만 쓴다.
+마지막 보고:
 
-### (기록) OCR v4 판정 절차
-
-- F-3d에서 v4를 사전 등록했다(`docs/results/mlb_p0/game_747139_scoreboard_ocr_v4_preregistration.json`). A-10 병합 뒤 `scripts/70`을 모든 버전으로 한 번 돌리고,
-  그 파일의 `acceptance_criterion_for_A10` (1)~(5)를 그대로 적용한다. (1)~(3)은 `ocr_reports.new_rows_acceptance`, (5)는 `scripts/66 predict --diagnostics`.
-- 결과를 본 뒤 v4 옵션·기준을 고치지 않는다. 실패하면 실패로 기록하고, 오판독은 알려진 오판독 목록에 v4로 올린다. 수정은 새 버전(v5)으로 다시 사전 등록한다.
-
-### (이전) F-3d v4 사전 등록 계획
-
-- v3(F-3c)는 held-out 75구 무회귀 기준에서 73·0·2로 실패했다(카운트 '2' vs 새 카운트 폰트 '3' margin). 결과를 본 뒤 v3를 고치지 않는다.
-  A-9 5회 새 프레임에서도 v3는 볼 '3'·점수 '2' 4건을 더 맞히고 볼 '2' 2건(33/5·35/5)을 기권해 같은 원인이 재현됐다.
-- v4 후보: 필드 묶음별 템플릿 + 34/3 초말 화살표(판독 창 확장 또는 동률에 강한 꼭짓점 규칙). 5회 프레임은 이미 결과를 봤으므로 v4 blind 증거가 아니다.
-  F-3d는 규칙·코드를 먼저 커밋(사전 등록)하고, 첫 blind 채점은 A-10 병합 뒤 `scripts/70`의 새 행 비교로 v2·v3·v4를 함께 기록한다.
-
-### (이전) F-3c v3 계획 메모
-
-- v1(PA 1·2·9, 숫자 0/1/2)과 v2(PA 1·2·9·18, 숫자 3 추가)는 별도 파일로 보존한다. 같은 held-out 전 필드 82구: v1 44·38·0, v2 75·7·0(정답·기권·오답).
-- v2 남은 기권 7구는 원인을 확인했다: 19/2·11/2 카메라 컷 윗선 게이트, 4/1·11/1 오른쪽 테두리 조각, 13/3 고립 픽셀, 24/5 점수 폰트 '2', 5/6 카운트 폰트 '3'.
-  이 7구는 이미 본 사례이므로 v3를 고쳐도 held-out으로 세지 않는다. v3 규칙·코드 변경을 먼저 기록하고 A-8 이후의 새 판단 프레임으로 채점한다.
-- 주석이 늘면 v1·v2를 모두 재실행하고 각 버전의 provenance(`..._ocr_v1_provenance.json`, `..._ocr_v2_provenance.json`)를 갱신한다.
-- 결과를 보며 조정한 사례를 blind 검증이라 부르지 않는다. 자동 동기화·사람 간 일치도·C/D 모델 완성을 추정하지 않는다.
-
-Windows에서는 `PYTHONIOENCODING=utf-8`, 사용자 캐시가 막히면 `uv --cache-dir .cache/uv run --frozen ...`을 쓴다.
-
-## 3. 지켜야 할 규칙
-
-- feed UTC(`video.event_start_utc`)를 재생 초로 바꾸거나 보간하지 않는다. 탐색 출발점으로만 쓴다(편집으로 실제로 어긋난다).
-- 영상으로 확인하지 않은 값을 주석·판독값·OCR 정답으로 만들지 않는다. 확인한 프레임의 판독 불가는 `null`, 미검증은 미검증으로 둔다.
-- 확인 불가 사례를 지워 커버리지를 높이지 않는다. 미검증을 완료로 표시하지 않는다.
-- CHECKLIST C·D는 팀원 담당이다. 팀원 저장소(SongRoute/pitcheezy)는 읽기 전용이며, 팀원에게 메시지를 보내지 않는다
-  (요청 문안은 `docs/TEAMMATE_PITCHEEZY_2026-09-22.md` §9 말미, `docs/VIDEO_LAB_SCHEMA_V2_PROPOSAL.md` — 둘 다 미전송).
-- 경기 747139는 기존 test cohort에 포함된 개발·시연 자료다. 새 독립 성능으로 보고하지 않는다.
-- 한 단위를 커밋할 때 `CHECKLIST.md`(상태 표·완료 항목과 커밋 해시·새 항목은 `[추가되었음 · 날짜 · Codex]`)와
-  `docs/MLB_P0_HANDOFF.md`(체크포인트: 한 일, 실행한 검사와 실제 결과)를 같은 커밋에 넣는다. A-7은 PA 26까지 끝나야 완료다.
-  커밋 메시지에 파일 목록을 적고 푸시·원격 동기화를 확인한다.
-- 작업을 끝내거나 멈출 때 '파일 수정 권한'을 `비어 있음`으로 되돌리고, 다음 도구의 첫 실행 명령을 인계 문서에 남긴다.
-
-## 4. 마지막 보고 형식
-
-1. 검증·병합한 타석과 투구 수(고친 값이 있으면 무엇을 왜)
-2. 아직 후보로 남은 투구와 이유
-3. 실제로 실행한 검사와 결과(`check_project.py` 합계, OCR held-out 오답·기권 수, 음성 거짓 판독 수)
-4. 커밋 해시와 푸시 상태
+1. 완료한 단위와 변경 내용·이유(주석 작업이면 타석·투구 수와 정정값)
+2. 미완료·미검증 후보와 이유
+3. 실제 검사 결과와 한계(실행한 테스트 합계, OCR을 갱신했다면 분모·오답·기권·음성 거짓 판독)
+4. 작업/해시 고정 커밋과 푸시 상태
 5. 다음 한 단위
