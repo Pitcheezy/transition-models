@@ -15,6 +15,9 @@ frames are used only when nothing else exists). New grabs are named ``<label>_<t
 The sheet is ``<out-dir>/<label>_review_sheet.png``: decision frames three per row at half
 size, their scoreboard bugs enlarged, preparation frames four per row and release crops of the
 pitcher box five per row. It is a review aid for manual timing and produces no labels.
+
+All --dec, --prep and --rel values are playback seconds observed directly in the source
+video. Broadcasts may be edited: never convert, extrapolate, or interpolate them from feed UTC.
 """
 
 import argparse
@@ -51,9 +54,27 @@ def main():
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )
     parser.add_argument("--label", required=True, help="name of this sheet and of new grabs")
-    parser.add_argument("--dec", type=float, nargs="*", default=[], help="decision frames")
-    parser.add_argument("--prep", type=float, nargs="*", default=[], help="preparation frames")
-    parser.add_argument("--rel", type=float, nargs="*", default=[], help="release frames")
+    parser.add_argument(
+        "--dec",
+        type=float,
+        nargs="*",
+        default=[],
+        help="decision frame playback seconds; never derive from feed UTC",
+    )
+    parser.add_argument(
+        "--prep",
+        type=float,
+        nargs="*",
+        default=[],
+        help="preparation frame playback seconds; never derive from feed UTC",
+    )
+    parser.add_argument(
+        "--rel",
+        type=float,
+        nargs="*",
+        default=[],
+        help="release frame playback seconds; never derive from feed UTC",
+    )
     parser.add_argument("--title", help="sheet title (default: the label)")
     parser.add_argument(
         "--pitcher-box",

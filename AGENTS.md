@@ -10,8 +10,11 @@ Codex/Claude handoff protocol. Update it in the same commit as the work it track
 The product goal is pre-pitch broadcast situation recognition, outcome probabilities,
 and eventually pitch-type/target-location recommendations. MLB is the first delivery
 target; KBO comes later. Read docs/MLB_P0.md and docs/MLB_P0_HANDOFF.md for current work.
-Start from docs/CODEX_RESUME_PROMPT.md; the next unit is CHECKLIST A-z: make the
-prohibition on converting feed UTC to video playback seconds explicit in the tools and docs.
+Start from docs/CODEX_RESUME_PROMPT.md. A-z is complete: the annotation UI and CLI help
+explicitly prohibit deriving playback seconds from feed UTC (handoff checkpoint 44).
+The next unit is preparation within CHECKLIST A-y: build a blind re-review package for a
+different reviewer. A-y remains incomplete until actual independent review results exist;
+do not invent agreement scores or call AI-only cross-checks human inter-rater agreement.
 Scripts 58–71 cover video identity, manual inference UI, source inspection, observation
 targets, whole-game checks, manual timing, scoreboard evaluation/OCR, verified merges,
 OCR report refresh, and timing review sheets.

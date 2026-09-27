@@ -1,4 +1,8 @@
-"""Prepare a resumable manual annotation page or validate exported pitch timings."""
+"""Prepare a resumable manual annotation page or validate exported pitch timings.
+
+Annotation times are playback seconds observed directly in the source video. Broadcasts may
+be edited: never convert, extrapolate, or interpolate playback seconds from feed UTC.
+"""
 
 import argparse
 import json

@@ -35,7 +35,13 @@ def main():
     parser.add_argument(
         "--label", required=True, help="prefix for this batch; use a new one per call"
     )
-    parser.add_argument("--times", type=float, nargs="+", required=True, help="playback seconds")
+    parser.add_argument(
+        "--times",
+        type=float,
+        nargs="+",
+        required=True,
+        help="source video playback seconds observed directly; never derive from feed UTC",
+    )
     parser.add_argument("--timing", type=Path, default=DEFAULT_TIMING)
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
     parser.add_argument(

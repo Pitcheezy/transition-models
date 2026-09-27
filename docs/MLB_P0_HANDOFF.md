@@ -398,8 +398,15 @@
     v2 유지, v3/v4의 과거 채택 기준 실패 유지. 350 passed, 2 deselected (`check_project.py --cpu-only`, Ruff 69경로 통과). 수정 권한 반납. 다음 **A-z**(CHECKLIST 순서6).
     시각·점수판 두 측면을 직접 봤지만 새로운 두 독립 검증 에이전트나 사람 간 일치도 측정을 수행했다는 뜻은 아니다.
 
+44. `(이 커밋)`: **A-z 완료** (Codex, 2026-09-27; 선점 `8180d3b`).
+    주석 화면의 이동 입력 근처에 영상 재생 초를 직접 확인하고 feed UTC에서 변환·보간하지 말라는 안내를 추가했다.
+    판단·릴리스 라벨을 재생 초로 바꾸고 scripts63 설명·65 --times·71 --dec/--prep/--rel 도움말에 같은 구분을 명시했다.
+    JS의 video.currentTime 저장, 시간값·투구 ID·OCR 코드/템플릿은 변경하지 않았다. 3 CLI --help와 scripts63 prepare로 실제 생성 HTML 문구를 확인했다.
+    350 passed, 2 deselected (`check_project.py --cpu-only`, Ruff 69경로 통과). A-15 이후 데이터 파일 변경 0. 수정 권한 반납. 다음은 **A-y: 다른 검토자용 블라인드 재검토 묶음 준비**다.
+    실제 별도 검토자의 결과를 받기 전에는 일치도 측정 완료나 사람 간 일치도 수치를 주장하지 않는다.
+
 이 문서와 함께 추가되는 후속 커밋의 해시는 `git log -6 --oneline`으로 확인한다.
-최신 Windows CPU 검사: **350 passed, 2 deselected (`check_project.py --cpu-only`, Ruff 69경로 통과)**(체크포인트 43). 아래 브라우저·서비스 검증은 이전 체크포인트 기록이다.
+최신 Windows CPU 검사: **350 passed, 2 deselected (`check_project.py --cpu-only`, Ruff 69경로 통과)**(체크포인트 44). 아래 브라우저·서비스 검증은 이전 체크포인트 기록이다.
 JavaScript 구문 검사 및 Chrome 수동 입력·실제 추론·9회 이후 추천 보류 확인.
 GitHub CI 결과는 해당 커밋의 validation 워크플로에서 따로 확인한다.
 주석 모듈을 먼저 import한 새 프로세스에서도 Torch→Pandas 문자열 생성이 성공하는지
@@ -454,7 +461,7 @@ Claude/Codex의 순서는 [../CHECKLIST.md](../CHECKLIST.md)의 "진행 순서" 
 팀원 레포(SongRoute/pitcheezy) 대조 결과는 [TEAMMATE_PITCHEEZY_2026-09-22.md](TEAMMATE_PITCHEEZY_2026-09-22.md) — 우리 쪽 참조가 없는 별도
 트랙이라 I-0(인터페이스 합의)·I-5(시연 경기)·I-6(클래스 대응표)·G-3(통화)를 A/B와 병행해 먼저 진행한다.
 
-1. **영상 시간 주석: 전 경기 완료** — PA1~82, 322구(297 확인·25 불가·미검토0). 다음은 A-z: 실제 입력 UI/도움말에 UTC와 영상 재생 초 구분을 보완한다.
+1. **영상 시간 주석: 전 경기 완료** — PA1~82, 322구(297 확인·25 불가·미검토0). A-z 입력 안내도 완료했다. 다음은 A-y의 블라인드 재검토 묶음 준비이며 실제 다른 검토자 판정을 받아야 일치도를 측정한다.
 
 ```bash
 uv run --frozen python scripts/checklist_model.py --next
@@ -463,7 +470,7 @@ uv run --frozen python scripts/64_build_scoreboard_evalset.py check
 ```
 
 PA82에는 unavailable이 있으므로 `--require-pa 82`는 통과 조건이 아니다. 기존 후보 rows는 비었으므로 재병합하지 않는다.
-A-y의 다른 검토자 일치도는 남아 있고 H-1·A-v는 완료했다. feed UTC를 재생 초로 보간하지 않는다.
+A-y의 다른 검토자 일치도는 남아 있고 H-1·A-v·A-z는 완료했다. feed UTC를 재생 초로 보간하지 않는다.
 상세 재개 절차는 [CODEX_RESUME_PROMPT.md](CODEX_RESUME_PROMPT.md). 다음 OCR 버전은 새 미검토 자료로 검증한다.
 
 2. **기존 영상 재검증**: 옛 오타니 수집기는 CSV `iloc[i]`를 사용했다.
