@@ -405,7 +405,7 @@
     350 passed, 2 deselected (`check_project.py --cpu-only`, Ruff 69경로 통과). A-15 이후 데이터 파일 변경 0. 수정 권한 반납. 다음은 **A-y: 다른 검토자용 블라인드 재검토 묶음 준비**다.
     실제 별도 검토자의 결과를 받기 전에는 일치도 측정 완료나 사람 간 일치도 수치를 주장하지 않는다.
 
-45. 이번 커밋: **A-y 준비 완료 / 실제 별도 검토자 결과 대기** (Codex, 2026-09-27; 선점 `73b476d`).
+45. `41c9679`: **A-y 준비 완료 / 실제 별도 검토자 결과 대기** (Codex, 2026-09-27; 선점 `73b476d`).
     기준 `ed56f9b1ac7d943ec7ffa217fafeb31cfbbbb55d`의 4입력 canonical 해시·원본 영상 출처·비교 규칙을
     [등록 JSON](results/mlb_p0/game_747139_blind_review_protocol.json)에 고정했다. 키 해시 선정 일반32 + 진단12 = 44구, 겹침0.
     [비교 규약·명령](BLIND_REVIEW_PROTOCOL.md), scripts72 freeze/build/check-package/check-response와 입력 검증 모듈을 추가했다.
