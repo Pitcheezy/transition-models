@@ -404,6 +404,7 @@ feature builder의 고정 2022 프로필을 그 방식으로 갱신하는 코드
       scripts73 build/check --verify-frames(full_input_rebuild, feed·8프레임 바이트 재검증)와 scripts74 predict→score→check --verify-frames 통과, 실제 Windows OCR en-US 실행. PA6 산출물·timing·숫자 OCR 결과 변경 없음. 전체 573 passed, 2 deselected, Ruff 84경로 통과.
 - [ ] F-4b. **이름 OCR v2 사전 등록·blind 평가** — PA61에서 본 v1 약점(대문자 전용 배너의 I→l 혼동, 타순 자릿수 `a.` 오인식)의 규칙을 **새 프레임을 보기 전에** 사전 등록 커밋한 뒤 PA6·PA61이 아닌 타석에서 v1·v2를 같은 프레임으로 평가한다(F-3d 방식). `[추가되었음 · 2026-09-28 · Claude]` 〔모델: Fable 5.1〕
       허용 후보: 대문자 전용 문맥의 l→I 정규화, 타순 자리의 숫자 검증. 금지: 정답 문자열 기반 보정, 퍼지 매칭, 기대 역할/정답 ID로 후보 축소. PA60 투수 교체 타석의 생성기 처리는 별도 항목으로 남기고 우회하지 않는다. v1 결과·PA6/PA61 자료는 보존한다.
+      2026-09-28 사전 등록 커밋(이 커밋, Claude/Fable 5.1; 선점 `f29ac92`): `CONFIG_V2`(v1 crop·gate 동일 + `uppercase_context_l_to_I`·`decoupled_unreadable_batter_slot`), scripts74 `--reader v2`(별도 출력 강제), 파서 검사 추가. 대상은 결정 규칙(PA61 이후 4구 이상·전 투구 annotated·교체/수비 전환 없음인 첫 두 타석)으로 PA62·PA67, 채택 기준·예측은 [OCR 안내 v2 절](docs/PLAYER_IDENTITY_OCR.md). 대상 OCR 출력은 이 커밋 시점에 없다(프레임 자체는 시각 주석 때 본 개발 자료).
 
 ## G. 효용 검증
 

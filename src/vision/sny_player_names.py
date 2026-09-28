@@ -35,20 +35,49 @@ CONFIG = {
     "parser": "uppercase_latin_literal_names_optional_batter_slot_no_fuzzy_correction",
     "state": "current_frame_only_no_hold",
 }
+# v2 (pre-registered 2026-09-28, CHECKLIST F-4b) keeps every v1 crop, gate and preprocessing
+# value and adds two image-side parser rules for this uppercase-only strip. Neither rule uses a
+# roster, an expected player or any per-frame label; v1 stays the default reader.
+CONFIG_V2 = {
+    **deepcopy(CONFIG),
+    "schema": "sny_player_names_v2",
+    "parser": "v1_parser_plus_uppercase_context_l_to_I_and_decoupled_batter_slot",
+    "options": {
+        # The strip prints surnames in capitals, so a lowercase "l" returned by the engine can
+        # only be a capital "I". Applied before upper-casing and only when "l" is the sole
+        # lowercase letter in the raw text; other lowercase output is left to the v1 path.
+        "uppercase_context_l_to_I": True,
+        # When the batter slot position holds one unreadable character before "." or ":", read
+        # the name after it and abstain on the lineup slot instead of abstaining on both.
+        "decoupled_unreadable_batter_slot": True,
+    },
+}
+NO_OPTIONS = {"uppercase_context_l_to_I": False, "decoupled_unreadable_batter_slot": False}
 
 
-def parse_panel_text(raw_text, role):
+def parse_panel_text(raw_text, role, options=None):
     """Parse a fixed single-line panel, preserving raw OCR text without dictionary correction."""
     if role not in CONFIG["crops"]:
         raise ValueError("Unknown player role")
     if not isinstance(raw_text, str):
         raise ValueError("OCR text must be a string")
-    text = " ".join(raw_text.upper().split())
-    slot = None
+    options = {**NO_OPTIONS, **(options or {})}
+    if set(options) != set(NO_OPTIONS):
+        raise ValueError("Unknown parser option")
+    text = " ".join(raw_text.split())
+    slot, reason = None, "literal_name"
     if role == "batter":
+        # The slot character is split off before any case rule so it cannot mask the name.
         match = re.match(r"^([1-9])\s*[.:]?\s*(.*)$", text)
+        unreadable = (
+            re.match(r"^[^\s.:]\s*[.:]\s*(.+)$", text)
+            if match is None and options["decoupled_unreadable_batter_slot"]
+            else None
+        )
         if match:
             slot, text = int(match[1]), match[2]
+        elif unreadable:
+            text, reason = unreadable[1], "literal_name_slot_unreadable"
         else:
             return {
                 "raw_text": raw_text,
@@ -57,13 +86,16 @@ def parse_panel_text(raw_text, role):
                 "status": "abstain",
                 "reason": "batter_slot_missing",
             }
+    if options["uppercase_context_l_to_I"] and {char for char in text if char.islower()} == {"l"}:
+        text = text.replace("l", "I")
+    text = text.upper()
     valid = re.fullmatch(r"[A-Z][A-Z .'-]*[A-Z.]", text) is not None
     return {
         "raw_text": raw_text,
         "name_text": text if valid else None,
         "lineup_order": slot,
         "status": "read" if valid else "abstain",
-        "reason": "literal_name" if valid else "name_syntax_or_empty",
+        "reason": reason if valid else "name_syntax_or_empty",
     }
 
 
@@ -147,14 +179,18 @@ class WindowsOCR:
 class SNYPlayerNameReader:
     """Read literal names in a fixed SNY layout; never accept feed labels or roster candidates."""
 
-    def __init__(self, backend=None):
+    def __init__(self, backend=None, config=None):
         self.backend = WindowsOCR() if backend is None else backend
+        self.config = deepcopy(CONFIG if config is None else config)
+        if self.config["schema"] not in ("sny_player_names_v1", "sny_player_names_v2"):
+            raise ValueError("Unknown player-name reader configuration")
 
     def metadata(self):
-        return {"engine": self.backend.metadata(), "config": deepcopy(CONFIG)}
+        return {"engine": self.backend.metadata(), "config": deepcopy(self.config)}
 
     def read(self, frame):
         """Return per-role text and abstentions; wrong dimensions and missing panels are explicit."""
+        CONFIG = self.config  # noqa: N806 - the frozen v1 module constant is the default
         if frame.size != tuple(CONFIG["frame_size"]):
             return {role: _abstain("unsupported_frame_size") for role in CONFIG["crops"]}
         frame = frame.convert("RGB")
@@ -188,7 +224,7 @@ class SNYPlayerNameReader:
                 if len(texts) != len(roles):
                     raise ValueError("Incomplete OCR crop batch")
                 for role, raw in zip(roles, texts, strict=True):
-                    result[role] = parse_panel_text(raw, role)
+                    result[role] = parse_panel_text(raw, role, CONFIG.get("options"))
             except (OSError, RuntimeError, ValueError, subprocess.TimeoutExpired) as exc:
                 # Keep these opportunities in reports; an engine failure is not a missing label.
                 for role in roles:

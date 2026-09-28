@@ -6,7 +6,13 @@ from pathlib import Path
 import pytest
 from PIL import Image, ImageDraw
 
-from src.vision.sny_player_names import CONFIG, SNYPlayerNameReader, WindowsOCR, parse_panel_text
+from src.vision.sny_player_names import (
+    CONFIG,
+    CONFIG_V2,
+    SNYPlayerNameReader,
+    WindowsOCR,
+    parse_panel_text,
+)
 
 
 class FakeOCR:
@@ -56,6 +62,59 @@ def test_parser_preserves_raw_text_without_fuzzy_or_roster_correction(raw, role,
     assert result["raw_text"] == raw
     assert result["name_text"] == name and result["lineup_order"] == slot
     assert result["status"] == ("read" if name else "abstain")
+
+
+@pytest.mark.parametrize(
+    "raw,role,name,slot,reason",
+    [
+        # Uppercase-only context: the engine's lowercase "l" is a capital "I"; "1" is untouched.
+        ("3.VlENTOS", "batter", "VIENTOS", 3, "literal_name"),
+        ("MEGlLL", "pitcher", "MEGILL", None, "literal_name"),
+        ("7.SM1TH", "batter", None, 7, "name_syntax_or_empty"),
+        # Any other lowercase letter means the text is not an uppercase strip: v1 path only.
+        ("VlENTOs", "pitcher", "VLENTOS", None, "literal_name"),
+        ("de la cruz", "pitcher", "DE LA CRUZ", None, "literal_name"),
+        # One unreadable slot character before the separator: name read, slot abstains.
+        ("a.VlENTOS", "batter", "VIENTOS", None, "literal_name_slot_unreadable"),
+        ("?:JONES", "batter", "JONES", None, "literal_name_slot_unreadable"),
+        # A zero is not a lineup slot: it is treated as an unreadable slot character.
+        ("0.JONES", "batter", "JONES", None, "literal_name_slot_unreadable"),
+        # No separator at all, or nothing after it, keeps the v1 outcome.
+        ("JONES", "batter", None, None, "batter_slot_missing"),
+        ("a.", "batter", None, None, "batter_slot_missing"),
+        ("3.JONES .304", "batter", None, 3, "name_syntax_or_empty"),
+    ],
+)
+def test_v2_parser_options_are_image_side_rules_without_roster_correction(
+    raw, role, name, slot, reason
+):
+    result = parse_panel_text(raw, role, CONFIG_V2["options"])
+    assert result["raw_text"] == raw
+    assert result["name_text"] == name and result["lineup_order"] == slot
+    assert result["status"] == ("read" if name else "abstain") and result["reason"] == reason
+
+
+@pytest.mark.parametrize("raw,role", [("3.VlENTOS", "batter"), ("a.VlENTOS", "batter")])
+def test_v1_parser_is_unchanged_by_the_v2_options(raw, role):
+    assert parse_panel_text(raw, role) == parse_panel_text(raw, role, None)
+    assert parse_panel_text("3.VlENTOS", "batter")["name_text"] == "VLENTOS"
+    assert parse_panel_text("a.VlENTOS", "batter")["reason"] == "batter_slot_missing"
+    with pytest.raises(ValueError):
+        parse_panel_text(raw, role, {"unknown_option": True})
+
+
+def test_v2_reader_shares_v1_crops_and_reports_its_own_schema():
+    backend = FakeOCR(["MEGlLL", "a.VlENTOS"])
+    reader = SNYPlayerNameReader(backend, config=CONFIG_V2)
+    result = reader.read(synthetic_frame())
+    assert result["pitcher"]["name_text"] == "MEGILL"
+    assert result["batter"]["name_text"] == "VIENTOS" and result["batter"]["lineup_order"] is None
+    metadata = reader.metadata()["config"]
+    assert metadata["schema"] == "sny_player_names_v2" and metadata["crops"] == CONFIG["crops"]
+    assert metadata["presence"] == CONFIG["presence"]
+    assert "options" not in CONFIG and CONFIG["schema"] == "sny_player_names_v1"
+    with pytest.raises(ValueError):
+        SNYPlayerNameReader(backend, config={**CONFIG, "schema": "sny_player_names_v9"})
 
 
 def test_reader_gets_only_image_crops_and_keeps_a_wrong_literal():

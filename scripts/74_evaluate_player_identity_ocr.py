@@ -49,14 +49,24 @@ def main():
         action="store_true",
         help="also verify local frame bytes/source binding when scoring/checking; predict always does",
     )
+    parser.add_argument(
+        "--reader",
+        choices=("v1", "v2"),
+        default="v1",
+        help="predict only: frozen v1 (default) or the pre-registered v2 parser options (F-4b)",
+    )
     args = parser.parse_args()
     custom_evalset = not _same_file(args.evalset, DEFAULT_EVALSET)
     if args.command == "predict" and custom_evalset and args.predictions is None:
         parser.error("predict with a custom evalset requires explicit --predictions")
+    if args.command == "predict" and args.reader != "v1" and args.predictions is None:
+        parser.error("predict with a non-v1 reader requires explicit --predictions")
     args.predictions = args.predictions or DEFAULT_PREDICTIONS
     custom_predictions = not _same_file(args.predictions, DEFAULT_PREDICTIONS)
     if args.command == "predict" and custom_evalset and not custom_predictions:
         parser.error("custom evalset must not overwrite canonical PA6 predictions")
+    if args.command == "predict" and args.reader != "v1" and not custom_predictions:
+        parser.error("a non-v1 reader must not overwrite canonical v1 predictions")
     custom_inputs = custom_evalset or custom_predictions
     if args.command == "score" and custom_inputs and args.report is None:
         parser.error("score with custom inputs requires explicit --report")
@@ -79,9 +89,10 @@ def main():
     check_player_identity_evalset(evalset, verify_frames=args.verify_frames)
     if args.command == "predict":
         # Import/initialize Windows OCR only for actual prediction; scoring remains portable.
-        from src.vision.sny_player_names import SNYPlayerNameReader
+        from src.vision.sny_player_names import CONFIG, CONFIG_V2, SNYPlayerNameReader
 
-        predictions = build_predictions(evalset, SNYPlayerNameReader())
+        reader = SNYPlayerNameReader(config=CONFIG_V2 if args.reader == "v2" else CONFIG)
+        predictions = build_predictions(evalset, reader)
         report = score_predictions(evalset, predictions)
         _write(args.predictions, predictions)
     else:
