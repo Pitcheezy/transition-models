@@ -476,7 +476,7 @@
     다음 한 단위는 **PA61 네 투구의 이름 근거·고정 v1 검증**. 투수 IGLESIAS의 전체 명단 모호성을 정답 역할로 해결하지 않는지 확인한다.
     PA60은 투수 교체 이벤트가 있어 현 기준 생성기가 거부하므로 다음 단위에서 우회하지 않는다. A-y 실제 독립 응답·I-0/I-5 답변 대기, 수정 권한 반납.
 
-50. (이 커밋): **F-4a 세 번째 단위: PA61 네 투구의 이름 근거·고정 v1 평가 완료** (Claude 세션 Fable 5.1, 2026-09-28; 선점 `fdaf6b7`).
+50. `abfa03c`: **F-4a 세 번째 단위: PA61 네 투구의 이름 근거·고정 v1 평가 완료** (Claude 세션 Fable 5.1, 2026-09-28; 선점 `fdaf6b7`).
     [PA61 직접 판독](docs/results/mlb_p0/game_747139_player_identity_review_pa61.json)·[평가셋](docs/results/mlb_p0/game_747139_player_identity_evalset_pa61.json): 판단 프레임 6044.75·6063.00·6077.50·6094.00, 8역할 중 투수 `IGLESIAS` 4건·타자 `VIENTOS`/타순 3 3건 직접 판독, 6044.75 타자 배너 부재 1건 기권(이후 프레임으로 채우지 않음). 모든 연속성 unknown, held 0.
     수동 대응: VIENTOS 3건 유일 일치 → feed 기준(Mark Vientos 668901)과 3/3 일치. IGLESIAS 4건은 전체 명단의 Raisel/Jose 두 후보라 `ambiguous_name` 기권이며 투수 역할·정답 ID로 좁히지 않았다. 불일치 0. scripts73 build/check --verify-frames는 full_input_rebuild·feed/8프레임 바이트 재검증 통과.
     고정 v1(reader 설정·코드 해시 PA6 실행과 동일, 튜닝 없음) 실제 Windows OCR en-US 실행 → [예측](docs/results/mlb_p0/game_747139_player_identity_ocr_v1_pa61_predictions.json)·[보고서](docs/results/mlb_p0/game_747139_player_identity_ocr_v1_pa61_report.json), predict→score→check --verify-frames 통과.

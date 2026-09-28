@@ -29,7 +29,7 @@
 | 항목 | 값 | 갱신 |
 |---|---|---|
 | 브랜치 | `codex/fix-point-label-alignment` | 2026-09-22 |
-| 최신 작업 커밋 | (이 커밋) (F-4a PA61 이름 근거·고정 v1 평가), 선점 `fdaf6b7`; 이름 OCR v1 `f5962d7`, 평가 준비 `e34c8a6`, A-y 동결 기준 `ed56f9b` | 2026-09-28 |
+| 최신 작업 커밋 | `abfa03c` (F-4a PA61 이름 근거·고정 v1 평가), 선점 `fdaf6b7`; 이름 OCR v1 `f5962d7`, 평가 준비 `e34c8a6`, A-y 동결 기준 `ed56f9b` | 2026-09-28 |
 | 파일 수정 권한 | **비어 있음** — F-4a PA61 근거·고정 v1 평가 완료(Claude, 2026-09-28). 다음 F-4b 이름 OCR v2 사전 등록; A-y 실제 응답 대기 | 2026-09-28 |
 | 중계 시각 주석 | **297 확인 / 25 확인 불가 / 0 미검토** — 전 경기 322구 검토 완료. 완전 타석 2~4·6~15·18~19·21·23~28·30~32·34·36~38·40~46·49~51·53~55·57~63·65~69·71·74~79·81. 불가 목록·반이닝 집계·리드 분포는 [전 경기 요약](docs/MLB_BROADCAST_TIMING.md). 규약 v2, 수동 시각 | 2026-09-27 |
 | 점수판 평가셋 | timing 322 / 리뷰 297(292구 10필드 confirmed, PA 8/1·16/1·33/1·41/1·44/1 partial) / 라벨 충돌 0 / 판단 화면 불가 25 / 미검토 0 | 2026-09-27 |
@@ -397,7 +397,7 @@ feature builder의 고정 2022 프로필을 그 방식으로 갱신하는 코드
       신규51검사·실제엔진/출처·원문 재채점 통과, 전체573 passed·2 deselected, Ruff84경로 통과. 다른 작업 폴더에서 저장 결과 check도 통과.
       예측은 Windows OCR en-US 필요, 저장 결과 채점은 이식 가능하다. UI 선수 ID는 여전히 feed 기준이며 실시간 연결·교체·새 영상 검증은 남았다.
       다음 PA61(4구)은 교체 이벤트 없이 IGLESIAS 모호성 검증을 준비한다. PA60은 투수 교체 이벤트 때문에 현 기준 생성기에서 거부, 임의 해제 금지.
-      2026-09-28 세 번째 단위(이 커밋, Claude 세션 Fable 5.1; 선점 `fdaf6b7`): PA61(8회초, 4구) 판단 프레임 6044.75·6063.00·6077.50·6094.00의 [직접 판독](docs/results/mlb_p0/game_747139_player_identity_review_pa61.json)과 [평가셋](docs/results/mlb_p0/game_747139_player_identity_evalset_pa61.json).
+      2026-09-28 세 번째 단위(`abfa03c`, Claude 세션 Fable 5.1; 선점 `fdaf6b7`): PA61(8회초, 4구) 판단 프레임 6044.75·6063.00·6077.50·6094.00의 [직접 판독](docs/results/mlb_p0/game_747139_player_identity_review_pa61.json)과 [평가셋](docs/results/mlb_p0/game_747139_player_identity_evalset_pa61.json).
       8역할 중 투수 `IGLESIAS` 4건, 타자 `VIENTOS`·타순 3 3건을 직접 읽었고 6044.75 타자 배너 부재 1건은 기권. 수동 대응: VIENTOS 3건은 명단 유일 일치로 feed 기준과 3/3 일치, IGLESIAS 4건은 전체 명단의 Raisel/Jose 두 후보라 `ambiguous_name` 기권(투수 역할·정답 ID로 좁히지 않음), 불일치 0. 6077.50은 라이브 광각 프레임이지만 bug는 같은 크기·위치로 완전히 읽힌다.
       고정 v1(설정·코드 해시 PA6 실행과 동일, 튜닝 없음) [예측](docs/results/mlb_p0/game_747139_player_identity_ocr_v1_pa61_predictions.json)·[보고서](docs/results/mlb_p0/game_747139_player_identity_ocr_v1_pa61_report.json): 이름 8기회 중 기준 판독 가능 7·시도 6·정답 4(IGLESIAS×4)·**오답 2**·기권 2; ID는 8기회 모두 기권(IGLESIAS 4 모호, VIENTOS 3은 이름 오판독으로 사전 불일치, 부재 1; 시도 0·오답 0); 타순 4기회 중 정답 2·기권 2. 엔진 오류 0, 부재 프레임 거짓 판독 0.
       오판독 원문: 6077.50·6094.00 타자 `3.VlENTOS`(대문자 I가 소문자 l) → 이름 `VLENTOS` 오답 2건(ID 기권으로 가리지 않고 이름 오답으로 보고), 6063.00 `a.VlENTOS`(타순 3이 a) → 타순 누락 기권. 이름 처리율은 4/8이며 IGLESIAS 정답 4건도 ID까지는 가지 못한다. 개선은 F-4b로 넘긴다.
