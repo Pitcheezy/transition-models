@@ -13,13 +13,13 @@ H-5에서 병합 경로·영상 캐시 출처·A-y 안내 자산 바인딩을 �
 6판단 프레임×2역할=12건 중 11개 이름을 직접 읽었고 첫 투구 타자 1건은 기권했다. 자동 인식 결과가 아니다.
 SNY 이름 OCR v1도 구현·개발 평가했다(HANDOFF49, [OCR 안내](PLAYER_IDENTITY_OCR.md)).
 PA6 이름/ID12건 중9정답·3기권, 타순6건 중4정답·2기권이며 허용된 오답0이다. OCR 원문과 기권을 그대로 보존한다.
-다음 한 단위는 **F-4a PA61 네 투구의 이름 근거·고정 v1 검증**이다. F-4a 전체는 아직 부분 완료다.
+PA61 네 투구의 이름 근거·고정 v1 평가도 마쳤다(HANDOFF50): IGLESIAS 4건은 이름 정답·ID 모호 기권, VIENTOS는 I→l 오인식으로 이름 오답 2·타순 누락 1. 다음 한 단위는 **F-4b 이름 OCR v2 사전 등록·blind 평가**이며 F-4a 전체는 아직 부분 완료다.
 남은 작업 기준은 [CHECKLIST.md](../CHECKLIST.md)이며, C·D는 팀원 담당이다.
 
 ---
 
 저장소 `Pitcheezy/transition-models`, 브랜치 `codex/fix-point-label-alignment`에서 **CHECKLIST F-4a**를 진행해라.
-점수판 상태만으로는 선수 ID가 확인되지 않는다. 완성된 v1을 고정하고 PA61의 이름 판독 근거·모호성 사례를 검증한다.
+점수판 상태만으로는 선수 ID가 확인되지 않는다. v1과 PA6·PA61 평가는 고정됐다. 다음은 F-4b: v2 규칙을 새 프레임을 보기 전에 사전 등록하고 PA6·PA61 밖의 타석에서 v1과 같은 프레임으로 평가한다.
 새 모델 학습이나 실제 외부 서비스 연결은 이번 범위가 아니다. 동료 저장소를 수정하거나 메시지를 보내지 않는다.
 
 ## 0. 시작 전 확인
@@ -37,7 +37,11 @@ git log -8 --oneline
 - 상태 표의 파일 수정 권한을 `Codex (착수 날짜, F-4a 선수 식별)`로 바꾸는 작은 커밋을 먼저 푸시한다.
   다른 작업자가 권한을 잡고 있으면 파일 수정 없이 상태를 대조한다.
 
-## 1. 다음 작업: F-4a PA61 네 투구의 이름 근거·고정 v1 검증
+## 1. 다음 작업: F-4b 이름 OCR v2 사전 등록·blind 평가 (아래 PA61 절차는 완료된 직전 단위의 기록이며 새 타석에 같은 절차를 쓴다)
+
+F-4b 순서: (a) PA61에서 확인한 약점(대문자 전용 배너의 I→l 혼동, 타순 자릿수 `a.` 오인식)에 대한 v2 규칙과 대상 타석(PA6·PA61 제외, 교체 이벤트 없는 타석)을 **프레임을 보기 전에** 문서·코드로 사전 등록해 커밋한다.
+(b) 대상 타석의 판단 프레임을 scripts73 절차로 직접 읽어 별도 review/evalset을 만든다. (c) v1·v2를 같은 평가셋에 별도 `--predictions/--report`로 실행해 이름·ID·타순을 따로 채점하고 v1 결과·PA6/PA61 자료는 보존한다.
+정답 문자열 보정·퍼지 매칭·기대 역할/정답 ID 필터는 금지. PA60 교체 타석은 별도 항목이다.
 
 읽을 자료: `docs/PLAYER_IDENTITY_PROTOCOL.md`, `docs/PLAYER_IDENTITY_OCR.md`, `src/data/player_identity.py`,
 `src/vision/sny_player_names.py`, `src/evaluation/player_identity_ocr.py`, scripts73/74,

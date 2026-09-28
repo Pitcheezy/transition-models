@@ -129,6 +129,29 @@ note에 부재 이유를 명시한다. 11/12는 이 선택 자료에서 이름�
 그런 타석을 추가할 때는 이벤트 순서를 확인하고 투구별 ID 기준이 불확실하면 보류한다.
 이번 평가셋 생성기는 대상 타석에 교체 또는 수비 위치 변경 이벤트가 있으면 보수적으로 거부한다.
 
+## PA61 기준과 직접 읽은 범위 (2026-09-28)
+
+공식 feed의 `/liveData/plays/allPlays/60`은 `about.atBatIndex=60`, 즉 PA61이다. 투수는 **Raisel Iglesias 628452**(ATL, 홈),
+타자는 **Mark Vientos 668901**(NYM, 원정)이며 8회초다. PA61의 `playEvents`는 투구 4개뿐이고 교체·수비 위치 변경 이벤트가 없다
+(직전 PA60에 `mound_visit`·`pitching_substitution`이 있어 PA60은 현 생성기가 거부하며 이번 범위에서 우회하지 않았다).
+2026-09-28 Claude 세션(Fable 5.1)이 기존 timing의 네 판단 프레임을 직접 읽어 [PA61 review](docs/results/mlb_p0/game_747139_player_identity_review_pa61.json)에 기록했고,
+scripts73 build/check `--verify-frames`로 [PA61 평가셋](docs/results/mlb_p0/game_747139_player_identity_evalset_pa61.json)을 만들었다(full_input_rebuild, feed·8프레임 바이트 재검증).
+
+| 투구 | 판단 재생 초 | 투수 문자열 | 타자 문자열 / 타순 |
+|---|---:|---|---|
+| 61/1 | 6044.75 | `IGLESIAS` | 배너 없음: null / null |
+| 61/2 | 6063.00 | `IGLESIAS` | `VIENTOS` / 3 |
+| 61/3 | 6077.50 | `IGLESIAS` | `VIENTOS` / 3 |
+| 61/4 | 6094.00 | `IGLESIAS` | `VIENTOS` / 3 |
+
+4프레임 × 2역할의 **8개 기록 중 7개 이름을 직접 읽었고 1개는 타자 배너가 없었다.** 6077.50은 홈 뒤 상단 라이브 광각 프레임이지만 bug는 같은 크기·위치라 완전히 읽힌다.
+타자 배너 `3.VIENTOS 0-3`에서 이름과 타순을 분리했고 오른쪽 `0-3`은 경기 성적(0타수 3타석)이지 카운트나 이름 근거가 아니다. 팀은 배너에 없어 모두 null이다.
+
+이름 대응 결과는 규약대로 나뉜다. `VIENTOS` 3건은 전체 명단에서 유일하게 일치해 `observed`가 되고 feed 기준과 3/3 일치한다.
+`IGLESIAS` 4건은 문자열이 완전히 읽혔지만 전체 명단에 Raisel Iglesias(투수)와 Jose Iglesias(타자) 두 후보가 있어 **`ambiguous_name` 기권**이다.
+투수 역할, 타석 상황, feed 정답 ID로 후보를 하나로 줄이지 않는다. 화면에 성만 표시되는 이 형식에서는 성이 겹치는 선수를 이름만으로 확정할 수 없다는 사례이며,
+동명이인 해소는 화면에서 실제로 읽힌 팀·이니셜·번호 같은 추가 관찰이나 별도 규약이 있어야 한다. 모든 연속성은 `unknown`, held 0이다.
+
 ## 재현과 다음 범위
 
 구현은 [player_identity.py](../src/data/player_identity.py), CLI는

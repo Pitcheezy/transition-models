@@ -476,8 +476,16 @@
     다음 한 단위는 **PA61 네 투구의 이름 근거·고정 v1 검증**. 투수 IGLESIAS의 전체 명단 모호성을 정답 역할로 해결하지 않는지 확인한다.
     PA60은 투수 교체 이벤트가 있어 현 기준 생성기가 거부하므로 다음 단위에서 우회하지 않는다. A-y 실제 독립 응답·I-0/I-5 답변 대기, 수정 권한 반납.
 
+50. (이 커밋): **F-4a 세 번째 단위: PA61 네 투구의 이름 근거·고정 v1 평가 완료** (Claude 세션 Fable 5.1, 2026-09-28; 선점 `fdaf6b7`).
+    [PA61 직접 판독](docs/results/mlb_p0/game_747139_player_identity_review_pa61.json)·[평가셋](docs/results/mlb_p0/game_747139_player_identity_evalset_pa61.json): 판단 프레임 6044.75·6063.00·6077.50·6094.00, 8역할 중 투수 `IGLESIAS` 4건·타자 `VIENTOS`/타순 3 3건 직접 판독, 6044.75 타자 배너 부재 1건 기권(이후 프레임으로 채우지 않음). 모든 연속성 unknown, held 0.
+    수동 대응: VIENTOS 3건 유일 일치 → feed 기준(Mark Vientos 668901)과 3/3 일치. IGLESIAS 4건은 전체 명단의 Raisel/Jose 두 후보라 `ambiguous_name` 기권이며 투수 역할·정답 ID로 좁히지 않았다. 불일치 0. scripts73 build/check --verify-frames는 full_input_rebuild·feed/8프레임 바이트 재검증 통과.
+    고정 v1(reader 설정·코드 해시 PA6 실행과 동일, 튜닝 없음) 실제 Windows OCR en-US 실행 → [예측](docs/results/mlb_p0/game_747139_player_identity_ocr_v1_pa61_predictions.json)·[보고서](docs/results/mlb_p0/game_747139_player_identity_ocr_v1_pa61_report.json), predict→score→check --verify-frames 통과.
+    이름 8기회: 기준 판독 가능 7, 시도 6, 정답 4(IGLESIAS×4), **오답 2**, 기권 2. ID 8기회: 모두 기권(IGLESIAS 4 모호, VIENTOS 3 사전 불일치, 부재 1; 시도 0·오답 0). 타순 4기회: 정답 2·기권 2. 엔진 오류 0, 부재 프레임 거짓 판독 0.
+    오판독 원문 `3.VlENTOS`(6077.50·6094.00, I→l) → `VLENTOS` 이름 오답 2건, `a.VlENTOS`(6063.00, 타순 3→a) → 타순 누락 기권. 이름 오답을 ID 기권으로 가리지 않고 보고했다. 처리율 4/8이며 정답 4건도 ID 확정에는 이르지 못한다.
+    PA6 산출물·timing·숫자 OCR 결과 변경 없음(git status). 전체 **573 passed, 2 deselected**, Ruff 84경로 통과. F-4a 전체는 부분 완료 유지. 새 항목 F-4b(v2 사전 등록·blind 평가) 추가. PA60 교체 타석은 우회하지 않았다. A-y 실제 응답 대기, 수정 권한 반납.
+
 이 문서와 함께 추가되는 후속 커밋의 해시는 `git log -6 --oneline`으로 확인한다.
-최신 Windows CPU 검사: **573 passed, 2 deselected (`check_project.py --cpu-only`, Ruff 84경로 통과)**(체크포인트 49). 아래 브라우저·서비스 검증은 이전 체크포인트 기록이다.
+최신 Windows CPU 검사: **573 passed, 2 deselected (`check_project.py --cpu-only`, Ruff 84경로 통과)**(체크포인트 50). 아래 브라우저·서비스 검증은 이전 체크포인트 기록이다.
 JavaScript 구문 검사 및 Chrome 수동 입력·실제 추론·9회 이후 추천 보류 확인.
 GitHub CI 결과는 해당 커밋의 validation 워크플로에서 따로 확인한다.
 주석 모듈을 먼저 import한 새 프로세스에서도 Torch→Pandas 문자열 생성이 성공하는지
@@ -532,7 +540,7 @@ Claude/Codex의 순서는 [../CHECKLIST.md](../CHECKLIST.md)의 "진행 순서" 
 팀원 레포(SongRoute/pitcheezy) 대조 결과는 [TEAMMATE_PITCHEEZY_2026-09-22.md](TEAMMATE_PITCHEEZY_2026-09-22.md) — 우리 쪽 참조가 없는 별도
 트랙이라 I-0(인터페이스 합의)·I-5(시연 경기)·I-6(클래스 대응표)·G-3(통화)를 A/B와 병행해 먼저 진행한다.
 
-1. **다음 한 단위 F-4a: PA61 네 투구의 이름 근거·고정 v1 검증** — PA6 기준선·별도 예측 보고서는 완료했다. IGLESIAS 이름 모호성의 새 개발 사례를 검토하며 기존 v1·PA6 자료를 보존한다. F-4a 전체는 미완료다.
+1. **다음 한 단위 F-4b: 이름 OCR v2 사전 등록·blind 평가** — F-4a는 PA6 기준선·PA61 근거·고정 v1 평가까지 완료했고 전체는 부분 완료다(체크포인트 50). PA61에서 v1은 IGLESIAS 이름 4건을 읽고 명단 모호성으로 ID를 기권했으며 VIENTOS는 I→l 오인식으로 이름 오답 2·타순 누락 1이다. 개선 규칙은 새 프레임을 보기 전에 사전 등록하고 PA6·PA61 밖의 타석에서 평가한다.
    영상 시간 주석은 PA1~82, 322구(297 확인·25 불가·미검토0) 완료. A-y는 v2 묶음 준비 완료 후 실제 다른 검토자 응답을 기다린다.
 
 ```bash
