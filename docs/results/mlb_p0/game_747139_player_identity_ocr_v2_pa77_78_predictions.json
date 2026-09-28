@@ -1,0 +1,575 @@
+{
+  "schema": "mlb_player_identity_ocr_predictions_v1",
+  "game_pk": 747139,
+  "evalset_sha256": "e557ffd7739329e23a2be068ab9b189447211551ac2e60d2f14a04f6e1927bbc",
+  "roster_sha256": "20da6d29b18f2781b51b73a73ff37d17e1c70767e42588e9a4ee9cb9b29f00b4",
+  "source": {
+    "page_url": "https://www.mlb.com/video/9-30-24-mets-win-epic-game-in-playoff-clincher",
+    "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+    "duration_seconds": 9340.748083
+  },
+  "reader_metadata": {
+    "engine": {
+      "engine": "windows_ocr",
+      "language": "en-US",
+      "os_version": "10.0.26200.0",
+      "dll_version": "10.0.26100.9278 (WinBuild.160101.0800)"
+    },
+    "config": {
+      "schema": "sny_player_names_v2",
+      "frame_size": [
+        1280,
+        720
+      ],
+      "crops": {
+        "pitcher": [
+          64,
+          111,
+          168,
+          129
+        ],
+        "batter": [
+          64,
+          133,
+          252,
+          151
+        ]
+      },
+      "presence": {
+        "count_bug": "sny_scoreboard_v2_default_gate",
+        "min_neutral_bright_fraction": 0.5,
+        "min_channel": 160,
+        "max_channel_spread": 50
+      },
+      "preprocessing": {
+        "scale": 4,
+        "resampling": "LANCZOS",
+        "border": 16,
+        "grayscale": true
+      },
+      "parser": "v1_parser_plus_uppercase_context_l_to_I_and_decoupled_batter_slot",
+      "state": "current_frame_only_no_hold",
+      "options": {
+        "uppercase_context_l_to_I": true,
+        "decoupled_unreadable_batter_slot": true
+      }
+    }
+  },
+  "reader_metadata_sha256": "40b17b29db4c3abea944c0771f2207db4943b76f2989c56e3fcbd7d6e388d72e",
+  "pipeline_code_sha256": {
+    "src/evaluation/player_identity_ocr.py": "1faa7c4fc6b3790f45627c8e75a3edf2f6c23515a6262f64474b90047472b4b7",
+    "src/data/player_identity.py": "bef316c76bb8ba153f8db4461fad1263a58b9c46ae461dd4838b44b219523171",
+    "src/vision/frames.py": "8abffcc1c787e7d43102fbba5066770b13a68bcfb08f45ac1328ed00a3cc705e",
+    "src/vision/sny_player_names.py": "351913177d031c89f566faee9914bcb3130ae6cdaded7e26027d0c6bb8c7f05f",
+    "src/vision/sny_scoreboard.py": "a886460da1ce866b664983e3cd36a5cc77388113e0c7014015183ade50006714",
+    "src/vision/windows_ocr.ps1": "5605def973ec8a515619c2fb421fb54ec5da0ebd82e0965fcc2d05fb0eb80ed2",
+    "scripts/74_evaluate_player_identity_ocr.py": "61544c3f941c93290c0efb740c7e36f6eb336a4bbb1b9d9a9afa76671f185a5c"
+  },
+  "predictions": [
+    {
+      "game_pk": 747139,
+      "at_bat_number": 77,
+      "pitch_number": 1,
+      "play_id": "3be206be-743d-4dbe-9d8e-7d19498634b9",
+      "role": "pitcher",
+      "evidence": {
+        "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+        "frame_seconds": 7861,
+        "image_sha256": "6e32edb08cb6ed82bed7cf9c6c773065369a35a0599f67a2e502cd0b17877151",
+        "path": "outputs/frames/evalset_7861.00.jpg"
+      },
+      "raw_text": "JOHNSON",
+      "name_text": "JOHNSON",
+      "lineup_order": null,
+      "status": "read",
+      "reason": "literal_name"
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 77,
+      "pitch_number": 1,
+      "play_id": "3be206be-743d-4dbe-9d8e-7d19498634b9",
+      "role": "batter",
+      "evidence": {
+        "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+        "frame_seconds": 7861,
+        "image_sha256": "6e32edb08cb6ed82bed7cf9c6c773065369a35a0599f67a2e502cd0b17877151",
+        "path": "outputs/frames/evalset_7861.00.jpg"
+      },
+      "raw_text": "",
+      "name_text": null,
+      "lineup_order": null,
+      "status": "abstain",
+      "reason": "name_panel_absent"
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 77,
+      "pitch_number": 2,
+      "play_id": "0f7a16ed-ea26-46c6-8b4e-23b1872c43ac",
+      "role": "pitcher",
+      "evidence": {
+        "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+        "frame_seconds": 7876.5,
+        "image_sha256": "596fd6141a7efcbc96c746f03f08c97114d5904171586b5a3ce5a83c34abb76e",
+        "path": "outputs/frames/evalset_7876.50.jpg"
+      },
+      "raw_text": "JOHNSON",
+      "name_text": "JOHNSON",
+      "lineup_order": null,
+      "status": "read",
+      "reason": "literal_name"
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 77,
+      "pitch_number": 2,
+      "play_id": "0f7a16ed-ea26-46c6-8b4e-23b1872c43ac",
+      "role": "batter",
+      "evidence": {
+        "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+        "frame_seconds": 7876.5,
+        "image_sha256": "596fd6141a7efcbc96c746f03f08c97114d5904171586b5a3ce5a83c34abb76e",
+        "path": "outputs/frames/evalset_7876.50.jpg"
+      },
+      "raw_text": "",
+      "name_text": null,
+      "lineup_order": null,
+      "status": "abstain",
+      "reason": "name_panel_absent"
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 77,
+      "pitch_number": 3,
+      "play_id": "d018328c-4add-4a23-8a72-e1031401f6ee",
+      "role": "pitcher",
+      "evidence": {
+        "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+        "frame_seconds": 7891.75,
+        "image_sha256": "5ab939948a882e55e151f548aea780644a3f558de0f99609cf72e04161ecb8c5",
+        "path": "outputs/frames/evalset_7891.75.jpg"
+      },
+      "raw_text": "JOHNSON",
+      "name_text": "JOHNSON",
+      "lineup_order": null,
+      "status": "read",
+      "reason": "literal_name"
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 77,
+      "pitch_number": 3,
+      "play_id": "d018328c-4add-4a23-8a72-e1031401f6ee",
+      "role": "batter",
+      "evidence": {
+        "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+        "frame_seconds": 7891.75,
+        "image_sha256": "5ab939948a882e55e151f548aea780644a3f558de0f99609cf72e04161ecb8c5",
+        "path": "outputs/frames/evalset_7891.75.jpg"
+      },
+      "raw_text": "",
+      "name_text": null,
+      "lineup_order": null,
+      "status": "abstain",
+      "reason": "name_panel_absent"
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 77,
+      "pitch_number": 4,
+      "play_id": "fc703098-06c4-4433-a3c0-02d0d4474969",
+      "role": "pitcher",
+      "evidence": {
+        "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+        "frame_seconds": 7916.25,
+        "image_sha256": "ddc21e9e6005833cea5843d7a7451d7f958d505cbf2319923d15830bc86cf621",
+        "path": "outputs/frames/evalset_7916.25.jpg"
+      },
+      "raw_text": "JOHNSON",
+      "name_text": "JOHNSON",
+      "lineup_order": null,
+      "status": "read",
+      "reason": "literal_name"
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 77,
+      "pitch_number": 4,
+      "play_id": "fc703098-06c4-4433-a3c0-02d0d4474969",
+      "role": "batter",
+      "evidence": {
+        "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+        "frame_seconds": 7916.25,
+        "image_sha256": "ddc21e9e6005833cea5843d7a7451d7f958d505cbf2319923d15830bc86cf621",
+        "path": "outputs/frames/evalset_7916.25.jpg"
+      },
+      "raw_text": "",
+      "name_text": null,
+      "lineup_order": null,
+      "status": "abstain",
+      "reason": "name_panel_absent"
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 78,
+      "pitch_number": 1,
+      "play_id": "3a1dd24b-999e-446a-b201-6a54e1ca6e87",
+      "role": "pitcher",
+      "evidence": {
+        "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+        "frame_seconds": 7957.5,
+        "image_sha256": "a971392d8697ab1917453c4d46e82d62a3880351a5b317ddfa01af636dc576fb",
+        "path": "outputs/frames/evalset_7957.50.jpg"
+      },
+      "raw_text": "JOHNSON",
+      "name_text": "JOHNSON",
+      "lineup_order": null,
+      "status": "read",
+      "reason": "literal_name"
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 78,
+      "pitch_number": 1,
+      "play_id": "3a1dd24b-999e-446a-b201-6a54e1ca6e87",
+      "role": "batter",
+      "evidence": {
+        "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+        "frame_seconds": 7957.5,
+        "image_sha256": "a971392d8697ab1917453c4d46e82d62a3880351a5b317ddfa01af636dc576fb",
+        "path": "outputs/frames/evalset_7957.50.jpg"
+      },
+      "raw_text": "",
+      "name_text": null,
+      "lineup_order": null,
+      "status": "abstain",
+      "reason": "name_panel_absent"
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 78,
+      "pitch_number": 2,
+      "play_id": "6234b5dc-5ef2-4fdb-85d8-09177f9c7809",
+      "role": "pitcher",
+      "evidence": {
+        "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+        "frame_seconds": 7973,
+        "image_sha256": "6fdd0fdefba13bec64f91284070ab2534ef4639aae3b72b8f8b436ac2e7f569b",
+        "path": "outputs/frames/evalset_7973.00.jpg"
+      },
+      "raw_text": "JOHNSON",
+      "name_text": "JOHNSON",
+      "lineup_order": null,
+      "status": "read",
+      "reason": "literal_name"
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 78,
+      "pitch_number": 2,
+      "play_id": "6234b5dc-5ef2-4fdb-85d8-09177f9c7809",
+      "role": "batter",
+      "evidence": {
+        "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+        "frame_seconds": 7973,
+        "image_sha256": "6fdd0fdefba13bec64f91284070ab2534ef4639aae3b72b8f8b436ac2e7f569b",
+        "path": "outputs/frames/evalset_7973.00.jpg"
+      },
+      "raw_text": "",
+      "name_text": null,
+      "lineup_order": null,
+      "status": "abstain",
+      "reason": "name_panel_absent"
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 78,
+      "pitch_number": 3,
+      "play_id": "63bdb74e-98bf-4c06-b87c-82811dabcdf5",
+      "role": "pitcher",
+      "evidence": {
+        "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+        "frame_seconds": 7991.25,
+        "image_sha256": "433558fc245f62e64e96bce2f226f05b48422c5d0e05fc137271cf9ade57f9fa",
+        "path": "outputs/frames/evalset_7991.25.jpg"
+      },
+      "raw_text": "JOHNSON",
+      "name_text": "JOHNSON",
+      "lineup_order": null,
+      "status": "read",
+      "reason": "literal_name"
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 78,
+      "pitch_number": 3,
+      "play_id": "63bdb74e-98bf-4c06-b87c-82811dabcdf5",
+      "role": "batter",
+      "evidence": {
+        "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+        "frame_seconds": 7991.25,
+        "image_sha256": "433558fc245f62e64e96bce2f226f05b48422c5d0e05fc137271cf9ade57f9fa",
+        "path": "outputs/frames/evalset_7991.25.jpg"
+      },
+      "raw_text": "",
+      "name_text": null,
+      "lineup_order": null,
+      "status": "abstain",
+      "reason": "name_panel_absent"
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 78,
+      "pitch_number": 4,
+      "play_id": "a64b1765-489c-42da-a464-643a03f13467",
+      "role": "pitcher",
+      "evidence": {
+        "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+        "frame_seconds": 8013.75,
+        "image_sha256": "cfb1ed3a299d0191f72cf67498e48d4c85c113827447e70015d6d8df233ecb28",
+        "path": "outputs/frames/evalset_8013.75.jpg"
+      },
+      "raw_text": "JOHNSON",
+      "name_text": "JOHNSON",
+      "lineup_order": null,
+      "status": "read",
+      "reason": "literal_name"
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 78,
+      "pitch_number": 4,
+      "play_id": "a64b1765-489c-42da-a464-643a03f13467",
+      "role": "batter",
+      "evidence": {
+        "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+        "frame_seconds": 8013.75,
+        "image_sha256": "cfb1ed3a299d0191f72cf67498e48d4c85c113827447e70015d6d8df233ecb28",
+        "path": "outputs/frames/evalset_8013.75.jpg"
+      },
+      "raw_text": "",
+      "name_text": null,
+      "lineup_order": null,
+      "status": "abstain",
+      "reason": "name_panel_absent"
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 78,
+      "pitch_number": 5,
+      "play_id": "574794ea-c1fd-4ba8-b3b9-019f462a8496",
+      "role": "pitcher",
+      "evidence": {
+        "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+        "frame_seconds": 8037,
+        "image_sha256": "28b9c7b993b020bbd3ed88b43ca5dc2593e00993c55cc0768b58f6d8500038c0",
+        "path": "outputs/frames/evalset_8037.00.jpg"
+      },
+      "raw_text": "JOHNSON",
+      "name_text": "JOHNSON",
+      "lineup_order": null,
+      "status": "read",
+      "reason": "literal_name"
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 78,
+      "pitch_number": 5,
+      "play_id": "574794ea-c1fd-4ba8-b3b9-019f462a8496",
+      "role": "batter",
+      "evidence": {
+        "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+        "frame_seconds": 8037,
+        "image_sha256": "28b9c7b993b020bbd3ed88b43ca5dc2593e00993c55cc0768b58f6d8500038c0",
+        "path": "outputs/frames/evalset_8037.00.jpg"
+      },
+      "raw_text": "",
+      "name_text": null,
+      "lineup_order": null,
+      "status": "abstain",
+      "reason": "name_panel_absent"
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 78,
+      "pitch_number": 6,
+      "play_id": "2054de59-4eb4-41ea-8ce7-e33afda83647",
+      "role": "pitcher",
+      "evidence": {
+        "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+        "frame_seconds": 8051.5,
+        "image_sha256": "7b1157192dd1671f4d32497cca58c920cdbd5fa422f2d9a14ba136c7e1975cc2",
+        "path": "outputs/frames/evalset_8051.50.jpg"
+      },
+      "raw_text": "JOHNSON",
+      "name_text": "JOHNSON",
+      "lineup_order": null,
+      "status": "read",
+      "reason": "literal_name"
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 78,
+      "pitch_number": 6,
+      "play_id": "2054de59-4eb4-41ea-8ce7-e33afda83647",
+      "role": "batter",
+      "evidence": {
+        "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+        "frame_seconds": 8051.5,
+        "image_sha256": "7b1157192dd1671f4d32497cca58c920cdbd5fa422f2d9a14ba136c7e1975cc2",
+        "path": "outputs/frames/evalset_8051.50.jpg"
+      },
+      "raw_text": "",
+      "name_text": null,
+      "lineup_order": null,
+      "status": "abstain",
+      "reason": "name_panel_absent"
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 78,
+      "pitch_number": 7,
+      "play_id": "dfee7d2d-32df-4ff0-b6a2-fefa47accdeb",
+      "role": "pitcher",
+      "evidence": {
+        "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+        "frame_seconds": 8069,
+        "image_sha256": "62acf00a45f745bc4a37354daae9e52f5308f9ec97934e772ccc25d50a487cf5",
+        "path": "outputs/frames/evalset_8069.00.jpg"
+      },
+      "raw_text": "JOHNSON",
+      "name_text": "JOHNSON",
+      "lineup_order": null,
+      "status": "read",
+      "reason": "literal_name"
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 78,
+      "pitch_number": 7,
+      "play_id": "dfee7d2d-32df-4ff0-b6a2-fefa47accdeb",
+      "role": "batter",
+      "evidence": {
+        "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+        "frame_seconds": 8069,
+        "image_sha256": "62acf00a45f745bc4a37354daae9e52f5308f9ec97934e772ccc25d50a487cf5",
+        "path": "outputs/frames/evalset_8069.00.jpg"
+      },
+      "raw_text": "",
+      "name_text": null,
+      "lineup_order": null,
+      "status": "abstain",
+      "reason": "name_panel_absent"
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 78,
+      "pitch_number": 8,
+      "play_id": "3d8cce47-48c5-4a8e-bc5a-26b9874962db",
+      "role": "pitcher",
+      "evidence": {
+        "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+        "frame_seconds": 8090.75,
+        "image_sha256": "237d02ba203cad272c14ddaa1fceceafb32a97e634cb2bb83f9d9261bbbaa832",
+        "path": "outputs/frames/evalset_8090.75.jpg"
+      },
+      "raw_text": "JOHNSON",
+      "name_text": "JOHNSON",
+      "lineup_order": null,
+      "status": "read",
+      "reason": "literal_name"
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 78,
+      "pitch_number": 8,
+      "play_id": "3d8cce47-48c5-4a8e-bc5a-26b9874962db",
+      "role": "batter",
+      "evidence": {
+        "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+        "frame_seconds": 8090.75,
+        "image_sha256": "237d02ba203cad272c14ddaa1fceceafb32a97e634cb2bb83f9d9261bbbaa832",
+        "path": "outputs/frames/evalset_8090.75.jpg"
+      },
+      "raw_text": "",
+      "name_text": null,
+      "lineup_order": null,
+      "status": "abstain",
+      "reason": "name_panel_absent"
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 78,
+      "pitch_number": 9,
+      "play_id": "9026331f-1e47-409d-873d-2bbfba1cd7ff",
+      "role": "pitcher",
+      "evidence": {
+        "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+        "frame_seconds": 8109.75,
+        "image_sha256": "6bd7efd9fe60f95fef1469152feb9172eecd64c52723802c384293a47e379c52",
+        "path": "outputs/frames/evalset_8109.75.jpg"
+      },
+      "raw_text": "JOHNSON",
+      "name_text": "JOHNSON",
+      "lineup_order": null,
+      "status": "read",
+      "reason": "literal_name"
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 78,
+      "pitch_number": 9,
+      "play_id": "9026331f-1e47-409d-873d-2bbfba1cd7ff",
+      "role": "batter",
+      "evidence": {
+        "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+        "frame_seconds": 8109.75,
+        "image_sha256": "6bd7efd9fe60f95fef1469152feb9172eecd64c52723802c384293a47e379c52",
+        "path": "outputs/frames/evalset_8109.75.jpg"
+      },
+      "raw_text": "",
+      "name_text": null,
+      "lineup_order": null,
+      "status": "abstain",
+      "reason": "name_panel_absent"
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 78,
+      "pitch_number": 10,
+      "play_id": "4d7e7a98-267e-46d7-86a4-d10a29a398cb",
+      "role": "pitcher",
+      "evidence": {
+        "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+        "frame_seconds": 8135.25,
+        "image_sha256": "254435b585b7719c3f6c103804e0b88ea65d4c1369f89de9c4537da33505b377",
+        "path": "outputs/frames/evalset_8135.25.jpg"
+      },
+      "raw_text": "JOHNSON",
+      "name_text": "JOHNSON",
+      "lineup_order": null,
+      "status": "read",
+      "reason": "literal_name"
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 78,
+      "pitch_number": 10,
+      "play_id": "4d7e7a98-267e-46d7-86a4-d10a29a398cb",
+      "role": "batter",
+      "evidence": {
+        "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+        "frame_seconds": 8135.25,
+        "image_sha256": "254435b585b7719c3f6c103804e0b88ea65d4c1369f89de9c4537da33505b377",
+        "path": "outputs/frames/evalset_8135.25.jpg"
+      },
+      "raw_text": "",
+      "name_text": null,
+      "lineup_order": null,
+      "status": "abstain",
+      "reason": "name_panel_absent"
+    }
+  ],
+  "context_predictions": []
+}

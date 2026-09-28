@@ -267,6 +267,22 @@ F-4b·F-4c와 같은 규칙(PA67 이후 번호순, 4구 이상·전 투구 annot
   하나라도 어긋나면 v3를 실패로 기록하고 v1을 현행으로 유지한다. 기준을 결과를 본 뒤 바꾸지 않는다. v2는 비교 참고로 함께 돌린다.
 - 자료 이름: `..._review_pa77_78.json`·`..._evalset_pa77_78.json`, `..._ocr_v1_pa77_78_*.json`·`..._ocr_v2_pa77_78_*.json`·`..._ocr_v3_pa77_78_*.json`. reader 모듈이 해시 대상이므로 이 커밋에서 PA6·PA61·PA62/67·PA68/75의 v1·v2 예측/보고서를 재생성해 행 동일성을 확인한다.
 
+### 2026-09-28 사전 등록 평가 결과 — PA77·PA78 (F-4d): v3 실패 기록
+
+자료: [직접 판독](docs/results/mlb_p0/game_747139_player_identity_review_pa77_78.json), [평가셋](docs/results/mlb_p0/game_747139_player_identity_evalset_pa77_78.json), 보고서 [v1](docs/results/mlb_p0/game_747139_player_identity_ocr_v1_pa77_78_report.json)·[v2](docs/results/mlb_p0/game_747139_player_identity_ocr_v2_pa77_78_report.json)·[v3](docs/results/mlb_p0/game_747139_player_identity_ocr_v3_pa77_78_report.json). 실제 Windows OCR en-US 실행, predict→score→check `--verify-frames` 통과.
+
+| 대상 | 전체 기회 | 판독 가능한 기준 | 시도 | 정답 | 오답 | 기권 |
+|---|---:|---:|---:|---:|---:|---:|
+| 이름 문자열 (v1 = v2 = v3) | 28 | 14 | 14 | 14 | 0 | 14 |
+| 이름→명단 ID (v1 = v2 = v3) | 28 | 14 | 14 | 14 | 0 | 14 |
+| 타자 타순 (v1 = v2 = v3) | 14 | 0 | 0 | 0 | 0 | 14 |
+
+- 두 타석의 14개 판단 프레임에는 타자 줄이 한 번도 그려지지 않았다. 투수 `JOHNSON`은 14건 모두 이름·ID 정답이고, 타자 14건은 세 reader 모두 `name_panel_absent` 기권이며 v3 이진화도 빈 패널에서 글자를 만들지 않았다.
+- 판정: 사전 등록 기준 가운데 **'v1과 결과가 다른 행 ≥ 1'을 채우지 못해 v3를 실패로 기록**하고 v1을 현행으로 유지한다. 오답·정답·거짓 판독 조건은 동률이었다. v3는 `CONFIG_V3` 옵션으로 남긴다.
+- 한계: 이 표본은 v3가 겨냥한 타자 줄 오인식 유형(`I`→`l`, `N`→`1V`, 아포스트로피→`t`, 타순 자리)을 한 번도 담지 않았다. A-14 timing 기록에 이미 '배너 없음'이 적혀 있었는데 결정 규칙이 그 정보를 쓰지 않았다. 다음 규칙(F-4e)은 검증 기록의 배너 관찰을 표본 조건에 넣어 사전 등록한다.
+
+누적(PA61·62·67·68·75·77·78, 68역할; v1 = v2, v3는 PA77·78만): 이름 기준 47·시도 42·정답 39·오답 3·기권 26, ID 기준 39·시도 31·정답 31·오답 0·기권 37, 타순 기준 13·정답 10·기권 24. ID 오답은 여전히 0건이다.
+
 ## bridge 단독 확인
 
 저장소 루트의 PowerShell에서 설치된 엔진 정보를 확인할 수 있다.

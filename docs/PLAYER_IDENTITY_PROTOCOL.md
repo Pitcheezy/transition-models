@@ -189,6 +189,13 @@ F-4b와 같은 결정 규칙의 다음 두 타석이다. feed 기준 PA68은 **P
 
 16개 기록 중 13개 이름을 직접 읽었고 3개는 타자 배너가 없었다. 아포스트로피는 배너에 인쇄된 그대로 `D'ARNAUD`로 적었고 명단 별칭과 정확히 일치한다. 네 이름 모두 명단에서 유일해 `observed` 13건이 feed 기준과 일치하며, 팀 null·연속성 `unknown`·held 0이다.
 
+## PA77·PA78 기준과 직접 읽은 범위 (2026-09-28, F-4d)
+
+feed 기준 PA77은 **Pierce Johnson 572955** 대 **Jose Iglesias 578428**(9회초 4구), PA78은 **Pierce Johnson 572955** 대 **Eddy Alvarez 657193**(9회초 10구)이며 비투구 이벤트는 타임뿐이다.
+2026-09-28 Claude 세션(Fable 5.1)이 기존 timing의 14개 판단 프레임을 직접 읽어 [review](docs/results/mlb_p0/game_747139_player_identity_review_pa77_78.json)에 기록했고 scripts73 `--verify-frames`로 [평가셋](docs/results/mlb_p0/game_747139_player_identity_evalset_pa77_78.json)을 만들었다(full_input_rebuild).
+14프레임 모두 투수 줄 `JOHNSON`만 있고 **타자 줄은 한 번도 표시되지 않았다**(A-14 timing note와 일치). 28개 기록 = 투수 14 observed(명단 유일, feed 일치)·타자 14 기권(배너 부재). 동명이인 `IGLESIAS`·`ALVAREZ`의 화면 사례는 따라서 이 두 타석에서 얻지 못했다.
+팀 null·연속성 `unknown`·held 0이다.
+
 ## 재현과 다음 범위
 
 구현은 [player_identity.py](../src/data/player_identity.py), CLI는
