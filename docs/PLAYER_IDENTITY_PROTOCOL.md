@@ -210,6 +210,21 @@ F-4e 결정 규칙(검증 기록에 타자 줄이 기록된 타석)으로 고른
 
 20개 기록 중 18개 이름을 직접 읽었고 두 타석 모두 1구째에는 타자 배너가 없었다. 세 이름 모두 명단에서 유일해 `observed` 18건이 feed 기준과 일치하며, 팀 null·연속성 `unknown`·held 0이다.
 
+## PA23·PA24 기준과 직접 읽은 범위 (2026-09-29, F-4f)
+
+feed 기준 PA23은 **Tylor Megill 656731** 대 **Matt Olson 621566**(3회말 4구, 비투구 이벤트 없음), PA24는 **Tylor Megill 656731** 대 **Jorge Soler 624585**(3회말 5구, 마운드 방문 1회).
+2026-09-29 Claude 세션(Fable 5.1)이 기존 timing의 9개 판단 프레임을 직접 읽어 [review](docs/results/mlb_p0/game_747139_player_identity_review_pa23_24.json)에 기록했고 scripts73 `--verify-frames`로 [평가셋](docs/results/mlb_p0/game_747139_player_identity_evalset_pa23_24.json)을 만들었다(full_input_rebuild).
+
+| 투구 | 판단 재생 초 | 투수 문자열 | 타자 문자열 / 타순 |
+|---|---:|---|---|
+| 23/1, 23/4 | 2253.75, 2318.25 | `MEGILL` | 배너 없음: null / null |
+| 23/2, 23/3 | 2269.00, 2296.75 | `MEGILL` | `OLSON` / 4 |
+| 24/1 | 2396.25 | `MEGILL` | 배너 없음: null / null |
+| 24/2~24/4 | 2412.50, 2440.75, 2460.25 | `MEGILL` | `SOLER` / 5 |
+| 24/5 | 2487.50 | `MEGILL` | MLB.tv 보드에 가림: null / null |
+
+18개 기록 중 14개 이름을 직접 읽었다. 세 이름 모두 명단에서 유일해 `observed` 14건이 feed 기준과 일치하며, 팀 null·연속성 `unknown`·held 0이다. 오른쪽 `0-1`은 경기 성적이다.
+
 ## 재현과 다음 범위
 
 구현은 [player_identity.py](../src/data/player_identity.py), CLI는

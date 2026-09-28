@@ -326,6 +326,23 @@ PA22는 1구 unavailable, PA25는 1구뿐이다. 판단 프레임은 기존 timi
 v2를 현행 reader로 전환한다(scripts74 `--reader` 기본값 v2, PA6 정본 예측·보고서를 v2로도 별도 파일에 저장, 문서의 '현행' 표기 변경). 아니면 v1을 유지하고 v2는 채택 후보로 남긴다. 기준을 결과를 본 뒤 바꾸지 않는다.
 자료 이름: `..._review_pa23_24.json`·`..._evalset_pa23_24.json`, `..._ocr_v{1,2}_pa23_24_*.json`.
 
+### 2026-09-29 사전 등록 평가 결과 — PA23·PA24 (F-4f): v2 현행 전환 보류
+
+자료: [직접 판독](docs/results/mlb_p0/game_747139_player_identity_review_pa23_24.json), [평가셋](docs/results/mlb_p0/game_747139_player_identity_evalset_pa23_24.json), 보고서 [v1](docs/results/mlb_p0/game_747139_player_identity_ocr_v1_pa23_24_report.json)·[v2](docs/results/mlb_p0/game_747139_player_identity_ocr_v2_pa23_24_report.json). 실제 Windows OCR en-US 실행, predict→score→check `--verify-frames` 통과.
+
+| 대상 | 전체 기회 | 판독 가능한 기준 | v1 = v2 시도/정답/오답/기권 |
+|---|---:|---:|---|
+| 이름 문자열 | 18 | 14 | 14 / 13 / 1 / 4 |
+| 이름→명단 ID | 18 | 14 | 13 / 13 / 0 / 5 |
+| 타자 타순 | 9 | 5 | 5 / 5 / 0 / 4 |
+
+- 18행 모두 v1과 v2가 같다. `MEGILL`×9, `OLSON`(23/2)·`SOLER`×3은 이름·ID·타순 정답, 부재 4건은 `name_panel_absent` 기권이다.
+- 23/3 원문 `4. OLSO N`: 이름 안에 공백이 들어가 `OLSO N`으로 출력됐다. 파서가 `DE LA CRUZ`형 다단어 이름을 위해 공백을 허용하므로 문법만으로 거를 수 없고, 사전 불일치로 ID는 기권했다(이름 오답 1).
+- 판정: 전환 기준 (1) 오답 1 ≤ 1, 정답 13 ≥ 13, 거짓 판독 0과 (2) 차이 행 0건 중 v2 오답 0은 충족했으나 (3) F-4e와 합산한 차이 행이 1건(PA15/4)이라 **전환 보류**. v1 현행 유지, v2는 채택 후보로 남긴다.
+
+누적(11타석 106역할): v1 이름 기준 79·시도 66·정답 61·오답 5·기권 40, ID 기준 71·정답 53·오답 0·기권 53, 타순 기준 26·정답 16·기권 37. v2(PA61은 v1 값)는 이름 정답 62·오답 4, ID 정답 54. 어느 reader에서도 ID 오답은 0건이다.
+다음은 CHECKLIST F-4g: 남은 규칙 충족 타석을 한 단위로 묶어 v1·v2를 평가한다(대상 목록은 사전 등록 커밋에서 검증 기록으로 재계산).
+
 ## bridge 단독 확인
 
 저장소 루트의 PowerShell에서 설치된 엔진 정보를 확인할 수 있다.

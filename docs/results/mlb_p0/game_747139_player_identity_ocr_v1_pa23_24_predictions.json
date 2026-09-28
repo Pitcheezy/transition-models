@@ -1,0 +1,391 @@
+{
+  "schema": "mlb_player_identity_ocr_predictions_v1",
+  "game_pk": 747139,
+  "evalset_sha256": "acca736f6c5f3061e3981a8efeb2e7de4626d3e158e0c3b64b9adf01e6aabdc3",
+  "roster_sha256": "20da6d29b18f2781b51b73a73ff37d17e1c70767e42588e9a4ee9cb9b29f00b4",
+  "source": {
+    "page_url": "https://www.mlb.com/video/9-30-24-mets-win-epic-game-in-playoff-clincher",
+    "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+    "duration_seconds": 9340.748083
+  },
+  "reader_metadata": {
+    "engine": {
+      "engine": "windows_ocr",
+      "language": "en-US",
+      "os_version": "10.0.26200.0",
+      "dll_version": "10.0.26100.9278 (WinBuild.160101.0800)"
+    },
+    "config": {
+      "schema": "sny_player_names_v1",
+      "frame_size": [
+        1280,
+        720
+      ],
+      "crops": {
+        "pitcher": [
+          64,
+          111,
+          168,
+          129
+        ],
+        "batter": [
+          64,
+          133,
+          252,
+          151
+        ]
+      },
+      "presence": {
+        "count_bug": "sny_scoreboard_v2_default_gate",
+        "min_neutral_bright_fraction": 0.5,
+        "min_channel": 160,
+        "max_channel_spread": 50
+      },
+      "preprocessing": {
+        "scale": 4,
+        "resampling": "LANCZOS",
+        "border": 16,
+        "grayscale": true
+      },
+      "parser": "uppercase_latin_literal_names_optional_batter_slot_no_fuzzy_correction",
+      "state": "current_frame_only_no_hold"
+    }
+  },
+  "reader_metadata_sha256": "c96a41b9644f3a75ebe0887e1c558c9dab48ffa3a6b9c377b1b4eb1e50ea6ae5",
+  "pipeline_code_sha256": {
+    "src/evaluation/player_identity_ocr.py": "1faa7c4fc6b3790f45627c8e75a3edf2f6c23515a6262f64474b90047472b4b7",
+    "src/data/player_identity.py": "bef316c76bb8ba153f8db4461fad1263a58b9c46ae461dd4838b44b219523171",
+    "src/vision/frames.py": "8abffcc1c787e7d43102fbba5066770b13a68bcfb08f45ac1328ed00a3cc705e",
+    "src/vision/sny_player_names.py": "351913177d031c89f566faee9914bcb3130ae6cdaded7e26027d0c6bb8c7f05f",
+    "src/vision/sny_scoreboard.py": "a886460da1ce866b664983e3cd36a5cc77388113e0c7014015183ade50006714",
+    "src/vision/windows_ocr.ps1": "5605def973ec8a515619c2fb421fb54ec5da0ebd82e0965fcc2d05fb0eb80ed2",
+    "scripts/74_evaluate_player_identity_ocr.py": "61544c3f941c93290c0efb740c7e36f6eb336a4bbb1b9d9a9afa76671f185a5c"
+  },
+  "predictions": [
+    {
+      "game_pk": 747139,
+      "at_bat_number": 23,
+      "pitch_number": 1,
+      "play_id": "17f88dad-a997-4ade-8bda-39f1135f5b50",
+      "role": "pitcher",
+      "evidence": {
+        "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+        "frame_seconds": 2253.75,
+        "image_sha256": "7083b6068f49de7d096007b491b76075ea1af4b79f17a5b0669835b2d2ec692e",
+        "path": "outputs/frames/evalset_2253.75.jpg"
+      },
+      "raw_text": "MEGILL",
+      "name_text": "MEGILL",
+      "lineup_order": null,
+      "status": "read",
+      "reason": "literal_name"
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 23,
+      "pitch_number": 1,
+      "play_id": "17f88dad-a997-4ade-8bda-39f1135f5b50",
+      "role": "batter",
+      "evidence": {
+        "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+        "frame_seconds": 2253.75,
+        "image_sha256": "7083b6068f49de7d096007b491b76075ea1af4b79f17a5b0669835b2d2ec692e",
+        "path": "outputs/frames/evalset_2253.75.jpg"
+      },
+      "raw_text": "",
+      "name_text": null,
+      "lineup_order": null,
+      "status": "abstain",
+      "reason": "name_panel_absent"
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 23,
+      "pitch_number": 2,
+      "play_id": "1af3eded-413c-49f0-a5dc-ef4657921ae6",
+      "role": "pitcher",
+      "evidence": {
+        "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+        "frame_seconds": 2269,
+        "image_sha256": "280922058a5373c766668301f36bc98cbfb807475c7aa5ed98e31659cbf07c0e",
+        "path": "outputs/frames/evalset_2269.00.jpg"
+      },
+      "raw_text": "MEGILL",
+      "name_text": "MEGILL",
+      "lineup_order": null,
+      "status": "read",
+      "reason": "literal_name"
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 23,
+      "pitch_number": 2,
+      "play_id": "1af3eded-413c-49f0-a5dc-ef4657921ae6",
+      "role": "batter",
+      "evidence": {
+        "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+        "frame_seconds": 2269,
+        "image_sha256": "280922058a5373c766668301f36bc98cbfb807475c7aa5ed98e31659cbf07c0e",
+        "path": "outputs/frames/evalset_2269.00.jpg"
+      },
+      "raw_text": "4.OLSON",
+      "name_text": "OLSON",
+      "lineup_order": 4,
+      "status": "read",
+      "reason": "literal_name"
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 23,
+      "pitch_number": 3,
+      "play_id": "97edfe44-c93c-4db4-835d-62cc2a6a7138",
+      "role": "pitcher",
+      "evidence": {
+        "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+        "frame_seconds": 2296.75,
+        "image_sha256": "cde55505b6312acf82b065b040a73fe421a978b5485c5f2154d2721335c359db",
+        "path": "outputs/frames/evalset_2296.75.jpg"
+      },
+      "raw_text": "MEGILL",
+      "name_text": "MEGILL",
+      "lineup_order": null,
+      "status": "read",
+      "reason": "literal_name"
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 23,
+      "pitch_number": 3,
+      "play_id": "97edfe44-c93c-4db4-835d-62cc2a6a7138",
+      "role": "batter",
+      "evidence": {
+        "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+        "frame_seconds": 2296.75,
+        "image_sha256": "cde55505b6312acf82b065b040a73fe421a978b5485c5f2154d2721335c359db",
+        "path": "outputs/frames/evalset_2296.75.jpg"
+      },
+      "raw_text": "4. OLSO N",
+      "name_text": "OLSO N",
+      "lineup_order": 4,
+      "status": "read",
+      "reason": "literal_name"
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 23,
+      "pitch_number": 4,
+      "play_id": "02cefcee-4bdf-4b76-9782-7f1e792213a2",
+      "role": "pitcher",
+      "evidence": {
+        "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+        "frame_seconds": 2318.25,
+        "image_sha256": "dc066402c49c70fc08e5b675a2d5eb7c002416ed75c1eb773d8a7d0cd8353662",
+        "path": "outputs/frames/evalset_2318.25.jpg"
+      },
+      "raw_text": "MEGILL",
+      "name_text": "MEGILL",
+      "lineup_order": null,
+      "status": "read",
+      "reason": "literal_name"
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 23,
+      "pitch_number": 4,
+      "play_id": "02cefcee-4bdf-4b76-9782-7f1e792213a2",
+      "role": "batter",
+      "evidence": {
+        "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+        "frame_seconds": 2318.25,
+        "image_sha256": "dc066402c49c70fc08e5b675a2d5eb7c002416ed75c1eb773d8a7d0cd8353662",
+        "path": "outputs/frames/evalset_2318.25.jpg"
+      },
+      "raw_text": "",
+      "name_text": null,
+      "lineup_order": null,
+      "status": "abstain",
+      "reason": "name_panel_absent"
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 24,
+      "pitch_number": 1,
+      "play_id": "355f3c74-8e06-440f-bd8f-b265342674ad",
+      "role": "pitcher",
+      "evidence": {
+        "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+        "frame_seconds": 2396.25,
+        "image_sha256": "3da4ce892acb63bd7c5a39ac623bbe6845163bc986ae5114358768c33031ce34",
+        "path": "outputs/frames/evalset_2396.25.jpg"
+      },
+      "raw_text": "MEGILL",
+      "name_text": "MEGILL",
+      "lineup_order": null,
+      "status": "read",
+      "reason": "literal_name"
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 24,
+      "pitch_number": 1,
+      "play_id": "355f3c74-8e06-440f-bd8f-b265342674ad",
+      "role": "batter",
+      "evidence": {
+        "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+        "frame_seconds": 2396.25,
+        "image_sha256": "3da4ce892acb63bd7c5a39ac623bbe6845163bc986ae5114358768c33031ce34",
+        "path": "outputs/frames/evalset_2396.25.jpg"
+      },
+      "raw_text": "",
+      "name_text": null,
+      "lineup_order": null,
+      "status": "abstain",
+      "reason": "name_panel_absent"
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 24,
+      "pitch_number": 2,
+      "play_id": "3825a8fc-ec3a-4a07-aebd-857805ae6c4e",
+      "role": "pitcher",
+      "evidence": {
+        "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+        "frame_seconds": 2412.5,
+        "image_sha256": "9470c4984474521188386104aa06da5b89d05fcd94ff5682692a44a06b2bd821",
+        "path": "outputs/frames/evalset_2412.50.jpg"
+      },
+      "raw_text": "MEGILL",
+      "name_text": "MEGILL",
+      "lineup_order": null,
+      "status": "read",
+      "reason": "literal_name"
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 24,
+      "pitch_number": 2,
+      "play_id": "3825a8fc-ec3a-4a07-aebd-857805ae6c4e",
+      "role": "batter",
+      "evidence": {
+        "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+        "frame_seconds": 2412.5,
+        "image_sha256": "9470c4984474521188386104aa06da5b89d05fcd94ff5682692a44a06b2bd821",
+        "path": "outputs/frames/evalset_2412.50.jpg"
+      },
+      "raw_text": "5.SOLER",
+      "name_text": "SOLER",
+      "lineup_order": 5,
+      "status": "read",
+      "reason": "literal_name"
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 24,
+      "pitch_number": 3,
+      "play_id": "1b182e36-da26-4e13-9d5b-a01c93b5da49",
+      "role": "pitcher",
+      "evidence": {
+        "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+        "frame_seconds": 2440.75,
+        "image_sha256": "c9d7151e3630a0972a26ef555a0e7846c3a912196f49b876391b02ff4f34c165",
+        "path": "outputs/frames/evalset_2440.75.jpg"
+      },
+      "raw_text": "MEGILL",
+      "name_text": "MEGILL",
+      "lineup_order": null,
+      "status": "read",
+      "reason": "literal_name"
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 24,
+      "pitch_number": 3,
+      "play_id": "1b182e36-da26-4e13-9d5b-a01c93b5da49",
+      "role": "batter",
+      "evidence": {
+        "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+        "frame_seconds": 2440.75,
+        "image_sha256": "c9d7151e3630a0972a26ef555a0e7846c3a912196f49b876391b02ff4f34c165",
+        "path": "outputs/frames/evalset_2440.75.jpg"
+      },
+      "raw_text": "5. SOLER",
+      "name_text": "SOLER",
+      "lineup_order": 5,
+      "status": "read",
+      "reason": "literal_name"
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 24,
+      "pitch_number": 4,
+      "play_id": "e5eb1428-cf22-4a2c-9cd4-82d4a7a45d28",
+      "role": "pitcher",
+      "evidence": {
+        "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+        "frame_seconds": 2460.25,
+        "image_sha256": "31020d111ecb5450dee5b86738b5b49aec0a2a23f7fceda836651c394e8c5c68",
+        "path": "outputs/frames/evalset_2460.25.jpg"
+      },
+      "raw_text": "MEGILL",
+      "name_text": "MEGILL",
+      "lineup_order": null,
+      "status": "read",
+      "reason": "literal_name"
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 24,
+      "pitch_number": 4,
+      "play_id": "e5eb1428-cf22-4a2c-9cd4-82d4a7a45d28",
+      "role": "batter",
+      "evidence": {
+        "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+        "frame_seconds": 2460.25,
+        "image_sha256": "31020d111ecb5450dee5b86738b5b49aec0a2a23f7fceda836651c394e8c5c68",
+        "path": "outputs/frames/evalset_2460.25.jpg"
+      },
+      "raw_text": "5.SOLER",
+      "name_text": "SOLER",
+      "lineup_order": 5,
+      "status": "read",
+      "reason": "literal_name"
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 24,
+      "pitch_number": 5,
+      "play_id": "262f21a8-e25a-44a2-90de-e6d11345ebcc",
+      "role": "pitcher",
+      "evidence": {
+        "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+        "frame_seconds": 2487.5,
+        "image_sha256": "32520f5ebcf09c0746131455a31ed6a2f4aef63780a2cf61214c4113b98612dc",
+        "path": "outputs/frames/evalset_2487.50.jpg"
+      },
+      "raw_text": "MEGILL",
+      "name_text": "MEGILL",
+      "lineup_order": null,
+      "status": "read",
+      "reason": "literal_name"
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 24,
+      "pitch_number": 5,
+      "play_id": "262f21a8-e25a-44a2-90de-e6d11345ebcc",
+      "role": "batter",
+      "evidence": {
+        "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+        "frame_seconds": 2487.5,
+        "image_sha256": "32520f5ebcf09c0746131455a31ed6a2f4aef63780a2cf61214c4113b98612dc",
+        "path": "outputs/frames/evalset_2487.50.jpg"
+      },
+      "raw_text": "",
+      "name_text": null,
+      "lineup_order": null,
+      "status": "abstain",
+      "reason": "name_panel_absent"
+    }
+  ],
+  "context_predictions": []
+}
