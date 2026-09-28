@@ -16,7 +16,7 @@
       "dll_version": "10.0.26100.9278 (WinBuild.160101.0800)"
     },
     "config": {
-      "schema": "sny_player_names_v1",
+      "schema": "sny_player_names_v2",
       "frame_size": [
         1280,
         720
@@ -47,11 +47,15 @@
         "border": 16,
         "grayscale": true
       },
-      "parser": "uppercase_latin_literal_names_optional_batter_slot_no_fuzzy_correction",
-      "state": "current_frame_only_no_hold"
+      "parser": "v1_parser_plus_uppercase_context_l_to_I_and_decoupled_batter_slot",
+      "state": "current_frame_only_no_hold",
+      "options": {
+        "uppercase_context_l_to_I": true,
+        "decoupled_unreadable_batter_slot": true
+      }
     }
   },
-  "reader_metadata_sha256": "c96a41b9644f3a75ebe0887e1c558c9dab48ffa3a6b9c377b1b4eb1e50ea6ae5",
+  "reader_metadata_sha256": "40b17b29db4c3abea944c0771f2207db4943b76f2989c56e3fcbd7d6e388d72e",
   "pipeline_code_sha256": {
     "src/evaluation/player_identity_ocr.py": "1faa7c4fc6b3790f45627c8e75a3edf2f6c23515a6262f64474b90047472b4b7",
     "src/data/player_identity.py": "bef316c76bb8ba153f8db4461fad1263a58b9c46ae461dd4838b44b219523171",

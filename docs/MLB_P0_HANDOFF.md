@@ -515,8 +515,14 @@
     v1 = v2 18행: 이름 기준 14·정답 13·오답 1(`4. OLSO N`, 이름 내부 공백)·기권 4, ID 정답 13·오답 0, 타순 정답 5, 엔진 오류 0, 거짓 판독 0. 전환 기준 (3) 누적 차이 행 1 < 2 → 보류.
     누적 106역할: v1 이름 기준 79·정답 61·오답 5·기권 40, ID 기준 71·정답 53·오답 0·기권 53; v2 이름 정답 62·오답 4, ID 정답 54. 전체 **588 passed, 2 deselected**, Ruff 84경로 통과. 새 항목 F-4g(남은 규칙 충족 타석 일괄 평가로 속도 확보). A-y 실제 응답 대기, 수정 권한 반납.
 
+56. (이 커밋): **F-4g 남은 규칙 충족 9타석 일괄 v1·v2 평가 — 차이 행 12건 전부 v2 정답, 이름 OCR 현행 v2 전환** (Claude 세션 Fable 5.1, 2026-09-29; 선점·사전 등록 `0d25acb`).
+    대상 PA26·31·34·37·38·46·49·55·81(49프레임·98역할). [직접 판독](docs/results/mlb_p0/game_747139_player_identity_review_pa_rest.json)·[평가셋](docs/results/mlb_p0/game_747139_player_identity_evalset_pa_rest.json): 수동 대응 85 observed(feed와 85/85 일치)·13 기권(배너 부재 12, 26/4 OFFICIAL SCORING 그래픽 1), 불일치 0.
+    이름 기준 85: v1 정답 41·오답 21·기권 36 / v2 정답 53·오답 13·기권 32. ID 기준 85: v1 41·0 / v2 53·0. 타순 기준 37: 32·0. 엔진 오류 0, 거짓 판독 0. 차이 행 12건(`l`→`I` 8, 타순 자리 `l.` 4) 전부 v2 정답 → 누적 차이 행 13, 전환 기준 충족.
+    전환 실행: scripts74 `--reader` 기본값 v2·reader별 정본 경로·타 reader 정본 덮어쓰기 거부, 정본 PA6 v2 [예측](docs/results/mlb_p0/game_747139_player_identity_ocr_v2_predictions.json)·[보고서](docs/results/mlb_p0/game_747139_player_identity_ocr_v2_report.json) 추가, v1은 `--reader v1`로 보존. scripts74가 해시 대상이라 저장 예측/보고서 19세트를 재생성해 행 동일성 확인. 남은 유형(긴 이름 crop 잘림, `Á`, 아포스트로피, 공백)은 F-4h로.
+    누적 204역할: v1 이름 기준 164·정답 102·오답 26·기권 76, ID 기준 156·정답 94·오답 0·기권 110; v2 이름 정답 115·오답 17, ID 정답 107. 전체 **588 passed, 2 deselected**, Ruff 84경로 통과. A-y 실제 응답 대기, 수정 권한 반납.
+
 이 문서와 함께 추가되는 후속 커밋의 해시는 `git log -6 --oneline`으로 확인한다.
-최신 Windows CPU 검사: **588 passed, 2 deselected (`check_project.py --cpu-only`, Ruff 84경로 통과)**(체크포인트 55). 아래 브라우저·서비스 검증은 이전 체크포인트 기록이다.
+최신 Windows CPU 검사: **588 passed, 2 deselected (`check_project.py --cpu-only`, Ruff 84경로 통과)**(체크포인트 56). 아래 브라우저·서비스 검증은 이전 체크포인트 기록이다.
 JavaScript 구문 검사 및 Chrome 수동 입력·실제 추론·9회 이후 추천 보류 확인.
 GitHub CI 결과는 해당 커밋의 validation 워크플로에서 따로 확인한다.
 주석 모듈을 먼저 import한 새 프로세스에서도 Torch→Pandas 문자열 생성이 성공하는지
@@ -571,7 +577,7 @@ Claude/Codex의 순서는 [../CHECKLIST.md](../CHECKLIST.md)의 "진행 순서" 
 팀원 레포(SongRoute/pitcheezy) 대조 결과는 [TEAMMATE_PITCHEEZY_2026-09-22.md](TEAMMATE_PITCHEEZY_2026-09-22.md) — 우리 쪽 참조가 없는 별도
 트랙이라 I-0(인터페이스 합의)·I-5(시연 경기)·I-6(클래스 대응표)·G-3(통화)를 A/B와 병행해 먼저 진행한다.
 
-1. **다음 한 단위 F-4g: 남은 규칙 충족 타석 전부를 한 단위로 v1·v2 평가(대상 목록 사전 등록)** — F-4f(체크포인트 55)는 v1 = v2로 누적 차이 행이 1건에 머물러 전환을 보류했다. 2타석 단위의 오버헤드를 줄이기 위해 남은 대상을 한 번에 묶는다. 전환 기준은 동일. F-4a 전체는 부분 완료다.
+1. **다음 한 단위 F-4h: 이름 OCR 남은 유형별 후속 결정(v4 후보 사전 등록)과 교체 타석 규약** — F-4g(체크포인트 56)로 이름 OCR 현행은 v2가 됐고 이 경기의 규칙 충족 타석은 모두 평가했다. 남은 오인식 유형(SCHWELLENBACH crop 잘림, `Á`→`Å`, 아포스트로피→`t`, 이름 내부 공백)은 결과를 본 표본에서 튜닝하지 말고 v4 후보로 사전 등록해 다른 타석·다른 영상에서 평가한다. F-4a 전체는 부분 완료다.
    영상 시간 주석은 PA1~82, 322구(297 확인·25 불가·미검토0) 완료. A-y는 v2 묶음 준비 완료 후 실제 다른 검토자 응답을 기다린다.
 
 ```bash

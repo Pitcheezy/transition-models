@@ -13,8 +13,21 @@ from src.evaluation.player_identity_ocr import build_predictions, score_predicti
 
 RESULTS = ROOT / "docs/results/mlb_p0"
 DEFAULT_EVALSET = RESULTS / "game_747139_player_identity_evalset_pa6.json"
-DEFAULT_PREDICTIONS = RESULTS / "game_747139_player_identity_ocr_v1_predictions.json"
-DEFAULT_REPORT = RESULTS / "game_747139_player_identity_ocr_v1_report.json"
+# Canonical PA6 outputs per reader. v2 became the default reader on 2026-09-29 (CHECKLIST
+# F-4g: pre-registered criterion met on 13 differing rows, all correct); v1 stays frozen and
+# selectable with --reader v1, and no reader may write over another reader's canonical files.
+CANONICAL = {
+    "v1": (
+        RESULTS / "game_747139_player_identity_ocr_v1_predictions.json",
+        RESULTS / "game_747139_player_identity_ocr_v1_report.json",
+    ),
+    "v2": (
+        RESULTS / "game_747139_player_identity_ocr_v2_predictions.json",
+        RESULTS / "game_747139_player_identity_ocr_v2_report.json",
+    ),
+}
+DEFAULT_READER = "v2"
+DEFAULT_PREDICTIONS, DEFAULT_REPORT = CANONICAL[DEFAULT_READER]
 PROTECTED_INPUTS = (
     DEFAULT_EVALSET,
     RESULTS / "game_747139_manifest.json",
@@ -52,36 +65,55 @@ def main():
     parser.add_argument(
         "--reader",
         choices=("v1", "v2", "v3"),
-        default="v1",
+        default=DEFAULT_READER,
         help=(
-            "predict only: frozen v1 (default), the pre-registered v2 parser options (F-4b) "
-            "or the pre-registered v3 preprocessing candidate (F-4d)"
+            "v2 (default, current reader: v1 + pre-registered parser options), the frozen v1 "
+            "baseline, or the v3 preprocessing candidate recorded as failed (F-4d/F-4e). Also "
+            "selects which canonical PA6 prediction/report files are used when none is given; "
+            "v3 has no canonical files and always needs explicit --predictions/--report"
         ),
     )
     args = parser.parse_args()
+    canonical_predictions, canonical_report = CANONICAL.get(args.reader, (None, None))
+    other_canonical = [
+        path for key, pair in CANONICAL.items() if key != args.reader for path in pair
+    ]
     custom_evalset = not _same_file(args.evalset, DEFAULT_EVALSET)
     if args.command == "predict" and custom_evalset and args.predictions is None:
         parser.error("predict with a custom evalset requires explicit --predictions")
-    if args.command == "predict" and args.reader != "v1" and args.predictions is None:
-        parser.error("predict with a non-v1 reader requires explicit --predictions")
-    args.predictions = args.predictions or DEFAULT_PREDICTIONS
-    custom_predictions = not _same_file(args.predictions, DEFAULT_PREDICTIONS)
+    if args.predictions is None and canonical_predictions is None:
+        parser.error(f"reader {args.reader} has no canonical predictions; give --predictions")
+    args.predictions = args.predictions or canonical_predictions
+    custom_predictions = canonical_predictions is None or not _same_file(
+        args.predictions, canonical_predictions
+    )
     if args.command == "predict" and custom_evalset and not custom_predictions:
         parser.error("custom evalset must not overwrite canonical PA6 predictions")
-    if args.command == "predict" and args.reader != "v1" and not custom_predictions:
-        parser.error("a non-v1 reader must not overwrite canonical v1 predictions")
+    if args.command == "predict" and any(_same_file(args.predictions, p) for p in other_canonical):
+        parser.error("a reader must not write over another reader's canonical files")
     custom_inputs = custom_evalset or custom_predictions
     if args.command == "score" and custom_inputs and args.report is None:
         parser.error("score with custom inputs requires explicit --report")
-    args.report = args.report or DEFAULT_REPORT
-    if args.command == "score" and custom_inputs and _same_file(args.report, DEFAULT_REPORT):
-        parser.error("custom inputs must not overwrite canonical PA6 report")
+    if args.command != "predict" and args.report is None and canonical_report is None:
+        parser.error(f"reader {args.reader} has no canonical report; give --report")
+    args.report = args.report or canonical_report
+    if args.command == "score" and custom_inputs and canonical_report is not None:
+        if _same_file(args.report, canonical_report):
+            parser.error("custom inputs must not overwrite canonical PA6 report")
+    if args.command == "score" and any(_same_file(args.report, p) for p in other_canonical):
+        parser.error("a reader must not write over another reader's canonical files")
     if args.command in ("predict", "score"):
         output = args.predictions if args.command == "predict" else args.report
         inputs = (
             args.evalset,
-            args.report if args.command == "predict" else args.predictions,
-            DEFAULT_REPORT if args.command == "predict" else DEFAULT_PREDICTIONS,
+            *[
+                p
+                for p in (
+                    args.report if args.command == "predict" else args.predictions,
+                    canonical_report if args.command == "predict" else canonical_predictions,
+                )
+                if p
+            ],
             *PROTECTED_INPUTS,
         )
         if any(_same_file(output, path) for path in inputs):

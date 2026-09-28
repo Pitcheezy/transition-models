@@ -225,6 +225,16 @@ feed 기준 PA23은 **Tylor Megill 656731** 대 **Matt Olson 621566**(3회말 4�
 
 18개 기록 중 14개 이름을 직접 읽었다. 세 이름 모두 명단에서 유일해 `observed` 14건이 feed 기준과 일치하며, 팀 null·연속성 `unknown`·held 0이다. 오른쪽 `0-1`은 경기 성적이다.
 
+## 남은 9타석 기준과 직접 읽은 범위 (2026-09-29, F-4g)
+
+F-4e 결정 규칙으로 남은 타석 PA26(Megill 대 d'Arnaud)·31(Megill 대 Arcia)·34(Schwellenbach 대 J.D. Martinez)·37(Schwellenbach 대 Bader)·38(Megill 대 Albies)·46(Megill 대 d'Arnaud)·49(Brazobán 대 Harris II)·55(Ottavino 대 Olson)·81(Díaz 대 Laureano)의 49개 판단 프레임을
+2026-09-29 Claude 세션(Fable 5.1)이 직접 읽어 [review](docs/results/mlb_p0/game_747139_player_identity_review_pa_rest.json)에 기록했고 scripts73 `--verify-frames`로 [평가셋](docs/results/mlb_p0/game_747139_player_identity_evalset_pa_rest.json)을 만들었다(full_input_rebuild). 98개 기록 중 85개 이름을 읽었고 13개는 기권이다.
+
+- 타자 배너 부재 12건: 26/1·31/1·34/1·37/1·38/1·38/2·49/1·49/4·55/1·55/2·81/1(첫 투구 또는 초반 투구), 그리고 26/4.
+- 26/4는 투수 줄과 타자 줄이 모두 `OFFICIAL SCORING: PASSED BALL` 그래픽으로 대체돼 두 역할 다 `unreadable`이다(투수 줄이 이름이 아닌 문구로 바뀐 첫 사례).
+- 악센트가 인쇄된 `BRAZOBÁN`·`DÍAZ`는 화면에 보이는 대로 적었고, 명단 대응은 악센트를 정규화한 정확 일치다. `HARRIS II`는 세대 접미사를 포함한 문자열 그대로다.
+- 모든 이름이 명단에서 유일해 `observed` 85건이 feed 기준과 일치하며, 팀 null·연속성 `unknown`·held 0이다. 오른쪽 `1-1`·`0-1` 등은 경기 성적이다.
+
 ## 재현과 다음 범위
 
 구현은 [player_identity.py](../src/data/player_identity.py), CLI는

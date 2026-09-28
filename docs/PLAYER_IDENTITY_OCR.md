@@ -1,6 +1,6 @@
 # SNY 선수 이름 OCR 개발 기준선 — F-4a
 
-이 구현은 경기 747139의 **한 SNY 화면 형식·PA6 여섯 프레임**에서 이름 문자열을 읽는
+**현행 reader는 v2다(2026-09-29, F-4g).** 이 구현은 경기 747139의 **한 SNY 화면 형식·PA6 여섯 프레임**에서 이름 문자열을 읽는
 개발 기준선이다. 선수 이름 OCR의 실행 경로와 평가 출처를 분리하는 첫 단계이며,
 F-4a 전체 완료, 일반 중계 인식, 새 독립 정확도 또는 실시간 선수 추적을 뜻하지 않는다.
 수동 판독·feed 기준·교체/신선도 규칙은 [선수 식별 규약](PLAYER_IDENTITY_PROTOCOL.md)을 따른다.
@@ -353,6 +353,23 @@ v2를 현행 reader로 전환한다(scripts74 `--reader` 기본값 v2, PA6 정�
 전환 기준은 F-4f와 같다: v2 이름 오답 ≤ v1·정답 ≥ v1·부재 프레임 거짓 판독 0, v1과 다른 행에서 v2 오답 0, F-4e·f와 합산한 누적 차이 행 ≥ 2 → v2 현행 전환(scripts74 기본 reader v2, PA6 정본 예측·보고서를 v2로도 별도 저장). 결과를 본 뒤 기준을 바꾸지 않는다.
 자료 이름: `..._review_pa_rest.json`·`..._evalset_pa_rest.json`, `..._ocr_v{1,2}_pa_rest_*.json`.
 
+### 2026-09-29 사전 등록 평가 결과 — 남은 9타석 (F-4g): v2 현행 전환
+
+자료: [직접 판독](docs/results/mlb_p0/game_747139_player_identity_review_pa_rest.json), [평가셋](docs/results/mlb_p0/game_747139_player_identity_evalset_pa_rest.json), 보고서 [v1](docs/results/mlb_p0/game_747139_player_identity_ocr_v1_pa_rest_report.json)·[v2](docs/results/mlb_p0/game_747139_player_identity_ocr_v2_pa_rest_report.json). 실제 Windows OCR en-US 실행, predict→score→check `--verify-frames` 통과. 코드·설정은 결과를 보기 전과 같다.
+
+| 대상 | 전체 기회 | 판독 가능한 기준 | v1 시도/정답/오답/기권 | v2 시도/정답/오답/기권 |
+|---|---:|---:|---|---|
+| 이름 문자열 | 98 | 85 | 62 / 41 / 21 / 36 | 66 / 53 / 13 / 32 |
+| 이름→명단 ID | 98 | 85 | 41 / 41 / 0 / 57 | 53 / 53 / 0 / 45 |
+| 타자 타순 | 49 | 37 | 32 / 32 / 0 / 17 | 32 / 32 / 0 / 17 |
+
+- v1과 다른 행 12건이 전부 v2 정답이다: `9.ARClA`×3(PA31)·`6.MARTlNEZ`×3(PA34)·`2.ALBlES`×2(PA38)는 `l`→`I` 규칙, `l. HARRIS II`×4(PA49)는 타순 자리 `l`을 분리해 이름만 읽고 타순은 기권했다. F-4e의 PA15/4를 더하면 누적 차이 행 13건, 차이 행에서 v2 오답 0.
+- **판정: 전환 기준(오답 ≤ v1, 정답 ≥ v1, 거짓 판독 0, 차이 행 v2 오답 0, 누적 차이 행 ≥ 2) 전부 충족 → v2를 현행 reader로 전환.** `scripts/74 --reader` 기본값은 v2이고 정본 PA6 v2 예측·보고서를 추가했다(PA6에는 규칙 발화 사례가 없어 v1과 같은 9·0·3). v1은 `--reader v1`로 고정 보존하며 서로의 정본 파일을 덮어쓰지 못한다.
+- 두 reader가 똑같이 못 읽는 유형: `SCHWELLENBACH`×10은 글자가 crop 오른쪽 경계에 닿아 `possible_truncated_name` 기권(투수 crop 폭 64~168의 한계), `BRAZOBÁN`×6은 `Á`가 `Å`로 읽혀 문법 기권, `D'ARNAUD`는 아포스트로피가 `t`로(`DtARNAUD`×8) 또는 탈락(`DARNAUD`, `7NARNAUD`)해 오답 10, `6.1-AUREANO`×2 기권, `LAU REANO`·`4mSON` 오답, 81/3 투수 `Diu` 오답. 26/4의 OFFICIAL SCORING 그래픽은 두 역할 모두 기권(거짓 판독 없음). ID 오답은 0.
+- 처리율: v2 이름 53/98, ID 53/98. 시도 중 정답 비율(0.80)을 전체 인식 성공률로 표현하지 않는다.
+
+누적(12타석 204역할): v1 이름 기준 164·정답 102·오답 26·기권 76, ID 기준 156·정답 94·오답 0·기권 110, 타순 기준 63·정답 48·기권 54. v2(PA61은 v1 값)는 이름 정답 115·오답 17, ID 정답 107. 이 경기의 규칙 충족 타석은 모두 평가했으며 남은 유형은 CHECKLIST F-4h(v4 후보 사전 등록·교체 타석 규약)로 넘긴다.
+
 ## bridge 단독 확인
 
 저장소 루트의 PowerShell에서 설치된 엔진 정보를 확인할 수 있다.
@@ -388,8 +405,8 @@ uv run --frozen python scripts/74_evaluate_player_identity_ocr.py check --verify
 
 기본 입력은 PA6 평가셋이며 출력은 아래 두 파일이다.
 
-- [원문 예측](results/mlb_p0/game_747139_player_identity_ocr_v1_predictions.json): `predict`가 생성한다.
-- [채점 보고서](results/mlb_p0/game_747139_player_identity_ocr_v1_report.json): `score`가 생성하며,
+- 현행 v2 [원문 예측](results/mlb_p0/game_747139_player_identity_ocr_v2_predictions.json)·[채점 보고서](results/mlb_p0/game_747139_player_identity_ocr_v2_report.json): 기본 `--reader v2`의 `predict`·`score`가 생성한다.
+- 고정 v1 [원문 예측](results/mlb_p0/game_747139_player_identity_ocr_v1_predictions.json)·[채점 보고서](results/mlb_p0/game_747139_player_identity_ocr_v1_report.json): `--reader v1`로 생성·검사하며,
   `check`는 다시 계산한 결과가 저장된 보고서와 같은지 검사한다.
 
 `--evalset`, `--predictions`, `--report`로 경로를 지정할 수 있다. 사용자 평가셋으로 예측할 때는
