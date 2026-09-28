@@ -29,7 +29,7 @@
 | 항목 | 값 | 갱신 |
 |---|---|---|
 | 브랜치 | `codex/fix-point-label-alignment` | 2026-09-22 |
-| 최신 작업 커밋 | (이 커밋) (F-4b v2 사전 등록 평가 완료), 사전 등록 `5323ba8`, 선점 `f29ac92`; PA61 v1 평가 `abfa03c`, 이름 OCR v1 `f5962d7` | 2026-09-28 |
+| 최신 작업 커밋 | `0f8a5eb` (F-4b v2 사전 등록 평가 완료), 사전 등록 `5323ba8`, 선점 `f29ac92`; PA61 v1 평가 `abfa03c`, 이름 OCR v1 `f5962d7` | 2026-09-28 |
 | 파일 수정 권한 | **비어 있음** — F-4b 완료(Claude, 2026-09-28; v1 현행 유지). 다음 F-4c(PA68·75 동일 절차 평가); A-y 실제 응답 대기 | 2026-09-28 |
 | 중계 시각 주석 | **297 확인 / 25 확인 불가 / 0 미검토** — 전 경기 322구 검토 완료. 완전 타석 2~4·6~15·18~19·21·23~28·30~32·34·36~38·40~46·49~51·53~55·57~63·65~69·71·74~79·81. 불가 목록·반이닝 집계·리드 분포는 [전 경기 요약](docs/MLB_BROADCAST_TIMING.md). 규약 v2, 수동 시각 | 2026-09-27 |
 | 점수판 평가셋 | timing 322 / 리뷰 297(292구 10필드 confirmed, PA 8/1·16/1·33/1·41/1·44/1 partial) / 라벨 충돌 0 / 판단 화면 불가 25 / 미검토 0 | 2026-09-27 |
@@ -405,7 +405,7 @@ feature builder의 고정 2022 프로필을 그 방식으로 갱신하는 코드
 - [x] F-4b. **이름 OCR v2 사전 등록 평가 — 결과 v1과 동일, v1 현행 유지** `[추가되었음 · 2026-09-28 · Claude]` 〔모델: Fable 5.1〕
       허용 후보: 대문자 전용 문맥의 l→I 정규화, 타순 자리의 숫자 검증. 금지: 정답 문자열 기반 보정, 퍼지 매칭, 기대 역할/정답 ID로 후보 축소. PA60 투수 교체 타석의 생성기 처리는 별도 항목으로 남기고 우회하지 않는다. v1 결과·PA6/PA61 자료는 보존한다.
       2026-09-28 사전 등록 커밋(`5323ba8`, Claude/Fable 5.1; 선점 `f29ac92`): `CONFIG_V2`(v1 crop·gate 동일 + `uppercase_context_l_to_I`·`decoupled_unreadable_batter_slot`), scripts74 `--reader v2`(별도 출력 강제), 파서 검사 추가. 대상은 결정 규칙(PA61 이후 4구 이상·전 투구 annotated·교체/수비 전환 없음인 첫 두 타석)으로 PA62·PA67, 채택 기준·예측은 [OCR 안내 v2 절](docs/PLAYER_IDENTITY_OCR.md). 대상 OCR 출력은 이 커밋 시점에 없다(프레임 자체는 시각 주석 때 본 개발 자료).
-      2026-09-28 평가 완료(이 커밋): [PA62·67 직접 판독](docs/results/mlb_p0/game_747139_player_identity_review_pa62_67.json)·[평가셋](docs/results/mlb_p0/game_747139_player_identity_evalset_pa62_67.json) 16역할 = 투수 `IGLESIAS`×4·`MATON`×4, 타자 `NIMMO`/타순 4×4·`LAUREANO`/타순 6×1, 67/1~67/3 타자 배너 부재 3건. 수동 대응 9 observed(NIMMO·MATON·LAUREANO 유일 일치, feed와 9/9 일치)·7 기권(IGLESIAS 모호 4 + 부재 3), 불일치 0.
+      2026-09-28 평가 완료(`0f8a5eb`): [PA62·67 직접 판독](docs/results/mlb_p0/game_747139_player_identity_review_pa62_67.json)·[평가셋](docs/results/mlb_p0/game_747139_player_identity_evalset_pa62_67.json) 16역할 = 투수 `IGLESIAS`×4·`MATON`×4, 타자 `NIMMO`/타순 4×4·`LAUREANO`/타순 6×1, 67/1~67/3 타자 배너 부재 3건. 수동 대응 9 observed(NIMMO·MATON·LAUREANO 유일 일치, feed와 9/9 일치)·7 기권(IGLESIAS 모호 4 + 부재 3), 불일치 0.
       [v1](docs/results/mlb_p0/game_747139_player_identity_ocr_v1_pa62_67_report.json)·[v2](docs/results/mlb_p0/game_747139_player_identity_ocr_v2_pa62_67_report.json) 실제 Windows OCR 결과가 **행 단위로 동일**: 이름 16기회 중 기준 13·시도 10·정답 10·오답 0·기권 6, ID 기준 9 중 정답 6(NIMMO 1·MATON 4·LAUREANO 1)·기권 10(IGLESIAS 4 모호, NIMMO 3 미판독, 부재 3), 타순 8기회 중 정답 4·기권 4, 엔진 오류 0, 부재 프레임 거짓 판독 0.
       규칙 발화: 62/1·62/3 타자 원문 `41VlMMO`(`4.NIMMO`의 N→`1V`, I→`l`)에서 v2 `l→I`가 적용됐지만 `1VIMMO`는 이름 문법에 걸려 v1과 같이 기권(거짓 판독 없음). 62/2 원문 빈 문자열. 타순 자리 분리 규칙은 발화 사례 없음.
       판정: 사전 등록 기준(오답 ≤ v1, 정답 ≥ v1, 거짓 판독 0)은 충족했으나 **결과가 바뀐 행이 0건**이라 채택 근거가 없다 → **v1 현행 유지, v2는 옵션으로 보존**. 개발 표본 PA61에 v2를 돌리면([예측](docs/results/mlb_p0/game_747139_player_identity_ocr_v2_pa61_predictions.json)·[보고서](docs/results/mlb_p0/game_747139_player_identity_ocr_v2_pa61_report.json)) 이름 7/7·ID 3/3·타순 2/2가 되지만 규칙을 만든 표본이라 성능 근거가 아니다.

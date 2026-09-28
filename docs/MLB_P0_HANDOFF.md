@@ -484,7 +484,7 @@
     오판독 원문 `3.VlENTOS`(6077.50·6094.00, I→l) → `VLENTOS` 이름 오답 2건, `a.VlENTOS`(6063.00, 타순 3→a) → 타순 누락 기권. 이름 오답을 ID 기권으로 가리지 않고 보고했다. 처리율 4/8이며 정답 4건도 ID 확정에는 이르지 못한다.
     PA6 산출물·timing·숫자 OCR 결과 변경 없음(git status). 전체 **573 passed, 2 deselected**, Ruff 84경로 통과. F-4a 전체는 부분 완료 유지. 새 항목 F-4b(v2 사전 등록·blind 평가) 추가. PA60 교체 타석은 우회하지 않았다. A-y 실제 응답 대기, 수정 권한 반납.
 
-51. (이 커밋): **F-4b 이름 OCR v2 사전 등록 평가 완료 — 결과 v1과 동일, v1 현행 유지** (Claude 세션 Fable 5.1, 2026-09-28; 선점 `f29ac92`, 사전 등록 `5323ba8`).
+51. `0f8a5eb`: **F-4b 이름 OCR v2 사전 등록 평가 완료 — 결과 v1과 동일, v1 현행 유지** (Claude 세션 Fable 5.1, 2026-09-28; 선점 `f29ac92`, 사전 등록 `5323ba8`).
     v2 = v1 crop/gate/전처리 + 파서 옵션 2개(대문자 문맥 `l`→`I`, 타순 자리 분리). scripts74 `--reader v2`는 별도 출력 강제. 대상은 결정 규칙으로 PA62(Iglesias 대 Nimmo)·PA67(Maton 대 Laureano), OCR 실행 전에 규칙·기준을 커밋했다.
     [직접 판독](docs/results/mlb_p0/game_747139_player_identity_review_pa62_67.json)·[평가셋](docs/results/mlb_p0/game_747139_player_identity_evalset_pa62_67.json) 16역할: 투수 IGLESIAS×4·MATON×4, 타자 NIMMO/4×4·LAUREANO/6×1, 67/1~3 타자 배너 부재 3. 수동 대응 observed 9(feed와 9/9 일치)·기권 7(IGLESIAS 모호 4·부재 3), 불일치 0.
     v1·v2 실제 OCR 결과 행 단위 동일: 이름 16기회·기준 13·시도 10·정답 10·오답 0·기권 6; ID 기준 9·정답 6·기권 10; 타순 8기회·정답 4·기권 4; 엔진 오류 0, 부재 프레임 거짓 판독 0. 62/1·62/3 원문 `41VlMMO`에서 v2 `l→I`가 발화했으나 `N`→`1V` 때문에 문법 기권 유지, 62/2 빈 원문.
