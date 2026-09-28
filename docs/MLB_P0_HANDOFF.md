@@ -484,8 +484,15 @@
     오판독 원문 `3.VlENTOS`(6077.50·6094.00, I→l) → `VLENTOS` 이름 오답 2건, `a.VlENTOS`(6063.00, 타순 3→a) → 타순 누락 기권. 이름 오답을 ID 기권으로 가리지 않고 보고했다. 처리율 4/8이며 정답 4건도 ID 확정에는 이르지 못한다.
     PA6 산출물·timing·숫자 OCR 결과 변경 없음(git status). 전체 **573 passed, 2 deselected**, Ruff 84경로 통과. F-4a 전체는 부분 완료 유지. 새 항목 F-4b(v2 사전 등록·blind 평가) 추가. PA60 교체 타석은 우회하지 않았다. A-y 실제 응답 대기, 수정 권한 반납.
 
+51. (이 커밋): **F-4b 이름 OCR v2 사전 등록 평가 완료 — 결과 v1과 동일, v1 현행 유지** (Claude 세션 Fable 5.1, 2026-09-28; 선점 `f29ac92`, 사전 등록 `5323ba8`).
+    v2 = v1 crop/gate/전처리 + 파서 옵션 2개(대문자 문맥 `l`→`I`, 타순 자리 분리). scripts74 `--reader v2`는 별도 출력 강제. 대상은 결정 규칙으로 PA62(Iglesias 대 Nimmo)·PA67(Maton 대 Laureano), OCR 실행 전에 규칙·기준을 커밋했다.
+    [직접 판독](docs/results/mlb_p0/game_747139_player_identity_review_pa62_67.json)·[평가셋](docs/results/mlb_p0/game_747139_player_identity_evalset_pa62_67.json) 16역할: 투수 IGLESIAS×4·MATON×4, 타자 NIMMO/4×4·LAUREANO/6×1, 67/1~3 타자 배너 부재 3. 수동 대응 observed 9(feed와 9/9 일치)·기권 7(IGLESIAS 모호 4·부재 3), 불일치 0.
+    v1·v2 실제 OCR 결과 행 단위 동일: 이름 16기회·기준 13·시도 10·정답 10·오답 0·기권 6; ID 기준 9·정답 6·기권 10; 타순 8기회·정답 4·기권 4; 엔진 오류 0, 부재 프레임 거짓 판독 0. 62/1·62/3 원문 `41VlMMO`에서 v2 `l→I`가 발화했으나 `N`→`1V` 때문에 문법 기권 유지, 62/2 빈 원문.
+    판정: 사전 등록 기준은 충족(오답 0=0, 정답 10=10, 거짓 판독 0)이나 결과가 바뀐 행 0건이라 채택 근거 없음 → v1 유지, v2 옵션 보존. 개발 표본 PA61의 v2 재채점([보고서](docs/results/mlb_p0/game_747139_player_identity_ocr_v2_pa61_report.json): 이름 7/7·ID 3/3)은 규칙을 만든 표본이라 근거로 쓰지 않는다.
+    reader 모듈이 해시 대상이라 PA6·PA61 v1 예측/보고서를 실제 엔진으로 재생성했고 예측 행·reader 메타데이터가 이전과 동일함을 확인했다(코드 해시만 변경). 전체 **587 passed, 2 deselected**, Ruff 84경로 통과. 다음 한 단위 F-4c(PA68·PA75 동일 절차). A-y 실제 응답 대기, 수정 권한 반납.
+
 이 문서와 함께 추가되는 후속 커밋의 해시는 `git log -6 --oneline`으로 확인한다.
-최신 Windows CPU 검사: **573 passed, 2 deselected (`check_project.py --cpu-only`, Ruff 84경로 통과)**(체크포인트 50). 아래 브라우저·서비스 검증은 이전 체크포인트 기록이다.
+최신 Windows CPU 검사: **587 passed, 2 deselected (`check_project.py --cpu-only`, Ruff 84경로 통과)**(체크포인트 51). 아래 브라우저·서비스 검증은 이전 체크포인트 기록이다.
 JavaScript 구문 검사 및 Chrome 수동 입력·실제 추론·9회 이후 추천 보류 확인.
 GitHub CI 결과는 해당 커밋의 validation 워크플로에서 따로 확인한다.
 주석 모듈을 먼저 import한 새 프로세스에서도 Torch→Pandas 문자열 생성이 성공하는지
@@ -540,7 +547,7 @@ Claude/Codex의 순서는 [../CHECKLIST.md](../CHECKLIST.md)의 "진행 순서" 
 팀원 레포(SongRoute/pitcheezy) 대조 결과는 [TEAMMATE_PITCHEEZY_2026-09-22.md](TEAMMATE_PITCHEEZY_2026-09-22.md) — 우리 쪽 참조가 없는 별도
 트랙이라 I-0(인터페이스 합의)·I-5(시연 경기)·I-6(클래스 대응표)·G-3(통화)를 A/B와 병행해 먼저 진행한다.
 
-1. **다음 한 단위 F-4b: 이름 OCR v2 사전 등록·blind 평가** — F-4a는 PA6 기준선·PA61 근거·고정 v1 평가까지 완료했고 전체는 부분 완료다(체크포인트 50). PA61에서 v1은 IGLESIAS 이름 4건을 읽고 명단 모호성으로 ID를 기권했으며 VIENTOS는 I→l 오인식으로 이름 오답 2·타순 누락 1이다. 개선 규칙은 새 프레임을 보기 전에 사전 등록하고 PA6·PA61 밖의 타석에서 평가한다.
+1. **다음 한 단위 F-4c: 같은 결정 규칙의 다음 두 타석(PA68·PA75)에 이름 OCR v1·v2 동일 절차 평가** — F-4b(체크포인트 51)는 v2가 PA62/67에서 v1과 행 단위로 같아 v1을 현행으로 유지했다. 오인식 유형(`N`→`1V`, `I`→`l`, 빈 원문)을 누적한 뒤 v3 후보는 별도 사전 등록한다. F-4a 전체는 부분 완료다.
    영상 시간 주석은 PA1~82, 322구(297 확인·25 불가·미검토0) 완료. A-y는 v2 묶음 준비 완료 후 실제 다른 검토자 응답을 기다린다.
 
 ```bash

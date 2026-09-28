@@ -190,6 +190,23 @@ PA63·66은 교체/수비 전환 이벤트로 제외, PA64·65는 4구 미만 �
 - 수동 기준은 scripts73 절차로 같은 8프레임을 직접 읽어 별도 `..._review_pa62_67.json`·`..._evalset_pa62_67.json`에 만들고, v1·v2 예측·보고서는
   `..._ocr_v1_pa62_67_*.json`·`..._ocr_v2_pa62_67_*.json`으로 분리한다. PA6·PA61 산출물과 v1 코드 경로는 그대로 둔다.
 
+### 2026-09-28 사전 등록 평가 결과 — PA62·PA67
+
+자료: [직접 판독](docs/results/mlb_p0/game_747139_player_identity_review_pa62_67.json), [평가셋](docs/results/mlb_p0/game_747139_player_identity_evalset_pa62_67.json), v1 [예측](docs/results/mlb_p0/game_747139_player_identity_ocr_v1_pa62_67_predictions.json)·[보고서](docs/results/mlb_p0/game_747139_player_identity_ocr_v1_pa62_67_report.json), v2 [예측](docs/results/mlb_p0/game_747139_player_identity_ocr_v2_pa62_67_predictions.json)·[보고서](docs/results/mlb_p0/game_747139_player_identity_ocr_v2_pa62_67_report.json). 실제 Windows OCR en-US 실행, predict→score→check `--verify-frames` 통과.
+
+| 대상 | 전체 기회 | 판독 가능한 기준 | 시도 | 정답 | 오답 | 기권 |
+|---|---:|---:|---:|---:|---:|---:|
+| 이름 문자열 (v1 = v2) | 16 | 13 | 10 | 10 | 0 | 6 |
+| 이름→명단 ID (v1 = v2) | 16 | 9 | 6 | 6 | 0 | 10 |
+| 타자 타순 (v1 = v2) | 8 | 5 | 4 | 4 | 0 | 4 |
+
+- v1과 v2의 16행 원문·이름·타순·상태가 모두 같다. 투수 `IGLESIAS`×4는 이름 정답·ID 모호 기권, `MATON`×4·`LAUREANO`×1·`NIMMO`(62/4)는 이름·ID 정답이다.
+- 62/1·62/3 타자 원문은 `41VlMMO`다. 배너 `4.NIMMO`의 `N`이 `1V`로, `I`가 `l`로 읽혔다. v2의 `l→I` 규칙은 발화했지만 `1VIMMO`는 이름 문법을 통과하지 못해 v1과 같이 `name_syntax_or_empty` 기권이며 거짓 판독은 없다.
+  62/2 타자 원문은 빈 문자열, 67/1~67/3은 패널 부재로 `name_panel_absent`다. 타순 자리 분리 규칙은 발화 사례가 없었다.
+- 판정: 사전 등록 기준(오답 ≤ v1, 정답 ≥ v1, 거짓 판독 0)은 충족했으나 결과가 바뀐 행이 없어 채택 근거가 없다. **v1을 현행으로 유지하고 v2는 옵션으로 보존한다.**
+- 개발 표본 확인: 규칙을 도출한 PA61에 v2를 돌리면 이름 7/7·ID 3/3·타순 2/2다([예측](docs/results/mlb_p0/game_747139_player_identity_ocr_v2_pa61_predictions.json)·[보고서](docs/results/mlb_p0/game_747139_player_identity_ocr_v2_pa61_report.json)). 규칙을 만든 표본이므로 성능 근거로 쓰지 않는다.
+- 새로 기록된 오인식 유형: `N`→`1V`, 빈 원문. 이 결과를 보고 규칙을 고치지 않았다. 다음은 CHECKLIST F-4c(같은 결정 규칙의 다음 두 타석 PA68·PA75)이며 v3 후보는 별도 사전 등록한다.
+
 ## bridge 단독 확인
 
 저장소 루트의 PowerShell에서 설치된 엔진 정보를 확인할 수 있다.

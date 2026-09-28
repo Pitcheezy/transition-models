@@ -29,12 +29,12 @@
 | 항목 | 값 | 갱신 |
 |---|---|---|
 | 브랜치 | `codex/fix-point-label-alignment` | 2026-09-22 |
-| 최신 작업 커밋 | `abfa03c` (F-4a PA61 이름 근거·고정 v1 평가), 선점 `fdaf6b7`; 이름 OCR v1 `f5962d7`, 평가 준비 `e34c8a6`, A-y 동결 기준 `ed56f9b` | 2026-09-28 |
-| 파일 수정 권한 | **Claude** (2026-09-28 착수, F-4b 이름 OCR v2 사전 등록·blind 평가 — 세션 Fable 5.1; A-y 실제 응답 대기) | 2026-09-28 |
+| 최신 작업 커밋 | (이 커밋) (F-4b v2 사전 등록 평가 완료), 사전 등록 `5323ba8`, 선점 `f29ac92`; PA61 v1 평가 `abfa03c`, 이름 OCR v1 `f5962d7` | 2026-09-28 |
+| 파일 수정 권한 | **비어 있음** — F-4b 완료(Claude, 2026-09-28; v1 현행 유지). 다음 F-4c(PA68·75 동일 절차 평가); A-y 실제 응답 대기 | 2026-09-28 |
 | 중계 시각 주석 | **297 확인 / 25 확인 불가 / 0 미검토** — 전 경기 322구 검토 완료. 완전 타석 2~4·6~15·18~19·21·23~28·30~32·34·36~38·40~46·49~51·53~55·57~63·65~69·71·74~79·81. 불가 목록·반이닝 집계·리드 분포는 [전 경기 요약](docs/MLB_BROADCAST_TIMING.md). 규약 v2, 수동 시각 | 2026-09-27 |
 | 점수판 평가셋 | timing 322 / 리뷰 297(292구 10필드 confirmed, PA 8/1·16/1·33/1·41/1·44/1 partial) / 라벨 충돌 0 / 판단 화면 불가 25 / 미검토 0 | 2026-09-27 |
 | 점수판 OCR | **현행 v2 유지**. A-15 새 17구: 새 판단 프레임 17구의 필드 정답·기권·오답: v1 119·51·0 / v2 119·51·0 / v3 117·53·0 / v4 119·51·0. unavailable 2구는 예측 대상이 아니다. 공유 280행 변화 0·반복 297행 일치·음성 거짓 판독 0. 이전 오판독은 [알려진 목록](docs/results/mlb_p0/game_747139_scoreboard_known_misreads.json)에 유지. v3 무회귀·v4 사전 등록 기준 실패 유지. 747139는 전 경기 개발 자료; 새 버전 독립 검증은 새 미검토 영상 필요 | 2026-09-27 |
-| 전체 검사 (Windows CPU) | 573 passed, 2 deselected (`check_project.py --cpu-only`, Ruff 84경로 통과) | 2026-09-28 |
+| 전체 검사 (Windows CPU) | 587 passed, 2 deselected (`check_project.py --cpu-only`, Ruff 84경로 통과) | 2026-09-28 |
 | 정책 효용 | **미입증** — delta −0.0862 runs/100, 95% CI [−0.4046, +0.2304] | 2026-09-21 |
 | Claude 모델 배정 | 항목 태그 참조 — `uv run --frozen python scripts/checklist_model.py --next` | 2026-09-22 |
 | 담당 구분 | **C·D = 팀원(외부)**, 그 외 = Claude/Codex. 통합 검증은 I절 | 2026-09-22 |
@@ -248,7 +248,7 @@ git diff -- src/data/mlb_video.py src/vision/state_tracker.py
 
 A-y 준비는 완료했다. 실제 별도 검토자 JSON을 받은 뒤 scripts72 check-response로 검사하고 고정 규약으로 비교한다.
 응답이 없으면 일치도 수치를 만들거나 A-y를 완료로 바꾸지 않는다. 전 경기 주석은 끝났으므로 빈 후보를 다시 병합하지 않는다.
-H-1·H-5·I-6·A-v·A-z는 완료, E-1은 원본 확보 필요다. F-4a의 규약·PA6 OCR 기준선·PA61 근거·고정 v1 평가는 완료했고(F-4a 전체는 부분 완료 유지), 다음은 F-4b 이름 OCR v2 사전 등록·blind 평가다. 상세 절차는 [CODEX_RESUME_PROMPT.md](docs/CODEX_RESUME_PROMPT.md).
+H-1·H-5·I-6·A-v·A-z는 완료, E-1은 원본 확보 필요다. F-4a의 규약·PA6 OCR 기준선·PA61 근거·고정 v1 평가는 완료했고(F-4a 전체는 부분 완료 유지), F-4b(v2 사전 등록 평가: 결과 v1과 동일, v1 유지)도 완료했고 다음은 F-4c(PA68·75 동일 절차 평가)다. 상세 절차는 [CODEX_RESUME_PROMPT.md](docs/CODEX_RESUME_PROMPT.md).
 
 ## B. 점수판 인식 평가셋
 
@@ -402,9 +402,17 @@ feature builder의 고정 2022 프로필을 그 방식으로 갱신하는 코드
       고정 v1(설정·코드 해시 PA6 실행과 동일, 튜닝 없음) [예측](docs/results/mlb_p0/game_747139_player_identity_ocr_v1_pa61_predictions.json)·[보고서](docs/results/mlb_p0/game_747139_player_identity_ocr_v1_pa61_report.json): 이름 8기회 중 기준 판독 가능 7·시도 6·정답 4(IGLESIAS×4)·**오답 2**·기권 2; ID는 8기회 모두 기권(IGLESIAS 4 모호, VIENTOS 3은 이름 오판독으로 사전 불일치, 부재 1; 시도 0·오답 0); 타순 4기회 중 정답 2·기권 2. 엔진 오류 0, 부재 프레임 거짓 판독 0.
       오판독 원문: 6077.50·6094.00 타자 `3.VlENTOS`(대문자 I가 소문자 l) → 이름 `VLENTOS` 오답 2건(ID 기권으로 가리지 않고 이름 오답으로 보고), 6063.00 `a.VlENTOS`(타순 3이 a) → 타순 누락 기권. 이름 처리율은 4/8이며 IGLESIAS 정답 4건도 ID까지는 가지 못한다. 개선은 F-4b로 넘긴다.
       scripts73 build/check --verify-frames(full_input_rebuild, feed·8프레임 바이트 재검증)와 scripts74 predict→score→check --verify-frames 통과, 실제 Windows OCR en-US 실행. PA6 산출물·timing·숫자 OCR 결과 변경 없음. 전체 573 passed, 2 deselected, Ruff 84경로 통과.
-- [ ] F-4b. **이름 OCR v2 사전 등록·blind 평가** — PA61에서 본 v1 약점(대문자 전용 배너의 I→l 혼동, 타순 자릿수 `a.` 오인식)의 규칙을 **새 프레임을 보기 전에** 사전 등록 커밋한 뒤 PA6·PA61이 아닌 타석에서 v1·v2를 같은 프레임으로 평가한다(F-3d 방식). `[추가되었음 · 2026-09-28 · Claude]` 〔모델: Fable 5.1〕
+- [x] F-4b. **이름 OCR v2 사전 등록 평가 — 결과 v1과 동일, v1 현행 유지** `[추가되었음 · 2026-09-28 · Claude]` 〔모델: Fable 5.1〕
       허용 후보: 대문자 전용 문맥의 l→I 정규화, 타순 자리의 숫자 검증. 금지: 정답 문자열 기반 보정, 퍼지 매칭, 기대 역할/정답 ID로 후보 축소. PA60 투수 교체 타석의 생성기 처리는 별도 항목으로 남기고 우회하지 않는다. v1 결과·PA6/PA61 자료는 보존한다.
-      2026-09-28 사전 등록 커밋(이 커밋, Claude/Fable 5.1; 선점 `f29ac92`): `CONFIG_V2`(v1 crop·gate 동일 + `uppercase_context_l_to_I`·`decoupled_unreadable_batter_slot`), scripts74 `--reader v2`(별도 출력 강제), 파서 검사 추가. 대상은 결정 규칙(PA61 이후 4구 이상·전 투구 annotated·교체/수비 전환 없음인 첫 두 타석)으로 PA62·PA67, 채택 기준·예측은 [OCR 안내 v2 절](docs/PLAYER_IDENTITY_OCR.md). 대상 OCR 출력은 이 커밋 시점에 없다(프레임 자체는 시각 주석 때 본 개발 자료).
+      2026-09-28 사전 등록 커밋(`5323ba8`, Claude/Fable 5.1; 선점 `f29ac92`): `CONFIG_V2`(v1 crop·gate 동일 + `uppercase_context_l_to_I`·`decoupled_unreadable_batter_slot`), scripts74 `--reader v2`(별도 출력 강제), 파서 검사 추가. 대상은 결정 규칙(PA61 이후 4구 이상·전 투구 annotated·교체/수비 전환 없음인 첫 두 타석)으로 PA62·PA67, 채택 기준·예측은 [OCR 안내 v2 절](docs/PLAYER_IDENTITY_OCR.md). 대상 OCR 출력은 이 커밋 시점에 없다(프레임 자체는 시각 주석 때 본 개발 자료).
+      2026-09-28 평가 완료(이 커밋): [PA62·67 직접 판독](docs/results/mlb_p0/game_747139_player_identity_review_pa62_67.json)·[평가셋](docs/results/mlb_p0/game_747139_player_identity_evalset_pa62_67.json) 16역할 = 투수 `IGLESIAS`×4·`MATON`×4, 타자 `NIMMO`/타순 4×4·`LAUREANO`/타순 6×1, 67/1~67/3 타자 배너 부재 3건. 수동 대응 9 observed(NIMMO·MATON·LAUREANO 유일 일치, feed와 9/9 일치)·7 기권(IGLESIAS 모호 4 + 부재 3), 불일치 0.
+      [v1](docs/results/mlb_p0/game_747139_player_identity_ocr_v1_pa62_67_report.json)·[v2](docs/results/mlb_p0/game_747139_player_identity_ocr_v2_pa62_67_report.json) 실제 Windows OCR 결과가 **행 단위로 동일**: 이름 16기회 중 기준 13·시도 10·정답 10·오답 0·기권 6, ID 기준 9 중 정답 6(NIMMO 1·MATON 4·LAUREANO 1)·기권 10(IGLESIAS 4 모호, NIMMO 3 미판독, 부재 3), 타순 8기회 중 정답 4·기권 4, 엔진 오류 0, 부재 프레임 거짓 판독 0.
+      규칙 발화: 62/1·62/3 타자 원문 `41VlMMO`(`4.NIMMO`의 N→`1V`, I→`l`)에서 v2 `l→I`가 적용됐지만 `1VIMMO`는 이름 문법에 걸려 v1과 같이 기권(거짓 판독 없음). 62/2 원문 빈 문자열. 타순 자리 분리 규칙은 발화 사례 없음.
+      판정: 사전 등록 기준(오답 ≤ v1, 정답 ≥ v1, 거짓 판독 0)은 충족했으나 **결과가 바뀐 행이 0건**이라 채택 근거가 없다 → **v1 현행 유지, v2는 옵션으로 보존**. 개발 표본 PA61에 v2를 돌리면([예측](docs/results/mlb_p0/game_747139_player_identity_ocr_v2_pa61_predictions.json)·[보고서](docs/results/mlb_p0/game_747139_player_identity_ocr_v2_pa61_report.json)) 이름 7/7·ID 3/3·타순 2/2가 되지만 규칙을 만든 표본이라 성능 근거가 아니다.
+      새로 기록된 오인식 유형: `N`→`1V`(62/1·62/3), 빈 원문(62/2). 정답 기반 보정 없음. PA6·PA61 산출물은 코드 해시만 갱신(행 동일). 전체 587 passed, 2 deselected, Ruff 84경로 통과.
+- [ ] F-4c. **이름 OCR 오인식 유형 누적: 같은 결정 규칙의 다음 두 타석(PA68·PA75)에 v1·v2 동일 절차 평가** `[추가되었음 · 2026-09-28 · Claude]` 〔모델: Fable 5.1〕
+      대상 규칙은 F-4b와 같다(PA67 이후 4구 이상·전 투구 annotated·교체/수비 전환 없음인 첫 두 타석 → PA68 Maton 대 d'Arnaud, PA75 Johnson 대 Marte; feed로 재확인). 아포스트로피 이름 `D'ARNAUD`가 첫 사례다.
+      결과를 본 뒤 규칙을 고치지 않는다. 누적된 유형(`N`→`1V`, `I`→`l`, 빈 원문, 타순 자리 오인식)이 충분하면 v3 후보(예: crop 확대 배율, 다른 엔진 어댑터)를 **별도 사전 등록** 뒤 새 타석에서 평가한다. PA60 교체 타석은 여전히 별도 항목.
 
 ## G. 효용 검증
 
@@ -526,7 +534,7 @@ git fetch origin && git status --short --branch && git log -5 --oneline
 미커밋 변경이나 로컬 전용 커밋이 있으면 먼저 대조·보존한다.
 그 다음 상태 요약 표의 진행 중 `[~]` 항목이 있으면 그것부터, 없으면 **다음 한 단위**부터 이어간다.
 2026-09-26 기준 A-7~A-14(9회초까지 303구), F-3a(OCR v2)·F-3c(v3 실패 기록)·F-3d(v4 사전 등록, A-10에서 판정 실패 기록)·H-4(유지보수 도구)는 완료됐다.
-다음 한 단위는 **F-4b 이름 OCR v2 사전 등록·blind 평가**다. F-4a는 PA6 기준선과 PA61 근거·고정 v1 평가까지 마쳤고 전체는 부분 완료다(IGLESIAS는 명단 모호성으로 ID 기권을 확인했고, VIENTOS는 I→l 오인식으로 이름 오답 2·타순 누락 1이다). H-5·I-6은 완료, A-y는 실제 별도 검토자 응답 대기다. 실제 독립 검토자의 결과 없이는 일치도 측정 완료로 표시하지 않는다. C·D는 팀원 담당, I-0·I-5는 답변 대기다. 새 OCR 버전의 독립 검증에는 새 미검토 영상이 필요하다. 공개 저장소에 비밀·개인정보를 커밋하지 않는다.
+다음 한 단위는 **F-4c: 같은 결정 규칙의 다음 두 타석(PA68·PA75)에 이름 OCR v1·v2 동일 절차 평가**다. F-4b는 v2가 v1과 행 단위로 같아 v1을 현행으로 유지했고(PA62/67), F-4a 전체는 부분 완료다. H-5·I-6은 완료, A-y는 실제 별도 검토자 응답 대기다. 실제 서비스 연결·C·D 통합은 팀원 산출물 수신 뒤에 한다.
 자세한 첫 실행 절차는 [docs/CODEX_RESUME_PROMPT.md](docs/CODEX_RESUME_PROMPT.md)를 따른다.
 
 ## 유지해야 할 정보 경계

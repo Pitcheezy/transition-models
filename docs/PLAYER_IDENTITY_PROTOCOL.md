@@ -152,6 +152,25 @@ scripts73 build/check `--verify-frames`로 [PA61 평가셋](docs/results/mlb_p0/
 투수 역할, 타석 상황, feed 정답 ID로 후보를 하나로 줄이지 않는다. 화면에 성만 표시되는 이 형식에서는 성이 겹치는 선수를 이름만으로 확정할 수 없다는 사례이며,
 동명이인 해소는 화면에서 실제로 읽힌 팀·이니셜·번호 같은 추가 관찰이나 별도 규약이 있어야 한다. 모든 연속성은 `unknown`, held 0이다.
 
+## PA62·PA67 기준과 직접 읽은 범위 (2026-09-28, F-4b)
+
+F-4b의 결정 규칙(PA61 이후 4구 이상·전 투구 annotated·교체/수비 전환 이벤트 없음인 첫 두 타석)으로 고른 타석이다. feed 기준 PA62는 **Raisel Iglesias 628452** 대 **Brandon Nimmo 607043**(8회초, 도루 이벤트만),
+PA67은 **Phil Maton 664208** 대 **Ramón Laureano 657656**(8회말, 타임 이벤트만)이며 두 타석 모두 교체·수비 위치 변경 이벤트가 없다. 2026-09-28 Claude 세션(Fable 5.1)이 기존 timing의 8개 판단 프레임을 직접 읽어 [review](docs/results/mlb_p0/game_747139_player_identity_review_pa62_67.json)에 기록했고 scripts73 `--verify-frames`로 [평가셋](docs/results/mlb_p0/game_747139_player_identity_evalset_pa62_67.json)을 만들었다(full_input_rebuild).
+
+| 투구 | 판단 재생 초 | 투수 문자열 | 타자 문자열 / 타순 |
+|---|---:|---|---|
+| 62/1 | 6142.25 | `IGLESIAS` | `NIMMO` / 4 |
+| 62/2 | 6172.25 | `IGLESIAS` | `NIMMO` / 4 |
+| 62/3 | 6187.50 | `IGLESIAS` | `NIMMO` / 4 |
+| 62/4 | 6205.50 | `IGLESIAS` | `NIMMO` / 4 |
+| 67/1 | 6719.75 | `MATON` (SNY 와이프 직후, 잔광 있으나 판독 가능) | 배너 없음: null / null |
+| 67/2 | 6742.75 | `MATON` | 배너 없음: null / null |
+| 67/3 | 6760.25 | `MATON` | 배너 없음: null / null |
+| 67/4 | 6807.00 | `MATON` | `LAUREANO` / 6 |
+
+8프레임 × 2역할의 **16개 기록 중 13개 이름을 직접 읽었고 3개는 타자 배너가 없었다**(PA67은 4구째에야 타자 줄이 표시됐다). `NIMMO`·`MATON`·`LAUREANO`는 명단에서 유일해 `observed` 9건이 feed 기준과 모두 일치하고,
+`IGLESIAS` 4건은 PA61과 같은 이유로 `ambiguous_name` 기권이다. 배너 오른쪽 `0-3`·`3-3`은 경기 성적이며 카운트가 아니다. 팀은 배너에 없어 모두 null, 연속성은 모두 `unknown`, held 0이다.
+
 ## 재현과 다음 범위
 
 구현은 [player_identity.py](../src/data/player_identity.py), CLI는

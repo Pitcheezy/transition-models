@@ -1,0 +1,308 @@
+{
+  "schema": "mlb_player_identity_ocr_report_v1",
+  "evalset_sha256": "25fd82e455bc309ca6c7032c82e4528693cdcba453df81fbed6c87620e2220ce",
+  "predictions_sha256": "a57f1d802022becb947e3db3ae1bcb53705e656c17c74f259beb9a785c54a9ec",
+  "reader_metadata_sha256": "40b17b29db4c3abea944c0771f2207db4943b76f2989c56e3fcbd7d6e388d72e",
+  "pipeline_matches_current_code": true,
+  "names": {
+    "opportunities": 8,
+    "reference_evaluable": 7,
+    "attempt": 7,
+    "correct": 7,
+    "wrong": 0,
+    "abstain": 1,
+    "coverage": 0.875,
+    "correct_given_attempt": 1.0,
+    "false_reads_without_evaluable_reference": 0
+  },
+  "identities": {
+    "opportunities": 8,
+    "reference_evaluable": 3,
+    "attempt": 3,
+    "correct": 3,
+    "wrong": 0,
+    "abstain": 5,
+    "coverage": 0.375,
+    "correct_given_attempt": 1.0,
+    "false_reads_without_evaluable_reference": 0
+  },
+  "lineup": {
+    "opportunities": 4,
+    "reference_evaluable": 3,
+    "attempt": 2,
+    "correct": 2,
+    "wrong": 0,
+    "abstain": 2,
+    "coverage": 0.5,
+    "correct_given_attempt": 1.0,
+    "false_reads_without_evaluable_reference": 0
+  },
+  "reader_errors": 0,
+  "context_diagnostics": {
+    "opportunities": 0,
+    "reader_errors": 0,
+    "name_false_read": 0,
+    "id_false_read": 0,
+    "lineup_false_read": 0,
+    "rows": []
+  },
+  "rows": [
+    {
+      "game_pk": 747139,
+      "at_bat_number": 61,
+      "pitch_number": 1,
+      "play_id": "9c2a92d3-2e65-4132-aae3-f7b1eeb9bc1d",
+      "role": "pitcher",
+      "evidence": {
+        "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+        "frame_seconds": 6044.75,
+        "image_sha256": "da361c2fdcc025253a05582d223f915b38994b702d9190ad56ca712099edccec",
+        "path": "outputs/frames/evalset_6044.75.jpg"
+      },
+      "raw_text": "IGLESIAS",
+      "name_text": "IGLESIAS",
+      "lineup_order": null,
+      "status": "read",
+      "reason": "literal_name",
+      "expected_name_text": "IGLESIAS",
+      "name_reference_evaluable": true,
+      "name_verdict": "correct",
+      "candidate_ids": [
+        578428,
+        628452
+      ],
+      "resolved_player_id": null,
+      "id_reference_evaluable": false,
+      "id_verdict": "abstain",
+      "expected_lineup_order": null,
+      "lineup_reference_evaluable": false,
+      "lineup_verdict": "abstain",
+      "matches_hindsight_reference": null
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 61,
+      "pitch_number": 1,
+      "play_id": "9c2a92d3-2e65-4132-aae3-f7b1eeb9bc1d",
+      "role": "batter",
+      "evidence": {
+        "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+        "frame_seconds": 6044.75,
+        "image_sha256": "da361c2fdcc025253a05582d223f915b38994b702d9190ad56ca712099edccec",
+        "path": "outputs/frames/evalset_6044.75.jpg"
+      },
+      "raw_text": "",
+      "name_text": null,
+      "lineup_order": null,
+      "status": "abstain",
+      "reason": "name_panel_absent",
+      "expected_name_text": null,
+      "name_reference_evaluable": false,
+      "name_verdict": "abstain",
+      "candidate_ids": [],
+      "resolved_player_id": null,
+      "id_reference_evaluable": false,
+      "id_verdict": "abstain",
+      "expected_lineup_order": null,
+      "lineup_reference_evaluable": false,
+      "lineup_verdict": "abstain",
+      "matches_hindsight_reference": null
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 61,
+      "pitch_number": 2,
+      "play_id": "3259fc6d-1af2-4952-8ed6-b8ae03e85d0c",
+      "role": "pitcher",
+      "evidence": {
+        "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+        "frame_seconds": 6063.0,
+        "image_sha256": "2a41565657f7a737349fb7d1291fe2e52aa7bf10de989cf09ee11ae97f6baa09",
+        "path": "outputs/frames/evalset_6063.00.jpg"
+      },
+      "raw_text": "IGLESIAS",
+      "name_text": "IGLESIAS",
+      "lineup_order": null,
+      "status": "read",
+      "reason": "literal_name",
+      "expected_name_text": "IGLESIAS",
+      "name_reference_evaluable": true,
+      "name_verdict": "correct",
+      "candidate_ids": [
+        578428,
+        628452
+      ],
+      "resolved_player_id": null,
+      "id_reference_evaluable": false,
+      "id_verdict": "abstain",
+      "expected_lineup_order": null,
+      "lineup_reference_evaluable": false,
+      "lineup_verdict": "abstain",
+      "matches_hindsight_reference": null
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 61,
+      "pitch_number": 2,
+      "play_id": "3259fc6d-1af2-4952-8ed6-b8ae03e85d0c",
+      "role": "batter",
+      "evidence": {
+        "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+        "frame_seconds": 6063.0,
+        "image_sha256": "2a41565657f7a737349fb7d1291fe2e52aa7bf10de989cf09ee11ae97f6baa09",
+        "path": "outputs/frames/evalset_6063.00.jpg"
+      },
+      "raw_text": "a.VlENTOS",
+      "name_text": "VIENTOS",
+      "lineup_order": null,
+      "status": "read",
+      "reason": "literal_name_slot_unreadable",
+      "expected_name_text": "VIENTOS",
+      "name_reference_evaluable": true,
+      "name_verdict": "correct",
+      "candidate_ids": [
+        668901
+      ],
+      "resolved_player_id": 668901,
+      "id_reference_evaluable": true,
+      "id_verdict": "correct",
+      "expected_lineup_order": 3,
+      "lineup_reference_evaluable": true,
+      "lineup_verdict": "abstain",
+      "matches_hindsight_reference": true
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 61,
+      "pitch_number": 3,
+      "play_id": "d77609ba-144a-4743-bb46-38395ae9b037",
+      "role": "pitcher",
+      "evidence": {
+        "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+        "frame_seconds": 6077.5,
+        "image_sha256": "95e53578af6f37586cdb2a3d63533fd437e127aa766dcc7ce97f390734a77e0f",
+        "path": "outputs/frames/evalset_6077.50.jpg"
+      },
+      "raw_text": "IGLESIAS",
+      "name_text": "IGLESIAS",
+      "lineup_order": null,
+      "status": "read",
+      "reason": "literal_name",
+      "expected_name_text": "IGLESIAS",
+      "name_reference_evaluable": true,
+      "name_verdict": "correct",
+      "candidate_ids": [
+        578428,
+        628452
+      ],
+      "resolved_player_id": null,
+      "id_reference_evaluable": false,
+      "id_verdict": "abstain",
+      "expected_lineup_order": null,
+      "lineup_reference_evaluable": false,
+      "lineup_verdict": "abstain",
+      "matches_hindsight_reference": null
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 61,
+      "pitch_number": 3,
+      "play_id": "d77609ba-144a-4743-bb46-38395ae9b037",
+      "role": "batter",
+      "evidence": {
+        "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+        "frame_seconds": 6077.5,
+        "image_sha256": "95e53578af6f37586cdb2a3d63533fd437e127aa766dcc7ce97f390734a77e0f",
+        "path": "outputs/frames/evalset_6077.50.jpg"
+      },
+      "raw_text": "3.VlENTOS",
+      "name_text": "VIENTOS",
+      "lineup_order": 3,
+      "status": "read",
+      "reason": "literal_name",
+      "expected_name_text": "VIENTOS",
+      "name_reference_evaluable": true,
+      "name_verdict": "correct",
+      "candidate_ids": [
+        668901
+      ],
+      "resolved_player_id": 668901,
+      "id_reference_evaluable": true,
+      "id_verdict": "correct",
+      "expected_lineup_order": 3,
+      "lineup_reference_evaluable": true,
+      "lineup_verdict": "correct",
+      "matches_hindsight_reference": true
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 61,
+      "pitch_number": 4,
+      "play_id": "7c16a1c0-a07e-4f71-8e3d-7d958c0c7beb",
+      "role": "pitcher",
+      "evidence": {
+        "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+        "frame_seconds": 6094.0,
+        "image_sha256": "347d35d41e6e8ee7de3c309238d967630622b872c1efdfa23ab0c38c45f335e5",
+        "path": "outputs/frames/evalset_6094.00.jpg"
+      },
+      "raw_text": "IGLESIAS",
+      "name_text": "IGLESIAS",
+      "lineup_order": null,
+      "status": "read",
+      "reason": "literal_name",
+      "expected_name_text": "IGLESIAS",
+      "name_reference_evaluable": true,
+      "name_verdict": "correct",
+      "candidate_ids": [
+        578428,
+        628452
+      ],
+      "resolved_player_id": null,
+      "id_reference_evaluable": false,
+      "id_verdict": "abstain",
+      "expected_lineup_order": null,
+      "lineup_reference_evaluable": false,
+      "lineup_verdict": "abstain",
+      "matches_hindsight_reference": null
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 61,
+      "pitch_number": 4,
+      "play_id": "7c16a1c0-a07e-4f71-8e3d-7d958c0c7beb",
+      "role": "batter",
+      "evidence": {
+        "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+        "frame_seconds": 6094.0,
+        "image_sha256": "347d35d41e6e8ee7de3c309238d967630622b872c1efdfa23ab0c38c45f335e5",
+        "path": "outputs/frames/evalset_6094.00.jpg"
+      },
+      "raw_text": "3.VlENTOS",
+      "name_text": "VIENTOS",
+      "lineup_order": 3,
+      "status": "read",
+      "reason": "literal_name",
+      "expected_name_text": "VIENTOS",
+      "name_reference_evaluable": true,
+      "name_verdict": "correct",
+      "candidate_ids": [
+        668901
+      ],
+      "resolved_player_id": 668901,
+      "id_reference_evaluable": true,
+      "id_verdict": "correct",
+      "expected_lineup_order": 3,
+      "lineup_reference_evaluable": true,
+      "lineup_verdict": "correct",
+      "matches_hindsight_reference": true
+    }
+  ],
+  "limitations": [
+    "Manual PA6 development references on one SNY layout, not new blind validation or general OCR accuracy.",
+    "Reader receives images only; exact whole-game roster resolution runs afterward with no expected-player or role filter.",
+    "Wrong literal names remain wrong when identity resolution abstains; absent/partial names are not successful identity targets.",
+    "Lineup totals include batter roles only. Context frames are separate diagnostic negatives.",
+    "Final-feed agreement is hindsight context, not evidence of live player availability or automatic substitution tracking."
+  ]
+}
