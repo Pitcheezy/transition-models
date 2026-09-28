@@ -29,7 +29,7 @@
 | 항목 | 값 | 갱신 |
 |---|---|---|
 | 브랜치 | `codex/fix-point-label-alignment` | 2026-09-22 |
-| 최신 작업 커밋 | (이 커밋) (F-4g 남은 9타석 일괄 평가: v2 현행 전환), 사전 등록 `0d25acb`; F-4f `41881cb`, v1 `f5962d7` | 2026-09-29 |
+| 최신 작업 커밋 | `4e111bb` (F-4g 남은 9타석 일괄 평가: v2 현행 전환), 사전 등록 `0d25acb`; F-4f `41881cb`, v1 `f5962d7` | 2026-09-29 |
 | 파일 수정 권한 | **비어 있음** — F-4g 완료(Claude, 2026-09-29; 이름 OCR 현행 v2). 다음 F-4h(남은 유형 후속·교체 타석 규약); A-y 실제 응답 대기 | 2026-09-29 |
 | 중계 시각 주석 | **297 확인 / 25 확인 불가 / 0 미검토** — 전 경기 322구 검토 완료. 완전 타석 2~4·6~15·18~19·21·23~28·30~32·34·36~38·40~46·49~51·53~55·57~63·65~69·71·74~79·81. 불가 목록·반이닝 집계·리드 분포는 [전 경기 요약](docs/MLB_BROADCAST_TIMING.md). 규약 v2, 수동 시각 | 2026-09-27 |
 | 점수판 평가셋 | timing 322 / 리뷰 297(292구 10필드 confirmed, PA 8/1·16/1·33/1·41/1·44/1 partial) / 라벨 충돌 0 / 판단 화면 불가 25 / 미검토 0 | 2026-09-27 |
@@ -446,7 +446,7 @@ feature builder의 고정 2022 프로필을 그 방식으로 갱신하는 코드
       2타석 단위는 커밋·검사 오버헤드가 커서 속도가 나지 않는다. F-4e 결정 규칙으로 아직 안 쓴 타석 전부(검증 기록 bug_text에서 사전 등록 커밋 시 재계산; PA26·31·34·37·38·46·49·55 등 후보)를 하나의 review/evalset(`..._pa_rest.json`)로 묶어 직접 읽고 v1·v2를 한 번에 채점한다.
       전환 기준은 F-4f와 같다(차이 행에서 v2 오답 0, 누적 차이 행 ≥ 2 → v2 현행 전환). 프레임 추출은 8프레임 단위로 병렬, OCR은 v1·v2만. 결과를 본 뒤 규칙·기준을 바꾸지 않는다.
       2026-09-29 사전 등록 커밋(`0d25acb`, Claude/Fable 5.1): 검증 기록으로 재계산한 대상 = **PA26·31·34·37·38·46·49·55·81**(49프레임·98역할; 투수 Megill·Schwellenbach·Brazobán·Ottavino·Díaz, 타자 d'Arnaud·Arcia·Martinez·Bader·Albies·Harris II·Olson·Laureano). 자료 이름 `..._pa_rest.json`, `..._ocr_v{1,2}_pa_rest_*.json`. 전환 기준 동일, 코드·설정 변경 없음, 대상 OCR 출력은 이 커밋 시점에 없다.
-      2026-09-29 평가 완료(이 커밋): [PA_rest 직접 판독](docs/results/mlb_p0/game_747139_player_identity_review_pa_rest.json)·[평가셋](docs/results/mlb_p0/game_747139_player_identity_evalset_pa_rest.json) 9타석 49프레임 98역할. 투수 MEGILL×22(26/4는 OFFICIAL SCORING: PASSED BALL 그래픽이 투수 줄을 대체해 unreadable)·SCHWELLENBACH×10·BRAZOBÁN×6·OTTAVINO×5·DÍAZ×6, 타자 37건(D'ARNAUD 12·ARCIA 3·MARTINEZ 4·BADER 4·ALBIES 2·HARRIS II 4·OLSON 3·LAUREANO 5), 배너 부재 12. 수동 대응 85 observed(모두 명단 유일, feed와 85/85 일치)·13 기권, 불일치 0.
+      2026-09-29 평가 완료(`4e111bb`): [PA_rest 직접 판독](docs/results/mlb_p0/game_747139_player_identity_review_pa_rest.json)·[평가셋](docs/results/mlb_p0/game_747139_player_identity_evalset_pa_rest.json) 9타석 49프레임 98역할. 투수 MEGILL×22(26/4는 OFFICIAL SCORING: PASSED BALL 그래픽이 투수 줄을 대체해 unreadable)·SCHWELLENBACH×10·BRAZOBÁN×6·OTTAVINO×5·DÍAZ×6, 타자 37건(D'ARNAUD 12·ARCIA 3·MARTINEZ 4·BADER 4·ALBIES 2·HARRIS II 4·OLSON 3·LAUREANO 5), 배너 부재 12. 수동 대응 85 observed(모두 명단 유일, feed와 85/85 일치)·13 기권, 불일치 0.
       [v1](docs/results/mlb_p0/game_747139_player_identity_ocr_v1_pa_rest_report.json)·[v2](docs/results/mlb_p0/game_747139_player_identity_ocr_v2_pa_rest_report.json) 실제 OCR, 이름 기준 85: **v1** 시도 62·정답 41·오답 21·기권 36 / **v2** 시도 66·정답 53·오답 13·기권 32. ID 기준 85: v1 정답 41·오답 0·기권 57 / v2 정답 53·오답 0·기권 45. 타순 기준 37: 둘 다 정답 32·기권 17. 엔진 오류 0, 부재·대체 그래픽 프레임 거짓 판독 0.
       v1과 다른 행 **12건, 전부 v2 정답**: `9.ARClA`×3·`6.MARTlNEZ`×3·`2.ALBlES`×2(l→I), `l. HARRIS II`×4(타순 자리 `l` → 이름만 판독, 타순 기권). F-4e의 1건과 합쳐 누적 차이 행 13건, 차이 행 v2 오답 0.
       **판정: 전환 기준 전부 충족 → v2를 현행 reader로 전환.** scripts74 `--reader` 기본값 v2, 정본 PA6 v2 [예측](docs/results/mlb_p0/game_747139_player_identity_ocr_v2_predictions.json)·[보고서](docs/results/mlb_p0/game_747139_player_identity_ocr_v2_report.json) 추가(이름 9·0·3, ID 9·0·3: PA6에는 발화 사례가 없어 v1과 동일), v1은 `--reader v1`로 고정 보존, reader끼리 정본 파일 덮어쓰기 거부. scripts74가 해시 대상이라 저장된 예측/보고서 19세트를 재생성해 행 동일성을 확인했다.
