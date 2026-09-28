@@ -207,6 +207,42 @@ PA63·66은 교체/수비 전환 이벤트로 제외, PA64·65는 4구 미만 �
 - 개발 표본 확인: 규칙을 도출한 PA61에 v2를 돌리면 이름 7/7·ID 3/3·타순 2/2다([예측](docs/results/mlb_p0/game_747139_player_identity_ocr_v2_pa61_predictions.json)·[보고서](docs/results/mlb_p0/game_747139_player_identity_ocr_v2_pa61_report.json)). 규칙을 만든 표본이므로 성능 근거로 쓰지 않는다.
 - 새로 기록된 오인식 유형: `N`→`1V`, 빈 원문. 이 결과를 보고 규칙을 고치지 않았다. 다음은 CHECKLIST F-4c(같은 결정 규칙의 다음 두 타석 PA68·PA75)이며 v3 후보는 별도 사전 등록한다.
 
+### 2026-09-28 동일 절차 평가 결과 — PA68·PA75 (F-4c)
+
+F-4b와 같은 결정 규칙의 다음 두 타석이다(feed 비투구 이벤트 없음). 자료: [직접 판독](docs/results/mlb_p0/game_747139_player_identity_review_pa68_75.json), [평가셋](docs/results/mlb_p0/game_747139_player_identity_evalset_pa68_75.json), v1 [예측](docs/results/mlb_p0/game_747139_player_identity_ocr_v1_pa68_75_predictions.json)·[보고서](docs/results/mlb_p0/game_747139_player_identity_ocr_v1_pa68_75_report.json), v2 [예측](docs/results/mlb_p0/game_747139_player_identity_ocr_v2_pa68_75_predictions.json)·[보고서](docs/results/mlb_p0/game_747139_player_identity_ocr_v2_pa68_75_report.json). 결과를 본 뒤 규칙·crop을 바꾸지 않았다.
+
+| 대상 | 전체 기회 | 판독 가능한 기준 | 시도 | 정답 | 오답 | 기권 |
+|---|---:|---:|---:|---:|---:|---:|
+| 이름 문자열 (v1 = v2) | 16 | 13 | 12 | 11 | 1 | 4 |
+| 이름→명단 ID (v1 = v2) | 16 | 13 | 11 | 11 | 0 | 5 |
+| 타자 타순 (v1 = v2) | 8 | 5 | 4 | 4 | 0 | 4 |
+
+- `MATON`×4·`JOHNSON`×4·`MARTE`×2(타순 9)·68/4 `D'ARNAUD`(타순 7)는 이름·ID 정답이다. 이 타석들에는 동명이인이 없어 ID 기준 판독 가능이 13이다.
+- 68/3 원문 `7.DtARNAUD`: 아포스트로피가 `t`로 읽혀 파서가 `DTARNAUD`를 이름으로 출력했다. 사전에 없어 ID는 기권이지만 **이름 오답 1건**으로 보고한다. 68/2 원문 `zD'ARNAUD`: 타순 `7.`이 `z`로 뭉개져 구분자가 없으므로 v1·v2 모두 `batter_slot_missing` 기권이다(v2의 타순 자리 분리 규칙은 구분자를 요구한다).
+- 68/1·75/1·75/2는 타자 패널 부재로 `name_panel_absent`, 거짓 판독 0. 엔진 오류 0. v2 규칙은 발화 사례가 없어 v1과 행 단위로 같다.
+
+### 누적 결과와 오인식 유형표 (PA61·62·67·68·75, 개발 표본 PA6 제외)
+
+같은 경기·같은 화면 형식의 개발 자료이며 새 독립 성능이 아니다. v1과 v2는 이 40역할에서 행 단위로 같다.
+
+| 대상 | 전체 기회 | 판독 가능한 기준 | 시도 | 정답 | 오답 | 기권 |
+|---|---:|---:|---:|---:|---:|---:|
+| 이름 문자열 | 40 | 33 | 28 | 25 | 3 | 12 |
+| 이름→명단 ID | 40 | 25 | 17 | 17 | 0 | 23 |
+| 타자 타순 | 20 | 13 | 10 | 10 | 0 | 10 |
+
+| 유형 | 사례(원문) | v1 결과 | v2 결과 |
+|---|---|---|---|
+| 대문자 `I` → 소문자 `l` | PA61 `3.VlENTOS`×2, `a.VlENTOS` | 이름 오답 `VLENTOS`×2, 타순 누락 기권 | `VIENTOS`×2 정답, 타순 기권·이름 정답(개발 표본 재채점, 근거 아님) |
+| `N` → `1V` (+`I`→`l`) | PA62 `41VlMMO`×2 | 문법 기권 | `l`→`I` 뒤에도 `1VIMMO` 문법 기권 |
+| 아포스트로피 → `t` | PA68 `7.DtARNAUD` | 이름 오답 `DTARNAUD` | 동일 |
+| 타순 자리 오인식 | PA61 `a.VlENTOS`, PA68 `zD'ARNAUD` | 기권 | `a.`는 이름만 판독, `z`(구분자 없음)는 기권 |
+| 빈 원문 | PA62 62/2, PA6 611.45 | 기권 | 동일 |
+| 숫자 `0` 혼입 | PA6 `3.0ZUNA` | 이름 거부·타순 3 | 동일(치환 없음) |
+
+ID 오답은 0건이며 명단 정확 일치 규칙이 이름 오답을 ID로 승격시키지 않았다. 반대로 성만 표시되는 `IGLESIAS`는 이름이 정답이어도 ID를 확정할 수 없다(8건 모호 기권).
+다음은 CHECKLIST F-4d: 위 유형이 모두 4배 회색조 crop의 글자 형태 혼동이므로 전처리만 바꾼 v3 후보를 OCR 실행 전에 사전 등록하고 PA77·PA78에서 v1·v2·v3를 같은 프레임으로 평가한다.
+
 ## bridge 단독 확인
 
 저장소 루트의 PowerShell에서 설치된 엔진 정보를 확인할 수 있다.

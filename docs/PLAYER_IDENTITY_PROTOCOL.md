@@ -171,6 +171,24 @@ PA67은 **Phil Maton 664208** 대 **Ramón Laureano 657656**(8회말, 타임 이
 8프레임 × 2역할의 **16개 기록 중 13개 이름을 직접 읽었고 3개는 타자 배너가 없었다**(PA67은 4구째에야 타자 줄이 표시됐다). `NIMMO`·`MATON`·`LAUREANO`는 명단에서 유일해 `observed` 9건이 feed 기준과 모두 일치하고,
 `IGLESIAS` 4건은 PA61과 같은 이유로 `ambiguous_name` 기권이다. 배너 오른쪽 `0-3`·`3-3`은 경기 성적이며 카운트가 아니다. 팀은 배너에 없어 모두 null, 연속성은 모두 `unknown`, held 0이다.
 
+## PA68·PA75 기준과 직접 읽은 범위 (2026-09-28, F-4c)
+
+F-4b와 같은 결정 규칙의 다음 두 타석이다. feed 기준 PA68은 **Phil Maton 664208** 대 **Travis d'Arnaud 518595**(8회말), PA75는 **Pierce Johnson 572955** 대 **Starling Marte 516782**(9회초)이며 두 타석 모두 비투구 이벤트가 없다.
+2026-09-28 Claude 세션(Fable 5.1)이 기존 timing의 8개 판단 프레임을 직접 읽어 [review](docs/results/mlb_p0/game_747139_player_identity_review_pa68_75.json)에 기록했고 scripts73 `--verify-frames`로 [평가셋](docs/results/mlb_p0/game_747139_player_identity_evalset_pa68_75.json)을 만들었다(full_input_rebuild).
+
+| 투구 | 판단 재생 초 | 투수 문자열 | 타자 문자열 / 타순 |
+|---|---:|---|---|
+| 68/1 | 6848.25 | `MATON` | 배너 없음: null / null |
+| 68/2 | 6867.75 | `MATON` | `D'ARNAUD` / 7 |
+| 68/3 | 6886.75 | `MATON` | `D'ARNAUD` / 7 |
+| 68/4 | 6913.75 | `MATON` | `D'ARNAUD` / 7 |
+| 75/1 | 7681.25 | `JOHNSON` | 배너 없음: null / null |
+| 75/2 | 7700.00 | `JOHNSON` | 배너 없음: null / null |
+| 75/3 | 7716.75 | `JOHNSON` | `MARTE` / 9 |
+| 75/4 | 7740.00 | `JOHNSON` | `MARTE` / 9 |
+
+16개 기록 중 13개 이름을 직접 읽었고 3개는 타자 배너가 없었다. 아포스트로피는 배너에 인쇄된 그대로 `D'ARNAUD`로 적었고 명단 별칭과 정확히 일치한다. 네 이름 모두 명단에서 유일해 `observed` 13건이 feed 기준과 일치하며, 팀 null·연속성 `unknown`·held 0이다.
+
 ## 재현과 다음 범위
 
 구현은 [player_identity.py](../src/data/player_identity.py), CLI는

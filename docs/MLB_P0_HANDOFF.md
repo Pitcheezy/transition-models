@@ -491,8 +491,14 @@
     판정: 사전 등록 기준은 충족(오답 0=0, 정답 10=10, 거짓 판독 0)이나 결과가 바뀐 행 0건이라 채택 근거 없음 → v1 유지, v2 옵션 보존. 개발 표본 PA61의 v2 재채점([보고서](docs/results/mlb_p0/game_747139_player_identity_ocr_v2_pa61_report.json): 이름 7/7·ID 3/3)은 규칙을 만든 표본이라 근거로 쓰지 않는다.
     reader 모듈이 해시 대상이라 PA6·PA61 v1 예측/보고서를 실제 엔진으로 재생성했고 예측 행·reader 메타데이터가 이전과 동일함을 확인했다(코드 해시만 변경). 전체 **587 passed, 2 deselected**, Ruff 84경로 통과. 다음 한 단위 F-4c(PA68·PA75 동일 절차). A-y 실제 응답 대기, 수정 권한 반납.
 
+52. (이 커밋): **F-4c PA68·PA75 이름 OCR v1·v2 동일 절차 평가 완료 — v1 = v2, v1 현행 유지** (Claude 세션 Fable 5.1, 2026-09-28; 선점 `1802faa`).
+    같은 결정 규칙의 다음 두 타석(PA68 Maton 대 d'Arnaud, PA75 Johnson 대 Marte; feed 비투구 이벤트 없음). [직접 판독](docs/results/mlb_p0/game_747139_player_identity_review_pa68_75.json)·[평가셋](docs/results/mlb_p0/game_747139_player_identity_evalset_pa68_75.json) 16역할: MATON×4·JOHNSON×4, D'ARNAUD/7×3·MARTE/9×2, 배너 부재 3. 수동 대응 13 observed(feed와 13/13 일치)·3 기권, 불일치 0.
+    v1·v2 실제 OCR 결과 행 단위 동일: 이름 16기회·기준 13·시도 12·정답 11·오답 1·기권 4; ID 기준 13·정답 11·오답 0·기권 5; 타순 8기회·정답 4·기권 4; 엔진 오류 0, 부재 프레임 거짓 판독 0. v2 규칙 발화 0건.
+    새 오인식 유형: `7.DtARNAUD`(아포스트로피→`t`, 이름 오답 1, ID 기권), `zD'ARNAUD`(타순·구분자가 `z`로 뭉개짐, 기권). 누적(PA61·62·67·68·75, 40역할, v1 = v2): 이름 기준 33·정답 25·오답 3·기권 12, ID 기준 25·정답 17·오답 0·기권 23, 타순 기준 13·정답 10·기권 10.
+    규칙·crop 변경 없음, PA6·PA61·PA62/67 산출물 보존. 전체 **587 passed, 2 deselected**, Ruff 84경로 통과. 새 항목 F-4d(v3 전처리 후보 사전 등록 → PA77·PA78 v1·v2·v3 평가). A-y 실제 응답 대기, 수정 권한 반납.
+
 이 문서와 함께 추가되는 후속 커밋의 해시는 `git log -6 --oneline`으로 확인한다.
-최신 Windows CPU 검사: **587 passed, 2 deselected (`check_project.py --cpu-only`, Ruff 84경로 통과)**(체크포인트 51). 아래 브라우저·서비스 검증은 이전 체크포인트 기록이다.
+최신 Windows CPU 검사: **587 passed, 2 deselected (`check_project.py --cpu-only`, Ruff 84경로 통과)**(체크포인트 52). 아래 브라우저·서비스 검증은 이전 체크포인트 기록이다.
 JavaScript 구문 검사 및 Chrome 수동 입력·실제 추론·9회 이후 추천 보류 확인.
 GitHub CI 결과는 해당 커밋의 validation 워크플로에서 따로 확인한다.
 주석 모듈을 먼저 import한 새 프로세스에서도 Torch→Pandas 문자열 생성이 성공하는지
@@ -547,7 +553,7 @@ Claude/Codex의 순서는 [../CHECKLIST.md](../CHECKLIST.md)의 "진행 순서" 
 팀원 레포(SongRoute/pitcheezy) 대조 결과는 [TEAMMATE_PITCHEEZY_2026-09-22.md](TEAMMATE_PITCHEEZY_2026-09-22.md) — 우리 쪽 참조가 없는 별도
 트랙이라 I-0(인터페이스 합의)·I-5(시연 경기)·I-6(클래스 대응표)·G-3(통화)를 A/B와 병행해 먼저 진행한다.
 
-1. **다음 한 단위 F-4c: 같은 결정 규칙의 다음 두 타석(PA68·PA75)에 이름 OCR v1·v2 동일 절차 평가** — F-4b(체크포인트 51)는 v2가 PA62/67에서 v1과 행 단위로 같아 v1을 현행으로 유지했다. 오인식 유형(`N`→`1V`, `I`→`l`, 빈 원문)을 누적한 뒤 v3 후보는 별도 사전 등록한다. F-4a 전체는 부분 완료다.
+1. **다음 한 단위 F-4d: 이름 OCR v3 전처리 후보 사전 등록과 PA77·PA78 v1·v2·v3 평가** — F-4b·F-4c(체크포인트 51·52)에서 v2는 32역할 모두 v1과 같았고 v1을 현행으로 유지했다. 누적 오인식 유형(`I`→`l`, `N`→`1V`, 아포스트로피→`t`, 타순 자리 `a.`/`z`, 빈 원문)은 전처리 단계의 글자 형태 혼동이므로 v3는 전처리만 바꿔 OCR 실행 전에 사전 등록한다. F-4a 전체는 부분 완료다.
    영상 시간 주석은 PA1~82, 322구(297 확인·25 불가·미검토0) 완료. A-y는 v2 묶음 준비 완료 후 실제 다른 검토자 응답을 기다린다.
 
 ```bash
