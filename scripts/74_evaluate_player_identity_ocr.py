@@ -51,9 +51,12 @@ def main():
     )
     parser.add_argument(
         "--reader",
-        choices=("v1", "v2"),
+        choices=("v1", "v2", "v3"),
         default="v1",
-        help="predict only: frozen v1 (default) or the pre-registered v2 parser options (F-4b)",
+        help=(
+            "predict only: frozen v1 (default), the pre-registered v2 parser options (F-4b) "
+            "or the pre-registered v3 preprocessing candidate (F-4d)"
+        ),
     )
     args = parser.parse_args()
     custom_evalset = not _same_file(args.evalset, DEFAULT_EVALSET)
@@ -89,9 +92,10 @@ def main():
     check_player_identity_evalset(evalset, verify_frames=args.verify_frames)
     if args.command == "predict":
         # Import/initialize Windows OCR only for actual prediction; scoring remains portable.
-        from src.vision.sny_player_names import CONFIG, CONFIG_V2, SNYPlayerNameReader
+        from src.vision.sny_player_names import CONFIG, CONFIG_V2, CONFIG_V3, SNYPlayerNameReader
 
-        reader = SNYPlayerNameReader(config=CONFIG_V2 if args.reader == "v2" else CONFIG)
+        configs = {"v1": CONFIG, "v2": CONFIG_V2, "v3": CONFIG_V3}
+        reader = SNYPlayerNameReader(config=configs[args.reader])
         predictions = build_predictions(evalset, reader)
         report = score_predictions(evalset, predictions)
         _write(args.predictions, predictions)

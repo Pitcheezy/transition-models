@@ -16,7 +16,7 @@
       "dll_version": "10.0.26100.9278 (WinBuild.160101.0800)"
     },
     "config": {
-      "schema": "sny_player_names_v1",
+      "schema": "sny_player_names_v3",
       "frame_size": [
         1280,
         720
@@ -42,16 +42,21 @@
         "max_channel_spread": 50
       },
       "preprocessing": {
-        "scale": 4,
+        "scale": 6,
         "resampling": "LANCZOS",
         "border": 16,
-        "grayscale": true
+        "grayscale": true,
+        "binarize_threshold": 100
       },
-      "parser": "uppercase_latin_literal_names_optional_batter_slot_no_fuzzy_correction",
-      "state": "current_frame_only_no_hold"
+      "parser": "v1_parser_plus_uppercase_context_l_to_I_and_decoupled_batter_slot",
+      "state": "current_frame_only_no_hold",
+      "options": {
+        "uppercase_context_l_to_I": true,
+        "decoupled_unreadable_batter_slot": true
+      }
     }
   },
-  "reader_metadata_sha256": "c96a41b9644f3a75ebe0887e1c558c9dab48ffa3a6b9c377b1b4eb1e50ea6ae5",
+  "reader_metadata_sha256": "c18227a180f6298430bc1c3af9f35639bd49ea1a9a8e848aa893263c8e8e86f4",
   "pipeline_code_sha256": {
     "src/evaluation/player_identity_ocr.py": "1faa7c4fc6b3790f45627c8e75a3edf2f6c23515a6262f64474b90047472b4b7",
     "src/data/player_identity.py": "bef316c76bb8ba153f8db4461fad1263a58b9c46ae461dd4838b44b219523171",
@@ -128,7 +133,7 @@
         "image_sha256": "2a41565657f7a737349fb7d1291fe2e52aa7bf10de989cf09ee11ae97f6baa09",
         "path": "outputs/frames/evalset_6063.00.jpg"
       },
-      "raw_text": "a.VlENTOS",
+      "raw_text": "-J VIENTOS",
       "name_text": null,
       "lineup_order": null,
       "status": "abstain",
@@ -164,8 +169,8 @@
         "image_sha256": "95e53578af6f37586cdb2a3d63533fd437e127aa766dcc7ce97f390734a77e0f",
         "path": "outputs/frames/evalset_6077.50.jpg"
       },
-      "raw_text": "3.VlENTOS",
-      "name_text": "VLENTOS",
+      "raw_text": "3 VIENTOS",
+      "name_text": "VIENTOS",
       "lineup_order": 3,
       "status": "read",
       "reason": "literal_name"
@@ -200,8 +205,8 @@
         "image_sha256": "347d35d41e6e8ee7de3c309238d967630622b872c1efdfa23ab0c38c45f335e5",
         "path": "outputs/frames/evalset_6094.00.jpg"
       },
-      "raw_text": "3.VlENTOS",
-      "name_text": "VLENTOS",
+      "raw_text": "3 VIENTOS",
+      "name_text": "VIENTOS",
       "lineup_order": 3,
       "status": "read",
       "reason": "literal_name"

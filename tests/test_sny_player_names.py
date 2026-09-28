@@ -9,6 +9,7 @@ from PIL import Image, ImageDraw
 from src.vision.sny_player_names import (
     CONFIG,
     CONFIG_V2,
+    CONFIG_V3,
     SNYPlayerNameReader,
     WindowsOCR,
     parse_panel_text,
@@ -115,6 +116,35 @@ def test_v2_reader_shares_v1_crops_and_reports_its_own_schema():
     assert "options" not in CONFIG and CONFIG["schema"] == "sny_player_names_v1"
     with pytest.raises(ValueError):
         SNYPlayerNameReader(backend, config={**CONFIG, "schema": "sny_player_names_v9"})
+
+
+def test_v3_changes_only_the_preprocessing_handed_to_the_engine():
+    backend = FakeOCR(["MEGlLL", "a.VlENTOS"])
+    frame = synthetic_frame()
+    ImageDraw.Draw(frame).rectangle((80, 115, 90, 125), fill=(90, 90, 90))  # mid-gray glyph
+    reader = SNYPlayerNameReader(backend, config=CONFIG_V3)
+    result = reader.read(frame)
+    # Parser rules are the v2 ones; only the images differ.
+    assert result["pitcher"]["name_text"] == "MEGILL" and result["batter"]["name_text"] == "VIENTOS"
+    metadata = reader.metadata()["config"]
+    assert (
+        metadata["schema"] == "sny_player_names_v3" and metadata["options"] == CONFIG_V2["options"]
+    )
+    assert metadata["crops"] == CONFIG["crops"] and metadata["presence"] == CONFIG["presence"]
+    assert (
+        metadata["preprocessing"]["scale"] == 6
+        and metadata["preprocessing"]["binarize_threshold"] == 100
+    )
+    images = backend.calls[0]
+    x0, y0, x1, y1 = CONFIG["crops"]["pitcher"]
+    assert images[0].size == ((x1 - x0) * 6 + 32, (y1 - y0) * 6 + 32)
+    assert set(images[0].convert("L").getdata()) == {0, 255}
+    # v1 and v2 keep the 4x grayscale image with intermediate values.
+    v2 = FakeOCR(["SMITH", "7.JONES"])
+    SNYPlayerNameReader(v2, config=CONFIG_V2).read(frame)
+    assert v2.calls[0][0].size == ((x1 - x0) * 4 + 32, (y1 - y0) * 4 + 32)
+    assert len(set(v2.calls[0][0].convert("L").getdata())) > 2
+    assert "binarize_threshold" not in CONFIG["preprocessing"]
 
 
 def test_reader_gets_only_image_crops_and_keeps_a_wrong_literal():

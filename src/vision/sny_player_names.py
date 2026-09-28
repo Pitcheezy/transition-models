@@ -52,7 +52,27 @@ CONFIG_V2 = {
         "decoupled_unreadable_batter_slot": True,
     },
 }
+# v3 (pre-registered 2026-09-28, CHECKLIST F-4d) keeps every v2 crop, gate, parser and state
+# rule and changes only the preprocessing handed to the engine: a larger LANCZOS scale and a
+# fixed-threshold binarization of the grayscale crop. The cumulative misread types on this
+# strip (I->l, N->1V, apostrophe->t, slot digit->letter) are glyph-shape confusions, so the
+# candidate targets the image the engine sees, not the parser or any roster/label input.
+CONFIG_V3 = {
+    **deepcopy(CONFIG_V2),
+    "schema": "sny_player_names_v3",
+    "preprocessing": {
+        "scale": 6,
+        "resampling": "LANCZOS",
+        "border": 16,
+        "grayscale": True,
+        # Grayscale value strictly above the threshold becomes white, everything else black.
+        # 100 (not the 128 midpoint) was chosen on the PA61 development sample among six
+        # scale/threshold variants before any target frame was run; see PLAYER_IDENTITY_OCR.md.
+        "binarize_threshold": 100,
+    },
+}
 NO_OPTIONS = {"uppercase_context_l_to_I": False, "decoupled_unreadable_batter_slot": False}
+SCHEMAS = ("sny_player_names_v1", "sny_player_names_v2", "sny_player_names_v3")
 
 
 def parse_panel_text(raw_text, role, options=None):
@@ -182,7 +202,7 @@ class SNYPlayerNameReader:
     def __init__(self, backend=None, config=None):
         self.backend = WindowsOCR() if backend is None else backend
         self.config = deepcopy(CONFIG if config is None else config)
-        if self.config["schema"] not in ("sny_player_names_v1", "sny_player_names_v2"):
+        if self.config["schema"] not in SCHEMAS:
             raise ValueError("Unknown player-name reader configuration")
 
     def metadata(self):
@@ -216,6 +236,9 @@ class SNYPlayerNameReader:
             crop = crop.convert("L").resize(
                 (crop.width * prep["scale"], crop.height * prep["scale"]), Image.Resampling.LANCZOS
             )
+            if prep.get("binarize_threshold") is not None:
+                threshold = prep["binarize_threshold"]
+                crop = crop.point(lambda value, limit=threshold: 255 if value > limit else 0)
             crops.append(ImageOps.expand(crop, border=prep["border"], fill=255).convert("RGB"))
             roles.append(role)
         if crops:
