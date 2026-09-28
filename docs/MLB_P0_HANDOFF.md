@@ -491,7 +491,7 @@
     판정: 사전 등록 기준은 충족(오답 0=0, 정답 10=10, 거짓 판독 0)이나 결과가 바뀐 행 0건이라 채택 근거 없음 → v1 유지, v2 옵션 보존. 개발 표본 PA61의 v2 재채점([보고서](docs/results/mlb_p0/game_747139_player_identity_ocr_v2_pa61_report.json): 이름 7/7·ID 3/3)은 규칙을 만든 표본이라 근거로 쓰지 않는다.
     reader 모듈이 해시 대상이라 PA6·PA61 v1 예측/보고서를 실제 엔진으로 재생성했고 예측 행·reader 메타데이터가 이전과 동일함을 확인했다(코드 해시만 변경). 전체 **587 passed, 2 deselected**, Ruff 84경로 통과. 다음 한 단위 F-4c(PA68·PA75 동일 절차). A-y 실제 응답 대기, 수정 권한 반납.
 
-52. (이 커밋): **F-4c PA68·PA75 이름 OCR v1·v2 동일 절차 평가 완료 — v1 = v2, v1 현행 유지** (Claude 세션 Fable 5.1, 2026-09-28; 선점 `1802faa`).
+52. `dc59ac6`: **F-4c PA68·PA75 이름 OCR v1·v2 동일 절차 평가 완료 — v1 = v2, v1 현행 유지** (Claude 세션 Fable 5.1, 2026-09-28; 선점 `1802faa`).
     같은 결정 규칙의 다음 두 타석(PA68 Maton 대 d'Arnaud, PA75 Johnson 대 Marte; feed 비투구 이벤트 없음). [직접 판독](docs/results/mlb_p0/game_747139_player_identity_review_pa68_75.json)·[평가셋](docs/results/mlb_p0/game_747139_player_identity_evalset_pa68_75.json) 16역할: MATON×4·JOHNSON×4, D'ARNAUD/7×3·MARTE/9×2, 배너 부재 3. 수동 대응 13 observed(feed와 13/13 일치)·3 기권, 불일치 0.
     v1·v2 실제 OCR 결과 행 단위 동일: 이름 16기회·기준 13·시도 12·정답 11·오답 1·기권 4; ID 기준 13·정답 11·오답 0·기권 5; 타순 8기회·정답 4·기권 4; 엔진 오류 0, 부재 프레임 거짓 판독 0. v2 규칙 발화 0건.
     새 오인식 유형: `7.DtARNAUD`(아포스트로피→`t`, 이름 오답 1, ID 기권), `zD'ARNAUD`(타순·구분자가 `z`로 뭉개짐, 기권). 누적(PA61·62·67·68·75, 40역할, v1 = v2): 이름 기준 33·정답 25·오답 3·기권 12, ID 기준 25·정답 17·오답 0·기권 23, 타순 기준 13·정답 10·기권 10.

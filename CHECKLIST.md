@@ -29,7 +29,7 @@
 | 항목 | 값 | 갱신 |
 |---|---|---|
 | 브랜치 | `codex/fix-point-label-alignment` | 2026-09-22 |
-| 최신 작업 커밋 | (이 커밋) (F-4c PA68·PA75 v1·v2 평가 완료), 선점 `1802faa`; F-4b `0f8a5eb`, v2 사전 등록 `5323ba8`, PA61 `abfa03c`, v1 `f5962d7` | 2026-09-28 |
+| 최신 작업 커밋 | `dc59ac6` (F-4c PA68·PA75 v1·v2 평가 완료), 선점 `1802faa`; F-4b `0f8a5eb`, v2 사전 등록 `5323ba8`, PA61 `abfa03c`, v1 `f5962d7` | 2026-09-28 |
 | 파일 수정 권한 | **비어 있음** — F-4c 완료(Claude, 2026-09-28; v1 현행 유지). 다음 F-4d(v3 전처리 후보 사전 등록·PA77·78); A-y 실제 응답 대기 | 2026-09-28 |
 | 중계 시각 주석 | **297 확인 / 25 확인 불가 / 0 미검토** — 전 경기 322구 검토 완료. 완전 타석 2~4·6~15·18~19·21·23~28·30~32·34·36~38·40~46·49~51·53~55·57~63·65~69·71·74~79·81. 불가 목록·반이닝 집계·리드 분포는 [전 경기 요약](docs/MLB_BROADCAST_TIMING.md). 규약 v2, 수동 시각 | 2026-09-27 |
 | 점수판 평가셋 | timing 322 / 리뷰 297(292구 10필드 confirmed, PA 8/1·16/1·33/1·41/1·44/1 partial) / 라벨 충돌 0 / 판단 화면 불가 25 / 미검토 0 | 2026-09-27 |
@@ -413,7 +413,7 @@ feature builder의 고정 2022 프로필을 그 방식으로 갱신하는 코드
 - [x] F-4c. **이름 OCR 오인식 유형 누적: PA68·PA75 v1·v2 동일 절차 평가 — v1 = v2, v1 현행 유지** `[추가되었음 · 2026-09-28 · Claude]` 〔모델: Fable 5.1〕
       대상 규칙은 F-4b와 같다(PA67 이후 4구 이상·전 투구 annotated·교체/수비 전환 없음인 첫 두 타석 → PA68 Maton 대 d'Arnaud, PA75 Johnson 대 Marte; feed로 재확인). 아포스트로피 이름 `D'ARNAUD`가 첫 사례다.
       결과를 본 뒤 규칙을 고치지 않는다. 누적된 유형(`N`→`1V`, `I`→`l`, 빈 원문, 타순 자리 오인식)이 충분하면 v3 후보(예: crop 확대 배율, 다른 엔진 어댑터)를 **별도 사전 등록** 뒤 새 타석에서 평가한다. PA60 교체 타석은 여전히 별도 항목.
-      2026-09-28 완료(이 커밋, Claude/Fable 5.1; 선점 `1802faa`): feed 재확인(PA68·PA75 비투구 이벤트 없음). [직접 판독](docs/results/mlb_p0/game_747139_player_identity_review_pa68_75.json)·[평가셋](docs/results/mlb_p0/game_747139_player_identity_evalset_pa68_75.json) 16역할 = 투수 `MATON`×4·`JOHNSON`×4, 타자 `D'ARNAUD`/타순 7×3·`MARTE`/타순 9×2, 배너 부재 3(68/1·75/1·75/2). 수동 대응 13 observed(모두 명단 유일, feed와 13/13 일치)·3 기권(부재), 불일치 0.
+      2026-09-28 완료(`dc59ac6`, Claude/Fable 5.1; 선점 `1802faa`): feed 재확인(PA68·PA75 비투구 이벤트 없음). [직접 판독](docs/results/mlb_p0/game_747139_player_identity_review_pa68_75.json)·[평가셋](docs/results/mlb_p0/game_747139_player_identity_evalset_pa68_75.json) 16역할 = 투수 `MATON`×4·`JOHNSON`×4, 타자 `D'ARNAUD`/타순 7×3·`MARTE`/타순 9×2, 배너 부재 3(68/1·75/1·75/2). 수동 대응 13 observed(모두 명단 유일, feed와 13/13 일치)·3 기권(부재), 불일치 0.
       [v1](docs/results/mlb_p0/game_747139_player_identity_ocr_v1_pa68_75_report.json)·[v2](docs/results/mlb_p0/game_747139_player_identity_ocr_v2_pa68_75_report.json) 실제 OCR 결과 행 단위 동일: 이름 16기회·기준 13·시도 12·정답 11·**오답 1**·기권 4; ID 기준 13·정답 11·오답 0·기권 5; 타순 8기회·정답 4·기권 4; 엔진 오류 0, 부재 프레임 거짓 판독 0. v2 규칙은 발화 사례 없음(소문자 `l`·구분자 있는 오인식 타순이 없었다).
       새 오인식 유형: 68/3 `7.DtARNAUD`(아포스트로피→`t`, 이름 오답 `DTARNAUD`; 사전 불일치라 ID는 기권했지만 이름 오답으로 보고), 68/2 `zD'ARNAUD`(타순 `7.`이 `z`로 뭉개져 구분자 없음 → `batter_slot_missing` 기권). 68/4 `7.D'ARNAUD`·75/3·75/4 `9.MARTE`는 정답. 규칙·crop은 바꾸지 않았다.
       누적(개발 표본 PA6 제외, PA61·62·67·68·75 = 40역할, v1 = v2): 이름 기준 33·시도 28·정답 25·오답 3·기권 12 / ID 기준 25·정답 17·오답 0·기권 23 / 타순 기준 13·정답 10·오답 0·기권 10. 오인식 유형표는 [OCR 안내](docs/PLAYER_IDENTITY_OCR.md). 전체 587 passed, 2 deselected, Ruff 84경로 통과.
