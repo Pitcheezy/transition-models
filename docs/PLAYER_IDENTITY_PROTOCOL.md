@@ -196,6 +196,20 @@ feed 기준 PA77은 **Pierce Johnson 572955** 대 **Jose Iglesias 578428**(9회�
 14프레임 모두 투수 줄 `JOHNSON`만 있고 **타자 줄은 한 번도 표시되지 않았다**(A-14 timing note와 일치). 28개 기록 = 투수 14 observed(명단 유일, feed 일치)·타자 14 기권(배너 부재). 동명이인 `IGLESIAS`·`ALVAREZ`의 화면 사례는 따라서 이 두 타석에서 얻지 못했다.
 팀 null·연속성 `unknown`·held 0이다.
 
+## PA15·PA21 기준과 직접 읽은 범위 (2026-09-28, F-4e)
+
+F-4e 결정 규칙(검증 기록에 타자 줄이 기록된 타석)으로 고른 타석이다. feed 기준 PA15는 **Tylor Megill 656731** 대 **Orlando Arcia 606115**(2회말 5구, 비투구 이벤트 없음), PA21은 **Tylor Megill 656731** 대 **Ozzie Albies 645277**(3회말 5구, 견제 1회).
+2026-09-28 Claude 세션(Fable 5.1)이 기존 timing의 10개 판단 프레임을 직접 읽어 [review](docs/results/mlb_p0/game_747139_player_identity_review_pa15_21.json)에 기록했고 scripts73 `--verify-frames`로 [평가셋](docs/results/mlb_p0/game_747139_player_identity_evalset_pa15_21.json)을 만들었다(full_input_rebuild).
+
+| 투구 | 판단 재생 초 | 투수 문자열 | 타자 문자열 / 타순 |
+|---|---:|---|---|
+| 15/1 | 1461.25 | `MEGILL` | 배너 없음: null / null |
+| 15/2~15/5 | 1484.75·1506.75·1528.50·1556.25 | `MEGILL` | `ARCIA` / 9 (오른쪽 `.220`은 타율) |
+| 21/1 | 2040.75 | `MEGILL` (전환으로 기울어졌으나 판독 가능) | 배너 없음: null / null |
+| 21/2~21/5 | 2059.75·2071.75·2123.00·2140.75 | `MEGILL` | `ALBIES` / 2 (오른쪽 `BB`는 직전 결과) |
+
+20개 기록 중 18개 이름을 직접 읽었고 두 타석 모두 1구째에는 타자 배너가 없었다. 세 이름 모두 명단에서 유일해 `observed` 18건이 feed 기준과 일치하며, 팀 null·연속성 `unknown`·held 0이다.
+
 ## 재현과 다음 범위
 
 구현은 [player_identity.py](../src/data/player_identity.py), CLI는
