@@ -29,7 +29,7 @@
 | 항목 | 값 | 갱신 |
 |---|---|---|
 | 브랜치 | `codex/fix-point-label-alignment` | 2026-09-22 |
-| 최신 작업 커밋 | (이 커밋) (F-4h 교체 타석 규약·PA60 평가셋·이름 OCR v4 후보 사전 등록), 선점 `feb9d4b`; F-4g `4e111bb`, v1 `f5962d7` | 2026-10-01 |
+| 최신 작업 커밋 | `2876d8f` (F-4h 교체 타석 규약·PA60 평가셋·이름 OCR v4 후보 사전 등록), 선점 `feb9d4b`; F-4g `4e111bb`, v1 `f5962d7` | 2026-10-01 |
 | 파일 수정 권한 | 없음 (2026-10-01 F-4h 완료 후 반납 — Claude 세션 Fable 5.1; 동료 의도 모듈 v0는 `feature/intent-v0` 브랜치에서 별도 진행) | 2026-10-01 |
 | 중계 시각 주석 | **297 확인 / 25 확인 불가 / 0 미검토** — 전 경기 322구 검토 완료. 완전 타석 2~4·6~15·18~19·21·23~28·30~32·34·36~38·40~46·49~51·53~55·57~63·65~69·71·74~79·81. 불가 목록·반이닝 집계·리드 분포는 [전 경기 요약](docs/MLB_BROADCAST_TIMING.md). 규약 v2, 수동 시각 | 2026-09-27 |
 | 점수판 평가셋 | timing 322 / 리뷰 297(292구 10필드 confirmed, PA 8/1·16/1·33/1·41/1·44/1 partial) / 라벨 충돌 0 / 판단 화면 불가 25 / 미검토 0 | 2026-09-27 |
@@ -455,7 +455,7 @@ feature builder의 고정 2022 프로필을 그 방식으로 갱신하는 코드
 - [x] F-4h. **이름 OCR 남은 유형별 후속 결정과 교체 타석 규약** `[추가되었음 · 2026-09-29 · Claude]` 〔모델: Fable 5.1〕
       (1) SCHWELLENBACH형 긴 이름의 crop 폭(현재 64~168) 확장과 아포스트로피·악센트(`Á`→`Å`) 정규화는 **새 사전 등록(v4 후보)** 뒤 다른 타석에서 평가한다; 결과를 본 표본(PA34·37·46·49)에서 튜닝하지 않는다. (2) PA60·63·66·71처럼 교체 이벤트가 있는 타석은 생성기가 거부하므로, 이벤트 순서로 투구별 기준을 만드는 규약을 먼저 문서화한 뒤 해제 여부를 결정한다.
       (3) 이 경기의 규칙 충족 타석은 모두 평가했으므로 새 독립 성능은 다른 경기 영상이 있어야 한다. A-y 실제 응답 대기는 그대로.
-      2026-10-01 완료(이 커밋): (1) 규약 — 교체·수비 전환 이벤트가 **모두 첫 투구 전**이면 PA matchup을 투구별 기준으로 수용하고(이 경기 교체 타석 13개 전부 해당), 첫 투구 이후 이벤트는 계속 거부([규약](docs/PLAYER_IDENTITY_PROTOCOL.md) '교체 타석 규약' 절, 생성기 검사 추가). PA60(Raisel Iglesias 대 Jose Iglesias, 투수 교체 후 4구) [직접 판독](docs/results/mlb_p0/game_747139_player_identity_review_pa60.json)·[평가셋](docs/results/mlb_p0/game_747139_player_identity_evalset_pa60.json) 8역할: 이름 6 판독(투수 IGLESIAS×4, 타자 2.IGLESIAS×2)·배너 부재 2, ID는 동성 IGLESIAS 모호성으로 8 전부 기권. [v2 OCR](docs/results/mlb_p0/game_747139_player_identity_ocr_v2_pa60_report.json) 이름 4 정답·0 오답·4 기권(타자 `2.1GLESlAS`×2: 새 유형 어두 `I`→`1`). 규칙 충족 타석이 아니라 누적 집계 밖.
+      2026-10-01 완료(`2876d8f`): (1) 규약 — 교체·수비 전환 이벤트가 **모두 첫 투구 전**이면 PA matchup을 투구별 기준으로 수용하고(이 경기 교체 타석 13개 전부 해당), 첫 투구 이후 이벤트는 계속 거부([규약](docs/PLAYER_IDENTITY_PROTOCOL.md) '교체 타석 규약' 절, 생성기 검사 추가). PA60(Raisel Iglesias 대 Jose Iglesias, 투수 교체 후 4구) [직접 판독](docs/results/mlb_p0/game_747139_player_identity_review_pa60.json)·[평가셋](docs/results/mlb_p0/game_747139_player_identity_evalset_pa60.json) 8역할: 이름 6 판독(투수 IGLESIAS×4, 타자 2.IGLESIAS×2)·배너 부재 2, ID는 동성 IGLESIAS 모호성으로 8 전부 기권. [v2 OCR](docs/results/mlb_p0/game_747139_player_identity_ocr_v2_pa60_report.json) 이름 4 정답·0 오답·4 기권(타자 `2.1GLESlAS`×2: 새 유형 어두 `I`→`1`). 규칙 충족 타석이 아니라 누적 집계 밖.
       (2) v4 후보 사전 등록([OCR 안내](docs/PLAYER_IDENTITY_OCR.md) v4 절, `CONFIG_V4`, scripts74 `--reader v4`): 투수 crop은 글자 잉크가 고정 경계(x=168) 마지막 열에 있을 때만 잉크 끝+4px까지 확장(최대 230, 남색 피치클록 칸 앞 정지), NFKD 악센트 접기. 아포스트로피·이름 내부 공백 유형은 손대지 않는다. **규칙은 이 경기 개발 프레임(PA26·34·49·60)에서 만들었으므로 개발 재채점은 근거가 아니다**: 9타석 묶음에서 v2 대비 차이 17행(SCHWELLENBACH 9 정답·1 기권 `SCHVÆLLENBACH`, BRAZOBÁN 6 정답, 26/4 그래픽 기권 유지), 이름 오답 13→13, ID 오답 0, 거짓 판독 0; PA60은 v2와 동일. 첫 안(고정 x=230 확장)은 엔진이 넓은 빈 crop에서 MEGILL 13행·IGLESIAS 2행을 빈 문자열로 돌려 폐기(8폭 실험 기록 보존).
       (3) 사전 등록 시험은 F-4i(다음 미검토 영상, 기준은 F-4g와 같음). 해시 대상(reader·생성기·scripts74) 변경으로 저장 예측/보고서 22세트(v1 8·v2 9·v3 3·v4 2, 44파일)를 실제 Windows OCR로 재생성해 행이 전부 같음을 확인(변경은 predictions의 pipeline_code_sha256과 report의 predictions_sha256뿐). 전체 595 passed, 2 deselected.
 - [ ] F-4i. **새 미검토 영상에서 이름 OCR v4 사전 등록 평가** `[추가되었음 · 2026-10-01 · Claude]` 〔모델: Fable 5.1〕
