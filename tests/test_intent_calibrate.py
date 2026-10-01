@@ -203,3 +203,41 @@ def test_jittered_readings_give_a_positive_rms_and_the_cli_writes_the_file(tmp_p
     assert 0.0 < doc["rms_error_feet"] < 0.5
     assert doc["end_to_end_check"]["by_depth_y"]["-1.0"]["z"]["se_of_mean_feet"] > 0
     assert "per_item" in doc and len(doc["per_item"]["end_to_end_per_pitch"]) == MIN_PITCHES + 5
+
+
+def test_headline_error_uses_the_human_verified_subset_once_it_reaches_the_minimum(tmp_path):
+    readings = _readings(MIN_PITCHES + 4, jitter=4.0)
+    ids = [f"747139:{10 + i}:1" for i in range(MIN_PITCHES)]
+    doc = build(readings, ids, {"verified_by": "test"})
+    assert doc["rms_basis"] == "human_verified_subset"
+    assert doc["human_verified_check"]["n"] == MIN_PITCHES
+    assert doc["rms_error_feet"] == pytest.approx(doc["human_verified_check"]["rms_2d_feet"])
+    assert doc["human_verification"] == {"verified_by": "test"}
+    few = build(readings, ids[: MIN_PITCHES - 1])
+    assert few["rms_basis"] == "all_used_pitches_assistant_read"
+    assert few["rms_error_feet"] == pytest.approx(
+        few["end_to_end_check"]["by_depth_y"]["-1.0"]["rms_2d_feet"]
+    )
+    # the CLI reads an object with pitch_ids and keeps its metadata
+    src = tmp_path / "readings.json"
+    src.write_text(json.dumps(readings), encoding="utf-8")
+    ver = tmp_path / "verified.json"
+    ver.write_text(
+        json.dumps({"pitch_ids": ids, "verified_by": "owner", "excluded": []}), encoding="utf-8"
+    )
+    out = tmp_path / "cal.json"
+    main(
+        [
+            "--game",
+            "747139",
+            "--readings",
+            str(src),
+            "--out",
+            str(out),
+            "--human-verified",
+            str(ver),
+        ]
+    )
+    saved = json.loads(out.read_text(encoding="utf-8"))
+    assert saved["human_verified_count"] == MIN_PITCHES
+    assert saved["human_verification"]["verified_by"] == "owner"

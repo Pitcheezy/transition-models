@@ -458,7 +458,39 @@ def end_to_end_check(catch_pitches, matrix):
     return summary
 
 
-def build(readings, human_verified_ids):
+def human_verified_check(per_pitch, game_pk, verified_ids):
+    """End-to-end error at y = -1.0 ft restricted to the pitches a person confirmed."""
+    wanted = set(verified_ids)
+    rows = [
+        p
+        for p in per_pitch
+        if p["used"] and f"{game_pk}:{p['at_bat_number']}:{p['pitch_number']}" in wanted
+    ]
+    if not rows:
+        return None
+    dx = [p["error_vs_depth"]["-1.0"]["dx_feet"] for p in rows]
+    dz = [p["error_vs_depth"]["-1.0"]["dz_feet"] for p in rows]
+    return {
+        "n": len(rows),
+        "depth_y": "-1.0",
+        "x": _axis_stats(dx),
+        "z": _axis_stats(dz),
+        "rms_2d_feet": _rms([math.hypot(a, b) for a, b in zip(dx, dz, strict=True)]),
+    }
+
+
+def load_verification(path):
+    """Read a person's confirmation file: a JSON list of pitch ids, or an object with pitch_ids."""
+    doc = _load(path)
+    if isinstance(doc, list):
+        return [str(p) for p in doc], None
+    if not isinstance(doc, dict) or not isinstance(doc.get("pitch_ids"), list):
+        raise ValueError("human verification file needs a list or an object with pitch_ids")
+    meta = {k: v for k, v in doc.items() if k != "pitch_ids"}
+    return [str(p) for p in doc["pitch_ids"]], meta
+
+
+def build(readings, human_verified_ids, verification_meta=None):
     frames = readings["decision_frames"]
     pitches = readings["catch_pitches"]
     noise = front_edge_noise(frames)
@@ -469,13 +501,19 @@ def build(readings, human_verified_ids):
     overlay = overlay_check(frames)
     e2e = end_to_end_check(pitches, matrix)
     main = e2e["by_depth_y"]["-1.0"]
-    rms = main["rms_2d_feet"] if main["x"]["n"] >= MIN_PITCHES else None
     used_ids = {
         f"{readings['game_pk']}:{p['at_bat_number']}:{p['pitch_number']}"
         for p in e2e["per_pitch"]
         if p["used"]
     }
     verified = sorted(pid for pid in human_verified_ids if pid in used_ids)
+    human = human_verified_check(e2e["per_pitch"], readings["game_pk"], verified)
+    if human is not None and human["n"] >= MIN_PITCHES:
+        rms, rms_basis = human["rms_2d_feet"], "human_verified_subset"
+    elif main["x"]["n"] >= MIN_PITCHES:
+        rms, rms_basis = main["rms_2d_feet"], "all_used_pitches_assistant_read"
+    else:
+        rms, rms_basis = None, None
     camera_summary = {k: v for k, v in camera.items() if k != "tilt"}
     camera_summary["tilt"] = {k: v for k, v in camera["tilt"].items() if k != "rows"}
     return {
@@ -500,18 +538,27 @@ def build(readings, human_verified_ids):
         "lateral_check": {k: v for k, v in lateral.items() if k != "rows"},
         "overlay_check": {k: v for k, v in overlay.items() if k != "rows"},
         "end_to_end_check": {k: v for k, v in e2e.items() if k != "per_pitch"},
+        "human_verified_check": human,
         "rms_error_feet": rms,
+        "rms_basis": rms_basis,
         "error_status": "measured" if rms is not None else "unmeasured",
         "error_definition": "2-D rms over called pitches of (hops 1-2 with the calibrated matrix "
         "applied to the ball/pocket on the first frame with the ball in the mitt, A/B reader "
         "mean) minus (Statcast trajectory at y = -1.0 ft, i.e. 2.4 ft behind the plate front); "
-        "the parallax term is removed for the nominal 2.5 ft depth, so a residual mean offset "
-        "reflects the true catch depth differing from that assumption plus reader noise; readers "
-        "are assistant visual estimates; development game",
-        "measured_on": f"{main['x']['n']} called pitches of game {readings['game_pk']} (in-sample)",
+        "computed on the human-verified pitches when at least min_pitches were confirmed, "
+        "otherwise on all used pitches; the parallax term is removed for the nominal 2.5 ft "
+        "depth, so a residual mean offset reflects the true catch depth differing from that "
+        "assumption plus reader noise; pixel readings are assistant visual estimates (a person "
+        "confirmed them on a montage, not re-marked them); development game",
+        "measured_on": (
+            f"{human['n']} human-verified called pitches of game {readings['game_pk']} (in-sample)"
+            if rms_basis == "human_verified_subset"
+            else f"{main['x']['n']} called pitches of game {readings['game_pk']} (in-sample)"
+        ),
         "min_pitches": MIN_PITCHES,
         "human_verified_count": len(verified),
         "human_verified_pitch_ids": verified,
+        "human_verification": verification_meta,
         "per_item": {
             "tilt_rows": camera["tilt"]["rows"],
             "lateral_rows": lateral["rows"],
@@ -530,7 +577,8 @@ def main(argv=None):
         "--human-verified",
         type=Path,
         default=None,
-        help="JSON list of pitch ids a person confirmed",
+        help="pitch ids a person confirmed: a JSON list or an object with pitch_ids "
+        "(default docs/results/mlb_p0/game_<game>_intent_human_verified_v0.json when present)",
     )
     args = parser.parse_args(argv)
     readings = _load(
@@ -538,8 +586,13 @@ def main(argv=None):
     )
     if readings.get("schema") != READINGS_SCHEMA or readings.get("game_pk") != args.game:
         parser.error("readings file schema/game mismatch")
-    verified = _load(args.human_verified) if args.human_verified else []
-    doc = build(readings, verified)
+    verification_path = (
+        args.human_verified or RESULTS / f"game_{args.game}_intent_human_verified_v0.json"
+    )
+    verified, meta = (
+        load_verification(verification_path) if verification_path.is_file() else ([], None)
+    )
+    doc = build(readings, verified, meta)
     out = args.out or RESULTS / f"game_{args.game}_intent_plate_calibration_v0.json"
     out.write_text(
         json.dumps(doc, ensure_ascii=False, indent=1, allow_nan=False) + "\n", encoding="utf-8"

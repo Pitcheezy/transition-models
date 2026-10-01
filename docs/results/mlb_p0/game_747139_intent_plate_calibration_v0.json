@@ -441,13 +441,95 @@
    }
   }
  },
- "rms_error_feet": 0.32502831012229133,
+ "human_verified_check": {
+  "n": 19,
+  "depth_y": "-1.0",
+  "x": {
+   "n": 19,
+   "mean_signed_feet": -0.13461578947368422,
+   "se_of_mean_feet": 0.02873023171190514,
+   "sd_feet": 0.12523217665670208,
+   "rms_feet": 0.18160143895789743
+  },
+  "z": {
+   "n": 19,
+   "mean_signed_feet": 0.1645,
+   "se_of_mean_feet": 0.030642132634620272,
+   "sd_feet": 0.1335659595688795,
+   "rms_feet": 0.20966920437479106
+  },
+  "rms_2d_feet": 0.2773810698204491
+ },
+ "rms_error_feet": 0.2773810698204491,
+ "rms_basis": "human_verified_subset",
  "error_status": "measured",
- "error_definition": "2-D rms over called pitches of (hops 1-2 with the calibrated matrix applied to the ball/pocket on the first frame with the ball in the mitt, A/B reader mean) minus (Statcast trajectory at y = -1.0 ft, i.e. 2.4 ft behind the plate front); the parallax term is removed for the nominal 2.5 ft depth, so a residual mean offset reflects the true catch depth differing from that assumption plus reader noise; readers are assistant visual estimates; development game",
- "measured_on": "21 called pitches of game 747139 (in-sample)",
+ "error_definition": "2-D rms over called pitches of (hops 1-2 with the calibrated matrix applied to the ball/pocket on the first frame with the ball in the mitt, A/B reader mean) minus (Statcast trajectory at y = -1.0 ft, i.e. 2.4 ft behind the plate front); computed on the human-verified pitches when at least min_pitches were confirmed, otherwise on all used pitches; the parallax term is removed for the nominal 2.5 ft depth, so a residual mean offset reflects the true catch depth differing from that assumption plus reader noise; pixel readings are assistant visual estimates (a person confirmed them on a montage, not re-marked them); development game",
+ "measured_on": "19 human-verified called pitches of game 747139 (in-sample)",
  "min_pitches": 10,
- "human_verified_count": 0,
- "human_verified_pitch_ids": [],
+ "human_verified_count": 19,
+ "human_verified_pitch_ids": [
+  "747139:10:1",
+  "747139:12:1",
+  "747139:15:2",
+  "747139:19:1",
+  "747139:23:2",
+  "747139:27:1",
+  "747139:29:1",
+  "747139:35:2",
+  "747139:48:1",
+  "747139:57:1",
+  "747139:5:1",
+  "747139:61:1",
+  "747139:64:1",
+  "747139:66:1",
+  "747139:69:1",
+  "747139:71:1",
+  "747139:77:1",
+  "747139:7:3",
+  "747139:82:2"
+ ],
+ "human_verification": {
+  "schema": "intent_human_verification_v0",
+  "game_pk": 747139,
+  "verified_by": "project owner (repository user), by eye",
+  "verified_on": "2026-10-02",
+  "method": "montage review of the catch frames: for each tile the person checked that the reader circles sit on the ball in the first ball-in-mitt frame; the person did not re-mark positions and did not check the plate front-edge readings",
+  "montage_tiles": [
+   "747139:1:1",
+   "747139:5:1",
+   "747139:7:3",
+   "747139:10:1",
+   "747139:12:1",
+   "747139:15:2",
+   "747139:19:1",
+   "747139:23:2",
+   "747139:27:1",
+   "747139:29:1",
+   "747139:35:2",
+   "747139:48:1",
+   "747139:55:1",
+   "747139:57:1",
+   "747139:61:1",
+   "747139:64:1",
+   "747139:66:1",
+   "747139:69:1",
+   "747139:71:1",
+   "747139:74:1",
+   "747139:77:1",
+   "747139:82:2"
+  ],
+  "excluded": [
+   {
+    "pitch_id": "747139:1:1",
+    "reason": "the two reader circles were apart (readers chose different first-in-mitt frames); excluded by the owner"
+   },
+   {
+    "pitch_id": "747139:74:1",
+    "reason": "the two reader circles were apart (0.77 ft); excluded by the owner"
+   }
+  ],
+  "note": "the owner's statement in chat on 2026-10-02 was that every tile was correct except the two listed under excluded; 55/1 was a tile but is not used in the end-to-end check (only one reader found a first ball-in-mitt frame)"
+ },
  "per_item": {
   "tilt_rows": [
    {

@@ -272,7 +272,13 @@ def main(argv=None):
         if calibration is None
         else {
             k: calibration.get(k)
-            for k in ("rms_error_feet", "error_status", "human_verified_count", "measured_on")
+            for k in (
+                "rms_error_feet",
+                "rms_basis",
+                "error_status",
+                "human_verified_count",
+                "measured_on",
+            )
         },
         "hop2_parameters": {k: v for k, v in hop2_parameters(calibration).items() if k != "matrix"},
         "caveats": [
