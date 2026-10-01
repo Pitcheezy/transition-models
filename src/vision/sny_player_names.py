@@ -11,6 +11,7 @@ import re
 import subprocess
 import sys
 import tempfile
+import unicodedata
 from copy import deepcopy
 from pathlib import Path
 
@@ -71,8 +72,47 @@ CONFIG_V3 = {
         "binarize_threshold": 100,
     },
 }
-NO_OPTIONS = {"uppercase_context_l_to_I": False, "decoupled_unreadable_batter_slot": False}
-SCHEMAS = ("sny_player_names_v1", "sny_player_names_v2", "sny_player_names_v3")
+# v4 (pre-registered 2026-10-01, CHECKLIST F-4h) keeps the v2 parser and 4x grayscale
+# preprocessing and adds two reader-side rules for the misread types that v2 still shares
+# with v1: long surnames whose glyphs touch the pitcher crop's right edge (SCHWELLENBACH)
+# and accented capitals the engine returns as other letters (BRAZOBÁN -> BRAZOBÅN). Both
+# rules were shaped on this game's development frames, so their re-score here is not
+# evidence; the pre-registered test is a different video (see PLAYER_IDENTITY_OCR.md).
+CONFIG_V4 = {
+    **deepcopy(CONFIG_V2),
+    "schema": "sny_player_names_v4",
+    "parser": "v2_parser_plus_nfkd_accent_fold",
+    "options": {
+        **CONFIG_V2["options"],
+        # Decompose accented letters (NFKD) and drop the combining marks before the grammar,
+        # so Á, Å, Í, É ... become A, A, I, E; the roster match already folds accents.
+        "nfkd_accent_fold": True,
+    },
+    # The pitcher crop keeps the v2 box unless ink touches its last column; then the right
+    # edge follows the ink (stopping at the navy pitch-clock box or the x limit) plus a
+    # margin, so a long surname is no longer cut while short names keep the v2 crop. A fixed
+    # wider crop was rejected in development: the engine returned nothing for MEGILL and
+    # IGLESIAS in wide blank crops at some widths.
+    "pitcher_dynamic_right_edge": {
+        "max_x": 230,
+        "ink_max_channel": 100,  # a pixel is ink when every channel is below this
+        "ink_min_pixels": 3,  # a column has ink with at least this many ink pixels in the band
+        "gap": 8,  # consecutive ink-free columns that end the scan
+        "margin": 4,  # blank columns kept after the last ink column
+        "box_blue_minus_red": 30,  # every band pixel this blue-dominant: the pitch-clock box
+    },
+}
+NO_OPTIONS = {
+    "uppercase_context_l_to_I": False,
+    "decoupled_unreadable_batter_slot": False,
+    "nfkd_accent_fold": False,
+}
+SCHEMAS = (
+    "sny_player_names_v1",
+    "sny_player_names_v2",
+    "sny_player_names_v3",
+    "sny_player_names_v4",
+)
 
 
 def parse_panel_text(raw_text, role, options=None):
@@ -108,6 +148,10 @@ def parse_panel_text(raw_text, role, options=None):
             }
     if options["uppercase_context_l_to_I"] and {char for char in text if char.islower()} == {"l"}:
         text = text.replace("l", "I")
+    if options["nfkd_accent_fold"]:
+        text = "".join(
+            char for char in unicodedata.normalize("NFKD", text) if not unicodedata.combining(char)
+        )
     text = text.upper()
     valid = re.fullmatch(r"[A-Z][A-Z .'-]*[A-Z.]", text) is not None
     return {
@@ -117,6 +161,31 @@ def parse_panel_text(raw_text, role, options=None):
         "status": "read" if valid else "abstain",
         "reason": reason if valid else "name_syntax_or_empty",
     }
+
+
+def dynamic_right_edge(pixels, box, rule):
+    """Return the v4 pitcher crop's right edge: the fixed edge unless ink crosses it."""
+    x0, y0, x1, y1 = box
+    band = pixels[y0 + 3 : y1 - 3]
+
+    def ink(x):
+        dark = (band[:, x].max(axis=1) < rule["ink_max_channel"]).sum()
+        return int(dark) >= rule["ink_min_pixels"]
+
+    def clock_box(x):
+        return bool(((band[:, x, 2] - band[:, x, 0]) >= rule["box_blue_minus_red"]).all())
+
+    if not ink(x1 - 1):
+        return x1
+    last_ink = x1 - 1
+    for x in range(x1, rule["max_x"]):
+        if clock_box(x):
+            return max(x1, min(last_ink + rule["margin"] + 1, x))
+        if ink(x):
+            last_ink = x
+        elif x - last_ink > rule["gap"]:
+            break
+    return min(rule["max_x"], last_ink + rule["margin"] + 1)
 
 
 def _abstain(reason, *, error=False):
@@ -218,7 +287,12 @@ class SNYPlayerNameReader:
         if not bug_present(navy, white):
             return {role: _abstain("count_bug_absent") for role in CONFIG["crops"]}
         result, crops, roles = {}, [], []
+        dynamic = CONFIG.get("pitcher_dynamic_right_edge")
+        frame_pixels = np.asarray(frame).astype(np.int16) if dynamic else None
         for role, box in CONFIG["crops"].items():
+            if role == "pitcher" and dynamic:
+                x0, y0, _, y1 = box
+                box = (x0, y0, dynamic_right_edge(frame_pixels, box, dynamic), y1)
             crop = frame.crop(box)
             pixels = np.asarray(crop).astype(np.int16)
             gate = CONFIG["presence"]

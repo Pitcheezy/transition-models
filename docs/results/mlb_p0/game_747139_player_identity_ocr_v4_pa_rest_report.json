@@ -1,28 +1,28 @@
 {
   "schema": "mlb_player_identity_ocr_report_v1",
   "evalset_sha256": "209379b63d5732476a6713afb7cb8c163e774381a1d6dbb752520e4c10fdbaf6",
-  "predictions_sha256": "e6b25970c42039aea145d9afe3afe00a16bfa93f7c7963ff97a76d7fd1470d6f",
-  "reader_metadata_sha256": "40b17b29db4c3abea944c0771f2207db4943b76f2989c56e3fcbd7d6e388d72e",
+  "predictions_sha256": "9ad2254673d2d32f88dd5db3984a451bde33aa09d1b95ce81fede1c15eeab26e",
+  "reader_metadata_sha256": "602e626cbce4817f4261570532e37db4d7b66b2c78d57aec47ac786eea464a90",
   "pipeline_matches_current_code": true,
   "names": {
     "opportunities": 98,
     "reference_evaluable": 85,
-    "attempt": 66,
-    "correct": 53,
+    "attempt": 81,
+    "correct": 68,
     "wrong": 13,
-    "abstain": 32,
-    "coverage": 0.673469387755102,
-    "correct_given_attempt": 0.803030303030303,
+    "abstain": 17,
+    "coverage": 0.826530612244898,
+    "correct_given_attempt": 0.8395061728395061,
     "false_reads_without_evaluable_reference": 0
   },
   "identities": {
     "opportunities": 98,
     "reference_evaluable": 85,
-    "attempt": 53,
-    "correct": 53,
+    "attempt": 68,
+    "correct": 68,
     "wrong": 0,
-    "abstain": 45,
-    "coverage": 0.5408163265306123,
+    "abstain": 30,
+    "coverage": 0.6938775510204082,
     "correct_given_attempt": 1.0,
     "false_reads_without_evaluable_reference": 0
   },
@@ -239,11 +239,11 @@
         "image_sha256": "9f19517190090b046a0ff45133b3c064a9b78aa5cfd46d6dc8cc77f999882dbe",
         "path": "outputs/frames/evalset_2669.50.jpg"
       },
-      "raw_text": "",
+      "raw_text": "OFFICIAL SCORING:",
       "name_text": null,
       "lineup_order": null,
       "status": "abstain",
-      "reason": "possible_truncated_name",
+      "reason": "name_syntax_or_empty",
       "expected_name_text": null,
       "name_reference_evaluable": false,
       "name_verdict": "abstain",
@@ -603,22 +603,24 @@
         "image_sha256": "25cd74ffa5a437169ed4883e9e56f734e762c3c00d32fb632fe890cf1d63c30f",
         "path": "outputs/frames/evalset_3276.75.jpg"
       },
-      "raw_text": "",
-      "name_text": null,
+      "raw_text": "SCHWELLENBACH",
+      "name_text": "SCHWELLENBACH",
       "lineup_order": null,
-      "status": "abstain",
-      "reason": "possible_truncated_name",
+      "status": "read",
+      "reason": "literal_name",
       "expected_name_text": "SCHWELLENBACH",
       "name_reference_evaluable": true,
-      "name_verdict": "abstain",
-      "candidate_ids": [],
-      "resolved_player_id": null,
+      "name_verdict": "correct",
+      "candidate_ids": [
+        680885
+      ],
+      "resolved_player_id": 680885,
       "id_reference_evaluable": true,
-      "id_verdict": "abstain",
+      "id_verdict": "correct",
       "expected_lineup_order": null,
       "lineup_reference_evaluable": false,
       "lineup_verdict": "abstain",
-      "matches_hindsight_reference": null
+      "matches_hindsight_reference": true
     },
     {
       "game_pk": 747139,
@@ -661,22 +663,24 @@
         "image_sha256": "b8b8c32c15aa7a66b41ddb70ddfcdcd767f4743f530856a52d201587241cdd96",
         "path": "outputs/frames/evalset_3295.25.jpg"
       },
-      "raw_text": "",
-      "name_text": null,
+      "raw_text": "SCHWELLENBACH",
+      "name_text": "SCHWELLENBACH",
       "lineup_order": null,
-      "status": "abstain",
-      "reason": "possible_truncated_name",
+      "status": "read",
+      "reason": "literal_name",
       "expected_name_text": "SCHWELLENBACH",
       "name_reference_evaluable": true,
-      "name_verdict": "abstain",
-      "candidate_ids": [],
-      "resolved_player_id": null,
+      "name_verdict": "correct",
+      "candidate_ids": [
+        680885
+      ],
+      "resolved_player_id": 680885,
       "id_reference_evaluable": true,
-      "id_verdict": "abstain",
+      "id_verdict": "correct",
       "expected_lineup_order": null,
       "lineup_reference_evaluable": false,
       "lineup_verdict": "abstain",
-      "matches_hindsight_reference": null
+      "matches_hindsight_reference": true
     },
     {
       "game_pk": 747139,
@@ -721,22 +725,24 @@
         "image_sha256": "ebb55f9efffc75a6cdf0bed6b94d8ad2799073c64b8e14049cd1eec86c543de3",
         "path": "outputs/frames/evalset_3314.50.jpg"
       },
-      "raw_text": "",
-      "name_text": null,
+      "raw_text": "SCHWELLENBACH",
+      "name_text": "SCHWELLENBACH",
       "lineup_order": null,
-      "status": "abstain",
-      "reason": "possible_truncated_name",
+      "status": "read",
+      "reason": "literal_name",
       "expected_name_text": "SCHWELLENBACH",
       "name_reference_evaluable": true,
-      "name_verdict": "abstain",
-      "candidate_ids": [],
-      "resolved_player_id": null,
+      "name_verdict": "correct",
+      "candidate_ids": [
+        680885
+      ],
+      "resolved_player_id": 680885,
       "id_reference_evaluable": true,
-      "id_verdict": "abstain",
+      "id_verdict": "correct",
       "expected_lineup_order": null,
       "lineup_reference_evaluable": false,
       "lineup_verdict": "abstain",
-      "matches_hindsight_reference": null
+      "matches_hindsight_reference": true
     },
     {
       "game_pk": 747139,
@@ -781,22 +787,24 @@
         "image_sha256": "b873dad90fca07bb6401512978175c9fb4c9e2010a2312b51fa1391fb440c8ec",
         "path": "outputs/frames/evalset_3338.50.jpg"
       },
-      "raw_text": "",
-      "name_text": null,
+      "raw_text": "SCHWELLENBACH",
+      "name_text": "SCHWELLENBACH",
       "lineup_order": null,
-      "status": "abstain",
-      "reason": "possible_truncated_name",
+      "status": "read",
+      "reason": "literal_name",
       "expected_name_text": "SCHWELLENBACH",
       "name_reference_evaluable": true,
-      "name_verdict": "abstain",
-      "candidate_ids": [],
-      "resolved_player_id": null,
+      "name_verdict": "correct",
+      "candidate_ids": [
+        680885
+      ],
+      "resolved_player_id": 680885,
       "id_reference_evaluable": true,
-      "id_verdict": "abstain",
+      "id_verdict": "correct",
       "expected_lineup_order": null,
       "lineup_reference_evaluable": false,
       "lineup_verdict": "abstain",
-      "matches_hindsight_reference": null
+      "matches_hindsight_reference": true
     },
     {
       "game_pk": 747139,
@@ -841,22 +849,24 @@
         "image_sha256": "df505f653c3c0793dc14d6565bf9c7cd80c0ed55bc3e01bf51fd11c85024701f",
         "path": "outputs/frames/evalset_3354.75.jpg"
       },
-      "raw_text": "",
-      "name_text": null,
+      "raw_text": "SCHWELLENBACH",
+      "name_text": "SCHWELLENBACH",
       "lineup_order": null,
-      "status": "abstain",
-      "reason": "possible_truncated_name",
+      "status": "read",
+      "reason": "literal_name",
       "expected_name_text": "SCHWELLENBACH",
       "name_reference_evaluable": true,
-      "name_verdict": "abstain",
-      "candidate_ids": [],
-      "resolved_player_id": null,
+      "name_verdict": "correct",
+      "candidate_ids": [
+        680885
+      ],
+      "resolved_player_id": 680885,
       "id_reference_evaluable": true,
-      "id_verdict": "abstain",
+      "id_verdict": "correct",
       "expected_lineup_order": null,
       "lineup_reference_evaluable": false,
       "lineup_verdict": "abstain",
-      "matches_hindsight_reference": null
+      "matches_hindsight_reference": true
     },
     {
       "game_pk": 747139,
@@ -901,11 +911,11 @@
         "image_sha256": "efd6201f48435460c4352f4568167878f15dcf622a0fd8bc07e446a9b89ccfc6",
         "path": "outputs/frames/evalset_3576.75.jpg"
       },
-      "raw_text": "",
+      "raw_text": "SCHVÆLLENBACH",
       "name_text": null,
       "lineup_order": null,
       "status": "abstain",
-      "reason": "possible_truncated_name",
+      "reason": "name_syntax_or_empty",
       "expected_name_text": "SCHWELLENBACH",
       "name_reference_evaluable": true,
       "name_verdict": "abstain",
@@ -959,22 +969,24 @@
         "image_sha256": "4440580301a8bba0ee64bbcaf71a3ad8bc751e67799f82b0e066f963fb06c38d",
         "path": "outputs/frames/evalset_3598.25.jpg"
       },
-      "raw_text": "",
-      "name_text": null,
+      "raw_text": "SCHWELLENBACH",
+      "name_text": "SCHWELLENBACH",
       "lineup_order": null,
-      "status": "abstain",
-      "reason": "possible_truncated_name",
+      "status": "read",
+      "reason": "literal_name",
       "expected_name_text": "SCHWELLENBACH",
       "name_reference_evaluable": true,
-      "name_verdict": "abstain",
-      "candidate_ids": [],
-      "resolved_player_id": null,
+      "name_verdict": "correct",
+      "candidate_ids": [
+        680885
+      ],
+      "resolved_player_id": 680885,
       "id_reference_evaluable": true,
-      "id_verdict": "abstain",
+      "id_verdict": "correct",
       "expected_lineup_order": null,
       "lineup_reference_evaluable": false,
       "lineup_verdict": "abstain",
-      "matches_hindsight_reference": null
+      "matches_hindsight_reference": true
     },
     {
       "game_pk": 747139,
@@ -1019,22 +1031,24 @@
         "image_sha256": "ccb71725c7772ddd9e31d74660ee94b10c38efd367fa0e96ed236f20638900aa",
         "path": "outputs/frames/evalset_3620.00.jpg"
       },
-      "raw_text": "",
-      "name_text": null,
+      "raw_text": "SCHWELLENBACH",
+      "name_text": "SCHWELLENBACH",
       "lineup_order": null,
-      "status": "abstain",
-      "reason": "possible_truncated_name",
+      "status": "read",
+      "reason": "literal_name",
       "expected_name_text": "SCHWELLENBACH",
       "name_reference_evaluable": true,
-      "name_verdict": "abstain",
-      "candidate_ids": [],
-      "resolved_player_id": null,
+      "name_verdict": "correct",
+      "candidate_ids": [
+        680885
+      ],
+      "resolved_player_id": 680885,
       "id_reference_evaluable": true,
-      "id_verdict": "abstain",
+      "id_verdict": "correct",
       "expected_lineup_order": null,
       "lineup_reference_evaluable": false,
       "lineup_verdict": "abstain",
-      "matches_hindsight_reference": null
+      "matches_hindsight_reference": true
     },
     {
       "game_pk": 747139,
@@ -1079,22 +1093,24 @@
         "image_sha256": "8292f42c6914fab232b65acc42b8e62eb52a76fe90eeef3b38570782cef0ccb1",
         "path": "outputs/frames/evalset_3657.50.jpg"
       },
-      "raw_text": "",
-      "name_text": null,
+      "raw_text": "SCHWELLENBACH",
+      "name_text": "SCHWELLENBACH",
       "lineup_order": null,
-      "status": "abstain",
-      "reason": "possible_truncated_name",
+      "status": "read",
+      "reason": "literal_name",
       "expected_name_text": "SCHWELLENBACH",
       "name_reference_evaluable": true,
-      "name_verdict": "abstain",
-      "candidate_ids": [],
-      "resolved_player_id": null,
+      "name_verdict": "correct",
+      "candidate_ids": [
+        680885
+      ],
+      "resolved_player_id": 680885,
       "id_reference_evaluable": true,
-      "id_verdict": "abstain",
+      "id_verdict": "correct",
       "expected_lineup_order": null,
       "lineup_reference_evaluable": false,
       "lineup_verdict": "abstain",
-      "matches_hindsight_reference": null
+      "matches_hindsight_reference": true
     },
     {
       "game_pk": 747139,
@@ -1139,22 +1155,24 @@
         "image_sha256": "01d7e28c90c7032cca4ad53a866ecf4a2898e59974a7108e63d888bffdba5bfd",
         "path": "outputs/frames/evalset_3682.25.jpg"
       },
-      "raw_text": "",
-      "name_text": null,
+      "raw_text": "SCHWELLENBACH",
+      "name_text": "SCHWELLENBACH",
       "lineup_order": null,
-      "status": "abstain",
-      "reason": "possible_truncated_name",
+      "status": "read",
+      "reason": "literal_name",
       "expected_name_text": "SCHWELLENBACH",
       "name_reference_evaluable": true,
-      "name_verdict": "abstain",
-      "candidate_ids": [],
-      "resolved_player_id": null,
+      "name_verdict": "correct",
+      "candidate_ids": [
+        680885
+      ],
+      "resolved_player_id": 680885,
       "id_reference_evaluable": true,
-      "id_verdict": "abstain",
+      "id_verdict": "correct",
       "expected_lineup_order": null,
       "lineup_reference_evaluable": false,
       "lineup_verdict": "abstain",
-      "matches_hindsight_reference": null
+      "matches_hindsight_reference": true
     },
     {
       "game_pk": 747139,
@@ -1986,21 +2004,23 @@
         "path": "outputs/frames/evalset_4720.25.jpg"
       },
       "raw_text": "BRAZOBÅN",
-      "name_text": null,
+      "name_text": "BRAZOBAN",
       "lineup_order": null,
-      "status": "abstain",
-      "reason": "name_syntax_or_empty",
+      "status": "read",
+      "reason": "literal_name",
       "expected_name_text": "BRAZOBÁN",
       "name_reference_evaluable": true,
-      "name_verdict": "abstain",
-      "candidate_ids": [],
-      "resolved_player_id": null,
+      "name_verdict": "correct",
+      "candidate_ids": [
+        623211
+      ],
+      "resolved_player_id": 623211,
       "id_reference_evaluable": true,
-      "id_verdict": "abstain",
+      "id_verdict": "correct",
       "expected_lineup_order": null,
       "lineup_reference_evaluable": false,
       "lineup_verdict": "abstain",
-      "matches_hindsight_reference": null
+      "matches_hindsight_reference": true
     },
     {
       "game_pk": 747139,
@@ -2044,21 +2064,23 @@
         "path": "outputs/frames/evalset_4740.25.jpg"
       },
       "raw_text": "BRAZOBÅN",
-      "name_text": null,
+      "name_text": "BRAZOBAN",
       "lineup_order": null,
-      "status": "abstain",
-      "reason": "name_syntax_or_empty",
+      "status": "read",
+      "reason": "literal_name",
       "expected_name_text": "BRAZOBÁN",
       "name_reference_evaluable": true,
-      "name_verdict": "abstain",
-      "candidate_ids": [],
-      "resolved_player_id": null,
+      "name_verdict": "correct",
+      "candidate_ids": [
+        623211
+      ],
+      "resolved_player_id": 623211,
       "id_reference_evaluable": true,
-      "id_verdict": "abstain",
+      "id_verdict": "correct",
       "expected_lineup_order": null,
       "lineup_reference_evaluable": false,
       "lineup_verdict": "abstain",
-      "matches_hindsight_reference": null
+      "matches_hindsight_reference": true
     },
     {
       "game_pk": 747139,
@@ -2104,21 +2126,23 @@
         "path": "outputs/frames/evalset_4789.25.jpg"
       },
       "raw_text": "BRAZOBÅN",
-      "name_text": null,
+      "name_text": "BRAZOBAN",
       "lineup_order": null,
-      "status": "abstain",
-      "reason": "name_syntax_or_empty",
+      "status": "read",
+      "reason": "literal_name",
       "expected_name_text": "BRAZOBÁN",
       "name_reference_evaluable": true,
-      "name_verdict": "abstain",
-      "candidate_ids": [],
-      "resolved_player_id": null,
+      "name_verdict": "correct",
+      "candidate_ids": [
+        623211
+      ],
+      "resolved_player_id": 623211,
       "id_reference_evaluable": true,
-      "id_verdict": "abstain",
+      "id_verdict": "correct",
       "expected_lineup_order": null,
       "lineup_reference_evaluable": false,
       "lineup_verdict": "abstain",
-      "matches_hindsight_reference": null
+      "matches_hindsight_reference": true
     },
     {
       "game_pk": 747139,
@@ -2164,21 +2188,23 @@
         "path": "outputs/frames/evalset_4808.00.jpg"
       },
       "raw_text": "BRAZOBÅN",
-      "name_text": null,
+      "name_text": "BRAZOBAN",
       "lineup_order": null,
-      "status": "abstain",
-      "reason": "name_syntax_or_empty",
+      "status": "read",
+      "reason": "literal_name",
       "expected_name_text": "BRAZOBÁN",
       "name_reference_evaluable": true,
-      "name_verdict": "abstain",
-      "candidate_ids": [],
-      "resolved_player_id": null,
+      "name_verdict": "correct",
+      "candidate_ids": [
+        623211
+      ],
+      "resolved_player_id": 623211,
       "id_reference_evaluable": true,
-      "id_verdict": "abstain",
+      "id_verdict": "correct",
       "expected_lineup_order": null,
       "lineup_reference_evaluable": false,
       "lineup_verdict": "abstain",
-      "matches_hindsight_reference": null
+      "matches_hindsight_reference": true
     },
     {
       "game_pk": 747139,
@@ -2222,21 +2248,23 @@
         "path": "outputs/frames/evalset_4821.25.jpg"
       },
       "raw_text": "BRAZOBÅN",
-      "name_text": null,
+      "name_text": "BRAZOBAN",
       "lineup_order": null,
-      "status": "abstain",
-      "reason": "name_syntax_or_empty",
+      "status": "read",
+      "reason": "literal_name",
       "expected_name_text": "BRAZOBÁN",
       "name_reference_evaluable": true,
-      "name_verdict": "abstain",
-      "candidate_ids": [],
-      "resolved_player_id": null,
+      "name_verdict": "correct",
+      "candidate_ids": [
+        623211
+      ],
+      "resolved_player_id": 623211,
       "id_reference_evaluable": true,
-      "id_verdict": "abstain",
+      "id_verdict": "correct",
       "expected_lineup_order": null,
       "lineup_reference_evaluable": false,
       "lineup_verdict": "abstain",
-      "matches_hindsight_reference": null
+      "matches_hindsight_reference": true
     },
     {
       "game_pk": 747139,
@@ -2282,21 +2310,23 @@
         "path": "outputs/frames/evalset_4841.75.jpg"
       },
       "raw_text": "BRAZOBÅN",
-      "name_text": null,
+      "name_text": "BRAZOBAN",
       "lineup_order": null,
-      "status": "abstain",
-      "reason": "name_syntax_or_empty",
+      "status": "read",
+      "reason": "literal_name",
       "expected_name_text": "BRAZOBÁN",
       "name_reference_evaluable": true,
-      "name_verdict": "abstain",
-      "candidate_ids": [],
-      "resolved_player_id": null,
+      "name_verdict": "correct",
+      "candidate_ids": [
+        623211
+      ],
+      "resolved_player_id": 623211,
       "id_reference_evaluable": true,
-      "id_verdict": "abstain",
+      "id_verdict": "correct",
       "expected_lineup_order": null,
       "lineup_reference_evaluable": false,
       "lineup_verdict": "abstain",
-      "matches_hindsight_reference": null
+      "matches_hindsight_reference": true
     },
     {
       "game_pk": 747139,

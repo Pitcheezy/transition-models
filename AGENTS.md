@@ -24,8 +24,11 @@ identity protocol and PA6 preparation are complete (checkpoint 48; docs/PLAYER_I
 F-4a now also has a small SNY name-panel OCR baseline (checkpoint 49; docs/PLAYER_IDENTITY_OCR.md),
 keeping OCR text, frozen final-feed roster lookup, and reference IDs separate. Prediction currently needs
 Windows OCR en-US; saved-result scoring is portable. This remains partial, developed on six PA6 frames.
-Next prepare PA61's four-pitch name evidence and check the frozen v1 baseline on its ambiguous pitcher surname.
-PA60 contains a pitching substitution and remains unsupported by the conservative reference builder.
+PA61 and every remaining rule-qualifying PA of this game are evaluated (checkpoints 50-56); the current
+name reader is v2 and a v4 candidate (ink-extended pitcher crop, accent folding) is pre-registered for a
+different, unreviewed video (checkpoint 57) - its re-score on this game's frames is development only.
+The reference builder accepts a PA whose substitution/switch events all precede its first pitch (PA60 and
+the other twelve substitution PAs here) and still refuses a substitution at or after the first pitch.
 Do not turn this already reviewed game's new name cases into an independent validation claim.
 A-y awaits an actual independent
 response, then comparison under the frozen protocol. It remains incomplete until those results exist;

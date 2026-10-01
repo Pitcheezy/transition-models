@@ -127,13 +127,13 @@ note에 부재 이유를 명시한다. 11/12는 이 선택 자료에서 이름�
 기존 `feed_pitch_index`는 PA matchup을 그 타석의 각 투구에 붙인다. PA6처럼 교체가 없는 타석에서는
 대조 근거가 있지만, 일반적인 타석 도중 투수·타자 교체까지 재구성하는 함수는 아니다.
 그런 타석을 추가할 때는 이벤트 순서를 확인하고 투구별 ID 기준이 불확실하면 보류한다.
-이번 평가셋 생성기는 대상 타석에 교체 또는 수비 위치 변경 이벤트가 있으면 보수적으로 거부한다.
+평가셋 생성기는 대상 타석의 교체 또는 수비 위치 변경 이벤트가 **첫 투구 이후**에 있으면 거부한다(2026-10-01 F-4h 규약, 아래 '교체 타석 규약' 절). 이벤트가 모두 첫 투구 전이면 feed의 PA matchup이 이미 교체 후 선수이므로 투구별 기준으로 쓴다. 2026-09-30까지는 이벤트가 있기만 하면 거부했다.
 
 ## PA61 기준과 직접 읽은 범위 (2026-09-28)
 
 공식 feed의 `/liveData/plays/allPlays/60`은 `about.atBatIndex=60`, 즉 PA61이다. 투수는 **Raisel Iglesias 628452**(ATL, 홈),
 타자는 **Mark Vientos 668901**(NYM, 원정)이며 8회초다. PA61의 `playEvents`는 투구 4개뿐이고 교체·수비 위치 변경 이벤트가 없다
-(직전 PA60에 `mound_visit`·`pitching_substitution`이 있어 PA60은 현 생성기가 거부하며 이번 범위에서 우회하지 않았다).
+(직전 PA60에 `mound_visit`·`pitching_substitution`이 있어 당시 생성기가 PA60을 거부했고 이번 범위에서 우회하지 않았다; 두 이벤트가 첫 투구 전이라 2026-10-01 F-4h 규약부터는 수용한다).
 2026-09-28 Claude 세션(Fable 5.1)이 기존 timing의 네 판단 프레임을 직접 읽어 [PA61 review](docs/results/mlb_p0/game_747139_player_identity_review_pa61.json)에 기록했고,
 scripts73 build/check `--verify-frames`로 [PA61 평가셋](docs/results/mlb_p0/game_747139_player_identity_evalset_pa61.json)을 만들었다(full_input_rebuild, feed·8프레임 바이트 재검증).
 
@@ -234,6 +234,35 @@ F-4e 결정 규칙으로 남은 타석 PA26(Megill 대 d'Arnaud)·31(Megill 대 
 - 26/4는 투수 줄과 타자 줄이 모두 `OFFICIAL SCORING: PASSED BALL` 그래픽으로 대체돼 두 역할 다 `unreadable`이다(투수 줄이 이름이 아닌 문구로 바뀐 첫 사례).
 - 악센트가 인쇄된 `BRAZOBÁN`·`DÍAZ`는 화면에 보이는 대로 적었고, 명단 대응은 악센트를 정규화한 정확 일치다. `HARRIS II`는 세대 접미사를 포함한 문자열 그대로다.
 - 모든 이름이 명단에서 유일해 `observed` 85건이 feed 기준과 일치하며, 팀 null·연속성 `unknown`·held 0이다. 오른쪽 `1-1`·`0-1` 등은 경기 성적이다.
+
+## 교체 타석 규약과 PA60 기준 (2026-10-01, F-4h)
+
+feed의 PA matchup은 그 타석에서 **마지막으로 유효한** 투수·타자다. 교체·수비 전환 이벤트(`isSubstitution`, `*_substitution`, `defensive_switch`)가 모두 그 타석의 첫 `isPitch` 이벤트보다 앞에 있으면 모든 투구가 같은 matchup에서 던져졌으므로 PA matchup을 투구별 기준으로 쓴다. 이벤트가 첫 투구와 같거나 뒤에 있으면(타석 도중 투수 교체·대타) 투구별 기준이 불확실하므로 생성기는 거부한다(`ValueError`, 검사 있음). 대주자·수비 전환이 현재 타자·투수를 바꾸지 않더라도 같은 순서 규칙으로만 판단하고 사람이 해석해 넘기지 않는다. 이 경기의 교체 타석 13개는 모두 첫 투구 전이며 타석 도중 교체는 없다(index는 `playEvents` 순서).
+
+| PA | 이닝 | 투수 → 타자 (feed) | 교체/전환 이벤트 (index: type) | 첫 투구 index | 투구 수 |
+|---|---|---|---|---:|---:|
+| PA48 | 6회말 | Brazobán 623211 → Arcia 606115 | 1: pitching_substitution (Brazobán이 Megill 교체) | 2 | 7 |
+| PA50 | 7회초 | Schwellenbach 680885 → Nimmo 607043 | 0: defensive_substitution (White가 우익수 Soler 교체) | 1 | 3 |
+| PA53 | 7회말 | Ottavino 493603 → Albies 645277 | 0: pitching_substitution | 1 | 3 |
+| PA57 | 8회초 | Jiménez 641729 → F. Alvarez 682626 | 1: pitching_substitution | 2 | 2 |
+| PA58 | 8회초 | Jiménez 641729 → Marte 516782 | 0: offensive_substitution (대타 Marte) | 1 | 3 |
+| PA60 | 8회초 | R. Iglesias 628452 → J. Iglesias 578428 | 1: pitching_substitution (Iglesias가 Jiménez 교체) | 2 | 4 |
+| PA63 | 8회초 | Bummer 607481 → Alonso 624413 | 1: pitching_substitution | 2 | 5 |
+| PA65 | 8회초 | Bummer 607481 → Taylor 621438 | 0: offensive_substitution (대주자 Acuña, 타자 아님) | 1 | 2 |
+| PA66 | 8회말 | Maton 664208 → White 642201 | 0: pitching_substitution; 1·2·3·5: defensive_switch; 4: defensive_substitution | 6 | 4 |
+| PA69 | 8회말 | Díaz 621242 → Urshela 570482 | 1: pitching_substitution | 2 | 3 |
+| PA70 | 8회말 | Díaz 621242 → Kelenic 672284 | 0: offensive_substitution (대타 Kelenic) | 1 | 3 |
+| PA71 | 8회말 | Díaz 621242 → Harris II 671739 | 1: offensive_substitution (대주자 Merrifield, 타자 아님) | 2 | 4 |
+| PA74 | 9회초 | P. Johnson 572955 → F. Alvarez 682626 | 0·1: defensive_switch; 2: pitching_substitution | 3 | 2 |
+
+**PA60**은 8회초 **Raisel Iglesias 628452**(ATL) 대 **Jose Iglesias 578428**(NYM)이고 `playEvents`는 `mound_visit`(0)·`pitching_substitution`(1, Iglesias가 Jiménez 교체) 뒤 투구 4개(2~5)다. 2026-10-01 Claude 세션(Fable 5.1)이 기존 timing의 네 판단 프레임을 직접 읽어 [review](docs/results/mlb_p0/game_747139_player_identity_review_pa60.json)에 기록했고 scripts73 `--verify-frames`로 [평가셋](docs/results/mlb_p0/game_747139_player_identity_evalset_pa60.json)을 만들었다(full_input_rebuild).
+
+| 투구 | 판단 재생 초 | 투수 문자열 | 타자 문자열 / 타순 |
+|---|---:|---|---|
+| 60/1, 60/2 | 5933.50, 5948.75 | `IGLESIAS` | 배너 없음(MLB.tv 보드): null / null |
+| 60/3, 60/4 | 5971.50, 5988.00 | `IGLESIAS` | `IGLESIAS` / 2 |
+
+8개 기록 중 6개 이름을 직접 읽었다. 명단에 IGLESIAS가 둘(ATL 투수 Raisel, NYM 타자 Jose)이라 정확 일치 규칙으로는 역할·팀 없이 ID를 고를 수 없어 `ambiguous_name` 기권 6건이고, 배너 부재 2건은 `continuity_unknown` 기권이다(observed 0, 불일치 0). 역할·팀 정보로 모호성을 푸는 규칙은 이 규약에 없으며 이번에도 추가하지 않았다. PA60은 F-4e 결정 규칙(교체 없음)의 타석이 아니므로 누적 12타석 집계에 넣지 않는다. 이 사례는 생성기 규약 변경을 확인할 뿐 교체 감지 성능을 뜻하지 않는다.
 
 ## 재현과 다음 범위
 

@@ -1,6 +1,6 @@
 # SNY 선수 이름 OCR 개발 기준선 — F-4a
 
-**현행 reader는 v2다(2026-09-29, F-4g).** 이 구현은 경기 747139의 **한 SNY 화면 형식·PA6 여섯 프레임**에서 이름 문자열을 읽는
+**현행 reader는 v2다(2026-09-29, F-4g); v4 후보는 2026-10-01(F-4h) 사전 등록됐고 다음 미검토 영상에서 평가한다(아래 v4 절).** 이 구현은 경기 747139의 **한 SNY 화면 형식·PA6 여섯 프레임**에서 이름 문자열을 읽는
 개발 기준선이다. 선수 이름 OCR의 실행 경로와 평가 출처를 분리하는 첫 단계이며,
 F-4a 전체 완료, 일반 중계 인식, 새 독립 정확도 또는 실시간 선수 추적을 뜻하지 않는다.
 수동 판독·feed 기준·교체/신선도 규칙은 [선수 식별 규약](PLAYER_IDENTITY_PROTOCOL.md)을 따른다.
@@ -370,6 +370,36 @@ v2를 현행 reader로 전환한다(scripts74 `--reader` 기본값 v2, PA6 정�
 
 누적(12타석 204역할): v1 이름 기준 164·정답 102·오답 26·기권 76, ID 기준 156·정답 94·오답 0·기권 110, 타순 기준 63·정답 48·기권 54. v2(PA61은 v1 값)는 이름 정답 115·오답 17, ID 정답 107. 이 경기의 규칙 충족 타석은 모두 평가했으며 남은 유형은 CHECKLIST F-4h(v4 후보 사전 등록·교체 타석 규약)로 넘긴다.
 
+## v4 사전 등록 — 2026-10-01 (F-4h): 투수 crop 잉크 연장·악센트 접기
+
+**이 절은 다음 미검토 영상의 대상 타석에 OCR을 실행하기 전에 커밋한 사전 등록이다.** 이 경기의 규칙 충족 타석은 F-4g까지 모두 평가했으므로 아래 규칙은 이미 결과를 본 개발 프레임(PA26·34·49·60)에서 만들었고, **이 경기의 재채점은 채택 근거가 아니다**. v4는 `CONFIG_V4`(scripts74 `--reader v4`, 정본 PA6 파일 없음, 별도 `--predictions`·`--report` 필수)이며 패널 gate·전처리(4배 회색조)·상태 규칙·v2 파서 옵션은 그대로다. 명단·기대 선수·라벨은 쓰지 않는다.
+
+1. **투수 crop 잉크 연장**: 고정 crop(64~168)의 마지막 열(x=167)에 잉크(세 채널 모두 100 미만인 화소가 띠 y 114~125에서 3개 이상)가 있을 때만 오른쪽으로 잉크가 이어지는 동안(빈 열 8개 연속이면 종료) 스캔해 마지막 잉크 열+4+1을 오른쪽 경계로 한다(최대 x=230; 띠의 모든 화소가 파랑−빨강 ≥ 30인 남색 피치클록 칸을 만나면 그 앞에서 멈춘다). 마지막 열이 비어 있으면 v2 crop 그대로다. 잘림 기권(`possible_truncated_name`)은 연장된 crop에도 그대로 적용한다. 타자 crop은 바꾸지 않는다.
+2. **NFKD 악센트 접기**: 문법 검사 전에 NFKD 분해 후 결합 기호를 버린다(`Å`·`Á`→`A`, `Í`→`I`). 합자 `Æ`는 분해되지 않아 기권으로 남는다.
+3. 손대지 않는 유형: 아포스트로피(`DtARNAUD`·`DARNAUD`), 이름 내부 공백(`LAU REANO`), `Diu`. 추측 보정은 하지 않는다.
+
+폐기한 첫 안(기록): 고정 경계를 x=230까지 무조건 넓히는 안은 개발 재채점에서 `MEGILL`×13(PA26·31·38·46)·`IGLESIAS`×2(PA60)를 빈 문자열로 돌려 v2 정답을 기권으로 퇴행시켰다. 같은 프레임의 오른쪽 경계를 168·176·184·192·200·210·220·230으로 바꿔 엔진에 넣은 실험에서 `MEGILL`은 184·192·230에서, `IGLESIAS`는 230에서 빈 문자열이었고 그 사이 폭에서는 읽혔으며 `SCHWELLENBACH`는 200·210에서 `SCHVÆLLENBACH`였다(엔진이 빈 여백 폭에 비단조적으로 반응). 그래서 잉크가 경계에 닿을 때만 연장하는 규칙으로 바꿨다. 이 선택 과정 전체가 개발 자료에서 이루어졌다.
+
+### 개발 재채점(근거 아님) — 9타석 묶음·PA60
+
+자료: [v4 pa_rest 예측](results/mlb_p0/game_747139_player_identity_ocr_v4_pa_rest_predictions.json)·[보고서](results/mlb_p0/game_747139_player_identity_ocr_v4_pa_rest_report.json), [v4 PA60 예측](results/mlb_p0/game_747139_player_identity_ocr_v4_pa60_predictions.json)·[보고서](results/mlb_p0/game_747139_player_identity_ocr_v4_pa60_report.json); 비교 대상 [v2 pa_rest 보고서](results/mlb_p0/game_747139_player_identity_ocr_v2_pa_rest_report.json)·[v2 PA60 보고서](results/mlb_p0/game_747139_player_identity_ocr_v2_pa60_report.json). 실제 Windows OCR en-US 실행, predict→score→check `--verify-frames` 통과.
+
+| 대상 | 전체 기회 | 판독 가능한 기준 | v2 시도/정답/오답/기권 | v4 시도/정답/오답/기권 |
+|---|---:|---:|---|---|
+| 9타석 이름 문자열 | 98 | 85 | 66 / 53 / 13 / 32 | 81 / 68 / 13 / 17 |
+| 9타석 이름→명단 ID | 98 | 85 | 53 / 53 / 0 / 45 | 68 / 68 / 0 / 30 |
+| PA60 이름 문자열 | 8 | 6 | 4 / 4 / 0 / 4 | 4 / 4 / 0 / 4 |
+| PA60 이름→명단 ID | 8 | 0 | 0 / 0 / 0 / 8 | 0 / 0 / 0 / 8 |
+
+- v2와 다른 행 17(모두 투수): `SCHWELLENBACH` 10행 중 9 정답·1 기권(37/1 `SCHVÆLLENBACH`), `BRAZOBÅN`→`BRAZOBAN` 6 정답, 26/4 OFFICIAL SCORING 그래픽은 잘림 기권 대신 문법 기권(`OFFICIAL SCORING:`), 거짓 판독 0. MEGILL·IGLESIAS·타자 줄은 v2와 같다. PA60은 v2와 완전히 같다(PA60의 타자 `2.1GLESlAS`×2는 어두 `I`→`1` 유형으로 두 reader 모두 기권).
+- 이 수치는 규칙을 만든 프레임의 재채점이므로 v4 채택 근거가 아니며 성능 주장에 쓰지 않는다. 현행 reader는 v2 그대로다.
+
+### 사전 등록 시험(F-4i, 다음 미검토 영상)
+
+대상: 같은 SNY 화면 형식의 다른 경기 영상에서 F-4e 결정 규칙(4구 이상·전 투구 annotated·첫 투구 이후 교체 없음·검증 기록에 타자 배너 관찰이 투구 수의 절반 이상)으로 고른 타석 전부(이 경기 타석 제외). 판단 프레임은 그 경기 timing 값이며 대상 선정을 OCR 실행 전에 커밋한다. v2·v4를 같은 프레임·역할에서 별도 출력으로 실행·채점한다(v1·v3는 선택).
+채택 기준(결과를 본 뒤 바꾸지 않는다): (1) v4 이름 오답 ≤ v2, 정답 ≥ v2, 부재 프레임 거짓 판독 0, (2) v2와 다른 행에서 v4 오답 0, (3) 다른 행 ≥ 2 → v4를 현행으로 전환(scripts74 기본 reader v4, 정본 PA6 v4 파일 추가). (1)·(2) 가운데 하나라도 어긋나면 v2 유지·v4 실패 기록. (1)·(2)는 충족했으나 표본에 긴 이름·악센트 사례가 없어 (3)을 못 채우면 채택하지 않고 '표본 부족'으로 기록한다.
+자료 이름: `game_<gamePk>_player_identity_{review,evalset}_<unit>.json`, `..._ocr_v{2,4}_<unit>_{predictions,report}.json`.
+
 ## bridge 단독 확인
 
 저장소 루트의 PowerShell에서 설치된 엔진 정보를 확인할 수 있다.
@@ -408,6 +438,7 @@ uv run --frozen python scripts/74_evaluate_player_identity_ocr.py check --verify
 - 현행 v2 [원문 예측](results/mlb_p0/game_747139_player_identity_ocr_v2_predictions.json)·[채점 보고서](results/mlb_p0/game_747139_player_identity_ocr_v2_report.json): 기본 `--reader v2`의 `predict`·`score`가 생성한다.
 - 고정 v1 [원문 예측](results/mlb_p0/game_747139_player_identity_ocr_v1_predictions.json)·[채점 보고서](results/mlb_p0/game_747139_player_identity_ocr_v1_report.json): `--reader v1`로 생성·검사하며,
   `check`는 다시 계산한 결과가 저장된 보고서와 같은지 검사한다.
+- 후보 v3(실패 기록)·v4(사전 등록): `--reader v3|v4`는 정본 파일이 없으므로 `--predictions`·`--report`를 반드시 지정한다.
 
 `--evalset`, `--predictions`, `--report`로 경로를 지정할 수 있다. 사용자 평가셋으로 예측할 때는
 별도 `--predictions`가 필요하다. 사용자 평가셋 또는 예측을 채점할 때도 별도 `--report`를
