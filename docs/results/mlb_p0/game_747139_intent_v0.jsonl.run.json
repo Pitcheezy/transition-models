@@ -1,0 +1,25 @@
+{
+  "game_pk": 747139,
+  "out": "C:\\Users\\zpfh1\\Projects\\transition-models-intent\\docs\\results\\mlb_p0\\game_747139_intent_v0.jsonl",
+  "lines": 297,
+  "estimated": 233,
+  "unavailable": 64,
+  "zone": 153,
+  "missing_annotation": 0,
+  "elapsed_seconds_this_run": 0.252,
+  "annotation_elapsed": {
+    "wall_clock_seconds": 1706.0,
+    "basis": "workflow launch to last chunk result (file timestamps), 30 chunks run in parallel; per-frame agent time is not isolated"
+  },
+  "method": {
+    "kind": "assistant_visual_estimate",
+    "version": "v0"
+  },
+  "label_source": "assistant_visual_estimate",
+  "review_status": "unreviewed",
+  "frames_verified": true,
+  "caveats": [
+    "annotated_image_zone is the plate-plane homography applied to a point that is not on the plane (the mitt sits above the plate): u is roughly the lateral position in plate widths, v is not a height and is ill-conditioned because the plate is only a few pixels tall in this camera; plate_feet needs a separate calibration (M2).",
+    "points come from assistant visual estimates with no human review and no measured accuracy; accuracy_estimate stays null until measured on an independent sample."
+  ]
+}

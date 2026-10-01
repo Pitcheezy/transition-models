@@ -180,6 +180,14 @@ def main(argv=None):
         "label_source": points["label_source"],
         "review_status": "unreviewed",
         "frames_verified": bool(args.verify_frames),
+        "caveats": [
+            "annotated_image_zone is the plate-plane homography applied to a point that is not on "
+            "the plane (the mitt sits above the plate): u is roughly the lateral position in plate "
+            "widths, v is not a height and is ill-conditioned because the plate is only a few "
+            "pixels tall in this camera; plate_feet needs a separate calibration (M2).",
+            "points come from assistant visual estimates with no human review and no measured "
+            "accuracy; accuracy_estimate stays null until measured on an independent sample.",
+        ],
     }
     Path(str(args.out) + ".run.json").write_text(
         json.dumps(summary, indent=2, ensure_ascii=False), encoding="utf-8"

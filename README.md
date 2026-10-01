@@ -164,6 +164,29 @@ references/     Papers
 tests/          121 pytest tests (Phase 10 완료 기준)
 ```
 
+## Intent (catcher setup) module v0 — branch `feature/intent-v0`
+
+동료(Pitcheezy) 작업 지시서 [docs/INTENT_V0_WORK_ORDER.md](docs/INTENT_V0_WORK_ORDER.md)의 M0·M1 구현이다.
+포수 셋업(미트 위치)은 **의도의 대리값**이며(`is_intent_proxy=true`), 포수 의도를 확인한 값이 아니다.
+
+```bash
+# M1: 경기 747139의 판단 프레임 297구 → IntentEstimate v1 JSONL (한 줄 = 한 투구)
+uv run --frozen python -m intent.run --game 747139 --out intent_747139.jsonl
+# 로컬 프레임 바이트까지 다시 확인하려면 (프레임이 있는 체크아웃을 지정)
+uv run --frozen python -m intent.run --game 747139 --out intent_747139.jsonl --frames-root <checkout> --verify-frames
+uv run --frozen python -m pytest tests/test_intent_v0.py -q
+```
+
+- 입력: 고정 수동 timing(`docs/results/mlb_p0/game_747139_timing.json`)과 점 파일
+  `docs/results/mlb_p0/game_747139_intent_points_v0.json`(`method.kind=assistant_visual_estimate`:
+  Claude Code 워크플로 에이전트가 2배 확대 crop 격자에서 미트 중심·홈플레이트 네 모서리를 읽어 적은 값, 사람 검토 없음).
+- 출력: `docs/results/mlb_p0/game_747139_intent_v0.jsonl`과 `.run.json`(건수·소요 시간·주의 사항). 모든 줄이 `intent.schema.validate_intent_estimate`를 통과한다.
+  `review_status`는 항상 `unreviewed`, `accuracy_estimate`는 측정 전이라 `null`이다.
+- 좌표 홉: `image_pixels` → `annotated_image_zone`(플레이트 네 모서리 → 단위 정사각형 평면 homography; 미트는 평면 위에 있지 않으므로
+  u는 대략 가로 위치, v는 높이가 아니며 플레이트가 화면에서 몇 px 높이라 불안정) → `plate_feet`는 M2 전까지 `blocked_by=no_plate_plane_calibration`.
+- **영상 권리**: 프레임은 MLB.com 공개 영상에서 로컬 `outputs/frames/`에만 추출했고 저장소에는 넣지 않는다(좌표·해시만 커밋).
+  프레임·crop·영상 파일을 공개 저장소나 산출물에 넣지 않으며, 대량 수집·공개 범위는 M4에서 별도로 합의한다.
+
 ## Daily Memo
 
 > 팀원 데일리 메모. 날짜와 이름을 적고, 오늘 한 일/배운 것/이슈를 자유롭게 기록.
