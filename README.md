@@ -191,6 +191,12 @@ uv run --frozen python -m pytest tests/test_intent_v0.py -q
   ```bash
   uv run --frozen python -m intent.calibrate --game 747139   # readings json → calibration json
   ```
+- 사람 라벨(M3 준비, 2026-10-02): 아래 첫 명령이 판단 프레임 40장(에이전트 추정 32 + 기권 8, 고르게 분산)을 넣은 라벨링 HTML을 `outputs/intent_label/`(git 제외)에 만든다.
+  브라우저로 열어 미트 중심과 플레이트 앞선 양 끝을 클릭하고 JSON을 내려받는다. 에이전트 표시는 보이지 않는다. 두 번째 명령이 라벨을 커밋용 파일로 옮기고 에이전트 판독과 비교한다.
+  ```bash
+  uv run --frozen python -m intent.label_pack --game 747139 --frames-root <프레임이 있는 체크아웃> --sample 40 --out outputs/intent_label/game_747139_pack.html
+  uv run --frozen python -m intent.human_labels --game 747139 --labels <내려받은 JSON>
+  ```
 - **영상 권리**: 프레임은 MLB.com 공개 영상에서 로컬 `outputs/frames/`에만 추출했고 저장소에는 넣지 않는다(좌표·해시만 커밋).
   프레임·crop·영상 파일을 공개 저장소나 산출물에 넣지 않으며, 대량 수집·공개 범위는 M4에서 별도로 합의한다.
 
