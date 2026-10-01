@@ -265,8 +265,14 @@ def make_estimate(
     uncertainty_basis,
     annotated_zone=None,
     zone_transform=None,
+    plate_feet=None,
+    feet_transform=None,
 ):
-    """Build an estimated record that reached image_pixels, or annotated_image_zone when given."""
+    """Build an estimated record for the deepest frame given: pixels, zone, or plate feet.
+
+    ``plate_feet`` is ``(plate_x_ft, plate_z_ft)``; the record stores it as ``x``/``y`` with the
+    fixed ``x_convention`` (``y`` is the height above the ground, Statcast plate_z).
+    """
     doc = _base(pitch_id, clip_id, clip_sha256, method, frame_time, label_source)
     points = {"image_pixels": {"x": float(image_pixels[0]), "y": float(image_pixels[1])}}
     chain = []
@@ -281,12 +287,22 @@ def make_estimate(
         }
         chain.append(deepcopy(zone_transform))
         deepest = "annotated_image_zone"
+    if plate_feet is not None:
+        if annotated_zone is None or feet_transform is None:
+            raise IntentEstimateError("plate_feet needs the zone hop and its own transform step")
+        points["plate_feet"] = {
+            "x": float(plate_feet[0]),
+            "y": float(plate_feet[1]),
+            "x_convention": "statcast_plate_x_catcher_view",
+        }
+        chain.append(deepcopy(feet_transform))
+        deepest = "plate_feet"
     doc.update(
         {
             "status": "estimated",
             "unavailable_reason": None,
             "deepest_frame": deepest,
-            "blocked_by": "no_plate_plane_calibration",
+            "blocked_by": None if deepest == "plate_feet" else "no_plate_plane_calibration",
             "points": points,
             "transform_chain": chain,
             "uncertainty": {
@@ -296,4 +312,6 @@ def make_estimate(
             },
         }
     )
+    if deepest == "plate_feet":
+        doc["claims"]["physical_plate_coordinates"] = True
     return validate_intent_estimate(doc)

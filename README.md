@@ -182,8 +182,15 @@ uv run --frozen python -m pytest tests/test_intent_v0.py -q
   Claude Code 워크플로 에이전트가 2배 확대 crop 격자에서 미트 중심·홈플레이트 네 모서리를 읽어 적은 값, 사람 검토 없음).
 - 출력: `docs/results/mlb_p0/game_747139_intent_v0.jsonl`과 `.run.json`(건수·소요 시간·주의 사항). 모든 줄이 `intent.schema.validate_intent_estimate`를 통과한다.
   `review_status`는 항상 `unreviewed`, `accuracy_estimate`는 측정 전이라 `null`이다.
-- 좌표 홉: `image_pixels` → `annotated_image_zone`(플레이트 네 모서리 → 단위 정사각형 평면 homography; 미트는 평면 위에 있지 않으므로
-  u는 대략 가로 위치, v는 높이가 아니며 플레이트가 화면에서 몇 px 높이라 불안정) → `plate_feet`는 M2 전까지 `blocked_by=no_plate_plane_calibration`.
+- 좌표 홉(M2, 2026-10-01): `image_pixels` → `annotated_image_zone` v1(플레이트 **앞선**에 고정한 유사변환: u = 앞선 폭 단위 가로 위치, v = 지면선 위 높이;
+  카메라 롤·타석별 배율은 M1 모서리에서 합산) → `plate_feet` v0(상수 3×3 아핀: x = −(17/12)(u−0.5), z = (17/12)·v/cos θ − d0·tan θ;
+  `x_convention=statcast_plate_x_catcher_view`, 카메라 틸트 θ = 5.84°(타자석 6 ft 기준선), 공칭 미트 깊이 d0 = 2.5 ft). 측정 방법·검사·한계는
+  [docs/INTENT_V0_M2_NOTES.md](docs/INTENT_V0_M2_NOTES.md), 수치는 `docs/results/mlb_p0/game_747139_intent_plate_calibration_v0.json`(`rms_error_feet`,
+  `human_verified_count`) — 판독은 모두 에이전트 시각 추정이며 사람 검토 수는 0이다. 앞선 모서리가 없는 추정 프레임은 `image_pixels`에서 멈추고
+  `blocked_by=no_plate_plane_calibration`으로 남는다.
+  ```bash
+  uv run --frozen python -m intent.calibrate --game 747139   # readings json → calibration json
+  ```
 - **영상 권리**: 프레임은 MLB.com 공개 영상에서 로컬 `outputs/frames/`에만 추출했고 저장소에는 넣지 않는다(좌표·해시만 커밋).
   프레임·crop·영상 파일을 공개 저장소나 산출물에 넣지 않으며, 대량 수집·공개 범위는 M4에서 별도로 합의한다.
 

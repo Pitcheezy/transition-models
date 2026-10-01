@@ -12,24 +12,48 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 import sys
 import time
 from pathlib import Path
 
+import numpy as np
+
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from intent.geometry import (  # noqa: E402
-    CORNER_ORDER,
-    homography_from_corners,
-    inside_unit_square,
-    project_point,
-    reprojection_error_pixels,
+from intent.geometry import CORNER_ORDER, front_edge_similarity, project_point  # noqa: E402
+from intent.plate_feet import (  # noqa: E402
+    PLATE_WIDTH_FEET,
+    feet_transform_step,
+    hop2_parameters,
+    load_calibration,
+    zone_to_plate_feet,
 )
 from intent.schema import make_estimate, make_unavailable, validate_intent_estimate  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 RESULTS = ROOT / "docs/results/mlb_p0"
 POINTS_SCHEMA = "intent_points_v0"
+ZONE_METHOD = "plate_front_edge_similarity"
+ZONE_VERSION = "v1"
+POOLED_WIDTH_TOLERANCE = 0.08
+
+
+def camera_constants(frames):
+    """Pooled front-edge roll (camera constant) and per-PA median front-edge widths."""
+    rolls, widths = [], {}
+    for frame in frames:
+        corners = frame.get("plate_corners") or {}
+        if not (corners.get("front_left") and corners.get("front_right")):
+            continue
+        fl, fr = corners["front_left"], corners["front_right"]
+        rolls.append(math.atan2(fr[1] - fl[1], fr[0] - fl[0]))
+        widths.setdefault(frame["at_bat_number"], []).append(
+            math.hypot(fr[0] - fl[0], fr[1] - fl[1])
+        )
+    roll = float(np.median(rolls)) if rolls else 0.0
+    pooled = {pa: float(np.median(w)) for pa, w in widths.items()}
+    return {"roll_radians": roll, "roll_frames": len(rolls), "pa_median_width_px": pooled}
 
 
 def _load(path):
@@ -40,8 +64,14 @@ def _sha256(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
-def build_records(game_pk, timing, points, *, frames_root=None, verify_frames=False):
-    """Return (records, counters) for every annotated timing row of the game."""
+def build_records(
+    game_pk, timing, points, *, frames_root=None, verify_frames=False, calibration=None
+):
+    """Return (records, counters) for every annotated timing row of the game.
+
+    ``calibration`` is the measured hop-2 document (``intent.plate_feet.load_calibration``) or
+    None; plate feet are emitted either way, with error_status measured only when it exists.
+    """
     if points.get("schema") != POINTS_SCHEMA or points.get("game_pk") != game_pk:
         raise ValueError("point file schema/game mismatch")
     method = points["method"]
@@ -56,9 +86,18 @@ def build_records(game_pk, timing, points, *, frames_root=None, verify_frames=Fa
         (r for r in timing["annotations"] if r["status"] == "annotated"),
         key=lambda r: (r["at_bat_number"], r["pitch_number"]),
     )
+    camera = camera_constants(points["frames"])
+    hop2 = hop2_parameters(calibration)
     records, counters = (
         [],
-        {"lines": 0, "estimated": 0, "unavailable": 0, "zone": 0, "missing_annotation": 0},
+        {
+            "lines": 0,
+            "estimated": 0,
+            "unavailable": 0,
+            "zone": 0,
+            "plate_feet": 0,
+            "missing_annotation": 0,
+        },
     )
     for row in rows:
         key = (row["at_bat_number"], row["pitch_number"])
@@ -98,29 +137,62 @@ def build_records(game_pk, timing, points, *, frames_root=None, verify_frames=Fa
             or "annotator estimate"
         )
         corners = frame.get("plate_corners")
-        zone = transform = None
-        if corners and all(corners.get(name) for name in CORNER_ORDER):
-            h = homography_from_corners(corners)
+        zone = transform = feet = feet_step = None
+        if corners and all(corners.get(name) for name in ("front_left", "front_right")):
+            own_width = math.hypot(
+                corners["front_right"][0] - corners["front_left"][0],
+                corners["front_right"][1] - corners["front_left"][1],
+            )
+            pooled = camera["pa_median_width_px"].get(key[0], own_width)
+            use_pooled = abs(own_width - pooled) <= POOLED_WIDTH_TOLERANCE * pooled
+            h, diagnostics = front_edge_similarity(
+                corners,
+                roll_radians=camera["roll_radians"],
+                width_px=pooled if use_pooled else own_width,
+            )
+            diagnostics["width_source"] = (
+                "median of this plate appearance's M1 front edges"
+                if use_pooled
+                else "this frame only (differs from the PA median by more than 8 percent)"
+            )
+            diagnostics["roll_source"] = (
+                f"median front-edge direction over {camera['roll_frames']} M1 frames"
+            )
             uv = project_point(h, mitt)
-            zone = (uv[0], uv[1], inside_unit_square(uv))
+            # v1 flag: within the plate's lateral extent and at a plausible height (0-3 plate
+            # widths = 0-4.25 ft); the M1 ground-quad meaning no longer applies to a mitt.
+            zone = (uv[0], uv[1], 0.0 <= uv[0] <= 1.0 and 0.0 <= uv[1] <= 3.0)
+            hop1_error = (calibration or {}).get("hop1_front_edge_rms_pixels")
             transform = {
                 "source_frame": "image_pixels",
                 "target_frame": "annotated_image_zone",
-                "method": "plane_homography_plate_corners_to_unit_square",
-                "version": "v0",
-                "error": None,
+                "method": ZONE_METHOD,
+                "version": ZONE_VERSION,
+                "error": float(hop1_error) if hop1_error is not None else None,
                 "error_units": "pixels",
-                "error_status": "unmeasured",
+                "error_status": "measured" if hop1_error is not None else "unmeasured",
                 "evidence": {
                     "plate_corners_image_pixels": {
-                        name: [float(v) for v in corners[name]] for name in CORNER_ORDER
+                        name: [float(v) for v in corners[name]]
+                        for name in CORNER_ORDER
+                        if corners.get(name)
                     },
                     "corner_order": list(CORNER_ORDER),
-                    "corner_reprojection_rms_pixels": reprojection_error_pixels(h, corners),
-                    "note": "mitt is above the plate plane; this hop normalizes the image zone only",
+                    "anchor": "front_left/front_right only; u along the 17-inch front edge, "
+                    "v up from that ground line, both in front-edge widths",
+                    "inside_annotated_quad": "0 <= u <= 1 and 0 <= v <= 3 (lateral plate extent, "
+                    "height below 4.25 ft); not a strike-zone test",
+                    "diagnostics": diagnostics,
+                    "note": "the mitt is above the plate plane, so a plane homography (M1 v0) "
+                    "gave a meaningless v; v1 uses the front-edge similarity instead",
                 },
             }
             counters["zone"] += 1
+            feet = zone_to_plate_feet(uv, hop2["matrix"])
+            feet_step = feet_transform_step(
+                diagnostics["width_used_px"] / PLATE_WIDTH_FEET, diagnostics, calibration
+            )
+            counters["plate_feet"] += 1
         records.append(
             make_estimate(
                 pitch_id,
@@ -134,6 +206,8 @@ def build_records(game_pk, timing, points, *, frames_root=None, verify_frames=Fa
                 basis,
                 annotated_zone=zone,
                 zone_transform=transform,
+                plate_feet=feet,
+                feet_transform=feet_step,
             )
         )
         counters["estimated"] += 1
@@ -153,14 +227,28 @@ def main(argv=None):
     parser.add_argument(
         "--verify-frames", action="store_true", help="re-hash the local decision frames"
     )
+    parser.add_argument(
+        "--calibration",
+        type=Path,
+        default=None,
+        help="measured hop-2 calibration (default docs/results/mlb_p0/game_<game>_intent_plate_calibration_v0.json)",
+    )
     args = parser.parse_args(argv)
     started = time.perf_counter()
     timing = _load(args.timing or RESULTS / f"game_{args.game}_timing.json")
     points = _load(args.points or RESULTS / f"game_{args.game}_intent_points_v0.json")
     if timing["game_pk"] != args.game:
         parser.error("timing file is for another game")
+    calibration = load_calibration(
+        args.calibration or RESULTS / f"game_{args.game}_intent_plate_calibration_v0.json"
+    )
     records, counters = build_records(
-        args.game, timing, points, frames_root=args.frames_root, verify_frames=args.verify_frames
+        args.game,
+        timing,
+        points,
+        frames_root=args.frames_root,
+        verify_frames=args.verify_frames,
+        calibration=calibration,
     )
     for record in records:
         validate_intent_estimate(record)
@@ -180,11 +268,20 @@ def main(argv=None):
         "label_source": points["label_source"],
         "review_status": "unreviewed",
         "frames_verified": bool(args.verify_frames),
+        "plate_calibration": None
+        if calibration is None
+        else {
+            k: calibration.get(k)
+            for k in ("rms_error_feet", "error_status", "human_verified_count", "measured_on")
+        },
+        "hop2_parameters": {k: v for k, v in hop2_parameters(calibration).items() if k != "matrix"},
         "caveats": [
-            "annotated_image_zone is the plate-plane homography applied to a point that is not on "
-            "the plane (the mitt sits above the plate): u is roughly the lateral position in plate "
-            "widths, v is not a height and is ill-conditioned because the plate is only a few "
-            "pixels tall in this camera; plate_feet needs a separate calibration (M2).",
+            "annotated_image_zone (v1) is a similarity anchored on the plate's front edge: u along "
+            "the 17-inch edge, v up from the ground line, both in plate widths (camera roll and "
+            "per-PA width pooled over the M1 corners); plate_feet (v0) scales that by 17/12 ft "
+            "with the Statcast plate_x sign and removes the depth parallax for a nominal mitt "
+            "depth using the calibrated camera tilt (uncorrected when no calibration file is "
+            "present); the calibration file reports what was measured (null error until then).",
             "points come from assistant visual estimates with no human review and no measured "
             "accuracy; accuracy_estimate stays null until measured on an independent sample.",
         ],

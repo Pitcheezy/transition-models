@@ -256,11 +256,12 @@ def test_build_records_emits_one_validated_line_per_annotated_pitch():
         "estimated": 1,
         "unavailable": 2,
         "zone": 1,
+        "plate_feet": 1,
         "missing_annotation": 1,
     }
     assert [r["pitch_id"] for r in records] == ["1:1:1", "1:1:2", "1:1:3"]
     assert (
-        records[0]["deepest_frame"] == "annotated_image_zone"
+        records[0]["deepest_frame"] == "plate_feet"
         and records[2]["unavailable_reason"] == "no_point_annotation_for_pitch"
     )
     for r in records:
