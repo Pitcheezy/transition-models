@@ -1,5 +1,7 @@
 # 의도(포수 셋업) 모듈 v0 작업 지시서 (2026-10-01)
 
+> **정정(2026-10-02):** 아래 스키마 요약에는 `plate_feet` 점의 키(`x, z`)와 `blocked_by` 값 두 개(`no_image_plane_calibration`, `no_batter_zone_bounds`)가 빠져 있었습니다. 맞는 규칙과 수정 요청은 [INTENT_V0_CONTRACT_FIXES.md](INTENT_V0_CONTRACT_FIXES.md)를 봐 주세요.
+
 Pitcheezy 서비스 쪽(Song)이 요청하는 작업입니다. 아래 "붙여 넣을 프롬프트"를 Claude Code 세션에 그대로 넣으면 됩니다.
 이 브랜치(`feature/intent-v0`)는 `codex/fix-point-label-alignment`(3fc3e5e) 위에 이 문서만 더한 것이고, `main`은 건드리지 않았습니다.
 요약하면 지금 `transition-models`에는 포수 미트·의도 모듈이 없습니다. 있는 것은 747139 한 경기의 판단 프레임 297구뿐입니다.
