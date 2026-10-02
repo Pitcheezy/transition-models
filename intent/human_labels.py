@@ -12,10 +12,14 @@ coordinates, checked against the committed pack manifest) and
   and the calibrated hop-2 matrix, which isolates the mitt reading;
 - full-chain difference: assistant mitt through the assistant's own plate edge versus the
   person's mitt through the person's plate edge;
+- output difference: the assistant's published ``plate_feet`` (the JSONL line) versus the
+  person's mitt through the person's plate edge;
 - plate front-edge end differences in pixels.
 
-This is a development-game check on 747139 (the frames the assistant pipeline was built on);
-it measures how well the assistant reads the setup mitt, not a held-out accuracy.
+The game's role (development or evaluation) comes from
+``docs/results/mlb_p0/intent_eval_plan_v0.json``. On a development game (747139, 849843) this
+measures how well the assistant reads the setup mitt on frames the pipeline was built on, not a
+held-out accuracy.
 """
 
 from __future__ import annotations
@@ -125,6 +129,26 @@ def validate_labels(labels, manifest):
     return [rows[f["pitch_id"]] for f in manifest["frames"] if f["pitch_id"] in rows]
 
 
+def _display_path(path):
+    try:
+        return Path(path).resolve().relative_to(ROOT).as_posix()
+    except ValueError:
+        return str(path)
+
+
+def game_role(game_pk, plan_path=None):
+    """'development', 'evaluation' or 'unplanned' from the committed evaluation plan."""
+    path = Path(plan_path) if plan_path else RESULTS / "intent_eval_plan_v0.json"
+    if not path.is_file():
+        return "unplanned"
+    plan = _load(path)
+    if any(g["game_pk"] == game_pk for g in plan["development_games"]):
+        return "development"
+    if any(g["game_pk"] == game_pk for g in plan["evaluation_games"]["games"]):
+        return "evaluation"
+    return "unplanned"
+
+
 def _feet(plate_front, mitt, matrix):
     h, _ = front_edge_similarity(
         {"front_left": plate_front["left_end"], "front_right": plate_front["right_end"]}
@@ -132,8 +156,9 @@ def _feet(plate_front, mitt, matrix):
     return zone_to_plate_feet(project_point(h, mitt), matrix)
 
 
-def compare(human_rows, points, calibration):
-    """Assistant vs person on the labeled frames."""
+def compare(human_rows, points, calibration, records=None):
+    """Assistant vs person on the labeled frames; ``records`` = JSONL lines by pitch_id."""
+    records = records or {}
     matrix = hop2_parameters(calibration)["matrix"]
     by_id = {
         f"{points['game_pk']}:{f['at_bat_number']}:{f['pitch_number']}": f for f in points["frames"]
@@ -149,6 +174,7 @@ def compare(human_rows, points, calibration):
         },
     )
     px_dx, px_dy, px_d, ft_dx, ft_dz, chain_dx, chain_dz, plate_d = [], [], [], [], [], [], [], []
+    out_dx, out_dz, out_d = [], [], []
     for row in human_rows:
         a = by_id[row["pitch_id"]]
         a_marked = a["status"] == "estimated" and a.get("mitt_center") is not None
@@ -189,6 +215,15 @@ def compare(human_rows, points, calibration):
                     chain_dx.append(cx - hx)
                     chain_dz.append(cz - hz)
                     entry["full_chain_feet_diff"] = [round(cx - hx, 4), round(cz - hz, 4)]
+                published = ((records.get(row["pitch_id"]) or {}).get("points") or {}).get(
+                    "plate_feet"
+                )
+                if published:
+                    ox, oz = published["x"] - hx, published["z"] - hz
+                    out_dx.append(ox)
+                    out_dz.append(oz)
+                    out_d.append(math.hypot(ox, oz))
+                    entry["output_feet_diff"] = [round(ox, 4), round(oz, 4)]
         corners = a.get("plate_corners") or {}
         if row["plate_status"] == "marked" and corners.get("front_left"):
             dl = math.dist(corners["front_left"], row["plate_front"]["left_end"])
@@ -209,6 +244,16 @@ def compare(human_rows, points, calibration):
         },
         "mitt_feet_same_plate": {"x": _axis(ft_dx), "z": _axis(ft_dz)},
         "full_chain_feet": {"x": _axis(chain_dx), "z": _axis(chain_dz)},
+        "output_feet": {
+            "x": _axis(out_dx),
+            "z": _axis(out_dz),
+            "abs_x_median": _percentile([abs(v) for v in out_dx], 0.5),
+            "abs_x_p90": _percentile([abs(v) for v in out_dx], 0.9),
+            "abs_z_median": _percentile([abs(v) for v in out_dz], 0.5),
+            "abs_z_p90": _percentile([abs(v) for v in out_dz], 0.9),
+            "distance_median": _percentile(out_d, 0.5),
+            "distance_p90": _percentile(out_d, 0.9),
+        },
         "plate_front_end_pixels": {
             "n_ends": len(plate_d),
             "median": _percentile(plate_d, 0.5),
@@ -227,6 +272,7 @@ def main(argv=None):
     parser.add_argument("--calibration", type=Path, default=None)
     parser.add_argument("--out-labels", type=Path, default=None)
     parser.add_argument("--out-report", type=Path, default=None)
+    parser.add_argument("--jsonl", type=Path, default=None)
     args = parser.parse_args(argv)
     manifest = _load(args.manifest or RESULTS / f"game_{args.game}_intent_label_pack_v0.json")
     labels = _load(args.labels)
@@ -235,7 +281,15 @@ def main(argv=None):
     calibration = load_calibration(
         args.calibration or RESULTS / f"game_{args.game}_intent_plate_calibration_v0.json"
     )
-    report = compare(rows, points, calibration)
+    jsonl = args.jsonl or RESULTS / f"game_{args.game}_intent_v0.jsonl"
+    records = {}
+    if jsonl.is_file():
+        for line in jsonl.read_text(encoding="utf-8").splitlines():
+            if line.strip():
+                rec = json.loads(line)
+                records[rec["pitch_id"]] = rec
+    report = compare(rows, points, calibration, records)
+    role = game_role(args.game)
     stored = {
         "schema": LABELS_SCHEMA,
         "game_pk": args.game,
@@ -252,8 +306,10 @@ def main(argv=None):
         "schema": "intent_setup_check_v0",
         "game_pk": args.game,
         "pack_id": manifest["pack_id"],
-        "scope": "development game: assistant setup-frame readings vs one person's hand labels on "
-        "the same frames; not a held-out accuracy",
+        "role": role,
+        "scope": f"{role} game: assistant setup-frame readings vs one person's hand labels on "
+        "the same frames" + ("; not a held-out accuracy" if role != "evaluation" else ""),
+        "jsonl": _display_path(jsonl) if records else None,
         "labeler": labels.get("labeler"),
         "elapsed_seconds": labels.get("elapsed_seconds"),
         **report,

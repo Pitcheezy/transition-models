@@ -304,7 +304,9 @@ def main(argv=None):
         "review_status": "unreviewed",
         "frames_verified": bool(args.verify_frames),
         "frame_index_rule": {
-            "rule": "round(frame_time * fps) of the source video (frames grabbed by time)",
+            "rule": (points.get("video") or {}).get(
+                "frame_index_rule", "round(frame_time * fps) of the source video"
+            ),
             "fps": "{}/{}".format(*video_fps(points)),
         },
         "plate_calibration": None

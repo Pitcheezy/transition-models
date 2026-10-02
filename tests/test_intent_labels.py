@@ -210,3 +210,13 @@ def test_labels_are_checked_against_the_pack_and_compared_in_pixels_and_feet(tmp
     assert (
         json.loads(paths["out_r"].read_text(encoding="utf-8"))["availability"]["both_marked"] == 4
     )
+
+
+def test_pack_crop_boxes_are_per_game_and_all_frames_can_be_taken(tmp_path):
+    points = _points(tmp_path)
+    manifest, page_frames = build_pack(
+        points, tmp_path, 100, main_box=(300, 200, 960, 520), plate_box=(500, 440, 760, 500)
+    )
+    assert manifest["selection"]["all_frames"] is True and len(manifest["frames"]) == 10
+    assert manifest["crops"]["main"]["box"] == [300, 200, 960, 520]
+    assert page_frames[0]["plate"]["box"] == [500, 440, 760, 500]

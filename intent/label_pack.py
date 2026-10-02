@@ -25,7 +25,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 ROOT = Path(__file__).resolve().parents[1]
 RESULTS = ROOT / "docs/results/mlb_p0"
 PACK_SCHEMA = "intent_label_pack_v0"
-MAIN_BOX = (440, 120, 840, 400)  # x0, y0, x1, y1 in original 1280x720 pixels
+MAIN_BOX = (440, 120, 840, 400)  # x0, y0, x1, y1 in original 1280x720 pixels (747139 defaults)
 MAIN_ZOOM = 2
 PLATE_BOX = (520, 280, 820, 360)
 PLATE_ZOOM = 4
@@ -69,7 +69,9 @@ def _crop_jpeg(image, box, zoom):
     return "data:image/jpeg;base64," + base64.b64encode(buffer.getvalue()).decode("ascii")
 
 
-def build_pack(points, frames_root, sample, *, verify_frames=True):
+def build_pack(
+    points, frames_root, sample, *, main_box=MAIN_BOX, plate_box=PLATE_BOX, verify_frames=True
+):
     """Return (manifest, page_frames): the committable manifest and the embedded page data."""
     from PIL import Image
 
@@ -99,14 +101,14 @@ def build_pack(points, frames_root, sample, *, verify_frames=True):
                     "frame_seconds": frame["frame_seconds"],
                     "image_sha256": frame["image_sha256"],
                     "main": {
-                        "box": list(MAIN_BOX),
+                        "box": list(main_box),
                         "zoom": MAIN_ZOOM,
-                        "src": _crop_jpeg(image, MAIN_BOX, MAIN_ZOOM),
+                        "src": _crop_jpeg(image, main_box, MAIN_ZOOM),
                     },
                     "plate": {
-                        "box": list(PLATE_BOX),
+                        "box": list(plate_box),
                         "zoom": PLATE_ZOOM,
-                        "src": _crop_jpeg(image, PLATE_BOX, PLATE_ZOOM),
+                        "src": _crop_jpeg(image, plate_box, PLATE_ZOOM),
                     },
                 }
             )
@@ -120,11 +122,14 @@ def build_pack(points, frames_root, sample, *, verify_frames=True):
             "the assistant-estimated frames plus about 20 percent over the assistant "
             "abstentions; deterministic, no random seed",
             "sample": sample,
+            "all_frames": len(selected) == len(points["frames"]),
             "points_method": points.get("method"),
         },
         "crops": {
-            "main": {"box": list(MAIN_BOX), "zoom": MAIN_ZOOM},
-            "plate": {"box": list(PLATE_BOX), "zoom": PLATE_ZOOM},
+            "main": {"box": list(main_box), "zoom": MAIN_ZOOM},
+            "plate": {"box": list(plate_box), "zoom": PLATE_ZOOM},
+            "rule": "one fixed pair of boxes per game, chosen from the plate position on one "
+            "frame before labeling; the same for every frame, so the crop carries no per-pitch hint",
         },
         "blind": "the page shows no assistant marks",
         "frames": entries,
@@ -252,6 +257,12 @@ def main(argv=None):
         "--out", type=Path, required=True, help="HTML page (keep it under outputs/)"
     )
     parser.add_argument("--manifest", type=Path, default=None)
+    parser.add_argument(
+        "--main-box", default=",".join(map(str, MAIN_BOX)), help="x0,y0,x1,y1 (mitt view)"
+    )
+    parser.add_argument(
+        "--plate-box", default=",".join(map(str, PLATE_BOX)), help="x0,y0,x1,y1 (plate view)"
+    )
     args = parser.parse_args(argv)
     points = json.loads(
         (args.points or RESULTS / f"game_{args.game}_intent_points_v0.json").read_text(
@@ -262,7 +273,13 @@ def main(argv=None):
         parser.error("points file is for another game")
     if "outputs" not in args.out.resolve().parts:
         parser.error("the page embeds MLB frames; write it under outputs/ (git-ignored)")
-    manifest, page_frames = build_pack(points, args.frames_root, args.sample)
+    manifest, page_frames = build_pack(
+        points,
+        args.frames_root,
+        args.sample,
+        main_box=tuple(int(v) for v in args.main_box.split(",")),
+        plate_box=tuple(int(v) for v in args.plate_box.split(",")),
+    )
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(render_page(manifest, page_frames), encoding="utf-8")
     manifest_path = args.manifest or RESULTS / f"game_{args.game}_intent_label_pack_v0.json"
