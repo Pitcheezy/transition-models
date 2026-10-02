@@ -1,0 +1,41 @@
+{
+  "game_pk": 849845,
+  "out": "docs\\results\\mlb_p0\\game_849845_intent_v0.jsonl",
+  "lines": 57,
+  "estimated": 43,
+  "unavailable": 14,
+  "zone": 43,
+  "plate_feet": 43,
+  "missing_annotation": 0,
+  "elapsed_seconds_this_run": 0.177,
+  "annotation_elapsed": null,
+  "method": {
+    "kind": "assistant_visual_estimate",
+    "version": "v0"
+  },
+  "label_source": "assistant_visual_estimate",
+  "review_status": "unreviewed",
+  "frames_verified": true,
+  "frame_index_rule": {
+    "rule": "frames cut by source frame index (accurate seek), so frame_index is exact",
+    "fps": "60000/1001"
+  },
+  "plate_calibration": {
+    "rms_error_feet": 0.1488494360600154,
+    "rms_basis": "all_used_pitches_assistant_read",
+    "error_status": "measured",
+    "human_verified_count": 0,
+    "measured_on": "13 called pitches of game 849845 (in-sample)"
+  },
+  "hop2_parameters": {
+    "tilt_sin": 0.09946727631506504,
+    "mitt_depth_feet": 2.5,
+    "pan_tan": -0.012071128241845338,
+    "source": "tilt = mean sin(tilt) from the batter's-box 6-ft depth readings; pan = mean from rubber readings (0 when none were read); nominal mitt depth 2.5 ft behind the plate front (assumed, not measured)"
+  },
+  "caveats": [
+    "evidence.frame_index rule: frames cut by source frame index (accurate seek), so frame_index is exact (fps from the points file).",
+    "annotated_image_zone (v1) is a similarity anchored on the plate's front edge: u along the 17-inch edge, v up from the ground line, both in plate widths (camera roll and per-PA width pooled over the M1 corners); plate_feet (v0) scales that by 17/12 ft with the Statcast plate_x sign and removes the depth parallax for a nominal mitt depth using the calibrated camera tilt (uncorrected when no calibration file is present); the calibration file reports what was measured (null error until then).",
+    "points come from assistant visual estimates with no human review and no measured accuracy; accuracy_estimate stays null until measured on an independent sample."
+  ]
+}
