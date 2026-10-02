@@ -152,6 +152,52 @@ def front_edge_noise(decision_frames):
 NOMINAL_MITT_DEPTH_FEET_FOR_PARALLAX = NOMINAL_MITT_DEPTH_FEET
 
 
+RUBBER_TO_PLATE_FRONT_FEET = 60.5 - 17.0 / 12.0  # front edge of the rubber to the plate front
+RUBBER_WIDTH_FEET = 2.0
+
+
+def pan_from_rubber(rubber_frames):
+    """Camera pan (tan, plate_x sign) from the rubber's position on the plate-front scale.
+
+    For each frame: map the rubber centre through hop 1 with that frame's plate front edge
+    (x_r = -(17/12)(u - 0.5)); the rubber's own width gives the scale ratio r = s_rubber /
+    s_plate, hence the camera distance Y = L*r/(r-1) for the rubber-to-plate distance L; then
+    pan_tan = -x_r * (Y - L) / (L * Y).
+    """
+    rows = []
+    for frame in rubber_frames:
+        for reader, read in frame["readers"].items():
+            if not read or not read.get("plate_front") or not read.get("rubber_center"):
+                continue
+            (x_r, _), diag = pixel_to_feet(read["plate_front"], read["rubber_center"])
+            plate_px_per_ft = diag["front_edge_px"] / PLATE_WIDTH_FEET
+            width = read.get("rubber_width_px")
+            r = (width / RUBBER_WIDTH_FEET) / plate_px_per_ft if width else None
+            length = RUBBER_TO_PLATE_FRONT_FEET
+            distance = length * r / (r - 1.0) if r and r > 1.02 else None
+            pan_tan = -x_r * (distance - length) / (length * distance) if distance else None
+            rows.append(
+                {
+                    "frame": frame.get("frame"),
+                    "reader": reader,
+                    "rubber_x_on_plate_scale_feet": x_r,
+                    "scale_ratio": r,
+                    "camera_distance_feet": distance,
+                    "pan_tan": pan_tan,
+                }
+            )
+    values = [row["pan_tan"] for row in rows if row["pan_tan"] is not None]
+    mean = _mean(values)
+    return {
+        "pan_tan": mean,
+        "pan_degrees": math.degrees(math.atan(mean)) if mean is not None else None,
+        "sd": _sd(values),
+        "n": len(values),
+        "basis": "rubber centre and width read on centre-field frames, plate front edge of the same frame",
+        "rows": rows,
+    }
+
+
 def camera_estimates(readings):
     """Tilt from the batter's-box depth, pan from the plate quads, parallax term they imply."""
     tilt_sins, rows = [], []
@@ -496,7 +542,10 @@ def build(readings, human_verified_ids, verification_meta=None):
     noise = front_edge_noise(frames)
     camera = camera_estimates(readings)
     tilt_sin = camera["tilt"]["sin_mean"] or 0.0
-    matrix = zone_to_feet_matrix(tilt_sin, NOMINAL_MITT_DEPTH_FEET if tilt_sin else 0.0)
+    pan = pan_from_rubber(readings.get("rubber_frames", []))
+    pan_tan = pan["pan_tan"] or 0.0
+    depth = NOMINAL_MITT_DEPTH_FEET if (tilt_sin or pan_tan) else 0.0
+    matrix = zone_to_feet_matrix(tilt_sin, depth, pan_tan)
     lateral = lateral_check(frames)
     overlay = overlay_check(frames)
     e2e = end_to_end_check(pitches, matrix)
@@ -525,12 +574,15 @@ def build(readings, human_verified_ids, verification_meta=None):
             "version": VERSION,
             "matrix": [list(r) for r in matrix],
             "tilt_sin": tilt_sin,
-            "mitt_depth_feet": NOMINAL_MITT_DEPTH_FEET if tilt_sin else 0.0,
+            "pan_tan": pan_tan,
+            "pan_estimate": {k: v for k, v in pan.items() if k != "rows"},
+            "mitt_depth_feet": depth,
             "x_convention": X_CONVENTION,
-            "source": "tilt = mean sin(tilt) from the batter's-box 6-ft depth readings; "
-            "nominal mitt depth 2.5 ft behind the plate front (assumed, not measured)"
-            if tilt_sin
-            else "no tilt reading: uncorrected matrix",
+            "source": "tilt = mean sin(tilt) from the batter's-box 6-ft depth readings; pan = mean "
+            "from rubber readings (0 when none were read); nominal mitt depth 2.5 ft behind the "
+            "plate front (assumed, not measured)"
+            if (tilt_sin or pan_tan)
+            else "no tilt or pan reading: uncorrected matrix",
         },
         "hop1_front_edge_rms_pixels": noise["rms_pixels"],
         "hop1_front_edge_noise": noise,
@@ -561,6 +613,7 @@ def build(readings, human_verified_ids, verification_meta=None):
         "human_verification": verification_meta,
         "per_item": {
             "tilt_rows": camera["tilt"]["rows"],
+            "pan_rows": pan["rows"],
             "lateral_rows": lateral["rows"],
             "overlay_rows": overlay["rows"],
             "end_to_end_per_pitch": e2e["per_pitch"],

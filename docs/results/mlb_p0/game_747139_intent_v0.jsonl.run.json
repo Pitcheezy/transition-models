@@ -7,7 +7,7 @@
   "zone": 153,
   "plate_feet": 153,
   "missing_annotation": 0,
-  "elapsed_seconds_this_run": 0.461,
+  "elapsed_seconds_this_run": 0.473,
   "annotation_elapsed": {
     "wall_clock_seconds": 1706.0,
     "basis": "workflow launch to last chunk result (file timestamps), 30 chunks run in parallel; per-frame agent time is not isolated"
@@ -33,7 +33,8 @@
   "hop2_parameters": {
     "tilt_sin": 0.10174485830780287,
     "mitt_depth_feet": 2.5,
-    "source": "tilt = mean sin(tilt) from the batter's-box 6-ft depth readings; nominal mitt depth 2.5 ft behind the plate front (assumed, not measured)"
+    "pan_tan": 0.0,
+    "source": "tilt = mean sin(tilt) from the batter's-box 6-ft depth readings; pan = mean from rubber readings (0 when none were read); nominal mitt depth 2.5 ft behind the plate front (assumed, not measured)"
   },
   "caveats": [
     "evidence.frame_index is derived from the playback time, round(frame_time * fps) with the source fps in the points file; the frames were grabbed by time, so the number can differ by one from the frame ffmpeg actually decoded.",

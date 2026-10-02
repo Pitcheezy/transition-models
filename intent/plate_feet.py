@@ -40,8 +40,14 @@ CALIBRATION_SCHEMA = "intent_plate_calibration_v0"
 NOMINAL_MITT_DEPTH_FEET = 2.5
 
 
-def zone_to_feet_matrix(tilt_sin=0.0, mitt_depth_feet=0.0):
-    """Return the 3x3 affine matrix for the given camera tilt and nominal mitt depth."""
+def zone_to_feet_matrix(tilt_sin=0.0, mitt_depth_feet=0.0, pan_tan=0.0):
+    """Return the 3x3 affine matrix for the camera tilt, pan and the nominal mitt depth.
+
+    ``pan_tan`` is the camera's lateral offset over its distance, signed in plate_x feet
+    (positive when the camera sits on the first-base side of the mound-plate line). A point
+    d ft behind the plate front then maps d*pan_tan too far toward that side on the
+    plate-front scale, so the x row subtracts mitt_depth*pan_tan.
+    """
     if not (0.0 <= tilt_sin < 1.0):
         raise ValueError("tilt_sin must be in [0, 1)")
     if mitt_depth_feet < 0.0:
@@ -49,7 +55,7 @@ def zone_to_feet_matrix(tilt_sin=0.0, mitt_depth_feet=0.0):
     cos_t = math.sqrt(1.0 - tilt_sin * tilt_sin)
     tan_t = tilt_sin / cos_t
     return (
-        (-PLATE_WIDTH_FEET, 0.0, PLATE_WIDTH_FEET / 2.0),
+        (-PLATE_WIDTH_FEET, 0.0, PLATE_WIDTH_FEET / 2.0 - mitt_depth_feet * pan_tan),
         (0.0, PLATE_WIDTH_FEET / cos_t, -mitt_depth_feet * tan_t),
         (0.0, 0.0, 1.0),
     )
@@ -73,7 +79,9 @@ def load_calibration(path):
     if doc.get("schema") != CALIBRATION_SCHEMA:
         raise ValueError("unexpected plate calibration schema")
     hop2 = doc.get("hop2", {})
-    expected = zone_to_feet_matrix(hop2.get("tilt_sin", 0.0), hop2.get("mitt_depth_feet", 0.0))
+    expected = zone_to_feet_matrix(
+        hop2.get("tilt_sin", 0.0), hop2.get("mitt_depth_feet", 0.0), hop2.get("pan_tan", 0.0)
+    )
     if not np.allclose(np.asarray(hop2.get("matrix", []), dtype=float), np.asarray(expected)):
         raise ValueError("calibration matrix does not match its tilt/depth parameters")
     return doc
@@ -85,6 +93,7 @@ def hop2_parameters(calibration):
         return {
             "matrix": UNCORRECTED_MATRIX,
             "tilt_sin": 0.0,
+            "pan_tan": 0.0,
             "mitt_depth_feet": 0.0,
             "source": "no calibration file: uncorrected (tilt 0, depth 0)",
         }
@@ -93,6 +102,7 @@ def hop2_parameters(calibration):
         "matrix": tuple(tuple(float(v) for v in row) for row in hop2["matrix"]),
         "tilt_sin": float(hop2["tilt_sin"]),
         "mitt_depth_feet": float(hop2["mitt_depth_feet"]),
+        "pan_tan": float(hop2.get("pan_tan", 0.0)),
         "source": hop2.get("source", "calibration file"),
     }
 
@@ -110,6 +120,7 @@ def feet_transform_step(frame_px_per_foot, diagnostics, calibration):
         "camera_tilt_sin": tilt_sin,
         "camera_tilt_degrees": math.degrees(math.asin(tilt_sin)),
         "nominal_mitt_depth_feet": params["mitt_depth_feet"],
+        "camera_pan_tan": params["pan_tan"],
         "parameters_source": params["source"],
         "target_quantity": "the mitt's own position at its depth behind the plate front "
         "(depth parallax removed for the nominal depth); not the plate-front crossing point "

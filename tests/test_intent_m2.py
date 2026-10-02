@@ -258,3 +258,15 @@ def test_build_records_emits_plate_feet_only_with_a_front_edge_and_marks_the_cal
     (tmp_path / "bad.json").write_text(json.dumps(bad), encoding="utf-8")
     with pytest.raises(ValueError):
         load_calibration(tmp_path / "bad.json")
+
+
+def test_hop2_pan_term_shifts_x_by_depth_times_pan_and_leaves_z_alone():
+    base = zone_to_feet_matrix(0.1, 2.5)
+    panned = zone_to_feet_matrix(0.1, 2.5, pan_tan=-0.06)
+    x0, z0 = zone_to_plate_feet((0.4, 1.7), base)
+    x1, z1 = zone_to_plate_feet((0.4, 1.7), panned)
+    # camera on the third-base side (pan_tan < 0): deeper points map too far toward third,
+    # so the correction moves them back toward first base by depth * |pan_tan|
+    assert x1 - x0 == pytest.approx(2.5 * 0.06)
+    assert z1 == pytest.approx(z0)
+    assert zone_to_feet_matrix(0.1, 2.5, 0.0) == base

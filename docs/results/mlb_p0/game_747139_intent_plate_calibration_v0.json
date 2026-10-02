@@ -23,9 +23,17 @@
    ]
   ],
   "tilt_sin": 0.10174485830780287,
+  "pan_tan": 0.0,
+  "pan_estimate": {
+   "pan_tan": null,
+   "pan_degrees": null,
+   "sd": null,
+   "n": 0,
+   "basis": "rubber centre and width read on centre-field frames, plate front edge of the same frame"
+  },
   "mitt_depth_feet": 2.5,
   "x_convention": "statcast_plate_x_catcher_view",
-  "source": "tilt = mean sin(tilt) from the batter's-box 6-ft depth readings; nominal mitt depth 2.5 ft behind the plate front (assumed, not measured)"
+  "source": "tilt = mean sin(tilt) from the batter's-box 6-ft depth readings; pan = mean from rubber readings (0 when none were read); nominal mitt depth 2.5 ft behind the plate front (assumed, not measured)"
  },
  "hop1_front_edge_rms_pixels": 0.67700320038633,
  "hop1_front_edge_noise": {
@@ -965,6 +973,7 @@
     "sin_tilt": 0.10745464852607715
    }
   ],
+  "pan_rows": [],
   "lateral_rows": [
    {
     "at_bat_number": 1,
