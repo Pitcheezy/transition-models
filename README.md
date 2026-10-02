@@ -187,7 +187,8 @@ uv run --frozen python -m pytest tests/test_intent_v0.py -q
   `x_convention=statcast_plate_x_catcher_view`, 카메라 틸트 θ = 5.84°(타자석 6 ft 기준선), 공칭 미트 깊이 d0 = 2.5 ft). 측정 방법·검사·한계는
   [docs/INTENT_V0_M2_NOTES.md](docs/INTENT_V0_M2_NOTES.md), 수치는 `docs/results/mlb_p0/game_747139_intent_plate_calibration_v0.json`(`rms_error_feet`,
   `human_verified_count`) — 판독은 에이전트 시각 추정이고, 포구 프레임 19구의 공 위치는 2026-10-02 소유자가 몽타주로 확인했다(`rms_error_feet` 0.277 ft, 개발 경기 안의 값). 앞선 모서리가 없는 추정 프레임은 `image_pixels`에서 멈추고
-  `blocked_by=no_plate_plane_calibration`으로 남는다.
+  `blocked_by=no_image_plane_calibration`으로 남는다. `plate_feet`까지 간 줄은 `blocked_by=no_batter_zone_bounds`(서비스의 다음 좌표계 zone9에 필요한 타자 존 경계가 없음)이다.
+- 계약 조정(2026-10-02, 서비스 쪽 요청): `evidence.frame_index`는 원본 영상 프레임 번호(시각으로 뽑은 프레임은 `round(frame_time × 60000/1001)`), `points.plate_feet`의 키는 Statcast와 같은 `x`/`z`, 멈춘 깊이마다 `blocked_by` 이름을 둔다. 서비스 쪽 `validate_intent_estimate`(SongRoute/pitcheezy 8771c06)로 297줄 전부 통과를 확인했다.
   ```bash
   uv run --frozen python -m intent.calibrate --game 747139   # readings json → calibration json
   ```

@@ -11,6 +11,12 @@
   "human_reviewed": false
  },
  "label_source": "assistant_visual_estimate",
+ "video": {
+  "fps_num": 60000,
+  "fps_den": 1001,
+  "basis": "ffprobe r_frame_rate of the source MP4 (timing media_url), checked 2026-10-01",
+  "frame_index_rule": "round(frame_seconds * fps_num / fps_den); frames were grabbed by playback time"
+ },
  "uncertainty_basis": "annotator's stated +/- in original pixels for the mitt centre (v0); not measured against ground truth",
  "crop": {
   "box": [

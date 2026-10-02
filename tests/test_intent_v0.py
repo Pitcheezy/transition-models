@@ -14,6 +14,7 @@ from intent.geometry import (
 from intent.run import build_records
 from intent.schema import (
     IntentEstimateError,
+    frame_index_from_time,
     make_estimate,
     make_unavailable,
     validate_intent_estimate,
@@ -52,6 +53,7 @@ def normal():
         "2x crop with 20 px grid",
         annotated_zone=(0.5, -4.5, False),
         zone_transform=ZONE_STEP,
+        frame_index=frame_index_from_time(525.5, 60000, 1001),
     )
 
 
@@ -64,6 +66,7 @@ def abstain():
         4610.25,
         "assistant_visual_estimate",
         "catcher_hidden_by_umpire",
+        frame_index=frame_index_from_time(4610.25, 60000, 1001),
     )
 
 
@@ -78,6 +81,7 @@ def no_calibration():
         (912, 804),
         25,
         "wide-angle frame, plate corners not resolvable",
+        frame_index=frame_index_from_time(7796.5, 60000, 1001),
     )
 
 
@@ -101,7 +105,10 @@ def test_shapes_encode_how_far_the_chain_got():
     assert (
         list(no_calibration()["points"]) == ["image_pixels"]
         and no_calibration()["transform_chain"] == []
+        and no_calibration()["blocked_by"] == "no_image_plane_calibration"
     )
+    # frames grabbed by time are numbered round(t * 60000/1001) in the 59.94 fps source
+    assert normal()["evidence"] == {"frame_index": 31499, "frame_time": 525.5}
     assert (
         abstain()["points"] == {}
         and abstain()["deepest_frame"] is None
@@ -144,6 +151,12 @@ def _mutate(doc, path, value):
         (normal, ("provenance", "review_status"), "approved"),
         (normal, ("uncertainty", "value"), -1),
         (normal, ("evidence", "frame_time"), None),
+        (normal, ("evidence", "frame_index"), None),
+        (normal, ("evidence", "frame_index"), -1),
+        (normal, ("evidence", "frame_index"), 3.0),
+        (normal, ("evidence", "frame_index"), True),
+        (no_calibration, ("blocked_by",), "no_plate_plane_calibration"),
+        (no_calibration, ("blocked_by",), None),
         (normal, ("extra",), 1),
         (abstain, ("unavailable_reason",), None),
         (abstain, ("points",), {"image_pixels": {"x": 1, "y": 2}}),
@@ -174,6 +187,7 @@ def test_make_estimate_refuses_a_zone_without_its_transform():
             1,
             "b",
             annotated_zone=(0, 0, True),
+            frame_index=0,
         )
 
 
@@ -224,6 +238,7 @@ def test_build_records_emits_one_validated_line_per_annotated_pitch():
         "game_pk": 1,
         "method": METHOD,
         "label_source": "assistant_visual_estimate",
+        "video": {"fps_num": 60000, "fps_den": 1001},
         "uncertainty_basis": "test",
         "frames": [
             {
@@ -266,7 +281,12 @@ def test_build_records_emits_one_validated_line_per_annotated_pitch():
     )
     for r in records:
         validate_intent_estimate(r)
+    assert [r["evidence"]["frame_index"] for r in records] == [614, 1229, 1798]
     bad = deepcopy(points)
     bad["frames"][0]["frame_seconds"] = 11.0
     with pytest.raises(ValueError):
         build_records(1, timing, bad)
+    no_fps = deepcopy(points)
+    del no_fps["video"]
+    with pytest.raises(ValueError):
+        build_records(1, timing, no_fps)

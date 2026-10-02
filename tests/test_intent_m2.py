@@ -119,12 +119,14 @@ def test_estimate_reaching_plate_feet_sets_claims_and_clears_the_blocker():
         zone_transform=zone_step,
         plate_feet=zone_to_plate_feet(uv),
         feet_transform=feet_step,
+        frame_index=4510,
     )
-    assert doc["deepest_frame"] == "plate_feet" and doc["blocked_by"] is None
+    assert doc["deepest_frame"] == "plate_feet" and doc["blocked_by"] == "no_batter_zone_bounds"
     assert doc["claims"]["physical_plate_coordinates"] is True
     assert doc["points"]["plate_feet"]["x_convention"] == "statcast_plate_x_catcher_view"
     assert doc["points"]["plate_feet"]["x"] == pytest.approx(-PLATE_WIDTH_FEET * (uv[0] - 0.5))
-    assert doc["points"]["plate_feet"]["y"] == pytest.approx(PLATE_WIDTH_FEET * uv[1])
+    assert set(doc["points"]["plate_feet"]) == {"x", "z", "x_convention"}
+    assert doc["points"]["plate_feet"]["z"] == pytest.approx(PLATE_WIDTH_FEET * uv[1])
     assert feet_step["error_status"] == "unmeasured" and feet_step["error"] is None
     assert json.loads(json.dumps(doc)) == validate_intent_estimate(doc)
     with pytest.raises(IntentEstimateError):
@@ -140,6 +142,7 @@ def test_estimate_reaching_plate_feet_sets_claims_and_clears_the_blocker():
             "test",
             plate_feet=(0.0, 2.0),
             feet_transform=feet_step,
+            frame_index=4510,
         )
 
 
@@ -171,6 +174,7 @@ def _timing_and_points(tmp_path, corners=CORNERS):
         "game_pk": 747139,
         "method": METHOD,
         "label_source": "assistant_visual_estimate",
+        "video": {"fps_num": 60000, "fps_den": 1001},
         "uncertainty_basis": "test",
         "frames": [
             {
@@ -209,7 +213,7 @@ def test_build_records_emits_plate_feet_only_with_a_front_edge_and_marks_the_cal
     )
     assert counters["plate_feet"] == 1 and counters["zone"] == 1
     feet = records[0]["points"]["plate_feet"]
-    assert feet["x"] == pytest.approx(0.0) and feet["y"] == pytest.approx(
+    assert feet["x"] == pytest.approx(0.0) and feet["z"] == pytest.approx(
         54 / 54 * PLATE_WIDTH_FEET
     )
     assert records[0]["transform_chain"][1]["error_status"] == "unmeasured"
@@ -241,7 +245,7 @@ def test_build_records_emits_plate_feet_only_with_a_front_edge_and_marks_the_cal
     assert "per_item" not in chain[1]["evidence"]["calibration"]
     assert chain[1]["evidence"]["camera_tilt_sin"] == 0.15
     expected_z = 1.0 * PLATE_WIDTH_FEET / np.sqrt(1 - 0.15**2) - 2.5 * 0.15 / np.sqrt(1 - 0.15**2)
-    assert records[0]["points"]["plate_feet"]["y"] == pytest.approx(expected_z)
+    assert records[0]["points"]["plate_feet"]["z"] == pytest.approx(expected_z)
     assert load_calibration(tmp_path / "missing.json") is None
     bad = dict(
         calibration,

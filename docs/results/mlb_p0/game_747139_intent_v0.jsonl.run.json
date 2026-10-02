@@ -7,7 +7,7 @@
   "zone": 153,
   "plate_feet": 153,
   "missing_annotation": 0,
-  "elapsed_seconds_this_run": 0.467,
+  "elapsed_seconds_this_run": 0.662,
   "annotation_elapsed": {
     "wall_clock_seconds": 1706.0,
     "basis": "workflow launch to last chunk result (file timestamps), 30 chunks run in parallel; per-frame agent time is not isolated"
@@ -19,6 +19,10 @@
   "label_source": "assistant_visual_estimate",
   "review_status": "unreviewed",
   "frames_verified": true,
+  "frame_index_rule": {
+    "rule": "round(frame_time * fps) of the source video (frames grabbed by time)",
+    "fps": "60000/1001"
+  },
   "plate_calibration": {
     "rms_error_feet": 0.2773810698204491,
     "rms_basis": "human_verified_subset",

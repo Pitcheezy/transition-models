@@ -29,7 +29,12 @@ from intent.plate_feet import (  # noqa: E402
     load_calibration,
     zone_to_plate_feet,
 )
-from intent.schema import make_estimate, make_unavailable, validate_intent_estimate  # noqa: E402
+from intent.schema import (  # noqa: E402
+    frame_index_from_time,
+    make_estimate,
+    make_unavailable,
+    validate_intent_estimate,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
 RESULTS = ROOT / "docs/results/mlb_p0"
@@ -64,6 +69,18 @@ def _sha256(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
+def video_fps(points):
+    """Source frame rate as an integer ratio, from the points file's ``video`` block."""
+    video = points.get("video") or {}
+    num, den = video.get("fps_num"), video.get("fps_den")
+    if not (isinstance(num, int) and isinstance(den, int) and num > 0 and den > 0):
+        raise ValueError(
+            "points file needs video.fps_num and video.fps_den (source frame rate) so that "
+            "evidence.frame_index can be numbered"
+        )
+    return num, den
+
+
 def build_records(
     game_pk, timing, points, *, frames_root=None, verify_frames=False, calibration=None
 ):
@@ -76,6 +93,7 @@ def build_records(
         raise ValueError("point file schema/game mismatch")
     method = points["method"]
     label_source = points["label_source"]
+    fps_num, fps_den = video_fps(points)
     by_key = {}
     for frame in points["frames"]:
         key = (frame["at_bat_number"], frame["pitch_number"])
@@ -103,13 +121,22 @@ def build_records(
         key = (row["at_bat_number"], row["pitch_number"])
         pitch_id = f"{game_pk}:{key[0]}:{key[1]}"
         t = float(row["decision_seconds"])
+        # frames were grabbed by playback time, so the frame number is round(t * fps)
+        frame_index = frame_index_from_time(t, fps_num, fps_den)
         frame = by_key.get(key)
         if frame is None:
             counters["missing_annotation"] += 1
             clip_id, sha = f"{game_pk}:decision_frame:{t:.2f}", "0" * 64
             records.append(
                 make_unavailable(
-                    pitch_id, clip_id, sha, method, t, label_source, "no_point_annotation_for_pitch"
+                    pitch_id,
+                    clip_id,
+                    sha,
+                    method,
+                    t,
+                    label_source,
+                    "no_point_annotation_for_pitch",
+                    frame_index=frame_index,
                 )
             )
             counters["unavailable"] += 1
@@ -125,7 +152,14 @@ def build_records(
         if frame["status"] == "unavailable":
             records.append(
                 make_unavailable(
-                    pitch_id, clip_id, sha, method, t, label_source, frame["unavailable_reason"]
+                    pitch_id,
+                    clip_id,
+                    sha,
+                    method,
+                    t,
+                    label_source,
+                    frame["unavailable_reason"],
+                    frame_index=frame_index,
                 )
             )
             counters["unavailable"] += 1
@@ -208,6 +242,7 @@ def build_records(
                 zone_transform=transform,
                 plate_feet=feet,
                 feet_transform=feet_step,
+                frame_index=frame_index,
             )
         )
         counters["estimated"] += 1
@@ -268,6 +303,10 @@ def main(argv=None):
         "label_source": points["label_source"],
         "review_status": "unreviewed",
         "frames_verified": bool(args.verify_frames),
+        "frame_index_rule": {
+            "rule": "round(frame_time * fps) of the source video (frames grabbed by time)",
+            "fps": "{}/{}".format(*video_fps(points)),
+        },
         "plate_calibration": None
         if calibration is None
         else {

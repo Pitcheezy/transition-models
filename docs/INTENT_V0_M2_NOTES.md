@@ -24,7 +24,7 @@ plate_z_ft =  (17/12) · v / cos θ  −  d0 · tan θ
 - `x_convention = statcast_plate_x_catcher_view`: 포수 시점에서 오른쪽(1루 쪽)이 양수. 중앙 카메라는 투수 쪽에서 포수를 보므로 화면 오른쪽 = 3루 쪽 = 포수의 왼쪽 = 음수 → 부호가 뒤집힌다(우타자가 화면 오른쪽에 서는 것과 일치).
 - 세로 배율 = 가로 배율 ÷ cos θ (핀홀, 정사각 화소). θ는 카메라 하향 틸트.
 - `d0·tan θ`: 미트는 플레이트 앞선보다 d0 ≈ 2.5 ft 뒤에 있어서 같은 높이라도 화면에서 d0·sin θ만큼 높게 보인다(깊이 시차). 공칭 깊이 2.5 ft(가정, 미측정)에 대해 제거한다.
-  → `plate_feet.y`의 목표량은 **미트 자체의 높이**(그 깊이에서)이지, 그 미트로 들어오는 공의 플레이트 앞선 통과 높이가 아니다. 공이 앞선에서 미트까지 떨어지는 양(0.15~0.4 ft)과 상쇄시키지 않는다.
+  → `plate_feet.z`의 목표량은 **미트 자체의 높이**(그 깊이에서)이지, 그 미트로 들어오는 공의 플레이트 앞선 통과 높이가 아니다. 공이 앞선에서 미트까지 떨어지는 양(0.15~0.4 ft)과 상쇄시키지 않는다.
 - 행렬 값(보정 파일에 기록): tilt_sin = 0.1017, d0 = 2.5 → `[[-1.41667, 0, 0.70833], [0, 1.42406, -0.25569], [0, 0, 1]]`. 보정 파일이 없으면 tilt 0·d0 0의 무보정 행렬을 쓰고 transform 단계에 그렇게 적는다.
 
 ## 3. 카메라 상수 측정
@@ -128,3 +128,18 @@ M2의 `rms_error_feet`는 포구 프레임의 공 위치로 잰 값이라 **셋�
 - `python -m intent.human_labels`: 내려받은 라벨을 팩 목록·프레임 해시와 대조해 `game_747139_intent_human_labels_v0.json`(`label_source = human_manual_annotation`)으로 옮기고, `game_747139_intent_setup_check_v0.json`에 에이전트 대 사람 비교를 쓴다: 기권 일치, 미트 픽셀 차이, 사람의 앞선으로 둘 다 피트로 바꾼 차이(미트 판독만의 몫), 각자의 앞선을 쓴 전체 사슬 차이, 앞선 끝 픽셀 차이.
 - 브라우저에서 클릭 좌표가 원본 픽셀로 0.1 px 안에서 돌아오는 것, 내려받은 JSON이 가져오기를 통과하는 것을 확인했다(시험 표시는 지웠다).
 - 이 경기(747139)에서 재는 값은 개발 경기의 판독 오차이며 M3의 다른 경기 정확도가 아니다. 같은 도구를 M3 경기에 그대로 쓴다.
+
+## 8. 계약 조정 (2026-10-02, 서비스 쪽 요청)
+
+서비스 쪽 검사 함수(SongRoute/pitcheezy `apps/observer/backend/observer_app/intent.py`, 커밋 8771c06)에 맞춰 출력과 우리 검사를 바꿨다.
+
+| 항목 | 이전 | 지금 |
+|---|---|---|
+| `evidence.frame_index` | `null` | 원본 영상 프레임 번호(정수). 판단 프레임은 재생 시각으로 뽑았으므로 `round(frame_time × 60000/1001)`; 원본 59.94 fps는 점 파일의 `video` 블록에 기록 |
+| `points.plate_feet` 키 | `x`, `y` | `x`, `z` (Statcast `plate_x`/`plate_z`와 같은 이름), `x_convention`은 그대로 |
+| `plate_feet`에서 멈춘 줄의 `blocked_by` | `null` | `no_batter_zone_bounds` (서비스의 다음 좌표계 zone9에 필요한 타자 존 경계가 없음) |
+| `image_pixels`에서 멈춘 80줄의 `blocked_by` | `no_plate_plane_calibration` | `no_image_plane_calibration` |
+| `annotated_image_zone`에서 멈춘 줄 | `no_plate_plane_calibration` | 그대로 (현재 해당 줄 없음) |
+
+- 서비스 쪽 검사 함수를 읽기 전용으로 가져와 297줄 전부 통과를 확인했다(이전 JSONL은 `frame_index` 때문에 297줄 전부 거부됐다).
+- 좌표 값, 오차, 사람 확인 수는 바뀌지 않았다. 프레임 번호는 ffmpeg가 시각으로 뽑은 실제 프레임과 ±1 차이가 날 수 있다(시각 반올림 규칙의 한계).
