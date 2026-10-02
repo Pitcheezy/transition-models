@@ -321,9 +321,11 @@ def main(argv=None):
         },
         "hop2_parameters": {k: v for k, v in hop2_parameters(calibration).items() if k != "matrix"},
         "caveats": [
-            "evidence.frame_index is derived from the playback time, round(frame_time * fps) "
-            "with the source fps in the points file; the frames were grabbed by time, so the "
-            "number can differ by one from the frame ffmpeg actually decoded.",
+            "evidence.frame_index rule: "
+            + (points.get("video") or {}).get(
+                "frame_index_rule", "round(frame_time * fps) of the source video"
+            )
+            + " (fps from the points file).",
             "annotated_image_zone (v1) is a similarity anchored on the plate's front edge: u along "
             "the 17-inch edge, v up from the ground line, both in plate widths (camera roll and "
             "per-PA width pooled over the M1 corners); plate_feet (v0) scales that by 17/12 ft "

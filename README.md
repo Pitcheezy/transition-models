@@ -192,6 +192,7 @@ uv run --frozen python -m pytest tests/test_intent_v0.py -q
   ```bash
   uv run --frozen python -m intent.calibrate --game 747139   # readings json → calibration json
   ```
+- 시연 경기 849843(2026-10-02): MLB 공식 압축 경기에서 39구를 찾아 의도 v0 JSONL을 만들었다(추정 27, 기권 12, 서비스 검사 39/39 통과). 출처·절차·한계(선정 편향, 낮게 쉬는 글러브)는 [docs/INTENT_V0_DEMO_849843.md](docs/INTENT_V0_DEMO_849843.md).
 - 사람 라벨(M3 준비, 2026-10-02): 아래 첫 명령이 판단 프레임 40장(에이전트 추정 32 + 기권 8, 고르게 분산)을 넣은 라벨링 HTML을 `outputs/intent_label/`(git 제외)에 만든다.
   브라우저로 열어 미트 중심과 플레이트 앞선 양 끝을 클릭하고 JSON을 내려받는다. 에이전트 표시는 보이지 않는다. 두 번째 명령이 라벨을 커밋용 파일로 옮기고 에이전트 판독과 비교한다.
   ```bash
