@@ -1,0 +1,5312 @@
+{
+ "schema": "intent_condensed_scan_v0",
+ "game_pk": 849845,
+ "feed_pitches": 250,
+ "method": "two Claude Code workflow agents per ~80 s range read 2-fps contact sheets (intent/workflows/condensed_scan.js); detections paired by release time (<= 1.5 s) and matched in feed order by half, inning, batter surname and count; ties broken by the post-pitch type/speed graphic, then by the outcome; no-scoreboard detections, unresolved ties and graphic conflicts are left out unless an operator decision (with reason) assigns them (python -m intent.condensed map)",
+ "operator_decisions": [
+  {
+   "release_t": 331,
+   "action": "drop",
+   "status": "dropped_pickoff_not_a_pitch",
+   "reason": "Only reader A listed it. The bug read count 0-1 and Sale P:43, i.e. after pitch 21:1 (Sale had thrown 42 before 21:1). The feed has no second pitch in PA21; it ended on 'Pickoff Caught Stealing 2B' after a pickoff attempt to first, which matches the reader's description of a throw to first and a runner out at second. The delivery seen is the pickoff move."
+  },
+  {
+   "release_t": 547.0,
+   "action": "assign",
+   "at_bat_number": 37,
+   "pitch_number": 5,
+   "status": "resolved_by_pitch_count",
+   "reason": "Both readers read count 1-2 and Luzardo P:65. 37:4 and 37:5 are both 1-2 sweepers at 86.1/85.8 mph, so the graphic cannot separate them; Luzardo had thrown 65 pitches before 37:5 and 64 before 37:4."
+  },
+  {
+   "release_t": 610.75,
+   "action": "assign",
+   "at_bat_number": 42,
+   "pitch_number": 3,
+   "status": "resolved_by_pitch_count",
+   "reason": "The count-based match 42:3 is confirmed: both readers read 1-1 and Sale P:76, and Sale had thrown 76 pitches before 42:3; the readers' single to right matches 'In play, no out'. The conflict is only the type label: the broadcast graphic said FOUR SEAM 97 where Statcast typed the pitch SI 96.8 mph."
+  }
+ ],
+ "summary": {
+  "detections": 58,
+  "usable": 57,
+  "status": {
+   "unique": 48,
+   "resolved_by_pitch_graphic": 5,
+   "resolved_by_outcome": 2,
+   "dropped_pickoff_not_a_pitch": 1,
+   "resolved_by_pitch_count": 2
+  },
+  "pitch_graphic_checked": 57,
+  "pitch_graphic_agrees": 56
+ },
+ "detections": [
+  {
+   "A": {
+    "release_t": 62,
+    "release_bracket": [
+     61.5,
+     62
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 61.5,
+    "half": "top",
+    "inning": 1,
+    "outs": 0,
+    "balls_before": 1,
+    "strikes_before": 2,
+    "batter_text": "1. TURNER",
+    "pitcher_text": "SALE",
+    "pitch_count_text": "P: 3",
+    "post_pitch_graphic": {
+     "type_text": "SLIDER",
+     "mph": 79
+    },
+    "outcome_seen": "swinging strike (Turner swings and misses at 1-2, apparent strikeout)",
+    "confidence": "high",
+    "note": "The CF view runs 60.5-63.5. At 61.5 the arm is still back. At 62.0 the throwing arm is blurred forward, so release is at or just before that frame. The bug reads 1-2 with 0 outs, pitch clock :01. SLIDER 79 MPH replaces the pitcher name from about 63.0. A low-angle replay of this pitch (64.0-66.0) is excluded."
+   },
+   "B": {
+    "release_t": 61.5,
+    "release_bracket": [
+     61.5,
+     62
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 61.5,
+    "half": "top",
+    "inning": 1,
+    "outs": 0,
+    "balls_before": 1,
+    "strikes_before": 2,
+    "batter_text": "1. TURNER",
+    "pitcher_text": "SALE",
+    "pitch_count_text": "P:3",
+    "post_pitch_graphic": {
+     "type_text": "SLIDER",
+     "mph": 79
+    },
+    "outcome_seen": "swinging strike (strikeout swinging; batter ends on one knee)",
+    "confidence": "high",
+    "note": "Bug at 60.5-61.5: P 0 A 0, top 1, both out markers empty, count 1-2. 61.5 pitcher in stride arm back, 62.0 full follow-through with batter already through the swing, so release about 61.6-61.8. SLIDER 79 MPH replaces pitch count at 63.0-63.5. Side-angle replay without bug at 64.0-66.0 shows the miss."
+   },
+   "release_t": 61.75,
+   "readers": "both",
+   "candidates": [
+    "1:1",
+    "1:2",
+    "1:3",
+    "1:4"
+   ],
+   "match": {
+    "at_bat_number": 1,
+    "pitch_number": 4,
+    "play_id": "e6798213-fe89-34cc-a0d1-0c5675b12e8b",
+    "half": "top",
+    "inning": 1,
+    "batter": "Trea Turner",
+    "pitcher": "Chris Sale",
+    "balls_before": 1,
+    "strikes_before": 2,
+    "call": "Swinging Strike"
+   },
+   "match_score": 4,
+   "pitch_graphic": {
+    "seen": [
+     [
+      "SLIDER",
+      79
+     ],
+     [
+      "SLIDER",
+      79
+     ]
+    ],
+    "feed": [
+     "SL",
+     79.3
+    ],
+    "agrees": true
+   },
+   "outcome_consistent": true,
+   "match_status": "unique"
+  },
+  {
+   "A": {
+    "release_t": 69,
+    "release_bracket": [
+     68.5,
+     69
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 68.5,
+    "half": "top",
+    "inning": 1,
+    "outs": 1,
+    "balls_before": 3,
+    "strikes_before": 2,
+    "batter_text": "2. SCHWARBER",
+    "pitcher_text": "SALE",
+    "pitch_count_text": "P: 10",
+    "post_pitch_graphic": {
+     "type_text": "SLIDER",
+     "mph": 80
+    },
+    "outcome_seen": "ball on a checked swing (base umpire signals no swing), apparent walk on 3-2",
+    "confidence": "high",
+    "note": "The CF view runs 68.5-70.5. At 69.0 the pitcher has landed his stride and his arm is blurred. At 69.5 he is in full follow-through and the batter is in a half-swing. The bug reads 3-2 with 1 out, bases empty, pitch clock :02. SLIDER 80 MPH appears at 70.0. The base umpire signals safe/no swing at 71.0-72.0. A side-angle replay of the check swing (72.5-74.5) is excluded. At 78.0 the bug shows a runner on 1st."
+   },
+   "B": {
+    "release_t": 69,
+    "release_bracket": [
+     68.5,
+     69
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 68.5,
+    "half": "top",
+    "inning": 1,
+    "outs": 1,
+    "balls_before": 3,
+    "strikes_before": 2,
+    "batter_text": "2. SCHWARBER",
+    "pitcher_text": "SALE",
+    "pitch_count_text": "P:10",
+    "post_pitch_graphic": {
+     "type_text": "SLIDER",
+     "mph": 80
+    },
+    "outcome_seen": "ball on a check swing (base umpire signals no swing at 71.0-71.5), i.e. ball four / walk",
+    "confidence": "high",
+    "note": "Bug at 68.5-69.5: top 1, one out marker filled, count 3-2, P:10. 68.5 stride, 69.0 arm through with a faint ball blur in front of the plate, 69.5 follow-through with batter checking. SLIDER 80 MPH appears at 70.0. Side-angle replay of the check swing without bug at 72.5-74.5 is excluded."
+   },
+   "release_t": 69.0,
+   "readers": "both",
+   "candidates": [
+    "2:2",
+    "2:3",
+    "2:4",
+    "2:5",
+    "2:6",
+    "2:7"
+   ],
+   "match": {
+    "at_bat_number": 2,
+    "pitch_number": 7,
+    "play_id": "ed0e9ec6-7a93-3a6d-9377-08b48b483190",
+    "half": "top",
+    "inning": 1,
+    "batter": "Kyle Schwarber",
+    "pitcher": "Chris Sale",
+    "balls_before": 3,
+    "strikes_before": 2,
+    "call": "Ball"
+   },
+   "match_score": 4,
+   "pitch_graphic": {
+    "seen": [
+     [
+      "SLIDER",
+      80
+     ],
+     [
+      "SLIDER",
+      80
+     ]
+    ],
+    "feed": [
+     "SL",
+     79.5
+    ],
+    "agrees": true
+   },
+   "outcome_consistent": false,
+   "match_status": "resolved_by_pitch_graphic"
+  },
+  {
+   "A": {
+    "release_t": 79,
+    "release_bracket": [
+     79,
+     79.5
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 78.5,
+    "half": "top",
+    "inning": 1,
+    "outs": 1,
+    "balls_before": 2,
+    "strikes_before": 2,
+    "batter_text": "3. HARPER",
+    "pitcher_text": "SALE",
+    "pitch_count_text": "P: 15",
+    "post_pitch_graphic": {
+     "type_text": "FOUR SEAM",
+     "mph": 100
+    },
+    "outcome_seen": "apparent swinging strike (Harper swings at 2-2, catcher receives the ball; replays after 80 s suggest a swing and miss)",
+    "confidence": "medium",
+    "note": "The CF view runs 78.0-80.0. At 79.0 the stride has landed with the arm still back, so the pitch is just before release. At 79.5 he is in follow-through. Release is about 79.1-79.2 s. The bug reads 2-2 with 1 out, runner on 1st, pitch clock :06. FOUR SEAM 100 MPH appears at 79.5, recorded as shown. The outcome is judged partly from replays at 80.5-86.5, which fall outside this range."
+   },
+   "B": {
+    "release_t": 78.5,
+    "release_bracket": [
+     78,
+     79
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 78,
+    "half": "top",
+    "inning": 1,
+    "outs": 1,
+    "balls_before": 2,
+    "strikes_before": 2,
+    "batter_text": "3. HARPER",
+    "pitcher_text": "SALE",
+    "pitch_count_text": "P:15",
+    "post_pitch_graphic": {
+     "type_text": "FOUR SEAM",
+     "mph": 100
+    },
+    "outcome_seen": "swinging strike (strikeout swinging)",
+    "confidence": "medium",
+    "note": "Bug at 78.0-79.0: top 1, one out, runner on first (base filled), count 2-2, P:15. At 78.0 pitcher strides; at 78.5 his throwing arm is extended forward, about at release; at 79.0 he follows through as the batter swings. Graphic reads FOUR SEAM 100 MPH at 79.5-80.0 (transcribed as shown). Replays after 80.0, outside range, confirm the swing and miss."
+   },
+   "release_t": 78.75,
+   "readers": "both",
+   "candidates": [
+    "3:1",
+    "3:2",
+    "3:3",
+    "3:4",
+    "3:5"
+   ],
+   "match": {
+    "at_bat_number": 3,
+    "pitch_number": 5,
+    "play_id": "66b1288a-6657-3b07-91d2-4f93762fcb52",
+    "half": "top",
+    "inning": 1,
+    "batter": "Bryce Harper",
+    "pitcher": "Chris Sale",
+    "balls_before": 2,
+    "strikes_before": 2,
+    "call": "Swinging Strike"
+   },
+   "match_score": 4,
+   "pitch_graphic": {
+    "seen": [
+     [
+      "FOUR SEAM",
+      100
+     ],
+     [
+      "FOUR SEAM",
+      100
+     ]
+    ],
+    "feed": [
+     "FF",
+     100.0
+    ],
+    "agrees": true
+   },
+   "outcome_consistent": true,
+   "match_status": "unique"
+  },
+  {
+   "A": {
+    "release_t": 93.5,
+    "release_bracket": [
+     93.5,
+     94
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 93.5,
+    "half": "top",
+    "inning": 1,
+    "outs": 2,
+    "balls_before": 2,
+    "strikes_before": 2,
+    "batter_text": "4. BOHM",
+    "pitcher_text": "SALE",
+    "pitch_count_text": "P: 20",
+    "post_pitch_graphic": {
+     "type_text": "FOUR SEAM",
+     "mph": 99
+    },
+    "outcome_seen": "in play: hit, drive off the outfield wall (left-centre) fielded by #23, runner scores (score goes to PHI 1-0)",
+    "confidence": "high",
+    "note": "Centre-field shot starts at 93.5 with pitcher in stride and catcher set; at 94.0 the ball is already at the catcher's mitt, so release about 93.6. Runner on first, pitch clock :02."
+   },
+   "B": {
+    "release_t": 94,
+    "release_bracket": [
+     94,
+     94.5
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 94,
+    "half": "top",
+    "inning": 1,
+    "outs": 2,
+    "balls_before": 2,
+    "strikes_before": 2,
+    "batter_text": "4. BOHM",
+    "pitcher_text": "SALE",
+    "pitch_count_text": "P: 20",
+    "post_pitch_graphic": {
+     "type_text": "FOUR SEAM",
+     "mph": 99
+    },
+    "outcome_seen": "in play: hit to left field (extra-base hit); runner from first scores (score goes P 0 -> P 1)",
+    "confidence": "high",
+    "note": "93.5 leg lift with catcher set, 94.0 striding arm back, 94.5 follow-through with batter already through the swing. Bug at 93.5/94.0: up-arrow 1, two filled out dots, 2-2, runner on first."
+   },
+   "release_t": 93.75,
+   "readers": "both",
+   "candidates": [
+    "4:1",
+    "4:2",
+    "4:3",
+    "4:4",
+    "4:5"
+   ],
+   "match": {
+    "at_bat_number": 4,
+    "pitch_number": 5,
+    "play_id": "1101d66a-0061-3f91-bb19-42ed74b82b58",
+    "half": "top",
+    "inning": 1,
+    "batter": "Alec Bohm",
+    "pitcher": "Chris Sale",
+    "balls_before": 2,
+    "strikes_before": 2,
+    "call": "In play, run(s)"
+   },
+   "match_score": 4,
+   "pitch_graphic": {
+    "seen": [
+     [
+      "FOUR SEAM",
+      99
+     ],
+     [
+      "FOUR SEAM",
+      99
+     ]
+    ],
+    "feed": [
+     "FF",
+     99.1
+    ],
+    "agrees": true
+   },
+   "outcome_consistent": true,
+   "match_status": "unique"
+  },
+  {
+   "A": {
+    "release_t": 116.5,
+    "release_bracket": [
+     116.5,
+     117
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 116.5,
+    "half": "top",
+    "inning": 1,
+    "outs": 2,
+    "balls_before": 0,
+    "strikes_before": 1,
+    "batter_text": "5. HILL",
+    "pitcher_text": "SALE",
+    "pitch_count_text": "P: 22",
+    "post_pitch_graphic": {
+     "type_text": "SLIDER",
+     "mph": 80
+    },
+    "outcome_seen": "in play: ground ball to the infield (batter running at 117.5, infielders fielding at 118.5); half-inning ends, followed by the BOTTOM 1ST graphic",
+    "confidence": "high",
+    "note": "Centre-field view begins at 116.5 with the pitcher in stride and the catcher set. At 117.0 the ball is in flight near the plate. Runner on second, pitch clock :03."
+   },
+   "B": {
+    "release_t": 116.5,
+    "release_bracket": [
+     116.5,
+     117
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 116.5,
+    "half": "top",
+    "inning": 1,
+    "outs": 2,
+    "balls_before": 0,
+    "strikes_before": 1,
+    "batter_text": "5. HILL",
+    "pitcher_text": "SALE",
+    "pitch_count_text": "P: 22",
+    "post_pitch_graphic": {
+     "type_text": "SLIDER",
+     "mph": 80
+    },
+    "outcome_seen": "in play: fly ball to centre field, caught by the centre fielder (120-121.5); 'BOTTOM 1ST' graphic follows",
+    "confidence": "high",
+    "note": "Ball is already in flight near the plate at 117.0, so release is about 116.6-116.8. Bug: P 1 A 0, up-arrow 1, two outs, 0-1, runner on second."
+   },
+   "release_t": 116.5,
+   "readers": "both",
+   "candidates": [
+    "5:1",
+    "5:2"
+   ],
+   "match": {
+    "at_bat_number": 5,
+    "pitch_number": 2,
+    "play_id": "c6344cfd-b6a5-379e-a375-caf5c1bfb76d",
+    "half": "top",
+    "inning": 1,
+    "batter": "Derek Hill",
+    "pitcher": "Chris Sale",
+    "balls_before": 0,
+    "strikes_before": 1,
+    "call": "In play, out(s)"
+   },
+   "match_score": 4,
+   "pitch_graphic": {
+    "seen": [
+     [
+      "SLIDER",
+      80
+     ],
+     [
+      "SLIDER",
+      80
+     ]
+    ],
+    "feed": [
+     "SL",
+     80.1
+    ],
+    "agrees": true
+   },
+   "outcome_consistent": true,
+   "match_status": "unique"
+  },
+  {
+   "A": {
+    "release_t": 132.5,
+    "release_bracket": [
+     132,
+     132.5
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 132,
+    "half": "bottom",
+    "inning": 1,
+    "outs": 0,
+    "balls_before": 2,
+    "strikes_before": 2,
+    "batter_text": "1. BALDWIN",
+    "pitcher_text": "LUZARDO",
+    "pitch_count_text": "P: 4",
+    "post_pitch_graphic": {
+     "type_text": "SWEEPER",
+     "mph": 87
+    },
+    "outcome_seen": "in play: ground ball fielded by a middle infielder, throw to first (apparent groundout; the next batter is shown with 1 out)",
+    "confidence": "medium",
+    "note": "At 132.0 the frame is a dissolve from the batter close-up: the catcher is set, but only faintly visible under the overlay. At 132.5 the pitcher's arm has already come through, and at 133.0 the ball is already off the bat. Score bug read at 132.0 and 132.5."
+   },
+   "B": {
+    "release_t": 132.5,
+    "release_bracket": [
+     132.5,
+     133
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 132.5,
+    "half": "bottom",
+    "inning": 1,
+    "outs": 0,
+    "balls_before": 2,
+    "strikes_before": 2,
+    "batter_text": "1. BALDWIN",
+    "pitcher_text": "LUZARDO",
+    "pitch_count_text": "P: 4",
+    "post_pitch_graphic": {
+     "type_text": "SWEEPER",
+     "mph": 87
+    },
+    "outcome_seen": "in play: ground ball to the right side, fielded by the second baseman, out at first (136-137)",
+    "confidence": "high",
+    "note": "132.0 is a crossfade from a batter close-up, and 132.5 is the first clean centre-field frame (Luzardo mid-stride, arm back). Ball is off the bat at 133.0. Bug: down-arrow 1, no outs, 2-2."
+   },
+   "release_t": 132.5,
+   "readers": "both",
+   "candidates": [
+    "6:1",
+    "6:2",
+    "6:3",
+    "6:4",
+    "6:5"
+   ],
+   "match": {
+    "at_bat_number": 6,
+    "pitch_number": 5,
+    "play_id": "2be30293-0cc4-3755-81f8-b73c2bc46de5",
+    "half": "bottom",
+    "inning": 1,
+    "batter": "Drake Baldwin",
+    "pitcher": "Jesús Luzardo",
+    "balls_before": 2,
+    "strikes_before": 2,
+    "call": "In play, out(s)"
+   },
+   "match_score": 4,
+   "pitch_graphic": {
+    "seen": [
+     [
+      "SWEEPER",
+      87
+     ],
+     [
+      "SWEEPER",
+      87
+     ]
+    ],
+    "feed": [
+     "ST",
+     87.4
+    ],
+    "agrees": true
+   },
+   "outcome_consistent": true,
+   "match_status": "unique"
+  },
+  {
+   "A": {
+    "release_t": 141.5,
+    "release_bracket": [
+     141.5,
+     142
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 141.5,
+    "half": "bottom",
+    "inning": 1,
+    "outs": 1,
+    "balls_before": 0,
+    "strikes_before": 0,
+    "batter_text": "2. ACUÑA JR.",
+    "pitcher_text": "LUZARDO",
+    "pitch_count_text": "P: 5",
+    "post_pitch_graphic": {
+     "type_text": "FOUR SEAM",
+     "mph": 98
+    },
+    "outcome_seen": "in play: fly ball to left field, fielded by the left fielder (apparent fly out; the next batter is shown with 2 outs)",
+    "confidence": "high",
+    "note": "At 141.5 the arm is cocked and the catcher is set. At 142.0 the batter is already swinging through contact. First pitch of the at-bat. Pitch clock :08."
+   },
+   "B": {
+    "release_t": 141.5,
+    "release_bracket": [
+     141.5,
+     142
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 141.5,
+    "half": "bottom",
+    "inning": 1,
+    "outs": 1,
+    "balls_before": 0,
+    "strikes_before": 0,
+    "batter_text": "2. ACUÑA JR.",
+    "pitcher_text": "LUZARDO",
+    "pitch_count_text": "P: 5",
+    "post_pitch_graphic": {
+     "type_text": "FOUR SEAM",
+     "mph": 98
+    },
+    "outcome_seen": "in play: fly ball to centre field, caught by the Phillies centre fielder (143.5-148.5); outs go to 2",
+    "confidence": "high",
+    "note": "The first pitch to Acuna. 141.5 is the only centre-field frame before release (arm cocked), and at 142.0 the batter is through the swing. Bug at 148.0 shows two outs, P: 6."
+   },
+   "release_t": 141.5,
+   "readers": "both",
+   "candidates": [
+    "7:1"
+   ],
+   "match": {
+    "at_bat_number": 7,
+    "pitch_number": 1,
+    "play_id": "77a38af5-a77e-3261-bab7-b4b51058a71a",
+    "half": "bottom",
+    "inning": 1,
+    "batter": "Ronald Acuña Jr.",
+    "pitcher": "Jesús Luzardo",
+    "balls_before": 0,
+    "strikes_before": 0,
+    "call": "In play, out(s)"
+   },
+   "match_score": 4,
+   "pitch_graphic": {
+    "seen": [
+     [
+      "FOUR SEAM",
+      98
+     ],
+     [
+      "FOUR SEAM",
+      98
+     ]
+    ],
+    "feed": [
+     "FF",
+     98.0
+    ],
+    "agrees": true
+   },
+   "outcome_consistent": true,
+   "match_status": "unique"
+  },
+  {
+   "A": {
+    "release_t": 157.5,
+    "release_bracket": [
+     157.5,
+     158
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 157.5,
+    "half": "bottom",
+    "inning": 1,
+    "outs": 2,
+    "balls_before": 0,
+    "strikes_before": 2,
+    "batter_text": "3. OLSON",
+    "pitcher_text": "LUZARDO",
+    "pitch_count_text": "P: 9",
+    "post_pitch_graphic": {
+     "type_text": "SWEEPER",
+     "mph": 88
+    },
+    "outcome_seen": "swinging strike (apparent strikeout: the catcher stands up with the ball and the batter walks away at 158.5-159.5)",
+    "confidence": "high",
+    "note": "Centre-field view starts at 157.5 with the pitcher in stride and the catcher set. At 158.0 the batter is mid-swing."
+   },
+   "B": {
+    "release_t": 157.5,
+    "release_bracket": [
+     157.5,
+     158
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 157.5,
+    "half": "bottom",
+    "inning": 1,
+    "outs": 2,
+    "balls_before": 0,
+    "strikes_before": 2,
+    "batter_text": "3. OLSON",
+    "pitcher_text": "LUZARDO",
+    "pitch_count_text": "P: 9",
+    "post_pitch_graphic": {
+     "type_text": "SWEEPER",
+     "mph": 88
+    },
+    "outcome_seen": "swinging strike (appears to be strike three: batter walks off and catcher stands with the ball, 158.5-159.5)",
+    "confidence": "medium",
+    "note": "At 157.5 the leg is up and the arm is not yet forward; at 158.0 the batter is mid-swing. Release is estimated at about 157.6. A strikeout is inferred from the batter leaving; the bug still shows 0-2 at 159.5."
+   },
+   "release_t": 157.5,
+   "readers": "both",
+   "candidates": [
+    "8:1",
+    "8:2",
+    "8:3",
+    "8:4"
+   ],
+   "match": {
+    "at_bat_number": 8,
+    "pitch_number": 4,
+    "play_id": "18fe0e42-b1bb-38ba-a6fb-fff0b70cf6f2",
+    "half": "bottom",
+    "inning": 1,
+    "batter": "Matt Olson",
+    "pitcher": "Jesús Luzardo",
+    "balls_before": 0,
+    "strikes_before": 2,
+    "call": "Swinging Strike"
+   },
+   "match_score": 4,
+   "pitch_graphic": {
+    "seen": [
+     [
+      "SWEEPER",
+      88
+     ],
+     [
+      "SWEEPER",
+      88
+     ]
+    ],
+    "feed": [
+     "ST",
+     87.5
+    ],
+    "agrees": true
+   },
+   "outcome_consistent": true,
+   "match_status": "resolved_by_outcome"
+  },
+  {
+   "A": {
+    "release_t": 169.5,
+    "release_bracket": [
+     169.5,
+     170
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 169.5,
+    "half": "top",
+    "inning": 2,
+    "outs": 1,
+    "balls_before": 0,
+    "strikes_before": 2,
+    "batter_text": "7. STOTT",
+    "pitcher_text": "SALE",
+    "pitch_count_text": "P:27",
+    "post_pitch_graphic": {
+     "type_text": "SLIDER",
+     "mph": 77
+    },
+    "outcome_seen": "swinging strike (strike three, ball in the dirt per replay; Stott heads toward first, possible dropped third strike)",
+    "confidence": "medium",
+    "note": "CF view starts 169.5 with Sale in stride; at 170.0 ball appears near plate, at 170.5 batter in swing follow-through. Release between 169.5 and 170.0. Close-up replays 172.5-176.5 not counted."
+   },
+   "B": {
+    "release_t": 169.5,
+    "release_bracket": [
+     169.5,
+     170
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 169.5,
+    "half": "top",
+    "inning": 2,
+    "outs": 1,
+    "balls_before": 0,
+    "strikes_before": 2,
+    "batter_text": "7. STOTT",
+    "pitcher_text": "SALE",
+    "pitch_count_text": "P:27",
+    "post_pitch_graphic": {
+     "type_text": "SLIDER",
+     "mph": 77
+    },
+    "outcome_seen": "swinging strike on a slider in the dirt; looks like strike three (Stott's at-bat ends, next batter Sosa comes up with 2 outs), but the bug still shows 0-2, 1 out at 172.0",
+    "confidence": "medium",
+    "note": "At 169.5 Sale is mid-stride. At 170.0 he is in follow-through with the ball near the batter's feet, and at 170.5 the swing is completing. Release is about 169.6-169.8. Frames 172.5-174.5 are a close-up replay of this pitch and are excluded."
+   },
+   "release_t": 169.5,
+   "readers": "both",
+   "candidates": [
+    "10:1",
+    "10:2",
+    "10:3",
+    "10:4"
+   ],
+   "match": {
+    "at_bat_number": 10,
+    "pitch_number": 4,
+    "play_id": "53ec3526-0f24-3417-82d1-b920200d75ca",
+    "half": "top",
+    "inning": 2,
+    "batter": "Bryson Stott",
+    "pitcher": "Chris Sale",
+    "balls_before": 0,
+    "strikes_before": 2,
+    "call": "Swinging Strike"
+   },
+   "match_score": 4,
+   "pitch_graphic": {
+    "seen": [
+     [
+      "SLIDER",
+      77
+     ],
+     [
+      "SLIDER",
+      77
+     ]
+    ],
+    "feed": [
+     "SL",
+     77.0
+    ],
+    "agrees": true
+   },
+   "outcome_consistent": true,
+   "match_status": "resolved_by_pitch_graphic"
+  },
+  {
+   "A": {
+    "release_t": 177.5,
+    "release_bracket": [
+     177,
+     177.5
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 177,
+    "half": "top",
+    "inning": 2,
+    "outs": 2,
+    "balls_before": 0,
+    "strikes_before": 2,
+    "batter_text": "8. SOSA",
+    "pitcher_text": "SALE",
+    "pitch_count_text": "P:30",
+    "post_pitch_graphic": {
+     "type_text": "SLIDER",
+     "mph": 80
+    },
+    "outcome_seen": "check swing, appealed and called strike by base umpire (strikeout, ends top 2nd)",
+    "confidence": "medium",
+    "note": "At 177.5 ball just out of Sale's hand; base umpire rings him up at 180.5-181.5."
+   },
+   "B": {
+    "release_t": 177.5,
+    "release_bracket": [
+     177.5,
+     178
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 177.5,
+    "half": "top",
+    "inning": 2,
+    "outs": 2,
+    "balls_before": 0,
+    "strikes_before": 2,
+    "batter_text": "8. SOSA",
+    "pitcher_text": "SALE",
+    "pitch_count_text": "P:30",
+    "post_pitch_graphic": {
+     "type_text": "SLIDER",
+     "mph": 80
+    },
+    "outcome_seen": "check swing called a strike on appeal (base umpire signals strike at 180.5): strikeout swinging, and the inning ends (MID 2 at 182)",
+    "confidence": "high",
+    "note": "At 177.5 the arm is cocked back with the ball visible in hand. At 178.0 Sale is in follow-through and the batter has a half swing. Release is about 177.7."
+   },
+   "release_t": 177.5,
+   "readers": "both",
+   "candidates": [
+    "11:1",
+    "11:2",
+    "11:3"
+   ],
+   "match": {
+    "at_bat_number": 11,
+    "pitch_number": 3,
+    "play_id": "ab8cd061-2e15-3e61-a803-acc5c6279914",
+    "half": "top",
+    "inning": 2,
+    "batter": "Edmundo Sosa",
+    "pitcher": "Chris Sale",
+    "balls_before": 0,
+    "strikes_before": 2,
+    "call": "Swinging Strike (Blocked)"
+   },
+   "match_score": 4,
+   "pitch_graphic": {
+    "seen": [
+     [
+      "SLIDER",
+      80
+     ],
+     [
+      "SLIDER",
+      80
+     ]
+    ],
+    "feed": [
+     "SL",
+     80.5
+    ],
+    "agrees": true
+   },
+   "outcome_consistent": false,
+   "match_status": "unique"
+  },
+  {
+   "A": {
+    "release_t": 197,
+    "release_bracket": [
+     196.5,
+     197
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 196.5,
+    "half": "bottom",
+    "inning": 2,
+    "outs": 0,
+    "balls_before": 1,
+    "strikes_before": 0,
+    "batter_text": "4. DUBÓN",
+    "pitcher_text": "LUZARDO",
+    "pitch_count_text": "P:11",
+    "post_pitch_graphic": {
+     "type_text": "CHANGEUP",
+     "mph": 87
+    },
+    "outcome_seen": "in play, hit to left-center outfield (Dubón later shown at second base, likely double)",
+    "confidence": "high",
+    "note": "First CF frame 196.5 already in leg lift; follow-through at 197.0, contact by 197.5."
+   },
+   "B": {
+    "release_t": 196.5,
+    "release_bracket": [
+     196.5,
+     197
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 196.5,
+    "half": "bottom",
+    "inning": 2,
+    "outs": 0,
+    "balls_before": 1,
+    "strikes_before": 0,
+    "batter_text": "4. DUBÓN",
+    "pitcher_text": "LUZARDO",
+    "pitch_count_text": "P:11",
+    "post_pitch_graphic": {
+     "type_text": "CHANGEUP",
+     "mph": 87
+    },
+    "outcome_seen": "in play: hit to right/right-centre field; the right fielder chases it to the wall and the batter ends up on second (bug shows a runner on 2nd at 203)",
+    "confidence": "high",
+    "note": "At 196.5 Luzardo is mid-stride with the arm back; at 197.0 he is in follow-through. Release is about 196.7-196.8. Contact is about 197.4. Frames 198-200 follow the ball in the outfield."
+   },
+   "release_t": 196.75,
+   "readers": "both",
+   "candidates": [
+    "12:1",
+    "12:2"
+   ],
+   "match": {
+    "at_bat_number": 12,
+    "pitch_number": 2,
+    "play_id": "cee2d155-4be5-30e5-8704-6906583b92a1",
+    "half": "bottom",
+    "inning": 2,
+    "batter": "Mauricio Dubón",
+    "pitcher": "Jesús Luzardo",
+    "balls_before": 1,
+    "strikes_before": 0,
+    "call": "In play, no out"
+   },
+   "match_score": 4,
+   "pitch_graphic": {
+    "seen": [
+     [
+      "CHANGEUP",
+      87
+     ],
+     [
+      "CHANGEUP",
+      87
+     ]
+    ],
+    "feed": [
+     "CH",
+     86.6
+    ],
+    "agrees": true
+   },
+   "outcome_consistent": true,
+   "match_status": "unique"
+  },
+  {
+   "A": {
+    "release_t": 203,
+    "release_bracket": [
+     203,
+     203.5
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 203,
+    "half": "bottom",
+    "inning": 2,
+    "outs": 0,
+    "balls_before": 0,
+    "strikes_before": 0,
+    "batter_text": "5. HARRIS II",
+    "pitcher_text": "LUZARDO",
+    "pitch_count_text": "P:12",
+    "post_pitch_graphic": {
+     "type_text": "SWEEPER",
+     "mph": 86
+    },
+    "outcome_seen": "bunt in play (sacrifice-type bunt, runner on 2nd advances)",
+    "confidence": "medium",
+    "note": "Pitcher in stride at 203.0, ball near plate at 203.5, bunt contact ~204.0. Wide shots 205-208 show the fielding play."
+   },
+   "B": {
+    "release_t": 203,
+    "release_bracket": [
+     203,
+     203.5
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 203,
+    "half": "bottom",
+    "inning": 2,
+    "outs": 0,
+    "balls_before": 0,
+    "strikes_before": 0,
+    "batter_text": "5. HARRIS II",
+    "pitcher_text": "LUZARDO",
+    "pitch_count_text": "P:12",
+    "post_pitch_graphic": {
+     "type_text": "SWEEPER",
+     "mph": 86
+    },
+    "outcome_seen": "bunt in play (sacrifice); batter thrown out at first, runner advances to third (next batter has 1 out and a runner on 3rd)",
+    "confidence": "high",
+    "note": "At 203.0 the arm is back mid-stride. At 203.5 the ball is in flight near the plate with the batter squared to bunt. Release is about 203.1-203.2. Frames 205-208 are the live fielding play."
+   },
+   "release_t": 203.0,
+   "readers": "both",
+   "candidates": [
+    "13:1"
+   ],
+   "match": {
+    "at_bat_number": 13,
+    "pitch_number": 1,
+    "play_id": "ecd2c83a-5b15-3699-bc50-d5bcd98fba8f",
+    "half": "bottom",
+    "inning": 2,
+    "batter": "Michael Harris II",
+    "pitcher": "Jesús Luzardo",
+    "balls_before": 0,
+    "strikes_before": 0,
+    "call": "In play, out(s)"
+   },
+   "match_score": 4,
+   "pitch_graphic": {
+    "seen": [
+     [
+      "SWEEPER",
+      86
+     ],
+     [
+      "SWEEPER",
+      86
+     ]
+    ],
+    "feed": [
+     "ST",
+     85.6
+    ],
+    "agrees": true
+   },
+   "outcome_consistent": true,
+   "match_status": "unique"
+  },
+  {
+   "A": {
+    "release_t": 213,
+    "release_bracket": [
+     213,
+     213.5
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 213,
+    "half": "bottom",
+    "inning": 2,
+    "outs": 1,
+    "balls_before": 3,
+    "strikes_before": 1,
+    "batter_text": "6. ALBIES",
+    "pitcher_text": "LUZARDO",
+    "pitch_count_text": "P:17",
+    "post_pitch_graphic": {
+     "type_text": "SWEEPER",
+     "mph": 86
+    },
+    "outcome_seen": "ball (high), ball four, walk",
+    "confidence": "high",
+    "note": "Arm cocked at 213.0, ball arriving high at catcher at 213.5. Frames 214-215.5 are aftermath, not a new pitch; WALK graphic 216-219."
+   },
+   "B": {
+    "release_t": 213,
+    "release_bracket": [
+     213,
+     213.5
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 213,
+    "half": "bottom",
+    "inning": 2,
+    "outs": 1,
+    "balls_before": 3,
+    "strikes_before": 1,
+    "batter_text": "6. ALBIES",
+    "pitcher_text": "LUZARDO",
+    "pitch_count_text": "P:17",
+    "post_pitch_graphic": {
+     "type_text": "SWEEPER",
+     "mph": 86
+    },
+    "outcome_seen": "ball (high), ball four: walk (a WALK graphic appears around 217.5)",
+    "confidence": "high",
+    "note": "At 213.0 the arm is up behind the head. At 213.5 the ball is already high at the catcher. Release is about 213.1. The graphic reads SWEEPER 86, the same as the previous pitch's graphic, but this is what the bug shows."
+   },
+   "release_t": 213.0,
+   "readers": "both",
+   "candidates": [
+    "14:1",
+    "14:2",
+    "14:3",
+    "14:4",
+    "14:5"
+   ],
+   "match": {
+    "at_bat_number": 14,
+    "pitch_number": 5,
+    "play_id": "0672ed33-aa55-3624-ae3a-316b99c68ec1",
+    "half": "bottom",
+    "inning": 2,
+    "batter": "Ozzie Albies",
+    "pitcher": "Jesús Luzardo",
+    "balls_before": 3,
+    "strikes_before": 1,
+    "call": "Ball"
+   },
+   "match_score": 4,
+   "pitch_graphic": {
+    "seen": [
+     [
+      "SWEEPER",
+      86
+     ],
+     [
+      "SWEEPER",
+      86
+     ]
+    ],
+    "feed": [
+     "ST",
+     86.0
+    ],
+    "agrees": true
+   },
+   "outcome_consistent": true,
+   "match_status": "unique"
+  },
+  {
+   "A": {
+    "release_t": 229,
+    "release_bracket": [
+     228.5,
+     229
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 228.5,
+    "half": "bottom",
+    "inning": 2,
+    "outs": 1,
+    "balls_before": 1,
+    "strikes_before": 1,
+    "batter_text": "7. RILEY",
+    "pitcher_text": "LUZARDO",
+    "pitch_count_text": "P:20",
+    "post_pitch_graphic": {
+     "type_text": "FOUR SEAM",
+     "mph": 97
+    },
+    "outcome_seen": "in play, chopper/ground ball back toward the mound, followed by a play at the bases",
+    "confidence": "medium",
+    "note": "Stride at 228.5 (preceded by a cross-fade from the wide shot at 228.0), follow-through at 229.0, ball bouncing in front of the mound at 230.0. Runners on 1st and 3rd."
+   },
+   "B": {
+    "release_t": 228.5,
+    "release_bracket": [
+     228.5,
+     229
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 228.5,
+    "half": "bottom",
+    "inning": 2,
+    "outs": 1,
+    "balls_before": 1,
+    "strikes_before": 1,
+    "batter_text": "7. RILEY",
+    "pitcher_text": "LUZARDO",
+    "pitch_count_text": "P:20",
+    "post_pitch_graphic": {
+     "type_text": "FOUR SEAM",
+     "mph": 97
+    },
+    "outcome_seen": "in play: ground ball back to the pitcher (comebacker); Luzardo fields it, followed by a play near first and home (231.5-239.5)",
+    "confidence": "high",
+    "note": "The scene crossfades in at 228.0. At 228.5 the arm is back. At 229.0 Luzardo is in follow-through with the ball near the catcher, and contact is just after. Release is about 228.6-228.7. Runners are on 1st and 3rd."
+   },
+   "release_t": 228.75,
+   "readers": "both",
+   "candidates": [
+    "15:1",
+    "15:2",
+    "15:3"
+   ],
+   "match": {
+    "at_bat_number": 15,
+    "pitch_number": 3,
+    "play_id": "3c54ffe6-80d9-3f04-b8aa-ea456ada6e9d",
+    "half": "bottom",
+    "inning": 2,
+    "batter": "Austin Riley",
+    "pitcher": "Jesús Luzardo",
+    "balls_before": 1,
+    "strikes_before": 1,
+    "call": "In play, out(s)"
+   },
+   "match_score": 4,
+   "pitch_graphic": {
+    "seen": [
+     [
+      "FOUR SEAM",
+      97
+     ],
+     [
+      "FOUR SEAM",
+      97
+     ]
+    ],
+    "feed": [
+     "FF",
+     97.2
+    ],
+    "agrees": true
+   },
+   "outcome_consistent": true,
+   "match_status": "unique"
+  },
+  {
+   "A": {
+    "release_t": 263,
+    "release_bracket": [
+     263,
+     263.5
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 263,
+    "half": "bottom",
+    "inning": 2,
+    "outs": 2,
+    "balls_before": 0,
+    "strikes_before": 0,
+    "batter_text": "8. YASTRZEMSKI",
+    "pitcher_text": "LUZARDO",
+    "pitch_count_text": "P: 21",
+    "post_pitch_graphic": {
+     "type_text": "SINKER",
+     "mph": 98
+    },
+    "outcome_seen": "in play: ground ball hit back up the middle, an infielder dives and the ball gets through (base hit); Braves score goes 0 to 1 by the next pitch",
+    "confidence": "high",
+    "note": "The centre-field camera starts at 262.5 with the pitcher in his leg lift. At 263.0 he is striding, and by 263.5 the ball has already been hit, so release is about 263.0 to 263.2. Runners on 1st and 3rd. Ground-level replay at 270.5-277.5 left out."
+   },
+   "B": {
+    "release_t": 263,
+    "release_bracket": [
+     263,
+     263.5
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 263,
+    "half": "bottom",
+    "inning": 2,
+    "outs": 2,
+    "balls_before": 0,
+    "strikes_before": 0,
+    "batter_text": "8. YASTRZEMSKI",
+    "pitcher_text": "LUZARDO",
+    "pitch_count_text": "P:21",
+    "post_pitch_graphic": {
+     "type_text": "SINKER",
+     "mph": 98
+    },
+    "outcome_seen": "in play: ground ball through the right side past a diving second baseman (single); a runner scores (score goes from P1-A0 to P1-A1 by the next pitch)",
+    "confidence": "high",
+    "note": "CF view 262.5-264.0. At 263.0 the pitcher is in his stride with the arm back. By 263.5 he is in follow-through, the batter has already swung and the ball is visible heading to the right side, so the release is about 263.1. Bug: P 1, A 0, down-arrow 2, two out markers filled, 0-0, pitch clock :09, runners on base. 'SINKER 98 MPH' appears at 264.0."
+   },
+   "release_t": 263.0,
+   "readers": "both",
+   "candidates": [
+    "16:1"
+   ],
+   "match": {
+    "at_bat_number": 16,
+    "pitch_number": 1,
+    "play_id": "0011de1f-3071-3315-9219-7c347c0163a0",
+    "half": "bottom",
+    "inning": 2,
+    "batter": "Mike Yastrzemski",
+    "pitcher": "Jesús Luzardo",
+    "balls_before": 0,
+    "strikes_before": 0,
+    "call": "In play, run(s)"
+   },
+   "match_score": 4,
+   "pitch_graphic": {
+    "seen": [
+     [
+      "SINKER",
+      98
+     ],
+     [
+      "SINKER",
+      98
+     ]
+    ],
+    "feed": [
+     "SI",
+     97.6
+    ],
+    "agrees": true
+   },
+   "outcome_consistent": true,
+   "match_status": "unique"
+  },
+  {
+   "A": {
+    "release_t": 285,
+    "release_bracket": [
+     285,
+     285.5
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 285,
+    "half": "bottom",
+    "inning": 2,
+    "outs": 2,
+    "balls_before": 3,
+    "strikes_before": 2,
+    "batter_text": "9. KIM",
+    "pitcher_text": "LUZARDO",
+    "pitch_count_text": "P: 27",
+    "post_pitch_graphic": {
+     "type_text": "FOUR SEAM",
+     "mph": 98
+    },
+    "outcome_seen": "swinging strike (strikeout on 3-2, the catcher holds the ball); the inning ends and the next segment is TOP 3RD",
+    "confidence": "high",
+    "note": "Bug reads 1-1 with runners on 1st and 3rd. At 285.0 the pitcher is in his stride with the arm cocked, and at 285.5 he is in the follow-through, so release is about 285.2."
+   },
+   "B": {
+    "release_t": 285.5,
+    "release_bracket": [
+     285,
+     285.5
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 285,
+    "half": "bottom",
+    "inning": 2,
+    "outs": 2,
+    "balls_before": 3,
+    "strikes_before": 2,
+    "batter_text": "9. KIM",
+    "pitcher_text": "LUZARDO",
+    "pitch_count_text": "P:27",
+    "post_pitch_graphic": {
+     "type_text": "FOUR SEAM",
+     "mph": 98
+    },
+    "outcome_seen": "swinging strike three (strikeout), which ends the half-inning",
+    "confidence": "high",
+    "note": "CF view 284.0-287.5. At 285.0 the arm is back and the catcher is set. At 285.5 the pitcher is in follow-through with the batter mid-stride, and the swing and miss shows at 286.0. The release is about 285.25 and could round to either frame. Bug: P1 A1, down-arrow 2, 2 outs, 3-2, :10/:09. 'FOUR SEAM 98 MPH' at 287.0. The 'TOP 3RD INNING' graphic follows at 292.5-294.0."
+   },
+   "release_t": 285.25,
+   "readers": "both",
+   "candidates": [
+    "17:1",
+    "17:2",
+    "17:3",
+    "17:4",
+    "17:5",
+    "17:6"
+   ],
+   "match": {
+    "at_bat_number": 17,
+    "pitch_number": 6,
+    "play_id": "337986a1-bc1c-3f75-92ad-7643a6ca7234",
+    "half": "bottom",
+    "inning": 2,
+    "batter": "Ha-Seong Kim",
+    "pitcher": "Jesús Luzardo",
+    "balls_before": 3,
+    "strikes_before": 2,
+    "call": "Foul Tip"
+   },
+   "match_score": 4,
+   "pitch_graphic": {
+    "seen": [
+     [
+      "FOUR SEAM",
+      98
+     ],
+     [
+      "FOUR SEAM",
+      98
+     ]
+    ],
+    "feed": [
+     "FF",
+     98.0
+    ],
+    "agrees": true
+   },
+   "outcome_consistent": true,
+   "match_status": "unique"
+  },
+  {
+   "A": {
+    "release_t": 298,
+    "release_bracket": [
+     298,
+     298.5
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 298,
+    "half": "top",
+    "inning": 3,
+    "outs": 1,
+    "balls_before": 0,
+    "strikes_before": 2,
+    "batter_text": "1. TURNER",
+    "pitcher_text": "SALE",
+    "pitch_count_text": "P: 36",
+    "post_pitch_graphic": {
+     "type_text": "SLIDER",
+     "mph": 80
+    },
+    "outcome_seen": "Batter half-swings or flinches away. On a check-swing appeal at 302.5 the 1B umpire rules no swing. Turner is later standing at first base (310.5-312), so this looks like a hit by pitch, but that is not certain.",
+    "confidence": "medium",
+    "note": "The bug's batter line shows '1. TURNER 0-1' (a game stat line). Bases empty. Count stays 0-2 in the bug after the pitch. Slow-motion side replay at 304-310 left out. Bracket: 298.0 is the stride and 298.5 the follow-through."
+   },
+   "B": {
+    "release_t": 298,
+    "release_bracket": [
+     297.5,
+     298.5
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": false,
+    "setup_t": null,
+    "half": "top",
+    "inning": 3,
+    "outs": 1,
+    "balls_before": 0,
+    "strikes_before": 2,
+    "batter_text": "1. TURNER",
+    "pitcher_text": "SALE",
+    "pitch_count_text": "P:36",
+    "post_pitch_graphic": {
+     "type_text": "SLIDER",
+     "mph": 80
+    },
+    "outcome_seen": "check swing with the ball apparently hitting Turner's hands. The base umpire signals no swing (arms out) and Turner drops the bat and heads toward first, so this looks like a hit by pitch; the official ruling was not shown",
+    "confidence": "medium",
+    "note": "A live behind-the-batter shot (no bug, 295.5-297.0) dissolves into the CF view at 297.5. At 298.0 Sale (#51) is upright at or just past release with the batter striding, and at 298.5 he is in a deep follow-through with the batter's bat out over the plate. The release window is about 297.6-298.2, so the bracket is widened to [297.5, 298.5]. The catcher is clearly set in the CF view only at 298.0, which is not clearly before release, so setup is marked not visible. Bug read at 297.5-298.0: P1 A1, up-arrow 3, 1 out, 0-2, :03, '1. TURNER 0-1', 'SALE P:36'. 'SLIDER 80 MPH' at 299.0. Ump signal at 302.5-303.5."
+   },
+   "release_t": 298.0,
+   "readers": "both",
+   "candidates": [
+    "19:1",
+    "19:2",
+    "19:3"
+   ],
+   "match": {
+    "at_bat_number": 19,
+    "pitch_number": 3,
+    "play_id": "612799c1-f2a5-3752-9297-6e31f9432ca5",
+    "half": "top",
+    "inning": 3,
+    "batter": "Trea Turner",
+    "pitcher": "Chris Sale",
+    "balls_before": 0,
+    "strikes_before": 2,
+    "call": "Hit By Pitch"
+   },
+   "match_score": 4,
+   "pitch_graphic": {
+    "seen": [
+     [
+      "SLIDER",
+      80
+     ],
+     [
+      "SLIDER",
+      80
+     ]
+    ],
+    "feed": [
+     "SL",
+     80.3
+    ],
+    "agrees": true
+   },
+   "outcome_consistent": true,
+   "match_status": "unique"
+  },
+  {
+   "A": {
+    "release_t": 317.5,
+    "release_bracket": [
+     317,
+     317.5
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": false,
+    "setup_t": null,
+    "half": "top",
+    "inning": 3,
+    "outs": 1,
+    "balls_before": 2,
+    "strikes_before": 2,
+    "batter_text": "2. SCHWARBER",
+    "pitcher_text": "SALE",
+    "pitch_count_text": "P: 41",
+    "post_pitch_graphic": {
+     "type_text": "SINKER",
+     "mph": 96
+    },
+    "outcome_seen": "in play: batted ball in the air to the outfield; the pitcher looks up and the batter runs. The result is not visible before 320.",
+    "confidence": "medium",
+    "note": "317.0 is still a close-up of Schwarber. The cut to the centre-field camera at 317.5 lands at or just after release (lefty Sale's arm is already through), so no centre-field setup frame exists before release. Runner on 1st. The bug's batter line shows 'BB' as a stat line."
+   },
+   "B": {
+    "release_t": 317.5,
+    "release_bracket": [
+     317,
+     317.5
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": false,
+    "setup_t": null,
+    "half": "top",
+    "inning": 3,
+    "outs": 1,
+    "balls_before": 2,
+    "strikes_before": 2,
+    "batter_text": "2. SCHWARBER",
+    "pitcher_text": "SALE",
+    "pitch_count_text": "P:41",
+    "post_pitch_graphic": {
+     "type_text": "SINKER",
+     "mph": 96
+    },
+    "outcome_seen": "in play: Schwarber swings and lifts a fly or pop-up, apparently caught in shallow right or foul territory near the first-base line, with Olson (#28) and a teammate jogging in afterward",
+    "confidence": "medium",
+    "note": "A Schwarber close-up dissolves into the CF view: 317.0 is a dissolve with a faint CF layer, and the CF view is clean at 317.5, where Sale is already in follow-through. The batter has swung by 318.0, so the release is about 317.3 during or just after the dissolve, and no clean CF frame of the catcher set before release exists. Bug at 317.0-317.5: P1 A1, up-arrow 3, 1 out, runner on 1st, 2-2, :03, '2. SCHWARBER BB', 'SALE P:41'. 'SINKER 96 MPH' at 318.5. The exact outcome is mostly beyond 320."
+   },
+   "release_t": 317.5,
+   "readers": "both",
+   "candidates": [
+    "20:1",
+    "20:2",
+    "20:3",
+    "20:4",
+    "20:5"
+   ],
+   "match": {
+    "at_bat_number": 20,
+    "pitch_number": 5,
+    "play_id": "c402d571-ffbc-3c29-b434-9eaefd46d075",
+    "half": "top",
+    "inning": 3,
+    "batter": "Kyle Schwarber",
+    "pitcher": "Chris Sale",
+    "balls_before": 2,
+    "strikes_before": 2,
+    "call": "In play, out(s)"
+   },
+   "match_score": 4,
+   "pitch_graphic": {
+    "seen": [
+     [
+      "SINKER",
+      96
+     ],
+     [
+      "SINKER",
+      96
+     ]
+    ],
+    "feed": [
+     "SI",
+     96.3
+    ],
+    "agrees": true
+   },
+   "outcome_consistent": true,
+   "match_status": "unique"
+  },
+  {
+   "A": {
+    "release_t": 331,
+    "release_bracket": [
+     330.5,
+     331
+    ],
+    "camera_at_release": "other",
+    "centre_field_setup_visible": true,
+    "setup_t": 330.5,
+    "half": "top",
+    "inning": 3,
+    "outs": 2,
+    "balls_before": 0,
+    "strikes_before": 1,
+    "batter_text": "3. HARPER",
+    "pitcher_text": "SALE",
+    "pitch_count_text": "P:43",
+    "post_pitch_graphic": null,
+    "outcome_seen": "in play: ground ball to first baseman, throw to second for force out of runner (inning ends)",
+    "confidence": "medium",
+    "note": "CF view shows catcher set at 330.0 and pitcher in leg lift at 330.5; camera cuts to the infield before 331.0, where pitcher is in follow-through and runner from first is heading to second. Release likely about 330.8 to 331.0, at or just before the cut. No pitch-type graphic; the bug kept showing the :04 pitch clock."
+   },
+   "B": null,
+   "release_t": 331,
+   "readers": "A only",
+   "candidates": [
+    "21:1"
+   ],
+   "match": null,
+   "match_score": 2,
+   "pitch_graphic": null,
+   "outcome_consistent": false,
+   "match_status": "dropped_pickoff_not_a_pitch",
+   "resolution": {
+    "action": "drop",
+    "reason": "Only reader A listed it. The bug read count 0-1 and Sale P:43, i.e. after pitch 21:1 (Sale had thrown 42 before 21:1). The feed has no second pitch in PA21; it ended on 'Pickoff Caught Stealing 2B' after a pickoff attempt to first, which matches the reader's description of a throw to first and a runner out at second. The delivery seen is the pickoff move."
+   }
+  },
+  {
+   "A": {
+    "release_t": 359,
+    "release_bracket": [
+     359,
+     359.5
+    ],
+    "camera_at_release": "other",
+    "centre_field_setup_visible": false,
+    "setup_t": null,
+    "half": "bottom",
+    "inning": 3,
+    "outs": 1,
+    "balls_before": 2,
+    "strikes_before": 2,
+    "batter_text": "2. ACUÑA JR.",
+    "pitcher_text": "LUZARDO",
+    "pitch_count_text": "P:38",
+    "post_pitch_graphic": {
+     "type_text": "FOUR SEAM",
+     "mph": 97
+    },
+    "outcome_seen": "in play: ground ball to first baseman, batter out at first",
+    "confidence": "medium",
+    "note": "359.0 is a batter close-up and the CF view first appears at 359.5 with the ball already near the plate, so no CF setup frame exists before release. Release is estimated at about 359.1. Bug read at 359.5 (count 2-2, 1 out)."
+   },
+   "B": {
+    "release_t": 359,
+    "release_bracket": [
+     359,
+     359.5
+    ],
+    "camera_at_release": "other",
+    "centre_field_setup_visible": false,
+    "setup_t": null,
+    "half": "bottom",
+    "inning": 3,
+    "outs": 1,
+    "balls_before": 2,
+    "strikes_before": 2,
+    "batter_text": "2. ACUÑA JR.",
+    "pitcher_text": "LUZARDO",
+    "pitch_count_text": "P:38",
+    "post_pitch_graphic": {
+     "type_text": "FOUR SEAM",
+     "mph": 97
+    },
+    "outcome_seen": "in play: ground ball to the right side, batter thrown out at first (bug then shows 2 outs, 0-0)",
+    "confidence": "medium",
+    "note": "Batter close-up at 359.0 cuts to centre field. By 359.5 the pitcher is already in follow-through and the ball is at the plate, so release was about 359.1, probably before or during the cut. No centre-field frame shows the catcher set before release. Count 2-2 and P:38 read at 359.5. 'FOUR SEAM 97 MPH' appears at 360.5. 361-366 shows the play at first."
+   },
+   "release_t": 359.0,
+   "readers": "both",
+   "candidates": [
+    "23:1",
+    "23:2",
+    "23:3",
+    "23:4",
+    "23:5",
+    "23:6"
+   ],
+   "match": {
+    "at_bat_number": 23,
+    "pitch_number": 6,
+    "play_id": "f8ad0a25-07d4-3dad-ab79-c3aa03158535",
+    "half": "bottom",
+    "inning": 3,
+    "batter": "Ronald Acuña Jr.",
+    "pitcher": "Jesús Luzardo",
+    "balls_before": 2,
+    "strikes_before": 2,
+    "call": "In play, out(s)"
+   },
+   "match_score": 4,
+   "pitch_graphic": {
+    "seen": [
+     [
+      "FOUR SEAM",
+      97
+     ],
+     [
+      "FOUR SEAM",
+      97
+     ]
+    ],
+    "feed": [
+     "FF",
+     97.5
+    ],
+    "agrees": true
+   },
+   "outcome_consistent": true,
+   "match_status": "resolved_by_outcome"
+  },
+  {
+   "A": {
+    "release_t": 372,
+    "release_bracket": [
+     372,
+     372.5
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 372,
+    "half": "bottom",
+    "inning": 3,
+    "outs": 2,
+    "balls_before": 2,
+    "strikes_before": 2,
+    "batter_text": "3. OLSON",
+    "pitcher_text": "LUZARDO",
+    "pitch_count_text": "P:43",
+    "post_pitch_graphic": {
+     "type_text": "SWEEPER",
+     "mph": 88
+    },
+    "outcome_seen": "swinging strike three (strikeout); catcher throws afterward and the inning ends",
+    "confidence": "medium",
+    "note": "Pitcher is in his stride at 372.0 and in follow-through at 372.5 with the batter swinging, so release is about 372.1 to 372.3. The low side-angle footage at 375.0 to 377.0 is a replay of this swing and is not counted."
+   },
+   "B": {
+    "release_t": 372,
+    "release_bracket": [
+     372,
+     372.5
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 372,
+    "half": "bottom",
+    "inning": 3,
+    "outs": 2,
+    "balls_before": 2,
+    "strikes_before": 2,
+    "batter_text": "3. OLSON",
+    "pitcher_text": "LUZARDO",
+    "pitch_count_text": "P:43",
+    "post_pitch_graphic": {
+     "type_text": "SWEEPER",
+     "mph": 88
+    },
+    "outcome_seen": "swinging strike three (strikeout); catcher holds the ball, inning ends and the bug resets to 0-0",
+    "confidence": "high",
+    "note": "Centre-field view from 371.0, leg lift at 371.5, arm cocked at 372.0, follow-through and swing at 372.5. 'SWEEPER 88 MPH' appears at 373.0. The low-angle view at 375.0-377.0 is a replay of this pitch and is not counted."
+   },
+   "release_t": 372.0,
+   "readers": "both",
+   "candidates": [
+    "24:1",
+    "24:2",
+    "24:3",
+    "24:4",
+    "24:5"
+   ],
+   "match": {
+    "at_bat_number": 24,
+    "pitch_number": 5,
+    "play_id": "ad5d042d-9edb-3c87-a0b2-ddcc08584bf2",
+    "half": "bottom",
+    "inning": 3,
+    "batter": "Matt Olson",
+    "pitcher": "Jesús Luzardo",
+    "balls_before": 2,
+    "strikes_before": 2,
+    "call": "Swinging Strike"
+   },
+   "match_score": 4,
+   "pitch_graphic": {
+    "seen": [
+     [
+      "SWEEPER",
+      88
+     ],
+     [
+      "SWEEPER",
+      88
+     ]
+    ],
+    "feed": [
+     "ST",
+     87.8
+    ],
+    "agrees": true
+   },
+   "outcome_consistent": true,
+   "match_status": "unique"
+  },
+  {
+   "A": {
+    "release_t": 382.5,
+    "release_bracket": [
+     382.5,
+     383
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 382.5,
+    "half": "bottom",
+    "inning": 4,
+    "outs": 0,
+    "balls_before": 1,
+    "strikes_before": 2,
+    "batter_text": "4. DUBÓN",
+    "pitcher_text": "LUZARDO",
+    "pitch_count_text": "P:48",
+    "post_pitch_graphic": {
+     "type_text": "FOUR SEAM",
+     "mph": 96
+    },
+    "outcome_seen": "swing, apparently foul (count still 1-2 afterward)",
+    "confidence": "medium",
+    "note": "Arm is cocked back at 382.5 and the batter is swinging at 383.0, so release is about 382.6 to 382.7. Count stayed 1-2 at 384.5. The slow-motion side-angle footage at 385.0 to 388.5 is a replay of this swing and is not counted. 1-1 next to the batter name is game stats, not the count."
+   },
+   "B": {
+    "release_t": 382.5,
+    "release_bracket": [
+     382.5,
+     383
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 382.5,
+    "half": "bottom",
+    "inning": 4,
+    "outs": 0,
+    "balls_before": 1,
+    "strikes_before": 2,
+    "batter_text": "4. DUBÓN",
+    "pitcher_text": "LUZARDO",
+    "pitch_count_text": "P:48",
+    "post_pitch_graphic": {
+     "type_text": "FOUR SEAM",
+     "mph": 96
+    },
+    "outcome_seen": "foul (swing at 383.0, count stays 1-2)",
+    "confidence": "medium",
+    "note": "Dissolve into centre field at 381.5, catcher set at 382.0 and 382.5, arm cocked at 382.5, follow-through and swing at 383.0. 'FOUR SEAM 96 MPH' appears at 383.5-384.5 with the count unchanged at 1-2, so it was most likely a foul. The batter-side view at 385.0-388.5 has no score bug and is a replay, not counted."
+   },
+   "release_t": 382.5,
+   "readers": "both",
+   "candidates": [
+    "28:1",
+    "28:2",
+    "28:3",
+    "28:4",
+    "28:5"
+   ],
+   "match": {
+    "at_bat_number": 28,
+    "pitch_number": 5,
+    "play_id": "91653029-de08-3778-a987-64646a4034e4",
+    "half": "bottom",
+    "inning": 4,
+    "batter": "Mauricio Dubón",
+    "pitcher": "Jesús Luzardo",
+    "balls_before": 1,
+    "strikes_before": 2,
+    "call": "Swinging Strike"
+   },
+   "match_score": 4,
+   "pitch_graphic": {
+    "seen": [
+     [
+      "FOUR SEAM",
+      96
+     ],
+     [
+      "FOUR SEAM",
+      96
+     ]
+    ],
+    "feed": [
+     "FF",
+     95.7
+    ],
+    "agrees": true
+   },
+   "outcome_consistent": false,
+   "match_status": "resolved_by_pitch_graphic"
+  },
+  {
+   "A": {
+    "release_t": 391,
+    "release_bracket": [
+     391,
+     391.5
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 391,
+    "half": "bottom",
+    "inning": 4,
+    "outs": 1,
+    "balls_before": 1,
+    "strikes_before": 1,
+    "batter_text": "5. HARRIS II",
+    "pitcher_text": "LUZARDO",
+    "pitch_count_text": "P:51",
+    "post_pitch_graphic": {
+     "type_text": "SINKER",
+     "mph": 96
+    },
+    "outcome_seen": "in play: batted ball into the outfield near the foul line, outfielder chasing; likely a base hit",
+    "confidence": "medium",
+    "note": "Pitcher is late in his stride at 391.0 and in follow-through at 391.5 with the batter swinging, so release is about 391.2. The slow-motion close-ups at 395.0 to 398.5 are replays of the contact and are not counted. The bug shows SH where the batter's stats would be."
+   },
+   "B": {
+    "release_t": 391,
+    "release_bracket": [
+     391,
+     391.5
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 391,
+    "half": "bottom",
+    "inning": 4,
+    "outs": 1,
+    "balls_before": 1,
+    "strikes_before": 1,
+    "batter_text": "5. HARRIS II",
+    "pitcher_text": "LUZARDO",
+    "pitch_count_text": "P:51",
+    "post_pitch_graphic": {
+     "type_text": "SINKER",
+     "mph": 96
+    },
+    "outcome_seen": "in play: hit down the right-field line, ball rolling in the right-field corner with the right fielder chasing (base hit, likely extra bases)",
+    "confidence": "high",
+    "note": "Centre-field view at 389.5-391.5. Set at 390.0, leg lift at 390.5, arm back at 391.0, follow-through at 391.5. 'SINKER 96 MPH' appears at 392.0. The low-angle views at 395.0-398.5 are a replay and are not counted."
+   },
+   "release_t": 391.0,
+   "readers": "both",
+   "candidates": [
+    "29:1",
+    "29:2",
+    "29:3"
+   ],
+   "match": {
+    "at_bat_number": 29,
+    "pitch_number": 3,
+    "play_id": "0bbdbcd9-934d-357c-9a1e-7f4e0c6bca70",
+    "half": "bottom",
+    "inning": 4,
+    "batter": "Michael Harris II",
+    "pitcher": "Jesús Luzardo",
+    "balls_before": 1,
+    "strikes_before": 1,
+    "call": "In play, no out"
+   },
+   "match_score": 4,
+   "pitch_graphic": {
+    "seen": [
+     [
+      "SINKER",
+      96
+     ],
+     [
+      "SINKER",
+      96
+     ]
+    ],
+    "feed": [
+     "SI",
+     96.4
+    ],
+    "agrees": true
+   },
+   "outcome_consistent": true,
+   "match_status": "unique"
+  },
+  {
+   "A": {
+    "release_t": 402.5,
+    "release_bracket": [
+     402.5,
+     403
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 402.5,
+    "half": "bottom",
+    "inning": 4,
+    "outs": 1,
+    "balls_before": 2,
+    "strikes_before": 1,
+    "batter_text": "6. ALBIES",
+    "pitcher_text": "LUZARDO",
+    "pitch_count_text": "P:55",
+    "post_pitch_graphic": {
+     "type_text": "SINKER",
+     "mph": 96
+    },
+    "outcome_seen": "foul (swing, ball fouled back into the stands; count goes to 2-2)",
+    "confidence": "high",
+    "note": "Cut to CF view at 402.5 with pitcher already striding; at 403.0 batter is swinging, so release is around 402.6. The camera then follows the foul into the seats from 404.5 to 409.0."
+   },
+   "B": {
+    "release_t": 402.5,
+    "release_bracket": [
+     402.5,
+     403
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 402.5,
+    "half": "bottom",
+    "inning": 4,
+    "outs": 1,
+    "balls_before": 2,
+    "strikes_before": 1,
+    "batter_text": "6. ALBIES",
+    "pitcher_text": "LUZARDO",
+    "pitch_count_text": "P:55",
+    "post_pitch_graphic": {
+     "type_text": "SINKER",
+     "mph": 96
+    },
+    "outcome_seen": "foul (swing, ball fouled into the stands down the line)",
+    "confidence": "high",
+    "note": "First CF frame is 402.5 (pitcher mid-delivery, catcher set); at 403.0 batter has finished swing. Runner on 2nd. Next pitch bug shows 2-2, P:56."
+   },
+   "release_t": 402.5,
+   "readers": "both",
+   "candidates": [
+    "30:1",
+    "30:2",
+    "30:3",
+    "30:5",
+    "30:4"
+   ],
+   "match": {
+    "at_bat_number": 30,
+    "pitch_number": 4,
+    "play_id": "fd091cd8-7af4-3dab-8efe-e821e7891f00",
+    "half": "bottom",
+    "inning": 4,
+    "batter": "Ozzie Albies",
+    "pitcher": "Jesús Luzardo",
+    "balls_before": 2,
+    "strikes_before": 1,
+    "call": "Foul"
+   },
+   "match_score": 4,
+   "pitch_graphic": {
+    "seen": [
+     [
+      "SINKER",
+      96
+     ],
+     [
+      "SINKER",
+      96
+     ]
+    ],
+    "feed": [
+     "SI",
+     96.0
+    ],
+    "agrees": true
+   },
+   "outcome_consistent": true,
+   "match_status": "unique"
+  },
+  {
+   "A": {
+    "release_t": 413,
+    "release_bracket": [
+     413,
+     413.5
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 413,
+    "half": "bottom",
+    "inning": 4,
+    "outs": 1,
+    "balls_before": 2,
+    "strikes_before": 2,
+    "batter_text": "6. ALBIES",
+    "pitcher_text": "LUZARDO",
+    "pitch_count_text": "P:56",
+    "post_pitch_graphic": {
+     "type_text": "SWEEPER",
+     "mph": 88
+    },
+    "outcome_seen": "in play: ground ball to the right side of the infield, fielded and play made at first",
+    "confidence": "high",
+    "note": "At 413.5 pitcher is in follow-through and batter is making contact, so release is around 413.1. The 'SWEEPER 88 MPH' graphic is at 415.0. The fielding play runs from 414.5 to 423.5 in wide and fielder views."
+   },
+   "B": {
+    "release_t": 413,
+    "release_bracket": [
+     413,
+     413.5
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 413,
+    "half": "bottom",
+    "inning": 4,
+    "outs": 1,
+    "balls_before": 2,
+    "strikes_before": 2,
+    "batter_text": "6. ALBIES",
+    "pitcher_text": "LUZARDO",
+    "pitch_count_text": "P:56",
+    "post_pitch_graphic": {
+     "type_text": "SWEEPER",
+     "mph": 88
+    },
+    "outcome_seen": "in play: ground ball to right side, out at first (runner advanced to 3rd; next bug shows 2 outs, runner on 3rd)",
+    "confidence": "high",
+    "note": "Batter at contact at 413.5. Frames 418.5-423.5 show other angles of the same play, not new pitches."
+   },
+   "release_t": 413.0,
+   "readers": "both",
+   "candidates": [
+    "30:5"
+   ],
+   "match": {
+    "at_bat_number": 30,
+    "pitch_number": 5,
+    "play_id": "a333e19d-a411-3e31-b945-e036964d8c7e",
+    "half": "bottom",
+    "inning": 4,
+    "batter": "Ozzie Albies",
+    "pitcher": "Jesús Luzardo",
+    "balls_before": 2,
+    "strikes_before": 2,
+    "call": "In play, out(s)"
+   },
+   "match_score": 4,
+   "pitch_graphic": {
+    "seen": [
+     [
+      "SWEEPER",
+      88
+     ],
+     [
+      "SWEEPER",
+      88
+     ]
+    ],
+    "feed": [
+     "ST",
+     87.5
+    ],
+    "agrees": true
+   },
+   "outcome_consistent": true,
+   "match_status": "unique"
+  },
+  {
+   "A": {
+    "release_t": 425,
+    "release_bracket": [
+     425,
+     425.5
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 425,
+    "half": "bottom",
+    "inning": 4,
+    "outs": 2,
+    "balls_before": 0,
+    "strikes_before": 1,
+    "batter_text": "7. RILEY",
+    "pitcher_text": "LUZARDO",
+    "pitch_count_text": "P:58",
+    "post_pitch_graphic": {
+     "type_text": "SWEEPER",
+     "mph": 86
+    },
+    "outcome_seen": "ball (pitch in the dirt, blocked by the catcher, no swing; count goes to 1-1)",
+    "confidence": "high",
+    "note": "Pitch count jumps from P:56 to P:58, so one pitch between the at-bats was edited out. Release is about 425.2. The 'SWEEPER 86 MPH' graphic appears from 426.0. From 432.0 to 437.0 there is a side-angle slow-motion replay of Riley taking a low pitch, with no score bug. It is a replay, not a new pitch."
+   },
+   "B": {
+    "release_t": 425,
+    "release_bracket": [
+     425,
+     425.5
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 425,
+    "half": "bottom",
+    "inning": 4,
+    "outs": 2,
+    "balls_before": 0,
+    "strikes_before": 1,
+    "batter_text": "7. RILEY",
+    "pitcher_text": "LUZARDO",
+    "pitch_count_text": "P:58",
+    "post_pitch_graphic": {
+     "type_text": "SWEEPER",
+     "mph": 86
+    },
+    "outcome_seen": "ball (in the dirt, batter held/checked); count went to 1-1",
+    "confidence": "medium",
+    "note": "Ball seen bouncing near the plate at 426.0. Release is somewhere between 425.0 and 425.5; pitcher at 425.5 is in the same follow-through pose that came about 0.4 s after release on the other pitches. Runner on 3rd."
+   },
+   "release_t": 425.0,
+   "readers": "both",
+   "candidates": [
+    "31:1",
+    "31:2"
+   ],
+   "match": {
+    "at_bat_number": 31,
+    "pitch_number": 2,
+    "play_id": "fb230f81-2ba6-32fb-a4fc-f6552ccad6eb",
+    "half": "bottom",
+    "inning": 4,
+    "batter": "Austin Riley",
+    "pitcher": "Jesús Luzardo",
+    "balls_before": 0,
+    "strikes_before": 1,
+    "call": "Hit By Pitch"
+   },
+   "match_score": 4,
+   "pitch_graphic": {
+    "seen": [
+     [
+      "SWEEPER",
+      86
+     ],
+     [
+      "SWEEPER",
+      86
+     ]
+    ],
+    "feed": [
+     "ST",
+     86.1
+    ],
+    "agrees": true
+   },
+   "outcome_consistent": false,
+   "match_status": "unique"
+  },
+  {
+   "A": {
+    "release_t": 440,
+    "release_bracket": [
+     440,
+     440.5
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 440,
+    "half": "bottom",
+    "inning": 4,
+    "outs": 2,
+    "balls_before": 0,
+    "strikes_before": 1,
+    "batter_text": "8. YASTRZEMSKI",
+    "pitcher_text": "LUZARDO",
+    "pitch_count_text": "P:60",
+    "post_pitch_graphic": {
+     "type_text": "SINKER",
+     "mph": 96
+    },
+    "outcome_seen": "in play: fly ball to the outfield, caught (ends the bottom 4th)",
+    "confidence": "high",
+    "note": "The bug's batter line reads 1-1, but the count box reads 0-1. At 440.5 batter is already at contact, so release is around 440.1. The camera follows the fly to the outfielder from 442.0 to 447.5. The inning ends and the 'TOP 5TH INNING' graphic shows at 452 to 454.5."
+   },
+   "B": {
+    "release_t": 440,
+    "release_bracket": [
+     440,
+     440.5
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 440,
+    "half": "bottom",
+    "inning": 4,
+    "outs": 2,
+    "balls_before": 0,
+    "strikes_before": 1,
+    "batter_text": "8. YASTRZEMSKI",
+    "pitcher_text": "LUZARDO",
+    "pitch_count_text": "P:60",
+    "post_pitch_graphic": {
+     "type_text": "SINKER",
+     "mph": 96
+    },
+    "outcome_seen": "in play: fly ball to outfield, caught (inning-ending out)",
+    "confidence": "high",
+    "note": "Runners on 1st and 3rd. Camera follows fly ball 442-446; then switch to top 5th."
+   },
+   "release_t": 440.0,
+   "readers": "both",
+   "candidates": [
+    "32:1",
+    "32:2"
+   ],
+   "match": {
+    "at_bat_number": 32,
+    "pitch_number": 2,
+    "play_id": "90a66d37-3c37-387a-9193-0633a3e19625",
+    "half": "bottom",
+    "inning": 4,
+    "batter": "Mike Yastrzemski",
+    "pitcher": "Jesús Luzardo",
+    "balls_before": 0,
+    "strikes_before": 1,
+    "call": "In play, out(s)"
+   },
+   "match_score": 4,
+   "pitch_graphic": {
+    "seen": [
+     [
+      "SINKER",
+      96
+     ],
+     [
+      "SINKER",
+      96
+     ]
+    ],
+    "feed": [
+     "SI",
+     96.1
+    ],
+    "agrees": true
+   },
+   "outcome_consistent": true,
+   "match_status": "unique"
+  },
+  {
+   "A": {
+    "release_t": 467,
+    "release_bracket": [
+     467,
+     467.5
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 467,
+    "half": "top",
+    "inning": 5,
+    "outs": 0,
+    "balls_before": 1,
+    "strikes_before": 2,
+    "batter_text": "6. DE LA CRUZ",
+    "pitcher_text": "SALE",
+    "pitch_count_text": "P:54",
+    "post_pitch_graphic": {
+     "type_text": "SLIDER",
+     "mph": 79
+    },
+    "outcome_seen": "swinging strike three (strikeout; 'K' graphic and 'Sale - 5 strikeouts')",
+    "confidence": "high",
+    "note": "From 462.5 to 466.5 a behind-home-plate view shows the pitcher set on the rubber but not delivering. At 467.0 the CF view cuts in with the pitcher mid-stride. At 467.5 the ball is almost at the plate, so release is around 467.1. Pitcher is Sale #51."
+   },
+   "B": {
+    "release_t": 467,
+    "release_bracket": [
+     467,
+     467.5
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 467,
+    "half": "top",
+    "inning": 5,
+    "outs": 0,
+    "balls_before": 1,
+    "strikes_before": 2,
+    "batter_text": "6. DE LA CRUZ",
+    "pitcher_text": "SALE",
+    "pitch_count_text": "P:54",
+    "post_pitch_graphic": {
+     "type_text": "SLIDER",
+     "mph": 79
+    },
+    "outcome_seen": "swinging strike three (strikeout; K graphic at 470.5)",
+    "confidence": "high",
+    "note": "Ball already in flight near the plate at 467.5, so release is right after 467.0. The 462.5-466.5 behind-home-plate shot has no score bug and no delivery; Sale only stands on the mound."
+   },
+   "release_t": 467.0,
+   "readers": "both",
+   "candidates": [
+    "33:1",
+    "33:2",
+    "33:3",
+    "33:4"
+   ],
+   "match": {
+    "at_bat_number": 33,
+    "pitch_number": 4,
+    "play_id": "65f65bb2-ed6d-30d2-8652-254ae622e114",
+    "half": "top",
+    "inning": 5,
+    "batter": "Bryan De La Cruz",
+    "pitcher": "Chris Sale",
+    "balls_before": 1,
+    "strikes_before": 2,
+    "call": "Swinging Strike"
+   },
+   "match_score": 4,
+   "pitch_graphic": {
+    "seen": [
+     [
+      "SLIDER",
+      79
+     ],
+     [
+      "SLIDER",
+      79
+     ]
+    ],
+    "feed": [
+     "SL",
+     78.9
+    ],
+    "agrees": true
+   },
+   "outcome_consistent": true,
+   "match_status": "unique"
+  },
+  {
+   "A": {
+    "release_t": 480.5,
+    "release_bracket": [
+     480.5,
+     481
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 480.5,
+    "half": "top",
+    "inning": 5,
+    "outs": 1,
+    "balls_before": 2,
+    "strikes_before": 2,
+    "batter_text": "7. STOTT 0-1",
+    "pitcher_text": "SALE",
+    "pitch_count_text": "P:59",
+    "post_pitch_graphic": {
+     "type_text": "FOUR SEAM",
+     "mph": 96
+    },
+    "outcome_seen": "swinging strike, apparently strike three (Stott swings through, catcher gloves ball in replay; scoreboard later shows Sale IP 4.2, i.e. 2 outs)",
+    "confidence": "high",
+    "note": "CF shot starts at 480.0 with leg lift already under way; at 480.5 the arm is cocked, at 481.0 follow-through and batter mid-swing. Release around 480.6-480.7 s. Bug shows 2-2 before the pitch; one of two out markers filled."
+   },
+   "B": {
+    "release_t": 481,
+    "release_bracket": [
+     480.5,
+     481
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 480,
+    "half": "top",
+    "inning": 5,
+    "outs": 1,
+    "balls_before": 2,
+    "strikes_before": 2,
+    "batter_text": "7. STOTT",
+    "pitcher_text": "SALE",
+    "pitch_count_text": "P:59",
+    "post_pitch_graphic": {
+     "type_text": "FOUR SEAM",
+     "mph": 96
+    },
+    "outcome_seen": "swinging strike, apparently strike three (batter swings through; next live pitch shows 2 outs and a new batter, Sosa)",
+    "confidence": "high",
+    "note": "CF view starts at 480.0 with Sale set and catcher crouched; 481.0 shows the stride/arm already through and the batter mid-swing; 481.5 shows the swing finished. Bug before the pitch: top 5, 1 out, 2-2, pitch clock :03. FOUR SEAM 96 MPH replaced the pitcher name at 482.0. Release likely about 480.8-481.0."
+   },
+   "release_t": 480.75,
+   "readers": "both",
+   "candidates": [
+    "34:1",
+    "34:2",
+    "34:3",
+    "34:4",
+    "34:5"
+   ],
+   "match": {
+    "at_bat_number": 34,
+    "pitch_number": 5,
+    "play_id": "c910486b-04d4-3699-b816-356d655aa8a1",
+    "half": "top",
+    "inning": 5,
+    "batter": "Bryson Stott",
+    "pitcher": "Chris Sale",
+    "balls_before": 2,
+    "strikes_before": 2,
+    "call": "Swinging Strike"
+   },
+   "match_score": 4,
+   "pitch_graphic": {
+    "seen": [
+     [
+      "FOUR SEAM",
+      96
+     ],
+     [
+      "FOUR SEAM",
+      96
+     ]
+    ],
+    "feed": [
+     "FF",
+     95.9
+    ],
+    "agrees": true
+   },
+   "outcome_consistent": true,
+   "match_status": "unique"
+  },
+  {
+   "A": {
+    "release_t": 497,
+    "release_bracket": [
+     497,
+     497.5
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 497,
+    "half": "top",
+    "inning": 5,
+    "outs": 2,
+    "balls_before": 0,
+    "strikes_before": 2,
+    "batter_text": "8. SOSA 0-1",
+    "pitcher_text": "SALE",
+    "pitch_count_text": "P:65",
+    "post_pitch_graphic": {
+     "type_text": "CHANGEUP",
+     "mph": 90
+    },
+    "outcome_seen": "in play: hit down the left-field line, batter reaches second (double); bug later shows runner on 2nd and 0-0",
+    "confidence": "high",
+    "note": "At 497.0 pitcher in stride with arm back; at 497.5 the ball is already near the plate, so release is about 497.1. No bases occupied before the pitch."
+   },
+   "B": {
+    "release_t": 497.5,
+    "release_bracket": [
+     497,
+     498
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 497,
+    "half": "top",
+    "inning": 5,
+    "outs": 2,
+    "balls_before": 0,
+    "strikes_before": 2,
+    "batter_text": "8. SOSA",
+    "pitcher_text": "SALE",
+    "pitch_count_text": "P:65",
+    "post_pitch_graphic": {
+     "type_text": "CHANGEUP",
+     "mph": 90
+    },
+    "outcome_seen": "in play: hit to left field; the batter reaches second base (looks like a double; the bug shows first base occupied, then second)",
+    "confidence": "high",
+    "note": "At 497.5 Sale is in his stride with the arm coming through; by 498.0 the batter has already made contact. Bug before the pitch: top 5, 2 outs, 0-2, P:65, clock :04. CHANGEUP 90 MPH showed from 498.5."
+   },
+   "release_t": 497.25,
+   "readers": "both",
+   "candidates": [
+    "35:1",
+    "35:2",
+    "35:3",
+    "35:4",
+    "35:5",
+    "35:6"
+   ],
+   "match": {
+    "at_bat_number": 35,
+    "pitch_number": 6,
+    "play_id": "f73a22fd-0923-31b6-8854-f1a953809e00",
+    "half": "top",
+    "inning": 5,
+    "batter": "Edmundo Sosa",
+    "pitcher": "Chris Sale",
+    "balls_before": 0,
+    "strikes_before": 2,
+    "call": "In play, no out"
+   },
+   "match_score": 4,
+   "pitch_graphic": {
+    "seen": [
+     [
+      "CHANGEUP",
+      90
+     ],
+     [
+      "CHANGEUP",
+      90
+     ]
+    ],
+    "feed": [
+     "CH",
+     89.6
+    ],
+    "agrees": true
+   },
+   "outcome_consistent": true,
+   "match_status": "resolved_by_pitch_graphic"
+  },
+  {
+   "A": {
+    "release_t": 525.5,
+    "release_bracket": [
+     525,
+     525.5
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 525,
+    "half": "top",
+    "inning": 5,
+    "outs": 2,
+    "balls_before": 2,
+    "strikes_before": 2,
+    "batter_text": "9. REALMUTO 0-1",
+    "pitcher_text": "SALE",
+    "pitch_count_text": "P:70",
+    "post_pitch_graphic": {
+     "type_text": "SLIDER",
+     "mph": 81
+    },
+    "outcome_seen": "swinging strike three: strikeout ends the top 5th (scoreboard shows STRIKEOUT, then MID 5)",
+    "confidence": "high",
+    "note": "At 525.5 the ball is just out of Sale's hand (visible next to his hand), so release is about 525.4. Runner on second. SLIDER 81 MPH graphic at 527.5."
+   },
+   "B": {
+    "release_t": 525.5,
+    "release_bracket": [
+     525.5,
+     526
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 525,
+    "half": "top",
+    "inning": 5,
+    "outs": 2,
+    "balls_before": 2,
+    "strikes_before": 2,
+    "batter_text": "9. REALMUTO",
+    "pitcher_text": "SALE",
+    "pitch_count_text": "P:70",
+    "post_pitch_graphic": {
+     "type_text": "SLIDER",
+     "mph": 81
+    },
+    "outcome_seen": "swinging strike three, strikeout (the scoreboard shows STRIKEOUT and the half-inning ends; BOTTOM 5TH graphic at 531.5)",
+    "confidence": "high",
+    "note": "At 525.5 the arm is fully back with the ball still in hand; at 526.0 Sale is in follow-through and the batter has swung, so release is about 525.6-525.7. Bug before the pitch: top 5, 2 outs, runner on 2nd, 2-2, P:70, clock :06. SLIDER 81 MPH at 527.5, with the count reset to 0-0."
+   },
+   "release_t": 525.5,
+   "readers": "both",
+   "candidates": [
+    "36:1",
+    "36:2",
+    "36:3",
+    "36:4",
+    "36:5"
+   ],
+   "match": {
+    "at_bat_number": 36,
+    "pitch_number": 5,
+    "play_id": "e74c2b1e-4980-3e3b-b84a-b0da13264cc2",
+    "half": "top",
+    "inning": 5,
+    "batter": "J.T. Realmuto",
+    "pitcher": "Chris Sale",
+    "balls_before": 2,
+    "strikes_before": 2,
+    "call": "Swinging Strike"
+   },
+   "match_score": 4,
+   "pitch_graphic": {
+    "seen": [
+     [
+      "SLIDER",
+      81
+     ],
+     [
+      "SLIDER",
+      81
+     ]
+    ],
+    "feed": [
+     "SL",
+     81.5
+    ],
+    "agrees": true
+   },
+   "outcome_consistent": true,
+   "match_status": "unique"
+  },
+  {
+   "A": {
+    "release_t": 547,
+    "release_bracket": [
+     547,
+     547.5
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 547,
+    "half": "bottom",
+    "inning": 5,
+    "outs": 0,
+    "balls_before": 1,
+    "strikes_before": 2,
+    "batter_text": "9. KIM 0-1",
+    "pitcher_text": "LUZARDO",
+    "pitch_count_text": "P:65",
+    "post_pitch_graphic": {
+     "type_text": "SWEEPER",
+     "mph": 86
+    },
+    "outcome_seen": "swing, likely foul ball (count stays 1-2, pitcher asks for a new ball afterwards)",
+    "confidence": "medium",
+    "note": "CF shot starts at 547.0 with Luzardo in stride; at 547.5 the ball is near the plate, so release is about 547.1. The release time is high confidence. The outcome is only medium: no replay was shown, and foul is inferred from the count not changing and the pitcher getting a new ball."
+   },
+   "B": {
+    "release_t": 547,
+    "release_bracket": [
+     547,
+     547.5
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 547,
+    "half": "bottom",
+    "inning": 5,
+    "outs": 0,
+    "balls_before": 1,
+    "strikes_before": 2,
+    "batter_text": "9. KIM",
+    "pitcher_text": "LUZARDO",
+    "pitch_count_text": "P:65",
+    "post_pitch_graphic": {
+     "type_text": "SWEEPER",
+     "mph": 86
+    },
+    "outcome_seen": "swinging strike (Kim swings through; the catcher holds the ball and Kim walks away, which looks like a strikeout, though the bug count was not seen to update)",
+    "confidence": "medium",
+    "note": "The CF view starts at 547.0 with Luzardo already in his stride and the catcher set, so the only setup frame is 547.0. At 547.5 the ball is already near the catcher's glove, so release is about 547.1. Bug before the pitch: bottom 5, 0 outs, 1-2, P:65, clock :09. SWEEPER 86 MPH from 548.5."
+   },
+   "release_t": 547.0,
+   "readers": "both",
+   "candidates": [
+    "37:1",
+    "37:2",
+    "37:3",
+    "37:4",
+    "37:5"
+   ],
+   "match": {
+    "at_bat_number": 37,
+    "pitch_number": 5,
+    "play_id": "4aea6992-e4a7-3e13-9177-6d5707af96c5",
+    "half": "bottom",
+    "inning": 5,
+    "batter": "Ha-Seong Kim",
+    "pitcher": "Jesús Luzardo",
+    "balls_before": 1,
+    "strikes_before": 2,
+    "call": "Swinging Strike (Blocked)"
+   },
+   "match_score": 4,
+   "pitch_graphic": {
+    "seen": [
+     [
+      "SWEEPER",
+      86
+     ],
+     [
+      "SWEEPER",
+      86
+     ]
+    ],
+    "feed": [
+     "ST",
+     86.1
+    ],
+    "agrees": true
+   },
+   "outcome_consistent": true,
+   "match_status": "resolved_by_pitch_count",
+   "resolution": {
+    "action": "assign",
+    "reason": "Both readers read count 1-2 and Luzardo P:65. 37:4 and 37:5 are both 1-2 sweepers at 86.1/85.8 mph, so the graphic cannot separate them; Luzardo had thrown 65 pitches before 37:5 and 64 before 37:4."
+   }
+  },
+  {
+   "A": {
+    "release_t": 563,
+    "release_bracket": [
+     562.5,
+     563
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 562.5,
+    "half": "bottom",
+    "inning": 5,
+    "outs": 1,
+    "balls_before": 2,
+    "strikes_before": 2,
+    "batter_text": "I. BALDWIN 0-2",
+    "pitcher_text": "LUZARDO",
+    "pitch_count_text": "P:71",
+    "post_pitch_graphic": {
+     "type_text": "FOUR SEAM",
+     "mph": 96
+    },
+    "outcome_seen": "called strike three (umpire rings him up at ~565.0)",
+    "confidence": "high",
+    "note": "Centre-field shot starts 562.0 after pitcher close-up; 566.0-569.5 side-angle replay and 570.0-573.0 centre-field replay without score bug are replays of this pitch, excluded."
+   },
+   "B": {
+    "release_t": 562.5,
+    "release_bracket": [
+     562.5,
+     563
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 562.5,
+    "half": "bottom",
+    "inning": 5,
+    "outs": 1,
+    "balls_before": 2,
+    "strikes_before": 2,
+    "batter_text": "1. BALDWIN",
+    "pitcher_text": "LUZARDO",
+    "pitch_count_text": "P:71",
+    "post_pitch_graphic": {
+     "type_text": "FOUR SEAM",
+     "mph": 96
+    },
+    "outcome_seen": "check swing; catcher appeals and the umpire signals. Looks like strike three (the next pitch shows 2 outs and a new batter)",
+    "confidence": "medium",
+    "note": "At 562.5 the pitcher is in his stride with the arm back. At 563.0 he is in follow-through and the ball is not visible. Score bug read at 562.0-562.5 shows 2-2 and :08 on the pitch clock. The low-angle replay at 566-569.5 and the centre-field replay with a yellow pitch trace and no score bug at 570-573 are both replays of this pitch, so they are not counted."
+   },
+   "release_t": 562.75,
+   "readers": "both",
+   "candidates": [
+    "38:1",
+    "38:2",
+    "38:3",
+    "38:4",
+    "38:5",
+    "38:6"
+   ],
+   "match": {
+    "at_bat_number": 38,
+    "pitch_number": 6,
+    "play_id": "f8280355-461c-31ce-a35b-22eb7984eac3",
+    "half": "bottom",
+    "inning": 5,
+    "batter": "Drake Baldwin",
+    "pitcher": "Jesús Luzardo",
+    "balls_before": 2,
+    "strikes_before": 2,
+    "call": "Called Strike"
+   },
+   "match_score": 4,
+   "pitch_graphic": {
+    "seen": [
+     [
+      "FOUR SEAM",
+      96
+     ],
+     [
+      "FOUR SEAM",
+      96
+     ]
+    ],
+    "feed": [
+     "FF",
+     96.0
+    ],
+    "agrees": true
+   },
+   "outcome_consistent": true,
+   "match_status": "unique"
+  },
+  {
+   "A": {
+    "release_t": 577.5,
+    "release_bracket": [
+     577,
+     577.5
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 577,
+    "half": "bottom",
+    "inning": 5,
+    "outs": 2,
+    "balls_before": 2,
+    "strikes_before": 0,
+    "batter_text": "2. ACUÑA JR. 0-2",
+    "pitcher_text": "LUZARDO",
+    "pitch_count_text": "P:74",
+    "post_pitch_graphic": {
+     "type_text": "SWEEPER",
+     "mph": 85
+    },
+    "outcome_seen": "sweeper in the dirt, Acuña half-swings, ball bounces away from catcher; umpire appears to signal swing/strike",
+    "confidence": "medium",
+    "note": "Ball visible mid-flight at 577.5. Outcome call uncertain (check swing). 581.0-583.5 side-angle replay without bug excluded. Acuña's PA result not shown; he is on 1st for next batter."
+   },
+   "B": {
+    "release_t": 577,
+    "release_bracket": [
+     577,
+     577.5
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 577,
+    "half": "bottom",
+    "inning": 5,
+    "outs": 2,
+    "balls_before": 2,
+    "strikes_before": 0,
+    "batter_text": "2. ACUÑA JR.",
+    "pitcher_text": "LUZARDO",
+    "pitch_count_text": "P:74",
+    "post_pitch_graphic": {
+     "type_text": "SWEEPER",
+     "mph": 85
+    },
+    "outcome_seen": "pitch in the dirt; batter jumps and lifts his foot, and the umpire raises his hands. Appears to be a hit by pitch on the foot: Acuña heads toward first, and the next batter has a runner on first",
+    "confidence": "medium",
+    "note": "At 577.5 the ball is near the plate, so release is about 577.1. The low-angle replay at 581-583.5 has no score bug and shows the ball near Acuña's foot. It is a replay, so it is not counted."
+   },
+   "release_t": 577.25,
+   "readers": "both",
+   "candidates": [
+    "39:1",
+    "39:2",
+    "39:3"
+   ],
+   "match": {
+    "at_bat_number": 39,
+    "pitch_number": 3,
+    "play_id": "d39b8189-eecf-3845-82ea-10b9db52a2fb",
+    "half": "bottom",
+    "inning": 5,
+    "batter": "Ronald Acuña Jr.",
+    "pitcher": "Jesús Luzardo",
+    "balls_before": 2,
+    "strikes_before": 0,
+    "call": "Hit By Pitch"
+   },
+   "match_score": 4,
+   "pitch_graphic": {
+    "seen": [
+     [
+      "SWEEPER",
+      85
+     ],
+     [
+      "SWEEPER",
+      85
+     ]
+    ],
+    "feed": [
+     "ST",
+     85.4
+    ],
+    "agrees": true
+   },
+   "outcome_consistent": true,
+   "match_status": "unique"
+  },
+  {
+   "A": {
+    "release_t": 588.5,
+    "release_bracket": [
+     588,
+     588.5
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 588,
+    "half": "bottom",
+    "inning": 5,
+    "outs": 2,
+    "balls_before": 1,
+    "strikes_before": 0,
+    "batter_text": "3. OLSON 0-2",
+    "pitcher_text": "LUZARDO",
+    "pitch_count_text": "P:76",
+    "post_pitch_graphic": {
+     "type_text": "FOUR SEAM",
+     "mph": 96
+    },
+    "outcome_seen": "in play: ball to the first-base side, first baseman fields near the bag; inning ends (Luzardo line graphic follows)",
+    "confidence": "medium",
+    "note": "Runner on 1st. Centre-field shot begins 588.0 with pitcher already in delivery; outcome type (grounder vs pop) not fully clear from frames."
+   },
+   "B": {
+    "release_t": 588,
+    "release_bracket": [
+     588,
+     588.5
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 588,
+    "half": "bottom",
+    "inning": 5,
+    "outs": 2,
+    "balls_before": 1,
+    "strikes_before": 0,
+    "batter_text": "3. OLSON",
+    "pitcher_text": "LUZARDO",
+    "pitch_count_text": "P:76",
+    "post_pitch_graphic": {
+     "type_text": "FOUR SEAM",
+     "mph": 96
+    },
+    "outcome_seen": "in play: ground ball to the first baseman, who takes it to the bag for the third out (bug shows END 5 at 593)",
+    "confidence": "high",
+    "note": "There is a runner on 1st. At 588.5 the ball is already near the catcher, so release is about 588.05. A dugout shot and the TOP 6TH graphic follow at 599-607."
+   },
+   "release_t": 588.25,
+   "readers": "both",
+   "candidates": [
+    "40:1",
+    "40:2"
+   ],
+   "match": {
+    "at_bat_number": 40,
+    "pitch_number": 2,
+    "play_id": "c76d5884-bcb6-3a0f-a209-f1cd503cd62e",
+    "half": "bottom",
+    "inning": 5,
+    "batter": "Matt Olson",
+    "pitcher": "Jesús Luzardo",
+    "balls_before": 1,
+    "strikes_before": 0,
+    "call": "In play, out(s)"
+   },
+   "match_score": 4,
+   "pitch_graphic": {
+    "seen": [
+     [
+      "FOUR SEAM",
+      96
+     ],
+     [
+      "FOUR SEAM",
+      96
+     ]
+    ],
+    "feed": [
+     "FF",
+     96.1
+    ],
+    "agrees": true
+   },
+   "outcome_consistent": true,
+   "match_status": "unique"
+  },
+  {
+   "A": {
+    "release_t": 611,
+    "release_bracket": [
+     610.5,
+     611
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 610.5,
+    "half": "top",
+    "inning": 6,
+    "outs": 1,
+    "balls_before": 1,
+    "strikes_before": 1,
+    "batter_text": "2. SCHWARBER 0-1",
+    "pitcher_text": "SALE",
+    "pitch_count_text": "P:76",
+    "post_pitch_graphic": {
+     "type_text": "FOUR SEAM",
+     "mph": 97
+    },
+    "outcome_seen": "in play: ground ball through the right side past diving second baseman, single",
+    "confidence": "high",
+    "note": "616.5-619.5 low-angle replay without bug excluded."
+   },
+   "B": {
+    "release_t": 610.5,
+    "release_bracket": [
+     610.5,
+     611
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 610.5,
+    "half": "top",
+    "inning": 6,
+    "outs": 1,
+    "balls_before": 1,
+    "strikes_before": 1,
+    "batter_text": "2. SCHWARBER",
+    "pitcher_text": "SALE",
+    "pitch_count_text": "P:76",
+    "post_pitch_graphic": {
+     "type_text": "FOUR SEAM",
+     "mph": 97
+    },
+    "outcome_seen": "in play: ground ball past the diving first baseman into right field, a single (Schwarber reaches first at 615)",
+    "confidence": "high",
+    "note": "The pitcher is Sale (#51). The bug's '0-1' after SCHWARBER is his game line, not the count. Field-level shots of Schwarber at 616-619.5 come after the play and do not show a pitch."
+   },
+   "release_t": 610.75,
+   "readers": "both",
+   "candidates": [
+    "42:1",
+    "42:2",
+    "42:3"
+   ],
+   "match": {
+    "at_bat_number": 42,
+    "pitch_number": 3,
+    "play_id": "e1577482-8e5a-3f14-b8ed-5d024827f99a",
+    "half": "top",
+    "inning": 6,
+    "batter": "Kyle Schwarber",
+    "pitcher": "Chris Sale",
+    "balls_before": 1,
+    "strikes_before": 1,
+    "call": "In play, no out"
+   },
+   "match_score": 4,
+   "pitch_graphic": {
+    "seen": [
+     [
+      "FOUR SEAM",
+      97
+     ],
+     [
+      "FOUR SEAM",
+      97
+     ]
+    ],
+    "feed": [
+     "SI",
+     96.8
+    ],
+    "agrees": false
+   },
+   "outcome_consistent": true,
+   "match_status": "resolved_by_pitch_count",
+   "resolution": {
+    "action": "assign",
+    "reason": "The count-based match 42:3 is confirmed: both readers read 1-1 and Sale P:76, and Sale had thrown 76 pitches before 42:3; the readers' single to right matches 'In play, no out'. The conflict is only the type label: the broadcast graphic said FOUR SEAM 97 where Statcast typed the pitch SI 96.8 mph."
+   }
+  },
+  {
+   "A": {
+    "release_t": 622,
+    "release_bracket": [
+     622,
+     622.5
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 622,
+    "half": "top",
+    "inning": 6,
+    "outs": 1,
+    "balls_before": 2,
+    "strikes_before": 0,
+    "batter_text": "3. HARPER 0-2",
+    "pitcher_text": "SALE",
+    "pitch_count_text": "P:79",
+    "post_pitch_graphic": {
+     "type_text": "SLIDER",
+     "mph": 78
+    },
+    "outcome_seen": "swung, long fly ball toward right-field foul pole; apparently foul (Harper still batting afterwards)",
+    "confidence": "medium",
+    "note": "Shot dissolves in at 621.5; at 622.0 arm cocked, at 622.5 swing done. Runner on 1st. 630.0-636.5 Harper close-up and pole replay without bug excluded."
+   },
+   "B": {
+    "release_t": 622,
+    "release_bracket": [
+     622,
+     622.5
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 622,
+    "half": "top",
+    "inning": 6,
+    "outs": 1,
+    "balls_before": 2,
+    "strikes_before": 0,
+    "batter_text": "3. HARPER",
+    "pitcher_text": "SALE",
+    "pitch_count_text": "P:79",
+    "post_pitch_graphic": {
+     "type_text": "SLIDER",
+     "mph": 78
+    },
+    "outcome_seen": "swing, long fly ball to the left-field corner that lands in the seats near the foul pole. Looks foul: no home-run reaction, and the next shown pitch has the count at 2-2",
+    "confidence": "medium",
+    "note": "At 621.5 the shot cross-fades from a Harper close-up, but the catcher's setup is visible. The runner is on 1st. At 622.0 the arm is cocked; at 622.5 Harper is mid-swing. The fly-ball and crowd shots at 623-636.5 are the live play and reactions, not new pitches. P:79 here and P:81 at the next shown pitch mean one pitch was skipped."
+   },
+   "release_t": 622.0,
+   "readers": "both",
+   "candidates": [
+    "43:1",
+    "43:2",
+    "43:4",
+    "43:5",
+    "43:3"
+   ],
+   "match": {
+    "at_bat_number": 43,
+    "pitch_number": 3,
+    "play_id": "1d4fabd7-6c5b-38d9-bfa3-e693e449ed9c",
+    "half": "top",
+    "inning": 6,
+    "batter": "Bryce Harper",
+    "pitcher": "Chris Sale",
+    "balls_before": 2,
+    "strikes_before": 0,
+    "call": "Foul"
+   },
+   "match_score": 4,
+   "pitch_graphic": {
+    "seen": [
+     [
+      "SLIDER",
+      78
+     ],
+     [
+      "SLIDER",
+      78
+     ]
+    ],
+    "feed": [
+     "SL",
+     78.3
+    ],
+    "agrees": true
+   },
+   "outcome_consistent": false,
+   "match_status": "unique"
+  },
+  {
+   "A": {
+    "release_t": 637,
+    "release_bracket": [
+     637,
+     637.5
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 637,
+    "half": "top",
+    "inning": 6,
+    "outs": 1,
+    "balls_before": 2,
+    "strikes_before": 2,
+    "batter_text": "3. HARPER 0-2",
+    "pitcher_text": "SALE",
+    "pitch_count_text": "P:81",
+    "post_pitch_graphic": {
+     "type_text": "SLIDER",
+     "mph": 82
+    },
+    "outcome_seen": "swinging strike three (strikeout), Harper walks away",
+    "confidence": "medium",
+    "note": "Live shot starts at 637.0 right as pitcher is releasing; release may be just before 637.0 or between 637.0 and 637.5. Intermediate 2-1 pitch skipped by the condensed game."
+   },
+   "B": {
+    "release_t": 636.5,
+    "release_bracket": [
+     636.5,
+     637
+    ],
+    "camera_at_release": "other",
+    "centre_field_setup_visible": false,
+    "setup_t": null,
+    "half": "top",
+    "inning": 6,
+    "outs": 1,
+    "balls_before": 2,
+    "strikes_before": 2,
+    "batter_text": "3. HARPER",
+    "pitcher_text": "SALE",
+    "pitch_count_text": "P:81",
+    "post_pitch_graphic": {
+     "type_text": "SLIDER",
+     "mph": 82
+    },
+    "outcome_seen": "swinging; Harper swings through and walks away as the catcher stands. Appears to be a strikeout",
+    "confidence": "low",
+    "note": "The frame at 636.5 is a crowd/stands shot with no score bug. The first centre-field frame, at 637.0, already shows Sale in follow-through with the ball near the plate, so release is about 636.6 and the cut falls inside the bracket. The camera at release is uncertain: the last frame before release is the stands shot. The score bug (2-2, P:81) was read at 637.0, just after release, because no pre-release frame has the bug."
+   },
+   "release_t": 636.75,
+   "readers": "both",
+   "candidates": [
+    "43:4",
+    "43:5"
+   ],
+   "match": {
+    "at_bat_number": 43,
+    "pitch_number": 5,
+    "play_id": "92f2f576-6d7b-3ccf-a5f5-2cb869e6670a",
+    "half": "top",
+    "inning": 6,
+    "batter": "Bryce Harper",
+    "pitcher": "Chris Sale",
+    "balls_before": 2,
+    "strikes_before": 2,
+    "call": "Swinging Strike"
+   },
+   "match_score": 4,
+   "pitch_graphic": {
+    "seen": [
+     [
+      "SLIDER",
+      82
+     ],
+     [
+      "SLIDER",
+      82
+     ]
+    ],
+    "feed": [
+     "SL",
+     82.4
+    ],
+    "agrees": true
+   },
+   "outcome_consistent": true,
+   "match_status": "unique"
+  },
+  {
+   "A": {
+    "release_t": 645.5,
+    "release_bracket": [
+     645.5,
+     646
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 645.5,
+    "half": "top",
+    "inning": 6,
+    "outs": 2,
+    "balls_before": 1,
+    "strikes_before": 0,
+    "batter_text": "4. BOHM",
+    "pitcher_text": "SALE",
+    "pitch_count_text": "P:83",
+    "post_pitch_graphic": {
+     "type_text": "CHANGEUP",
+     "mph": 91
+    },
+    "outcome_seen": "in play: ground ball to the left side, force out at second base (inning ends)",
+    "confidence": "high",
+    "note": "At 645.5 the pitcher is in his stride with the arm back. By 646.0 he is in follow-through and the ball is near the plate. The bug shows a runner on first and pitch clock :05."
+   },
+   "B": {
+    "release_t": 645.5,
+    "release_bracket": [
+     645.5,
+     646
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 645.5,
+    "half": "top",
+    "inning": 6,
+    "outs": 2,
+    "balls_before": 1,
+    "strikes_before": 0,
+    "batter_text": "4. BOHM 1-2",
+    "pitcher_text": "SALE",
+    "pitch_count_text": "P:83",
+    "post_pitch_graphic": {
+     "type_text": "CHANGEUP",
+     "mph": 91
+    },
+    "outcome_seen": "in play: ground ball to the left side of the infield, throw to second for a force play that ends the half-inning",
+    "confidence": "high",
+    "note": "The centre-field shot starts at 645.5 with the pitcher already striding and the catcher set. At 646.0 the ball is at the plate, so release is about 645.6. The bug at 645.5 shows a runner on first."
+   },
+   "release_t": 645.5,
+   "readers": "both",
+   "candidates": [
+    "44:1",
+    "44:2"
+   ],
+   "match": {
+    "at_bat_number": 44,
+    "pitch_number": 2,
+    "play_id": "85a33aca-8911-39b1-a8a6-411f7526f53e",
+    "half": "top",
+    "inning": 6,
+    "batter": "Alec Bohm",
+    "pitcher": "Chris Sale",
+    "balls_before": 1,
+    "strikes_before": 0,
+    "call": "In play, out(s)"
+   },
+   "match_score": 4,
+   "pitch_graphic": {
+    "seen": [
+     [
+      "CHANGEUP",
+      91
+     ],
+     [
+      "CHANGEUP",
+      91
+     ]
+    ],
+    "feed": [
+     "CH",
+     91.4
+    ],
+    "agrees": true
+   },
+   "outcome_consistent": true,
+   "match_status": "unique"
+  },
+  {
+   "A": {
+    "release_t": 666.5,
+    "release_bracket": [
+     666,
+     666.5
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 666,
+    "half": "bottom",
+    "inning": 6,
+    "outs": 0,
+    "balls_before": 1,
+    "strikes_before": 2,
+    "batter_text": "4. DUBÓN",
+    "pitcher_text": "MCFARLANE",
+    "pitch_count_text": "P:3",
+    "post_pitch_graphic": {
+     "type_text": "FOUR SEAM",
+     "mph": 101
+    },
+    "outcome_seen": "swinging strike three (strikeout); the ball is in the catcher's glove at 667.0",
+    "confidence": "high",
+    "note": "The broadcaster's bug changed style after the BOTTOM 6TH graphic and now has an NL WILD CARD header. The '1-2' next to DUBÓN is his game line; the count is also 1-2. K graphic at 669.5. The release is very close to 666.5, since the follow-through is complete in that frame."
+   },
+   "B": {
+    "release_t": 666.5,
+    "release_bracket": [
+     666,
+     666.5
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 666,
+    "half": "bottom",
+    "inning": 6,
+    "outs": 0,
+    "balls_before": 1,
+    "strikes_before": 2,
+    "batter_text": "4. DUBÓN 1-2",
+    "pitcher_text": "MCFARLANE",
+    "pitch_count_text": "P:3",
+    "post_pitch_graphic": {
+     "type_text": "FOUR SEAM",
+     "mph": 101
+    },
+    "outcome_seen": "swinging strike three, a strikeout (K graphic at 669.5-670)",
+    "confidence": "high",
+    "note": "Set at 665.0, leg lift at 665.5, stride at 666.0, follow-through at 666.5 with the batter not yet swung, and the swing done by 667.0. Release is about 666.3. The replay of this strikeout at 671.5-675 is not counted."
+   },
+   "release_t": 666.5,
+   "readers": "both",
+   "candidates": [
+    "45:1",
+    "45:2",
+    "45:3",
+    "45:4"
+   ],
+   "match": {
+    "at_bat_number": 45,
+    "pitch_number": 4,
+    "play_id": "4896d3e0-4547-34eb-9563-2aa3baa0bb74",
+    "half": "bottom",
+    "inning": 6,
+    "batter": "Mauricio Dubón",
+    "pitcher": "Alex McFarlane",
+    "balls_before": 1,
+    "strikes_before": 2,
+    "call": "Swinging Strike"
+   },
+   "match_score": 4,
+   "pitch_graphic": {
+    "seen": [
+     [
+      "FOUR SEAM",
+      101
+     ],
+     [
+      "FOUR SEAM",
+      101
+     ]
+    ],
+    "feed": [
+     "FF",
+     101.1
+    ],
+    "agrees": true
+   },
+   "outcome_consistent": true,
+   "match_status": "unique"
+  },
+  {
+   "A": {
+    "release_t": 680,
+    "release_bracket": [
+     680,
+     680.5
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 680,
+    "half": "bottom",
+    "inning": 6,
+    "outs": 1,
+    "balls_before": 0,
+    "strikes_before": 1,
+    "batter_text": "5. HARRIS II",
+    "pitcher_text": "MCFARLANE",
+    "pitch_count_text": "P:5",
+    "post_pitch_graphic": {
+     "type_text": "SINKER",
+     "mph": 102
+    },
+    "outcome_seen": "in play: base hit to the outfield; batter reaches first (bug shows a runner on first afterward)",
+    "confidence": "medium",
+    "note": "At 680.0 the pitcher is still in the delivery with the arm back. At 680.5 he is in follow-through and the batter has already swung and made contact, so the release is about 680.1-680.3."
+   },
+   "B": {
+    "release_t": 680.5,
+    "release_bracket": [
+     680,
+     680.5
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 680,
+    "half": "bottom",
+    "inning": 6,
+    "outs": 1,
+    "balls_before": 0,
+    "strikes_before": 1,
+    "batter_text": "5. HARRIS II 1-1",
+    "pitcher_text": "MCFARLANE",
+    "pitch_count_text": "P:5",
+    "post_pitch_graphic": {
+     "type_text": "SINKER",
+     "mph": 102
+    },
+    "outcome_seen": "in play: batted ball to the outfield, a hit (batter on first, count reset to 0-0 at 683.5)",
+    "confidence": "medium",
+    "note": "Stride at 680.0, follow-through at 680.5 with the batter still loading. Release is about 680.2-680.3, between the two frames, so 680.0 is also possible."
+   },
+   "release_t": 680.25,
+   "readers": "both",
+   "candidates": [
+    "46:1",
+    "46:2"
+   ],
+   "match": {
+    "at_bat_number": 46,
+    "pitch_number": 2,
+    "play_id": "cb976ae6-9368-3785-a570-1f1803017c21",
+    "half": "bottom",
+    "inning": 6,
+    "batter": "Michael Harris II",
+    "pitcher": "Alex McFarlane",
+    "balls_before": 0,
+    "strikes_before": 1,
+    "call": "In play, no out"
+   },
+   "match_score": 4,
+   "pitch_graphic": {
+    "seen": [
+     [
+      "SINKER",
+      102
+     ],
+     [
+      "SINKER",
+      102
+     ]
+    ],
+    "feed": [
+     "SI",
+     101.6
+    ],
+    "agrees": true
+   },
+   "outcome_consistent": true,
+   "match_status": "unique"
+  },
+  {
+   "A": {
+    "release_t": 687,
+    "release_bracket": [
+     686.5,
+     687
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 686.5,
+    "half": "bottom",
+    "inning": 6,
+    "outs": 1,
+    "balls_before": 1,
+    "strikes_before": 1,
+    "batter_text": "6. ALBIES",
+    "pitcher_text": "MCFARLANE",
+    "pitch_count_text": "P:8",
+    "post_pitch_graphic": {
+     "type_text": "FOUR SEAM",
+     "mph": 99
+    },
+    "outcome_seen": "in play: deep fly ball off the top of the outfield wall, extra-base hit; the runner from first appears to score, and the batter ends up around second",
+    "confidence": "high",
+    "note": "The bug shows a runner on first and pitch clock :06. At 686.5 the pitcher is in his stride; at 687.0 he is in follow-through and the batter is swinging."
+   },
+   "B": {
+    "release_t": 686.5,
+    "release_bracket": [
+     686,
+     686.5
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": false,
+    "setup_t": null,
+    "half": "bottom",
+    "inning": 6,
+    "outs": 1,
+    "balls_before": 1,
+    "strikes_before": 1,
+    "batter_text": "6. ALBIES 0-1",
+    "pitcher_text": "MCFARLANE",
+    "pitch_count_text": "P:8",
+    "post_pitch_graphic": {
+     "type_text": "FOUR SEAM",
+     "mph": 99
+    },
+    "outcome_seen": "in play: deep fly ball to the left/left-centre wall, off the wall or the glove of a leaping fielder, a hit (runners on 1st and 2nd, 1 out, P:9 at 696)",
+    "confidence": "medium",
+    "note": "The cut from the batter close-up (686.0, no bug) to the centre-field shot falls between 686.0 and 686.5. At 686.5 the pitcher is already in follow-through, so release falls inside the cut and the camera at the moment of release is not certain. No centre-field setup frame before release. The bug was read at 686.5 and 687.0, after release but before the count changed. Runner on first."
+   },
+   "release_t": 686.75,
+   "readers": "both",
+   "candidates": [
+    "47:1",
+    "47:2",
+    "47:3"
+   ],
+   "match": {
+    "at_bat_number": 47,
+    "pitch_number": 3,
+    "play_id": "b027e643-e98b-38ee-9e90-a8285211c905",
+    "half": "bottom",
+    "inning": 6,
+    "batter": "Ozzie Albies",
+    "pitcher": "Alex McFarlane",
+    "balls_before": 1,
+    "strikes_before": 1,
+    "call": "In play, run(s)"
+   },
+   "match_score": 4,
+   "pitch_graphic": {
+    "seen": [
+     [
+      "FOUR SEAM",
+      99
+     ],
+     [
+      "FOUR SEAM",
+      99
+     ]
+    ],
+    "feed": [
+     "FF",
+     99.3
+    ],
+    "agrees": true
+   },
+   "outcome_consistent": true,
+   "match_status": "unique"
+  },
+  {
+   "A": {
+    "release_t": 725,
+    "release_bracket": [
+     725,
+     725.5
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 725,
+    "half": "bottom",
+    "inning": 6,
+    "outs": 1,
+    "balls_before": 2,
+    "strikes_before": 1,
+    "batter_text": "7. RILEY",
+    "pitcher_text": "MCFARLANE",
+    "pitch_count_text": "P:12",
+    "post_pitch_graphic": {
+     "type_text": "SINKER",
+     "mph": 101
+    },
+    "outcome_seen": "in play: ground ball to right side, pitcher covers first, batter (#27) out at first; runner from first advances",
+    "confidence": "high",
+    "note": "725.0 arm cocked, 725.5 follow-through with batter mid-swing; CF view starts at 725.0 with catcher set. Next bug shows 2 outs."
+   },
+   "B": {
+    "release_t": 725,
+    "release_bracket": [
+     725,
+     725.5
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 725,
+    "half": "bottom",
+    "inning": 6,
+    "outs": 1,
+    "balls_before": 2,
+    "strikes_before": 1,
+    "batter_text": "7. RILEY",
+    "pitcher_text": "MCFARLANE",
+    "pitch_count_text": "P:12",
+    "post_pitch_graphic": {
+     "type_text": "SINKER",
+     "mph": 101
+    },
+    "outcome_seen": "in play: ground ball, batter Riley out at first (play at first base with fielder covering)",
+    "confidence": "high",
+    "note": "Cut into CF view at 725.0 with pitcher arm back and catcher set; at 725.5 follow-through and batter swinging. Bug shows runner on third. SINKER 101 MPH replaces pitcher name at 726.0."
+   },
+   "release_t": 725.0,
+   "readers": "both",
+   "candidates": [
+    "48:1",
+    "48:2",
+    "48:3",
+    "48:4"
+   ],
+   "match": {
+    "at_bat_number": 48,
+    "pitch_number": 4,
+    "play_id": "14420e07-a4b9-3295-a6f8-8f11473387c7",
+    "half": "bottom",
+    "inning": 6,
+    "batter": "Austin Riley",
+    "pitcher": "Alex McFarlane",
+    "balls_before": 2,
+    "strikes_before": 1,
+    "call": "In play, out(s)"
+   },
+   "match_score": 4,
+   "pitch_graphic": {
+    "seen": [
+     [
+      "SINKER",
+      101
+     ],
+     [
+      "SINKER",
+      101
+     ]
+    ],
+    "feed": [
+     "SI",
+     100.5
+    ],
+    "agrees": true
+   },
+   "outcome_consistent": true,
+   "match_status": "unique"
+  },
+  {
+   "A": {
+    "release_t": 733,
+    "release_bracket": [
+     733,
+     733.5
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 732.5,
+    "half": "bottom",
+    "inning": 6,
+    "outs": 2,
+    "balls_before": 0,
+    "strikes_before": 2,
+    "batter_text": "8. YASTRZEMSKI",
+    "pitcher_text": "MCFARLANE",
+    "pitch_count_text": "P:15",
+    "post_pitch_graphic": {
+     "type_text": "FOUR SEAM",
+     "mph": 99
+    },
+    "outcome_seen": "batter takes, appears called strike three (umpire signals, inning ends, cut to Braves dugout then TOP 7TH card)",
+    "confidence": "medium",
+    "note": "732.5 is a crossfade into CF view with catcher set; 733.0 arm cocked, 733.5 ball arriving at catcher, no swing. Strike call inferred from umpire gesture and inning ending."
+   },
+   "B": {
+    "release_t": 733,
+    "release_bracket": [
+     733,
+     733.5
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 733,
+    "half": "bottom",
+    "inning": 6,
+    "outs": 2,
+    "balls_before": 0,
+    "strikes_before": 2,
+    "batter_text": "8. YASTRZEMSKI",
+    "pitcher_text": "MCFARLANE",
+    "pitch_count_text": "P:15",
+    "post_pitch_graphic": {
+     "type_text": "FOUR SEAM",
+     "mph": 99
+    },
+    "outcome_seen": "swinging strike, strikeout (inning ends; next segment is the top 7th)",
+    "confidence": "medium",
+    "note": "732.5 is a dissolve into CF view. Ball near the catcher at 733.5; batter in swing finish at 734.0. The swing-vs-take call is from the batter's posture only."
+   },
+   "release_t": 733.0,
+   "readers": "both",
+   "candidates": [
+    "49:1",
+    "49:2",
+    "49:3"
+   ],
+   "match": {
+    "at_bat_number": 49,
+    "pitch_number": 3,
+    "play_id": "cb0d814e-1bbc-308b-a4c7-5c80100acfe4",
+    "half": "bottom",
+    "inning": 6,
+    "batter": "Mike Yastrzemski",
+    "pitcher": "Alex McFarlane",
+    "balls_before": 0,
+    "strikes_before": 2,
+    "call": "Swinging Strike"
+   },
+   "match_score": 4,
+   "pitch_graphic": {
+    "seen": [
+     [
+      "FOUR SEAM",
+      99
+     ],
+     [
+      "FOUR SEAM",
+      99
+     ]
+    ],
+    "feed": [
+     "FF",
+     99.5
+    ],
+    "agrees": true
+   },
+   "outcome_consistent": true,
+   "match_status": "unique"
+  },
+  {
+   "A": {
+    "release_t": 754,
+    "release_bracket": [
+     754,
+     754.5
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 753.5,
+    "half": "top",
+    "inning": 7,
+    "outs": 0,
+    "balls_before": 0,
+    "strikes_before": 1,
+    "batter_text": "5. HILL",
+    "pitcher_text": "SALE",
+    "pitch_count_text": "P:85",
+    "post_pitch_graphic": {
+     "type_text": "CHANGEUP",
+     "mph": 87
+    },
+    "outcome_seen": "swinging strike (low pitch, near dirt); count goes to 0-2",
+    "confidence": "high",
+    "note": "754.0 arm back, 754.5 follow-through with batter swinging; bug updates to 0-2 by 756.5."
+   },
+   "B": {
+    "release_t": 754,
+    "release_bracket": [
+     754,
+     754.5
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 754,
+    "half": "top",
+    "inning": 7,
+    "outs": 0,
+    "balls_before": 0,
+    "strikes_before": 1,
+    "batter_text": "5. HILL",
+    "pitcher_text": "SALE",
+    "pitch_count_text": "P:85",
+    "post_pitch_graphic": {
+     "type_text": "CHANGEUP",
+     "mph": 87
+    },
+    "outcome_seen": "strike (count went 0-1 to 0-2); batter appears to swing and miss on a low pitch",
+    "confidence": "medium",
+    "note": "Ball low at the catcher at 754.5; bat high at 755.0. Bug updates to 0-2 at 755.5. Could be a foul tip instead of a swinging strike. Frames 747-749.5 (behind-plate view, no bug) show no delivery."
+   },
+   "release_t": 754.0,
+   "readers": "both",
+   "candidates": [
+    "50:1",
+    "50:3",
+    "50:2"
+   ],
+   "match": {
+    "at_bat_number": 50,
+    "pitch_number": 2,
+    "play_id": "f2a932ad-cf2a-3ffd-b707-38157a346dfe",
+    "half": "top",
+    "inning": 7,
+    "batter": "Derek Hill",
+    "pitcher": "Chris Sale",
+    "balls_before": 0,
+    "strikes_before": 1,
+    "call": "Swinging Strike"
+   },
+   "match_score": 4,
+   "pitch_graphic": {
+    "seen": [
+     [
+      "CHANGEUP",
+      87
+     ],
+     [
+      "CHANGEUP",
+      87
+     ]
+    ],
+    "feed": [
+     "CH",
+     87.5
+    ],
+    "agrees": true
+   },
+   "outcome_consistent": true,
+   "match_status": "unique"
+  },
+  {
+   "A": {
+    "release_t": 768,
+    "release_bracket": [
+     768,
+     768.5
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 768,
+    "half": "top",
+    "inning": 7,
+    "outs": 1,
+    "balls_before": 2,
+    "strikes_before": 1,
+    "batter_text": "6. DE LA CRUZ",
+    "pitcher_text": "SALE",
+    "pitch_count_text": "P:90",
+    "post_pitch_graphic": {
+     "type_text": "SLIDER",
+     "mph": 78
+    },
+    "outcome_seen": "pitch low and inside, batter flinches/bends; batter ends up on first base (likely hit by pitch)",
+    "confidence": "medium",
+    "note": "768.0 arm back, 768.5 ball in flight near plate. Outcome uncertain: overhead shot at 774-776 shows runner on first and next batter Stott; HBP is inferred, not clearly seen. Slow-motion replay 771-773.5 not counted."
+   },
+   "B": {
+    "release_t": 768,
+    "release_bracket": [
+     768,
+     768.5
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 768,
+    "half": "top",
+    "inning": 7,
+    "outs": 1,
+    "balls_before": 2,
+    "strikes_before": 1,
+    "batter_text": "6. DE LA CRUZ",
+    "pitcher_text": "SALE",
+    "pitch_count_text": "P:90",
+    "post_pitch_graphic": {
+     "type_text": "SLIDER",
+     "mph": 78
+    },
+    "outcome_seen": "foul (batter swings; umpire raises both arms at 770.5)",
+    "confidence": "medium",
+    "note": "Ball just in front of the plate at 768.5; batter swinging at 769.0. The bug still showed 2-1 at 770.5. Frames 771.5-773.5 are a slow-motion replay of this swing (no score bug), not a new pitch."
+   },
+   "release_t": 768.0,
+   "readers": "both",
+   "candidates": [
+    "51:1",
+    "51:2",
+    "51:3",
+    "51:4"
+   ],
+   "match": {
+    "at_bat_number": 51,
+    "pitch_number": 4,
+    "play_id": "e47df5fe-e522-3b8d-8a1e-0d68f9885676",
+    "half": "top",
+    "inning": 7,
+    "batter": "Bryan De La Cruz",
+    "pitcher": "Chris Sale",
+    "balls_before": 2,
+    "strikes_before": 1,
+    "call": "Hit By Pitch"
+   },
+   "match_score": 4,
+   "pitch_graphic": {
+    "seen": [
+     [
+      "SLIDER",
+      78
+     ],
+     [
+      "SLIDER",
+      78
+     ]
+    ],
+    "feed": [
+     "SL",
+     78.0
+    ],
+    "agrees": true
+   },
+   "outcome_consistent": true,
+   "match_status": "unique"
+  },
+  {
+   "A": {
+    "release_t": 786,
+    "release_bracket": [
+     786,
+     786.5
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 786,
+    "half": "top",
+    "inning": 7,
+    "outs": 1,
+    "balls_before": 2,
+    "strikes_before": 1,
+    "batter_text": "7. STOTT",
+    "pitcher_text": "SALE",
+    "pitch_count_text": "P:94",
+    "post_pitch_graphic": {
+     "type_text": "FOUR SEAM",
+     "mph": 96
+    },
+    "outcome_seen": "in play: hit to the outfield, batter reaches second, runner from first to third (bug at 791.5 shows runners on 2nd and 3rd, 1 out)",
+    "confidence": "high",
+    "note": "784-785.5 behind-plate shot of Stott before the pitch, no delivery there; CF view starts 786.0 with catcher set; 786.5 follow-through, batter swung."
+   },
+   "B": {
+    "release_t": 786,
+    "release_bracket": [
+     786,
+     786.5
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 786,
+    "half": "top",
+    "inning": 7,
+    "outs": 1,
+    "balls_before": 2,
+    "strikes_before": 1,
+    "batter_text": "7. STOTT",
+    "pitcher_text": "SALE",
+    "pitch_count_text": "P:94",
+    "post_pitch_graphic": {
+     "type_text": "FOUR SEAM",
+     "mph": 96
+    },
+    "outcome_seen": "in play: hit to the outfield; runners end on second and third (looks like a double, runner from first to third)",
+    "confidence": "high",
+    "note": "Cut from the behind-umpire shot (783-785.5) to CF view at 786.0 with the pitcher mid-stride and the catcher set; swing at 786.5. Bug before the pitch shows a runner on first. Frames 794.5-797.5 are a replay without the score bug, not a new pitch."
+   },
+   "release_t": 786.0,
+   "readers": "both",
+   "candidates": [
+    "52:1",
+    "52:2",
+    "52:3",
+    "52:4"
+   ],
+   "match": {
+    "at_bat_number": 52,
+    "pitch_number": 4,
+    "play_id": "c60b68e7-5488-3ffd-9d8d-60f63a5ee176",
+    "half": "top",
+    "inning": 7,
+    "batter": "Bryson Stott",
+    "pitcher": "Chris Sale",
+    "balls_before": 2,
+    "strikes_before": 1,
+    "call": "In play, no out"
+   },
+   "match_score": 4,
+   "pitch_graphic": {
+    "seen": [
+     [
+      "FOUR SEAM",
+      96
+     ],
+     [
+      "FOUR SEAM",
+      96
+     ]
+    ],
+    "feed": [
+     "FF",
+     96.3
+    ],
+    "agrees": true
+   },
+   "outcome_consistent": true,
+   "match_status": "unique"
+  },
+  {
+   "A": {
+    "release_t": 825.5,
+    "release_bracket": [
+     825.5,
+     826
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 825.5,
+    "half": "top",
+    "inning": 7,
+    "outs": 1,
+    "balls_before": 3,
+    "strikes_before": 1,
+    "batter_text": "8. CRAWFORD",
+    "pitcher_text": "FUENTES",
+    "pitch_count_text": "P:4",
+    "post_pitch_graphic": {
+     "type_text": "SLIDER",
+     "mph": 83
+    },
+    "outcome_seen": "in play: fly ball to the outfield, caught for an out (bug shows 2 outs, score still PHI 1-ATL 2 by t=834)",
+    "confidence": "high",
+    "note": "Centre-field view begins at 825.5 with the pitcher mid-delivery and the catcher set. At 826.0 the ball is at the plate and contact is made. Bug at 826.5 reads SLIDER 83 MPH. The behind-the-batter and side-angle shots at 837-841 are replays."
+   },
+   "B": {
+    "release_t": 825.5,
+    "release_bracket": [
+     825.5,
+     826
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 825.5,
+    "half": "top",
+    "inning": 7,
+    "outs": 1,
+    "balls_before": 3,
+    "strikes_before": 1,
+    "batter_text": "8. CRAWFORD",
+    "pitcher_text": "FUENTES",
+    "pitch_count_text": "P: 4",
+    "post_pitch_graphic": {
+     "type_text": "SLIDER",
+     "mph": 83
+    },
+    "outcome_seen": "in play: fly ball to the outfield, caught (outs go from 1 to 2 by t=834)",
+    "confidence": "high",
+    "note": "Centre-field view starts at 825.5 with the pitcher's arm up and the catcher set. At 826.0 the ball is at the plate and the batter is swinging. Runners on 1st and 3rd, score PHI 1 ATL 2, pitch clock :08. The SLIDER 83 MPH graphic replaces the pitcher name at 826.5."
+   },
+   "release_t": 825.5,
+   "readers": "both",
+   "candidates": [
+    "53:1",
+    "53:2",
+    "53:3",
+    "53:4",
+    "53:5"
+   ],
+   "match": {
+    "at_bat_number": 53,
+    "pitch_number": 5,
+    "play_id": "b6ad4b3b-b74d-3ce1-87f4-b59f4c4ec0a1",
+    "half": "top",
+    "inning": 7,
+    "batter": "Justin Crawford",
+    "pitcher": "Didier Fuentes",
+    "balls_before": 3,
+    "strikes_before": 1,
+    "call": "In play, out(s)"
+   },
+   "match_score": 4,
+   "pitch_graphic": {
+    "seen": [
+     [
+      "SLIDER",
+      83
+     ],
+     [
+      "SLIDER",
+      83
+     ]
+    ],
+    "feed": [
+     "SL",
+     82.5
+    ],
+    "agrees": true
+   },
+   "outcome_consistent": true,
+   "match_status": "unique"
+  },
+  {
+   "A": {
+    "release_t": 850,
+    "release_bracket": [
+     850,
+     850.5
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 850,
+    "half": "top",
+    "inning": 7,
+    "outs": 2,
+    "balls_before": 1,
+    "strikes_before": 0,
+    "batter_text": "9. REALMUTO 0-2",
+    "pitcher_text": "FUENTES",
+    "pitch_count_text": "P:6",
+    "post_pitch_graphic": {
+     "type_text": "FOUR SEAM",
+     "mph": 99
+    },
+    "outcome_seen": "in play: hit into the right-field corner off or near the 325 wall, runs score (bug reads PHI 2 at 856 and PHI 3 by 877.5)",
+    "confidence": "high",
+    "note": "Centre-field view from 849.0, catcher set. At 850.0 the arm is cocked; at 850.5 the ball is reaching the catcher area. Bug at 851.5 reads FOUR SEAM 99 MPH. The low behind-plate replay of the swing and the outfielder #13 fielding at the wall (863-872) are replays, not new pitches."
+   },
+   "B": {
+    "release_t": 850,
+    "release_bracket": [
+     850,
+     850.5
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 849.5,
+    "half": "top",
+    "inning": 7,
+    "outs": 2,
+    "balls_before": 1,
+    "strikes_before": 0,
+    "batter_text": "9. REALMUTO",
+    "pitcher_text": "FUENTES",
+    "pitch_count_text": "P: 6",
+    "post_pitch_graphic": {
+     "type_text": "FOUR SEAM",
+     "mph": 99
+    },
+    "outcome_seen": "in play: base hit into the left-field corner; a run scores (PHI 1 becomes 2 by t=856)",
+    "confidence": "high",
+    "note": "Pitcher is cocked at 850.0 and the ball is near the catcher at 850.5. Runners on 1st and 3rd, clock :05. The FOUR SEAM 99 MPH graphic shows from 851.5. At 856 the bug reads PHI 2 ATL 2, 0-0, P:7, with runners on 1st and 2nd."
+   },
+   "release_t": 850.0,
+   "readers": "both",
+   "candidates": [
+    "54:1",
+    "54:2"
+   ],
+   "match": {
+    "at_bat_number": 54,
+    "pitch_number": 2,
+    "play_id": "92b5d040-38b8-3812-8a74-af75eaf6617c",
+    "half": "top",
+    "inning": 7,
+    "batter": "J.T. Realmuto",
+    "pitcher": "Didier Fuentes",
+    "balls_before": 1,
+    "strikes_before": 0,
+    "call": "In play, run(s)"
+   },
+   "match_score": 4,
+   "pitch_graphic": {
+    "seen": [
+     [
+      "FOUR SEAM",
+      99
+     ],
+     [
+      "FOUR SEAM",
+      99
+     ]
+    ],
+    "feed": [
+     "FF",
+     99.4
+    ],
+    "agrees": true
+   },
+   "outcome_consistent": true,
+   "match_status": "unique"
+  },
+  {
+   "A": {
+    "release_t": 877.5,
+    "release_bracket": [
+     877.5,
+     878
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 877.5,
+    "half": "top",
+    "inning": 7,
+    "outs": 2,
+    "balls_before": 1,
+    "strikes_before": 2,
+    "batter_text": "1. TURNER 0-2",
+    "pitcher_text": "FUENTES",
+    "pitch_count_text": "P:11",
+    "post_pitch_graphic": {
+     "type_text": "FOUR SEAM",
+     "mph": 99
+    },
+    "outcome_seen": "in play: swung and made contact, batted ball (likely a fly or pop) with the batter leaving the box; result is past the end of the range",
+    "confidence": "medium",
+    "note": "Dissolve from a Turner close-up at 877.0. First clean centre-field frame is 877.5 with the pitcher striding and the catcher set. At 878.0 the swing is already through. Bug at 878.5 reads FOUR SEAM 99 MPH. Score PHI 3-ATL 2."
+   },
+   "B": {
+    "release_t": 877.5,
+    "release_bracket": [
+     877.5,
+     878
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 877.5,
+    "half": "top",
+    "inning": 7,
+    "outs": 2,
+    "balls_before": 1,
+    "strikes_before": 2,
+    "batter_text": "1. TURNER",
+    "pitcher_text": "FUENTES",
+    "pitch_count_text": "P: 11",
+    "post_pitch_graphic": {
+     "type_text": "FOUR SEAM",
+     "mph": 99
+    },
+    "outcome_seen": "in play: batter swings and makes contact, ball hit to the outfield (the result falls after the range ends)",
+    "confidence": "high",
+    "note": "Dissolves in from the batter close-up at 877.0. At 877.5 the pitcher is in his stride and the catcher is set. By 878.0 the batter has already swung through contact. Score PHI 3 ATL 2, runner on 3rd, clock :06. The '0-2' next to TURNER is his game line, not the count. The FOUR SEAM 99 MPH graphic shows from 878.5. The 879.5 overhead view shows the ball in play."
+   },
+   "release_t": 877.5,
+   "readers": "both",
+   "candidates": [
+    "55:1",
+    "55:2",
+    "55:3",
+    "55:4",
+    "55:5"
+   ],
+   "match": {
+    "at_bat_number": 55,
+    "pitch_number": 5,
+    "play_id": "5f63a2ea-2cc4-3267-b0f0-8e22682972ec",
+    "half": "top",
+    "inning": 7,
+    "batter": "Trea Turner",
+    "pitcher": "Didier Fuentes",
+    "balls_before": 1,
+    "strikes_before": 2,
+    "call": "In play, out(s)"
+   },
+   "match_score": 4,
+   "pitch_graphic": {
+    "seen": [
+     [
+      "FOUR SEAM",
+      99
+     ],
+     [
+      "FOUR SEAM",
+      99
+     ]
+    ],
+    "feed": [
+     "FF",
+     99.4
+    ],
+    "agrees": true
+   },
+   "outcome_consistent": true,
+   "match_status": "resolved_by_pitch_graphic"
+  },
+  {
+   "A": {
+    "release_t": 913,
+    "release_bracket": [
+     913,
+     913.5
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 913,
+    "half": "bottom",
+    "inning": 7,
+    "outs": 0,
+    "balls_before": 1,
+    "strikes_before": 2,
+    "batter_text": "9. SMITH",
+    "pitcher_text": "DURAN",
+    "pitch_count_text": "P:4",
+    "post_pitch_graphic": {
+     "type_text": "SPLITTER",
+     "mph": 99
+    },
+    "outcome_seen": "swinging strike (strike three; catcher on his knees after the pitch, ball likely in the dirt)",
+    "confidence": "high",
+    "note": "The arm is cocked at 913.0, and by 913.5 the follow-through is complete with the ball at the catcher, so release is about 913.1. The score bug shows 1-2 with 0 outs."
+   },
+   "B": {
+    "release_t": 913.5,
+    "release_bracket": [
+     913,
+     913.5
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 913,
+    "half": "bottom",
+    "inning": 7,
+    "outs": 0,
+    "balls_before": 1,
+    "strikes_before": 2,
+    "batter_text": "9. SMITH",
+    "pitcher_text": "DURAN",
+    "pitch_count_text": "P:4",
+    "post_pitch_graphic": {
+     "type_text": "SPLITTER",
+     "mph": 99
+    },
+    "outcome_seen": "swinging strike (batter swings through, catcher picks it low; batter walks off, apparently strikeout)",
+    "confidence": "medium",
+    "note": "Leg kick 912.5, stride with arm back 913.0, pitcher already in follow-through 913.5 (release ~913.3); batter finishing swing at 914.0. Bug still showed 1-2, 0 outs through 916 with SPLITTER 99 MPH graphic from ~915."
+   },
+   "release_t": 913.25,
+   "readers": "both",
+   "candidates": [
+    "56:1",
+    "56:2",
+    "56:3",
+    "56:4",
+    "56:5"
+   ],
+   "match": {
+    "at_bat_number": 56,
+    "pitch_number": 5,
+    "play_id": "f66662eb-5e8a-3a7d-b9c2-7da2a7085d6c",
+    "half": "bottom",
+    "inning": 7,
+    "batter": "Dominic Smith",
+    "pitcher": "Jhoan Duran",
+    "balls_before": 1,
+    "strikes_before": 2,
+    "call": "Swinging Strike"
+   },
+   "match_score": 4,
+   "pitch_graphic": {
+    "seen": [
+     [
+      "SPLITTER",
+      99
+     ],
+     [
+      "SPLITTER",
+      99
+     ]
+    ],
+    "feed": [
+     "FS",
+     98.5
+    ],
+    "agrees": true
+   },
+   "outcome_consistent": true,
+   "match_status": "unique"
+  },
+  {
+   "A": {
+    "release_t": 925.5,
+    "release_bracket": [
+     925.5,
+     926
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 925.5,
+    "half": "bottom",
+    "inning": 7,
+    "outs": 2,
+    "balls_before": 3,
+    "strikes_before": 1,
+    "batter_text": "2. ACUÑA JR.",
+    "pitcher_text": "DURAN",
+    "pitch_count_text": "P:11",
+    "post_pitch_graphic": {
+     "type_text": "SPLITTER",
+     "mph": 99
+    },
+    "outcome_seen": "in play: fly ball to the outfield, caught near the wall (ends the inning, fielders walk off)",
+    "confidence": "high",
+    "note": "The CF view starts at 925.5 with the arm cocked. At 926.0 the swing is done and the batter is watching the ball. 'Bottom 8th' graphic at 937.5-939."
+   },
+   "B": {
+    "release_t": 926,
+    "release_bracket": [
+     925.5,
+     926
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 925.5,
+    "half": "bottom",
+    "inning": 7,
+    "outs": 2,
+    "balls_before": 3,
+    "strikes_before": 1,
+    "batter_text": "2. ACUÑA JR.",
+    "pitcher_text": "DURAN",
+    "pitch_count_text": "P:11",
+    "post_pitch_graphic": {
+     "type_text": "SPLITTER",
+     "mph": 99
+    },
+    "outcome_seen": "in play: fly ball to left/left-centre, caught near the wall by outfielder (inning ends, Bottom 8th graphic follows)",
+    "confidence": "medium",
+    "note": "925.5 pitcher in stride, 926.0 already in post-release posture with batter still striding, contact by 926.5; release ~925.8. Bug next to batter also shows 0-2 (his game line). Graphic SPLITTER 99 MPH from 927.0."
+   },
+   "release_t": 925.75,
+   "readers": "both",
+   "candidates": [
+    "58:1",
+    "58:2",
+    "58:3",
+    "58:4",
+    "58:5"
+   ],
+   "match": {
+    "at_bat_number": 58,
+    "pitch_number": 5,
+    "play_id": "21daebf3-c052-3303-bbed-fea163bda601",
+    "half": "bottom",
+    "inning": 7,
+    "batter": "Ronald Acuña Jr.",
+    "pitcher": "Jhoan Duran",
+    "balls_before": 3,
+    "strikes_before": 1,
+    "call": "In play, out(s)"
+   },
+   "match_score": 4,
+   "pitch_graphic": {
+    "seen": [
+     [
+      "SPLITTER",
+      99
+     ],
+     [
+      "SPLITTER",
+      99
+     ]
+    ],
+    "feed": [
+     "FS",
+     98.7
+    ],
+    "agrees": true
+   },
+   "outcome_consistent": true,
+   "match_status": "unique"
+  },
+  {
+   "A": {
+    "release_t": 943,
+    "release_bracket": [
+     943,
+     943.5
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 943,
+    "half": "bottom",
+    "inning": 8,
+    "outs": 0,
+    "balls_before": 1,
+    "strikes_before": 0,
+    "batter_text": "3. OLSON",
+    "pitcher_text": "DURAN",
+    "pitch_count_text": "P:13",
+    "post_pitch_graphic": {
+     "type_text": "SPLITTER",
+     "mph": 97
+    },
+    "outcome_seen": "in play: pop-up on the infield, caught by an infielder",
+    "confidence": "high",
+    "note": "At 943.5 the ball is near the plate, so release is about 943.1. Replay of this same pop-up from a camera behind the plate on the 1B side (no score bug) at 950.5-954.0; not counted."
+   },
+   "B": {
+    "release_t": 943.5,
+    "release_bracket": [
+     943.5,
+     944
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 943.5,
+    "half": "bottom",
+    "inning": 8,
+    "outs": 0,
+    "balls_before": 1,
+    "strikes_before": 0,
+    "batter_text": "3. OLSON",
+    "pitcher_text": "DURAN",
+    "pitch_count_text": "P:13",
+    "post_pitch_graphic": {
+     "type_text": "SPLITTER",
+     "mph": 97
+    },
+    "outcome_seen": "in play: pop-up/fly out (catcher looks up, batter walks off; bug shows 1 out, 0-0 by 947)",
+    "confidence": "medium",
+    "note": "943.5 stride with arm back, 944.0 follow-through and batter's swing complete; release ~943.6. Olson's line on bug 0-3. SPLITTER 97 MPH graphic from 944.5."
+   },
+   "release_t": 943.25,
+   "readers": "both",
+   "candidates": [
+    "62:1",
+    "62:2"
+   ],
+   "match": {
+    "at_bat_number": 62,
+    "pitch_number": 2,
+    "play_id": "6739ebc0-5be4-3afb-b2b1-3c5afb1f1113",
+    "half": "bottom",
+    "inning": 8,
+    "batter": "Matt Olson",
+    "pitcher": "Jhoan Duran",
+    "balls_before": 1,
+    "strikes_before": 0,
+    "call": "In play, out(s)"
+   },
+   "match_score": 4,
+   "pitch_graphic": {
+    "seen": [
+     [
+      "SPLITTER",
+      97
+     ],
+     [
+      "SPLITTER",
+      97
+     ]
+    ],
+    "feed": [
+     "FS",
+     97.3
+    ],
+    "agrees": true
+   },
+   "outcome_consistent": true,
+   "match_status": "unique"
+  },
+  {
+   "A": {
+    "release_t": 956.5,
+    "release_bracket": [
+     956.5,
+     957
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 956.5,
+    "half": "bottom",
+    "inning": 8,
+    "outs": 2,
+    "balls_before": 2,
+    "strikes_before": 0,
+    "batter_text": "5. HARRIS II",
+    "pitcher_text": "DURAN",
+    "pitch_count_text": "P:17",
+    "post_pitch_graphic": {
+     "type_text": "SPLITTER",
+     "mph": 99
+    },
+    "outcome_seen": "in play: ground ball to the infield, fielded and thrown",
+    "confidence": "high",
+    "note": "At 956.5 the arm is up and back. At 957.0 the ball is at the plate during the swing, so release is about 956.6. The bug now carries an 'NL WILD CARD - GAME 1' header."
+   },
+   "B": {
+    "release_t": 956.5,
+    "release_bracket": [
+     956.5,
+     957
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 956.5,
+    "half": "bottom",
+    "inning": 8,
+    "outs": 2,
+    "balls_before": 2,
+    "strikes_before": 0,
+    "batter_text": "5. HARRIS II",
+    "pitcher_text": "DURAN",
+    "pitch_count_text": "P:17",
+    "post_pitch_graphic": {
+     "type_text": "SPLITTER",
+     "mph": 99
+    },
+    "outcome_seen": "in play: ground ball (fielded in infield near second base)",
+    "confidence": "medium",
+    "note": "Bug now has an 'NL WILD CARD - GAME 1 (BEST OF 3)' header and sits lower. 956.5 arm cocked, 957.0 follow-through with ball near plate and batter swinging; release ~956.7. Harris line 2-2 on bug. SPLITTER 99 MPH graphic from 957.5."
+   },
+   "release_t": 956.5,
+   "readers": "both",
+   "candidates": [
+    "64:1",
+    "64:2",
+    "64:3"
+   ],
+   "match": {
+    "at_bat_number": 64,
+    "pitch_number": 3,
+    "play_id": "30b56ae4-31d9-34cf-b06a-9540f55cb126",
+    "half": "bottom",
+    "inning": 8,
+    "batter": "Michael Harris II",
+    "pitcher": "Jhoan Duran",
+    "balls_before": 2,
+    "strikes_before": 0,
+    "call": "In play, no out"
+   },
+   "match_score": 4,
+   "pitch_graphic": {
+    "seen": [
+     [
+      "SPLITTER",
+      99
+     ],
+     [
+      "SPLITTER",
+      99
+     ]
+    ],
+    "feed": [
+     "FS",
+     98.7
+    ],
+    "agrees": true
+   },
+   "outcome_consistent": true,
+   "match_status": "unique"
+  },
+  {
+   "A": {
+    "release_t": 998,
+    "release_bracket": [
+     998,
+     998.5
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 998,
+    "half": "bottom",
+    "inning": 8,
+    "outs": 2,
+    "balls_before": 0,
+    "strikes_before": 0,
+    "batter_text": "7. RILEY",
+    "pitcher_text": "DURAN",
+    "pitch_count_text": "P:24",
+    "post_pitch_graphic": {
+     "type_text": "FOUR SEAM",
+     "mph": 100
+    },
+    "outcome_seen": "in play: home run (batter #27 swings, ball to left/left-centre seats, HOME RUN graphic at 1007.5, PHI 3 ATL 2 before)",
+    "confidence": "high",
+    "note": "Centre-field view from 997.5. At 998.0 the pitcher's arm is still back with the catcher set; at 998.5 the ball is near the plate. The bug read before release shows a 0-0 count, 2 outs, and a timer of :02. FOUR SEAM 100 MPH replaces the pitcher line on the bug at 999.5-1000."
+   },
+   "B": {
+    "release_t": 998,
+    "release_bracket": [
+     998,
+     998.5
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 998,
+    "half": "bottom",
+    "inning": 8,
+    "outs": 2,
+    "balls_before": 0,
+    "strikes_before": 0,
+    "batter_text": "7. RILEY",
+    "pitcher_text": "DURAN",
+    "pitch_count_text": "P: 24",
+    "post_pitch_graphic": {
+     "type_text": "FOUR SEAM",
+     "mph": 100
+    },
+    "outcome_seen": "in play: home run (Riley swings, drive to left-centre over the 375 wall, HOME RUN graphic follows)",
+    "confidence": "high",
+    "note": "Centre-field view from 997.5. At 998.0 the pitcher's arm is cocked and the catcher is set; by 998.5 the ball is already near the plate. Score bug read at 997.5/998.0: bottom 8, two filled out markers, count 0-0, 7. RILEY 0-2, DURAN P:24, PHI 3 ATL 2. FOUR SEAM 100 MPH replaced the pitcher field at 1000.0."
+   },
+   "release_t": 998.0,
+   "readers": "both",
+   "candidates": [
+    "66:1"
+   ],
+   "match": {
+    "at_bat_number": 66,
+    "pitch_number": 1,
+    "play_id": "29f38552-151c-3d65-bdbd-3173fa3d6f3a",
+    "half": "bottom",
+    "inning": 8,
+    "batter": "Austin Riley",
+    "pitcher": "Jhoan Duran",
+    "balls_before": 0,
+    "strikes_before": 0,
+    "call": "In play, run(s)"
+   },
+   "match_score": 4,
+   "pitch_graphic": {
+    "seen": [
+     [
+      "FOUR SEAM",
+      100
+     ],
+     [
+      "FOUR SEAM",
+      100
+     ]
+    ],
+    "feed": [
+     "FF",
+     99.9
+    ],
+    "agrees": true
+   },
+   "outcome_consistent": true,
+   "match_status": "unique"
+  },
+  {
+   "A": {
+    "release_t": 1051,
+    "release_bracket": [
+     1051,
+     1051.5
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 1051,
+    "half": "top",
+    "inning": 9,
+    "outs": 0,
+    "balls_before": 0,
+    "strikes_before": 0,
+    "batter_text": "5. MARSH",
+    "pitcher_text": null,
+    "pitch_count_text": null,
+    "post_pitch_graphic": {
+     "type_text": "FOUR SEAM",
+     "mph": 94
+    },
+    "outcome_seen": "in play: hit through the infield into the outfield, batter (#16) reaches first, apparently a single",
+    "confidence": "medium",
+    "note": "The centre-field shot starts at 1050.5 (no score bug, catcher set). At 1051.0 the arm is cocked and the bug is still animating in. At 1051.5 there is follow-through and contact. The bug values (PHI 3 ATL 5, top 9, 0 outs, 0-0) come from 1051.5-1052.0, just after release, because no full bug appears before release; for a ball in play the count would not change anyway. The batter name 5. MARSH is read at 1054.0. No pitcher name or pitch count is shown on the bug in this segment."
+   },
+   "B": {
+    "release_t": 1051,
+    "release_bracket": [
+     1050.5,
+     1051
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 1050.5,
+    "half": "top",
+    "inning": 9,
+    "outs": 0,
+    "balls_before": 0,
+    "strikes_before": 0,
+    "batter_text": "5. MARSH",
+    "pitcher_text": null,
+    "pitch_count_text": null,
+    "post_pitch_graphic": {
+     "type_text": "FOUR SEAM",
+     "mph": 94
+    },
+    "outcome_seen": "in play: hit into the outfield, ball rolling on the grass, batter reaches first (single)",
+    "confidence": "medium",
+    "note": "CF view starts 1050.5 (pitcher in stride, catcher set); at 1051.0 pitcher already in follow-through. No score bug before release: it animates in at 1051.0, and top 9 / 0 outs / 0-0 was read at 1051.5 and the name at 1054.0 (just after release). In-play pitches do not change the count, but these values were not read from a pre-release frame. That bug shows no pitcher name or pitch count."
+   },
+   "release_t": 1051.0,
+   "readers": "both",
+   "candidates": [
+    "68:1"
+   ],
+   "match": {
+    "at_bat_number": 68,
+    "pitch_number": 1,
+    "play_id": "12b05906-99c5-37a6-a059-f890c2994656",
+    "half": "top",
+    "inning": 9,
+    "batter": "Brandon Marsh",
+    "pitcher": "Raisel Iglesias",
+    "balls_before": 0,
+    "strikes_before": 0,
+    "call": "In play, no out"
+   },
+   "match_score": 4,
+   "pitch_graphic": {
+    "seen": [
+     [
+      "FOUR SEAM",
+      94
+     ],
+     [
+      "FOUR SEAM",
+      94
+     ]
+    ],
+    "feed": [
+     "FF",
+     93.6
+    ],
+    "agrees": true
+   },
+   "outcome_consistent": true,
+   "match_status": "unique"
+  },
+  {
+   "A": {
+    "release_t": 1061.5,
+    "release_bracket": [
+     1061.5,
+     1062
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 1061.5,
+    "half": "top",
+    "inning": 9,
+    "outs": 0,
+    "balls_before": 1,
+    "strikes_before": 0,
+    "batter_text": "6. DE LA CRUZ 0-2",
+    "pitcher_text": "IGLESIAS",
+    "pitch_count_text": "P:2",
+    "post_pitch_graphic": {
+     "type_text": "SINKER",
+     "mph": 93
+    },
+    "outcome_seen": "in play: ground ball to the middle infield, force at second, then relay to first; double play",
+    "confidence": "high",
+    "note": "1059.0-1061.0 is a side angle of the batter waiting, with no delivery. At 1061.5 the pitcher is at foot plant with his arm high, and the bug reads top 9, 0 outs, runner on 1st, 1-0, 6. DE LA CRUZ 0-2, IGLESIAS P:2. At 1062.0 there is follow-through and a swing. The double play plays 1063-1067.5. The 1072.5-1077.5 segment is a replay of this double play and is not counted."
+   },
+   "B": {
+    "release_t": 1061.5,
+    "release_bracket": [
+     1061.5,
+     1062
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": true,
+    "setup_t": 1061.5,
+    "half": "top",
+    "inning": 9,
+    "outs": 0,
+    "balls_before": 1,
+    "strikes_before": 0,
+    "batter_text": "6. DE LA CRUZ",
+    "pitcher_text": "IGLESIAS",
+    "pitch_count_text": "P:2",
+    "post_pitch_graphic": {
+     "type_text": "SINKER",
+     "mph": 93
+    },
+    "outcome_seen": "in play: ground ball to the middle infield, turned into a double play (flip to second, throw to first)",
+    "confidence": "high",
+    "note": "1059.0-1061.0 is a side angle from beside the plate showing the batter set, no delivery. CF view at 1061.5 shows the arm cocked with the catcher set, and 1062.0 is the follow-through with the batter swinging. Bug read at 1061.5: runner on first, pitch clock :09, batter game line 0-2."
+   },
+   "release_t": 1061.5,
+   "readers": "both",
+   "candidates": [
+    "69:1",
+    "69:2"
+   ],
+   "match": {
+    "at_bat_number": 69,
+    "pitch_number": 2,
+    "play_id": "aaee43a3-53b8-3b62-8577-486bf599f4ef",
+    "half": "top",
+    "inning": 9,
+    "batter": "Bryan De La Cruz",
+    "pitcher": "Raisel Iglesias",
+    "balls_before": 1,
+    "strikes_before": 0,
+    "call": "In play, out(s)"
+   },
+   "match_score": 4,
+   "pitch_graphic": {
+    "seen": [
+     [
+      "SINKER",
+      93
+     ],
+     [
+      "SINKER",
+      93
+     ]
+    ],
+    "feed": [
+     "SI",
+     92.6
+    ],
+    "agrees": true
+   },
+   "outcome_consistent": true,
+   "match_status": "unique"
+  },
+  {
+   "A": {
+    "release_t": 1086.5,
+    "release_bracket": [
+     1086.5,
+     1087
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": false,
+    "setup_t": null,
+    "half": "top",
+    "inning": 9,
+    "outs": 2,
+    "balls_before": 1,
+    "strikes_before": 2,
+    "batter_text": "7. STOTT 1-3",
+    "pitcher_text": "IGLESIAS",
+    "pitch_count_text": "P:6",
+    "post_pitch_graphic": {
+     "type_text": "FOUR SEAM",
+     "mph": 96
+    },
+    "outcome_seen": "in play: fly ball to the outfield, caught for the final out of the game",
+    "confidence": "medium",
+    "note": "1080.0-1086.5 are close-ups of Stott and Iglesias with no bug. The first centre-field frame, 1087.0, already shows the ball in flight near the plate, with the pitcher finishing his delivery. Release is therefore about 1086.6-1086.8, just after the cut, so camera_at_release is most likely centre field but the release itself is not seen, and there is no centre-field setup frame. The bug values (top 9, 2 outs, 1-2, 7. STOTT 1-3, IGLESIAS P:6) come from 1087.0, after release; the count is unchanged there. The swing follows at 1087.5. The fly ball is tracked 1088-1094, and the game ends."
+   },
+   "B": {
+    "release_t": 1086.5,
+    "release_bracket": [
+     1086.5,
+     1087
+    ],
+    "camera_at_release": "centre_field",
+    "centre_field_setup_visible": false,
+    "setup_t": null,
+    "half": "top",
+    "inning": 9,
+    "outs": 2,
+    "balls_before": 1,
+    "strikes_before": 2,
+    "batter_text": "7. STOTT",
+    "pitcher_text": "IGLESIAS",
+    "pitch_count_text": "P:6",
+    "post_pitch_graphic": {
+     "type_text": "FOUR SEAM",
+     "mph": 96
+    },
+    "outcome_seen": "in play: fly ball to the outfield, caught for the final out (game ends PHI 3, ATL 5)",
+    "confidence": "medium",
+    "note": "1086.5 is a close-up of Stott; the first CF frame at 1087.0 already shows the pitcher in follow-through with the ball near the plate. Release happened during or right after the cut, so camera_at_release is uncertain and there is no CF setup frame. Bug read at 1087.0 (pitch clock still showing :06, count not yet updated); no bug in earlier frames. The broadcast cut the 1-2 count and the pitches before it."
+   },
+   "release_t": 1086.5,
+   "readers": "both",
+   "candidates": [
+    "70:1",
+    "70:2",
+    "70:3",
+    "70:4"
+   ],
+   "match": {
+    "at_bat_number": 70,
+    "pitch_number": 4,
+    "play_id": "d6066bd3-487b-35a2-8d16-c5de9365eaf6",
+    "half": "top",
+    "inning": 9,
+    "batter": "Bryson Stott",
+    "pitcher": "Raisel Iglesias",
+    "balls_before": 1,
+    "strikes_before": 2,
+    "call": "In play, out(s)"
+   },
+   "match_score": 4,
+   "pitch_graphic": {
+    "seen": [
+     [
+      "FOUR SEAM",
+      96
+     ],
+     [
+      "FOUR SEAM",
+      96
+     ]
+    ],
+    "feed": [
+     "FF",
+     96.3
+    ],
+    "agrees": true
+   },
+   "outcome_consistent": true,
+   "match_status": "unique"
+  }
+ ]
+}

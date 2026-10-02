@@ -1,0 +1,29 @@
+{
+ "schema": "intent_condensed_resolutions_v0",
+ "game_pk": 849845,
+ "basis": "Operator decisions for the scan detections that `python -m intent.condensed map` left open or matched weakly. Evidence used: the score bug's pitcher pitch count 'P:NN', which equals the pitches that pitcher had thrown before the pitch on all 47 unique matches of this game (47/47), plus the count, the outcome and the feed's non-pitch events. Statcast pitch locations and the mitt were not looked at.",
+ "decisions": [
+  {
+   "release_t": 331,
+   "action": "drop",
+   "status": "dropped_pickoff_not_a_pitch",
+   "reason": "Only reader A listed it. The bug read count 0-1 and Sale P:43, i.e. after pitch 21:1 (Sale had thrown 42 before 21:1). The feed has no second pitch in PA21; it ended on 'Pickoff Caught Stealing 2B' after a pickoff attempt to first, which matches the reader's description of a throw to first and a runner out at second. The delivery seen is the pickoff move."
+  },
+  {
+   "release_t": 547.0,
+   "action": "assign",
+   "at_bat_number": 37,
+   "pitch_number": 5,
+   "status": "resolved_by_pitch_count",
+   "reason": "Both readers read count 1-2 and Luzardo P:65. 37:4 and 37:5 are both 1-2 sweepers at 86.1/85.8 mph, so the graphic cannot separate them; Luzardo had thrown 65 pitches before 37:5 and 64 before 37:4."
+  },
+  {
+   "release_t": 610.75,
+   "action": "assign",
+   "at_bat_number": 42,
+   "pitch_number": 3,
+   "status": "resolved_by_pitch_count",
+   "reason": "The count-based match 42:3 is confirmed: both readers read 1-1 and Sale P:76, and Sale had thrown 76 pitches before 42:3; the readers' single to right matches 'In play, no out'. The conflict is only the type label: the broadcast graphic said FOUR SEAM 97 where Statcast typed the pitch SI 96.8 mph."
+  }
+ ]
+}

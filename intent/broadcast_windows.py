@@ -21,6 +21,7 @@ import json
 import shutil
 import subprocess
 import tempfile
+import time
 from fractions import Fraction
 from pathlib import Path
 
@@ -61,7 +62,17 @@ def _grid(image, box, zoom, minor=20, major=100):
 
 
 def cut_window(
-    media_url, pitch, out_dir, fps, box, *, ffmpeg="ffmpeg", before=1.5, after=1.5, step=3
+    media_url,
+    pitch,
+    out_dir,
+    fps,
+    box,
+    *,
+    ffmpeg="ffmpeg",
+    before=1.5,
+    after=1.5,
+    step=3,
+    retries=4,
 ):
     from PIL import Image, ImageDraw
 
@@ -73,24 +84,35 @@ def cut_window(
     target.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory() as tmp:
         seek = float(Fraction(start) / fps)
-        subprocess.run(
-            [
-                ffmpeg,
-                "-v",
-                "error",
-                "-y",
-                "-ss",
-                f"{seek:.6f}",
-                "-i",
-                media_url,
-                "-frames:v",
-                str(n_frames),
-                "-q:v",
-                "2",
-                str(Path(tmp) / "f_%05d.jpg"),
-            ],
-            check=True,
-        )
+        for attempt in range(retries + 1):
+            for stale in Path(tmp).glob("f_*.jpg"):
+                stale.unlink()
+            try:
+                subprocess.run(
+                    [
+                        ffmpeg,
+                        "-v",
+                        "error",
+                        "-y",
+                        "-ss",
+                        f"{seek:.6f}",
+                        "-i",
+                        media_url,
+                        "-frames:v",
+                        str(n_frames),
+                        "-q:v",
+                        "2",
+                        str(Path(tmp) / "f_%05d.jpg"),
+                    ],
+                    check=True,
+                )
+                break
+            except subprocess.CalledProcessError:
+                # the CDN sometimes cuts a ranged read short ("partial file"); the same seek
+                # decodes the same frames, so a retry cannot change any output
+                if attempt == retries:
+                    raise
+                time.sleep(3 * (attempt + 1))
         decoded = sorted(Path(tmp).glob("f_*.jpg"))
         frames = []
         for offset, path in enumerate(decoded):

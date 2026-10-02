@@ -39,6 +39,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from intent.geometry import front_edge_similarity, project_point  # noqa: E402
+from intent.human_labels import game_role  # noqa: E402
 from intent.plate_feet import (  # noqa: E402
     CALIBRATION_SCHEMA,
     METHOD,
@@ -600,8 +601,9 @@ def build(readings, human_verified_ids, verification_meta=None):
         "computed on the human-verified pitches when at least min_pitches were confirmed, "
         "otherwise on all used pitches; the parallax term is removed for the nominal 2.5 ft "
         "depth, so a residual mean offset reflects the true catch depth differing from that "
-        "assumption plus reader noise; pixel readings are assistant visual estimates (a person "
-        "confirmed them on a montage, not re-marked them); development game",
+        "assumption plus reader noise; pixel readings are assistant visual estimates"
+        + (" (a person confirmed them on a montage, not re-marked them)" if verified else "")
+        + f"; {game_role(readings['game_pk'])} game (docs/results/mlb_p0/intent_eval_plan_v0.json)",
         "measured_on": (
             f"{human['n']} human-verified called pitches of game {readings['game_pk']} (in-sample)"
             if rms_basis == "human_verified_subset"
