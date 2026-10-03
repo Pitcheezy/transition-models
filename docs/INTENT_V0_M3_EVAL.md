@@ -133,7 +133,7 @@ M3 완료 기준은 [작업 지시서](INTENT_V0_WORK_ORDER.md)에 있다.
 - **기준 커밋** (브랜치 `feature/intent-v0`)
   - 고정 방법·파이프라인: `784db6e`
   - 판독 원문·서비스 검사: `32c3675`
-  - 검토 반영 보고·가져오기 도구: 이 절을 고친 커밋
+  - 검토 반영 보고·가져오기 도구: `976a900`
   - 라벨을 가져온 뒤의 최종 커밋은 그때 따로 알린다.
   - 보고서를 만든 코드 커밋은 `python -m intent.accuracy_report --code-commit <hash>`로 보고서에 적는다. 실행 중인 HEAD를 자동으로 읽지 않는 것은 재실행 결과를 바이트 단위로 맞추기 위해서다.
 - **환경:** Windows 11, Python 3.12.12(`uv run --frozen`), uv 0.10.4, Pillow 12.2.0, ffmpeg 8.0 (gyan.dev essentials).
