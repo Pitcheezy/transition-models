@@ -370,3 +370,23 @@ def test_service_check_runs_a_validator_file_with_the_sibling_imports_stubbed(tm
     assert result["lines"] == 2 and result["passed"] == 1
     assert result["failures"] == [{"pitch_id": "1:1:2", "error": "negative"}]
     assert "observer_app" not in sys.modules
+
+
+def test_surname_parser_ignores_stat_tokens_copied_from_the_bug():
+    assert surname_from_bug("1. ANTONACCI .766 OPS") == "ANTONACCI"
+    assert surname_from_bug("4. ALTUVE 0-2") == "ALTUVE"
+    assert surname_from_bug("5. MESA JR. .249") == "MESA"
+    assert surname_from_bug("9. O'HEARN") == "O'HEARN"
+    assert surname_from_bug(".300 OPS") is None
+
+
+def test_a_resolution_time_picks_the_exact_copy_of_a_double_detection():
+    pitches = [_pitch(1, 1, 0, 0, "Called Strike")]
+    det = [
+        {"release_t": 319.75, "match": None, "match_status": "unique"},
+        {"release_t": 320.0, "match": None, "match_status": "no_candidate"},
+    ]
+    out = apply_resolutions(
+        det, pitches, [{"release_t": 320.0, "action": "drop", "reason": "duplicate"}]
+    )
+    assert out[1]["resolution"]["action"] == "drop" and "resolution" not in out[0]

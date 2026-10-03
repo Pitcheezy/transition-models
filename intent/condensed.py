@@ -49,6 +49,7 @@ PAIR_SECONDS = 1.5
 AGREE_PX = 15.0
 SPEED_TOLERANCE_MPH = 1.0
 NAME_SUFFIXES = {"JR", "SR", "II", "III", "IV"}
+STAT_WORDS = {"OPS", "AVG", "OBP", "SLG", "HR", "RBI", "FOR", "ERA", "IP", "SO", "BB"}
 CATCH_DEPTHS = (-0.5, -1.0, -1.5)
 TRAJECTORY_KEYS = ("x0", "y0", "z0", "vX0", "vY0", "vZ0", "aX", "aY", "aZ")
 
@@ -108,11 +109,18 @@ def surname(full_name):
 
 
 def surname_from_bug(text):
-    """'2. BREGMAN' -> 'BREGMAN' (lineup numbers and initials dropped)."""
+    """'2. BREGMAN' -> 'BREGMAN'; lineup numbers, suffixes and stat tokens are dropped.
+
+    Readers sometimes copy the bug's stat line too ('1. ANTONACCI .766 OPS', '4. ALTUVE 0-2'),
+    so only tokens made of letters (and inner hyphens/apostrophes) count, minus stat words.
+    """
     if not text:
         return None
-    words = [w for w in fold(text).replace(".", " ").split() if not w.isdigit()]
-    words = [w for w in words if w not in NAME_SUFFIXES]
+    words = [
+        w
+        for w in fold(text).replace(".", " ").split()
+        if re.fullmatch(r"[A-Z][A-Z'\-]*", w) and w not in NAME_SUFFIXES and w not in STAT_WORDS
+    ]
     return words[-1] if words else None
 
 
@@ -575,6 +583,9 @@ def apply_resolutions(detections, pitches, decisions):
     by_key = {(p["at_bat_number"], p["pitch_number"]): p for p in pitches}
     for d in decisions:
         hits = [x for x in detections if abs(x["release_t"] - d["release_t"]) <= 0.3]
+        exact = [x for x in hits if abs(x["release_t"] - d["release_t"]) < 0.01]
+        if len(hits) > 1 and len(exact) == 1:
+            hits = exact  # two copies of one delivery 0.25 s apart: the exact time decides
         if len(hits) != 1:
             raise ValueError(f"resolution at t={d['release_t']} matches {len(hits)} detections")
         rec = hits[0]

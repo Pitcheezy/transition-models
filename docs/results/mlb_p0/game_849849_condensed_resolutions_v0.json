@@ -1,0 +1,21 @@
+{
+ "schema": "intent_condensed_resolutions_v0",
+ "game_pk": 849849,
+ "basis": "Operator decisions for the two scan detections that `python -m intent.condensed map` left open in the fallback game 849849 (prepared in advance; it enters the evaluation only if the plan's fallback rule triggers). Evidence used: the score bug, the post-pitch type/speed graphic, the feed's pitch order and pitcher, and the visible outcome. Statcast pitch locations and the mitt were not looked at.",
+ "decisions": [
+  {
+   "release_t": 320.0,
+   "action": "drop",
+   "status": "dropped_duplicate_range_boundary",
+   "reason": "The same delivery was reported by the readers of two adjacent scan ranges (release 319.7-319.9 s, on the 320 s boundary). The other copy (t=319.75) already matched 17:3 uniquely; both copies read top 2, 0-2, MURAKAMI, P:5 and FOUR SEAM 95, and 17:3 is FF 94.8 mph with 5 pitches thrown before by that pitcher."
+  },
+  {
+   "release_t": 718.25,
+   "action": "assign",
+   "at_bat_number": 51,
+   "pitch_number": 4,
+   "status": "resolved_by_pitch_graphic_and_order",
+   "reason": "A promo bar covered the score bug before release, so no count was read. The pitch lies between the matches 50:4 (t=699.75) and 52:1 (t=736.0), i.e. in PA 51 (bottom 6, Paredes vs David Sandlin). The readers saw a pitching change to #54 just before (the feed lists Sandlin as #54), the graphic CUTTER 93 and a ground ball in play; in PA 51 only 51:4 is in play and it is FC 92.7 mph (51:3 is a called strike, FC 91.1)."
+  }
+ ]
+}
