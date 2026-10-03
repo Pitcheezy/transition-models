@@ -91,7 +91,7 @@ M3 완료 기준은 [작업 지시서](INTENT_V0_WORK_ORDER.md)에 있다.
 
 | 항목 | 상태 | 파일 |
 |---|---|---|
-| 사람 라벨 (평가 2경기, 표시 50구 이상) | **대기**: 라벨 팩 2개(86장)를 2026-10-03 저장소 주인에게 넘겼다. 확보 0구 / 필요 50구 | 팩 manifest: `game_849845_intent_label_pack_v0.json`(e3e7cac83f68ebf1), `game_823407_intent_label_pack_v0.json`(c72e8a15a8a67507) |
+| 사람 라벨 (평가 2경기, 표시 50구 이상) | **진행 중**: 849845는 2026-10-03 라벨 완료(57장 중 표시 56, 기권 1), 823407(29장)은 대기. 두 경기 조건 때문에 M3는 아직 미충족 | 팩 manifest: `game_849845_intent_label_pack_v0.json`(e3e7cac83f68ebf1), `game_823407_intent_label_pack_v0.json`(c72e8a15a8a67507) |
 | 라벨 출처 | 가져올 때 기록: 라벨러 식별자(페이지 이름 칸, 비면 `--labeler`, 익명 가능), 내보낸 시각(`exported_at`, UTC), 라벨 시간(`elapsed_seconds`), 원본 sha256, 팩 ID, 프레임 해시 | `game_<경기>_intent_human_labels_raw_v0.json`(원본 그대로), `game_<경기>_intent_human_labels_v0.json`, `game_<경기>_intent_setup_check_v0.json` |
 | 정확도 보고서 | 도구 준비, 라벨 대기 | `intent_accuracy_report_v0.json` |
 | 보정과 해석의 한계 | 아래에 정리 | 이 문서, 보고서 `limits` |

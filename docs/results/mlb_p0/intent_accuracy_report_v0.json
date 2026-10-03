@@ -17,15 +17,16 @@
   "per_game": [
    {
     "game_pk": 849845,
-    "status": "awaiting_labels"
+    "person_marked": 56,
+    "person_undecided": 0
    },
    {
     "game_pk": 823407,
     "status": "awaiting_labels"
    }
   ],
-  "games_with_person_marks": 0,
-  "person_marked": 0,
+  "games_with_person_marks": 1,
+  "person_marked": 56,
   "games_with_undecided_frames": [],
   "met": false,
   "fallback": {
@@ -176,7 +177,329 @@
     "manifest": "docs/results/mlb_p0/game_849845_intent_label_pack_v0.json"
    },
    "person": {
-    "status": "awaiting_labels"
+    "status": "labeled",
+    "provenance": {
+     "labeler": "owner",
+     "labeler_source": "page",
+     "exported_at": "2026-10-03T10:52:05.822Z",
+     "exported_at_meaning": "time the person pressed export on the page (UTC); elapsed_seconds is the time the page was open and visible",
+     "elapsed_seconds": 403,
+     "pack_id": "e3e7cac83f68ebf1",
+     "raw_file": "docs/results/mlb_p0/game_849845_intent_human_labels_raw_v0.json",
+     "raw_sha256": "776c1c19fa00ccd568faaae6fe46362eb730016cf3d31c56b7c4a13a530a4766",
+     "labels_file": "docs/results/mlb_p0/game_849845_intent_human_labels_v0.json",
+     "setup_check_file": "docs/results/mlb_p0/game_849845_intent_setup_check_v0.json"
+    },
+    "frames_in_pack": 57,
+    "frames_decided": 57,
+    "person_undecided": 0,
+    "person_marked": 56,
+    "person_abstained": 1,
+    "person_abstention_reasons": {
+     "not_in_setup": 1
+    },
+    "person_abstention_rate": 0.017543859649122806,
+    "person_abstention_rate_denominator": "frames the person decided",
+    "availability": {
+     "both_marked": 43,
+     "both_abstained": 1,
+     "assistant_only": 0,
+     "person_only": 13,
+     "person_undecided": 0
+    },
+    "mitt_reading_pixels": {
+     "denominator": "frames where both the assistant and the person marked a mitt",
+     "distance": {
+      "n": 43,
+      "median": 2.0615528128088303,
+      "p90": 5.091168824543142
+     },
+     "dx_assistant_minus_person": {
+      "signed": {
+       "n": 43,
+       "mean": 0.5604651162790697,
+       "median": 0.6,
+       "se_of_mean": 0.33765426784583086
+      },
+      "absolute": {
+       "n": 43,
+       "median": 1.2,
+       "p90": 4.2
+      }
+     },
+     "dy_assistant_minus_person": {
+      "signed": {
+       "n": 43,
+       "mean": -0.6651162790697674,
+       "median": -0.4,
+       "se_of_mean": 0.2861878302923139
+      },
+      "absolute": {
+       "n": 43,
+       "median": 0.9,
+       "p90": 3.6
+      }
+     }
+    },
+    "mitt_reading_feet_same_plate": {
+     "denominator": "both marked a mitt and the person marked the plate front edge",
+     "distance": {
+      "n": 43,
+      "median": 0.05658992843254001,
+      "p90": 0.13906678251832824
+     },
+     "x_assistant_minus_person": {
+      "signed": {
+       "n": 43,
+       "mean": -0.014788372093023257,
+       "median": -0.0164,
+       "se_of_mean": 0.009146079898604302
+      },
+      "absolute": {
+       "n": 43,
+       "median": 0.0324,
+       "p90": 0.1109
+      }
+     },
+     "z_assistant_minus_person": {
+      "signed": {
+       "n": 43,
+       "mean": 0.01817906976744186,
+       "median": 0.0067,
+       "se_of_mean": 0.007789105290064253
+      },
+      "absolute": {
+       "n": 43,
+       "median": 0.025,
+       "p90": 0.0992
+      }
+     }
+    },
+    "output_vs_person_feet": {
+     "denominator": "both marked a mitt, the person marked the plate front edge, and the published line reached plate_feet",
+     "distance": {
+      "n": 43,
+      "median": 0.08843585245815183,
+      "p90": 0.1743107856674394
+     },
+     "x_published_minus_person": {
+      "signed": {
+       "n": 43,
+       "mean": -0.002467441860465116,
+       "median": -0.0103,
+       "se_of_mean": 0.011634677574795006
+      },
+      "absolute": {
+       "n": 43,
+       "median": 0.0509,
+       "p90": 0.128
+      }
+     },
+     "z_published_minus_person": {
+      "signed": {
+       "n": 43,
+       "mean": -0.05101860465116279,
+       "median": -0.049,
+       "se_of_mean": 0.012365597373489697
+      },
+      "absolute": {
+       "n": 43,
+       "median": 0.0512,
+       "p90": 0.149
+      }
+     }
+    },
+    "example_cases": {
+     "rule": "among frames where both marked a mitt: representative = output feet error closest to the median, best = smallest, worst = largest (mitt pixel distance when no frame reached plate_feet); ties by pitch_id; chosen by code, never by hand",
+     "metric": "output_feet_distance",
+     "median": 0.08843585245815183,
+     "cases": [
+      {
+       "role": "representative",
+       "pitch_id": "849845:50:2",
+       "value": 0.0884,
+       "mitt_px_diff": [
+        -1.1,
+        0.5
+       ],
+       "output_feet_diff": [
+        0.0077,
+        -0.0881
+       ]
+      },
+      {
+       "role": "best (success, not typical)",
+       "pitch_id": "849845:23:6",
+       "value": 0.0085,
+       "mitt_px_diff": [
+        0.4,
+        -3.8
+       ],
+       "output_feet_diff": [
+        -0.0082,
+        0.0021
+       ]
+      },
+      {
+       "role": "worst (failure)",
+       "pitch_id": "849845:38:6",
+       "value": 0.3223,
+       "mitt_px_diff": [
+        0.3,
+        -1.0
+       ],
+       "output_feet_diff": [
+        -0.0103,
+        -0.3221
+       ]
+      }
+     ]
+    },
+    "failure_cases": {
+     "largest_mitt_pixel_differences": [
+      {
+       "pitch_id": "849845:8:4",
+       "mitt_px_diff": [
+        4.8,
+        -4.4
+       ],
+       "distance_px": 6.51,
+       "output_feet_diff": [
+        -0.0072,
+        0.0824
+       ]
+      },
+      {
+       "pitch_id": "849845:7:1",
+       "mitt_px_diff": [
+        2.6,
+        -5.6
+       ],
+       "distance_px": 6.17,
+       "output_feet_diff": [
+        -0.068,
+        0.1605
+       ]
+      },
+      {
+       "pitch_id": "849845:13:1",
+       "mitt_px_diff": [
+        -5.3,
+        2.2
+       ],
+       "distance_px": 5.74,
+       "output_feet_diff": [
+        0.1863,
+        -0.1854
+       ]
+      },
+      {
+       "pitch_id": "849845:40:2",
+       "mitt_px_diff": [
+        4.8,
+        -1.9
+       ],
+       "distance_px": 5.16,
+       "output_feet_diff": [
+        -0.1104,
+        -0.0093
+       ]
+      },
+      {
+       "pitch_id": "849845:24:5",
+       "mitt_px_diff": [
+        3.6,
+        -3.6
+       ],
+       "distance_px": 5.09,
+       "output_feet_diff": [
+        -0.0123,
+        0.0116
+       ]
+      }
+     ],
+     "availability_disagreements": [
+      {
+       "pitch_id": "849845:2:7",
+       "assistant_status": "unavailable",
+       "assistant_reason": "only_one_reader_found_a_setup_frame",
+       "person_status": "marked"
+      },
+      {
+       "pitch_id": "849845:3:5",
+       "assistant_status": "unavailable",
+       "assistant_reason": "only_one_reader_found_a_setup_frame",
+       "person_status": "marked"
+      },
+      {
+       "pitch_id": "849845:14:5",
+       "assistant_status": "unavailable",
+       "assistant_reason": "readers_disagree_on_mitt",
+       "person_status": "marked"
+      },
+      {
+       "pitch_id": "849845:16:1",
+       "assistant_status": "unavailable",
+       "assistant_reason": "only_one_reader_found_a_setup_frame",
+       "person_status": "marked"
+      },
+      {
+       "pitch_id": "849845:29:3",
+       "assistant_status": "unavailable",
+       "assistant_reason": "only_one_reader_found_a_setup_frame",
+       "person_status": "marked"
+      },
+      {
+       "pitch_id": "849845:30:4",
+       "assistant_status": "unavailable",
+       "assistant_reason": "only_one_reader_found_a_setup_frame",
+       "person_status": "marked"
+      },
+      {
+       "pitch_id": "849845:30:5",
+       "assistant_status": "unavailable",
+       "assistant_reason": "only_one_reader_found_a_setup_frame",
+       "person_status": "marked"
+      },
+      {
+       "pitch_id": "849845:55:5",
+       "assistant_status": "unavailable",
+       "assistant_reason": "only_one_reader_found_a_setup_frame",
+       "person_status": "marked"
+      },
+      {
+       "pitch_id": "849845:56:5",
+       "assistant_status": "unavailable",
+       "assistant_reason": "readers_disagree_on_mitt",
+       "person_status": "marked"
+      },
+      {
+       "pitch_id": "849845:58:5",
+       "assistant_status": "unavailable",
+       "assistant_reason": "readers_disagree_on_mitt",
+       "person_status": "marked"
+      },
+      {
+       "pitch_id": "849845:62:2",
+       "assistant_status": "unavailable",
+       "assistant_reason": "readers_disagree_on_mitt",
+       "person_status": "marked"
+      },
+      {
+       "pitch_id": "849845:64:3",
+       "assistant_status": "unavailable",
+       "assistant_reason": "readers_disagree_on_mitt",
+       "person_status": "marked"
+      },
+      {
+       "pitch_id": "849845:66:1",
+       "assistant_status": "unavailable",
+       "assistant_reason": "readers_disagree_on_mitt",
+       "person_status": "marked"
+      }
+     ]
+    },
+    "warnings": []
    }
   },
   {
@@ -232,129 +555,184 @@
   }
  ],
  "evaluation_pooled": {
-  "games": [],
+  "games": [
+   849845
+  ],
   "scope": "evaluation games with imported labels only; development games never pooled",
-  "lines_in_output": 0,
-  "frames_in_pack": 0,
+  "lines_in_output": 57,
+  "frames_in_pack": 57,
   "assistant": {
-   "estimated": 0,
-   "unavailable": 0,
-   "abstention_rate": null,
+   "estimated": 43,
+   "unavailable": 14,
+   "abstention_rate": 0.24561403508771928,
    "abstention_rate_denominator": "output lines summed over the pooled games",
-   "abstention_reasons": {}
+   "abstention_reasons": {
+    "only_one_reader_found_a_setup_frame": 8,
+    "readers_disagree_on_mitt": 6
+   }
   },
-  "frames_decided_by_person": 0,
-  "person_marked": 0,
-  "person_abstained": 0,
-  "person_abstention_reasons": {},
-  "person_abstention_rate": null,
+  "frames_decided_by_person": 57,
+  "person_marked": 56,
+  "person_abstained": 1,
+  "person_abstention_reasons": {
+   "not_in_setup": 1
+  },
+  "person_abstention_rate": 0.017543859649122806,
   "person_abstention_rate_denominator": "frames the person decided, summed over the pooled games",
-  "availability": {},
+  "availability": {
+   "both_marked": 43,
+   "both_abstained": 1,
+   "assistant_only": 0,
+   "person_only": 13,
+   "person_undecided": 0
+  },
   "mitt_reading_pixels": {
    "denominator": "frames where both the assistant and the person marked a mitt",
    "distance": {
-    "n": 0,
-    "median": null,
-    "p90": null
+    "n": 43,
+    "median": 2.0615528128088303,
+    "p90": 5.091168824543142
    },
    "dx_assistant_minus_person": {
     "signed": {
-     "n": 0,
-     "mean": null,
-     "median": null,
-     "se_of_mean": null
+     "n": 43,
+     "mean": 0.5604651162790697,
+     "median": 0.6,
+     "se_of_mean": 0.33765426784583086
     },
     "absolute": {
-     "n": 0,
-     "median": null,
-     "p90": null
+     "n": 43,
+     "median": 1.2,
+     "p90": 4.2
     }
    },
    "dy_assistant_minus_person": {
     "signed": {
-     "n": 0,
-     "mean": null,
-     "median": null,
-     "se_of_mean": null
+     "n": 43,
+     "mean": -0.6651162790697674,
+     "median": -0.4,
+     "se_of_mean": 0.2861878302923139
     },
     "absolute": {
-     "n": 0,
-     "median": null,
-     "p90": null
+     "n": 43,
+     "median": 0.9,
+     "p90": 3.6
     }
    }
   },
   "mitt_reading_feet_same_plate": {
    "denominator": "both marked a mitt and the person marked the plate front edge",
    "distance": {
-    "n": 0,
-    "median": null,
-    "p90": null
+    "n": 43,
+    "median": 0.05658992843254001,
+    "p90": 0.13906678251832824
    },
    "x_assistant_minus_person": {
     "signed": {
-     "n": 0,
-     "mean": null,
-     "median": null,
-     "se_of_mean": null
+     "n": 43,
+     "mean": -0.014788372093023257,
+     "median": -0.0164,
+     "se_of_mean": 0.009146079898604302
     },
     "absolute": {
-     "n": 0,
-     "median": null,
-     "p90": null
+     "n": 43,
+     "median": 0.0324,
+     "p90": 0.1109
     }
    },
    "z_assistant_minus_person": {
     "signed": {
-     "n": 0,
-     "mean": null,
-     "median": null,
-     "se_of_mean": null
+     "n": 43,
+     "mean": 0.01817906976744186,
+     "median": 0.0067,
+     "se_of_mean": 0.007789105290064253
     },
     "absolute": {
-     "n": 0,
-     "median": null,
-     "p90": null
+     "n": 43,
+     "median": 0.025,
+     "p90": 0.0992
     }
    }
   },
   "output_vs_person_feet": {
    "denominator": "both marked a mitt, the person marked the plate front edge, and the published line reached plate_feet",
    "distance": {
-    "n": 0,
-    "median": null,
-    "p90": null
+    "n": 43,
+    "median": 0.08843585245815183,
+    "p90": 0.1743107856674394
    },
    "x_published_minus_person": {
     "signed": {
-     "n": 0,
-     "mean": null,
-     "median": null,
-     "se_of_mean": null
+     "n": 43,
+     "mean": -0.002467441860465116,
+     "median": -0.0103,
+     "se_of_mean": 0.011634677574795006
     },
     "absolute": {
-     "n": 0,
-     "median": null,
-     "p90": null
+     "n": 43,
+     "median": 0.0509,
+     "p90": 0.128
     }
    },
    "z_published_minus_person": {
     "signed": {
-     "n": 0,
-     "mean": null,
-     "median": null,
-     "se_of_mean": null
+     "n": 43,
+     "mean": -0.05101860465116279,
+     "median": -0.049,
+     "se_of_mean": 0.012365597373489697
     },
     "absolute": {
-     "n": 0,
-     "median": null,
-     "p90": null
+     "n": 43,
+     "median": 0.0512,
+     "p90": 0.149
     }
    }
   },
   "example_cases": {
    "rule": "among frames where both marked a mitt: representative = output feet error closest to the median, best = smallest, worst = largest (mitt pixel distance when no frame reached plate_feet); ties by pitch_id; chosen by code, never by hand",
-   "cases": []
+   "metric": "output_feet_distance",
+   "median": 0.08843585245815183,
+   "cases": [
+    {
+     "role": "representative",
+     "pitch_id": "849845:50:2",
+     "value": 0.0884,
+     "mitt_px_diff": [
+      -1.1,
+      0.5
+     ],
+     "output_feet_diff": [
+      0.0077,
+      -0.0881
+     ]
+    },
+    {
+     "role": "best (success, not typical)",
+     "pitch_id": "849845:23:6",
+     "value": 0.0085,
+     "mitt_px_diff": [
+      0.4,
+      -3.8
+     ],
+     "output_feet_diff": [
+      -0.0082,
+      0.0021
+     ]
+    },
+    {
+     "role": "worst (failure)",
+     "pitch_id": "849845:38:6",
+     "value": 0.3223,
+     "mitt_px_diff": [
+      0.3,
+      -1.0
+     ],
+     "output_feet_diff": [
+      -0.0103,
+      -0.3221
+     ]
+    }
+   ]
   }
  },
  "limits": [
