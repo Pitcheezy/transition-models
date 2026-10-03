@@ -1,0 +1,4905 @@
+{
+ "schema": "intent_condensed_read_reads_v0",
+ "workflow": "intent/workflows/condensed_read.js",
+ "workflow_run_id": "wf_dad9f795-f4d",
+ "readers": "two independent Claude Code workflow agents per block (A, B), model claude-opus-5-5",
+ "note": "raw agent results exported from the workflow journal; coordinates and text only, no images",
+ "reads": [
+  {
+   "chunk": 1,
+   "A": [
+    {
+     "at_bat_number": 1,
+     "pitch_number": 8,
+     "release_frame": 2679,
+     "live_cf_first_frame": 2571,
+     "setup_frame": 2676,
+     "setup_reason": null,
+     "mitt_center": [
+      693,
+      333
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       630,
+       372
+      ],
+      "right_end": [
+       688,
+       372
+      ]
+     },
+     "setup_uncertainty_pixels": 10,
+     "catch_frame": 2703,
+     "catch_reason": null,
+     "ball_visible_in_catch_frame": true,
+     "pocket_center": [
+      705,
+      244
+     ],
+     "catch_plate_front": {
+      "left_end": [
+       630,
+       372
+      ],
+      "right_end": [
+       687,
+       372
+      ]
+     },
+     "catch_uncertainty_pixels": 5,
+     "rubber_center": [
+      690,
+      627
+     ],
+     "rubber_width_px": 94,
+     "left_box": {
+      "x_used": 480,
+      "front_y": 379,
+      "back_y": 355
+     },
+     "right_box": {
+      "x_used": 840,
+      "front_y": 380,
+      "back_y": 356
+     },
+     "note": "There's a dissolve from the pitcher close-up at 2568-2571, and the CF view is clean after that. At 2676 the ball is still at the pitcher's raised hand near (797,348); at 2679 it is clearly free at (778,322). The catcher sets on one knee with his dark mitt resting low near the ground at about (693,333), indistinct against his legs, so it is only partly visible as a target. He then reaches up to his glove side and the ball sits in the pocket at 2703 (at 2700 it is touching the rising glove's edge, so the catch could be one frame earlier). At 2703 the plate's left end is hidden by the pitcher's cap. The camera did not move (right end and box lines match 2676), so I copied the left end from 2676."
+    },
+    {
+     "at_bat_number": 2,
+     "pitch_number": 7,
+     "release_frame": 3279,
+     "live_cf_first_frame": 3147,
+     "setup_frame": 3276,
+     "setup_reason": null,
+     "mitt_center": [
+      692,
+      334
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       635,
+       374
+      ],
+      "right_end": [
+       692,
+       374
+      ]
+     },
+     "setup_uncertainty_pixels": 10,
+     "catch_frame": null,
+     "catch_reason": "batter_hit_ball",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      695,
+      630
+     ],
+     "rubber_width_px": 95,
+     "left_box": {
+      "x_used": 480,
+      "front_y": 381,
+      "back_y": 356
+     },
+     "right_box": {
+      "x_used": 840,
+      "front_y": 382,
+      "back_y": 358
+     },
+     "note": "The window opens already in the live CF view, so the cut may be before 3147. At 3276 the pitcher's hand is a blur with no separate ball. At 3279 the ball shows as a white blob next to the catcher's right shoe at about (793,337), and it is clearly in flight by 3282 at (765,318). Release is fairly sure but could be 3276. The catcher's mitt rests low and dark near the ground at about (692,334), only partly distinct. The batter makes contact around 3303 (ball in play), so there is no catch."
+    },
+    {
+     "at_bat_number": 3,
+     "pitch_number": 5,
+     "release_frame": 4499,
+     "live_cf_first_frame": 4376,
+     "setup_frame": null,
+     "setup_reason": "glove_not_identifiable_blur_and_batter_leg_overlap",
+     "mitt_center": null,
+     "mitt_visible_fraction": null,
+     "setup_plate_front": null,
+     "setup_uncertainty_pixels": null,
+     "catch_frame": null,
+     "catch_reason": "ball_in_dirt_not_caught_cleanly",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      686,
+      625
+     ],
+     "rubber_width_px": 97,
+     "left_box": {
+      "x_used": 470,
+      "front_y": 370,
+      "back_y": 344
+     },
+     "right_box": {
+      "x_used": 840,
+      "front_y": 371,
+      "back_y": 345
+     },
+     "note": "The window is in the live CF view from 4376, but this pitch's footage is blurry. At 4499 the ball is already out of the hand at about (775,333). Around 4496 the catcher's glove-side area (about 650-700, 255-300) is a mix of wristband, shin guard and the right-handed batter's front leg, so I can't pick out the mitt and did not give a setup. The ball bounces in front of the plate (about (645,325) at 4517) and the catcher blocks or scoops it around 4523-4526, so there is no clean catch. Plate front at 4496 for reference: about (625,362)-(682,362)."
+    }
+   ],
+   "B": [
+    {
+     "at_bat_number": 1,
+     "pitch_number": 8,
+     "release_frame": 2679,
+     "live_cf_first_frame": 2571,
+     "setup_frame": 2676,
+     "setup_reason": null,
+     "mitt_center": [
+      690,
+      336
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       630,
+       373
+      ],
+      "right_end": [
+       687,
+       373
+      ]
+     },
+     "setup_uncertainty_pixels": 10,
+     "catch_frame": 2703,
+     "catch_reason": null,
+     "ball_visible_in_catch_frame": true,
+     "pocket_center": [
+      705,
+      243
+     ],
+     "catch_plate_front": {
+      "left_end": [
+       630,
+       373
+      ],
+      "right_end": [
+       687,
+       373
+      ]
+     },
+     "catch_uncertainty_pixels": 6,
+     "rubber_center": [
+      690,
+      627
+     ],
+     "rubber_width_px": 94,
+     "left_box": {
+      "x_used": 480,
+      "front_y": 379,
+      "back_y": 354
+     },
+     "right_box": {
+      "x_used": 820,
+      "front_y": 380,
+      "back_y": 355
+     },
+     "note": "Close-up of the pitcher dissolves into the live CF view at 2568-2571 (2571 still has a faint ghost). Ball is first seen out of the hand at 2679 at (780,322); at 2676 it is still at the hand. At 2676 the mitt rests low near the ground under the catcher's right thigh (glove-down posture), so the setup point is the low resting mitt. The ball rises and runs to the upper right; the glove reaches up and meets it at 2703 (ball at (705,243) against the dark glove), and it is hidden in the closed glove at 2706. In the catch frame the plate's left end is hidden by the pitcher's head, so I reused the setup-frame reading (static camera, right end matches at 687,373)."
+    },
+    {
+     "at_bat_number": 2,
+     "pitch_number": 7,
+     "release_frame": 3279,
+     "live_cf_first_frame": 3147,
+     "setup_frame": 3276,
+     "setup_reason": null,
+     "mitt_center": [
+      684,
+      336
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       635,
+       373
+      ],
+      "right_end": [
+       692,
+       373
+      ]
+     },
+     "setup_uncertainty_pixels": 10,
+     "catch_frame": null,
+     "catch_reason": "batter_hit_ball",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      695,
+      630
+     ],
+     "rubber_width_px": 94,
+     "left_box": {
+      "x_used": 480,
+      "front_y": 380,
+      "back_y": 356
+     },
+     "right_box": {
+      "x_used": 820,
+      "front_y": 381,
+      "back_y": 358
+     },
+     "note": "The live CF view runs through the whole window with no cut. At 3276 the arm is extended up and forward with the ball not separable; at 3279 a blurred ball streak is visible at about (790,335), so release is 3276-3279. At 3276 the mitt rests low on the ground under the catcher's thigh, partly covered (glove-down posture). The ball can be tracked from (768,318) at 3282 to (687,285) at 3300; the batter swings through at 3303 and puts it in play, so there is no catch."
+    },
+    {
+     "at_bat_number": 3,
+     "pitch_number": 5,
+     "release_frame": 4496,
+     "live_cf_first_frame": 4376,
+     "setup_frame": 4493,
+     "setup_reason": null,
+     "mitt_center": [
+      672,
+      268
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       623,
+       362
+      ],
+      "right_end": [
+       684,
+       362
+      ]
+     },
+     "setup_uncertainty_pixels": 15,
+     "catch_frame": null,
+     "catch_reason": "ball_in_dirt_not_caught_cleanly",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      686,
+      625
+     ],
+     "rubber_width_px": 99,
+     "left_box": {
+      "x_used": 480,
+      "front_y": 370,
+      "back_y": 344
+     },
+     "right_box": {
+      "x_used": 820,
+      "front_y": 371,
+      "back_y": 346
+     },
+     "note": "This CF view is framed wider than in PA1/PA2 (the plate sits at y about 362); it is live from the first frame of the window. The arm is overhead at 4493 and extended forward at 4496, so release is about 4496 (the ball is not resolved at the hand). The catcher is down on his knees in a blocking posture before release. The mitt is unclear, a light glove with a dark pocket at about (672,268) next to the umpire's legs, so I have low confidence in it. The ball is seen low by the catcher's knee at (645,325) at 4517 and (632,330) at 4520, rolling to image-left in the dirt, so there is no clean catch."
+    }
+   ]
+  },
+  {
+   "chunk": 2,
+   "A": [
+    {
+     "at_bat_number": 4,
+     "pitch_number": 2,
+     "release_frame": 5664,
+     "live_cf_first_frame": 5556,
+     "setup_frame": 5661,
+     "setup_reason": null,
+     "mitt_center": [
+      690,
+      316
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       630,
+       357
+      ],
+      "right_end": [
+       690,
+       357
+      ]
+     },
+     "setup_uncertainty_pixels": 15,
+     "catch_frame": null,
+     "catch_reason": "batter_hit_ball",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      691,
+      621
+     ],
+     "rubber_width_px": 96,
+     "left_box": {
+      "x_used": 480,
+      "front_y": 367,
+      "back_y": 341
+     },
+     "right_box": {
+      "x_used": 840,
+      "front_y": 367,
+      "back_y": 342
+     },
+     "note": "Frame 5553 is a dissolve from the batter close-up, so the first clean centre-field frame is 5556. In 5661 the ball is still in the raised hand at about (807,335), and by 5664 the arm has come through, so release is between 5661 and 5664. The catcher sets his dark mitt low between his knees at about (690,316). It is hard to separate from his shin guards, so the mitt position is moderately uncertain. The ball reaches the glove area at about (686,287) in 5685 and the batter swings through, so there is no catch."
+    },
+    {
+     "at_bat_number": 5,
+     "pitch_number": 5,
+     "release_frame": 6629,
+     "live_cf_first_frame": 6599,
+     "setup_frame": 6626,
+     "setup_reason": null,
+     "mitt_center": [
+      687,
+      302
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       633,
+       357
+      ],
+      "right_end": [
+       694,
+       357
+      ]
+     },
+     "setup_uncertainty_pixels": 12,
+     "catch_frame": 6653,
+     "catch_reason": null,
+     "ball_visible_in_catch_frame": true,
+     "pocket_center": [
+      733,
+      232
+     ],
+     "catch_plate_front": {
+      "left_end": [
+       634,
+       357
+      ],
+      "right_end": [
+       694,
+       357
+      ]
+     },
+     "catch_uncertainty_pixels": 5,
+     "rubber_center": [
+      694,
+      622
+     ],
+     "rubber_width_px": 98,
+     "left_box": {
+      "x_used": 480,
+      "front_y": 369,
+      "back_y": 341
+     },
+     "right_box": {
+      "x_used": 840,
+      "front_y": 369,
+      "back_y": 342
+     },
+     "note": "Frame 6596 is a dissolve, so the first clean live frame is 6599. The pitcher's arm comes through between 6626 and 6629, and the ball first shows at (796,324) in 6629. It then rises slowly up and to the left: (788,312), (765,280), (749,256), (742,244), (737,238). At 6626 the mitt is a dark glove held low between the catcher's knees, and it rises to meet the ball. The ball sits in the glove pocket at 6653 at the upper right of the catcher's chest."
+    },
+    {
+     "at_bat_number": 6,
+     "pitch_number": 5,
+     "release_frame": 7523,
+     "live_cf_first_frame": 7424,
+     "setup_frame": 7520,
+     "setup_reason": null,
+     "mitt_center": [
+      713,
+      318
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       633,
+       357
+      ],
+      "right_end": [
+       695,
+       357
+      ]
+     },
+     "setup_uncertainty_pixels": 15,
+     "catch_frame": 7544,
+     "catch_reason": null,
+     "ball_visible_in_catch_frame": true,
+     "pocket_center": [
+      698,
+      303
+     ],
+     "catch_plate_front": {
+      "left_end": [
+       633,
+       357
+      ],
+      "right_end": [
+       695,
+       357
+      ]
+     },
+     "catch_uncertainty_pixels": 6,
+     "rubber_center": [
+      694,
+      613
+     ],
+     "rubber_width_px": 98,
+     "left_box": {
+      "x_used": 480,
+      "front_y": 365,
+      "back_y": 341
+     },
+     "right_box": {
+      "x_used": 840,
+      "front_y": 366.5,
+      "back_y": 342.5
+     },
+     "note": "Frames 7418 and 7421 are dissolves, so the first clean live frame is 7424. King is left-handed: the ball is still in his raised hand at (570,363) in 7520 and is out at (585,337) in 7523. The ball then tracks (597,327), (617,312), (627,305), (650,298) and (687,302) to the glove. The catcher's low dark mitt next to his right knee is only partly separable from his leg guards. The ball is first inside the pocket at 7544. The glove is then dragged down and to the right as the bat comes through in 7547, and the foul-tip contact itself is not visible."
+    }
+   ],
+   "B": [
+    {
+     "at_bat_number": 4,
+     "pitch_number": 2,
+     "release_frame": 5664,
+     "live_cf_first_frame": 5556,
+     "setup_frame": 5661,
+     "setup_reason": null,
+     "mitt_center": [
+      694,
+      317
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       630,
+       359
+      ],
+      "right_end": [
+       688,
+       359
+      ]
+     },
+     "setup_uncertainty_pixels": 10,
+     "catch_frame": null,
+     "catch_reason": "batter_swung_contact_unclear: ball last seen at (686,288) above the glove in 5685, the bat comes through in 5688 and the ball is never seen again; the umpire stands up and looks out and the batter watches the field afterwards, so I cannot confirm a clean catch",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      690,
+      621
+     ],
+     "rubber_width_px": 99,
+     "left_box": {
+      "x_used": 480,
+      "front_y": 366,
+      "back_y": 341
+     },
+     "right_box": {
+      "x_used": 840,
+      "front_y": 367,
+      "back_y": 343
+     },
+     "note": "5553 is a dissolve and 5556 still carries a faint ghost but is live-dominant. In 5661 the throwing hand is a blurred blob at about (810,335). The ball is first seen clearly at (746,295) in 5670 (it is probably hidden by the catcher's white shoe in 5664 and 5667), so release is 5664 +/-1 sample. The mitt rests low on the dirt beside the catcher's down-knee (one-knee stance) and is part-hidden by his thigh; its laces are visible."
+    },
+    {
+     "at_bat_number": 5,
+     "pitch_number": 5,
+     "release_frame": 6629,
+     "live_cf_first_frame": 6599,
+     "setup_frame": 6626,
+     "setup_reason": null,
+     "mitt_center": [
+      687,
+      305
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       634,
+       359
+      ],
+      "right_end": [
+       693,
+       359
+      ]
+     },
+     "setup_uncertainty_pixels": 12,
+     "catch_frame": 6653,
+     "catch_reason": null,
+     "ball_visible_in_catch_frame": true,
+     "pocket_center": [
+      731,
+      232
+     ],
+     "catch_plate_front": {
+      "left_end": [
+       633,
+       359
+      ],
+      "right_end": [
+       692,
+       359
+      ]
+     },
+     "catch_uncertainty_pixels": 5,
+     "rubber_center": [
+      695,
+      622
+     ],
+     "rubber_width_px": 97,
+     "left_box": {
+      "x_used": 480,
+      "front_y": 366,
+      "back_y": 342
+     },
+     "right_box": {
+      "x_used": 800,
+      "front_y": 366,
+      "back_y": 343
+     },
+     "note": "6596 is a cross-dissolve and 6599 is the first clean live frame. The ball is separate from the hand at (797,325) in 6629. The setup mitt is a dark, laced shape held low between the catcher's legs, part-hidden by his thigh and shin guard, so its location is only moderately certain. The catch is high and to image-right: in 6650 the ball is at the edge of the open glove, and in 6653 it sits in the pocket."
+    },
+    {
+     "at_bat_number": 6,
+     "pitch_number": 5,
+     "release_frame": 7520,
+     "live_cf_first_frame": 7424,
+     "setup_frame": 7517,
+     "setup_reason": null,
+     "mitt_center": [
+      706,
+      318
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       634,
+       359
+      ],
+      "right_end": [
+       690,
+       359
+      ]
+     },
+     "setup_uncertainty_pixels": 10,
+     "catch_frame": 7544,
+     "catch_reason": null,
+     "ball_visible_in_catch_frame": true,
+     "pocket_center": [
+      697,
+      304
+     ],
+     "catch_plate_front": {
+      "left_end": [
+       634,
+       359
+      ],
+      "right_end": [
+       690,
+       359
+      ]
+     },
+     "catch_uncertainty_pixels": 6,
+     "rubber_center": [
+      693,
+      614
+     ],
+     "rubber_width_px": 93,
+     "left_box": {
+      "x_used": 480,
+      "front_y": 366,
+      "back_y": 342
+     },
+     "right_box": {
+      "x_used": 800,
+      "front_y": 367,
+      "back_y": 344
+     },
+     "note": "7418 and 7421 are a dissolve with a pitcher close-up overlay, and 7424 is the first clean live frame. In 7520 a blurred white blob sits just beyond the hand at (569,364); the ball is clear at (587,337) in 7523 and is tracked low into the mitt. In 7541 it is at the glove edge (686,301), and in 7544 it is in the pocket. The setup mitt rests on the dirt beside the catcher's thigh in a one-knee stance and is partly hidden. The bat crosses only after the ball is in the glove, and I could not see the tip itself."
+    }
+   ]
+  },
+  {
+   "chunk": 3,
+   "A": [
+    {
+     "at_bat_number": 7,
+     "pitch_number": 1,
+     "release_frame": 9114,
+     "live_cf_first_frame": 9039,
+     "setup_frame": 9111,
+     "setup_reason": null,
+     "mitt_center": [
+      688,
+      331
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       625,
+       372
+      ],
+      "right_end": [
+       681,
+       372
+      ]
+     },
+     "setup_uncertainty_pixels": 12,
+     "catch_frame": null,
+     "catch_reason": "batter_hit_ball",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      684,
+      627
+     ],
+     "rubber_width_px": 94,
+     "left_box": {
+      "x_used": 480,
+      "front_y": 379,
+      "back_y": 355
+     },
+     "right_box": {
+      "x_used": 820,
+      "front_y": 379,
+      "back_y": 357
+     },
+     "note": "The live CF view dissolves in at 9039 (blended with the close-up) and is clean by 9045. At 9111 the ball is still in the lefty's hand; at 9114 it is in flight near (543,363). Before release the catcher drops his dark mitt to rest low near the ground by his left knee at about (688,331), half in shadow beside the batter's front foot, so it reads as a low resting glove rather than a clearly raised target. The batter swings and makes contact around 9132-9138, so there is no catch."
+    },
+    {
+     "at_bat_number": 8,
+     "pitch_number": 3,
+     "release_frame": 9791,
+     "live_cf_first_frame": 9737,
+     "setup_frame": 9788,
+     "setup_reason": null,
+     "mitt_center": [
+      731,
+      340
+     ],
+     "mitt_visible_fraction": "full",
+     "setup_plate_front": {
+      "left_end": [
+       628,
+       375
+      ],
+      "right_end": [
+       684,
+       375
+      ]
+     },
+     "setup_uncertainty_pixels": 8,
+     "catch_frame": null,
+     "catch_reason": "batter_hit_ball",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      688,
+      629
+     ],
+     "rubber_width_px": 95,
+     "left_box": {
+      "x_used": 480,
+      "front_y": 381,
+      "back_y": 358
+     },
+     "right_box": {
+      "x_used": 820,
+      "front_y": 383,
+      "back_y": 360
+     },
+     "note": "The live view dissolves in at 9737 and is clean by about 9740. The ball first shows out of the hand at 9791, near (548,372). The catcher is shifted to image right, away from the lefty Alvarez, with his black mitt held low just above the dirt at about (731,340). The mitt is fully visible from 9782 to 9788. Alvarez swings at about 9815-9821 and the ball is put in play, so there is no catch."
+    },
+    {
+     "at_bat_number": 10,
+     "pitch_number": 3,
+     "release_frame": 11143,
+     "live_cf_first_frame": 11080,
+     "setup_frame": 11140,
+     "setup_reason": null,
+     "mitt_center": [
+      711,
+      336
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       630,
+       372
+      ],
+      "right_end": [
+       686,
+       372
+      ]
+     },
+     "setup_uncertainty_pixels": 12,
+     "catch_frame": null,
+     "catch_reason": "batter_hit_ball",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      690,
+      627
+     ],
+     "rubber_width_px": 95,
+     "left_box": {
+      "x_used": 480,
+      "front_y": 379,
+      "back_y": 355
+     },
+     "right_box": {
+      "x_used": 820,
+      "front_y": 379,
+      "back_y": 358
+     },
+     "note": "The live view dissolves in at 11080 and is clean a frame or two later. The ball is first out of the hand at 11143, near (550,358). Before release the catcher's mitt rests low in shadow by his left knee, at about (711,336) with the white wristband just above it. It is dim and partly blocked by his leg, so the centre is uncertain. The dark shape at the image left of the catcher (about 648,286) is his throwing arm tucked behind his leg, not the mitt. The mitt rises toward the ball from 11158, and Altuve swings at 11161-11167 and puts the ball in play, so there is no catch."
+    }
+   ],
+   "B": [
+    {
+     "at_bat_number": 7,
+     "pitch_number": 1,
+     "release_frame": 9114,
+     "live_cf_first_frame": 9039,
+     "setup_frame": null,
+     "setup_reason": "glove_not_presented_resting_on_ground",
+     "mitt_center": null,
+     "mitt_visible_fraction": null,
+     "setup_plate_front": null,
+     "setup_uncertainty_pixels": null,
+     "catch_frame": null,
+     "catch_reason": "batter_hit_ball",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      684,
+      627
+     ],
+     "rubber_width_px": 93,
+     "left_box": {
+      "x_used": 470,
+      "front_y": 380,
+      "back_y": 354
+     },
+     "right_box": {
+      "x_used": 840,
+      "front_y": 380,
+      "back_y": 356
+     },
+     "note": "Live CF view dissolves in at 9039. Ball first seen out of the hand at 9114, at about (542,362). From 9105 through release (9111/9114) the catcher's dark mitt rests on the dirt at about (690,333) and is not raised as a target; he lifts it only after release (near the chest at about (650,270) by 9132). Peña swings and makes contact around 9135-9138, so there is no catch. Plate front on 9111 is about (625,372)-(681,372); rubber, boxes and plate were read on 9111."
+    },
+    {
+     "at_bat_number": 8,
+     "pitch_number": 3,
+     "release_frame": 9791,
+     "live_cf_first_frame": 9734,
+     "setup_frame": null,
+     "setup_reason": "glove_not_presented_resting_on_ground",
+     "mitt_center": null,
+     "mitt_visible_fraction": null,
+     "setup_plate_front": null,
+     "setup_uncertainty_pixels": null,
+     "catch_frame": null,
+     "catch_reason": "batter_hit_ball",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      688,
+      629
+     ],
+     "rubber_width_px": 95,
+     "left_box": {
+      "x_used": 470,
+      "front_y": 381,
+      "back_y": 357
+     },
+     "right_box": {
+      "x_used": 840,
+      "front_y": 381,
+      "back_y": 360
+     },
+     "note": "A very faint dissolve of the live CF view starts at 9734 and is clear by 9737-9740. Ball first seen out of the hand at 9791, at about (547,370). Through release, the catcher's black mitt rests on the dirt between his feet at about (731,341) (on 9788) and is not raised as a target; it comes up only after release (about (707,295) at 9812). Alvarez swings at 9818 and the ball is not caught. Plate front on 9788 is about (628,375)-(685,375)."
+    },
+    {
+     "at_bat_number": 10,
+     "pitch_number": 3,
+     "release_frame": 11143,
+     "live_cf_first_frame": 11080,
+     "setup_frame": null,
+     "setup_reason": "glove_not_identifiable_held_low_behind_leg",
+     "mitt_center": null,
+     "mitt_visible_fraction": null,
+     "setup_plate_front": null,
+     "setup_uncertainty_pixels": null,
+     "catch_frame": null,
+     "catch_reason": "batter_hit_ball",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      689,
+      626
+     ],
+     "rubber_width_px": 94,
+     "left_box": {
+      "x_used": 480,
+      "front_y": 379,
+      "back_y": 353
+     },
+     "right_box": {
+      "x_used": 840,
+      "front_y": 379,
+      "back_y": 355
+     },
+     "note": "Live CF view dissolves in at 11080. Ball first seen out of the hand at 11143, at about (550,358); at 11140 the arm is extended but no ball is seen. Around 11116-11122 the catcher handles something at his chest, then from 11128 he drops low and his mitt cannot be clearly seen. It may be the dark blob near (700-718, 320-345) by his leg, but that is too ambiguous to give. Altuve makes contact at about 11164. Plate front on 11140 is about (630,371)-(687,371); rubber, boxes and plate were read on 11140."
+    }
+   ]
+  },
+  {
+   "chunk": 4,
+   "A": [
+    {
+     "at_bat_number": 11,
+     "pitch_number": 4,
+     "release_frame": 11934,
+     "live_cf_first_frame": 11880,
+     "setup_frame": 11931,
+     "setup_reason": null,
+     "mitt_center": [
+      661,
+      326
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       634,
+       367
+      ],
+      "right_end": [
+       690,
+       367
+      ]
+     },
+     "setup_uncertainty_pixels": 12,
+     "catch_frame": null,
+     "catch_reason": "batter_hit_ball (swing and contact around 11955-11958, in play)",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      692,
+      621
+     ],
+     "rubber_width_px": 95,
+     "left_box": {
+      "x_used": 480,
+      "front_y": 373,
+      "back_y": 349
+     },
+     "right_box": {
+      "x_used": 800,
+      "front_y": 375,
+      "back_y": 351
+     },
+     "note": "Live CF view dissolves in at 11880 (11877 is pure close-up); ball first seen out of hand at 11934 at ~(571,368), hand at 11931 still blurred around (568,385). The black glove is held low near the catcher's knees (dark on dark gear, low contrast), so the mitt centre is only moderately sure; right-box front line is faint and close to the foul line."
+    },
+    {
+     "at_bat_number": 12,
+     "pitch_number": 2,
+     "release_frame": 12752,
+     "live_cf_first_frame": 12719,
+     "setup_frame": 12749,
+     "setup_reason": null,
+     "mitt_center": [
+      636,
+      284
+     ],
+     "mitt_visible_fraction": "full",
+     "setup_plate_front": {
+      "left_end": [
+       619,
+       371
+      ],
+      "right_end": [
+       676,
+       371
+      ]
+     },
+     "setup_uncertainty_pixels": 6,
+     "catch_frame": null,
+     "catch_reason": "batter_hit_ball (swing and contact around 12773-12782, in play)",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      678,
+      630
+     ],
+     "rubber_width_px": 93,
+     "left_box": {
+      "x_used": 480,
+      "front_y": 377,
+      "back_y": 352
+     },
+     "right_box": {
+      "x_used": 800,
+      "front_y": 377,
+      "back_y": 357
+     },
+     "note": "Live view starts as a faint dissolve at 12719; ball is at the hand at 12749 (~562,372) and clearly out at 12752 (~570,357). Glove is clearly open in front of the catcher's chest at 12749; box front lines are faint, especially the right one near the foul line."
+    },
+    {
+     "at_bat_number": 13,
+     "pitch_number": 4,
+     "release_frame": 13858,
+     "live_cf_first_frame": 13777,
+     "setup_frame": 13855,
+     "setup_reason": null,
+     "mitt_center": [
+      661,
+      259
+     ],
+     "mitt_visible_fraction": "full",
+     "setup_plate_front": {
+      "left_end": [
+       628,
+       374
+      ],
+      "right_end": [
+       686,
+       374
+      ]
+     },
+     "setup_uncertainty_pixels": 8,
+     "catch_frame": null,
+     "catch_reason": "hit_by_pitch (ball rises into the batter's upper body around 13873-13876, never reaches the glove)",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      685,
+      628
+     ],
+     "rubber_width_px": 90,
+     "left_box": {
+      "x_used": 470,
+      "front_y": 380,
+      "back_y": null
+     },
+     "right_box": {
+      "x_used": 800,
+      "front_y": 381,
+      "back_y": 358
+     },
+     "note": "Dissolve into the live CF view at 13777 (13774 is an earlier 0-0 wide shot from behind home). The ball is in the hand at 13855 and appears just above the hand at 13858 (~567,350). The glove is dark against the dark chest protector at 13855 but its outline is readable. The left box's back line is hidden by the batter's feet and shadow."
+    }
+   ],
+   "B": [
+    {
+     "at_bat_number": 11,
+     "pitch_number": 4,
+     "release_frame": 11934,
+     "live_cf_first_frame": 11880,
+     "setup_frame": 11931,
+     "setup_reason": null,
+     "mitt_center": [
+      657,
+      305
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       632.5,
+       367
+      ],
+      "right_end": [
+       691,
+       367
+      ]
+     },
+     "setup_uncertainty_pixels": 15,
+     "catch_frame": null,
+     "catch_reason": "batter_hit_ball",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      693,
+      621
+     ],
+     "rubber_width_px": 93,
+     "left_box": {
+      "x_used": 520,
+      "front_y": 373,
+      "back_y": 349.5
+     },
+     "right_box": {
+      "x_used": 830,
+      "front_y": 374.5,
+      "back_y": 351
+     },
+     "note": "Live CF view fades in at 11880 (dissolve). Arm fully extended at 11931 and ball first seen out of hand at (570,369) in 11934. At setup the glove is not clearly separable; a dark mass below the chest protector where the glove arm ends is read as a glove held low (low confidence). The batter swings through the zone at 11958 and puts the ball in play, so there is no catch."
+    },
+    {
+     "at_bat_number": 12,
+     "pitch_number": 2,
+     "release_frame": 12752,
+     "live_cf_first_frame": 12719,
+     "setup_frame": 12749,
+     "setup_reason": null,
+     "mitt_center": [
+      641,
+      285
+     ],
+     "mitt_visible_fraction": "full",
+     "setup_plate_front": {
+      "left_end": [
+       619,
+       372
+      ],
+      "right_end": [
+       676,
+       372
+      ]
+     },
+     "setup_uncertainty_pixels": 8,
+     "catch_frame": null,
+     "catch_reason": "batter_hit_ball",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      678.5,
+      630
+     ],
+     "rubber_width_px": 95,
+     "left_box": {
+      "x_used": 470,
+      "front_y": 379,
+      "back_y": 353
+     },
+     "right_box": {
+      "x_used": 820,
+      "front_y": 380,
+      "back_y": 356
+     },
+     "note": "Live CF view first appears faintly in the dissolve at 12719 and is clear by 12725. Arm extended at 12749, and the ball is out of the hand at (570,357) in 12752. The dark glove sits low at the bottom of the zone box and is fairly clear. The ball approaches at 12770 and the batter's swing makes contact around 12776 (in play), so there is no catch."
+    },
+    {
+     "at_bat_number": 13,
+     "pitch_number": 4,
+     "release_frame": 13858,
+     "live_cf_first_frame": 13777,
+     "setup_frame": 13855,
+     "setup_reason": null,
+     "mitt_center": [
+      662,
+      259
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       627.5,
+       373
+      ],
+      "right_end": [
+       685,
+       373
+      ]
+     },
+     "setup_uncertainty_pixels": 12,
+     "catch_frame": null,
+     "catch_reason": "hit_by_pitch",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      685,
+      627
+     ],
+     "rubber_width_px": 88,
+     "left_box": {
+      "x_used": 460,
+      "front_y": 380,
+      "back_y": null
+     },
+     "right_box": {
+      "x_used": 815,
+      "front_y": 381,
+      "back_y": 358
+     },
+     "note": "Live CF view first appears faintly in the dissolve at 13777 and dominates at 13780. At 13855 the hand is at extension with the ball at its tip (565,370); at 13858 the arm is blurred coming down, so 13858 is the first frame with the ball out (ball itself not separable there; seen at (572,312) in 13861). The dark glove is held at the chest against the dark chest protector (partial, moderate confidence). The ball is tracked up into the batter's upper body by 13879 (HBP), so there is no catch. The left box back line is worn/hidden by the batter's feet."
+    }
+   ]
+  },
+  {
+   "chunk": 5,
+   "A": [
+    {
+     "at_bat_number": 14,
+     "pitch_number": 3,
+     "release_frame": 15135,
+     "live_cf_first_frame": 15072,
+     "setup_frame": 15132,
+     "setup_reason": null,
+     "mitt_center": [
+      685,
+      286
+     ],
+     "mitt_visible_fraction": "full",
+     "setup_plate_front": {
+      "left_end": [
+       639,
+       372
+      ],
+      "right_end": [
+       696,
+       371
+      ]
+     },
+     "setup_uncertainty_pixels": 8,
+     "catch_frame": null,
+     "catch_reason": "batted_ball: batter swings and makes contact about frame 15159 (ball at (674,274) in 15156, then gone toward the field)",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      698.5,
+      629
+     ],
+     "rubber_width_px": 95,
+     "left_box": {
+      "x_used": 480,
+      "front_y": 378,
+      "back_y": 352.5
+     },
+     "right_box": {
+      "x_used": 800,
+      "front_y": 378.5,
+      "back_y": 355.5
+     },
+     "note": "Live CF view fades in from 15072 (dissolve) and is clean from 15075. Arm is extended at 15132 with no ball separable from it; the ball is first clearly free at (590,362) in 15135, then (607,342) in 15138. The catcher's dark mitt is held in front of his chest, low inside the broadcast zone box. It is visible but low-contrast. The front lines of both boxes are faint (intensity profile)."
+    },
+    {
+     "at_bat_number": 15,
+     "pitch_number": 4,
+     "release_frame": 17083,
+     "live_cf_first_frame": 17071,
+     "setup_frame": 17080,
+     "setup_reason": null,
+     "mitt_center": [
+      713,
+      320
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       632,
+       362
+      ],
+      "right_end": [
+       691,
+       362.5
+      ]
+     },
+     "setup_uncertainty_pixels": 12,
+     "catch_frame": null,
+     "catch_reason": "batted_ball: contact around frame 17107 (ball at (625,270) in 17104 just before the swing)",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      692,
+      626
+     ],
+     "rubber_width_px": 94,
+     "left_box": {
+      "x_used": 480,
+      "front_y": 369.5,
+      "back_y": 343
+     },
+     "right_box": {
+      "x_used": 800,
+      "front_y": 369.5,
+      "back_y": 346
+     },
+     "note": "Live view is in a dissolve at 17071-17074 and clean from 17077. At 17080 the catcher holds his dark mitt low by his right knee/shin guard (image right), not raised in the zone. It blends with the shin guard, so it is only partly readable, and it is questionable whether this is a presented target; it rises into the zone only after release (17089-17095). The ball is first free at (576,342) in 17083."
+    },
+    {
+     "at_bat_number": 16,
+     "pitch_number": 3,
+     "release_frame": 18869,
+     "live_cf_first_frame": 18836,
+     "setup_frame": 18866,
+     "setup_reason": null,
+     "mitt_center": [
+      675,
+      326
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       629,
+       372.5
+      ],
+      "right_end": [
+       686,
+       372.5
+      ]
+     },
+     "setup_uncertainty_pixels": 10,
+     "catch_frame": null,
+     "catch_reason": "batted_ball: ball at (665,290) in 18887, swing contact about 18890",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      689,
+      625.5
+     ],
+     "rubber_width_px": 93,
+     "left_box": {
+      "x_used": 500,
+      "front_y": 382,
+      "back_y": 354
+     },
+     "right_box": {
+      "x_used": 800,
+      "front_y": 380,
+      "back_y": 356.5
+     },
+     "note": "Live view dissolves in at 18836 and is clean from 18839. The release frame is uncertain by one step: at 18866 the arm is at release height, with the hand/ball blur reaching about (757,363). By 18869 the arm has come through, but the ball is hidden behind the batter's white shoe; the ball is first clearly seen at (711,324) in 18875. In the setup frame the catcher's dark mitt rests low near his knee/ground (partial, low target), and he raises it only after release (18878)."
+    }
+   ],
+   "B": [
+    {
+     "at_bat_number": 14,
+     "pitch_number": 3,
+     "release_frame": 15132,
+     "live_cf_first_frame": 15075,
+     "setup_frame": 15129,
+     "setup_reason": null,
+     "mitt_center": [
+      685,
+      288
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       640,
+       371.5
+      ],
+      "right_end": [
+       696,
+       371.5
+      ]
+     },
+     "setup_uncertainty_pixels": 10,
+     "catch_frame": null,
+     "catch_reason": "batter_hit_ball",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      696,
+      629
+     ],
+     "rubber_width_px": 90,
+     "left_box": {
+      "x_used": 500,
+      "front_y": 379.5,
+      "back_y": 353
+     },
+     "right_box": {
+      "x_used": 800,
+      "front_y": 379.5,
+      "back_y": 355
+     },
+     "note": "15072 is a dissolve and 15075 is the first clean live CF frame. At 15132 the throwing arm is fully extended with no separate ball, and the free ball shows at (590,362) in 15135. On 15129 the dark mitt sits in front of the catcher's chest, partly blending with the chest protector and inside the grey overlay box. The ball reaches the glove area at about 15153, the bat makes contact at about 15157, and a batted ball is in flight at 15165, so there is no catch. The left box's back line is faint."
+    },
+    {
+     "at_bat_number": 15,
+     "pitch_number": 4,
+     "release_frame": 17080,
+     "live_cf_first_frame": 17074,
+     "setup_frame": 17077,
+     "setup_reason": null,
+     "mitt_center": [
+      711,
+      322
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       632,
+       362.5
+      ],
+      "right_end": [
+       691,
+       363
+      ]
+     },
+     "setup_uncertainty_pixels": 10,
+     "catch_frame": null,
+     "catch_reason": "batter_hit_ball",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      692,
+      625.5
+     ],
+     "rubber_width_px": 91.5,
+     "left_box": {
+      "x_used": 480,
+      "front_y": 370,
+      "back_y": 343
+     },
+     "right_box": {
+      "x_used": 800,
+      "front_y": 371,
+      "back_y": 346
+     },
+     "note": "17071 is a roughly 50% dissolve over a batter close-up, and 17074 is the first mostly clean live CF frame. The pitcher's arm is fully extended at 17080, and the free ball shows at (576,341) in 17083, then tracks up to (625,269) by 17104. Before release the catcher holds the mitt low beside his knee in a one-knee stance, at about (700-725, 310-335): it is dark, against dark gear, so only partly distinct, and I am unsure whether it is a deliberate target. The bat meets the ball at about 17107 (in play), so there is no catch."
+    },
+    {
+     "at_bat_number": 16,
+     "pitch_number": 3,
+     "release_frame": 18866,
+     "live_cf_first_frame": 18839,
+     "setup_frame": 18863,
+     "setup_reason": null,
+     "mitt_center": [
+      674,
+      329
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       630,
+       373.5
+      ],
+      "right_end": [
+       685.5,
+       373.5
+      ]
+     },
+     "setup_uncertainty_pixels": 10,
+     "catch_frame": null,
+     "catch_reason": "batter_hit_ball",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      689,
+      626
+     ],
+     "rubber_width_px": 93,
+     "left_box": {
+      "x_used": 520,
+      "front_y": 380,
+      "back_y": 354
+     },
+     "right_box": {
+      "x_used": 800,
+      "front_y": 381,
+      "back_y": 358
+     },
+     "note": "18836 is a dissolve from a close-up, and 18839 is the first live CF frame (a faint residue of the overlay remains). At 18866 the throwing arm is extended high with a streak of motion blur, so release is about 18866, give or take one sample. The catcher (one knee down) holds the mitt low near the ground at about (660-690, 320-337), partly visible and dark against his shin guard, then raises it to about (655,290) as the ball arrives. The ball is at (666,289) in 18887, the bat crosses at 18890, and a batted ball is visible at (830,240) in 18899, so there is no catch."
+    }
+   ]
+  },
+  {
+   "chunk": 6,
+   "A": [
+    {
+     "at_bat_number": 17,
+     "pitch_number": 3,
+     "release_frame": 19178,
+     "live_cf_first_frame": 19136,
+     "setup_frame": 19175,
+     "setup_reason": null,
+     "mitt_center": [
+      693,
+      308
+     ],
+     "mitt_visible_fraction": "full",
+     "setup_plate_front": {
+      "left_end": [
+       635,
+       379
+      ],
+      "right_end": [
+       692,
+       379
+      ]
+     },
+     "setup_uncertainty_pixels": 8,
+     "catch_frame": 19205,
+     "catch_reason": null,
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": [
+      667,
+      280
+     ],
+     "catch_plate_front": {
+      "left_end": [
+       635,
+       379
+      ],
+      "right_end": [
+       692,
+       379
+      ]
+     },
+     "catch_uncertainty_pixels": 12,
+     "rubber_center": [
+      694,
+      635
+     ],
+     "rubber_width_px": 93,
+     "left_box": {
+      "x_used": 480,
+      "front_y": 387,
+      "back_y": 362
+     },
+     "right_box": {
+      "x_used": 840,
+      "front_y": 388,
+      "back_y": 365
+     },
+     "note": "The live CF view dissolves in at 19136 and is clean from 19142. The ball is first seen clear of the hand at 19178 (763,364). Its image track overlaps the catcher's body for the whole flight. It is still visible at 19202 (660,286) in front of the glove, and hidden in the closed glove at 19205, so the catch could be 19202 or 19205. The low target glove sits by the catcher's knee and is clearly visible. At 19205 the pitcher's cap hides the plate's left corner; the visible front edge and right end match the setup frame, so the setup left end is reused."
+    },
+    {
+     "at_bat_number": 18,
+     "pitch_number": 3,
+     "release_frame": 19801,
+     "live_cf_first_frame": 19690,
+     "setup_frame": 19798,
+     "setup_reason": null,
+     "mitt_center": [
+      694,
+      329
+     ],
+     "mitt_visible_fraction": "full",
+     "setup_plate_front": {
+      "left_end": [
+       621,
+       375
+      ],
+      "right_end": [
+       680,
+       375
+      ]
+     },
+     "setup_uncertainty_pixels": 8,
+     "catch_frame": 19828,
+     "catch_reason": null,
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": [
+      650,
+      252
+     ],
+     "catch_plate_front": {
+      "left_end": [
+       621,
+       375
+      ],
+      "right_end": [
+       680,
+       375
+      ]
+     },
+     "catch_uncertainty_pixels": 14,
+     "rubber_center": [
+      682,
+      635
+     ],
+     "rubber_width_px": 95,
+     "left_box": {
+      "x_used": 470,
+      "front_y": 381,
+      "back_y": 356
+     },
+     "right_box": {
+      "x_used": 830,
+      "front_y": 383,
+      "back_y": 359
+     },
+     "note": "The window is already live CF at 19690, so the cut is earlier. The ball is first seen clear of the hand at 19801 (735,357). The open glove is set very low, near the dirt between the knees, and is fully visible. The ball is still visible on its way in through 19822 (660,264), with the bat in front of it, and is a blur on the glove at 19825. It is gone into the glove, which is moving up and to the left, at 19828, so the catch could be 19825 or 19828. At 19828 the pitcher's head and the catcher's arm hide the plate ends; the visible front edge sits at the same y as in the setup frame, so the setup ends are reused."
+    },
+    {
+     "at_bat_number": 19,
+     "pitch_number": 6,
+     "release_frame": 21435,
+     "live_cf_first_frame": 21399,
+     "setup_frame": 21432,
+     "setup_reason": null,
+     "mitt_center": [
+      693,
+      332
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       635,
+       373
+      ],
+      "right_end": [
+       692,
+       373
+      ]
+     },
+     "setup_uncertainty_pixels": 10,
+     "catch_frame": null,
+     "catch_reason": "batter_hit_ball",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      695,
+      629
+     ],
+     "rubber_width_px": 94,
+     "left_box": {
+      "x_used": 480,
+      "front_y": 380,
+      "back_y": 353
+     },
+     "right_box": {
+      "x_used": 840,
+      "front_y": 381,
+      "back_y": 357
+     },
+     "note": "The live CF view starts at 19399 after a pitcher close-up. The LHP's ball is first seen clear of the hand at 21435 (562,345); at 21432 the hand at about (545,370) is blurred. The dark glove is held low between the catcher's knees, in shadow and low contrast, so it is marked partial. The bat meets the ball at 21456, about (670,265), so there is no catch."
+    }
+   ],
+   "B": [
+    {
+     "at_bat_number": 17,
+     "pitch_number": 3,
+     "release_frame": 19178,
+     "live_cf_first_frame": 19136,
+     "setup_frame": 19175,
+     "setup_reason": null,
+     "mitt_center": [
+      696,
+      309
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       634,
+       380
+      ],
+      "right_end": [
+       692,
+       380
+      ]
+     },
+     "setup_uncertainty_pixels": 10,
+     "catch_frame": 19205,
+     "catch_reason": null,
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": [
+      664,
+      284
+     ],
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": 8,
+     "rubber_center": [
+      694,
+      635
+     ],
+     "rubber_width_px": 93,
+     "left_box": {
+      "x_used": 500,
+      "front_y": 387,
+      "back_y": 361
+     },
+     "right_box": {
+      "x_used": 820,
+      "front_y": 388,
+      "back_y": 365
+     },
+     "note": "Live CF view fades in by cross-dissolve from 19136 and is clean from 19142. Ball first seen out of the hand at 19178 (~(748,365)). The catcher's mitt rests low on his left knee and is not raised as a target; it is partly visible. Ball is fully visible in front of the open glove at 19202 (661,286) and hidden inside the closed glove at 19205. catch_plate_front is null because the pitcher's cap hides the plate's left end at 19205; the visible right end (692,380) matches the setup frame, so the camera is static."
+    },
+    {
+     "at_bat_number": 18,
+     "pitch_number": 3,
+     "release_frame": 19801,
+     "live_cf_first_frame": 19690,
+     "setup_frame": 19798,
+     "setup_reason": null,
+     "mitt_center": [
+      695,
+      325
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       622,
+       374
+      ],
+      "right_end": [
+       679,
+       374
+      ]
+     },
+     "setup_uncertainty_pixels": 10,
+     "catch_frame": 19825,
+     "catch_reason": null,
+     "ball_visible_in_catch_frame": true,
+     "pocket_center": [
+      651,
+      256
+     ],
+     "catch_plate_front": {
+      "left_end": [
+       622,
+       374
+      ],
+      "right_end": [
+       679,
+       374
+      ]
+     },
+     "catch_uncertainty_pixels": 8,
+     "rubber_center": [
+      682,
+      635
+     ],
+     "rubber_width_px": 96,
+     "left_box": {
+      "x_used": 470,
+      "front_y": 382,
+      "back_y": 355
+     },
+     "right_box": {
+      "x_used": 820,
+      "front_y": 383,
+      "back_y": 359
+     },
+     "note": "The whole window is the live CF view, so the true cut is at or before 19690. At 19798 the pitcher's arm is fully up; at 19801 a blurred ball is at (735,356). The mitt rests low between the catcher's knees (dark, only partly visible) and is not raised as a target. The ball crosses up and to the left in front of the open glove as the bat passes (19822, (659,263)) and sits dim inside the pocket at 19825. The catch frame could be off by one step."
+    },
+    {
+     "at_bat_number": 19,
+     "pitch_number": 6,
+     "release_frame": 21435,
+     "live_cf_first_frame": 21399,
+     "setup_frame": 21432,
+     "setup_reason": null,
+     "mitt_center": [
+      690,
+      333
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       635,
+       372
+      ],
+      "right_end": [
+       691,
+       372
+      ]
+     },
+     "setup_uncertainty_pixels": 10,
+     "catch_frame": null,
+     "catch_reason": "batter_hit_ball",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      695,
+      629
+     ],
+     "rubber_width_px": 95,
+     "left_box": {
+      "x_used": 500,
+      "front_y": 378,
+      "back_y": 354
+     },
+     "right_box": {
+      "x_used": 830,
+      "front_y": 380,
+      "back_y": 356
+     },
+     "note": "Live CF starts at 21399 after close-ups of the pitcher. At 21432 the lefty's arm is extended with the hand or ball at about (545,372); at 21435 the ball is clearly free at (565,346), so release could be 21432 or 21435. The catcher's mitt rests low near the ground by his left knee from about 21417 and is not raised; at 21405 he held it at his chest. The batter makes contact around 21456 (ball at about (670,264)), so there is no catch."
+    }
+   ]
+  },
+  {
+   "chunk": 7,
+   "A": [
+    {
+     "at_bat_number": 20,
+     "pitch_number": 4,
+     "release_frame": 21848,
+     "live_cf_first_frame": 21818,
+     "setup_frame": 21845,
+     "setup_reason": null,
+     "mitt_center": [
+      676,
+      336
+     ],
+     "mitt_visible_fraction": "full",
+     "setup_plate_front": {
+      "left_end": [
+       617,
+       371.5
+      ],
+      "right_end": [
+       672,
+       371.5
+      ]
+     },
+     "setup_uncertainty_pixels": 8,
+     "catch_frame": null,
+     "catch_reason": "batter_hit_ball (in play; ball reaches plate about 21878-21881 during the swing and is not caught)",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      675.5,
+      628
+     ],
+     "rubber_width_px": 94,
+     "left_box": {
+      "x_used": 440,
+      "front_y": 377,
+      "back_y": 353
+     },
+     "right_box": {
+      "x_used": 840,
+      "front_y": 376,
+      "back_y": 356
+     },
+     "note": "21815 is a dissolve and 21818 is the first clean live CF frame. At 21848 the arm is fully extended with the hand at about (525,388), and the ball is first seen free at 21851 (533,363), so the release is about 21848 +/-3. The catcher sets a low dark mitt facing the camera between his knees (about 657-695 x 327-345). The box chalk lines are faint and scuffed; the right-box front line is weakest."
+    },
+    {
+     "at_bat_number": 21,
+     "pitch_number": 7,
+     "release_frame": 22310,
+     "live_cf_first_frame": 22298,
+     "setup_frame": 22307,
+     "setup_reason": null,
+     "mitt_center": [
+      710,
+      336
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       633,
+       371
+      ],
+      "right_end": [
+       690,
+       371
+      ]
+     },
+     "setup_uncertainty_pixels": 10,
+     "catch_frame": 22340,
+     "catch_reason": null,
+     "ball_visible_in_catch_frame": true,
+     "pocket_center": [
+      715,
+      309
+     ],
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": 5,
+     "rubber_center": [
+      692,
+      628
+     ],
+     "rubber_width_px": 94,
+     "left_box": {
+      "x_used": 455,
+      "front_y": 376,
+      "back_y": 353
+     },
+     "right_box": {
+      "x_used": 850,
+      "front_y": 377,
+      "back_y": 355
+     },
+     "note": "22295 is mostly the previous close-up; 22298 is live with a faint residual overlay. The arm is extended at 22310 (hand about (565,400)) and the ball is first seen free at 22313 (554,366). The setup mitt is low and dark near the catcher's right-side knee, partly blended with his legs. At 22340 the ball is clearly inside the raised glove, after arriving at 22337 as the bat crosses. In 22340 the plate is hidden behind the pitcher, so catch_plate_front is null. The left box back line is barely visible."
+    },
+    {
+     "at_bat_number": 25,
+     "pitch_number": 4,
+     "release_frame": 23368,
+     "live_cf_first_frame": 23281,
+     "setup_frame": 23365,
+     "setup_reason": null,
+     "mitt_center": [
+      667,
+      336
+     ],
+     "mitt_visible_fraction": "full",
+     "setup_plate_front": {
+      "left_end": [
+       636,
+       373
+      ],
+      "right_end": [
+       693,
+       373
+      ]
+     },
+     "setup_uncertainty_pixels": 7,
+     "catch_frame": null,
+     "catch_reason": "batter_hit_ball (in play; ball at about (640,267) at 23392 just before contact, then view cuts to the outfield at 23434)",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      695,
+      628
+     ],
+     "rubber_width_px": 92,
+     "left_box": {
+      "x_used": 455,
+      "front_y": 377,
+      "back_y": 353
+     },
+     "right_box": {
+      "x_used": 855,
+      "front_y": 381,
+      "back_y": 357
+     },
+     "note": "23278 is a dissolve and 23281 is the first clean live CF frame. At 23368 the arm is extended (hand about (545,383)) and the ball is first seen free at 23371 (565,355), so the release is about 23368 +/-3. The setup mitt is a dark glove facing the camera, held low between the knees (about 648-685 x 325-347). The box lines are faint, and the left-box back line is uncertain."
+    }
+   ],
+   "B": [
+    {
+     "at_bat_number": 20,
+     "pitch_number": 4,
+     "release_frame": 21851,
+     "live_cf_first_frame": 21815,
+     "setup_frame": 21848,
+     "setup_reason": null,
+     "mitt_center": [
+      673,
+      335
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       616,
+       371
+      ],
+      "right_end": [
+       672,
+       371
+      ]
+     },
+     "setup_uncertainty_pixels": 10,
+     "catch_frame": null,
+     "catch_reason": "batted_ball_in_play (ball reaches plate ~21875, contact ~21881, ball leaves to image-right at 21884)",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      676,
+      627
+     ],
+     "rubber_width_px": 93,
+     "left_box": {
+      "x_used": 480,
+      "front_y": 379,
+      "back_y": 353
+     },
+     "right_box": {
+      "x_used": 820,
+      "front_y": 379,
+      "back_y": 356
+     },
+     "note": "CF view dissolves in at 21815 (pitcher already in leg lift) and is clean from 21818; ball held in hand at 21848, first seen free at (533,362) in 21851. The catcher sets very low and the mitt is a dark blob near his knee at about (673,335), only partly separable from his legs. The batter's box chalk is very faint and was read on contrast-enhanced zooms (+/-3 px)."
+    },
+    {
+     "at_bat_number": 21,
+     "pitch_number": 7,
+     "release_frame": 22313,
+     "live_cf_first_frame": 22295,
+     "setup_frame": 22310,
+     "setup_reason": null,
+     "mitt_center": [
+      711,
+      334
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       633,
+       371
+      ],
+      "right_end": [
+       691,
+       371
+      ]
+     },
+     "setup_uncertainty_pixels": 10,
+     "catch_frame": 22340,
+     "catch_reason": null,
+     "ball_visible_in_catch_frame": true,
+     "pocket_center": [
+      715,
+      309
+     ],
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": 5,
+     "rubber_center": [
+      691,
+      627
+     ],
+     "rubber_width_px": 92,
+     "left_box": {
+      "x_used": 480,
+      "front_y": 377,
+      "back_y": 352
+     },
+     "right_box": {
+      "x_used": 820,
+      "front_y": 378,
+      "back_y": 355
+     },
+     "note": "Faint CF dissolve at 22292, readable from 22295, clean from 22298. The ball is first free at (554,366) in 22313 and is hidden by the batter's white legs in 22316/22319. Setup mitt: a dark glove held low beside the catcher's right knee. In 22337 the ball is at the glove edge under the bat; at 22340 it sits in the pocket. The plate is hidden by the pitcher's back in the catch frame, so catch_plate_front is null."
+    },
+    {
+     "at_bat_number": 25,
+     "pitch_number": 4,
+     "release_frame": 23371,
+     "live_cf_first_frame": 23278,
+     "setup_frame": 23368,
+     "setup_reason": null,
+     "mitt_center": [
+      670,
+      335
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       636,
+       374
+      ],
+      "right_end": [
+       695,
+       374
+      ]
+     },
+     "setup_uncertainty_pixels": 9,
+     "catch_frame": null,
+     "catch_reason": "batted_ball_in_play (swing and contact around 23389-23395; view cuts to outfield at 23434)",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      695,
+      627
+     ],
+     "rubber_width_px": 95,
+     "left_box": {
+      "x_used": 480,
+      "front_y": 380,
+      "back_y": 355
+     },
+     "right_box": {
+      "x_used": 830,
+      "front_y": 381,
+      "back_y": 357
+     },
+     "note": "CF view comes in as a dissolve over a close-up at 23278 and is nearly clean at 23281. The ball is in the hand at 23368 (hand at ~548,383) and first free at (566,355) in 23371; the static white mark near (605,372) is chalk, not the ball. The catcher is in a low one-knee setup with the dark mitt near the ground at ~(670,335). The box lines are very faint and were read on enhanced zooms."
+    }
+   ]
+  },
+  {
+   "chunk": 8,
+   "A": [
+    {
+     "at_bat_number": 26,
+     "pitch_number": 1,
+     "release_frame": 23796,
+     "live_cf_first_frame": 23748,
+     "setup_frame": 23793,
+     "setup_reason": null,
+     "mitt_center": [
+      705,
+      336
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       627,
+       372
+      ],
+      "right_end": [
+       683,
+       372
+      ]
+     },
+     "setup_uncertainty_pixels": 8,
+     "catch_frame": null,
+     "catch_reason": "batter_hit_ball (bunt put in play; ball rolls in front of the plate)",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      686,
+      624
+     ],
+     "rubber_width_px": 92,
+     "left_box": {
+      "x_used": 460,
+      "front_y": 378,
+      "back_y": null
+     },
+     "right_box": {
+      "x_used": 845,
+      "front_y": 380,
+      "back_y": 357
+     },
+     "note": "23745 is a cross-dissolve; clean live CF from 23748. In 23793 the throwing arm is extended with the ball not separable from the hand; in 23796 a blurred ball sits at about (544,375) just ahead of the hand, so release=23796. From about 23775 the catcher holds the dark mitt low between his knees, almost on the dirt, partly hidden by his legs; the mitt centre is a moderate-confidence read. The batter bunted, so there is no catch. The left box's back line was not visible, and the left front line is faint."
+    },
+    {
+     "at_bat_number": 27,
+     "pitch_number": 5,
+     "release_frame": 24402,
+     "live_cf_first_frame": 24369,
+     "setup_frame": 24399,
+     "setup_reason": null,
+     "mitt_center": [
+      690,
+      336
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       634,
+       372
+      ],
+      "right_end": [
+       692,
+       372
+      ]
+     },
+     "setup_uncertainty_pixels": 8,
+     "catch_frame": null,
+     "catch_reason": "batter_hit_ball (swing and contact around 24426; in play)",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      695,
+      629
+     ],
+     "rubber_width_px": 94,
+     "left_box": {
+      "x_used": 480,
+      "front_y": 380,
+      "back_y": 354
+     },
+     "right_box": {
+      "x_used": 860,
+      "front_y": 381,
+      "back_y": 356
+     },
+     "note": "24366 is a dissolve; clean live CF from 24369. In 24399 the arm is extended with no separate ball; in 24402 the ball is clearly out of the hand at (543,352), then at (552,326) in 24405, so release=24402. The catcher sets the dark mitt low between his knees, partly occluded by his legs, giving a moderate-confidence centre. All four box lines are faint chalk."
+    },
+    {
+     "at_bat_number": 28,
+     "pitch_number": 1,
+     "release_frame": 25693,
+     "live_cf_first_frame": 25672,
+     "setup_frame": 25690,
+     "setup_reason": null,
+     "mitt_center": [
+      713,
+      340
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       631,
+       375.5
+      ],
+      "right_end": [
+       688,
+       375.5
+      ]
+     },
+     "setup_uncertainty_pixels": 9,
+     "catch_frame": null,
+     "catch_reason": "batter_hit_ball (swing and contact around 25717-25720; in play)",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      690,
+      629
+     ],
+     "rubber_width_px": 93,
+     "left_box": {
+      "x_used": 480,
+      "front_y": 382,
+      "back_y": 358
+     },
+     "right_box": {
+      "x_used": 840,
+      "front_y": 384,
+      "back_y": 359
+     },
+     "note": "25669 is a dissolve; clean live CF from 25672. In 25690 the arm is cocked with the ball in hand; in 25693 the ball is out of the hand at (551,377), and it is then tracked toward the plate (about (585,330) in 25702 and (638,316) in 25714), so release=25693. The catcher's dark mitt is held low on the dirt between his knees, partly hidden, so the centre is approximate. The left box's back line is very faint."
+    }
+   ],
+   "B": [
+    {
+     "at_bat_number": 26,
+     "pitch_number": 1,
+     "release_frame": 23796,
+     "live_cf_first_frame": 23742,
+     "setup_frame": 23793,
+     "setup_reason": null,
+     "mitt_center": [
+      708,
+      335
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       627,
+       372
+      ],
+      "right_end": [
+       683,
+       371
+      ]
+     },
+     "setup_uncertainty_pixels": 10,
+     "catch_frame": null,
+     "catch_reason": "batter_hit_ball",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      686,
+      622
+     ],
+     "rubber_width_px": 94,
+     "left_box": {
+      "x_used": 470,
+      "front_y": 378,
+      "back_y": 352
+     },
+     "right_box": {
+      "x_used": 840,
+      "front_y": 379,
+      "back_y": 356
+     },
+     "note": "Live CF view fades in from 23742 (clean by 23748). Blurred ball streak first seen separate from the hand at about (541,375) in 23796. It is lost against the batter's white legs at 23799-23802, then tracked high at (589,291) to (652,252) by 23820, and the batter puts it in play, so there is no catch. The mitt is dark, held low by the catcher's left shin with low contrast, so its centre is moderately uncertain."
+    },
+    {
+     "at_bat_number": 27,
+     "pitch_number": 5,
+     "release_frame": 24402,
+     "live_cf_first_frame": 24363,
+     "setup_frame": 24399,
+     "setup_reason": null,
+     "mitt_center": [
+      690,
+      335
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       635,
+       373
+      ],
+      "right_end": [
+       692,
+       372
+      ]
+     },
+     "setup_uncertainty_pixels": 10,
+     "catch_frame": null,
+     "catch_reason": "batter_hit_ball",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      695,
+      627
+     ],
+     "rubber_width_px": 94,
+     "left_box": {
+      "x_used": 480,
+      "front_y": 378,
+      "back_y": 352
+     },
+     "right_box": {
+      "x_used": 840,
+      "front_y": 381,
+      "back_y": 357
+     },
+     "note": "Live CF view starts as a faint dissolve at 24363 (clean from 24369). The ball is first separate from the hand at (542,352) in 24402 and climbs high to about (621,270), where it meets the bat at 24426, so there is no catch. The mitt is held low and dark near the catcher's left shin with low contrast."
+    },
+    {
+     "at_bat_number": 28,
+     "pitch_number": 1,
+     "release_frame": 25693,
+     "live_cf_first_frame": 25666,
+     "setup_frame": 25690,
+     "setup_reason": null,
+     "mitt_center": [
+      717,
+      339
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       631,
+       376
+      ],
+      "right_end": [
+       688,
+       375
+      ]
+     },
+     "setup_uncertainty_pixels": 9,
+     "catch_frame": null,
+     "catch_reason": "batter_hit_ball",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      690,
+      628
+     ],
+     "rubber_width_px": 94,
+     "left_box": {
+      "x_used": 470,
+      "front_y": 382,
+      "back_y": 357
+     },
+     "right_box": {
+      "x_used": 840,
+      "front_y": 383,
+      "back_y": 360
+     },
+     "note": "Live CF view starts as a faint dissolve at 25666 (clean from 25672). The ball is first separate from the hand at (549,376) in 25693 and is tracked to about (637,316) at 25714. At 25717 the pitcher's head hides the catch area, and the batter puts the ball in play, so there is no catch. The mitt is dark and low beside the catcher's left knee, so its centre is moderately uncertain."
+    }
+   ]
+  },
+  {
+   "chunk": 9,
+   "A": [
+    {
+     "at_bat_number": 29,
+     "pitch_number": 3,
+     "release_frame": 27318,
+     "live_cf_first_frame": 27273,
+     "setup_frame": 27315,
+     "setup_reason": null,
+     "mitt_center": [
+      684,
+      297
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       636,
+       372
+      ],
+      "right_end": [
+       693,
+       372
+      ]
+     },
+     "setup_uncertainty_pixels": 9,
+     "catch_frame": null,
+     "catch_reason": "batter_hit_ball",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      696,
+      627
+     ],
+     "rubber_width_px": 92,
+     "left_box": {
+      "x_used": 470,
+      "front_y": 381,
+      "back_y": null
+     },
+     "right_box": {
+      "x_used": 860,
+      "front_y": 380,
+      "back_y": 357
+     },
+     "note": "Live CF view dissolves in at 27273 (clean from 27279); in 27315 the throwing arm is still cocked high with the ball, at 27318 the arm has come through. The catcher sets up low, with the dark mitt just below the strike-zone graphic and partly blended with his knee and chest protector, so the mitt centre is moderately uncertain. The batter puts the ball in play, so there is no catch; the box chalk is faint and the left box's back line is not readable."
+    },
+    {
+     "at_bat_number": 30,
+     "pitch_number": 5,
+     "release_frame": 29646,
+     "live_cf_first_frame": 29535,
+     "setup_frame": 29643,
+     "setup_reason": null,
+     "mitt_center": [
+      715,
+      331
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       637,
+       372
+      ],
+      "right_end": [
+       694,
+       372
+      ]
+     },
+     "setup_uncertainty_pixels": 10,
+     "catch_frame": null,
+     "catch_reason": "batter_hit_ball",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      704,
+      628
+     ],
+     "rubber_width_px": 77,
+     "left_box": {
+      "x_used": 470,
+      "front_y": 380,
+      "back_y": null
+     },
+     "right_box": {
+      "x_used": 860,
+      "front_y": 381,
+      "back_y": 357
+     },
+     "note": "The ball is visible in hand at the top of the arm in 29643 and in flight from 29646, rising in the image to about (667,288) by 29664, before the bat arrives at 29667 (in play). The setup mitt is held very low beside the catcher's left knee and partly hidden by it. The visible rubber chalk runs about x 666-742; its left part looks dirt-covered, so the width may be under-read."
+    },
+    {
+     "at_bat_number": 33,
+     "pitch_number": 3,
+     "release_frame": 33689,
+     "live_cf_first_frame": 33659,
+     "setup_frame": 33686,
+     "setup_reason": null,
+     "mitt_center": [
+      682,
+      303
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       629,
+       375
+      ],
+      "right_end": [
+       685,
+       375
+      ]
+     },
+     "setup_uncertainty_pixels": 10,
+     "catch_frame": null,
+     "catch_reason": "batter_hit_ball",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      689,
+      632
+     ],
+     "rubber_width_px": 83,
+     "left_box": {
+      "x_used": 470,
+      "front_y": 382,
+      "back_y": null
+     },
+     "right_box": {
+      "x_used": 855,
+      "front_y": 384,
+      "back_y": 361
+     },
+     "note": "Live CF view dissolves in at 33659 (clean at 33662). The real release is about 33689, about 0.4 s later than the estimate: the ball is at the raised hand in 33686 and the arm is through in 33689. The tan mitt sits low on the image-right side of the catcher near the bottom-right corner of the strike-zone graphic, partly behind his knee and arm; it matches the mitt that rises to about (672,270) by 33710 as the bat comes through (in play), so there is no catch."
+    }
+   ],
+   "B": [
+    {
+     "at_bat_number": 29,
+     "pitch_number": 3,
+     "release_frame": 27315,
+     "live_cf_first_frame": 27279,
+     "setup_frame": 27312,
+     "setup_reason": null,
+     "mitt_center": [
+      686,
+      305
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       637,
+       373
+      ],
+      "right_end": [
+       693,
+       373
+      ]
+     },
+     "setup_uncertainty_pixels": 8,
+     "catch_frame": null,
+     "catch_reason": "batter_hit_ball (swing/contact around 27336-27339, pitch put in play)",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      695,
+      626
+     ],
+     "rubber_width_px": 92,
+     "left_box": {
+      "x_used": 480,
+      "front_y": 380,
+      "back_y": 355
+     },
+     "right_box": {
+      "x_used": 830,
+      "front_y": 381,
+      "back_y": 355.5
+     },
+     "note": "Dissolve from the batter close-up at 27273-27276, so 27279 is the first clean live CF frame. At 27309 the ball is still in the cocked hand, 27312 is an arm blur and at 27315 the ball is clearly free at about (760,357), so release could be 27312. At 27312 the dark grey mitt is held low in front of the catcher's crotch/thigh, partly overlapped by his leg, and it rises to chest height after release. The ball is not tracked into the glove; the batter swings at 27336-27339."
+    },
+    {
+     "at_bat_number": 30,
+     "pitch_number": 5,
+     "release_frame": 29646,
+     "live_cf_first_frame": 29535,
+     "setup_frame": 29643,
+     "setup_reason": "glove_resting_low_near_ground (lowered from chest height at 29607-29619)",
+     "mitt_center": [
+      711,
+      330
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       640,
+       374
+      ],
+      "right_end": [
+       694,
+       374
+      ]
+     },
+     "setup_uncertainty_pixels": 10,
+     "catch_frame": null,
+     "catch_reason": "batter_hit_ball (ball tracked in flight to the batter; bat meets it around 29667; next view is the field)",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      697,
+      629
+     ],
+     "rubber_width_px": 93,
+     "left_box": {
+      "x_used": 520,
+      "front_y": 380,
+      "back_y": 357.5
+     },
+     "right_box": {
+      "x_used": 830,
+      "front_y": 381,
+      "back_y": 358
+     },
+     "note": "Live CF view for the whole window. The ball is in the hand at 29643 and free at about (741,349) at 29646. The catcher showed the mitt at his chest around 29607-29610, then lowered it to rest near the dirt between his knees by 29619, and it stays there through release. That low, partly hidden glove is what was measured, so treat it as a resting position, not a clear target. The left-box back line is faint."
+    },
+    {
+     "at_bat_number": 33,
+     "pitch_number": 3,
+     "release_frame": 33686,
+     "live_cf_first_frame": 33662,
+     "setup_frame": 33683,
+     "setup_reason": "glove_resting_on_ground_not_raised (mitt only lifted into the zone after release, ~33704-33710)",
+     "mitt_center": [
+      652,
+      336
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       628,
+       376
+      ],
+      "right_end": [
+       684,
+       376
+      ]
+     },
+     "setup_uncertainty_pixels": 12,
+     "catch_frame": null,
+     "catch_reason": "batter_hit_ball (ball last seen at ~(695,260) at 33704 as the bat comes through at 33707; pitch put in play)",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      690,
+      632
+     ],
+     "rubber_width_px": 95,
+     "left_box": {
+      "x_used": 520,
+      "front_y": 382.5,
+      "back_y": 357
+     },
+     "right_box": {
+      "x_used": 830,
+      "front_y": 384,
+      "back_y": 361
+     },
+     "note": "There is a heavy dissolve at 33659, and 33662 still carries a faint transition-graphic overlay but the live CF view is clear. The ball is out of Hicks's hand at about (772,357) at 33686 and is tracked to (695,260) at 33704. Through release the black mitt rests on the dirt between the catcher's legs, partly under his knee and wrist. It is only raised to about (670,275) after release, so this setup mitt is not a presented target and is uncertain."
+    }
+   ]
+  },
+  {
+   "chunk": 10,
+   "A": [
+    {
+     "at_bat_number": 34,
+     "pitch_number": 4,
+     "release_frame": 34115,
+     "live_cf_first_frame": 34082,
+     "setup_frame": 34112,
+     "setup_reason": null,
+     "mitt_center": [
+      688,
+      340
+     ],
+     "mitt_visible_fraction": "full",
+     "setup_plate_front": {
+      "left_end": [
+       630,
+       376.5
+      ],
+      "right_end": [
+       686,
+       376.5
+      ]
+     },
+     "setup_uncertainty_pixels": 8,
+     "catch_frame": null,
+     "catch_reason": "batter_hit_ball",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      689,
+      632
+     ],
+     "rubber_width_px": 92,
+     "left_box": {
+      "x_used": 480,
+      "front_y": 383,
+      "back_y": 357.5
+     },
+     "right_box": {
+      "x_used": 840,
+      "front_y": 385.5,
+      "back_y": 361
+     },
+     "note": "Live CF view dissolves in at 34079 (clean from 34082); ball in hand by the head at 34112, arm extended with no ball at 34115. Catcher held glove at chest 34082-34091, then rested it low on the dirt by his left knee from 34094 through release (a low resting target, not raised); ball seen in flight near catcher chest 34127-34136, Altuve swings ~34139 and puts it in play. Box chalk lines are faint/worn (read with contrast enhancement on 34100), so box y values are about +/-3 px."
+    },
+    {
+     "at_bat_number": 35,
+     "pitch_number": 8,
+     "release_frame": 34583,
+     "live_cf_first_frame": 34538,
+     "setup_frame": 34580,
+     "setup_reason": null,
+     "mitt_center": [
+      680,
+      325
+     ],
+     "mitt_visible_fraction": "full",
+     "setup_plate_front": {
+      "left_end": [
+       625,
+       367
+      ],
+      "right_end": [
+       682,
+       367
+      ]
+     },
+     "setup_uncertainty_pixels": 8,
+     "catch_frame": 34610,
+     "catch_reason": null,
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": [
+      666,
+      214
+     ],
+     "catch_plate_front": {
+      "left_end": [
+       625,
+       368
+      ],
+      "right_end": [
+       683,
+       368
+      ]
+     },
+     "catch_uncertainty_pixels": 10,
+     "rubber_center": [
+      687,
+      623
+     ],
+     "rubber_width_px": 90,
+     "left_box": {
+      "x_used": 480,
+      "front_y": 374,
+      "back_y": 348
+     },
+     "right_box": {
+      "x_used": 830,
+      "front_y": 375.5,
+      "back_y": 351
+     },
+     "note": "Live CF view dissolves in at 34535 (clean from 34538); ball in hand by the head at 34580, arm extended at 34583. Glove rests low on the dirt near the catcher's knee before release; the pitch comes in high, at 34607 the ball is just in front of the rising glove by the mask while the bat passes under it, and at 34610 the closed, motion-blurred glove covers the ball (pocket centre estimated from the glove)."
+    },
+    {
+     "at_bat_number": 36,
+     "pitch_number": 6,
+     "release_frame": 35281,
+     "live_cf_first_frame": 35248,
+     "setup_frame": 35278,
+     "setup_reason": null,
+     "mitt_center": [
+      710,
+      342
+     ],
+     "mitt_visible_fraction": "full",
+     "setup_plate_front": {
+      "left_end": [
+       630,
+       379
+      ],
+      "right_end": [
+       687,
+       379
+      ]
+     },
+     "setup_uncertainty_pixels": 8,
+     "catch_frame": 35308,
+     "catch_reason": null,
+     "ball_visible_in_catch_frame": true,
+     "pocket_center": [
+      705,
+      303
+     ],
+     "catch_plate_front": {
+      "left_end": [
+       630,
+       379
+      ],
+      "right_end": [
+       687,
+       379
+      ]
+     },
+     "catch_uncertainty_pixels": 4,
+     "rubber_center": [
+      689.5,
+      633
+     ],
+     "rubber_width_px": 93,
+     "left_box": {
+      "x_used": 480,
+      "front_y": 386,
+      "back_y": 362
+     },
+     "right_box": {
+      "x_used": 840,
+      "front_y": 387.5,
+      "back_y": 364.5
+     },
+     "note": "Live CF view dissolves in at 35242-35245 (clean from 35248). LHP: ball in hand behind the head at 35275, arm blurred over the head at 35278, arm fully extended at 35281 (ball not separately visible until ~35284-35287, so release could be off by one sample). Glove rests low on the dirt before release; the ball is tracked from (597,331) at 35287 into the glove, at the glove edge at 35305 and inside the pocket at 35308. The left box back line is faint."
+    }
+   ],
+   "B": [
+    {
+     "at_bat_number": 34,
+     "pitch_number": 4,
+     "release_frame": 34115,
+     "live_cf_first_frame": 34076,
+     "setup_frame": 34112,
+     "setup_reason": null,
+     "mitt_center": [
+      687,
+      337
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       628,
+       377
+      ],
+      "right_end": [
+       687,
+       377
+      ]
+     },
+     "setup_uncertainty_pixels": 10,
+     "catch_frame": null,
+     "catch_reason": "batter_hit_ball",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      690,
+      631
+     ],
+     "rubber_width_px": 90,
+     "left_box": {
+      "x_used": 500,
+      "front_y": 383,
+      "back_y": 356
+     },
+     "right_box": {
+      "x_used": 840,
+      "front_y": 385,
+      "back_y": 362
+     },
+     "note": "Live CF view dissolves in from a replay at 34076 (faint) and is clear by 34082. Ball is above the head at 34112 and the arm is fully extended at 34115 (ball not separately visible), so release is 34115 +/-1 sample. The catcher's glove sits low and dark near his right knee at about (687,337), partly shaded. The ball is seen near the catcher at 34127-34136 and the bat meets it at about 34139 (in play), so there is no catch. The left box back line is faint (low confidence)."
+    },
+    {
+     "at_bat_number": 35,
+     "pitch_number": 8,
+     "release_frame": 34583,
+     "live_cf_first_frame": 34535,
+     "setup_frame": 34580,
+     "setup_reason": null,
+     "mitt_center": [
+      680,
+      325
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       625,
+       367
+      ],
+      "right_end": [
+       683,
+       367
+      ]
+     },
+     "setup_uncertainty_pixels": 10,
+     "catch_frame": 34607,
+     "catch_reason": null,
+     "ball_visible_in_catch_frame": true,
+     "pocket_center": [
+      667,
+      215
+     ],
+     "catch_plate_front": {
+      "left_end": [
+       623,
+       366
+      ],
+      "right_end": [
+       681,
+       366
+      ]
+     },
+     "catch_uncertainty_pixels": 8,
+     "rubber_center": [
+      690,
+      622
+     ],
+     "rubber_width_px": 90,
+     "left_box": {
+      "x_used": 520,
+      "front_y": 373,
+      "back_y": 346
+     },
+     "right_box": {
+      "x_used": 840,
+      "front_y": 375,
+      "back_y": 352
+     },
+     "note": "Live CF view dissolves in at 34535. The ball is in the hand behind the head at 34580 and the arm is extended at 34583. The glove rests low by the catcher's knee at setup (partial, dark). On this high pitch the glove rises to face level, and the ball (traced at 34595-34604) overlaps the raised glove pocket at 34607 and is hidden in the closed glove by 34610. The catch could be one sample later (34610). The left box back line is faint (low confidence)."
+    },
+    {
+     "at_bat_number": 36,
+     "pitch_number": 6,
+     "release_frame": 34581,
+     "live_cf_first_frame": 35242,
+     "setup_frame": 35278,
+     "setup_reason": null,
+     "mitt_center": [
+      712,
+      342
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       631,
+       380
+      ],
+      "right_end": [
+       687,
+       380
+      ]
+     },
+     "setup_uncertainty_pixels": 10,
+     "catch_frame": 35308,
+     "catch_reason": null,
+     "ball_visible_in_catch_frame": true,
+     "pocket_center": [
+      705,
+      303
+     ],
+     "catch_plate_front": {
+      "left_end": [
+       631,
+       379
+      ],
+      "right_end": [
+       689,
+       379
+      ]
+     },
+     "catch_uncertainty_pixels": 6,
+     "rubber_center": [
+      689,
+      633
+     ],
+     "rubber_width_px": 93,
+     "left_box": {
+      "x_used": 500,
+      "front_y": 386,
+      "back_y": null
+     },
+     "right_box": {
+      "x_used": 840,
+      "front_y": 387,
+      "back_y": 363
+     },
+     "note": "Live CF view dissolves in from a pitcher close-up: very faint at 35242, blended at 35245, clean at 35248. Left-handed pitcher: the arm is cocked at 35278 and fully extended toward the plate at 35281 (release). The ball is traced at 35287-35305 and is in the glove at 35308. The catcher is one knee down with the glove resting low near his knee (partial). The left box back line is hidden behind the left-handed batter's feet."
+    }
+   ]
+  },
+  {
+   "chunk": 11,
+   "A": [
+    {
+     "at_bat_number": 38,
+     "pitch_number": 5,
+     "release_frame": 35715,
+     "live_cf_first_frame": 35712,
+     "setup_frame": null,
+     "setup_reason": "cut_after_release",
+     "mitt_center": null,
+     "mitt_visible_fraction": null,
+     "setup_plate_front": null,
+     "setup_uncertainty_pixels": null,
+     "catch_frame": null,
+     "catch_reason": "batter_hit_ball",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      686,
+      632
+     ],
+     "rubber_width_px": 92,
+     "left_box": {
+      "x_used": 460,
+      "front_y": 383,
+      "back_y": null
+     },
+     "right_box": {
+      "x_used": 820,
+      "front_y": 385,
+      "back_y": 361
+     },
+     "note": "The CF view cuts in at 35712 with the pitcher's arm already extended in follow-through. The ball is first clearly free at about (573,337) in 35715, so release is at or just before the cut. I could not see the catcher's mitt before the ball arrived, and the batter swings into the ball around 35745 (in play). The CF shot seems to be slow motion (ball moves about 10-15 px per sampled frame), so it may be a replay. Box lines are faint, and the left back line is under or near the batter's feet."
+    },
+    {
+     "at_bat_number": 39,
+     "pitch_number": 3,
+     "release_frame": 36024,
+     "live_cf_first_frame": 36003,
+     "setup_frame": 36021,
+     "setup_reason": null,
+     "mitt_center": [
+      636,
+      272
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       621,
+       378
+      ],
+      "right_end": [
+       675,
+       378
+      ]
+     },
+     "setup_uncertainty_pixels": 12,
+     "catch_frame": null,
+     "catch_reason": "batter_hit_ball",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      678,
+      635
+     ],
+     "rubber_width_px": 95,
+     "left_box": {
+      "x_used": 460,
+      "front_y": 384,
+      "back_y": null
+     },
+     "right_box": {
+      "x_used": 830,
+      "front_y": 386,
+      "back_y": 362
+     },
+     "note": "The view dissolves into CF at 36000-36003. The ball is first seen free at (570,346) in 36024; at 36021 the arm is extended but I cannot see the ball, so release is at 36021 or 36024. The dark mitt sits in front of the dark chest protector at about chest height, so its centre is only roughly readable. The ball arrives low, about (647,312) at 36045, as the batter swings (in play). The motion looks slowed, so this may be a replay. The left box back line is not distinguishable."
+    },
+    {
+     "at_bat_number": 40,
+     "pitch_number": 5,
+     "release_frame": 36773,
+     "live_cf_first_frame": 36728,
+     "setup_frame": 36770,
+     "setup_reason": null,
+     "mitt_center": [
+      672,
+      330
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       616,
+       375
+      ],
+      "right_end": [
+       671,
+       375
+      ]
+     },
+     "setup_uncertainty_pixels": 15,
+     "catch_frame": null,
+     "catch_reason": "batter_hit_ball",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      676,
+      633
+     ],
+     "rubber_width_px": 96,
+     "left_box": {
+      "x_used": 450,
+      "front_y": 382,
+      "back_y": 354
+     },
+     "right_box": {
+      "x_used": 830,
+      "front_y": 382,
+      "back_y": 356
+     },
+     "note": "The view dissolves into CF at 36728. In 36770 the ball is at the hand tip; at 36773 it is clearly free at (566,316). The mitt looks held low near the ground in front of the catcher's knees and is hard to tell apart from the dark shin guards, so position and uncertainty are rough. The ball passes about (626,293) at 36791 and the bat meets it around 36797 (in play). The shot seems slowed, so it may be a replay."
+    }
+   ],
+   "B": [
+    {
+     "at_bat_number": 38,
+     "pitch_number": 5,
+     "release_frame": 35715,
+     "live_cf_first_frame": 35712,
+     "setup_frame": 35712,
+     "setup_reason": null,
+     "mitt_center": [
+      702,
+      341
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       626,
+       378
+      ],
+      "right_end": [
+       683,
+       377
+      ]
+     },
+     "setup_uncertainty_pixels": 10,
+     "catch_frame": null,
+     "catch_reason": "batter_hit_ball",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      685.5,
+      632.5
+     ],
+     "rubber_width_px": 91,
+     "left_box": {
+      "x_used": 465,
+      "front_y": 383.5,
+      "back_y": 358
+     },
+     "right_box": {
+      "x_used": 835,
+      "front_y": 385,
+      "back_y": 362
+     },
+     "note": "Hard cut to the live CF view at 35712, just before release. The ball is first seen clear of the hand at 35715 (572,336). In the only pre-release live frame the catcher is in a one-knee-down stance with the mitt resting low near the ground, partly visible (682-720, 332-350). He raises it around 35733, so this low mitt may be a resting position rather than the real target (low confidence). The batter put the ball in play, so there is no catch. The left box back line (358) is a weak chalk signal."
+    },
+    {
+     "at_bat_number": 39,
+     "pitch_number": 3,
+     "release_frame": 36024,
+     "live_cf_first_frame": 36000,
+     "setup_frame": 36021,
+     "setup_reason": null,
+     "mitt_center": [
+      640,
+      272
+     ],
+     "mitt_visible_fraction": "full",
+     "setup_plate_front": {
+      "left_end": [
+       619,
+       378
+      ],
+      "right_end": [
+       677,
+       377
+      ]
+     },
+     "setup_uncertainty_pixels": 8,
+     "catch_frame": null,
+     "catch_reason": "batter_hit_ball",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      679.5,
+      635
+     ],
+     "rubber_width_px": 95,
+     "left_box": {
+      "x_used": 450,
+      "front_y": 384,
+      "back_y": 359
+     },
+     "right_box": {
+      "x_used": 835,
+      "front_y": 386,
+      "back_y": 362
+     },
+     "note": "The live CF view dissolves in from 36000 and is clean from 36006. The ball is first seen out of the hand at 36024 (570,346). The dark mitt is held in front of the chest (about 622-653 x 257-290). It is hard to separate from the navy chest protector, hence +/-8 px. The batter swung and put the ball in play, so there is no catch."
+    },
+    {
+     "at_bat_number": 40,
+     "pitch_number": 5,
+     "release_frame": 36773,
+     "live_cf_first_frame": 36725,
+     "setup_frame": 36770,
+     "setup_reason": null,
+     "mitt_center": [
+      677,
+      334
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       615,
+       375
+      ],
+      "right_end": [
+       674,
+       374
+      ]
+     },
+     "setup_uncertainty_pixels": 10,
+     "catch_frame": null,
+     "catch_reason": "batter_hit_ball",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      675,
+      633
+     ],
+     "rubber_width_px": 92,
+     "left_box": {
+      "x_used": 450,
+      "front_y": 380,
+      "back_y": 355
+     },
+     "right_box": {
+      "x_used": 835,
+      "front_y": 382,
+      "back_y": 358
+     },
+     "note": "The live CF view dissolves in at 36725 and is clean from 36731. The ball is still in the LHP's hand at 36770 (556,348) and free at 36773 (567,317). The catcher holds the mitt low near the ground between his knees (about 660-693 x 323-345), with the lower part merging into the legs and dirt. The mitt is still there as the ball approaches at 36791. The batter swung and put the ball in play, so there is no catch."
+    }
+   ]
+  },
+  {
+   "chunk": 12,
+   "A": [
+    {
+     "at_bat_number": 41,
+     "pitch_number": 7,
+     "release_frame": 38083,
+     "live_cf_first_frame": 38014,
+     "setup_frame": 38080,
+     "setup_reason": null,
+     "mitt_center": [
+      707,
+      336
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       629,
+       372
+      ],
+      "right_end": [
+       686,
+       372
+      ]
+     },
+     "setup_uncertainty_pixels": 8,
+     "catch_frame": null,
+     "catch_reason": "batter_hit_ball",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      688,
+      628
+     ],
+     "rubber_width_px": 95,
+     "left_box": {
+      "x_used": 460,
+      "front_y": 376,
+      "back_y": null
+     },
+     "right_box": {
+      "x_used": 840,
+      "front_y": 381,
+      "back_y": 356
+     },
+     "note": "38014 is a dissolve into the live CF view (38017 first clean frame). The catcher is in a one-knee stance with the dark mitt resting low near the dirt (back of glove toward camera), not clearly raised as a target. The ball is first seen out of the hand at 38083 (~567,347) and rises toward the plate; the batter swings and makes contact around 38104-38107, so there is no catch. Left box: only a faint front chalk line, back line hidden by the batter's feet."
+    },
+    {
+     "at_bat_number": 42,
+     "pitch_number": 2,
+     "release_frame": 38697,
+     "live_cf_first_frame": 38676,
+     "setup_frame": 38691,
+     "setup_reason": null,
+     "mitt_center": [
+      658,
+      318
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       616,
+       360
+      ],
+      "right_end": [
+       673,
+       360
+      ]
+     },
+     "setup_uncertainty_pixels": 12,
+     "catch_frame": null,
+     "catch_reason": "batter_hit_ball",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      676,
+      619
+     ],
+     "rubber_width_px": 95,
+     "left_box": {
+      "x_used": 470,
+      "front_y": 366,
+      "back_y": null
+     },
+     "right_box": {
+      "x_used": 820,
+      "front_y": 367,
+      "back_y": 344
+     },
+     "note": "The live view cuts in at 38676 from a graphic. At 38694 the arm is fully extended, but the ball cannot be told apart from the hand or the batter's white shoe; it is first seen clearly out of the hand at 38697 (~733,318). Release is between 38694 and 38697, so I used 38691 as the setup frame. The catcher's mitt hangs low between his knees (white trim at ~662,304, dark glove below), relaxed rather than raised as a target. The batter puts the ball in play around 38721-38724, so there is no catch. The left box back line is not visible."
+    },
+    {
+     "at_bat_number": 43,
+     "pitch_number": 5,
+     "release_frame": 39237,
+     "live_cf_first_frame": 39204,
+     "setup_frame": 39231,
+     "setup_reason": null,
+     "mitt_center": [
+      665,
+      332
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       618,
+       370
+      ],
+      "right_end": [
+       676,
+       370
+      ]
+     },
+     "setup_uncertainty_pixels": 10,
+     "catch_frame": null,
+     "catch_reason": "batter_hit_ball",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      675,
+      626
+     ],
+     "rubber_width_px": 88,
+     "left_box": {
+      "x_used": 470,
+      "front_y": 376,
+      "back_y": null
+     },
+     "right_box": {
+      "x_used": 820,
+      "front_y": 377,
+      "back_y": 354
+     },
+     "note": "39204 is a dissolve into the live view (39207 first clean frame). At 39234 the left-hander's hand is at full extension (~553,372) with no separate ball visible; the ball is first clearly out of the hand at 39237 (~573,350), so I used 39231 as the setup frame. The mitt hangs low between the catcher's knees, white trim plus a dark glove, and is not raised. The batter hits the ball around 39258-39261, so there is no catch. The rubber is very faint and dirt-covered: only weak chalk traces at y~626 from x~630 to 720 (low confidence). The left box back line is hidden."
+    }
+   ],
+   "B": [
+    {
+     "at_bat_number": 41,
+     "pitch_number": 7,
+     "release_frame": 38083,
+     "live_cf_first_frame": 38017,
+     "setup_frame": 38080,
+     "setup_reason": null,
+     "mitt_center": [
+      711,
+      335
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       630,
+       371.5
+      ],
+      "right_end": [
+       684,
+       371.5
+      ]
+     },
+     "setup_uncertainty_pixels": 12,
+     "catch_frame": null,
+     "catch_reason": "batter_hit_ball",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      688,
+      628
+     ],
+     "rubber_width_px": 94,
+     "left_box": {
+      "x_used": 575,
+      "front_y": 379.5,
+      "back_y": null
+     },
+     "right_box": {
+      "x_used": 830,
+      "front_y": 380,
+      "back_y": 357
+     },
+     "note": "The live CF view dissolves in at 38014 and is clean from 38017. The ball is clearly out of the hand at 38083 (567,347) with the arm fully extended; at 38080 the arm is a blur. In the setup frame the catcher is on one knee with the glove resting low on the dirt, so only the back of the glove shows and it may not be a presented target. The batter makes contact around 38107 and the pitcher fields the ball, so there is no catch. The left box back line is too faint to read."
+    },
+    {
+     "at_bat_number": 42,
+     "pitch_number": 2,
+     "release_frame": 38694,
+     "live_cf_first_frame": 38676,
+     "setup_frame": 38691,
+     "setup_reason": null,
+     "mitt_center": [
+      652,
+      319
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       616,
+       358.5
+      ],
+      "right_end": [
+       672,
+       358.5
+      ]
+     },
+     "setup_uncertainty_pixels": 12,
+     "catch_frame": null,
+     "catch_reason": "batter_hit_ball",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      676,
+      618
+     ],
+     "rubber_width_px": 96,
+     "left_box": {
+      "x_used": 575,
+      "front_y": 367,
+      "back_y": null
+     },
+     "right_box": {
+      "x_used": 830,
+      "front_y": 367.5,
+      "back_y": 343
+     },
+     "note": "There is a hard cut from a graphic to the live CF view at 38676. At 38694 the arm is extended toward the plate and the ball cannot be told apart from the batter's white shoe; it is clearly in flight at 38697 (732,318) and 38700 (715,304), so release could be one sample later. The catcher's glove rests low on the dirt before release (back of glove only) and only rises after release. Walker swings around 38715-38718 and the ball is put in play, so there is no catch. The left box back line is not readable."
+    },
+    {
+     "at_bat_number": 43,
+     "pitch_number": 5,
+     "release_frame": 39234,
+     "live_cf_first_frame": 39207,
+     "setup_frame": 39231,
+     "setup_reason": null,
+     "mitt_center": [
+      667,
+      332
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       620,
+       368
+      ],
+      "right_end": [
+       675,
+       368
+      ]
+     },
+     "setup_uncertainty_pixels": 12,
+     "catch_frame": null,
+     "catch_reason": "batter_hit_ball",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": null,
+     "rubber_width_px": null,
+     "left_box": {
+      "x_used": 575,
+      "front_y": 376,
+      "back_y": null
+     },
+     "right_box": {
+      "x_used": 830,
+      "front_y": 377,
+      "back_y": 353
+     },
+     "note": "The live CF view dissolves in at 39204 and is clean from 39207. At 39234 the arm is fully extended and the hand looks empty; the ball is first seen at 39237 (572,350) and may be hidden against the batter's white shoe at 39234. The catcher's glove rests low between his knees before release (partial, may not be a presented target). The batter hits the ball around 39261, so there is no catch. No white rubber is visible on the mound in this angle, even after the pitcher leaves it; only the rosin bag and cleat brush are visible."
+    }
+   ]
+  },
+  {
+   "chunk": 13,
+   "A": [
+    {
+     "at_bat_number": 45,
+     "pitch_number": 3,
+     "release_frame": 39959,
+     "live_cf_first_frame": 39881,
+     "setup_frame": 39956,
+     "setup_reason": null,
+     "mitt_center": [
+      712,
+      320
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       636,
+       359
+      ],
+      "right_end": [
+       693,
+       359
+      ]
+     },
+     "setup_uncertainty_pixels": 12,
+     "catch_frame": null,
+     "catch_reason": "batter_hit_ball (in play)",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": null,
+     "rubber_width_px": null,
+     "left_box": null,
+     "right_box": null,
+     "note": "Frame 39878 is a dissolve from the batter close-up; 39881 is the first clean live CF frame. The ball is first clearly out of the hand at 39959 (~(589,331)); at 39956 the arm is a blur with no separate ball. The mitt is a dark glove held very low near the dirt, between the catcher's knees and partly under his arm and the batter's legs, so its centre is only approximate. The rubber is not visible (under or behind the pitcher's feet at the mound edge, nothing white even after he steps off), and the box chalk is too worn to read."
+    },
+    {
+     "at_bat_number": 50,
+     "pitch_number": 4,
+     "release_frame": 41952,
+     "live_cf_first_frame": 41922,
+     "setup_frame": 41949,
+     "setup_reason": null,
+     "mitt_center": [
+      716,
+      335
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       630,
+       373
+      ],
+      "right_end": [
+       686,
+       373
+      ]
+     },
+     "setup_uncertainty_pixels": 10,
+     "catch_frame": null,
+     "catch_reason": "batter_hit_ball (in play)",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": null,
+     "rubber_width_px": null,
+     "left_box": null,
+     "right_box": null,
+     "note": "41916-41919 are a dissolve and 41922 is the first clean live CF frame. The ball is first seen free of the hand at 41952 (~(591,350)). The catcher shows a low, dark glove near the dirt between his knees (x 700-732, y 322-348), partly blended with his legs. The rubber is not visible anywhere on the mound, and the batter's box lines are too faint to read."
+    },
+    {
+     "at_bat_number": 51,
+     "pitch_number": 4,
+     "release_frame": 43061,
+     "live_cf_first_frame": 43025,
+     "setup_frame": 43058,
+     "setup_reason": null,
+     "mitt_center": [
+      640,
+      328
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       621,
+       367
+      ],
+      "right_end": [
+       679,
+       367
+      ]
+     },
+     "setup_uncertainty_pixels": 12,
+     "catch_frame": null,
+     "catch_reason": "batter_hit_ball (in play)",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      684,
+      623
+     ],
+     "rubber_width_px": 86,
+     "left_box": null,
+     "right_box": null,
+     "note": "43019-43022 are a dissolve and 43025 is the first clean live CF frame. The ball is out of the hand at 43061 (~(790,362)); at 43058 the arm is still over the head. The catcher dropped his glove low just before release (it was higher at 43040): a dark glove near the dirt between his knees, partly behind his leg, so the centre is approximate. The rubber shows as a thin white strip at y~623 (x 641-727). The box chalk is too worn to read."
+    }
+   ],
+   "B": [
+    {
+     "at_bat_number": 45,
+     "pitch_number": 3,
+     "release_frame": 39956,
+     "live_cf_first_frame": 39875,
+     "setup_frame": 39953,
+     "setup_reason": null,
+     "mitt_center": [
+      705,
+      320
+     ],
+     "mitt_visible_fraction": "full",
+     "setup_plate_front": {
+      "left_end": [
+       636,
+       360
+      ],
+      "right_end": [
+       693,
+       360
+      ]
+     },
+     "setup_uncertainty_pixels": 8,
+     "catch_frame": null,
+     "catch_reason": "batted_ball",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": null,
+     "rubber_width_px": null,
+     "left_box": null,
+     "right_box": null,
+     "note": "Live CF view dissolves in at 39875 (clean from 39881). At 39956 the LHP's arm is fully out to image-left (hand at about (583,363)) and the ball is not seen apart from the hand. It is first seen at 39959 (588,330), then rises toward the plate and meets the bat at about 39980 (in play), so there is no catch. The dark mitt sits low on the image-right side of the catcher. The rubber is not visible (hidden or too dirty), and the batter's-box chalk is too worn to read lines."
+    },
+    {
+     "at_bat_number": 50,
+     "pitch_number": 4,
+     "release_frame": 41949,
+     "live_cf_first_frame": 41916,
+     "setup_frame": 41946,
+     "setup_reason": null,
+     "mitt_center": [
+      718,
+      334
+     ],
+     "mitt_visible_fraction": "full",
+     "setup_plate_front": {
+      "left_end": [
+       629,
+       372
+      ],
+      "right_end": [
+       686,
+       372
+      ]
+     },
+     "setup_uncertainty_pixels": 8,
+     "catch_frame": null,
+     "catch_reason": "batted_ball",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": null,
+     "rubber_width_px": null,
+     "left_box": null,
+     "right_box": null,
+     "note": "Live CF view dissolves in at 41916 (clean by 41922). At 41949 the LHP's arm is extended to image-left (hand at about (577,386)) and the ball is not distinguishable. It is first seen at 41952 (592,350) and tracks up to about (641,263) by 41973. Alvarez swings at about 41973-41976 and puts it in play, so there is no catch. The catcher holds the dark mitt low and wide, image-right of the plate. The rubber shows at most as a faint smear near y 626, too unclear to read, so null; the box chalk is worn."
+    },
+    {
+     "at_bat_number": 51,
+     "pitch_number": 4,
+     "release_frame": 43061,
+     "live_cf_first_frame": 43019,
+     "setup_frame": 43058,
+     "setup_reason": null,
+     "mitt_center": [
+      636,
+      327
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       621,
+       366
+      ],
+      "right_end": [
+       679,
+       366
+      ]
+     },
+     "setup_uncertainty_pixels": 9,
+     "catch_frame": null,
+     "catch_reason": "batted_ball",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      686,
+      623
+     ],
+     "rubber_width_px": 85,
+     "left_box": null,
+     "right_box": null,
+     "note": "The live CF view dissolves in at 43019-43022. The RHP's ball is in hand at 43055-43058, and at 43061 it is just out of the hand at about (792,362). It is seen at 43064 (778,351), then at 43073-43079 near (716,315) to (681,307), and Paredes swings at about 43079-43085 and puts it in play, so there is no catch. The mitt is held very low near the ground between the catcher's knees and blends with his gear, so it is only partly visible. The rubber is clear at y about 623, x 643-728. The box chalk is too worn to read."
+    }
+   ]
+  },
+  {
+   "chunk": 14,
+   "A": [
+    {
+     "at_bat_number": 52,
+     "pitch_number": 1,
+     "release_frame": 44140,
+     "live_cf_first_frame": 44080,
+     "setup_frame": 44137,
+     "setup_reason": null,
+     "mitt_center": [
+      632,
+      330
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       617,
+       365
+      ],
+      "right_end": [
+       675,
+       365
+      ]
+     },
+     "setup_uncertainty_pixels": 12,
+     "catch_frame": null,
+     "catch_reason": "batted_ball_in_play",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      683.5,
+      623
+     ],
+     "rubber_width_px": 85,
+     "left_box": {
+      "x_used": 460,
+      "front_y": 372,
+      "back_y": null
+     },
+     "right_box": {
+      "x_used": 830,
+      "front_y": 373,
+      "back_y": 350
+     },
+     "note": "The live CF view dissolves in at 44080-44083. The catcher held the mitt at his chest until about 44110, then dropped it to the ground between his knees. On 44137 it shows only as a dark partial shape near (632,330), so the mitt position is uncertain. The ball is first clearly free of the hand at 44140 at (763,340); it may already be out but blurred at 44137. Altuve put the ball in play, so there is no catch. The box chalk lines are faint and scuffed."
+    },
+    {
+     "at_bat_number": 55,
+     "pitch_number": 1,
+     "release_frame": 45662,
+     "live_cf_first_frame": 45569,
+     "setup_frame": 45659,
+     "setup_reason": null,
+     "mitt_center": [
+      695,
+      332
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       636,
+       372
+      ],
+      "right_end": [
+       694,
+       372
+      ]
+     },
+     "setup_uncertainty_pixels": 15,
+     "catch_frame": null,
+     "catch_reason": "batted_ball_in_play_bunt",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      702.5,
+      638
+     ],
+     "rubber_width_px": 85,
+     "left_box": {
+      "x_used": 440,
+      "front_y": 389,
+      "back_y": null
+     },
+     "right_box": {
+      "x_used": 850,
+      "front_y": 381,
+      "back_y": 358
+     },
+     "note": "The live CF view dissolves in at 45569 and is clear from 45572. The one-knee catcher had the mitt low on the ground behind his left knee from about 45632. On 45659 it is only partly visible as a dark shape with white lettering near (695,332), so its identity and centre are uncertain. The ball is out of the hand at 45662 at (645,335) and climbs toward the catcher until 45683 at (659,267). Peters squared and bunted at about 45686-45689 (in play), so there is no catch."
+    },
+    {
+     "at_bat_number": 56,
+     "pitch_number": 2,
+     "release_frame": 46346,
+     "live_cf_first_frame": 46310,
+     "setup_frame": 46343,
+     "setup_reason": null,
+     "mitt_center": [
+      703,
+      326
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       633,
+       364
+      ],
+      "right_end": [
+       692,
+       364
+      ]
+     },
+     "setup_uncertainty_pixels": 15,
+     "catch_frame": null,
+     "catch_reason": "ball_in_dirt_not_caught",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      700,
+      626
+     ],
+     "rubber_width_px": 86,
+     "left_box": {
+      "x_used": 430,
+      "front_y": 381,
+      "back_y": null
+     },
+     "right_box": {
+      "x_used": 850,
+      "front_y": 371,
+      "back_y": 348
+     },
+     "note": "The live CF view dissolves in at 46310. Same catcher setup as PA55: the mitt is low between his legs and only partly seen as a dark shape near (703,326) on 46343, so the mitt position is uncertain. The ball is clearly out of the hand at 46346 at (658,331). It is lost against the catcher's white pants from 46352 to 46358, then drops into the dirt near the plate by 46370 at (656,352). The catcher did not catch it cleanly, so there is no catch frame."
+    }
+   ],
+   "B": [
+    {
+     "at_bat_number": 52,
+     "pitch_number": 1,
+     "release_frame": 44140,
+     "live_cf_first_frame": 44080,
+     "setup_frame": 44137,
+     "setup_reason": null,
+     "mitt_center": [
+      667,
+      287
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       617,
+       366
+      ],
+      "right_end": [
+       675,
+       366
+      ]
+     },
+     "setup_uncertainty_pixels": 12,
+     "catch_frame": null,
+     "catch_reason": "batter_hit_ball",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      683,
+      624
+     ],
+     "rubber_width_px": 85,
+     "left_box": {
+      "x_used": 460,
+      "front_y": 372,
+      "back_y": null
+     },
+     "right_box": {
+      "x_used": 850,
+      "front_y": 372,
+      "back_y": 349
+     },
+     "note": "Live CF view dissolves in from 44080. At 44137 the throwing arm is only a blur; the ball is first clearly out of the hand at 44140 (767,340). The mitt at 44137 is a tan, edge-on glove on the image-right side, partly overlapped by the white overlay box corner; at 44152 the ball is near it (689,283). Altuve put the ball in play, so there is no catch. Box chalk is faint: the left back line is not readable."
+    },
+    {
+     "at_bat_number": 55,
+     "pitch_number": 1,
+     "release_frame": 45662,
+     "live_cf_first_frame": 45566,
+     "setup_frame": 45659,
+     "setup_reason": null,
+     "mitt_center": [
+      691,
+      332
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       635,
+       372
+      ],
+      "right_end": [
+       694,
+       372
+      ]
+     },
+     "setup_uncertainty_pixels": 12,
+     "catch_frame": null,
+     "catch_reason": "batter_hit_ball",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      702,
+      638
+     ],
+     "rubber_width_px": 85,
+     "left_box": {
+      "x_used": 440,
+      "front_y": null,
+      "back_y": null
+     },
+     "right_box": {
+      "x_used": 850,
+      "front_y": 381,
+      "back_y": 356
+     },
+     "note": "Dissolve into the live CF view at about 45566. The ball is first out of the hand at 45662 (645,335, with a streak). The catcher sets up on one knee with a dark mitt held low between his knees (back of glove, about 691,332). From 45674 to 45680 the mitt rises toward the ball, which confirms it is the glove, but it is a low resting target, not a raised one. The left-handed batter hit the ball, so there is no catch. Left box lines are too faint to read."
+    },
+    {
+     "at_bat_number": 56,
+     "pitch_number": 2,
+     "release_frame": 46346,
+     "live_cf_first_frame": 46310,
+     "setup_frame": 46343,
+     "setup_reason": null,
+     "mitt_center": [
+      688,
+      328
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       633,
+       363
+      ],
+      "right_end": [
+       692,
+       363
+      ]
+     },
+     "setup_uncertainty_pixels": 15,
+     "catch_frame": null,
+     "catch_reason": "not_caught_cleanly_ball_in_dirt",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      700,
+      626
+     ],
+     "rubber_width_px": 86,
+     "left_box": {
+      "x_used": 520,
+      "front_y": 370,
+      "back_y": null
+     },
+     "right_box": {
+      "x_used": 850,
+      "front_y": 372,
+      "back_y": 347
+     },
+     "note": "The live CF view dissolves in at 46310 to 46313 and the camera slowly zooms in during the pitch. The ball is first out of the hand at 46346 (658,331). The mitt is a dark glove with white trim held low between the knees, only partly visible, so it is low confidence. The swinging strike was in the dirt: at 46361 the ball is at about (701,320) by the glove, then at 46364 to 46370 it caroms off the catcher down onto the plate. It was never cleanly caught."
+    }
+   ]
+  },
+  {
+   "chunk": 15,
+   "A": [
+    {
+     "at_bat_number": 56,
+     "pitch_number": 3,
+     "release_frame": 46909,
+     "live_cf_first_frame": 46855,
+     "setup_frame": 46906,
+     "setup_reason": null,
+     "mitt_center": [
+      653,
+      336
+     ],
+     "mitt_visible_fraction": "full",
+     "setup_plate_front": {
+      "left_end": [
+       613,
+       372
+      ],
+      "right_end": [
+       669,
+       372
+      ]
+     },
+     "setup_uncertainty_pixels": 8,
+     "catch_frame": null,
+     "catch_reason": "not_caught_cleanly: pitch in the dirt; ball dropped toward the ground in front of the catcher, kicked up dust at the plate (46933) and lay loose near the plate (46945-46951) while the catcher lunged",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      676,
+      625
+     ],
+     "rubber_width_px": 82,
+     "left_box": null,
+     "right_box": null,
+     "note": "The live CF view dissolves in from a dugout shot (faint at 46855, dominant at 46858). The catcher holds a dark mitt low between his knees, near the ground (about 641-664 x 326-346). The ball is first seen separate from the hand at 46909, near (632,327); at 46906 the arm is blurred with no ball visible, so release could be one sample earlier. The batter's box chalk is too faded to read, so both boxes are null."
+    },
+    {
+     "at_bat_number": 57,
+     "pitch_number": 5,
+     "release_frame": 48075,
+     "live_cf_first_frame": 47952,
+     "setup_frame": null,
+     "setup_reason": "glove_hidden_by_batter",
+     "mitt_center": null,
+     "mitt_visible_fraction": null,
+     "setup_plate_front": null,
+     "setup_uncertainty_pixels": null,
+     "catch_frame": null,
+     "catch_reason": "batter_hit_ball: bat meets the ball at about (649,244) around 48099; in play",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      679,
+      625
+     ],
+     "rubber_width_px": 86,
+     "left_box": null,
+     "right_box": null,
+     "note": "The window is live CF throughout. Before release, the catcher's glove side (image right) is tangled with the batter's legs and shoes near (700-740,300-330), and I could not pick out a mitt presented as a target, so I abstained. The ball is at the hand tip at 48075 (628,333) and fully separate at 48078 (636,307), so release may be 48078. The plate on the nearest live frame (48072) spans about x 615-672 at y about 366. Box chalk is not visible."
+    },
+    {
+     "at_bat_number": 61,
+     "pitch_number": 6,
+     "release_frame": 49142,
+     "live_cf_first_frame": 49103,
+     "setup_frame": 49139,
+     "setup_reason": null,
+     "mitt_center": [
+      656,
+      335
+     ],
+     "mitt_visible_fraction": "full",
+     "setup_plate_front": {
+      "left_end": [
+       618,
+       373
+      ],
+      "right_end": [
+       676,
+       373
+      ]
+     },
+     "setup_uncertainty_pixels": 8,
+     "catch_frame": null,
+     "catch_reason": "batter_hit_ball: swing meets the ball near (625,302) around 49163-49166; in play",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      677,
+      629
+     ],
+     "rubber_width_px": 80,
+     "left_box": null,
+     "right_box": null,
+     "note": "The live view dissolves in from a close-up at 49103 and is clean from 49106. The catcher holds a dark mitt low on the ground between his knees (about 640-672 x 327-342). The ball is first seen separate from the hand at 49142 (690,328), then tracked through (665,290) at 49151 to (625,302) at 49163. Box chalk is not visible."
+    }
+   ],
+   "B": [
+    {
+     "at_bat_number": 56,
+     "pitch_number": 3,
+     "release_frame": 46909,
+     "live_cf_first_frame": 46861,
+     "setup_frame": 46906,
+     "setup_reason": null,
+     "mitt_center": [
+      660,
+      336
+     ],
+     "mitt_visible_fraction": "full",
+     "setup_plate_front": {
+      "left_end": [
+       612,
+       370
+      ],
+      "right_end": [
+       668,
+       370
+      ]
+     },
+     "setup_uncertainty_pixels": 7,
+     "catch_frame": null,
+     "catch_reason": "ball_in_dirt_blocked_not_caught_cleanly",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      677,
+      625
+     ],
+     "rubber_width_px": 84,
+     "left_box": null,
+     "right_box": null,
+     "note": "Cut from dugout to CF view dissolves over 46855-46858; 46861 is the first clean live frame. Ball is in the hand at 46903, not visible in the blurred arm at 46906, and first clearly free of the hand at 46909 (633,331), so release could be 46906. The catcher's glove rests low on the dirt between his knees. The pitch bounces in front of the plate around 46930 and is blocked, so there is no catch. Batter's box chalk is worn and only faint fragments show."
+    },
+    {
+     "at_bat_number": 57,
+     "pitch_number": 5,
+     "release_frame": 48075,
+     "live_cf_first_frame": 47952,
+     "setup_frame": 48072,
+     "setup_reason": null,
+     "mitt_center": [
+      697,
+      318
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       615,
+       365
+      ],
+      "right_end": [
+       672,
+       365
+      ]
+     },
+     "setup_uncertainty_pixels": 10,
+     "catch_frame": null,
+     "catch_reason": "batter_hit_ball",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      680,
+      626
+     ],
+     "rubber_width_px": 85,
+     "left_box": null,
+     "right_box": null,
+     "note": "The whole window is the live CF view. At 48075 the ball shows as a separate round object at (631,334), at the tip of the arm's motion blur; at 48078 it is clearly in flight. The mitt is low near the catcher's right knee, partly overlapped by the batter's front shoe, so its centre is uncertain (about +/-10 px). The ball rises toward the image-left of the catcher and is hit at about 48099 (in play). Batter's box lines are worn and unreadable."
+    },
+    {
+     "at_bat_number": 61,
+     "pitch_number": 6,
+     "release_frame": 49139,
+     "live_cf_first_frame": 49106,
+     "setup_frame": 49136,
+     "setup_reason": null,
+     "mitt_center": [
+      660,
+      332
+     ],
+     "mitt_visible_fraction": "full",
+     "setup_plate_front": {
+      "left_end": [
+       619,
+       372
+      ],
+      "right_end": [
+       675,
+       372
+      ]
+     },
+     "setup_uncertainty_pixels": 7,
+     "catch_frame": null,
+     "catch_reason": "batter_hit_ball",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      680,
+      628
+     ],
+     "rubber_width_px": 80,
+     "left_box": null,
+     "right_box": null,
+     "note": "49103 is a dissolve from a replay; 49106 is the first clean live CF frame. Release is read from the arm reaching full extension at 49139; the ball is not seen separating, so release is uncertain by about one window. The glove rests low on the dirt at the catcher's left knee and is clearly visible. The ball is seen in flight from about 49151 and is put in play at about 49166, so there is no catch. Batter's box chalk is worn and only fragments show."
+    }
+   ]
+  },
+  {
+   "chunk": 16,
+   "A": [
+    {
+     "at_bat_number": 66,
+     "pitch_number": 3,
+     "release_frame": 50170,
+     "live_cf_first_frame": 50107,
+     "setup_frame": 50167,
+     "setup_reason": null,
+     "mitt_center": [
+      600,
+      336
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       614,
+       372
+      ],
+      "right_end": [
+       671,
+       372
+      ]
+     },
+     "setup_uncertainty_pixels": 10,
+     "catch_frame": null,
+     "catch_reason": "batter_hit_ball (in play; bat meets ball around 50194-50197)",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      672,
+      630
+     ],
+     "rubber_width_px": 89,
+     "left_box": null,
+     "right_box": null,
+     "note": "The live CF view starts with a dissolve at 50107; 50164 shows the ball still in the cocked hand, 50170 has the arm extended in follow-through, and a ball-like blob is at about (705,350) at 50173, so release is about 50170 (+/-1 sample). The catcher sets up on one knee with his dark mitt held low near the ground just above the plate, partly merged with his shin guard, so the mitt centre is only moderately sure. Batter's box chalk is worn away, so the boxes are null."
+    },
+    {
+     "at_bat_number": 67,
+     "pitch_number": 2,
+     "release_frame": 51069,
+     "live_cf_first_frame": 51027,
+     "setup_frame": 51066,
+     "setup_reason": null,
+     "mitt_center": [
+      645,
+      326
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       634,
+       366
+      ],
+      "right_end": [
+       692,
+       366
+      ]
+     },
+     "setup_uncertainty_pixels": 10,
+     "catch_frame": null,
+     "catch_reason": "batter_hit_ball (in play; Alvarez swings around 51087-51096)",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      692,
+      619
+     ],
+     "rubber_width_px": 89,
+     "left_box": null,
+     "right_box": null,
+     "note": "A faint dissolve into the live CF view starts at 51027. At 51066 the arm is across the head and no ball is visible; at 51069 the ball is in flight at about (713,345), so release is 51069 (it could be 51067-51068). The catcher is on one knee with his black mitt low near the ground (partial, by the knee), and the left-handed batter is at image-left and does not hide it. Box chalk is worn, so the boxes are null."
+    },
+    {
+     "at_bat_number": 68,
+     "pitch_number": 4,
+     "release_frame": 52487,
+     "live_cf_first_frame": 52391,
+     "setup_frame": 52484,
+     "setup_reason": null,
+     "mitt_center": [
+      637,
+      330
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       612,
+       369
+      ],
+      "right_end": [
+       671,
+       369
+      ]
+     },
+     "setup_uncertainty_pixels": 8,
+     "catch_frame": 52514,
+     "catch_reason": null,
+     "ball_visible_in_catch_frame": true,
+     "pocket_center": [
+      629,
+      322
+     ],
+     "catch_plate_front": {
+      "left_end": [
+       611,
+       368
+      ],
+      "right_end": [
+       671,
+       368
+      ]
+     },
+     "catch_uncertainty_pixels": 6,
+     "rubber_center": [
+      670,
+      629
+     ],
+     "rubber_width_px": 92,
+     "left_box": null,
+     "right_box": null,
+     "note": "The ball is in hand at 52481 and the arm is extended at 52487; the ball is seen in flight from 52490 (around (705,340)) to 52502 (666,304), then tipped at about 52505-52508. At 52511 the ball (641,310) is just above the low mitt, and at 52514 it sits in the pocket below the white wristband, so this is the foul-tip catch (moderate confidence). The setup mitt is a dark, low one-knee target that is partly blended with the shin guard. Box chalk is worn, so the boxes are null."
+    }
+   ],
+   "B": [
+    {
+     "at_bat_number": 66,
+     "pitch_number": 3,
+     "release_frame": 50170,
+     "live_cf_first_frame": 50107,
+     "setup_frame": 50167,
+     "setup_reason": null,
+     "mitt_center": [
+      607,
+      334
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       614,
+       373
+      ],
+      "right_end": [
+       671,
+       372.5
+      ]
+     },
+     "setup_uncertainty_pixels": 10,
+     "catch_frame": null,
+     "catch_reason": "batter_hit_ball (in play)",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      671,
+      630
+     ],
+     "rubber_width_px": 87,
+     "left_box": null,
+     "right_box": null,
+     "note": "Live CF view dissolves in from 50107 (faint) and is clear from 50113; ball cocked in hand at 50164, arm across head at 50167, arm extended past release at 50170 (release +/-1 frame). The catcher holds a dark mitt very low near the ground between his knees, the end of his white-banded left forearm (partly in shadow, laces visible by 50182). Batter's box chalk is not distinguishable, so both boxes are null."
+    },
+    {
+     "at_bat_number": 67,
+     "pitch_number": 2,
+     "release_frame": 51069,
+     "live_cf_first_frame": 51027,
+     "setup_frame": 51066,
+     "setup_reason": null,
+     "mitt_center": [
+      646,
+      322
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       635,
+       366.5
+      ],
+      "right_end": [
+       692,
+       366
+      ]
+     },
+     "setup_uncertainty_pixels": 12,
+     "catch_frame": null,
+     "catch_reason": "batter_hit_ball (in play)",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      687,
+      620
+     ],
+     "rubber_width_px": 80,
+     "left_box": null,
+     "right_box": null,
+     "note": "Faint dissolve into the live CF view at 51027; arm across head at 51066, and at 51069 the arm is extended with a blurred ball visible near (712,342), so release is 51069 (+/-1). The mitt is dark and held low at the end of the catcher's white-banded left forearm, partly in shadow; a dark shin/shoe just to the right adds some ambiguity. The box chalk is not readable."
+    },
+    {
+     "at_bat_number": 68,
+     "pitch_number": 4,
+     "release_frame": 52487,
+     "live_cf_first_frame": 52391,
+     "setup_frame": 52484,
+     "setup_reason": null,
+     "mitt_center": [
+      643,
+      330
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       613,
+       369.5
+      ],
+      "right_end": [
+       671,
+       368.5
+      ]
+     },
+     "setup_uncertainty_pixels": 14,
+     "catch_frame": null,
+     "catch_reason": "foul_tip_bat_contact (ball tipped by bat before reaching glove; caught low near (630,320) around 52514-52517)",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      669,
+      629
+     ],
+     "rubber_width_px": 90,
+     "left_box": null,
+     "right_box": null,
+     "note": "Faint dissolve into the live CF view at 52391, clear from 52397; the pitcher is cocked at 52481 and across his head at 52484, and his arm is extended past release at 52487 (+/-1). The black mitt is set very low between the catcher's knees in shadow, at the end of his left forearm; it is only partly discernible, and a tan patch near (668,290) might be a glove edge or a knee. On the foul tip the ball was deflected into that low glove area, so no catch reading is given. Box chalk lines are not visible."
+    }
+   ]
+  },
+  {
+   "chunk": 17,
+   "A": [
+    {
+     "at_bat_number": 69,
+     "pitch_number": 7,
+     "release_frame": 54243,
+     "live_cf_first_frame": 54231,
+     "setup_frame": 54240,
+     "setup_reason": null,
+     "mitt_center": [
+      670,
+      337
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       635,
+       372
+      ],
+      "right_end": [
+       691,
+       372
+      ]
+     },
+     "setup_uncertainty_pixels": 12,
+     "catch_frame": null,
+     "catch_reason": "batter_hit_ball (in play; Altuve swings and makes contact)",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      693,
+      626
+     ],
+     "rubber_width_px": 86,
+     "left_box": null,
+     "right_box": null,
+     "note": "The live view fades in from a crowd shot (the dissolve starts at 54228, clean from 54231). The catcher sets on one knee with a dark mitt held low near the dirt, partly blended with his legs and the shadow. A white tracking box overlays his chest, so the mitt centre is only moderately certain. The arm is at the top at 54240 and down by 54243. The batter's-box chalk is worn and not readable."
+    },
+    {
+     "at_bat_number": 70,
+     "pitch_number": 7,
+     "release_frame": 58490,
+     "live_cf_first_frame": 58433,
+     "setup_frame": 58487,
+     "setup_reason": null,
+     "mitt_center": [
+      672,
+      332
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       635,
+       370
+      ],
+      "right_end": [
+       692,
+       370
+      ]
+     },
+     "setup_uncertainty_pixels": 12,
+     "catch_frame": 58517,
+     "catch_reason": null,
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": [
+      668,
+      266
+     ],
+     "catch_plate_front": {
+      "left_end": [
+       635,
+       370
+      ],
+      "right_end": [
+       692,
+       370
+      ]
+     },
+     "catch_uncertainty_pixels": 14,
+     "rubber_center": [
+      695,
+      628
+     ],
+     "rubber_width_px": 95,
+     "left_box": null,
+     "right_box": null,
+     "note": "Same one-knee set with the dark mitt low by the dirt (partial). The pitch came in high: the ball is seen drifting over the catcher's chest/mask (58502-58514). The catcher raised the mitt and it is closed at chest height by 58517, but the ball in the pocket is not clearly resolved, so the catch frame could be 58514 or 58517. The batter's-box chalk is not visible."
+    },
+    {
+     "at_bat_number": 75,
+     "pitch_number": 5,
+     "release_frame": 59790,
+     "live_cf_first_frame": 59757,
+     "setup_frame": 59787,
+     "setup_reason": null,
+     "mitt_center": [
+      643,
+      335
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       621,
+       373
+      ],
+      "right_end": [
+       678,
+       373
+      ]
+     },
+     "setup_uncertainty_pixels": 12,
+     "catch_frame": null,
+     "catch_reason": "not_clean_catch: ball sinks to the dirt below the mitt (59814-59817) and is smothered/scooped; no clean catch frame",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      684,
+      631
+     ],
+     "rubber_width_px": 86,
+     "left_box": null,
+     "right_box": null,
+     "note": "The live view dissolves in from a pitcher close-up at 59754 (clean at 59757). The catcher is squatting with the dark mitt low between his knees (partial; the white wrist strap is at about 654,324). The ball is visible descending from about (665,283) to (625,333) near his shoe, under the mitt, so this was a ball in the dirt, not a clean catch. The pitcher's arm may slightly clip the plate's right end. The box lines are worn and not readable."
+    }
+   ],
+   "B": [
+    {
+     "at_bat_number": 69,
+     "pitch_number": 7,
+     "release_frame": 54240,
+     "live_cf_first_frame": 54225,
+     "setup_frame": 54237,
+     "setup_reason": null,
+     "mitt_center": [
+      670,
+      337
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       634,
+       372
+      ],
+      "right_end": [
+       692,
+       372
+      ]
+     },
+     "setup_uncertainty_pixels": 12,
+     "catch_frame": null,
+     "catch_reason": "batter_hit_ball",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      692,
+      627
+     ],
+     "rubber_width_px": 88,
+     "left_box": null,
+     "right_box": null,
+     "note": "The live CF view dissolves in from a crowd shot starting at 54225. At 54237 the arm is at the top and at 54240 it is extended forward, so I put release at 54240. The catcher holds a dark glove low between his knees, close to the ground; it is dim against his shin guards, so the mitt centre is only approximate. Altuve put the ball in play and the feed cut to the outfield at 54306. The batter's-box chalk is worn away and I could not read it even with a contrast boost."
+    },
+    {
+     "at_bat_number": 70,
+     "pitch_number": 7,
+     "release_frame": 58487,
+     "live_cf_first_frame": 58430,
+     "setup_frame": 58484,
+     "setup_reason": null,
+     "mitt_center": [
+      673,
+      328
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       635,
+       370
+      ],
+      "right_end": [
+       693,
+       370
+      ]
+     },
+     "setup_uncertainty_pixels": 10,
+     "catch_frame": 58517,
+     "catch_reason": null,
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": [
+      668,
+      270
+     ],
+     "catch_plate_front": {
+      "left_end": [
+       635,
+       370
+      ],
+      "right_end": [
+       692,
+       370
+      ]
+     },
+     "catch_uncertainty_pixels": 12,
+     "rubber_center": [
+      695,
+      628
+     ],
+     "rubber_width_px": 93,
+     "left_box": null,
+     "right_box": null,
+     "note": "The live view dissolves in from a batter close-up at 58430. Before release the catcher's glove rests low near the ground at about (673,328). It is partly visible and may be a resting position rather than a real target, because he raises it to chest height to take the pitch. I tracked the ball in front of the catcher's mask from 58502 to 58511. At 58517 the glove is closed at chest height around (668,270), but I cannot clearly separate the ball, so the catch frame is moderately uncertain (it could be 58514). The box chalk is not readable."
+    },
+    {
+     "at_bat_number": 75,
+     "pitch_number": 5,
+     "release_frame": 59787,
+     "live_cf_first_frame": 59754,
+     "setup_frame": 59784,
+     "setup_reason": null,
+     "mitt_center": [
+      646,
+      335
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       622,
+       373
+      ],
+      "right_end": [
+       678,
+       374
+      ]
+     },
+     "setup_uncertainty_pixels": 10,
+     "catch_frame": null,
+     "catch_reason": "not_caught_cleanly",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      683,
+      631
+     ],
+     "rubber_width_px": 87,
+     "left_box": null,
+     "right_box": null,
+     "note": "The live view dissolves in from a pitcher close-up at 59754 and is clean from 59757. The catcher's dark glove sits low between his knees near the ground, about (646,335), and is only partly visible. The ball drops to about (624,332) at 59817 beside the low glove. At 59829 it shows loose near the catcher's knee while his hands are at his chest, so I see no clean catch (likely a pitch in the dirt). The batter's-box chalk is worn away."
+    }
+   ]
+  },
+  {
+   "chunk": 18,
+   "A": [
+    {
+     "at_bat_number": 77,
+     "pitch_number": 3,
+     "release_frame": 60261,
+     "live_cf_first_frame": 60165,
+     "setup_frame": 60258,
+     "setup_reason": null,
+     "mitt_center": [
+      640,
+      335
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       619,
+       375
+      ],
+      "right_end": [
+       679,
+       375
+      ]
+     },
+     "setup_uncertainty_pixels": 10,
+     "catch_frame": null,
+     "catch_reason": "blocked_in_dirt_not_caught_cleanly",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      679,
+      632
+     ],
+     "rubber_width_px": 94,
+     "left_box": {
+      "x_used": 500,
+      "front_y": 382,
+      "back_y": null
+     },
+     "right_box": null,
+     "note": "Window is live centre-field from its first frame (60165); ball first seen out of hand at 60261 (blur near 700,355). Catcher on one knee holds a dark mitt low between his knees (about 625-655 x 322-347), partly shadowed by his legs, so the centre is approximate. The ball reaches the dirt and is blocked (60282-60291), so no clean catch. The left box front line is a faint chalk trace; the back line and the right box are not readable."
+    },
+    {
+     "at_bat_number": 78,
+     "pitch_number": 7,
+     "release_frame": 60842,
+     "live_cf_first_frame": 60749,
+     "setup_frame": 60839,
+     "setup_reason": null,
+     "mitt_center": [
+      655,
+      329
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       631,
+       368
+      ],
+      "right_end": [
+       689,
+       368
+      ]
+     },
+     "setup_uncertainty_pixels": 10,
+     "catch_frame": null,
+     "catch_reason": "batted_ball",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      691,
+      622
+     ],
+     "rubber_width_px": 93,
+     "left_box": null,
+     "right_box": null,
+     "note": "A dissolve from a pitcher close-up runs 60746-60749 and the clean live view starts at 60752. Release is about 0.65 s after the estimate: the ball streak leaves the hand at 60842 (near 727,350). Catcher on one knee holds a dark, low mitt (about 635-675 x 317-340), partly blended with his legs. The batter swings and puts the ball in play (60860-60866), so no catch. The batter's box chalk is too scuffed to read either line."
+    }
+   ],
+   "B": [
+    {
+     "at_bat_number": 77,
+     "pitch_number": 3,
+     "release_frame": 60261,
+     "live_cf_first_frame": 60165,
+     "setup_frame": 60258,
+     "setup_reason": null,
+     "mitt_center": [
+      643,
+      334
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       619,
+       375
+      ],
+      "right_end": [
+       674,
+       375
+      ]
+     },
+     "setup_uncertainty_pixels": 10,
+     "catch_frame": null,
+     "catch_reason": "not_caught_cleanly_ball_in_dirt_blocked",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      679,
+      631
+     ],
+     "rubber_width_px": 94,
+     "left_box": null,
+     "right_box": null,
+     "note": "The window opens already in the live CF view, so 60165 is only the earliest frame I have, not the true cut. 60261 is the first sampled frame where a ball streak (about 701,356) is separate from the hand; in 60258 the arm is still behind the head. The catcher gives a very low target: a dark mitt near the dirt between his knees, under the wrist band, partly merged with his legs. The ball arrives low around 60282-60285 and is blocked, so there is no clean catch. No batter's-box chalk is visible."
+    },
+    {
+     "at_bat_number": 78,
+     "pitch_number": 7,
+     "release_frame": 60842,
+     "live_cf_first_frame": 60746,
+     "setup_frame": 60839,
+     "setup_reason": null,
+     "mitt_center": [
+      658,
+      330
+     ],
+     "mitt_visible_fraction": "partial",
+     "setup_plate_front": {
+      "left_end": [
+       631,
+       367
+      ],
+      "right_end": [
+       687,
+       367
+      ]
+     },
+     "setup_uncertainty_pixels": 10,
+     "catch_frame": null,
+     "catch_reason": "batter_hit_ball",
+     "ball_visible_in_catch_frame": false,
+     "pocket_center": null,
+     "catch_plate_front": null,
+     "catch_uncertainty_pixels": null,
+     "rubber_center": [
+      690,
+      622
+     ],
+     "rubber_width_px": 94,
+     "left_box": null,
+     "right_box": null,
+     "note": "60746 is the first frame of a dissolve from a close-up into the live CF view (it is clean from about 60749). In 60842 a ball streak (about 728,354) has left the hand; in 60839 the arm is still behind the head. The catcher sets a low target with a dark mitt near the dirt between his knees, below a white wrist, partly visible. The ball is visible near the zone at 60857 and the batter puts it in play, so there is no catch. Box chalk is not visible."
+    }
+   ]
+  }
+ ]
+}
