@@ -2,14 +2,16 @@
  "schema": "intent_accuracy_report_v0",
  "plan": "docs/results/mlb_p0/intent_eval_plan_v0.json",
  "definitions": {
-  "mitt_pixels": "distance between the assistant's and the person's mitt point on the same decision frame (both marked), source pixels",
-  "output_feet": "assistant's published plate_feet (JSONL) minus the person's mitt mapped through the person's plate front edge and the game's hop-2 matrix, feet",
+  "mitt_reading_pixels": "assistant mitt point minus the person's on the same decision frame, source pixels",
+  "mitt_reading_feet_same_plate": "both mitt points mapped through the person's plate front edge and the game's hop-2 matrix; isolates the mitt reading",
+  "output_vs_person_feet": "published plate_feet (JSONL) minus the person's mitt mapped through the person's plate front edge and the game's hop-2 matrix; shares the matrix, so it is not a physical-accuracy measurement",
+  "camera_check_catch_vs_statcast": "the only physical check: assistant-read ball in the mitt through hops 1-2 vs the Statcast trajectory (intent.calibrate); no person",
   "assistant abstention_rate": "unavailable lines / lines in the game's output",
-  "person_abstention_rate": "frames the person marked hidden / not in setup / not centre field, over the frames the person decided",
-  "percentiles": "nearest-rank median and 90th percentile"
+  "person_abstention_rate": "frames the person marked hidden / not in setup / not centre field, over the frames the person decided; abstentions are not counted as marked",
+  "percentiles": "nearest-rank median and 90th percentile; signed blocks give mean, median and the standard error of the mean"
  },
  "m3_requirement": {
-  "rule": "at least 50 person-marked pitches over at least 2 evaluation games",
+  "rule": "at least 50 person-marked pitches over at least 2 evaluation games (abstentions do not count)",
   "evaluation_games_labeled": 0,
   "person_marked": 0,
   "met": false
@@ -19,17 +21,36 @@
    "game_pk": 747139,
    "broadcast": "SNY",
    "video": "full game",
+   "files": {
+    "jsonl": "docs/results/mlb_p0/game_747139_intent_v0.jsonl",
+    "points": "docs/results/mlb_p0/game_747139_intent_points_v0.json",
+    "calibration": "docs/results/mlb_p0/game_747139_intent_plate_calibration_v0.json"
+   },
    "pitches_in_output": 297,
    "assistant": {
     "estimated": 233,
     "unavailable": 64,
-    "abstention_rate": 0.21548821548821548
+    "abstention_rate": 0.21548821548821548,
+    "abstention_rate_denominator": "lines in the game's output",
+    "abstention_reasons": {
+     "catcher_not_in_setup": 26,
+     "camera_not_centre_field": 36,
+     "glove_hidden_by_umpire": 1,
+     "glove_not_visible": 1
+    }
    },
    "camera_check_catch_vs_statcast": {
     "rms_error_feet": 0.2773810698204491,
     "rms_basis": "human_verified_subset",
+    "error_status": "measured",
     "pitches_used": 21,
-    "human_verified_count": 19
+    "min_pitches": 10,
+    "x_mean_signed_feet": -0.17318571428571428,
+    "z_mean_signed_feet": 0.12422857142857142,
+    "human_verified_count": 19,
+    "tilt_degrees": 5.839656047243835,
+    "pan_degrees": null,
+    "pan_readings": 0
    },
    "person": {
     "status": "awaiting_labels"
@@ -39,11 +60,23 @@
    "game_pk": 849843,
    "broadcast": "NBC",
    "video": "official condensed game",
+   "files": {
+    "jsonl": "docs/results/mlb_p0/game_849843_intent_v0.jsonl",
+    "points": "docs/results/mlb_p0/game_849843_intent_points_v0.json",
+    "calibration": "docs/results/mlb_p0/game_849843_intent_plate_calibration_v0.json"
+   },
    "pitches_in_output": 39,
    "assistant": {
     "estimated": 27,
     "unavailable": 12,
-    "abstention_rate": 0.3076923076923077
+    "abstention_rate": 0.3076923076923077,
+    "abstention_rate_denominator": "lines in the game's output",
+    "abstention_reasons": {
+     "readers_disagree_on_mitt": 4,
+     "glove_not_distinguishable": 3,
+     "only_one_reader_found_a_setup_frame": 4,
+     "glove_hidden_by_catcher_body": 1
+    }
    },
    "coverage": {
     "feed_pitches": 262,
@@ -53,8 +86,15 @@
    "camera_check_catch_vs_statcast": {
     "rms_error_feet": 0.4862910445402013,
     "rms_basis": "all_used_pitches_assistant_read",
+    "error_status": "measured",
     "pitches_used": 10,
-    "human_verified_count": 0
+    "min_pitches": 10,
+    "x_mean_signed_feet": 0.05904,
+    "z_mean_signed_feet": 0.10873999999999999,
+    "human_verified_count": 0,
+    "tilt_degrees": 4.031532743245371,
+    "pan_degrees": -4.218142718555379,
+    "pan_readings": 24
    },
    "person": {
     "status": "awaiting_labels"
@@ -66,11 +106,21 @@
    "game_pk": 849845,
    "broadcast": "NBC/Peacock",
    "video": "official condensed game (00:18:33)",
+   "files": {
+    "jsonl": "docs/results/mlb_p0/game_849845_intent_v0.jsonl",
+    "points": "docs/results/mlb_p0/game_849845_intent_points_v0.json",
+    "calibration": "docs/results/mlb_p0/game_849845_intent_plate_calibration_v0.json"
+   },
    "pitches_in_output": 57,
    "assistant": {
     "estimated": 43,
     "unavailable": 14,
-    "abstention_rate": 0.24561403508771928
+    "abstention_rate": 0.24561403508771928,
+    "abstention_rate_denominator": "lines in the game's output",
+    "abstention_reasons": {
+     "only_one_reader_found_a_setup_frame": 8,
+     "readers_disagree_on_mitt": 6
+    }
    },
    "coverage": {
     "feed_pitches": 250,
@@ -80,8 +130,15 @@
    "camera_check_catch_vs_statcast": {
     "rms_error_feet": 0.1488494360600154,
     "rms_basis": "all_used_pitches_assistant_read",
+    "error_status": "measured",
     "pitches_used": 13,
-    "human_verified_count": 0
+    "min_pitches": 10,
+    "x_mean_signed_feet": 0.00806923076923077,
+    "z_mean_signed_feet": 0.0578,
+    "human_verified_count": 0,
+    "tilt_degrees": 5.708494714002056,
+    "pan_degrees": -0.6915911124510634,
+    "pan_readings": 42
    },
    "person": {
     "status": "awaiting_labels"
@@ -91,11 +148,23 @@
    "game_pk": 823407,
    "broadcast": "FOX",
    "video": "official condensed game (00:10:59)",
+   "files": {
+    "jsonl": "docs/results/mlb_p0/game_823407_intent_v0.jsonl",
+    "points": "docs/results/mlb_p0/game_823407_intent_points_v0.json",
+    "calibration": "docs/results/mlb_p0/game_823407_intent_plate_calibration_v0.json"
+   },
    "pitches_in_output": 29,
    "assistant": {
     "estimated": 15,
     "unavailable": 14,
-    "abstention_rate": 0.4827586206896552
+    "abstention_rate": 0.4827586206896552,
+    "abstention_rate_denominator": "lines in the game's output",
+    "abstention_reasons": {
+     "only_one_reader_found_a_setup_frame": 7,
+     "cut_after_release": 1,
+     "not_centre_field": 3,
+     "readers_disagree_on_mitt": 3
+    }
    },
    "coverage": {
     "feed_pitches": 355,
@@ -105,8 +174,15 @@
    "camera_check_catch_vs_statcast": {
     "rms_error_feet": null,
     "rms_basis": null,
+    "error_status": "unmeasured",
     "pitches_used": 2,
-    "human_verified_count": 0
+    "min_pitches": 10,
+    "x_mean_signed_feet": -0.36505,
+    "z_mean_signed_feet": -0.016000000000000007,
+    "human_verified_count": 0,
+    "tilt_degrees": 3.3108401982450353,
+    "pan_degrees": null,
+    "pan_readings": 0
    },
    "person": {
     "status": "awaiting_labels"
@@ -117,26 +193,117 @@
   "games": 0,
   "frames_decided_by_person": 0,
   "person_marked": 0,
-  "mitt_pixels": {
-   "n": 0,
-   "median": null,
-   "p90": null
+  "availability": {},
+  "mitt_reading_pixels": {
+   "denominator": "frames where both the assistant and the person marked a mitt",
+   "distance": {
+    "n": 0,
+    "median": null,
+    "p90": null
+   },
+   "dx_assistant_minus_person": {
+    "signed": {
+     "n": 0,
+     "mean": null,
+     "median": null,
+     "se_of_mean": null
+    },
+    "absolute": {
+     "n": 0,
+     "median": null,
+     "p90": null
+    }
+   },
+   "dy_assistant_minus_person": {
+    "signed": {
+     "n": 0,
+     "mean": null,
+     "median": null,
+     "se_of_mean": null
+    },
+    "absolute": {
+     "n": 0,
+     "median": null,
+     "p90": null
+    }
+   }
   },
-  "output_feet_distance": {
-   "n": 0,
-   "median": null,
-   "p90": null
+  "mitt_reading_feet_same_plate": {
+   "denominator": "both marked a mitt and the person marked the plate front edge",
+   "distance": {
+    "n": 0,
+    "median": null,
+    "p90": null
+   },
+   "x_assistant_minus_person": {
+    "signed": {
+     "n": 0,
+     "mean": null,
+     "median": null,
+     "se_of_mean": null
+    },
+    "absolute": {
+     "n": 0,
+     "median": null,
+     "p90": null
+    }
+   },
+   "z_assistant_minus_person": {
+    "signed": {
+     "n": 0,
+     "mean": null,
+     "median": null,
+     "se_of_mean": null
+    },
+    "absolute": {
+     "n": 0,
+     "median": null,
+     "p90": null
+    }
+   }
   },
-  "output_feet_abs_x": {
-   "n": 0,
-   "median": null,
-   "p90": null
-  },
-  "output_feet_abs_z": {
-   "n": 0,
-   "median": null,
-   "p90": null
+  "output_vs_person_feet": {
+   "denominator": "both marked a mitt, the person marked the plate front edge, and the published line reached plate_feet",
+   "distance": {
+    "n": 0,
+    "median": null,
+    "p90": null
+   },
+   "x_published_minus_person": {
+    "signed": {
+     "n": 0,
+     "mean": null,
+     "median": null,
+     "se_of_mean": null
+    },
+    "absolute": {
+     "n": 0,
+     "median": null,
+     "p90": null
+    }
+   },
+   "z_published_minus_person": {
+    "signed": {
+     "n": 0,
+     "mean": null,
+     "median": null,
+     "se_of_mean": null
+    },
+    "absolute": {
+     "n": 0,
+     "median": null,
+     "p90": null
+    }
+   }
   }
  },
+ "limits": [
+  "Person-vs-assistant numbers use the same hop-2 matrix on both sides; they measure the reading, not the physical accuracy of plate_feet.",
+  "The person labels the assistant's decision frame; whether that is the right setup frame is not evaluated.",
+  "Condensed games show mostly plate-appearance-ending pitches; the evaluated pitches are not a random sample of the games.",
+  "Catchers in these games rest the glove on the dirt until release; plate_feet.z is the resting glove height, not a target height.",
+  "823407: the pitching rubber is hidden on the low FOX camera, so pan is unmeasured (0 by rule) and the camera check has 2 catches (unmeasured).",
+  "One labeler, one pass; no second person, so person-to-person variation is unmeasured."
+ ],
  "no_threshold": "no pass/fail threshold was set in advance; the numbers are reported with n"
 }

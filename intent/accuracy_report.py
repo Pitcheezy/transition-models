@@ -11,6 +11,17 @@ catch-vs-Statcast camera check) and, once the person's labels have been imported
 Writes ``docs/results/mlb_p0/intent_accuracy_report_v0.json``. Development and evaluation games
 sit in separate blocks and are never pooled; the pooled block covers evaluation games only. A game
 without imported labels is reported as ``awaiting_labels`` with no error numbers.
+
+Three error families are kept apart because they measure different things:
+
+- ``mitt_reading``: assistant vs person mitt point on the same frame, in pixels and in feet with
+  both points mapped through the PERSON's plate edge and the same hop-2 matrix. This isolates the
+  mitt reading; the camera transform cancels.
+- ``output_vs_person``: the published ``plate_feet`` against the person's mitt through the
+  person's plate edge (mitt reading plus plate-edge reading, same matrix). It still shares the
+  hop-2 matrix with the assistant, so it says nothing about physical (camera) accuracy.
+- ``camera_check``: the catch-vs-Statcast check of ``intent.calibrate`` (assistant-read ball in
+  the mitt vs the Statcast trajectory), the only physical check; it has no person in it.
 """
 
 from __future__ import annotations
@@ -18,7 +29,9 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import statistics
 import sys
+from collections import Counter
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
@@ -30,6 +43,18 @@ RESULTS = ROOT / "docs/results/mlb_p0"
 REPORT_SCHEMA = "intent_accuracy_report_v0"
 M3_MIN_PERSON_MARKED = 50
 M3_MIN_EVAL_GAMES = 2
+WORST = 5
+ERROR_KEYS = (
+    "mitt_px",
+    "mitt_dx_px",
+    "mitt_dy_px",
+    "same_plate_dx_ft",
+    "same_plate_dz_ft",
+    "same_plate_ft",
+    "output_dx_ft",
+    "output_dz_ft",
+    "output_ft",
+)
 
 
 def _load(path):
@@ -38,32 +63,118 @@ def _load(path):
 
 def _summary(values):
     values = [float(v) for v in values]
+    return {"n": len(values), "median": _percentile(values, 0.5), "p90": _percentile(values, 0.9)}
+
+
+def _signed(values):
+    values = [float(v) for v in values]
+    if not values:
+        return {"n": 0, "mean": None, "median": None, "se_of_mean": None}
+    sd = statistics.stdev(values) if len(values) > 1 else None
     return {
         "n": len(values),
-        "median": _percentile(values, 0.5),
-        "p90": _percentile(values, 0.9),
+        "mean": statistics.fmean(values),
+        "median": statistics.median(values),
+        "se_of_mean": sd / math.sqrt(len(values)) if sd is not None else None,
+    }
+
+
+def _axis_block(signed_values):
+    return {
+        "signed": _signed(signed_values),
+        "absolute": _summary([abs(v) for v in signed_values]),
     }
 
 
 def frame_errors(check):
-    """Per-frame error lists from one setup check (both marked only)."""
-    out = {"mitt_px": [], "output_feet": [], "output_abs_x": [], "output_abs_z": []}
+    """Per-frame error lists from one setup check (frames where both marked)."""
+    out = {k: [] for k in ERROR_KEYS}
     for f in check.get("per_frame", []):
         if f.get("mitt_px_diff"):
-            out["mitt_px"].append(math.hypot(*f["mitt_px_diff"]))
+            dx, dy = f["mitt_px_diff"]
+            out["mitt_px"].append(math.hypot(dx, dy))
+            out["mitt_dx_px"].append(dx)
+            out["mitt_dy_px"].append(dy)
+        if f.get("mitt_feet_diff_same_plate"):
+            dx, dz = f["mitt_feet_diff_same_plate"]
+            out["same_plate_dx_ft"].append(dx)
+            out["same_plate_dz_ft"].append(dz)
+            out["same_plate_ft"].append(math.hypot(dx, dz))
         if f.get("output_feet_diff"):
             dx, dz = f["output_feet_diff"]
-            out["output_feet"].append(math.hypot(dx, dz))
-            out["output_abs_x"].append(abs(dx))
-            out["output_abs_z"].append(abs(dz))
+            out["output_dx_ft"].append(dx)
+            out["output_dz_ft"].append(dz)
+            out["output_ft"].append(math.hypot(dx, dz))
     return out
+
+
+def error_blocks(errors):
+    return {
+        "mitt_reading_pixels": {
+            "denominator": "frames where both the assistant and the person marked a mitt",
+            "distance": _summary(errors["mitt_px"]),
+            "dx_assistant_minus_person": _axis_block(errors["mitt_dx_px"]),
+            "dy_assistant_minus_person": _axis_block(errors["mitt_dy_px"]),
+        },
+        "mitt_reading_feet_same_plate": {
+            "denominator": "both marked a mitt and the person marked the plate front edge",
+            "distance": _summary(errors["same_plate_ft"]),
+            "x_assistant_minus_person": _axis_block(errors["same_plate_dx_ft"]),
+            "z_assistant_minus_person": _axis_block(errors["same_plate_dz_ft"]),
+        },
+        "output_vs_person_feet": {
+            "denominator": "both marked a mitt, the person marked the plate front edge, and the "
+            "published line reached plate_feet",
+            "distance": _summary(errors["output_ft"]),
+            "x_published_minus_person": _axis_block(errors["output_dx_ft"]),
+            "z_published_minus_person": _axis_block(errors["output_dz_ft"]),
+        },
+    }
 
 
 def person_counts(check):
     a = check["availability"]
-    labeled = check["frames_labeled"] - a["person_undecided"]
+    decided = check["frames_labeled"] - a["person_undecided"]
     marked = a["both_marked"] + a["person_only"]
-    return labeled, marked
+    return decided, marked
+
+
+def _rel(path):
+    try:
+        return Path(path).resolve().relative_to(ROOT).as_posix()
+    except ValueError:
+        return Path(path).as_posix()
+
+
+def failure_cases(check):
+    frames = check.get("per_frame", [])
+    worst = sorted(
+        (f for f in frames if f.get("mitt_px_diff")),
+        key=lambda f: -math.hypot(*f["mitt_px_diff"]),
+    )[:WORST]
+    disagree = [
+        {
+            "pitch_id": f["pitch_id"],
+            "assistant_status": f["assistant_status"],
+            "assistant_reason": f.get("assistant_reason"),
+            "person_status": f["person_status"],
+        }
+        for f in frames
+        if f.get("person_status") is not None
+        and (f["assistant_status"] == "estimated") != (f["person_status"] == "marked")
+    ]
+    return {
+        "largest_mitt_pixel_differences": [
+            {
+                "pitch_id": f["pitch_id"],
+                "mitt_px_diff": f["mitt_px_diff"],
+                "distance_px": round(math.hypot(*f["mitt_px_diff"]), 2),
+                "output_feet_diff": f.get("output_feet_diff"),
+            }
+            for f in worst
+        ],
+        "availability_disagreements": disagree,
+    }
 
 
 def game_block(entry, results=RESULTS):
@@ -71,15 +182,23 @@ def game_block(entry, results=RESULTS):
     points = _load(results / f"game_{g}_intent_points_v0.json")
     frames = points["frames"]
     estimated = sum(1 for f in frames if f["status"] == "estimated")
+    reasons = Counter(f.get("unavailable_reason") for f in frames if f["status"] != "estimated")
     block = {
         "game_pk": g,
         "broadcast": entry.get("broadcast"),
         "video": entry.get("video"),
+        "files": {
+            "jsonl": _rel(results / f"game_{g}_intent_v0.jsonl"),
+            "points": _rel(results / f"game_{g}_intent_points_v0.json"),
+            "calibration": _rel(results / f"game_{g}_intent_plate_calibration_v0.json"),
+        },
         "pitches_in_output": len(frames),
         "assistant": {
             "estimated": estimated,
             "unavailable": len(frames) - estimated,
             "abstention_rate": (len(frames) - estimated) / len(frames) if frames else None,
+            "abstention_rate_denominator": "lines in the game's output",
+            "abstention_reasons": dict(reasons),
         },
     }
     scan_path = results / f"game_{g}_condensed_scan_v0.json"
@@ -93,49 +212,67 @@ def game_block(entry, results=RESULTS):
     cal_path = results / f"game_{g}_intent_plate_calibration_v0.json"
     if cal_path.is_file():
         cal = _load(cal_path)
+        ref = (cal["end_to_end_check"].get("by_depth_y") or {}).get("-1.0") or {}
         block["camera_check_catch_vs_statcast"] = {
             "rms_error_feet": cal.get("rms_error_feet"),
             "rms_basis": cal.get("rms_basis"),
+            "error_status": cal.get("error_status"),
             "pitches_used": cal["end_to_end_check"].get("pitches_used"),
+            "min_pitches": cal.get("min_pitches"),
+            "x_mean_signed_feet": (ref.get("x") or {}).get("mean_signed_feet"),
+            "z_mean_signed_feet": (ref.get("z") or {}).get("mean_signed_feet"),
             "human_verified_count": cal.get("human_verified_count"),
+            "tilt_degrees": (cal.get("camera", {}).get("tilt") or {}).get("degrees"),
+            "pan_degrees": (cal.get("hop2", {}).get("pan_estimate") or {}).get("pan_degrees"),
+            "pan_readings": (cal.get("hop2", {}).get("pan_estimate") or {}).get("n"),
         }
     check_path = results / f"game_{g}_intent_setup_check_v0.json"
     if not check_path.is_file():
         block["person"] = {"status": "awaiting_labels"}
         return block, None
     check = _load(check_path)
-    labeled, marked = person_counts(check)
+    decided, marked = person_counts(check)
     errors = frame_errors(check)
+    person_reasons = Counter(
+        f["person_status"]
+        for f in check.get("per_frame", [])
+        if f.get("person_status") not in (None, "marked")
+    )
     block["person"] = {
         "status": "labeled",
-        "labeler": check.get("labeler"),
-        "frames_labeled": check["frames_labeled"],
+        "provenance": {
+            "labeler": check.get("labeler"),
+            "exported_at": check.get("exported_at"),
+            "elapsed_seconds": check.get("elapsed_seconds"),
+            "pack_id": check.get("pack_id"),
+            "pack_manifest": _rel(results / f"game_{g}_intent_label_pack_v0.json"),
+            "labels_file": check.get("labels_file"),
+            "labels_raw_sha256": check.get("labels_raw_sha256"),
+            "setup_check_file": _rel(check_path),
+        },
+        "frames_in_pack": check["frames_labeled"],
+        "frames_decided": decided,
         "person_marked": marked,
-        "person_abstention_rate": (labeled - marked) / labeled if labeled else None,
+        "person_abstained": decided - marked,
+        "person_abstention_reasons": dict(person_reasons),
+        "person_abstention_rate": (decided - marked) / decided if decided else None,
+        "person_abstention_rate_denominator": "frames the person decided",
         "availability": check["availability"],
-        "mitt_pixels": _summary(errors["mitt_px"]),
-        "output_feet_distance": _summary(errors["output_feet"]),
-        "output_feet_abs_x": _summary(errors["output_abs_x"]),
-        "output_feet_abs_z": _summary(errors["output_abs_z"]),
+        **error_blocks(errors),
+        "failure_cases": failure_cases(check),
     }
-    return block, {"check": check, "errors": errors, "labeled": labeled, "marked": marked}
+    return block, {"check": check, "errors": errors, "decided": decided, "marked": marked}
 
 
 def build(plan, results=RESULTS):
-    development, evaluation, pooled = (
-        [],
-        [],
-        {
-            "mitt_px": [],
-            "output_feet": [],
-            "output_abs_x": [],
-            "output_abs_z": [],
-        },
-    )
-    labeled_total = marked_total = 0
+    development, evaluation = [], []
+    pooled = {k: [] for k in ERROR_KEYS}
+    availability = Counter()
+    decided_total = marked_total = 0
     eval_games_labeled = 0
     for entry in plan["development_games"]:
-        development.append(game_block(entry, results)[0])
+        if (results / f"game_{entry['game_pk']}_intent_points_v0.json").is_file():
+            development.append(game_block(entry, results)[0])
     for entry in plan["evaluation_games"]["games"]:
         if not (results / f"game_{entry['game_pk']}_intent_points_v0.json").is_file():
             evaluation.append({"game_pk": entry["game_pk"], "status": "not_processed"})
@@ -144,8 +281,9 @@ def build(plan, results=RESULTS):
         evaluation.append(block)
         if extra:
             eval_games_labeled += 1
-            labeled_total += extra["labeled"]
+            decided_total += extra["decided"]
             marked_total += extra["marked"]
+            availability.update(extra["check"]["availability"])
             for k in pooled:
                 pooled[k] += extra["errors"][k]
     met = eval_games_labeled >= M3_MIN_EVAL_GAMES and marked_total >= M3_MIN_PERSON_MARKED
@@ -153,18 +291,24 @@ def build(plan, results=RESULTS):
         "schema": REPORT_SCHEMA,
         "plan": "docs/results/mlb_p0/intent_eval_plan_v0.json",
         "definitions": {
-            "mitt_pixels": "distance between the assistant's and the person's mitt point on the "
-            "same decision frame (both marked), source pixels",
-            "output_feet": "assistant's published plate_feet (JSONL) minus the person's mitt "
-            "mapped through the person's plate front edge and the game's hop-2 matrix, feet",
+            "mitt_reading_pixels": "assistant mitt point minus the person's on the same decision "
+            "frame, source pixels",
+            "mitt_reading_feet_same_plate": "both mitt points mapped through the person's plate "
+            "front edge and the game's hop-2 matrix; isolates the mitt reading",
+            "output_vs_person_feet": "published plate_feet (JSONL) minus the person's mitt mapped "
+            "through the person's plate front edge and the game's hop-2 matrix; shares the matrix, "
+            "so it is not a physical-accuracy measurement",
+            "camera_check_catch_vs_statcast": "the only physical check: assistant-read ball in the "
+            "mitt through hops 1-2 vs the Statcast trajectory (intent.calibrate); no person",
             "assistant abstention_rate": "unavailable lines / lines in the game's output",
-            "person_abstention_rate": "frames the person marked hidden / not in setup / not "
-            "centre field, over the frames the person decided",
-            "percentiles": "nearest-rank median and 90th percentile",
+            "person_abstention_rate": "frames the person marked hidden / not in setup / not centre "
+            "field, over the frames the person decided; abstentions are not counted as marked",
+            "percentiles": "nearest-rank median and 90th percentile; signed blocks give mean, "
+            "median and the standard error of the mean",
         },
         "m3_requirement": {
             "rule": f"at least {M3_MIN_PERSON_MARKED} person-marked pitches over at least "
-            f"{M3_MIN_EVAL_GAMES} evaluation games",
+            f"{M3_MIN_EVAL_GAMES} evaluation games (abstentions do not count)",
             "evaluation_games_labeled": eval_games_labeled,
             "person_marked": marked_total,
             "met": met,
@@ -173,13 +317,24 @@ def build(plan, results=RESULTS):
         "evaluation_games": evaluation,
         "evaluation_pooled": {
             "games": eval_games_labeled,
-            "frames_decided_by_person": labeled_total,
+            "frames_decided_by_person": decided_total,
             "person_marked": marked_total,
-            "mitt_pixels": _summary(pooled["mitt_px"]),
-            "output_feet_distance": _summary(pooled["output_feet"]),
-            "output_feet_abs_x": _summary(pooled["output_abs_x"]),
-            "output_feet_abs_z": _summary(pooled["output_abs_z"]),
+            "availability": dict(availability),
+            **error_blocks(pooled),
         },
+        "limits": [
+            "Person-vs-assistant numbers use the same hop-2 matrix on both sides; they measure the "
+            "reading, not the physical accuracy of plate_feet.",
+            "The person labels the assistant's decision frame; whether that is the right setup "
+            "frame is not evaluated.",
+            "Condensed games show mostly plate-appearance-ending pitches; the evaluated pitches are "
+            "not a random sample of the games.",
+            "Catchers in these games rest the glove on the dirt until release; plate_feet.z is the "
+            "resting glove height, not a target height.",
+            "823407: the pitching rubber is hidden on the low FOX camera, so pan is unmeasured "
+            "(0 by rule) and the camera check has 2 catches (unmeasured).",
+            "One labeler, one pass; no second person, so person-to-person variation is unmeasured.",
+        ],
         "no_threshold": "no pass/fail threshold was set in advance; the numbers are reported with n",
     }
 
@@ -187,9 +342,10 @@ def build(plan, results=RESULTS):
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--plan", type=Path, default=RESULTS / "intent_eval_plan_v0.json")
+    parser.add_argument("--results", type=Path, default=RESULTS)
     parser.add_argument("--out", type=Path, default=RESULTS / "intent_accuracy_report_v0.json")
     args = parser.parse_args(argv)
-    report = build(_load(args.plan))
+    report = build(_load(args.plan), args.results)
     args.out.write_text(
         json.dumps(report, ensure_ascii=False, indent=1, allow_nan=False) + "\n", encoding="utf-8"
     )

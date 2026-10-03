@@ -247,10 +247,30 @@ def test_plan_roles_and_report_blocks(tmp_path):
             "person_undecided": 0,
         },
         "per_frame": [
-            {"mitt_px_diff": [3, 4], "output_feet_diff": [0.3, 0.4]},
-            {"mitt_px_diff": [6, 8], "output_feet_diff": [-0.6, 0.8]},
-            {"mitt_px_diff": [0, 1], "output_feet_diff": [0.0, -0.1]},
-            {},
+            {
+                "pitch_id": "2:1:1",
+                "assistant_status": "estimated",
+                "person_status": "marked",
+                "mitt_px_diff": [3, 4],
+                "mitt_feet_diff_same_plate": [0.1, 0.1],
+                "output_feet_diff": [0.3, 0.4],
+            },
+            {
+                "pitch_id": "2:2:1",
+                "assistant_status": "estimated",
+                "person_status": "marked",
+                "mitt_px_diff": [6, 8],
+                "mitt_feet_diff_same_plate": [0.2, -0.2],
+                "output_feet_diff": [-0.6, 0.8],
+            },
+            {
+                "pitch_id": "2:3:1",
+                "assistant_status": "estimated",
+                "person_status": "marked",
+                "mitt_px_diff": [0, 1],
+                "output_feet_diff": [0.0, -0.1],
+            },
+            {"pitch_id": "2:4:1", "assistant_status": "unavailable", "person_status": "hidden"},
         ],
     }
     (tmp_path / "game_2_intent_setup_check_v0.json").write_text(json.dumps(check), encoding="utf-8")
@@ -260,7 +280,41 @@ def test_plan_roles_and_report_blocks(tmp_path):
     assert e3["status"] == "not_processed"
     assert e2["assistant"]["abstention_rate"] == pytest.approx(0.25)
     assert e2["person"]["person_abstention_rate"] == pytest.approx(0.25)
-    assert e2["person"]["mitt_pixels"] == {"n": 3, "median": 5.0, "p90": 10.0}
-    assert e2["person"]["output_feet_distance"]["median"] == pytest.approx(0.5)
+    assert e2["person"]["mitt_reading_pixels"]["distance"] == {"n": 3, "median": 5.0, "p90": 10.0}
+    assert e2["person"]["output_vs_person_feet"]["distance"]["median"] == pytest.approx(0.5)
+    out_x = e2["person"]["output_vs_person_feet"]["x_published_minus_person"]
+    assert out_x["signed"]["mean"] == pytest.approx(-0.1) and out_x["absolute"]["median"] == 0.3
+    assert e2["person"]["mitt_reading_feet_same_plate"]["distance"]["n"] == 2
+    assert e2["person"]["person_abstention_reasons"] == {"hidden": 1}
+    worst = e2["person"]["failure_cases"]["largest_mitt_pixel_differences"]
+    assert worst[0]["pitch_id"] == "2:2:1" and worst[0]["distance_px"] == 10.0
+    assert e2["person"]["failure_cases"]["availability_disagreements"] == []
     assert report["evaluation_pooled"]["person_marked"] == 3
+    assert report["evaluation_pooled"]["availability"]["both_marked"] == 3
     assert report["m3_requirement"]["met"] is False
+
+
+def test_service_check_runs_a_validator_file_with_the_sibling_imports_stubbed(tmp_path):
+    from intent.service_check import check_file, load_validator
+
+    validator = tmp_path / "intent.py"
+    validator.write_text(
+        "from .domain import ZONES\n"
+        "from .video_lab import _number\n"
+        "def validate_intent_estimate(doc):\n"
+        "    _number(doc['x'], 'x')\n"
+        "    if doc['x'] < 0:\n"
+        "        raise ValueError('negative')\n"
+        "    return doc\n",
+        encoding="utf-8",
+    )
+    jsonl = tmp_path / "a.jsonl"
+    jsonl.write_text(
+        '{"pitch_id": "1:1:1", "x": 1, "deepest_frame": "plate_feet"}\n'
+        '{"pitch_id": "1:1:2", "x": -1, "deepest_frame": null}\n',
+        encoding="utf-8",
+    )
+    result = check_file(load_validator(validator), jsonl)
+    assert result["lines"] == 2 and result["passed"] == 1
+    assert result["failures"] == [{"pitch_id": "1:1:2", "error": "negative"}]
+    assert "observer_app" not in sys.modules

@@ -25,6 +25,7 @@ held-out accuracy.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import math
 import sys
@@ -276,6 +277,7 @@ def main(argv=None):
     args = parser.parse_args(argv)
     manifest = _load(args.manifest or RESULTS / f"game_{args.game}_intent_label_pack_v0.json")
     labels = _load(args.labels)
+    raw_sha256 = hashlib.sha256(Path(args.labels).read_bytes()).hexdigest()
     rows = validate_labels(labels, manifest)
     points = _load(args.points or RESULTS / f"game_{args.game}_intent_points_v0.json")
     calibration = load_calibration(
@@ -298,6 +300,7 @@ def main(argv=None):
         "exported_at": labels.get("exported_at"),
         "elapsed_seconds": labels.get("elapsed_seconds"),
         "label_source": "human_manual_annotation",
+        "imported_from": {"file_name": Path(args.labels).name, "sha256": raw_sha256},
         "frames": rows,
     }
     out_labels = args.out_labels or RESULTS / f"game_{args.game}_intent_human_labels_v0.json"
@@ -311,7 +314,10 @@ def main(argv=None):
         "the same frames" + ("; not a held-out accuracy" if role != "evaluation" else ""),
         "jsonl": _display_path(jsonl) if records else None,
         "labeler": labels.get("labeler"),
+        "exported_at": labels.get("exported_at"),
         "elapsed_seconds": labels.get("elapsed_seconds"),
+        "labels_file": _display_path(out_labels),
+        "labels_raw_sha256": raw_sha256,
         **report,
     }
     out_report = args.out_report or RESULTS / f"game_{args.game}_intent_setup_check_v0.json"
