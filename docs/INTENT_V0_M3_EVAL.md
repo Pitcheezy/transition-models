@@ -53,6 +53,90 @@ M3 완료 기준은 [작업 지시서](INTENT_V0_WORK_ORDER.md)에 있다.
 - **`intent/calibrate.py`의 `error_definition` 문구를 고쳤다.** "development game"과 몽타주 확인 문구가 모든 경기에 고정으로 찍히고 있었다.
   - 이제 경기 역할은 평가 계획에서 읽고, 몽타주 문구는 사람 확인이 있을 때만 붙인다.
   - 숫자는 바뀌지 않았다. 747139·849843 보정 파일은 이 문자열 한 줄만 달라졌다.
+- **보고 도구를 보강했다 (2026-10-03, 측정 방법은 그대로).** 10/5 전달 요청에 맞춰 바꾼 것은 보고 쪽뿐이다.
+  - `intent/accuracy_report.py`: 지표별 분모, 부호 있는 x·z와 절댓값, 미트 판독 오차·출력 오차·카메라 검사의 분리, 사람 기권 이유, 라벨 출처, 큰 차이와 가용성 불일치의 pitch_id, 한계 목록을 넣었다.
+  - `intent/human_labels.py`: 라벨 내보낸 시각, 원본 파일 이름과 sha256을 기록한다.
+  - 판독·합의 규칙·보정·좌표 변환은 바꾸지 않았다.
+  - 합성 라벨(커밋하지 않음)로 끝까지 돌려 보다가 보고 도구가 per-frame 키 이름을 잘못 읽는 버그를 찾아 고쳤다. 같은 판 고정 피트 오차가 0건으로 나오던 문제다. 사람 라벨을 받기 전이다.
+
+## 10/5 전달 묶음 (Song 요청 2026-10-03)
+
+요청서의 체크리스트 순서대로 정리했다. 사람 라벨이 들어오면 이 절의 '상태'와 시연 요약을 채운다.
+
+| 항목 | 상태 | 파일 |
+|---|---|---|
+| 사람 라벨 (평가 2경기, 표시 50구 이상) | **대기**: 라벨 팩 2개(86장)를 저장소 주인에게 넘겼다 | 팩 manifest: `game_849845_intent_label_pack_v0.json`(e3e7cac83f68ebf1), `game_823407_intent_label_pack_v0.json`(c72e8a15a8a67507) |
+| 라벨 출처 | 가져오면 자동 기록 (라벨러 식별자, 내보낸 시각, 원본 sha256, 팩 ID, 프레임 해시) | `game_<경기>_intent_human_labels_v0.json`, `game_<경기>_intent_setup_check_v0.json` |
+| 정확도 보고서 | 도구 준비, 라벨 대기 | `intent_accuracy_report_v0.json` |
+| 보정과 해석의 한계 | 아래에 정리 | 이 문서, 보고서 `limits` |
+| 재현·연동 정보 | 끝남 (재현 확인, 서비스 검사 통과) | 아래 |
+| 시연용 짧은 요약 | 라벨 뒤 채움 | 이 절 끝 |
+
+### 오차를 세 갈래로 나눈다
+
+- **미트 판독 오차:** 같은 프레임에서 보조 판독 점과 사람 점의 차이다.
+  - 픽셀로 잰다.
+  - 피트로도 잰다. 두 점을 모두 사람이 찍은 앞선과 같은 홉 ② 행렬로 옮기므로 카메라 변환이 상쇄된다.
+- **출력 오차:** 공개한 `plate_feet` − 사람 미트를 사람 앞선으로 옮긴 값이다. 미트 판독과 앞선 판독이 함께 들어간다.
+- **카메라 검사:** 포구 공 vs Statcast다. 물리 좌표를 확인하는 유일한 검사이고, 사람 확인은 없다.
+- 위 두 갈래(사람 vs 보조)는 같은 행렬을 양쪽에 쓰므로 `plate_feet`의 물리적 정확도를 증명하지 않는다.
+
+### 알려진 한계
+
+- **선정 편향:** 압축 경기는 대부분 타석 마지막 공만 보여 준다. 849845는 250구 중 57구(23%), 823407은 355구 중 29구(8%)다.
+- **높이:** 두 평가 경기 모두 포수가 릴리스까지 글러브를 땅에 둔다. `plate_feet.z`는 목표 높이가 아니라 쉬는 글러브 높이다.
+- **823407 카메라:** FOX 카메라가 낮아 러버가 가려졌다.
+  - 팬은 미측정이라 규칙대로 0으로 두었다.
+  - 포구 공 2구뿐이라 카메라 검사도 미측정(`null`)이다.
+  - 셋업 − 실제 공 x 중앙값이 −0.75 ft로 치우쳐 있어, 이 경기 x는 카메라 기준으로 믿기 어렵다.
+- **849845 카메라 검사:** 13구 rms 0.149 ft는 보조 판독만으로 잰 값이다.
+- **판독 프레임:** 사람은 보조 판독이 고른 프레임에 라벨한다. 그 프레임이 맞는 셋업 프레임인지는 평가하지 않는다.
+- **라벨러:** 1명이 한 번 찍는다. 사람 간 차이는 미측정이다.
+- **실패 사례:** 보고서 `failure_cases`에 큰 차이 5건과 가용성 불일치 전부를 pitch_id로 남긴다.
+
+### 재현·연동
+
+- **기준 커밋:** 이 절을 넣은 커밋. 브랜치 `feature/intent-v0`.
+- **환경:** Windows 11, Python 3.12.12(`uv run --frozen`), uv 0.10.4, Pillow 12.2.0, ffmpeg 8.0 (gyan.dev essentials).
+- **영상 없이 커밋된 판독 원문에서 재현** (프레임 검증 `--verify-frames`만 로컬 프레임이 필요하다):
+
+```bash
+python -m intent.condensed map --game 849845 --scan docs/results/mlb_p0/game_849845_condensed_scan_reads_v0.json --resolve docs/results/mlb_p0/game_849845_condensed_resolutions_v0.json
+python -m intent.condensed map --game 823407 --scan docs/results/mlb_p0/game_823407_condensed_scan_reads_v0.json
+python -m intent.condensed assemble --game 849845 --reads docs/results/mlb_p0/game_849845_condensed_reads_v0.json
+python -m intent.condensed assemble --game 823407 --reads docs/results/mlb_p0/game_823407_condensed_reads_v0.json
+python -m intent.calibrate --game 849845
+python -m intent.calibrate --game 823407
+python -m intent.run --game 849845 --out docs/results/mlb_p0/game_849845_intent_v0.jsonl
+python -m intent.run --game 823407 --out docs/results/mlb_p0/game_823407_intent_v0.jsonl
+```
+
+  - `map`과 `assemble`은 feed(`data/raw/mlb_video/<경기>/feed.json`, git 제외)가 필요하다. `python -m intent.condensed source --game <경기>`로 받는다.
+  - 2026-10-03에 위 명령을 다시 돌렸다. 스캔·points·보정·JSONL이 커밋된 파일과 바이트 단위로 같았고, `run.json`의 실행 시간만 달랐다.
+- **서비스 스키마 검사:** [intent_service_check_v0.json](results/mlb_p0/intent_service_check_v0.json). 서비스 저장소의 `intent.py`를 읽어서 돌리며, 이 저장소에 복사하지 않는다.
+  - 검사기: SongRoute/pitcheezy `8771c06`, sha256 `52f46e9a…`. 10/3 기준 main·demo/ws-2026 모두 이 버전이다.
+  - 결과: 849845 57/57, 823407 29/29, 849843 39/39, 747139 297/297.
+
+```bash
+python -m intent.service_check --validator <pitcheezy>/apps/observer/backend/observer_app/intent.py docs/results/mlb_p0/game_849845_intent_v0.jsonl docs/results/mlb_p0/game_823407_intent_v0.jsonl --out docs/results/mlb_p0/intent_service_check_v0.json
+```
+
+- **라벨 받은 뒤:**
+
+```bash
+python -m intent.human_labels --game 849845 --labels <내려받은 JSON>
+python -m intent.human_labels --game 823407 --labels <내려받은 JSON>
+python -m intent.accuracy_report
+```
+
+- **git 제외 자료** (영상, 프레임, 라벨링 HTML)는 공개 저장소에 넣지 않는다. MLB 공식 압축 경기에서 다시 만들고 해시로 대조한다.
+  - 다시 만드는 명령: `source` → `sheets` → `broadcast_windows`(경기별 상자는 위 '진행'에 있음) → `label_pack`.
+  - 프레임 sha256은 points와 팩 manifest에 있다. ffmpeg 버전이 다르면 JPEG 바이트가 달라질 수 있다. 프레임 번호는 정확하므로 좌표는 그대로 쓸 수 있다.
+- **처음부터 다시 돌리기:** 스캔·판독 워크플로(`intent/workflows/*.js`)는 Claude Code 에이전트 판독이라 다시 돌리면 같은 결과가 나오지 않는다. 그래서 재현의 기준은 커밋된 판독 원문이다.
+
+### 시연용 짧은 요약
+
+(사람 라벨을 가져온 뒤 채운다.)
 
 ## 진행
 
