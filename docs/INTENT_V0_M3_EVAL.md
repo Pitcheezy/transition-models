@@ -264,3 +264,4 @@ python -m intent.accuracy_report --code-commit <hash>
     - 포구 공 vs Statcast: 쓸 수 있는 공이 7구라 최소 10구에 못 미친다. `rms_error_feet = null`(미측정)이다.
     - 이 경기 포수들도 글러브를 땅에 둔다. 프레임 4장을 직접 그려 확인했다.
   - 이 경기는 보충 규칙이 발동하지 않으면 보고서 평가 블록에 나오지 않는다.
+  - 라벨링 팩: [manifest](results/mlb_p0/game_849849_intent_label_pack_v0.json) 53장, pack `b175894571fe8ee7`, 미트 상자 `480,180,900,420`, 플레이트 상자 `560,340,780,400`. 출력 커밋(`e37a02c`) 뒤에 만들었고, 보충 규칙이 발동할 때만 라벨러에게 넘긴다.

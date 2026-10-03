@@ -1,0 +1,409 @@
+{
+ "schema": "intent_label_pack_v0",
+ "game_pk": 849849,
+ "pack_id": "b175894571fe8ee7",
+ "selection": {
+  "rule": "frames sorted by (at_bat_number, pitch_number); evenly spread picks over the assistant-estimated frames plus about 20 percent over the assistant abstentions; deterministic, no random seed",
+  "sample": 1000,
+  "all_frames": true,
+  "points_method": {
+   "kind": "assistant_visual_estimate",
+   "version": "v0"
+  }
+ },
+ "crops": {
+  "main": {
+   "box": [
+    480,
+    180,
+    900,
+    420
+   ],
+   "zoom": 2
+  },
+  "plate": {
+   "box": [
+    560,
+    340,
+    780,
+    400
+   ],
+   "zoom": 4
+  },
+  "rule": "one fixed pair of boxes per game, chosen from the plate position on one frame before labeling; the same for every frame, so the crop carries no per-pitch hint"
+ },
+ "blind": "the page shows no assistant marks",
+ "frames": [
+  {
+   "pitch_id": "849849:1:8",
+   "frame_seconds": 44.6446,
+   "path": "outputs/frames/849849_windows/pa1_p8/frame_002676.jpg",
+   "image_sha256": "5ff00732989503e86f19bd80a1cbfb9917d68d441cdf1a0576adeff8c82a12cc",
+   "assistant_status": "estimated"
+  },
+  {
+   "pitch_id": "849849:2:7",
+   "frame_seconds": 54.6546,
+   "path": "outputs/frames/849849_windows/pa2_p7/frame_003276.jpg",
+   "image_sha256": "8be04685626ebfb344500724647a80abb95319ee74f6d0276ffe953d1156f5c4",
+   "assistant_status": "estimated"
+  },
+  {
+   "pitch_id": "849849:3:5",
+   "frame_seconds": 74.95821666666667,
+   "path": "outputs/frames/849849_windows/pa3_p5/frame_004493.jpg",
+   "image_sha256": "9c4f9371237233f81f3e84659407b832cbe1b91807f9742c44dbdd94a6ac8134",
+   "assistant_status": "unavailable"
+  },
+  {
+   "pitch_id": "849849:4:2",
+   "frame_seconds": 94.44435,
+   "path": "outputs/frames/849849_windows/pa4_p2/frame_005661.jpg",
+   "image_sha256": "9c55172c73b5c9ffd5bd043b9279a1a4aa76c35ae27f9f9142d139cba8068c81",
+   "assistant_status": "estimated"
+  },
+  {
+   "pitch_id": "849849:5:5",
+   "frame_seconds": 110.54376666666667,
+   "path": "outputs/frames/849849_windows/pa5_p5/frame_006626.jpg",
+   "image_sha256": "4edc0ff25b083f11c214de8dcfabfdcc061975b6885fa1738b30b2ac28e7d473",
+   "assistant_status": "estimated"
+  },
+  {
+   "pitch_id": "849849:6:5",
+   "frame_seconds": 125.45866666666667,
+   "path": "outputs/frames/849849_windows/pa6_p5/frame_007520.jpg",
+   "image_sha256": "458c440daebcd257309214df58d37d93ed22d3a8482ddb691bf0b85e48185f6f",
+   "assistant_status": "estimated"
+  },
+  {
+   "pitch_id": "849849:7:1",
+   "frame_seconds": 152.00185,
+   "path": "outputs/frames/849849_windows/pa7_p1/frame_009111.jpg",
+   "image_sha256": "a35b86eacc47859558224f397ea905c6dc6e39f05425d077132f0d9d7daefdf6",
+   "assistant_status": "unavailable"
+  },
+  {
+   "pitch_id": "849849:8:3",
+   "frame_seconds": 163.29646666666667,
+   "path": "outputs/frames/849849_windows/pa8_p3/frame_009788.jpg",
+   "image_sha256": "3bf2378a64c32fa95a661a4de9b942e0545976ee2c5cb81b82abeb2665131ab5",
+   "assistant_status": "unavailable"
+  },
+  {
+   "pitch_id": "849849:10:3",
+   "frame_seconds": 185.85233333333332,
+   "path": "outputs/frames/849849_windows/pa10_p3/frame_011140.jpg",
+   "image_sha256": "59dc1954c7bd588444e12f253f5ebec2c64fb3805225da7461fcc28baf5ad21a",
+   "assistant_status": "unavailable"
+  },
+  {
+   "pitch_id": "849849:11:4",
+   "frame_seconds": 199.04885,
+   "path": "outputs/frames/849849_windows/pa11_p4/frame_011931.jpg",
+   "image_sha256": "1285410b4d8e55d5553741501c20b17763ea8424a89b27aa021bb3b166243357",
+   "assistant_status": "unavailable"
+  },
+  {
+   "pitch_id": "849849:12:2",
+   "frame_seconds": 212.69581666666667,
+   "path": "outputs/frames/849849_windows/pa12_p2/frame_012749.jpg",
+   "image_sha256": "d1d0fecf2468c0bf62a4444750ca5c30605365fbf6871ddbc0bb0ab618c40bb6",
+   "assistant_status": "estimated"
+  },
+  {
+   "pitch_id": "849849:13:4",
+   "frame_seconds": 231.14758333333333,
+   "path": "outputs/frames/849849_windows/pa13_p4/frame_013855.jpg",
+   "image_sha256": "7c44c38e2ee032dc93107936c6e1a1e60baba3fde2b0c9f7de0486b30a3c6d82",
+   "assistant_status": "estimated"
+  },
+  {
+   "pitch_id": "849849:14:3",
+   "frame_seconds": 252.4522,
+   "path": "outputs/frames/849849_windows/pa14_p3/frame_015132.jpg",
+   "image_sha256": "326c9172fa898b4412963b30e64e536c0821e53c5bff20aa66a47ee9dda4a914",
+   "assistant_status": "estimated"
+  },
+  {
+   "pitch_id": "849849:15:4",
+   "frame_seconds": 284.9513333333333,
+   "path": "outputs/frames/849849_windows/pa15_p4/frame_017080.jpg",
+   "image_sha256": "98dc9b61f76c98860e7caca2f12ebf6b6f15f171871c7e5cf7ba9f62ba060a23",
+   "assistant_status": "estimated"
+  },
+  {
+   "pitch_id": "849849:16:3",
+   "frame_seconds": 314.7477666666667,
+   "path": "outputs/frames/849849_windows/pa16_p3/frame_018866.jpg",
+   "image_sha256": "2f0492207f2d826c4ea8c587793d32b875c903f9e20b7bcafe3fefbb8efc8b34",
+   "assistant_status": "estimated"
+  },
+  {
+   "pitch_id": "849849:17:3",
+   "frame_seconds": 319.90291666666667,
+   "path": "outputs/frames/849849_windows/pa17_p3/frame_019175.jpg",
+   "image_sha256": "a99bf22f30a462da414ba5180975aaf3304ec6f22a30ac7ed959965243fc1386",
+   "assistant_status": "estimated"
+  },
+  {
+   "pitch_id": "849849:18:3",
+   "frame_seconds": 330.2966333333333,
+   "path": "outputs/frames/849849_windows/pa18_p3/frame_019798.jpg",
+   "image_sha256": "caf03e6502e7086df86301e4f0177a774783d94f187f11e1041fd88625308989",
+   "assistant_status": "estimated"
+  },
+  {
+   "pitch_id": "849849:19:6",
+   "frame_seconds": 357.5572,
+   "path": "outputs/frames/849849_windows/pa19_p6/frame_021432.jpg",
+   "image_sha256": "48c59e83426010fcecede99021341f91030d89d827ab3bf0c4dbf338fa011080",
+   "assistant_status": "estimated"
+  },
+  {
+   "pitch_id": "849849:20:4",
+   "frame_seconds": 364.44741666666664,
+   "path": "outputs/frames/849849_windows/pa20_p4/frame_021845.jpg",
+   "image_sha256": "7f26db7995e3ec122ec2f6251d215b5e9003584ccccb73e718a01996977ff424",
+   "assistant_status": "estimated"
+  },
+  {
+   "pitch_id": "849849:21:7",
+   "frame_seconds": 372.1551166666667,
+   "path": "outputs/frames/849849_windows/pa21_p7/frame_022307.jpg",
+   "image_sha256": "ebb42e24ad50bdd193d32dd66491c6edd079cf142636d115e001f141a586871d",
+   "assistant_status": "estimated"
+  },
+  {
+   "pitch_id": "849849:25:4",
+   "frame_seconds": 389.80608333333333,
+   "path": "outputs/frames/849849_windows/pa25_p4/frame_023365.jpg",
+   "image_sha256": "e3a23d34fbdc105b406bc1d37eefa0c3f9126aa430495b294326fd2483466ce1",
+   "assistant_status": "estimated"
+  },
+  {
+   "pitch_id": "849849:26:1",
+   "frame_seconds": 396.94655,
+   "path": "outputs/frames/849849_windows/pa26_p1/frame_023793.jpg",
+   "image_sha256": "252091cae636322405558c7eab6d7b6ea6ff5ae55f5982fc22f5713386e66632",
+   "assistant_status": "estimated"
+  },
+  {
+   "pitch_id": "849849:27:5",
+   "frame_seconds": 407.05665,
+   "path": "outputs/frames/849849_windows/pa27_p5/frame_024399.jpg",
+   "image_sha256": "eb111b7f3b0d06e97534cc4db4f654587f22c30d391623c1232ecc4aa1dd0c8d",
+   "assistant_status": "estimated"
+  },
+  {
+   "pitch_id": "849849:28:1",
+   "frame_seconds": 428.5948333333333,
+   "path": "outputs/frames/849849_windows/pa28_p1/frame_025690.jpg",
+   "image_sha256": "3aad83e7601cd0900488299130bd49f3a17f38e41aebfb4711ff47c36ed4cb95",
+   "assistant_status": "estimated"
+  },
+  {
+   "pitch_id": "849849:29:3",
+   "frame_seconds": 455.70525,
+   "path": "outputs/frames/849849_windows/pa29_p3/frame_027315.jpg",
+   "image_sha256": "5f192d5038b0e99daf97faf52586f1e965e89b9616f4d3a19618db6b6f3219a4",
+   "assistant_status": "estimated"
+  },
+  {
+   "pitch_id": "849849:30:5",
+   "frame_seconds": 494.54405,
+   "path": "outputs/frames/849849_windows/pa30_p5/frame_029643.jpg",
+   "image_sha256": "64168f2010c04e4835bed6d6f662f01a23d76cae43b7a37ef9d57064f9cadf1f",
+   "assistant_status": "estimated"
+  },
+  {
+   "pitch_id": "849849:33:3",
+   "frame_seconds": 561.9947666666667,
+   "path": "outputs/frames/849849_windows/pa33_p3/frame_033686.jpg",
+   "image_sha256": "547e7cc1f0ef92afc71b5afc27522f171db78df7219265923f8ee7e03d39f73e",
+   "assistant_status": "unavailable"
+  },
+  {
+   "pitch_id": "849849:34:4",
+   "frame_seconds": 569.1018666666666,
+   "path": "outputs/frames/849849_windows/pa34_p4/frame_034112.jpg",
+   "image_sha256": "7d4bb802acf965c35748c0ef3e063061ee4657019de9cbcaeeda1664c2b7fa4c",
+   "assistant_status": "estimated"
+  },
+  {
+   "pitch_id": "849849:35:8",
+   "frame_seconds": 576.9096666666667,
+   "path": "outputs/frames/849849_windows/pa35_p8/frame_034580.jpg",
+   "image_sha256": "c166a36b8f252b5d6130a6ecc28526918fe385a4bc1d3ab5429b26106c66277c",
+   "assistant_status": "estimated"
+  },
+  {
+   "pitch_id": "849849:36:6",
+   "frame_seconds": 588.5546333333333,
+   "path": "outputs/frames/849849_windows/pa36_p6/frame_035278.jpg",
+   "image_sha256": "0c8a8d6a060892a2361e09d94c74d3e3dd255a71f2e81ec7404a29cd5465e1e0",
+   "assistant_status": "estimated"
+  },
+  {
+   "pitch_id": "849849:38:5",
+   "frame_seconds": 595.7952,
+   "path": "outputs/frames/849849_windows/pa38_p5/frame_035712.jpg",
+   "image_sha256": "cc5fcc33c951aa6c129015f5dca7e796a9a173bdc64982d6f5a90908e6175e8e",
+   "assistant_status": "unavailable"
+  },
+  {
+   "pitch_id": "849849:39:3",
+   "frame_seconds": 600.95035,
+   "path": "outputs/frames/849849_windows/pa39_p3/frame_036021.jpg",
+   "image_sha256": "a668f9304d9aa5400c67c8088d83e333a160cb8dc15b07b8246d1a10210ee96b",
+   "assistant_status": "estimated"
+  },
+  {
+   "pitch_id": "849849:40:5",
+   "frame_seconds": 613.4461666666666,
+   "path": "outputs/frames/849849_windows/pa40_p5/frame_036770.jpg",
+   "image_sha256": "7a76a8cfa311cc78d1ccab3f7914ff55bdfc99b05d77e86c56c05f8f21c24de2",
+   "assistant_status": "estimated"
+  },
+  {
+   "pitch_id": "849849:41:7",
+   "frame_seconds": 635.3013333333333,
+   "path": "outputs/frames/849849_windows/pa41_p7/frame_038080.jpg",
+   "image_sha256": "8b01a2a0796aba0390bc4e4cd63d39b69f4ac088e2c30719bb62554e6bf41cae",
+   "assistant_status": "estimated"
+  },
+  {
+   "pitch_id": "849849:42:2",
+   "frame_seconds": 645.49485,
+   "path": "outputs/frames/849849_windows/pa42_p2/frame_038691.jpg",
+   "image_sha256": "32e5b6bba743aee201637f8f607b370a77f7f5b8f561c2e36418c6b20255544f",
+   "assistant_status": "estimated"
+  },
+  {
+   "pitch_id": "849849:43:5",
+   "frame_seconds": 654.50385,
+   "path": "outputs/frames/849849_windows/pa43_p5/frame_039231.jpg",
+   "image_sha256": "695bdc5d636d94a7235eddbaa8249fda7940efcc90b7591f199d5153d6ecf6e4",
+   "assistant_status": "estimated"
+  },
+  {
+   "pitch_id": "849849:45:3",
+   "frame_seconds": 666.5992666666667,
+   "path": "outputs/frames/849849_windows/pa45_p3/frame_039956.jpg",
+   "image_sha256": "e88af06f9a1084096eecf1b713bb18efeacd8eec134794836bef5ddd1ce9ec04",
+   "assistant_status": "estimated"
+  },
+  {
+   "pitch_id": "849849:50:4",
+   "frame_seconds": 699.84915,
+   "path": "outputs/frames/849849_windows/pa50_p4/frame_041949.jpg",
+   "image_sha256": "9d696a6b74d5f6f8869b15a5ee8f479b62458ab2e43f1fb2dc8e881f2dd092c7",
+   "assistant_status": "estimated"
+  },
+  {
+   "pitch_id": "849849:51:4",
+   "frame_seconds": 718.3509666666666,
+   "path": "outputs/frames/849849_windows/pa51_p4/frame_043058.jpg",
+   "image_sha256": "795ccb7cdb62ff482f34ea9fa1fb04ac3706b3156c6bd80feaa49a0a5361c63c",
+   "assistant_status": "estimated"
+  },
+  {
+   "pitch_id": "849849:52:1",
+   "frame_seconds": 736.3522833333334,
+   "path": "outputs/frames/849849_windows/pa52_p1/frame_044137.jpg",
+   "image_sha256": "3ff4f56707047379aa26a8e535d469fe9dc9641f07e59070b4f11ad3d1b86f86",
+   "assistant_status": "unavailable"
+  },
+  {
+   "pitch_id": "849849:55:1",
+   "frame_seconds": 761.7443166666667,
+   "path": "outputs/frames/849849_windows/pa55_p1/frame_045659.jpg",
+   "image_sha256": "407a51def161443eb3d0c9becef592a5b067effdb0df26e23e5b38174e23c446",
+   "assistant_status": "estimated"
+  },
+  {
+   "pitch_id": "849849:56:2",
+   "frame_seconds": 773.1557166666666,
+   "path": "outputs/frames/849849_windows/pa56_p2/frame_046343.jpg",
+   "image_sha256": "033b7c9a9f33a2e6f3c4d81ee7b96defb2444654800709caac284cffd359f633",
+   "assistant_status": "unavailable"
+  },
+  {
+   "pitch_id": "849849:56:3",
+   "frame_seconds": 782.5484333333334,
+   "path": "outputs/frames/849849_windows/pa56_p3/frame_046906.jpg",
+   "image_sha256": "5b154312f71af33b74c5ad9449f2d74dab287353f770bdd9d6883b7dec03ba75",
+   "assistant_status": "estimated"
+  },
+  {
+   "pitch_id": "849849:57:5",
+   "frame_seconds": 802.0012,
+   "path": "outputs/frames/849849_windows/pa57_p5/frame_048072.jpg",
+   "image_sha256": "ee9ed457aa76bceef918b47509cc2b85c89877fbc60ee619763452c306f549f5",
+   "assistant_status": "unavailable"
+  },
+  {
+   "pitch_id": "849849:61:6",
+   "frame_seconds": 819.8023166666667,
+   "path": "outputs/frames/849849_windows/pa61_p6/frame_049139.jpg",
+   "image_sha256": "1d60ba82a814c1ad728b1dbe89a64cf7c46f731f72acc8cc1c933f7b04bb1e90",
+   "assistant_status": "estimated"
+  },
+  {
+   "pitch_id": "849849:66:3",
+   "frame_seconds": 836.9527833333333,
+   "path": "outputs/frames/849849_windows/pa66_p3/frame_050167.jpg",
+   "image_sha256": "1123ada102b87974009c4c5ba6226ef69e2279b1043cabcab3b43bbd89e2570c",
+   "assistant_status": "estimated"
+  },
+  {
+   "pitch_id": "849849:67:2",
+   "frame_seconds": 851.9511,
+   "path": "outputs/frames/849849_windows/pa67_p2/frame_051066.jpg",
+   "image_sha256": "98ad35ed4fa7193cc8b857845f2c5e75f2a235f8dbd3d0652609bc74cf60fd10",
+   "assistant_status": "estimated"
+  },
+  {
+   "pitch_id": "849849:68:4",
+   "frame_seconds": 875.6080666666667,
+   "path": "outputs/frames/849849_windows/pa68_p4/frame_052484.jpg",
+   "image_sha256": "fc758be88b2590c2d386771e4321899ad17108e4d0809a06ddf3326686875b11",
+   "assistant_status": "estimated"
+  },
+  {
+   "pitch_id": "849849:69:7",
+   "frame_seconds": 904.904,
+   "path": "outputs/frames/849849_windows/pa69_p7/frame_054240.jpg",
+   "image_sha256": "738969dac29f464396db4f60016f812d5d3f2a5a849dc1875776ad43f7a74f30",
+   "assistant_status": "estimated"
+  },
+  {
+   "pitch_id": "849849:70:7",
+   "frame_seconds": 975.7581166666666,
+   "path": "outputs/frames/849849_windows/pa70_p7/frame_058487.jpg",
+   "image_sha256": "2a4fd2944c8add8b49c85fe5d4b1dc8f1fe54ac3a76827fcfa5c37260fb7185c",
+   "assistant_status": "estimated"
+  },
+  {
+   "pitch_id": "849849:75:5",
+   "frame_seconds": 997.44645,
+   "path": "outputs/frames/849849_windows/pa75_p5/frame_059787.jpg",
+   "image_sha256": "389ac9511de03c152859ece3924cd43294b41fc2d3299254de9069959b86df2e",
+   "assistant_status": "estimated"
+  },
+  {
+   "pitch_id": "849849:77:3",
+   "frame_seconds": 1005.3043,
+   "path": "outputs/frames/849849_windows/pa77_p3/frame_060258.jpg",
+   "image_sha256": "1551a057a234ff2a782c0a7de11fc80638c322a290bc15a82bfada339e62c7a4",
+   "assistant_status": "estimated"
+  },
+  {
+   "pitch_id": "849849:78:7",
+   "frame_seconds": 1014.9973166666666,
+   "path": "outputs/frames/849849_windows/pa78_p7/frame_060839.jpg",
+   "image_sha256": "837d72d6712c357d4be5c73a96508d7f4a9fe8365fa567342a5920e8ac4932e5",
+   "assistant_status": "estimated"
+  }
+ ]
+}
