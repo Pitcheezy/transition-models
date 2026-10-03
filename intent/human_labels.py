@@ -127,7 +127,12 @@ def validate_labels(labels, manifest):
             if plate_status == "marked"
             else None,
         }
-    return [rows[f["pitch_id"]] for f in manifest["frames"] if f["pitch_id"] in rows]
+    missing = [f["pitch_id"] for f in manifest["frames"] if f["pitch_id"] not in rows]
+    if missing:
+        # the page always exports every pack frame (undecided ones with null statuses), so a
+        # shorter file is truncated or hand-made
+        raise ValueError(f"labels file lacks {len(missing)} pack frames, e.g. {missing[:5]}")
+    return [rows[f["pitch_id"]] for f in manifest["frames"]]
 
 
 def _display_path(path):
@@ -137,8 +142,14 @@ def _display_path(path):
         return str(path)
 
 
+# The plan's pre-registered fallback, in order (intent_eval_plan_v0.json, evaluation_games.fallback:
+# "if E1 and E2 together give fewer than 50 person-marked pitches, add 849849 and then 849851").
+FALLBACK_GAMES = (849849, 849851)
+EVALUATION_ROLES = ("evaluation", "evaluation_fallback")
+
+
 def game_role(game_pk, plan_path=None):
-    """'development', 'evaluation' or 'unplanned' from the committed evaluation plan."""
+    """'development', 'evaluation', 'evaluation_fallback' or 'unplanned' from the committed plan."""
     path = Path(plan_path) if plan_path else RESULTS / "intent_eval_plan_v0.json"
     if not path.is_file():
         return "unplanned"
@@ -147,6 +158,8 @@ def game_role(game_pk, plan_path=None):
         return "development"
     if any(g["game_pk"] == game_pk for g in plan["evaluation_games"]["games"]):
         return "evaluation"
+    if game_pk in FALLBACK_GAMES:
+        return "evaluation_fallback"
     return "unplanned"
 
 
@@ -264,43 +277,86 @@ def compare(human_rows, points, calibration, records=None):
     }
 
 
+def resolve_labeler(labels, cli_labeler):
+    """(labeler, source): the page's name box first, then --labeler; refuse when both are empty."""
+    from_file = (labels.get("labeler") or "").strip()
+    if from_file:
+        return from_file, "page"
+    if cli_labeler and cli_labeler.strip():
+        return cli_labeler.strip(), "cli"
+    raise ValueError("the labels file has no labeler id; pass --labeler <anonymous id>")
+
+
+def load_records(jsonl, rows, manifest):
+    """JSONL lines by pitch_id; every labeled frame must have its line, on the same frame."""
+    if not Path(jsonl).is_file():
+        raise ValueError(f"JSONL not found: {jsonl}")
+    records = {}
+    for line in Path(jsonl).read_text(encoding="utf-8").splitlines():
+        if line.strip():
+            rec = json.loads(line)
+            records[rec["pitch_id"]] = rec
+    frames = {f["pitch_id"]: f for f in manifest["frames"]}
+    for row in rows:
+        rec = records.get(row["pitch_id"])
+        if rec is None:
+            raise ValueError(f"no JSONL line for {row['pitch_id']}")
+        if rec.get("clip_sha256") != frames[row["pitch_id"]]["image_sha256"]:
+            raise ValueError(f"JSONL frame differs from the pack frame for {row['pitch_id']}")
+    return records
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--game", type=int, required=True)
     parser.add_argument("--labels", type=Path, required=True)
+    parser.add_argument(
+        "--labeler", default=None, help="anonymous id when the page's box was empty"
+    )
     parser.add_argument("--manifest", type=Path, default=None)
     parser.add_argument("--points", type=Path, default=None)
     parser.add_argument("--calibration", type=Path, default=None)
     parser.add_argument("--out-labels", type=Path, default=None)
     parser.add_argument("--out-report", type=Path, default=None)
+    parser.add_argument(
+        "--raw-out",
+        type=Path,
+        default=None,
+        help="where the unchanged export is kept (default docs/results/mlb_p0/game_<g>_intent_human_labels_raw_v0.json)",
+    )
     parser.add_argument("--jsonl", type=Path, default=None)
     args = parser.parse_args(argv)
     manifest = _load(args.manifest or RESULTS / f"game_{args.game}_intent_label_pack_v0.json")
-    labels = _load(args.labels)
-    raw_sha256 = hashlib.sha256(Path(args.labels).read_bytes()).hexdigest()
+    raw_bytes = Path(args.labels).read_bytes()
+    labels = json.loads(raw_bytes.decode("utf-8-sig"))
+    raw_sha256 = hashlib.sha256(raw_bytes).hexdigest()
     rows = validate_labels(labels, manifest)
+    labeler, labeler_source = resolve_labeler(labels, args.labeler)
+    raw_out = args.raw_out or RESULTS / f"game_{args.game}_intent_human_labels_raw_v0.json"
+    if Path(raw_out).resolve() != Path(args.labels).resolve():
+        Path(raw_out).write_bytes(raw_bytes)
     points = _load(args.points or RESULTS / f"game_{args.game}_intent_points_v0.json")
     calibration = load_calibration(
         args.calibration or RESULTS / f"game_{args.game}_intent_plate_calibration_v0.json"
     )
     jsonl = args.jsonl or RESULTS / f"game_{args.game}_intent_v0.jsonl"
-    records = {}
-    if jsonl.is_file():
-        for line in jsonl.read_text(encoding="utf-8").splitlines():
-            if line.strip():
-                rec = json.loads(line)
-                records[rec["pitch_id"]] = rec
+    records = load_records(jsonl, rows, manifest)
     report = compare(rows, points, calibration, records)
     role = game_role(args.game)
+    provenance = {
+        "labeler": labeler,
+        "labeler_source": labeler_source,
+        "exported_at": labels.get("exported_at"),
+        "elapsed_seconds": labels.get("elapsed_seconds"),
+        "raw_file": _display_path(raw_out),
+        "raw_sha256": raw_sha256,
+    }
     stored = {
         "schema": LABELS_SCHEMA,
         "game_pk": args.game,
         "pack_id": manifest["pack_id"],
-        "labeler": labels.get("labeler"),
-        "exported_at": labels.get("exported_at"),
-        "elapsed_seconds": labels.get("elapsed_seconds"),
+        **provenance,
         "label_source": "human_manual_annotation",
-        "imported_from": {"file_name": Path(args.labels).name, "sha256": raw_sha256},
         "frames": rows,
     }
     out_labels = args.out_labels or RESULTS / f"game_{args.game}_intent_human_labels_v0.json"
@@ -311,13 +367,10 @@ def main(argv=None):
         "pack_id": manifest["pack_id"],
         "role": role,
         "scope": f"{role} game: assistant setup-frame readings vs one person's hand labels on "
-        "the same frames" + ("; not a held-out accuracy" if role != "evaluation" else ""),
-        "jsonl": _display_path(jsonl) if records else None,
-        "labeler": labels.get("labeler"),
-        "exported_at": labels.get("exported_at"),
-        "elapsed_seconds": labels.get("elapsed_seconds"),
+        "the same frames" + ("; not a held-out accuracy" if role not in EVALUATION_ROLES else ""),
+        "jsonl": _display_path(jsonl),
+        **provenance,
         "labels_file": _display_path(out_labels),
-        "labels_raw_sha256": raw_sha256,
         **report,
     }
     out_report = args.out_report or RESULTS / f"game_{args.game}_intent_setup_check_v0.json"

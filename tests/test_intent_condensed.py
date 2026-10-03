@@ -289,9 +289,61 @@ def test_plan_roles_and_report_blocks(tmp_path):
     worst = e2["person"]["failure_cases"]["largest_mitt_pixel_differences"]
     assert worst[0]["pitch_id"] == "2:2:1" and worst[0]["distance_px"] == 10.0
     assert e2["person"]["failure_cases"]["availability_disagreements"] == []
-    assert report["evaluation_pooled"]["person_marked"] == 3
-    assert report["evaluation_pooled"]["availability"]["both_marked"] == 3
-    assert report["m3_requirement"]["met"] is False
+    pooled = report["evaluation_pooled"]
+    assert pooled["person_marked"] == 3 and pooled["games"] == [2]
+    assert pooled["availability"]["both_marked"] == 3
+    assert pooled["assistant"]["abstention_rate"] == pytest.approx(0.25)
+    assert pooled["person_abstention_rate"] == pytest.approx(0.25)
+    assert pooled["person_abstention_reasons"] == {"hidden": 1}
+    cases = {c["role"]: c["pitch_id"] for c in e2["person"]["example_cases"]["cases"]}
+    assert cases == {
+        "representative": "2:1:1",
+        "best (success, not typical)": "2:3:1",
+        "worst (failure)": "2:2:1",
+    }
+    m3 = report["m3_requirement"]
+    assert m3["met"] is False and m3["fallback"]["triggered"] is False  # game 3 not labeled
+    # both planned games labeled but short of 50 -> the plan's fallback game is next, in order
+    points(3, ["estimated"])
+    one = dict(check, frames_labeled=1, per_frame=check["per_frame"][:1])
+    one["availability"] = dict(check["availability"], both_marked=1, both_abstained=0)
+    (tmp_path / "game_3_intent_setup_check_v0.json").write_text(json.dumps(one), encoding="utf-8")
+    m3 = build_report(plan, tmp_path)["m3_requirement"]
+    assert m3["games_with_person_marks"] == 2 and m3["person_marked"] == 4 and m3["met"] is False
+    assert m3["fallback"] == dict(
+        m3["fallback"], triggered=True, games_added=[849849], next_game_to_process=849849
+    )
+    assert game_role(849849) == "evaluation_fallback" and game_role(849851) == "evaluation_fallback"
+
+
+def test_fallback_games_are_the_plans_and_unmeasured_camera_means_are_withheld(tmp_path):
+    from intent.accuracy_report import game_block
+    from intent.human_labels import FALLBACK_GAMES
+
+    plan = json.loads(
+        (
+            Path(__file__).resolve().parents[1] / "docs/results/mlb_p0/intent_eval_plan_v0.json"
+        ).read_text(encoding="utf-8")
+    )
+    text = plan["evaluation_games"]["fallback"]
+    assert text.index(str(FALLBACK_GAMES[0])) < text.index(str(FALLBACK_GAMES[1]))
+    (tmp_path / "game_5_intent_points_v0.json").write_text(
+        json.dumps({"frames": [{"status": "estimated"}]}), encoding="utf-8"
+    )
+    cal = {
+        "rms_error_feet": None,
+        "error_status": "unmeasured",
+        "min_pitches": 10,
+        "end_to_end_check": {
+            "pitches_used": 2,
+            "by_depth_y": {"-1.0": {"x": {"mean_signed_feet": -0.4}, "z": {"mean_signed_feet": 0}}},
+        },
+    }
+    (tmp_path / "game_5_intent_plate_calibration_v0.json").write_text(
+        json.dumps(cal), encoding="utf-8"
+    )
+    camera = game_block({"game_pk": 5}, tmp_path)[0]["camera_check_catch_vs_statcast"]
+    assert camera["x_mean_signed_feet"] is None and camera["signed_means_note"]
 
 
 def test_service_check_runs_a_validator_file_with_the_sibling_imports_stubbed(tmp_path):

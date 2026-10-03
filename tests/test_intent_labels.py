@@ -187,29 +187,76 @@ def test_labels_are_checked_against_the_pack_and_compared_in_pixels_and_feet(tmp
     paths["labels"].write_text(json.dumps(labels), encoding="utf-8")
     paths["manifest"].write_text(json.dumps(manifest), encoding="utf-8")
     paths["points"].write_text(json.dumps(points), encoding="utf-8")
-    labels_main(
-        [
-            "--game",
-            "747139",
-            "--labels",
-            str(paths["labels"]),
-            "--manifest",
-            str(paths["manifest"]),
-            "--points",
-            str(paths["points"]),
-            "--calibration",
-            str(tmp_path / "none.json"),
-            "--out-labels",
-            str(paths["out_l"]),
-            "--out-report",
-            str(paths["out_r"]),
-        ]
+    jsonl = tmp_path / "out.jsonl"
+    jsonl.write_text(
+        "".join(
+            json.dumps(
+                {
+                    "pitch_id": f["pitch_id"],
+                    "clip_sha256": f["image_sha256"],
+                    "points": {"plate_feet": {"x": 0.0, "z": 1.0}}
+                    if f["assistant_status"] == "estimated"
+                    else {},
+                }
+            )
+            + "\n"
+            for f in manifest["frames"]
+        ),
+        encoding="utf-8",
     )
+    cli = [
+        "--game",
+        "747139",
+        "--labels",
+        str(paths["labels"]),
+        "--manifest",
+        str(paths["manifest"]),
+        "--points",
+        str(paths["points"]),
+        "--calibration",
+        str(tmp_path / "none.json"),
+        "--out-labels",
+        str(paths["out_l"]),
+        "--out-report",
+        str(paths["out_r"]),
+        "--raw-out",
+        str(tmp_path / "raw.json"),
+        "--jsonl",
+        str(jsonl),
+    ]
+    labels_main(cli)
     stored = json.loads(paths["out_l"].read_text(encoding="utf-8"))
     assert stored["label_source"] == "human_manual_annotation" and len(stored["frames"]) == 5
-    assert (
-        json.loads(paths["out_r"].read_text(encoding="utf-8"))["availability"]["both_marked"] == 4
-    )
+    assert stored["labeler"] == "t" and stored["labeler_source"] == "page"
+    assert (tmp_path / "raw.json").read_bytes() == paths["labels"].read_bytes()
+    report = json.loads(paths["out_r"].read_text(encoding="utf-8"))
+    assert report["availability"]["both_marked"] == 4 and report["role"] == "development"
+    assert report["output_feet"]["x"]["n"] == 4
+    # a re-run from the kept raw copy gives the same files
+    first = (paths["out_l"].read_bytes(), paths["out_r"].read_bytes())
+    labels_main(cli[:3] + [str(tmp_path / "raw.json")] + cli[4:])
+    assert (paths["out_l"].read_bytes(), paths["out_r"].read_bytes()) == first
+    # no labeler anywhere -> refused; --labeler fills it
+    anon = dict(labels, labeler=None)
+    paths["labels"].write_text(json.dumps(anon), encoding="utf-8")
+    with pytest.raises(ValueError):
+        labels_main(cli)
+    labels_main(cli + ["--labeler", "L1"])
+    assert json.loads(paths["out_l"].read_text(encoding="utf-8"))["labeler_source"] == "cli"
+    # a JSONL line on another frame is refused
+    bad = jsonl.read_text(encoding="utf-8").replace(manifest["frames"][0]["image_sha256"], "0" * 64)
+    jsonl.write_text(bad, encoding="utf-8")
+    with pytest.raises(ValueError):
+        labels_main(cli + ["--labeler", "L1"])
+
+
+def test_a_truncated_labels_file_is_refused(tmp_path):
+    points = _points(tmp_path)
+    manifest, _ = build_pack(points, tmp_path, 5)
+    labels = _labels(manifest)
+    labels["frames"] = labels["frames"][:3]
+    with pytest.raises(ValueError, match="lacks 2 pack frames"):
+        validate_labels(labels, manifest)
 
 
 def test_pack_crop_boxes_are_per_game_and_all_frames_can_be_taken(tmp_path):
