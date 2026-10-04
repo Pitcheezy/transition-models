@@ -90,7 +90,7 @@ python -m intent.temporal_audit check --trace path/to/measured_trace.json --arti
 
 이후 CV-5에서 [기존 두 창 122장의 시점 제한 공급](CV_PREFIX_REPLAY_V1.md)을 완료했다. 바로 다음은 CV-5a, [관측 v1 규약](CV_OBSERVATION_PROTOCOL_V1.md) §8의 **실제 관측기와 계측을 연결한 한 타석 개발 리플레이**다. 기존 한 타석의 원본 영상·출처를 고정하고, 미래 프레임을 제공하지 않는 처리 기록을 준비한다. 실제 미트 관측기와 계측을 연결하기 전까지 실시간 완료로 표시하지 않는다.
 
-그다음은 같은 규약으로 기권 불일치 26건을 개발 재검토하고, 미열람 연속 영상·독립 라벨러·평가 manifest를 확보하는 일이다. 새 영상과 실제 사람 판정이 없으므로 독립 검증은 남아 있다. F-4i 이름 OCR 보류, 팀원 업무 제외, 기존 M3·시연 자료 고정을 유지한다.
+CV-6의 [기권 불일치 26장 검토 자료](CV_REVIEW_QUEUE_V1.md)도 준비했지만 사람 응답은 0건이다. 다음은 같은 규약으로 실제 사람 재검토를 받고, 미열람 연속 영상·독립 라벨러·평가 manifest를 확보하는 일이다. 새 영상과 실제 사람 판정이 없으므로 독립 검증은 남아 있다. F-4i 이름 OCR 보류, 팀원 업무 제외, 기존 M3·시연 자료 고정을 유지한다.
 
 검증 결과와 커밋은 [CHECKLIST](../CHECKLIST.md)의 CV 절 및 [인계 기록](MLB_P0_HANDOFF.md)을 기준으로 확인한다. 새 도구는 `scripts/check_project.py --cpu-only`의 lint·format·전체 pytest 대상에 포함한다.
 

@@ -8,7 +8,10 @@ CV-1–4 add retrospective temporal/quality diagnostics, a standalone measured-t
 guard and a source-bound resumable local runner. CV-5 adds verified anonymous prefix
 frame delivery for two sampled windows (122 frames), not observer inference. Read
 [the prefix report](docs/CV_PREFIX_REPLAY_V1.md). Next: CV-5a actual observer and timing
-instrumentation on continuous video. These tools do not complete live CV or M4.
+instrumentation on continuous video. CV-6 source-only review preparation is ready:
+[26-frame review queue](docs/CV_REVIEW_QUEUE_V1.md), zero completed human responses.
+Do not mark CV-6 done or create human labels without real reviewer submissions.
+These tools do not complete live CV or M4.
 Existing M3, IntentEstimate v1 JSONL and 10/6 presentation files remain frozen.
 F-4i name OCR remains on hold. Teammate model/profile/policy/feed/service/UI work is
 excluded; SongRoute/pitcheezy is read-only. Next CV definition and evaluation gates:

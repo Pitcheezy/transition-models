@@ -23,7 +23,13 @@
 CV-5 추가 완료: 849845 PA43 두 창 122장의 SHA 검증·익명화·단조 prefix 공급.
 관련 검사 108 passed, 최종 전체 CPU 검사 **760 passed / 5 skipped / 2 deselected**,
 Ruff check/format 92경로 통과. 실제 관측기·라이브 계측·전체 타석 재생은 미완료.
-[공급 검증 기록](CV_PREFIX_REPLAY_V1.md). 다음 한 단위는 CHECKLIST CV-5a다. 아래의 F-4h 지시는 이 브랜치의 다음 작업이 아니다.
+[공급 검증 기록](CV_PREFIX_REPLAY_V1.md).
+CV-6 추가 준비 완료: [원본 26장 검토 자료와 응답 검사](CV_REVIEW_QUEUE_V1.md), 두 경기 각 13장.
+완료 응답 0 / 미검토 26. 기존 AI·사람 점을 숨긴 개발 재검토 자료이며 독립 검증은 아니다.
+HTML 이미지 참조·SHA를 검사했다. 앱 브라우저의 file URL 정책 때문에 렌더링은 미검증이다.
+새 검사 20건, 최종 전체 CPU 검사 **780 passed / 5 skipped / 2 deselected**, Ruff 94경로 통과.
+기존 frozen 186개 SHA 불변, 팀원 레포/시연 자료 수정 없음. 수정 권한 반납.
+남은 작업은 CV-5a 실제 관측기·연속 영상 계측, CV-6 실제 사람 응답, CV-7 미열람 독립 평가다. 아래의 F-4h 지시는 이 브랜치의 다음 작업이 아니다.
 
 현재 범위는 MLB 우선 개발이다. KBO는 최종 확장 목표로 유지한다.
 2026-09-22 Codex가 아래 코드를 구현·검증했다. Claude의 첫 호출은 OAuth 만료(401)로
