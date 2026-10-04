@@ -1,0 +1,66 @@
+{
+  "schema": "intent_development_prefix_check_v1",
+  "date": "2026-10-05",
+  "game_pk": 849845,
+  "at_bat_number": 43,
+  "pitch_numbers": [
+    3,
+    5
+  ],
+  "only_development": true,
+  "cv_inference_performed": false,
+  "frame_count": 122,
+  "window_count": 2,
+  "windows_sha256": "a1e578aff7976d4ef243abd4451815942c0eeac0559d3074e294b0b969e02089",
+  "timing_sha256": "9d81eee53b235cf3eb3b0207a87ee350106ccfd8ad85916ecd8078d8b5394a41",
+  "processor_manifest_sha256": "46ace7dc333dd4b5c950785faefa7aeabfd366358030c70578b548cd411920cd",
+  "scope": "sampled discontinuous windows; not a complete plate appearance or live feed",
+  "sampling": {
+    "before_s": 1.5,
+    "after_s": 1.5,
+    "step_frames": 3
+  },
+  "fps": "60000/1001",
+  "local_package": "outputs/cv_replay_849845_pa43_v1",
+  "evaluator_manifest_sha256": "986cca5e5e078ab31720a55786d712b03fc8e6d77ef18247ba01c47651bee454",
+  "source_sha256": {
+    "intent/replay.py": "4fcc323a3369a73012301b66142d24a0a9c2d988dd7240249a8667c95fdfe6fc"
+  },
+  "steps": [
+    {
+      "cutoff_seconds": 620,
+      "cumulative_frames": 0
+    },
+    {
+      "cutoff_seconds": 621,
+      "cumulative_frames": 10
+    },
+    {
+      "cutoff_seconds": 634,
+      "cumulative_frames": 61
+    },
+    {
+      "cutoff_seconds": 636,
+      "cumulative_frames": 76
+    },
+    {
+      "cutoff_seconds": 639,
+      "cumulative_frames": 122
+    }
+  ],
+  "backward_cutoff_rejected": "cutoff must be nonnegative and cannot decrease",
+  "state_preserved_on_rejection": true,
+  "frozen_files_unchanged": 186,
+  "claims": {
+    "live_latency_measured": false,
+    "prepitch_cv_accuracy_measured": false,
+    "complete_plate_appearance": false,
+    "new_labels_created": false
+  },
+  "limitations": [
+    "Source frame hashes verified; no new visual annotation or CV inference.",
+    "Five manually specified playback cutoffs; not a timed live arrival schedule.",
+    "Existing retrospectively selected sampled windows, with gaps and post-release frames.",
+    "Trusted local feeder; processor receives prefixes only by API contract, not a filesystem sandbox."
+  ]
+}

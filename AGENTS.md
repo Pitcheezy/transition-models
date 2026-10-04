@@ -5,7 +5,10 @@
 On `feature/intent-v0`, read CHECKLIST's CV section and
 [CV follow-up](docs/CV_FOLLOWUP_2026-10-05.md) before the historical OCR plan below.
 CV-1–4 add retrospective temporal/quality diagnostics, a standalone measured-trace
-guard and a source-bound resumable local runner. They do not complete live CV or M4.
+guard and a source-bound resumable local runner. CV-5 adds verified anonymous prefix
+frame delivery for two sampled windows (122 frames), not observer inference. Read
+[the prefix report](docs/CV_PREFIX_REPLAY_V1.md). Next: CV-5a actual observer and timing
+instrumentation on continuous video. These tools do not complete live CV or M4.
 Existing M3, IntentEstimate v1 JSONL and 10/6 presentation files remain frozen.
 F-4i name OCR remains on hold. Teammate model/profile/policy/feed/service/UI work is
 excluded; SongRoute/pitcheezy is read-only. Next CV definition and evaluation gates:
