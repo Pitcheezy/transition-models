@@ -1,3 +1,6 @@
 *.pt filter=lfs diff=lfs merge=lfs -text
 # raw hand-label exports are kept byte for byte (their sha256 is recorded); no EOL conversion
 docs/results/mlb_p0/*_intent_human_labels_raw_v0.json -text
+
+# Preserve the exact bytes of published CV audit artifacts with recorded SHA256.
+docs/results/cv_followup_20261005/*.json -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

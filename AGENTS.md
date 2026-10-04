@@ -1,5 +1,17 @@
 # SmartPitch MDP Transition Probability Models
 
+## Current intent branch — 2026-10-05
+
+On `feature/intent-v0`, read CHECKLIST's CV section and
+[CV follow-up](docs/CV_FOLLOWUP_2026-10-05.md) before the historical OCR plan below.
+CV-1–4 add retrospective temporal/quality diagnostics, a standalone measured-trace
+guard and a source-bound resumable local runner. They do not complete live CV or M4.
+Existing M3, IntentEstimate v1 JSONL and 10/6 presentation files remain frozen.
+F-4i name OCR remains on hold. Teammate model/profile/policy/feed/service/UI work is
+excluded; SongRoute/pitcheezy is read-only. Next CV definition and evaluation gates:
+[CV observation protocol](docs/CV_OBSERVATION_PROTOCOL_V1.md).
+The task requires preserving at least 20% remaining account usage.
+
 ## Open work
 
 [CHECKLIST.md](CHECKLIST.md) lists every remaining task, the next work unit, and the

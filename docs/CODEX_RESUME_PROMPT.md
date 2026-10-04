@@ -1,5 +1,23 @@
 # Codex 재개 프롬프트 — 2026-09-28
 
+## `feature/intent-v0` CV 재개 — 2026-10-05
+
+이 절은 intent 브랜치에서 아래의 과거 OCR 재개 지시보다 우선한다.
+현재 사용자 범위는 팀원 업무를 제외한 CV 후속이며 사용량 20%를 남긴다.
+먼저 git 상태·원격 변경을 읽고 미커밋 작업을 보존한다. 깨끗하고 로컬 전용
+커밋이 없을 때만 `pull --ff-only`로 맞춘다. 수정 권한은 CHECKLIST CV 절을 따른다.
+
+읽을 순서: [CV 결과](CV_FOLLOWUP_2026-10-05.md),
+[다음 관측 규약](CV_OBSERVATION_PROTOCOL_V1.md), CHECKLIST CV 절.
+CV-1–4는 기존 자료 개발 진단/재개 도구이며 새 M3·실시간 성능 평가가 아니다.
+다음 한 단위는 기존 한 타석으로 시간순 개발 리플레이를 준비하는 것이다.
+자료·발행 시점을 실제로 계측하기 전에는 pre-pitch 성공을 표시하지 않는다.
+원본 프레임을 볼 수 없으면 새 verified 라벨을 만들지 않는다.
+
+팀원 저장소는 읽기 전용이며 메시지를 보내지 않는다. 확률·추천·GUMBO·API·관전 UI는
+팀원이 맡는다. F-4i 보류 유지. 기존 M3·시연 JSONL·발표 자료를 수정하거나 재측정하지 않는다.
+완료 단위마다 CHECKLIST·인계 기록을 함께 커밋·푸시한다.
+
 A-15까지 병합해 경기 747139의 322구를 모두 검토했다: **297 annotated / 25 unavailable / 0 unreviewed**.
 PA 79–82의 마지막 19구는 17구 시각 확인·2구 판단 화면 불가다. A-15 결과는
 [MLB_P0_HANDOFF.md](MLB_P0_HANDOFF.md) 체크포인트 43과 [MLB_BROADCAST_TIMING.md](MLB_BROADCAST_TIMING.md)를 따른다.

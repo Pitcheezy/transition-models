@@ -1,5 +1,27 @@
 # MLB P0 — Codex / Claude 인계 기록
 
+## Intent 브랜치 CV 후속 — 2026-10-05
+
+`feature/intent-v0`의 별도 인계다. 아래 OCR/주석 이력은 분기 당시 기록으로 보존한다.
+사용자 승인: 팀원 영역을 제외해 계속 진행, Codex 잔여 사용량 최소 20% 보존.
+선점 커밋 `736da34`. 본 작업 커밋은 CHECKLIST CV 절에 고정한다.
+
+- 시간 감사: 4경기 422행, 압축 경기 릴리스 확인 124개 제공 창 모두 릴리스 후 프레임 포함.
+  실제 열람 로그는 아니며 결과 가용시점은 전부 미측정. frame-before-release와 구분했다.
+- 품질 감사: M3 원본 86장 유지. AI 58표시/28기권, 사람 84표시/2기권,
+  사람만 표시 26건의 정확성은 unknown. 좌표 가정 변화 민감도는 물리 정확도가 아니다.
+- 새 파일: `intent/temporal_audit.py`, `quality_audit.py`, `batch.py` 및 회귀 테스트.
+  trace의 출력 v1·프레임 해시/시각 연결, 혼합 출처 거절을 독립 코드 리뷰 후 보강했다.
+  배치는 중단·orphan·manifest-only 재개, 입력/소스/완료 출력 변조 및 누락 선택 파일의 생성도 검사한다.
+- 전체 CPU 검사 **742 passed, 5 skipped, 2 deselected**, Ruff check/format 90경로 통과. 새 도구 테스트 90건 포함. 기존 Pillow 경고 2건.
+- 실제 감사 2작업 성공, resume에서 재실행 0건. frozen 자료 186개 SHA 불변 확인.
+  [재현 명령·결과](CV_FOLLOWUP_2026-10-05.md), [실행 기록](results/cv_followup_20261005/execution_v1.json).
+- [관측 v1 규약](CV_OBSERVATION_PROTOCOL_V1.md)은 resting 미트 관측과 셋업 의미·투수 의도를 분리한다.
+  새 독립 평가·사람 판정·전체 영상 자동 처리·라이브 지연은 남아 있다.
+
+팀원 코드 수정·메시지 전송·외부 AI 호출 없음. 10/6 파일 재전달 불필요.
+다음 한 단위는 CHECKLIST CV-5다. 아래의 F-4h 지시는 이 브랜치의 다음 작업이 아니다.
+
 현재 범위는 MLB 우선 개발이다. KBO는 최종 확장 목표로 유지한다.
 2026-09-22 Codex가 아래 코드를 구현·검증했다. Claude의 첫 호출은 OAuth 만료(401)로
 실행되지 않았다. 이후 사용자가 재로그인을 완료했으나, 비공개 코드 외부 전송에 대한
