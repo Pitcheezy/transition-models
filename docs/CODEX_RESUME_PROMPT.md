@@ -14,9 +14,10 @@ CV-5의 [두 창 122장 프레임 공급](CV_PREFIX_REPLAY_V1.md)은 완료했�
 다음 한 단위는 CV-5a: 연속 영상에서 실제 관측기·입력 도착/출력 시각 계측을 연결하는 것이다.
 자료·발행 시점을 실제로 계측하기 전에는 pre-pitch 성공을 표시하지 않는다.
 CV-6의 [26장 검토 자료](CV_REVIEW_QUEUE_V1.md)는 준비 완료, 실제 사람 응답은 0건이다.
-원본 패키지는 `outputs/cv_review_20261005`, 검토자에게는 `reviewer/`만 제공한다.
+새 [클릭 입력 UI](CV_REVIEW_UI_V1.md)는 `outputs/cv_review_20261005_ui_v1`에 있다.
+검토자에게는 `reviewer/`만 제공한다. 이전 static 패키지는 보존했다.
 이전 AI/사람 점을 보여주거나 새 사람 판정을 AI로 대체하지 않는다.
-준비 이후 최종 전체 CPU 검사: 780 passed / 5 skipped / 2 deselected, Ruff 94경로.
+UI 준비 이후 최종 전체 CPU 검사: 794 passed / 5 skipped / 2 deselected, Ruff 96경로.
 수정 권한은 반납했다. 20% 사용량 여유를 확인하고 새 작업 범위를 정한 뒤 선점한다.
 원본 프레임을 볼 수 없으면 새 verified 라벨을 만들지 않는다.
 

@@ -7,7 +7,6 @@ availability disagreements, not new ground truth or an independent validation sa
 from __future__ import annotations
 
 import argparse
-import html
 import json
 from fractions import Fraction
 from pathlib import Path
@@ -17,6 +16,7 @@ from PIL import Image
 from intent.quality_audit import SCHEMA as AUDIT_SCHEMA
 from intent.quality_audit import availability, validate_inputs
 from intent.replay import _inside, _load, _no_links, _number, _sha, _write_new
+from intent.reviewer_ui import render_review_page
 
 ROOT = Path(__file__).resolve().parents[1]
 PROTOCOL = "cv_observation_v1"
@@ -216,25 +216,9 @@ def prepare(root, report_path, out, *, results="docs/results/mlb_p0", expected_c
             "mapping": private,
         },
     )
-    figures = "\n".join(
-        f"<figure><figcaption>{f['observation_id']}</figcaption>"
-        f'<img src="{f["path"]}" alt="{f["observation_id"]}"></figure>'
-        for f in frames
-    )
-    page = (
-        '<!doctype html><html lang="ko"><meta charset="utf-8">'
-        '<meta http-equiv="Content-Security-Policy" content="default-src \'none\'; '
-        "img-src 'self'; style-src 'unsafe-inline'\">"
-        "<title>미트 관측 개발 재검토</title><style>body{font:17px sans-serif;max-width:1320px;"
-        "margin:24px auto;padding:12px}p{line-height:1.8}figure{margin:32px 0}img{max-width:100%;"
-        "height:auto}figcaption{font-family:monospace;margin-bottom:8px}</style>"
-        "<h1>미트 관측 개발 재검토</h1><p>"
-        + html.escape(INSTRUCTIONS)
-        + "</p>"
-        + figures
-        + "</html>"
-    )
+    page = render_review_page(manifest, _load(reviewer / "response_template.json"), INSTRUCTIONS)
     (reviewer / "index.html").write_text(page, encoding="utf-8")
+    (reviewer / "review_ui.js").write_bytes(Path(__file__).with_name("review_ui.js").read_bytes())
     return {
         "prepared": len(frames),
         "completed_reviews": 0,

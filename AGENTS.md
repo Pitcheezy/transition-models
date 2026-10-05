@@ -9,7 +9,8 @@ guard and a source-bound resumable local runner. CV-5 adds verified anonymous pr
 frame delivery for two sampled windows (122 frames), not observer inference. Read
 [the prefix report](docs/CV_PREFIX_REPLAY_V1.md). Next: CV-5a actual observer and timing
 instrumentation on continuous video. CV-6 source-only review preparation is ready:
-[26-frame review queue](docs/CV_REVIEW_QUEUE_V1.md), zero completed human responses.
+[26-frame review queue](docs/CV_REVIEW_QUEUE_V1.md) and
+[offline click-and-export UI](docs/CV_REVIEW_UI_V1.md), zero completed human responses.
 Do not mark CV-6 done or create human labels without real reviewer submissions.
 These tools do not complete live CV or M4.
 Existing M3, IntentEstimate v1 JSONL and 10/6 presentation files remain frozen.

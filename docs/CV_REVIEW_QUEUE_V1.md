@@ -58,3 +58,5 @@ HTML의 이미지 참조 26개·파일 존재·바이트 SHA를 확인했다. �
 기존 시연·M3 관련 186개 파일은 SHA가 그대로다.
 
 검증: 새 도구 테스트 **20 passed**. 최종 `check_project.py --cpu-only`: **780 passed, 5 skipped, 2 deselected**, Ruff check/format 94경로 통과. 기존 Pillow 경고 2건.
+
+후속: [사람 클릭 입력 UI v1](CV_REVIEW_UI_V1.md)을 별도 `outputs/cv_review_20261005_ui_v1` 패키지로 준비했다. 위 static 패키지와 결과는 그대로 보존했다. 실제 응답 0건은 변하지 않았다.
