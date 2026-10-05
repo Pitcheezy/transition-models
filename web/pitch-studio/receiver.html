@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>응답 연결 확인 · Pitcheezy</title>
+    <meta name="theme-color" content="#091811" />
+    <link rel="stylesheet" href="product.css" />
+    <link rel="stylesheet" href="receiver.css" />
+    <script src="data.js" defer></script>
+    <script src="receiver-contract.js" defer></script>
+    <script src="receiver-sample.js" defer></script>
+    <script src="receiver.js" defer></script>
+  </head>
+  <body>
+    <a class="skip" href="#receiver">본문으로 이동</a>
+    <header class="product-header">
+      <a href="./" class="wordmark"
+        ><span class="seal">P</span>PITCHEEZY<i>●</i></a
+      >
+      <nav aria-label="주요 메뉴">
+        <a href="service.html">분석 스튜디오</a
+        ><a href="report.html#analysis">관측 기록</a>
+      </nav>
+    </header>
+    <main id="receiver" class="receiver-main">
+      <div class="receiver-heading">
+        <span class="eyebrow">LOCAL RESPONSE CHECK</span>
+        <h1>한 타석의 연결부터.</h1>
+        <p>
+          전달받은 추천·결과 파일을 확인하고, 같은 투구의 미트 관측과 나란히
+          살펴봅니다.
+        </p>
+      </div>
+      <section class="import-card" aria-labelledby="import-title">
+        <h2 id="import-title">응답 파일 열기</h2>
+        <p>
+          파일은 이 브라우저 안에서만 읽습니다. 서버 전송·자동 저장·팀원 서비스
+          호출은 없습니다.
+        </p>
+        <div class="import-actions">
+          <label class="primary file-label"
+            >JSON 파일 선택<input
+              id="response-file"
+              type="file"
+              accept=".json,application/json" /></label
+          ><button id="try-sample" class="secondary">
+            합성 자료로 동작 확인</button
+          ><button id="download-template" class="secondary">
+            전달 양식 받기</button
+          ><button id="clear-import" class="secondary">자료 비우기</button>
+        </div>
+        <p id="import-status" role="status">
+          실제 응답 미수신 · JSON 전달 양식을 준비했습니다.
+        </p>
+        <p id="import-error" role="alert" hidden></p>
+        <details>
+          <summary>전달 파일과 검증 범위</summary>
+          <p>
+            공개용 watch 응답, 선택 타석 번호, 투구별 reveal 응답과 투구 키·원본
+            경로, 모델 식별자·소스 커밋·생성 시각을 하나로 묶습니다. 내부 원본
+            파일의 최종 점수·투구 후 필드는 거절합니다.
+          </p>
+          <p>
+            검사 통과는 파일 구조와 연결 정보가 맞다는 뜻입니다. 원본의 진위,
+            실제 모델 실행, 영상과의 대응을 인증하지 않습니다. 파일에 담긴
+            결과를 화면에서 가리는 기능이며 실시간 보안 경계는 아닙니다.
+          </p>
+        </details>
+        <div id="source-details" hidden></div>
+      </section>
+      <section id="response-workspace" hidden aria-labelledby="game-name">
+        <div class="response-status">
+          <strong id="source-badge"></strong
+          ><span id="publication-state"></span>
+        </div>
+        <h2 id="game-name"></h2>
+        <p id="pitch-identity"></p>
+        <div id="current-situation" class="receiver-situation"></div>
+        <p id="players" class="receiver-players"></p>
+        <div class="receiver-controls">
+          <button id="previous-pitch" class="secondary">이전 투구</button
+          ><button id="reveal-pitch" class="primary">현재 투구 결과 공개</button
+          ><button id="hide-pitch" class="secondary">결과 다시 숨기기</button
+          ><button id="next-pitch" class="secondary">다음 투구</button>
+        </div>
+        <div class="receiver-columns">
+          <section class="receiver-panel">
+            <span class="eyebrow">BEFORE THE PITCH</span>
+            <h3>받은 구종 추천</h3>
+            <p id="recommendation-status"></p>
+            <div id="received-candidates"></div>
+            <p class="receiver-note">
+              표시 비율은 모델의 구종 선택 비율입니다. 상위 후보의 합이 100%
+              미만일 수 있으며 그대로 표시합니다. 목표 위치는 도달 분포의
+              근사값으로 포수의 실제 요구를 뜻하지 않습니다.
+            </p>
+          </section>
+          <section class="receiver-panel">
+            <span class="eyebrow">AFTER REVEAL</span>
+            <h3>실제 결과와 저장 관측</h3>
+            <p id="post-placeholder">결과 공개 후에만 표시합니다.</p>
+            <div id="received-post" hidden></div>
+          </section>
+        </div>
+        <div class="receiver-unavailable">
+          <strong>아직 연결하지 않은 분석</strong>
+          <p>
+            스트라이크·볼·파울·안타 확률, 투수·타자 책임, 교체 효과는 이 응답에
+            없습니다. 예시 수치로 대체하지 않습니다.
+          </p>
+        </div>
+      </section>
+      <footer class="receiver-footer">
+        우리 쪽 수신·표시 도구 · 실제 서버 미연결 · 영상 재생 시각 자동 동기화
+        미구현
+      </footer>
+    </main>
+  </body>
+</html>

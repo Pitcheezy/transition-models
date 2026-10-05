@@ -65,6 +65,15 @@ def check():
     for key in ("source_windows_manifest", "source_points_manifest"):
         actual = hashlib.sha256((ROOT / manifest[key]).read_bytes()).hexdigest()
         assert actual == manifest[f"{key}_sha256"], f"Source changed: {key}"
+    receiver = subprocess.run(
+        ["node", "--test", str(ROOT / "tests/js/pitch_receiver.test.cjs")],
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+    )
+    if receiver.returncode:
+        raise RuntimeError(receiver.stdout + receiver.stderr)
+    print("PASS: response receiver regression checks")
     print(f"PASS: {len(data['scenarios'])} illustrative distributions, HTML assets, media SHA256")
 
 

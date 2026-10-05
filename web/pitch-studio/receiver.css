@@ -1,0 +1,238 @@
+.receiver-main {
+  max-width: 1180px;
+  margin: auto;
+  padding: 48px 36px 24px;
+}
+.receiver-heading h1 {
+  font-size: clamp(32px, 5vw, 54px);
+  letter-spacing: -2px;
+  margin: 14px 0;
+}
+.receiver-heading p,
+.import-card p,
+.receiver-panel p {
+  font-size: 16px;
+  line-height: 1.8;
+  color: #bed0c4;
+}
+.import-card,
+.receiver-panel {
+  border: 1px solid #345040;
+  background: #122a1e;
+  padding: 28px;
+  margin-top: 28px;
+}
+.import-card h2 {
+  font-size: 23px;
+}
+.import-actions,
+.receiver-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+.import-actions button,
+.receiver-controls button,
+.file-label {
+  padding: 12px 18px;
+  min-height: 44px;
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+}
+.file-label {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid #ceff78;
+  background: #ceff78;
+  color: #102313;
+  font-weight: 700;
+}
+.file-label input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  width: 100%;
+  cursor: pointer;
+}
+.file-label:focus-within {
+  outline: 3px solid white;
+  outline-offset: 3px;
+}
+.receiver-main button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.receiver-main .primary {
+  margin-top: 0;
+}
+.receiver-main .secondary {
+  border: 1px solid #617c68;
+  background: #183324;
+  color: #e0ecd7;
+}
+.receiver-main .secondary:hover:not(:disabled) {
+  background: #264a32;
+}
+.receiver-main details {
+  margin-top: 20px;
+  color: #b2c4b6;
+}
+.receiver-main summary {
+  cursor: pointer;
+  font-size: 14px;
+}
+.receiver-main details p {
+  font-size: 14px;
+}
+#import-status {
+  color: #ceff78;
+  margin-bottom: 0;
+}
+#import-error {
+  color: #ffc09b;
+  border-left: 3px solid #ffab73;
+  padding-left: 16px;
+}
+#source-details {
+  margin-top: 18px;
+  border-top: 1px solid #36513f;
+  padding-top: 14px;
+  overflow-wrap: anywhere;
+  font-size: 12px;
+  color: #b8cabd;
+  line-height: 1.8;
+}
+.response-status {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: 42px;
+  color: #ceff78;
+}
+.response-status strong {
+  padding: 7px 12px;
+  background: #294122;
+  font-size: 14px;
+}
+.response-status span {
+  font-size: 14px;
+}
+#game-name {
+  font-size: 28px;
+  margin-bottom: 8px;
+}
+#pitch-identity {
+  font-size: 13px;
+  color: #aabdac;
+}
+.receiver-situation {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 18px;
+  background: #163022;
+  margin: 20px 0;
+  font-size: 16px;
+}
+.receiver-players {
+  font-size: 18px;
+}
+.receiver-controls {
+  margin: 22px 0;
+}
+.receiver-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+}
+.receiver-panel {
+  margin-top: 0;
+  min-width: 0;
+}
+.receiver-panel h3 {
+  font-size: 22px;
+}
+.received-candidate {
+  padding: 18px 0;
+  border-bottom: 1px solid #34503d;
+}
+.received-candidate strong {
+  color: #ceff78;
+  font-size: 20px;
+}
+.received-candidate p {
+  margin: 7px 0 0;
+  font-size: 14px;
+}
+.receiver-note {
+  font-size: 13px !important;
+}
+.receiver-unavailable {
+  margin-top: 22px;
+  border: 1px dashed #46604a;
+  padding: 20px;
+}
+.receiver-unavailable p {
+  margin-bottom: 0;
+  font-size: 14px;
+  color: #acc2b0;
+  line-height: 1.7;
+}
+.receiver-footer {
+  margin-top: 32px;
+  font-size: 12px;
+  color: #8ea496;
+}
+.receiver-main [hidden] {
+  display: none !important;
+}
+#received-post dl {
+  margin: 0;
+}
+#received-post dt {
+  font-size: 13px;
+  color: #abc0ae;
+  margin-top: 20px;
+}
+#received-post dd {
+  font-size: 20px;
+  margin: 6px 0;
+  color: #e3efd9;
+  overflow-wrap: anywhere;
+}
+#received-post .observation-caution {
+  font-size: 13px;
+}
+.receiver-main :focus-visible {
+  outline: 3px solid #ceff78;
+  outline-offset: 3px;
+}
+@media (max-width: 700px) {
+  .receiver-main {
+    padding: 28px 20px;
+  }
+  .receiver-columns {
+    grid-template-columns: 1fr;
+  }
+  .import-card,
+  .receiver-panel {
+    padding: 20px;
+  }
+  .receiver-players {
+    font-size: 16px;
+  }
+  #game-name {
+    font-size: 24px;
+  }
+  .receiver-controls button {
+    flex: 1 1 40%;
+  }
+  .import-actions > * {
+    width: 100%;
+    justify-content: center;
+  }
+}
