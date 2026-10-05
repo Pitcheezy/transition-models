@@ -1,0 +1,49 @@
+# 사람 검토 응답 집계 v1
+
+2026-10-05. CV-6에서 실제 제출받은 JSON을 원본 이미지·manifest와 대조하고,
+완료/미검토/불확실 판정 및 응답 간 차이를 기술하는 도구다. 원본 응답은 수정하지 않는다.
+
+## 실행
+
+먼저 [입력 UI](CV_REVIEW_UI_V1.md)에서 실제 사람이 응답을 저장한다.
+`--response`를 파일마다 반복한다. 출력의 상위 폴더는 존재해야 하고 출력 파일은 새 이름이어야 한다.
+
+```bash
+python -m intent.review_summary --package outputs/cv_review_20261005_ui_v1 --response path/to/reviewer_a.json --response path/to/reviewer_b.json --out outputs/cv_review_20261005_ui_v1/summary_new.json
+```
+
+응답이 없을 때도 자료 연결 검사를 하고 대기 상태를 기록할 수 있다.
+
+```bash
+python -m intent.review_summary --package outputs/cv_review_20261005_ui_v1 --out outputs/cv_review_20261005_ui_v1/pending_new.json
+```
+
+빈 양식을 사람 응답으로 제출하면 거절한다. 검토자 ID가 공백/대소문자만 다른 중복 제출,
+같은 경로·동일 내용 중복, 잘못된 이미지·manifest·좌표도 거절한다. 기존 파일을 덮어쓰지 않는다.
+검사 전후 파일 SHA를 비교하며 원본 이미지 바이트도 기존 검사기로 다시 확인한다.
+
+## 수치 해석
+
+- 검토자별 `marked / unavailable / unknown / unreviewed`, 검토한 행의 가시성·자세를 집계한다.
+- 전체 포함률은 **관측 ID의 합집합**이다. 여러 사람이 같은 프레임을 봐도 중복으로 더하지 않는다.
+  reviewed는 unknown을 포함하고, decided는 marked/unavailable만 포함한다.
+- 두 응답 모두 marked/unavailable일 때만 상태 같음/다름을 비교한다. unknown과 unreviewed는
+  비교에서 제외하고 제외 건수를 별도로 표시한다. 두 제외 사유는 겹칠 수 있다.
+- 둘 다 marked인 경우에만 두 점 사이 픽셀 거리의 n·중앙값·90분위를 기술한다.
+  90분위는 정렬한 거리에서 `ceil(0.9*n)`번째 값이다. 원본 좌표를 평균내거나 새 정답으로 만들지 않는다.
+- 비교 대상이 없으면 비율·거리는 null이고, 응답이 0개면 비교 목록은 비어 있다.
+
+이 수치는 **제출된 개발 응답의 비교**다. 사람이 실제로 작성했는지 또는 독립적으로 판독했는지
+도구가 인증하지 않는다. 동일한 상태/가까운 점도 정확성·물리 오차·독립 평가 성능의 증거가 아니다.
+상태 불일치 ID는 검토 후보이며 자동 합의·정답·AI 오류율을 생성하지 않는다.
+
+## 이번 실행
+
+[대기 보고서](results/cv_followup_20261005/review_summary_pending_v1.json)는 실제 자료 26장의 연결을
+검사한 결과다. 제출 응답 **0개**, 전원 미검토 **26장**, 정확도·일치도 측정 없음이다.
+테스트의 합성 응답은 별도 임시 자료로만 사용했다. 실제 사람 판정으로 기록하지 않았다.
+
+다음은 실제 응답을 받은 뒤 이 명령으로 검사하고, 원인을 검토하는 일이다. CV-6은 미완료다.
+CV-5a의 연속 영상·실제 관측기 계측, CV-7의 미열람 독립 평가도 남아 있다.
+
+최종 검사: **807 passed / 5 skipped / 2 deselected**, Ruff 98경로. 기존 Pillow 경고 2건. frozen 자료 186개 SHA 불변.

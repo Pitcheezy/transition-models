@@ -11,7 +11,8 @@ frame delivery for two sampled windows (122 frames), not observer inference. Rea
 instrumentation on continuous video. CV-6 source-only review preparation is ready:
 [26-frame review queue](docs/CV_REVIEW_QUEUE_V1.md) and
 [offline click-and-export UI](docs/CV_REVIEW_UI_V1.md), zero completed human responses.
-Do not mark CV-6 done or create human labels without real reviewer submissions.
+Use [response summary](docs/CV_REVIEW_SUMMARY_V1.md) after real submissions; the current
+26-frame report has zero reviewers. Do not mark CV-6 done or create human labels without real reviewer submissions.
 These tools do not complete live CV or M4.
 Existing M3, IntentEstimate v1 JSONL and 10/6 presentation files remain frozen.
 F-4i name OCR remains on hold. Teammate model/profile/policy/feed/service/UI work is

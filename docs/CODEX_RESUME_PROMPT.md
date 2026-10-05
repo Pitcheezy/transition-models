@@ -17,7 +17,8 @@ CV-6의 [26장 검토 자료](CV_REVIEW_QUEUE_V1.md)는 준비 완료, 실제 �
 새 [클릭 입력 UI](CV_REVIEW_UI_V1.md)는 `outputs/cv_review_20261005_ui_v1`에 있다.
 검토자에게는 `reviewer/`만 제공한다. 이전 static 패키지는 보존했다.
 이전 AI/사람 점을 보여주거나 새 사람 판정을 AI로 대체하지 않는다.
-UI 준비 이후 최종 전체 CPU 검사: 794 passed / 5 skipped / 2 deselected, Ruff 96경로.
+실제 응답을 받으면 [검증·집계 명령](CV_REVIEW_SUMMARY_V1.md)을 사용한다. 현재 제출 0 / 미검토 26이다.
+집계 준비 이후 최종 전체 CPU 검사: 807 passed / 5 skipped / 2 deselected, Ruff 98경로.
 수정 권한은 반납했다. 20% 사용량 여유를 확인하고 새 작업 범위를 정한 뒤 선점한다.
 원본 프레임을 볼 수 없으면 새 verified 라벨을 만들지 않는다.
 
