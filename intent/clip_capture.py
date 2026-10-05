@@ -23,6 +23,25 @@ def _sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
+def _artifact_records(output: Path) -> tuple[dict, list[str]]:
+    """Collect output hashes while keeping enumeration/hash failures in a failed receipt."""
+    records, errors = {}, []
+    try:
+        artifacts = sorted(output.iterdir())
+    except (Exception, KeyboardInterrupt) as exc:
+        return records, [f"Artifact enumeration failed: {type(exc).__name__}: {exc}"]
+    for artifact in artifacts:
+        try:
+            if artifact.is_file():
+                records[artifact.name] = {
+                    "sha256": _sha256(artifact),
+                    "bytes": artifact.stat().st_size,
+                }
+        except (Exception, KeyboardInterrupt) as exc:
+            errors.append(f"{artifact.name}: artifact hash failed: {type(exc).__name__}: {exc}")
+    return records, errors
+
+
 def _utc() -> str:
     return datetime.now(UTC).isoformat()
 
@@ -234,17 +253,8 @@ def capture(
                     receipt["errors"].append(f"{name}: bytes changed during capture")
             except (Exception, KeyboardInterrupt) as exc:
                 receipt["errors"].append(f"{name}: final hash failed: {type(exc).__name__}: {exc}")
-        for artifact in sorted(output.iterdir()):
-            if artifact.is_file():
-                try:
-                    receipt["artifacts"][artifact.name] = {
-                        "sha256": _sha256(artifact),
-                        "bytes": artifact.stat().st_size,
-                    }
-                except (Exception, KeyboardInterrupt) as exc:
-                    receipt["errors"].append(
-                        f"{artifact.name}: hash failed: {type(exc).__name__}: {exc}"
-                    )
+        receipt["artifacts"], artifact_errors = _artifact_records(output)
+        receipt["errors"].extend(artifact_errors)
         receipt.update(finished_at_utc=_utc(), elapsed_seconds=time.monotonic() - started)
         commands_ok = all(
             name in receipt["commands"]

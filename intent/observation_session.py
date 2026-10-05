@@ -13,6 +13,7 @@ import json
 import platform
 import time
 import uuid
+from fractions import Fraction
 from pathlib import Path
 
 from PIL import Image
@@ -23,6 +24,13 @@ from src.vision.frames import CACHE_SCHEMA, _seek, _sha256
 REQUEST_SCHEMA = "intent_visual_observation_request_v1"
 RESPONSE_SCHEMA = "intent_visual_observation_v1"
 SESSION_SCHEMA = "intent_visual_observation_session_v1"
+MAPPED_REQUEST_SCHEMA = "intent_visual_observation_request_v2"
+MAPPED_SESSION_SCHEMA = "intent_visual_observation_session_v2"
+MAPPED_TIME_FIELDS = (
+    "source_time_basis",
+    "source_time_seconds_exact",
+    "requested_cutoff_seconds_exact",
+)
 PROMPT = (
     "Inspect only image.jpg and this request. Mark the center of the visible catcher's "
     "mitt body in original full-frame pixel coordinates [x,y], including a resting mitt. "
@@ -79,20 +87,8 @@ def _source(frame, receipt, seconds):
     return image_bytes, receipt_bytes, dimensions
 
 
-def begin(frame_path, source_seconds, out, source_receipt):
-    """Publish one anonymous request and privately pin its source/time/hash receipt."""
-    frame, receipt, out = _path(frame_path), _path(source_receipt), _output(out)
-    data, receipt_data, (width, height) = _source(frame, receipt, source_seconds)
-    request = {
-        "schema": REQUEST_SCHEMA,
-        "observation_id": uuid.uuid4().hex,
-        "image_sha256": _sha256(data),
-        "width": width,
-        "height": height,
-        "source_time_seconds": float(source_seconds),
-        "prompt": PROMPT,
-        "response_schema": RESPONSE_FIELDS,
-    }
+def _publish(out, data, request, source_binding, schema):
+    """Publish the anonymous image/request before pinning private source metadata."""
     out.mkdir(parents=True, exist_ok=False)
     public = out / "request"
     public.mkdir()
@@ -102,20 +98,102 @@ def begin(frame_path, source_seconds, out, source_receipt):
     started_monotonic_ns, started_utc_ns = time.monotonic_ns(), time.time_ns()
     _write_new(public / "request.json", request)
     session = {
-        "schema": SESSION_SCHEMA,
+        "schema": schema,
         "host": platform.node(),
         "started_monotonic_ns": started_monotonic_ns,
         "started_utc_ns": started_utc_ns,
         "request_sha256": _sha256((public / "request.json").read_bytes()),
         "image_sha256": request["image_sha256"],
+        "generator_code_sha256": _sha256(Path(__file__).read_bytes()),
+        **source_binding,
+    }
+    _write_new(out / "session.json", session)
+    return request
+
+
+def _request(data, dimensions, seconds, schema):
+    return {
+        "schema": schema,
+        "observation_id": uuid.uuid4().hex,
+        "image_sha256": _sha256(data),
+        "width": dimensions[0],
+        "height": dimensions[1],
+        "source_time_seconds": float(seconds),
+        "prompt": PROMPT,
+        "response_schema": RESPONSE_FIELDS,
+    }
+
+
+def begin(frame_path, source_seconds, out, source_receipt):
+    """Publish one legacy anonymous request without changing the v1 receipt contract."""
+    frame, receipt, out = _path(frame_path), _path(source_receipt), _output(out)
+    data, receipt_data, dimensions = _source(frame, receipt, source_seconds)
+    binding = {
         "source_frame": str(frame),
         "source_receipt": str(receipt),
         "source_receipt_sha256": _sha256(receipt_data),
         "source_time_seconds": float(source_seconds),
-        "generator_code_sha256": _sha256(Path(__file__).read_bytes()),
     }
-    _write_new(out / "session.json", session)
-    return request
+    return _publish(
+        out,
+        data,
+        _request(data, dimensions, source_seconds, REQUEST_SCHEMA),
+        binding,
+        SESSION_SCHEMA,
+    )
+
+
+def _load_mapped(directory):
+    from intent import clip_capture, clip_clock, clip_frames
+
+    verified = clip_frames.load_verified_frame(directory)
+    hashes = {
+        module.__name__: _sha256(Path(module.__file__).read_bytes())
+        for module in (clip_frames, clip_clock, clip_capture)
+    }
+    return verified, hashes
+
+
+def _mapped_source(directory):
+    """Reverify mapped evidence and preserve actual time separately from requested cutoff."""
+    directory = _path(directory)
+    verified, helper_hashes = _load_mapped(directory)
+    frame, receipt = _path(verified["image_path"]), _path(verified["receipt_path"])
+    data, receipt_data = frame.read_bytes(), receipt.read_bytes()
+    document = json.loads(receipt_data)
+    if (
+        _sha256(receipt_data) != verified["receipt_sha256"]
+        or _sha256(data) != document["artifacts"]["image.jpg"]["sha256"]
+    ):
+        raise ValueError("mapped image/receipt changed during validation")
+    seconds, cutoff = verified["source_seconds"], verified["requested_source_seconds"]
+    if not isinstance(seconds, Fraction) or not isinstance(cutoff, Fraction) or seconds > cutoff:
+        raise ValueError("mapped actual time must be an exact Fraction at or before cutoff")
+    with Image.open(io.BytesIO(data)) as image:
+        if image.format != "JPEG" or image.size != verified["dimensions"]:
+            raise ValueError("mapped frame JPEG/dimensions mismatch")
+        image.verify()
+    binding = {
+        "source_frame": str(frame),
+        "source_receipt": str(receipt),
+        "source_receipt_sha256": verified["receipt_sha256"],
+        "source_time_seconds": float(seconds),
+        "source_time_basis": "decoded_pts",
+        "source_time_seconds_exact": str(seconds),
+        "requested_cutoff_seconds_exact": str(cutoff),
+        "mapped_frame_directory": str(directory),
+        "mapped_frame_helper_code_sha256": helper_hashes,
+    }
+    return data, receipt_data, verified["dimensions"], binding
+
+
+def begin_mapped(mapped_frame, out):
+    """Publish an anonymous observation request from a verified decoded-clock frame."""
+    out = _output(out)
+    data, _, dimensions, binding = _mapped_source(mapped_frame)
+    request = _request(data, dimensions, binding["source_time_seconds"], MAPPED_REQUEST_SCHEMA)
+    request.update({key: binding[key] for key in MAPPED_TIME_FIELDS})
+    return _publish(out, data, request, binding, MAPPED_SESSION_SCHEMA)
 
 
 def _validate_response(response, request):
@@ -162,20 +240,31 @@ def finish(out, response_path):
     session = json.loads(session_bytes)
     request_bytes = paths["request/request.json"].read_bytes()
     request = json.loads(request_bytes)
-    data, receipt_data, dimensions = _source(
-        _path(session["source_frame"]),
-        _path(session["source_receipt"]),
-        session["source_time_seconds"],
-    )
+    if session.get("schema") not in (SESSION_SCHEMA, MAPPED_SESSION_SCHEMA):
+        raise ValueError("unknown observation session schema")
+    mapped = session["schema"] == MAPPED_SESSION_SCHEMA
+    if mapped:
+        if not isinstance(session.get("mapped_frame_directory"), str):
+            raise ValueError("mapped session requires a mapped-frame directory")
+        data, receipt_data, dimensions, binding = _mapped_source(session["mapped_frame_directory"])
+        if any(session.get(key) != value for key, value in binding.items()):
+            raise ValueError("mapped source/time/helper binding mismatch")
+        if any(request.get(key) != binding[key] for key in MAPPED_TIME_FIELDS):
+            raise ValueError("mapped request exact-time binding mismatch")
+    else:
+        data, receipt_data, dimensions = _source(
+            _path(session["source_frame"]),
+            _path(session["source_receipt"]),
+            session["source_time_seconds"],
+        )
     if (
-        session.get("schema") != SESSION_SCHEMA
-        or session.get("host") != platform.node()
+        session.get("host") != platform.node()
         or session["request_sha256"] != _sha256(request_bytes)
         or session["image_sha256"] != _sha256(data)
         or session["source_receipt_sha256"] != _sha256(receipt_data)
         or session["generator_code_sha256"] != _sha256(Path(__file__).read_bytes())
         or _path(out / "request/image.jpg").read_bytes() != data
-        or request.get("schema") != REQUEST_SCHEMA
+        or request.get("schema") != (MAPPED_REQUEST_SCHEMA if mapped else REQUEST_SCHEMA)
         or request["image_sha256"] != session["image_sha256"]
         or request["source_time_seconds"] != session["source_time_seconds"]
         or (request["width"], request["height"]) != dimensions
@@ -191,7 +280,9 @@ def finish(out, response_path):
     response = json.loads(response_bytes)
     _validate_response(response, request)
     result = {
-        "schema": "intent_visual_observation_result_v1",
+        "schema": "intent_visual_observation_result_v2"
+        if mapped
+        else "intent_visual_observation_result_v1",
         "source_kind": "ai_visual_observation",
         "human_label": False,
         "availability_not_measured": True,
@@ -210,6 +301,9 @@ def finish(out, response_path):
         "orchestration and tool delays; not model-only latency or live availability",
         "clock_contract": "trusted same host/session; consistency check, not security attestation",
     }
+    if mapped:
+        result.update({key: request[key] for key in MAPPED_TIME_FIELDS})
+        result["live_availability_verified"] = False
     _write_new(out / "result.json", result)
     return result
 
@@ -221,15 +315,19 @@ def main(argv=None):
     for option in ("frame", "receipt", "out"):
         start.add_argument(f"--{option}", type=Path, required=True)
     start.add_argument("--source-seconds", type=float, required=True)
+    mapped = subs.add_parser("begin-mapped")
+    mapped.add_argument("--mapped-frame", type=Path, required=True)
+    mapped.add_argument("--out", type=Path, required=True)
     end = subs.add_parser("finish")
     end.add_argument("--session", type=Path, required=True)
     end.add_argument("--response", type=Path, required=True)
     args = parser.parse_args(argv)
-    result = (
-        begin(args.frame, args.source_seconds, args.out, args.receipt)
-        if args.command == "begin"
-        else finish(args.session, args.response)
-    )
+    if args.command == "begin":
+        result = begin(args.frame, args.source_seconds, args.out, args.receipt)
+    elif args.command == "begin-mapped":
+        result = begin_mapped(args.mapped_frame, args.out)
+    else:
+        result = finish(args.session, args.response)
     print(json.dumps(result, indent=2, allow_nan=False))
 
 

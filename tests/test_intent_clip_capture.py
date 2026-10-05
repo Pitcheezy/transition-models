@@ -322,3 +322,30 @@ def test_cli_reports_runtime_failure(inputs, monkeypatch, capsys):
     )
     assert code == 1
     assert json.loads(capsys.readouterr().out)["status"] == "failed"
+
+
+@pytest.mark.parametrize("stage", ["enumeration", "artifact_hash"])
+def test_final_artifact_collection_failure_still_saves_failed_receipt(inputs, monkeypatch, stage):
+    from intent import clip_capture
+
+    monkeypatch.setattr(subprocess, "run", fake_success)
+    original_iterdir, original_sha = Path.iterdir, clip_capture._sha256
+
+    def iterdir(path):
+        if stage == "enumeration" and path == inputs["out"]:
+            raise OSError("synthetic directory listing failure")
+        return original_iterdir(path)
+
+    def digest(path):
+        if stage == "artifact_hash" and path == inputs["out"] / "source.framemd5":
+            raise KeyboardInterrupt("synthetic artifact hash interruption")
+        return original_sha(path)
+
+    monkeypatch.setattr(Path, "iterdir", iterdir)
+    monkeypatch.setattr(clip_capture, "_sha256", digest)
+    result = capture(**inputs)
+    assert result["status"] == "failed"
+    assert result["actual_pts_parsed"] is True
+    assert any("artifact" in error.lower() for error in result["errors"])
+    assert (inputs["out"] / "source.framemd5").exists()
+    assert json.loads((inputs["out"] / "receipt.json").read_text())["status"] == "failed"
