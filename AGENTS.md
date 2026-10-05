@@ -24,7 +24,7 @@ Existing M3, IntentEstimate v1 JSONL and 10/6 presentation files remain frozen.
 F-4i name OCR remains on hold. Teammate model/profile/policy/feed/service/UI work is
 excluded; SongRoute/pitcheezy is read-only. Next CV definition and evaluation gates:
 [CV observation protocol](docs/CV_OBSERVATION_PROTOCOL_V1.md).
-The task requires preserving at least 20% remaining account usage.
+The task requires preserving at least 10% remaining account usage (latest user authorization).
 
 ## Open work
 
