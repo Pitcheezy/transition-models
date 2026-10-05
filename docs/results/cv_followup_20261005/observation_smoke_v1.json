@@ -1,0 +1,83 @@
+{
+  "schema": "intent_observation_smoke_v1",
+  "date": "2026-10-05",
+  "scope": "actual AI single-frame handoff smoke test, not continuous replay or independent accuracy",
+  "game_pk": 747139,
+  "candidate_pa": 2,
+  "selection": "earliest fully timed development PA; source times 175,180,185 selected before observing",
+  "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+  "candidate_clip": {
+    "requested_start_seconds": 175,
+    "requested_duration_seconds": 55,
+    "probe_duration_seconds": 55.047,
+    "bytes": 27922727,
+    "sha256": "e11a9879cd4f5b61a16bb678030a97f794f807d5ab5d43faf408fb719fe51b65",
+    "remux_clock_mapping_verified": false
+  },
+  "observer": "three fresh Codex subagents, one anonymous image each; inherited model version not independently captured",
+  "controller": "Codex tool orchestration, sequential begin/agent/finish; not a programmatic model API loop",
+  "observations": [
+    {
+      "source_time_seconds": 175.0,
+      "raw_response": {
+        "schema": "intent_visual_observation_v1",
+        "observation_id": "e1793456449f439782911cbb5d33c4cd",
+        "image_sha256": "3e1e13cc8055de9eedfde76d330506a13cff25ea8a7f43b108b59390ff7575bc",
+        "status": "unavailable",
+        "mitt": null,
+        "visibility": "hidden",
+        "pose": "unknown",
+        "reason": "No catcher or catcher's mitt is visible in this dugout close-up."
+      },
+      "elapsed_seconds": 63.125,
+      "elapsed_scope": "request publication through response receipt; includes Codex orchestration and tool delays; not model-only latency or live availability",
+      "request_sha256": "8519f79da7a2fb8dda2cfd91e0980410d8c26127b1fe169770d560ce44450421",
+      "raw_response_sha256": "c668929c0c8eec49bd17a8315e13fdf579f7ae67a84a938b36ce7ef20a9aa12a"
+    },
+    {
+      "source_time_seconds": 180.0,
+      "raw_response": {
+        "schema": "intent_visual_observation_v1",
+        "observation_id": "a2cda99e2e4c4085ab59882b7f7e3498",
+        "image_sha256": "e14573c07a415fafa4e3b672ea84f67bf7ca34aee4948a8c52ec0c42a4d410e2",
+        "status": "unavailable",
+        "mitt": null,
+        "visibility": "hidden",
+        "pose": "unknown",
+        "reason": "No catcher's mitt is visible in this dugout view."
+      },
+      "elapsed_seconds": 45.297,
+      "elapsed_scope": "request publication through response receipt; includes Codex orchestration and tool delays; not model-only latency or live availability",
+      "request_sha256": "980e8c5af5acd2873f22878b80603ed190cff44b4fee7678abc1b057095956ec",
+      "raw_response_sha256": "7d49888ab30e631bb0e6bd2921b6f6d0a0d62703678e876cbdfe2fa0c423d49d"
+    },
+    {
+      "source_time_seconds": 185.0,
+      "raw_response": {
+        "schema": "intent_visual_observation_v1",
+        "observation_id": "49c83afad1544d28aca33bf4205cacea",
+        "image_sha256": "c76a304dcbc1b01559f124951ad3a21b74a7d05f9188b923b46df9371ba45061",
+        "status": "marked",
+        "mitt": [
+          680,
+          273
+        ],
+        "visibility": "partial",
+        "pose": "resting",
+        "reason": "Visible mitt body held low near the catcher's lap."
+      },
+      "elapsed_seconds": 54.39,
+      "elapsed_scope": "request publication through response receipt; includes Codex orchestration and tool delays; not model-only latency or live availability",
+      "request_sha256": "06e66dddd564a0ae99135a548e741c6cecceb839fa923910af6b31780276146b",
+      "raw_response_sha256": "ee381f7d4176cc0ea84d397788a9530b5b652179f3cb688901c572d642ca3249"
+    }
+  ],
+  "source_code_sha256": "fa28e524ead243d64f376ffb4bb555b94ca5014cf1195145b8ecb78f0168d4b0",
+  "independent_validation": false,
+  "human_label": false,
+  "accuracy_measured": false,
+  "pre_pitch_availability_measured": false,
+  "whole_pa_replay_complete": false,
+  "frozen_files_unchanged": 186,
+  "checks": "834 passed, 5 skipped, 2 deselected; Ruff 100 paths"
+}
