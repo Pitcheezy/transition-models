@@ -1,86 +1,123 @@
-# Pitcheezy 투구 관측 스튜디오 — 2026-10-05
+# Pitcheezy 홈·최종 서비스 콘셉트 — 2026-10-05
 
-사용자 요청으로 만든 독립 CV 발표 사이트다. Song의 실제 관전 UI를 대체하거나
-그 화면의 리허설을 완료한 것으로 처리하지 않는다.
+사용자가 요청한 최종 제품의 화면을 홈과 분석 서비스로 나눠 구현했다.
+기존 CV 관측과 M3 리포트는 별도 화면에 보존했다. 실제 영상·저장 관측과 설명용
+추천·확률·선수/감독 평가를 구분하며, 모델 통합 완료나 완성률 95%를 주장하지 않는다.
 
-## 실행과 배포
+## 실행·배포
 
-- 공개 데모: https://pitcheezy-pitch-studio.sritone723.chatgpt.site
-- Sites 배포 성공: 2026-10-05, 소스 `febbcf003fd76a4501b75810f4c86bfd3dbb7ed3`.
-- Sites project: `appgprj_6ac3665aa5048191ac2b5a012b2c7010`.
-- 사용자 추가 요청에 따라 public으로 전환했다. 중계 영상·이미지·사람 원본 라벨은 포함하지 않는다.
-- `pitcheezy.com` 연결 요청은 생성했으나, 도메인 구매·Cloudflare 네임서버는 확인됐고 DNS 설정은 대기다.
-- 저장소의 `web/pitch-studio/`는 배포된 정적 파일 4개의 동일한 사본이다.
-
-인터넷 없는 발표에서는 `web/pitch-studio/index.html`을 브라우저로 직접 열 수 있다.
-HTTP 방식은 저장소 루트에서 다음을 실행한다(Python 3, Windows/macOS 동일).
+- 공개 홈: https://pitcheezy-pitch-studio.sritone723.chatgpt.site
+- 분석 서비스: 위 주소의 `/service.html`
+- 실제 관측·검증: `/report.html#analysis`, `/report.html#validation`
+- 배포 소스: `7cf49c756e07ecf6bd1a6f110cf70d49f3c2e574`, 배포 상태 `succeeded`.
+- Sites project: `appgprj_6ac3665aa5048191ac2b5a012b2c7010` (기존 사이트 갱신).
+- `web/pitch-studio/`는 배포 정적 파일 사본이다. CDN·외부 폰트·API·프레임워크가 필요 없다.
+- 이전 `/#analysis` 링크는 서비스로, `/#validation`과 `/#story`는 기존 리포트로 이동한다.
+- `pitcheezy.com`은 구매 확인, DNS/SSL 연결 대기다.
 
 ```bash
 python -m http.server 8786 --bind 127.0.0.1 --directory web/pitch-studio
 ```
 
-브라우저에서 http://127.0.0.1:8786/ 을 연다. 서버 종료는 해당 터미널에서 Ctrl+C.
-외부 CDN, 폰트, API, 프레임워크 설치 없이 HTML/CSS/JS만으로 동작한다.
+http://127.0.0.1:8786/ 을 연다. 서버 종료는 Ctrl+C. 로컬 index.html도 직접 열 수 있다.
 
-## 화면과 발표 동선
+## 시연 동선
 
-1. **투구 관측:** 투구 선택 → 공개 → 미트/공의 가로 관측값 확인. 첫 사례는 `849843:1:3`.
-2. **기권:** `849843:2:5`를 공개해 미트 좌표가 없고 이전 점도 남지 않음을 보인다.
-3. **검증 리포트:** 별도 두 경기 M3의 86장/출력58/기권28, 공동 표시58구의 2.5px/~1.1in을 설명한다.
-4. **프로젝트 방향:** 관측 → 요구 위치 확인 → 동일 기준 비교의 순서로 다음 검증을 설명한다.
-5. 로컬 대표 비교 그림 `849845:10:4`는 이미 전달한 ZIP의 index.html에서 별도로 연다.
+1. 홈: 컵스 대 파드리스 실제 기록 리플레이로 시작한다. `미트 위치 보기`는 정확한
+   판독 정지 장면으로 바꾸고 저장된 한 점을 표시한다. 재생 중에는 점을 숨긴다.
+2. 분석 스튜디오: 투구 전 예측 → 투수 실행 → 타자 대응 → 교체 판단을 누른다.
+   네 시나리오는 제구 이탈·좋은 타격·교체 검토·유리한 공을 놓친 타격이다.
+   각 시나리오의 카운트·이닝은 설명용이며 배경 영상의 경기 상태와 별개다.
+3. 예상 목표는 예시 표적, 실제 미트 관측은 저장 좌표다. 두 모드를 구분한다.
+   좌타자의 몸쪽/바깥쪽은 포수 시점 격자이며 중계 영상과 좌우가 반대다.
+   예시 표적의 화면 위치는 설명용 배치이지 영상으로 추정한 공간 좌표가 아니다.
+4. 실제 관측 리포트: 39구 탐색·공개/숨김·27좌표/12기권과 기존 M3 근거를 보여준다.
+5. 발표에서는 “우리가 만들려는 최종 사용자 흐름이며, 현재 검증한 부분은 영상의
+   미트 관측과 사람 표시 비교입니다. 예측과 선수·벤치 평가는 연결할 화면입니다”라고 설명한다.
 
-발표용 표현:
+미트와 공의 측정 평면이 달라 두 x 차이를 제구 오차로 계산하지 않는다. 실시간 분석,
+자동 추적·동기화, 투수 의도 검증, 책임 배분, 교체 실책의 인과 판단은 아직 완료되지 않았다.
+실제 리허설의 Song 화면 6항목 확인도 별도 대기다.
 
-> 최종 목적은 포수가 요구한 위치와 실제 투구 수행을 비교하는 것입니다.
-> 제가 맡은 부분은 영상에서 미트 위치를 읽어 좌표로 전달하고 사람 표시와 비교하는 관측 모듈입니다.
-> 오늘은 실제 저장 기록의 탐색·기권 처리·위치 표시와 평가 결과를 연결해 보여드립니다.
+## 실제 경기·영상 출처
 
-완성률 95%는 산정하지 않는다. 현재 사이트는 사전 처리 기록의 시연이며 실시간 판독이 아니다.
-셋업 미트가 실제 요구 위치였는지는 별도 검증 대상이다. 공 좌표는 Statcast 홈플레이트 통과
-위치이고 미트는 플레이트 뒤의 위치라 두 값의 단순 차이를 제구 오차로 계산하지 않는다.
-미트 높이·9구역·투수 의도·결과 확률·추천·영상 자동 동기화는 제공하지 않는다.
+로컬 frozen `data/raw/mlb_video/{gamePk}/feed.json`의 날짜·팀·구장·선수를 확인했다.
 
-## 데이터와 유지보수
+| 용도 | 경기 | 날짜·대회 | 구장 |
+|---|---|---|---|
+| 시연 849843 | Chicago Cubs @ San Diego Padres | 2026-09-29 NL Wild Card Game 1 | Petco Park |
+| 평가 849845 | Philadelphia Phillies @ Atlanta Braves | 2026-09-29 NL Wild Card Game 1 | Truist Park |
+| 평가 823407 | Tampa Bay Rays @ Philadelphia Phillies | 2026-09-26 정규시즌 | Citizens Bank Park |
 
-시연은 경기849843의 선택된39구(미트27/기권12)다. 전체262구나 새로운 독립 평가가 아니다.
-`data.js`의 `sources`는 원본 4파일의 SHA256이며, 키로 연결한 투구 데이터와 정확한 M3 수치를 보존한다.
-공 좌표39개는 calibration_readings의 statcast_front.pX이며 로컬 frozen feed와39/39 일치를 확인했다.
-타순·영상 배열 순서를 사용하지 않는다. 공개 버튼은 표시 상태만 조작하며 실제 경기 진행과 연결되지 않는다.
+대표 시연은 Michael King 대 Pete Crow-Armstrong. 평가 대표는 Chris Sale 대 Bryson Stott,
+`849845:10:4` (2회 초). 내부 키는 유지하고 사용자에게 경기명을 먼저 보여준다.
 
-원본 대조(기본값은 읽기 전용, Python + Node 필요):
+이번 홈의 MLB 영상 공개는 사용자가 명시적으로 승인했다. 기존 공개 자료에서 MLB 화면을
+제외했던 지침은 이번 추가 홈페이지 미디어에 한해 변경됐다. 기존 발표 장표는 그대로다.
+새 다운로드 없이 이미 추출한 원본 JPEG 각 61장으로 두 개의 약 3.053초 무음 MP4를 만들었다.
+H.264/yuv420p/faststart, 1280×720, 20000/1001fps. 자르기·리사이즈·원본 시간 간격 변경 없음.
+원본 122장 모두 창 manifest의 SHA256과 일치했다. 포스터는 원본 바이트 복사다.
+
+[미디어 출처·SHA256](results/mlb_p0/pitch_studio_media_provenance_v1.json)에 원본 URL,
+프레임 인덱스·시각·점·인코딩·모든 입력 해시를 기록했다. 홈/서비스는 `849843:1:3`을 사용한다.
+`849843:2:5` 기권 클립은 재사용 자산으로만 보존하며 현재 화면에서 재생하지 않는다.
+실제 점 (571, 372.5)은 1280×720 판독 프레임 3084에서만 표시한다. 시각 51.4514초는
+원본 영상의 프레임 시각이며 사이트의 공개 시점 정책을 대신하지 않는다.
+
+## 실제 서비스 연결 계약
+
+동료 저장소는 읽기 전용으로 확인했다.
+
+- `SongRoute/pitcheezy`, `demo/ws-2026@9c3018913780cde2d12db522c2a420a6e283db7c`.
+- 구형 Observer 비교 기준 `main@70aa5499eb261e57c85c5c54e84ea27f869dae50`.
+- 근거: `watch_along.py`, `WatchAlong.tsx`, `demo_precompute.py`,
+  `docs/contracts/event-analysis-v1.md`, `inning-decision-api-v1.md`, `inning-result-v1.md`.
+
+| 화면 | 실제 연결 대상 | 현재 한계 |
+|---|---|---|
+| 경기·선수·투구 전 추천 | GET `/api/watch/games`, `/api/watch/{game_pk}` | `pre.recommendation.candidates[].detail.probability`는 구종 선택 비율 |
+| 투구 후 공개 | GET `/api/watch/{game_pk}/reveal/{index}` | 실제 결과·위치·WE 변화, 책임 판정 아님 |
+| 결과 확률 | 별도 결과 확률 계약 필요 | `/watch`에는 없음. 구형 Observer 확률을 혼합하지 않음 |
+| 투수·타자 분석 | `event-analysis-v1` | 의도 근거가 없으면 전략·실행 null. 결과 잔차는 타자 실력/책임 아님 |
+| 유지·교체 | POST `/api/inning-decisions/{id}/resolve`, `inning-result-v1` | 조건부 유지 전망. replacement unavailable, value_pp null |
+| 미트 관측 | 우리 `IntentEstimate v1` | 투구 키로 연결, null을 0으로 바꾸지 않음 |
+
+구형 Observer의 10종은 ball/strike/foul/out/single/double/triple/home_run/hbp/double_play다.
+우리 구형 ten-class의 Strike에는 foul이 포함되므로 독립 파울 확률로 변환하지 않는다.
+`preview-data.js`는 10종을 갖춘 **합성 설명용 분포**이며 `source_kind=illustrative`,
+`model_connected=false`, `causal_attribution=false`다. 어떤 기존 모델 출력도 가장하지 않는다.
+교체 수치도 수비 팀의 승리 전망을 가정한 예시이며 동료의 조건부 유지 전망과 의미가 같지 않다.
+
+다음 한 작업 단위: 동료의 849843 한 타석 watch/reveal 실제 응답, 모델 식별자·생성 시점·SHA256을
+확보한다. 투구 키와 CV 연결, 공개 전후 정보 분리, 누락 처리를 검증한 뒤 그 타석만 실제 모델
+모드로 바꾼다. 결과 확률과 책임 판정은 별도 검증된 응답이 있어야 연결한다.
+
+## 유지보수·확인 결과
 
 ```bash
 uv run --frozen python scripts/export_pitch_studio.py
-node --check web/pitch-studio/app.js
-node --check web/pitch-studio/data.js
+uv run --frozen python scripts/check_pitch_studio.py
+uv run --frozen python -m pytest tests/test_checklist_model.py -q
 ```
 
-의도적인 원본 변경 후에는 먼저 평가 설명·고정 숫자의 변경 범위를 검토한 뒤
-`uv run --frozen python scripts/export_pitch_studio.py --write`로 파생 파일을 갱신한다.
-이 도구는 중복키·키 불일치·39/27 계약 위반을 거절한다. 임의로 기존 M3를 재측정하지 않는다.
+Windows 체크리스트 테스트는 `PYTHONUTF8=1`로 실행한다.
+`export_pitch_studio.py` 기본 동작은 읽기 전용 원본 대조다. `--write`는 의도적으로
+고정 원본을 바꾼 경우에만 사용한다. M3 재측정이나 JSONL 재생성은 이번에 하지 않았다.
 
-- `index.html`: 기본 화면 구조
-- `styles.css`: 반응형 스타일
-- `app.js`: 화면 상태·조작·검증 설명·WebMCP
-- `data.js`: 고정 자료에서 만든 파생 스냅샷
+- 홈 `index.html/home.js/product.css`; 서비스 `service.html/studio.js/studio.css/preview-data.js`.
+- 실제 관측 `report.html/app.js/styles.css/report-theme.css/data.js`.
+- 39고유키/27좌표/12기권·M3·4개 원본 해시 대조 통과. 예시 4개 분포 합 1, 구종 비율 합 100.
+- JavaScript 문법·HTML 내부 파일 링크·미디어와 원본 manifest 해시 검사 통과.
+- 브라우저: 시나리오·분석 단계·실제 좌표/예시 목표·재생 시 표식 숨김·계약 안내 확인.
+- 390×844 모바일 홈/서비스/리포트의 scrollWidth=clientWidth=375, 가로 넘침 없음.
+- 개발 콘솔 오류 없음. 체크리스트 가드 결과 `4 passed`.
+- 팀원 저장소·고정 M3·원본 JSONL·발표 PPTX/PNG·기존 리허설 문서는 수정하지 않았다.
 
-Sites 재배포는 같은 project_id와 기존 checkout을 열어 수행한다. 새 Site를 만들지 않는다.
-현재 로컬 Site checkout은 주 저장소의 `outputs/cv_followup_20261005/pitcheezy-demo-site`이며 Git 추적 제외다.
-Sites 소스와 이 저장소의 web 사본을 함께 맞추고, native 배포 성공을 확인한 뒤 링크를 전달한다.
-Windows의 bundled workflow는 Git Bash, `TAR_OPTIONS=--force-local`, forward-slash archive 경로가 필요했다.
-샌드박스 소유권 차이는 해당 checkout만 실행 범위의 safe.directory로 지정했다. 전역 설정은 변경하지 않았다.
-인증 토큰은 저장하지 않는다.
-
-## 실제 확인 결과
-
-- JavaScript 두 파일 문법 검사 통과, Prettier 정리 완료.
-- 원본 대조:39키/27좌표/12기권 및 M3·출처 해시 일치.
-- 브라우저: 선택 시 공개 상태 초기화, 기권 시 null 유지, ft/in 변환, 다음 투구 초기화,
-  화면 전환·발표 가이드, 접근성 설명의 이전 좌표 제거, 잘못된 키(`__proto__` 포함) 거절 확인.
-- 390px 모바일 viewport에서 document scrollWidth=clientWidth=375px(스크롤바 제외), 가로 넘침 없음.
-- 사이트 배포 succeeded, public 접근 설정 확인. Song의 실제 UI 6항목 검증은 여전히 대기.
-- 기존 JSONL·M3 보고서·PPTX·PNG·리허설 문서·팀원 저장소는 변경하지 않았다.
+Site 재배포는 같은 project_id와 기존 checkout을 열어 수행한다. 새 Site를 만들지 않는다.
+소스는 주 저장소의 ignored `outputs/cv_followup_20261005/pitcheezy-demo-site`다.
+원본 Site 파일과 `web/pitch-studio/` 사본을 맞추고 정확한 소스 커밋의 배포 성공을 확인한다.
+Windows bundled workflow: Git Bash, TAR_OPTIONS=--force-local, forward-slash archive 경로.
+safe.directory는 해당 checkout에만 실행 범위로 적용하고 토큰을 파일에 저장하지 않는다.
 
 ## pitcheezy.com 연결 대기
 

@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>분석 스튜디오 · Pitcheezy</title>
+    <meta name="theme-color" content="#091811" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23ceff78'/%3E%3Ctext x='8' y='25' font-family='Arial' font-weight='bold' font-size='25' fill='%23091811'%3EP%3C/text%3E%3C/svg%3E"
+    />
+    <link rel="stylesheet" href="product.css" />
+    <link rel="stylesheet" href="studio.css" />
+    <script src="data.js" defer></script>
+    <script src="preview-data.js" defer></script>
+    <script src="studio.js" defer></script>
+  </head>
+  <body>
+    <a class="skip" href="#studio">본문으로 이동</a>
+    <header class="product-header">
+      <a href="./" class="wordmark"
+        ><span class="seal">P</span>PITCHEEZY<i>●</i></a
+      >
+      <nav aria-label="주요 메뉴">
+        <a href="./">홈</a><a href="report.html#validation">검증 기록</a
+        ><a href="report.html#analysis">관측 데이터</a>
+      </nav>
+    </header>
+    <div class="concept-banner">
+      <b>PRODUCT PREVIEW</b
+      ><span
+        >중계는 실제 영상입니다. 예상 위치·확률·선수 및 교체 평가는
+        <strong>설명용 예시</strong>이며 실제 모델 결과가 아닙니다.</span
+      ><button id="open-contract">연결 구조 보기</button>
+    </div>
+    <main id="studio" class="studio-main">
+      <div class="game-heading">
+        <div>
+          <span class="eyebrow">2026 NL WILD CARD · GAME 1</span>
+          <h1>Chicago Cubs <span>at</span> San Diego Padres</h1>
+          <p>2026.09.29 · Petco Park · 시카고 컵스 @ 샌디에이고 파드리스</p>
+        </div>
+        <label class="scenario-select"
+          >분석 시나리오<select id="scenario">
+            <option value="execution">제구 이탈 → 장타 허용</option>
+            <option value="batter">정상 제구 → 타자의 좋은 대응</option>
+            <option value="manager">투수 유지 vs 교체 검토</option>
+            <option value="missed">유리한 공 → 타자의 아쉬운 대응</option>
+          </select></label
+        >
+      </div>
+      <div class="situation-strip">
+        <span class="mini-badge">상황 예시</span>
+        <div id="situation-values"></div>
+        <span class="situation-note"
+          >시나리오의 경기 상태 · 배경 영상과 별개</span
+        >
+      </div>
+      <div class="phase-nav" role="tablist" aria-label="분석 단계">
+        <button role="tab" aria-selected="true" data-phase="pre">
+          01 <span>투구 전 예측</span></button
+        ><button role="tab" aria-selected="false" data-phase="post">
+          02 <span>투수 실행</span></button
+        ><button role="tab" aria-selected="false" data-phase="batter">
+          03 <span>타자 대응</span></button
+        ><button role="tab" aria-selected="false" data-phase="manager">
+          04 <span>교체 판단</span>
+        </button>
+      </div>
+      <div class="studio-grid">
+        <section class="watch-column" aria-label="경기 영상과 분석">
+          <div class="matchup-line">
+            <div>
+              <span class="player-icon">MK</span>
+              <p>
+                <small>PITCHER · RHP</small><strong>마이클 킹</strong
+                ><span>Michael King · SD</span>
+              </p>
+            </div>
+            <b>VS</b>
+            <div>
+              <p>
+                <small>BATTER · LHB</small><strong>피트 크로암스트롱</strong
+                ><span>Pete Crow-Armstrong · CHC</span>
+              </p>
+              <span class="player-icon hitter">PC</span>
+            </div>
+          </div>
+          <div class="watch-actions">
+            <button id="show-target" class="primary">예상 위치 보기 ⊕</button
+            ><button id="play-clip" class="secondary">클립 재생 ▷</button
+            ><button id="show-observation" class="secondary">
+              실제 미트 관측</button
+            ><span>좌표는 정지 장면에서 표시</span>
+          </div>
+          <div class="watch-stage">
+            <video
+              id="studio-video"
+              playsinline
+              muted
+              controls
+              preload="metadata"
+              poster="media/pitch-849843-1-3.jpg"
+              aria-label="분석 화면의 배경으로 사용하는 실제 기록 리플레이"
+            >
+              <source
+                src="media/pitch-849843-1-3.mp4"
+                type="video/mp4"
+              /></video
+            ><img
+              id="studio-still"
+              src="media/pitch-849843-1-3.jpg"
+              width="1280"
+              height="720"
+              alt="좌표 표시용 고정 판독 프레임"
+              hidden
+            /><span class="video-status" id="video-status"
+              >기록 리플레이 · 예시 분석의 배경 영상</span
+            >
+            <div class="concept-target" id="concept-target" hidden>
+              <span class="target-reticle"></span
+              ><span class="target-bubble"
+                ><small>예상 목표 · 예시</small
+                ><b id="target-overlay-name">바깥쪽 낮게</b></span
+              >
+            </div>
+            <div class="actual-marker" id="actual-marker" hidden>
+              <i></i><span>실제 저장된 미트 판독</span>
+            </div>
+          </div>
+          <section class="insight-card" aria-live="polite">
+            <div class="insight-heading">
+              <span class="eyebrow" id="insight-kicker">PRE-PITCH PLAN</span
+              ><span class="mini-badge">분석 예시</span>
+            </div>
+            <h2 id="insight-title"></h2>
+            <p id="insight-text"></p>
+            <div class="insight-metrics" id="insight-metrics"></div>
+          </section>
+          <div class="attribution-grid" id="attribution-grid"></div>
+          <section class="observation-panel" id="observation-panel" hidden>
+            <div>
+              <span class="eyebrow">RECORDED OBSERVATION</span>
+              <h3>실제 저장 자료와 비교하기</h3>
+              <p>
+                미트와 공의 측정 평면은 다릅니다. 두 값으로 제구 오차를 계산하지
+                않습니다.
+              </p>
+            </div>
+            <div><span>미트 x</span><strong>−0.05 ft</strong></div>
+            <div><span>공의 플레이트 x</span><strong>−0.41 ft</strong></div>
+            <small>마이클 킹 대 피트 크로암스트롱 · 내부 키 849843:1:3</small>
+          </section>
+        </section>
+        <aside class="strategy-column">
+          <section class="strategy-card">
+            <div class="card-title">
+              <div>
+                <span class="eyebrow">NEXT PITCH</span>
+                <h2>추천 구종과 위치</h2>
+              </div>
+              <span class="mini-badge">예시</span>
+            </div>
+            <div class="recommendation-head">
+              <div>
+                <span>01 / RECOMMENDED</span>
+                <h3 id="pitch-label">슬라이더</h3>
+                <p id="zone-label">바깥쪽 낮은 코스</p>
+              </div>
+              <strong id="pitch-code">SL</strong>
+            </div>
+            <div class="zone-wrap">
+              <div
+                class="zone-grid"
+                id="zone-grid"
+                aria-label="예시 목표 구역, 포수 시점"
+              ></div>
+              <div class="zone-caption">
+                <span>포수 왼쪽</span><span>포수 시점</span
+                ><span>포수 오른쪽</span>
+              </div>
+            </div>
+            <div class="pitch-options" id="pitch-options"></div>
+            <p class="selection-note">위 비율은 구종 선택 비율 예시입니다.</p>
+          </section>
+          <section class="strategy-card probability-card">
+            <div class="card-title">
+              <div>
+                <span class="eyebrow">PITCH OUTCOMES</span>
+                <h2>이 공의 결과 확률</h2>
+              </div>
+              <span class="mini-badge">예시</span>
+            </div>
+            <div id="probability-bars"></div>
+            <details>
+              <summary>10종 결과 전체 보기</summary>
+              <dl id="outcomes-detail"></dl>
+            </details>
+            <p class="selection-note">
+              구종 선택 비율과 별개인 설명용 확률 분포
+            </p>
+          </section>
+          <section class="dugout-card">
+            <span class="eyebrow">FROM THE DUGOUT</span>
+            <h3 id="dugout-title">교체 대안을 검토합니다</h3>
+            <p>결정 당시의 정보로 유지와 교체를 비교하는 화면입니다.</p>
+            <button id="view-manager">교체 판단 열기</button>
+          </section>
+        </aside>
+      </div>
+      <div class="studio-foot">
+        <span>관측 자료: MLB / IntentEstimate v1</span
+        ><span>예측·평가: 제품 콘셉트 데이터 · 실제 서비스 미연결</span
+        ><a href="report.html#validation">AI 판독 검증 기록</a>
+      </div>
+    </main>
+    <dialog id="contract-dialog">
+      <form method="dialog">
+        <button aria-label="닫기" class="dialog-close">×</button>
+      </form>
+      <span class="eyebrow">INTEGRATION MAP</span>
+      <h2>실제 결과를 연결할 자리까지.</h2>
+      <p>
+        이 화면의 숫자는 UI 설계용 예시입니다. 중계 영상과 하단 관측 좌표는 기존
+        자료를 사용합니다.
+      </p>
+      <dl>
+        <dt>경기·구종·근사 목표 위치</dt>
+        <dd>동료 watch API의 투구 전 recommendation 계약에 연결할 영역</dd>
+        <dt>볼·스트라이크·파울·안타</dt>
+        <dd>
+          별도 결과 확률 계약 필요. 구종 선택 비율을 결과 확률로 바꾸지 않음
+        </dd>
+        <dt>투수·타자 분석</dt>
+        <dd>
+          event-analysis-v1의 전략·실행·결과 차이를 받되, 실제 의도가 없으면
+          판단 보류
+        </dd>
+        <dt>감독 교체 비교</dt>
+        <dd>inning-result-v1의 유지 전망과 교체 가용성에 연결할 영역</dd>
+      </dl>
+      <p>
+        화면에 표시된 선수·감독 평가 예시는 영상 속 인물에 대한 실제 판정이
+        아닙니다.
+      </p>
+    </dialog>
+  </body>
+</html>

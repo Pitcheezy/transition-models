@@ -3,214 +3,190 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Pitcheezy · 투구 관측 스튜디오</title>
+    <title>Pitcheezy — 한 구의 의도를 읽다</title>
     <meta
       name="description"
-      content="포수 미트와 공의 가로 위치를 살펴보고, AI 판독의 검증 결과를 확인하는 투구 분석 데모."
+      content="포수의 요구, 투수의 실행, 타자의 대응. 투구의 맥락을 읽는 야구 분석 서비스 콘셉트 데모."
     />
-    <meta name="theme-color" content="#10233f" />
+    <meta name="theme-color" content="#091811" />
     <link
       rel="icon"
-      type="image/svg+xml"
-      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%232869f5'/%3E%3Cpath d='M10 25V8h8a6 6 0 0 1 0 12h-4v5m0-9h4a2 2 0 0 0 0-4h-4z' fill='white'/%3E%3C/svg%3E"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23ceff78'/%3E%3Ctext x='8' y='25' font-family='Arial' font-weight='bold' font-size='25' fill='%23091811'%3EP%3C/text%3E%3C/svg%3E"
     />
-    <link rel="stylesheet" href="styles.css" />
-    <script src="data.js" defer></script>
-    <script src="app.js" defer></script>
+    <link rel="stylesheet" href="product.css" />
+    <script src="home.js" defer></script>
   </head>
   <body>
-    <a class="skip" href="#workspace">본문으로 이동</a>
-    <header class="header">
-      <a class="brand" href="#analysis" aria-label="Pitcheezy 홈"
-        ><span class="brand-mark">P</span
-        ><span
-          >PITCHEEZY<span class="brand-caption">PITCH OBSERVATORY</span></span
-        ></a
+    <a class="skip" href="#main">본문으로 이동</a>
+    <header class="product-header">
+      <a href="./" class="wordmark"
+        ><span class="seal">P</span>PITCHEEZY<i>●</i></a
       >
-      <nav aria-label="주요 화면" class="tabs">
-        <button class="nav-tab active" data-view="analysis" aria-current="page">
-          투구 관측</button
-        ><button class="nav-tab" data-view="validation">검증 리포트</button
-        ><button class="nav-tab" data-view="story">프로젝트 방향</button>
+      <nav aria-label="주요 메뉴">
+        <a href="#vision">서비스 소개</a
+        ><a href="report.html#validation">검증 기록</a
+        ><a class="nav-cta" href="service.html">분석 스튜디오</a>
       </nav>
-      <span class="demo-label">기록 데이터 시연</span>
     </header>
-    <main id="workspace">
-      <section
-        id="view-analysis"
-        class="view active"
-        aria-labelledby="analysis-title"
-      >
-        <div class="page-heading">
-          <div>
-            <p class="eyebrow">OBSERVE THE PITCH</p>
-            <h1 id="analysis-title">미트와 공의 위치를 한눈에.</h1>
-            <p class="subheading">
-              한 구씩 확인하는 포수 미트 판독과 투구 위치.
-            </p>
-          </div>
-          <button class="quiet-button" id="guide-button">발표 가이드</button>
+    <main id="main">
+      <section class="hero">
+        <div class="hero-copy">
+          <span class="eyebrow">BEYOND THE BOX SCORE</span>
+          <h1>결과는 한 구.<br />이유는 그 안에.</h1>
+          <p>
+            포수의 요구에서 벤치의 선택까지.<br />야구의 다음 장면을 읽는 새로운
+            관점.
+          </p>
+          <a class="primary" href="service.html">분석 스튜디오 시작</a
+          ><span class="hero-demo">PRODUCT CONCEPT DEMO</span>
         </div>
-        <div class="workspace-grid">
-          <aside class="pitch-panel" aria-label="투구 선택">
-            <div class="panel-heading">
-              <div>
-                <span class="eyebrow">DEMO GAME</span>
-                <h2>경기 849843</h2>
-              </div>
-              <span class="count-tag">39구</span>
-            </div>
-            <p class="panel-desc">MLB 압축 경기 · 개발 자료</p>
-            <label class="select-label" for="pitch-filter">표시 상태</label
-            ><select id="pitch-filter">
-              <option value="all">전체 39구</option>
-              <option value="estimated">좌표 있음 27구</option>
-              <option value="unavailable">기권 12구</option>
-            </select>
-            <div
-              class="pitch-list"
-              id="pitch-list"
-              role="group"
-              aria-label="투구 목록"
-            ></div>
-            <div class="list-foot">경기 전체 262구 중 영상에 포함된 39구</div>
-          </aside>
-          <div class="analysis-main">
-            <article class="observation-card">
-              <div class="observation-top">
-                <div>
-                  <span class="eyebrow" id="pitch-inning">1회 초</span>
-                  <h2 id="pitch-title">첫 투구를 준비하고 있습니다</h2>
-                  <p id="matchup" class="muted"></p>
-                </div>
-                <span id="reveal-state" class="state-label">공개 전</span>
-              </div>
-              <div class="pitch-context">
-                <span id="count-context"></span><span id="type-context"></span
-                ><code id="pitch-key"></code>
-              </div>
-              <div class="playback-controls">
-                <button
-                  class="quiet-button"
-                  id="previous-pitch"
-                  aria-label="이전 투구"
-                >
-                  이전 투구</button
-                ><button class="primary-button" id="reveal-pitch">
-                  투구 공개</button
-                ><button
-                  class="quiet-button"
-                  id="next-pitch"
-                  aria-label="다음 투구"
-                >
-                  다음 투구
-                </button>
-              </div>
-              <div class="chart-shell">
-                <div class="chart-topline">
-                  <span>포수 시점 · 가로 위치</span>
-                  <div class="units" role="group" aria-label="좌표 단위">
-                    <button data-unit="ft" class="active" aria-pressed="true">
-                      ft</button
-                    ><button data-unit="in" aria-pressed="false">in</button>
-                  </div>
-                </div>
-                <svg
-                  id="position-chart"
-                  viewBox="0 0 760 290"
-                  role="img"
-                  aria-labelledby="chart-title chart-desc"
-                >
-                  <title id="chart-title">공개 후 미트와 공의 가로 위치</title>
-                  <desc id="chart-desc">
-                    투구 공개 버튼을 누르면 저장된 관측값을 확인할 수 있습니다.
-                  </desc>
-                  <g id="chart-grid"></g>
-                  <g id="chart-points"></g>
-                </svg>
-                <div id="chart-cover" class="chart-cover">
-                  <span class="crosshair" aria-hidden="true">+</span
-                  ><strong>투구를 공개하면 위치가 나타납니다</strong
-                  ><span>미트 좌표는 공개 전 표시하지 않습니다</span>
-                </div>
-                <div class="chart-legend">
-                  <span><i class="dot mitt"></i>포수 미트 추정</span
-                  ><span><i class="dot ball"></i>공의 플레이트 통과 위치</span>
-                </div>
-              </div>
-              <div class="readouts">
-                <div>
-                  <span>미트 가로 위치</span><strong id="mitt-value">—</strong
-                  ><small id="mitt-note">공개 전</small>
-                </div>
-                <div>
-                  <span>공의 가로 위치</span><strong id="ball-value">—</strong
-                  ><small id="ball-note">공개 전</small>
-                </div>
-                <div class="decision-readout">
-                  <span>현재 해석 범위</span><strong>위치 관측</strong
-                  ><small>목표 일치·제구 오차는 미검증</small>
-                </div>
-              </div>
-              <p class="comparison-note">
-                미트와 공은 측정 기준이 다릅니다. 두 위치의 차이를 제구 오차로
-                해석하지 않습니다.
-              </p>
-              <div
-                class="status-message"
-                id="observation-status"
-                role="status"
-                aria-live="polite"
-              ></div>
-            </article>
-            <div class="analysis-bottom">
-              <article class="note-card">
-                <span class="eyebrow">WHAT WE READ</span>
-                <h3>미트의 위치부터 읽습니다.</h3>
-                <p>
-                  화면에 보이는 미트를 좌표로 바꾸고, 판독이 어려우면
-                  기권합니다. 미트 위치가 실제 요구 위치였는지는 별도로 확인해야
-                  합니다.
-                </p>
-              </article>
-              <article class="note-card dark-note">
-                <span class="eyebrow">WHY IT MATTERS</span>
-                <h3>제구 분석을 위한 첫 단계.</h3>
-                <p>
-                  포수의 목표 위치와 실제 공의 도착 위치를 같은 기준에서
-                  비교하는 분석으로 이어갑니다.
-                </p>
-                <button class="text-button" data-open-view="story">
-                  프로젝트 방향 보기
-                </button>
-              </article>
-            </div>
+        <div class="film-stage">
+          <video
+            id="hero-video"
+            autoplay
+            muted
+            loop
+            playsinline
+            preload="metadata"
+            poster="media/pitch-849843-1-3.jpg"
+            aria-label="컵스 대 파드리스의 약 3초 무음 기록 리플레이"
+          >
+            <source src="media/pitch-849843-1-3.mp4" type="video/mp4" /></video
+          ><img
+            id="hero-still"
+            src="media/pitch-849843-1-3.jpg"
+            width="1280"
+            height="720"
+            alt="마이클 킹의 투구 전 미트를 판독한 정지 장면"
+            hidden
+          />
+          <div class="film-shade"></div>
+          <div class="scorebug">
+            <small>MLB · RECORDED</small><strong>CHC <em>vs</em> SD</strong
+            ><span>1회 초 · 기록 영상</span>
           </div>
+          <div
+            id="hero-marker"
+            class="mitt-marker"
+            style="left: 44.609375%; top: 51.736111%"
+            hidden
+          >
+            <i></i><span>관측 미트 위치<b>−0.05 ft</b></span>
+          </div>
+          <div class="film-controls">
+            <span id="film-mode">실제 중계 프레임으로 재구성한 리플레이</span
+            ><button id="hero-toggle">미트 위치 보기 ＋</button>
+          </div>
+        </div>
+        <div class="match-caption">
+          <span><b>2026 NL WILD CARD / GAME 1</b> 2026.09.29 · PETCO PARK</span
+          ><strong>시카고 컵스 @ 샌디에이고 파드리스</strong>
         </div>
       </section>
-      <section
-        id="view-validation"
-        class="view"
-        hidden
-        aria-labelledby="validation-title"
-      ></section>
-      <section
-        id="view-story"
-        class="view"
-        hidden
-        aria-labelledby="story-title"
-      ></section>
-      <footer>
-        <span>PITCHEEZY / CAPSTONE 2026</span
-        ><span>사전 처리한 기록 기반 데모 · 실시간 분석 미연결</span
-        ><button class="text-button" id="source-button">데이터와 한계</button>
-      </footer>
+      <section class="game-strip">
+        <div class="strip-title">
+          <span class="eyebrow">THE GAMES</span>
+          <h2>실제 경기에서<br />출발합니다.</h2>
+        </div>
+        <a href="service.html" class="game-tile"
+          ><small>시연 경기</small>
+          <div class="team-pair">CHC <i>@</i> SD</div>
+          <strong>컵스 · 파드리스</strong
+          ><span>2026.09.29 · NL 와일드카드 1차전</span>
+          <p>마이클 킹 × 피트 크로암스트롱</p></a
+        ><a href="report.html#validation" class="game-tile"
+          ><small>평가 경기 01</small>
+          <div class="team-pair">PHI <i>@</i> ATL</div>
+          <strong>필리스 · 브레이브스</strong
+          ><span>2026.09.29 · NL 와일드카드 1차전</span>
+          <p>Truist Park · 57장 평가</p></a
+        ><a href="report.html#validation" class="game-tile"
+          ><small>평가 경기 02</small>
+          <div class="team-pair">TB <i>@</i> PHI</div>
+          <strong>레이스 · 필리스</strong><span>2026.09.26 · 정규시즌</span>
+          <p>Citizens Bank Park · 29장 평가</p></a
+        >
+      </section>
+      <section class="vision section-pad" id="vision">
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow">ONE PITCH. FOUR PERSPECTIVES.</span>
+            <h2>안타 한 개로,<br />모든 판단을 끝내지 않도록.</h2>
+          </div>
+          <p>
+            좋은 선택과 좋은 실행은 다를 수 있습니다.<br />목표는 결과 뒤에 숨은
+            판단의 근거를 보여주는 것.
+          </p>
+        </div>
+        <div class="feature-grid">
+          <a href="service.html?phase=pre"
+            ><span>01 / PREDICT</span>
+            <h3>다음 공을 읽다.</h3>
+            <p>구종과 목표 위치, 스트라이크·파울·안타 확률을 한눈에.</p>
+            <b>투구 전 전략</b></a
+          ><a href="service.html?phase=post"
+            ><span>02 / EXECUTE</span>
+            <h3>의도와 실행을 나누다.</h3>
+            <p>요구한 곳에 던졌는지, 제구 이탈이 있었는지 확인.</p>
+            <b>투수의 실행</b></a
+          ><a href="service.html?phase=batter"
+            ><span>03 / RESPOND</span>
+            <h3>타격의 질을 보다.</h3>
+            <p>좋은 공을 공략했는지, 결과보다 대응의 질을 살펴보기.</p>
+            <b>타자의 대응</b></a
+          ><a href="service.html?phase=manager"
+            ><span>04 / DECIDE</span>
+            <h3>그때의 선택으로.</h3>
+            <p>투수 유지와 교체 대안을 당시 정보로 비교.</p>
+            <b>벤치의 판단</b></a
+          >
+        </div>
+        <p class="concept-note">
+          완성형 서비스를 보여주는 콘셉트 화면입니다. 예측·평가 예시와 실제 관측
+          자료를 구분해 표시합니다.
+        </p>
+      </section>
+      <section class="evidence-preview">
+        <div>
+          <span class="eyebrow">OBSERVATION COMES FIRST</span>
+          <h2>첫 번째 근거는,<br />포수의 미트입니다.</h2>
+          <p>
+            AI가 읽은 위치를 사람의 표시와 비교했습니다.<br />좌표 출력과 기권을
+            함께 공개합니다.
+          </p>
+          <a href="report.html#validation" class="text-link"
+            >검증 결과 자세히 보기</a
+          >
+        </div>
+        <div class="evidence-stats">
+          <div>
+            <strong>2.5<em>px</em></strong>
+            <p>AI·사람 공동 표시 58구<br />미트 점 차이 중앙값</p>
+          </div>
+          <div>
+            <strong>58<em>/86</em></strong>
+            <p>평가 장면 중 AI 출력<br />나머지 28장 기권</p>
+          </div>
+          <small
+            >같은 변환 기준 좌표 차이 중앙값 약 1.1인치.<br />물리 정확도나 투수
+            의도를 검증한 값은 아닙니다.</small
+          >
+        </div>
+      </section>
+      <section class="closing">
+        <span class="eyebrow">YOUR NEXT PITCH, WITH CONTEXT</span>
+        <h2>이제, 한 구를 직접 살펴보세요.</h2>
+        <a href="service.html" class="primary">분석 스튜디오 열기</a>
+        <p>실제 MLB 기록 · 영상 리플레이 · 최종 서비스 콘셉트</p>
+      </section>
     </main>
-    <dialog id="info-dialog">
-      <form method="dialog">
-        <button class="close-dialog" aria-label="닫기">×</button>
-      </form>
-      <div id="dialog-content"></div>
-    </dialog>
+    <footer class="product-footer">
+      <a href="./" class="wordmark">PITCHEEZY<i>●</i></a>
+      <p>
+        MLB 공식 압축 경기의 추출 프레임으로 구성한 리플레이.<br />실시간
+        예측·투수/타자/감독 판정은 콘셉트 예시이며 실제 모델 출력이 아닙니다.
+      </p>
+      <a href="report.html#story">프로젝트 방향</a>
+    </footer>
   </body>
 </html>

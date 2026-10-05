@@ -278,12 +278,12 @@ render();
 const agreedQuote =
   "평가 2경기에서 AI와 사람이 모두 표시한 58구의 미트 점 차이 중앙값은 2.5px입니다. 같은 변환 기준의 좌표 차이는 중앙값 약 1.1인치이며, 물리 정확도나 투수 의도를 검증한 값은 아닙니다.";
 $("view-validation").innerHTML = `
-  <div class="page-heading"><div><p class="eyebrow">EVIDENCE, BEFORE CONFIDENCE</p><h1 id="validation-title">판독 결과를 사람의 표시와 비교했습니다.</h1><p class="subheading">시연 경기와 분리한 평가 2경기 · 849845 / 823407</p></div><span class="evidence-tag">M3 평가 기록</span></div>
+  <div class="page-heading"><div><p class="eyebrow">EVIDENCE, BEFORE CONFIDENCE</p><h1 id="validation-title">판독 결과를 사람의 표시와 비교했습니다.</h1><p class="subheading">필리스 @ 브레이브스 · 2026.09.29 / 레이스 @ 필리스 · 2026.09.26</p></div><span class="evidence-tag">M3 평가 기록</span></div>
   <div class="metric-grid"><article class="metric"><span>미트 점 차이 중앙값</span><strong>2.5<em>px</em></strong><p>AI와 사람이 모두 표시한 58구</p></article><article class="metric"><span>같은 변환 기준 좌표 차이</span><strong>1.1<em>in</em></strong><p>중앙값 · x·z 거리 · 물리 정확도 아님</p></article><article class="metric"><span>AI가 좌표를 출력한 장면</span><strong>58<em>/ 86</em></strong><p>기권 28장 · 기권도 결과에 포함</p></article></div>
-  <div class="evidence-layout"><article class="evidence-card"><div class="section-head"><div><p class="eyebrow">ALL 86 FRAMES</p><h2>표시와 기권을 함께 봅니다.</h2></div><span class="count-tag">평가 2경기</span></div><div class="coverage-bar" aria-label="전체 86장 중 둘 다 표시 58장, 사람만 표시 26장, 둘 다 기권 2장"><span class="both" style="flex:58"></span><span class="human-only" style="flex:26"></span><span class="neither" style="flex:2"></span></div><div class="coverage-legend"><span><i style="background:#2869f5"></i>둘 다 표시 <b>58</b></span><span><i style="background:#adc7ff"></i>사람만 표시 <b>26</b></span><span><i style="background:#8994a8"></i>둘 다 기권 <b>2</b></span></div><div class="table-wrap"><table><caption>경기별 표시 수</caption><thead><tr><th>평가 경기</th><th>전체 장면</th><th>AI 표시</th><th>사람 표시</th></tr></thead><tbody><tr><th>849845 · NBC</th><td>57</td><td>43</td><td>56</td></tr><tr><th>823407 · FOX</th><td>29</td><td>15</td><td>28</td></tr><tr class="total-row"><th>합계</th><td>86</td><td>58</td><td>84</td></tr></tbody></table></div><p class="evidence-foot">AI 기권 28장 중 사람은 26장에 미트를 표시했습니다. 모든 기권을 올바른 판정으로 해석할 수는 없습니다.</p></article>
+  <div class="evidence-layout"><article class="evidence-card"><div class="section-head"><div><p class="eyebrow">ALL 86 FRAMES</p><h2>표시와 기권을 함께 봅니다.</h2></div><span class="count-tag">평가 2경기</span></div><div class="coverage-bar" aria-label="전체 86장 중 둘 다 표시 58장, 사람만 표시 26장, 둘 다 기권 2장"><span class="both" style="flex:58"></span><span class="human-only" style="flex:26"></span><span class="neither" style="flex:2"></span></div><div class="coverage-legend"><span><i style="background:#2869f5"></i>둘 다 표시 <b>58</b></span><span><i style="background:#adc7ff"></i>사람만 표시 <b>26</b></span><span><i style="background:#8994a8"></i>둘 다 기권 <b>2</b></span></div><div class="table-wrap"><table><caption>경기별 표시 수</caption><thead><tr><th>평가 경기</th><th>전체 장면</th><th>AI 표시</th><th>사람 표시</th></tr></thead><tbody><tr><th>필라델피아 필리스 @ 애틀랜타 브레이브스<br><small>2026.09.29 · NL 와일드카드 1차전 · Truist Park</small></th><td>57</td><td>43</td><td>56</td></tr><tr><th>탬파베이 레이스 @ 필라델피아 필리스<br><small>2026.09.26 · 정규시즌 · Citizens Bank Park</small></th><td>29</td><td>15</td><td>28</td></tr><tr class="total-row"><th>합계</th><td>86</td><td>58</td><td>84</td></tr></tbody></table></div><p class="evidence-foot">AI 기권 28장 중 사람은 26장에 미트를 표시했습니다. 모든 기권을 올바른 판정으로 해석할 수는 없습니다.</p></article>
   <article class="evidence-card scope-card"><p class="eyebrow">READ THE RESULT CORRECTLY</p><h2>작은 차이, 분명한 범위.</h2><div class="scope-row"><span class="scope-mark">01</span><div><h3>동일한 변환 기준</h3><p>AI와 사람 좌표가 같은 카메라 변환을 공유합니다. 실제 공간의 측정 정확도를 뜻하지 않습니다.</p></div></div><div class="scope-row"><span class="scope-mark">02</span><div><h3>한 명의 사람 검토</h3><p>사람 한 명이 한 번 표시했습니다. 사람 간 일치도와 반복 신뢰도는 아직 측정하지 않았습니다.</p></div></div><div class="scope-row"><span class="scope-mark">03</span><div><h3>압축 영상의 선택 편향</h3><p>타석 마지막 공이 많은 표본입니다. 전체 투구나 실시간 중계 성능으로 일반화하지 않습니다.</p></div></div></article></div>
   <blockquote class="agreed-quote">${agreedQuote}</blockquote>
-  <div class="report-foot"><span>대표 비교 사례: <b>849845:10:4</b> · 합산 중앙값에 가장 가까운 사례</span><button class="text-button" id="local-example-help">현장 비교 그림 안내</button></div>`;
+  <div class="report-foot"><span>대표 비교: <b>크리스 세일 대 브라이슨 스톳 · 2회 초</b><br>필리스 @ 브레이브스 · 2026.09.29 · 내부 키 849845:10:4</span><button class="text-button" id="local-example-help">현장 비교 그림 안내</button></div>`;
 $("view-story").innerHTML = `
   <div class="vision-intro"><p class="eyebrow">THE QUESTION BEHIND THE PROJECT</p><h1 id="story-title">포수가 요구한 곳에,<br>공이 도착했는가.</h1><p>영상에서 읽은 미트 위치를 출발점으로,<br>투구의 목표와 실행을 구분해 분석합니다.</p><span class="evidence-tag">프로젝트 목표 · 현재 검증 완료를 뜻하지 않습니다</span></div>
   <div class="journey"><article><span class="journey-number">01</span><h2>위치를 관측한다</h2><p>포수 미트 위치를 판독하고, 좌표로 변환합니다. 불일치·판독 불가 장면은 기권합니다.</p><span class="journey-status ready">구현 · 개발 자료 검증</span></article><article><span class="journey-number">02</span><h2>목표를 확인한다</h2><p>쉬는 글러브와 실제로 요구한 목표를 구분합니다. 미트가 보인다는 것만으로 목표를 확정하지 않습니다.</p><span class="journey-status">추가 정의·검증 필요</span></article><article><span class="journey-number">03</span><h2>같은 기준으로 비교한다</h2><p>목표와 공의 위치를 같은 깊이·시점·좌표 기준으로 맞춘 뒤, 투구 수행의 차이를 평가합니다.</p><span class="journey-status">향후 분석 단계</span></article></div>
@@ -315,10 +315,6 @@ for (const b of document.querySelectorAll("[data-open-view]"))
         : "smooth",
     });
   });
-document.querySelector(".brand").addEventListener("click", (e) => {
-  e.preventDefault();
-  setView("analysis");
-});
 function showDialog(html) {
   $("dialog-content").innerHTML = html;
   $("info-dialog").showModal();
@@ -330,12 +326,12 @@ $("guide-button").addEventListener("click", () =>
 );
 $("source-button").addEventListener("click", () =>
   showDialog(
-    `<p class="eyebrow">DATA & SCOPE</p><h2>저장된 관측 기록을 보여줍니다.</h2><p><b>시연:</b> 경기 849843의 기존 JSONL 39구 중 미트 좌표 27구, 기권 12구. 전체 262구 중 선택된 압축 영상 자료입니다. 이 경기의 사람 검토는 없습니다.</p><p><b>공의 위치:</b> 저장된 MLB Statcast의 홈플레이트 통과 가로 좌표를 투구 키로 연결했습니다. 미트는 플레이트 뒤의 셋업 위치이므로 같은 단위라도 같은 측정 평면이 아닙니다.</p><p><b>별도 평가:</b> 849845·823407, 총 86장. 보고서의 기존 수치를 표시하며 새 평가를 수행한 것은 아닙니다.</p><p><b>공개 버튼:</b> 사전 처리한 값의 표시를 조작하는 시연입니다. 실제 영상이나 서비스와 자동 동기화하지 않습니다. 미트 좌표를 포수의 의도, 목표 위치 정답, 제구 오차로 확정하지 않습니다.</p><p><b>자료 보존:</b> 배포본에는 중계 영상·이미지·사람 원본 라벨·개인정보가 없습니다. 기존 시연 JSONL·M3 결과는 변경하지 않았습니다.</p><a href="https://github.com/Pitcheezy/transition-models/blob/feature/intent-v0/docs/INTENT_V0_DEMO_REHEARSAL.md" target="_blank" rel="noopener">프로젝트 검증 설명 보기</a>`,
+    `<p class="eyebrow">DATA & SCOPE</p><h2>저장된 관측 기록을 보여줍니다.</h2><p><b>시연:</b> 컵스 @ 파드리스(2026.09.29)의 기존 JSONL 39구 중 미트 좌표 27구, 기권 12구. 전체 262구 중 선택된 압축 영상 자료입니다. 이 경기의 사람 검토는 없습니다.</p><p><b>공의 위치:</b> 저장된 MLB Statcast의 홈플레이트 통과 가로 좌표를 투구 키로 연결했습니다. 미트는 플레이트 뒤의 셋업 위치이므로 같은 단위라도 같은 측정 평면이 아닙니다.</p><p><b>별도 평가:</b> 필리스 @ 브레이브스(09.29), 레이스 @ 필리스(09.26), 2026년 두 경기 총 86장. 보고서의 기존 수치를 표시하며 새 평가를 수행한 것은 아닙니다.</p><p><b>공개 버튼:</b> 사전 처리한 값의 표시를 조작하는 시연입니다. 실제 영상이나 서비스와 자동 동기화하지 않습니다. 미트 좌표를 포수의 의도, 목표 위치 정답, 제구 오차로 확정하지 않습니다.</p><p><b>자료 보존:</b> 홈과 서비스에는 사용자 승인으로 공개한 기록 리플레이와 판독 정지 이미지가 있습니다. 사람 원본 라벨은 포함하지 않습니다. 기존 시연 JSONL·M3 결과는 변경하지 않았습니다.</p><a href="https://github.com/Pitcheezy/transition-models/blob/feature/intent-v0/docs/INTENT_V0_DEMO_REHEARSAL.md" target="_blank" rel="noopener">프로젝트 검증 설명 보기</a>`,
   ),
 );
 $("local-example-help").addEventListener("click", () =>
   showDialog(
-    `<p class="eyebrow">LOCAL PRESENTATION MATERIAL</p><h2>대표 사례 849845:10:4</h2><p>이미 전달한 비교 자료 ZIP 안의 <b>index.html</b>을 별도로 열어주세요. 이 사이트에는 중계 이미지를 포함하지 않았습니다.</p><p><b>초록 원</b>은 AI 미트 점, <b>빨간 십자</b>는 사람 미트 점입니다. 이 사례는 출력 좌표 거리의 합산 중앙값에 가장 가까운 사례로 선정됐습니다.</p><p>평가 경기 849845의 사례이며, 시연 경기 849843과 구분해 설명합니다. 미트 판독 비교 그림이지 공이 요구 위치에 도착했음을 입증하는 그림은 아닙니다.</p>`,
+    `<p class="eyebrow">LOCAL PRESENTATION MATERIAL</p><h2>크리스 세일 대 브라이슨 스톳</h2><p>이미 전달한 비교 자료 ZIP 안의 <b>index.html</b>을 별도로 열어주세요. 이 비교 그림은 기존 로컬 자료에서 확인할 수 있습니다. 홈의 영상은 별도 시연 경기입니다.</p><p><b>초록 원</b>은 AI 미트 점, <b>빨간 십자</b>는 사람 미트 점입니다. 이 사례는 출력 좌표 거리의 합산 중앙값에 가장 가까운 사례로 선정됐습니다.</p><p>필리스 @ 브레이브스(2026.09.29, 내부 키849845:10:4)의 사례이며, 컵스 @ 파드리스 시연과 구분합니다. 미트 판독 비교 그림이지 공이 요구 위치에 도착했음을 입증하는 그림은 아닙니다.</p>`,
   ),
 );
 $("info-dialog").addEventListener("click", (e) => {

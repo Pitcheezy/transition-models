@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pitcheezy · 투구 관측 스튜디오</title>
+    <meta
+      name="description"
+      content="포수 미트와 공의 가로 위치를 살펴보고, AI 판독의 검증 결과를 확인하는 투구 분석 데모."
+    />
+    <meta name="theme-color" content="#10233f" />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%232869f5'/%3E%3Cpath d='M10 25V8h8a6 6 0 0 1 0 12h-4v5m0-9h4a2 2 0 0 0 0-4h-4z' fill='white'/%3E%3C/svg%3E"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="report-theme.css" />
+    <script src="data.js" defer></script>
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <a class="skip" href="#workspace">본문으로 이동</a>
+    <header class="header">
+      <a class="brand" href="./" aria-label="Pitcheezy 홈"
+        ><span class="brand-mark">P</span
+        ><span
+          >PITCHEEZY<span class="brand-caption">PITCH OBSERVATORY</span></span
+        ></a
+      >
+      <nav aria-label="주요 화면" class="tabs">
+        <button class="nav-tab active" data-view="analysis" aria-current="page">
+          투구 관측</button
+        ><button class="nav-tab" data-view="validation">검증 리포트</button
+        ><button class="nav-tab" data-view="story">프로젝트 방향</button>
+      </nav>
+      <span class="demo-label"><a href="service.html">분석 스튜디오</a></span>
+    </header>
+    <main id="workspace">
+      <section
+        id="view-analysis"
+        class="view active"
+        aria-labelledby="analysis-title"
+      >
+        <div class="page-heading">
+          <div>
+            <p class="eyebrow">OBSERVE THE PITCH</p>
+            <h1 id="analysis-title">미트와 공의 위치를 한눈에.</h1>
+            <p class="subheading">
+              한 구씩 확인하는 포수 미트 판독과 투구 위치.
+            </p>
+          </div>
+          <button class="quiet-button" id="guide-button">발표 가이드</button>
+        </div>
+        <div class="workspace-grid">
+          <aside class="pitch-panel" aria-label="투구 선택">
+            <div class="panel-heading">
+              <div>
+                <span class="eyebrow">DEMO GAME</span>
+                <h2>컵스 @ 파드리스</h2>
+              </div>
+              <span class="count-tag">39구</span>
+            </div>
+            <p class="panel-desc">2026.09.29 · NL 와일드카드 1차전</p>
+            <label class="select-label" for="pitch-filter">표시 상태</label
+            ><select id="pitch-filter">
+              <option value="all">전체 39구</option>
+              <option value="estimated">좌표 있음 27구</option>
+              <option value="unavailable">기권 12구</option>
+            </select>
+            <div
+              class="pitch-list"
+              id="pitch-list"
+              role="group"
+              aria-label="투구 목록"
+            ></div>
+            <div class="list-foot">경기 전체 262구 중 영상에 포함된 39구</div>
+          </aside>
+          <div class="analysis-main">
+            <article class="observation-card">
+              <div class="observation-top">
+                <div>
+                  <span class="eyebrow" id="pitch-inning">1회 초</span>
+                  <h2 id="pitch-title">첫 투구를 준비하고 있습니다</h2>
+                  <p id="matchup" class="muted"></p>
+                </div>
+                <span id="reveal-state" class="state-label">공개 전</span>
+              </div>
+              <div class="pitch-context">
+                <span id="count-context"></span><span id="type-context"></span
+                ><code id="pitch-key"></code>
+              </div>
+              <div class="playback-controls">
+                <button
+                  class="quiet-button"
+                  id="previous-pitch"
+                  aria-label="이전 투구"
+                >
+                  이전 투구</button
+                ><button class="primary-button" id="reveal-pitch">
+                  투구 공개</button
+                ><button
+                  class="quiet-button"
+                  id="next-pitch"
+                  aria-label="다음 투구"
+                >
+                  다음 투구
+                </button>
+              </div>
+              <div class="chart-shell">
+                <div class="chart-topline">
+                  <span>포수 시점 · 가로 위치</span>
+                  <div class="units" role="group" aria-label="좌표 단위">
+                    <button data-unit="ft" class="active" aria-pressed="true">
+                      ft</button
+                    ><button data-unit="in" aria-pressed="false">in</button>
+                  </div>
+                </div>
+                <svg
+                  id="position-chart"
+                  viewBox="0 0 760 290"
+                  role="img"
+                  aria-labelledby="chart-title chart-desc"
+                >
+                  <title id="chart-title">공개 후 미트와 공의 가로 위치</title>
+                  <desc id="chart-desc">
+                    투구 공개 버튼을 누르면 저장된 관측값을 확인할 수 있습니다.
+                  </desc>
+                  <g id="chart-grid"></g>
+                  <g id="chart-points"></g>
+                </svg>
+                <div id="chart-cover" class="chart-cover">
+                  <span class="crosshair" aria-hidden="true">+</span
+                  ><strong>투구를 공개하면 위치가 나타납니다</strong
+                  ><span>미트 좌표는 공개 전 표시하지 않습니다</span>
+                </div>
+                <div class="chart-legend">
+                  <span><i class="dot mitt"></i>포수 미트 추정</span
+                  ><span><i class="dot ball"></i>공의 플레이트 통과 위치</span>
+                </div>
+              </div>
+              <div class="readouts">
+                <div>
+                  <span>미트 가로 위치</span><strong id="mitt-value">—</strong
+                  ><small id="mitt-note">공개 전</small>
+                </div>
+                <div>
+                  <span>공의 가로 위치</span><strong id="ball-value">—</strong
+                  ><small id="ball-note">공개 전</small>
+                </div>
+                <div class="decision-readout">
+                  <span>현재 해석 범위</span><strong>위치 관측</strong
+                  ><small>목표 일치·제구 오차는 미검증</small>
+                </div>
+              </div>
+              <p class="comparison-note">
+                미트와 공은 측정 기준이 다릅니다. 두 위치의 차이를 제구 오차로
+                해석하지 않습니다.
+              </p>
+              <div
+                class="status-message"
+                id="observation-status"
+                role="status"
+                aria-live="polite"
+              ></div>
+            </article>
+            <div class="analysis-bottom">
+              <article class="note-card">
+                <span class="eyebrow">WHAT WE READ</span>
+                <h3>미트의 위치부터 읽습니다.</h3>
+                <p>
+                  화면에 보이는 미트를 좌표로 바꾸고, 판독이 어려우면
+                  기권합니다. 미트 위치가 실제 요구 위치였는지는 별도로 확인해야
+                  합니다.
+                </p>
+              </article>
+              <article class="note-card dark-note">
+                <span class="eyebrow">WHY IT MATTERS</span>
+                <h3>제구 분석을 위한 첫 단계.</h3>
+                <p>
+                  포수의 목표 위치와 실제 공의 도착 위치를 같은 기준에서
+                  비교하는 분석으로 이어갑니다.
+                </p>
+                <button class="text-button" data-open-view="story">
+                  프로젝트 방향 보기
+                </button>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section
+        id="view-validation"
+        class="view"
+        hidden
+        aria-labelledby="validation-title"
+      ></section>
+      <section
+        id="view-story"
+        class="view"
+        hidden
+        aria-labelledby="story-title"
+      ></section>
+      <footer>
+        <span>PITCHEEZY / CAPSTONE 2026</span
+        ><span>사전 처리한 기록 기반 데모 · 실시간 분석 미연결</span
+        ><button class="text-button" id="source-button">데이터와 한계</button>
+      </footer>
+    </main>
+    <dialog id="info-dialog">
+      <form method="dialog">
+        <button class="close-dialog" aria-label="닫기">×</button>
+      </form>
+      <div id="dialog-content"></div>
+    </dialog>
+  </body>
+</html>
