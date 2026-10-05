@@ -1,5 +1,16 @@
 # SmartPitch MDP Transition Probability Models
 
+## CV 시간축 대응 — 2026-10-06
+
+사용자 최신 지시에 따라 우리 CV 후속을 재개하며 **잔여 사용량 50% 이상**을 유지한다.
+이전 10% 하한보다 우선한다. [원본/클립 PTS 검증](docs/CV_CLIP_CLOCK_V1.md):
+새 원본 구간·클립 디코딩 3,298장 고유 대응, 1/60000초 시간 단위와 누락 1구간 확인.
+185초 cutoff는 184.9848초 프레임을 선택하며 다음 프레임은 아직 공개하지 않는다.
+기존 M3·시연 자료·사이트 207파일 SHA 불변. 전체 검사 906 passed / 5 skipped / 2 deselected, Ruff 104 paths.
+CV-5a 전체·실시간 관측은 미완료다. 다음은 영상/체크섬에 결속된 정확한 프레임 추출이다.
+E-site5 실제 응답과 E-demo2 현장 확인은 대기 유지. 팀원 영역은 변경하지 않았다.
+
+
 ## 우리 오프라인 시연 묶음 — 2026-10-05
 
 [사이트·장표·비교 그림 묶음](docs/PITCH_STUDIO_OFFLINE_BUNDLE.md) v2 준비. ZIP 약 4.56MB,

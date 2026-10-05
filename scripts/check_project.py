@@ -8,6 +8,10 @@ from uuid import uuid4
 
 ROOT = Path(__file__).resolve().parents[1]
 QUALITY_PATHS = [
+    "intent/clip_clock.py",
+    "intent/clip_capture.py",
+    "tests/test_intent_clip_clock.py",
+    "tests/test_intent_clip_capture.py",
     "intent/observation_session.py",
     "tests/test_intent_observation_session.py",
     "intent/review_summary.py",

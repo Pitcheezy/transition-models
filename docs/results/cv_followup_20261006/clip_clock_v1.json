@@ -1,0 +1,186 @@
+{
+  "schema": "intent_clip_clock_development_audit_v1",
+  "date": "2026-10-06",
+  "game_pk": 747139,
+  "role": "previously_reviewed_development_video_not_independent_validation",
+  "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+  "clip_sha256": "e11a9879cd4f5b61a16bb678030a97f794f807d5ab5d43faf408fb719fe51b65",
+  "clip_bytes": 27922727,
+  "source_capture": {
+    "requested_interval": {
+      "start_seconds": 172.0,
+      "duration_seconds": 62.0,
+      "end_seconds": 234.0
+    },
+    "ffmpeg_version": "ffmpeg version 8.0-essentials_build-www.gyan.dev Copyright (c) 2000-2025 the FFmpeg developers",
+    "private_receipt_sha256": "ef03502c5a90364e70e234437476ff58ad48790847d6f47e494f0bcb9923f834",
+    "capture_code_sha256": "1413691367478b6ff4af3b846e1a116e7864dc09cce6f369f60ab979bdb2df47",
+    "source_elapsed_seconds": 17.733999999938533,
+    "clip_elapsed_seconds": 11.796999999787658,
+    "timing_scope": "checksum_decoding_wall_time_not_model_latency_or_broadcast_delay",
+    "fresh_remote_source_and_local_clip": true
+  },
+  "mapping": {
+    "schema": "intent_clip_clock_mapping_v1",
+    "input_hashes": {
+      "source_sha256": "143821fbbfc52e10c931c362901e97e4b20e31da275ebf70d3d62fccaefbf82f",
+      "clip_sha256": "98b058c7908c1e743ed963fe0f3f6b0f425ab992e689a4293fd097373e9f76ac"
+    },
+    "source": {
+      "frame_count": 3717,
+      "time_base": "1/60000",
+      "dimensions": [
+        1280,
+        720
+      ],
+      "sample_aspect_ratio": "1",
+      "frame_bytes": 1382400,
+      "first_pts": 10320310,
+      "last_pts": 14040026,
+      "first_seconds_exact": "1032031/6000",
+      "end_seconds_exact": "14041027/60000",
+      "gaps": [],
+      "duration_overlaps": []
+    },
+    "clip": {
+      "frame_count": 3298,
+      "time_base": "1/60000",
+      "dimensions": [
+        1280,
+        720
+      ],
+      "sample_aspect_ratio": "1",
+      "frame_bytes": 1382400,
+      "first_pts": 0,
+      "last_pts": 3301298,
+      "first_seconds_exact": "0",
+      "end_seconds_exact": "3302299/60000",
+      "gaps": [
+        {
+          "after_decode_ordinal": 3296,
+          "before_decode_ordinal": 3297,
+          "previous_end_pts": 3300297,
+          "next_pts": 3301298,
+          "delta_ticks": 1001,
+          "delta_seconds_exact": "1001/60000"
+        }
+      ],
+      "duration_overlaps": []
+    },
+    "matched_frames": 3298,
+    "constant_offset": {
+      "exact": "1050049/6000",
+      "seconds": 175.00816666666665
+    },
+    "offset_range": {
+      "minimum_exact": "1050049/6000",
+      "maximum_exact": "1050049/6000",
+      "span_exact": "0"
+    },
+    "limitations": [
+      "Only the supplied checksum tables are verified; media identity, capture commands and native packet clocks are not authenticated.",
+      "Decode ordinals differ from PTS. Gaps are declared-clock ticks, not inferred missing-frame counts or a constant frame rate.",
+      "Varying per-frame offsets never authorize an average/global time correction.",
+      "Causal lookup uses mapped source intervals only; it never picks a future frame or fills a missing interval.",
+      "No full-PA boundaries, image labels, automatic observer, accuracy or real-time availability are established."
+    ]
+  },
+  "first_mapped_frame": {
+    "clip_decode_ordinal": 0,
+    "source_decode_ordinal": 180,
+    "clip_pts": 0,
+    "source_pts": 10500490,
+    "clip_duration": 1001,
+    "source_duration": 1001,
+    "clip_seconds_exact": "0",
+    "source_seconds_exact": "1050049/6000",
+    "source_interval_end_exact": "3500497/20000",
+    "offset_seconds_exact": "1050049/6000",
+    "size": 1382400,
+    "md5": "fddbee9c92d38a4235f88cececca3d79"
+  },
+  "last_mapped_frame": {
+    "clip_decode_ordinal": 3297,
+    "source_decode_ordinal": 3478,
+    "clip_pts": 3301298,
+    "source_pts": 13801788,
+    "clip_duration": 1001,
+    "source_duration": 1001,
+    "clip_seconds_exact": "1650649/30000",
+    "source_seconds_exact": "1150149/5000",
+    "source_interval_end_exact": "13802789/60000",
+    "offset_seconds_exact": "1050049/6000",
+    "size": 1382400,
+    "md5": "b3e8b33ccaee452fd3368a61aefbb01c"
+  },
+  "legacy_normalized_checksum_comparison": {
+    "input_hashes": {
+      "source_sha256": "01a371e4f4d867b1fae17c7c7c275767eb0727e80184e8c3f47c5b04d4069cfc",
+      "clip_sha256": "8c010b9786902a85bf900800988b0c6cafaacba4025a1b7af2358235399fa7c1"
+    },
+    "matched_frames": 3298,
+    "same_decoded_frame_digests": true,
+    "legacy_time_base": "1001/60000",
+    "notice": "Legacy default encoder clock quantized timestamps; native-time-base capture is authoritative for this new mapping. Neither proves physical broadcast latency."
+  },
+  "causal_boundary_checks": [
+    {
+      "cutoff_seconds_exact": "175",
+      "status": "rejected",
+      "reason": "Requested time is outside mapped coverage or lies in a missing interval"
+    },
+    {
+      "cutoff_seconds_exact": "180",
+      "status": "mapped",
+      "clip_decode_ordinal": 299,
+      "source_pts": 10799789,
+      "actual_source_seconds_exact": "10799789/60000"
+    },
+    {
+      "cutoff_seconds_exact": "185",
+      "status": "mapped",
+      "clip_decode_ordinal": 598,
+      "source_pts": 11099088,
+      "actual_source_seconds_exact": "231231/1250"
+    },
+    {
+      "cutoff_seconds_exact": "11100089/60000",
+      "status": "mapped",
+      "clip_decode_ordinal": 599,
+      "source_pts": 11100089,
+      "actual_source_seconds_exact": "11100089/60000"
+    },
+    {
+      "cutoff_seconds_exact": "13800787/60000",
+      "status": "rejected",
+      "reason": "Requested time is outside mapped coverage or lies in a missing interval"
+    },
+    {
+      "cutoff_seconds_exact": "13801788/60000",
+      "status": "mapped",
+      "clip_decode_ordinal": 3297,
+      "source_pts": 13801788,
+      "actual_source_seconds_exact": "1150149/5000"
+    },
+    {
+      "cutoff_seconds_exact": "231",
+      "status": "rejected",
+      "reason": "Requested time is outside mapped coverage or lies in a missing interval"
+    }
+  ],
+  "full_cpu_check": "906 passed / 5 skipped / 2 deselected, Ruff 104 paths",
+  "frozen_files_and_site_unchanged": 207,
+  "original_frozen_files": 186,
+  "new_ai_observations": 0,
+  "human_labels_changed": false,
+  "whole_pa_boundaries_verified": false,
+  "live_cv_completed": false,
+  "teammate_changed": false,
+  "notes": [
+    "Preserved frames match by unique raw-frame size/MD5; file SHA256 binds exact captured tables and local clip.",
+    "URL identity is a local provenance claim, not an authenticated game-to-video assertion.",
+    "One declared frame-duration gap is detected; its cause is not established.",
+    "The 185s cutoff selects 184.9848s. The frame at 185.0014833s is still in the future.",
+    "The source window and clip span are not proof of full plate-appearance entry/result/exit coverage."
+  ]
+}
