@@ -80,3 +80,23 @@ def test_real_checklist_next_unit_is_tagged():
     ]
     assert untagged == [], f"open CHECKLIST items without a model tag: {untagged}"
     assert item["external"] is False
+
+
+def test_multi_letter_workstream_is_not_silently_skipped():
+    mod = load_module()
+    text = """- [ ] E-demo2. external response pending 〔모델: Opus 5〕
+- [~] CV-5a4. current CV boundary review 〔모델: Opus 5〕
+- [~] F-4a. historical OCR work 〔모델: Fable 5.1〕
+"""
+    items = mod.parse_items(text)
+    assert [item["id"] for item in items] == ["E-demo2", "CV-5a4", "F-4a"]
+    assert mod.next_unit(items)["id"] == "CV-5a4"
+
+
+def test_multiletter_teammate_work_remains_excluded():
+    mod = load_module()
+    items = mod.parse_items("""- [~] ML-1. external service 〔담당: 팀원〕
+- [~] CV-5a4. our boundary review 〔모델: Opus 5〕
+""")
+    assert items[0]["external"] is True
+    assert mod.next_unit(items)["id"] == "CV-5a4"

@@ -25,7 +25,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 MODEL_IDS = {"Opus 5": "claude-opus-5", "Fable 5.1": "claude-fable-5-1"}
-ITEM = re.compile(r"^- \[(?P<state>[ x~!])\] (?P<id>[A-Z]-[a-z0-9]+)\. (?P<text>.*)$")
+ITEM = re.compile(r"^- \[(?P<state>[ x~!])\] (?P<id>[A-Z]+-[a-z0-9]+)\. (?P<text>.*)$")
 TAG = re.compile(r"〔모델: (?P<label>[^〕]+)〕")
 OWNER = re.compile(r"〔담당: (?P<owner>[^〕]+)〕")
 INTERNAL_OWNERS = {"Claude", "Codex", "Claude/Codex", "Claude Code"}
