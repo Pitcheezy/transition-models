@@ -127,6 +127,18 @@ safe.directory는 해당 checkout에만 실행 범위로 적용하고 토큰을 
 
 ## pitcheezy.com 연결 대기
 
+## 2026-10-06 접속 장애 진단
+
+Sites의 기존 공개 배포는 active이며 v3다. `pitcheezy.com` custom domain은
+pending / provider pending / ssl pending_validation이다. Google 공개 DNS 조회에서
+apex A는 NOERROR·Answer 없음, 두 인증 TXT 이름은 NXDOMAIN이었다. 필요한 A/TXT를
+아직 등록하지 않은 상태로 판단했다. 단순 SSL 전파 완료를 기다리는 상태가 아니다.
+
+Cloudflare 관리 탭이 로그인 화면으로 이동해 DNS 수정은 수행하지 못했다. 사용자 로그인
+요청을 남겼다. 로그인 후 아래 기존 네 레코드를 추가하고 Sites refresh에서 active 및
+SSL active를 확인한다. 기존 레코드를 먼저 읽고 다른 서비스를 보존한다. 아직 해결 완료가 아니다.
+
+
 사용자가 구매 완료를 알렸으며 공식 RDAP에서 PITCHEEZY.COM 등록과 Cloudflare 네임서버를 확인했다. 이메일 인증 여부는 미확인이다. DNS에
 아래 서버 반환 값을 추가한다. 기존 DNS가 있다면 충돌 레코드만 검토하고 다른 서비스 기록을 보존한다.
 Cloudflare에서는 A 레코드 프록시를 DNS only로 두고 TTL은 Auto를 사용할 수 있다.
