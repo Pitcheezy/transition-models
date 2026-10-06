@@ -28,6 +28,22 @@
     x === null ? null : number(x, label, lo, hi);
   const nullableText = (x, label) =>
     x == null ? null : string(x, label, 1000);
+  const namedZones = new Set([
+    "high_left",
+    "high_middle",
+    "high_right",
+    "middle_left",
+    "middle_middle",
+    "middle_right",
+    "low_left",
+    "low_middle",
+    "low_right",
+  ]);
+  const zone = (value) => {
+    if (value === null || namedZones.has(value)) return value;
+    // Legacy synthetic packets used integers. Do not convert between the two conventions.
+    return integer(value, 1, 9, "구역");
+  };
   const only = (x, fields, label) => {
     if (Object.keys(x).some((k) => !fields.includes(k)))
       fail(`${label}: 허용되지 않은 필드가 있습니다.`);
@@ -74,7 +90,7 @@
       rank: integer(c.rank, 1, 30, "추천 순위"),
       pitch_type: string(c.pitch_type, "구종 코드", 20),
       pitch_label: string(c.pitch_label, "구종 이름"),
-      zone_id: c.zone_id === null ? null : integer(c.zone_id, 1, 9, "구역"),
+      zone_id: zone(c.zone_id),
       target: target
         ? {
             x: number(target.x, "목표 x", -10, 10),

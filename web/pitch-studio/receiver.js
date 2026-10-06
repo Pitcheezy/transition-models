@@ -56,7 +56,7 @@ function render() {
     "source-badge",
     view.source.kind === "synthetic"
       ? "합성 연결 테스트 · 실제 경기 아님"
-      : "가져온 응답 · 출처 미인증",
+      : "제공받은 모델 응답 · 검증 전 실험 추천",
   );
   put(
     "publication-state",
@@ -160,12 +160,32 @@ function render() {
     missing: "이 투구의 저장 관측이 없습니다.",
     conflict: "키·선수·구종 대조 불일치 · 좌표 표시 보류",
     unavailable: "기권 · 좌표 없음",
-    key_matched: "키·선수·구종 일치 · 영상 대응 미검증",
+    key_matched:
+      "미검토 AI 가로 위치 추정 · 키·선수·구종 일치 · 영상 대응 미검증",
   };
   metric(
     "우리 저장 미트 x",
-    observation.x === null ? "—" : `${observation.x.toFixed(2)} ft`,
+    observation.x === null ? "—" : `${observation.x.toFixed(4)} ft`,
   );
+  if (observation.x !== null) {
+    const graphic = textElement("div", "", post);
+    graphic.className = "mitt-horizontal";
+    graphic.setAttribute("role", "img");
+    graphic.setAttribute(
+      "aria-label",
+      `포수 시점 미트 가로 위치 ${observation.x.toFixed(4)} ft. 높이와 투수 의도는 표시하지 않습니다.`,
+    );
+    const track = textElement("div", "", graphic);
+    track.className = "mitt-track";
+    const marker = textElement("span", "", track);
+    marker.className = "mitt-dot";
+    marker.style.left = `${Math.max(0, Math.min(100, (observation.x + 2) * 25))}%`;
+    textElement(
+      "div",
+      "−2 ft　← 포수 시점 · 0 · 가로 위치 →　+2 ft",
+      graphic,
+    ).className = "mitt-axis";
+  }
   const note = textElement(
     "p",
     labels[observation.status] +
@@ -215,7 +235,7 @@ async function openText(text, name, version, inputBytes, originals = []) {
   textElement("div", `제공자 기재 모델: ${view.source.model_id}`, info);
   textElement(
     "div",
-    `기재 커밋: ${view.source.revision} · 생성 시각: ${view.source.exported_at}`,
+    `제공자가 기재한 자료 생성 코드 커밋: ${view.source.revision} · 생성 시각: ${view.source.exported_at}`,
     info,
   );
   render();
@@ -226,7 +246,29 @@ function reportError(error, version) {
   put("import-status", "자료를 불러오지 않았습니다.");
   put("import-error", `검사 실패: ${error.message}`);
   node("import-error").hidden = false;
+  node("file-tools").open = true;
 }
+async function loadFirstPa() {
+  resetRaw();
+  clear();
+  const version = loadVersion;
+  try {
+    const demo = window.PitchReceiverDemo849843;
+    await openText(
+      JSON.stringify(demo.packet),
+      "849843 첫 타석 · 제공받은 원응답에서 선별",
+      version,
+      undefined,
+      demo.originals,
+    );
+    if (version !== loadVersion) return;
+    node("file-tools").open = false;
+    node("response-workspace").focus();
+  } catch (error) {
+    reportError(error, version);
+  }
+}
+node("load-first-pa").addEventListener("click", loadFirstPa);
 node("response-file").addEventListener("change", async (event) => {
   const file = event.target.files[0];
   if (!file) return;
@@ -355,12 +397,10 @@ node("raw-form").addEventListener("submit", async (event) => {
       timeline: parsed[0].response,
       at_bat_number: pa,
       source,
-      reveals: parsed
-        .slice(1)
-        .map(({ endpoint, response }) => ({
-          source_endpoint: endpoint,
-          response,
-        })),
+      reveals: parsed.slice(1).map(({ endpoint, response }) => ({
+        source_endpoint: endpoint,
+        response,
+      })),
     });
     const text = JSON.stringify(envelope);
     if (new TextEncoder().encode(text).length > MAX_BYTES)
@@ -399,3 +439,5 @@ node("previous-pitch").addEventListener("click", () => {
   session?.previous();
   render();
 });
+if (new URLSearchParams(window.location.search).get("demo") === "849843-pa1")
+  loadFirstPa();
