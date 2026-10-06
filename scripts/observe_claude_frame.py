@@ -101,27 +101,138 @@ def _has_tool(value):
     return isinstance(value, list) and any(_has_tool(item) for item in value)
 
 
-def _parse(stdout, request):
+def _output_schema(request):
+    """Build a request-bound draft-07 schema; local response validation still applies."""
+    point = {
+        "type": "array",
+        "minItems": 2,
+        "maxItems": 2,
+        "items": [
+            {"type": "number", "minimum": 0, "exclusiveMaximum": request["width"]},
+            {"type": "number", "minimum": 0, "exclusiveMaximum": request["height"]},
+        ],
+        "additionalItems": False,
+    }
+    return {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": False,
+        "required": list(RESPONSE_FIELDS),
+        "properties": {
+            "schema": {"type": "string", "const": "intent_visual_observation_v1"},
+            "observation_id": {"type": "string", "const": request["observation_id"]},
+            "image_sha256": {"type": "string", "const": request["image_sha256"]},
+            "status": {"type": "string", "enum": ["marked", "unavailable", "unknown"]},
+            "mitt": {"anyOf": [point, {"type": "null"}]},
+            "visibility": {"type": "string", "enum": ["full", "partial", "hidden", "unknown"]},
+            "pose": {
+                "type": "string",
+                "enum": ["presented_target", "resting", "moving", "unknown"],
+            },
+            "reason": {"type": "string"},
+        },
+        "allOf": [
+            {
+                "if": {"properties": {"status": {"const": "marked"}}},
+                "then": {
+                    "properties": {
+                        "mitt": point,
+                        "visibility": {"enum": ["full", "partial"]},
+                    }
+                },
+                "else": {"properties": {"mitt": {"type": "null"}, "reason": {"pattern": r"\S"}}},
+            }
+        ],
+    }
+
+
+def _serialization_pairs(events, response, request):
+    """Allow only audited StructuredOutput serialization, never general tool execution."""
+    uses, results = {}, set()
+
+    def blocks(value, path=()):
+        if isinstance(value, dict):
+            if str(value.get("type", "")).endswith(("tool_use", "tool_result")):
+                yield path, value
+            for key, child in value.items():
+                yield from blocks(child, (*path, key))
+        elif isinstance(value, list):
+            for index, child in enumerate(value):
+                yield from blocks(child, (*path, index))
+
+    for event in events:
+        for path, block in blocks(event):
+            if len(path) != 3 or path[:2] != ("message", "content") or type(path[2]) is not int:
+                raise ValueError("tool event outside allowed serialization content")
+            if block["type"] == "tool_use":
+                identity = block.get("id")
+                if (
+                    event.get("type") != "assistant"
+                    or block.get("name") != "StructuredOutput"
+                    or not isinstance(identity, str)
+                    or not identity
+                    or identity in uses
+                    or block.get("input") != response
+                    or set(block) - {"type", "id", "name", "input", "caller"}
+                    or ("caller" in block and block["caller"] != {"type": "direct"})
+                ):
+                    raise ValueError("unrelated or mismatched serialization tool use")
+                _validate_response(block["input"], request)
+                uses[identity] = block["input"]
+            elif block["type"] == "tool_result":
+                identity = block.get("tool_use_id")
+                if (
+                    event.get("type") != "user"
+                    or not isinstance(identity, str)
+                    or identity not in uses
+                    or identity in results
+                    or block.get("is_error", False) is not False
+                    or block.get("content") != "Structured output provided successfully"
+                    or set(block) - {"type", "tool_use_id", "content", "is_error"}
+                ):
+                    raise ValueError("unmatched or failed serialization tool result")
+                results.add(identity)
+            else:
+                raise ValueError("forbidden tool event type")
+    if set(uses) != results:
+        raise ValueError("unmatched serialization tool use")
+    return len(uses)
+
+
+def _parse(stdout, request, *, structured_output=False):
     events = [json.loads(line) for line in stdout.splitlines() if line.strip()]
-    if any(not isinstance(event, dict) or _has_tool(event) for event in events):
-        raise ValueError("invalid event or forbidden tool use in provider output")
+    if any(not isinstance(event, dict) for event in events):
+        raise ValueError("invalid provider event")
     results = [event for event in events if event.get("type") == "result"]
-    if len(results) != 1:
+    if len(results) != 1 or events[-1] is not results[0]:
         raise ValueError("expected exactly one final provider result")
     final = results[0]
     if final.get("subtype") != "success" or final.get("is_error") is not False:
         raise ValueError("provider result did not succeed")
-    if not isinstance(final.get("result"), str):
-        raise ValueError("provider result must contain JSON text")
-    result_text = final["result"].strip()
-    result_format = "bare_json"
-    if result_text.startswith("```json\n") and result_text.endswith("\n```"):
-        if result_text.count("```") != 2:
-            raise ValueError("only one complete JSON fence is accepted")
-        result_text = result_text[len("```json\n") : -len("\n```")]
-        result_format = "fenced_json"
-    response = json.loads(result_text)
-    _validate_response(response, request)
+    serialization_pairs = 0
+    if structured_output:
+        response = final.get("structured_output")
+        if not isinstance(response, dict):
+            raise ValueError(
+                "structured mode requires a structured_output object; no text fallback"
+            )
+        _validate_response(response, request)
+        serialization_pairs = _serialization_pairs(events, response, request)
+        result_format = "structured_output"
+    else:
+        if any(_has_tool(event) for event in events):
+            raise ValueError("forbidden tool use in provider output")
+        if not isinstance(final.get("result"), str):
+            raise ValueError("provider result must contain JSON text")
+        result_text = final["result"].strip()
+        result_format = "bare_json"
+        if result_text.startswith("```json\n") and result_text.endswith("\n```"):
+            if result_text.count("```") != 2:
+                raise ValueError("only one complete JSON fence is accepted")
+            result_text = result_text[len("```json\n") : -len("\n```")]
+            result_format = "fenced_json"
+        response = json.loads(result_text)
+        _validate_response(response, request)
     metadata = {
         key: final[key]
         for key in (
@@ -141,11 +252,22 @@ def _parse(stdout, request):
         event["model"] for event in events if event.get("type") == "system" and "model" in event
     ]
     metadata["result_format"] = result_format
+    metadata["serialization_pairs"] = serialization_pairs
     return response, metadata
 
 
-def observe(request_path, image_path, response_path, *, claude_bin="claude", model=None):
+def observe(
+    request_path,
+    image_path,
+    response_path,
+    *,
+    claude_bin="claude",
+    model=None,
+    structured_output=False,
+):
     """Run one subscription-only CLI call; preserve raw output even on failure."""
+    if type(structured_output) is not bool:
+        raise ValueError("structured_output must be an explicit boolean")
     if model is not None and (
         not isinstance(model, str)
         or not model
@@ -211,6 +333,9 @@ def observe(request_path, image_path, response_path, *, claude_bin="claude", mod
     ]
     if model is not None:
         argv.extend(["--model", model])
+    schema = _output_schema(request) if structured_output else None
+    if schema is not None:
+        argv.extend(["--json-schema", json.dumps(schema, separators=(",", ":"), allow_nan=False)])
     out.parent.mkdir(parents=True, exist_ok=True)
     metadata = {
         "schema": "claude_frame_provider_v1",
@@ -219,6 +344,14 @@ def observe(request_path, image_path, response_path, *, claude_bin="claude", mod
         "usage_note": "Only provider-reported metadata; cost is not a billing receipt.",
         "argv": argv,
         "requested_model": model,
+        "output_protocol": "structured_json_schema_v1" if structured_output else "legacy_json_text",
+        "output_schema": schema,
+        "provider_schema_retry_note": (
+            "Provider may re-prompt internally; adapter has no retries or coercion and does not "
+            "measure the provider's internal retry count."
+        )
+        if structured_output
+        else None,
     }
     with tempfile.TemporaryDirectory(prefix="pitcheezy-observer-") as cwd:
         auth = subprocess.run(
@@ -248,7 +381,9 @@ def observe(request_path, image_path, response_path, *, claude_bin="claude", mod
             metadata["returncode"] = completed.returncode
             if completed.returncode != 0:
                 raise ValueError("Claude CLI returned nonzero; inspect private provider logs")
-            response, reported = _parse(logs[0].read_text(encoding="utf-8"), request)
+            response, reported = _parse(
+                logs[0].read_text(encoding="utf-8"), request, structured_output=structured_output
+            )
             metadata["result_format"] = reported.pop("result_format")
             metadata["reported"] = reported
             with out.open("x", encoding="utf-8") as stream:
@@ -272,10 +407,20 @@ def main():
     parser.add_argument("response", type=Path)
     parser.add_argument("--claude-bin", default="claude")
     parser.add_argument("--model", help="Explicit model ID; omitted preserves CLI model selection")
+    parser.add_argument(
+        "--structured-output",
+        action="store_true",
+        help="Opt into request-bound JSON Schema; legacy text parsing is not a fallback",
+    )
     args = parser.parse_args()
     try:
         observe(
-            args.request, args.image, args.response, claude_bin=args.claude_bin, model=args.model
+            args.request,
+            args.image,
+            args.response,
+            claude_bin=args.claude_bin,
+            model=args.model,
+            structured_output=args.structured_output,
         )
     except (OSError, ValueError, KeyError, TypeError, subprocess.SubprocessError) as error:
         parser.exit(1, f"Observation rejected ({type(error).__name__}); no fallback used.\n")

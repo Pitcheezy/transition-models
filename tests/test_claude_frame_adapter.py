@@ -253,3 +253,122 @@ def test_invalid_explicit_model_rejected_before_any_cli_call(case, model):
         adapter.observe(*case.paths, model=model)
     assert not case.calls
     assert not case.paths[2].exists()
+
+
+def structured_events(response):
+    return [
+        {
+            "type": "assistant",
+            "message": {
+                "content": [
+                    {
+                        "type": "tool_use",
+                        "id": "serialization-1",
+                        "name": "StructuredOutput",
+                        "input": response,
+                        "caller": {"type": "direct"},
+                    }
+                ]
+            },
+        },
+        {
+            "type": "user",
+            "message": {
+                "content": [
+                    {
+                        "type": "tool_result",
+                        "tool_use_id": "serialization-1",
+                        "content": "Structured output provided successfully",
+                    }
+                ]
+            },
+        },
+        {
+            "type": "result",
+            "subtype": "success",
+            "is_error": False,
+            "result": "",
+            "structured_output": response,
+        },
+    ]
+
+
+def test_structured_mode_binds_schema_and_accepts_only_matched_serialization(case):
+    case.events = structured_events(case.response)
+    metadata = adapter.observe(*case.paths, structured_output=True, model="claude-opus-4-8[1m]")
+    argv = case.calls[1][0]
+    schema = json.loads(argv[argv.index("--json-schema") + 1])
+    assert schema["additionalProperties"] is False
+    assert set(schema["required"]) == set(adapter.RESPONSE_FIELDS)
+    assert schema["properties"]["observation_id"]["const"] == case.request["observation_id"]
+    assert schema["properties"]["image_sha256"]["const"] == case.request["image_sha256"]
+    point = schema["properties"]["mitt"]["anyOf"][0]
+    assert point["minItems"] == point["maxItems"] == 2
+    assert point["items"][0]["exclusiveMaximum"] == 20
+    assert point["items"][1]["exclusiveMaximum"] == 12
+    assert metadata["output_protocol"] == "structured_json_schema_v1"
+    assert metadata["reported"]["serialization_pairs"] == 1
+    assert metadata["requested_model"] == "claude-opus-4-8[1m]"
+    assert metadata["provider_schema_retry_note"]
+    assert json.loads(case.paths[2].read_text()) == case.response
+    raw = (case.paths[2].parent / "provider_stdout.jsonl").read_text()
+    assert [json.loads(line) for line in raw.splitlines()] == case.events
+
+
+@pytest.mark.parametrize(
+    "change",
+    [
+        "missing",
+        "string",
+        "mitt_string",
+        "wrong_id",
+        "extra_field",
+        "out_of_bounds",
+        "unmatched_use",
+        "unmatched_result",
+        "wrong_input",
+        "extra_tool",
+        "failed_result",
+    ],
+)
+def test_structured_mode_fails_closed_without_text_fallback(case, change):
+    case.events = copy.deepcopy(structured_events(case.response))
+    final = case.events[-1]
+    final["result"] = json.dumps(case.response)  # Valid legacy JSON must never become a fallback.
+    if change == "missing":
+        final.pop("structured_output")
+    elif change == "string":
+        final["structured_output"] = json.dumps(case.response)
+    elif change == "mitt_string":
+        final["structured_output"]["mitt"] = "[9,8]"
+    elif change == "wrong_id":
+        final["structured_output"]["observation_id"] = "wrong"
+    elif change == "extra_field":
+        final["structured_output"]["extra"] = "forbidden"
+    elif change == "out_of_bounds":
+        final["structured_output"]["mitt"] = [20, 8]
+    elif change == "unmatched_use":
+        case.events.pop(1)
+    elif change == "unmatched_result":
+        case.events[1]["message"]["content"][0]["tool_use_id"] = "unknown"
+    elif change == "wrong_input":
+        case.events[0]["message"]["content"][0]["input"] = {**case.response, "mitt": [8, 8]}
+    elif change == "extra_tool":
+        case.events[0]["message"]["content"].append(
+            {"type": "tool_use", "id": "other", "name": "Read", "input": {"file_path": "secret"}}
+        )
+    else:
+        case.events[1]["message"]["content"][0]["is_error"] = True
+    with pytest.raises(ValueError):
+        adapter.observe(*case.paths, structured_output=True)
+    assert not case.paths[2].exists()
+    assert len(case.calls) == 2
+    assert (case.paths[2].parent / "provider_stdout.jsonl").exists()
+
+
+def test_legacy_mode_still_rejects_structured_serialization_tools(case):
+    case.events = structured_events(case.response)
+    case.events[-1]["result"] = json.dumps(case.response)
+    with pytest.raises(ValueError, match="forbidden tool"):
+        adapter.observe(*case.paths)
+    assert "--json-schema" not in case.calls[1][0]
