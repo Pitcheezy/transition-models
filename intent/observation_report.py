@@ -6,6 +6,7 @@ import argparse
 import hashlib
 import json
 import math
+import statistics
 from fractions import Fraction
 from pathlib import Path
 
@@ -102,6 +103,133 @@ def _accepted(run, row, cutoff, accepted_ns):
     return result_hash
 
 
+_EXTRA_STAMPS = (
+    "input_bindings_verified",
+    "frame_extracted",
+    "request_ready",
+    "output_bindings_verified",
+)
+_LOOP_PHASES = {
+    "input_binding_verification": ("preparation_started", "input_bindings_verified"),
+    "frame_extraction": ("input_bindings_verified", "frame_extracted"),
+    "request_preparation": ("frame_extracted", "request_ready"),
+    "dispatch_overhead": ("request_ready", "observer_dispatch"),
+    "observer_process": ("observer_dispatch", "observer_exit"),
+    "output_binding_verification": ("observer_exit", "output_bindings_verified"),
+    "response_validation_publication": ("output_bindings_verified", "response_accepted"),
+}
+_PROVIDER_STAGES = ("input_validation", "auth_status", "cli_call", "parse_validate_write")
+
+
+def _loop_phases(row, stamps):
+    version = row.get("phase_timing_version")
+    if version is None:
+        if any(name in stamps for name in _EXTRA_STAMPS):
+            raise ValueError("Extra phase timestamps require a timing version")
+        return {}
+    if type(version) is not int or version != 1:
+        raise ValueError("Unsupported phase timing version")
+    if row["status"] == "accepted" and any(name not in stamps for name in _EXTRA_STAMPS):
+        raise ValueError("Accepted instrumented attempt lacks phase timestamps")
+    if "request_ready" in stamps and stamps.get("frame_ready") != stamps["request_ready"]:
+        raise ValueError("Request-ready alias disagrees with legacy frame-ready clock")
+    values = {}
+    for name, (begin, end) in _LOOP_PHASES.items():
+        if end not in stamps:
+            continue
+        if begin not in stamps:
+            raise ValueError("Completed phase lacks its starting timestamp")
+        values[name] = (stamps[end] - stamps[begin]) / 1e9
+    return values
+
+
+def _provider_phases(run, row, stamps):
+    path = run / "outputs" / f"cv_observation_{row['index']:03d}" / "request/provider_metadata.json"
+    if not path.exists():
+        return {}, None, "metadata_absent"
+    metadata, digest = _read(path)
+    timing = metadata.get("timing_v1")
+    if timing is None:
+        return {}, digest, "legacy_metadata_without_timing"
+    if (
+        not isinstance(timing, dict)
+        or timing.get("clock") != "monotonic_ns"
+        or not isinstance(timing.get("scope"), str)
+        or not timing["scope"].strip()
+        or not isinstance(timing.get("stages"), dict)
+        or set(timing["stages"]) != {*_PROVIDER_STAGES, "total"}
+    ):
+        raise ValueError("Malformed provider phase timing")
+
+    def interval(stage):
+        if not isinstance(stage, dict) or stage.get("status") not in ("completed", "failed"):
+            raise ValueError("Unfinished or invalid provider timing stage")
+        begin = _int(stage["started_monotonic_ns"])
+        end = _int(stage["finished_monotonic_ns"])
+        if end < begin:
+            raise ValueError("Provider timing moved backwards")
+        _same_number(stage["elapsed_seconds"], (end - begin) / 1e9)
+        return begin, end
+
+    if "observer_exit" not in stamps and row["status"] == "error":
+        # Interrupted processes may save metadata without a captured outer exit.
+        # Keep the error and file hash, but do not invent a bounding timestamp.
+        return {}, digest, "unavailable_without_observer_exit"
+    total_start, total_end = interval(timing["stages"]["total"])
+    provider_accepted = metadata.get("status") == "accepted"
+    if metadata.get("status") not in ("accepted", "failed") or (
+        timing["stages"]["total"]["status"] != ("completed" if provider_accepted else "failed")
+    ):
+        raise ValueError("Provider outcome disagrees with its total timing")
+    if (
+        "observer_dispatch" not in stamps
+        or "observer_exit" not in stamps
+        or not stamps["observer_dispatch"] <= total_start <= total_end <= stamps["observer_exit"]
+    ):
+        raise ValueError("Provider timing outside measured observer process")
+    if row["status"] == "accepted" and (
+        metadata.get("status") != "accepted" or timing["stages"]["total"]["status"] != "completed"
+    ):
+        raise ValueError("Accepted response disagrees with provider timing outcome")
+    values = {
+        "provider.total": (total_end - total_start) / 1e9,
+        "process_start_to_adapter": (total_start - stamps["observer_dispatch"]) / 1e9,
+        "process_exit_tail": (stamps["observer_exit"] - total_end) / 1e9,
+    }
+    previous = total_start
+    missing_or_failed = False
+    for name in _PROVIDER_STAGES:
+        stage = timing["stages"][name]
+        if stage is None:
+            missing_or_failed = True
+            if provider_accepted:
+                raise ValueError("Accepted provider omitted a timing stage")
+            continue
+        begin, end = interval(stage)
+        if missing_or_failed or not previous <= begin <= end <= total_end:
+            raise ValueError("Provider timing sequence is inconsistent")
+        values[f"provider.{name}"] = (end - begin) / 1e9
+        previous = end
+        missing_or_failed = stage["status"] == "failed"
+        if missing_or_failed and provider_accepted:
+            raise ValueError("Accepted provider has a failed timing stage")
+    return values, digest, "validated_with_outer_bounds"
+
+
+def _phase_summaries(rows):
+    names = sorted({name for row in rows for name in row["phase_seconds"]})
+    summary = {}
+    for name in names:
+        values = [row["phase_seconds"][name] for row in rows if name in row["phase_seconds"]]
+        summary[name] = {
+            "n": len(values),
+            "min": min(values),
+            "median": statistics.median(values),
+            "max": max(values),
+        }
+    return summary
+
+
 def build_report(run_dir):
     """Validate saved evidence, keeping every planned observation in the denominator."""
     run = Path(run_dir)
@@ -164,9 +292,13 @@ def build_report(run_dir):
         last = previous_finish
         for key in (
             "preparation_started",
+            "input_bindings_verified",
+            "frame_extracted",
             "frame_ready",
+            "request_ready",
             "observer_dispatch",
             "observer_exit",
+            "output_bindings_verified",
             "response_accepted",
             "attempt_finished",
         ):
@@ -221,6 +353,9 @@ def build_report(run_dir):
             counts["errors"] += 1
         else:
             raise ValueError("Unknown attempt status")
+        phases = _loop_phases(row, stamps)
+        provider_phases, provider_hash, provider_timing_status = _provider_phases(run, row, stamps)
+        phases.update(provider_phases)
         rows.append(
             {
                 "index": index,
@@ -231,6 +366,9 @@ def build_report(run_dir):
                 "accepted_latency_from_schedule_seconds": publication_delay,
                 "attempt_sha256": row_hash,
                 "result_sha256": result_hash,
+                "provider_metadata_sha256": provider_hash,
+                "provider_timing_status": provider_timing_status,
+                "phase_seconds": phases,
             }
         )
     # A killed process may have dispatched work without reaching its finally block.
@@ -301,6 +439,12 @@ def build_report(run_dir):
             "summary": summary_hash,
         },
         "observations": rows,
+        "phase_summary_seconds": _phase_summaries(rows),
+        "phase_notice": "Optional measured phases only; omitted stages are not zero. Provider "
+        "CLI time includes network/server work, not pure model inference. Provider timings "
+        "are nested within observer_process and must not be added to outer phases twice. "
+        "process_start_to_adapter includes launch, imports and argument setup; "
+        "it is not interpreter startup alone.",
     }
 
 

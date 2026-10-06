@@ -263,3 +263,164 @@ def test_killed_unpersisted_attempt_is_not_reported_as_unattempted(run, evidence
         (run / "outputs/cv_observation_000").mkdir(parents=True)
     with pytest.raises(ValueError, match="incomplete evidence"):
         observation_report.build_report(run)
+
+
+def instrument(run, row):
+    row.update(
+        phase_timing_version=1,
+        input_bindings_verified=stamp(0.6),
+        frame_extracted=stamp(0.8),
+        request_ready=row["frame_ready"],
+        output_bindings_verified=stamp(1.9),
+    )
+    write(run / "attempts/000.json", row)
+    return row
+
+
+def test_fine_phases_preserve_total_and_old_report_has_no_invented_phases(run):
+    row = add(run, 0)
+    assert observation_report.build_report(run)["phase_summary_seconds"] == {}
+    instrument(run, row)
+    report = observation_report.build_report(run)
+    phases = report["observations"][0]["phase_seconds"]
+    assert phases["input_binding_verification"] == pytest.approx(0.1)
+    assert phases["frame_extraction"] == pytest.approx(0.2)
+    assert phases["request_preparation"] == pytest.approx(0.2)
+    assert sum(phases.values()) == pytest.approx(1.5)
+    assert report["counts"]["publication_within_5s"] == 1
+
+
+@pytest.mark.parametrize("problem", ["missing", "reversed", "alias", "version"])
+def test_bad_loop_phase_evidence_rejected(run, problem):
+    row = instrument(run, add(run, 0))
+    if problem == "missing":
+        row["frame_extracted"] = None
+    elif problem == "reversed":
+        row["input_bindings_verified"] = stamp(0.9)
+    elif problem == "alias":
+        row["request_ready"] = stamp(1.01)
+    else:
+        row["phase_timing_version"] = True
+    write(run / "attempts/000.json", row)
+    with pytest.raises(ValueError):
+        observation_report.build_report(run)
+
+
+def provider_timing(run):
+    def stage(start, end):
+        return {
+            "status": "completed",
+            "started_monotonic_ns": stamp(start)["monotonic_ns"],
+            "finished_monotonic_ns": stamp(end)["monotonic_ns"],
+            "elapsed_seconds": end - start,
+        }
+
+    data = {
+        "status": "accepted",
+        "timing_v1": {
+            "clock": "monotonic_ns",
+            "scope": "function-only; excludes interpreter/import startup",
+            "stages": {
+                "total": stage(1.05, 1.75),
+                "input_validation": stage(1.05, 1.1),
+                "auth_status": stage(1.1, 1.2),
+                "cli_call": stage(1.2, 1.6),
+                "parse_validate_write": stage(1.6, 1.75),
+            },
+        },
+    }
+    path = run / "outputs/cv_observation_000/request/provider_metadata.json"
+    write(path, data)
+    return path, data
+
+
+def test_provider_timings_are_nested_and_attested_by_file_hash(run):
+    instrument(run, add(run, 0))
+    provider_timing(run)
+    report = observation_report.build_report(run)
+    row = report["observations"][0]
+    assert row["phase_seconds"]["provider.cli_call"] == pytest.approx(0.4)
+    assert row["phase_seconds"]["process_start_to_adapter"] == pytest.approx(0.05)
+    assert row["phase_seconds"]["provider.total"] == pytest.approx(0.7)
+    assert len(row["provider_metadata_sha256"]) == 64
+
+
+@pytest.mark.parametrize("problem", ["clock", "outside", "duration", "missing", "failed"])
+def test_invalid_provider_timings_are_not_silently_trusted(run, problem):
+    instrument(run, add(run, 0))
+    path, data = provider_timing(run)
+    timing = data["timing_v1"]
+    if problem == "clock":
+        timing["clock"] = "wall"
+    elif problem == "outside":
+        timing["stages"]["total"]["started_monotonic_ns"] = stamp(0.9)["monotonic_ns"]
+        timing["stages"]["total"]["elapsed_seconds"] = 0.85
+    elif problem == "duration":
+        timing["stages"]["cli_call"]["elapsed_seconds"] = 0.01
+    elif problem == "missing":
+        timing["stages"]["auth_status"] = None
+    else:
+        timing["stages"]["auth_status"]["status"] = "failed"
+    write(path, data)
+    with pytest.raises(ValueError):
+        observation_report.build_report(run)
+
+
+def test_error_without_outer_exit_keeps_counts_but_does_not_invent_provider_bound(run):
+    row = instrument(run, add(run, 0))
+    path, _ = provider_timing(run)
+    row.update(
+        status="error",
+        errors=["TimeoutExpired"],
+        observation_status=None,
+        observer_exit=None,
+        output_bindings_verified=None,
+        response_accepted=None,
+    )
+    write(run / "attempts/000.json", row)
+    report = observation_report.build_report(run)
+    saved = report["observations"][0]
+    assert report["counts"]["errors"] == 1
+    assert report["counts"]["accepted"] == 0
+    assert saved["provider_timing_status"] == "unavailable_without_observer_exit"
+    assert saved["provider_metadata_sha256"] == hashlib.sha256(path.read_bytes()).hexdigest()
+    assert not any(name.startswith("provider.") for name in saved["phase_seconds"])
+    assert "process_exit_tail" not in saved["phase_seconds"]
+
+
+@pytest.mark.parametrize("failure", ["auth_status", "cli_call", "after_provider"])
+def test_provider_failures_and_later_rejection_keep_their_measured_phases(run, failure):
+    row = instrument(run, add(run, 0))
+    row.update(
+        status="error",
+        observation_status=None,
+        response_accepted=None,
+        output_bindings_verified=None,
+        errors=[failure],
+    )
+    write(run / "attempts/000.json", row)
+    path, data = provider_timing(run)
+    if failure != "after_provider":
+        data["status"] = "failed"
+        stages = data["timing_v1"]["stages"]
+        stages["total"]["status"] = "failed"
+        stages[failure]["status"] = "failed"
+        for name in list(stages)[list(stages).index(failure) + 1 :]:
+            stages[name] = None
+    write(path, data)
+    report = observation_report.build_report(run)
+    assert report["counts"]["errors"] == 1
+    phases = report["observations"][0]["phase_seconds"]
+    assert "provider.auth_status" in phases
+    assert ("provider.parse_validate_write" in phases) == (failure == "after_provider")
+
+
+def test_error_row_does_not_hide_contradictory_provider_success(run):
+    row = instrument(run, add(run, 0))
+    row.update(status="error", observation_status=None, response_accepted=None, errors=["later"])
+    write(run / "attempts/000.json", row)
+    path, data = provider_timing(run)
+    data["timing_v1"]["stages"]["total"]["status"] = "failed"
+    write(path, data)
+    with pytest.raises(ValueError, match="Provider outcome"):
+        observation_report.build_report(run)

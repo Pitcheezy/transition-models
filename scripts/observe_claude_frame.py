@@ -12,7 +12,9 @@ import os
 import subprocess
 import sys
 import tempfile
+import time
 import uuid
+from contextlib import contextmanager
 from fractions import Fraction
 from pathlib import Path
 
@@ -187,7 +189,42 @@ def _serialization_pairs(events, response, request):
     return len(uses)
 
 
-def _parse(stdout, request, *, structured_output=False):
+def _primary_model_check(events, requested_model):
+    """Verify primary execution evidence; auxiliary modelUsage entries are not identity proof."""
+    if requested_model is None:
+        return None
+    initialization = [
+        event.get("model")
+        for event in events
+        if event.get("type") == "system"
+        and event.get("subtype") == "init"
+        and event.get("parent_tool_use_id") is None
+    ]
+    assistants = [
+        event.get("message", {}).get("model") if isinstance(event.get("message"), dict) else None
+        for event in events
+        if event.get("type") == "assistant" and event.get("parent_tool_use_id") is None
+    ]
+    allowed = [requested_model]
+    if requested_model.endswith("[1m]"):
+        allowed.append(requested_model[:-4])
+    if (
+        initialization != [requested_model]
+        or not assistants
+        or any(not isinstance(model, str) or model not in allowed for model in assistants)
+    ):
+        raise ValueError("Explicit requested model lacks matching initialization/primary evidence")
+    return {
+        "requested_model": requested_model,
+        "initialization_models": initialization,
+        "assistant_models": list(dict.fromkeys(assistants)),
+        "allowed_assistant_models": allowed,
+        "context_suffix_rule": "Only literal requested [1m] may be absent from assistant model; "
+        "initialization remains exact. No alias/version fallback; modelUsage is not proof.",
+    }
+
+
+def _parse(stdout, request, *, structured_output=False, requested_model=None):
     events = [json.loads(line) for line in stdout.splitlines() if line.strip()]
     if any(not isinstance(event, dict) for event in events):
         raise ValueError("invalid provider event")
@@ -241,7 +278,52 @@ def _parse(stdout, request, *, structured_output=False):
     ]
     metadata["result_format"] = result_format
     metadata["serialization_pairs"] = serialization_pairs
+    primary_check = _primary_model_check(events, requested_model)
+    if primary_check is not None:
+        metadata["primary_model_check"] = primary_check
     return response, metadata
+
+
+def _timing():
+    return {
+        "clock": "monotonic_ns",
+        "scope": (
+            "observe() work and temporary-directory cleanup; excludes final metadata write "
+            "and interpreter/import startup. Outer loop measures the whole observer process; "
+            "CLI duration includes startup/network/provider work, not model-only inference."
+        ),
+        "stages": dict.fromkeys(
+            ("input_validation", "auth_status", "cli_call", "parse_validate_write", "total")
+        ),
+    }
+
+
+@contextmanager
+def _timed_stage(timing, name, clock):
+    started = clock.monotonic_ns()
+    if type(started) is not int or started < 0:
+        raise ValueError("Expected a nonnegative integer monotonic clock")
+    record = {
+        "status": "started",
+        "started_monotonic_ns": started,
+        "finished_monotonic_ns": None,
+        "elapsed_seconds": None,
+    }
+    timing["stages"][name] = record
+    try:
+        yield
+    except BaseException:
+        record["status"] = "failed"
+        raise
+    else:
+        record["status"] = "completed"
+    finally:
+        ended = clock.monotonic_ns()
+        if type(ended) is not int or ended < started:
+            record["status"] = "failed"
+            raise ValueError("Expected a nondecreasing integer monotonic clock")
+        record["finished_monotonic_ns"] = ended
+        record["elapsed_seconds"] = (ended - started) / 1e9
 
 
 def observe(
@@ -252,136 +334,180 @@ def observe(
     claude_bin="claude",
     model=None,
     structured_output=False,
+    clock=time,
 ):
-    """Run one subscription-only CLI call; preserve raw output even on failure."""
-    if type(structured_output) is not bool:
-        raise ValueError("structured_output must be an explicit boolean")
-    if model is not None and (
-        not isinstance(model, str)
-        or not model
-        or model.startswith("-")
-        or any(char.isspace() or not char.isprintable() for char in model)
-    ):
-        raise ValueError("Explicit model must be a nonempty model ID without whitespace/options")
-    if any(os.environ.get(key) for key in FORBIDDEN_ENV):
-        raise ValueError("API credential/provider override environment is forbidden")
-    request, data = _inputs(request_path, image_path)
-    out = _path(response_path)
-    logs = [
-        out.parent / name
-        for name in ("provider_stdout.jsonl", "provider_stderr.txt", "provider_metadata.json")
-    ]
-    if out in logs or any(path.exists() for path in [out, *logs]):
-        raise ValueError("response and provider logs must be fresh")
-    payload = {
-        "type": "user",
-        "message": {
-            "role": "user",
-            "content": [
-                {"type": "text", "text": json.dumps(request, ensure_ascii=False)},
-                {
-                    "type": "image",
-                    "source": {
-                        "type": "base64",
-                        "media_type": "image/jpeg",
-                        "data": base64.b64encode(data).decode("ascii"),
+    """Run one subscription-only CLI call; preserve raw output and local stage timing."""
+    timing = _timing()
+    metadata, logs = None, None
+    try:
+        with _timed_stage(timing, "total", clock):
+            with _timed_stage(timing, "input_validation", clock):
+                if type(structured_output) is not bool:
+                    raise ValueError("structured_output must be an explicit boolean")
+                if model is not None and (
+                    not isinstance(model, str)
+                    or not model
+                    or model.startswith("-")
+                    or any(char.isspace() or not char.isprintable() for char in model)
+                ):
+                    raise ValueError(
+                        "Explicit model must be a nonempty model ID without whitespace/options"
+                    )
+                if any(os.environ.get(key) for key in FORBIDDEN_ENV):
+                    raise ValueError("API credential/provider override environment is forbidden")
+                out = _path(response_path)
+                logs = [
+                    out.parent / name
+                    for name in (
+                        "provider_stdout.jsonl",
+                        "provider_stderr.txt",
+                        "provider_metadata.json",
+                    )
+                ]
+                if out in logs or any(path.exists() for path in [out, *logs]):
+                    raise ValueError("response and provider logs must be fresh")
+                # Publish failed validation timing only after a safe fresh destination is known.
+                metadata = {
+                    "schema": "claude_frame_provider_v1",
+                    "status": "failed",
+                    "billing_basis": "claude.ai subscription authentication; no API fallback",
+                    "usage_note": "Only provider-reported metadata; cost is not a billing receipt.",
+                    "argv": None,
+                    "requested_model": model,
+                    "output_protocol": "structured_json_schema_v1"
+                    if structured_output
+                    else "legacy_json_text",
+                    "output_schema": None,
+                    "provider_schema_retry_note": (
+                        "Provider may re-prompt internally; adapter has no retries or coercion and "
+                        "does not measure the provider's internal retry count."
+                    )
+                    if structured_output
+                    else None,
+                    "timing_v1": timing,
+                }
+                request, data = _inputs(request_path, image_path)
+                payload = {
+                    "type": "user",
+                    "message": {
+                        "role": "user",
+                        "content": [
+                            {"type": "text", "text": json.dumps(request, ensure_ascii=False)},
+                            {
+                                "type": "image",
+                                "source": {
+                                    "type": "base64",
+                                    "media_type": "image/jpeg",
+                                    "data": base64.b64encode(data).decode("ascii"),
+                                },
+                            },
+                        ],
                     },
-                },
-            ],
-        },
-        "parent_tool_use_id": None,
-    }
-    stdin = (json.dumps(payload, ensure_ascii=False) + "\n").encode("utf-8")
-    if len(stdin) > 9_000_000:
-        raise ValueError("request exceeds bounded stdin size")
-    if Path(tempfile.gettempdir()).resolve().is_relative_to(Path(__file__).resolve().parents[1]):
-        raise ValueError("isolated temporary working directory must be outside repository")
-    argv = [
-        claude_bin,
-        "-p",
-        "--input-format",
-        "stream-json",
-        "--output-format",
-        "stream-json",
-        "--verbose",
-        "--tools",
-        "",
-        "--strict-mcp-config",
-        "--mcp-config",
-        '{"mcpServers":{}}',
-        "--setting-sources",
-        "",
-        "--settings",
-        '{"disableAllHooks":true,"autoMemoryEnabled":false}',
-        "--no-session-persistence",
-        "--disable-slash-commands",
-        "--no-chrome",
-        "--system-prompt",
-        SYSTEM,
-    ]
-    if model is not None:
-        argv.extend(["--model", model])
-    schema = _output_schema(request) if structured_output else None
-    if schema is not None:
-        argv.extend(["--json-schema", json.dumps(schema, separators=(",", ":"), allow_nan=False)])
-    out.parent.mkdir(parents=True, exist_ok=True)
-    metadata = {
-        "schema": "claude_frame_provider_v1",
-        "status": "failed",
-        "billing_basis": "claude.ai subscription authentication; no API fallback",
-        "usage_note": "Only provider-reported metadata; cost is not a billing receipt.",
-        "argv": argv,
-        "requested_model": model,
-        "output_protocol": "structured_json_schema_v1" if structured_output else "legacy_json_text",
-        "output_schema": schema,
-        "provider_schema_retry_note": (
-            "Provider may re-prompt internally; adapter has no retries or coercion and does not "
-            "measure the provider's internal retry count."
-        )
-        if structured_output
-        else None,
-    }
-    with tempfile.TemporaryDirectory(prefix="pitcheezy-observer-") as cwd:
-        auth = subprocess.run(
-            [claude_bin, "auth", "status"],
-            cwd=cwd,
-            capture_output=True,
-            timeout=30,
-            check=False,
-            shell=False,
-        )
-        auth_state = json.loads(auth.stdout) if auth.returncode == 0 else {}
-        if auth_state.get("loggedIn") is not True or auth_state.get("authMethod") != "claude.ai":
-            raise ValueError("Claude subscription login required (authMethod claude.ai)")
-        metadata["auth_method"] = "claude.ai"
-        try:
-            with logs[0].open("xb") as stdout, logs[1].open("xb") as stderr:
-                completed = subprocess.run(
-                    argv,
-                    cwd=cwd,
-                    input=stdin,
-                    stdout=stdout,
-                    stderr=stderr,
-                    timeout=120,
-                    check=False,
-                    shell=False,
-                )
-            metadata["returncode"] = completed.returncode
-            if completed.returncode != 0:
-                raise ValueError("Claude CLI returned nonzero; inspect private provider logs")
-            response, reported = _parse(
-                logs[0].read_text(encoding="utf-8"), request, structured_output=structured_output
-            )
-            metadata["result_format"] = reported.pop("result_format")
-            metadata["reported"] = reported
-            with out.open("x", encoding="utf-8") as stream:
-                json.dump(response, stream, ensure_ascii=False, indent=2, allow_nan=False)
-                stream.write("\n")
-            metadata["status"] = "accepted"
-        except (Exception, KeyboardInterrupt) as error:
+                    "parent_tool_use_id": None,
+                }
+                stdin = (json.dumps(payload, ensure_ascii=False) + "\n").encode("utf-8")
+                if len(stdin) > 9_000_000:
+                    raise ValueError("request exceeds bounded stdin size")
+                if (
+                    Path(tempfile.gettempdir())
+                    .resolve()
+                    .is_relative_to(Path(__file__).resolve().parents[1])
+                ):
+                    raise ValueError(
+                        "isolated temporary working directory must be outside repository"
+                    )
+                argv = [
+                    claude_bin,
+                    "-p",
+                    "--input-format",
+                    "stream-json",
+                    "--output-format",
+                    "stream-json",
+                    "--verbose",
+                    "--tools",
+                    "",
+                    "--strict-mcp-config",
+                    "--mcp-config",
+                    '{"mcpServers":{}}',
+                    "--setting-sources",
+                    "",
+                    "--settings",
+                    '{"disableAllHooks":true,"autoMemoryEnabled":false}',
+                    "--no-session-persistence",
+                    "--disable-slash-commands",
+                    "--no-chrome",
+                    "--system-prompt",
+                    SYSTEM,
+                ]
+                if model is not None:
+                    argv.extend(["--model", model])
+                schema = _output_schema(request) if structured_output else None
+                if schema is not None:
+                    argv.extend(
+                        [
+                            "--json-schema",
+                            json.dumps(schema, separators=(",", ":"), allow_nan=False),
+                        ]
+                    )
+                metadata.update(argv=argv, output_schema=schema)
+                out.parent.mkdir(parents=True, exist_ok=True)
+            with tempfile.TemporaryDirectory(prefix="pitcheezy-observer-") as cwd:
+                with _timed_stage(timing, "auth_status", clock):
+                    auth = subprocess.run(
+                        [claude_bin, "auth", "status"],
+                        cwd=cwd,
+                        capture_output=True,
+                        timeout=30,
+                        check=False,
+                        shell=False,
+                    )
+                    auth_state = json.loads(auth.stdout) if auth.returncode == 0 else {}
+                    if (
+                        auth_state.get("loggedIn") is not True
+                        or auth_state.get("authMethod") != "claude.ai"
+                    ):
+                        raise ValueError(
+                            "Claude subscription login required (authMethod claude.ai)"
+                        )
+                    metadata["auth_method"] = "claude.ai"
+                with _timed_stage(timing, "cli_call", clock):
+                    with logs[0].open("xb") as stdout, logs[1].open("xb") as stderr:
+                        completed = subprocess.run(
+                            argv,
+                            cwd=cwd,
+                            input=stdin,
+                            stdout=stdout,
+                            stderr=stderr,
+                            timeout=120,
+                            check=False,
+                            shell=False,
+                        )
+                    metadata["returncode"] = completed.returncode
+                    if completed.returncode != 0:
+                        raise ValueError(
+                            "Claude CLI returned nonzero; inspect private provider logs"
+                        )
+                with _timed_stage(timing, "parse_validate_write", clock):
+                    response, reported = _parse(
+                        logs[0].read_text(encoding="utf-8"),
+                        request,
+                        structured_output=structured_output,
+                        requested_model=model,
+                    )
+                    metadata["result_format"] = reported.pop("result_format")
+                    metadata["reported"] = reported
+                    with out.open("x", encoding="utf-8") as stream:
+                        json.dump(response, stream, ensure_ascii=False, indent=2, allow_nan=False)
+                        stream.write("\n")
+                    metadata["status"] = "accepted"
+    except (Exception, KeyboardInterrupt) as error:
+        if metadata is not None:
+            metadata["status"] = "failed"
             metadata["error_type"] = type(error).__name__
-            raise
-        finally:
+        raise
+    finally:
+        if metadata is not None:
+            logs[2].parent.mkdir(parents=True, exist_ok=True)
             with logs[2].open("x", encoding="utf-8") as stream:
                 json.dump(metadata, stream, ensure_ascii=False, indent=2, allow_nan=False)
                 stream.write("\n")

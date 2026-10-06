@@ -175,8 +175,13 @@ def run_plan(plan_path, out, *, clock=time, runner=subprocess.run):
                 "scheduled_input_monotonic_ns": scheduled,
                 "scheduled_input_utc_ns": start_utc_ns + delay_ns,
                 "scheduled_offset_seconds_exact": str(cutoff - cutoffs[0]),
+                "phase_timing_version": 1,
                 "preparation_started": None,
+                "input_bindings_verified": None,
+                "frame_extracted": None,
+                "request_ready": None,
                 "observer_dispatch": None,
+                "output_bindings_verified": None,
                 "response_accepted": None,
                 "observation_status": None,
                 "errors": [],
@@ -190,6 +195,8 @@ def run_plan(plan_path, out, *, clock=time, runner=subprocess.run):
                 record["preparation_started"] = stamp()
                 event("preparation_started", index)
                 clip_frames._verify_files(bindings)
+                record["input_bindings_verified"] = stamp()
+                event("input_bindings_verified", index)
                 frame_dir, session = (
                     out / "frames" / f"frame_{index:03d}",
                     out / "outputs" / f"cv_observation_{index:03d}",
@@ -203,12 +210,17 @@ def run_plan(plan_path, out, *, clock=time, runner=subprocess.run):
                 )
                 if extraction.get("status") != "extracted":
                     raise ValueError("Frame extraction failed; no observation was submitted")
+                record["frame_extracted"] = stamp()
+                event("frame_extracted", index)
                 request = observation_session.begin_mapped(frame_dir, session)
                 actual = Fraction(request["source_time_seconds_exact"])
                 if actual > cutoff or Fraction(request["requested_cutoff_seconds_exact"]) != cutoff:
                     raise ValueError("Mapped request violates the planned causal cutoff")
                 record["actual_source_seconds_exact"] = str(actual)
                 record["frame_ready"] = stamp()
+                # Keep the legacy name while making the completed request stage explicit.
+                record["request_ready"] = record["frame_ready"]
+                event("request_ready", index)
                 public = session / "request"
                 response = public / "response.json"
                 if response.exists() or response.is_symlink():
@@ -242,6 +254,8 @@ def run_plan(plan_path, out, *, clock=time, runner=subprocess.run):
                 if not response.is_file() or response.is_symlink():
                     raise ValueError("Observer did not write a fresh regular response file")
                 clip_frames._verify_files(bindings)
+                record["output_bindings_verified"] = stamp()
+                event("output_bindings_verified", index)
                 result = observation_session.finish(session, response)
                 record["response_accepted"] = stamp()
                 record["accepted_latency_from_schedule_seconds"] = (

@@ -67,11 +67,20 @@ def case(tmp_path, monkeypatch):
                 returncode=0,
                 stdout=json.dumps({"loggedIn": True, "authMethod": state.auth_method}).encode(),
             )
+        reported_model = (
+            argv[argv.index("--model") + 1] if "--model" in argv else "provider-reported-model"
+        )
+        assistant_model = reported_model[:-4] if reported_model.endswith("[1m]") else reported_model
         events = (
             state.events
             if state.events is not None
             else [
-                {"type": "system", "model": "provider-reported-model"},
+                {"type": "system", "subtype": "init", "model": reported_model},
+                {
+                    "type": "assistant",
+                    "parent_tool_use_id": None,
+                    "message": {"role": "assistant", "model": assistant_model, "content": []},
+                },
                 {
                     "type": "result",
                     "subtype": "success",
@@ -241,7 +250,11 @@ def test_explicit_model_preserves_requested_and_reported_separately(case):
     argv = case.calls[1][0]
     assert argv[-2:] == ["--model", model]
     assert metadata["requested_model"] == model
-    assert metadata["reported"]["reported_models"] == ["provider-reported-model"]
+    assert metadata["reported"]["reported_models"] == [model]
+    check = metadata["reported"]["primary_model_check"]
+    assert check["requested_model"] == model
+    assert check["initialization_models"] == [model]
+    assert check["assistant_models"] == ["claude-opus-4-8"]
     saved = json.loads((case.paths[2].parent / "provider_metadata.json").read_text())
     assert saved["requested_model"] == model and saved["reported"] == metadata["reported"]
     assert len(case.calls) == 2  # One authentication check, one observation, no substitution/retry.
@@ -293,8 +306,15 @@ def structured_events(response):
     ]
 
 
+def primary_events(response, model):
+    events = structured_events(response)
+    events[0]["message"]["model"] = model[:-4] if model.endswith("[1m]") else model
+    events.insert(0, {"type": "system", "subtype": "init", "model": model})
+    return events
+
+
 def test_structured_mode_binds_schema_and_accepts_only_matched_serialization(case):
-    case.events = structured_events(case.response)
+    case.events = primary_events(case.response, "claude-opus-4-8[1m]")
     metadata = adapter.observe(*case.paths, structured_output=True, model="claude-opus-4-8[1m]")
     argv = case.calls[1][0]
     schema = json.loads(argv[argv.index("--json-schema") + 1])
@@ -394,3 +414,233 @@ def test_provider_schema_avoids_top_combinators_but_cross_field_rules_remain(cas
     with pytest.raises(ValueError):
         adapter.observe(*case.paths, structured_output=True)
     assert not case.paths[2].exists()
+
+
+class StageClock:
+    def __init__(self):
+        self.now = 1_000_000_000
+
+    def monotonic_ns(self):
+        value = self.now
+        self.now += 100_000_000
+        return value
+
+
+def assert_timing_chronology(metadata):
+    timing = metadata["timing_v1"]
+    assert timing["clock"] == "monotonic_ns"
+    assert "interpreter/import startup" in timing["scope"]
+    assert "final metadata write" in timing["scope"]
+    assert set(timing["stages"]) == {
+        "input_validation",
+        "auth_status",
+        "cli_call",
+        "parse_validate_write",
+        "total",
+    }
+    stages = timing["stages"]
+    total = stages["total"]
+    previous = total["started_monotonic_ns"]
+    for name in ("input_validation", "auth_status", "cli_call", "parse_validate_write"):
+        record = stages[name]
+        if record is None:
+            continue
+        start, end = record["started_monotonic_ns"], record["finished_monotonic_ns"]
+        assert type(start) is int and type(end) is int
+        assert 0 <= previous <= start <= end <= total["finished_monotonic_ns"]
+        assert record["elapsed_seconds"] == (end - start) / 1e9
+        assert record["elapsed_seconds"] >= 0
+        previous = end
+    assert (
+        total["elapsed_seconds"]
+        == (total["finished_monotonic_ns"] - total["started_monotonic_ns"]) / 1e9
+    )
+
+
+def test_timing_records_chronology_without_changing_calls_or_response(case):
+    metadata = adapter.observe(*case.paths, clock=StageClock())
+    assert_timing_chronology(metadata)
+    stages = metadata["timing_v1"]["stages"]
+    assert all(stage["status"] == "completed" for stage in stages.values())
+    assert stages["total"]["elapsed_seconds"] == 0.9
+    assert all(stages[name]["elapsed_seconds"] == 0.1 for name in stages if name != "total")
+    assert len(case.calls) == 2
+    assert json.loads(case.paths[2].read_text()) == case.response
+    saved = json.loads((case.paths[2].parent / "provider_metadata.json").read_text())
+    assert saved == metadata
+    encoded = json.dumps(metadata["timing_v1"])
+    assert case.request["observation_id"] not in encoded
+    assert case.request["image_sha256"] not in encoded
+    assert str(case.paths[0]) not in encoded
+
+
+@pytest.mark.parametrize(
+    "failure,failed_stage,expected_calls",
+    [
+        ("input", "input_validation", 0),
+        ("auth_rejected", "auth_status", 1),
+        ("auth_timeout", "auth_status", 1),
+        ("cli_timeout", "cli_call", 2),
+        ("cli_nonzero", "cli_call", 2),
+        ("parse", "parse_validate_write", 2),
+    ],
+)
+def test_failure_timings_are_retained_without_retry(
+    case, monkeypatch, failure, failed_stage, expected_calls
+):
+    if failure == "input":
+        case.paths[0].write_text("{}", encoding="utf-8")
+    elif failure == "auth_rejected":
+        case.auth_method = "api_key"
+    elif failure == "auth_timeout":
+        original = adapter.subprocess.run
+
+        def timed_out_auth(argv, **kwargs):
+            original(argv, **kwargs)
+            raise subprocess.TimeoutExpired(argv, kwargs["timeout"])
+
+        monkeypatch.setattr(adapter.subprocess, "run", timed_out_auth)
+    elif failure == "cli_timeout":
+        case.timeout = True
+    elif failure == "cli_nonzero":
+        case.returncode = 1
+    else:
+        case.events = "not JSON"
+    with pytest.raises((ValueError, subprocess.TimeoutExpired)):
+        adapter.observe(*case.paths, clock=StageClock())
+    metadata = json.loads((case.paths[2].parent / "provider_metadata.json").read_text())
+    assert_timing_chronology(metadata)
+    stages = metadata["timing_v1"]["stages"]
+    assert metadata["status"] == "failed" and stages["total"]["status"] == "failed"
+    assert stages[failed_stage]["status"] == "failed"
+    names = ["input_validation", "auth_status", "cli_call", "parse_validate_write"]
+    index = names.index(failed_stage)
+    assert all(stages[name]["status"] == "completed" for name in names[:index])
+    assert all(stages[name] is None for name in names[index + 1 :])
+    assert len(case.calls) == expected_calls
+    assert not case.paths[2].exists()
+    if failed_stage in ("cli_call", "parse_validate_write"):
+        assert (case.paths[2].parent / "provider_stdout.jsonl").exists()
+    else:
+        assert not (case.paths[2].parent / "provider_stdout.jsonl").exists()
+
+
+def test_existing_metadata_is_never_overwritten_even_for_input_error(case):
+    path = case.paths[2].parent / "provider_metadata.json"
+    path.write_bytes(b"keep existing metadata")
+    case.paths[0].write_text("{}", encoding="utf-8")
+    with pytest.raises(ValueError, match="fresh"):
+        adapter.observe(*case.paths, clock=StageClock())
+    assert path.read_bytes() == b"keep existing metadata"
+    assert not case.calls
+
+
+def test_total_timing_includes_temporary_directory_cleanup(case, monkeypatch):
+    clock = StageClock()
+    original = adapter.tempfile.TemporaryDirectory
+
+    @contextmanager
+    def cleanup_delay(**kwargs):
+        with original(**kwargs) as cwd:
+            yield cwd
+            clock.now += 2_000_000_000
+
+    monkeypatch.setattr(adapter.tempfile, "TemporaryDirectory", cleanup_delay)
+    metadata = adapter.observe(*case.paths, clock=clock)
+    assert_timing_chronology(metadata)
+    stages = metadata["timing_v1"]["stages"]
+    assert stages["total"]["elapsed_seconds"] == 2.9
+    assert stages["parse_validate_write"]["elapsed_seconds"] == 0.1
+
+
+@pytest.mark.parametrize("requested", ["claude-haiku-4-5-20251001", "claude-opus-4-8[1m]"])
+def test_explicit_primary_model_matches_without_trusting_auxiliary_usage(case, requested):
+    case.events = primary_events(case.response, requested)
+    case.events[-1]["modelUsage"] = {"auxiliary-model": {"inputTokens": 1}}
+    metadata = adapter.observe(*case.paths, model=requested, structured_output=True)
+    proof = metadata["reported"]["primary_model_check"]
+    assert proof["requested_model"] == requested
+    assert proof["initialization_models"] == [requested]
+    assert proof["assistant_models"] == [
+        requested[:-4] if requested.endswith("[1m]") else requested
+    ]
+    assert metadata["reported"]["modelUsage"] == {"auxiliary-model": {"inputTokens": 1}}
+    assert len(case.calls) == 2
+
+
+@pytest.mark.parametrize(
+    "problem",
+    [
+        "wrong_init",
+        "missing_init",
+        "duplicate_init",
+        "wrong_assistant",
+        "missing_assistant",
+        "missing_assistant_model",
+        "mixed_primary_models",
+        "child_only",
+        "assistant_version_alias",
+        "unrequested_context_suffix",
+    ],
+)
+def test_primary_model_mismatch_refused_even_with_matching_model_usage(case, problem):
+    requested = "claude-haiku-4-5-20251001"
+    case.events = primary_events(case.response, requested)
+    case.events[-1]["modelUsage"] = {requested: {"inputTokens": 123}}
+    init, assistant = case.events[0], case.events[1]
+    if problem == "wrong_init":
+        init["model"] = "claude-opus-4-8"
+    elif problem == "missing_init":
+        case.events.pop(0)
+    elif problem == "duplicate_init":
+        case.events.insert(0, dict(init))
+    elif problem == "wrong_assistant":
+        assistant["message"]["model"] = "claude-opus-4-8"
+    elif problem == "missing_assistant":
+        # Preserve a valid structured response, with no serialization/tool events.
+        case.events = [init, case.events[-1]]
+    elif problem == "missing_assistant_model":
+        assistant["message"].pop("model")
+    elif problem == "mixed_primary_models":
+        case.events.insert(-1, {"type": "assistant", "message": {"model": "other"}})
+    elif problem == "child_only":
+        assistant["parent_tool_use_id"] = "child-session"
+    elif problem == "assistant_version_alias":
+        assistant["message"]["model"] = "claude-haiku-4-5"
+    else:
+        assistant["message"]["model"] = requested + "[1m]"
+    with pytest.raises(ValueError, match="requested model"):
+        adapter.observe(*case.paths, model=requested, structured_output=True)
+    assert not case.paths[2].exists()
+    assert len(case.calls) == 2
+    path = case.paths[2].parent
+    assert [json.loads(line) for line in (path / "provider_stdout.jsonl").read_text().splitlines()]
+    metadata = json.loads((path / "provider_metadata.json").read_text())
+    assert metadata["status"] == "failed"
+    assert metadata["timing_v1"]["stages"]["parse_validate_write"]["status"] == "failed"
+    assert metadata["timing_v1"]["stages"]["total"]["status"] == "failed"
+
+
+def test_context_suffix_still_requires_exact_initialization(case):
+    requested = "claude-opus-4-8[1m]"
+    case.events = primary_events(case.response, requested)
+    case.events[0]["model"] = "claude-opus-4-8"
+    with pytest.raises(ValueError, match="requested model"):
+        adapter.observe(*case.paths, model=requested, structured_output=True)
+    assert not case.paths[2].exists()
+
+
+def test_configured_context_suffix_may_also_be_present_in_assistant(case):
+    requested = "claude-opus-4-8[1m]"
+    case.events = primary_events(case.response, requested)
+    case.events[1]["message"]["model"] = requested
+    metadata = adapter.observe(*case.paths, model=requested, structured_output=True)
+    assert metadata["reported"]["primary_model_check"]["assistant_models"] == [requested]
+
+
+def test_legacy_unspecified_model_preserves_acceptance_without_primary_evidence(case):
+    case.events = structured_events(case.response)
+    metadata = adapter.observe(*case.paths, structured_output=True)
+    assert metadata["requested_model"] is None
+    assert "primary_model_check" not in metadata["reported"]
+    assert len(case.calls) == 2
