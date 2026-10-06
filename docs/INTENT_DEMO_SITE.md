@@ -13,7 +13,7 @@
 - Sites project: `appgprj_6ac3665aa5048191ac2b5a012b2c7010` (기존 사이트 갱신).
 - `web/pitch-studio/`는 배포 정적 파일 사본이다. CDN·외부 폰트·API·프레임워크가 필요 없다.
 - 이전 `/#analysis` 링크는 서비스로, `/#validation`과 `/#story`는 기존 리포트로 이동한다.
-- `pitcheezy.com`은 구매 확인, DNS/SSL 연결 대기다.
+- `https://pitcheezy.com`은 2026-10-06 DNS/SSL active 및 HTTPS 200 확인 완료.
 
 ```bash
 python -m http.server 8786 --bind 127.0.0.1 --directory web/pitch-studio
@@ -125,9 +125,13 @@ Site 재배포는 같은 project_id와 기존 checkout을 열어 수행한다. �
 Windows bundled workflow: Git Bash, TAR_OPTIONS=--force-local, forward-slash archive 경로.
 safe.directory는 해당 checkout에만 실행 범위로 적용하고 토큰을 파일에 저장하지 않는다.
 
-## pitcheezy.com 연결 대기
+## pitcheezy.com 연결 완료
 
-## 2026-10-06 접속 장애 진단
+## 2026-10-06 복구 확인
+
+Cloudflare 기존 DNS 0건에서 아래 A 2건(DNS only)과 TXT 2건을 등록했다. 공개 DNS에서 값 일치를 확인했고 04:45 UTC Sites domain/provider/SSL 모두 active, HTTPS GET 200 및 실제 홈페이지 표시를 확인했다. www는 별도 미등록이다. 사이트 코드·시연 자료는 변경하지 않았다.
+
+## 이전 접속 장애 진단
 
 Sites의 기존 공개 배포는 active이며 v3다. `pitcheezy.com` custom domain은
 pending / provider pending / ssl pending_validation이다. Google 공개 DNS 조회에서

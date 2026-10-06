@@ -1,5 +1,9 @@
 # MLB P0 — Codex / Claude 인계 기록
 
+## 도메인 복구 완료 — 2026-10-06
+
+https://pitcheezy.com DNS 4건 등록, domain/provider/SSL active·HTTPS 200·홈 화면 확인 완료. 기존 사이트 코드는 유지. CV-5a4는 앞선 4장 사전 점검 상태이며 새 모델 호출 없음. 사용량 잔여 48%로 이전 50% 하한을 넘겨 사용했으므로 추가 CV 개발 중단, 수정 권한 반납.
+
 ## 도메인 진단·다음 타석 사전 점검 — 2026-10-06
 
 pitcheezy.com은 A/인증 TXT가 없고 SSL pending_validation이다. 사이트 기존 배포는 active.
