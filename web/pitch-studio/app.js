@@ -5,7 +5,8 @@ const rows = Object.values(data.pitches).sort((a, b) => {
     y = b.pitch_id.split(":").map(Number);
   return x[1] - y[1] || x[2] - y[2];
 });
-let selected = rows[0].pitch_id,
+const requestedPitch = new URLSearchParams(location.search).get("pitch");
+let selected = Object.hasOwn(data.pitches, requestedPitch) ? requestedPitch : rows[0].pitch_id,
   revealed = false,
   unit = "ft",
   filter = "all",

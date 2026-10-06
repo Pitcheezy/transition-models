@@ -66,14 +66,19 @@ def check():
         actual = hashlib.sha256((ROOT / manifest[key]).read_bytes()).hexdigest()
         assert actual == manifest[f"{key}_sha256"], f"Source changed: {key}"
     receiver = subprocess.run(
-        ["node", "--test", str(ROOT / "tests/js/pitch_receiver.test.cjs")],
+        [
+            "node",
+            "--test",
+            str(ROOT / "tests/js/pitch_receiver.test.cjs"),
+            str(ROOT / "tests/js/pitch_home.test.cjs"),
+        ],
         capture_output=True,
         text=True,
         encoding="utf-8",
     )
     if receiver.returncode:
         raise RuntimeError(receiver.stdout + receiver.stderr)
-    print("PASS: response receiver regression checks")
+    print("PASS: receiver and home playback regression checks")
     print(f"PASS: {len(data['scenarios'])} illustrative distributions, HTML assets, media SHA256")
 
 

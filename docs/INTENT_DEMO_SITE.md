@@ -6,10 +6,11 @@
 
 ## 실행·배포
 
-- 공개 홈: https://pitcheezy-pitch-studio.sritone723.chatgpt.site
+- 공개 홈: https://pitcheezy.com (기본 주소 https://pitcheezy-pitch-studio.sritone723.chatgpt.site)
 - 분석 서비스: 위 주소의 `/service.html`
 - 실제 관측·검증: `/report.html#analysis`, `/report.html#validation`
-- 배포 소스: `7cf49c756e07ecf6bd1a6f110cf70d49f3c2e574`, 배포 상태 `succeeded`.
+- 최신 배포: v4, 소스 `d52bb61a5b2a7dc1871efa3f19777bf0061108de`, 상태 `succeeded`(2026-10-06).
+- 배포 ID: `appgdep_6ac481b5176c8191a9cb32b3ca2d4ac6`.
 - Sites project: `appgprj_6ac3665aa5048191ac2b5a012b2c7010` (기존 사이트 갱신).
 - `web/pitch-studio/`는 배포 정적 파일 사본이다. CDN·외부 폰트·API·프레임워크가 필요 없다.
 - 이전 `/#analysis` 링크는 서비스로, `/#validation`과 `/#story`는 기존 리포트로 이동한다.
@@ -20,6 +21,23 @@ python -m http.server 8786 --bind 127.0.0.1 --directory web/pitch-studio
 ```
 
 http://127.0.0.1:8786/ 을 연다. 서버 종료는 Ctrl+C. 로컬 index.html도 직접 열 수 있다.
+
+## 10/6 발표 안정성 보완
+
+- 홈 재생/일시정지 버튼과 자동재생 거절 시 안내. 영상·source 파일 오류 시 정지 장면,
+  명시적 재시도 시 파일 다시 로드. 늦은 재생 응답이 정지 장면 설명을 덮어쓰지 않는다.
+- `/report.html?pitch=849843%3A1%3A3#analysis`는 좌표 있는 사례,
+  `/report.html?pitch=849843%3A2%3A5#analysis`는 기권 사례다. 허용된 39키만 선택하며
+  잘못된 키는 첫 투구로 돌아간다. 링크의 공개 여부 파라미터는 사용하지 않는다.
+- Node 재생 6건 + 기존 수신 34건, 데이터 원본 대조(39/27/12와 M3), Ruff,
+  체크리스트 4건(PYTHONUTF8=1) 통과. 모델 코드는 바꾸지 않아 전체 CPU 검사는 재실행하지 않았다.
+- Windows 브라우저에서 재생/일시정지/재개/정지 미트/재생 복귀, 정상 공개/다음 투구 초기화/
+  기권/바로가기/잘못된 키를 확인했다. 390px 폭의 새 조작부와 미트 범례도 확인했다.
+  실제 Safari/iPhone 검증은 아니다. 자동재생 차단·파일 오류는 회귀 검사에서 모의했다.
+- 207파일 보존 기준에서 203개 불변, 사이트 `app.js/home.js/index.html/product.css` 4개만
+  의도적으로 변경. Site dist와 저장소 사본 바이트 일치. 기존 M3·JSONL·장표·private 비교는 유지.
+- [2분 동선·30초 대체 대사](PITCH_STUDIO_DEMO_RUNBOOK.md),
+  [비공개 오프라인 v3](PITCH_STUDIO_OFFLINE_BUNDLE.md). 실제 낭독·Song 리허설은 대기다.
 
 ## 시연 동선
 
