@@ -1,0 +1,835 @@
+{
+  "schema": "cv_latency_model_comparison_analysis_v1",
+  "preregistration_sha256": "36e6da539f37a33505341857d6e1c140e45d157565840d27aa33e3301777cb91",
+  "run_order": [
+    "opus",
+    "haiku"
+  ],
+  "same_preregistered_frames_confirmed": true,
+  "arms": {
+    "opus": {
+      "requested_model": "claude-opus-4-8[1m]",
+      "counts": {
+        "attempted": 10,
+        "accepted": 10,
+        "marked": 7,
+        "unavailable": 3,
+        "unknown": 0,
+        "errors": 0,
+        "dispatched": 10,
+        "dispatch_within_5s": 1,
+        "publication_within_5s": 0,
+        "both_within_5s": 0,
+        "not_attempted": 0
+      },
+      "planned": 10,
+      "elapsed_seconds": 234.5,
+      "service_seconds": {
+        "n": 10,
+        "min": 18.594,
+        "median": 23.8675,
+        "max": 31.016
+      },
+      "phase_seconds": {
+        "dispatch_overhead": {
+          "n": 10,
+          "min": 0.0,
+          "median": 0.0,
+          "max": 0.0
+        },
+        "frame_extraction": {
+          "n": 10,
+          "min": 0.657,
+          "median": 1.5699999999999998,
+          "max": 2.187
+        },
+        "input_binding_verification": {
+          "n": 10,
+          "min": 0.422,
+          "median": 0.797,
+          "max": 0.828
+        },
+        "observer_process": {
+          "n": 10,
+          "min": 14.281,
+          "median": 18.992,
+          "max": 26.063
+        },
+        "output_binding_verification": {
+          "n": 10,
+          "min": 0.734,
+          "median": 0.7965,
+          "max": 0.829
+        },
+        "process_exit_tail": {
+          "n": 10,
+          "min": 0.078,
+          "median": 0.093,
+          "max": 0.094
+        },
+        "process_start_to_adapter": {
+          "n": 10,
+          "min": 0.734,
+          "median": 0.7655000000000001,
+          "max": 0.828
+        },
+        "provider.auth_status": {
+          "n": 10,
+          "min": 0.782,
+          "median": 0.8049999999999999,
+          "max": 0.844
+        },
+        "provider.cli_call": {
+          "n": 10,
+          "min": 12.563,
+          "median": 17.2185,
+          "max": 24.313
+        },
+        "provider.input_validation": {
+          "n": 10,
+          "min": 0.046,
+          "median": 0.047,
+          "max": 0.063
+        },
+        "provider.parse_validate_write": {
+          "n": 10,
+          "min": 0.015,
+          "median": 0.031,
+          "max": 0.032
+        },
+        "provider.total": {
+          "n": 10,
+          "min": 13.422,
+          "median": 18.125,
+          "max": 25.219
+        },
+        "request_preparation": {
+          "n": 10,
+          "min": 0.406,
+          "median": 0.7344999999999999,
+          "max": 0.781
+        },
+        "response_validation_publication": {
+          "n": 10,
+          "min": 0.718,
+          "median": 0.742,
+          "max": 0.781
+        }
+      },
+      "details": [
+        {
+          "index": 0,
+          "status": "accepted",
+          "observation_status": "marked",
+          "image_matches_preregistered": true,
+          "image_sha256": "c103b67dbde86972fdf0d92cdc5b765adeda9b426dc68ae38a29285a1f0d52dc",
+          "provider_status": "accepted",
+          "provider_error_type": null,
+          "primary_model_check": {
+            "requested_model": "claude-opus-4-8[1m]",
+            "initialization_models": [
+              "claude-opus-4-8[1m]"
+            ],
+            "assistant_models": [
+              "claude-opus-4-8"
+            ],
+            "allowed_assistant_models": [
+              "claude-opus-4-8[1m]",
+              "claude-opus-4-8"
+            ],
+            "context_suffix_rule": "Only literal requested [1m] may be absent from assistant model; initialization remains exact. No alias/version fallback; modelUsage is not proof."
+          },
+          "serialization_pairs": 1,
+          "service_seconds": 19.954
+        },
+        {
+          "index": 1,
+          "status": "accepted",
+          "observation_status": "marked",
+          "image_matches_preregistered": true,
+          "image_sha256": "291e3fdeaf97d9325e908659a641146f0c02b0b71a575a23f23675574d8daeb3",
+          "provider_status": "accepted",
+          "provider_error_type": null,
+          "primary_model_check": {
+            "requested_model": "claude-opus-4-8[1m]",
+            "initialization_models": [
+              "claude-opus-4-8[1m]"
+            ],
+            "assistant_models": [
+              "claude-opus-4-8"
+            ],
+            "allowed_assistant_models": [
+              "claude-opus-4-8[1m]",
+              "claude-opus-4-8"
+            ],
+            "context_suffix_rule": "Only literal requested [1m] may be absent from assistant model; initialization remains exact. No alias/version fallback; modelUsage is not proof."
+          },
+          "serialization_pairs": 1,
+          "service_seconds": 24.89
+        },
+        {
+          "index": 2,
+          "status": "accepted",
+          "observation_status": "unavailable",
+          "image_matches_preregistered": true,
+          "image_sha256": "fc10baed4c2294538a1545f700b247ffb6fe3a654efe392a292b80208f4eed49",
+          "provider_status": "accepted",
+          "provider_error_type": null,
+          "primary_model_check": {
+            "requested_model": "claude-opus-4-8[1m]",
+            "initialization_models": [
+              "claude-opus-4-8[1m]"
+            ],
+            "assistant_models": [
+              "claude-opus-4-8"
+            ],
+            "allowed_assistant_models": [
+              "claude-opus-4-8[1m]",
+              "claude-opus-4-8"
+            ],
+            "context_suffix_rule": "Only literal requested [1m] may be absent from assistant model; initialization remains exact. No alias/version fallback; modelUsage is not proof."
+          },
+          "serialization_pairs": 1,
+          "service_seconds": 21.406
+        },
+        {
+          "index": 3,
+          "status": "accepted",
+          "observation_status": "unavailable",
+          "image_matches_preregistered": true,
+          "image_sha256": "255d8767662f26f2280aa170278459f5f5fb5ad92e0771db409073dc1ddc60fa",
+          "provider_status": "accepted",
+          "provider_error_type": null,
+          "primary_model_check": {
+            "requested_model": "claude-opus-4-8[1m]",
+            "initialization_models": [
+              "claude-opus-4-8[1m]"
+            ],
+            "assistant_models": [
+              "claude-opus-4-8"
+            ],
+            "allowed_assistant_models": [
+              "claude-opus-4-8[1m]",
+              "claude-opus-4-8"
+            ],
+            "context_suffix_rule": "Only literal requested [1m] may be absent from assistant model; initialization remains exact. No alias/version fallback; modelUsage is not proof."
+          },
+          "serialization_pairs": 1,
+          "service_seconds": 18.594
+        },
+        {
+          "index": 4,
+          "status": "accepted",
+          "observation_status": "marked",
+          "image_matches_preregistered": true,
+          "image_sha256": "49af438deaeba35ad2592c28d925239f9dfbdc199be63c2b6ef25e72cdb631b5",
+          "provider_status": "accepted",
+          "provider_error_type": null,
+          "primary_model_check": {
+            "requested_model": "claude-opus-4-8[1m]",
+            "initialization_models": [
+              "claude-opus-4-8[1m]"
+            ],
+            "assistant_models": [
+              "claude-opus-4-8"
+            ],
+            "allowed_assistant_models": [
+              "claude-opus-4-8[1m]",
+              "claude-opus-4-8"
+            ],
+            "context_suffix_rule": "Only literal requested [1m] may be absent from assistant model; initialization remains exact. No alias/version fallback; modelUsage is not proof."
+          },
+          "serialization_pairs": 1,
+          "service_seconds": 24.719
+        },
+        {
+          "index": 5,
+          "status": "accepted",
+          "observation_status": "marked",
+          "image_matches_preregistered": true,
+          "image_sha256": "9f0aa8d630d7da11d2864cc244b4a8f54ed8016212d69833c5f8bccb0310611f",
+          "provider_status": "accepted",
+          "provider_error_type": null,
+          "primary_model_check": {
+            "requested_model": "claude-opus-4-8[1m]",
+            "initialization_models": [
+              "claude-opus-4-8[1m]"
+            ],
+            "assistant_models": [
+              "claude-opus-4-8"
+            ],
+            "allowed_assistant_models": [
+              "claude-opus-4-8[1m]",
+              "claude-opus-4-8"
+            ],
+            "context_suffix_rule": "Only literal requested [1m] may be absent from assistant model; initialization remains exact. No alias/version fallback; modelUsage is not proof."
+          },
+          "serialization_pairs": 1,
+          "service_seconds": 23.016
+        },
+        {
+          "index": 6,
+          "status": "accepted",
+          "observation_status": "marked",
+          "image_matches_preregistered": true,
+          "image_sha256": "68ae55db2590c89fa7f6ddc1691d17d8dcf78b6bcd862c82d6778aef37b82bd5",
+          "provider_status": "accepted",
+          "provider_error_type": null,
+          "primary_model_check": {
+            "requested_model": "claude-opus-4-8[1m]",
+            "initialization_models": [
+              "claude-opus-4-8[1m]"
+            ],
+            "assistant_models": [
+              "claude-opus-4-8"
+            ],
+            "allowed_assistant_models": [
+              "claude-opus-4-8[1m]",
+              "claude-opus-4-8"
+            ],
+            "context_suffix_rule": "Only literal requested [1m] may be absent from assistant model; initialization remains exact. No alias/version fallback; modelUsage is not proof."
+          },
+          "serialization_pairs": 1,
+          "service_seconds": 20.765
+        },
+        {
+          "index": 7,
+          "status": "accepted",
+          "observation_status": "unavailable",
+          "image_matches_preregistered": true,
+          "image_sha256": "2ff551b33f25c080f844b7527fe2c3fec54493b5223bd2035b1e70802763ffd3",
+          "provider_status": "accepted",
+          "provider_error_type": null,
+          "primary_model_check": {
+            "requested_model": "claude-opus-4-8[1m]",
+            "initialization_models": [
+              "claude-opus-4-8[1m]"
+            ],
+            "assistant_models": [
+              "claude-opus-4-8"
+            ],
+            "allowed_assistant_models": [
+              "claude-opus-4-8[1m]",
+              "claude-opus-4-8"
+            ],
+            "context_suffix_rule": "Only literal requested [1m] may be absent from assistant model; initialization remains exact. No alias/version fallback; modelUsage is not proof."
+          },
+          "serialization_pairs": 1,
+          "service_seconds": 31.016
+        },
+        {
+          "index": 8,
+          "status": "accepted",
+          "observation_status": "marked",
+          "image_matches_preregistered": true,
+          "image_sha256": "13642f03ac843850adf76b0cd44b9689a3253427df5608eecb5e03e6b1a25c45",
+          "provider_status": "accepted",
+          "provider_error_type": null,
+          "primary_model_check": {
+            "requested_model": "claude-opus-4-8[1m]",
+            "initialization_models": [
+              "claude-opus-4-8[1m]"
+            ],
+            "assistant_models": [
+              "claude-opus-4-8"
+            ],
+            "allowed_assistant_models": [
+              "claude-opus-4-8[1m]",
+              "claude-opus-4-8"
+            ],
+            "context_suffix_rule": "Only literal requested [1m] may be absent from assistant model; initialization remains exact. No alias/version fallback; modelUsage is not proof."
+          },
+          "serialization_pairs": 1,
+          "service_seconds": 25.281
+        },
+        {
+          "index": 9,
+          "status": "accepted",
+          "observation_status": "marked",
+          "image_matches_preregistered": true,
+          "image_sha256": "37c5f2263d2b10f00fb430def12fce7efac2e9d0254f1f61ae175a1af8f514dc",
+          "provider_status": "accepted",
+          "provider_error_type": null,
+          "primary_model_check": {
+            "requested_model": "claude-opus-4-8[1m]",
+            "initialization_models": [
+              "claude-opus-4-8[1m]"
+            ],
+            "assistant_models": [
+              "claude-opus-4-8"
+            ],
+            "allowed_assistant_models": [
+              "claude-opus-4-8[1m]",
+              "claude-opus-4-8"
+            ],
+            "context_suffix_rule": "Only literal requested [1m] may be absent from assistant model; initialization remains exact. No alias/version fallback; modelUsage is not proof."
+          },
+          "serialization_pairs": 1,
+          "service_seconds": 24.828
+        }
+      ]
+    },
+    "haiku": {
+      "requested_model": "claude-haiku-4-5-20251001",
+      "counts": {
+        "attempted": 10,
+        "accepted": 10,
+        "marked": 8,
+        "unavailable": 2,
+        "unknown": 0,
+        "errors": 0,
+        "dispatched": 10,
+        "dispatch_within_5s": 1,
+        "publication_within_5s": 0,
+        "both_within_5s": 0,
+        "not_attempted": 0
+      },
+      "planned": 10,
+      "elapsed_seconds": 267.437,
+      "service_seconds": {
+        "n": 10,
+        "min": 21.531,
+        "median": 24.5625,
+        "max": 48.688
+      },
+      "phase_seconds": {
+        "dispatch_overhead": {
+          "n": 10,
+          "min": 0.0,
+          "median": 0.0,
+          "max": 0.0
+        },
+        "frame_extraction": {
+          "n": 10,
+          "min": 0.641,
+          "median": 1.5935,
+          "max": 2.172
+        },
+        "input_binding_verification": {
+          "n": 10,
+          "min": 0.421,
+          "median": 0.8045,
+          "max": 0.875
+        },
+        "observer_process": {
+          "n": 10,
+          "min": 17.25,
+          "median": 19.461,
+          "max": 43.766
+        },
+        "output_binding_verification": {
+          "n": 10,
+          "min": 0.781,
+          "median": 0.8049999999999999,
+          "max": 0.844
+        },
+        "process_exit_tail": {
+          "n": 10,
+          "min": 0.078,
+          "median": 0.094,
+          "max": 0.094
+        },
+        "process_start_to_adapter": {
+          "n": 10,
+          "min": 0.719,
+          "median": 0.766,
+          "max": 0.922
+        },
+        "provider.auth_status": {
+          "n": 10,
+          "min": 0.781,
+          "median": 0.8049999999999999,
+          "max": 0.86
+        },
+        "provider.cli_call": {
+          "n": 10,
+          "min": 15.453,
+          "median": 17.6175,
+          "max": 41.968
+        },
+        "provider.input_validation": {
+          "n": 10,
+          "min": 0.046,
+          "median": 0.047,
+          "max": 0.063
+        },
+        "provider.parse_validate_write": {
+          "n": 10,
+          "min": 0.031,
+          "median": 0.031,
+          "max": 0.047
+        },
+        "provider.total": {
+          "n": 10,
+          "min": 16.375,
+          "median": 18.539,
+          "max": 42.875
+        },
+        "request_preparation": {
+          "n": 10,
+          "min": 0.453,
+          "median": 0.773,
+          "max": 0.844
+        },
+        "response_validation_publication": {
+          "n": 10,
+          "min": 0.719,
+          "median": 0.7575000000000001,
+          "max": 0.828
+        }
+      },
+      "details": [
+        {
+          "index": 0,
+          "status": "accepted",
+          "observation_status": "marked",
+          "image_matches_preregistered": true,
+          "image_sha256": "c103b67dbde86972fdf0d92cdc5b765adeda9b426dc68ae38a29285a1f0d52dc",
+          "provider_status": "accepted",
+          "provider_error_type": null,
+          "primary_model_check": {
+            "requested_model": "claude-haiku-4-5-20251001",
+            "initialization_models": [
+              "claude-haiku-4-5-20251001"
+            ],
+            "assistant_models": [
+              "claude-haiku-4-5-20251001"
+            ],
+            "allowed_assistant_models": [
+              "claude-haiku-4-5-20251001"
+            ],
+            "context_suffix_rule": "Only literal requested [1m] may be absent from assistant model; initialization remains exact. No alias/version fallback; modelUsage is not proof."
+          },
+          "serialization_pairs": 1,
+          "service_seconds": 21.75
+        },
+        {
+          "index": 1,
+          "status": "accepted",
+          "observation_status": "marked",
+          "image_matches_preregistered": true,
+          "image_sha256": "291e3fdeaf97d9325e908659a641146f0c02b0b71a575a23f23675574d8daeb3",
+          "provider_status": "accepted",
+          "provider_error_type": null,
+          "primary_model_check": {
+            "requested_model": "claude-haiku-4-5-20251001",
+            "initialization_models": [
+              "claude-haiku-4-5-20251001"
+            ],
+            "assistant_models": [
+              "claude-haiku-4-5-20251001"
+            ],
+            "allowed_assistant_models": [
+              "claude-haiku-4-5-20251001"
+            ],
+            "context_suffix_rule": "Only literal requested [1m] may be absent from assistant model; initialization remains exact. No alias/version fallback; modelUsage is not proof."
+          },
+          "serialization_pairs": 1,
+          "service_seconds": 26.078
+        },
+        {
+          "index": 2,
+          "status": "accepted",
+          "observation_status": "unavailable",
+          "image_matches_preregistered": true,
+          "image_sha256": "fc10baed4c2294538a1545f700b247ffb6fe3a654efe392a292b80208f4eed49",
+          "provider_status": "accepted",
+          "provider_error_type": null,
+          "primary_model_check": {
+            "requested_model": "claude-haiku-4-5-20251001",
+            "initialization_models": [
+              "claude-haiku-4-5-20251001"
+            ],
+            "assistant_models": [
+              "claude-haiku-4-5-20251001"
+            ],
+            "allowed_assistant_models": [
+              "claude-haiku-4-5-20251001"
+            ],
+            "context_suffix_rule": "Only literal requested [1m] may be absent from assistant model; initialization remains exact. No alias/version fallback; modelUsage is not proof."
+          },
+          "serialization_pairs": 1,
+          "service_seconds": 21.531
+        },
+        {
+          "index": 3,
+          "status": "accepted",
+          "observation_status": "unavailable",
+          "image_matches_preregistered": true,
+          "image_sha256": "255d8767662f26f2280aa170278459f5f5fb5ad92e0771db409073dc1ddc60fa",
+          "provider_status": "accepted",
+          "provider_error_type": null,
+          "primary_model_check": {
+            "requested_model": "claude-haiku-4-5-20251001",
+            "initialization_models": [
+              "claude-haiku-4-5-20251001"
+            ],
+            "assistant_models": [
+              "claude-haiku-4-5-20251001"
+            ],
+            "allowed_assistant_models": [
+              "claude-haiku-4-5-20251001"
+            ],
+            "context_suffix_rule": "Only literal requested [1m] may be absent from assistant model; initialization remains exact. No alias/version fallback; modelUsage is not proof."
+          },
+          "serialization_pairs": 1,
+          "service_seconds": 24.703
+        },
+        {
+          "index": 4,
+          "status": "accepted",
+          "observation_status": "marked",
+          "image_matches_preregistered": true,
+          "image_sha256": "49af438deaeba35ad2592c28d925239f9dfbdc199be63c2b6ef25e72cdb631b5",
+          "provider_status": "accepted",
+          "provider_error_type": null,
+          "primary_model_check": {
+            "requested_model": "claude-haiku-4-5-20251001",
+            "initialization_models": [
+              "claude-haiku-4-5-20251001"
+            ],
+            "assistant_models": [
+              "claude-haiku-4-5-20251001"
+            ],
+            "allowed_assistant_models": [
+              "claude-haiku-4-5-20251001"
+            ],
+            "context_suffix_rule": "Only literal requested [1m] may be absent from assistant model; initialization remains exact. No alias/version fallback; modelUsage is not proof."
+          },
+          "serialization_pairs": 1,
+          "service_seconds": 23.484
+        },
+        {
+          "index": 5,
+          "status": "accepted",
+          "observation_status": "marked",
+          "image_matches_preregistered": true,
+          "image_sha256": "9f0aa8d630d7da11d2864cc244b4a8f54ed8016212d69833c5f8bccb0310611f",
+          "provider_status": "accepted",
+          "provider_error_type": null,
+          "primary_model_check": {
+            "requested_model": "claude-haiku-4-5-20251001",
+            "initialization_models": [
+              "claude-haiku-4-5-20251001"
+            ],
+            "assistant_models": [
+              "claude-haiku-4-5-20251001"
+            ],
+            "allowed_assistant_models": [
+              "claude-haiku-4-5-20251001"
+            ],
+            "context_suffix_rule": "Only literal requested [1m] may be absent from assistant model; initialization remains exact. No alias/version fallback; modelUsage is not proof."
+          },
+          "serialization_pairs": 1,
+          "service_seconds": 48.688
+        },
+        {
+          "index": 6,
+          "status": "accepted",
+          "observation_status": "marked",
+          "image_matches_preregistered": true,
+          "image_sha256": "68ae55db2590c89fa7f6ddc1691d17d8dcf78b6bcd862c82d6778aef37b82bd5",
+          "provider_status": "accepted",
+          "provider_error_type": null,
+          "primary_model_check": {
+            "requested_model": "claude-haiku-4-5-20251001",
+            "initialization_models": [
+              "claude-haiku-4-5-20251001"
+            ],
+            "assistant_models": [
+              "claude-haiku-4-5-20251001"
+            ],
+            "allowed_assistant_models": [
+              "claude-haiku-4-5-20251001"
+            ],
+            "context_suffix_rule": "Only literal requested [1m] may be absent from assistant model; initialization remains exact. No alias/version fallback; modelUsage is not proof."
+          },
+          "serialization_pairs": 1,
+          "service_seconds": 22.484
+        },
+        {
+          "index": 7,
+          "status": "accepted",
+          "observation_status": "marked",
+          "image_matches_preregistered": true,
+          "image_sha256": "2ff551b33f25c080f844b7527fe2c3fec54493b5223bd2035b1e70802763ffd3",
+          "provider_status": "accepted",
+          "provider_error_type": null,
+          "primary_model_check": {
+            "requested_model": "claude-haiku-4-5-20251001",
+            "initialization_models": [
+              "claude-haiku-4-5-20251001"
+            ],
+            "assistant_models": [
+              "claude-haiku-4-5-20251001"
+            ],
+            "allowed_assistant_models": [
+              "claude-haiku-4-5-20251001"
+            ],
+            "context_suffix_rule": "Only literal requested [1m] may be absent from assistant model; initialization remains exact. No alias/version fallback; modelUsage is not proof."
+          },
+          "serialization_pairs": 1,
+          "service_seconds": 24.422
+        },
+        {
+          "index": 8,
+          "status": "accepted",
+          "observation_status": "marked",
+          "image_matches_preregistered": true,
+          "image_sha256": "13642f03ac843850adf76b0cd44b9689a3253427df5608eecb5e03e6b1a25c45",
+          "provider_status": "accepted",
+          "provider_error_type": null,
+          "primary_model_check": {
+            "requested_model": "claude-haiku-4-5-20251001",
+            "initialization_models": [
+              "claude-haiku-4-5-20251001"
+            ],
+            "assistant_models": [
+              "claude-haiku-4-5-20251001"
+            ],
+            "allowed_assistant_models": [
+              "claude-haiku-4-5-20251001"
+            ],
+            "context_suffix_rule": "Only literal requested [1m] may be absent from assistant model; initialization remains exact. No alias/version fallback; modelUsage is not proof."
+          },
+          "serialization_pairs": 1,
+          "service_seconds": 29.172
+        },
+        {
+          "index": 9,
+          "status": "accepted",
+          "observation_status": "marked",
+          "image_matches_preregistered": true,
+          "image_sha256": "37c5f2263d2b10f00fb430def12fce7efac2e9d0254f1f61ae175a1af8f514dc",
+          "provider_status": "accepted",
+          "provider_error_type": null,
+          "primary_model_check": {
+            "requested_model": "claude-haiku-4-5-20251001",
+            "initialization_models": [
+              "claude-haiku-4-5-20251001"
+            ],
+            "assistant_models": [
+              "claude-haiku-4-5-20251001"
+            ],
+            "allowed_assistant_models": [
+              "claude-haiku-4-5-20251001"
+            ],
+            "context_suffix_rule": "Only literal requested [1m] may be absent from assistant model; initialization remains exact. No alias/version fallback; modelUsage is not proof."
+          },
+          "serialization_pairs": 1,
+          "service_seconds": 25.078
+        }
+      ]
+    }
+  },
+  "paired_development_observations": [
+    {
+      "index": 0,
+      "both_accepted": true,
+      "statuses": [
+        "marked",
+        "marked"
+      ],
+      "status_agrees": true,
+      "point_distance_pixels": 290.13962156175774
+    },
+    {
+      "index": 1,
+      "both_accepted": true,
+      "statuses": [
+        "marked",
+        "marked"
+      ],
+      "status_agrees": true,
+      "point_distance_pixels": 249.92999019725505
+    },
+    {
+      "index": 2,
+      "both_accepted": true,
+      "statuses": [
+        "unavailable",
+        "unavailable"
+      ],
+      "status_agrees": true
+    },
+    {
+      "index": 3,
+      "both_accepted": true,
+      "statuses": [
+        "unavailable",
+        "unavailable"
+      ],
+      "status_agrees": true
+    },
+    {
+      "index": 4,
+      "both_accepted": true,
+      "statuses": [
+        "marked",
+        "marked"
+      ],
+      "status_agrees": true,
+      "point_distance_pixels": 152.029602380589
+    },
+    {
+      "index": 5,
+      "both_accepted": true,
+      "statuses": [
+        "marked",
+        "marked"
+      ],
+      "status_agrees": true,
+      "point_distance_pixels": 114.0570032922135
+    },
+    {
+      "index": 6,
+      "both_accepted": true,
+      "statuses": [
+        "marked",
+        "marked"
+      ],
+      "status_agrees": true,
+      "point_distance_pixels": 435.2390147953191
+    },
+    {
+      "index": 7,
+      "both_accepted": true,
+      "statuses": [
+        "unavailable",
+        "marked"
+      ],
+      "status_agrees": false
+    },
+    {
+      "index": 8,
+      "both_accepted": true,
+      "statuses": [
+        "marked",
+        "marked"
+      ],
+      "status_agrees": true,
+      "point_distance_pixels": 239.1359446005556
+    },
+    {
+      "index": 9,
+      "both_accepted": true,
+      "statuses": [
+        "marked",
+        "marked"
+      ],
+      "status_agrees": true,
+      "point_distance_pixels": 273.1300056749533
+    }
+  ],
+  "paired_pixel_disagreement": {
+    "n": 7,
+    "min": 114.0570032922135,
+    "median": 249.92999019725505,
+    "max": 435.2390147953191
+  },
+  "human_label": false,
+  "accuracy_evaluated": false,
+  "full_pa_verified": false,
+  "live_availability_verified": false,
+  "notice": "One run per model, fixed sequential order, previously reviewed input. Differences do not isolate model effect from provider load/network/cache/order, do not establish independent localization accuracy, and do not change frozen M3. Provider phases are nested; do not sum them with outer phases."
+}
