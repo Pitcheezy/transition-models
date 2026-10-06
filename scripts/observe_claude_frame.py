@@ -102,7 +102,7 @@ def _has_tool(value):
 
 
 def _output_schema(request):
-    """Build a request-bound draft-07 schema; local response validation still applies."""
+    """Bind fields without provider-unsupported top-level combinators; validate locally."""
     point = {
         "type": "array",
         "minItems": 2,
@@ -131,18 +131,6 @@ def _output_schema(request):
             },
             "reason": {"type": "string"},
         },
-        "allOf": [
-            {
-                "if": {"properties": {"status": {"const": "marked"}}},
-                "then": {
-                    "properties": {
-                        "mitt": point,
-                        "visibility": {"enum": ["full", "partial"]},
-                    }
-                },
-                "else": {"properties": {"mitt": {"type": "null"}, "reason": {"pattern": r"\S"}}},
-            }
-        ],
     }
 
 

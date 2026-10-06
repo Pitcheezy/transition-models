@@ -372,3 +372,25 @@ def test_legacy_mode_still_rejects_structured_serialization_tools(case):
     with pytest.raises(ValueError, match="forbidden tool"):
         adapter.observe(*case.paths)
     assert "--json-schema" not in case.calls[1][0]
+
+
+@pytest.mark.parametrize(
+    "change", ["marked_null", "hidden_marked", "abstention_point", "blank_reason"]
+)
+def test_provider_schema_avoids_top_combinators_but_cross_field_rules_remain(case, change):
+    schema = adapter._output_schema(case.request)
+    assert not {"allOf", "anyOf", "oneOf", "if", "then", "else"} & schema.keys()
+    assert schema["properties"]["mitt"]["anyOf"][1] == {"type": "null"}
+    response = copy.deepcopy(case.response)
+    if change == "marked_null":
+        response["mitt"] = None
+    elif change == "hidden_marked":
+        response["visibility"] = "hidden"
+    elif change == "abstention_point":
+        response.update(status="unavailable", reason="hidden")
+    else:
+        response.update(status="unavailable", mitt=None, reason="   ")
+    case.events = structured_events(response)
+    with pytest.raises(ValueError):
+        adapter.observe(*case.paths, structured_output=True)
+    assert not case.paths[2].exists()
