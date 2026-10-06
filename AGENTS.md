@@ -1,5 +1,9 @@
 # SmartPitch MDP Transition Probability Models
 
+## 오늘 시연 우선 — 2026-10-06 최신 지시
+
+사용자는 잔여 사용량 10%까지 오늘 데모를 다듬도록 요청했다. 아래 이전 50% 하한·CV 개발 재개 지시보다 우선한다. E-demo4(홈 재생 복구, 정상/기권 사례 바로가기, 브라우저 점검, 오프라인 v3, 발표 안내)를 Codex가 선점했다. M3·기존 JSONL·장표·private 비교자료는 고정하고 팀원 저장소는 수정하지 않는다. E-demo2/E-site5 실제 현장·응답은 대기다. pitcheezy.com DNS/SSL 복구는 완료했다.
+
 ## 정확한 프레임 추출·실제 관측 — 2026-10-06
 
 [실제 PTS 관측 연결](docs/CV_MAPPED_OBSERVATION_V1.md) 완료: 180/185/190초 상한의
