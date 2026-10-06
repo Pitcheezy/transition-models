@@ -90,6 +90,23 @@ def check():
             assert len(actual) == clip[evidence]["bytes"]
             assert hashlib.sha256(actual).hexdigest() == clip[evidence]["sha256"]
     print("PASS: 3 exact official play IDs, media bytes and provenance")
+    reel = json.loads((ROOT / "docs/results/mlb_p0/hero_reel_v1.json").read_bytes())
+    assert [clip["pitch_id"] for clip in reel["segments"]] == [
+        "849843:1:1",
+        "849843:1:2",
+        "849843:1:3",
+        "849843:2:5",
+    ]
+    for clip in reel["segments"]:
+        assert (
+            hashlib.sha256((SITE / "media" / clip["source_asset"]).read_bytes()).hexdigest()
+            == clip["source_sha256"]
+        )
+    output = reel["output"]
+    asset = (SITE / "media" / output["file"]).read_bytes()
+    assert len(asset) == output["bytes"]
+    assert hashlib.sha256(asset).hexdigest() == output["sha256"]
+    print("PASS: four-pitch hero reel source and output hashes")
     receiver = subprocess.run(
         [
             "node",

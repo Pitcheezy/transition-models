@@ -10,8 +10,8 @@
 - 분석 서비스: 위 주소의 `/service.html`
 - 실제 첫 타석·공식 영상 3구: `/receiver.html?demo=849843-pa1`. 3구 공개 후 별도 미트 판독 정지 장면. [연결/검수 기록](PITCH_STUDIO_RECEIVER.md).
 - 실제 관측·검증: `/report.html#analysis`, `/report.html#validation`
-- 최신 배포: v8, 소스 `1058c4358223d77217e66be7a59929caaa25d730`, 상태 `succeeded`(2026-10-06).
-- 배포 ID: `appgdep_6ac49eab37848191803f1677336e97bb`.
+- 최신 배포: v9, 소스 `a3a7a6bb7bc434c6ba93ae45f12bca23c8898012`, 상태 `succeeded`(2026-10-06).
+- 배포 ID: `appgdep_6ac4a34611d08191bc5d9d1ae7cc93ba`.
 - Sites project: `appgprj_6ac3665aa5048191ac2b5a012b2c7010` (기존 사이트 갱신).
 - `web/pitch-studio/`는 배포 정적 파일 사본이다. CDN·외부 폰트·API·프레임워크가 필요 없다.
 - 이전 `/#analysis` 링크는 서비스로, `/#validation`과 `/#story`는 기존 리포트로 이동한다.
@@ -22,6 +22,13 @@ python -m http.server 8786 --bind 127.0.0.1 --directory web/pitch-studio
 ```
 
 http://127.0.0.1:8786/ 을 연다. 서버 종료는 Ctrl+C. 로컬 index.html도 직접 열 수 있다.
+
+## 홈 하이라이트 v9
+
+첫 타석 1·2·3구와 둘째 타석 5구 발췌를 이은 23.83초 무음 영상이다.
+원본·결합 파일 SHA는 `results/mlb_p0/hero_reel_v1.json`에서 검증한다.
+원본 영상은 보존하며, 대표 미트 버튼은 별도 첫 타석 3구 정지 장면을 보여준다.
+오프라인 v4 ZIP은 Site v8 스냅샷으로 보존했다. 새 빌드에는 하이라이트를 포함한다.
 
 ## 10/6 발표 안정성 보완
 

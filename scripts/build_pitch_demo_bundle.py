@@ -33,6 +33,7 @@ SITE_FILES = (
     "studio.css",
     "studio.js",
     "styles.css",
+    "media/hero-849843-four-pitches-v1.mp4",
     "media/pitch-849843-1-1-official.jpg",
     "media/pitch-849843-1-1-official.mp4",
     "media/pitch-849843-1-2-official.jpg",

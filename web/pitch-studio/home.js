@@ -13,7 +13,7 @@ function showPlaybackState() {
   play.textContent = film.paused ? "영상 재생 ▶" : "일시정지 Ⅱ";
   label.textContent = film.paused
     ? "일시정지 · 재생 버튼으로 계속 보기"
-    : "실제 중계 프레임으로 재구성한 리플레이";
+    : "4투구 하이라이트 · 약 24초";
 }
 async function playFilm() {
   const request = ++playRequest;
@@ -39,10 +39,10 @@ function setObservation(value) {
   poster.hidden = !value;
   mark.hidden = !value;
   play.hidden = value;
-  toggle.textContent = value ? "영상 다시 재생 ↻" : "미트 위치 보기 ＋";
+  toggle.textContent = value ? "하이라이트로 돌아가기" : "대표 미트 장면";
   if (value) {
     film.pause();
-    label.textContent = "사전 판독 · 정지 프레임 · 실시간 추적 아님";
+    label.textContent = "첫 타석 3구 · 별도 판독 정지 프레임 · 실시간 추적 아님";
   } else playFilm();
 }
 toggle.addEventListener("click", () => setObservation(!observing));
