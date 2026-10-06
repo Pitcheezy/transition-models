@@ -3,14 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>응답 연결 확인 · Pitcheezy</title>
+    <title>받은 모델 결과 · Pitcheezy</title>
     <meta name="theme-color" content="#091811" />
     <link rel="stylesheet" href="product.css" />
-    <link rel="stylesheet" href="receiver.css" />
+    <link rel="stylesheet" href="receiver.css?v=5" />
     <script src="data.js" defer></script>
-    <script src="receiver-contract.js" defer></script>
+    <script src="receiver-contract.js?v=5" defer></script>
     <script src="receiver-sample.js" defer></script>
-    <script src="receiver.js" defer></script>
+    <script src="receiver.js?v=5" defer></script>
   </head>
   <body>
     <a class="skip" href="#receiver">본문으로 이동</a>
@@ -25,33 +25,129 @@
     </header>
     <main id="receiver" class="receiver-main">
       <div class="receiver-heading">
-        <span class="eyebrow">LOCAL RESPONSE CHECK</span>
-        <h1>한 타석의 연결부터.</h1>
+        <span class="eyebrow">ONE AT BAT · MODEL RESULTS</span>
+        <h1>추천부터 결과까지,<br />받은 한 타석을 그대로.</h1>
         <p>
           전달받은 추천·결과 파일을 확인하고, 같은 투구의 미트 관측과 나란히
           살펴봅니다.
         </p>
       </div>
       <section class="import-card" aria-labelledby="import-title">
-        <h2 id="import-title">응답 파일 열기</h2>
+        <h2 id="import-title">전달받은 모델 결과 열기</h2>
         <p>
           파일은 이 브라우저 안에서만 읽습니다. 서버 전송·자동 저장·팀원 서비스
           호출은 없습니다.
         </p>
-        <div class="import-actions">
-          <label class="primary file-label"
-            >JSON 파일 선택<input
-              id="response-file"
-              type="file"
-              accept=".json,application/json" /></label
-          ><button id="try-sample" class="secondary">
-            합성 자료로 동작 확인</button
-          ><button id="download-template" class="secondary">
-            전달 양식 받기</button
-          ><button id="clear-import" class="secondary">자료 비우기</button>
+        <details class="raw-intake" open>
+          <summary>원본 응답 파일로 시작하기</summary>
+          <p>
+            경기 응답 1개와 한 타석의 투구별 결과 파일을 선택하세요. 원래 요청
+            주소와 모델 정보는 제공자가 알려준 값으로 입력합니다.
+          </p>
+          <form id="raw-form">
+            <div class="raw-fields">
+              <label
+                >경기 응답 파일 (timeline)<input
+                  id="timeline-file"
+                  type="file"
+                  accept=".json,application/json"
+                  required
+              /></label>
+              <label
+                >투구별 결과 파일 (reveal)<input
+                  id="reveal-files"
+                  type="file"
+                  accept=".json,application/json"
+                  multiple
+                  required
+              /></label>
+              <label
+                >연결할 타석 번호<input
+                  id="raw-pa"
+                  type="number"
+                  min="1"
+                  max="999"
+                  step="1"
+                  value="1"
+                  required
+              /></label>
+              <label
+                >자료 종류<select id="raw-kind" required>
+                  <option value="">선택해주세요</option>
+                  <option value="provided_export">제공받은 모델 응답</option>
+                  <option value="synthetic">합성 연결 테스트</option>
+                </select></label
+              >
+            </div>
+            <div id="raw-endpoints"></div>
+            <fieldset class="raw-fields">
+              <legend>제공받은 모델 정보</legend>
+              <label
+                >모델 이름·버전<input
+                  id="raw-model"
+                  type="text"
+                  maxlength="200"
+                  autocomplete="off"
+                  required
+              /></label>
+              <label
+                >코드 커밋<input
+                  id="raw-revision"
+                  type="text"
+                  minlength="40"
+                  maxlength="40"
+                  pattern="[a-f0-9]{40}"
+                  autocomplete="off"
+                  required
+                  aria-describedby="revision-help"
+                /><small id="revision-help"
+                  >40자리 전체 값을 입력하세요.</small
+                ></label
+              >
+              <label class="raw-wide"
+                >결과 생성 시각<input
+                  id="raw-generated"
+                  type="text"
+                  placeholder="예: 2026-10-06T12:00:00+09:00"
+                  maxlength="200"
+                  autocomplete="off"
+                  required
+                /><small
+                  >파일을 받은 시각이 아닌 결과를 생성한 시각입니다.</small
+                ></label
+              >
+            </fieldset>
+            <p class="receiver-note">
+              권장 시작: 컵스 @ 파드리스(849843), 1번 타석. 미트 관측은 해당
+              투구 키가 일치할 때만 대조합니다. 원본 파일 전체 합계는 5MB
+              이하입니다.
+            </p>
+            <button class="primary" type="submit">검사하고 한 타석 열기</button>
+          </form>
+        </details>
+        <details class="packed-intake">
+          <summary>이미 묶은 파일·연결 테스트</summary>
+          <div class="import-actions">
+            <label class="primary file-label"
+              >묶음 JSON 선택<input
+                id="response-file"
+                type="file"
+                accept=".json,application/json" /></label
+            ><button id="try-sample" class="secondary">
+              합성 자료로 동작 확인</button
+            ><button id="download-template" class="secondary">
+              전달 양식 받기
+            </button>
+          </div>
+        </details>
+        <div class="import-actions intake-secondary">
+          <button id="download-prepared" class="secondary" disabled>
+            검사한 묶음 저장
+          </button>
+          <button id="clear-import" class="secondary">자료 비우기</button>
         </div>
         <p id="import-status" role="status">
-          실제 응답 미수신 · JSON 전달 양식을 준비했습니다.
+          파일 대기 · 전달받은 응답을 선택하면 이 화면에 표시합니다.
         </p>
         <p id="import-error" role="alert" hidden></p>
         <details>

@@ -1,13 +1,18 @@
 "use strict";
 const node = (id) => document.getElementById(id);
 let session = null,
-  loadVersion = 0;
+  loadVersion = 0,
+  preparedEnvelope = null,
+  rawFiles = [];
+const MAX_BYTES = 5 * 1024 * 1024;
 const put = (id, text) => {
   node(id).textContent = text;
 };
 function clear() {
   loadVersion++;
   session = null;
+  preparedEnvelope = null;
+  node("download-prepared").disabled = true;
   node("response-workspace").hidden = true;
   node("source-details").hidden = true;
   node("source-details").replaceChildren();
@@ -26,7 +31,15 @@ function clear() {
   node("current-situation").replaceChildren();
   node("import-error").hidden = true;
   node("response-file").value = "";
-  put("import-status", "실제 응답 미수신 · JSON 전달 양식을 준비했습니다.");
+  put(
+    "import-status",
+    "파일 대기 · 전달받은 응답을 선택하면 이 화면에 표시합니다.",
+  );
+}
+function resetRaw() {
+  node("raw-form").reset();
+  rawFiles = [];
+  node("raw-endpoints").replaceChildren();
 }
 function textElement(tag, text, parent) {
   const e = document.createElement(tag);
@@ -91,6 +104,12 @@ function render() {
       `${c.rank}. ${c.pitch_label} · ${(c.selection_probability * 100).toFixed(1)}%`,
       item,
     );
+    const bar = document.createElement("progress");
+    bar.className = "selection-bar";
+    bar.max = 1;
+    bar.value = c.selection_probability;
+    bar.setAttribute("aria-label", `${c.pitch_label} 구종 선택 비율`);
+    item.append(bar);
     textElement(
       "p",
       c.target
@@ -117,6 +136,24 @@ function render() {
     `${a.pitch_label ?? "미제공"} / ${a.speed_mph === null ? "미제공" : `${a.speed_mph.toFixed(1)} mph`}`,
   );
   metric("공의 플레이트 x", a.x === null ? "미제공" : `${a.x.toFixed(2)} ft`);
+  const we = view.post.we;
+  const percent = (value) =>
+    value === null ? "미제공" : `${(value * 100).toFixed(1)}%`;
+  metric(
+    "홈팀 승리 기대 (전 → 후)",
+    `${percent(we.home_before)} → ${percent(we.home_after)}`,
+  );
+  metric(
+    "홈팀 승리 기대 변화",
+    we.home_delta === null
+      ? "미제공"
+      : `${we.home_delta > 0 ? "+" : ""}${(we.home_delta * 100).toFixed(1)}%p`,
+  );
+  textElement(
+    "p",
+    "투구 직전 → 다음 기록 직전 상태의 홈팀 승리 기대 근사입니다. 경기 마지막 기록은 최종 승패를 사용하며, 볼카운트는 반영하지 않습니다. 선수 책임이나 교체 효과를 뜻하지 않습니다.",
+    post,
+  ).className = "receiver-note";
   const observation = PitchReceiver.observation(view, window.DEMO_DATA.pitches);
   const labels = {
     synthetic: "합성 자료에는 실제 관측을 연결하지 않습니다.",
@@ -137,16 +174,22 @@ function render() {
   );
   note.className = "observation-caution";
 }
-async function openText(text, name, version, inputBytes) {
-  const candidateSession = PitchReceiver.createSession(JSON.parse(text));
-  const bytes = inputBytes ?? new TextEncoder().encode(text);
-  const hash = Array.from(
+async function sha256(bytes) {
+  return Array.from(
     new Uint8Array(await crypto.subtle.digest("SHA-256", bytes)),
   )
     .map((b) => b.toString(16).padStart(2, "0"))
     .join("");
+}
+async function openText(text, name, version, inputBytes, originals = []) {
+  const envelope = JSON.parse(text);
+  const candidateSession = PitchReceiver.createSession(envelope);
+  const bytes = inputBytes ?? new TextEncoder().encode(text);
+  const hash = await sha256(bytes);
   if (version !== loadVersion) return;
   session = candidateSession;
+  preparedEnvelope = envelope;
+  node("download-prepared").disabled = false;
   const view = session.view();
   put(
     "import-status",
@@ -155,7 +198,20 @@ async function openText(text, name, version, inputBytes) {
   const info = node("source-details");
   info.hidden = false;
   textElement("div", `파일: ${name}`, info);
-  textElement("div", `입력 파일 SHA256: ${hash}`, info);
+  textElement(
+    "div",
+    `${originals.length ? "조립한 묶음" : "입력 파일"} SHA256: ${hash}`,
+    info,
+  );
+  for (const original of originals) {
+    textElement(
+      "div",
+      `원본 파일: ${original.name} · SHA256: ${original.hash}`,
+      info,
+    );
+    if (original.endpoint)
+      textElement("div", `원래 요청 경로: ${original.endpoint}`, info);
+  }
   textElement("div", `제공자 기재 모델: ${view.source.model_id}`, info);
   textElement(
     "div",
@@ -174,10 +230,11 @@ function reportError(error, version) {
 node("response-file").addEventListener("change", async (event) => {
   const file = event.target.files[0];
   if (!file) return;
+  resetRaw();
   clear();
   const version = loadVersion;
   try {
-    if (file.size > 5 * 1024 * 1024)
+    if (file.size > MAX_BYTES)
       throw new Error("파일 크기는 5MB 이하여야 합니다.");
     const bytes = await file.arrayBuffer();
     const text = new TextDecoder("utf-8", { fatal: true }).decode(bytes);
@@ -187,6 +244,7 @@ node("response-file").addEventListener("change", async (event) => {
   }
 });
 node("try-sample").addEventListener("click", async () => {
+  resetRaw();
   clear();
   const version = loadVersion;
   try {
@@ -199,19 +257,132 @@ node("try-sample").addEventListener("click", async () => {
     reportError(error, version);
   }
 });
-node("download-template").addEventListener("click", () => {
+function downloadJson(value, name) {
   const url = URL.createObjectURL(
-    new Blob([JSON.stringify(window.PitchReceiverSample, null, 2)], {
+    new Blob([JSON.stringify(value)], {
       type: "application/json",
     }),
   );
   const a = document.createElement("a");
   a.href = url;
-  a.download = "pitcheezy-receiver-synthetic-template.json";
+  a.download = name;
+  document.body.append(a);
   a.click();
+  a.remove();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+node("download-template").addEventListener("click", () =>
+  downloadJson(
+    window.PitchReceiverSample,
+    "pitcheezy-receiver-synthetic-template.json",
+  ),
+);
+node("download-prepared").addEventListener("click", () => {
+  if (preparedEnvelope)
+    downloadJson(
+      preparedEnvelope,
+      `pitcheezy-${preparedEnvelope.game_pk}-pa${preparedEnvelope.at_bat_number}-${preparedEnvelope.source.kind}.json`,
+    );
 });
-node("clear-import").addEventListener("click", clear);
+node("clear-import").addEventListener("click", () => {
+  resetRaw();
+  clear();
+});
+node("raw-form").addEventListener("input", clear);
+node("raw-form").addEventListener("change", clear);
+node("reveal-files").addEventListener("change", (event) => {
+  rawFiles = [];
+  const parent = node("raw-endpoints");
+  parent.replaceChildren();
+  const files = Array.from(event.target.files);
+  if (files.length > 100) {
+    // The form change handler clears status, so keep this instruction beside the input.
+    textElement("p", "한 타석의 파일만 선택하세요. 최대 100개입니다.", parent);
+    return;
+  }
+  for (const file of files) {
+    const label = textElement("label", `${file.name} · 원래 요청 주소`, parent);
+    label.className = "raw-endpoint";
+    const endpoint = document.createElement("input");
+    endpoint.type = "text";
+    endpoint.required = true;
+    endpoint.maxLength = 2000;
+    endpoint.placeholder = "제공받은 /api/watch/경기번호/reveal/index 경로";
+    endpoint.autocomplete = "off";
+    label.append(endpoint);
+    rawFiles.push({ file, endpoint });
+  }
+});
+node("raw-form").addEventListener("submit", async (event) => {
+  event.preventDefault();
+  clear();
+  const version = loadVersion;
+  try {
+    const timelineFile = node("timeline-file").files[0];
+    if (!timelineFile || !rawFiles.length)
+      throw new Error("경기 파일과 한 타석의 결과 파일을 선택하세요.");
+    const files = [
+      { file: timelineFile },
+      ...rawFiles.map(({ file, endpoint }) => ({
+        file,
+        endpoint: endpoint.value.trim(),
+      })),
+    ];
+    if (files.reduce((sum, { file }) => sum + file.size, 0) > MAX_BYTES)
+      throw new Error("원본 파일 전체 합계는 5MB 이하여야 합니다.");
+    const source = {
+      kind: node("raw-kind").value,
+      revision: node("raw-revision").value.trim(),
+      exported_at: node("raw-generated").value.trim(),
+      model_id: node("raw-model").value.trim(),
+    };
+    const pa = Number(node("raw-pa").value);
+    const parsed = await Promise.all(
+      files.map(async ({ file, endpoint }) => {
+        const bytes = await file.arrayBuffer();
+        return {
+          name: file.name,
+          endpoint,
+          hash: await sha256(bytes),
+          response: JSON.parse(
+            new TextDecoder("utf-8", { fatal: true }).decode(bytes),
+          ),
+        };
+      }),
+    );
+    if (version !== loadVersion) return;
+    const envelope = PitchReceiver.assemble({
+      timeline: parsed[0].response,
+      at_bat_number: pa,
+      source,
+      reveals: parsed
+        .slice(1)
+        .map(({ endpoint, response }) => ({
+          source_endpoint: endpoint,
+          response,
+        })),
+    });
+    const text = JSON.stringify(envelope);
+    if (new TextEncoder().encode(text).length > MAX_BYTES)
+      throw new Error(
+        "조립한 묶음이 5MB를 넘습니다. 제공자에게 작은 공개용 응답을 요청하세요.",
+      );
+    const originals = parsed.map((p, i) => ({
+      name: p.name,
+      hash: p.hash,
+      endpoint: i ? envelope.reveals[i - 1].source_endpoint : null,
+    }));
+    await openText(
+      text,
+      "원본 응답으로 조립한 한 타석",
+      version,
+      undefined,
+      originals,
+    );
+  } catch (error) {
+    reportError(error, version);
+  }
+});
 node("reveal-pitch").addEventListener("click", () => {
   session?.reveal(true);
   render();

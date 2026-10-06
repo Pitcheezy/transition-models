@@ -353,6 +353,64 @@
       decisions: selected.map((d) => ({ ...d, post: revealMap.get(d.index) })),
     };
   }
+  function assemble({ timeline, at_bat_number, source, reveals }) {
+    object(timeline, "timeline");
+    object(timeline.game, "경기");
+    const pa = integer(at_bat_number, 1, 999, "타석 번호");
+    if (!Array.isArray(timeline.decisions))
+      fail("timeline 투구 목록이 필요합니다.");
+    if (!Array.isArray(reveals) || !reveals.length || reveals.length > 100)
+      fail("선택한 한 타석의 reveal 파일들이 필요합니다.");
+    const wrapped = reveals.map((entry) => {
+      object(entry, "원응답 연결");
+      only(entry, ["source_endpoint", "response"], "원응답 연결");
+      object(entry.response, "reveal 응답");
+      const d = timeline.decisions.find(
+        (row) => row.index === entry.response.index && row.at_bat_number === pa,
+      );
+      if (!d) fail("reveal index가 선택한 타석에 없습니다.");
+      let endpoint = string(
+        entry.source_endpoint,
+        "원래 요청 주소",
+        2000,
+      ).trim();
+      if (!endpoint.startsWith("/")) {
+        let url;
+        try {
+          url = new URL(endpoint);
+        } catch {
+          fail("원래 요청 주소를 확인하세요.");
+        }
+        if (
+          !["http:", "https:"].includes(url.protocol) ||
+          url.username ||
+          url.password ||
+          url.search ||
+          url.hash
+        )
+          fail("요청 주소에는 인증정보·쿼리·조각 없이 HTTP 경로만 넣어주세요.");
+        endpoint = url.pathname;
+      }
+      // The caller supplies the original endpoint; it is never invented from array order.
+      if (endpoint !== `/api/watch/${timeline.game.game_pk}/reveal/${d.index}`)
+        fail("원래 요청 주소의 경기/index와 응답이 일치하지 않습니다.");
+      return {
+        pitch_id: `${d.pa_id}:${d.pitch_number}`,
+        source_endpoint: endpoint,
+        response: entry.response,
+      };
+    });
+    const envelope = {
+      schema: "pitcheezy-receiver-v1",
+      source,
+      game_pk: timeline.game.game_pk,
+      at_bat_number: pa,
+      timeline,
+      reveals: wrapped,
+    };
+    validate(envelope);
+    return envelope;
+  }
   function createSession(input) {
     const data = validate(input);
     let cursor = 0,
@@ -419,7 +477,7 @@
       return { status: "conflict", x: null };
     return { status: "key_matched", x: row.mitt_x_ft };
   }
-  const api = { validate, createSession, observation };
+  const api = { validate, assemble, createSession, observation };
   if (typeof module === "object" && module.exports) module.exports = api;
   else root.PitchReceiver = api;
 })(typeof globalThis === "object" ? globalThis : this);
