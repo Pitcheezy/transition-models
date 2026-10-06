@@ -144,8 +144,15 @@ def _parse(stdout, request):
     return response, metadata
 
 
-def observe(request_path, image_path, response_path, *, claude_bin="claude"):
+def observe(request_path, image_path, response_path, *, claude_bin="claude", model=None):
     """Run one subscription-only CLI call; preserve raw output even on failure."""
+    if model is not None and (
+        not isinstance(model, str)
+        or not model
+        or model.startswith("-")
+        or any(char.isspace() or not char.isprintable() for char in model)
+    ):
+        raise ValueError("Explicit model must be a nonempty model ID without whitespace/options")
     if any(os.environ.get(key) for key in FORBIDDEN_ENV):
         raise ValueError("API credential/provider override environment is forbidden")
     request, data = _inputs(request_path, image_path)
@@ -202,6 +209,8 @@ def observe(request_path, image_path, response_path, *, claude_bin="claude"):
         "--system-prompt",
         SYSTEM,
     ]
+    if model is not None:
+        argv.extend(["--model", model])
     out.parent.mkdir(parents=True, exist_ok=True)
     metadata = {
         "schema": "claude_frame_provider_v1",
@@ -209,6 +218,7 @@ def observe(request_path, image_path, response_path, *, claude_bin="claude"):
         "billing_basis": "claude.ai subscription authentication; no API fallback",
         "usage_note": "Only provider-reported metadata; cost is not a billing receipt.",
         "argv": argv,
+        "requested_model": model,
     }
     with tempfile.TemporaryDirectory(prefix="pitcheezy-observer-") as cwd:
         auth = subprocess.run(
@@ -261,9 +271,12 @@ def main():
     parser.add_argument("image", type=Path)
     parser.add_argument("response", type=Path)
     parser.add_argument("--claude-bin", default="claude")
+    parser.add_argument("--model", help="Explicit model ID; omitted preserves CLI model selection")
     args = parser.parse_args()
     try:
-        observe(args.request, args.image, args.response, claude_bin=args.claude_bin)
+        observe(
+            args.request, args.image, args.response, claude_bin=args.claude_bin, model=args.model
+        )
     except (OSError, ValueError, KeyError, TypeError, subprocess.SubprocessError) as error:
         parser.exit(1, f"Observation rejected ({type(error).__name__}); no fallback used.\n")
     print("Accepted one validated AI pixel observation; private provider logs saved.")

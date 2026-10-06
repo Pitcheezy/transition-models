@@ -1,0 +1,65 @@
+{
+  "schema": "cv_bounded_latency_preregistration_v1",
+  "registered_date": "2026-10-06",
+  "status": "frozen_before_calls",
+  "full_pa_verified": false,
+  "accuracy_evaluated": false,
+  "scope": "Ten-frame end-to-end local replay latency diagnostic, not full-PA validation.",
+  "reason_for_separate_unit": "Full-PA boundary/continuous-review gate remains open. Fixed-schedule backlog and protocol failures can be measured on the already mapped bounded frame window without asserting PA completeness.",
+  "earlier_full_pa_candidate_status": "Still blocked; this is a separate latency-only diagnostic, not promotion of that candidate.",
+  "selection": {
+    "source_record_sha256": "554e6e9f944809d6e74206ba3784477b1f76cef7a80f48799da5038e18d6cb80",
+    "cutoffs": [
+      "2703701/15000",
+      "2778701/15000",
+      "2853701/15000",
+      "2928701/15000",
+      "3003701/15000",
+      "3078701/15000",
+      "3153701/15000",
+      "3228701/15000",
+      "3303701/15000",
+      "3378701/15000"
+    ],
+    "planned": 10,
+    "cadence_seconds": 5,
+    "selected_before_new_outputs": true,
+    "sample_replacement": false,
+    "automatic_retry": false
+  },
+  "requested_model": "claude-opus-4-8[1m]",
+  "model_policy": "Explicit prior reported model. Record actual provider models separately. Model mismatch invalidates same-model comparison; no silent model/provider fallback.",
+  "limits": {
+    "dispatch_seconds": 5,
+    "accepted_publication_seconds": 5,
+    "observer_timeout_seconds": 240,
+    "extract_timeout_seconds": 120
+  },
+  "analysis": "Keep planned N=10 denominator. Report accepted,marked,unavailable,unknown,error,not_attempted and latency per row. Accepted point is not a correct point. No accuracy, pitch execution, target intent or pre-release success claims.",
+  "capture_receipt_sha256": "ef03502c5a90364e70e234437476ff58ad48790847d6f47e494f0bcb9923f834",
+  "executable_local_plan_sha256": "69e498a2baa70ca10bd519e11960d6c3381d7f11d85df8f7f23d71b4b2c17216",
+  "adapter_sha256": "7a6c3d9e7364b29a4ef9f211219394fb722bfeb8f94030577dd8fd71789d8794",
+  "observation_loop_sha256": "03496de4a47e6a0d1f77554683c8397a43821f433ffbe2a32831925e9315907d",
+  "prior_looks": "All looks in previous pa_boundary_review_v1 plus 41 chronological samples of preceding extension below. 747139 remains reviewed development material.",
+  "preceding_extension": {
+    "capture_input_hashes": {
+      "capture_receipt_sha256": "e8232b7d04c251abf0581d48ade0f8159e95e251b242be2a1eccba1d2bcea405",
+      "source_framemd5_sha256": "8c6ea10b713a68088f30dfe1673cd14060b1f395604bf46d9ec8b13184db3474",
+      "clip_framemd5_sha256": "7aa3bc552c73cd6fe83f1a907b0aca1b73b9c04ebde8b5cfd350a2a660af7989",
+      "clip_media_sha256": "00bc526799e52af186272918856390ccd1bbde469b16057f7899b8ee74f4c12b"
+    },
+    "matched_frames": 2449,
+    "first_source_seconds_exact": "8649641/60000",
+    "last_source_seconds_exact": "11100089/60000",
+    "gaps": [],
+    "overlap_frames_identical_to_previous_clip": 600,
+    "sample_index_sha256": "a43d0a8b2c89a514999fefca603ed7487fc5573397f7115b57ef38a30ce1f9ba",
+    "reviewed_sample_count": 41,
+    "observations": [
+      "2-2/no-out batter closeup; pitch-usage overlay; return during pitch delivery.",
+      "Ground ball toward first base, fielder receives ball and runner passes base; subsequent count reset and one-out display.",
+      "LINDOR/12 returns to dugout; camera remains there before center-field cut for next batter. Physical next-batter entry is not shown in the sampled sequence."
+    ],
+    "review_kind": "AI inspection of every60th decode ordinal, not all-frame playback or human reference"
+  }
+}

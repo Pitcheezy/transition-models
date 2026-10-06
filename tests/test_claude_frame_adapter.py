@@ -109,6 +109,7 @@ def test_valid_pixel_call_is_anonymous_and_tool_free(case):
     assert metadata["reported"]["reported_models"] == ["provider-reported-model"]
     assert metadata["reported"]["usage"] == {"input_tokens": 123}
     assert metadata["status"] == "accepted"
+    assert "--model" not in argv and metadata["requested_model"] is None
     assert metadata["result_format"] == "bare_json"
 
 
@@ -232,3 +233,23 @@ def test_mapped_request_retains_actual_time_and_requested_cutoff(case):
     )
     case.paths[0].write_text(json.dumps(case.request), encoding="utf-8")
     assert adapter.observe(*case.paths)["status"] == "accepted"
+
+
+def test_explicit_model_preserves_requested_and_reported_separately(case):
+    model = "claude-opus-4-8[1m]"
+    metadata = adapter.observe(*case.paths, model=model)
+    argv = case.calls[1][0]
+    assert argv[-2:] == ["--model", model]
+    assert metadata["requested_model"] == model
+    assert metadata["reported"]["reported_models"] == ["provider-reported-model"]
+    saved = json.loads((case.paths[2].parent / "provider_metadata.json").read_text())
+    assert saved["requested_model"] == model and saved["reported"] == metadata["reported"]
+    assert len(case.calls) == 2  # One authentication check, one observation, no substitution/retry.
+
+
+@pytest.mark.parametrize("model", ["", " ", "opus extra", "opus\n", "\x00opus", "--help", "-p", 42])
+def test_invalid_explicit_model_rejected_before_any_cli_call(case, model):
+    with pytest.raises(ValueError, match="Explicit model"):
+        adapter.observe(*case.paths, model=model)
+    assert not case.calls
+    assert not case.paths[2].exists()
