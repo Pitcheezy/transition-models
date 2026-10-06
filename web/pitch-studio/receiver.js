@@ -3,7 +3,18 @@ const node = (id) => document.getElementById(id);
 let session = null,
   loadVersion = 0,
   preparedEnvelope = null,
-  rawFiles = [];
+  rawFiles = [],
+  builtInDemo = false;
+const pitchVideo = PitchReceiverVideo.create({
+  video: node("pitch-video"), section: node("pitch-video-section"),
+  frame: node("pitch-video-frame"), missing: node("pitch-video-missing"),
+  status: node("pitch-video-status"), play: node("play-pitch-video"),
+  fallback: node("pitch-video-fallback"),
+}, (binding) => {
+  if (!session || !builtInDemo || binding !== `${loadVersion}:${session.view().pitch_id}`) return;
+  session.reveal(true);
+  render();
+});
 const MAX_BYTES = 5 * 1024 * 1024;
 const put = (id, text) => {
   node(id).textContent = text;
@@ -11,6 +22,8 @@ const put = (id, text) => {
 function clear() {
   loadVersion++;
   session = null;
+  builtInDemo = false;
+  pitchVideo.update(null);
   preparedEnvelope = null;
   node("download-prepared").disabled = true;
   node("response-workspace").hidden = true;
@@ -51,6 +64,7 @@ function render() {
   if (!session) return;
   const view = session.view(),
     s = view.situation;
+  pitchVideo.update({ context: loadVersion, pitch_id: view.pitch_id, revealed: view.revealed, enabled: builtInDemo });
   node("response-workspace").hidden = false;
   put(
     "source-badge",
@@ -160,8 +174,9 @@ function render() {
     missing: "이 투구의 저장 관측이 없습니다.",
     conflict: "키·선수·구종 대조 불일치 · 좌표 표시 보류",
     unavailable: "기권 · 좌표 없음",
-    key_matched:
-      "미검토 AI 가로 위치 추정 · 키·선수·구종 일치 · 영상 대응 미검증",
+    key_matched: builtInDemo && view.pitch_id === "849843:1:3"
+      ? "미검토 AI 가로 위치 추정 · 키·선수·구종·발췌 영상 대응 확인"
+      : "미검토 AI 가로 위치 추정 · 키·선수·구종 일치 · 영상 대응 미검증",
   };
   metric(
     "우리 저장 미트 x",
@@ -248,7 +263,7 @@ function reportError(error, version) {
   node("import-error").hidden = false;
   node("file-tools").open = true;
 }
-async function loadFirstPa() {
+async function loadFirstPa(startPitch = 1) {
   resetRaw();
   clear();
   const version = loadVersion;
@@ -262,13 +277,26 @@ async function loadFirstPa() {
       demo.originals,
     );
     if (version !== loadVersion) return;
+    builtInDemo = true;
+    if (startPitch === 3) {
+      session.reveal(true); session.next();
+      session.reveal(true); session.next();
+      session.reveal(false);
+    }
+    render();
     node("file-tools").open = false;
     node("response-workspace").focus();
   } catch (error) {
     reportError(error, version);
   }
 }
-node("load-first-pa").addEventListener("click", loadFirstPa);
+node("load-first-pa").addEventListener("click", () => loadFirstPa());
+for (const link of document.querySelectorAll(".video-jump")) {
+  link.addEventListener("click", (event) => {
+    event.preventDefault();
+    loadFirstPa(3);
+  });
+}
 node("response-file").addEventListener("change", async (event) => {
   const file = event.target.files[0];
   if (!file) return;
@@ -440,4 +468,4 @@ node("previous-pitch").addEventListener("click", () => {
   render();
 });
 if (new URLSearchParams(window.location.search).get("demo") === "849843-pa1")
-  loadFirstPa();
+  loadFirstPa(new URLSearchParams(window.location.search).get("pitch") === "3" ? 3 : 1);
