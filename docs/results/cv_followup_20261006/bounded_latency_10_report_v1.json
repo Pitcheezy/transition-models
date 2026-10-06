@@ -1,0 +1,144 @@
+{
+  "schema": "intent_observation_loop_report_v1",
+  "run_status": "completed_with_errors",
+  "planned": 10,
+  "counts": {
+    "attempted": 10,
+    "accepted": 7,
+    "marked": 4,
+    "unavailable": 3,
+    "unknown": 0,
+    "errors": 3,
+    "dispatched": 10,
+    "dispatch_within_5s": 1,
+    "publication_within_5s": 0,
+    "both_within_5s": 0,
+    "not_attempted": 0
+  },
+  "rates_per_planned": {
+    "attempted": 1.0,
+    "accepted": 0.7,
+    "marked": 0.4,
+    "unavailable": 0.3,
+    "unknown": 0.0,
+    "errors": 0.3,
+    "dispatched": 1.0,
+    "dispatch_within_5s": 0.1,
+    "publication_within_5s": 0.0,
+    "both_within_5s": 0.0,
+    "not_attempted": 0.0
+  },
+  "latency_threshold_seconds": 5,
+  "threshold_scope": "Development schedule-to-dispatch/publication target, not live SLA.",
+  "full_pa_verified": false,
+  "live_availability_verified": false,
+  "accuracy_evaluated": false,
+  "notice": "Local replay timing includes extraction, process and validation. Marked means an accepted point, not a correct point. Unavailable/unknown are model abstentions; errors and not-attempted observations remain separate. Saved-artifact consistency is checked; original video provenance and model execution are not re-attested.",
+  "evidence_sha256": {
+    "manifest": "a06b84ff9567f2d5e262dacf0e0b0d3088fe29178598ef2d73650cfcbe4980c4",
+    "saved_plan": "69e498a2baa70ca10bd519e11960d6c3381d7f11d85df8f7f23d71b4b2c17216",
+    "summary": "440205092ab9c15e0f9cd11613dc3c02f3301f9f071e16f13a7f9b6a53ccc3bd"
+  },
+  "observations": [
+    {
+      "index": 0,
+      "cutoff_seconds_exact": "2703701/15000",
+      "status": "accepted",
+      "observation_status": "marked",
+      "dispatch_lateness_seconds": 1.469,
+      "accepted_latency_from_schedule_seconds": 14.735,
+      "attempt_sha256": "b93a610ef8b87b4cfe47d6e10ff68054c0ea356484bc911d60fc2b79830b66ff",
+      "result_sha256": "561242b906a93f2566be7dc4c1377c02ccfbe1999cef3e431ad9606a47c492da"
+    },
+    {
+      "index": 1,
+      "cutoff_seconds_exact": "2778701/15000",
+      "status": "accepted",
+      "observation_status": "marked",
+      "dispatch_lateness_seconds": 12.516,
+      "accepted_latency_from_schedule_seconds": 25.875,
+      "attempt_sha256": "cd6a0b26de7a29492ff5f3d46f5eaecbc8403d65c79a01f7746bcc07c543396b",
+      "result_sha256": "b150bddc20798be467daff3daf27910362c8b13be2cd966125b1f478b29aedf7"
+    },
+    {
+      "index": 2,
+      "cutoff_seconds_exact": "2853701/15000",
+      "status": "accepted",
+      "observation_status": "unavailable",
+      "dispatch_lateness_seconds": 23.688,
+      "accepted_latency_from_schedule_seconds": 37.235,
+      "attempt_sha256": "0c0ecfa7537f015dbedfda2da3006cee99ac1ca91bfe60212dddf7002cc2335e",
+      "result_sha256": "174f0be55d160c7d4965ab96582ebaa14269d5d36f462cccb930f283a19827f8"
+    },
+    {
+      "index": 3,
+      "cutoff_seconds_exact": "2928701/15000",
+      "status": "accepted",
+      "observation_status": "unavailable",
+      "dispatch_lateness_seconds": 35.11,
+      "accepted_latency_from_schedule_seconds": 47.328,
+      "attempt_sha256": "dc61bb624baf98ce6c56b5a21029c58eead0ae4ab73503d6b2ca765793fc40fd",
+      "result_sha256": "9da56fdc6f145e78d0a3cc5d10e7ab689bb2c9aceee9e605fcfe86d6ca7d0454"
+    },
+    {
+      "index": 4,
+      "cutoff_seconds_exact": "3003701/15000",
+      "status": "error",
+      "observation_status": null,
+      "dispatch_lateness_seconds": 45.406,
+      "accepted_latency_from_schedule_seconds": null,
+      "attempt_sha256": "1905b0d62e05acd116324bc8ecc973f7edd980ff47bb2a501f94b2d54b7792cf",
+      "result_sha256": null
+    },
+    {
+      "index": 5,
+      "cutoff_seconds_exact": "3078701/15000",
+      "status": "error",
+      "observation_status": null,
+      "dispatch_lateness_seconds": 55.188,
+      "accepted_latency_from_schedule_seconds": null,
+      "attempt_sha256": "a474cacf5605885496086c55e4d09cd67687ccfadc23c04b321ceb55121ef782",
+      "result_sha256": null
+    },
+    {
+      "index": 6,
+      "cutoff_seconds_exact": "3153701/15000",
+      "status": "accepted",
+      "observation_status": "marked",
+      "dispatch_lateness_seconds": 66.578,
+      "accepted_latency_from_schedule_seconds": 78.985,
+      "attempt_sha256": "b59ae58397cf5f8e7d502fd7cca07e842a21000503bc79a57b9f25d16a04ae37",
+      "result_sha256": "7a8d9c536a576d1deadf65635a3f429c8205f4c5cab8fa96375eced935ffe509"
+    },
+    {
+      "index": 7,
+      "cutoff_seconds_exact": "3228701/15000",
+      "status": "accepted",
+      "observation_status": "unavailable",
+      "dispatch_lateness_seconds": 77.422,
+      "accepted_latency_from_schedule_seconds": 92.172,
+      "attempt_sha256": "4cbf2b3f14a840d59ee3825512a12ca6c693686f6c99fc844ee04dcbd14b3b00",
+      "result_sha256": "6063d99d8c54b58281e43c6c7db6ef852901cfc3b54ffdead77eb80440be1aa1"
+    },
+    {
+      "index": 8,
+      "cutoff_seconds_exact": "3303701/15000",
+      "status": "error",
+      "observation_status": null,
+      "dispatch_lateness_seconds": 90.813,
+      "accepted_latency_from_schedule_seconds": null,
+      "attempt_sha256": "00afa802e1ab2371153070fb58e88e19fd0c2d6528ea2bc83f46e987fc4cb6c7",
+      "result_sha256": null
+    },
+    {
+      "index": 9,
+      "cutoff_seconds_exact": "3378701/15000",
+      "status": "accepted",
+      "observation_status": "marked",
+      "dispatch_lateness_seconds": 101.36,
+      "accepted_latency_from_schedule_seconds": 115.938,
+      "attempt_sha256": "f0513cf1c4584df963a9af2205ee4d2f988001a8a7af9cfa8f66bd3ded11d18c",
+      "result_sha256": "d57f6af60dc18fdf4d33ae87d57f649ca66d1bb4548779d8362bf570973071d1"
+    }
+  ]
+}
