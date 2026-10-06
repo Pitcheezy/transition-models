@@ -6,13 +6,14 @@
     <title>받은 모델 결과 · Pitcheezy</title>
     <meta name="theme-color" content="#091811" />
     <link rel="stylesheet" href="product.css" />
-    <link rel="stylesheet" href="receiver.css?v=7" />
+    <link rel="stylesheet" href="receiver.css?v=8" />
     <script src="data.js" defer></script>
     <script src="receiver-contract.js?v=6" defer></script>
     <script src="receiver-sample.js" defer></script>
     <script src="receiver-demo-849843.js" defer></script>
-    <script src="receiver-video.js?v=7" defer></script>
-    <script src="receiver.js?v=7" defer></script>
+    <script src="receiver-media.js?v=8" defer></script>
+    <script src="receiver-video.js?v=8" defer></script>
+    <script src="receiver.js?v=8" defer></script>
   </head>
   <body>
     <a class="skip" href="#receiver">본문으로 이동</a>
@@ -43,13 +44,13 @@
           Michael King <span>vs</span> Pete Crow-Armstrong
         </p>
         <p>
-          제공받은 모델 응답으로 첫 타석의 추천과 실제 결과를 한 구씩
-          살펴봅니다.
+          공식 투구 영상 세 구와 제공받은 모델 응답을 연결했습니다.
+          추천을 살펴보고, 실제 투구를 재생한 뒤 결과를 확인하세요.
         </p>
         <button id="load-first-pa" class="primary">
           첫 타석 처음부터 보기
         </button>
-        <a class="video-jump" href="receiver.html?demo=849843-pa1&amp;pitch=3#response-workspace">3구 실제 영상 바로 보기</a>
+        <a class="video-jump" href="receiver.html?demo=849843-pa1&amp;pitch=3#response-workspace">3구 미트 관측으로 바로 가기</a>
         <p class="scientific-note">
           과거 경기 재생 · 검증 전 실험 추천입니다. 구종 비율은 사건확률이
           아닙니다. 추천 위치는 과거 실제 투구 분포의 근사이며, 미트 표시는
@@ -227,6 +228,12 @@
         <p id="pitch-identity"></p>
         <div id="current-situation" class="receiver-situation"></div>
         <p id="players" class="receiver-players"></p>
+        <nav id="pitch-tabs" class="pitch-tabs" aria-label="첫 타석 투구 선택" hidden>
+          <button type="button" data-pitch="1">1구</button>
+          <button type="button" data-pitch="2">2구</button>
+          <button type="button" data-pitch="3">3구</button>
+          <span>추천 확인 · 영상 재생 · 결과 공개</span>
+        </nav>
         <p class="scientific-note">
           과거 경기 재생 · 검증 전 실험 추천입니다. 구종 비율은 사건확률이
           아닙니다. 추천 위치는 과거 실제 투구 분포의 근사이며, 미트 표시는
@@ -238,24 +245,33 @@
           ><button id="hide-pitch" class="secondary">결과 다시 숨기기</button
           ><button id="next-pitch" class="secondary">다음 투구</button>
         </div>
+        <div id="receiver-stage" class="receiver-stage">
         <section id="pitch-video-section" class="pitch-video-section" hidden aria-labelledby="pitch-video-title">
           <div class="pitch-video-heading">
             <div><span class="eyebrow">ACTUAL BROADCAST EXCERPT</span><h3 id="pitch-video-title">같은 투구, 실제 영상</h3></div>
-            <span class="video-scope">영상 연결 1 / 3구</span>
+            <span class="video-scope">공식 영상 3 / 3구</span>
           </div>
           <div id="pitch-video-missing" class="pitch-video-missing">
             <p>이 투구의 영상은 아직 확보하지 못했습니다.</p>
-            <a class="video-jump" href="receiver.html?demo=849843-pa1&amp;pitch=3#response-workspace">영상이 있는 3구로 이동</a>
+            <p>확인되지 않은 영상으로 대신하지 않습니다.</p>
           </div>
           <div id="pitch-video-frame" class="pitch-video-frame" hidden>
-            <video id="pitch-video" controls playsinline muted preload="metadata" poster="media/pitch-849843-1-3.jpg" aria-label="849843 경기 첫 타석 3구의 실제 투구 동작"></video>
+            <video id="pitch-video" controls playsinline muted preload="metadata" aria-label="선택한 투구의 실제 영상"></video>
             <img id="pitch-video-fallback" src="media/pitch-849843-1-3.jpg" alt="Michael King 대 Pete Crow-Armstrong, 1회초 0볼 2스트라이크의 투구 전 정지 장면" hidden />
+            <img id="pitch-observation-image" src="media/pitch-849843-1-3.jpg" width="1280" height="720" alt="3구의 별도 판독 정지 프레임, 저장된 AI 미트 중심을 확인하는 장면" hidden />
+            <span id="pitch-observation-marker" class="observation-marker" aria-hidden="true" hidden></span>
           </div>
-          <div class="pitch-video-actions"><button id="play-pitch-video" class="primary" hidden>투구 영상 재생</button><p id="pitch-video-status" role="status"></p></div>
-          <p class="receiver-note">투구 키로 확인한 3구 발췌 영상입니다. 전체 타석 영상이나 실시간 자동 동기화가 아닙니다. 움직이는 영상 위에는 미트 점을 표시하지 않습니다.</p>
+          <div class="pitch-video-actions">
+            <button id="play-pitch-video" class="primary" hidden>투구 영상 재생</button>
+            <button id="inspect-pitch-mitt" class="secondary" disabled hidden>미트 판독 장면</button>
+            <button id="video-next-pitch" class="secondary" hidden>다음 투구 보기</button>
+          </div>
+          <p id="pitch-video-status" role="status"></p>
+          <p id="pitch-observation-note" class="observation-legend" hidden>초록 표시: 별도 정지 프레임에 저장된 AI 미트 중심 · 미검토 추정. 높이·투수 의도·제구 오차를 검증한 값이 아닙니다.</p>
+          <p class="receiver-note">투구별 공식 클립입니다. 투구 사이의 연속 중계 영상은 아닙니다. 미트 표시는 3구의 별도 판독 정지 장면에서만 볼 수 있습니다.</p>
+          <a id="pitch-video-source" class="source-link" target="_blank" rel="noopener noreferrer" hidden>이 투구의 MLB 공식 영상 출처</a>
         </section>
-        <div class="receiver-columns">
-          <section class="receiver-panel">
+          <section class="receiver-panel recommendation-panel">
             <span class="eyebrow">BEFORE THE PITCH</span>
             <h3>받은 구종 추천</h3>
             <p id="recommendation-status"></p>
@@ -266,13 +282,13 @@
               근사값으로 포수의 실제 요구를 뜻하지 않습니다.
             </p>
           </section>
-          <section class="receiver-panel">
+        </div>
+          <section class="receiver-panel receiver-results">
             <span class="eyebrow">AFTER REVEAL</span>
             <h3>실제 결과와 저장 관측</h3>
             <p id="post-placeholder">결과 공개 후에만 표시합니다.</p>
             <div id="received-post" hidden></div>
           </section>
-        </div>
         <div class="receiver-unavailable">
           <strong>아직 연결하지 않은 분석</strong>
           <p>

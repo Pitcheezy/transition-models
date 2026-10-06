@@ -8,10 +8,10 @@
 
 - 공개 홈: https://pitcheezy.com (기본 주소 https://pitcheezy-pitch-studio.sritone723.chatgpt.site)
 - 분석 서비스: 위 주소의 `/service.html`
-- 실제 첫 타석·3구 영상: `/receiver.html?demo=849843-pa1&pitch=3#response-workspace`. 1·2구 영상은 미확보. [연결/검수 기록](PITCH_STUDIO_RECEIVER.md).
+- 실제 첫 타석·공식 영상 3구: `/receiver.html?demo=849843-pa1`. 3구 공개 후 별도 미트 판독 정지 장면. [연결/검수 기록](PITCH_STUDIO_RECEIVER.md).
 - 실제 관측·검증: `/report.html#analysis`, `/report.html#validation`
-- 최신 배포: v7, 소스 `bf2250da3cad7e5cddb2bcb038a1f33f79319595`, 상태 `succeeded`(2026-10-06).
-- 배포 ID: `appgdep_6ac497e7d9e881918607c521a655100e`.
+- 최신 배포: v8, 소스 `1058c4358223d77217e66be7a59929caaa25d730`, 상태 `succeeded`(2026-10-06).
+- 배포 ID: `appgdep_6ac49eab37848191803f1677336e97bb`.
 - Sites project: `appgprj_6ac3665aa5048191ac2b5a012b2c7010` (기존 사이트 갱신).
 - `web/pitch-studio/`는 배포 정적 파일 사본이다. CDN·외부 폰트·API·프레임워크가 필요 없다.
 - 이전 `/#analysis` 링크는 서비스로, `/#validation`과 `/#story`는 기존 리포트로 이동한다.

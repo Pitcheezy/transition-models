@@ -65,6 +65,31 @@ def check():
     for key in ("source_windows_manifest", "source_points_manifest"):
         actual = hashlib.sha256((ROOT / manifest[key]).read_bytes()).hexdigest()
         assert actual == manifest[f"{key}_sha256"], f"Source changed: {key}"
+    official = json.loads((ROOT / "docs/results/mlb_p0/first_pa_media_v1.json").read_bytes())
+    registry = json.loads(
+        subprocess.check_output(
+            [
+                "node",
+                "-e",
+                "console.log(JSON.stringify(require(process.argv[1])))",
+                str(SITE / "receiver-media.js"),
+            ]
+        )
+    )
+    assert official["game_pk"] == 849843
+    assert set(registry) == {f"849843:1:{pitch}" for pitch in (1, 2, 3)}
+    for clip in official["clips"]:
+        pitch_id = f"{clip['game_pk']}:{clip['at_bat_number']}:{clip['pitch_number']}"
+        record = registry[pitch_id]
+        assert record["play_id"] == clip["play_id"]
+        assert record["page_url"] == clip["official_page_url"]
+        for kind, evidence in (("video", "media"), ("poster", "poster")):
+            assert record[kind] == clip[f"site_{kind}"]
+            assert record[f"{kind}_sha256"] == clip[evidence]["sha256"]
+            actual = (SITE / record[kind]).read_bytes()
+            assert len(actual) == clip[evidence]["bytes"]
+            assert hashlib.sha256(actual).hexdigest() == clip[evidence]["sha256"]
+    print("PASS: 3 exact official play IDs, media bytes and provenance")
     receiver = subprocess.run(
         [
             "node",

@@ -10,11 +10,14 @@ const pitchVideo = PitchReceiverVideo.create({
   frame: node("pitch-video-frame"), missing: node("pitch-video-missing"),
   status: node("pitch-video-status"), play: node("play-pitch-video"),
   fallback: node("pitch-video-fallback"),
+  inspect: node("inspect-pitch-mitt"), observationImage: node("pitch-observation-image"),
+  marker: node("pitch-observation-marker"), observationNote: node("pitch-observation-note"),
+  sourceLink: node("pitch-video-source"),
 }, (binding) => {
   if (!session || !builtInDemo || binding !== `${loadVersion}:${session.view().pitch_id}`) return;
   session.reveal(true);
   render();
-});
+}, window.PitchReceiverMedia);
 const MAX_BYTES = 5 * 1024 * 1024;
 const put = (id, text) => {
   node(id).textContent = text;
@@ -24,6 +27,8 @@ function clear() {
   session = null;
   builtInDemo = false;
   pitchVideo.update(null);
+  node("pitch-tabs").hidden = true;
+  node("receiver-stage").classList.remove("has-video");
   preparedEnvelope = null;
   node("download-prepared").disabled = true;
   node("response-workspace").hidden = true;
@@ -64,7 +69,17 @@ function render() {
   if (!session) return;
   const view = session.view(),
     s = view.situation;
-  pitchVideo.update({ context: loadVersion, pitch_id: view.pitch_id, revealed: view.revealed, enabled: builtInDemo });
+  const currentObservation = PitchReceiver.observation(view, window.DEMO_DATA.pitches);
+  pitchVideo.update({ context: loadVersion, pitch_id: view.pitch_id, revealed: view.revealed, enabled: builtInDemo,
+    observationAllowed: currentObservation?.status === "key_matched" });
+  node("pitch-tabs").hidden = !builtInDemo;
+  node("receiver-stage").classList.toggle("has-video", builtInDemo);
+  for (const button of node("pitch-tabs").querySelectorAll("button")) {
+    if (Number(button.dataset.pitch) === view.pitch_number) button.setAttribute("aria-current", "step");
+    else button.removeAttribute("aria-current");
+  }
+  node("video-next-pitch").hidden = !builtInDemo || !view.can_next;
+  put("video-next-pitch", `${view.pitch_number + 1}구 보기`);
   node("response-workspace").hidden = false;
   put(
     "source-badge",
@@ -278,9 +293,8 @@ async function loadFirstPa(startPitch = 1) {
     );
     if (version !== loadVersion) return;
     builtInDemo = true;
-    if (startPitch === 3) {
-      session.reveal(true); session.next();
-      session.reveal(true); session.next();
+    if (Number.isInteger(startPitch) && startPitch >= 1 && startPitch <= 3) {
+      for (let i = 1; i < startPitch; i++) { session.reveal(true); session.next(); }
       session.reveal(false);
     }
     render();
@@ -291,6 +305,12 @@ async function loadFirstPa(startPitch = 1) {
   }
 }
 node("load-first-pa").addEventListener("click", () => loadFirstPa());
+for (const button of node("pitch-tabs").querySelectorAll("button")) {
+  button.addEventListener("click", () => loadFirstPa(Number(button.dataset.pitch)));
+}
+node("video-next-pitch").addEventListener("click", () => {
+  if (builtInDemo && session?.view().can_next) { session.next(); render(); }
+});
 for (const link of document.querySelectorAll(".video-jump")) {
   link.addEventListener("click", (event) => {
     event.preventDefault();
@@ -468,4 +488,4 @@ node("previous-pitch").addEventListener("click", () => {
   render();
 });
 if (new URLSearchParams(window.location.search).get("demo") === "849843-pa1")
-  loadFirstPa(new URLSearchParams(window.location.search).get("pitch") === "3" ? 3 : 1);
+  loadFirstPa(Number(new URLSearchParams(window.location.search).get("pitch")) || 1);

@@ -1,80 +1,54 @@
-# 우리 CV 오프라인 시연 묶음 — 2026-10-06
+# 우리 CV 오프라인 시연 묶음 — v4, 2026-10-06
 
-실제 timeline/reveal 응답은 로컬 대상 폴더에서 찾지 못했다. 팀원 API/모델/관전 UI를
-변경하거나 새로 구현하지 않고, 사용자가 바로 가져갈 수 있는 우리 발표 묶음을 준비했다.
-E-site5 실제 응답 연결과 E-demo2 Song 화면 리허설은 계속 대기다.
+첫 타석 공식 영상 3구와 제공받은 실제 저장 응답을 연결한 Site v8의 비공개 발표 묶음이다.
+최신 발표 동선은 [발표 대본](PITCH_STUDIO_DEMO_RUNBOOK.md)을 따른다. 과거 v3의 실제 응답
+미수신 상태는 해소됐다. Song 최종 확인·실기기 리허설(E-demo2)은 여전히 별도 대기다.
 
-## 산출물과 실행
+## 파일과 실행
 
-- ZIP: `outputs/demo_delivery/pitcheezy_offline_demo_20261006_v3.zip`
-- 압축 푼 폴더: 같은 위치의 `pitcheezy_offline_demo_20261006_v3/`
-- 시작 파일: `START_HERE.html`
-- 크기: 4,563,043바이트 (약 4.56MB)
-- ZIP SHA256: `6afeb490264aca99ff92fa95e5f3f3ea43879af933ad973804d29ee0ca58f6cb`
-- 내용 파일 29개 + bundle_manifest.json 1개. ZIP 전체를 옮겨 압축 해제한 뒤 시작 파일을 연다.
-- v1/v2 폴더와 ZIP은 덮어쓰지 않고 보존했다. 새로 전달한다면 위 v3를 사용한다.
+- ZIP: `outputs/demo_delivery/pitcheezy_offline_demo_20261006_v4.zip`
+- 폴더: 같은 위치의 `pitcheezy_offline_demo_20261006_v4/`
+- 시작: ZIP 전체 압축 해제 → `START_HERE.html` → 첫 타석 추천·영상·결과
+- 크기: 18,087,236바이트, 내용 38파일 + `bundle_manifest.json`
+- ZIP SHA256: `c9eed39629a90ec57dd3988c29fedc10358da4138dcef02c44e13025330bcdc9`
+- 기존 v1/v2/v3는 덮어쓰지 않고 보존했다. 전달 시 v4 전체를 사용한다.
 
-포함: 우리 정적 사이트 21파일(영상·포스터 포함), 기존 CV 장표 PNG/PPTX 2파일,
-기존 private 비교 HTML/README/manifest 3파일, 시작 안내·대본·실행 안내 3파일.
-원본 라벨·모델·private 관측 세션·전체 영상·인증정보는 포함하지 않았다.
+포함: 사이트 30파일(실제 응답·공식 3구 영상/포스터·판독 정지 장면·제어 코드), 기존 CV
+장표 PNG/PPTX 2파일, private 비교 HTML/README/manifest 3파일, 시작 안내·대본·실행 안내 3파일.
+미트는 3구 별도 정지 프레임에서만 표시한다. 1·2구 주석은 없다. 실제 저장 응답의 구종
+선택 비중을 사건확률이나 사전 예측 성능으로 설명하지 않는다.
 
-홈 → 제품 콘셉트 → 실제 관측 → 기존 장표 → 대표 비교 → 다음 단계 순서다.
-[새 사이트 포함 발표 대본](PITCH_STUDIO_DEMO_RUNBOOK.md)은 목표 2분이며 실제 낭독은 미측정이다.
-기존 60–90초 M3 전용 대본과 장표를 덮어쓰지 않았다.
+기본 시연 파일은 인터넷·모델 서버·로그인이 필요 없다. 파일 기능이 제한되면 보안 설정을
+바꾸지 말고 압축 푼 폴더에서 `python -m http.server 8786 --bind 127.0.0.1`을 실행한다.
+Mac은 필요하면 `python3`를 쓴다. `http://127.0.0.1:8786/START_HERE.html`, 종료 Ctrl+C.
+이 안내는 사용자 기기용이다. 이번 작업에서 앱 브라우저의 file URL 차단을 우회하지 않았다.
 
-패키지는 비공개 현장·지정 팀원 파일 전달용이다. 기존 comparison/에는 MLB 비교 그림이
-포함되므로 이 ZIP 전체를 공개 사이트/GitHub에 올리지 않는다. 이 ZIP을 공개 배포하거나
-팀원에게 전송하지 않았다. 공개 사이트 자체는 별도로 v4로 갱신했다. 홈페이지의 이미 승인된 영상 공개 범위는 그대로다.
-
-## 재생성·확인
-
-저장소 루트에서 Python 3만 있으면 패키지 도구를 실행할 수 있다.
+## 재현
 
 ```bash
+python scripts/check_pitch_studio.py
 python scripts/build_pitch_demo_bundle.py build --comparison outputs/intent_label/delivery_20261005/intent_comparison_local --out outputs/demo_delivery/pitcheezy_offline_demo_new
 python scripts/build_pitch_demo_bundle.py check outputs/demo_delivery/pitcheezy_offline_demo_new
 ```
 
-기존 출력 폴더나 ZIP이 있으면 거절한다. 다른 출력 이름을 쓰며 이전 파일은 삭제하지 않는다.
-개별 파일 수정 뒤 무조건 검사를 통과시키도록 해시를 바꾸지 않는다. 새로 빌드해 원본과 대조한다.
+새 이름을 사용한다. 기존 출력이 있으면 빌드를 거절한다. Git 소유자 경고가 발생하면
+해당 저장소 한 경로만 명시적으로 신뢰하며 전역 `safe.directory=*`를 설정하지 않는다.
+빌드 허용 목록에 실제 응답/영상 제어/미디어 레지스트리 JS 3개와 공식 미디어 6개를 추가했다.
+미디어는 브라우저에서 동적으로 선택되므로 사이트 검사기가 별도로 경로·playId·해시를 검증한다.
 
-빌드 허용 목록은 scripts/build_pitch_demo_bundle.py의 SITE_FILES/SLIDES/COMPARISON_FILES다.
-공개 사이트에 새 파일이 생기면 이 목록도 검토해야 한다. 원본 비교자료 폴더는 Git 제외이며,
-다른 컴퓨터에서는 기존 비공개 자료를 받아 같은 저장소 아래에 두거나 완성 ZIP 자체를 옮긴다.
+## 확인과 범위
 
-홈 링크 `href="./"`는 file URL에서 폴더 목록이 될 수 있으므로 **패키지의 사이트 HTML
-사본에서만** `href="index.html"`로 바꾼다. 원본 HTML의 홈 링크는 바꾸지 않았다. v3는 재생 복구·투구 바로가기가 반영된 Site v4와 같다.
-manifest는 source_sha256과 출력 sha256, 이 변환의 이름을 각각 기록한다.
-장표·비교 HTML/JPEG·영상·JS·CSS는 원본 바이트 그대로다.
+38파일 원본/출력 SHA256과 ZIP 바이트 일치, 상대 HTML 링크 및 기존 비교 HTML·M3 보고서·
+내장 JPEG 5장 해시 검사 통과. 사이트 77 Node, 체크리스트 4 passed, Ruff 통과.
+홈 링크 `href="./"`만 패키지 HTML 사본에서 `href="index.html"`로 바꾸며 변환을 manifest에 기록한다.
+JS/CSS/영상·원본 장표·비교 그림은 바이트 그대로다. Git HEAD는 빌드 시점의 기존 커밋이며
+추가 파일 이전일 수 있으므로 정확한 내용은 각 source_sha256/sha256으로 결속한다.
 
-## 확인한 것
+Windows 앱 브라우저에서 공개 사이트와 같은 소스의 세 구 재생·결과 공개·미트 정지 장면·
+숨김/투구 전환·1280/390px 배치를 검수했다. ZIP의 file URL 직접 렌더링, Safari/Mac/iPhone,
+실제 낭독 시간은 미확인이다. 이를 사용자/Song 현장 리허설 완료로 세지 않는다.
 
-- 29개 파일의 원본 SHA·출력 SHA·바이트 일치 또는 명시한 홈 링크 변환을 확인했다.
-- 기존 비교 HTML과 원본 M3 보고서, 내장 JPEG 5장의 해시가 기존 manifest와 일치한다.
-- 패키지 내부 HTML href/src/poster의 상대 파일 경로·존재·범위 확인 통과.
-- 이 링크 검사기는 CSS/JavaScript의 모든 동적 네트워크 요청을 증명하는 보안 검사가 아니다.
-  이번 소스의 별도 읽기 감사에서 외부 CSS/JS 로드 의존성은 발견하지 않았다.
-- ZIP에서 읽은 모든 내용이 생성 폴더와 바이트 단위로 일치한다.
-- 같은 출력으로 빌드하면 FileExistsError로 거절되어 이전 묶음을 보존한다.
-- Ruff check/format, 체크리스트 가드 4 passed(PYTHONUTF8=1). 재생 6·수신 34 Node 검사 통과. 공개 사이트는 재생 복구·투구 바로가기 변경만 별도 v4로 배포했다.
-- 기존 M3·JSONL·장표·비교자료와 팀원 저장소는 수정하지 않았다.
-
-## v3 변경 범위
-
-홈 재생/일시정지·자동재생 차단 안내·파일 오류 정지 폴백, 정상/기권 바로가기,
-2분 목표 안내와 30초 대체 대사가 추가됐다. 모델 호출이나 새 측정은 없다.
-본 발표의 정상/기권 사례는 여전히 849843:1:3 / 849843:2:5이며 대표 비교는 849845:10:4다.
-Windows 브라우저의 공개 사이트용 로컬 미리보기에서 재생·표시·정상/기권·390px 폭을
-검수했다. 아래 file URL 제한을 우회해 비공개 패키지를 브라우저로 검사한 것은 아니다.
-
-## 직접 실행 확인의 한계
-
-Codex 앱 브라우저의 URL 보안 정책이 file:// 프로토콜을 차단해 시작 파일을 직접 여는
-시도는 거절됐다. 다른 경로로 우회하지 않았다. 따라서 이 패키지의 file URL 렌더링,
-Safari/Mac/iPhone에서의 재생, 실제 발표 낭독 시간은 **미확인**이다.
-이전 작업의 공개 사이트 브라우저 검수와 이번 파일·해시 검증을 현장 리허설로 바꾸지 않는다.
-
-다음은 사용자가 실제 발표 기기에서 START_HERE.html을 열고 네 항목(재생, 공개·기권,
-글자·범례, 낭독 시간)을 확인하는 것이다. 기존 README에는 일반 로컬 HTTP 실행 방법도
-있지만 이번 제한을 우회하기 위해 도구로 실행하거나 확인하지 않았다.
-Song의 영상 대응·좌우·공개 시점·기기 확인은 별도 E-demo2다.
+이 ZIP은 기존 private 비교 그림을 포함하므로 비공개 현장·지정 팀원 파일 전달용이다.
+ZIP이나 comparison/은 공개 사이트·GitHub에 올리지 않았다. 팀원에게 전송하지 않았다.
+공개 사이트 영상 승인과 비공개 비교 그림의 취급을 구분한다. 모델·원본 사람 라벨·private
+세션·전체 중계 영상·API 인증정보는 포함하지 않는다. 기존 M3·JSONL·장표·팀원 저장소 불변.
