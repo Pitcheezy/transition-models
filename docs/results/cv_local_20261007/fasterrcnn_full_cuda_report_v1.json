@@ -1,0 +1,1796 @@
+{
+  "schema": "local_glove_report_v1",
+  "development_only": true,
+  "independent_validation": false,
+  "catcher_association_verified": false,
+  "live": false,
+  "physical_accuracy_measured": false,
+  "manifest_sha256": "8501772cebc32c85c02c4adae0ed26e666ed22180a1272d9b2f95688ab65cc6a",
+  "provenance": {
+    "manifest_bytes_verified": true,
+    "image_bytes_verified": false,
+    "reference_kind": "legacy_single_labeler_development",
+    "run_integrity": {
+      "metadata_present": true,
+      "declared_claims_checked": true,
+      "assessment": "declared_eligible_not_independently_reverified",
+      "run_status": "completed",
+      "frozen_input_bytes_reverified": false
+    },
+    "detection_contract_checked": true,
+    "input_files": {
+      "manifest": {
+        "filename": "manifest.json",
+        "sha256": "8501772cebc32c85c02c4adae0ed26e666ed22180a1272d9b2f95688ab65cc6a"
+      },
+      "references": {
+        "filename": "references.json",
+        "sha256": "dc38d678f4891bcf1a9ba2379d585608b8d2d7d8232b302186e2dba13dd6f7ad"
+      },
+      "predictions": {
+        "filename": "predictions.json",
+        "sha256": "fe0169f8eadff9a92df663f880192ec6bd8d2c5be77d711f289071b97ee319d7"
+      }
+    }
+  },
+  "model": {
+    "model_id": "fasterrcnn_mobilenet_v3_large_fpn",
+    "input_view": "full_frame",
+    "threshold": 0.5,
+    "device": "cuda"
+  },
+  "limitations": [
+    "Previously reviewed, single-labeler development frames; not new independent validation.",
+    "Legacy nonmarked labels use older definitions and are not current true negatives.",
+    "Availability cross-tabs are descriptive; no false-positive or abstention-correctness rates.",
+    "Point differences are conditional on both points existing, not overall accuracy.",
+    "Fixed pixel sensitivity fractions include every legacy marked frame in their denominator.",
+    "Pixel sensitivity cutoffs are descriptive, not success thresholds or physical tolerances.",
+    "No physical-coordinate accuracy, pitcher intent, live latency, or pre-pitch success claim.",
+    "Stored image hashes are matched; image bytes are not reopened by this report.",
+    "Timing describes the supplied first pass; repeat timings belong to a separate artifact."
+  ],
+  "summary": {
+    "counts": {
+      "planned": 86,
+      "attempted": 86,
+      "completed": 86,
+      "error": 0,
+      "not_attempted": 0,
+      "candidate": 16,
+      "no_candidate": 69,
+      "ambiguous": 1,
+      "human_marked": 84,
+      "legacy_abstained": 2
+    },
+    "availability": {
+      "completed_over_planned": {
+        "numerator": 86,
+        "denominator": 86,
+        "fraction": 1.0
+      },
+      "candidate_over_planned": {
+        "numerator": 16,
+        "denominator": 86,
+        "fraction": 0.18604651162790697
+      },
+      "legacy_reference_by_prediction_state": {
+        "legacy_marked": {
+          "candidate": 16,
+          "no_candidate": 67,
+          "ambiguous": 1,
+          "error": 0,
+          "not_attempted": 0
+        },
+        "legacy_abstained": {
+          "candidate": 0,
+          "no_candidate": 2,
+          "ambiguous": 0,
+          "error": 0,
+          "not_attempted": 0
+        }
+      },
+      "legacy_status_counts": {
+        "marked": 84,
+        "not_centre_field": 1,
+        "not_in_setup": 1
+      }
+    },
+    "conditional_point_discrepancy": {
+      "n": 16,
+      "sign_convention": "prediction_minus_legacy_reference; x right, y down",
+      "normalization": "sqrt(width**2 + height**2), original full image",
+      "percentile_method": "linear",
+      "distance_pixels": {
+        "n": 16,
+        "median": 151.9283124577915,
+        "p90": 328.394018767741
+      },
+      "dx_pixels": {
+        "n": 16,
+        "median": -45.141497802734364,
+        "p90": -2.748620605468716
+      },
+      "dy_pixels": {
+        "n": 16,
+        "median": 140.95784759521484,
+        "p90": 221.6034698486328
+      },
+      "distance_image_diagonal": {
+        "n": 16,
+        "median": 0.1034507816678328,
+        "p90": 0.22360952601248685
+      },
+      "dx_image_diagonal": {
+        "n": 16,
+        "median": -0.030737675932831922,
+        "p90": -0.001871586312939844
+      },
+      "dy_image_diagonal": {
+        "n": 16,
+        "median": 0.09598079041384354,
+        "p90": 0.15089387754842656
+      }
+    },
+    "fixed_pixel_sensitivity": {
+      "interpretation": "descriptive fractions, not accuracy or a success criterion",
+      "denominator_basis": "all_legacy_marked_in_manifest_including_error_abstention_missing",
+      "cutoffs": [
+        {
+          "maximum_distance_pixels": 5,
+          "numerator": 0,
+          "denominator": 84,
+          "fraction": 0.0
+        },
+        {
+          "maximum_distance_pixels": 10,
+          "numerator": 0,
+          "denominator": 84,
+          "fraction": 0.0
+        },
+        {
+          "maximum_distance_pixels": 20,
+          "numerator": 0,
+          "denominator": 84,
+          "fraction": 0.0
+        },
+        {
+          "maximum_distance_pixels": 50,
+          "numerator": 0,
+          "denominator": 84,
+          "fraction": 0.0
+        }
+      ]
+    },
+    "first_pass_timing_seconds": {
+      "model_seconds": {
+        "n": 86,
+        "median": 0.07984909997321665,
+        "p90": 0.08802749984897673
+      },
+      "service_seconds": {
+        "n": 86,
+        "median": 0.13381614990066737,
+        "p90": 0.142374400049448
+      }
+    }
+  },
+  "games": [
+    {
+      "game_pk": 823407,
+      "counts": {
+        "planned": 29,
+        "attempted": 29,
+        "completed": 29,
+        "error": 0,
+        "not_attempted": 0,
+        "candidate": 5,
+        "no_candidate": 24,
+        "ambiguous": 0,
+        "human_marked": 28,
+        "legacy_abstained": 1
+      },
+      "availability": {
+        "completed_over_planned": {
+          "numerator": 29,
+          "denominator": 29,
+          "fraction": 1.0
+        },
+        "candidate_over_planned": {
+          "numerator": 5,
+          "denominator": 29,
+          "fraction": 0.1724137931034483
+        },
+        "legacy_reference_by_prediction_state": {
+          "legacy_marked": {
+            "candidate": 5,
+            "no_candidate": 23,
+            "ambiguous": 0,
+            "error": 0,
+            "not_attempted": 0
+          },
+          "legacy_abstained": {
+            "candidate": 0,
+            "no_candidate": 1,
+            "ambiguous": 0,
+            "error": 0,
+            "not_attempted": 0
+          }
+        },
+        "legacy_status_counts": {
+          "marked": 28,
+          "not_centre_field": 1
+        }
+      },
+      "conditional_point_discrepancy": {
+        "n": 5,
+        "sign_convention": "prediction_minus_legacy_reference; x right, y down",
+        "normalization": "sqrt(width**2 + height**2), original full image",
+        "percentile_method": "linear",
+        "distance_pixels": {
+          "n": 5,
+          "median": 298.0943365771564,
+          "p90": 358.89192130732874
+        },
+        "dx_pixels": {
+          "n": 5,
+          "median": -258.20771484374995,
+          "p90": -25.379592285156207
+        },
+        "dy_pixels": {
+          "n": 5,
+          "median": 7.916357421874977,
+          "p90": 170.492724609375
+        },
+        "distance_image_diagonal": {
+          "n": 5,
+          "median": 0.20297791524689163,
+          "p90": 0.24437610865866916
+        },
+        "dx_image_diagonal": {
+          "n": 5,
+          "median": -0.1758183810583155,
+          "p90": -0.017281431076513337
+        },
+        "dy_image_diagonal": {
+          "n": 5,
+          "median": 0.005390393337531715,
+          "p90": 0.11609163127128426
+        }
+      },
+      "fixed_pixel_sensitivity": {
+        "interpretation": "descriptive fractions, not accuracy or a success criterion",
+        "denominator_basis": "all_legacy_marked_in_manifest_including_error_abstention_missing",
+        "cutoffs": [
+          {
+            "maximum_distance_pixels": 5,
+            "numerator": 0,
+            "denominator": 28,
+            "fraction": 0.0
+          },
+          {
+            "maximum_distance_pixels": 10,
+            "numerator": 0,
+            "denominator": 28,
+            "fraction": 0.0
+          },
+          {
+            "maximum_distance_pixels": 20,
+            "numerator": 0,
+            "denominator": 28,
+            "fraction": 0.0
+          },
+          {
+            "maximum_distance_pixels": 50,
+            "numerator": 0,
+            "denominator": 28,
+            "fraction": 0.0
+          }
+        ]
+      },
+      "first_pass_timing_seconds": {
+        "model_seconds": {
+          "n": 29,
+          "median": 0.07126879994757473,
+          "p90": 0.07404030002653599
+        },
+        "service_seconds": {
+          "n": 29,
+          "median": 0.12322400021366775,
+          "p90": 0.13279476012103258
+        }
+      }
+    },
+    {
+      "game_pk": 849845,
+      "counts": {
+        "planned": 57,
+        "attempted": 57,
+        "completed": 57,
+        "error": 0,
+        "not_attempted": 0,
+        "candidate": 11,
+        "no_candidate": 45,
+        "ambiguous": 1,
+        "human_marked": 56,
+        "legacy_abstained": 1
+      },
+      "availability": {
+        "completed_over_planned": {
+          "numerator": 57,
+          "denominator": 57,
+          "fraction": 1.0
+        },
+        "candidate_over_planned": {
+          "numerator": 11,
+          "denominator": 57,
+          "fraction": 0.19298245614035087
+        },
+        "legacy_reference_by_prediction_state": {
+          "legacy_marked": {
+            "candidate": 11,
+            "no_candidate": 44,
+            "ambiguous": 1,
+            "error": 0,
+            "not_attempted": 0
+          },
+          "legacy_abstained": {
+            "candidate": 0,
+            "no_candidate": 1,
+            "ambiguous": 0,
+            "error": 0,
+            "not_attempted": 0
+          }
+        },
+        "legacy_status_counts": {
+          "marked": 56,
+          "not_in_setup": 1
+        }
+      },
+      "conditional_point_discrepancy": {
+        "n": 11,
+        "sign_convention": "prediction_minus_legacy_reference; x right, y down",
+        "normalization": "sqrt(width**2 + height**2), original full image",
+        "percentile_method": "linear",
+        "distance_pixels": {
+          "n": 11,
+          "median": 147.3785056459887,
+          "p90": 221.3574008317737
+        },
+        "dx_pixels": {
+          "n": 11,
+          "median": -42.98628540039067,
+          "p90": -9.436193847656227
+        },
+        "dy_pixels": {
+          "n": 11,
+          "median": 143.42076416015624,
+          "p90": 220.90226135253906
+        },
+        "distance_image_diagonal": {
+          "n": 11,
+          "median": 0.10035273454610626,
+          "p90": 0.15072632463003696
+        },
+        "dx_image_diagonal": {
+          "n": 11,
+          "median": -0.029270152177214584,
+          "p90": -0.006425277907173706
+        },
+        "dy_image_diagonal": {
+          "n": 11,
+          "median": 0.09765783559195428,
+          "p90": 0.15041641178934906
+        }
+      },
+      "fixed_pixel_sensitivity": {
+        "interpretation": "descriptive fractions, not accuracy or a success criterion",
+        "denominator_basis": "all_legacy_marked_in_manifest_including_error_abstention_missing",
+        "cutoffs": [
+          {
+            "maximum_distance_pixels": 5,
+            "numerator": 0,
+            "denominator": 56,
+            "fraction": 0.0
+          },
+          {
+            "maximum_distance_pixels": 10,
+            "numerator": 0,
+            "denominator": 56,
+            "fraction": 0.0
+          },
+          {
+            "maximum_distance_pixels": 20,
+            "numerator": 0,
+            "denominator": 56,
+            "fraction": 0.0
+          },
+          {
+            "maximum_distance_pixels": 50,
+            "numerator": 0,
+            "denominator": 56,
+            "fraction": 0.0
+          }
+        ]
+      },
+      "first_pass_timing_seconds": {
+        "model_seconds": {
+          "n": 57,
+          "median": 0.08299030014313757,
+          "p90": 0.08874849998392165
+        },
+        "service_seconds": {
+          "n": 57,
+          "median": 0.13646039995364845,
+          "p90": 0.143608439899981
+        }
+      }
+    }
+  ],
+  "frames": [
+    {
+      "observation_id": "823407:1:3",
+      "game_pk": 823407,
+      "image_sha256": "1053991a06fdcf0e5baad1526662da2e9a0b03e83a148425ab7bf7189c4b9940",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "candidate",
+      "point": [
+        433.5910186767578,
+        656.5550537109375
+      ],
+      "difference": {
+        "dx_pixels": -254.80898132324216,
+        "dy_pixels": 252.45505371093748,
+        "distance_pixels": 358.69370095832556,
+        "dx_image_diagonal": -0.17350412090700315,
+        "dy_image_diagonal": 0.17190128831087287,
+        "distance_image_diagonal": 0.24424113677808207
+      },
+      "timing": {
+        "model_seconds": 0.07111380016431212,
+        "service_seconds": 0.12313199997879565
+      },
+      "error": null
+    },
+    {
+      "observation_id": "823407:4:2",
+      "game_pk": 823407,
+      "image_sha256": "e6f952445b2a6fb9c9631e45861281fb654893f1a54232266671f5250d4835a5",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.07295339996926486,
+        "service_seconds": 0.13693580008111894
+      },
+      "error": null
+    },
+    {
+      "observation_id": "823407:5:2",
+      "game_pk": 823407,
+      "image_sha256": "d0b7ca574995103b46e9275eab2feca54534181d3c0a31880602645705b03ff2",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.08143480005674064,
+        "service_seconds": 0.1323701001238078
+      },
+      "error": null
+    },
+    {
+      "observation_id": "823407:6:4",
+      "game_pk": 823407,
+      "image_sha256": "954cc026d5b1ecb111281630ad278e9470f6c9727356893c9afc863d5a7a4796",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.07325189979746938,
+        "service_seconds": 0.12472409987822175
+      },
+      "error": null
+    },
+    {
+      "observation_id": "823407:8:5",
+      "game_pk": 823407,
+      "image_sha256": "d6025ef576495585eae4538bc6cd398edacc153a5dda1dbaf825d902fa63e0aa",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.06870619999244809,
+        "service_seconds": 0.12034330004826188
+      },
+      "error": null
+    },
+    {
+      "observation_id": "823407:10:6",
+      "game_pk": 823407,
+      "image_sha256": "186b78f65e39e4af77f7d0e55b946ad0f7ff2e5737c52bdc966bd33e410bd9c1",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.07061460008844733,
+        "service_seconds": 0.1203870999161154
+      },
+      "error": null
+    },
+    {
+      "observation_id": "823407:12:4",
+      "game_pk": 823407,
+      "image_sha256": "dea06e8a9437b993dd851c847c82157547da41f8638a4eb6fd2db7b2e01061d9",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.07251140009611845,
+        "service_seconds": 0.1286977999843657
+      },
+      "error": null
+    },
+    {
+      "observation_id": "823407:13:5",
+      "game_pk": 823407,
+      "image_sha256": "d2cfe4235a12df54b64ff4ff30f39e737be431b278be8d75c6246bf9d0e6d789",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.07107040006667376,
+        "service_seconds": 0.12357680010609329
+      },
+      "error": null
+    },
+    {
+      "observation_id": "823407:18:1",
+      "game_pk": 823407,
+      "image_sha256": "e8c3e59b5678606d7ac8be037e18e9b54663a063254960fb917411521542fb43",
+      "legacy_mitt_status": "not_centre_field",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.07385909999720752,
+        "service_seconds": 0.11855989997275174
+      },
+      "error": null
+    },
+    {
+      "observation_id": "823407:19:4",
+      "game_pk": 823407,
+      "image_sha256": "8b9f0cb039dab614ead704e45a7fef89ee7a1d89615efd34c096fc7aef33df71",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.07126879994757473,
+        "service_seconds": 0.12328920001164079
+      },
+      "error": null
+    },
+    {
+      "observation_id": "823407:20:3",
+      "game_pk": 823407,
+      "image_sha256": "fa02fd76f2f058c06f57a2acbf7e36c8dfdbf2cdb0c77cd461b4dc9859460eb8",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.07190270000137389,
+        "service_seconds": 0.12446979992091656
+      },
+      "error": null
+    },
+    {
+      "observation_id": "823407:21:2",
+      "game_pk": 823407,
+      "image_sha256": "2070342ee1b807c3c83795acd90851d5e78e01d5906d875096bdcd81381d56fb",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.07262620003893971,
+        "service_seconds": 0.1265632000286132
+      },
+      "error": null
+    },
+    {
+      "observation_id": "823407:22:3",
+      "game_pk": 823407,
+      "image_sha256": "ea1044782b939d55c2532988bc63dd479f72256b8dc83b52e3e7b90d8f7f9e23",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.07102819997817278,
+        "service_seconds": 0.12229730002582073
+      },
+      "error": null
+    },
+    {
+      "observation_id": "823407:23:6",
+      "game_pk": 823407,
+      "image_sha256": "c478495b28a4c99c03118da6d4a8538a78e375593a92e07211444f9e973d012f",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.06849370012059808,
+        "service_seconds": 0.12322400021366775
+      },
+      "error": null
+    },
+    {
+      "observation_id": "823407:24:5",
+      "game_pk": 823407,
+      "image_sha256": "909151f12a7d4482d3213246828289f17f84a988823ba544761585418fb70e90",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.07133350009098649,
+        "service_seconds": 0.12578030000440776
+      },
+      "error": null
+    },
+    {
+      "observation_id": "823407:29:3",
+      "game_pk": 823407,
+      "image_sha256": "6d532e95f19f676feaa128f0600cfe1cf123bd65b54578f8850ac03bed10e2df",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "candidate",
+      "point": [
+        473.59228515625,
+        413.016357421875
+      ],
+      "difference": {
+        "dx_pixels": -258.20771484374995,
+        "dy_pixels": 7.916357421874977,
+        "distance_pixels": 258.32903963678217,
+        "dx_image_diagonal": -0.1758183810583155,
+        "dy_image_diagonal": 0.005390393337531715,
+        "distance_image_diagonal": 0.17590099334085735
+      },
+      "timing": {
+        "model_seconds": 0.07476510014384985,
+        "service_seconds": 0.1260476999450475
+      },
+      "error": null
+    },
+    {
+      "observation_id": "823407:31:4",
+      "game_pk": 823407,
+      "image_sha256": "5cc909197a2f4414cceb75bdcc8fda590e48b80f4cfc12400c53f9267b08796c",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "candidate",
+      "point": [
+        421.2958068847656,
+        411.9303741455078
+      ],
+      "difference": {
+        "dx_pixels": -298.00419311523433,
+        "dy_pixels": 7.33037414550779,
+        "distance_pixels": 298.0943365771564,
+        "dx_image_diagonal": -0.20291653490607678,
+        "dy_image_diagonal": 0.004991386549370985,
+        "distance_image_diagonal": 0.20297791524689163
+      },
+      "timing": {
+        "model_seconds": 0.07252150005660951,
+        "service_seconds": 0.13449340010993183
+      },
+      "error": null
+    },
+    {
+      "observation_id": "823407:34:5",
+      "game_pk": 823407,
+      "image_sha256": "5d657fdc54c8be2ab8a58d32428e55a7088047eb02fc47ccea4d1fee4cf19903",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.065033899853006,
+        "service_seconds": 0.11744390008971095
+      },
+      "error": null
+    },
+    {
+      "observation_id": "823407:36:1",
+      "game_pk": 823407,
+      "image_sha256": "5db496d2c0423db93b6b235c375523ac20a23a45cc47e2dbfe08925950cdf9f6",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.07285319990478456,
+        "service_seconds": 0.12419270002283156
+      },
+      "error": null
+    },
+    {
+      "observation_id": "823407:37:4",
+      "game_pk": 823407,
+      "image_sha256": "800588107b446b21303deea3fa3c7eea337818933ad3b9902be3dbf11aa1f93d",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.07312029995955527,
+        "service_seconds": 0.12287190021015704
+      },
+      "error": null
+    },
+    {
+      "observation_id": "823407:39:3",
+      "game_pk": 823407,
+      "image_sha256": "20a2a5a354f112c98289bba29cf949be81b7ce06fc01b4e0c579a34f38739b56",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.08205820014700294,
+        "service_seconds": 0.1375191998668015
+      },
+      "error": null
+    },
+    {
+      "observation_id": "823407:49:1",
+      "game_pk": 823407,
+      "image_sha256": "a553c2e7a09994004331e48f36a9528a5812a2752b2c8c909c1bade9fd098ddd",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.07180599984712899,
+        "service_seconds": 0.12327450001612306
+      },
+      "error": null
+    },
+    {
+      "observation_id": "823407:50:1",
+      "game_pk": 823407,
+      "image_sha256": "7477fc62a4034a6e2a70982e45f345badd77023b1e0379f4a42ecbac8f2bf31e",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.06530110002495348,
+        "service_seconds": 0.11504380009137094
+      },
+      "error": null
+    },
+    {
+      "observation_id": "823407:61:3",
+      "game_pk": 823407,
+      "image_sha256": "d02d7b9502c4a46cd47e917012057c89f91f3cf41ca82ffa5d029ff3688e6bfc",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.06742500001564622,
+        "service_seconds": 0.11692770011723042
+      },
+      "error": null
+    },
+    {
+      "observation_id": "823407:63:4",
+      "game_pk": 823407,
+      "image_sha256": "fe66c29615cdf14b7daca30b1ab2fdee29b418c2bac0a5e776dc8924ff1a5f2e",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.06542859994806349,
+        "service_seconds": 0.11647509993053973
+      },
+      "error": null
+    },
+    {
+      "observation_id": "823407:65:2",
+      "game_pk": 823407,
+      "image_sha256": "f794ef1df41296fd320c54d1ae985e5403992f42d520e140be1833d92cfc1cd8",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.06638660002499819,
+        "service_seconds": 0.11514080013148487
+      },
+      "error": null
+    },
+    {
+      "observation_id": "823407:73:10",
+      "game_pk": 823407,
+      "image_sha256": "a1eff676ee9f7f1e2bf80c21fa244f7aa50acdc2e9ba30b54d5a4d28761bdad3",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.07072010007686913,
+        "service_seconds": 0.12152970000170171
+      },
+      "error": null
+    },
+    {
+      "observation_id": "823407:80:3",
+      "game_pk": 823407,
+      "image_sha256": "e200a768a576f53ee8c6feaa6a5ac7e8e487b50fb63a93f51d2564e78e497743",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "candidate",
+      "point": [
+        789.0733337402344,
+        372.92112731933594
+      ],
+      "difference": {
+        "dx_pixels": 127.57333374023438,
+        "dy_pixels": -25.678872680664085,
+        "distance_pixels": 130.13208668021497,
+        "dx_image_diagonal": 0.08686702881047981,
+        "dy_image_diagonal": -0.01748521660109587,
+        "distance_image_diagonal": 0.08860933073863028
+      },
+      "timing": {
+        "model_seconds": 0.06667480012401938,
+        "service_seconds": 0.11723259999416769
+      },
+      "error": null
+    },
+    {
+      "observation_id": "823407:88:3",
+      "game_pk": 823407,
+      "image_sha256": "2c0220331fe81defedac3e6750f7996c04184bb9354178dafa6cc3781f589db4",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "candidate",
+      "point": [
+        385.8385772705078,
+        436.64923095703125
+      ],
+      "difference": {
+        "dx_pixels": -355.86142272949223,
+        "dy_pixels": 47.54923095703123,
+        "distance_pixels": 359.0240682066642,
+        "dx_image_diagonal": -0.2423125864510652,
+        "dy_image_diagonal": 0.03237714571190135,
+        "distance_image_diagonal": 0.24446608991239388
+      },
+      "timing": {
+        "model_seconds": 0.06697060004808009,
+        "service_seconds": 0.11979010002687573
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:1:4",
+      "game_pk": 849845,
+      "image_sha256": "29676d5da4949e851a4c61afa1be4defe8c3e2fd64b2cf5fd70cadae46b74115",
+      "legacy_mitt_status": "not_in_setup",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.06806479999795556,
+        "service_seconds": 0.12436929997056723
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:2:7",
+      "game_pk": 849845,
+      "image_sha256": "e825ca304e7257ba9c8d74e7994c4839d7296fe22a27bd1eaf18074508af4666",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.07512749987654388,
+        "service_seconds": 0.1261594002135098
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:3:5",
+      "game_pk": 849845,
+      "image_sha256": "ff2562d3176d64cb587615b21ded4784524e80b55c2b2ab543a1c6c43a8944e8",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.07572319987230003,
+        "service_seconds": 0.12748509994708002
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:4:5",
+      "game_pk": 849845,
+      "image_sha256": "b7392f7c9d828a4c688643855230619867510dd73b60a7abdfb4b047141b160b",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.07573530008085072,
+        "service_seconds": 0.12765350006520748
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:5:2",
+      "game_pk": 849845,
+      "image_sha256": "2d21fbc9259e083cd3203d4e13eaa85583b4263bce4973d17e1ba1de5956eb11",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.07693229988217354,
+        "service_seconds": 0.13646039995364845
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:6:5",
+      "game_pk": 849845,
+      "image_sha256": "ec45069bc767e89656b6770176b765fb7938364fefab09c5a9f39ee0eca05a6b",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.0744225000962615,
+        "service_seconds": 0.1276041001547128
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:7:1",
+      "game_pk": 849845,
+      "image_sha256": "b335b0939bd45fba75678ed59703cb6d5bfe326053b95e3d54c148df0f0504c4",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.08115820004604757,
+        "service_seconds": 0.1341041000559926
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:8:4",
+      "game_pk": 849845,
+      "image_sha256": "cd4cdf275e1e0598f520e5d6e2ddb204bac058a14b405e78713cb0e6effb307f",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "candidate",
+      "point": [
+        654.4440612792969,
+        467.84547424316406
+      ],
+      "difference": {
+        "dx_pixels": -50.75593872070317,
+        "dy_pixels": 140.94547424316409,
+        "distance_pixels": 149.8058477665348,
+        "dx_image_diagonal": -0.03456065199434186,
+        "dy_image_diagonal": 0.09597236517090629,
+        "distance_image_diagonal": 0.1020055564308719
+      },
+      "timing": {
+        "model_seconds": 0.07925360021181405,
+        "service_seconds": 0.1326260999776423
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:10:4",
+      "game_pk": 849845,
+      "image_sha256": "4a721eb59b5e3aedae99884f3ac2693d5814fb3de8b938efb3169c8fe65f4e1f",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.07655470003373921,
+        "service_seconds": 0.1285737999714911
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:11:3",
+      "game_pk": 849845,
+      "image_sha256": "2e19b737eceff3207679967c074843d0aa11e23ec9af6413922e359ecc401481",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.07488229987211525,
+        "service_seconds": 0.12677509989589453
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:12:2",
+      "game_pk": 849845,
+      "image_sha256": "bde9b339362bf3218b69fda84670cc55c51019f774f83f5cca49106bc35a6ff1",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.09623579983599484,
+        "service_seconds": 0.17024039989337325
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:13:1",
+      "game_pk": 849845,
+      "image_sha256": "d5a5a9ab5712e72ac1bb0f8889a54722cf5117a3668f95ad10df25c4f33c5776",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "candidate",
+      "point": [
+        646.2378234863281,
+        475.9873504638672
+      ],
+      "difference": {
+        "dx_pixels": -46.06217651367183,
+        "dy_pixels": 148.18735046386718,
+        "distance_pixels": 155.1812325723625,
+        "dx_image_diagonal": -0.031364582996897906,
+        "dy_image_diagonal": 0.10090349185594442,
+        "distance_image_diagonal": 0.10566575478977065
+      },
+      "timing": {
+        "model_seconds": 0.07811759994365275,
+        "service_seconds": 0.1360694000031799
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:14:5",
+      "game_pk": 849845,
+      "image_sha256": "e36c83ac82bd1ab9285ba5db99f874402501670d9710973611f515668b729edd",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.0781719998922199,
+        "service_seconds": 0.13156150002032518
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:15:3",
+      "game_pk": 849845,
+      "image_sha256": "593d45ddd61a9c6057d561c5700fcfde1a74bcff69d69a383d4ba5249b8701cd",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.08024649997241795,
+        "service_seconds": 0.13410030002705753
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:16:1",
+      "game_pk": 849845,
+      "image_sha256": "f8c89340f0071eebdd6e150c4ca340c13279b8072e1b119c7fd492ef679766c5",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.07945169997401536,
+        "service_seconds": 0.13274679984897375
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:17:6",
+      "game_pk": 849845,
+      "image_sha256": "155421039f25b98c383f2d488e96288c5262d36bfe32edd44fd0d8637a2f09d0",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "candidate",
+      "point": [
+        646.1123352050781,
+        472.30226135253906
+      ],
+      "difference": {
+        "dx_pixels": -14.18766479492183,
+        "dy_pixels": 220.90226135253906,
+        "distance_pixels": 221.3574008317737,
+        "dx_image_diagonal": -0.009660641847013322,
+        "dy_image_diagonal": 0.15041641178934906,
+        "distance_image_diagonal": 0.15072632463003696
+      },
+      "timing": {
+        "model_seconds": 0.07892669993452728,
+        "service_seconds": 0.1319026998244226
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:19:3",
+      "game_pk": 849845,
+      "image_sha256": "0676419b93a5ba9724de6bca335e298369ced94a5b8e2d55bfc50bb50329cea5",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.08130909991450608,
+        "service_seconds": 0.1346684000454843
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:20:5",
+      "game_pk": 849845,
+      "image_sha256": "2ed896ac1c7ae2816447fc21dcde21e928b4d557983d6f8b2355bd15de4b14ab",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.08805049979127944,
+        "service_seconds": 0.14271119982004166
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:23:6",
+      "game_pk": 849845,
+      "image_sha256": "dfb33b718048764d0e0b4074577e4afcecda70f3d10cd9d219de6ce1da9de07d",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.08407029998488724,
+        "service_seconds": 0.13981710001826286
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:24:5",
+      "game_pk": 849845,
+      "image_sha256": "ee1278a504964a2901876feefb5598c6a6b737c7d51f1bc7f8bf6fc221490b43",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.08028310001827776,
+        "service_seconds": 0.13234839984215796
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:28:5",
+      "game_pk": 849845,
+      "image_sha256": "cf543bef83efe6b6aefec875db215661f96910036533ee6d305e8f3e1619e39d",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "candidate",
+      "point": [
+        650.4638061523438,
+        469.90467834472656
+      ],
+      "difference": {
+        "dx_pixels": -9.436193847656227,
+        "dy_pixels": 222.30467834472657,
+        "distance_pixels": 222.5048578532228,
+        "dx_image_diagonal": -0.006425277907173706,
+        "dy_image_diagonal": 0.15137134330750407,
+        "distance_image_diagonal": 0.15150764921581575
+      },
+      "timing": {
+        "model_seconds": 0.07892660005018115,
+        "service_seconds": 0.13442320004105568
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:29:3",
+      "game_pk": 849845,
+      "image_sha256": "4c69a97bce108077da995e8e52b083f108b464f384891ed5394818449f7c83c4",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "ambiguous",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.07803909992799163,
+        "service_seconds": 0.1326454000081867
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:30:4",
+      "game_pk": 849845,
+      "image_sha256": "465948f71189d760fb1605f3495ab049a586c6cb74d04a569e3b2f63afd65756",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "candidate",
+      "point": [
+        647.2389526367188,
+        468.72076416015625
+      ],
+      "difference": {
+        "dx_pixels": 3.9389526367187955,
+        "dy_pixels": 143.42076416015624,
+        "distance_pixels": 143.47484427647055,
+        "dx_image_diagonal": 0.0026821052812940186,
+        "dy_image_diagonal": 0.09765783559195428,
+        "distance_image_diagonal": 0.09769465973759835
+      },
+      "timing": {
+        "model_seconds": 0.07930759992450476,
+        "service_seconds": 0.13424360007047653
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:30:5",
+      "game_pk": 849845,
+      "image_sha256": "dae11cd7d6e79e2dd5cf14b1b6fa40c992f0631a80b0dc4790e20112aa19eeda",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "candidate",
+      "point": [
+        649.3498229980469,
+        468.3211212158203
+      ],
+      "difference": {
+        "dx_pixels": -20.550177001953102,
+        "dy_pixels": 143.42112121582034,
+        "distance_pixels": 144.88591299920995,
+        "dx_image_diagonal": -0.013992993405063932,
+        "dy_image_diagonal": 0.09765807871772164,
+        "distance_image_diagonal": 0.09865548237817744
+      },
+      "timing": {
+        "model_seconds": 0.08089519990608096,
+        "service_seconds": 0.13526969985105097
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:31:2",
+      "game_pk": 849845,
+      "image_sha256": "2df75511d5bed489e055e1aafefd7834783de3e9c0e2a19642a52b0804603b9b",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "candidate",
+      "point": [
+        645.5022888183594,
+        471.9814910888672
+      ],
+      "difference": {
+        "dx_pixels": -51.79771118164058,
+        "dy_pixels": 145.0814910888672,
+        "distance_pixels": 154.0507771490482,
+        "dx_image_diagonal": -0.035270014019500515,
+        "dy_image_diagonal": 0.09878865509578902,
+        "distance_image_diagonal": 0.10489600690479368
+      },
+      "timing": {
+        "model_seconds": 0.08363780006766319,
+        "service_seconds": 0.14254949986934662
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:32:2",
+      "game_pk": 849845,
+      "image_sha256": "a4048209209def6071d335875e06d214bd4fa7444f2c4d5bab3762fd64a7193d",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.0828694999217987,
+        "service_seconds": 0.13377029984258115
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:33:4",
+      "game_pk": 849845,
+      "image_sha256": "3deff8c15012a5a90cd75fb8bd78c50def892fa631fc25ef18d876f2a1fb84fd",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.08145769988186657,
+        "service_seconds": 0.13827019999735057
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:34:5",
+      "game_pk": 849845,
+      "image_sha256": "8fc4d3b1640e3f82840b617cfee631ea5ebdc39fff68088239b5874992f0fccf",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.08525780006311834,
+        "service_seconds": 0.13676870008930564
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:35:6",
+      "game_pk": 849845,
+      "image_sha256": "5083164ff0a743b4807e0274962c489f971c0dc4b6bde4cc8fdf2051701a92b6",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.08299030014313757,
+        "service_seconds": 0.13805390009656549
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:36:5",
+      "game_pk": 849845,
+      "image_sha256": "06c27ef6445082a1513dd526c037d341cfe5595145667c9dc58aa2f87e99ba5b",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.0840817999560386,
+        "service_seconds": 0.14016510010696948
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:37:5",
+      "game_pk": 849845,
+      "image_sha256": "6c8725986ca78352b5661d93c806b5b96cfaa6ec6ec4ede8e54110021f0c007b",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "candidate",
+      "point": [
+        649.5278930664062,
+        464.8399658203125
+      ],
+      "difference": {
+        "dx_pixels": -40.672106933593795,
+        "dy_pixels": 140.3399658203125,
+        "distance_pixels": 146.11477094689698,
+        "dx_image_diagonal": -0.027694385505182904,
+        "dy_image_diagonal": 0.09556006335146855,
+        "distance_image_diagonal": 0.09949223435146268
+      },
+      "timing": {
+        "model_seconds": 0.0821569999679923,
+        "service_seconds": 0.13685649982653558
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:38:6",
+      "game_pk": 849845,
+      "image_sha256": "f0a29d9f43101aaeb09ac9845270234ba57c52f4e3ac5e1a524a16399a550edb",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.08595709991641343,
+        "service_seconds": 0.1416120999492705
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:39:3",
+      "game_pk": 849845,
+      "image_sha256": "a5998c7ea70162e7a2021c322117822dae203d7bff00555c6f08192822bf4132",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "candidate",
+      "point": [
+        649.7137145996094,
+        469.5702209472656
+      ],
+      "difference": {
+        "dx_pixels": -42.98628540039067,
+        "dy_pixels": 140.9702209472656,
+        "distance_pixels": 147.3785056459887,
+        "dx_image_diagonal": -0.029270152177214584,
+        "dy_image_diagonal": 0.09598921565678079,
+        "distance_image_diagonal": 0.10035273454610626
+      },
+      "timing": {
+        "model_seconds": 0.08850009995512664,
+        "service_seconds": 0.15190440020523965
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:40:2",
+      "game_pk": 849845,
+      "image_sha256": "53004120f5c6e3bbcd081b9e71c75fff4e0c6c534ff32d2c86b7dc6f42c04cfe",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "candidate",
+      "point": [
+        643.3396301269531,
+        206.11920928955078
+      ],
+      "difference": {
+        "dx_pixels": -54.36036987304692,
+        "dy_pixels": -123.7807907104492,
+        "distance_pixels": 135.191471482629,
+        "dx_image_diagonal": -0.037014975445617215,
+        "dy_image_diagonal": -0.08428461652278217,
+        "distance_image_diagonal": 0.092054358884477
+      },
+      "timing": {
+        "model_seconds": 0.08413009997457266,
+        "service_seconds": 0.1379486999940127
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:42:3",
+      "game_pk": 849845,
+      "image_sha256": "37dd0372d6bd85caa816285433e56aeb9b8f9f5874219847f82e64d752bbd9cc",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.08912110002711415,
+        "service_seconds": 0.14495430001989007
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:43:3",
+      "game_pk": 849845,
+      "image_sha256": "a5f7a277c36482a3f68b93cf9dbfe97416bfafd027d156becc504c035de78848",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.08973629982210696,
+        "service_seconds": 0.14225580007769167
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:43:5",
+      "game_pk": 849845,
+      "image_sha256": "ee3d2de5f1fdf951779f74dce1e19f03231d5289f79c2419e60e4d80f448cfeb",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.09296749997884035,
+        "service_seconds": 0.14747880003415048
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:44:2",
+      "game_pk": 849845,
+      "image_sha256": "41dbb4cd15afe958c102f0881f535915f64f2ee2eb44e6fea7d528c5ca744177",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.09045480005443096,
+        "service_seconds": 0.14235209999606013
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:45:4",
+      "game_pk": 849845,
+      "image_sha256": "89e8778a54a75caa672dd8bf4e1305222092c8c557b67493cf0d56e742efe4f9",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.08600520016625524,
+        "service_seconds": 0.14131030021235347
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:46:2",
+      "game_pk": 849845,
+      "image_sha256": "6f76e3837fc544fda5bd15361ce2bbe0a1959f028dfd6400e46ca7080ae11e58",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.08389910007826984,
+        "service_seconds": 0.13386199995875359
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:47:3",
+      "game_pk": 849845,
+      "image_sha256": "e06ca657df984ac8b33c2a6514604e94ae41811297610fe3ae5e1da48a63712d",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.08246669988147914,
+        "service_seconds": 0.13281550002284348
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:48:4",
+      "game_pk": 849845,
+      "image_sha256": "53dab96fe0b7ee019cc8507c3f2313b774debc9a09330e00da9533c8f68e141c",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.08400899986736476,
+        "service_seconds": 0.13355010002851486
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:49:3",
+      "game_pk": 849845,
+      "image_sha256": "df5fc2244feded86ac4c31517264b4bcf65ccd366c5cf1921ea5752c435b2464",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.08436620002612472,
+        "service_seconds": 0.13587510003708303
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:50:2",
+      "game_pk": 849845,
+      "image_sha256": "c813e4a68e72ba3ce17757a6f17e0abbf2cc622fc3193901bcb38e0d8b348861",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.09089150000363588,
+        "service_seconds": 0.145154400030151
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:51:4",
+      "game_pk": 849845,
+      "image_sha256": "8c26f0403e21a5ea260dafec84733ffcc2c53fb6cc71f6cd0b3c297839bc0944",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.08278160006739199,
+        "service_seconds": 0.13923630001954734
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:52:4",
+      "game_pk": 849845,
+      "image_sha256": "8d34544132502eb5555760979919c20297c62b083f869cedcaa4b60daac94c03",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.08419269998557866,
+        "service_seconds": 0.1350078999530524
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:53:5",
+      "game_pk": 849845,
+      "image_sha256": "f0822d1ed113eb45828c4238b128bfb4e2d1de98cefa281ad45c54d35774f64a",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.08726239996030927,
+        "service_seconds": 0.13986740005202591
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:54:2",
+      "game_pk": 849845,
+      "image_sha256": "b75b5d9b7a4d904091a1f3c085a01d50e6bc04c7168c2b4a361660c9de9dac38",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.08800449990667403,
+        "service_seconds": 0.1423967001028359
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:55:5",
+      "game_pk": 849845,
+      "image_sha256": "652901153726759dfd910a273ecdf10d64953188171095fbb1a1639a86fd5f34",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.08290980011224747,
+        "service_seconds": 0.133344299858436
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:56:5",
+      "game_pk": 849845,
+      "image_sha256": "73edc4b046c2aaa3b6d0dcb79d42b1ae0db8c20625b386baf3d316e067855725",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.0844889001455158,
+        "service_seconds": 0.1394730000756681
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:58:5",
+      "game_pk": 849845,
+      "image_sha256": "2da2f0b2a9a8124a24b488bc6412af6b96d3aea35e7fed2a7f64da6e11b46f3f",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.08450810005888343,
+        "service_seconds": 0.13827480003237724
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:62:2",
+      "game_pk": 849845,
+      "image_sha256": "19b13c34e9f7498ab1c955f1dcdecc47ce2af88e9eda834f8bdb8339a83b0c71",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.08393189986236393,
+        "service_seconds": 0.13767100009135902
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:64:3",
+      "game_pk": 849845,
+      "image_sha256": "88e725bdf95867a1e72625f244fa5db2fe59b5e7146b2a392eea25fc1d94c3c4",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "candidate",
+      "point": [
+        614.8791809082031,
+        207.08405303955078
+      ],
+      "difference": {
+        "dx_pixels": -44.2208190917969,
+        "dy_pixels": -117.8159469604492,
+        "distance_pixels": 125.84148044002346,
+        "dx_image_diagonal": -0.03011076886876594,
+        "dy_image_diagonal": -0.08022304472960227,
+        "distance_image_diagonal": 0.08568777805239211
+      },
+      "timing": {
+        "model_seconds": 0.08806420001201332,
+        "service_seconds": 0.15850239992141724
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:66:1",
+      "game_pk": 849845,
+      "image_sha256": "45da6f15d489925872ec57f04b4c87b8310b6a019f4505ce97ca8d24ea2de0dd",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.08506539999507368,
+        "service_seconds": 0.14155160007067025
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:68:1",
+      "game_pk": 849845,
+      "image_sha256": "26c91ab60895768ec8c4ba2365dd62a9a7f7ece054b87e10b8336f95d8cab5d9",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.0854124000761658,
+        "service_seconds": 0.1375185998622328
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:69:2",
+      "game_pk": 849845,
+      "image_sha256": "7431c96f2e65cf23aec59494e30a4dd97cd0e97203e18ba4c6d36b552bc66ed0",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.08787230006419122,
+        "service_seconds": 0.1414783000946045
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:70:4",
+      "game_pk": 849845,
+      "image_sha256": "efa90e50f420be76720cc8b8a911af6f01ebc9b131e436d890f31ea1c7ce0a93",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.08246890013106167,
+        "service_seconds": 0.1355536999180913
+      },
+      "error": null
+    }
+  ]
+}
