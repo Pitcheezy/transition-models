@@ -1,0 +1,64 @@
+# CV23 — 타석을 포함하는 연속 방송 구간 리플레이
+
+기존 10시각 개발 실험은 원본 180.246733초부터 시작해 직전 타석 종료와 더그아웃 장면이
+빠져 있었다. 이번에는 같은 원본의 더 긴 클립을 새로 확보해 **160.3935667–227.2103167초,
+66.81675초** 방송 구간을 다룬다. 물리적 타석 입장 시각은 방송에 나오지 않아 미확인이다.
+따라서 기존 `full_pa_verified=false`를 유지하고, 새 단위의 완료 범위를 **연속 방송 구간의
+원본 결속·고정 일정 실제 처리**로 분리한다. 이전 CV5a4의 엄격한 완료 조건을 소급 변경하지 않는다.
+
+## 화면과 원본 근거
+
+- 새로운 로컬 클립 5,995장의 디코딩 MD5·PTS·크기·duration이 원본과 대응한다.
+- 기존 뒤 클립의 3,298장 및 앞 확장 클립의 2,449장이 새 클립과 정확히 일치한다.
+- 약 0.5초 간격 순서 표본 148장과 점수판 시작 전환 연속 63장, 고유 209장을 AI가 확인했다.
+  이는 전체 프레임 시각 검토나 사람 검증이 아니다. 종료 경계는 원본 결속 추출로 재확인했다.
+- 시작은 첫 1아웃 표시 프레임(원본 PTS `4811807/30000`), 끝은 첫 2아웃 표시 프레임의
+  표시 구간 끝(`13632619/60000`)이다. `[start,end)` 안의 **4,005장·누락 0초**를 검증했다.
+- 린도어의 이전 타석 종료·더그아웃, 이글레시아스의 세 투구 동작·퇴장과 점수판 전환을 확인했다.
+  정확한 릴리스 순간, 실제 경기 현장 시각, 타자의 물리적 입장은 인증하지 않는다.
+- 전체 클립 꼬리에는 2,002 ticks의 누락이 있으나 이번 구간 밖이다. 영상을 완전 무결한
+  전체 경기로 설명하지 않는다. 영상·원본 프레임과 개인 경로는 Git/공개 사이트에서 제외한다.
+
+[프레임 검토·출처](results/cv_local_20261007/broadcast_interval_review_v1.json) ·
+[구간 전체 검사](results/cv_local_20261007/broadcast_interval_coverage_v1.json)
+
+## 실제 호출 전 고정 조건
+
+[등록 JSON](results/cv_local_20261007/broadcast_interval_preregister_v1.json)을 커밋·푸시한 뒤
+실행한다. 원래 S+5k의 5초 간격을 유지하면 **14개**다. 이전 N≤12 준비안은 보존하고,
+더 긴 구간의 새 계획 N=14를 출력 확인 전에 명시했다. 각 입력 한 번, 재시도·교체 없음.
+
+기존 Faster R-CNN MobileNet/CUDA/4threads/threshold0.5/전체화면 설정을 유지한다.
+검정 합성 5회 준비 후 고정 1배속 FIFO로 입력하며, 늦어도 시계를 다시 시작하지 않는다.
+실제 프레임은 각 cutoff 이후 추출한다. 모델에는 투구 키·릴리스 정답·이후 프레임을 주지 않는다.
+프레임의 과거 투구 정보가 보일 수 있으므로 미트 관측 개발 진단으로만 사용한다.
+표준 응답의 `mitt=null`은 유지하고 범용 글러브 후보는 별도 진단 자료에만 남긴다.
+
+모든 14개를 분모로 수락·기권·오류·미시도·5초 이내 발행을 보고한다. 시작 준비, 65초의
+첫~마지막 입력 일정, 명령 전체 시간을 분리한다. 마지막 응답이 구간 종료 뒤여도 버리지 않는다.
+새 클립 길이·입력·계획 파일 구성이 이전과 달라 CV22와의 인과적 속도 비교로 사용하지 않는다.
+
+## 재사용과 유지보수
+
+새 `intent.replay_coverage`는 지정 구간의 **모든 프레임 표시 구간**을 검사한다.
+선택한 입력 시각만 모두 조회돼도 그 사이 영상이 빠져 있으면 `fully_covered=false`다.
+개별 입력의 성공 여부와 전체 구간의 누락을 구분하며, 전후 입력 SHA 재검증과 새 출력만 허용한다.
+CLI 종료 성공은 감사 파일 생성 성공이다. 사용 여부는 `fully_covered`와 `cutoffs_unavailable`을 읽어 판단한다.
+모델이나 디코더는 실행하지 않는다. 보고서에 URL·개인 경로를 넣지 않는다.
+
+```text
+python -m intent.replay_coverage --capture-dir CAPTURE --start EXACT_START --end EXACT_END --cutoffs-json CUTOFFS.json --out NEW_REPORT.json
+python -m intent.local_glove_plan --capture-dir CAPTURE --config CONFIG.json --cutoffs-json CUTOFFS.json --ffmpeg FFMPEG --out-directory NEW_PLAN --observer-timeout-seconds 60 --extract-timeout-seconds 120
+python -m intent.local_glove_ready --plan NEW_PLAN/plan.json --out NEW_PLAN/run --startup-timeout 60
+python -m intent.local_glove_observer_report --run NEW_PLAN/run --out NEW_MODEL_REPORT.json
+```
+
+개발 PC의 이번 비공개 묶음은 저장소 `outputs/cv_local_pa_interval_v1/`이다.
+다른 PC에서는 기존 절대경로 receipt를 고치지 말고 그 기기에서 검증한 캡처와 새 계획을 만든다.
+입력 검증14개와 기존 clock/checklist를 합친 59개 검사 통과. 첫 Ruff import 오류는 수정했다.
+기존 Windows checklist subprocess 디코딩 경고 1건은 시험 성공과 별도 기록한다.
+
+## 남은 품질 조건
+
+새 미트 모델이나 독립 정확도는 이번 변경에 포함되지 않는다. CV6의 새 규약 사람 검토26건,
+CV7의 미열람 영상·독립 라벨러, 운영 모델 품질이 남아 있다. M3·시연 JSONL·사이트·팀원 코드는 고정한다.

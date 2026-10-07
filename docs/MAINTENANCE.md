@@ -226,3 +226,8 @@ CV15 사전등록 커밋에서 앞선6개 JSON의 Git 줄바꿈 정규화를 원
 설명하지 않는다. CV14/17 재현은 각각 당시 커밋 코드와 원계획을 사용한다.
 CV19의 실제Linux/mac CI통과와 Windows전체1563tests통과를 확인했다.
 Windows의기존Pillow경고2건은 남아 있고 CPU검사는 MPS/GPU성능 검증이 아니다.
+
+## 연속 방송 구간 누락 검사
+
+`python -m intent.replay_coverage`는 전체 `[start,end)`를 검사한다. CLI 성공과 `fully_covered`를 구분한다.
+[CV23 재현·실제 조건](CV_BROADCAST_INTERVAL_REPLAY_V1.md)을 따른다. 원본·영상·개인 경로는 로컬에 보존한다.
