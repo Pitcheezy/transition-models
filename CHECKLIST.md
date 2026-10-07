@@ -71,7 +71,9 @@
 
 ## CV 후속 작업 — 2026-10-05
 
-- [~] CV-20. 프레임 준비·시각표 처리 비용 분석 후 내용 결속을 유지하는 최소 개선. 원본/영상SHA·PTS·미래차단 검사를 생략하지 않고 동일10시각 비교 조건을 실행 전에 고정한다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-07 · Codex]`
+- [~] CV-21. 기기별 새CV계획 생성CLI: 유효한 capture/config·명시cutoff·현재Python으로 새계획과 검증영수증 작성. 기존계획수정·추출·모델호출 없이 준비하고 실패원인/새출력 보호. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-07 · Codex]`
+
+- [~] CV-20. 같은 시간표의 계산만 재사용하는 최소 개선 준비: 입력바이트 키·결과격리·용량상한, 새25/기존154tests 통과. [규약](docs/CV_CLOCK_CACHE_V1.md). 원본/영상SHA·PTS·미래차단 검사를 생략하지 않고 동일10시각 비교 조건을 실행 전에 고정한다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-07 · Codex]`
 
 - [x] CV-19. 원격Linux/macOS17실패 원인인 정상venv실행파일 링크 거절 수정. 원래venv유지·대상/설정SHA·linkretarget검증, 데이터symlink보호유지. Windows36tests/Ruff통과. 수정 `5b108f2`의 실제Linux/macOS CI 각각1542 passed·6 skipped·2 deselected, 기존180초 이내 성공. [기록](docs/CV_VENV_LAUNCHER_FIX.md). 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-07 · Codex]`
 
@@ -141,7 +143,7 @@
 | 중계 시각 주석 | **297 확인 / 25 확인 불가 / 0 미검토** — 전 경기 322구 검토 완료. 완전 타석 2~4·6~15·18~19·21·23~28·30~32·34·36~38·40~46·49~51·53~55·57~63·65~69·71·74~79·81. 불가 목록·반이닝 집계·리드 분포는 [전 경기 요약](docs/MLB_BROADCAST_TIMING.md). 규약 v2, 수동 시각 | 2026-09-27 |
 | 점수판 평가셋 | timing 322 / 리뷰 297(292구 10필드 confirmed, PA 8/1·16/1·33/1·41/1·44/1 partial) / 라벨 충돌 0 / 판단 화면 불가 25 / 미검토 0 | 2026-09-27 |
 | 점수판 OCR | **현행 v2 유지**. A-15 새 17구: 새 판단 프레임 17구의 필드 정답·기권·오답: v1 119·51·0 / v2 119·51·0 / v3 117·53·0 / v4 119·51·0. unavailable 2구는 예측 대상이 아니다. 공유 280행 변화 0·반복 297행 일치·음성 거짓 판독 0. 이전 오판독은 [알려진 목록](docs/results/mlb_p0/game_747139_scoreboard_known_misreads.json)에 유지. v3 무회귀·v4 사전 등록 기준 실패 유지. 747139는 전 경기 개발 자료; 새 버전 독립 검증은 새 미검토 영상 필요 | 2026-09-27 |
-| 전체 검사 (Windows CPU) | 1563 passed, 5 skipped, 2 deselected (401.33초, `check_project.py --cpu-only`, Ruff 139경로 통과) | 2026-10-07 |
+| 전체 검사 (Windows CPU) | 1588 passed, 5 skipped, 2 deselected (386.70초, CV20코드 `check_project.py --cpu-only`, Ruff140경로 통과) | 2026-10-07 |
 | 원격 검사 (Linux/mac CPU) | 최종코드 `7d75ed0` 양쪽1562 passed,6 skipped,2 deselected·Ruff139·JS통과 (CI37561979439) | 2026-10-07 |
 | 정책 효용 | **미입증** — delta −0.0862 runs/100, 95% CI [−0.4046, +0.2304] | 2026-09-21 |
 | Claude 모델 배정 | 항목 태그 참조 — `uv run --frozen python scripts/checklist_model.py --next` | 2026-09-22 |

@@ -12,12 +12,21 @@ import re
 from bisect import bisect_right
 from dataclasses import dataclass
 from fractions import Fraction
+from io import BytesIO
 from pathlib import Path
+from threading import Lock
 
 SCHEMA = "intent_clip_clock_mapping_v1"
 _COLUMNS = ["stream#", "dts", "pts", "duration", "size", "hash"]
 _REQUIRED = {"format", "version", "hash", "tb 0", "media_type 0", "codec_id 0", "dimensions 0"}
 _ALLOWED = _REQUIRED | {"software", "sar 0"}
+
+
+# One latest cacheable pair only; no path, mtime, media, or image cache.
+_MAPPING_CACHE_MAX_INPUT_BYTES = 4 * 1024 * 1024
+_MAPPING_CACHE_MAX_RESULT_BYTES = 16 * 1024 * 1024
+_MAPPING_CACHE_LOCK = Lock()
+_MAPPING_CACHE = None
 
 
 @dataclass(frozen=True)
@@ -216,6 +225,56 @@ def audit_mapping(source_bytes, clip_bytes):
             "No full-PA boundaries, image labels, automatic observer, accuracy or real-time availability are established.",
         ],
     }
+
+
+def clear_mapping_cache():
+    """Clear the single saved entry for test isolation, not in-flight calculations."""
+    global _MAPPING_CACHE
+    with _MAPPING_CACHE_LOCK:
+        _MAPPING_CACHE = None
+
+
+def cached_audit_mapping(source_bytes, clip_bytes):
+    """Reuse only identical freshly read table bytes; return an independent report.
+
+    Files and their hashes must still be verified by the caller on every use.
+    Cache lock contention bypasses caching rather than waiting for another caller.
+    """
+    global _MAPPING_CACHE
+    if (
+        not isinstance(source_bytes, bytes)
+        or not isinstance(clip_bytes, bytes)
+        or len(source_bytes) + len(clip_bytes) > _MAPPING_CACHE_MAX_INPUT_BYTES
+    ):
+        return audit_mapping(source_bytes, clip_bytes)
+    if not _MAPPING_CACHE_LOCK.acquire(blocking=False):
+        return audit_mapping(source_bytes, clip_bytes)
+    try:
+        cached = _MAPPING_CACHE
+        serialized = (
+            cached[2] if cached is not None and cached[:2] == (source_bytes, clip_bytes) else None
+        )
+    finally:
+        _MAPPING_CACHE_LOCK.release()
+    if serialized is not None:
+        return json.loads(serialized)
+
+    # Expensive pure work and JSON decoding never run under the cache lock.
+    report = audit_mapping(source_bytes, clip_bytes)
+    encoder = json.JSONEncoder(ensure_ascii=False, allow_nan=False, separators=(",", ":"))
+    with BytesIO() as buffer:
+        for chunk in encoder.iterencode(report):
+            encoded = chunk.encode("utf-8")
+            if buffer.tell() + len(encoded) > _MAPPING_CACHE_MAX_RESULT_BYTES:
+                return report
+            buffer.write(encoded)
+        serialized = buffer.getvalue()
+    if _MAPPING_CACHE_LOCK.acquire(blocking=False):
+        try:
+            _MAPPING_CACHE = (source_bytes, clip_bytes, serialized)
+        finally:
+            _MAPPING_CACHE_LOCK.release()
+    return json.loads(serialized)
 
 
 def latest_mapped_frame(report, source_seconds):

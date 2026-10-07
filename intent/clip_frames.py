@@ -89,7 +89,7 @@ def _capture_inputs(directory):
     source_data, clip_data = (
         (directory / name).read_bytes() for name in ("source.framemd5", "clip.framemd5")
     )
-    report = clip_clock.audit_mapping(source_data, clip_data)
+    report = clip_clock.cached_audit_mapping(source_data, clip_data)
     for role, data in (("source", source_data), ("clip", clip_data)):
         if clip_clock._sha(data) != artifacts[f"{role}.framemd5"]["sha256"]:
             raise ValueError("Checksum table changed while being read")
