@@ -8,6 +8,10 @@ from uuid import uuid4
 
 ROOT = Path(__file__).resolve().parents[1]
 QUALITY_PATHS = [
+    "intent/local_point_model.py",
+    "intent/local_point_experiment.py",
+    "tests/test_local_point_model.py",
+    "tests/test_local_point_experiment.py",
     "intent/local_glove_observer.py",
     "intent/local_glove_observer_report.py",
     "scripts/observe_local_glove_frame.py",
