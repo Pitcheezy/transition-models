@@ -48,8 +48,13 @@ Windows에서 기존 CV20의 10개 cutoff와 원 config로 새 bundle을 한 번
 계획·설정 원본 SHA 불변, 상태 validated, 모델/디코더/준비 subprocess 호출0,
 run/startup 폴더 없음 확인. 전체 경로 receipt는 로컬에 보존한다.
 [경로를 제외한 준비 근거](results/cv_local_20261007/machine_plan_validation_v1.json).
-합성 검사45개와 독립 읽기 검토를 통과했다. 관련 준비/worker 검사는 인계 기록 참조.
+합성 검사45개와 독립 읽기 검토를 통과했다. 준비/worker/체크리스트를 포함한 관련99개 검사도 통과했다.
 프로젝트 Ruff142경로 통과. Mac 실기기 실행은 아직 검증하지 않았다.
 
 CV22 속도 반복은 이 도구가 생성한 짧은 manifest를 쓰지 않고 CV20 원본 계획 바이트의
 복사본을 사용한다. 검사 파일 수 차이가 이전과의 속도 비교에 섞이지 않게 하기 위해서다.
+
+최신 코드 `cf355ec`의 [Linux/macOS CI](https://github.com/Pitcheezy/transition-models/actions/runs/37565118118)는
+각각 **1632 passed, 6 skipped, 2 deselected**다. Ubuntu53.93초·macOS105.93초,
+Ruff142경로와 JS 검사 성공. 이것은 CPU 소프트웨어 검사이며 Mac 모델 실행 결과가 아니다.
+기존 M3 입력25개 SHA도 동일함을 다시 확인했다.
