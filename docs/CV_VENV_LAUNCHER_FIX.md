@@ -18,4 +18,8 @@ observer_launcher_binding에 동결한다. 작업 준비·dispatch직전·runner
 
 Windows 관련검사36 passed(10.35초), Ruff통과. 현재Python subprocess의 sys.prefix 보존,
 정상링크 모의처리, retarget와일반링크거절, 상대경로/PATH표준해결을 검사했다.
-실제macOS/Linux CI의 수정후 결과는 푸시 후 별도로 확인한다.
+실제 수정 커밋 `5b108f2`의 [CI 37561107783](https://github.com/Pitcheezy/transition-models/actions/runs/37561107783)은 양쪽 모두 성공했다.
+Ubuntu24.04/torch2.6.0:1542 passed·6 skipped·2 deselected(48.29초).
+macOS15/torch2.8.0 CPU검사:1542 passed·6 skipped·2 deselected(102.93초).
+기존180초 제한을 유지했고 Ruff136경로·JavaScript구문·의존성설치도 성공했다.
+mac의 runtime탐지는MPS available이지만 실제검사는 --cpu-only이며 MPS성능 검증이 아니다.
