@@ -29,6 +29,12 @@ dependencies = [
     "pywin32>=311; sys_platform == 'win32'",
 ]
 
+[project.optional-dependencies]
+local-cv = [
+    "torchvision==0.21.0; sys_platform != 'darwin'",
+    "torchvision==0.23.0; sys_platform == 'darwin'",
+]
+
 [dependency-groups]
 dev = [
     "jupyter>=1.1.0",

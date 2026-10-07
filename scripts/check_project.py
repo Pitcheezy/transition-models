@@ -8,6 +8,14 @@ from uuid import uuid4
 
 ROOT = Path(__file__).resolve().parents[1]
 QUALITY_PATHS = [
+    "intent/local_detector_data.py",
+    "intent/local_glove_detector.py",
+    "intent/local_glove_benchmark.py",
+    "intent/local_glove_report.py",
+    "tests/test_local_detector_data.py",
+    "tests/test_local_glove_detector.py",
+    "tests/test_local_glove_benchmark.py",
+    "tests/test_local_glove_report.py",
     "intent/observation_loop.py",
     "intent/observation_report.py",
     "tests/test_intent_observation_report.py",
