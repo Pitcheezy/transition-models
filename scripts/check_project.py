@@ -8,6 +8,10 @@ from uuid import uuid4
 
 ROOT = Path(__file__).resolve().parents[1]
 QUALITY_PATHS = [
+    "src/integration",
+    "scripts/inspect_service_game.py",
+    "tests/test_service_game_contract.py",
+    "tests/test_service_game_cli.py",
     "tests/test_intent_clip_frames_seek.py",
     "intent/replay_coverage.py",
     "tests/test_replay_coverage.py",

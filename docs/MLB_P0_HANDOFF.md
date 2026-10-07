@@ -1,5 +1,28 @@
 # MLB P0 — Codex / Claude 인계 기록
 
+## I-service1 완료 — S 응답 로컬 계약 준비 (2026-10-07)
+
+기준 `feature/intent-v0@62121c0`, 선점 `022928b` 후 우리 저장소에서만 작업했다.
+팀원 STATUS의 S `pitcheezy-service-game-v2`를 받는 순수 정규화기와
+`scripts/inspect_service_game.py`를 추가하고 표준 검사 경로에 등록했다.
+원본 SHA, 원래 index/투구 키, ready/unsupported/missing, null과 구종 선택 비중을 보존한다.
+실제 결과는 `post`에 두며 `build_pitch_view`의 명시적 공개 전에는 포함하지 않는다.
+미트 비null 원자료는 존재 여부만 기록하고 좌표를 해석하지 않는다.
+새 출력은 로컬 `pitcheezy-service-review-v1`이며 기존 receiver-v1로 변환하지 않는다.
+
+실제 S 원문 미수신. 모든 새 행동 검사는 합성 자료이며 서버·팀원 코드·모델을 호출하지 않았다.
+합성 예제의 3행은 ready/unsupported/missing 각1, actual1, 불명 셋업1이다.
+최초 검사는 큰 정수 범위 처리와 Windows dangling 출력 링크 문제를 찾아 수정했다.
+표준 전체 CPU 결과: 1812 passed, 8 skipped, 2 deselected, 2 warnings / 428.63초. Ruff 150파일 통과.
+기존 `check_pitch_studio.py`의 영상·출처·해시·홈/수신기 회귀 검사도 통과했다.
+
+다음은 I-service2 실제 ready/unsupported/missing JSON·버전·SHA·셋업 계약 수신 후 대조다.
+기존 CV 상태를 유지하므로 자동 --next는 CV를 선택할 수 있다. 통합 재개는 I-service2를 명시한다.
+실제 호환성 확인 전 공개 페이지를 연결하지 않는다. 정책 a6dffaea/c13cc989/6eb85ba7 대응,
+추천 기록/계산/피드/영상 시점의 구분은 별도 근거가 필요하다.
+CV6 사람 응답 대기는 유지하며 기존 M3·JSONL·공개 미디어·배포·팀원 저장소는 불변이다.
+Codex 수정 권한 반납. [상세 실행·제한·전달 항목](SERVICE_GAME_V2_INTEGRATION.md).
+
 ## 통합 비교용 STATUS 완료 — 2026-10-07
 
 사용자 요청의 9개 목차를 루트 [STATUS.md](../STATUS.md)에 작성했다. 조사 기준은 우리

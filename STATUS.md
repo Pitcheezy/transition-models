@@ -1,5 +1,7 @@
 # STATUS — Pitcheezy / transition-models
 
+> 2026-10-07 후속 변경: 아래 조사 스냅샷을 유지하면서 [S 응답 로컬 검사 도구](docs/SERVICE_GAME_V2_INTEGRATION.md)를 추가했다. 합성 자료에서 동작을 확인한 통합 준비이며, 실제 S 응답 수신·공개 화면 연결·라이브 검증은 아직 하지 않았다.
+
 작성일: 2026-10-07. 두 프로토타입의 통합 판단을 위한 현황이며, 홍보 자료가 아니다.
 
 조사 기준은 `Pitcheezy/transition-models`, `feature/intent-v0`, `050740e03a46eb8c704107da6d3225c0a12ee249`이다. 현재 웹·CV 작업이 있는 `transition-models-intent` 작업 폴더를 기준으로 했다. 같은 저장소의 다른 브랜치 `codex/fix-point-label-alignment@dad5522`와 합쳐지지 않은 부분은 따로 표시한다. 팀원 저장소는 수정하거나 재조사하지 않았다. 아래 팀원 모델 관련 사실은 **이 저장소에 전달·저장된 응답**에 한정된다.
