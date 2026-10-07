@@ -45,3 +45,14 @@ uv run --frozen python -m intent.clip_frames --capture-dir outputs/cv_clip_clock
 검증: 10개 추출 영수증/이미지/디코딩 체크섬 및 원본 바인딩 재검사 통과, 후보 10개 cutoff 매핑 통과.
 체크리스트 선택기의 단일 문자 작업군 정규식 때문에 CV 항목이 누락되는 버그를 발견해 수정했다.
 CV 다중 문자 작업군·과거 진행 항목 우선순위 회귀 검사를 추가했다. 체크리스트 6 tests·Ruff 통과, 실제 `--next`가 CV-5a4를 선택함을 확인했다.
+
+## 2026-10-07 재개 시 출처 위치 확인
+
+앞 확장 영상은 이미 CV9에서 확보·검토했다. 새로 다운로드해야 하는 상태가 아니다.
+주 작업트리 `outputs/cv_pa2_preceding_capture_v1`의 receipt와 source/clip framemd5는
+[CV9 등록](results/cv_followup_20261006/bounded_latency_10_preregister_v1.json)의 preceding_extension과SHA가같다.
+2,449장(원본144.160683–185.001483초), 이전클립과600장 PTS/MD5/크기/duration 일치를 재확인했다.
+기존41장 표본을 다시 AI로 열람했으며 새사람검토나 미열람평가로 세지 않는다.
+160.176683–161.177683초의 점수판 초기화/1아웃 전환과 다음타자 화면을 더 확인할 수 있으나,
+이번에도 연속재생·심판판정시각·물리적타석입장·전체타석은확정하지 않았다.
+남은 일은 이 기존자료의 연속 장면 확인이다. 230.013117–230.0298초 누락 구간도 그대로 보존한다.
