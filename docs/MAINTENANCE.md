@@ -231,3 +231,16 @@ Windows의기존Pillow경고2건은 남아 있고 CPU검사는 MPS/GPU성능 검
 
 `python -m intent.replay_coverage`는 전체 `[start,end)`를 검사한다. CLI 성공과 `fully_covered`를 구분한다.
 [CV23 재현·실제 조건](CV_BROADCAST_INTERVAL_REPLAY_V1.md)을 따른다. 원본·영상·개인 경로는 로컬에 보존한다.
+
+## 정확한 프레임 추출과 디코더 회귀 검사
+
+[CV24](CV_EXACT_FRAME_SEEK_V1.md)부터 `intent.clip_frames`는 검증된 PTS로 탐색한다.
+초기/음수/정밀도 경계에서는 실행 전 기존 순번 방식으로 분기하며 실패 뒤 자동 재시도하지 않는다.
+비교가 필요하면 `--extraction-mode ordinal`을 지정한다. 구형 추출 영수증도 계속 검증한다.
+원본PTS·duration·size·MD5·JPEG 정합 검사를 완화하지 않는다.
+
+`INTENT_TEST_FFMPEG`에 FFmpeg 실행파일을 설정하면 전체CPU검사에 합성영상 디코더 회귀2건이
+포함된다. 인접한 ffprobe와 libx264가 필요하다. 환경변수가 없으면 그2건만 건너뛴다.
+실제 모델/영상 다운로드 없이 B프레임·시작PTS0/5초·PTS공백·JPEG동일성을 검사한다.
+로컬원본/요청/기기계획은 `outputs/cv_exact_seek_*`, 탐색기록은 `outputs/cv24_*`에 남고 Git에서 제외된다.
+이전결과를 덮어쓰지 말고 새계획과 새출력경로를 사용한다.

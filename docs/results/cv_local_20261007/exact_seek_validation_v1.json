@@ -1,0 +1,29 @@
+{
+  "schema": "cv_exact_seek_validation_v1",
+  "full_cpu_result": "1667 passed, 5 skipped, 2 deselected, 2 warnings in 407.57s (0:06:47)",
+  "full_check_log_sha256": "66058128c87504c68932a2c485e83f2edc0136a26c74380ecbd1b75a4e5dfb2f",
+  "full_command": "uv run --frozen python scripts/check_project.py --cpu-only",
+  "environment": {
+    "PYTHONUTF8": "1",
+    "INTENT_TEST_FFMPEG": "explicit local FFmpeg8.0 executable; enables generated B-frame/nonzero-PTS regression"
+  },
+  "related_tests_passed": 140,
+  "ruff_paths": 145,
+  "new_tests_passed": 19,
+  "new_real_decoder_cases": 2,
+  "preregistration_commit": "d1e2c4f",
+  "paired_extractions": 28,
+  "same_images": 14,
+  "new_model_loops": 1,
+  "remote_ci": {
+    "run_id": 37588484216,
+    "code_commit": "d1e2c4f39e3a77d4c0b99d208e6458c8b378627f",
+    "ubuntu_24_04": "1664 passed, 8 skipped, 2 deselected, 4 warnings in 57.77s",
+    "macos_15": "1664 passed, 8 skipped, 2 deselected, 2 warnings in 107.29s",
+    "conclusion": "success",
+    "real_decoder_cases_enabled": false
+  },
+  "frozen_m3_files_unchanged": 25,
+  "human_review_responses_created": 0,
+  "teammate_repository_mutations": 0
+}
