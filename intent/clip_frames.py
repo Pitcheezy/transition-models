@@ -138,6 +138,26 @@ def _command(ffmpeg, clip, ordinal, output):
     ]
 
 
+def _extraction_command(ffmpeg, clip, mapping, output, mode):
+    """Seek conservatively, select exact PTS and leave verification authoritative.
+
+    Near the beginning, negative timestamps and integers outside the filter's
+    exact double-precision range keep the original ordinal decode. This choice
+    happens before execution; a failed seek is never retried or substituted.
+    """
+    command = _command(ffmpeg, clip, mapping["clip_decode_ordinal"], output)
+    target = Fraction(mapping["clip_seconds_exact"])
+    seek_seconds = target.numerator // target.denominator - 2
+    if mode == "ordinal" or seek_seconds <= 0 or abs(mapping["clip_pts"]) >= 2**53:
+        return command
+    index = command.index("-i")
+    command[index:index] = ["-seek_timestamp", "1", "-ss", str(seek_seconds), "-noaccurate_seek"]
+    command[command.index("-filter_complex") + 1] = (
+        f"[0:v:0]select=eq(pts\\,{mapping['clip_pts']}),split=2[check][image]"
+    )
+    return command
+
+
 def _verify_extraction(output, mapping, report):
     table = clip_clock.parse_framemd5(
         (output / "selected.framemd5").read_text(encoding="utf-8-sig")
@@ -167,8 +187,18 @@ def _verify_extraction(output, mapping, report):
         decoded.load()
 
 
-def extract_frame(*, capture_dir, source_seconds, out, ffmpeg="ffmpeg", timeout=120):
+def extract_frame(
+    *,
+    capture_dir,
+    source_seconds,
+    out,
+    ffmpeg="ffmpeg",
+    timeout=120,
+    extraction_mode="seek_pts",
+):
     """Use a new private directory; preflight errors raise, runtime failures retain a receipt."""
+    if extraction_mode not in ("seek_pts", "ordinal"):
+        raise ValueError("extraction_mode must be seek_pts or ordinal")
     directory, output = (clip_capture._plain_path(value) for value in (capture_dir, out))
     if output.exists():
         raise FileExistsError("Mapped frame output directory must be new")
@@ -188,6 +218,8 @@ def extract_frame(*, capture_dir, source_seconds, out, ffmpeg="ffmpeg", timeout=
         "schema": SCHEMA,
         "status": "failed",
         "private_receipt": True,
+        "requested_extraction_mode": extraction_mode,
+        "actual_extraction_mode": None,
         "capture_directory": str(directory),
         "started_at_utc": clip_capture._utc(),
         "requested_source_seconds_exact": str(requested),
@@ -212,8 +244,10 @@ def extract_frame(*, capture_dir, source_seconds, out, ffmpeg="ffmpeg", timeout=
             for module in (clip_capture, clip_clock)
         }
         receipt["module_sha256"] = clip_capture._sha256(Path(__file__))
+        command = _extraction_command(ffmpeg, clip, mapping, output, extraction_mode)
+        receipt["actual_extraction_mode"] = "seek_pts" if "-ss" in command else "ordinal"
         receipt["command"] = clip_capture._run(
-            _command(ffmpeg, clip, mapping["clip_decode_ordinal"], output),
+            command,
             "extract",
             output,
             timeout,
@@ -313,6 +347,12 @@ def main(argv=None):
     parser.add_argument("--out", required=True, type=Path)
     parser.add_argument("--ffmpeg", default="ffmpeg")
     parser.add_argument("--timeout", default=120, type=float)
+    parser.add_argument(
+        "--extraction-mode",
+        choices=("seek_pts", "ordinal"),
+        default="seek_pts",
+        help="verified exact-PTS seek (default), or full decode by ordinal for comparison",
+    )
     args = parser.parse_args(argv)
     try:
         receipt = extract_frame(**vars(args))
