@@ -1,0 +1,116 @@
+{
+  "model_id": "fasterrcnn_mobilenet_v3_large_fpn",
+  "weights_sha256": "fb6a3cc702b1df54c18a44b26708cd083614211062d0c36d2ca7bf9270df3533",
+  "device": "cuda",
+  "threads": 4,
+  "threshold": 0.5,
+  "input_view": "full_frame",
+  "crop_xyxy": null,
+  "config_sha256": "e68fb6be292f227d52c4033be35e44bee033b55d630447a5cd512d41179306ba",
+  "cutoffs": [
+    "2703701/15000",
+    "2778701/15000",
+    "2853701/15000",
+    "2928701/15000",
+    "3003701/15000",
+    "3078701/15000",
+    "3153701/15000",
+    "3228701/15000",
+    "3303701/15000",
+    "3378701/15000"
+  ],
+  "expected_image_sha256": [
+    "c103b67dbde86972fdf0d92cdc5b765adeda9b426dc68ae38a29285a1f0d52dc",
+    "291e3fdeaf97d9325e908659a641146f0c02b0b71a575a23f23675574d8daeb3",
+    "fc10baed4c2294538a1545f700b247ffb6fe3a654efe392a292b80208f4eed49",
+    "255d8767662f26f2280aa170278459f5f5fb5ad92e0771db409073dc1ddc60fa",
+    "49af438deaeba35ad2592c28d925239f9dfbdc199be63c2b6ef25e72cdb631b5",
+    "9f0aa8d630d7da11d2864cc244b4a8f54ed8016212d69833c5f8bccb0310611f",
+    "68ae55db2590c89fa7f6ddc1691d17d8dcf78b6bcd862c82d6778aef37b82bd5",
+    "2ff551b33f25c080f844b7527fe2c3fec54493b5223bd2035b1e70802763ffd3",
+    "13642f03ac843850adf76b0cd44b9689a3253427df5608eecb5e03e6b1a25c45",
+    "37c5f2263d2b10f00fb430def12fce7efac2e9d0254f1f61ae175a1af8f514dc"
+  ],
+  "source_capture_hashes": {
+    "receipt.json": "ef03502c5a90364e70e234437476ff58ad48790847d6f47e494f0bcb9923f834",
+    "mapping.json": "ff2b4c40a050abb139bd78f688933f8c29b226860b69f70575cde2824b01ba10",
+    "source.framemd5": "143821fbbfc52e10c931c362901e97e4b20e31da275ebf70d3d62fccaefbf82f",
+    "clip.framemd5": "98b058c7908c1e743ed963fe0f3f6b0f425ab992e689a4293fd097373e9f76ac"
+  },
+  "startup_timeout_seconds": 60,
+  "warmup_count": 5,
+  "warmup_rgb": [
+    0,
+    0,
+    0
+  ],
+  "warmup_dimensions": [
+    1280,
+    720
+  ],
+  "startup_input_scope": "Only fixed config/weights and five synthetic black frames are supplied before READY. No study frame or result is used to choose warmup count or readiness.",
+  "timing_scope": "Preflight, startup and warm loop are measured separately. Wrapper cold_user_elapsed excludes interpreter/import and final summary write, explicitly named in its receipt. Parent additionally measures full subprocess launch-to-exit elapsed via perf_counter, including those costs but excluding post-run report building. A warm-loop <=5 second result cannot be described as a cold start, release-before availability, or live-broadcast success. Same local simulated input schedule, including extraction and validation.",
+  "output_contract": "Keep generic glove candidates only in bound local sidecar. Standard response always mitt=null, visibility=unknown, pose=unknown; candidate/ambiguous -> unknown, no_candidate -> unavailable. No absence/catcher/intent claim.",
+  "cache_contract": {
+    "entries": 1,
+    "input_bytes_limit": 4194304,
+    "serialized_output_bytes_limit": 16777216,
+    "cached_value": "immutable serialized mapping; callers receive new mutable dictionaries",
+    "key": "entire exact byte pair, not path, mtime or a hash-only shortcut",
+    "not_cached": "images, model outputs, SHA verification results or failures"
+  },
+  "guards": "Every existing source/media/receipt/artifact byte verification, extraction MD5+PTS+size+duration check, causal lookup, symlink check and response binding remains. No seeking change and no frame pre-extraction.",
+  "schema": "local_glove_repeatability_preregister_v1",
+  "frozen_at_utc": "2026-10-07T03:04:59.252250+00:00",
+  "status": "before_all_three_repeatability_runs",
+  "previous_preregister_sha256": "12c78ed72ed83fa6a24e6c3c15051d731788ed7023ae002b0816885caf68a26a",
+  "previous_report_sha256": "d375faa4620a10e8cefdd59fe755eef77ef943da7d9438ed9e28227a14a00688",
+  "runs": [
+    {
+      "index": 1,
+      "plan": "outputs/cv_local_repeat_01_v1/plan.json",
+      "plan_sha256": "5551fa8f53fc932ffae51c8a40e729f8b4cb53a7e869a401118a047c839ec9c3",
+      "run": "outputs/cv_local_repeat_01_v1/run"
+    },
+    {
+      "index": 2,
+      "plan": "outputs/cv_local_repeat_02_v1/plan.json",
+      "plan_sha256": "5551fa8f53fc932ffae51c8a40e729f8b4cb53a7e869a401118a047c839ec9c3",
+      "run": "outputs/cv_local_repeat_02_v1/run"
+    },
+    {
+      "index": 3,
+      "plan": "outputs/cv_local_repeat_03_v1/plan.json",
+      "plan_sha256": "5551fa8f53fc932ffae51c8a40e729f8b4cb53a7e869a401118a047c839ec9c3",
+      "run": "outputs/cv_local_repeat_03_v1/run"
+    }
+  ],
+  "code_sha256": {
+    "intent/local_glove_observer.py": "5db3f2538393860db09ed0df02c48bb6944b47c00bd45f0c42ab8f245f5d5947",
+    "intent/local_glove_observer_report.py": "9385f35b964cd03139fa90562b13276490d3b66d824192a22e2a2698e2dcbb1e",
+    "intent/local_glove_detector.py": "4818373655ee9906e662b47ff2bf0d989a550dd62c855c5bf0f001885f363d6b",
+    "scripts/observe_local_glove_frame.py": "992667ffa914761128fa63706b34fb89a08605a66d951c823cf0e88a396e8295",
+    "intent/observation_loop.py": "7927235043277e0c10c2585a4e223a7f4c98ab260e676f5db0c2e9bd937f320b",
+    "intent/observation_session.py": "7dc5616fed0bc4697efeeb61104175870a340e78a274efed5daee2a41967bfdc",
+    "intent/observation_report.py": "2292a6c6e5ae70d57c6cbde30546016e43d8fa6dc4f24c9c6ae22a50425e3751",
+    "intent/clip_capture.py": "8667aa6ebd8746818974950d831c7e1c2deba32b12a5916795cf42854b703109",
+    "intent/clip_clock.py": "8ce740cb475265c2f12673111d462edb62140b9a8e00826567379c5529104810",
+    "intent/clip_frames.py": "960b475abba47e49246ecb462079dbf1e5cfa02a15a0cb322edef2c6d5d7de32",
+    "pyproject.toml": "11f4a00b3c6f0bdf75bb642304c0764f9d3596549060c1b41a588e333c0d41d5",
+    "uv.lock": "e31fc9e3f59b663b263c5708a81f44c82c496bb9efb7740d67c67f845e360018",
+    "intent/local_glove_worker.py": "eedabbeefa3ea693f645b725fe21d4cd34fb3071eb2929a3190f97d521c4c666",
+    "intent/local_glove_ready.py": "eaefe0346f7ef3784d30d0b157d3ec82b6e4250201020754dd85505f90ec8e91"
+  },
+  "planned_runs": 3,
+  "planned_observations_per_run": 10,
+  "unique_development_frames": 10,
+  "total_planned_observations": 30,
+  "execution": "Three sequential fresh subprocesses; same CV20 plan bytes, same code, same ten cutoffs and five black warmups. Each process starts with an empty mapping cache. No parallel local tests/model work during the timed commands.",
+  "retry_policy": "Exactly one startup and one attempt per scheduled cutoff per run. No retries, replacement, skip, retuning or optional stopping. Startup failure counts ten not attempted; retain failures and continue other preregistered runs if runtime integrity is intact.",
+  "analysis": "Report every run: planned/attempted/accepted/errors/not-attempted, <=5s fraction with planned denominator, publication median/min/max, startup and full command elapsed, output equality against CV20, worker exit. Descriptive variability only: repeated ten frames are not thirty independent samples. No CI, accuracy, full-PA, causal speed or live performance claim.",
+  "actual_model_calls_before_registration": 0,
+  "full_pa_verified": false,
+  "live_availability_verified": false,
+  "independent_validation": false,
+  "human_label": false
+}
