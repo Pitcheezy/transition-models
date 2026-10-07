@@ -72,14 +72,17 @@ def test_real_checklist_next_unit_is_tagged():
     mod = load_module()
     items = mod.parse_items((ROOT / "CHECKLIST.md").read_text(encoding="utf-8-sig"))
     item = mod.next_unit(items)
-    assert item is not None and item["model"] in mod.MODEL_IDS.values()
+    actionable = [i for i in items if i["state"] in ("open", "in_progress") and not i["external"]]
+    assert (item is None) == (not actionable)
+    if item is not None:
+        assert item["model"] in mod.MODEL_IDS.values()
+        assert item["external"] is False
     untagged = [
         i["id"]
         for i in items
         if i["state"] in ("open", "in_progress") and not i["external"] and not i["model"]
     ]
     assert untagged == [], f"open CHECKLIST items without a model tag: {untagged}"
-    assert item["external"] is False
 
 
 def test_multi_letter_workstream_is_not_silently_skipped():
@@ -100,3 +103,13 @@ def test_multiletter_teammate_work_remains_excluded():
 """)
     assert items[0]["external"] is True
     assert mod.next_unit(items)["id"] == "CV-5a4"
+
+
+def test_blocked_and_external_work_do_not_create_an_actionable_unit():
+    mod = load_module()
+    items = mod.parse_items("""- [x] H-port1. delivered
+- [!] I-service2. real source pending 〔모델: Fable 5.1〕
+- [!] CV-6. human response pending 〔모델: Opus 5〕
+- [ ] C-1. teammate work 〔담당: 팀원〕
+""")
+    assert mod.next_unit(items) is None
