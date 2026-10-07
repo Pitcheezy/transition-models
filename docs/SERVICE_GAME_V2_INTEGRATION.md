@@ -142,5 +142,5 @@ index 0–100000, 타석 1–999, 투구 1–100 등 값 범위는 보수적인 
    `captured_live` 표기나 feed UTC만으로 투구 전 가용성·영상 동기화를 주장하지 않는다.
 
 후속 작업과 완료 조건은 [CHECKLIST](../CHECKLIST.md)에 함께 기록한다.
-기존 CV 부분 진행 상태는 유지한다. 자동 선택기의 `--next`는 기존 CV 항목을 우선할 수 있으므로,
-이 통합을 재개할 때는 `scripts/checklist_model.py I-service2`처럼 항목을 명시한다.
+2026-10-07 STATUS 비교 뒤 CV 후속은 보류/응답 대기로 정리했다. 자동 `--next`는 지금 가능한 H-port1을 선택한다.
+실제 원문이 도착해 이 통합을 재개할 때는 `scripts/checklist_model.py I-service2`처럼 항목을 명시한다.
