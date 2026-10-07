@@ -1,5 +1,34 @@
 # MLB P0 — Codex / Claude 인계 기록
 
+## H-port1 완료 — 우리 소스 최소 이관 묶음 (2026-10-07)
+
+우리 `feature/intent-v0`에서 선점 `e1f3dab` 뒤 소스 기준 `441f5e5efd0cfc1f020b640869581db8fa918df6`을 고정했다.
+48개 소스 파일을 Git blob 바이트 그대로 추출하고 SHA/역할/배포 범위를 기록했다.
+ZIP은 148,178bytes, SHA256 `8ecec737a4fdc775c426fe894fbfe40735c11f8e1c26d0ad42a50193d8b4f0e7`.
+로컬 위치는 `LEGACY_PROJECT/outputs/integration_delivery/pitcheezy_source_handoff_20261007_v1.zip`이다.
+[실행 안내](handoff/README.md) · [48파일 SHA](handoff/source_manifest_v1.json) · [전달/검증 기록](handoff/delivery_v1.json).
+
+핵심은 IntentEstimate/이미지 관측 계약, 새 S 응답 검사기, 기존 화면 소스와 합성 회귀 검사다.
+별도 목록은 31항목(실파일29개 SHA, 불투명 weight 참조1, Sites 디렉터리 참조1)이다.
+운영 135d 프로필·3개 가중치·보정값·추천기 추가 의존성을 명시했으나 실제 모델 이식/재실행은 하지 않았다.
+모든 영상·이미지·가중치·원본 사람 응답·비공개 비교 그림·기기별 세션은 ZIP에서 제외했다.
+기존 공개 승인 영상과 비공개 시연 ZIP은 목록에서 구분하며 이번 작업은 공개 범위 확대가 아니다.
+
+검증: ZIP CRC/원본 바이트 대조와 실제 압축 해제 검사를 통과했다.
+Git 없는 추출 사본에서 `python -I -S -B`로 manifest 검사와 합성 S 3상태 검사를 통과했다.
+같은 사본의 지정 Python 검사 **213 passed, 1 skipped(Windows의 POSIX named-pipe fixture)**,
+영상 없는 Node 4개 검사 파일 **64 passed**. 검사 후 소스 SHA도 불변이었다.
+포장기 자체 17개 회귀 검사 포함, 전체 CPU **1830 passed, 8 skipped, 2 deselected, 2 warnings / 486.63초**,
+Ruff152경로 통과. 경고2개는 기존 Pillow getdata 사용 중단 예고다.
+Mac/Linux 추출 사본 실행·새 S 실제 응답/API·전체 모델 기동·실기기는 이번에 검증하지 않았다.
+
+기존 완료83개는 보존하고 H-port1만 완료로 추가했다. 팀원 C/D 미완료7개 행은 그대로다.
+우리 실행 가능 항목은 현재 없으며 `--next` 종료1은 예상된다. 큐가 비었을 때의 가드와 회귀 검사도 보완했다.
+새 S 원문/버전/SHA/셋업 계약 수신→I-service2, 공용 기준 합의→I-0, 실제 추가 사람 응답→CV-6 순으로 해당 조건에서 재개한다.
+자료를 대신 만들어 대기를 해제하거나 CV/OCR·팀원 C/D를 자동 재개하지 않는다.
+팀원 저장소/서버 접근0, 연구 재학습/추가 판독0, 공개 배포와 M3/기존 JSONL 변경0. Codex 수정 권한 반납.
+
+
 ## I-plan1 완료 — STATUS 비교 후 우선순위 재정렬 (2026-10-07)
 
 사용자 요청으로 양쪽 STATUS가 기존 작업에 미치는 영향을 CHECKLIST 상단에 반영했다.
