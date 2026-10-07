@@ -153,6 +153,58 @@ uv run --frozen python scripts/57_recommend_operational.py --data-dir /Volumes/S
 `--runs-dir`로 지정하므로 JSON을 손으로 고칠 필요가 없다. 프로필 hash와 schema는
 계속 검사하므로 차원만 같은 다른 모델을 섞어 쓸 수 없다.
 
+
+## 우리 CV 개발 결과와 로컬 실행 — 2026-10-07
+
+현재 CV 결론은 [탐지 비교](CV_LOCAL_DETECTOR_RESULTS_V1.md),
+[경기 분리 위치 회귀](CV_LOCAL_POINT_MODEL_V1.md), [모델 재사용 지연](CV_LOCAL_WORKER_V1.md)에 있다.
+두 로컬 탐지 후보와 tinyCNN 모두 서비스 미트 판독기로 채택하지 않았다.
+기존 M3/시연 JSONL과 팀원 추천/API는 변경하지 않는다.
+
+로컬 탐지 실험을 실행할 때만 선택 의존성을 설치한다.
+
+```bash
+uv sync --frozen --extra local-cv
+uv run --frozen python scripts/check_project.py --cpu-only
+```
+
+Windows/Linux는 torch2.6 + torchvision0.21, macOS는 torch2.8 + torchvision0.23이다.
+실측은 Windows RTX4070 Laptop의 CUDA와 CPU에서 수행했다. 맥미니의 MPS/동일 수치/동일 속도를
+검증한 것은 아니다. detector 도구의 장치 계약은 cpu/cuda이며 맥미니에서는 새 CPU 계획을 만든다.
+패키지 설치만으로 체크포인트나 MLB 프레임이 내려오지 않는다. 가중치는 공식 URL·전체SHA를
+확인한 별도 로컬 파일이며, 운영용으로 승인된 모델이라는 뜻이 아니다.
+
+| 목적 | Git에 있는 것 | 별도로 보존할 로컬 자료 |
+|---|---|---|
+| 결론 확인 | docs/results/cv_local_20261007의 집계 JSON/PNG와 방법 문서 | 필요 없음 |
+| 84장 그림 탐색 | viewer 생성 코드·수치·HTML 해시 | outputs/cv_local_point_review_v2/index.html 단일 파일 |
+| 84장 viewer 재생성 | intent.local_point_review | cv_local_dataset_v1 manifest/references, cv_local_point_run_v1 전체, manifest가 가리키는86원본JPEG |
+| CV15 수치/학습 재현 | intent.local_point_model/experiment·사전규약 | 위 데이터, 해당 실행 계획과6checkpoint/ledger/evaluation |
+| CV14/17 저장 응답 재검증 | intent.local_glove_observer_report | 해당 run 전체의 raw 요청/이미지/설정사본/응답/sidecar/루프기록 |
+| 새 영상 루프 실행 | loop/worker 코드·규약 | source capture 원본/매핑, ffmpeg, 가중치, 새기기계획 |
+
+로컬 폴더는 `outputs/cv_local_*`로 Git에서 제외된다. MLB 이미지가 내장된 HTML·raw 요청·
+가중치·기기별 절대경로 계획을 공개 저장소에 추가하지 않는다. HTML은 외부 요청 없이
+이미지를 내장하지만 직접 file URL의 자동 검사는 도구 정책으로 하지 못했다.
+확인된 실행법은 해당 HTML 폴더만 `python -m http.server ... --bind 127.0.0.1`로 여는 방법이다.
+자세한 명령은 [로컬 비교 안내](CV_LOCAL_POINT_REVIEW_V1.md)에 있다.
+
+기존 frozen plan의 Windows 절대경로·실행 코드의 원바이트 SHA를 Mac 경로로 덮어쓰면 안 된다.
+기존 결과는 그대로 보관하고 새 경로/런타임/코드바이트를 기록한 새 계획·새 출력 디렉터리로
+별도 실행한다. 운영 검증의 경로 자동 복원 기능을 이 CV 계획에도 있다고 가정하지 않는다.
+같은 과거86프레임의 새 기기 재실행은 개발 재현이며 독립 평가가 아니다.
+
+`docs/results/cv_local_20261007/*.json`은 `.gitattributes`의 `-text`로 원바이트를 보존한다.
+CV15 사전등록 커밋에서 앞선6개 JSON의 Git 줄바꿈 정규화를 원본CRLF로 복원했으며
+파싱된 내용/수치는 바꾸지 않았다. 실행 당시의 해시 기록은 새 코드 변경으로 갱신하지 않는다.
+
+[CV-19 가상환경 수정](CV_VENV_LAUNCHER_FIX.md)은 현재venv Python launcher의 정상링크만
+허용하고 실행전후 대상/설정/링크결속을 검사한다. 데이터/영상/출력경로 링크 금지는 유지한다.
+
+합성 회귀 검사는 원본·모델 다운로드 없이 인터페이스/실패/무결성을 검증한다.
+그 검사가 통과했다고 실제 모델 정확도나 맥미니 실행이 확인된 것은 아니다.
+실험마다 새 출력 경로를 쓰고 실패 기록을 보존한다. 자동 실패 재시도·최고seed 선별은 하지 않는다.
+
 ## 변경할 때 지켜야 하는 경계
 
 - 입력·정답·투구 ID·클래스 순서를 같은 산출물로 다룬다. 행 순서를 추측하지 않는다.

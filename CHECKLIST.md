@@ -71,6 +71,8 @@
 
 ## CV 후속 작업 — 2026-10-05
 
+- [~] CV-19. 원격Linux/macOS17실패 원인인 정상venv실행파일 링크 거절 수정. 원래venv유지·대상/설정SHA·linkretarget검증, 데이터symlink보호유지. Windows36tests/Ruff통과, 원격재검증대기. [기록](docs/CV_VENV_LAUNCHER_FIX.md). 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-07 · Codex]`
+
 - [~] CV-18. **다음 한 단위:** 입력 전 모델 로드/고정 합성 warmup·ready 영수증·콜드 전체와 warm 루프 시간 분리. startup실패는 관측 미시도로 보존, 실제 비교 전 규약 고정. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-07 · Codex]`
 
 - [x] CV-17. 동일10시각 단일 worker/engine 재사용9회·10수락·오류0·종료확인. 총72.766초(vs233.562), 발행중앙26.664초·≤5초0/10 유지. 확정미트0·채택보류. 사전 등록 `0f292da`. [결과](docs/CV_LOCAL_WORKER_V1.md). `[추가되었음 · 2026-10-07 · Codex]`

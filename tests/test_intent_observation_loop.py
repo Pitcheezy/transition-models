@@ -1,10 +1,12 @@
 """Synthetic dependency/clock tests; no real observer or FFmpeg is invoked."""
 
 import json
+import os
 import subprocess
 import sys
 from fractions import Fraction
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -394,3 +396,168 @@ def test_phase_stamp_only_records_completed_stages(fixture, monkeypatch, failure
         for phase, expected in completed.items():
             assert (row[phase] is not None) == expected
             assert (phase in event_names) == expected
+
+
+@pytest.fixture
+def linked_launcher(fixture, monkeypatch):
+    """Model real leaf symlinks without requiring Windows symlink privileges."""
+    path, _, plan, _, _, _ = fixture
+    prefix = path.parent / "venv"
+    binary = prefix / "bin"
+    binary.mkdir(parents=True)
+    config = prefix / "pyvenv.cfg"
+    config.write_text("home = synthetic-base")
+    launcher, middle = binary / "python3", binary / "python"
+    targets = [path.parent / "base-python-a", path.parent / "base-python-b"]
+    for target in targets:
+        target.write_bytes(b"identical synthetic interpreter bytes")
+    links = {launcher: "python", middle: str(targets[0])}
+    # Regular placeholder files ensure availability checks work on every host.
+    for link in links:
+        link.write_bytes(b"synthetic link placeholder")
+    is_symlink, readlink = Path.is_symlink, Path.readlink
+    monkeypatch.setattr(
+        Path,
+        "is_symlink",
+        lambda value: Path(os.path.abspath(value)) in links or is_symlink(value),
+    )
+
+    def target(value):
+        key = Path(os.path.abspath(value))
+        return Path(links[key]) if key in links else readlink(value)
+
+    monkeypatch.setattr(Path, "readlink", target)
+    monkeypatch.setattr(
+        loop,
+        "sys",
+        SimpleNamespace(executable=str(launcher), prefix=str(prefix), base_prefix="synthetic-base"),
+    )
+    plan["observer_argv"][0] = str(launcher)
+    path.write_text(json.dumps(plan))
+    return launcher, middle, targets, links, config
+
+
+def test_current_python_launcher_preserves_its_virtualenv_prefix():
+    binding = loop._launcher_binding(sys.executable)
+    assert binding["launcher"] == os.path.abspath(sys.executable)
+    completed = subprocess.run(
+        [
+            binding["launcher"],
+            "-c",
+            "import json,sys; print(json.dumps([sys.executable,sys.prefix]))",
+        ],
+        check=True,
+        capture_output=True,
+        text=True,
+        timeout=10,
+    )
+    executable, prefix = json.loads(completed.stdout)
+    assert Path(executable) == Path(binding["launcher"])
+    assert Path(prefix) == Path(sys.prefix)
+
+
+def test_only_current_venv_link_is_preserved_and_target_bytes_are_bound(fixture, linked_launcher):
+    path, out, _, clock, run, _ = fixture
+    launcher, _, targets, _, config = linked_launcher
+
+    def checked_run(command, **kwargs):
+        assert command[0] == str(launcher)
+        assert command[0] != str(targets[0])
+        return run(command, **kwargs)
+
+    assert loop.run_plan(path, out, clock=clock, runner=checked_run)["accepted"] == 3
+    manifest = load(out / "run_manifest.json")
+    frozen = manifest["observer_launcher_binding"]
+    assert frozen["launcher"] == str(launcher) and frozen["resolved"] == str(targets[0])
+    assert len(frozen["links"]) == 2 and frozen["links"][0]["target"] == "python"
+    bound_paths = {row["path"] for row in manifest["input_code_bindings"]}
+    assert str(targets[0]) in bound_paths and str(config) in bound_paths
+    assert str(launcher) not in bound_paths
+
+
+@pytest.mark.parametrize("when", ["before_dispatch", "after_dispatch", "runner_raises"])
+def test_link_chain_retarget_rejected_even_with_identical_target_bytes(
+    fixture, linked_launcher, monkeypatch, when
+):
+    path, out, _, clock, run, _ = fixture
+    _, middle, targets, links, _ = linked_launcher
+    calls = []
+    if when == "before_dispatch":
+        begin = loop.observation_session.begin_mapped
+
+        def retarget_before(frame, session):
+            request = begin(frame, session)
+            links[middle] = str(targets[1])
+            return request
+
+        monkeypatch.setattr(loop.observation_session, "begin_mapped", retarget_before)
+
+    def retarget_after(command, **kwargs):
+        calls.append(command)
+        result = run(command, **kwargs)
+        links[middle] = str(targets[1])
+        if when == "runner_raises":
+            raise subprocess.TimeoutExpired(command, 10)
+        return result
+
+    result = loop.run_plan(path, out, clock=clock, runner=retarget_after)
+    assert result["accepted"] == 0 and result["errors"] == 3
+    assert len(calls) == (0 if when == "before_dispatch" else 1)
+    first = load(out / "attempts/000.json")
+    assert first["response_accepted"] is None
+    assert any("launcher link chain or target changed" in message for message in first["errors"])
+
+
+def test_virtualenv_configuration_remains_hash_bound(fixture, linked_launcher):
+    path, out, _, clock, run, _ = fixture
+    config = linked_launcher[-1]
+
+    def mutate(command, **kwargs):
+        result = run(command, **kwargs)
+        config.write_text("home = changed-base")
+        return result
+
+    assert loop.run_plan(path, out, clock=clock, runner=mutate)["accepted"] == 0
+    assert "Bound input" in load(out / "attempts/000.json")["errors"][0]
+
+
+def test_unrelated_executable_link_is_still_rejected(fixture, linked_launcher):
+    path, out, plan, clock, run, _ = fixture
+    _, middle, _, _, _ = linked_launcher
+    plan["observer_argv"][0] = str(middle)
+    path.write_text(json.dumps(plan))
+    with pytest.raises(ValueError, match="Only the current virtualenv"):
+        loop.run_plan(path, out, clock=clock, runner=run)
+    assert not out.exists()
+
+
+@pytest.mark.parametrize("kind", ["capture", "output"])
+def test_data_and_output_link_protection_is_unchanged(fixture, linked_launcher, kind):
+    path, out, _, clock, run, _ = fixture
+    links = linked_launcher[3]
+    linked = path.parent / "capture" if kind == "capture" else out
+    links[linked] = str(path.parent)
+    with pytest.raises(ValueError, match="Symlinks and junctions"):
+        loop.run_plan(path, out, clock=clock, runner=run)
+    assert not out.exists()
+
+
+@pytest.mark.parametrize("lookup", ["relative", "PATH"])
+def test_relative_and_path_launcher_lookup_keep_original_execution_path(
+    fixture, linked_launcher, monkeypatch, lookup
+):
+    path, out, plan, clock, run, _ = fixture
+    launcher = linked_launcher[0]
+    if lookup == "relative":
+        plan["observer_argv"][0] = str(launcher.relative_to(path.parent))
+        monkeypatch.setattr(loop.shutil, "which", lambda _: None)
+    else:
+        plan["observer_argv"][0] = "frozen-venv-python"
+        monkeypatch.setattr(loop.shutil, "which", lambda _: str(launcher))
+    path.write_text(json.dumps(plan))
+
+    def checked(command, **kwargs):
+        assert command[0] == str(launcher)
+        return run(command, **kwargs)
+
+    assert loop.run_plan(path, out, clock=clock, runner=checked)["accepted"] == 3

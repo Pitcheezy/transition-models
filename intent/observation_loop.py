@@ -9,8 +9,10 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import os
 import shutil
 import subprocess
+import sys
 import time
 from fractions import Fraction
 from pathlib import Path
@@ -42,6 +44,48 @@ def _path(value, base):
     if not isinstance(value, str) or not value.strip():
         raise ValueError("Expected a nonempty file/directory path")
     return clip_capture._plain_path(base / value)
+
+
+def _launcher_binding(value):
+    """Allow only this process's venv launcher links, without changing its argv path."""
+    launcher = Path(os.path.abspath(value))
+    clip_capture._plain_path(launcher.parent)
+    config = None
+    if launcher.is_symlink():
+        prefix = Path(os.path.abspath(sys.prefix))
+        if (
+            launcher != Path(os.path.abspath(sys.executable))
+            or sys.prefix == sys.base_prefix
+            or launcher.parent.parent != prefix
+            or launcher.parent.name not in {"bin", "Scripts"}
+        ):
+            raise ValueError("Only the current virtualenv Python launcher may be a symlink")
+        config = clip_capture._plain_path(prefix / "pyvenv.cfg")
+        if not config.is_file():
+            raise ValueError("Current virtualenv must have a regular pyvenv.cfg")
+    current, links, seen = launcher, [], set()
+    while current.is_symlink():
+        if current in seen or len(links) >= 40:
+            raise ValueError("Cyclic or excessive Python launcher link chain")
+        seen.add(current)
+        clip_capture._plain_path(current.parent)
+        target = current.readlink()
+        links.append({"path": str(current), "target": str(target)})
+        current = Path(os.path.abspath(current.parent / target))
+    current = clip_capture._plain_path(current)
+    if not current.is_file():
+        raise ValueError("Observer executable is unavailable")
+    return {
+        "launcher": str(launcher),
+        "resolved": str(current),
+        "links": links,
+        "venv_config": str(config) if config is not None else None,
+    }
+
+
+def _verify_launcher(binding):
+    if _launcher_binding(binding["launcher"]) != binding:
+        raise ValueError("Frozen observer launcher link chain or target changed")
 
 
 def _prepare(plan_path, out):
@@ -83,12 +127,10 @@ def _prepare(plan_path, out):
     resolved = {value: _path(value, plan_path.parent) for value in files}
     executable = shutil.which(argv[0])
     if executable is None:
-        candidate = _path(argv[0], plan_path.parent)
-        if not candidate.is_file():
-            raise ValueError("Observer executable is unavailable")
-        executable = str(candidate)
+        executable = str(plan_path.parent / argv[0])
+    launcher = _launcher_binding(executable)
     command = [str(resolved.get(value, value)) for value in argv]
-    command[0] = str(clip_capture._plain_path(executable))
+    command[0] = launcher["launcher"]
     used = set()
     for value in command:
         for placeholder in _PLACEHOLDERS:
@@ -115,7 +157,8 @@ def _prepare(plan_path, out):
             for module in (clip_capture, clip_clock, clip_frames, observation_session)
         ),
         *resolved.values(),
-        Path(command[0]),
+        Path(launcher["resolved"]),
+        *([Path(launcher["venv_config"])] if launcher["venv_config"] is not None else []),
     ]
     bindings += [(path, clip_capture._sha256(path), path.stat().st_size) for path in code]
     bindings.append((plan_path, clip_clock._sha(raw), len(raw)))
@@ -132,6 +175,7 @@ def _prepare(plan_path, out):
         "protocol_sha256": clip_clock._sha(json.dumps(protocol, sort_keys=True).encode()),
         "input_code_bindings": [{"path": str(p), "sha256": h, "bytes": n} for p, h, n in bindings],
         "observer_argv": command,
+        "observer_launcher_binding": launcher,
         "full_pa_verified": False,
         "live_availability_verified": False,
         "notice": "Sequential 1x local replay. Scheduled input times are a fixed simulation clock; extraction, validation, process and acceptance delays are included. No model provider is selected implicitly.",
@@ -194,6 +238,7 @@ def run_plan(plan_path, out, *, clock=time, runner=subprocess.run):
                     clock.sleep(min(0.1, remaining_ns / 1e9))
                 record["preparation_started"] = stamp()
                 event("preparation_started", index)
+                _verify_launcher(frozen["observer_launcher_binding"])
                 clip_frames._verify_files(bindings)
                 record["input_bindings_verified"] = stamp()
                 event("input_bindings_verified", index)
@@ -237,16 +282,20 @@ def run_plan(plan_path, out, *, clock=time, runner=subprocess.run):
                     (session / "observer.stdout.txt").open("xb") as stdout,
                     (session / "observer.stderr.txt").open("xb") as stderr,
                 ):
-                    completed = runner(
-                        argv,
-                        cwd=public,
-                        stdin=subprocess.DEVNULL,
-                        stdout=stdout,
-                        stderr=stderr,
-                        shell=False,
-                        check=False,
-                        timeout=frozen["plan"]["observer_timeout_seconds"],
-                    )
+                    _verify_launcher(frozen["observer_launcher_binding"])
+                    try:
+                        completed = runner(
+                            argv,
+                            cwd=public,
+                            stdin=subprocess.DEVNULL,
+                            stdout=stdout,
+                            stderr=stderr,
+                            shell=False,
+                            check=False,
+                            timeout=frozen["plan"]["observer_timeout_seconds"],
+                        )
+                    finally:
+                        _verify_launcher(frozen["observer_launcher_binding"])
                 record["observer_exit"] = stamp()
                 record["observer_exit_code"] = completed.returncode
                 if completed.returncode != 0:
