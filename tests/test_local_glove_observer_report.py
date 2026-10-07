@@ -611,3 +611,21 @@ def test_reordered_or_duplicate_json_keys_do_not_change_bound_inputs_silently(ru
     path.write_text(raw.replace('{"schema":', '{"schema":"duplicate","schema":', 1))
     with pytest.raises(ValueError, match="Duplicate JSON key"):
         report.build_report(run[0])
+
+
+def test_fourteen_input_schedule_keeps_missing_rows_and_neutral_scope(run):
+    root = run[0]
+    manifest = read(root / "run_manifest.json")
+    plan = manifest["plan"]
+    plan["cutoffs"] = [str(180 + 5 * i) for i in range(14)]
+    write(root / "plan.json", plan)
+    write(root / "run_manifest.json", manifest)
+    add(run, 0)
+    result = report.build_report(root)
+    assert result["planned"] == 14
+    assert len(result["observations"]) == 14
+    assert result["counts"]["accepted"] == 1
+    assert result["counts"]["not_attempted"] == 13
+    assert result["rates_per_planned"]["candidate"] == pytest.approx(1 / 14)
+    assert "ten-cutoff" not in result["study_scope"]
+    assert not result["full_pa_verified"]

@@ -56,3 +56,16 @@ HTML 정적 검사와 Node 로직 검사만 수행했다.
 [실행 기록](results/cv_followup_20261005/review_ui_v1.json) · [검토 규약](CV_OBSERVATION_PROTOCOL_V1.md)
 
 검사: **794 passed / 5 skipped / 2 deselected**, Ruff 96경로 통과. 기존 Pillow 경고 2건. frozen 파일 186개와 이전 검토 패키지 불변.
+
+## 2026-10-07 브라우저 확인
+
+기존 reviewer 폴더만 `127.0.0.1:8788`에 로컬 제공하고 앱 브라우저에서 원본 이미지,
+26장 분모, 미검토 상태와 입력 도구 렌더링을 확인했다. 검토자ID와 판정은 입력하지 않았고
+응답0/미검토26을 유지한다. 앞선 file URL 제한을 우회한 것이 아니라 별도 로컬 HTTP 제공이다.
+서버가 종료되면 저장소 루트에서 다음 명령으로 다시 열 수 있다.
+
+```text
+python -m http.server 8788 --bind 127.0.0.1 --directory outputs/cv_review_20261005_ui_v1/reviewer
+```
+
+원본 검토 결과를 저장할 때에는 브라우저의 **JSON 내보내기**를 사용한다. 서버는 입력을 저장하지 않는다.
