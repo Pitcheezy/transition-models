@@ -10,7 +10,7 @@
     && Object.keys(value).sort().join("|") === keys.slice().sort().join("|");
   const finite = value => typeof value === "number" && Number.isFinite(value);
 
-  function validateResponse(manifest, expectedHash, response, exporting = false) {
+  function validateState(manifest, expectedHash, response, {exporting = false, draft = false} = {}) {
     if (!exact(response, ["schema", "protocol_version", "manifest_sha256", "reviewer_id", "rows"]))
       fail("응답 문서 필드가 다릅니다.");
     if (manifest.schema !== "intent_source_review_pack_v1"
@@ -45,19 +45,36 @@
       if (!statuses.includes(row.status) || !visibilities.includes(row.visibility)
         || !poses.includes(row.pose) || typeof row.reason !== "string") fail("잘못된 판정 값입니다.");
       if (row.status === "marked") {
-        if (!Array.isArray(row.mitt) || row.mitt.length !== 2 || !row.mitt.every(finite)
+        if (!(draft && row.mitt === null) && (!Array.isArray(row.mitt)
+          || row.mitt.length !== 2 || !row.mitt.every(finite)
           || row.mitt[0] < 0 || row.mitt[0] >= frame.width || row.mitt[1] < 0
-          || row.mitt[1] >= frame.height || !["full", "partial"].includes(row.visibility))
+          || row.mitt[1] >= frame.height))
           fail(`${label}: marked에는 이미지 안의 점과 full/partial 가시성이 필요합니다.`);
-        if (row.visibility === "partial" && !row.reason.trim())
+        if (!draft && !["full", "partial"].includes(row.visibility))
+          fail(`${label}: marked에는 이미지 안의 점과 full/partial 가시성이 필요합니다.`);
+        if (!draft && row.visibility === "partial" && !row.reason.trim())
           fail(`${label}: 부분 가림(partial)을 표시한 이유를 입력하세요.`);
       } else if (row.mitt !== null) fail("marked 이외 상태는 mitt가 null이어야 합니다.");
-      if (["unavailable", "unknown"].includes(row.status) && !row.reason.trim())
+      if (!draft && ["unavailable", "unknown"].includes(row.status) && !row.reason.trim())
         fail(`${label}: 판정 이유가 필요합니다.`);
     }
-    if ((exporting || response.rows.some(row => row.status !== "unreviewed"))
+    if (!draft && (exporting || response.rows.some(row => row.status !== "unreviewed"))
       && !response.reviewer_id.trim()) fail("검토자 ID를 입력하세요.");
     return clone(response);
+  }
+
+  function validateResponse(manifest, expectedHash, response, exporting = false) {
+    return validateState(manifest, expectedHash, response, {exporting});
+  }
+
+  function validateDraft(document, manifest, expectedHash) {
+    if (!exact(document, ["schema", "response", "current_observation_id"])
+      || document.schema !== "intent_source_review_draft_v1") fail("초안 문서 필드 또는 버전이 다릅니다.");
+    const response = validateState(manifest, expectedHash, document.response, {draft: true});
+    if (typeof document.current_observation_id !== "string"
+      || !manifest.frames.some(item => item.observation_id === document.current_observation_id))
+      fail("초안의 현재 프레임이 이 검토 팩에 없습니다.");
+    return {schema: document.schema, response, current_observation_id: document.current_observation_id};
   }
 
   function imagePoint(clientX, clientY, rect, frame) {
@@ -84,6 +101,16 @@
   }
   function exportResponse(response, manifest, expectedHash) {
     return JSON.stringify(validateResponse(manifest, expectedHash, response, true), null, 2) + "\n";
+  }
+  function exportDraft(response, manifest, expectedHash, currentObservationId) {
+    return JSON.stringify(validateDraft({schema: "intent_source_review_draft_v1", response,
+      current_observation_id: currentObservationId}, manifest, expectedHash), null, 2) + "\n";
+  }
+  function parseImport(text, manifest, expectedHash) {
+    const document = JSON.parse(text);
+    if (document?.schema === "intent_source_review_draft_v1")
+      return validateDraft(document, manifest, expectedHash);
+    return {response: validateResponse(manifest, expectedHash, document), current_observation_id: null};
   }
 
   function init() {
@@ -143,15 +170,23 @@
         } catch (error) { message(error.message); }
       };
       $("frame").onerror = () => message("이미지를 불러올 수 없습니다. 패키지의 images 폴더를 확인하세요.");
+      function download(text, filename, note) {
+        const url = URL.createObjectURL(new Blob([text], {type: "application/json"}));
+        const link = document.createElement("a");
+        link.href = url; link.download = filename;
+        document.body.appendChild(link); link.click(); link.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+        message(`${note} 다운로드를 요청했습니다. 파일 저장을 확인한 뒤 닫으세요. 자동 저장은 없습니다.`);
+      }
       $("export").onclick = () => {
         try {
-          const text = exportResponse(state, manifest, hash);
-          const url = URL.createObjectURL(new Blob([text], {type: "application/json"}));
-          const link = document.createElement("a");
-          link.href = url; link.download = "human_review_response.json";
-          document.body.appendChild(link); link.click(); link.remove();
-          setTimeout(() => URL.revokeObjectURL(url), 1000);
-          message("다운로드를 요청했습니다. 파일 저장을 확인한 뒤 닫으세요. 자동 저장은 없습니다.");
+          download(exportResponse(state, manifest, hash), "human_review_response.json", "제출용 응답");
+        } catch (error) { message(error.message); }
+      };
+      $("draft-export").onclick = () => {
+        try {
+          download(exportDraft(state, manifest, hash, frame().observation_id),
+            "human_review_draft.json", "작업 초안(제출용 아님)");
         } catch (error) { message(error.message); }
       };
       $("import").onchange = async () => {
@@ -161,9 +196,14 @@
         try {
           const text = await file.text();
           if (requestRevision !== importRevision) return;
-          const imported = parseResponse(text, manifest, hash);
+          const imported = parseImport(text, manifest, hash);
           if (dirty && !window.confirm("현재 입력을 불러온 응답으로 바꿀까요? 내보내지 않은 입력은 사라집니다.")) return;
-          state = imported; dirty = false; render(); message("검증한 응답을 불러왔습니다.");
+          state = imported.response;
+          if (imported.current_observation_id !== null)
+            position = manifest.frames.findIndex(item => item.observation_id === imported.current_observation_id);
+          dirty = false; render();
+          message(imported.current_observation_id === null ? "검증한 응답을 불러왔습니다."
+            : "작업 초안을 불러왔습니다. 제출용이 아니며, 이어서 입력한 뒤 제출용 응답을 내보내세요.");
         } catch (error) {
           if (requestRevision === importRevision)
             message(`불러오기 거부 — 현재 입력을 유지했습니다: ${error.message}`);
@@ -178,7 +218,7 @@
     } catch (error) { message(`초기화 실패: ${error.message}`); }
   }
 
-  const api = {validateResponse, imagePoint, setStatus, parseResponse, exportResponse};
+  const api = {validateResponse, imagePoint, setStatus, parseResponse, exportResponse, exportDraft, parseImport};
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   if (typeof document !== "undefined") init();
 })();

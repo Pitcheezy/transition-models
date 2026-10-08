@@ -39,13 +39,16 @@ details{padding:8px 12px;border:1px solid #ccd;border-radius:8px}summary{cursor:
 투수가 어디로 던지려 했는지는 판단하지 않습니다.</p>
 <ol><li>검토자 ID를 입력합니다. 이전 결과의 점을 참고하지 않고 원본을 읽습니다.</li>
 <li>미트 중심을 클릭하고, 가시성·자세를 선택합니다. 가려졌거나 확신이 없으면 그 상태와 이유를 남깁니다.</li>
-<li>다음 이미지로 이동합니다. 중간에도 JSON을 내보내 저장하고, 나중에 불러와 이어갈 수 있습니다.</li></ol>
+<li>다음 이미지로 이동합니다. 입력 중에는 작업 초안을 저장하고, 나중에 불러와 이어갈 수 있습니다.</li></ol>
 <details><summary>검토 기준 자세히 보기</summary><p>__INSTRUCTIONS__</p></details>
-<p id="warning">자동 저장하지 않습니다. 닫기 전에 JSON 내보내기를 하세요.
+<p id="warning">자동 저장하지 않습니다. 닫기 전에 작업 초안 또는 제출용 응답을 저장하세요.
 이 페이지는 사람이 직접 표시하는 개발 재검토 도구이며 AI 판정을 생성하지 않습니다.</p>
 <label>검토자 ID <input id="reviewer" autocomplete="off"></label>
-<button id="export" type="button">JSON 내보내기</button>
-<label>저장한 응답 불러오기 <input id="import" type="file" accept="application/json,.json"></label>
+<button id="draft-export" type="button">작업 초안 저장 · 제출용 아님</button>
+<button id="export" type="button">제출용 응답 JSON 내보내기</button>
+<label>저장한 응답 / 초안 불러오기 <input id="import" type="file" accept="application/json,.json"></label>
+<p class="hint">초안은 아직 고르지 않은 항목과 현재 프레임도 보존합니다. 제출용이 아닙니다.
+입력을 마친 뒤에는 제출용 응답을 따로 내보내세요. 저장은 버튼을 눌러 다운로드할 때만 요청됩니다.</p>
 <div id="message" role="alert"></div>
 <nav><button id="prev" type="button">이전</button>
 <label>프레임 <input id="index" type="number" min="1" value="1" style="width:5em"></label>

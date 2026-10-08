@@ -71,6 +71,8 @@ QUALITY_PATHS = [
     "tests/test_intent_observation_session.py",
     "intent/review_summary.py",
     "tests/test_intent_review_summary.py",
+    "intent/review_server.py",
+    "tests/test_review_server.py",
     "intent/reviewer_ui.py",
     "tests/test_intent_review_ui.py",
     "intent/review_queue.py",

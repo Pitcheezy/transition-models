@@ -220,6 +220,9 @@ def prepare(root, report_path, out, *, results="docs/results/mlb_p0", expected_c
     page = render_review_page(manifest, _load(reviewer / "response_template.json"), INSTRUCTIONS)
     (reviewer / "index.html").write_text(page, encoding="utf-8")
     (reviewer / "review_ui.js").write_bytes(Path(__file__).with_name("review_ui.js").read_bytes())
+    (reviewer / "start_review.py").write_bytes(
+        Path(__file__).with_name("review_server.py").read_bytes()
+    )
     return {
         "prepared": len(frames),
         "completed_reviews": 0,

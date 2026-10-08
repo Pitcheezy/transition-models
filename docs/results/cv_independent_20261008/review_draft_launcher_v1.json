@@ -1,0 +1,98 @@
+{
+  "schema": "review_draft_launcher_verification_v1",
+  "baseline_files_checked": 65,
+  "baseline_all_sha256_unchanged_before_and_after": true,
+  "previous_reviewer_files": 30,
+  "new_reviewer_files": 31,
+  "comparison": {
+    "changed": [
+      "index.html",
+      "review_ui.js"
+    ],
+    "added": [
+      "start_review.py"
+    ],
+    "removed": [],
+    "unchanged_images": 26,
+    "manifest_and_blank_template_identical": true
+  },
+  "archive": {
+    "path": "LEGACY_PROJECT/outputs/integration_delivery/pitcheezy_mitt_review_20261008_v3.zip",
+    "bytes": 4900734,
+    "sha256": "fdafbd3f3cd059a5b9a15dca9bacacbfe61086f99e78d6d368c75b76ac0814e3",
+    "entries": 32,
+    "reviewer_files": 31,
+    "readme": "README.md",
+    "crc_passed": true,
+    "exact_bytes_passed": true,
+    "private_selection_or_saved_responses_included": false,
+    "ai_judgment_content_included": false
+  },
+  "isolated_check": {
+    "flags": [
+      "-I",
+      "-X",
+      "utf8",
+      "-S",
+      "-B"
+    ],
+    "returncode": 0,
+    "stdout": "검토 자료 검사 통과: 이미지 26장",
+    "stderr": "",
+    "network_or_browser_opened": false
+  },
+  "source_manifest_sha256": "d7d01b7776436c4539900e3a44115343e2b7db2eb6ae27489c3ae2f7a7f1a468",
+  "source_template_sha256": "bd00305e54535186559d56294d0b9218c774cd661e067325bda9f92d80d1c712",
+  "date": "2026-10-08",
+  "claim_commit": "7b1888d",
+  "source_commit": "same commit as this initial receipt; resolve via git history",
+  "checks": {
+    "targeted_pytest": {
+      "passed": 145,
+      "seconds": 48.97
+    },
+    "ruff_quality_paths": 163,
+    "node_syntax": "passed",
+    "independent_code_review": "CV29 and H11: no blocking issue found",
+    "actual_prior_response": {
+      "completed": 26,
+      "unreviewed": 0,
+      "unknown": 0
+    },
+    "full_cpu_ci": "pending at source commit"
+  },
+  "browser": {
+    "host": "Windows",
+    "browser": "Codex in-app browser",
+    "fixture": "two synthetic images, not MLB/human labels",
+    "incomplete_final_rejected": true,
+    "draft_download_file_verified": true,
+    "new_tab_restored_frame": "review_synthetic_2",
+    "missing_visibility_and_id_preserved": true,
+    "edited_then_final_download_verified": true,
+    "final_python_response_check": {
+      "completed": 2,
+      "unreviewed": 0,
+      "unknown": 0
+    },
+    "download_event_tool_timed_out": true,
+    "download_evidence": "Actual Downloads file inspected, then imported through browser file chooser",
+    "fixture_note": "First manager CLI check rejected the synthetic private canary without manifest binding; after adding its fixture binding, the exported response passed. Production code/real pack unchanged.",
+    "screenshot": "LEGACY_PROJECT/outputs/review_ui_browser_20261008_v3/synthetic-review-ui-proof.png",
+    "draft_file": {
+      "bytes": 1023,
+      "sha256": "812cbf4ea9854e0a573dd844bce57e937803ef470414dbb1728b47ccafb9d91d"
+    },
+    "final_file": {
+      "bytes": 860,
+      "sha256": "607c453e0b5f7662fb21c59d7c5d2ec0765011ab5d81b2e0081d1bd38b2746ea"
+    }
+  },
+  "limits": [
+    "No new human annotation or model accuracy measurement.",
+    "No actual Mac/iPhone user session.",
+    "No teammate repository changes or messages.",
+    "No public website deployment or media publication.",
+    "Launcher verifies declared dimensions and image bytes; no image decoding or label truth validation."
+  ]
+}

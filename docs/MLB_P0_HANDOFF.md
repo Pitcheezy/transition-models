@@ -1,5 +1,23 @@
 # MLB P0 — Codex / Claude 인계 기록
 
+## 개인 검토 사용성 개선 완료 — 2026-10-08
+
+CV-29: 미완성 초안 저장·복원과 현재 프레임 복귀 완료. 최종 사람 응답은 기존 규약으로 검사한다.
+H-11: stdlib 전용 실행 도우미·자료 검사·빈 포트·현재 컴퓨터 주소 안내 완료.
+새 팩 `outputs/cv_review_20261008_ui_v3/reviewer/`와 비공개 휴대용 ZIP을 준비했다.
+관련145passed·Ruff163경로·JS구문 통과. 합성2장 브라우저에서 저장→새 창 복원→최종 내보내기 확인.
+기존65파일 SHA 불변, 기존26응답을 새 팩에서도 수신 검사 통과했다. 새 사람 판독은 수행하지 않았다.
+ZIP 압축 해제·표준 라이브러리 단독 검사까지 Windows에서 확인했으며 실제 Mac 사용 확인은 남아 있다.
+[검증 기록](results/cv_independent_20261008/review_draft_launcher_v1.json).
+수정 권한 반납. 아래 추가 구현 없음/진행 중 기록은 과거 시점의 이력이다.
+
+선점 `7b1888d`; 구현과 완료 기록은 같은 커밋이다.
+ZIP: `LEGACY_PROJECT/outputs/integration_delivery/pitcheezy_mitt_review_20261008_v3.zip`,
+4,900,734bytes, SHA256 `fdafbd3f3cd059a5b9a15dca9bacacbfe61086f99e78d6d368c75b76ac0814e3`.
+reviewer31파일+README만 포함하며 private_selection/저장응답/AI판정은 제외했다.
+이미지26·manifest·빈 양식은 이전 팩과 동일하다. 새 helper만 추가하고 HTML/JS를 갱신했다.
+현재 전체 CPU는 원격 CI에서 별도 확인하며 기존1971검사를 새 구현 검증으로 인용하지 않는다.
+
 ## H-port4 최신 소스 이관 v2 완료 — 2026-10-08
 
 선점 `e669ed4`, 소스 `bf1fb5dcaf15ea614aee331175429a0016407fdd`, 전달 검증은 같은 커밋.

@@ -220,7 +220,7 @@ def test_synthetic_dom_click_export_and_failed_import():
 (async () => {
  const fs=require('node:fs'), vm=require('node:vm'), els={};
  const ids=['review-data','message','reviewer','index','total','prev','next','caption','frame',
- 'marker','coordinates','status','visibility','pose','reason','export','import'];
+ 'marker','coordinates','status','visibility','pose','reason','export','draft-export','import'];
  for (const id of ids) els[id]={value:'',textContent:'',style:{},files:[]};
  els['review-data'].textContent=JSON.stringify({manifest,response});
  Object.assign(els.frame,{complete:true,naturalWidth:1280,naturalHeight:720,
@@ -300,6 +300,19 @@ def test_js_export_passes_python_image_bound_checker(tmp_path):
     output = tmp_path / "synthetic_only.json"
     output.write_text(result.stdout, encoding="utf-8")
     assert check_response(tmp_path, output) == {"completed": 1, "unknown": 1, "unreviewed": 0}
+    draft = tmp_path / "synthetic_draft_only.json"
+    draft.write_text(
+        json.dumps(
+            {
+                "schema": "intent_source_review_draft_v1",
+                "response": json.loads(result.stdout),
+                "current_observation_id": manifest["frames"][0]["observation_id"],
+            }
+        ),
+        encoding="utf-8",
+    )
+    with pytest.raises(ValueError, match="unexpected response document fields"):
+        check_response(tmp_path, draft)
     (reviewer / manifest["frames"][0]["path"]).write_bytes(b"changed image")
     with pytest.raises(ValueError, match="SHA256"):
         check_response(tmp_path, output)
@@ -380,7 +393,7 @@ def test_import_request_order_and_edits(scenario):
 (async () => {
  const fs=require('node:fs'), vm=require('node:vm'), els={};
  const ids=['review-data','message','reviewer','index','total','prev','next','caption','frame',
- 'marker','coordinates','status','visibility','pose','reason','export','import'];
+ 'marker','coordinates','status','visibility','pose','reason','export','draft-export','import'];
  for (const id of ids) els[id]={value:'',textContent:'',style:{},files:[]};
  els['review-data'].textContent=JSON.stringify({manifest,response});
  Object.assign(els.frame,{complete:true,naturalWidth:1280,naturalHeight:720,
@@ -426,3 +439,185 @@ def test_import_request_order_and_edits(scenario):
 })().catch(error=>{console.error(error);process.exitCode=1;});
 """
     )
+
+
+@pytest.mark.parametrize(
+    "row",
+    [
+        {"status": "marked", "mitt": None, "visibility": "full"},
+        {"status": "marked", "mitt": [100, 200], "visibility": "unknown"},
+        {"status": "marked", "mitt": [100, 200], "visibility": "partial"},
+        {"status": "marked", "mitt": [100, 200], "visibility": "full"},
+        {"status": "unknown"},
+        {"status": "unavailable"},
+    ],
+)
+def test_draft_preserves_incomplete_state_but_final_response_stays_strict(row):
+    _node(f"""
+Object.assign(response.rows[0], {json.dumps(row)});
+const original=copy(response);
+const text=ui.exportDraft(response,manifest,hash,'review_2');
+const restored=ui.parseImport(text,manifest,hash);
+assert.equal(restored.schema,'intent_source_review_draft_v1');
+assert.equal(restored.current_observation_id,'review_2');
+assert.deepEqual(restored.response,original);
+assert.deepEqual(response,original);
+assert.throws(()=>ui.exportResponse(restored.response,manifest,hash));
+assert.throws(()=>ui.parseResponse(text,manifest,hash));
+""")
+
+
+@pytest.mark.parametrize(
+    "mutation",
+    [
+        "draft.extra=true",
+        "draft.current_observation_id='another_frame'",
+        "draft.response.manifest_sha256='b'.repeat(64)",
+        "draft.response.rows[0].image_sha256='a'.repeat(64)",
+        "draft.response.rows.pop()",
+        "draft.response.rows[1]=copy(draft.response.rows[0])",
+        "draft.response.rows[0].mitt=[1280,2]",
+        "draft.response.rows[0].mitt=[true,2]",
+        "draft.response.rows[0].mitt=[1,2,3]",
+        "draft.response.rows[0].status='other'",
+        "draft.response.rows[0].visibility='other'",
+        "draft.response.rows[0].pose=false",
+        "draft.response.rows[0].reason=null",
+        "draft.response.reviewer_id=null",
+        "draft.response.rows[0].status='unknown'",
+    ],
+)
+def test_draft_import_keeps_structural_and_source_binding_checks(mutation):
+    _node(f"""
+Object.assign(response.rows[0],{{status:'marked',mitt:[100,200]}});
+const draft=JSON.parse(ui.exportDraft(response,manifest,hash,'review_1'));
+{mutation};
+const original=copy(draft);
+assert.throws(()=>ui.parseImport(JSON.stringify(draft),manifest,hash));
+assert.deepEqual(draft,original);
+""")
+
+
+DRAFT_DOM_SCENARIOS = {
+    "incomplete_draft_roundtrip_and_final_completion": """
+els.next.onclick(); markPartial();
+const original=await downloadDraft();
+assert.equal(filename,'human_review_draft.json');
+assert.match(els.message.textContent,/제출용 아님/);
+assert.equal(original.current_observation_id,'review_2');
+assert.equal(original.response.reviewer_id,'');
+assert.deepEqual(original.response.rows[1].mitt,[300,150]);
+blob=null;els.export.onclick();assert.equal(blob,null);
+els.prev.onclick();els.reviewer.value='changed';els.reviewer.oninput();
+await finish(beginImport(),original);
+assert.equal(els.index.value,2);assert.equal(els.reviewer.value,'');
+assert.equal(confirmations,1);
+assert.deepEqual(await downloadDraft(),original);
+blob=null;els.export.onclick();assert.equal(blob,null);
+els.reviewer.value='synthetic-reviewer';els.reviewer.oninput();
+els.reason.value='Synthetic partial occlusion';els.reason.oninput();
+blob=null;els.export.onclick();assert.ok(blob);
+const final=JSON.parse(await blob.text());
+assert.equal(filename,'human_review_response.json');
+assert.equal(final.schema,'intent_source_review_response_v1');
+assert.equal(final.rows[0].status,'unreviewed');
+assert.equal(final.rows[1].pose,'unknown');
+assert.deepEqual(final.rows[1].mitt,[300,150]);
+assert.equal(final.rows[1].reason,'Synthetic partial occlusion');
+assert.deepEqual(ui.parseResponse(JSON.stringify(final),manifest,hash),final);
+assert.equal(unloadBlocked(),true);
+""",
+    "wrong_pack_draft_import_preserves_current_input": """
+markPartial();const original=await downloadDraft(),invalid=copy(original);
+invalid.response.manifest_sha256='b'.repeat(64);
+await finish(beginImport(),invalid);
+assert.match(els.message.textContent,/불러오기 거부/);
+assert.deepEqual(await downloadDraft(),original);
+assert.equal(confirmations,0);assert.equal(unloadBlocked(),true);
+""",
+    "out_of_bounds_draft_import_preserves_current_input": """
+markPartial();const original=await downloadDraft(),invalid=copy(original);
+invalid.response.rows[0].mitt=[1280,2];
+await finish(beginImport(),invalid);
+assert.match(els.message.textContent,/불러오기 거부/);
+assert.deepEqual(await downloadDraft(),original);
+assert.equal(confirmations,0);assert.equal(unloadBlocked(),true);
+""",
+    "draft_import_retains_request_order_and_dirty_confirmation": """
+const incoming={schema:'intent_source_review_draft_v1',response:copy(response),
+  current_observation_id:'review_2'};
+const old=beginImport(),latest=beginImport();
+markPartial();const original=await downloadDraft();acceptReplacement=false;
+await finish(latest,incoming);
+await finish(old,copy(response));
+assert.deepEqual(await downloadDraft(),original);
+assert.equal(confirmations,1);assert.equal(els.index.value,1);
+acceptReplacement=true;
+const anotherOld=beginImport(),newest=beginImport();
+await finish(newest,incoming);
+await finish(anotherOld,copy(response));
+assert.equal(els.index.value,2);
+assert.deepEqual(await downloadDraft(),incoming);
+assert.equal(confirmations,2);assert.equal(unloadBlocked(),false);
+""",
+    "draft_download_failure_keeps_input_and_unload_warning": """
+markPartial();const original=await downloadDraft();
+const create=context.URL.createObjectURL;
+context.URL.createObjectURL=()=>{throw new Error('synthetic download failure');};
+blob=null;els['draft-export'].onclick();assert.equal(blob,null);
+assert.equal(els.message.textContent,'synthetic download failure');
+assert.equal(unloadBlocked(),true);
+context.URL.createObjectURL=create;
+assert.deepEqual(await downloadDraft(),original);
+""",
+}
+
+
+@pytest.mark.parametrize("scenario", DRAFT_DOM_SCENARIOS)
+def test_draft_dom_workflow(scenario):
+    _node(
+        """
+(async()=>{
+const fs=require('node:fs'),vm=require('node:vm'),els={};
+for(const id of ['review-data','message','reviewer','index','total','prev','next','caption',
+  'frame','marker','coordinates','status','visibility','pose','reason','export','draft-export','import'])
+  els[id]={value:'',textContent:'',style:{},files:[]};
+els['review-data'].textContent=JSON.stringify({manifest,response});
+Object.assign(els.frame,{complete:true,naturalWidth:1280,naturalHeight:720,
+  getBoundingClientRect:()=>({left:0,top:0,width:1280,height:720})});
+let blob=null,filename=null,confirmations=0,acceptReplacement=true,beforeUnload;
+const context={document:{getElementById:id=>els[id],body:{appendChild(){}},
+  createElement:()=>({click(){filename=this.download;},remove(){}})},
+  window:{confirm(){confirmations++;return acceptReplacement;},
+    addEventListener:(event,handler)=>{if(event==='beforeunload') beforeUnload=handler;}},Blob,
+  URL:{createObjectURL:value=>{blob=value;return 'blob:synthetic';},revokeObjectURL(){}},setTimeout:()=>0};
+vm.runInNewContext(fs.readFileSync(modulePath,'utf8'),context);
+const markPartial=()=>{
+  els.frame.onclick({clientX:300,clientY:150});
+  els.visibility.value='partial';els.visibility.oninput();
+};
+const downloadDraft=async()=>{
+  blob=null;els['draft-export'].onclick();assert.ok(blob,els.message.textContent);
+  return JSON.parse(await blob.text());
+};
+const beginImport=()=>{
+  const read={};const pending=new Promise(resolve=>{read.resolve=resolve;});
+  els.import.files=[{text:()=>pending}];read.done=els.import.onchange();return read;
+};
+const finish=async(read,document)=>{read.resolve(JSON.stringify(document));await read.done;};
+const unloadBlocked=()=>{let blocked=false;beforeUnload({preventDefault(){blocked=true;}});return blocked;};
+"""
+        + DRAFT_DOM_SCENARIOS[scenario]
+        + """
+})().catch(error=>{console.error(error);process.exitCode=1;});
+"""
+    )
+
+
+def test_review_page_distinguishes_draft_from_submittable_response():
+    manifest, response = _fixture()
+    page = reviewer_ui.render_review_page(manifest, response, "synthetic instructions")
+    assert 'id="draft-export"' in page
+    assert "제출용 아님" in page
+    assert "저장한 응답 / 초안 불러오기" in page
+    assert "자동 저장하지 않습니다" in page
