@@ -93,6 +93,7 @@
       const initial = JSON.parse($("review-data").textContent);
       const manifest = initial.manifest, hash = initial.response.manifest_sha256;
       let state = validateResponse(manifest, hash, initial.response), position = 0, dirty = false;
+      let importRevision = 0;
       if (!manifest.frames.length) fail("검토할 프레임이 없습니다.");
       const frame = () => manifest.frames[position];
       const row = () => state.rows.find(item => item.observation_id === frame().observation_id);
@@ -156,12 +157,19 @@
       $("import").onchange = async () => {
         const file = $("import").files[0];
         if (!file) return;
+        const requestRevision = ++importRevision;
         try {
-          const imported = parseResponse(await file.text(), manifest, hash);
+          const text = await file.text();
+          if (requestRevision !== importRevision) return;
+          const imported = parseResponse(text, manifest, hash);
           if (dirty && !window.confirm("현재 입력을 불러온 응답으로 바꿀까요? 내보내지 않은 입력은 사라집니다.")) return;
           state = imported; dirty = false; render(); message("검증한 응답을 불러왔습니다.");
-        } catch (error) { message(`불러오기 거부 — 현재 입력을 유지했습니다: ${error.message}`); }
-        finally { $("import").value = ""; }
+        } catch (error) {
+          if (requestRevision === importRevision)
+            message(`불러오기 거부 — 현재 입력을 유지했습니다: ${error.message}`);
+        } finally {
+          if (requestRevision === importRevision) $("import").value = "";
+        }
       };
       window.addEventListener("beforeunload", event => {
         if (dirty) { event.preventDefault(); event.returnValue = ""; }

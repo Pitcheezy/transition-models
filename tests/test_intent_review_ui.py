@@ -12,6 +12,7 @@ import pytest
 from intent import reviewer_ui
 
 HASH = "a" * 64
+UI_SCRIPT = Path(__file__).resolve().parents[1] / "intent/review_ui.js"
 
 
 def _fixture():
@@ -60,7 +61,7 @@ def _node(source):
     script = (
         "const assert = require('node:assert/strict');\n"
         + "const modulePath = "
-        + json.dumps(str(Path(reviewer_ui.__file__).with_name("review_ui.js")))
+        + json.dumps(str(UI_SCRIPT))
         + ";\nconst ui = require(modulePath);\nconst manifest = "
         + json.dumps(manifest)
         + ";\nconst response = "
@@ -280,7 +281,7 @@ def test_js_export_passes_python_image_bound_checker(tmp_path):
     )
     source = (
         "const ui=require("
-        + json.dumps(str(Path(reviewer_ui.__file__).with_name("review_ui.js")))
+        + json.dumps(str(UI_SCRIPT))
         + "); const input=JSON.parse(require('node:fs').readFileSync(0,'utf8'));"
         + "const r=input.response;r.reviewer_id='synthetic-test-only';"
         + "Object.assign(r.rows[0],{status:'marked',mitt:[640,360],visibility:'full',pose:'resting'});"
@@ -302,3 +303,126 @@ def test_js_export_passes_python_image_bound_checker(tmp_path):
     (reviewer / manifest["frames"][0]["path"]).write_bytes(b"changed image")
     with pytest.raises(ValueError, match="SHA256"):
         check_response(tmp_path, output)
+
+
+IMPORT_SCENARIOS = {
+    "latest_selected_response_wins_reverse_completion": """
+const old = beginImport('older.json'), latest = beginImport('latest.json');
+await finish(latest, saved('latest-person', 20));
+await finish(old, saved('older-person', 10));
+const actual = await exported();
+assert.equal(actual.reviewer_id, 'latest-person');
+assert.deepEqual(actual.rows[0].mitt, [20,30]);
+assert.equal(confirmations, 0);
+""",
+    "stale_invalid_response_does_not_replace_success_notice": """
+const old = beginImport('older.json'), latest = beginImport('latest.json');
+await finish(latest, saved('latest-person', 20));
+const notice = els.message.textContent;
+const invalid = saved('older-person', 10); invalid.manifest_sha256 = 'b'.repeat(64);
+await finish(old, invalid);
+assert.equal(els.message.textContent, notice);
+assert.equal((await exported()).reviewer_id, 'latest-person');
+""",
+    "stale_read_error_cannot_clear_latest_pending_selection": """
+const old = beginImport('older.json'), latest = beginImport('latest.json');
+const notice = els.message.textContent;
+old.reject(new Error('synthetic old read error')); await old.done;
+assert.equal(els.import.value, 'latest.json');
+assert.equal(els.message.textContent, notice);
+await finish(latest, saved('latest-person', 20));
+assert.equal((await exported()).reviewer_id, 'latest-person');
+""",
+    "edit_during_read_then_decline_preserves_unsaved_input": """
+const latest = beginImport('latest.json');
+edit(); acceptReplacement = false;
+await finish(latest, saved('file-person', 20));
+const actual = await exported();
+assert.equal(actual.reviewer_id, 'edited-person');
+assert.deepEqual(actual.rows[0].mitt, [640,360]);
+assert.equal(actual.rows[0].reason, 'synthetic unsaved note');
+assert.equal(confirmations, 1);
+assert.equal(unloadBlocked(), true);
+assert.equal(els.import.value, '');
+""",
+    "edit_during_read_then_accept_restores_exact_partial_response": """
+const latest = beginImport('latest.json');
+edit();
+const imported = saved('file-person', 20);
+imported.rows.reverse();
+await finish(latest, imported);
+assert.deepEqual(await exported(), imported);
+assert.equal(confirmations, 1);
+assert.equal(unloadBlocked(), false);
+els.next.onclick(); assert.equal(els.status.value, 'unreviewed');
+els.prev.onclick(); assert.equal(els.status.value, 'marked');
+assert.equal(els.pose.value, 'unknown');
+""",
+    "failed_latest_import_does_not_fall_back_to_older_response": """
+edit();
+const old = beginImport('older.json'), latest = beginImport('latest.json');
+latest.reject(new Error('synthetic latest read error')); await latest.done;
+const notice = els.message.textContent;
+assert.match(notice, /synthetic latest read error/);
+await finish(old, saved('older-person', 10));
+assert.equal(els.message.textContent, notice);
+assert.equal((await exported()).reviewer_id, 'edited-person');
+assert.equal(confirmations, 0);
+assert.equal(unloadBlocked(), true);
+""",
+}
+
+
+@pytest.mark.parametrize("scenario", IMPORT_SCENARIOS)
+def test_import_request_order_and_edits(scenario):
+    _node(
+        """
+(async () => {
+ const fs=require('node:fs'), vm=require('node:vm'), els={};
+ const ids=['review-data','message','reviewer','index','total','prev','next','caption','frame',
+ 'marker','coordinates','status','visibility','pose','reason','export','import'];
+ for (const id of ids) els[id]={value:'',textContent:'',style:{},files:[]};
+ els['review-data'].textContent=JSON.stringify({manifest,response});
+ Object.assign(els.frame,{complete:true,naturalWidth:1280,naturalHeight:720,
+ getBoundingClientRect:()=>({left:0,top:0,width:1280,height:720})});
+ let blob=null, confirmations=0, acceptReplacement=true, beforeUnload;
+ const context={document:{getElementById:id=>els[id],body:{appendChild(){}},
+ createElement:()=>({click(){},remove(){}})},
+ window:{confirm:()=>{confirmations++;return acceptReplacement;},
+ addEventListener:(name, handler)=>{if(name==='beforeunload') beforeUnload=handler;}}, Blob,
+ URL:{createObjectURL:b=>{blob=b;return 'blob:synthetic';},revokeObjectURL(){}},setTimeout:()=>0};
+ vm.runInNewContext(fs.readFileSync(modulePath,'utf8'),context);
+ const beginImport = name => {
+   const read = {};
+   const pending = new Promise((resolve,reject)=>Object.assign(read,{resolve,reject}));
+   els.import.files=[{text:()=>pending}]; els.import.value=name;
+   read.done=els.import.onchange(); return read;
+ };
+ const finish = async (read, document) => {
+   read.resolve(JSON.stringify(document)); await read.done;
+ };
+ const saved = (id, x) => {
+   const document=copy(response); document.reviewer_id=id;
+   Object.assign(document.rows[0],{status:'marked',mitt:[x,30],visibility:'full',pose:'unknown'});
+   return document;
+ };
+ const edit = () => {
+   els.reviewer.value='edited-person'; els.reviewer.oninput();
+   els.frame.onclick({clientX:640,clientY:360});
+   els.visibility.value='full'; els.visibility.oninput();
+   els.reason.value='synthetic unsaved note'; els.reason.oninput();
+ };
+ const exported = async () => {
+   blob=null; els.export.onclick(); assert.ok(blob, els.message.textContent);
+   return JSON.parse(await blob.text());
+ };
+ const unloadBlocked = () => {
+   let blocked=false;
+   beforeUnload({preventDefault(){blocked=true;}}); return blocked;
+ };
+"""
+        + IMPORT_SCENARIOS[scenario]
+        + """
+})().catch(error=>{console.error(error);process.exitCode=1;});
+"""
+    )
