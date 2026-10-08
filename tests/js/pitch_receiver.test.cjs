@@ -91,3 +91,43 @@ test("CV key, names and pitch type must all match after reveal", () => {
   record.pitcher="테스트 투수";record.status="unavailable";record.mitt_x_ft=null;
   assert.deepEqual(observation(s.view(),records),{status:"unavailable",x:null});
 });
+
+test("generation timestamps reject impossible Gregorian dates", () => {
+  for (const date of [
+    "2026-02-29", "2026-02-30", "2026-02-31", "2026-04-31",
+    "2026-06-31", "2026-09-31", "2026-11-31",
+    "1900-02-29", "2100-02-29", "0100-02-29",
+    "2026-00-10", "2026-13-10", "2026-01-00", "2026-01-32",
+  ]) {
+    const packet = sample();
+    packet.source.exported_at = `${date}T12:00:00+09:00`;
+    assert.throws(() => validate(packet), /생성 시각/, date);
+  }
+});
+
+test("valid timestamps retain leap days, offsets and original precision", () => {
+  for (const stamp of [
+    "2024-02-29T12:00:00Z", "2000-02-29T12:00:00Z",
+    "2400-02-29T12:00:00Z", "0000-02-29T12:00:00Z", "0096-02-29T12:00:00Z",
+    "2026-01-01T00:30:00+14:00", "2026-12-31T23:30:00-12:00",
+    "2026-04-30T24:00:00Z", "2026-10-05T12:34Z",
+    "2026-10-05T12:34:56.123456+05:30", fixture.source.exported_at,
+  ]) {
+    const packet = sample();
+    packet.source.exported_at = stamp;
+    assert.equal(validate(packet).source.exported_at, stamp);
+    assert.equal(packet.source.exported_at, stamp);
+  }
+});
+
+test("generation timestamps still require supported ISO time and timezone", () => {
+  for (const stamp of [
+    "2026-10-05T12:00:00", "2026-10-05T12:00:00z",
+    "2026-10-05T12:00:00+0900", "2026-10-05T24:00:01Z",
+    "2026-10-05T12:60:00Z", "2026-10-05T12:00:00+25:00",
+  ]) {
+    const packet = sample();
+    packet.source.exported_at = stamp;
+    assert.throws(() => validate(packet), /생성 시각/, stamp);
+  }
+});

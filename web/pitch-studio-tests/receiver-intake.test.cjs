@@ -145,6 +145,12 @@ for (const [name, mutate] of [
     },
   ],
   [
+    "impossible generation date",
+    (x) => {
+      x.source.exported_at = "2026-02-30T12:00:00Z";
+    },
+  ],
+  [
     "missing generation timestamp",
     (x) => {
       delete x.source.exported_at;

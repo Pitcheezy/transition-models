@@ -28,6 +28,12 @@
     x === null ? null : number(x, label, lo, hi);
   const nullableText = (x, label) =>
     x == null ? null : string(x, label, 1000);
+  const validCalendarDate = (year, month, day) => {
+    // Validate the written date, before Date.parse normalizes it or applies an offset.
+    const leap = year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
+    const days = [31, leap ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    return month >= 1 && month <= 12 && day >= 1 && day <= days[month - 1];
+  };
   const namedZones = new Set([
     "high_left",
     "high_middle",
@@ -117,8 +123,10 @@
     if (!/^[a-f0-9]{40}$/.test(revision))
       fail("소스 커밋은 40자리 SHA여야 합니다.");
     const exportedAt = string(source.exported_at, "생성 시각");
+    const date = /^(\d{4})-(\d\d)-(\d\d)T.+(?:Z|[+-]\d\d:\d\d)$/.exec(exportedAt);
     if (
-      !/^\d{4}-\d\d-\d\dT.+(?:Z|[+-]\d\d:\d\d)$/.test(exportedAt) ||
+      !date ||
+      !validCalendarDate(Number(date[1]), Number(date[2]), Number(date[3])) ||
       !Number.isFinite(Date.parse(exportedAt))
     )
       fail("생성 시각에 ISO 날짜와 시간대를 넣어주세요.");

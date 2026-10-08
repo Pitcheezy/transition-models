@@ -1,12 +1,28 @@
 # MLB P0 — Codex / Claude 인계 기록
 
+## H-7 — 수신 파일 생성 날짜 검사 완료 (2026-10-08)
+
+`receiver-contract.js`에서 `Date.parse`가 2월30일·평년2월29일·4월31일을
+다음 달로 보정해 통과시키는 오류를 고쳤다. 입력의 연/월/일을 Gregorian 규칙으로 먼저 검사하고,
+기존 시간/시간대 파싱과 반환 원문은 보존한다. 실제 제공자 생성 시각의 진위 검증은 아니다.
+
+- 선점 `562fcce`; H-7 완료는 이 기록과 같은 커밋. 작업 범위는 우리 저장소의 Site 사본.
+- 수정 전 관련58검사56통과/2실패, 수정 후 전체 Site Node81통과(0.355초).
+- `scripts/check_pitch_studio.py` 통과: 기존 미디어/출처 SHA, HTML 자산, JS구문, 첫 타석 공개 순서.
+- 체크리스트 가드7통과(1.92초). Python 전체 모델 검사는 이 JS 수정으로 재실행하지 않았다.
+- 공개 Site 재배포는 하지 않았다. 기존 실제/합성 패킷과 모델·사람 응답은 변경하지 않았다.
+- 다음 단위: CV-6b 저장 A/B 기권 경로 감사. Codex가 그 작업의 수정 권한을 유지한다.
+
+재현: `node --test tests/js/pitch_receiver.test.cjs web/pitch-studio-tests/receiver-intake.test.cjs`
+또는 `uv run --frozen python scripts/check_pitch_studio.py`.
+
 ## CV6 첫 사람 응답 처리 완료 — 2026-10-08
 
 실제 응답1개·26장 모두 marked/full, 미검토0. 출처·좌표 범위 검사와 CV26 원본 연결을 통과했다.
 자세는 원문 resting18/moving5/presented_target2/unknown1을 보존했다. 사용자가 지적한 낮은 준비 자세와
 휴식/움직임의 모호함은 전역 피드백으로 별도 기록했다. 자세를 임의 재분류하거나 목표/의도 정답으로 쓰지 않는다.
 원본9,035bytes·SHA 및 검토 팩31파일 불변, 새 점26개 준비·학습 선택0. 사람 간 일치도·독립 정확도 미측정.
-CV-6a 완료, CV-6 첫 재검토 완료/원인 분류·합의는 미완료다. 다음 독립 단위 H-7은 유지한다.
+CV-6a 완료, CV-6 첫 재검토 완료/원인 분류·합의는 미완료다. H-7 날짜 검사 완료 후 CV-6b 저장된 처리 경로 감사를 진행한다.
 원응답은 `outputs/cv_review_response_20261008_v1/`에 비공개 보존했다. 아래 응답0 기록은 수신 이전 이력이다.
 [수신 결과와 자세 해석](CV_FIRST_HUMAN_REVIEW_20261008.md). 선점 `61fe8c6`, 완료는 같은 커밋.
 
