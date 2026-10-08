@@ -45,7 +45,7 @@
   "source_template_sha256": "bd00305e54535186559d56294d0b9218c774cd661e067325bda9f92d80d1c712",
   "date": "2026-10-08",
   "claim_commit": "7b1888d",
-  "source_commit": "same commit as this initial receipt; resolve via git history",
+  "source_commit": "517280f1a21be0e42bb380277b6bdc6a749c41c3",
   "checks": {
     "targeted_pytest": {
       "passed": 145,
@@ -59,7 +59,33 @@
       "unreviewed": 0,
       "unknown": 0
     },
-    "full_cpu_ci": "pending at source commit"
+    "full_cpu_ci": {
+      "run_id": 37788681108,
+      "url": "https://github.com/Pitcheezy/transition-models/actions/runs/37788681108",
+      "conclusion": "success",
+      "jobs": [
+        {
+          "name": "checks (ubuntu-24.04)",
+          "passed": 2028,
+          "skipped": 8,
+          "deselected": 2,
+          "warnings": 4,
+          "seconds": 60.42
+        },
+        {
+          "name": "checks (macos-15)",
+          "passed": 2028,
+          "skipped": 8,
+          "deselected": 2,
+          "warnings": 2,
+          "seconds": 131.32
+        }
+      ]
+    },
+    "completion_doc_checklist_tests": {
+      "passed": 7,
+      "seconds": 1.97
+    }
   },
   "browser": {
     "host": "Windows",
@@ -86,7 +112,9 @@
     "final_file": {
       "bytes": 860,
       "sha256": "607c453e0b5f7662fb21c59d7c5d2ec0765011ab5d81b2e0081d1bd38b2746ea"
-    }
+    },
+    "synthetic_download_cleanup": "Only generated synthetic downloads moved into ignored browser test output after hash check; original human response preserved.",
+    "test_server_stopped": true
   },
   "limits": [
     "No new human annotation or model accuracy measurement.",

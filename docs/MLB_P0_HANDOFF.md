@@ -16,7 +16,8 @@ ZIP: `LEGACY_PROJECT/outputs/integration_delivery/pitcheezy_mitt_review_20261008
 4,900,734bytes, SHA256 `fdafbd3f3cd059a5b9a15dca9bacacbfe61086f99e78d6d368c75b76ac0814e3`.
 reviewer31파일+README만 포함하며 private_selection/저장응답/AI판정은 제외했다.
 이미지26·manifest·빈 양식은 이전 팩과 동일하다. 새 helper만 추가하고 HTML/JS를 갱신했다.
-현재 전체 CPU는 원격 CI에서 별도 확인하며 기존1971검사를 새 구현 검증으로 인용하지 않는다.
+구현 `517280f` 원격 CI37788681108 성공: Linux/macOS 각각 2028passed/8skipped/2deselected. 실제 Mac 사용자 검토와 구분한다.
+Linux 60.42초·경고4개, macOS 131.32초·경고2개.
 
 ## H-port4 최신 소스 이관 v2 완료 — 2026-10-08
 

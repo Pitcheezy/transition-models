@@ -6,6 +6,7 @@ CV-29: 미완성 초안 저장·복원과 현재 프레임 복귀 완료. 최종
 H-11: stdlib 전용 실행 도우미·자료 검사·빈 포트·현재 컴퓨터 주소 안내 완료.
 새 팩 `outputs/cv_review_20261008_ui_v3/reviewer/`와 비공개 휴대용 ZIP을 준비했다.
 관련145passed·Ruff163경로·JS구문 통과. 합성2장 브라우저에서 저장→새 창 복원→최종 내보내기 확인.
+구현 `517280f` 원격 CI37788681108 성공: Linux/macOS 각각 2028passed/8skipped/2deselected. 실제 Mac 사용자 검토와 구분한다.
 기존65파일 SHA 불변, 기존26응답을 새 팩에서도 수신 검사 통과했다. 새 사람 판독은 수행하지 않았다.
 ZIP 압축 해제·표준 라이브러리 단독 검사까지 Windows에서 확인했으며 실제 Mac 사용 확인은 남아 있다.
 [검증 기록](docs/results/cv_independent_20261008/review_draft_launcher_v1.json).
