@@ -1,10 +1,26 @@
-# 우리 프로토타입 최소 이관 묶음 — H-port1
+# 우리 프로토타입 최소 이관 묶음 — H-port4
 
-작성일: 2026-10-07. `Pitcheezy/transition-models`, `feature/intent-v0`의 내부 팀 검토용 소스 부분집합이다.
+갱신일: 2026-10-08. `Pitcheezy/transition-models`, `feature/intent-v0`의 내부 팀 검토용 소스49개 부분집합이다.
 정확한 기준 커밋은 함께 받은 `bundle_manifest.json`의 `source_commit`이다.
 파일 목록은 `docs/handoff/source_files_v1.json`, 별도 자료 목록은 `external_artifacts_v1.json`이다.
 모든 파일의 출처는 같은 기준 커밋의 Git blob이다. Windows 체크아웃의 줄바꿈 변환은 적용하지 않는다.
 해시는 전달 중 변경을 탐지하는 식별자이며 저자 인증 서명이나 재배포 권한 증명이 아니다.
+
+## 이번 새 묶음에 반영한 수정
+
+- H-7: 수신기의 존재하지 않는 Gregorian 날짜를 거부한다. 정상 시간대·소수초·생성 시각 원문은 보존한다.
+- H-9: 좌표 변환에서 요청 경기와 timing·points·calibration의 경기 식별자를 대조한다.
+- H-10: 명시적으로 지정한 보정 경로가 잘못되면 출력 전에 거부한다. 보정 옵션을 생략한 경우의 기존 기본 동작은 유지한다.
+- CV-28: 새 AI `marked/partial` 응답은 부분 가림의 비어 있지 않은 이유가 필요하다. 요청 문구와 수신 검사가 이를 명시한다.
+
+좌표 변환의 회귀 검사 `tests/test_intent_m2.py`를 추가했다. 나머지는 기존48개 소스 범위를 유지한다.
+2026-10-07의 H-port1 원본 ZIP·전달 기록·파일 manifest는 보존하며 이 새 ZIP으로 덮어쓰지 않는다.
+표시된 수정은 입력·도구의 동작 수정이며 새 모델 정확도나 팀원 서비스 연결을 의미하지 않는다.
+
+H-8의 `intent/review_ui.js`는 이 부분집합에 없다. 사람 검토 UI를 쓰려면 전체 저장소나
+별도 `outputs/cv_review_20261008_ui_v2/reviewer` 팩을 사용한다. 그 팩의 이미지·사람 응답은 이 ZIP에 넣지 않는다.
+H-10의 반복 판독 RMS 0 보존 수정은 별도 보정 생성기 `intent/calibrate.py`에 있으며 이 부분집합에는 없다.
+보정 생성기와 전체 관측 루프·모델 제공자·과거 관측 보고서는 기준 커밋의 전체 저장소에서 사용한다.
 
 ## 무엇을 바로 가져갈 수 있는가
 
@@ -12,7 +28,7 @@
 |---|---|---|
 | S 응답 검사 | `src/integration/service_game.py`, `scripts/inspect_service_game.py` | 투구 키·단위·null·선택 비중·공개 전후 분리. STATUS를 바탕으로 한 잠정 규약이며 실제 새 S 원문 미수신 |
 | 미트 계약 | `intent/schema.py` | IntentEstimate v1의 상태·출처·좌표 변환 근거 검사. 검출 모델이 아님 |
-| 이미지 관측 계약 | `intent/observation_session.py`, `intent/replay.py`, `src/vision/frames.py` | 이미지 SHA·픽셀·가시성·기권을 갖는 별도 `intent_visual_observation_v1`. IntentEstimate와 동일 구조가 아님 |
+| 이미지 관측 계약 | `intent/observation_session.py`, `intent/replay.py`, `src/vision/frames.py` | 이미지 SHA·픽셀·가시성·기권을 갖는 별도 `intent_visual_observation_v1`의 begin/finish. mapped 경로와 전체 루프는 전체 저장소 필요 |
 | 좌표 변환 | `intent/geometry.py`, `intent/plate_feet.py`, `intent/run.py` | 저장 주석을 변환·직렬화. `intent.run`은 영상에서 미트를 자동 검출하지 않음 |
 | 화면 | `web/pitch-studio/`의 HTML/CSS/JS | 홈·서비스 콘셉트·첫 타석 수신기·검증 리포트의 기존 소스. 현재 공개 영상 파일은 제외 |
 | 회귀 검사 | `tests/`, `web/pitch-studio-tests/`에 선택한 파일 | 합성 계약 검사와 저장 응답/화면 로직 검사. 실제 API·실기기·모델 성능 검사가 아님 |
@@ -49,11 +65,15 @@ node --test tests/js/pitch_receiver.test.cjs tests/js/pitch_home.test.cjs web/pi
 개발 환경에서 확인한 버전은 Python 3.12, numpy 2.4.4, Pillow 12.2.0, pytest 9.0.3이다.
 
 ```text
-python -B -m pytest -q -p no:cacheprovider tests/test_service_game_contract.py tests/test_service_game_cli.py tests/test_intent_v0.py tests/test_intent_observation_session.py
+python -B -m pytest -q -p no:cacheprovider tests/test_service_game_contract.py tests/test_service_game_cli.py tests/test_intent_v0.py tests/test_intent_m2.py tests/test_intent_observation_session.py
 ```
 
 이 부분집합에는 연구 학습 코드·전체 의존성 lock·모델 가중치가 없다. 이 안에서 `uv sync`나 전체 프로젝트 검사를 실행하는 패키지가 아니다.
 학습/전체 실행이 필요하면 우리 전체 저장소를 같은 `source_commit`으로 체크아웃하고 그 커밋의 `pyproject.toml`, `uv.lock`, `docs/MAINTENANCE.md`를 따른다.
+
+새 AI 응답의 부분 가림 이유 요구는 새 세션에 적용한다. 이전 코드로 시작한 세션을 새 코드로
+끝내는 것은 기존 코드 SHA 검사에서 거부되므로 새 폴더로 시작한다. 과거 응답을 고치거나
+이유를 만들어 채우지 않는다. 전체 저장소의 보고서는 저장된 요청의 옛/새 계약을 구분해 읽는다.
 
 화면 구조만 로컬로 보려면:
 
@@ -98,7 +118,8 @@ Git blob 해시 목록과 줄바꿈이 다를 수 있다. 별도 파일 수신 �
 공용 기준 브랜치와 최종 화면/백엔드 정본은 미합의이며 이 묶음이 일방적인 채택 결정은 아니다.
 다음은 실제 새 S 원문(발생한 ready/unsupported/missing), 생성 revision/SHA, 셋업 계약을 받은 뒤 한 타석을 대조하는 I-service2다.
 발생하지 않은 상태는 미확인으로 남긴다. 이후 합의한 전체 소스/가중치/데이터로 독립 환경 실행(I-run1), 실제 기기/표시 시점 확인(I-release1)을 한다.
-CV6 추가 사람 응답과 CV7 미열람 독립 자료는 계속 별도 대기한다.
+CV6의 첫 실제 사람 재검토26건은 수신했지만 독립된 두 사람 합의나 AI 오류26건을 뜻하지 않는다.
+추가 독립 사람 검토와 CV7 미열람 자료는 별도로 남는다.
 
 ## 다시 생성할 때
 
@@ -111,8 +132,14 @@ python -B scripts/build_integration_handoff.py check outputs/handoff_new
 
 `source_files_v1.json`의 명시 목록만 복사한다. 미커밋 파일·모델·영상·Git LFS 포인터는 전달하지 않는다.
 새 전달 시 생성된 ZIP의 SHA와 기준 커밋을 별도 전달 메시지에 기록하고, 수신자가 가진 기준과 비교한다.
-현재 실행 결과/ZIP 식별자는 전체 저장소의 `docs/handoff/delivery_v1.json`에 기록한다(자기 자신을 포장하는 순환을 피하기 위해 ZIP에는 미포함).
+H-port4의 실행 결과/ZIP 식별자는 전체 저장소의 `docs/handoff/delivery_v2.json`에 기록한다.
+새 파일별 manifest 사본은 `docs/handoff/source_manifest_v2.json`이다. 두 기록은 자기 자신을 포장하는
+순환을 피하기 위해 ZIP에는 넣지 않는다. 과거 `delivery_v1.json`과 `source_manifest_v1.json`은 보존한다.
 
 ## 2026-10-08 후속 — 운영 모델 별도 전달 묶음
 
-이48개 소스 묶음과 기존 receipt는 그대로 보존했다. [H-port2](../HANDOFF_OPERATIONAL_RELOCATION_V1.md)는 같은 Windows에서14개 운영 파일의 경로 이관을 실행 확인했다. [H-port3](../HANDOFF_OPERATIONAL_BUNDLE_V1.md)는 그 자료만 담은 별도5.14MB ZIP과 실행 안내를 준비했다. [새 전달 기록](operational_bundle_delivery_v1.json)의 기준 전체 소스 커밋과 SHA를 사용한다. 모델 ZIP만으로 새 환경 설치가 완료되는 것은 아니다.
+H-port2는 같은 Windows에서14개 운영 파일의 경로 이관을 실행 확인했고, H-port3는 그 자료만 담은
+별도5.14MB ZIP과 실행 안내를 준비했다. 전체 저장소의 `docs/HANDOFF_OPERATIONAL_RELOCATION_V1.md`,
+`docs/HANDOFF_OPERATIONAL_BUNDLE_V1.md`, `docs/handoff/operational_bundle_delivery_v1.json`을 참조한다.
+이 문서와 운영 자료는 본 소스 ZIP에 포함하지 않는다. 기존 운영14파일 ZIP은 변경하지 않았으며,
+그 전달 기록의 전체 소스 커밋·SHA를 사용한다. 새 소스49개 묶음도 완전한 모델 런타임이 아니다.
