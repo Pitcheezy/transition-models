@@ -1,0 +1,31 @@
+{
+  "schema": "intent_review_point_data_summary_v1",
+  "status": "awaiting_human_responses",
+  "protocol_version": "cv_observation_v1",
+  "source_frames": 26,
+  "reviewer_count": 0,
+  "annotation_rows": 0,
+  "annotation_status_counts": {
+    "marked": 0,
+    "unavailable": 0,
+    "unknown": 0,
+    "unreviewed": 0
+  },
+  "point_annotations": 0,
+  "unique_frames_with_points": 0,
+  "unreviewed_by_all": 26,
+  "marked_visibility_counts": {},
+  "marked_pose_counts": {},
+  "ready_for_training": false,
+  "training_examples_selected": 0,
+  "training_performed": false,
+  "independent_validation": false,
+  "limitations": [
+    "Previously reviewed, disagreement-selected development frames; not unseen validation.",
+    "Current labels remain separate from legacy points and AI observations.",
+    "Reviewer annotations remain separate; no consensus or training cohort is selected.",
+    "Unavailable means the center could not be read, not that a glove is absent.",
+    "Point labels provide no boxes, masks, physical targets or pre-pitch availability.",
+    "Human identity and independent labeling are not authenticated by this tool."
+  ]
+}

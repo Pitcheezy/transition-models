@@ -1,5 +1,7 @@
 # STATUS — Pitcheezy / transition-models
 
+> 2026-10-08 후속 변경: [투구별 발행 시간 진단](docs/CV_REPLAY_PITCH_DEADLINES_V1.md)과 [사람 점 자료 준비](docs/CV_REVIEW_POINT_DATA_V1.md)를 추가했다. 실제 새 사람 응답은0건이다. [운영 모델 경로 이관](docs/HANDOFF_OPERATIONAL_RELOCATION_V1.md)은 같은 Windows·기존 환경·예제1개에서 전체 결과가 같았다. 새 환경/팀원 서비스 통합 또는 성능 개선 검증은 아니다. 아래 10/7 조사 스냅샷과 구분한다.
+
 > 2026-10-07 후속 변경: 아래 조사 스냅샷을 유지하면서 [S 응답 로컬 검사 도구](docs/SERVICE_GAME_V2_INTEGRATION.md)를 추가했다. 합성 자료에서 동작을 확인한 통합 준비이며, 실제 S 응답 수신·공개 화면 연결·라이브 검증은 아직 하지 않았다.
 
 작성일: 2026-10-07. 두 프로토타입의 통합 판단을 위한 현황이며, 홍보 자료가 아니다.

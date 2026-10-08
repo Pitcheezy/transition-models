@@ -1,0 +1,27 @@
+{
+  "schema": "independent_work_validation_v1",
+  "recorded_on": "2026-10-08",
+  "source_base_commit": "ae7db0119125782502d356288d0c5910a3417f26",
+  "command": "python scripts/check_project.py --cpu-only",
+  "result": {
+    "passed": 1879,
+    "skipped": 8,
+    "deselected": 2,
+    "warnings": 2,
+    "seconds": 508.41,
+    "ruff_paths": 156
+  },
+  "log_sha256": "12f98a91674183b55c3f2082d86b7a075cd4ecb4f9bfaa731bff0578f2fe5bae",
+  "changed_source_sha256": {
+    "intent/replay_pitch_deadlines.py": "2881e208a630830e2122472895ffb95b5b63a62046d430bc915e76a11ea9a0cb",
+    "tests/test_replay_pitch_deadlines.py": "5fecb3596f548bc1e893b75507a779396dab3519239b5e63f2436eb422905829",
+    "intent/review_point_data.py": "6deef0f27362a438f07a3893257ba01282e74104ec7667d597b1579eb7608cb0",
+    "tests/test_review_point_data.py": "dc54f8f549ee62b5d7f3abc6c5db12a1c3a9696caadb20025b3560bd81826203",
+    "scripts/check_project.py": "a9d6f27022632456270e5c1f113b8814b3539d743eef81518c9a1c70fb898e45"
+  },
+  "new_test_counts": {
+    "pitch_deadlines": 29,
+    "review_point_data": 20
+  },
+  "scope": "CPU regression/lint, not model accuracy or independent human validation"
+}
