@@ -120,6 +120,7 @@ QUALITY_PATHS = [
     "tests/test_outcome_contracts.py",
     "tests/test_recommendation.py",
     "tests/test_manual_server.py",
+    "tests/test_manual_ui.py",
     "tests/conftest.py",
     "tests/test_sny_scoreboard.py",
     "tests/test_ocr_reports.py",

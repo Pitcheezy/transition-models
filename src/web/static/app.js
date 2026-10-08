@@ -30,11 +30,17 @@ function status(message, error = false) {
   notice.classList.toggle("error", error);
 }
 
-function invalidate() {
+function beginRevision() {
   revision++;
   result = null;
   prediction.hidden = true;
+  document.querySelector("#predict").disabled = false;
   document.querySelector("#latency").textContent = "다시 계산 필요";
+  return revision;
+}
+
+function invalidate() {
+  beginRevision();
   status("입력이 변경됐습니다. 새 상황으로 다시 계산하세요.");
 }
 
@@ -46,18 +52,27 @@ async function request(url, options) {
 }
 
 async function loadExample() {
-  const data = await request("/api/example");
-  for (const field of form.elements) {
-    if (field.name) field.value = data.state[field.name] ?? "";
+  const requestRevision = beginRevision();
+  status("예시를 불러오고 있습니다.");
+  try {
+    const data = await request("/api/example");
+    if (revision !== requestRevision) return;
+    for (const field of form.elements) {
+      if (field.name) field.value = data.state[field.name] ?? "";
+    }
+    const video = document.querySelector("#video");
+    if (data.video_url) {
+      video.src = data.video_url;
+    } else {
+      video.removeAttribute("src");
+      video.load();
+    }
+    video.hidden = !data.video_url;
+    document.querySelector("#video-empty").hidden = Boolean(data.video_url);
+    status("기록에서 가져온 예시입니다. 영상 자동 인식 결과가 아닙니다.");
+  } catch (error) {
+    if (revision === requestRevision) status(error.message, true);
   }
-  const video = document.querySelector("#video");
-  if (data.video_url) {
-    video.src = data.video_url;
-    video.hidden = false;
-    document.querySelector("#video-empty").hidden = true;
-  }
-  invalidate();
-  status("기록에서 가져온 예시입니다. 영상 자동 인식 결과가 아닙니다.");
 }
 
 function showCandidate() {
@@ -119,7 +134,7 @@ function renderCandidates() {
 
 async function predict(event) {
   event.preventDefault();
-  const requestRevision = ++revision;
+  const requestRevision = beginRevision();
   const payload = {};
   for (const [name, value] of new FormData(form)) {
     payload[name] = value === "" ? null : (numeric.has(name) ? Number(value) : value);
@@ -134,7 +149,7 @@ async function predict(event) {
       headers: {"Content-Type": "application/json"},
       body: JSON.stringify(payload),
     });
-    // Discard a response if the user edited the state while inference was running.
+    // Only the latest input or request may update the screen.
     if (revision !== requestRevision) return;
     result = response;
     document.querySelector("#recommended").textContent = result.recommendation
@@ -158,24 +173,23 @@ async function predict(event) {
       status(error.message, true);
     }
   } finally {
-    button.disabled = false;
+    if (revision === requestRevision) button.disabled = false;
   }
 }
 
 form.addEventListener("input", invalidate);
 form.addEventListener("submit", predict);
 document.querySelector("#candidate").addEventListener("change", showCandidate);
-document.querySelector("#example").addEventListener("click", () => {
-  loadExample().catch(error => status(error.message, true));
-});
+document.querySelector("#example").addEventListener("click", loadExample);
 
 (async () => {
+  const startupRevision = revision;
   try {
     await request("/api/health");
     document.querySelector("#health").textContent = "● 모델 준비 완료";
-    await loadExample();
+    if (revision === startupRevision) await loadExample();
   } catch (error) {
     document.querySelector("#health").textContent = "연결 실패";
-    status(error.message, true);
+    if (revision === startupRevision) status(error.message, true);
   }
 })();
