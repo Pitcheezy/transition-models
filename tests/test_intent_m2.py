@@ -19,6 +19,7 @@ from intent.plate_feet import (  # noqa: E402
     zone_to_plate_feet,
 )
 from intent.run import build_records  # noqa: E402
+from intent.run import main as run_main
 from intent.schema import IntentEstimateError, make_estimate, validate_intent_estimate  # noqa: E402
 
 CORNERS = {
@@ -258,6 +259,69 @@ def test_build_records_emits_plate_feet_only_with_a_front_edge_and_marks_the_cal
     (tmp_path / "bad.json").write_text(json.dumps(bad), encoding="utf-8")
     with pytest.raises(ValueError):
         load_calibration(tmp_path / "bad.json")
+
+
+@pytest.mark.parametrize("bad_timing", [None, [], {}, {"game_pk": 849845}])
+def test_build_records_rejects_missing_or_other_game_timing(tmp_path, bad_timing):
+    _, points = _timing_and_points(tmp_path)
+    with pytest.raises(ValueError, match="timing file game mismatch"):
+        build_records(747139, bad_timing, points)
+
+
+@pytest.mark.parametrize(
+    "bad_calibration",
+    [
+        [],
+        {},
+        {"schema": "intent_plate_calibration_v0"},
+        {"game_pk": 747139},
+        {"schema": "other", "game_pk": 747139},
+        {"schema": "intent_plate_calibration_v0", "game_pk": 849845},
+    ],
+)
+def test_build_records_rejects_calibration_identity_before_transform(tmp_path, bad_calibration):
+    timing, points = _timing_and_points(tmp_path)
+    with pytest.raises(ValueError, match="calibration file schema/game mismatch"):
+        build_records(747139, timing, points, calibration=bad_calibration)
+
+
+@pytest.mark.parametrize("existing_output", [False, True])
+def test_cli_wrong_game_calibration_never_writes_output(tmp_path, existing_output):
+    timing, points = _timing_and_points(tmp_path)
+    calibration = {
+        "schema": "intent_plate_calibration_v0",
+        "game_pk": 849845,
+        "hop2": {
+            "matrix": [list(row) for row in zone_to_feet_matrix(0.15, 2.5)],
+            "tilt_sin": 0.15,
+            "mitt_depth_feet": 2.5,
+        },
+    }
+    for name, document in (("timing", timing), ("points", points), ("calibration", calibration)):
+        (tmp_path / f"{name}.json").write_text(json.dumps(document), encoding="utf-8")
+    out = tmp_path / "existing.jsonl"
+    if existing_output:
+        out.write_bytes(b"existing output must be preserved\n")
+    with pytest.raises(ValueError, match="calibration file schema/game mismatch"):
+        run_main(
+            [
+                "--game",
+                "747139",
+                "--timing",
+                str(tmp_path / "timing.json"),
+                "--points",
+                str(tmp_path / "points.json"),
+                "--calibration",
+                str(tmp_path / "calibration.json"),
+                "--out",
+                str(out),
+            ]
+        )
+    assert not Path(str(out) + ".run.json").exists()
+    if existing_output:
+        assert out.read_bytes() == b"existing output must be preserved\n"
+    else:
+        assert not out.exists()
 
 
 def test_hop2_pan_term_shifts_x_by_depth_times_pan_and_leaves_z_alone():

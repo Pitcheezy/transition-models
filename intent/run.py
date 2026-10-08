@@ -23,6 +23,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from intent.geometry import CORNER_ORDER, front_edge_similarity, project_point  # noqa: E402
 from intent.plate_feet import (  # noqa: E402
+    CALIBRATION_SCHEMA,
     PLATE_WIDTH_FEET,
     feet_transform_step,
     hop2_parameters,
@@ -89,6 +90,14 @@ def build_records(
     ``calibration`` is the measured hop-2 document (``intent.plate_feet.load_calibration``) or
     None; plate feet are emitted either way, with error_status measured only when it exists.
     """
+    if not isinstance(timing, dict) or timing.get("game_pk") != game_pk:
+        raise ValueError("timing file game mismatch")
+    if calibration is not None and (
+        not isinstance(calibration, dict)
+        or calibration.get("schema") != CALIBRATION_SCHEMA
+        or calibration.get("game_pk") != game_pk
+    ):
+        raise ValueError("calibration file schema/game mismatch")
     if points.get("schema") != POINTS_SCHEMA or points.get("game_pk") != game_pk:
         raise ValueError("point file schema/game mismatch")
     method = points["method"]

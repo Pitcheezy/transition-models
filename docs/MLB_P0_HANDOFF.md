@@ -1,5 +1,18 @@
 # MLB P0 — Codex / Claude 인계 기록
 
+## H-9 경기와 보정 파일 결속 수정 — 2026-10-08
+
+선점 `c220ba3`, 완료는 같은 커밋. `build_records`에서 timing의 game_pk와 선택 경기,
+제공된 calibration의 schema/game_pk를 대조한다. 기존 points 검사는 유지한다.
+이전에는849843의 픽셀에849845보정을 넣어도39행 전부 schema검사를 통과했고27좌표가 바뀌었다.
+이제 CLI를 포함해 출력 전에 거부한다. 기본 보정None 처리는 그대로다.
+새12검사 수정 전 전부 실패→수정 후 통과; canonical 관련94passed(3.69초).
+root도 이전커밋 `3ee4b93` 함수와 비교해 정상4경기178행/카운터 전체JSON이 보정사용/미사용 양쪽에서 같음을 확인했다.
+기존 timing/points/calibration/JSONL16개 SHA불변. M3·서비스파일·모델·사람라벨·공개Site 재생성 없음.
+[상세 검증](results/cv_independent_20261008/calibration_game_binding_v1.json).
+동일경기라는 조건만 검사한다. 같은 경기 내 카메라/장면 변경까지 인증하는 것은 아니다.
+다음은 CV-28 신규부분가림 이유 검사와 과거보고서 호환성. Codex 수정 권한 유지.
+
 ## H-8 검토 응답 불러오기 순서 수정 — 2026-10-08
 
 선점 `9df8fe6`, 완료는 같은 커밋. 파일A→B를 선택하고 B→A 순서로 읽히면 A좌표로

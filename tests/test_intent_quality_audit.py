@@ -84,9 +84,10 @@ def sample():
         },
     }
     timing = {
+        "game_pk": game,
         "annotations": [
             dict(f, status="annotated", decision_seconds=f["frame_seconds"]) for f in frames
-        ]
+        ],
     }
     records, _ = build_records(game, timing, points, calibration=calibration)
     return dict(
