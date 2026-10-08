@@ -1,0 +1,101 @@
+{
+  "schema": "pitcheezy_handoff_delivery_v1",
+  "revision": "v2",
+  "created_on": "2026-10-08",
+  "repository": "Pitcheezy/transition-models",
+  "branch": "feature/intent-v0",
+  "source_commit": "bf1fb5dcaf15ea614aee331175429a0016407fdd",
+  "archive": {
+    "path_alias": "LEGACY_PROJECT",
+    "relative_path": "outputs/integration_delivery/pitcheezy_source_handoff_20261008_v2.zip",
+    "bytes": 154924,
+    "sha256": "9387621a3850dc5109ca8fe5d770504c01761dc01c4db9db3f3520b640c7f2bd",
+    "source_files": 49,
+    "manifest_files": 1,
+    "source_manifest_sha256": "9dac824af3ff05de349f35c2df881b2af28404a251d253364a135edf6b1c80d9"
+  },
+  "manifest_copy": "docs/handoff/source_manifest_v2.json",
+  "scope": "Internal source-only handoff; no media, weights, raw human responses or teammate code. Not a full model runtime or deployed service.",
+  "environment": {
+    "host": "Windows",
+    "python": "3.12.12",
+    "node": "24.1.0",
+    "numpy": "2.4.4",
+    "pillow": "12.2.0",
+    "pytest": "9.0.3"
+  },
+  "checks": {
+    "zip_crc_and_50_file_byte_roundtrip": "passed",
+    "extracted_stdlib_only_check": {
+      "result": "passed",
+      "command": "python -I -S -B scripts/build_integration_handoff.py check .",
+      "after_tests": "passed",
+      "without_git_checkout": true
+    },
+    "synthetic_service_inspection": {
+      "result": "passed",
+      "command": "python -I -S -B scripts/inspect_service_game.py --input docs/examples/service_game_v2_synthetic.json --source-kind synthetic",
+      "input_sha256": "4ad91d47139ddd34c735d7a9d1b073a5532905a77d77edfb655bab18d9a3a2ae",
+      "pitches": 3,
+      "ready": 1,
+      "unsupported": 1,
+      "missing": 1,
+      "note": "Invented fixture, not actual teammate S compatibility."
+    },
+    "extracted_python_tests": {
+      "passed": 244,
+      "skipped": 1,
+      "seconds": 29.38,
+      "skip_reason": "POSIX named-pipe fixture unavailable on Windows",
+      "command": "python -B -m pytest -q -p no:cacheprovider tests/test_service_game_contract.py tests/test_service_game_cli.py tests/test_intent_v0.py tests/test_intent_m2.py tests/test_intent_observation_session.py"
+    },
+    "extracted_node_tests": {
+      "passed": 68,
+      "failed": 0,
+      "command": "node --test tests/js/pitch_receiver.test.cjs tests/js/pitch_home.test.cjs web/pitch-studio-tests/receiver-intake.test.cjs web/pitch-studio-tests/receiver-first-pa.test.cjs"
+    },
+    "local_full_repository_check": {
+      "source_commit": "f1ec3b95c9fed274cd230dad7d1bafa3318bda34",
+      "passed": 1971,
+      "skipped": 8,
+      "deselected": 2,
+      "warnings": 2,
+      "seconds": 558.13,
+      "note": "Before documentation/selection-only bf1fb5d; source bundle independently extracted and checked afterward."
+    },
+    "remote_full_repository_check": {
+      "source_commit": "bf1fb5dcaf15ea614aee331175429a0016407fdd",
+      "run_id": 37774261304,
+      "url": "https://github.com/Pitcheezy/transition-models/actions/runs/37774261304",
+      "conclusion": "success",
+      "linux": {
+        "passed": 1971,
+        "skipped": 8,
+        "deselected": 2,
+        "warnings": 4,
+        "seconds": 57.67
+      },
+      "macos": {
+        "passed": 1971,
+        "skipped": 8,
+        "deselected": 2,
+        "warnings": 2,
+        "seconds": 118.88
+      },
+      "scope": "Hosted CPU CI and JavaScript syntax; not physical Mac MPS or phone validation"
+    }
+  },
+  "previous_artifacts_sha256_preserved": {
+    "docs/handoff/delivery_v1.json": "dcf117e918b11235444abba0e33442819b8f62f6a7d97c01575eedff58b6b1da",
+    "docs/handoff/source_manifest_v1.json": "829d951ae3384ac2c6dad44b9ce1dcbd17c0f8b6825bf1e9eb6e248d04047f85",
+    "docs/handoff/operational_bundle_delivery_v1.json": "f8e7ec07b04c0c220268c284bef4aab14ebf2b354ea5d55421c26542a439b1aa",
+    "outputs/integration_delivery/pitcheezy_source_handoff_20261007_v1.zip": "8ecec737a4fdc775c426fe894fbfe40735c11f8e1c26d0ad42a50193d8b4f0e7",
+    "outputs/integration_delivery/pitcheezy_operational_artifacts_20261008_v1.zip": "d51fa7671ec8d753dbc263469a872d2fba9cb327ffcc183861e9b495f9614d4e"
+  },
+  "limitations": [
+    "Same Windows host and existing dependency environment; not a physical Mac/iPhone execution record.",
+    "H-8 review UI and H-10 calibrate.py require the full repository or separate reviewer pack.",
+    "New S response/contract and independent human data remain pending.",
+    "Prepared locally; not uploaded, sent to teammate or publicly deployed."
+  ]
+}

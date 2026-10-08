@@ -1,5 +1,25 @@
 # MLB P0 — Codex / Claude 인계 기록
 
+## H-port4 최신 소스 이관 v2 완료 — 2026-10-08
+
+선점 `e669ed4`, 소스 `bf1fb5dcaf15ea614aee331175429a0016407fdd`, 전달 검증은 같은 커밋.
+기존48소스에 M2회귀 검사1개를 더한49소스와 manifest를 새 ZIP에 담았다.
+`LEGACY_PROJECT/outputs/integration_delivery/pitcheezy_source_handoff_20261008_v2.zip`,
+154,924bytes, SHA256 `9387621a3850dc5109ca8fe5d770504c01761dc01c4db9db3f3520b640c7f2bd`.
+H7/H9/H10명시경로/CV28수정을 포함하며 H8검토UI·H10보정생성기는 전체repo/별도팩 범위다.
+기존v1 ZIP/manifest/receipt와 운영14파일 ZIP은 그대로다.
+
+실제 압축 해제 후50파일 바이트/CRC·표준라이브러리 단독 검사·합성 S3상태 검사를 통과했다.
+해제한 소스에서 Python244passed/1skipped(29.38초), Node68passed, 검사 후 SHA/파일목록도 같다.
+동일 Windows·기존 의존성 환경의 확인이며 실제 S 응답·Mac/iPhone 서비스 사용 확인은 아니다.
+기준소스 원격 CI37774261304 성공: Linux1971passed/8skipped/2deselected(57.67초,경고4),
+macOS1971passed/8skipped/2deselected(118.88초,경고2), Ruff161·JS구문 통과.
+[전달 기록](handoff/delivery_v2.json) · [파일별 manifest](handoff/source_manifest_v2.json).
+
+다음 체크리스트를 재검토했으며 외부 응답/독립 자료 없이 추가할 구현 단위는 확인되지 않았다.
+새 S원문→I-service2, 실제 독립 판단→CV-6/A-y, 새 영상→CV-7, 새 기기 확인을 남긴다.
+소스·ZIP은 로컬 준비 및 우리 Git 커밋 범위이며 외부 전송/공개 배포를 하지 않았다. 수정 권한 반납.
+
 ## H-10 명시 보정 경로와 RMS 0 수정 완료 — 2026-10-08
 
 선점 `5fc8e27`, 완료는 같은 커밋. 명시한 보정 경로가 없거나 디렉터리이면 출력 쓰기 전에 종료2로 거부한다.
