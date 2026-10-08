@@ -112,3 +112,7 @@ python -B scripts/build_integration_handoff.py check outputs/handoff_new
 `source_files_v1.json`의 명시 목록만 복사한다. 미커밋 파일·모델·영상·Git LFS 포인터는 전달하지 않는다.
 새 전달 시 생성된 ZIP의 SHA와 기준 커밋을 별도 전달 메시지에 기록하고, 수신자가 가진 기준과 비교한다.
 현재 실행 결과/ZIP 식별자는 전체 저장소의 `docs/handoff/delivery_v1.json`에 기록한다(자기 자신을 포장하는 순환을 피하기 위해 ZIP에는 미포함).
+
+## 2026-10-08 후속 — 운영 모델 별도 전달 묶음
+
+이48개 소스 묶음과 기존 receipt는 그대로 보존했다. [H-port2](../HANDOFF_OPERATIONAL_RELOCATION_V1.md)는 같은 Windows에서14개 운영 파일의 경로 이관을 실행 확인했다. [H-port3](../HANDOFF_OPERATIONAL_BUNDLE_V1.md)는 그 자료만 담은 별도5.14MB ZIP과 실행 안내를 준비했다. [새 전달 기록](operational_bundle_delivery_v1.json)의 기준 전체 소스 커밋과 SHA를 사용한다. 모델 ZIP만으로 새 환경 설치가 완료되는 것은 아니다.

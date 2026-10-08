@@ -1,5 +1,17 @@
 # H-port3 — 운영 산출물 비공개 전달 ZIP
 
+## 실제 전달 파일
+
+`LEGACY_PROJECT/outputs/integration_delivery/pitcheezy_operational_artifacts_20261008_v1.zip`
+
+- 크기: **5,138,558bytes**. 모델 자료14개(원래8,986,954bytes)+manifest/안내2개.
+- SHA256: `d51fa7671ec8d753dbc263469a872d2fba9cb327ffcc183861e9b495f9614d4e`
+- 전체 저장소 기준: `8fda709bbfc534d0f8d377234f487aacbb640a5f`.
+- [전달/검사 기록](handoff/operational_bundle_delivery_v1.json): 표준 라이브러리 단독 build/check·CRC 통과.
+  새 폴더에 실제 압축 해제 후16파일이 ZIP 바이트와 같고,14자료가 목록의 SHA와 일치했다.
+- H-port2의 실행 소스/입력27개는 그대로다. H-port1 소스 ZIP도 원래 SHA와 일치한다.
+- 로컬 전달 준비 완료이며 **업로드·전송은 하지 않았다**. Mac/새 환경 기동 성공으로 확대하지 않는다.
+
 2026-10-08. `scripts/build_operational_bundle.py`는 [H-port2](HANDOFF_OPERATIONAL_RELOCATION_V1.md)에서
 경로 이식을 확인한 우리 운영 모델 산출물14개를 실제 ZIP으로 포장하고 검사한다.
 **전달 준비용 도구이며 전송·업로드·공개 배포는 하지 않는다.** 모델이나 pickle을 로드하지 않고
@@ -57,7 +69,7 @@ python -B -S scripts/build_operational_bundle.py check <NEW_PRIVATE_ZIP.zip>
 아닌 파일도 그대로 포장해, 역직렬화가 없음을 확인한다.14개 정확한 member·압축 해제 동일성,
 손상/누락/덮어쓰기 거부, 미지정 비공개 파일 제외, 경로 이탈/파일 링크/부모 링크 거부,
 결정적 ZIP, 표준 라이브러리 단독 CLI를 검사했다. 초기 표적 검사는 **21 passed, 0 skipped**였고
-Ruff도 통과했다. 실제 전달 ZIP의 크기·SHA와 압축 해제 확인은 별도 실행 기록으로 남긴다.
+Ruff도 통과했다. 실제 전달 ZIP의 크기·SHA와 압축 해제 확인은 위 전달 기록에 있다. 정본의 관련45tests와 전체 Ruff158경로도 통과했다.
 
 이 묶음은 우리 모델의 재현 기준을 보존하며 팀원 모델의 채택·대체 합의가 아니다.
 새 Mac·다른 기기·fresh install·모델 정확도·정책 효용·완전한 배포 런타임을 검증하지 않는다.

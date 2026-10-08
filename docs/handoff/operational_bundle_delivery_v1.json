@@ -1,0 +1,110 @@
+{
+  "schema": "pitcheezy_operational_bundle_delivery_v1",
+  "recorded_on": "2026-10-08",
+  "source_commit": "8fda709bbfc534d0f8d377234f487aacbb640a5f",
+  "archive": {
+    "path_alias": "LEGACY_PROJECT",
+    "relative_path": "outputs/integration_delivery/pitcheezy_operational_artifacts_20261008_v1.zip",
+    "bytes": 5138558,
+    "sha256": "d51fa7671ec8d753dbc263469a872d2fba9cb327ffcc183861e9b495f9614d4e"
+  },
+  "contents": {
+    "operational_artifacts": 14,
+    "operational_bytes": 8986954,
+    "metadata_files": 2,
+    "total_zip_members": 16,
+    "source_files": 0,
+    "media_or_labels": 0,
+    "manifest_sha256": "f0adb599c8d33b2573a678e99fc0f34817c78bd98e1b8be650e0d84146361644",
+    "guide_sha256": "69dd4386a6ad0d4f6f7b35dcd8bf12c2126e14a7ccb944bd7f11c01ec3445cb0",
+    "files": {
+      "data/operational_20260921_v2/dataset_manifest.json": {
+        "bytes": 1649,
+        "sha256": "98d77564855f4e33ebda65f56fe8d77142e45c9552225e76f528745ecbd02156"
+      },
+      "data/operational_20260921_v2/feature_builder.pkl": {
+        "bytes": 1411663,
+        "sha256": "6538080fe55f668a16d1071c5bff6e3f91eeb2d103835c780aa05f0d450443fe"
+      },
+      "data/operational_20260921_v2/run_value_model.npz": {
+        "bytes": 25884,
+        "sha256": "4d0d7337e3c4da4120af8c4e50c208f569a1b77a6e31bfb4fd54b4ddfa17c711"
+      },
+      "outputs/operational_20260921/evaluation/empirical.pkl": {
+        "bytes": 1566950,
+        "sha256": "c0495623406373961d1cb0027697c85e78045204cb1b602035629e60e7c6dccd"
+      },
+      "outputs/operational_20260921/evaluation/probability_report.json": {
+        "bytes": 696027,
+        "sha256": "d75d36b444b7dcd9f065aa830073135d3b5f562efceeb37c1a76e093d31b4168"
+      },
+      "outputs/operational_20260921/evaluation/selection.json": {
+        "bytes": 982,
+        "sha256": "8702238d45cbe543a6cb3484d527821576009f351b158b451462004c872b0d42"
+      },
+      "outputs/operational_20260921/mlp135_seed42/best.pt": {
+        "bytes": 432634,
+        "sha256": "1c783878357ea4a2a680118c47e8f2d237cff4853ee28e46ce25f7b05c9c50b3"
+      },
+      "outputs/operational_20260921/mlp135_seed42/manifest.json": {
+        "bytes": 3769,
+        "sha256": "2830c1f03d8f8707569859bfe18ddc9394faa90404924243dd2226563212b29c"
+      },
+      "outputs/operational_20260921/mlp135_seed43/best.pt": {
+        "bytes": 432634,
+        "sha256": "36e0720678e94a11c5f5abb459b9fea85dd07879b2afe9746db1ac58aeb0303f"
+      },
+      "outputs/operational_20260921/mlp135_seed43/manifest.json": {
+        "bytes": 3768,
+        "sha256": "74cacb27996b9ae0c3ca927bff05b0b3a294d15164998c84f080052803e3a2ed"
+      },
+      "outputs/operational_20260921/mlp135_seed44/best.pt": {
+        "bytes": 432634,
+        "sha256": "ed3221a42630fff7d83ebfb228519782a8845d382b1fb337da42615c916352cc"
+      },
+      "outputs/operational_20260921/mlp135_seed44/manifest.json": {
+        "bytes": 3766,
+        "sha256": "3ea3dcd7bdb82488222356f9d3205c4c2aa6d10e7d110406e86596380bc2361a"
+      },
+      "outputs/operational_20260921/policy_nuisance_v2/manifest.json": {
+        "bytes": 2519,
+        "sha256": "b9a1d639e277aca6f427b600784452b0afc1d75f53a569eca3f9e8e6b767340c"
+      },
+      "outputs/operational_20260921/policy_nuisance_v2/propensity.txt": {
+        "bytes": 3972075,
+        "sha256": "44aab078f1363830bb2fd698841a62812768105e5e54326468ce6f77f64c2ce3"
+      }
+    }
+  },
+  "verification": {
+    "build_exit_code": 0,
+    "standalone_check_exit_code": 0,
+    "isolated_python_stdlib_flags": [
+      "-I",
+      "-S",
+      "-B"
+    ],
+    "zip_crc_passed": true,
+    "extracted_members_byte_identical": 16,
+    "extracted_artifacts_sha_match": 14,
+    "runtime_source_files_unchanged_from_H_port2": 27,
+    "H_port1_archive_unchanged": true,
+    "same_host_extraction_only": true,
+    "fresh_environment_verified": false,
+    "different_machine_verified": false,
+    "models_loaded_during_packaging": false,
+    "model_cli_rerun_during_packaging": false,
+    "uploaded_or_sent": false,
+    "tests": {
+      "new": 21,
+      "related_passed": 45,
+      "related_skipped": 0,
+      "ruff_paths": 158
+    }
+  },
+  "environment": {
+    "python": "3.12.12",
+    "zlib": "1.3.1"
+  },
+  "scope": "Private artifact transfer preparation; existing runtime evidence is H-port2. Not a complete runtime installation, new model validation, or teammate model adoption."
+}
