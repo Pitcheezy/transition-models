@@ -229,7 +229,7 @@
   "scope": "Saved-input in-memory compatibility only. No records, historical JSONL, labels or M3 rewritten. No new visual judgment, inference, training or physical-accuracy claim. Source image bytes are not re-decoded or re-verified by this check.",
   "date": "2026-10-09",
   "claim_commit": "1d787e3",
-  "source_commit": "same commit as initial completion receipt; resolve via git history",
+  "source_commit": "fb325346113e851782d099938ca646dc75da099e",
   "checks": {
     "new_regressions_before": {
       "failed": 11
@@ -244,7 +244,33 @@
     },
     "ruff_paths": 163,
     "independent_review": "no blocking finding; signs, units and schema reviewed",
-    "full_cpu_ci": "pending"
+    "full_cpu_ci": {
+      "run_id": 37809189075,
+      "url": "https://github.com/Pitcheezy/transition-models/actions/runs/37809189075",
+      "jobs": [
+        {
+          "name": "checks (ubuntu-24.04)",
+          "passed": 2039,
+          "skipped": 8,
+          "deselected": 2,
+          "warnings": 4,
+          "seconds": 60.9
+        },
+        {
+          "name": "checks (macos-15)",
+          "passed": 2039,
+          "skipped": 8,
+          "deselected": 2,
+          "warnings": 2,
+          "seconds": 108.56
+        }
+      ],
+      "conclusion": "success"
+    },
+    "completion_doc_tests": {
+      "passed": 7,
+      "seconds": 1.97
+    }
   },
   "issue": "A fixed not-applied x parallax description contradicted the already applied pan/depth matrix for three saved games.",
   "applied_x_offset_feet": {
