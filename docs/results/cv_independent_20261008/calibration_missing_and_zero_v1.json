@@ -1,0 +1,82 @@
+{
+  "schema": "h10_stage_verification_v1",
+  "scope": "Explicit CLI calibration-path validation and zero-versus-missing front-edge repeatability; no inference, annotations or frozen outputs rewritten.",
+  "implementation": {
+    "explicit_calibration_missing_or_directory": "parser error before output writes",
+    "omitted_calibration_missing": "optional uncorrected fallback preserved",
+    "rms_zero": "0.0 preserved with measured hop-1 status",
+    "no_paired_front_edges": "None preserved with unmeasured hop-1 status"
+  },
+  "tests": {
+    "new_before": {
+      "failed": 5,
+      "passed": 2,
+      "deselected": 24,
+      "elapsed_seconds": 0.44
+    },
+    "related_after": {
+      "passed": 31,
+      "elapsed_seconds": 0.58
+    },
+    "coverage": [
+      "Explicit nonexistent file and directory, each with fresh and preexisting record/summary outputs",
+      "Omitted optional calibration when default file is missing",
+      "Full calibration build to IntentEstimate output for identical A/B front edges and no paired readings"
+    ],
+    "ruff_check": "passed",
+    "ruff_format_check": "passed"
+  },
+  "saved_readings_compatibility": [
+    {
+      "game_pk": 747139,
+      "front_edge_noise_unchanged": true,
+      "pairs": 27,
+      "rms_pixels": 0.67700320038633
+    },
+    {
+      "game_pk": 849843,
+      "front_edge_noise_unchanged": true,
+      "pairs": 31,
+      "rms_pixels": 1.4925892203299476
+    },
+    {
+      "game_pk": 823407,
+      "front_edge_noise_unchanged": true,
+      "pairs": 18,
+      "rms_pixels": 0.9965217285917831
+    },
+    {
+      "game_pk": 849845,
+      "front_edge_noise_unchanged": true,
+      "pairs": 49,
+      "rms_pixels": 0.708458372317049
+    },
+    {
+      "game_pk": 849849,
+      "front_edge_noise_unchanged": true,
+      "pairs": 47,
+      "rms_pixels": 0.7993514658505648
+    }
+  ],
+  "saved_input_sha256": {
+    "game_747139_intent_calibration_readings_v0.json": "173e9e2dafe3f21e24c31db071a2ed8f4016bb399148c8e1c2843634774e21c8",
+    "game_849843_intent_calibration_readings_v0.json": "fbc59b2a126aa66bc519fb00cd58699beb4707ee93840a85c33f574d69b10c18",
+    "game_823407_intent_calibration_readings_v0.json": "39283d7b0272e86844a9df53c5d647e9177b0f540646f1a8bedaa5eb9d5dbb15",
+    "game_849845_intent_calibration_readings_v0.json": "37f5665b7b327820afddb5b4db6e3adf0ccd129415979280a77f7195be27e2d0",
+    "game_849849_intent_calibration_readings_v0.json": "426228b357bae9b11ba12b15e5943677cf8d12db6bb2d14a52b0196923a2472e"
+  },
+  "saved_input_bytes_unchanged": true,
+  "interpretation": "Measured zero is zero difference between paired reader coordinates under this repeatability statistic; it is not evidence of zero physical error or independently verified accuracy.",
+  "independent_code_review": "passed",
+  "canonical_saved_input_sha256_recheck": "passed",
+  "canonical_full_cpu": {
+    "passed": 1971,
+    "skipped": 8,
+    "deselected": 2,
+    "warnings": 2,
+    "seconds": 558.13,
+    "ruff_paths": 161,
+    "command": "python scripts/check_project.py --cpu-only --test-timeout 900",
+    "note": "Windows; existing Pillow test deprecation warnings; no new model evaluation"
+  }
+}

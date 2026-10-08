@@ -278,6 +278,8 @@ def main(argv=None):
         help="measured hop-2 calibration (default docs/results/mlb_p0/game_<game>_intent_plate_calibration_v0.json)",
     )
     args = parser.parse_args(argv)
+    if args.calibration is not None and not args.calibration.is_file():
+        parser.error("explicit --calibration must name an existing file")
     started = time.perf_counter()
     timing = _load(args.timing or RESULTS / f"game_{args.game}_timing.json")
     points = _load(args.points or RESULTS / f"game_{args.game}_intent_points_v0.json")

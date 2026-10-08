@@ -18,6 +18,7 @@ from intent.plate_feet import (  # noqa: E402
     load_calibration,
     zone_to_feet_matrix,
 )
+from intent.run import build_records  # noqa: E402
 
 TILT_SIN = 0.15
 PLATE_FRONT = {"left_end": [636.0, 322.0], "right_end": [690.0, 322.0]}
@@ -191,6 +192,58 @@ def test_too_few_catch_pitches_leave_the_error_unmeasured():
     doc = build(_readings(MIN_PITCHES - 1), [])
     assert doc["rms_error_feet"] is None and doc["error_status"] == "unmeasured"
     assert doc["end_to_end_check"]["pitches_used"] == MIN_PITCHES - 1
+
+
+@pytest.mark.parametrize("has_pairs", [False, True])
+def test_front_edge_zero_or_no_data_preserves_measurement_status_through_run(has_pairs):
+    readings = _readings(MIN_PITCHES)
+    for frame in readings["decision_frames"]:
+        frame["readers"]["B"]["plate_front"] = json.loads(
+            json.dumps(frame["readers"]["A"]["plate_front"])
+        )
+    if not has_pairs:
+        readings["decision_frames"] = []
+    calibration = build(readings, [])
+    expected = 0.0 if has_pairs else None
+    assert calibration["hop1_front_edge_noise"]["frames_with_both_readers"] == (
+        2 if has_pairs else 0
+    )
+    assert calibration["hop1_front_edge_rms_pixels"] == expected
+    timing = {
+        "game_pk": 747139,
+        "annotations": [
+            {"at_bat_number": 1, "pitch_number": 1, "status": "annotated", "decision_seconds": 1.0}
+        ],
+    }
+    points = {
+        "schema": "intent_points_v0",
+        "game_pk": 747139,
+        "method": {"kind": "assistant_visual_estimate", "version": "v0"},
+        "label_source": "assistant_visual_estimate",
+        "video": {"fps_num": 30, "fps_den": 1},
+        "frames": [
+            {
+                "at_bat_number": 1,
+                "pitch_number": 1,
+                "frame_seconds": 1.0,
+                "path": "synthetic.jpg",
+                "image_sha256": "a" * 64,
+                "status": "estimated",
+                "mitt_center": [663.0, 268.0],
+                "uncertainty_pixels": 2.0,
+                "plate_corners": {
+                    "front_left": PLATE_FRONT["left_end"],
+                    "front_right": PLATE_FRONT["right_end"],
+                },
+            }
+        ],
+    }
+    records, _ = build_records(747139, timing, points, calibration=calibration)
+    step = records[0]["transform_chain"][0]
+    assert step["error"] == expected
+    assert step["error_status"] == ("measured" if has_pairs else "unmeasured")
+    # Zero here is repeated-reading difference, not verified physical accuracy.
+    assert calibration["human_verified_count"] == 0
 
 
 def test_jittered_readings_give_a_positive_rms_and_the_cli_writes_the_file(tmp_path):

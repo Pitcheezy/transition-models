@@ -145,7 +145,7 @@ def front_edge_noise(decision_frames):
     rms = _rms(diffs)
     return {
         "frames_with_both_readers": pairs,
-        "rms_pixels": rms / math.sqrt(2) if rms else None,
+        "rms_pixels": rms / math.sqrt(2) if rms is not None else None,
         "definition": "rms(A - B)/sqrt(2) over both ends and both coordinates",
     }
 

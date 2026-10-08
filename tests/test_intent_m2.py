@@ -324,6 +324,73 @@ def test_cli_wrong_game_calibration_never_writes_output(tmp_path, existing_outpu
         assert not out.exists()
 
 
+@pytest.mark.parametrize("path_kind", ["missing", "directory"])
+@pytest.mark.parametrize("existing_output", [False, True])
+def test_cli_explicit_unreadable_calibration_preserves_outputs(
+    tmp_path, path_kind, existing_output
+):
+    timing, points = _timing_and_points(tmp_path)
+    for name, document in (("timing", timing), ("points", points)):
+        (tmp_path / f"{name}.json").write_text(json.dumps(document), encoding="utf-8")
+    calibration = tmp_path / "calibration.json"
+    if path_kind == "directory":
+        calibration.mkdir()
+    out = tmp_path / "result.jsonl"
+    summary = Path(str(out) + ".run.json")
+    if existing_output:
+        out.write_bytes(b"previous records\n")
+        summary.write_bytes(b"previous summary\n")
+    with pytest.raises(SystemExit) as exc:
+        run_main(
+            [
+                "--game",
+                "747139",
+                "--timing",
+                str(tmp_path / "timing.json"),
+                "--points",
+                str(tmp_path / "points.json"),
+                "--calibration",
+                str(calibration),
+                "--out",
+                str(out),
+            ]
+        )
+    assert exc.value.code == 2
+    if existing_output:
+        assert out.read_bytes() == b"previous records\n"
+        assert summary.read_bytes() == b"previous summary\n"
+    else:
+        assert not out.exists() and not summary.exists()
+
+
+def test_cli_omitted_missing_calibration_keeps_uncorrected_fallback(tmp_path, monkeypatch):
+    timing, points = _timing_and_points(tmp_path)
+    for name, document in (("timing", timing), ("points", points)):
+        (tmp_path / f"{name}.json").write_text(json.dumps(document), encoding="utf-8")
+    monkeypatch.setitem(run_main.__globals__, "RESULTS", tmp_path / "missing_defaults")
+    out = tmp_path / "result.jsonl"
+    run_main(
+        [
+            "--game",
+            "747139",
+            "--timing",
+            str(tmp_path / "timing.json"),
+            "--points",
+            str(tmp_path / "points.json"),
+            "--out",
+            str(out),
+        ]
+    )
+    records = [json.loads(line) for line in out.read_text().splitlines()]
+    for record in records:
+        validate_intent_estimate(record)
+    summary = json.loads(Path(str(out) + ".run.json").read_text())
+    assert summary["plate_calibration"] is None
+    assert summary["hop2_parameters"]["tilt_sin"] == 0.0
+    assert records[0]["transform_chain"][1]["error_status"] == "unmeasured"
+    assert records[1]["deepest_frame"] == "image_pixels"
+
+
 def test_hop2_pan_term_shifts_x_by_depth_times_pan_and_leaves_z_alone():
     base = zone_to_feet_matrix(0.1, 2.5)
     panned = zone_to_feet_matrix(0.1, 2.5, pan_tan=-0.06)
