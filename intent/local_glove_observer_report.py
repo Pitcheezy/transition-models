@@ -166,11 +166,7 @@ def _bound_request(directory, row, evidence):
         raise ValueError("Invalid observation identity")
     if request.get("schema") != session.MAPPED_REQUEST_SCHEMA:
         raise ValueError("Expected a mapped loop observation request")
-    if (
-        request.get("prompt") != session.PROMPT
-        or request.get("response_schema") != session.RESPONSE_FIELDS
-    ):
-        raise ValueError("Unexpected observation prompt/response contract")
+    session._partial_reason_required(request)
     if any(type(request.get(key)) is not int or request[key] <= 0 for key in ("width", "height")):
         raise ValueError("Invalid request image dimensions")
     image_hash = _digest(request.get("image_sha256"))
@@ -303,7 +299,11 @@ def _artifacts(run, index, row, binding):
         raise ValueError("Failed adapter cannot claim a published response SHA256")
     if evidence["response"] is not None:
         response, response_hash = outer._read(request_dir / "response.json")
-        session._validate_response(response, request)
+        session._validate_response(
+            response,
+            request,
+            require_partial_reason=session._partial_reason_required(request),
+        )
         expected = "unavailable" if selection == "no_candidate" else "unknown"
         if (
             sidecar["status"] != "accepted"

@@ -252,6 +252,36 @@ def add(run, index, count=1, *, publication=2, failed=False):
     return directory
 
 
+@pytest.mark.parametrize(
+    "old_prompt,old_schema,accepted",
+    [(True, True, True), (False, False, True), (True, False, False), (False, True, False)],
+)
+def test_saved_local_request_accepts_only_complete_contract_pairs(
+    run, old_prompt, old_schema, accepted
+):
+    directory = add(run, 0)
+    request = read(directory / "request/request.json")
+    request.update(
+        prompt=observation_session.LEGACY_PROMPT if old_prompt else observation_session.PROMPT,
+        response_schema=(
+            observation_session.LEGACY_RESPONSE_FIELDS
+            if old_schema
+            else observation_session.RESPONSE_FIELDS
+        ),
+    )
+    request_hash = write(directory / "request/request.json", request)
+    saved_session = read(directory / "session.json")
+    saved_session["request_sha256"] = request_hash
+    write(directory / "session.json", saved_session)
+    row = read(run[0] / "attempts/000.json")
+    evidence = {"image": request["image_sha256"]}
+    if accepted:
+        assert report._bound_request(directory, row, evidence) == (request, request_hash)
+    else:
+        with pytest.raises(ValueError, match="prompt/response contract"):
+            report._bound_request(directory, row, evidence)
+
+
 def test_full_denominator_and_publication_boundary(run):
     add(run, 0, 1, publication=5)
     add(run, 1, 2)

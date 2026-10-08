@@ -86,7 +86,11 @@ def _accepted(run, row, cutoff, accepted_ns):
         raise ValueError("Missing regular request image")
     if hashlib.sha256(image.read_bytes()).hexdigest() != request["image_sha256"]:
         raise ValueError("Request image hash mismatch")
-    observation_session._validate_response(response, request)
+    observation_session._validate_response(
+        response,
+        request,
+        require_partial_reason=observation_session._partial_reason_required(request),
+    )
     actual = _fraction(row["actual_source_seconds_exact"])
     for document in (request, result):
         if (

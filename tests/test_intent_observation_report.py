@@ -86,6 +86,8 @@ def add(run, index, status="unavailable", dispatch=1, publication=2):
         "observation_id": str(index),
         "width": 100,
         "height": 100,
+        "prompt": observation_session.PROMPT,
+        "response_schema": observation_session.RESPONSE_FIELDS,
         "source_time_basis": "decoded_pts",
         "source_time_seconds_exact": str(180 + offset),
         "requested_cutoff_seconds_exact": str(180 + offset),
@@ -142,6 +144,45 @@ def test_late_accepted_observations_do_not_become_live_success(run):
     assert not result["live_availability_verified"]
     assert not result["full_pa_verified"]
     assert not result["accuracy_evaluated"]
+
+
+@pytest.mark.parametrize(
+    "legacy,reason,accepted",
+    [
+        (True, "", True),
+        (True, "  ", True),
+        (False, "", False),
+        (False, "  ", False),
+        (False, "Partly hidden by the knee.", True),
+    ],
+)
+def test_saved_partial_result_keeps_its_request_acceptance_policy(run, legacy, reason, accepted):
+    add(run, 0, "marked")
+    directory = run / "outputs/cv_observation_000"
+    request = read(directory / "request/request.json")
+    if legacy:
+        request.update(
+            prompt=observation_session.LEGACY_PROMPT,
+            response_schema=observation_session.LEGACY_RESPONSE_FIELDS,
+        )
+    request_hash = write(directory / "request/request.json", request)
+    session_hash = write(directory / "session.json", {"request_sha256": request_hash})
+    response = read(directory / "request/response.json")
+    response.update(visibility="partial", reason=reason)
+    response_hash = write(directory / "request/response.json", response)
+    result = read(directory / "result.json")
+    result.update(
+        request_sha256=request_hash,
+        session_sha256=session_hash,
+        raw_response_sha256=response_hash,
+        raw_response=response,
+    )
+    write(directory / "result.json", result)
+    if accepted:
+        assert observation_report.build_report(run)["counts"]["marked"] == 1
+    else:
+        with pytest.raises(ValueError, match="partial requires an explicit reason"):
+            observation_report.build_report(run)
 
 
 def test_interrupted_prefix_retains_unattempted_denominator(run):

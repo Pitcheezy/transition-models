@@ -416,7 +416,7 @@ def _validate_staged(directory, raw_request, raw_image, raw_config):
         or sidecar.get("candidate") != prediction["candidate"]
     ):
         raise ValueError("Worker candidate selection mismatch")
-    observation_session._validate_response(response, request)
+    observation_session._validate_response(response, request, require_partial_reason=True)
     expected_status = (
         "unavailable" if prediction["selection_status"] == "no_candidate" else "unknown"
     )

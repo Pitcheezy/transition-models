@@ -368,7 +368,7 @@ def observe(
                 "no_candidate": "Detector found no glove candidate above the fixed threshold; this is not proof that the mitt is absent.",
             }[selection],
         }
-        session._validate_response(response, request)
+        session._validate_response(response, request, require_partial_reason=True)
         encoded_response = _encode(response)
         # Recheck every bound input before publishing. Model failures never become abstentions.
         for path, expected in zip(inputs, (raw_request, data, raw_config), strict=True):

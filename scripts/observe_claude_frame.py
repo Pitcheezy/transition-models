@@ -167,7 +167,7 @@ def _serialization_pairs(events, response, request):
                     or ("caller" in block and block["caller"] != {"type": "direct"})
                 ):
                     raise ValueError("unrelated or mismatched serialization tool use")
-                _validate_response(block["input"], request)
+                _validate_response(block["input"], request, require_partial_reason=True)
                 uses[identity] = block["input"]
             elif block["type"] == "tool_result":
                 identity = block.get("tool_use_id")
@@ -241,7 +241,7 @@ def _parse(stdout, request, *, structured_output=False, requested_model=None):
             raise ValueError(
                 "structured mode requires a structured_output object; no text fallback"
             )
-        _validate_response(response, request)
+        _validate_response(response, request, require_partial_reason=True)
         serialization_pairs = _serialization_pairs(events, response, request)
         result_format = "structured_output"
     else:
@@ -257,7 +257,7 @@ def _parse(stdout, request, *, structured_output=False, requested_model=None):
             result_text = result_text[len("```json\n") : -len("\n```")]
             result_format = "fenced_json"
         response = json.loads(result_text)
-        _validate_response(response, request)
+        _validate_response(response, request, require_partial_reason=True)
     metadata = {
         key: final[key]
         for key in (

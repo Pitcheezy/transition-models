@@ -166,3 +166,36 @@ def test_output_boundary_and_no_symlinks(source, monkeypatch):
     monkeypatch.setattr(obs.Path, "is_symlink", lambda p: p == source[0] or original(p))
     with pytest.raises(ValueError, match="symlink"):
         start(source)
+
+
+@pytest.mark.parametrize("reason", ["", " \n\t "])
+def test_new_partial_response_requires_reason_before_result_publication(source, reason):
+    path = response(source, start(source), visibility="partial", reason=reason)
+    with pytest.raises(ValueError, match="partial requires an explicit reason"):
+        obs.finish(source[2], path)
+    assert not (source[2] / "result.json").exists()
+
+
+def test_full_response_may_still_have_blank_reason(source):
+    path = response(source, start(source), visibility="full", reason="")
+    assert obs.finish(source[2], path)["raw_response"]["reason"] == ""
+
+
+@pytest.mark.parametrize("legacy", [False, True])
+def test_saved_request_policy_uses_an_exact_contract_pair(legacy):
+    request = {
+        "prompt": obs.LEGACY_PROMPT if legacy else obs.PROMPT,
+        "response_schema": obs.LEGACY_RESPONSE_FIELDS if legacy else obs.RESPONSE_FIELDS,
+    }
+    assert obs._partial_reason_required(request) is not legacy
+    request["prompt"] = obs.PROMPT if legacy else obs.LEGACY_PROMPT
+    with pytest.raises(ValueError, match="prompt/response contract"):
+        obs._partial_reason_required(request)
+
+
+def test_live_validator_does_not_relax_for_a_legacy_request(source):
+    request = start(source)
+    request.update(prompt=obs.LEGACY_PROMPT, response_schema=obs.LEGACY_RESPONSE_FIELDS)
+    path = response(source, request, visibility="partial", reason="")
+    with pytest.raises(ValueError, match="partial requires an explicit reason"):
+        obs._validate_response(json.loads(path.read_bytes()), request)

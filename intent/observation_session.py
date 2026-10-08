@@ -31,7 +31,7 @@ MAPPED_TIME_FIELDS = (
     "source_time_seconds_exact",
     "requested_cutoff_seconds_exact",
 )
-PROMPT = (
+LEGACY_PROMPT = (
     "Inspect only image.jpg and this request. Mark the center of the visible catcher's "
     "mitt body in original full-frame pixel coordinates [x,y], including a resting mitt. "
     "Do not substitute wrist, arm or ball. Judge pose separately; a still image may "
@@ -41,7 +41,7 @@ PROMPT = (
     "require null mitt and a nonblank reason. Return exactly the response_schema fields "
     "as one JSON object. This is an AI observation, never a human label."
 )
-RESPONSE_FIELDS = {
+LEGACY_RESPONSE_FIELDS = {
     "schema": RESPONSE_SCHEMA,
     "observation_id": "copy request observation_id",
     "image_sha256": "copy request image_sha256",
@@ -50,6 +50,13 @@ RESPONSE_FIELDS = {
     "visibility": "full|partial|hidden|unknown; marked requires full or partial",
     "pose": "presented_target|resting|moving|unknown",
     "reason": "string; nonblank for unavailable or unknown",
+}
+PROMPT = (
+    LEGACY_PROMPT + " A marked partial mitt also requires a nonblank reason for partial visibility."
+)
+RESPONSE_FIELDS = {
+    **LEGACY_RESPONSE_FIELDS,
+    "reason": "string; nonblank for unavailable, unknown or marked partial",
 }
 
 
@@ -196,7 +203,19 @@ def begin_mapped(mapped_frame, out):
     return _publish(out, data, request, binding, MAPPED_SESSION_SCHEMA)
 
 
-def _validate_response(response, request):
+def _partial_reason_required(request):
+    """Read the exact saved request contract without upgrading historical acceptance."""
+    if request.get("prompt") == PROMPT and request.get("response_schema") == RESPONSE_FIELDS:
+        return True
+    if (
+        request.get("prompt") == LEGACY_PROMPT
+        and request.get("response_schema") == LEGACY_RESPONSE_FIELDS
+    ):
+        return False
+    raise ValueError("Unexpected observation prompt/response contract")
+
+
+def _validate_response(response, request, *, require_partial_reason=True):
     if not isinstance(response, dict) or response.keys() != RESPONSE_FIELDS.keys():
         raise ValueError("unexpected response fields")
     if (
@@ -224,6 +243,12 @@ def _validate_response(response, request):
         x, y = (_number(v, "mitt") for v in point)
         if not 0 <= x < request["width"] or not 0 <= y < request["height"]:
             raise ValueError("mitt outside image bounds")
+        if (
+            require_partial_reason
+            and response["visibility"] == "partial"
+            and not response["reason"].strip()
+        ):
+            raise ValueError("marked partial requires an explicit reason")
     elif response["mitt"] is not None or not response["reason"].strip():
         raise ValueError("unavailable/unknown requires null mitt and nonblank reason")
 
@@ -278,7 +303,7 @@ def finish(out, response_path):
     if elapsed < 0 or utc_elapsed < 0 or abs(elapsed - utc_elapsed) > 5_000_000_000:
         raise ValueError("clock mismatch: reboot/clock adjustment or invalid same-host session")
     response = json.loads(response_bytes)
-    _validate_response(response, request)
+    _validate_response(response, request, require_partial_reason=True)
     result = {
         "schema": "intent_visual_observation_result_v2"
         if mapped

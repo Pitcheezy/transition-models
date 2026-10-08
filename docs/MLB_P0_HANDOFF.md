@@ -1,5 +1,16 @@
 # MLB P0 — Codex / Claude 인계 기록
 
+## CV-28 신규 부분 가림 이유 검사 완료 — 2026-10-08
+
+선점 `c220ba3`, 완료는 같은 커밋. 신규 세션/Claude 어댑터/로컬 판독기/worker는
+marked+partial의 빈 문자열·공백 사유를 거부한다. full 빈 사유와 기권 규칙은 유지한다.
+저장 보고서는 결속된 요청의 정확한 prompt/response_schema 쌍으로 당시 규칙을 선택하며
+옛 쌍만 기존 빈 partial 사유를 허용한다. 혼합 쌍은 거부한다. 옛 응답을 새 규칙 통과로 취급하지 않는다.
+접근 가능139결과 중partial17/빈 이유5; 보고서16개 전체 값과 요청/결과278파일 불변.
+정본 관련9파일314passed(85.77초), Ruff161경로, 독립 호출경로 검토 통과.
+[설명](CV_PARTIAL_REASON_ACCEPTANCE_20261008.md) · [검사 기록](results/cv_independent_20261008/partial_reason_acceptance_v1.json).
+실제 모델 호출·재학습·시각 재판정·사람 응답 수정 없음. 다음은 H-10(선점 `5fc8e27`).
+
 ## H-9 경기와 보정 파일 결속 수정 — 2026-10-08
 
 선점 `c220ba3`, 완료는 같은 커밋. `build_records`에서 timing의 game_pk와 선택 경기,

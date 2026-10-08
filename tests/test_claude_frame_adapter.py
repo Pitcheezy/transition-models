@@ -39,7 +39,7 @@ def case(tmp_path, monkeypatch):
         "mitt": [9, 8],
         "visibility": "partial",
         "pose": "resting",
-        "reason": "",
+        "reason": "The mitt is partly hidden by the knee.",
     }
     state = SimpleNamespace(
         request=request,
@@ -179,6 +179,19 @@ def test_invalid_observation_rejected(case, field, value):
     with pytest.raises(ValueError):
         adapter.observe(*case.paths)
     assert not case.paths[2].exists()
+
+
+@pytest.mark.parametrize("structured", [False, True])
+@pytest.mark.parametrize("reason", ["", " \n\t "])
+def test_partial_reason_required_in_plain_and_structured_provider_output(case, structured, reason):
+    case.response["reason"] = reason
+    if structured:
+        case.events = structured_events(case.response)
+    with pytest.raises(ValueError, match="partial requires an explicit reason"):
+        adapter.observe(*case.paths, structured_output=structured)
+    assert not case.paths[2].exists()
+    metadata = json.loads((case.paths[2].parent / "provider_metadata.json").read_text())
+    assert metadata["status"] == "failed"
 
 
 @pytest.mark.parametrize(
