@@ -1,5 +1,7 @@
 # STATUS — Pitcheezy / transition-models
 
+> 2026-10-09 독립 결함 탐색(Claude): 조건 ①–④ 미충족 확인 후 H-12 좌표 보정 서술과 S 정규화기 경계를 구체 입력으로 탐색했고 재현 결함 없음. [탐색 기록](docs/results/cv_independent_20261009/defect_probe_v1.json). 코드·산출물 변경 없음.
+
 > 2026-10-09 H-12: 좌표 변환의 “보정 미적용” 고정 설명을 실제 적용값과 일치하도록 수정했다. 좌표·성능 수치와 기존 산출물은 그대로다. [정정 보고](docs/COORDINATE_EVIDENCE_CORRECTION_20261009.md).
 
 > **2026-10-08 최신 후속 (`517280f`)**: 실제 사람 응답 **1개·26장**을 수신·검사·보존했다. 아래 응답0은 수신 이전 기록이다. [수신 보고](docs/CV_FIRST_HUMAN_REVIEW_20261008.md). 미완성 초안 저장·복원과 팩 단독 실행 도우미를 추가하고 [새 사용 안내](docs/CV_HUMAN_REVIEW_START_HERE.md)를 정리했다. Windows 합성 화면 검증, reviewer31파일의 비공개 ZIP 압축 해제·단독 검사 완료. 구현 `517280f` 원격 CI37788681108 성공: Linux/macOS 각각 2028passed/8skipped/2deselected. 실제 Mac 사용자 검토와 구분한다. 모델 재학습·독립 정확도 측정·실제 새 S 응답 연결·공개 배포는 이 변경에 포함되지 않는다. [검증 기록](docs/results/cv_independent_20261008/review_draft_launcher_v1.json).

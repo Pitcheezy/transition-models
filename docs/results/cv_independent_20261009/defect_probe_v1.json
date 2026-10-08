@@ -1,0 +1,234 @@
+{
+  "schema": "independent_defect_probe_v1",
+  "date": "2026-10-09",
+  "head_commit": "0d2132c704366797d85e1035371449354c996a6f",
+  "purpose": "Path-5 search for a reproducible defect in our own execution paths after conditions 1-4 (new S original, new human response, new device, new video/labeler) were confirmed unmet. Recorded so the probes are not repeated.",
+  "inputs_checked_for_new_material": {
+    "downloads_newer_than_2026-10-08T18:00": 0,
+    "external_ssd_D_new_files": 0,
+    "outputs_cv_review_response_20261008_v1": "single 10/08 response only",
+    "teammate_public_branches_latest_commit": "2026-10-02 (no demo/ws-2026 change since 2026-09-30)",
+    "checklist_model_next": "no runnable item (exit 1)"
+  },
+  "h12_applied_correction_vs_matrix": {
+    "claim": "applied_depth_parallax_correction.{x_feet,z_feet} equals the hop-2 matrix translation (x at plate centre u=0.5, z at ground v=0)",
+    "tolerance": 1e-09,
+    "cases": [
+      {
+        "case": "game_747139_intent_plate_calibration_v0.json",
+        "tilt_sin": 0.10174485830780287,
+        "pan_tan": 0.0,
+        "applied_x_feet": -0.0,
+        "applied_z_feet": -0.2556890372302579,
+        "matrix_x_at_plate_centre": 0.0,
+        "matrix_z_at_ground": -0.2556890372302579,
+        "abs_diff_x": 0.0,
+        "abs_diff_z": 0.0
+      },
+      {
+        "case": "game_823407_intent_plate_calibration_v0.json",
+        "tilt_sin": 0.05775290935554448,
+        "pan_tan": 0.0,
+        "applied_x_feet": -0.0,
+        "applied_z_feet": -0.14462366361830706,
+        "matrix_x_at_plate_centre": 0.0,
+        "matrix_z_at_ground": -0.14462366361830706,
+        "abs_diff_x": 0.0,
+        "abs_diff_z": 0.0
+      },
+      {
+        "case": "game_849843_intent_plate_calibration_v0.json",
+        "tilt_sin": 0.07030547271871564,
+        "pan_tan": -0.07375377479856832,
+        "applied_x_feet": 0.1843844369964208,
+        "applied_z_feet": -0.17619968638794203,
+        "matrix_x_at_plate_centre": 0.18438443699642082,
+        "matrix_z_at_ground": -0.17619968638794203,
+        "abs_diff_x": 2.7755575615628914e-17,
+        "abs_diff_z": 0.0
+      },
+      {
+        "case": "game_849845_intent_plate_calibration_v0.json",
+        "tilt_sin": 0.09946727631506504,
+        "pan_tan": -0.012071128241845338,
+        "applied_x_feet": 0.030177820604613343,
+        "applied_z_feet": -0.2499075237308338,
+        "matrix_x_at_plate_centre": 0.03017782060461338,
+        "matrix_z_at_ground": -0.2499075237308338,
+        "abs_diff_x": 3.8163916471489756e-17,
+        "abs_diff_z": 0.0
+      },
+      {
+        "case": "game_849849_intent_plate_calibration_v0.json",
+        "tilt_sin": 0.10051874617108046,
+        "pan_tan": 0.011557189369363155,
+        "applied_x_feet": -0.028892973423407887,
+        "applied_z_feet": -0.25257612192256135,
+        "matrix_x_at_plate_centre": -0.02889297342340791,
+        "matrix_z_at_ground": -0.25257612192256135,
+        "abs_diff_x": 2.0816681711721685e-17,
+        "abs_diff_z": 0.0
+      },
+      {
+        "case": "no_calibration_uncorrected",
+        "tilt_sin": 0.0,
+        "pan_tan": 0.0,
+        "applied_x_feet": -0.0,
+        "applied_z_feet": -0.0,
+        "matrix_x_at_plate_centre": 0.0,
+        "matrix_z_at_ground": -0.0,
+        "abs_diff_x": 0.0,
+        "abs_diff_z": 0.0
+      },
+      {
+        "case": "synthetic_tilt_sin_0.0_pan_tan_0.0",
+        "tilt_sin": 0.0,
+        "pan_tan": 0.0,
+        "applied_x_feet": -0.0,
+        "applied_z_feet": -0.0,
+        "matrix_x_at_plate_centre": 0.0,
+        "matrix_z_at_ground": -0.0,
+        "abs_diff_x": 0.0,
+        "abs_diff_z": 0.0
+      },
+      {
+        "case": "synthetic_tilt_sin_0.1_pan_tan_0.0",
+        "tilt_sin": 0.1,
+        "pan_tan": 0.0,
+        "applied_x_feet": -0.0,
+        "applied_z_feet": -0.251259453814803,
+        "matrix_x_at_plate_centre": 0.0,
+        "matrix_z_at_ground": -0.251259453814803,
+        "abs_diff_x": 0.0,
+        "abs_diff_z": 0.0
+      },
+      {
+        "case": "synthetic_tilt_sin_0.0_pan_tan_0.1",
+        "tilt_sin": 0.0,
+        "pan_tan": 0.1,
+        "applied_x_feet": -0.25,
+        "applied_z_feet": -0.0,
+        "matrix_x_at_plate_centre": -0.25,
+        "matrix_z_at_ground": -0.0,
+        "abs_diff_x": 0.0,
+        "abs_diff_z": 0.0
+      },
+      {
+        "case": "synthetic_tilt_sin_0.3_pan_tan_-0.2",
+        "tilt_sin": 0.3,
+        "pan_tan": -0.2,
+        "applied_x_feet": 0.5,
+        "applied_z_feet": -0.7862136275414388,
+        "matrix_x_at_plate_centre": 0.5000000000000001,
+        "matrix_z_at_ground": -0.7862136275414388,
+        "abs_diff_x": 1.1102230246251565e-16,
+        "abs_diff_z": 0.0
+      },
+      {
+        "case": "synthetic_tilt_sin_0.5_pan_tan_0.3",
+        "tilt_sin": 0.5,
+        "pan_tan": 0.3,
+        "applied_x_feet": -0.75,
+        "applied_z_feet": -1.4433756729740645,
+        "matrix_x_at_plate_centre": -0.75,
+        "matrix_z_at_ground": -1.4433756729740645,
+        "abs_diff_x": 0.0,
+        "abs_diff_z": 0.0
+      }
+    ],
+    "all_consistent": true
+  },
+  "service_game_boundary_probes": {
+    "example_sha256": "8819919e2501041cb7266b8ebb77f758a7ee3464bb5d64afa9ec73680f15bdb2",
+    "cases": [
+      {
+        "case": "post_field_actual_inside_candidate",
+        "verdict": "rejected",
+        "error": "rec: post-pitch fields are forbidden in pre-pitch data"
+      },
+      {
+        "case": "post_field_catcher_setup_inside_candidate",
+        "verdict": "rejected",
+        "error": "rec: post-pitch fields are forbidden in pre-pitch data"
+      },
+      {
+        "case": "post_field_we_inside_candidate_detail",
+        "verdict": "rejected",
+        "error": "rec: post-pitch fields are forbidden in pre-pitch data"
+      },
+      {
+        "case": "post_field_catcher_setup_as_row_sibling",
+        "verdict": "accepted",
+        "unrevealed_view_actual_is_null": true,
+        "unrevealed_view_contains_catcher_setup_or_we": false
+      },
+      {
+        "case": "post_field_we_as_row_sibling",
+        "verdict": "accepted",
+        "unrevealed_view_actual_is_null": true,
+        "unrevealed_view_contains_catcher_setup_or_we": false
+      },
+      {
+        "case": "actual_x_nan",
+        "verdict": "rejected",
+        "error": "actual.x: expected a finite number in the supported range"
+      },
+      {
+        "case": "actual_x_bool",
+        "verdict": "rejected",
+        "error": "actual.x: expected a finite number in the supported range"
+      },
+      {
+        "case": "candidate_target_empty_object",
+        "verdict": "rejected",
+        "error": "rec.candidates.target.x: expected a finite number in the supported range"
+      },
+      {
+        "case": "selection_mass_1_plus_2e-6",
+        "verdict": "rejected",
+        "error": "rec: candidate selection probabilities sum above one"
+      },
+      {
+        "case": "probability_negative_zero",
+        "verdict": "accepted",
+        "unrevealed_view_actual_is_null": true,
+        "unrevealed_view_contains_catcher_setup_or_we": false
+      },
+      {
+        "case": "candidate_rank_zero",
+        "verdict": "rejected",
+        "error": "rec.candidates.rank: expected an integer in [1, 30]"
+      },
+      {
+        "case": "pitch_type_whitespace_only",
+        "verdict": "rejected",
+        "error": "rec.candidates.pitch_type: expected nonempty bounded text"
+      },
+      {
+        "case": "key_zero_padded_at_bat",
+        "verdict": "rejected",
+        "error": "pitch: key/pa_key disagree with game, plate appearance or pitch number"
+      },
+      {
+        "case": "situation_before_missing",
+        "verdict": "rejected",
+        "error": "situation_before: expected an object"
+      },
+      {
+        "case": "feed_stale_s_negative",
+        "verdict": "rejected",
+        "error": "feed.stale_s: expected a finite number in the supported range"
+      },
+      {
+        "case": "actual_present_on_missing_rec_pitch",
+        "verdict": "accepted",
+        "unrevealed_view_actual_is_null": true,
+        "unrevealed_view_contains_catcher_setup_or_we": false
+      }
+    ],
+    "post_pitch_data_leaked_into_unrevealed_view": false,
+    "note": "row-level sibling keys outside pre containers are dropped by design (docs/SERVICE_GAME_V2_INTEGRATION.md l.129; test_future_game_sections_and_unknown_fields_are_never_copied_into_pre_view)"
+  },
+  "defect_found": false,
+  "scope": "software behaviour of two local code paths on synthetic/committed inputs; not model accuracy, not physical accuracy, not a real S response, not a new human review"
+}
