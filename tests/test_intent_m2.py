@@ -18,7 +18,7 @@ from intent.plate_feet import (  # noqa: E402
     zone_to_feet_matrix,
     zone_to_plate_feet,
 )
-from intent.run import build_records  # noqa: E402
+from intent.run import ROOT, build_records  # noqa: E402
 from intent.run import main as run_main
 from intent.schema import IntentEstimateError, make_estimate, validate_intent_estimate  # noqa: E402
 
@@ -401,3 +401,103 @@ def test_hop2_pan_term_shifts_x_by_depth_times_pan_and_leaves_z_alone():
     assert x1 - x0 == pytest.approx(2.5 * 0.06)
     assert z1 == pytest.approx(z0)
     assert zone_to_feet_matrix(0.1, 2.5, 0.0) == base
+
+
+def _assert_depth_correction_evidence(calibration):
+    step = feet_transform_step(40.0, {}, calibration)
+    evidence = step["evidence"]
+    matrix = evidence["matrix"]
+    correction = evidence["applied_depth_parallax_correction"]
+    # These are the signed translations actually present in the matrix, excluding
+    # the plate-centre origin shift and the independent vertical scale correction.
+    assert correction["x_feet"] == pytest.approx(matrix[0][2] - PLATE_WIDTH_FEET / 2)
+    assert correction["z_feet"] == pytest.approx(matrix[1][2])
+    assert correction["x_formula"] == "-nominal_mitt_depth_feet * camera_pan_tan"
+    assert correction["z_formula"] == (
+        "-nominal_mitt_depth_feet * camera_tilt_sin / sqrt(1 - camera_tilt_sin**2)"
+    )
+    assert "not a measured accuracy" in correction["scope"]
+    residual = evidence["uncorrected_terms"]
+    assert "depth_parallax_x_feet" not in residual
+    assert residual["depth_error_definition"] == "actual mitt depth minus nominal mitt depth (feet)"
+    assert residual["coordinate_error_definition"] == "estimated coordinate minus true coordinate"
+    # Generate the image-zone point for a mitt deeper than the nominal assumption.
+    # Applying the nominal matrix must leave exactly the stated signed residual.
+    tilt = evidence["camera_tilt_sin"]
+    cos_t = np.sqrt(1 - tilt**2)
+    pan = evidence["camera_pan_tan"]
+    extra_depth = 0.75
+    actual_depth = evidence["nominal_mitt_depth_feet"] + extra_depth
+    true_x, true_z = 0.2, 2.0
+    uv = (
+        0.5 - (true_x + actual_depth * pan) / PLATE_WIDTH_FEET,
+        (true_z + actual_depth * tilt / cos_t) * cos_t / PLATE_WIDTH_FEET,
+    )
+    estimated_x, estimated_z = zone_to_plate_feet(uv, matrix)
+    assert estimated_x - true_x == pytest.approx(
+        extra_depth * residual["depth_parallax_x_feet_per_foot_of_depth_error"]
+    )
+    assert estimated_z - true_z == pytest.approx(
+        extra_depth * residual["depth_parallax_z_feet_per_foot_of_depth_error"]
+    )
+    assert step["method"] == "plate_front_edge_affine_with_depth_parallax"
+    assert step["version"] == "v0"
+    return step
+
+
+@pytest.mark.parametrize(
+    ("pan", "tilt", "depth"),
+    [(0.06, 0.15, 2.5), (-0.06, 0.15, 2.5), (0.0, 0.15, 2.5), (0.06, 0.15, 0.0), (0.06, 0.0, 2.5)],
+)
+def test_depth_evidence_reports_applied_translation_and_signed_residual(pan, tilt, depth):
+    calibration = {
+        "hop2": {
+            "matrix": [list(row) for row in zone_to_feet_matrix(tilt, depth, pan)],
+            "tilt_sin": tilt,
+            "pan_tan": pan,
+            "mitt_depth_feet": depth,
+        },
+        "rms_error_feet": 0.0,
+    }
+    original = json.dumps(calibration, sort_keys=True)
+    step = _assert_depth_correction_evidence(calibration)
+    assert step["evidence"]["matrix"] == calibration["hop2"]["matrix"]
+    assert step["error_status"] == "measured" and step["error"] == 0.0
+    assert json.dumps(calibration, sort_keys=True) == original
+
+
+def test_depth_evidence_without_calibration_has_zero_offsets_and_unmeasured_error():
+    step = _assert_depth_correction_evidence(None)
+    evidence = step["evidence"]
+    assert evidence["applied_depth_parallax_correction"]["x_feet"] == 0.0
+    assert evidence["applied_depth_parallax_correction"]["z_feet"] == 0.0
+    assert evidence["matrix"] == [list(row) for row in UNCORRECTED_MATRIX]
+    assert evidence["parameters_source"] == "no calibration file: uncorrected (tilt 0, depth 0)"
+    assert evidence["calibration"] is None
+    assert step["error_status"] == "unmeasured" and step["error"] is None
+
+
+@pytest.mark.parametrize("game", [747139, 823407, 849843, 849845, 849849])
+def test_depth_evidence_matches_five_saved_calibrations_and_preserves_contract(tmp_path, game):
+    calibration_path = (
+        ROOT / "docs/results/mlb_p0" / f"game_{game}_intent_plate_calibration_v0.json"
+    )
+    calibration = load_calibration(calibration_path)
+    assert calibration is not None
+    step = _assert_depth_correction_evidence(calibration)
+    assert step["evidence"]["matrix"] == calibration["hop2"]["matrix"]
+    timing, points = _timing_and_points(tmp_path)
+    timing["game_pk"] = points["game_pk"] = game
+    records, _ = build_records(game, timing, points, calibration=calibration)
+    for record in records:
+        validate_intent_estimate(record)
+    assert (
+        records[0]["transform_chain"][1]["evidence"]
+        == feet_transform_step(
+            54.0 / PLATE_WIDTH_FEET,
+            {"tilt_sin_estimate": 2 * 4.0 / 54.0},
+            calibration,
+        )["evidence"]
+    )
+    assert records[0]["claims"]["accuracy_estimate"] is None
+    assert records[0]["claims"]["catcher_intent_verified"] is False

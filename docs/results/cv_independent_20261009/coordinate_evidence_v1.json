@@ -1,0 +1,257 @@
+{
+  "schema": "coordinate_evidence_correction_verification_v1",
+  "base_commit": "178111f17f6ccf8be85c5c19d773d50f1a9f05d3",
+  "source_digests": {
+    "base_plate_feet_sha256": "2da24b4a0866c65ed38819c976cb9902096837f1681ec1445c573a5a0de89eda",
+    "candidate_plate_feet_sha256": "d4ac17422ce9de794e05226fc7fb7e2933189f6f2d445e4162689c6506b5761e",
+    "base_run_sha256": "2f9a5d2c9c416323914627a75b8d31c7b623a9ffc6fefa830576d7b6162a01e8",
+    "frozen_baseline_sha256": "ec22fee0198c12ff2b82d21593d66d09dea9f9339cbf60b514e085e2c7dd95a1"
+  },
+  "games": 5,
+  "cases": [
+    {
+      "game_pk": 747139,
+      "calibration_mode": "calibrated",
+      "records": 297,
+      "counters": {
+        "lines": 297,
+        "estimated": 233,
+        "unavailable": 64,
+        "zone": 153,
+        "plate_feet": 153,
+        "missing_annotation": 0
+      },
+      "hop2_metadata_changed_records": 153,
+      "numeric_points_equal": true,
+      "schema_status_counters_equal": true
+    },
+    {
+      "game_pk": 747139,
+      "calibration_mode": "none",
+      "records": 297,
+      "counters": {
+        "lines": 297,
+        "estimated": 233,
+        "unavailable": 64,
+        "zone": 153,
+        "plate_feet": 153,
+        "missing_annotation": 0
+      },
+      "hop2_metadata_changed_records": 153,
+      "numeric_points_equal": true,
+      "schema_status_counters_equal": true
+    },
+    {
+      "game_pk": 823407,
+      "calibration_mode": "calibrated",
+      "records": 29,
+      "counters": {
+        "lines": 29,
+        "estimated": 15,
+        "unavailable": 14,
+        "zone": 15,
+        "plate_feet": 15,
+        "missing_annotation": 0
+      },
+      "hop2_metadata_changed_records": 15,
+      "numeric_points_equal": true,
+      "schema_status_counters_equal": true
+    },
+    {
+      "game_pk": 823407,
+      "calibration_mode": "none",
+      "records": 29,
+      "counters": {
+        "lines": 29,
+        "estimated": 15,
+        "unavailable": 14,
+        "zone": 15,
+        "plate_feet": 15,
+        "missing_annotation": 0
+      },
+      "hop2_metadata_changed_records": 15,
+      "numeric_points_equal": true,
+      "schema_status_counters_equal": true
+    },
+    {
+      "game_pk": 849843,
+      "calibration_mode": "calibrated",
+      "records": 39,
+      "counters": {
+        "lines": 39,
+        "estimated": 27,
+        "unavailable": 12,
+        "zone": 27,
+        "plate_feet": 27,
+        "missing_annotation": 0
+      },
+      "hop2_metadata_changed_records": 27,
+      "numeric_points_equal": true,
+      "schema_status_counters_equal": true
+    },
+    {
+      "game_pk": 849843,
+      "calibration_mode": "none",
+      "records": 39,
+      "counters": {
+        "lines": 39,
+        "estimated": 27,
+        "unavailable": 12,
+        "zone": 27,
+        "plate_feet": 27,
+        "missing_annotation": 0
+      },
+      "hop2_metadata_changed_records": 27,
+      "numeric_points_equal": true,
+      "schema_status_counters_equal": true
+    },
+    {
+      "game_pk": 849845,
+      "calibration_mode": "calibrated",
+      "records": 57,
+      "counters": {
+        "lines": 57,
+        "estimated": 43,
+        "unavailable": 14,
+        "zone": 43,
+        "plate_feet": 43,
+        "missing_annotation": 0
+      },
+      "hop2_metadata_changed_records": 43,
+      "numeric_points_equal": true,
+      "schema_status_counters_equal": true
+    },
+    {
+      "game_pk": 849845,
+      "calibration_mode": "none",
+      "records": 57,
+      "counters": {
+        "lines": 57,
+        "estimated": 43,
+        "unavailable": 14,
+        "zone": 43,
+        "plate_feet": 43,
+        "missing_annotation": 0
+      },
+      "hop2_metadata_changed_records": 43,
+      "numeric_points_equal": true,
+      "schema_status_counters_equal": true
+    },
+    {
+      "game_pk": 849849,
+      "calibration_mode": "calibrated",
+      "records": 53,
+      "counters": {
+        "lines": 53,
+        "estimated": 43,
+        "unavailable": 10,
+        "zone": 43,
+        "plate_feet": 43,
+        "missing_annotation": 0
+      },
+      "hop2_metadata_changed_records": 43,
+      "numeric_points_equal": true,
+      "schema_status_counters_equal": true
+    },
+    {
+      "game_pk": 849849,
+      "calibration_mode": "none",
+      "records": 53,
+      "counters": {
+        "lines": 53,
+        "estimated": 43,
+        "unavailable": 10,
+        "zone": 43,
+        "plate_feet": 43,
+        "missing_annotation": 0
+      },
+      "hop2_metadata_changed_records": 43,
+      "numeric_points_equal": true,
+      "schema_status_counters_equal": true
+    }
+  ],
+  "records_compared": 950,
+  "schema_validations": 1900,
+  "hop2_metadata_changed_records": 562,
+  "unchanged_records": 388,
+  "numeric_points_schema_status_counters_identical": true,
+  "existing_matrix_calibration_and_z_sensitivity_identical": true,
+  "all_differences_limited_to_hop2_evidence": true,
+  "exact_leaf_diff_paths": [
+    {
+      "kind": "added",
+      "path": "$.transform_chain[1].evidence.applied_depth_parallax_correction.scope",
+      "record_count": 562
+    },
+    {
+      "kind": "added",
+      "path": "$.transform_chain[1].evidence.applied_depth_parallax_correction.x_feet",
+      "record_count": 562
+    },
+    {
+      "kind": "added",
+      "path": "$.transform_chain[1].evidence.applied_depth_parallax_correction.x_formula",
+      "record_count": 562
+    },
+    {
+      "kind": "added",
+      "path": "$.transform_chain[1].evidence.applied_depth_parallax_correction.z_feet",
+      "record_count": 562
+    },
+    {
+      "kind": "added",
+      "path": "$.transform_chain[1].evidence.applied_depth_parallax_correction.z_formula",
+      "record_count": 562
+    },
+    {
+      "kind": "added",
+      "path": "$.transform_chain[1].evidence.uncorrected_terms.coordinate_error_definition",
+      "record_count": 562
+    },
+    {
+      "kind": "added",
+      "path": "$.transform_chain[1].evidence.uncorrected_terms.depth_error_definition",
+      "record_count": 562
+    },
+    {
+      "kind": "added",
+      "path": "$.transform_chain[1].evidence.uncorrected_terms.depth_parallax_x_feet_per_foot_of_depth_error",
+      "record_count": 562
+    },
+    {
+      "kind": "removed",
+      "path": "$.transform_chain[1].evidence.uncorrected_terms.depth_parallax_x_feet",
+      "record_count": 562
+    }
+  ],
+  "frozen_files_checked_before_and_after": 26,
+  "frozen_sha256_unchanged": true,
+  "scope": "Saved-input in-memory compatibility only. No records, historical JSONL, labels or M3 rewritten. No new visual judgment, inference, training or physical-accuracy claim. Source image bytes are not re-decoded or re-verified by this check.",
+  "date": "2026-10-09",
+  "claim_commit": "1d787e3",
+  "source_commit": "same commit as initial completion receipt; resolve via git history",
+  "checks": {
+    "new_regressions_before": {
+      "failed": 11
+    },
+    "staged_m2_after": {
+      "passed": 36,
+      "seconds": 0.59
+    },
+    "canonical_related": {
+      "passed": 141,
+      "seconds": 4.26
+    },
+    "ruff_paths": 163,
+    "independent_review": "no blocking finding; signs, units and schema reviewed",
+    "full_cpu_ci": "pending"
+  },
+  "issue": "A fixed not-applied x parallax description contradicted the already applied pan/depth matrix for three saved games.",
+  "applied_x_offset_feet": {
+    "747139": -0.0,
+    "823407": -0.0,
+    "849843": 0.1843844369964208,
+    "849845": 0.030177820604613343,
+    "849849": -0.028892973423407887
+  }
+}

@@ -5,7 +5,7 @@ along the plate's 17-inch front edge (0 = front-left end, 1 = front-right end) a
 height above that ground line in plate widths. Hop 2 is a constant affine matrix for the
 camera:
 
-    plate_x_ft = -(17/12) * (u - 0.5)
+    plate_x_ft = -(17/12) * (u - 0.5) - d0 * tan(pan)
     plate_z_ft =  (17/12) * v / cos(tilt) - d0 * tan(tilt)
 
 - x: Statcast plate_x from the catcher's view, positive toward first base. The centre-field
@@ -112,6 +112,9 @@ def feet_transform_step(frame_px_per_foot, diagnostics, calibration):
     params = hop2_parameters(calibration)
     measured = calibration is not None and calibration.get("rms_error_feet") is not None
     tilt_sin = params["tilt_sin"]
+    tilt_tan = tilt_sin / math.sqrt(1.0 - tilt_sin * tilt_sin)
+    depth = params["mitt_depth_feet"]
+    pan_tan = params["pan_tan"]
     evidence = {
         "matrix": [list(row) for row in params["matrix"]],
         "x_convention": X_CONVENTION,
@@ -125,10 +128,19 @@ def feet_transform_step(frame_px_per_foot, diagnostics, calibration):
         "target_quantity": "the mitt's own position at its depth behind the plate front "
         "(depth parallax removed for the nominal depth); not the plate-front crossing point "
         "of a pitch into the mitt, and never netted against the ball's drop",
+        "applied_depth_parallax_correction": {
+            "x_feet": -depth * pan_tan,
+            "z_feet": -depth * tilt_tan,
+            "x_formula": "-nominal_mitt_depth_feet * camera_pan_tan",
+            "z_formula": "-nominal_mitt_depth_feet * camera_tilt_sin / sqrt(1 - camera_tilt_sin**2)",
+            "scope": "signed offsets applied at the nominal depth; not a measured accuracy "
+            "or a validation of the assumed camera/depth parameters",
+        },
         "uncorrected_terms": {
+            "depth_error_definition": "actual mitt depth minus nominal mitt depth (feet)",
+            "coordinate_error_definition": "estimated coordinate minus true coordinate",
             "depth_parallax_z_feet_per_foot_of_depth_error": math.tan(math.asin(tilt_sin)),
-            "depth_parallax_x_feet": "d*tan(pan); pan ~0.3 deg from 165 plate quads -> ~0.01 ft "
-            "at 2.5 ft, not applied",
+            "depth_parallax_x_feet_per_foot_of_depth_error": pan_tan,
             "tilt_sin_estimate_this_frame_from_plate_quad": diagnostics.get("tilt_sin_estimate"),
         },
         "calibration": None
