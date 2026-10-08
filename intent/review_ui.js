@@ -22,8 +22,8 @@
     if (typeof response.reviewer_id !== "string" || !Array.isArray(response.rows)
       || !Array.isArray(manifest.frames) || response.rows.length !== manifest.frames.length)
       fail("검토자 ID 또는 행 수가 잘못되었습니다.");
-    const frames = new Map();
-    for (const frame of manifest.frames) {
+    const frames = new Map(), frameNumbers = new Map();
+    for (const [index, frame] of manifest.frames.entries()) {
       if (typeof frame.observation_id !== "string" || frames.has(frame.observation_id)
         || !Number.isInteger(frame.width) || frame.width <= 0
         || !Number.isInteger(frame.height) || frame.height <= 0
@@ -31,6 +31,7 @@
         || !/^images\/[A-Za-z0-9_-]+\.(jpg|jpeg|png)$/.test(frame.path))
         fail("프레임 식별자, 이미지 경로 또는 크기가 잘못되었습니다.");
       frames.set(frame.observation_id, frame);
+      frameNumbers.set(frame.observation_id, index + 1);
     }
     const seen = new Set();
     for (const row of response.rows) {
@@ -40,16 +41,19 @@
       if (!frame || seen.has(row.observation_id) || row.image_sha256 !== frame.image_sha256)
         fail("관측 ID 중복/누락 또는 이미지 SHA256 불일치입니다.");
       seen.add(row.observation_id);
+      const label = `프레임 ${frameNumbers.get(row.observation_id)} (${row.observation_id})`;
       if (!statuses.includes(row.status) || !visibilities.includes(row.visibility)
         || !poses.includes(row.pose) || typeof row.reason !== "string") fail("잘못된 판정 값입니다.");
       if (row.status === "marked") {
         if (!Array.isArray(row.mitt) || row.mitt.length !== 2 || !row.mitt.every(finite)
           || row.mitt[0] < 0 || row.mitt[0] >= frame.width || row.mitt[1] < 0
           || row.mitt[1] >= frame.height || !["full", "partial"].includes(row.visibility))
-          fail(`${row.observation_id}: marked에는 이미지 안의 점과 full/partial 가시성이 필요합니다.`);
+          fail(`${label}: marked에는 이미지 안의 점과 full/partial 가시성이 필요합니다.`);
+        if (row.visibility === "partial" && !row.reason.trim())
+          fail(`${label}: 부분 가림(partial)을 표시한 이유를 입력하세요.`);
       } else if (row.mitt !== null) fail("marked 이외 상태는 mitt가 null이어야 합니다.");
       if (["unavailable", "unknown"].includes(row.status) && !row.reason.trim())
-        fail(`${row.observation_id}: 판정 이유가 필요합니다.`);
+        fail(`${label}: 판정 이유가 필요합니다.`);
     }
     if ((exporting || response.rows.some(row => row.status !== "unreviewed"))
       && !response.reviewer_id.trim()) fail("검토자 ID를 입력하세요.");

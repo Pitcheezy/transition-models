@@ -78,7 +78,7 @@ def _node(source):
 
 def test_inert_json_and_escaped_instructions():
     manifest, response = _fixture()
-    response["reviewer_id"] = '</script><script src="attack.js">'
+    response["reviewer_id"] = '__COUNT__</script><script src="attack.js">'
     page = reviewer_ui.render_review_page(manifest, response, "<img onerror=attack> & resting")
     assert '<script src="attack.js">' not in page
     assert "\\u003c/script>" in page
@@ -131,7 +131,8 @@ assert.deepEqual(response, original);
 def test_marked_bounds_types_visibility_and_reason():
     _node("""
 response.reviewer_id = 'person';
-const marked = {...response.rows[0], status:'marked', mitt:[1279.9,719.9], visibility:'partial'};
+const marked = {...response.rows[0], status:'marked', mitt:[1279.9,719.9],
+  visibility:'partial', reason:'synthetic occlusion'};
 response.rows[0] = marked;
 ui.validateResponse(manifest, hash, response);
 for (const point of [[1280,2],[-1,2],[3,720],[NaN,2],[true,2],[Infinity,2],[2]]) {
@@ -141,10 +142,51 @@ for (const point of [[1280,2],[-1,2],[3,720],[NaN,2],[true,2],[Infinity,2],[2]])
 response.rows[0].visibility='unknown';
 assert.throws(() => ui.validateResponse(manifest, hash, response));
 response.rows[0] = ui.setStatus(marked, 'unavailable');
+response.rows[0].reason='';
 assert.throws(() => ui.validateResponse(manifest, hash, response));
 response.rows[0].reason='occluded'; ui.validateResponse(manifest, hash, response);
 response.rows[0].status='unknown'; ui.validateResponse(manifest, hash, response);
 response.reviewer_id=' '; assert.throws(() => ui.validateResponse(manifest, hash, response));
+""")
+
+
+@pytest.mark.parametrize("reason", ["", " \t\n "])
+def test_partial_requires_nonblank_reason_on_import_and_export(reason):
+    _node(f"""
+response.reviewer_id='person';
+Object.assign(response.rows[1], {{status:'marked',mitt:[100,200],visibility:'partial',
+  pose:'resting',reason:{json.dumps(reason)}}});
+response.rows.reverse();
+const original=copy(response);
+const message=/프레임 2 \\(review_2\\).*partial/;
+assert.throws(() => ui.exportResponse(response,manifest,hash),message);
+assert.throws(() => ui.parseResponse(JSON.stringify(response),manifest,hash),message);
+assert.deepEqual(response,original);
+""")
+
+
+def test_full_resting_blank_reason_and_partial_with_reason_are_allowed():
+    _node("""
+response.reviewer_id='person';
+Object.assign(response.rows[0],{status:'marked',mitt:[100,200],visibility:'full',
+  pose:'resting',reason:''});
+Object.assign(response.rows[1],{status:'marked',mitt:[300,400],visibility:'partial',
+  pose:'resting',reason:'synthetic visible body partly occluded'});
+const saved=JSON.parse(ui.exportResponse(response,manifest,hash));
+assert.equal(saved.rows[0].reason,'');
+assert.equal(saved.rows[0].pose,'resting');
+assert.equal(saved.rows[1].visibility,'partial');
+assert.deepEqual(saved.rows[1].mitt,[300,400]);
+""")
+
+
+def test_invalid_marked_visibility_names_manifest_frame_after_response_reorder():
+    _node("""
+response.reviewer_id='person';
+Object.assign(response.rows[1],{status:'marked',mitt:[100,200],visibility:'unknown'});
+response.rows.reverse();
+assert.throws(() => ui.exportResponse(response,manifest,hash),
+  /프레임 2 \\(review_2\\).*full.*partial/);
 """)
 
 

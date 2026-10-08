@@ -187,6 +187,41 @@ def test_actual_external_mark_and_unknown_are_counted_without_mutation(source):
     assert path.read_bytes() == before
 
 
+@pytest.mark.parametrize("reason", ["", " \t\n "])
+def test_partial_requires_nonblank_reason(source, reason):
+    create(source)
+
+    def update(response):
+        response["reviewer_id"] = "synthetic-person"
+        response["rows"][0].update(
+            status="marked", mitt=[10, 6], visibility="partial", pose="resting", reason=reason
+        )
+
+    path = response_file(source, update)
+    before = path.read_bytes()
+    with pytest.raises(ValueError, match="marked partial requires an explicit reason"):
+        check_response(source[2], path)
+    assert path.read_bytes() == before
+
+
+@pytest.mark.parametrize(
+    "visibility,reason", [("full", ""), ("partial", "synthetic glove edge partly occluded")]
+)
+def test_full_blank_reason_and_partial_reason_preserve_resting(source, visibility, reason):
+    create(source)
+
+    def update(response):
+        response["reviewer_id"] = "synthetic-person"
+        response["rows"][0].update(
+            status="marked", mitt=[10, 6], visibility=visibility, pose="resting", reason=reason
+        )
+
+    path = response_file(source, update)
+    before = path.read_bytes()
+    assert check_response(source[2], path) == {"completed": 1, "unreviewed": 1, "unknown": 0}
+    assert path.read_bytes() == before
+
+
 @pytest.mark.parametrize(
     "change",
     [

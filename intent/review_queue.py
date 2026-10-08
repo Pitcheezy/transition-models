@@ -33,7 +33,8 @@ INSTRUCTIONS = (
     "독립 평가가 아닙니다. response_template.json을 별도 이름으로 저장해 실제 사람이 "
     "reviewer_id와 각 행을 작성합니다. 표시된 이미지는 원본 사본이며 화면에서는 축소될 수 있습니다."
     " visibility는 full/partial/hidden/unknown, pose는 presented_target/resting/moving/unknown "
-    "중 하나입니다. 아직 보지 않은 행은 unreviewed로 그대로 둡니다."
+    "중 하나입니다. marked + partial에는 부분 가림을 표시한 이유를 reason에 적습니다. "
+    "아직 보지 않은 행은 unreviewed로 그대로 둡니다."
 )
 
 
@@ -302,6 +303,8 @@ def check_response(package, response_path):
             x, y = (_number(v, "mitt") for v in mitt)
             if not 0 <= x < frame["width"] or not 0 <= y < frame["height"]:
                 raise ValueError("mitt outside image bounds")
+            if row["visibility"] == "partial" and not row["reason"].strip():
+                raise ValueError("marked partial requires an explicit reason")
         elif row["mitt"] is not None:
             raise ValueError("unreviewed/unavailable/unknown must have null mitt")
         if status in {"unavailable", "unknown"} and not row["reason"].strip():
