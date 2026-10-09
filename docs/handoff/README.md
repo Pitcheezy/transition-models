@@ -1,5 +1,15 @@
 # 우리 프로토타입 최소 이관 묶음 — H-port5
 
+## 2026-10-09 I-service2 이후 범위 안내
+
+이 문서의 **기존 H-port5 ZIP(54파일, 소스 `47ddc8f`)은 고정된 과거 전달물**이다.
+이후 완료한 I-service2의 `teammate_export_20261009_v1` 프로필, 비공개 `web/service-review` 화면,
+검토 팩 생성기는 그 ZIP에 포함되어 있지 않다. 기존 ZIP·manifest·전달 영수증은 수정하지 않았다.
+새 수신 코드와 실행법은 현재 저장소의 [통합 안내](../SERVICE_GAME_V2_INTEGRATION.md)·
+[수신 기록](../SERVICE_GAME_V2_RECEIVED_20261009.md)을 따른다. 실제 원문·정규화 데이터는 비공개다.
+아래의 S 원문 미수신·잠정 규약·연결 대기 서술은 해당 ZIP 기준 설명이며 현재 수신 상태가 아니다.
+I-run1/I-release1·실제 Mac 실행은 이 문서 갱신으로 완료되지 않는다.
+
 갱신일: 2026-10-09. `Pitcheezy/transition-models`, `feature/intent-v0`의 내부 팀 검토용 소스49개와 보정 회귀 자료5개(총54파일) 부분집합이다.
 정확한 기준 커밋은 함께 받은 `bundle_manifest.json`의 `source_commit`이다.
 파일 목록은 `docs/handoff/source_files_v1.json`, 별도 자료 목록은 `external_artifacts_v1.json`이다.

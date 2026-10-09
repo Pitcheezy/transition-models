@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'">
+  <title>Pitcheezy · 경기 검토</title>
+  <link rel="stylesheet" href="./style.css">
+  <script src="./review.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="./index.html" aria-label="Pitcheezy 검토 처음으로"><span class="brand-mark">P</span> PITCHEEZY <span class="brand-sub">RESEARCH</span></a>
+    <span class="private-badge"><span class="status-dot"></span> 로컬 · 비공개 검토</span>
+  </header>
+  <main>
+    <section class="intro">
+      <div><p class="eyebrow">PITCH BY PITCH / SERVICE SNAPSHOT</p><h1>한 구씩, 근거를 확인합니다.</h1><p class="subtle">투구 전 추천을 먼저 살펴보고, 실제 투구를 공개해 비교하세요.</p></div>
+      <label class="file-button">보고서 열기<input id="report-file" type="file" accept=".json,application/json" aria-label="정규화된 로컬 JSON 보고서 열기"></label>
+    </section>
+    <p id="load-status" class="load-status" role="status" aria-live="polite">로컬 보고서를 불러오는 중입니다.</p>
+    <section id="empty-state" class="empty-state" hidden><p class="eyebrow">LOCAL REPORT</p><h2>검토할 보고서를 열어주세요.</h2><p>정규화된 JSON 파일만 지원합니다. 최대 5 MiB이며 선택한 파일은 브라우저 안에서 읽습니다.</p><p class="subtle">기본 파일: review-data.json · 원본 서비스 응답은 먼저 정규화해야 합니다.</p></section>
+    <div id="report-content" hidden>
+      <section class="game-header"><div><p id="game-meta" class="eyebrow"></p><h2 id="game-title"></h2></div><div id="source-badges" class="badges"></div></section>
+      <section class="navigation" aria-label="타석과 투구 선택"><label for="pa-select">타석 선택</label><select id="pa-select"></select><div id="pitch-buttons" class="pitch-buttons" aria-label="투구 선택"></div></section>
+      <section class="situation" aria-label="투구 전 상황"><div><p class="eyebrow">BEFORE THE PITCH</p><h2 id="pitch-heading"></h2></div><div class="score"><span id="away-score"></span><span class="score-divider">:</span><span id="home-score"></span><small>투구 전 점수</small></div><div id="count" class="count"></div><div id="base-state" class="base-state"></div></section>
+      <div class="review-grid">
+        <section class="panel recommendations"><div class="panel-title"><div><p class="eyebrow">01 / RECOMMENDATION</p><h2>추천 구종과 위치</h2></div><span class="experiment">실험</span></div><p class="notice">검증 전 실험 추천 · 사건확률 아님</p><div id="people" class="people"></div><p id="recommendation-context" class="subtle"></p><div id="candidate-list" class="candidate-list"></div><p class="footnote">구종 선택 비중은 원자료 그대로 표시합니다. 표시된 후보끼리 합이 100%가 되도록 재조정하지 않습니다. 위치는 과거 투구 분포의 대푯값이며, 검증된 최적 목표가 아닙니다.</p></section>
+        <section class="panel location"><div class="panel-title"><div><p class="eyebrow">02 / LOCATION</p><h2>위치 비교</h2></div><span class="unit">ft</span></div><div id="plot" class="plot"></div><div id="plot-legend" class="plot-legend"></div><p id="plot-clipping" class="footnote"></p><p class="footnote">포수 시점 · 오른쪽 + · 서비스 구역 기준(실물 폭 검증 아님). 구역 반폭은 0.83 ft, 높이는 보고서의 zone_bounds를 사용합니다.</p><div id="setup-rail" class="setup-rail"></div></section>
+      </div>
+      <section class="panel actual-panel"><div class="reveal-heading"><div><p class="eyebrow">03 / OBSERVED PITCH</p><h2>실제 투구 확인</h2></div><button id="reveal-button" class="primary-button" type="button">실제 투구 공개</button></div><p id="reveal-hint" class="subtle">추천 검토를 마쳤다면 공개하세요. 타석·투구를 바꾸거나 파일을 열면 다시 가려집니다.</p><div id="actual-content"></div></section>
+      <details class="provenance"><summary>출처와 해석 범위</summary><dl id="source-detail"></dl><p>사후 아카이브 / as-of 재생은 실시간 투구 전 제공을 입증하지 않습니다. 추천 및 미트 추정의 가용 건수는 정확도가 아닙니다. 미트 위치는 투수 의도가 아닙니다.</p><p>보고서에는 사후 데이터가 포함되어 있습니다. 공개 버튼은 표시 순서를 제어하며 접근 권한을 보호하는 장치가 아닙니다.</p><ul id="report-warnings"></ul></details>
+    </div>
+    <footer>PITCHEEZY RESEARCH <span>개인 검토용 · 실시간 서비스 또는 정확도 검증 결과가 아닙니다.</span></footer>
+  </main>
+</body>
+</html>

@@ -14,7 +14,12 @@ sys.dont_write_bytecode = True
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from src.integration.service_game import ServiceGameError, normalize_service_game  # noqa: E402
+from src.integration.service_game import (  # noqa: E402
+    PROFILE,
+    PROFILES,
+    ServiceGameError,
+    normalize_service_game,
+)
 
 MAX_INPUT_BYTES = 5 * 1024 * 1024
 
@@ -115,6 +120,12 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--input", required=True, help="Local UTF-8 JSON file, at most 5 MiB.")
     parser.add_argument(
+        "--profile",
+        choices=PROFILES,
+        default=PROFILE,
+        help="Explicit contract profile; defaults to the legacy provisional STATUS interpretation.",
+    )
+    parser.add_argument(
         "--source-kind",
         required=True,
         choices=("synthetic", "provided_export"),
@@ -136,6 +147,7 @@ def main(argv: list[str] | None = None) -> int:
             input_kind=args.source_kind,
             source_sha256=digest,
             reported_revision=args.source_revision,
+            profile=args.profile,
         )
         summary = {
             "schema": report["schema"],

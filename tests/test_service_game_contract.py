@@ -7,6 +7,8 @@ from copy import deepcopy
 import pytest
 
 from src.integration.service_game import (
+    EXPORT_PROFILE,
+    PROFILE,
     ServiceGameError,
     build_pitch_view,
     normalize_service_game,
@@ -567,3 +569,230 @@ def test_empty_snapshot_remains_empty_without_fabricated_current_pitch(synthetic
     assert all(count == 0 for count in report["summary"].values())
     with pytest.raises(ServiceGameError):
         build_pitch_view(report, "999001:8:1")
+
+
+@pytest.fixture
+def synthetic_export(synthetic_snapshot):
+    """Model the supplied contract shape using invented, non-private values."""
+    synthetic_snapshot["game"]["date_kst"] = "2026-10-09"
+    synthetic_snapshot["cutoff"] = {"index": 19, "pitch_key": "999001:8:1"}
+    return synthetic_snapshot
+
+
+def _normalize_export(payload, **overrides):
+    return _normalize(payload, profile=EXPORT_PROFILE, **overrides)
+
+
+def test_export_requires_explicit_profile_and_preserves_legacy_interpretation(synthetic_export):
+    with pytest.raises(ServiceGameError, match="cutoff"):
+        _normalize(synthetic_export)
+    report = _normalize_export(synthetic_export, input_kind="provided_export")
+    assert report["profile"] == EXPORT_PROFILE
+    assert report["cutoff"] == synthetic_export["cutoff"]
+    assert report["cutoff_interpretation"] == "snapshot_release_boundary_not_training_cutoff"
+    assert report["index_scope"] == "supplied_snapshot_only_join_by_pitch_key"
+    assert report["game"]["kst_date"] == "2026-10-09"
+    assert all(value is False for value in report["claims"].values())
+    warnings = " ".join(report["warnings"])
+    for phrase in ("post-game", "unvalidated", "not authentication", "complete-game"):
+        assert phrase in warnings
+    rec = report["pitches"][0]["pre"]["recommendation"]
+    assert rec["event_probabilities"] is None
+    assert rec["known_selection_mass"] == pytest.approx(0.8)
+    assert rec["distribution_complete"] is None
+    synthetic_export["cutoff"] = 19
+    synthetic_export["pitches"][0]["actual"]["catcher_setup"] = {"old": "unknown"}
+    legacy = _normalize(synthetic_export)
+    assert legacy["profile"] == PROFILE
+    assert legacy["summary"]["uninterpreted_setup"] == 1
+    assert "cutoff_interpretation" not in legacy
+    assert "setup_status" not in legacy["pitches"][0]["post"]["actual"]
+
+
+@pytest.mark.parametrize("profile", ["unknown", "", None, True, []])
+def test_unknown_profiles_are_rejected_without_guessing(synthetic_snapshot, profile):
+    with pytest.raises(ServiceGameError, match="profile"):
+        _normalize(synthetic_snapshot, profile=profile)
+
+
+@pytest.mark.parametrize(
+    "cutoff",
+    [
+        19,
+        True,
+        {},
+        {"index": 19},
+        {"pitch_key": "999001:8:1"},
+        {"index": True, "pitch_key": "999001:8:1"},
+        {"index": -1, "pitch_key": "999001:8:1"},
+        {"index": 100001, "pitch_key": None},
+        {"index": 19.0, "pitch_key": "999001:8:1"},
+        {"index": 19, "pitch_key": "999002:8:1"},
+        {"index": 19, "pitch_key": "999001:08:1"},
+        {"index": 19, "pitch_key": "999001:8:2"},
+        {"index": 20, "pitch_key": "999001:8:1"},
+        {"index": 18, "pitch_key": None},
+    ],
+)
+def test_export_rejects_invalid_or_inconsistent_release_boundaries(synthetic_export, cutoff):
+    synthetic_export["cutoff"] = cutoff
+    with pytest.raises(ServiceGameError, match="cutoff"):
+        _normalize_export(synthetic_export)
+
+
+def test_export_cutoff_null_is_unknown_and_never_filled(synthetic_export):
+    synthetic_export["cutoff"] = None
+    report = _normalize_export(synthetic_export)
+    assert report["cutoff"] is None
+    assert report["cutoff_interpretation"] == "unknown"
+    assert report["summary"]["pitches"] == 1
+    assert report["claims"]["complete_game_verified"] is False
+
+
+def test_export_null_cutoff_key_preserves_only_declared_boundary(synthetic_export):
+    synthetic_export["cutoff"]["pitch_key"] = None
+    report = _normalize_export(synthetic_export)
+    assert report["cutoff"] == {"index": 19, "pitch_key": None}
+
+
+def test_export_cutoff_joins_by_key_not_array_position_or_previous_snapshot(synthetic_export):
+    synthetic_export["pitches"] = [_pitch(30, 10, 2), _pitch(23, 8, 4), _pitch(19, 8, 1)]
+    synthetic_export["cutoff"] = {"index": 30, "pitch_key": "999001:10:2"}
+    original = deepcopy(synthetic_export)
+    first = _normalize_export(synthetic_export)
+    assert synthetic_export == original
+    assert [p["index"] for p in first["pitches"]] == [19, 23, 30]
+    assert build_pitch_view(first, "999001:8:4")["index"] == 23
+    for pitch in synthetic_export["pitches"]:
+        pitch["index"] += 100
+    synthetic_export["cutoff"]["index"] += 100
+    second = _normalize_export(synthetic_export)
+    assert build_pitch_view(second, "999001:8:4")["index"] == 123
+    assert (
+        build_pitch_view(second, "999001:8:4")["pre"]
+        == build_pitch_view(first, "999001:8:4")["pre"]
+    )
+    synthetic_export["cutoff"] = {"index": 123, "pitch_key": "999001:8:4"}
+    with pytest.raises(ServiceGameError, match="beyond"):
+        _normalize_export(synthetic_export)
+
+
+def test_export_rejects_index_order_conflicting_with_pitch_identity(synthetic_export):
+    synthetic_export["pitches"] = [_pitch(20, 8, 1), _pitch(19, 8, 2)]
+    synthetic_export["cutoff"] = {"index": 20, "pitch_key": "999001:8:1"}
+    with pytest.raises(ServiceGameError, match="order"):
+        _normalize_export(synthetic_export)
+
+
+@pytest.mark.parametrize("invalid_date", ["2026-02-30", "2026-9-30", "20261009", True, 20261009])
+def test_export_calendar_date_is_checked_without_using_other_date_fields(
+    synthetic_export, invalid_date
+):
+    synthetic_export["game"]["date_kst"] = invalid_date
+    synthetic_export["game"]["kst_date"] = "2026-10-09"
+    with pytest.raises(ServiceGameError, match="date_kst"):
+        _normalize_export(synthetic_export)
+
+
+def test_export_missing_date_is_not_replaced_with_legacy_date(synthetic_export):
+    del synthetic_export["game"]["date_kst"]
+    synthetic_export["game"]["kst_date"] = "2026-10-09"
+    with pytest.raises(ServiceGameError, match="date_kst"):
+        _normalize_export(synthetic_export)
+    synthetic_export["game"]["date_kst"] = None
+    assert _normalize_export(synthetic_export)["game"]["kst_date"] is None
+
+
+@pytest.mark.parametrize(
+    ("setup", "status", "displayable", "summary_field"),
+    [
+        (None, None, False, "setup_not_supplied"),
+        (
+            {"status": "unavailable", "x_band": None, "plate_x_feet": None},
+            "unavailable",
+            False,
+            "setup_unavailable",
+        ),
+        (
+            {"status": "estimated", "x_band": "middle", "plate_x_feet": None},
+            "estimated",
+            False,
+            "setup_estimated",
+        ),
+        (
+            {"status": "estimated", "x_band": "middle", "plate_x_feet": 0},
+            "estimated",
+            True,
+            "setup_estimated",
+        ),
+        (
+            {"status": "estimated", "x_band": "off_left", "plate_x_feet": -1.1},
+            "estimated",
+            True,
+            "setup_estimated",
+        ),
+    ],
+)
+def test_export_setup_is_reveal_only_and_preserves_null_zero_and_unavailability(
+    synthetic_export, setup, status, displayable, summary_field
+):
+    synthetic_export["pitches"][0]["actual"]["catcher_setup"] = setup
+    report = _normalize_export(synthetic_export)
+    hidden = build_pitch_view(report, "999001:8:1")
+    shown = build_pitch_view(report, "999001:8:1", revealed=True)
+    assert hidden["actual"] is None
+    assert "setup_" not in json.dumps(hidden)
+    assert "SYNTHETIC_POST_ONLY" not in json.dumps(hidden)
+    assert hidden["pre"] == shown["pre"]
+    actual = shown["actual"]
+    assert actual["has_setup_estimate"] is displayable
+    assert actual["setup_status"] == status
+    assert actual["setup_x_ft"] == (setup["plate_x_feet"] if setup else None)
+    assert actual["setup_x_band"] == (setup["x_band"] if setup else None)
+    assert (
+        actual["setup_interpretation"] == "upstream_unreviewed_horizontal_setup_not_pitcher_intent"
+    )
+    assert report["summary"][summary_field] == 1
+    assert report["summary"]["setup_displayable"] == int(displayable)
+    assert report["summary"]["uninterpreted_setup"] == 0
+    assert "catcher_setup" not in actual
+    shown["actual"]["setup_x_ft"] = 8
+    assert build_pitch_view(report, "999001:8:1", revealed=True)["actual"] == actual | {
+        "setup_x_ft": setup["plate_x_feet"] if setup else None
+    }
+    assert build_pitch_view(report, "999001:8:1", revealed=False) == hidden
+
+
+@pytest.mark.parametrize(
+    "setup",
+    [
+        {},
+        [],
+        False,
+        0,
+        {"status": "estimated", "x_band": "middle"},
+        {"status": "estimated", "plate_x_feet": 0},
+        {"x_band": "middle", "plate_x_feet": 0},
+        {"status": "unavailable", "x_band": "middle", "plate_x_feet": None},
+        {"status": "unavailable", "x_band": None, "plate_x_feet": 0},
+        {"status": "ready", "x_band": "middle", "plate_x_feet": 0},
+        {"status": "estimated", "x_band": "unknown", "plate_x_feet": 0},
+        {"status": "estimated", "x_band": None, "plate_x_feet": 0},
+        {"status": "estimated", "x_band": "middle", "plate_x_feet": True},
+        {"status": "estimated", "x_band": "middle", "plate_x_feet": "0.1"},
+        {"status": "estimated", "x_band": "middle", "plate_x_feet": float("nan")},
+        {"status": "estimated", "x_band": "middle", "plate_x_feet": float("inf")},
+    ],
+)
+def test_export_setup_requires_documented_status_shape_and_finite_coordinate(
+    synthetic_export, setup
+):
+    synthetic_export["pitches"][0]["actual"]["catcher_setup"] = setup
+    with pytest.raises(ServiceGameError, match="catcher_setup"):
+        _normalize_export(synthetic_export)
+
+
+def test_export_missing_setup_is_not_silently_treated_as_explicit_null(synthetic_export):
+    del synthetic_export["pitches"][0]["actual"]["catcher_setup"]
+    with pytest.raises(ServiceGameError, match="catcher_setup"):
+        _normalize_export(synthetic_export)

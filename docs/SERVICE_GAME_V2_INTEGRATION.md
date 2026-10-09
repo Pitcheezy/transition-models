@@ -1,5 +1,52 @@
 # S service-game-v2 로컬 통합 준비
 
+## 2026-10-09 실제 수신 프로필·비공개 로컬 연결
+
+I-service2는 사용자 제공 service-game-v2 ZIP의 원본 검사와 로컬 표시까지 완료했다.
+경기849843 262투구/71타석, ready246·unsupported16·missing0,
+셋업 estimated27·unavailable12·null223을 대조했다. missing 실제 응답은 이번 파일에 없다.
+[수신 기록](SERVICE_GAME_V2_RECEIVED_20261009.md)과 [영수증](results/service_integration_20261009/s_export_receipt_v1.json)을 근거로 읽는다.
+검사: 전체 Windows CPU 2120 passed/8 skipped/2 deselected(최종 크기 제한 검사 추가 전, 549.41초); 최종 관련 Python208 passed/1 skipped(25.96초)·Node16 passed; 실제262구 공개 전후 대조 및 로컬 브라우저 확인 완료. 선점 `2b11c06`; 완료는 같은 커밋, 수정 권한 반납.
+
+기본 `teammate_status_20261007_provisional_v1`은 기존 합성 예제와 저장 보고서의 해석을 보존한다.
+실제 새 계약은 **`--profile teammate_export_20261009_v1`을 명시**해 선택한다.
+
+```text
+uv run --frozen python scripts/inspect_service_game.py --input outputs/service_review_received_20261009/service-game-849843.json --source-kind provided_export --profile teammate_export_20261009_v1
+```
+
+새 프로필은 cutoff를 `{index, pitch_key}` 또는 null로 받는다. null은 경계 미상이며,
+객체의 index는 공급된 스냅샷 안에서만 해석한다. 키가 있으면 같은 공급 행의 index와 일치해야 하고,
+경계를 넘는 행은 거절한다. index는 스냅샷 사이의 안정 키가 아니므로 투구 연결에는 key를 쓴다.
+이 경계는 학습 cutoff가 아니다. `game.date_kst`의 유효한 달력 날짜를 출력의 `game.kst_date`로 옮긴다.
+
+`actual.catcher_setup`은 null 또는 명시적 `status/x_band/plate_x_feet` 객체다.
+`estimated/unavailable`과 알려진 가로 구역을 검사하며, unavailable은 구역·좌표 모두 null이어야 한다.
+좌표는 boolean이 아닌 유한수 또는 null이다. estimated여도 좌표가 null이면 그리지 않는다.
+실제 결과를 공개한 뒤 estimated와 유효 좌표 조건을 모두 만족할 때만 가로 위치를 표시한다.
+단위는 ft, 포수 시점 오른쪽이 +이며 검토 전 추정치다. 투수 의도나 검증된 최적 목표가 아니다.
+
+`web/service-review`에는 화면 소스만 둔다. 원문·정규화 데이터와 화면 사본은 Git 제외 비공개 폴더에서
+제공하며 현재 검토 주소는 `http://127.0.0.1:8794/`다. 새 사본은 이미 존재하지 않는 비공개 경로에 만든다.
+
+```text
+uv run --frozen python scripts/build_service_review.py --input outputs/service_review_received_20261009/service-game-849843.json --source-kind provided_export --out-dir outputs/service_review_private_new
+uv run --frozen python -m http.server 8794 --bind 127.0.0.1 --directory outputs/service_review_private_new
+```
+
+공급 원문은 경기 후 as-of 재생이다. 추천 비중은 사건확률로 바꾸지 않으며,
+SHA는 출처 인증이 아니다. 서버 접근·새 모델 추론·사전 가용성·누출 없음·정책 효용·런타임 커밋·
+전체 경기 완전성은 검증하지 않았다. 표시 숨김도 접근 통제가 아니다.
+**I-0·I-run1·I-release1은 미완료**다. 다음은 합의한 모델/API 실행 번들과 정본/버전 확인이며,
+추가 사람 검토·새 기기·독립 영상 조건은 별도로 유지한다.
+H-port5 기존54파일 ZIP에는 이 새 프로필과 화면 코드가 포함되지 않는다.
+팀원 저장소/API와 공개 사이트는 변경하지 않았다.
+
+## 2026-10-07 잠정 프로필 이력
+
+아래 cutoff 정수·셋업 구조 미확인·실제 원문 미수신 설명은 **옛 기본 프로필의 당시 범위**다.
+새 수신 프로필은 위 절을 적용하며, 아래 기록을 삭제하거나 실제 새 수신 결과로 소급하지 않는다.
+
 작성일: 2026-10-07. 이 문서는 우리 저장소의 로컬 JSON 검토 도구를 설명한다.
 근거는 전달받은 팀원 **2026-10-07 STATUS 4.3·4.4절**이다.
 팀원 S의 실제 응답 원문·현재 서버·현재 코드를 이번 작업에서 검증하지 않았다.

@@ -1,5 +1,9 @@
 # STATUS — Pitcheezy / transition-models
 
+> **2026-10-09 I-service2 완료**: 실제 S ZIP을 비공개 수신·검사하고 `teammate_export_20261009_v1` 프로필과 `web/service-review` 로컬 화면(`http://127.0.0.1:8794/`)으로 연결했다. 경기849843 262투구/71타석, ready246/unsupported16/missing0, 셋업 estimated27/unavailable12/null223. missing 실제 사례는 미수신이다. 추천→실제 공개→조건에 맞는 가로 셋업 표시를 확인했다. 검사: 전체 Windows CPU 2120 passed/8 skipped/2 deselected(최종 크기 제한 검사 추가 전, 549.41초); 최종 관련 Python208 passed/1 skipped(25.96초)·Node16 passed; 실제262구 공개 전후 대조 및 로컬 브라우저 확인 완료. 선점 `2b11c06`; 완료는 같은 커밋. [수신·연결 기록](docs/SERVICE_GAME_V2_RECEIVED_20261009.md) · [영수증](docs/results/service_integration_20261009/s_export_receipt_v1.json).
+>
+> 경기 후 as-of 재생의 로컬 표시이며 라이브 사전 기록·누출 없음·정책 효용·전체 경기 완전성·런타임 커밋 검증은 아니다. 셋업은 검토 전 가로 추정치다. **I-0/I-run1/I-release1은 미완료**, 수정 권한 반납. 다음은 모델/API 실행 번들·정본 합의, 추가 사람 검토(CV-6/A-y), 새 기기 기록, 독립 영상/라벨러(CV-7)다. H-port5 기존54파일 ZIP에는 이번 수신 프로필·화면 코드가 없다. 팀원 API/저장소·공개 배포·M3/JSONL은 변경하지 않았다. 아래 미수신/미연결 서술은 각 날짜의 조사 이력이다.
+
 > 2026-10-09 H-port5: 최신 이관 목록의 필수 보정5파일 누락을 수정하고54파일 ZIP v3를 생성했다. 실제 압축 해제 Python276passed/1skipped·Node68passed, 기존 묶음 보존. 소스 `47ddc8f`의 Linux/mac CPU CI도 각각2060passed. [전달 기록](docs/handoff/delivery_v3.json). 팀원에게 전송·새 기기 실행·공개 배포는 미수행이다.
 
 > 2026-10-09 H-13: 투구·프레임 연결에서 중복 timing과 잘못된 시각을 거부하도록 수정했다. 정상5경기950행 결과·43고정파일은 동일하며 관련57검사와 전체 Windows CPU 2060 passed, 8 skipped, 2 deselected, 3 warnings in 577.39s (0:09:37)를 통과했다. [보고](docs/INTENT_FRAME_BINDING_20261009.md). 모델 성능·팀원 서비스 연결·사람 검토 상태는 변경하지 않았다.

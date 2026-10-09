@@ -355,3 +355,55 @@ def test_audit_does_not_access_network_models_processes_or_other_outputs(tmp_pat
     assert result.returncode == 0, result.stderr
     assert result.stderr == ""
     assert set(tmp_path.rglob("*")) == before | {output}
+
+
+def test_supplied_contract_profile_is_explicit_and_report_matches_normalizer(
+    tmp_path, synthetic_input, synthetic_payload
+):
+    from src.integration.service_game import EXPORT_PROFILE, normalize_service_game
+
+    synthetic_payload["game"]["date_kst"] = "2026-10-09"
+    synthetic_payload["cutoff"] = {"index": 7, "pitch_key": "900001:2:1"}
+    synthetic_input.write_text(json.dumps(synthetic_payload), encoding="utf-8")
+    default_result = run_cli(tmp_path, "--input", synthetic_input, "--source-kind", "synthetic")
+    assert_rejected(default_result)
+    output = tmp_path / "export-audit.json"
+    result = run_cli(
+        tmp_path,
+        "--input",
+        synthetic_input,
+        "--source-kind",
+        "synthetic",
+        "--profile",
+        EXPORT_PROFILE,
+        "--out",
+        output,
+    )
+    assert result.returncode == 0, result.stderr
+    report = json.loads(output.read_text(encoding="utf-8"))
+    assert report == normalize_service_game(
+        synthetic_payload,
+        input_kind="synthetic",
+        source_sha256=hashlib.sha256(synthetic_input.read_bytes()).hexdigest(),
+        profile=EXPORT_PROFILE,
+    )
+    assert report["profile"] == EXPORT_PROFILE
+    assert report["game"]["kst_date"] == "2026-10-09"
+    assert json.loads(result.stdout)["summary"] == report["summary"]
+    assert "Synthetic Pitcher" not in result.stdout
+
+
+def test_unknown_profile_is_rejected_without_creating_a_report(tmp_path, synthetic_input):
+    output = tmp_path / "invalid-profile.json"
+    result = run_cli(
+        tmp_path,
+        "--input",
+        synthetic_input,
+        "--source-kind",
+        "synthetic",
+        "--profile",
+        "unrecognized",
+        "--out",
+        output,
+    )
+    assert_rejected(result, output)

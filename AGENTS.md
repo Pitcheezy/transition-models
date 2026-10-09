@@ -1,5 +1,28 @@
 # SmartPitch MDP Transition Probability Models
 
+## I-service2 실제 S 원문 수신·로컬 연결 완료 — 2026-10-09
+
+사용자 제공 ZIP의 원본·CRC·manifest 5파일 SHA/크기를 검사하고, 경기 849843의 262투구/71타석을 새
+`teammate_export_20261009_v1` 프로필로 대조했다. ready 246·unsupported 16·missing 0,
+셋업 estimated 27·unavailable 12·null 223이다. missing 실제 사례는 미수신이며 합성 검사와 구분한다.
+`web/service-review`의 비공개 로컬 화면(`http://127.0.0.1:8794/`)에 추천 → 실제 결과 공개 →
+조건을 만족하는 가로 셋업 표시를 연결했다. 원문과 정규화 데이터는 Git 제외 경로에 보존한다.
+
+cutoff 객체의 투구 키/경계, `game.date_kst`, 셋업 상태/좌표를 명시적으로 검사한다. 기존 잠정 프로필과
+저장 결과는 유지한다. 선택 비중은 사건확률로 변환하지 않는다. 이 자료는 경기 후 as-of 재생이며,
+사전 가용성·누출 없음·정책 효용·전체 경기 완전성·실시간 연결·런타임 커밋은 검증하지 않았다.
+SHA 일치는 파일 식별이며 출처 인증이 아니다. 셋업은 검토 전 가로 추정치이고 투수 의도가 아니다.
+
+검사: 전체 Windows CPU 2120 passed/8 skipped/2 deselected(최종 크기 제한 검사 추가 전, 549.41초); 최종 관련 Python208 passed/1 skipped(25.96초)·Node16 passed; 실제262구 공개 전후 대조 및 로컬 브라우저 확인 완료. 선점 `2b11c06`; 구현·완료는 이 갱신과 같은 커밋이다.
+I-service2의 로컬 수신/표시 범위만 완료했다. **I-0·I-run1·I-release1은 미완료**이며 수정 권한을 반납한다.
+다음 조건은 모델/API 실행 번들과 정본·버전 합의, 추가 사람 검토(CV-6/A-y), 새 기기 실행 기록,
+미열람 영상·독립 라벨러(CV-7)다. CV-5a4의 시작 정의 등 기존 미완료 조건도 자동 해제하지 않는다.
+H-port5의 기존54파일 ZIP은 이번 새 수신 프로필·로컬 화면 코드를 포함하지 않는다.
+팀원 저장소/API·공개 배포·기존 M3/JSONL/사람 응답은 변경하지 않았다.
+
+[수신·연결 기록](docs/SERVICE_GAME_V2_RECEIVED_20261009.md) · [수신 영수증](docs/results/service_integration_20261009/s_export_receipt_v1.json).
+아래의 S 원문 미수신·I-service2 대기·다음 작업 지시는 당시 범위의 이력이며 현재 상태는 이 절을 따른다.
+
 ## 독립 결속 수정 H-13 완료 — 2026-10-09
 
 `intent.run`의 중복 timing 투구·비유한 포인트 시각 수용을 메모리 복제 입력으로 재현해 수정했다.

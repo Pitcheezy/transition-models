@@ -1,0 +1,136 @@
+{
+  "schema": "pitcheezy-s-export-receipt-v1",
+  "received_date": "2026-10-09",
+  "zip_sha256": "ed7237f2ed4fadaa7b963863e753c0d240bdeb6a4e9d82b6e50d7b537811e525",
+  "files": [
+    {
+      "file": "CONTRACT.md",
+      "bytes": 17875,
+      "sha256": "3bac396a8998855c914b32e9a567eacaf162e341531d71e359dc0883a192ccfb",
+      "matches_manifest": true
+    },
+    {
+      "file": "README.md",
+      "bytes": 6270,
+      "sha256": "659664a53824f40ba51a29d7bfcd110542fed5cb6bea05a0302755a9deb2f924",
+      "matches_manifest": true
+    },
+    {
+      "file": "service-dates.json",
+      "bytes": 173,
+      "sha256": "f1e8bdd09153972d7b375d9a31338c6d9f5d6f38703f2e4049c54dc22731ea59",
+      "matches_manifest": true
+    },
+    {
+      "file": "service-game-849843.json",
+      "bytes": 693719,
+      "sha256": "df606a11c6db465c054252ef8d331aeb23aa21565b4960bd586f3dcf8f62f6b7",
+      "matches_manifest": true
+    },
+    {
+      "file": "service-games.json",
+      "bytes": 2011,
+      "sha256": "c1afb04f2042ca3e3d8e34c04c65cee1a1e2b85065b720ba40205c5be36d18ae",
+      "matches_manifest": true
+    }
+  ],
+  "response_schema": "pitcheezy-service-game-v2",
+  "game_pk": 849843,
+  "upstream_kind": "archive",
+  "direct_counts": {
+    "pitches": 262,
+    "pas": 71,
+    "recommendations": {
+      "ready": 246,
+      "unsupported": 16
+    },
+    "setup": {
+      "not_supplied": 223,
+      "estimated": 27,
+      "unavailable": 12
+    }
+  },
+  "unique_pitch_keys": true,
+  "selected_pa": "849843:1",
+  "selected_pitch_keys": [
+    "849843:1:1",
+    "849843:1:2",
+    "849843:1:3"
+  ],
+  "independently_verified_http_capture": false,
+  "runtime_loaded_revision": null,
+  "model_weights_revision": null,
+  "live_pre_pitch_capture": false,
+  "event_probabilities_supplied": false,
+  "missing_observed": false,
+  "upstream_reported_only": {
+    "ready_service_fallback_count": 10,
+    "actual_dependent_refusal_count": 3,
+    "source_watch_included": false,
+    "first_pa_affected": false
+  },
+  "private_package_published": false,
+  "receiver_validation": {
+    "profile": "teammate_export_20261009_v1",
+    "summary": {
+      "pitches": 262,
+      "ready": 246,
+      "unsupported": 16,
+      "missing": 0,
+      "actual_available": 262,
+      "uninterpreted_setup": 0,
+      "setup_estimated": 27,
+      "setup_unavailable": 12,
+      "setup_not_supplied": 223,
+      "setup_displayable": 27
+    },
+    "all_262_reveal_views_checked": true,
+    "normalized_report_matches_recomputed": true,
+    "report_bytes": 461834,
+    "report_sha256": "154d9cd1cb166552db5975137e2ba431b9ab48f94fcfa6bdd05304f645427c80",
+    "assets_sha256": {
+      "index.html": "a85ac1127e32fd8cb12e5427765f4fb095ab7bde037ffae318be0a31b1e3b106",
+      "review.js": "5ed6302f9328940c6bcdbd019526ef35da860da46910b58c7ca45023f072cef2",
+      "style.css": "0fe7ea83d38527dbbf467a3e93cd29367e5590f3f024ab4843679b4848e9e505"
+    }
+  },
+  "browser_validation": {
+    "environment": "Windows Codex in-app browser; localhost-only static review",
+    "final_assets_checked": true,
+    "cases": [
+      "849843:1:2 grouped ranks 1 and 3",
+      "849843:1:2 actual reveal",
+      "849843:1:3 hidden then actual and setup x reveal",
+      "849843:41:1 unsupported reason",
+      "849843:2:5 setup unavailable",
+      "pitch and PA navigation resets reveal"
+    ],
+    "activation": "keyboard Enter and native select",
+    "console_errors_observed": 0,
+    "physical_mobile_or_mac_tested": false,
+    "video_synchronization_tested": false
+  },
+  "notes": [
+    "Hashes bind supplied bytes, not supplier/server identity.",
+    "Archive recommendations are post-game as-of replay; leakage freedom and policy benefit are unproven.",
+    "Fallback/refusal lineage is supplier-reported from a watch artifact absent from the ZIP.",
+    "Raw package and complete normalized report stay in git-ignored local outputs."
+  ],
+  "verification": {
+    "windows_full_cpu_before_final_size_guard_test": {
+      "passed": 2120,
+      "skipped": 8,
+      "deselected": 2,
+      "warnings": 2,
+      "seconds": 549.41
+    },
+    "final_targeted": {
+      "passed": 208,
+      "skipped": 1,
+      "seconds": 25.96,
+      "includes_final_size_guard_test": true
+    },
+    "node_tests": 16,
+    "read_only_independent_review": "three findings fixed; no remaining actionable finding"
+  }
+}

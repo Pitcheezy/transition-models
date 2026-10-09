@@ -1,19 +1,23 @@
 """Project a supplied S snapshot without claiming live timing or model equivalence.
 
-This provisional profile comes from the teammate's 2026-10-07 STATUS, not from
-an independently verified backend response. It is a local review format, not a
-receiver-v1 packet or a prediction request. Unknown upstream fields are omitted.
+The default profile preserves the provisional 2026-10-07 STATUS interpretation.
+The explicit export profile follows the supplied 2026-10-09 contract. Neither
+profile authenticates the source or proves timing, completeness or policy value.
+This is a local review format; unknown upstream fields are omitted.
 """
 
 import copy
 import math
 import re
-from datetime import datetime
+from datetime import date, datetime
 
 INPUT_SCHEMA = "pitcheezy-service-game-v2"
 OUTPUT_SCHEMA = "pitcheezy-service-review-v1"
 PROFILE = "teammate_status_20261007_provisional_v1"
+EXPORT_PROFILE = "teammate_export_20261009_v1"
+PROFILES = (PROFILE, EXPORT_PROFILE)
 POST_FIELDS = {"actual", "we", "post", "result", "catcher_setup"}
+SETUP_BANDS = {"left", "middle", "right", "off_left", "off_right"}
 ZONES = {
     f"{height}_{side}"
     for height in ("low", "middle", "high")
@@ -74,6 +78,43 @@ def _time(value, path):
     if "T" not in value or parsed.utcoffset() is None:
         _fail(path, "timestamp must include a time and timezone")
     return value
+
+
+def _date(value, path):
+    if value is None:
+        return None
+    if not isinstance(value, str) or not re.fullmatch(r"\d{4}-\d{2}-\d{2}", value):
+        _fail(path, "expected a calendar date in YYYY-MM-DD form")
+    try:
+        date.fromisoformat(value)
+    except ValueError:
+        _fail(path, "expected a valid calendar date")
+    return value
+
+
+def _export_cutoff(value, game_pk):
+    """Validate a snapshot boundary without treating indexes as persistent IDs."""
+    if value is None:
+        return None
+    value = _object(value, "cutoff")
+    if not {"index", "pitch_key"}.issubset(value):
+        _fail("cutoff", "index and pitch_key must be explicit")
+    index = _integer(value["index"], "cutoff.index", 0, 100000)
+    key = _text(value["pitch_key"], "cutoff.pitch_key", nullable=True, limit=80)
+    if key is not None and not re.fullmatch(rf"{game_pk}:[1-9]\d{{0,2}}:[1-9]\d{{0,2}}", key):
+        _fail("cutoff.pitch_key", "expected a canonical pitch key for this game")
+    return {"index": index, "pitch_key": key}
+
+
+def _check_export_boundary(cutoff, pitches):
+    if cutoff is None:
+        return
+    if any(pitch["index"] > cutoff["index"] for pitch in pitches):
+        _fail("cutoff", "supplied pitches extend beyond the release boundary")
+    if cutoff["pitch_key"] is not None:
+        matches = [pitch for pitch in pitches if pitch["key"] == cutoff["pitch_key"]]
+        if len(matches) != 1 or matches[0]["index"] != cutoff["index"]:
+            _fail("cutoff", "pitch_key and index must identify the same supplied pitch")
 
 
 def _no_post_fields(value, path, depth=0):
@@ -209,7 +250,31 @@ def _recommendation(value, path):
     }
 
 
-def _actual(value, path):
+def _setup(value, path):
+    """Project only the documented unreviewed horizontal setup, never intent."""
+    status, band, x = None, None, None
+    if value is not None:
+        value = _object(value, path)
+        if not {"status", "x_band", "plate_x_feet"}.issubset(value):
+            _fail(path, "status, x_band and plate_x_feet must be explicit")
+        status = _choice(value["status"], {"estimated", "unavailable"}, path + ".status")
+        x = _number(value["plate_x_feet"], path + ".plate_x_feet", nullable=True)
+        band = value["x_band"]
+        if status == "unavailable":
+            if x is not None or band is not None:
+                _fail(path, "unavailable requires null x_band and plate_x_feet")
+        else:
+            _choice(band, SETUP_BANDS, path + ".x_band")
+    return {
+        "has_setup_estimate": status == "estimated" and x is not None,
+        "setup_status": status,
+        "setup_x_band": band,
+        "setup_x_ft": x,
+        "setup_interpretation": "upstream_unreviewed_horizontal_setup_not_pitcher_intent",
+    }
+
+
+def _actual(value, path, profile):
     if value is None:
         return None
     value = _object(value, path)
@@ -232,17 +297,24 @@ def _actual(value, path):
             for key, low, high in (("speed_mph", 0, 150), ("x", -20, 20), ("z", -20, 20))
         }
     )
-    # The STATUS does not establish the backend catcher's setup object shape.
-    # True means a non-null raw value exists; even {} is not a verified estimate.
-    result["has_setup_estimate"] = value.get("catcher_setup") is not None
-    result["setup_x_ft"] = None
-    result["setup_interpretation"] = "unverified_upstream_shape"
+    if profile == EXPORT_PROFILE:
+        if "catcher_setup" not in value:
+            _fail(path, "catcher_setup must be explicit, including null")
+        result.update(_setup(value["catcher_setup"], path + ".catcher_setup"))
+    else:
+        # The legacy STATUS did not establish the backend setup object shape.
+        result["has_setup_estimate"] = value.get("catcher_setup") is not None
+        result["setup_x_ft"] = None
+        result["setup_interpretation"] = "unverified_upstream_shape"
     return result
 
 
-def normalize_service_game(payload, *, input_kind, source_sha256, reported_revision=None):
+def normalize_service_game(
+    payload, *, input_kind, source_sha256, reported_revision=None, profile=PROFILE
+):
     """Validate and project a snapshot; preserve IDs and do not infer missing evidence."""
     _choice(input_kind, {"synthetic", "provided_export"}, "input_kind")
+    _choice(profile, PROFILES, "profile")
     if not isinstance(source_sha256, str) or not re.fullmatch(r"[a-f0-9]{64}", source_sha256):
         _fail("source_sha256", "expected the original bytes' lowercase SHA256")
     if reported_revision is not None and (
@@ -268,7 +340,9 @@ def normalize_service_game(payload, *, input_kind, source_sha256, reported_revis
     if "cutoff" not in payload:
         _fail("cutoff", "must be explicit, including null; its time meaning is unverified")
     cutoff = payload["cutoff"]
-    if cutoff is not None:
+    if profile == EXPORT_PROFILE:
+        cutoff = _export_cutoff(cutoff, game_pk)
+    elif cutoff is not None:
         _integer(cutoff, "cutoff", -(2**31), 2**31 - 1)
     bounds = _object(payload.get("zone_bounds"), "zone_bounds")
     bounds = {key: _number(bounds.get(key), "zone_bounds." + key) for key in ("bottom", "top")}
@@ -303,13 +377,15 @@ def normalize_service_game(payload, *, input_kind, source_sha256, reported_revis
                     "batter": _person(row.get("batter"), "batter", "side"),
                     "recommendation": _recommendation(row.get("rec"), "rec"),
                 },
-                "post": {"actual": _actual(row.get("actual"), "actual")},
+                "post": {"actual": _actual(row.get("actual"), "actual", profile)},
             }
         )
     pitches.sort(key=lambda p: p["index"])
     ordering = [(p["at_bat_number"], p["pitch_number"]) for p in pitches]
     if ordering != sorted(ordering):
         _fail("pitches", "original index conflicts with plate appearance/pitch order")
+    if profile == EXPORT_PROFILE:
+        _check_export_boundary(cutoff, pitches)
     summary = {
         "pitches": len(pitches),
         "ready": 0,
@@ -318,14 +394,23 @@ def normalize_service_game(payload, *, input_kind, source_sha256, reported_revis
         "actual_available": 0,
         "uninterpreted_setup": 0,
     }
+    if profile == EXPORT_PROFILE:
+        summary.update(
+            setup_estimated=0, setup_unavailable=0, setup_not_supplied=0, setup_displayable=0
+        )
     for pitch in pitches:
         summary[pitch["pre"]["recommendation"]["status"]] += 1
         actual = pitch["post"]["actual"]
         summary["actual_available"] += actual is not None
-        summary["uninterpreted_setup"] += bool(actual and actual["has_setup_estimate"])
-    return {
+        if profile == EXPORT_PROFILE:
+            status = actual["setup_status"] if actual else None
+            summary["setup_" + (status or "not_supplied")] += 1
+            summary["setup_displayable"] += bool(actual and actual["has_setup_estimate"])
+        else:
+            summary["uninterpreted_setup"] += bool(actual and actual["has_setup_estimate"])
+    report = {
         "schema": OUTPUT_SCHEMA,
-        "profile": PROFILE,
+        "profile": profile,
         "source": {
             "input_kind": input_kind,
             "sha256": source_sha256,
@@ -349,7 +434,11 @@ def normalize_service_game(payload, *, input_kind, source_sha256, reported_revis
             "start": _time(game.get("start"), "game.start"),
             **{
                 key: _text(game.get(key), "game." + key, nullable=True)
-                for key in ("kst_date", "away_team", "home_team")
+                for key in (
+                    ("kst_date", "away_team", "home_team")
+                    if profile == PROFILE
+                    else ("away_team", "home_team")
+                )
             },
         },
         "feed": feed,
@@ -371,6 +460,34 @@ def normalize_service_game(payload, *, input_kind, source_sha256, reported_revis
             "This local review contains post-pitch data; display hiding is not access control.",
         ],
     }
+    if profile == EXPORT_PROFILE:
+        if "date_kst" not in game:
+            _fail("game.date_kst", "must be explicit, including null")
+        report["game"]["kst_date"] = _date(game["date_kst"], "game.date_kst")
+        report["cutoff_interpretation"] = (
+            "unknown" if cutoff is None else "snapshot_release_boundary_not_training_cutoff"
+        )
+        report["index_scope"] = "supplied_snapshot_only_join_by_pitch_key"
+        report["units"]["setup_x"] = "feet_catcher_view_right_positive"
+        report["warnings"] = [
+            "Projection follows the supplied 2026-10-09 export contract; source is not authenticated.",
+            "input_kind and revision are supplier declarations; SHA256 is not authentication.",
+            "The 2026-10-09 reference archive is post-game as-of replay, not live pre-pitch capture; "
+            "leak-free reconstruction is unverified.",
+            "Policy performance is unvalidated; matching actual pitches does not prove benefit.",
+            "Candidate probabilities are selection shares; kept without top-k renormalization.",
+            "Targets are historical delivery proxies, not validated optimal locations.",
+            "Feed time, cutoff and captured_live do not prove pre-pitch availability; "
+            "live timing and complete-game coverage remain unverified.",
+            "Cutoff is a snapshot release boundary, not a training cutoff; "
+            "indexes are not stable across snapshots. Join by pitch key.",
+            "Catcher setup is an upstream unreviewed horizontal estimate, not pitcher intent; "
+            "show only estimated finite x after actual-result reveal.",
+            "Only projected pitch fields are retained; current/next/PA and other metadata "
+            "are not consumed.",
+            "This local review contains post-pitch data; display hiding is not access control.",
+        ]
+    return report
 
 
 def build_pitch_view(report, pitch_key, *, revealed=False):
@@ -381,8 +498,8 @@ def build_pitch_view(report, pitch_key, *, revealed=False):
     """
     if type(revealed) is not bool:
         _fail("revealed", "expected an explicit boolean")
-    if report.get("schema") != OUTPUT_SCHEMA or report.get("profile") != PROFILE:
-        _fail("report", "expected the normalized provisional review report")
+    if report.get("schema") != OUTPUT_SCHEMA or report.get("profile") not in PROFILES:
+        _fail("report", "expected a normalized service review report with a supported profile")
     matches = [pitch for pitch in report["pitches"] if pitch["key"] == pitch_key]
     if len(matches) != 1:
         _fail("pitch_key", "expected one exact pitch key")
