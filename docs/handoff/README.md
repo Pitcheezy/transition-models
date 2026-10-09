@@ -1,12 +1,23 @@
-# 우리 프로토타입 최소 이관 묶음 — H-port4
+# 우리 프로토타입 최소 이관 묶음 — H-port5
 
-갱신일: 2026-10-08. `Pitcheezy/transition-models`, `feature/intent-v0`의 내부 팀 검토용 소스49개 부분집합이다.
+갱신일: 2026-10-09. `Pitcheezy/transition-models`, `feature/intent-v0`의 내부 팀 검토용 소스49개와 보정 회귀 자료5개(총54파일) 부분집합이다.
 정확한 기준 커밋은 함께 받은 `bundle_manifest.json`의 `source_commit`이다.
 파일 목록은 `docs/handoff/source_files_v1.json`, 별도 자료 목록은 `external_artifacts_v1.json`이다.
 모든 파일의 출처는 같은 기준 커밋의 Git blob이다. Windows 체크아웃의 줄바꿈 변환은 적용하지 않는다.
 해시는 전달 중 변경을 탐지하는 식별자이며 저자 인증 서명이나 재배포 권한 증명이 아니다.
 
 ## 이번 새 묶음에 반영한 수정
+
+H-port5는 최신 소스로 만든 전달 묶음의 회귀 검사에 필요한 보정 JSON5개 누락을 수정한다.
+기존49소스와 이미 버전 관리된5경기 보정 JSON만 포함하며 영상·사람 응답을 추가하지 않는다.
+이 자료는 H-12 보정 근거 검사에 필요하다. 파일을 빼면 전체 저장소에서는 통과해도
+압축을 받은 쪽의 안내된 테스트가5건 실패했다. 이 검사를 건너뛰는 대신 필수 자료를 동봉한다.
+
+H-12의 실제 적용 보정/잔여 민감도 설명과 H-13의 중복 투구·잘못된 시각 거부도 포함한다.
+5경기 보정 파일 내용과 기존 JSONL/M3/사람 응답은 변경하지 않는다.
+기존 v1/v2 ZIP과 delivery/source_manifest 기록은 그 당시 기준으로 보존한다.
+아래 H-port4 수정도 누적 포함한다.
+
 
 - H-7: 수신기의 존재하지 않는 Gregorian 날짜를 거부한다. 정상 시간대·소수초·생성 시각 원문은 보존한다.
 - H-9: 좌표 변환에서 요청 경기와 timing·points·calibration의 경기 식별자를 대조한다.
@@ -18,7 +29,7 @@
 표시된 수정은 입력·도구의 동작 수정이며 새 모델 정확도나 팀원 서비스 연결을 의미하지 않는다.
 
 H-8의 `intent/review_ui.js`는 이 부분집합에 없다. 사람 검토 UI를 쓰려면 전체 저장소나
-별도 `outputs/cv_review_20261008_ui_v2/reviewer` 팩을 사용한다. 그 팩의 이미지·사람 응답은 이 ZIP에 넣지 않는다.
+별도 `outputs/cv_review_20261008_ui_v3/reviewer` 팩을 사용한다. 그 팩의 이미지·사람 응답은 이 ZIP에 넣지 않는다.
 H-10의 반복 판독 RMS 0 보존 수정은 별도 보정 생성기 `intent/calibrate.py`에 있으며 이 부분집합에는 없다.
 보정 생성기와 전체 관측 루프·모델 제공자·과거 관측 보고서는 기준 커밋의 전체 저장소에서 사용한다.
 
@@ -132,8 +143,8 @@ python -B scripts/build_integration_handoff.py check outputs/handoff_new
 
 `source_files_v1.json`의 명시 목록만 복사한다. 미커밋 파일·모델·영상·Git LFS 포인터는 전달하지 않는다.
 새 전달 시 생성된 ZIP의 SHA와 기준 커밋을 별도 전달 메시지에 기록하고, 수신자가 가진 기준과 비교한다.
-H-port4의 실행 결과/ZIP 식별자는 전체 저장소의 `docs/handoff/delivery_v2.json`에 기록한다.
-새 파일별 manifest 사본은 `docs/handoff/source_manifest_v2.json`이다. 두 기록은 자기 자신을 포장하는
+H-port5의 실행 결과/ZIP 식별자는 전체 저장소의 `docs/handoff/delivery_v3.json`에 기록한다.
+새 파일별 manifest 사본은 `docs/handoff/source_manifest_v3.json`이다. 두 기록은 자기 자신을 포장하는
 순환을 피하기 위해 ZIP에는 넣지 않는다. 과거 `delivery_v1.json`과 `source_manifest_v1.json`은 보존한다.
 
 ## 2026-10-08 후속 — 운영 모델 별도 전달 묶음
@@ -142,4 +153,4 @@ H-port2는 같은 Windows에서14개 운영 파일의 경로 이관을 실행 �
 별도5.14MB ZIP과 실행 안내를 준비했다. 전체 저장소의 `docs/HANDOFF_OPERATIONAL_RELOCATION_V1.md`,
 `docs/HANDOFF_OPERATIONAL_BUNDLE_V1.md`, `docs/handoff/operational_bundle_delivery_v1.json`을 참조한다.
 이 문서와 운영 자료는 본 소스 ZIP에 포함하지 않는다. 기존 운영14파일 ZIP은 변경하지 않았으며,
-그 전달 기록의 전체 소스 커밋·SHA를 사용한다. 새 소스49개 묶음도 완전한 모델 런타임이 아니다.
+그 전달 기록의 전체 소스 커밋·SHA를 사용한다. 새54파일 묶음도 완전한 모델 런타임이 아니다.

@@ -82,6 +82,20 @@ def video_fps(points):
     return num, den
 
 
+def _seconds(value, name):
+    """Require a finite, nonnegative JSON number before matching source frames."""
+    message = f"{name} must be a finite nonnegative number"
+    if not isinstance(value, (int, float)) or isinstance(value, bool):
+        raise ValueError(message)
+    try:
+        seconds = float(value)
+    except OverflowError as exc:
+        raise ValueError(message) from exc
+    if not math.isfinite(seconds) or seconds < 0:
+        raise ValueError(message)
+    return seconds
+
+
 def build_records(
     game_pk, timing, points, *, frames_root=None, verify_frames=False, calibration=None
 ):
@@ -103,16 +117,33 @@ def build_records(
     method = points["method"]
     label_source = points["label_source"]
     fps_num, fps_den = video_fps(points)
+    timing_keys, rows = set(), []
+    for row in timing["annotations"]:
+        key = (row["at_bat_number"], row["pitch_number"])
+        if key in timing_keys:
+            raise ValueError(f"duplicate timing annotation for {key}")
+        timing_keys.add(key)
+        if row["status"] == "annotated":
+            _seconds(row.get("decision_seconds"), f"timing annotation for {key} decision_seconds")
+            rows.append(row)
     by_key = {}
     for frame in points["frames"]:
         key = (frame["at_bat_number"], frame["pitch_number"])
         if key in by_key:
             raise ValueError(f"duplicate point annotation for {key}")
+        _seconds(frame.get("frame_seconds"), f"point annotation for {key} frame_seconds")
         by_key[key] = frame
-    rows = sorted(
-        (r for r in timing["annotations"] if r["status"] == "annotated"),
-        key=lambda r: (r["at_bat_number"], r["pitch_number"]),
-    )
+    rows.sort(key=lambda r: (r["at_bat_number"], r["pitch_number"]))
+    # Check every binding before pooling camera geometry or reading image files.
+    # In particular, abs(NaN - t) > tolerance is false and is not a valid match.
+    for row in rows:
+        key = (row["at_bat_number"], row["pitch_number"])
+        frame = by_key.get(key)
+        if (
+            frame is not None
+            and abs(float(frame["frame_seconds"]) - float(row["decision_seconds"])) > 1e-6
+        ):
+            raise ValueError(f"point annotation for {key} is not on the decision frame")
     camera = camera_constants(points["frames"])
     hop2 = hop2_parameters(calibration)
     records, counters = (
@@ -150,8 +181,6 @@ def build_records(
             )
             counters["unavailable"] += 1
             continue
-        if abs(float(frame["frame_seconds"]) - t) > 1e-6:
-            raise ValueError(f"point annotation for {key} is not on the decision frame")
         clip_id = f"{game_pk}:decision_frame:{t:.2f}:{Path(frame['path']).name}"
         sha = frame["image_sha256"]
         if verify_frames:

@@ -1,5 +1,6 @@
 """M2: hop 1 v1 (front-edge similarity) and hop 2 (plate feet) of the intent chain."""
 
+import copy
 import json
 import sys
 from pathlib import Path
@@ -21,6 +22,123 @@ from intent.plate_feet import (  # noqa: E402
 from intent.run import ROOT, build_records  # noqa: E402
 from intent.run import main as run_main
 from intent.schema import IntentEstimateError, make_estimate, validate_intent_estimate  # noqa: E402
+
+
+@pytest.mark.parametrize("status", ["annotated", "unavailable"])
+@pytest.mark.parametrize("verify_frames", [False, True])
+def test_duplicate_timing_rejected_before_camera_or_frame_access(
+    tmp_path, monkeypatch, status, verify_frames
+):
+    timing, points = _timing_and_points(tmp_path)
+    duplicate = dict(timing["annotations"][0], status=status)
+    if status == "unavailable":
+        duplicate["decision_seconds"] = None
+    timing["annotations"].append(duplicate)
+    before = copy.deepcopy((timing, points))
+    monkeypatch.setattr("intent.run.camera_constants", lambda _: pytest.fail("camera was reached"))
+    with pytest.raises(ValueError, match="duplicate timing annotation"):
+        build_records(747139, timing, points, verify_frames=verify_frames, frames_root=tmp_path)
+    assert (timing, points) == before
+
+
+@pytest.mark.parametrize(
+    ("source", "value"),
+    [
+        ("point", float("nan")),
+        ("unavailable_point", float("nan")),
+        ("point", float("inf")),
+        ("point", float("-inf")),
+        ("point", -1e-7),
+        ("point", True),
+        ("point", "1"),
+        ("point", None),
+        ("decision", float("nan")),
+        ("decision", False),
+        ("decision", "1"),
+    ],
+)
+def test_invalid_source_seconds_rejected_before_camera(tmp_path, monkeypatch, source, value):
+    timing, points = _timing_and_points(tmp_path)
+    timing["annotations"][0]["decision_seconds"] = 0
+    points["frames"][0]["frame_seconds"] = 0
+    if source == "decision":
+        timing["annotations"][0]["decision_seconds"] = value
+        field = "decision_seconds"
+    else:
+        points["frames"][0]["frame_seconds"] = value
+        if source == "unavailable_point":
+            points["frames"][0].update(status="unavailable", unavailable_reason="synthetic")
+        field = "frame_seconds"
+    monkeypatch.setattr("intent.run.camera_constants", lambda _: pytest.fail("camera was reached"))
+    with pytest.raises(ValueError, match=field):
+        build_records(747139, timing, points)
+
+
+def test_unmatched_point_seconds_are_checked_before_camera_pooling(tmp_path, monkeypatch):
+    timing, points = _timing_and_points(tmp_path)
+    unused = dict(points["frames"][0], pitch_number=99, frame_seconds=float("nan"))
+    points["frames"].append(unused)
+    monkeypatch.setattr("intent.run.camera_constants", lambda _: pytest.fail("camera was reached"))
+    with pytest.raises(ValueError, match="frame_seconds"):
+        build_records(747139, timing, points)
+
+
+def test_unique_unavailable_timing_and_zero_seconds_remain_supported(tmp_path):
+    timing, points = _timing_and_points(tmp_path)
+    timing["annotations"][0]["decision_seconds"] = 0
+    points["frames"][0]["frame_seconds"] = 0
+    expected = build_records(747139, timing, points, frames_root=tmp_path, verify_frames=True)
+    timing["annotations"].append(
+        {"at_bat_number": 1, "pitch_number": 3, "status": "unavailable", "decision_seconds": None}
+    )
+    timing["annotations"].reverse()
+    points["frames"].reverse()
+    assert (
+        build_records(747139, timing, points, frames_root=tmp_path, verify_frames=True) == expected
+    )
+    assert expected[0][0]["evidence"] == {"frame_index": 0, "frame_time": 0.0}
+
+
+@pytest.mark.parametrize("problem", ["duplicate", "nan"])
+@pytest.mark.parametrize("existing_output", [False, True])
+def test_cli_bad_frame_binding_preserves_output_and_receipt(tmp_path, problem, existing_output):
+    timing, points = _timing_and_points(tmp_path)
+    # A distinct synthetic game avoids the repository's default saved calibration.
+    timing["game_pk"] = points["game_pk"] = 123456
+    if problem == "duplicate":
+        timing["annotations"].append(dict(timing["annotations"][0]))
+    else:
+        points["frames"][0]["frame_seconds"] = float("nan")
+    timing_path, points_path = tmp_path / "timing.json", tmp_path / "points.json"
+    timing_path.write_text(json.dumps(timing), encoding="utf-8")
+    points_path.write_text(json.dumps(points), encoding="utf-8")
+    out, receipt = tmp_path / "result.jsonl", tmp_path / "result.jsonl.run.json"
+    original = b"existing result must survive\n"
+    if existing_output:
+        out.write_bytes(original)
+        receipt.write_bytes(original)
+    with pytest.raises(ValueError, match="duplicate timing annotation|frame_seconds"):
+        run_main(
+            [
+                "--game",
+                "123456",
+                "--timing",
+                str(timing_path),
+                "--points",
+                str(points_path),
+                "--out",
+                str(out),
+                "--frames-root",
+                str(tmp_path),
+                "--verify-frames",
+            ]
+        )
+    for path in (out, receipt):
+        if existing_output:
+            assert path.read_bytes() == original
+        else:
+            assert not path.exists()
+
 
 CORNERS = {
     "front_left": [636.0, 322.0],
