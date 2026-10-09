@@ -1,5 +1,9 @@
 # STATUS — Pitcheezy / transition-models
 
+> 2026-10-09 H-port5: 최신 이관 목록의 필수 보정5파일 누락을 수정하고54파일 ZIP v3를 생성했다. 실제 압축 해제 Python276passed/1skipped·Node68passed, 기존 묶음 보존. 소스 `47ddc8f`의 Linux/mac CPU CI도 각각2060passed. [전달 기록](docs/handoff/delivery_v3.json). 팀원에게 전송·새 기기 실행·공개 배포는 미수행이다.
+
+> 2026-10-09 H-13: 투구·프레임 연결에서 중복 timing과 잘못된 시각을 거부하도록 수정했다. 정상5경기950행 결과·43고정파일은 동일하며 관련57검사와 전체 Windows CPU 2060 passed, 8 skipped, 2 deselected, 3 warnings in 577.39s (0:09:37)를 통과했다. [보고](docs/INTENT_FRAME_BINDING_20261009.md). 모델 성능·팀원 서비스 연결·사람 검토 상태는 변경하지 않았다.
+
 > 2026-10-09 독립 결함 탐색(Claude): 조건 ①–④ 미충족 확인 후 H-12 좌표 보정 서술과 S 정규화기 경계를 구체 입력으로 탐색했고 재현 결함 없음. [탐색 기록](docs/results/cv_independent_20261009/defect_probe_v1.json). 코드·산출물 변경 없음.
 
 > 2026-10-09 H-12: 좌표 변환의 “보정 미적용” 고정 설명을 실제 적용값과 일치하도록 수정했다. 좌표·성능 수치와 기존 산출물은 그대로다. [정정 보고](docs/COORDINATE_EVIDENCE_CORRECTION_20261009.md).

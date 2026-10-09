@@ -1,0 +1,197 @@
+{
+  "schema": "intent_frame_binding_regression_v1",
+  "date": "2026-10-09",
+  "baseline_source_commit": "30f8bb1",
+  "claim_commit": "83b7d4c",
+  "reproduction": {
+    "game_pk": 849843,
+    "input_scope": "mutated in-memory copies only; frozen files unchanged",
+    "baseline_rows": 39,
+    "old_duplicate_rows": 40,
+    "old_duplicate_unique_keys": 39,
+    "old_nan_frame_accepted_with_identical_output": true,
+    "after": [
+      {
+        "case": "duplicate",
+        "rejected": true,
+        "error": "duplicate timing annotation for (1, 3)"
+      },
+      {
+        "case": "nonfinite_frame_seconds",
+        "rejected": true,
+        "error": "point annotation for (1, 3) frame_seconds must be a finite nonnegative number"
+      }
+    ]
+  },
+  "saved_cases": [
+    {
+      "game_pk": 747139,
+      "calibration": "uncalibrated",
+      "records": 297,
+      "unique_pitch_ids": 297,
+      "records_and_counters_equal": true,
+      "serialized_bytes_equal": true
+    },
+    {
+      "game_pk": 747139,
+      "calibration": "saved_calibration",
+      "records": 297,
+      "unique_pitch_ids": 297,
+      "records_and_counters_equal": true,
+      "serialized_bytes_equal": true
+    },
+    {
+      "game_pk": 823407,
+      "calibration": "uncalibrated",
+      "records": 29,
+      "unique_pitch_ids": 29,
+      "records_and_counters_equal": true,
+      "serialized_bytes_equal": true
+    },
+    {
+      "game_pk": 823407,
+      "calibration": "saved_calibration",
+      "records": 29,
+      "unique_pitch_ids": 29,
+      "records_and_counters_equal": true,
+      "serialized_bytes_equal": true
+    },
+    {
+      "game_pk": 849843,
+      "calibration": "uncalibrated",
+      "records": 39,
+      "unique_pitch_ids": 39,
+      "records_and_counters_equal": true,
+      "serialized_bytes_equal": true
+    },
+    {
+      "game_pk": 849843,
+      "calibration": "saved_calibration",
+      "records": 39,
+      "unique_pitch_ids": 39,
+      "records_and_counters_equal": true,
+      "serialized_bytes_equal": true
+    },
+    {
+      "game_pk": 849845,
+      "calibration": "uncalibrated",
+      "records": 57,
+      "unique_pitch_ids": 57,
+      "records_and_counters_equal": true,
+      "serialized_bytes_equal": true
+    },
+    {
+      "game_pk": 849845,
+      "calibration": "saved_calibration",
+      "records": 57,
+      "unique_pitch_ids": 57,
+      "records_and_counters_equal": true,
+      "serialized_bytes_equal": true
+    },
+    {
+      "game_pk": 849849,
+      "calibration": "uncalibrated",
+      "records": 53,
+      "unique_pitch_ids": 53,
+      "records_and_counters_equal": true,
+      "serialized_bytes_equal": true
+    },
+    {
+      "game_pk": 849849,
+      "calibration": "saved_calibration",
+      "records": 53,
+      "unique_pitch_ids": 53,
+      "records_and_counters_equal": true,
+      "serialized_bytes_equal": true
+    }
+  ],
+  "total_records_compared": 950,
+  "frozen_file_count": 43,
+  "frozen_sha256": {
+    "docs/results/mlb_p0/game_747139_intent_calibration_readings_v0.json": "173e9e2dafe3f21e24c31db071a2ed8f4016bb399148c8e1c2843634774e21c8",
+    "docs/results/mlb_p0/game_747139_intent_human_verified_v0.json": "d108e78ceb7e1081dc49563d6238735e308a56d51900b4d335e733d6fd2ebfe1",
+    "docs/results/mlb_p0/game_747139_intent_label_pack_v0.json": "f63d9f9a43417025772fed2eca630c643d081ccf84818a0731a7a2bae2b767bd",
+    "docs/results/mlb_p0/game_747139_intent_plate_calibration_v0.json": "d6c3dd1c587a0b1825b252c0beb2f790433956649fb6fcb76851725685112caa",
+    "docs/results/mlb_p0/game_747139_intent_points_v0.json": "099e25766024c12ee5f1cd5969e9e9512a87737951e6fc1186d5c5cf9445034e",
+    "docs/results/mlb_p0/game_747139_intent_v0.jsonl": "355a2dd9e0906d5acfbb2c172118a41cc54591f04bbe40f8d3f2e7ab73483840",
+    "docs/results/mlb_p0/game_747139_intent_v0.jsonl.run.json": "ffb0dbd85b6d09dac559142b361bb94ce4a3b66ad313cf023dda0684bb625c7a",
+    "docs/results/mlb_p0/game_823407_intent_calibration_readings_v0.json": "39283d7b0272e86844a9df53c5d647e9177b0f540646f1a8bedaa5eb9d5dbb15",
+    "docs/results/mlb_p0/game_823407_intent_human_labels_raw_v0.json": "c7242bb3560985f86492437cb4d52344d65475dbd03d79acfb672f08a42955b2",
+    "docs/results/mlb_p0/game_823407_intent_human_labels_v0.json": "bce2a324c1cd4c8af1301e79ac6ec8a65137c2170c77236ee102ca80fb0585d1",
+    "docs/results/mlb_p0/game_823407_intent_label_pack_v0.json": "42cc7ea193ad4fb8c06aeddb132a42e1e1ddf3b0fac13fd163e4127dd115614c",
+    "docs/results/mlb_p0/game_823407_intent_plate_calibration_v0.json": "762df619208c86f14686af51de0a950cec8d770c274212692ea20a0dc9a031f4",
+    "docs/results/mlb_p0/game_823407_intent_points_v0.json": "977bb63c62594b6d5b6b1e1e0e4df360d6df9d96991a50e0c00a9209073eaaaf",
+    "docs/results/mlb_p0/game_823407_intent_setup_check_v0.json": "5ea518bd78a9660eee75a83b65500dc37b89c5ccf28e59b67ce6912d622065b4",
+    "docs/results/mlb_p0/game_823407_intent_v0.jsonl": "2ab78c0096fcf14c6120558c363aa00ba89f98935aae386cc72e2a7bd4358e0c",
+    "docs/results/mlb_p0/game_823407_intent_v0.jsonl.run.json": "9e2563b9f81eb409c963511a1b1fbf227aa34c09784d5f825b262723580fa7c8",
+    "docs/results/mlb_p0/game_849843_intent_calibration_readings_v0.json": "fbc59b2a126aa66bc519fb00cd58699beb4707ee93840a85c33f574d69b10c18",
+    "docs/results/mlb_p0/game_849843_intent_plate_calibration_v0.json": "556a8b643f540fb6eb2593bbec36c26706cc398adda6ddd9893b6a9102336925",
+    "docs/results/mlb_p0/game_849843_intent_points_v0.json": "a9c7c03f856f7afa3c13435568fdb796200dfa7cf8520ffb8b26c21215604141",
+    "docs/results/mlb_p0/game_849843_intent_v0.jsonl": "5ad0c28847c12dcea3d6c8589e966553a44d1d8f5829381b87ec6d0b7e2d27dc",
+    "docs/results/mlb_p0/game_849843_intent_v0.jsonl.run.json": "5536bdc3d301d7176b1deb73f57d1f5851866f39076f4114c5f9db440bf8bbbf",
+    "docs/results/mlb_p0/game_849845_intent_calibration_readings_v0.json": "37f5665b7b327820afddb5b4db6e3adf0ccd129415979280a77f7195be27e2d0",
+    "docs/results/mlb_p0/game_849845_intent_human_labels_raw_v0.json": "776c1c19fa00ccd568faaae6fe46362eb730016cf3d31c56b7c4a13a530a4766",
+    "docs/results/mlb_p0/game_849845_intent_human_labels_v0.json": "b1c9b97068ef6e6d8456cd834351cb24c3d82da15e7113ff5a75a80ecace96eb",
+    "docs/results/mlb_p0/game_849845_intent_label_pack_v0.json": "ae55fb2472b4b3caddb92c42e7651a1e74b5b8ece22003dd9611389bd1f47461",
+    "docs/results/mlb_p0/game_849845_intent_plate_calibration_v0.json": "89e42fa387ea5c0bbad700c038922c26262b5e28e154de1e94aac5adfe760eeb",
+    "docs/results/mlb_p0/game_849845_intent_points_v0.json": "17d71d55ee203ccbf9793c189f942f1c4c088ba1bf18ba887b31b3b07bb9f2e9",
+    "docs/results/mlb_p0/game_849845_intent_setup_check_v0.json": "e2df0992a51d79b3272f03142fd0bc080a5e6c53a9f838f758de34e3d715f6f1",
+    "docs/results/mlb_p0/game_849845_intent_v0.jsonl": "6d3a01d7aa0002e2b8c6bcb62e44d0b9723df969d0b8e017210c2863edddf4bc",
+    "docs/results/mlb_p0/game_849845_intent_v0.jsonl.run.json": "45df3868a565818202124207b273ee599f47baa4828f75c2660ea867f02c5b1d",
+    "docs/results/mlb_p0/game_849849_intent_calibration_readings_v0.json": "426228b357bae9b11ba12b15e5943677cf8d12db6bb2d14a52b0196923a2472e",
+    "docs/results/mlb_p0/game_849849_intent_label_pack_v0.json": "4601750443e9106d3106428c89209e1321f9470e8ac0feeb1927cc28aecc0b66",
+    "docs/results/mlb_p0/game_849849_intent_plate_calibration_v0.json": "950410f1d98e2f374a28bffd190845e65a86e3dca72b4662bef499872125a87f",
+    "docs/results/mlb_p0/game_849849_intent_points_v0.json": "7e0677c306fd00d15d081335ae3fda52a38eb6c51d4938cc43154959b09ae4dc",
+    "docs/results/mlb_p0/game_849849_intent_v0.jsonl": "f24c18bbbb9acc834d3371a3d2396ef14ed8776103d3cdfef09adbfcae25d9e5",
+    "docs/results/mlb_p0/game_849849_intent_v0.jsonl.run.json": "fe057b858bc15234423a9c919cc36316e0e59af6ecb90bd188313a891f3cd68d",
+    "docs/results/mlb_p0/intent_accuracy_report_v0.json": "0133f8982111d79340243dfed01572699df6c6786b5392dc718ce96de1f62d48",
+    "docs/results/mlb_p0/game_747139_timing.json": "9781a52527f5a91069548b5017cd927c94d4959df944a93cd54ec5be6c9760b7",
+    "docs/results/mlb_p0/game_823407_timing.json": "43a47ea7e0e90b2ea74a3c8cf573ce33e5aea7a0c3f437def803011ceb5c7f33",
+    "docs/results/mlb_p0/game_849843_timing.json": "cb38a741da9bb92b93935cf9d6f3c32ca11602bb6381203ff716db08c09d142b",
+    "docs/results/mlb_p0/game_849845_timing.json": "9d81eee53b235cf3eb3b0207a87ee350106ccfd8ad85916ecd8078d8b5394a41",
+    "docs/results/mlb_p0/game_849849_timing.json": "cfc83d703873b4b595191fbb1d5b9db8712b12b7dff0c61ff8b6c0103e4850b7",
+    "outputs/cv_review_response_20261008_v1/human_review_response.json": "d25fa9908aa90aacfcdab6e068543e62e8eca698bd7322e615c428fb6df5ffeb"
+  },
+  "frozen_files_unchanged": true,
+  "new_tests_before": {
+    "failed": 20,
+    "passed": 1
+  },
+  "related_tests_after": {
+    "passed": 57
+  },
+  "limitations": [
+    "Existing development artifacts only; no new human labels, independent accuracy, or teammate service validation.",
+    "No regeneration or replacement of committed JSONL, M3 reports, or original human responses.",
+    "No team repository, public deployment, or model changes."
+  ],
+  "implementation_commit": "47ddc8f1cc063efbccf8964f5477daa735eea828",
+  "full_validation": {
+    "command": "python scripts/check_project.py --cpu-only --test-timeout 900",
+    "platform": "Windows",
+    "result": "2060 passed, 8 skipped, 2 deselected, 3 warnings in 577.39s (0:09:37)",
+    "ruff": "163 supported paths passed lint and format checks"
+  },
+  "independent_diff_review": "No actionable findings; two changed code/test files reviewed.",
+  "source_commit_ci": {
+    "run_id": 37920381861,
+    "url": "https://github.com/Pitcheezy/transition-models/actions/runs/37920381861",
+    "source_commit": "47ddc8f1cc063efbccf8964f5477daa735eea828",
+    "conclusion": "success",
+    "ubuntu": {
+      "passed": 2060,
+      "skipped": 8,
+      "deselected": 2,
+      "warnings": 4,
+      "seconds": 49.78
+    },
+    "macos": {
+      "passed": 2060,
+      "skipped": 8,
+      "deselected": 2,
+      "warnings": 2,
+      "seconds": 118.82
+    },
+    "scope": "Full source CPU CI, not physical Mac reviewer operation."
+  }
+}

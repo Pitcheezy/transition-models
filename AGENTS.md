@@ -1,5 +1,24 @@
 # SmartPitch MDP Transition Probability Models
 
+## 독립 결속 수정 H-13 완료 — 2026-10-09
+
+`intent.run`의 중복 timing 투구·비유한 포인트 시각 수용을 메모리 복제 입력으로 재현해 수정했다.
+변환 전에 키 고유성·유한/0이상 숫자 시각을 확인한다. 관련57passed, 전체 Windows CPU
+2060 passed, 8 skipped, 2 deselected, 3 warnings in 577.39s (0:09:37), Ruff163경로 통과. 정상5경기10경우950행 동일·43고정파일 SHA 불변.
+[보고](docs/INTENT_FRAME_BINDING_20261009.md). 선점83b7d4c; 구현47ddc8f.
+H-port5(선점0bbcb32)도 완료: 보정5개를 포함한54파일 새 ZIP을 실제 압축 해제하여
+Python276passed/1skipped·Node68passed·55파일 SHA/바이트 검사를 통과했다. 기존 v1/v2는 보존했다.
+[전달 기록](docs/handoff/delivery_v3.json). 소스47ddc8f의 Linux/mac CPU CI37920381861도 각각2060passed.
+ZIP은 LEGACY_PROJECT/outputs/integration_delivery/transition_models_handoff_20261009_v3.zip,
+218861bytes, SHA256 1298a018b02d9eb92e7013a200c6653d33f32572401e37ea7eecad9b9f5779e9.
+전달·공개 배포·실제 Mac 사용 확인은 하지 않았다. 수정 권한 반납.
+
+`--next`는 등록 항목만 선택한다. 외부 입력이 없어도 새로 재현한 우리 결함/구체 작업은
+등록해 진행할 수 있다. 아래 추가 작업 없음·조건①–④만 재개는 과거 등록 범위의 기록이다.
+동일 탐색·실험 반복, 사람 판정 대행, 합성 자료의 실제 수신 승격은 하지 않는다.
+새 S 원문→I-service2, 추가 사람 미트 검토→CV-6, 별도 timing 독립 검토→A-y,
+새 영상/독립 라벨러→CV-7, 실제 Mac 확인은 계속 대기한다. 팀원 저장소/API·공개 배포 변경 없음.
+
 ## 독립 결함 탐색 — 2026-10-09 (Claude, Fable 5.1)
 
 조건 ①–④(새 S 원문·추가 사람 응답·새 기기·새 영상/독립 라벨러)가 모두 미충족임을 다운로드·외장 SSD·응답 폴더·팀원 공개 브랜치·`--next`로 확인했다.
