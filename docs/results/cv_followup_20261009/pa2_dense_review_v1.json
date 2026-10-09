@@ -1,0 +1,2105 @@
+{
+ "schema": "cv_pa2_dense_review_v1",
+ "date": "2026-10-09",
+ "unit": "CV-5a4",
+ "game_pk": 747139,
+ "target_pa": 2,
+ "preceding_pa": 1,
+ "kind": "development check on existing local video; not an independent evaluation, not a human review",
+ "human_label": false,
+ "independent_validation": false,
+ "continuous_playback_reviewed": false,
+ "full_pa_strict_verified": false,
+ "span_preceding_end_to_target_end_inside_gap_free_material": true,
+ "reviewers": {
+  "session": "Claude Fable 5.1 session: direct inspection of all 29 regular sheets, 11 cut sheets, the moderate-diff sheet and two zoom strips (43 images)",
+  "workflow_reviewer": "Workflow agent with model claude-opus-5 (CHECKLIST tag for CV-5a4): all 40 sheets, structured output",
+  "workflow_verifiers": "two refuting agents (boundary/timeline lens over 23 sheets; coverage/continuity lens over the 29 regular sheets), session model, enlarged crops of the same sheets",
+  "workflow_run_id": "wf_29d24504-03b",
+  "workflow_agents": 3,
+  "workflow_tokens": 639199
+ },
+ "sources": {
+  "broadcast": "SNY full game, source MP4 time axis (constant-offset framemd5 mappings, verified earlier)",
+  "ext_clip": {
+   "name": "preceding_pa_extension_v1.mp4 (LEGACY_PROJECT/outputs/cv_pa2_postdemo_review)",
+   "media_sha256": "00bc526799e52af186272918856390ccd1bbde469b16057f7899b8ee74f4c12b",
+   "capture_receipt_sha256": "e8232b7d04c251abf0581d48ade0f8159e95e251b242be2a1eccba1d2bcea405",
+   "mapping_sha256": "8c04c292a14453b16129b1cdeab7842a712bc642618f94338c17c4b2b6a0c075",
+   "source_framemd5_sha256": "8c6ea10b713a68088f30dfe1673cd14060b1f395604bf46d9ec8b13184db3474",
+   "clip_framemd5_sha256": "7aa3bc552c73cd6fe83f1a907b0aca1b73b9c04ebde8b5cfd350a2a660af7989",
+   "decoded_frames": 2449,
+   "constant_offset_exact": "8648681/60000",
+   "first_source_seconds_exact": "8649641/60000",
+   "last_source_seconds_exact": "11100089/60000",
+   "first_source_seconds": 144.160683,
+   "last_source_seconds": 185.001483,
+   "gaps": []
+  },
+  "old_clip": {
+   "name": "pa2_source_candidate.mp4 (LEGACY_PROJECT/outputs/cv_followup_20261005/observation_frames)",
+   "media_sha256": "e11a9879cd4f5b61a16bb678030a97f794f807d5ab5d43faf408fb719fe51b65",
+   "capture_receipt_sha256": "ef03502c5a90364e70e234437476ff58ad48790847d6f47e494f0bcb9923f834",
+   "source_framemd5_sha256": "143821fbbfc52e10c931c362901e97e4b20e31da275ebf70d3d62fccaefbf82f",
+   "clip_framemd5_sha256": "98b058c7908c1e743ed963fe0f3f6b0f425ab992e689a4293fd097373e9f76ac",
+   "mapping_record": "docs/results/cv_followup_20261006/clip_clock_v1.json",
+   "decoded_frames": 3298,
+   "constant_offset_exact": "1050049/6000",
+   "first_source_seconds": 175.008167,
+   "last_source_seconds": 230.029817,
+   "gaps": [
+    {
+     "after_decode_ordinal": 3296,
+     "before_decode_ordinal": 3297,
+     "missing_ticks": 1001,
+     "gap_seconds": [
+      230.013117,
+      230.029817
+     ]
+    }
+   ]
+  },
+  "overlap": "600 frames (175.008167-185.001483 s) byte-identical in both clips; the 180.246733 s cut is flagged identically in both",
+  "combined_coverage": "144.160683 -> 230.013117 s without a missing frame, then one frame at 230.029817 s",
+  "not_redownloaded": true
+ },
+ "method": {
+  "frame_difference_scan": {
+   "every_consecutive_frame_pair": true,
+   "representation": "ffmpeg decode to 160x90 gray, mean absolute difference 0-255",
+   "ext": {
+    "pairs": 2448,
+    "median": 2.65,
+    "p99": 12.86,
+    "threshold": 15.88
+   },
+   "old": {
+    "pairs": 3298,
+    "median": 0.72,
+    "p99": 9.85,
+    "threshold": 12.0,
+    "note": "rawvideo pass decoded 3299 frames because cfr output duplicated one frame at the known gap/end (last diff 0.0); flagged ordinals are unaffected"
+   },
+   "threshold_rule": "max(12, 6 x median)",
+   "flagged_pairs": 17,
+   "distinct_hard_cuts": 9,
+   "flagged_non_cut": "old 78-85 run (176.31-176.43 s) = same-camera fast motion"
+  },
+  "regular_sampling": {
+   "step_frames": 30,
+   "spacing_seconds": 0.5004,
+   "frames": 174,
+   "ext_ordinals": "0,30,...,2430 and 2448",
+   "old_ordinals": "600,630,...,3270 and 3297",
+   "binding": "each frame selected by decode ordinal with -copyts, its PTS/MD5 verified against a selected.framemd5 of the same decode"
+  },
+  "cut_adjacent_frames": {
+   "frames": 50,
+   "rule": "ordinals n-2, n-1, n, n+1 around every flagged pair"
+  },
+  "moderate_runs_checked": {
+   "rule": "endpoints of every run of sub-threshold diffs >= 12 (ext) / >= 10.5 (old)",
+   "runs": {
+    "ext": [
+     {
+      "first_before_ordinal": 1258,
+      "last_before_ordinal": 1264,
+      "frames": 7,
+      "max_diff": 13.62
+     },
+     {
+      "first_before_ordinal": 1267,
+      "last_before_ordinal": 1275,
+      "frames": 9,
+      "max_diff": 14.16
+     },
+     {
+      "first_before_ordinal": 1278,
+      "last_before_ordinal": 1284,
+      "frames": 7,
+      "max_diff": 13.54
+     },
+     {
+      "first_before_ordinal": 1290,
+      "last_before_ordinal": 1292,
+      "frames": 3,
+      "max_diff": 12.19
+     },
+     {
+      "first_before_ordinal": 1928,
+      "last_before_ordinal": 1934,
+      "frames": 7,
+      "max_diff": 14.54
+     }
+    ],
+    "old": [
+     {
+      "first_before_ordinal": 77,
+      "last_before_ordinal": 78,
+      "frames": 2,
+      "max_diff": 11.93
+     },
+     {
+      "first_before_ordinal": 86,
+      "last_before_ordinal": 86,
+      "frames": 1,
+      "max_diff": 11.24
+     },
+     {
+      "first_before_ordinal": 89,
+      "last_before_ordinal": 89,
+      "frames": 1,
+      "max_diff": 10.79
+     },
+     {
+      "first_before_ordinal": 3297,
+      "last_before_ordinal": 3297,
+      "frames": 1,
+      "max_diff": 11.42
+     }
+    ]
+   },
+   "result": "all same-camera motion (Lindor close-up jogging 165.13-165.72 s; dugout pan 176.28-176.49 s; the frame pair across the single gap 229.996/230.030 is the same close-up)"
+  },
+  "contact_sheets": [
+   {
+    "sheet": "sheet_regular_00.jpg",
+    "kind": "regular",
+    "source_seconds": [
+     144.16068333333334,
+     146.66318333333334
+    ],
+    "frames": 6,
+    "sha256": "0bcec192e7e6c26a716c65b3339c61512be64a4a83af47c9510af52a1bbc5c4b"
+   },
+   {
+    "sheet": "sheet_regular_01.jpg",
+    "kind": "regular",
+    "source_seconds": [
+     147.16368333333332,
+     149.66618333333332
+    ],
+    "frames": 6,
+    "sha256": "a67e5468bf5e7dd57648eeb568d744063717a74243718fd95bcca581ca1bae3b"
+   },
+   {
+    "sheet": "sheet_regular_02.jpg",
+    "kind": "regular",
+    "source_seconds": [
+     150.16668333333334,
+     152.66918333333334
+    ],
+    "frames": 6,
+    "sha256": "2c91c7d133132a5f13b91c811538eb426d5fecfb88c073ad87d760f1a58791c2"
+   },
+   {
+    "sheet": "sheet_regular_03.jpg",
+    "kind": "regular",
+    "source_seconds": [
+     153.16968333333332,
+     155.67218333333332
+    ],
+    "frames": 6,
+    "sha256": "bea9916f901927fe29bb7e3f938c28b75d921b195fb4390652054463faadab5b"
+   },
+   {
+    "sheet": "sheet_regular_04.jpg",
+    "kind": "regular",
+    "source_seconds": [
+     156.17268333333334,
+     158.67518333333334
+    ],
+    "frames": 6,
+    "sha256": "fdb1d76726f61b74b2f1c207be69527f798b1b032895e81662f772e29d8b9f77"
+   },
+   {
+    "sheet": "sheet_regular_05.jpg",
+    "kind": "regular",
+    "source_seconds": [
+     159.17568333333332,
+     161.67818333333332
+    ],
+    "frames": 6,
+    "sha256": "262c722a1a1e9e7911eb93023762aeeb14b8b40364ae0e1a8b1e6a61a8aa6afb"
+   },
+   {
+    "sheet": "sheet_regular_06.jpg",
+    "kind": "regular",
+    "source_seconds": [
+     162.17868333333334,
+     164.68118333333334
+    ],
+    "frames": 6,
+    "sha256": "167e194f35ece1c5fa1659f1b3221a56b0646e3ad4642585201123a4020dce50"
+   },
+   {
+    "sheet": "sheet_regular_07.jpg",
+    "kind": "regular",
+    "source_seconds": [
+     165.18168333333332,
+     167.68418333333332
+    ],
+    "frames": 6,
+    "sha256": "da571bf38c1ed534af8d514df683f90bfe68bdf89c8b93c7b1344e4616271e26"
+   },
+   {
+    "sheet": "sheet_regular_08.jpg",
+    "kind": "regular",
+    "source_seconds": [
+     168.18468333333334,
+     170.68718333333334
+    ],
+    "frames": 6,
+    "sha256": "b471b8d1c32ad9a8ab4e4229d61191bc721adf13c9b3970f540435991a7b0cb5"
+   },
+   {
+    "sheet": "sheet_regular_09.jpg",
+    "kind": "regular",
+    "source_seconds": [
+     171.18768333333333,
+     173.69018333333332
+    ],
+    "frames": 6,
+    "sha256": "62cc608bc80bdca694652dd10ec24b383113da74e86a3407058750bc3a5dcc28"
+   },
+   {
+    "sheet": "sheet_regular_10.jpg",
+    "kind": "regular",
+    "source_seconds": [
+     174.19068333333334,
+     176.69318333333334
+    ],
+    "frames": 6,
+    "sha256": "487fd669abc09cf8d393e1c86d302faf3535f6bf6853e97941204ebc0ecf80ed"
+   },
+   {
+    "sheet": "sheet_regular_11.jpg",
+    "kind": "regular",
+    "source_seconds": [
+     177.19368333333333,
+     179.69618333333332
+    ],
+    "frames": 6,
+    "sha256": "3dfae9882722d9b4305645791b694907ec44cc94aa94696dd255a570bbe29525"
+   },
+   {
+    "sheet": "sheet_regular_12.jpg",
+    "kind": "regular",
+    "source_seconds": [
+     180.19668333333334,
+     182.69918333333334
+    ],
+    "frames": 6,
+    "sha256": "e751de4acaa6d30e9e844c1ea470c66d4dadb9ce0b8bb4b9489c90fafab8fc8e"
+   },
+   {
+    "sheet": "sheet_regular_13.jpg",
+    "kind": "regular",
+    "source_seconds": [
+     183.19968333333333,
+     185.01816666666667
+    ],
+    "frames": 6,
+    "sha256": "1eaef28fae185f4908a60b64975bab75b0e95dd07dc5508b3625dc4b4ddd9526"
+   },
+   {
+    "sheet": "sheet_regular_14.jpg",
+    "kind": "regular",
+    "source_seconds": [
+     185.51866666666666,
+     188.02116666666666
+    ],
+    "frames": 6,
+    "sha256": "051f8e093aab7d1f5b7b4dd58126d56be5cfe05d0e9a226d678e5968584cdffa"
+   },
+   {
+    "sheet": "sheet_regular_15.jpg",
+    "kind": "regular",
+    "source_seconds": [
+     188.52166666666668,
+     191.02416666666667
+    ],
+    "frames": 6,
+    "sha256": "aca63cc8217ac7d176425279131d74ec0d1a984294d2095e7c5660610c403f63"
+   },
+   {
+    "sheet": "sheet_regular_16.jpg",
+    "kind": "regular",
+    "source_seconds": [
+     191.52466666666666,
+     194.02716666666666
+    ],
+    "frames": 6,
+    "sha256": "511bc66a4d728dd21a7797dcd25b4537ac36adef0557c6176e728d1c1c90647f"
+   },
+   {
+    "sheet": "sheet_regular_17.jpg",
+    "kind": "regular",
+    "source_seconds": [
+     194.52766666666668,
+     197.03016666666667
+    ],
+    "frames": 6,
+    "sha256": "35f4dd1e57de7f94b288bc17102ccb3170f7be73bb296122e50887ae8c4cee4f"
+   },
+   {
+    "sheet": "sheet_regular_18.jpg",
+    "kind": "regular",
+    "source_seconds": [
+     197.53066666666666,
+     200.03316666666666
+    ],
+    "frames": 6,
+    "sha256": "189d064916fbac2664a4f81f1da974538e65c99c20afc0da6b7e03f95549fc65"
+   },
+   {
+    "sheet": "sheet_regular_19.jpg",
+    "kind": "regular",
+    "source_seconds": [
+     200.53366666666668,
+     203.03616666666667
+    ],
+    "frames": 6,
+    "sha256": "5d8434e6645c9335540c46407c4b86ae9470a7a9698681c2e2cabb64cea693bb"
+   },
+   {
+    "sheet": "sheet_regular_20.jpg",
+    "kind": "regular",
+    "source_seconds": [
+     203.53666666666666,
+     206.03916666666666
+    ],
+    "frames": 6,
+    "sha256": "0d3a69bf246b3fc09d871194e4fd7565f561227d762ec6546bd2efd8d8c31d08"
+   },
+   {
+    "sheet": "sheet_regular_21.jpg",
+    "kind": "regular",
+    "source_seconds": [
+     206.53966666666668,
+     209.04216666666667
+    ],
+    "frames": 6,
+    "sha256": "5a09e9c114da109c48d65b1a3bd98d59001903c6be489d935fa92d17f382db75"
+   },
+   {
+    "sheet": "sheet_regular_22.jpg",
+    "kind": "regular",
+    "source_seconds": [
+     209.54266666666666,
+     212.04516666666666
+    ],
+    "frames": 6,
+    "sha256": "9e231850e15b5cbe210128202d3dc618618a8ca821b25f6b3cfdb4fa8a13640c"
+   },
+   {
+    "sheet": "sheet_regular_23.jpg",
+    "kind": "regular",
+    "source_seconds": [
+     212.54566666666668,
+     215.04816666666667
+    ],
+    "frames": 6,
+    "sha256": "1eb50fc0a9cb6e4a643ecb46fbdc807fb3c1381d694cc17e3355ae684460be60"
+   },
+   {
+    "sheet": "sheet_regular_24.jpg",
+    "kind": "regular",
+    "source_seconds": [
+     215.54866666666666,
+     218.05116666666666
+    ],
+    "frames": 6,
+    "sha256": "83fbd1a5318c485c179b98ad08f8403b5c5fb35840671b32969c1946231b628b"
+   },
+   {
+    "sheet": "sheet_regular_25.jpg",
+    "kind": "regular",
+    "source_seconds": [
+     218.55166666666668,
+     221.05416666666667
+    ],
+    "frames": 6,
+    "sha256": "bc3040525669702a2930a7e474d566bc672ed482df87a88e97b391ab3cd208dd"
+   },
+   {
+    "sheet": "sheet_regular_26.jpg",
+    "kind": "regular",
+    "source_seconds": [
+     221.55466666666666,
+     224.05716666666666
+    ],
+    "frames": 6,
+    "sha256": "b3c4e53be8b3cd8bb4121b30379d3d9d2bbf25d35e7fb4bb67110660ccb7194f"
+   },
+   {
+    "sheet": "sheet_regular_27.jpg",
+    "kind": "regular",
+    "source_seconds": [
+     224.55766666666668,
+     227.06016666666667
+    ],
+    "frames": 6,
+    "sha256": "5c447dd479f5f583d462dc7a0a8c0fab191ca656b2407077077380298644531c"
+   },
+   {
+    "sheet": "sheet_regular_28.jpg",
+    "kind": "regular",
+    "source_seconds": [
+     227.56066666666666,
+     230.0298
+    ],
+    "frames": 6,
+    "sha256": "34786502c35bf51df9ea0acd93ffeab791125b6ebb09f2ccc21bec7f0d3ed440"
+   },
+   {
+    "sheet": "sheet_cut_00.jpg",
+    "kind": "cut",
+    "source_seconds": [
+     154.62113333333335,
+     154.67118333333335
+    ],
+    "frames": 4,
+    "sha256": "5c2c33c8af273e822d13d54dad04a8e71ae5a7ba512e7189edb2d4cfe99d4f81"
+   },
+   {
+    "sheet": "sheet_cut_01.jpg",
+    "kind": "cut",
+    "source_seconds": [
+     161.6615,
+     161.71155
+    ],
+    "frames": 4,
+    "sha256": "a2b8e12d7a1d86c33aee0bd4ecbc28d32d9ee5467ee7bb35ca200714e5133b1c"
+   },
+   {
+    "sheet": "sheet_cut_02.jpg",
+    "kind": "cut",
+    "source_seconds": [
+     168.03453333333334,
+     168.08458333333334
+    ],
+    "frames": 4,
+    "sha256": "3e4eff5d3679b4e962a10626d798c4911907b50f0797ec10d72e6e9656bc2539"
+   },
+   {
+    "sheet": "sheet_cut_03.jpg",
+    "kind": "cut",
+    "source_seconds": [
+     176.29278333333335,
+     176.44293333333334
+    ],
+    "frames": 10,
+    "sha256": "5d33d2de4204f26fc1753845ae7e24d7643fd8404e95aa454ef356c7649d278b"
+   },
+   {
+    "sheet": "sheet_cut_04.jpg",
+    "kind": "cut",
+    "source_seconds": [
+     180.21336666666667,
+     180.26341666666667
+    ],
+    "frames": 4,
+    "sha256": "6097ae149f72c2273905ad09914744740c1c547e624da49ed9c8d71a9c05e48a"
+   },
+   {
+    "sheet": "sheet_cut_05.jpg",
+    "kind": "cut",
+    "source_seconds": [
+     180.21336666666667,
+     180.26341666666667
+    ],
+    "frames": 4,
+    "sha256": "e460781791474042910141b359e46ccbe5ea7c6d0b9cf27785c035a85b04516a"
+   },
+   {
+    "sheet": "sheet_cut_06.jpg",
+    "kind": "cut",
+    "source_seconds": [
+     188.95543333333333,
+     189.00548333333333
+    ],
+    "frames": 4,
+    "sha256": "da7a340048d3e3ef7d6ca513ffe41aa843cd38dec88d808b4f38683f328bbba4"
+   },
+   {
+    "sheet": "sheet_cut_07.jpg",
+    "kind": "cut",
+    "source_seconds": [
+     199.23236666666668,
+     199.28241666666668
+    ],
+    "frames": 4,
+    "sha256": "59d16ddad7db4ad14c0949cef128ebee4028a128d4e683ba3d7fa898d9d8e710"
+   },
+   {
+    "sheet": "sheet_cut_08.jpg",
+    "kind": "cut",
+    "source_seconds": [
+     206.03916666666666,
+     206.08921666666666
+    ],
+    "frames": 4,
+    "sha256": "2c088620fa8ac99fbb8f242559b1069358dedf7fd430a1914e9f0b8732de8188"
+   },
+   {
+    "sheet": "sheet_cut_09.jpg",
+    "kind": "cut",
+    "source_seconds": [
+     215.78223333333332,
+     215.83228333333332
+    ],
+    "frames": 4,
+    "sha256": "f92b8a5654af4b847337e2ae6781a6f6644ba57db75d282ac7271c8ea1dbf026"
+   },
+   {
+    "sheet": "sheet_cut_10.jpg",
+    "kind": "cut",
+    "source_seconds": [
+     228.9287,
+     228.97875
+    ],
+    "frames": 4,
+    "sha256": "92ff23425e2d13b14b4621995a172a2a0ae87578fe0acedfbafa97618ba5f7aa"
+   },
+   {
+    "sheet": "sheet_moderate_00.jpg",
+    "kind": "moderate",
+    "source_seconds": [
+     165.13163333333333,
+     230.0298
+    ],
+    "frames": 18,
+    "sha256": "35770de91c6185b74ffdb6a2a97f7bc06958a452959d23595d9c8330b045cd2f"
+   },
+   {
+    "sheet": "sheet_zoom_session_00.jpg",
+    "kind": "session_zoom",
+    "source_seconds": null,
+    "frames": null,
+    "sha256": "5c540d7faa55a40879d5a932d28b5c8bb59f6ac555a0417211b553bcc52816b9"
+   },
+   {
+    "sheet": "sheet_zoom_session_01.jpg",
+    "kind": "session_zoom",
+    "source_seconds": null,
+    "frames": null,
+    "sha256": "475677b14c710ad9fba43af711af25ef7dcc0d74f57f4ea12a6c2116dc3629e4"
+   }
+  ],
+  "index_json_sha256": "4814a25af21d7b1bfc0119dce274ac3a1f1ce0b46f007b778109eee40292d24e",
+  "extraction_script_sha256": "de3f39f9a050563c4918c4e706123b634539c52c94e8a74ac45dccdcf220a8ac",
+  "viewing": "The session and the workflow agents viewed JPEG contact sheets with the Read tool; the verifiers and the session additionally viewed 2-5x crops of the score bug, plate and mound regions. Nobody played the video continuously. Events shorter than 0.5 s between samples are only covered by the per-frame difference scan (hard cuts >= 29 vs threshold <= 16; graphic dissolves and display-only changes are below threshold and were located from the samples).",
+  "local_only": "frames, sheets and index.json stay in the git-ignored outputs folder (MLB footage); only hashes, PTS and observations are committed"
+ },
+ "hard_cuts": [
+  {
+   "first_frame_after": {
+    "clip": "ext",
+    "ordinal": 629,
+    "pts": 630589
+   },
+   "source_seconds": 154.6545,
+   "diff": 29.27,
+   "before": "center-field camera, Lindor running after contact",
+   "after": "high first-base-side camera, infield play"
+  },
+  {
+   "first_frame_after": {
+    "clip": "ext",
+    "ordinal": 1051,
+    "pts": 1053011
+   },
+   "source_seconds": 161.6948,
+   "diff": 33.94,
+   "before": "high first-base-side camera, Lindor jogging back",
+   "after": "close-up of Lindor jogging in"
+  },
+  {
+   "first_frame_after": {
+    "clip": "ext",
+    "ordinal": 1433,
+    "pts": 1435393
+   },
+   "source_seconds": 168.0679,
+   "diff": 67.76,
+   "before": "close-up of Lindor",
+   "after": "Mets dugout close-up (manager at the rail)"
+  },
+  {
+   "first_frame_after": {
+    "clip": "ext",
+    "ordinal": 2163,
+    "pts": 2166123,
+    "also": {
+     "clip": "old",
+     "ordinal": 314,
+     "pts": 314314
+    }
+   },
+   "source_seconds": 180.2467,
+   "diff": 62.2,
+   "before": "Mets dugout (Lindor, teammate); pitch-clock box already in the strip from 180.197",
+   "after": "center-field camera: Iglesias already in the box, pitcher on the rubber, bug 0-0 / 1 out / P:6, pitch clock :11"
+  },
+  {
+   "first_frame_after": {
+    "clip": "old",
+    "ordinal": 838,
+    "pts": 838838
+   },
+   "source_seconds": 188.9888,
+   "diff": 29.0,
+   "before": "center-field camera after pitch 1 (97 MPH, count already 0-1 from 188.955)",
+   "after": "pitcher close-up"
+  },
+  {
+   "first_frame_after": {
+    "clip": "old",
+    "ordinal": 1454,
+    "pts": 1455454
+   },
+   "source_seconds": 199.2657,
+   "diff": 29.87,
+   "before": "pitcher close-up, pitch clock :08",
+   "after": "center-field camera with the pitcher already set (hands together); leg lift by 199.533"
+  },
+  {
+   "first_frame_after": {
+    "clip": "old",
+    "ordinal": 1862,
+    "pts": 1863862
+   },
+   "source_seconds": 206.0725,
+   "diff": 45.36,
+   "before": "center-field camera after pitch 2 (0-2); a person in Braves white beside the umpire",
+   "after": "Iglesias close-up with lower banner 2B JOSE IGLESIAS / 20-GAME HITTING STREAK"
+  },
+  {
+   "first_frame_after": {
+    "clip": "old",
+    "ordinal": 2446,
+    "pts": 2448446
+   },
+   "source_seconds": 215.8156,
+   "diff": 53.67,
+   "before": "Iglesias close-up",
+   "after": "center-field camera, Iglesias in the box, pitcher on the rubber, 0-2 / 1 out / P:8"
+  },
+  {
+   "first_frame_after": {
+    "clip": "old",
+    "ordinal": 3234,
+    "pts": 3237234
+   },
+   "source_seconds": 228.9621,
+   "diff": 42.04,
+   "before": "center-field camera, bug 0-0 / 2 outs, pitcher walking off; Iglesias already out of frame since 228.562",
+   "after": "close-up of Iglesias walking with his bat"
+  }
+ ],
+ "below_threshold_transitions": [
+  {
+   "kind": "graphic_dissolve",
+   "source_seconds": [
+    144.661,
+    145.162
+   ],
+   "note": "close-up -> PITCH USAGE graphic over the high wide shot; dissolve diffs 6-8 at ext ~25-40"
+  },
+  {
+   "kind": "graphic_dissolve",
+   "source_seconds": [
+    152.169,
+    152.669
+   ],
+   "note": "graphic/wide shot -> center-field camera; diffs 2-7 at ext ~490-505 (prior manual note: dissolve at 152.4 s)"
+  },
+  {
+   "kind": "display_update",
+   "source_seconds": [
+    153.67,
+    154.171
+   ],
+   "note": "strip P:5 -> 96 MPH after PA1 pitch 6"
+  },
+  {
+   "kind": "display_update",
+   "source_seconds": [
+    160.177,
+    160.677
+   ],
+   "note": "bug 2-2 / 0 outs / P:5 -> 0-0 / 1 out / P:6, batter strip removed"
+  },
+  {
+   "kind": "display_update",
+   "source_seconds": [
+    179.696,
+    180.197
+   ],
+   "note": "pitch-clock box appears in the strip while the picture is still the dugout"
+  },
+  {
+   "kind": "display_update",
+   "source_seconds": [
+    183.7,
+    184.201
+   ],
+   "note": "batter strip 2. IGLESIAS .341 appears"
+  },
+  {
+   "kind": "display_update",
+   "source_seconds": [
+    188.522,
+    188.955
+   ],
+   "note": "count 0-0 -> 0-1 (before the 188.989 cut)"
+  },
+  {
+   "kind": "display_update",
+   "source_seconds": [
+    203.036,
+    203.537
+   ],
+   "note": "count 0-1 -> 0-2"
+  },
+  {
+   "kind": "display_update",
+   "source_seconds": [
+    227.06,
+    227.561
+   ],
+   "note": "bug 0-2 / 1 out -> 0-0 / 2 outs, batter strip removed (frame-exact 227.193633 s from the 2026-10-06 review)"
+  }
+ ],
+ "session_timeline": [
+  {
+   "source_seconds": [
+    144.161,
+    144.661
+   ],
+   "tiles": "ext 0, 30",
+   "observation": "Close-up of Lindor (#12) at the plate area. Bug NYM 0 / ATL 0, top 1, count 2-2, 0 outs, pitcher strip SCHWELLENBACH P:5, batter strip 1. LINDOR .272."
+  },
+  {
+   "source_seconds": [
+    145.162,
+    152.169
+   ],
+   "tiles": "ext 60-480",
+   "observation": "PITCH USAGE Statcast graphic (Schwellenbach 56) over a high wide shot from behind home plate; the mound is hidden, the plate circle with small figures stays visible below the panel. Dissolve-in diffs 6-8 at ext ordinals ~25-40 and dissolve-out diffs 2-7 at ~490-505 (152.33-152.58 s) stay below the cut threshold; the dissolve boundaries are not claimed frame-exact."
+  },
+  {
+   "source_seconds": [
+    152.669,
+    154.171
+   ],
+   "tiles": "ext 510-600 + session zoom",
+   "observation": "Center-field camera. 152.669 pitcher mid-stride with the throwing arm back (PA1 pitch 6 already under way; pitch clock :05 in the strip), 153.170 follow-through, 153.670 Lindor finishing his swing still at the plate, 154.171 Lindor running toward first. Strip P:5 -> 96 MPH between 153.670 and 154.171."
+  },
+  {
+   "source_seconds": [
+    154.655,
+    160.177
+   ],
+   "tiles": "ext 629-960 + cut sheet 00",
+   "observation": "Hard cut to the high first-base-side camera; an infielder is bent low in the second-base area at 155.172; Lindor's foot is at the first-base bag by 157.674 with the first baseman (#28) upright beside it; #28's return throw is cocked at 158.175 and released by 158.675; 159.176-160.177 Lindor jogging back. The ball, the catch and an out signal are not resolvable in any 0.5 s sample. Bug still 2-2 / 0 outs / P:5 at 160.177."
+  },
+  {
+   "source_seconds": [
+    160.677,
+    161.678
+   ],
+   "tiles": "ext 990-1050",
+   "observation": "Bug now 0-0 / 1 out / P:6 and the batter strip is gone: the out registered on the display between 160.177 and 160.677."
+  },
+  {
+   "source_seconds": [
+    161.695,
+    167.684
+   ],
+   "tiles": "ext 1051-1410 + cut sheet 01 + moderate sheet",
+   "observation": "Hard cut to a close-up of Lindor jogging in; same camera through 167.684 (sub-threshold diff runs at 165.13-165.72 s are the same close-up in motion)."
+  },
+  {
+   "source_seconds": [
+    168.068,
+    171.188
+   ],
+   "tiles": "ext 1433-1620 + cut sheet 02",
+   "observation": "Hard cut to the Mets dugout close-up (manager at the rail, #24 patch)."
+  },
+  {
+   "source_seconds": [
+    171.688,
+    180.23
+   ],
+   "tiles": "ext 1650-2162 / old 0-313 + cut sheets 03-05 + moderate sheet",
+   "observation": "Lindor (LINDOR 12) reaches the dugout rail by 172.189, removes his helmet 176.693-177.194 and is greeted by teammates; the dugout camera follows. The 176.28-176.49 s run of moderate diffs (old 77-89 / ext 1927-1934) is fast motion on the same dugout camera, not a cut. A pitch-clock box appears in the strip at 180.197 (ext 2160) while the picture is still the dugout. The dugout shot continues up to the last pre-cut frame at 180.230 (ext 2162 / old 313)."
+  },
+  {
+   "source_seconds": [
+    180.247,
+    184.201
+   ],
+   "tiles": "ext 2163-2400 / old 314 + cut sheets 04-05 + session zoom 01",
+   "observation": "Hard cut (byte-identical in both clips) to the center-field camera: Iglesias is ALREADY standing in the batter's box, catcher set, pitcher on the rubber. Bug 0-0 / 1 out / P:6; pitch clock :11 at the cut, :10 at 180.697, :09 at 181.198-182.199, :08 at 182.699, :07 from 183.200. Batter strip 2. IGLESIAS .341 appears between 183.700 and 184.201. No frame between 168.068 and 180.230 shows the field, so Iglesias's physical walk to the box is not in this broadcast segment."
+  },
+  {
+   "source_seconds": [
+    184.201,
+    189.022
+   ],
+   "tiles": "ext 2400-2448 / old 600-840 + session zoom",
+   "observation": "PA2 pitch 1: set at 184.201, leg lift at 184.701, stride with the arm back at 185.001/185.018, arm extended forward at 185.519 (release between 185.018 and 185.519), follow-through at 186.019 with Iglesias in a swing-finish pose; strip P:6 -> 97 MPH in progress at 186.520 and clean at 187.020; count 0-1 already displayed at 188.955 (0-0 at 188.522), i.e. before the 188.989 cut."
+  },
+  {
+   "source_seconds": [
+    188.989,
+    199.249
+   ],
+   "tiles": "old 838-1453 + cut sheets 06-07",
+   "observation": "Hard cut to a pitcher close-up that lasts until 199.249; P:7 appears between 191.525 and 192.025; pitch clock :10 at 196.530 and :08 at 198.031-199.032; corner promo bug DOWNLOAD NOW replaces the SNY bug 198.031-198.532 and reverts by 203.036. The catcher is never visible in this window."
+  },
+  {
+   "source_seconds": [
+    199.266,
+    203.537
+   ],
+   "tiles": "old 1454-1710 + cut sheet 07 + session zoom",
+   "observation": "Hard cut back to the center-field camera with the pitcher already set (hands together, 199.266/199.282); leg lift by 199.533, stride 200.033, arm forward with the ball near the plate 200.534 (release between 200.033 and 200.534), swing follow-through 201.034, 96 MPH at 201.535, count 0-2 at 203.537. The center-field pre-pitch window for pitch 2 is at most 199.266-199.533 (about 0.27 s)."
+  },
+  {
+   "source_seconds": [
+    203.537,
+    206.056
+   ],
+   "tiles": "old 1710-1861 + cut sheet 08",
+   "observation": "Center-field camera; the umpire extends an arm toward the first-base side; a person in Braves white enters from that side at 205.539 and stands beside the umpire at 206.039-206.056 (not identified)."
+  },
+  {
+   "source_seconds": [
+    206.073,
+    215.799
+   ],
+   "tiles": "old 1862-2445 + cut sheets 08-09",
+   "observation": "Hard cut to an Iglesias close-up with the lower banner 2B JOSE IGLESIAS / 20-GAME HITTING STREAK; strip 96 MPH -> P:8 between 206.089 and 207.040; umpire hands a ball to the catcher; batter resets."
+  },
+  {
+   "source_seconds": [
+    215.816,
+    222.556
+   ],
+   "tiles": "old 2446-2850 + cut sheet 09",
+   "observation": "Hard cut to the center-field camera: Iglesias in the box, pitcher on the rubber, 0-2 / 1 out / P:8; pitch clock :10 (217.050) down to :05 (222.055-223.056); pitcher set at 222.556."
+  },
+  {
+   "source_seconds": [
+    223.056,
+    225.058
+   ],
+   "tiles": "old 2880-3000 + session zoom",
+   "observation": "PA2 pitch 3: leg lift at 223.056, stride with the arm back at 223.557, arm forward at 224.057 with Iglesias still loaded (release between 223.557 and 224.057), swing through the zone with the catcher low at 224.558 (swing between 224.057 and 224.558), 90 MPH at 225.058. Feed outcome: strikeout swinging."
+  },
+  {
+   "source_seconds": [
+    225.058,
+    227.06
+   ],
+   "tiles": "old 3000-3120",
+   "observation": "Catcher holds the ball; Iglesias leaves the box between 225.058 and 225.559 and walks toward the first-base side with his bat; bug still 0-2 / 1 out at 227.060."
+  },
+  {
+   "source_seconds": [
+    227.561,
+    228.945
+   ],
+   "tiles": "old 3150-3233 + cut sheet 10",
+   "observation": "Bug 0-0 / 2 outs with the batter strip removed (display update between 227.060 and 227.561; the earlier frame-exact reading placed it at old 3127->3128 = 227.193633 s). Iglesias is at the right edge of the frame at 227.561-228.061 and out of frame from 228.562; the pitcher walks off the mound toward the first-base side."
+  },
+  {
+   "source_seconds": [
+    228.962,
+    230.03
+   ],
+   "tiles": "old 3234-3297 + cut sheet 10 + moderate sheet",
+   "observation": "Hard cut to a close-up of Iglesias walking in front of the stands with his bat in hand; same close-up through the last frame 230.030 (old 3297, the frame after the single missing frame)."
+  }
+ ],
+ "center_field_windows": [
+  {
+   "pitch": "PA1/6",
+   "start_seconds": "after the graphic dissolve, first center-field sample 152.669 (not frame-exact); set position and the start of the delivery are hidden by the graphic",
+   "end_seconds_exact": "ext 628 = 154.638 (last frame before the 154.6545 cut)"
+  },
+  {
+   "pitch": "PA2/1",
+   "start_seconds_exact": "180.246733 (ext 2163 / old 314)",
+   "end_seconds_exact": "188.972133 (old 837)"
+  },
+  {
+   "pitch": "PA2/2",
+   "start_seconds_exact": "199.265733 (old 1454), pitcher already set; leg lift by 199.533",
+   "end_seconds_exact": "206.055867 (old 1861)"
+  },
+  {
+   "pitch": "PA2/3",
+   "start_seconds_exact": "215.8156 (old 2446)",
+   "end_seconds_exact": "228.945383 (old 3233)"
+  }
+ ],
+ "pitch_release_brackets_from_samples": [
+  {
+   "pitch": "PA1/6",
+   "bracket": [
+    152.669,
+    153.17
+   ],
+   "note": "stride at 152.669, follow-through at 153.170; the set position and the start of the delivery are hidden by the graphic; the committed timing row stays 'unavailable' and is not re-timed here"
+  },
+  {
+   "pitch": "PA2/1",
+   "bracket": [
+    185.018,
+    185.519
+   ]
+  },
+  {
+   "pitch": "PA2/2",
+   "bracket": [
+    200.033,
+    200.534
+   ]
+  },
+  {
+   "pitch": "PA2/3",
+   "bracket": [
+    223.557,
+    224.057
+   ]
+  },
+  {
+   "note": "0.5 s sample brackets for cross-reference only; the committed timing rows (185.5 / 200.4 / 224.0) are not modified and not re-verified by this review"
+  }
+ ],
+ "findings": {
+  "preceding_pa_end": {
+   "final_pitch_shown": "partially: stride, release bracket, follow-through and the swing are on the center-field camera; the set position and the start of the delivery are hidden by the PITCH USAGE graphic until 152.169",
+   "outcome_shown": "partially: the play at first (runner at the bag by 157.674, first baseman beside it, return throw 158.175-158.675) is on camera; the fielding, the catch and an out signal are not resolvable in the 0.5 s samples; the out registers on the display between 160.177 and 160.677",
+   "batter_departure_shown": true,
+   "basis": "ext tiles 152.669-160.677, cut sheet 00, session zoom of the strip"
+  },
+  "batter_entry": {
+   "physical_walk_in_shown": false,
+   "first_appearance_seconds_exact": "180.246733 (ext 2163 / old 314)",
+   "first_appearance_how": "hard cut from the dugout shot; batter already set in the box, pitch clock :11 (clock box already present at 180.197 on the dugout shot)",
+   "basis": "24 regular tiles 168.185-180.197 plus cut-adjacent frames are all dugout close-ups; no field view exists between 168.068 and 180.230"
+  },
+  "target_pa": {
+   "pitch_motions_seen": 3,
+   "final_pitch_shown": true,
+   "outcome_shown": "swing through the zone at 224.558 with the catcher low, batter leaving the box 225.058-225.559, display reset to 2 outs 227.060-227.561; the called result itself is from the feed",
+   "departure_shown": true,
+   "scoreboard_update_shown": true,
+   "anything_possibly_outside_coverage": "nothing of PA2 lies outside 180.247-230.013 s; the only missing frame (230.013-230.030) is after the departure cut; Iglesias's arrival back in the dugout is after the last frame",
+   "pre_pitch_limitation": "pitch 2 has at most 0.27 s of center-field pre-pitch frames (cut at 199.266 with the pitcher already set, leg lift by 199.533); the preceding 188.989-199.249 window is a pitcher close-up without the catcher"
+  }
+ },
+ "verdict": {
+  "strict_whole_pa_condition_physical_entry_visible": "NOT MET and not satisfiable from this broadcast segment: the feed stays on the dugout from 168.068 s to 180.230 s and cuts to the center-field camera at 180.246733 s with Iglesias already in the box and the pitch clock running.",
+  "span_preceding_end_to_target_end": "PRESENT in the gap-free mapped material (144.160683-230.013117 s) and consistent across every 0.5 s sample, every flagged cut and every sub-threshold run: PA1's final pitch from the stride on, the play at first and Lindor's return, then PA2's three pitch motions, the swinging strikeout, the 2-out display update and Iglesias's departure. The fielding/catch of PA1 and the set position before PA1 pitch 6 are not shown (graphic / 0.5 s sampling), so 'outcome shown' holds only as play-at-first plus display update.",
+  "what_this_is_not": [
+   "not continuous playback",
+   "not a human review",
+   "not an independent evaluation",
+   "not a re-timing of the committed timing rows",
+   "not physical-accuracy or intent verification"
+  ],
+  "open_decision_for_the_owner": "Whether the single-PA replay may define its start as a broadcast event (first center-field frame 180.246733 s, labelled as such) or as the preceding PA's completion (play at first by 158.675 s / display update by 160.677 s), since a physically visible batter entry does not exist in this source. CV-5a stays held until that definition is fixed; this record does not change the protocol."
+ },
+ "workflow": {
+  "run_id": "wf_29d24504-03b",
+  "reviewer_model": "claude-opus-5",
+  "reviewer_conclusions": {
+   "flagged_jumps": [
+    {
+     "sheet": "sheet_cut_00.jpg",
+     "source_seconds": 154.655,
+     "classification": "hard_camera_cut",
+     "before": "Low centre-field game camera (tile 2, 154.638): home-plate area, Lindor already out of the batter's box, catcher and umpire rising, pitcher off the mound; bug 2-2 / 96 MPH / i. LINDOR .272.",
+     "after": "High third-base-side wide camera (tile 3, 154.655): looking down on the whole infield and the first-base line, mound at upper left, dugout and crowd at lower right; same score bug values."
+    },
+    {
+     "sheet": "sheet_cut_01.jpg",
+     "source_seconds": 161.695,
+     "classification": "hard_camera_cut",
+     "before": "High third-base-side camera (tile 2, 161.678): Lindor seen from above and behind, jogging across the grass/dirt diagonal, small in frame; bug 0-0 / 1 out / P:6.",
+     "after": "Tight low frontal camera (tile 3, 161.695): Lindor jogging straight toward the lens, head-to-waist framing, infield dirt wall behind; same bug values."
+    },
+    {
+     "sheet": "sheet_cut_02.jpg",
+     "source_seconds": 168.068,
+     "classification": "hard_camera_cut",
+     "before": "Tight frontal follow shot (tile 2, 168.051): Lindor jogging toward the lens through protective netting, grass background.",
+     "after": "Mets dugout camera (tile 3, 168.068): the manager in Mets grey and blue cap leaning on the padded rail, 'Ingelheim' signage and teammates behind; same bug values."
+    },
+    {
+     "sheet": "sheet_cut_03.jpg",
+     "source_seconds": 176.326,
+     "classification": "fast_motion_same_camera",
+     "before": "Mets dugout shot (tile 2, 176.309): Lindor's back (#12 'LINDOR'), a moustachioed teammate at left with his fist raised talking, 'NexGard PLUS' signage behind.",
+     "after": "Identical Mets dugout shot (tile 3, 176.326): same camera, same framing, same two players; only the teammate's raised hand and head position have moved, plus a slight camera drift. No cut or transition anywhere in the 10-frame cluster."
+    },
+    {
+     "sheet": "sheet_cut_04.jpg",
+     "source_seconds": 180.247,
+     "classification": "hard_camera_cut",
+     "before": "Mets dugout close-up (tile 2, 180.230): Lindor bare-headed in a blue head wrap at left, a teammate at right, dugout rail and control box in the foreground.",
+     "after": "Centre-field game camera (tile 3, 180.247): full field, Schwellenbach on the mound, catcher and umpire set, and a Mets batter in grey ALREADY standing at the plate; strip shows a pitch-clock readout and 'P:6' with no batter row yet."
+    },
+    {
+     "sheet": "sheet_cut_05.jpg",
+     "source_seconds": 180.247,
+     "classification": "hard_camera_cut",
+     "before": "Same Mets dugout close-up as cut_04 tile 2 (old ord 313, 180.230) - the overlap frame from the other clip.",
+     "after": "Same centre-field game camera with the Mets batter already at the plate as cut_04 tile 3 (old ord 314, 180.247). This is a duplicate observation of the same source cut, not a second edit."
+    },
+    {
+     "sheet": "sheet_cut_06.jpg",
+     "source_seconds": 188.989,
+     "classification": "hard_camera_cut",
+     "before": "Centre-field game camera (tile 2, 188.972): pitcher standing on the mound after the pitch, batter at the plate, catcher down; bug count 0-0, 97 MPH, i. IGLESIAS .341.",
+     "after": "Medium close-up of Schwellenbach (tile 3, 188.989) standing on the grass in front of the dirt wall, glove at his side; bug count now 0-1. The count change and the cut fall on the same frame boundary."
+    },
+    {
+     "sheet": "sheet_cut_07.jpg",
+     "source_seconds": 199.266,
+     "classification": "hard_camera_cut",
+     "before": "Pitcher close-up (tile 2, 199.249): Schwellenbach frontal, hands together at his chest, dirt wall and grass behind; bug 0-1 / P:7, clock :08.",
+     "after": "Centre-field game camera (tile 3, 199.266): pitcher set on the rubber, batter in the box, catcher and umpire in position; same bug values."
+    },
+    {
+     "sheet": "sheet_cut_08.jpg",
+     "source_seconds": 206.073,
+     "classification": "hard_camera_cut",
+     "before": "Centre-field game camera (tile 2, 206.056): batter stepping out toward the third-base side, pitcher walking behind the mound, umpire moving; bug 0-2 / 96 MPH.",
+     "after": "Tight side shot of Iglesias (tile 3, 206.073): #11 in Mets grey with his bat, braves.com wall and green seats behind, with the '2B JOSE IGLESIAS / 20-GAME HITTING STREAK' lower-third already fully drawn on screen."
+    },
+    {
+     "sheet": "sheet_cut_09.jpg",
+     "source_seconds": 215.816,
+     "classification": "hard_camera_cut",
+     "before": "Tight Iglesias shot (tile 2, 215.799): #11 adjusting his helmet beside the plate umpire, lower-third graphic still on screen.",
+     "after": "Centre-field game camera (tile 3, 215.816): full field, batter settling in the box, pitcher on the rubber; lower-third gone, bug 0-2 / P:8 / 1 out."
+    },
+    {
+     "sheet": "sheet_cut_10.jpg",
+     "source_seconds": 228.962,
+     "classification": "hard_camera_cut",
+     "before": "Centre-field game camera (tile 2, 228.945): pitcher walking down off the mound toward the first-base side, catcher and umpire standing at the plate; bug 0-0 with two filled out dots, '90 MPH'.",
+     "after": "Tight shot of Iglesias (tile 3, 228.962) walking right-to-left in front of the stands and the PLAYBALL.org brick wall, his bat in mid-air below him; same bug values."
+    }
+   ],
+   "unflagged_changes": [
+    {
+     "between": "sheet_regular_00 tile 2 (ext 144.661) and sheet_regular_00 tile 3 (ext 145.162)",
+     "description": "Scene change with no flagged jump in the interval: a tight head-and-shoulders shot of Lindor at the plate is replaced by the STATCAST 'PITCH USAGE' full-screen graphic animating in over a different, transitional field image. The small top-left score bug disappears at the same time."
+    },
+    {
+     "between": "sheet_regular_00 tile 3 (ext 145.162) and sheet_regular_00 tile 4 (ext 145.662)",
+     "description": "Continuation of the same unflagged graphic transition: behind the now fully seated PITCH USAGE panel the underlying picture settles into a steady high overhead infield camera, different from the transitional composite in the previous tile. No flagged jump lies between these two source seconds."
+    },
+    {
+     "between": "sheet_regular_02 tile 5 (ext 152.169) and sheet_regular_02 tile 6 (ext 152.669)",
+     "description": "Scene change with no flagged jump in the interval: the full-screen PITCH USAGE graphic is gone and the picture is the low centre-field game camera with the score bug restored. Schwellenbach is already mid-delivery in that first live tile, so both the graphic exit and the start of the pitch fall inside this unflagged interval."
+    }
+   ],
+   "preceding_pa_end": {
+    "final_pitch_shown": true,
+    "outcome_shown": true,
+    "batter_departure_shown": true,
+    "basis": "PITCH: only partially. The STATCAST PITCH USAGE graphic fills the frame from 145.162 through 152.169, so Schwellenbach's set position and the start of his 6th-pitch delivery appear in no sampled frame; the first live tile at 152.669 already shows him mid-stride. Release (between 152.669 and 153.170), follow-through (153.170) and contact (between 153.170 and 153.670) ARE visible on the centre-field camera. OUTCOME: partially. The batted ball being fielded is not identifiable in any tile - no sampled frame shows a fielder gloving or throwing it - but the play at first is depicted, with a Braves #28 beside the bag and the Mets runner arriving at 158.175 and the ball being returned at 158.675; the catch and the out call are not frame-resolved. DEPARTURE: clear. Lindor runs past first, jogs back up the line (158.675-167.684), reaches the dugout rail by 172.189 and removes his helmet by 177.694. The score-bug change to 1 out at 160.677 is treated as a display event only and is not used to time the out."
+   },
+   "batter_entry": {
+    "physical_walk_in_shown": false,
+    "first_appearance_seconds": 180.247,
+    "first_appearance_how": "Already standing at the plate on the centre-field game camera in the very first frame after a hard camera cut from the Mets dugout; no approach from the on-deck area or dugout is shown anywhere.",
+    "basis": "Frame-exact from sheet_cut_04 and sheet_cut_05 (the same source frames in both clips): 180.230 is the dugout close-up of Lindor and a teammate, and 180.247 is the centre-field game camera with a Mets batter in grey already at the plate. Every sampled frame before that cut is on the dugout camera or on Lindor, so no part of Iglesias's walk to the box appears in the material. Identity is established only afterwards - by the score-bug batter row 'i. IGLESIAS .341' from 184.201, and visually by the '11' / 'IGLESIAS' nameplate in the close-ups from 206.073."
+   },
+   "target_pa": {
+    "pitch_motions_seen": 3,
+    "final_pitch_shown": true,
+    "outcome_shown": true,
+    "departure_shown": true,
+    "scoreboard_update_shown": true,
+    "anything_possibly_outside_coverage": "Iglesias's walk-in to the batter's box is never shown: at his first visible frame (180.247) he is already at the plate, and all earlier sampled frames are on other shots (dugout, Lindor follow). His arrival back in the Mets dugout after the strikeout is after the last frame - at 230.030 he is still walking in front of the stands. PA3 (Vientos) is entirely outside coverage and no next batter is visible. The material also starts mid-PA1 (first frame 144.161 already shows a 2-2 count and P:5), so PA1 pitches 1-5 are outside coverage.",
+    "basis": "Three complete pitch motions are visible on the centre-field camera: leg lift 184.201 / release 185.018-185.519 / follow-through 186.019; motion start 199.533-200.033 / release 200.033-200.534 / follow-through 201.034; motion start 222.556-223.056 / release 223.557-224.057 / follow-through 224.558. The final pitch is visible from the set (222.556) through the follow-through (224.558). Outcome: the bat is visibly through the zone at 224.057 and the catcher is low at 224.558, the batter is bent over at 225.058 and out of the box by 225.559, with no runner advance or throw in any tile - but the ball, the catcher securing it and the umpire's strike-three mechanic are not individually resolvable. Departure: he walks off on the centre-field camera 225.559-228.562 and in a tight shot 229.062-230.030. Scoreboard: 0-2 with one out dot at 227.060 becomes 0-0 with two filled out dots at 227.561."
+   },
+   "whole_pa_condition": {
+    "met_on_sampled_evidence": false,
+    "verifiable": [
+     "The whole of PA2 (Iglesias) from his first visible frame at 180.247 to the end of the material at 230.030 is inside the mapped footage, with every interval either on camera or spanned by an identified hard cut.",
+     "All three PA2 pitch motions on the centre-field camera, each with a leg-lift/stride frame, a release-side frame and a follow-through frame.",
+     "The swing on PA2 pitch 3 (bat through the zone at 224.057) and Iglesias leaving the box (225.058-225.559).",
+     "Iglesias walking away from the plate and the post-strikeout tight shot of him, through the last frame at 230.030.",
+     "The full PA2 score-bug progression: 0-0 -> 0-1 (frame-exact 188.989) -> 0-2 (203.036-203.537) -> reset to 0-0 with the outs dot going 1 -> 2 (227.060-227.561), plus P:6 -> P:7 (191.525-192.025) -> P:8 (206.540-207.040) and the 97 / 96 / 90 MPH readouts.",
+     "PA1 contact (153.170-153.670), the runner reaching first base (157.174-158.675), and Lindor's complete departure to the dugout (158.675-177.694)."
+    ],
+    "not_verifiable": [
+     "PA1 pitch 6 set position and the first part of the delivery - the full-screen PITCH USAGE graphic hides the mound from 145.162 to 152.169 and the first live tile (152.669) already shows the pitcher mid-stride.",
+     "The second baseman fielding the ground ball and the throw to first - no sampled tile shows a fielder gloving or throwing the ball.",
+     "The catch at first base and the out call - not resolvable at 0.5 s sampling on the high third-base camera.",
+     "Iglesias entering the batter's box - shown in no frame; he is already at the plate in the first frame after the cut at 180.247.",
+     "Whether the batter swung or took on PA2 pitches 1 and 2 (batter too small on the centre-field camera, no cut sheet covering those moments).",
+     "The catcher securing PA2 pitch 3 and the umpire's strike-three mechanic.",
+     "PA1 pitches 1-5 (before 144.161) and all of PA3 (after 230.030)."
+    ],
+    "reasoning": "Judged only from these 40 sampled sheets, the condition is not met. PA2 itself is well covered from the batter's first visible frame through his departure, and Lindor's departure that closes PA1 is covered. What is missing sits at the end of PA1: the broadcast was on a full-screen STATCAST graphic through 152.169, so the pitcher's set and the start of the pitch that produced the groundout are absent from the material, and the defensive half of the play - the ground ball being fielded and the catch at first - never appears in a frame where it can be identified. The physical out can only be placed loosely between 157.174 and 158.675 from the first-base imagery; the clean 1-out score-bug change at 160.677 is a display event and is deliberately not used to establish it. In addition, Iglesias's entry into the box falls in a stretch where the broadcast was on the dugout, so the transition between the two plate appearances is covered in time but not in picture."
+   },
+   "limitations": [
+    "These are sampled still frames read with an image tool, not continuous playback. The regular sheets sample every 30th decoded frame (0.5004 s apart), so any event shorter than about 0.5 s can fall entirely between tiles outside the 11 cut sheets.",
+    "Only the 11 machine-flagged jumps have frame-exact context (4 frames, or 10 for cut_03). Every other transition is reported as a bracket between two sampled tiles, never as an exact time.",
+    "Score-bug text is very small at tile scale. Readings of the lower strip ('P:NN' vs a velocity readout, and the pitch-clock digits such as :10/:09/:08) and of the outs dots are near the legibility limit; the balls-strikes count and the filled out dots were the most reliable, the strip values less so.",
+    "Score-bug changes are reported as display events only; no physical event time (out, strike, strikeout) is inferred from a bug update.",
+    "Player identification is limited to what is legible: #12/'LINDOR', #11/'IGLESIAS', #56 and the 'SCHWELLENBACH' bug text, plus a Braves #28 at first base. The specific fielders named in the official feed (Albies, Olson) cannot be confirmed from these tiles.",
+    "sheet_cut_03's 10-frame cluster contains no camera change at all - all ten frames are the same dugout shot - so that flagged diff spike is fast subject motion plus camera drift, not an edit.",
+    "No replay segment of the PA1 groundout appears in any sampled tile between 153.670 and 180.197, but a replay shorter than the sampling interval could not be ruled out.",
+    "The material begins mid-PA1 (first frame 144.161 already shows a 2-2 count and P:5) and ends at 230.030 with Iglesias still walking off, so neither the start of PA1 nor any part of PA3 could be examined.",
+    "No file, video or source other than the 40 named contact sheets in <local path removed> was used; index.json was not opened. The prior manual timing quoted in the task was not used to derive any bracket reported here."
+   ]
+  },
+  "reviewer_sheet_notes": [
+   {
+    "sheet": "sheet_regular_00.jpg",
+    "note": "Tiles 1-2 (144.161/144.661): tight head-and-shoulders shot of Lindor (#12, Mets grey) at bat with crowd behind; bug reads NYM 0 / ATL 0, top-1st arrow, count 2-2, strip 'SCHWELLENBACH P:5'. Tile 3 (145.162) the STATCAST 'PITCH USAGE / SPENCER SCHWELLENBACH 56' full-screen graphic is wiping in over a transitional field image; tiles 4-6 show it fully seated over a high overhead infield camera. While the graphic is up the small top-left score bug is not visible."
+   },
+   {
+    "sheet": "sheet_regular_01.jpg",
+    "note": "All six tiles (147.164-149.666) are the full-screen STATCAST PITCH USAGE panel over the high overhead infield view. The mound, pitcher and batter are completely hidden behind the panel and the score bug is absent. Nothing in the panel changes across the sheet."
+   },
+   {
+    "sheet": "sheet_regular_02.jpg",
+    "note": "Tiles 1-5 (150.167-152.169) are still the full PITCH USAGE graphic over the overhead view. Tile 6 (152.669) is live game video from the low centre-field camera: Schwellenbach is already mid-delivery (front leg down, arm coming forward) and Lindor is loading in the box; the bug is back showing 2-2, 'SCHWELLENBACH P:5', 'i. LINDOR .272'."
+   },
+   {
+    "sheet": "sheet_regular_03.jpg",
+    "note": "Tiles 1-3 (153.170-154.171) centre-field camera: pitcher in follow-through with Lindor still at the plate, then pitcher upright with the batter out of the box, then the runner up the first-base line with Braves fielders moving. The strip changes from 'P:5' to '96 MPH' between 153.170 and 153.670. Tiles 4-6 (154.671-155.672) are a high third-base-side wide camera over the infield and first-base line."
+   },
+   {
+    "sheet": "sheet_regular_04.jpg",
+    "note": "All six tiles (156.173-158.675) are the high third-base-side camera progressively zooming onto the first-base area. At 157.674-158.175 a Braves first baseman (#28, white) is beside the bag with the Mets runner arriving/just past; at 158.675 his throwing arm is raised to send the ball back in and the runner is past the bag. Bug steady at 2-2, 96 MPH, i. LINDOR."
+   },
+   {
+    "sheet": "sheet_regular_05.jpg",
+    "note": "Same high camera tightening on Lindor jogging back up the line (159.176-161.678). The strip reverts from '96 MPH' to 'P:5' by 159.676. At 160.677 the bug changes to count 0-0, one filled yellow out dot, 'SCHWELLENBACH P:6', and the batter row is cleared."
+   },
+   {
+    "sheet": "sheet_regular_06.jpg",
+    "note": "All six tiles (162.179-164.681) are a tight frontal follow shot of Lindor (#12) jogging toward the lens through protective netting. Bug unchanged throughout: 0-0, one out dot, P:6, no batter row."
+   },
+   {
+    "sheet": "sheet_regular_07.jpg",
+    "note": "Continuation of the same tight frontal follow shot (165.182-167.684); Lindor keeps jogging and glances to his left. No bug changes across the sheet."
+   },
+   {
+    "sheet": "sheet_regular_08.jpg",
+    "note": "All six tiles (168.185-170.687) are the Mets dugout camera: the manager in Mets grey and a blue cap leaning on the padded rail with teammates behind, camera drifting slowly. Bug unchanged (0-0, 1 out, P:6)."
+   },
+   {
+    "sheet": "sheet_regular_09.jpg",
+    "note": "Same dugout camera (171.188-173.690). At 171.688 a Mets batting helmet rises into the lower frame; by 172.189 Lindor ('LINDOR 12' nameplate) is at the rail with his back to camera, and at 173.190-173.690 teammates greet him. Bug unchanged."
+   },
+   {
+    "sheet": "sheet_regular_10.jpg",
+    "note": "Dugout camera continuing (174.191-176.693), panning along the dugout past 'NexGard PLUS' signage. Lindor stands with his back to camera, still helmeted, talking with teammates; a bat-rack rail/control box enters frame at 176.693. Bug unchanged."
+   },
+   {
+    "sheet": "sheet_regular_11.jpg",
+    "note": "Dugout camera (177.194-179.696). At 177.194 Lindor's helmet is caught in mid-air being lifted off, revealing a blue head wrap; from 177.694 he is bare-headed while a moustachioed teammate in Mets grey talks beside him. Bug unchanged at 0-0, 1 out, P:6."
+   },
+   {
+    "sheet": "sheet_regular_12.jpg",
+    "note": "Tile 1 (180.197) is still the dugout close-up. Tile 2 (180.697) is the centre-field game camera: full field, pitcher on the rubber, and a Mets batter already standing at the plate; the strip reads 'SCHWELLENBACH :10  P:6' (pitch-clock digits) with no batter row. Tiles 3-6 (181.198-182.699) show the batter settling into his stance as the clock counts :09, :08."
+   },
+   {
+    "sheet": "sheet_regular_13.jpg",
+    "note": "Centre-field camera (183.200-185.018): pitcher standing on the rubber, then leg lift at 184.201, stride at 184.701 and front-foot plant at 185.001/185.018. From 184.201 the bug adds the batter row 'i. IGLESIAS .341'. The last tile is the old clip's overlapping frame at 185.018, identical in framing to the ext tiles."
+   },
+   {
+    "sheet": "sheet_regular_14.jpg",
+    "note": "Centre-field camera (185.519-188.021): arm extended forward at 185.519, full follow-through with the trailing leg high at 186.019, then recovery; the batter remains at the plate. The strip switches to '97 MPH' from 187.020 while the count still reads 0-0."
+   },
+   {
+    "sheet": "sheet_regular_15.jpg",
+    "note": "Tile 1 (188.522) is the centre-field camera with the count still 0-0. From tile 2 (189.022) onward the shot is a medium close-up of Schwellenbach standing on the grass, and the count now reads 0-1. Bug: 0-1, 1 out, '97 MPH', i. IGLESIAS .341."
+   },
+   {
+    "sheet": "sheet_regular_16.jpg",
+    "note": "Pitcher close-up throughout (191.525-194.027); he turns away and walks with his back to the camera against the dirt wall. The strip changes from '97 MPH' to 'P:7' between 191.525 and 192.025."
+   },
+   {
+    "sheet": "sheet_regular_17.jpg",
+    "note": "Pitcher close-up, frontal (194.528-197.030), gathering himself with glove at his waist. Bug 0-1, 1 out, P:7, i. IGLESIAS .341; pitch-clock digits (:10, :09) appear next to the pitcher name at 196.530 and 197.030."
+   },
+   {
+    "sheet": "sheet_regular_18.jpg",
+    "note": "Tiles 1-4 (197.531-199.032) pitcher close-up with the clock at :09/:08; a corner 'DOWNLOAD NOW' promo bug replaces the SNY bug from 198.532. Tile 5 (199.533) is back on the centre-field game camera with the pitcher set and the batter in the box; tile 6 (200.033) shows the leg lift/stride."
+   },
+   {
+    "sheet": "sheet_regular_19.jpg",
+    "note": "Centre-field camera (200.534-203.036): arm forward with front foot planted at 200.534, follow-through with trailing leg up at 201.034, recovery after. The batter appears rotated/post-swing at 201.034-202.536. Strip reads '96 MPH' from 201.535; the count still shows 0-1 through 203.036."
+   },
+   {
+    "sheet": "sheet_regular_20.jpg",
+    "note": "Centre-field camera (203.537-206.039); the count now reads 0-2 at 203.537. The pitcher walks behind the mound and back up, the batter steps out of the box and back in, and the catcher and umpire reset at the plate."
+   },
+   {
+    "sheet": "sheet_regular_21.jpg",
+    "note": "Tight side shot of Iglesias (#11, 'NEW YORK' grey) with his bat, catcher's mask in the foreground and the braves.com wall behind (206.540-209.042). The lower-third '2B JOSE IGLESIAS / 20-GAME HITTING STREAK / .416 AVG, 4 2B, HR, 3 RBI, 11 K' is on screen in every tile. The strip reads 'P:8' from 207.040; count 0-2, 1 out."
+   },
+   {
+    "sheet": "sheet_regular_22.jpg",
+    "note": "Same tight shot (209.543-212.045): the plate umpire hands a new ball to the catcher while Iglesias stands alongside adjusting his grip and looking out. Lower-third still on screen; bug 0-2, P:8, 1 out."
+   },
+   {
+    "sheet": "sheet_regular_23.jpg",
+    "note": "Same tight shot (212.546-215.048): Iglesias leans over, adjusts his helmet and settles back toward the box; the 'IGLESIAS 11' nameplate is legible at 213.046 and 214.548. Bug and lower-third unchanged."
+   },
+   {
+    "sheet": "sheet_regular_24.jpg",
+    "note": "Tile 1 (215.549) is the last tight Iglesias shot with the lower-third up. Tile 2 (216.049) is back on the centre-field game camera with the batter in the box and the pitcher on the rubber, lower-third gone. Pitch-clock digits (:10, :09) appear in the strip from 217.050."
+   },
+   {
+    "sheet": "sheet_regular_25.jpg",
+    "note": "Centre-field game camera for all six tiles (218.552-221.054): the pitcher stands on the rubber taking the sign while the batter sets; the pitch clock counts :09, :08, :07, :06. Count stays 0-2, P:8, one out dot."
+   },
+   {
+    "sheet": "sheet_regular_26.jpg",
+    "note": "Centre-field camera (221.555-224.057): pitcher comes set at 222.055-222.556 (clock :05), strides at 223.056-223.557, and at 224.057 the arm is forward in release while a bat is visibly swinging through the zone at the plate."
+   },
+   {
+    "sheet": "sheet_regular_27.jpg",
+    "note": "Centre-field camera (224.558-227.060): pitcher in follow-through with the catcher sprawled low and the umpire bent over at the plate (224.558); strip switches to '90 MPH' at 225.058 with the batter bent over in the box. From 225.559 the batter is upright and walking away, and by 226.059-227.060 Iglesias (#11) walks off while the catcher and umpire stand at the plate. The count display still reads 0-2 with one out dot."
+   },
+   {
+    "sheet": "sheet_regular_28.jpg",
+    "note": "Tiles 1-3 (227.561-228.562) centre-field camera: the bug has reset to count 0-0 with TWO filled yellow out dots, the catcher is at the plate with arms out and the pitcher walks down off the mound. Tile 4 (229.062) is a tight shot of Iglesias walking in front of the stands with his bat in mid-air below him; tiles 5-6 continue it, and 230.030 is the last frame of the mapped material."
+   },
+   {
+    "sheet": "sheet_cut_00.jpg",
+    "note": "Tiles 1-2 (154.621/154.638) are the low centre-field game camera: batter out of the box, catcher and umpire rising, fielders moving; bug 2-2 / 96 MPH / i. LINDOR .272. Tiles 3-4 (154.655/154.671) are a high third-base-side wide camera over the infield and first-base line. Hard camera cut between tiles 2 and 3; the score bug carries across unchanged."
+   },
+   {
+    "sheet": "sheet_cut_01.jpg",
+    "note": "Tiles 1-2 (161.661/161.678) are the high third-base camera with Lindor jogging seen from above, small in frame. Tiles 3-4 (161.695/161.712) are a tight frontal camera on Lindor jogging toward the lens. Hard camera cut; bug unchanged (0-0, 1 out, P:6)."
+   },
+   {
+    "sheet": "sheet_cut_02.jpg",
+    "note": "Tiles 1-2 (168.035/168.051) are the tight frontal shot of Lindor jogging through netting. Tiles 3-4 (168.068/168.085) are the Mets dugout with the manager leaning on the rail and 'Ingelheim' signage behind. Hard camera cut; bug unchanged."
+   },
+   {
+    "sheet": "sheet_cut_03.jpg",
+    "note": "All ten tiles (176.293-176.443) are the same Mets dugout shot: Lindor's back (#12 'LINDOR') with a teammate gesturing beside him and 'NexGard PLUS' signage behind. There is no camera or scene change anywhere in the cluster - only fast hand/arm motion and slow camera drift. Bug constant at 0-0 / 1 out / P:6."
+   },
+   {
+    "sheet": "sheet_cut_04.jpg",
+    "note": "Tiles 1-2 (180.213/180.230) are the dugout close-up (Lindor in a blue head wrap, teammate beside him, rail and control box in foreground). Tiles 3-4 (180.247/180.263) are the centre-field game camera showing the full field with the pitcher on the mound and a Mets batter already standing at the plate. Frame-exact hard camera cut between 180.230 and 180.247."
+   },
+   {
+    "sheet": "sheet_cut_05.jpg",
+    "note": "The same four source frames seen from the old clip (old ord 312-315, 180.213-180.263): dugout close-up on tiles 1-2, centre-field game camera with a batter already at the plate on tiles 3-4. Content matches sheet_cut_04 exactly, confirming the two clips agree in the overlap. Not a second edit, the same one."
+   },
+   {
+    "sheet": "sheet_cut_06.jpg",
+    "note": "Tiles 1-2 (188.955/188.972) are the centre-field game camera with pitcher on the mound, batter in the box, count 0-0. Tiles 3-4 (188.989/189.005) are a medium close-up of Schwellenbach on the grass, and the count now reads 0-1. Hard camera cut, with the score-bug count change landing on the same frame boundary."
+   },
+   {
+    "sheet": "sheet_cut_07.jpg",
+    "note": "Tiles 1-2 (199.232/199.249) are the pitcher close-up, frontal, hands together at the chest, clock :08. Tiles 3-4 (199.266/199.282) are the centre-field game camera with the pitcher set on the rubber and the batter in the box. Hard camera cut; bug 0-1 / P:7 / i. IGLESIAS across both."
+   },
+   {
+    "sheet": "sheet_cut_08.jpg",
+    "note": "Tiles 1-2 (206.039/206.056) are the centre-field camera with the batter stepping out and the pitcher walking behind the mound. Tiles 3-4 (206.073/206.089) are a tight shot of Iglesias (#11) with his bat and the '2B JOSE IGLESIAS / 20-GAME HITTING STREAK' lower-third already fully drawn. Hard camera cut."
+   },
+   {
+    "sheet": "sheet_cut_09.jpg",
+    "note": "Tiles 1-2 (215.782/215.799) are the tight Iglesias shot with the lower-third graphic, umpire beside him. Tiles 3-4 (215.816/215.832) are the centre-field game camera with the batter settling in the box and no lower-third. Hard camera cut; bug 0-2 / P:8 / 1 out across both."
+   },
+   {
+    "sheet": "sheet_cut_10.jpg",
+    "note": "Tiles 1-2 (228.929/228.945) are the centre-field camera with the pitcher walking off the mound and the catcher/umpire at the plate; bug 0-0 with two out dots, '90 MPH'. Tiles 3-4 (228.962/228.979) are a tight shot of Iglesias walking in front of the stands with his bat in mid-air below him. Hard camera cut."
+   }
+  ],
+  "reviewer_events": [
+   {
+    "name": "STATCAST 'PITCH USAGE' full-screen graphic covering the mound and plate",
+    "bracket_start_seconds": 144.661,
+    "bracket_end_seconds": 152.669,
+    "evidence": "Last tile without it is ext 144.661 (tight Lindor shot); first tile with it is ext 145.162 (wiping in); it fills every tile from 145.662 through 152.169; first tile without it again is ext 152.669. While it is up neither the pitcher nor the score bug is visible.",
+    "confidence": "high"
+   },
+   {
+    "name": "PA1 final pitch (Schwellenbach's 6th) - delivery already in progress when the graphic clears",
+    "bracket_start_seconds": 152.169,
+    "bracket_end_seconds": 152.669,
+    "evidence": "At 152.169 the frame is entirely the graphic. The next sampled tile, 152.669, already shows the pitcher in his stride with the front leg down and the arm coming forward. The set position and the first part of the delivery are in no sampled frame.",
+    "confidence": "high"
+   },
+   {
+    "name": "PA1 final pitch - release",
+    "bracket_start_seconds": 152.669,
+    "bracket_end_seconds": 153.17,
+    "evidence": "152.669 shows mid-stride with the arm still behind; 153.170 shows a full follow-through with the body rotated over the front leg. Release falls between the two; the exact frame is not sampled.",
+    "confidence": "high"
+   },
+   {
+    "name": "PA1 final pitch - contact, ball put in play",
+    "bracket_start_seconds": 153.17,
+    "bracket_end_seconds": 153.67,
+    "evidence": "At 153.170 Lindor is still in the box with the bat and the pitcher is in follow-through. At 153.670 Lindor is out of the box running and the pitcher is upright facing the infield. The contact instant is in no sampled tile.",
+    "confidence": "medium"
+   },
+   {
+    "name": "Score-bug strip switches from 'P:5' to the velocity readout '96 MPH' (display event)",
+    "bracket_start_seconds": 153.17,
+    "bracket_end_seconds": 153.67,
+    "evidence": "Strip reads 'SCHWELLENBACH P:5' at 153.170 and 'SCHWELLENBACH 96 MPH' at 153.670.",
+    "confidence": "high"
+   },
+   {
+    "name": "Infield ground-ball play in progress (the fielding itself is not resolvable)",
+    "bracket_start_seconds": 153.67,
+    "bracket_end_seconds": 156.673,
+    "evidence": "At 154.171 the runner is up the first-base line and Braves fielders are moving on the infield; the hard cut at 154.655 moves to a high third-base camera over the infield. No sampled tile shows a fielder actually gloving or throwing the ball, so the second baseman's play and the throw cannot be identified.",
+    "confidence": "low"
+   },
+   {
+    "name": "Runner reaches first base; first baseman at the bag and then returning the ball",
+    "bracket_start_seconds": 157.174,
+    "bracket_end_seconds": 158.675,
+    "evidence": "At 158.175 a Braves player (#28, white) is beside the first-base bag with the Mets runner in a crouched stride just past it; at 158.675 that player's throwing arm is raised to send the ball back in while Lindor continues past the bag. The catch and the out call are not resolvable.",
+    "confidence": "medium"
+   },
+   {
+    "name": "Score bug resets to 0-0 and shows 1 filled out dot, 'P:6', batter row cleared (display event)",
+    "bracket_start_seconds": 160.177,
+    "bracket_end_seconds": 160.677,
+    "evidence": "At 160.177 the bug shows 2-2, no filled out dots, 'SCHWELLENBACH P:5' and 'i. LINDOR .272'. At 160.677 it shows 0-0, one filled yellow dot, 'SCHWELLENBACH P:6' and no batter row. Display change only; not used here to time the physical out.",
+    "confidence": "high"
+   },
+   {
+    "name": "Lindor jogging back up the first-base line toward the Mets dugout",
+    "bracket_start_seconds": 158.675,
+    "bracket_end_seconds": 167.684,
+    "evidence": "Continuously visible on the high third-base camera (158.675-161.678) and on the tight frontal follow shot after the cut at 161.695 (162.179-167.684).",
+    "confidence": "high"
+   },
+   {
+    "name": "Lindor reaches the Mets dugout rail",
+    "bracket_start_seconds": 171.188,
+    "bracket_end_seconds": 172.189,
+    "evidence": "At 171.188 the dugout shot shows only the manager and other personnel; at 171.688 a Mets helmet (back of head) rises into the lower frame; at 172.189 'LINDOR 12' is at the rail with his back to camera.",
+    "confidence": "high"
+   },
+   {
+    "name": "Lindor removes his batting helmet in the dugout",
+    "bracket_start_seconds": 176.693,
+    "bracket_end_seconds": 177.694,
+    "evidence": "Still helmeted at 176.693; at 177.194 the helmet is caught in mid-air being lifted off and a blue head wrap is visible; bare-headed from 177.694 onward.",
+    "confidence": "high"
+   },
+   {
+    "name": "No replay of the PA1 groundout appears in any sampled tile",
+    "bracket_start_seconds": 153.67,
+    "bracket_end_seconds": 180.197,
+    "evidence": "Every sampled tile between the play and the return to the game camera is either live follow-footage of Lindor or the Mets dugout camera; none shows replay framing, a replay wipe or a replay badge. A replay shorter than the 0.5 s sampling interval cannot be excluded.",
+    "confidence": "medium"
+   },
+   {
+    "name": "Iglesias first visible - already standing at the plate, immediately after a hard cut",
+    "bracket_start_seconds": 180.23,
+    "bracket_end_seconds": 180.247,
+    "evidence": "Frame-exact from sheet_cut_04/sheet_cut_05: at 180.230 the picture is the Mets dugout close-up; at 180.247 the centre-field game camera shows a Mets batter in grey already standing at the plate. No sampled frame shows him approaching from the on-deck circle or dugout.",
+    "confidence": "high"
+   },
+   {
+    "name": "Score bug adds the batter row 'i. IGLESIAS .341' (display event, identity confirmation)",
+    "bracket_start_seconds": 183.7,
+    "bracket_end_seconds": 184.201,
+    "evidence": "No batter row at 183.700 (strip shows only 'SCHWELLENBACH :07 P:6'); 'i. IGLESIAS .341' present from 184.201. Visual confirmation of the same player comes later from the '11' / 'IGLESIAS' nameplate in the close-ups at 206.540-215.549.",
+    "confidence": "high"
+   },
+   {
+    "name": "PA2 pitch 1 - windup/leg lift begins",
+    "bracket_start_seconds": 183.7,
+    "bracket_end_seconds": 184.201,
+    "evidence": "At 183.700 the pitcher stands on the rubber with hands together; at 184.201 his lead knee is up.",
+    "confidence": "high"
+   },
+   {
+    "name": "PA2 pitch 1 - release",
+    "bracket_start_seconds": 185.018,
+    "bracket_end_seconds": 185.519,
+    "evidence": "At 185.001/185.018 the pitcher is in his stride with the front foot planting and the arm still back; at 185.519 the throwing arm is extended forward toward the plate.",
+    "confidence": "high"
+   },
+   {
+    "name": "PA2 pitch 1 - follow-through",
+    "bracket_start_seconds": 186.019,
+    "bracket_end_seconds": 186.52,
+    "evidence": "186.019 shows the full follow-through with the trailing leg kicked high; 186.520 shows the pitcher recovering upright.",
+    "confidence": "high"
+   },
+   {
+    "name": "PA2 pitch 1 - whether the batter swung or took is not resolvable",
+    "bracket_start_seconds": 185.519,
+    "bracket_end_seconds": 186.52,
+    "evidence": "At the centre-field camera's scale the batter occupies very few pixels; the bat position changes between 185.519 and 186.520 but a swing cannot be distinguished from a take in these stills, and no cut sheet covers this interval.",
+    "confidence": "low"
+   },
+   {
+    "name": "Score-bug strip 'P:6' -> '97 MPH' (display event)",
+    "bracket_start_seconds": 186.52,
+    "bracket_end_seconds": 187.02,
+    "evidence": "Strip reads 'P:6' at 186.520 and '97 MPH' at 187.020.",
+    "confidence": "high"
+   },
+   {
+    "name": "Score-bug count 0-0 -> 0-1, on the same frame boundary as a hard cut (display event)",
+    "bracket_start_seconds": 188.972,
+    "bracket_end_seconds": 188.989,
+    "evidence": "Frame-exact from sheet_cut_06: count reads 0-0 at 188.972 (centre-field camera) and 0-1 at 188.989 (first frame of the pitcher close-up).",
+    "confidence": "high"
+   },
+   {
+    "name": "Score-bug strip '97 MPH' -> 'P:7' (display event)",
+    "bracket_start_seconds": 191.525,
+    "bracket_end_seconds": 192.025,
+    "evidence": "Strip reads '97 MPH' at 191.525 and 'P:7' at 192.025.",
+    "confidence": "high"
+   },
+   {
+    "name": "PA2 pitch 2 - motion begins",
+    "bracket_start_seconds": 199.533,
+    "bracket_end_seconds": 200.033,
+    "evidence": "At 199.533 (first tile after the cut at 199.266) the pitcher is set on the rubber; at 200.033 he is into his leg lift/stride.",
+    "confidence": "high"
+   },
+   {
+    "name": "PA2 pitch 2 - release",
+    "bracket_start_seconds": 200.033,
+    "bracket_end_seconds": 200.534,
+    "evidence": "At 200.534 the front foot is planted and the throwing arm is forward/extended; at 200.033 the arm is still back in the lift. The release frame itself is not sampled.",
+    "confidence": "medium"
+   },
+   {
+    "name": "PA2 pitch 2 - follow-through",
+    "bracket_start_seconds": 201.034,
+    "bracket_end_seconds": 201.535,
+    "evidence": "201.034 shows the follow-through with the trailing leg up; 201.535 shows the pitcher recovering upright.",
+    "confidence": "high"
+   },
+   {
+    "name": "PA2 pitch 2 - batter appears to swing",
+    "bracket_start_seconds": 200.534,
+    "bracket_end_seconds": 202.536,
+    "evidence": "The batter is in a loaded stance at 200.534 and appears rotated with the bat carried around at 201.034-202.035, consistent with a swing, but the bat path is not clearly resolvable at this scale and no cut sheet covers the interval.",
+    "confidence": "low"
+   },
+   {
+    "name": "Score-bug strip 'P:7' -> '96 MPH' (display event)",
+    "bracket_start_seconds": 201.034,
+    "bracket_end_seconds": 201.535,
+    "evidence": "Strip reads 'P:7' at 201.034 and '96 MPH' at 201.535.",
+    "confidence": "high"
+   },
+   {
+    "name": "Score-bug count 0-1 -> 0-2 (display event)",
+    "bracket_start_seconds": 203.036,
+    "bracket_end_seconds": 203.537,
+    "evidence": "Count reads 0-1 at 203.036 and 0-2 at 203.537.",
+    "confidence": "high"
+   },
+   {
+    "name": "Lower-third graphic '2B JOSE IGLESIAS / 20-GAME HITTING STREAK / .416 AVG, 4 2B, HR, 3 RBI, 11 K'",
+    "bracket_start_seconds": 206.056,
+    "bracket_end_seconds": 215.816,
+    "evidence": "Frame-exact bounds: absent at 206.056 (sheet_cut_08 tile 2), fully drawn at 206.073 (tile 3); still present at 215.799 (sheet_cut_09 tile 2), gone at 215.816 (tile 3). On screen in every tile of sheets 21-23 and in sheet_regular_24 tile 1.",
+    "confidence": "high"
+   },
+   {
+    "name": "Score-bug strip '96 MPH' -> 'P:8' (display event)",
+    "bracket_start_seconds": 206.54,
+    "bracket_end_seconds": 207.04,
+    "evidence": "At 206.540 the strip still shows the velocity readout; at 207.040 it reads 'P:8'.",
+    "confidence": "medium"
+   },
+   {
+    "name": "PA2 pitch 3 - motion begins",
+    "bracket_start_seconds": 222.556,
+    "bracket_end_seconds": 223.056,
+    "evidence": "At 222.556 the pitcher is set with hands together on the rubber (clock :05); at 223.056 he is into his stride with the lower body driving forward.",
+    "confidence": "high"
+   },
+   {
+    "name": "PA2 pitch 3 - release",
+    "bracket_start_seconds": 223.557,
+    "bracket_end_seconds": 224.057,
+    "evidence": "At 223.557 the arm is back in the stride; at 224.057 the arm is forward in release and a bat is visible swinging through the zone at the plate.",
+    "confidence": "high"
+   },
+   {
+    "name": "PA2 pitch 3 - batter swings; catcher and umpire drop low at the plate",
+    "bracket_start_seconds": 224.057,
+    "bracket_end_seconds": 224.558,
+    "evidence": "At 224.057 the bat is visibly through the hitting zone; at 224.558 the pitcher is in follow-through while the catcher is sprawled low and the umpire is bent over, with the batter past his swing. The ball itself and the catcher securing it are not resolvable.",
+    "confidence": "medium"
+   },
+   {
+    "name": "PA2 pitch 3 - follow-through",
+    "bracket_start_seconds": 224.558,
+    "bracket_end_seconds": 225.058,
+    "evidence": "224.558 shows the trailing leg high in the follow-through; 225.058 shows the pitcher upright with the catcher coming back up and the batter bent over in the box.",
+    "confidence": "high"
+   },
+   {
+    "name": "Score-bug strip 'P:8' -> '90 MPH' (display event)",
+    "bracket_start_seconds": 224.558,
+    "bracket_end_seconds": 225.058,
+    "evidence": "Strip reads 'P:8' at 224.558 and '90 MPH' at 225.058.",
+    "confidence": "high"
+   },
+   {
+    "name": "PA2 outcome - swinging strikeout (composite reading)",
+    "bracket_start_seconds": 224.057,
+    "bracket_end_seconds": 227.561,
+    "evidence": "Bat visibly through the zone at 224.057, catcher low at 224.558, batter bent over then leaving the box 225.058-225.559, no runner advance or throw visible in any tile, and the bug subsequently shows 0-0 with 2 outs. The strike-three call and the catcher receiving the ball are not individually visible in the samples.",
+    "confidence": "medium"
+   },
+   {
+    "name": "Iglesias leaves the batter's box",
+    "bracket_start_seconds": 225.058,
+    "bracket_end_seconds": 225.559,
+    "evidence": "At 225.058 he is still bent over inside the box; at 225.559 he is upright and moving away from the plate with his bat.",
+    "confidence": "high"
+   },
+   {
+    "name": "Iglesias walking away from the plate (centre-field camera)",
+    "bracket_start_seconds": 225.559,
+    "bracket_end_seconds": 228.945,
+    "evidence": "Visible walking off with his bat at 226.059, 226.560, 227.060 and 227.561-228.562 while the catcher and umpire stand at the plate and the pitcher walks off the mound.",
+    "confidence": "high"
+   },
+   {
+    "name": "Score bug resets to 0-0 and the outs indicator goes from 1 to 2 filled dots (display event)",
+    "bracket_start_seconds": 227.06,
+    "bracket_end_seconds": 227.561,
+    "evidence": "At 227.060 the bug still reads count 0-2 with one filled dot; at 227.561 it reads 0-0 with two filled yellow dots. Display change only; not used here to time the physical strikeout.",
+    "confidence": "high"
+   },
+   {
+    "name": "Hard cut to a tight shot of Iglesias walking, bat flipped and falling",
+    "bracket_start_seconds": 228.945,
+    "bracket_end_seconds": 228.962,
+    "evidence": "Frame-exact from sheet_cut_10: centre-field camera at 228.945, tight shot of Iglesias walking in front of the stands with his bat in mid-air at 228.962.",
+    "confidence": "high"
+   },
+   {
+    "name": "Last frame of the mapped material",
+    "bracket_start_seconds": 230.03,
+    "bracket_end_seconds": 230.03,
+    "evidence": "old ord 3297, pts 3301298, src 230.030: tight shot of Iglesias (#11, Mets grey) walking right-to-left in front of the stands, bat in mid-air below him; bug reads 0-0, two filled out dots, 'SCHWELLENBACH 90 MPH'. No next batter is visible anywhere in the material.",
+    "confidence": "high"
+   }
+  ],
+  "verifier_stats": [
+   {
+    "lens": "boundary",
+    "overall_refuted": true,
+    "claims": 57,
+    "refuted": 11,
+    "additional_findings": 13
+   },
+   {
+    "lens": "coverage",
+    "overall_refuted": false,
+    "claims": 27,
+    "refuted": 18,
+    "additional_findings": 11
+   }
+  ],
+  "verifier_verdicts": [
+   {
+    "lens": "boundary",
+    "verdict": {
+     "claims": [
+      {
+       "claim": "EVENT: STATCAST 'PITCH USAGE' full-screen graphic covering the mound and plate, 144.661-152.669",
+       "refuted": false,
+       "evidence": "sheet_regular_00: ext ord 30 / 144.661 s is the tight Lindor shot with no graphic; ext ord 60 / 145.162 s shows the panel wiping in over a dissolving field image. sheet_regular_02: ext ord 480 / 152.169 s is still the full panel, ext ord 510 / 152.669 s is the live centre-field camera. Bracket holds. One correction to the reviewer's sheet notes: the plate cluster (batter/catcher/umpire, small) IS visible in the exposed strip below the panel's lower edge in every graphic tile (e.g. ext ord 360 / 150.167, 420 / 151.168, 480 / 152.169, enlarged); only the mound/pitcher and the score bug are hidden."
+      },
+      {
+       "claim": "EVENT: PA1 final pitch delivery already in progress when the graphic clears, 152.169-152.669",
+       "refuted": false,
+       "evidence": "ext ord 480 / 152.169 s: full graphic. ext ord 510 / 152.669 s (enlarged): pitcher in his stride, front leg extended toward the plate, glove hand forward, throwing arm still back (not 'arm coming forward' as the reviewer wrote, but the bracket for 'delivery in progress' holds). Lindor loaded in the first-base-side box."
+      },
+      {
+       "claim": "EVENT: PA1 final pitch release, 152.669-153.170",
+       "refuted": false,
+       "evidence": "ext ord 510 / 152.669 s: stride with arm back. ext ord 540 / 153.170 s (sheet_regular_03 tile 1, enlarged): full follow-through, trailing leg kicked high, glove at chest. Release lies between them."
+      },
+      {
+       "claim": "EVENT: PA1 final pitch contact / ball put in play, 153.170-153.670",
+       "refuted": false,
+       "evidence": "ext ord 540 / 153.170 s (enlarged plate region): Lindor still loaded, bat up, catcher crouched. ext ord 570 / 153.670 s: Lindor has swung - bat extended toward the first-base side at shoulder height, torso rotated - but he is STILL at the plate with his feet in the box, not 'out of the box running' as the reviewer states; running is first visible at ext ord 600 / 154.171 s. The contact bracket itself survives (loaded -> post-swing)."
+      },
+      {
+       "claim": "EVENT: Score-bug strip switches 'P:5' -> '96 MPH', 153.170-153.670",
+       "refuted": true,
+       "evidence": "Enlarged strip crops: ext ord 540 / 153.170 s reads 'SCHWELLENBACH :0x P:5' (a pitch-clock box still present), ext ord 570 / 153.670 s reads 'SCHWELLENBACH P:5' (no clock box, still P:5), and '96 MPH' first appears at ext ord 600 / 154.171 s (also at 630 / 154.671). The change is between 153.670 and 154.171, one tile later than claimed. The sheet_regular_03 note carries the same error."
+      },
+      {
+       "claim": "EVENT: Infield ground-ball play in progress (fielding not resolvable), 153.670-156.673",
+       "refuted": false,
+       "evidence": "ext ord 600 / 154.171 s: runner out of the box toward first, pitcher moving off the mound toward the first-base side (also ext ord 627-628 / 154.621-154.638 in sheet_cut_00); ext ord 630-690 / 154.671-155.672 high third-base camera shows several small figures around the 1B/2B area and the runner on the line, but no glove, throw or ball is identifiable at this scale. Claim (low confidence) is consistent with the tiles."
+      },
+      {
+       "claim": "EVENT: Runner reaches first base; first baseman at the bag and then returning the ball, 157.174-158.675",
+       "refuted": false,
+       "evidence": "Enlarged sheet_regular_04: ext ord 780 / 157.174 s #28 (white) standing at the bag, runner ~15 ft up the line; ext ord 810 / 157.674 s runner (grey, helmet) already AT the bag beside #28; ext ord 840 / 158.175 s runner in a crouched stride past the bag, #28's left arm raised by his head; ext ord 870 / 158.675 s #28's arm extended outward (throw-like motion), runner well past. The bracket contains the arrival, but the arrival itself is 157.174-157.674, not 158.175 as the reviewer's evidence implies. The ball is never visible; 'returning the ball' is an inference from the arm motion."
+      },
+      {
+       "claim": "EVENT: Score bug resets to 0-0, one filled out dot, 'P:6', batter row cleared, 160.177-160.677",
+       "refuted": false,
+       "evidence": "Enlarged strip crops: ext ord 960 / 160.177 s reads 2-2, no filled dot, 'SCHWELLENBACH P:5', '1. LINDOR .272'; ext ord 990 / 160.677 s reads 0-0, one filled yellow dot, 'SCHWELLENBACH P:6', no batter row."
+      },
+      {
+       "claim": "EVENT: Lindor jogging back up the line toward the dugout, 158.675-167.684",
+       "refuted": false,
+       "evidence": "sheet_regular_05 ext ord 900-1050 (159.176-161.678) high camera on #12 jogging; sheet_cut_01 cut at 161.695; sheet_regular_06 ext ord 1080-1230 (162.179-164.681) and sheet_regular_07 ext ord 1260-1410 (165.182-167.684) tight frontal shots of #12 'NEW YORK' jogging. Continuous as claimed."
+      },
+      {
+       "claim": "EVENT: Lindor reaches the Mets dugout rail, 171.188-172.189",
+       "refuted": false,
+       "evidence": "sheet_regular_09: ext ord 1620 / 171.188 s dugout rail with the capped Mets staffer, no Lindor; ext ord 1650 / 171.688 s a blue batting helmet (back of head) rises into the lower-centre frame; ext ord 1680 / 172.189 s 'LINDOR 12' nameplate at the rail, back to camera."
+      },
+      {
+       "claim": "EVENT: Lindor removes his batting helmet in the dugout, 176.693-177.694",
+       "refuted": false,
+       "evidence": "sheet_regular_10 ext ord 1950 / 176.693 s: Lindor helmeted (#12 on helmet). sheet_regular_11 ext ord 1980 / 177.194 s: helmet in mid-air above his head, blue head wrap visible; ext ord 2010 / 177.694 s: bare-headed in the wrap. Bracket holds."
+      },
+      {
+       "claim": "EVENT: No replay of the PA1 groundout appears in any sampled tile, 153.670-180.197",
+       "refuted": false,
+       "evidence": "Every sampled tile from ext ord 570 / 153.670 s to ext ord 2160 / 180.197 s is live: centre-field camera (to 154.638), high third-base camera (154.655-161.678), tight Lindor follow shot (161.695-168.051), Mets dugout camera (168.068-180.230). No replay framing, wipe or badge in sheets 03-12 or cuts 00-04."
+      },
+      {
+       "claim": "EVENT: Iglesias first visible - already at the plate immediately after a hard cut, 180.230-180.247",
+       "refuted": false,
+       "evidence": "sheet_cut_04 ext ord 2162 / 180.230 s: dugout close-up (Lindor in blue wrap, teammate, rail/control box). ext ord 2163 / 180.247 s: centre-field camera, Mets batter in grey already standing in the third-base-side (right-handed) box, pitcher on the rubber. Identical frames in sheet_cut_05 old ord 313/314. Frame-exact as claimed."
+      },
+      {
+       "claim": "EVENT: Score bug adds batter row 'i. IGLESIAS .341', 183.700-184.201",
+       "refuted": false,
+       "evidence": "Enlarged strips: ext ord 2340 / 183.200 s and ext ord 2370 / 183.700 s read 'SCHWELLENBACH :07 P:6' with no second row; ext ord 2400 / 184.201 s adds '2. IGLESIAS .341'."
+      },
+      {
+       "claim": "EVENT: PA2 pitch 1 windup/leg lift begins, 183.700-184.201 ('at 184.201 his lead knee is up')",
+       "refuted": true,
+       "evidence": "Enlarged pitcher crops (sheet_regular_13): ext ord 2370 / 183.700 s and ext ord 2400 / 184.201 s are the same set position - upright, hands together at the chest, both feet on the ground, no knee up. The lead knee is first up at ext ord 2430 / 184.701 s; the stride with the lead leg extended is at ext ord 2448 / 185.001 s and old ord 600 / 185.018 s. Correct bracket: 184.201-184.701. The sheet_regular_13 note ('leg lift at 184.201, stride at 184.701, plant at 185.001') is shifted one tile early."
+      },
+      {
+       "claim": "EVENT: PA2 pitch 1 release, 185.018-185.519",
+       "refuted": false,
+       "evidence": "old ord 600 / 185.018 s: lead leg extended forward, foot about to land, hands separating, throwing arm back. old ord 630 / 185.519 s (enlarged): throwing arm fully extended forward toward the plate. Release lies between."
+      },
+      {
+       "claim": "EVENT: PA2 pitch 1 follow-through, 186.019-186.520",
+       "refuted": false,
+       "evidence": "old ord 660 / 186.019 s: full follow-through, trailing leg high; old ord 690 / 186.520 s: pitcher recovering upright."
+      },
+      {
+       "claim": "EVENT: PA2 pitch 1 - whether the batter swung or took is not resolvable, 185.519-186.520",
+       "refuted": true,
+       "evidence": "Enlarged plate crops (sheet_regular_14): old ord 630 / 185.519 s Iglesias loaded, bat up; old ord 660 / 186.019 s the bat is extended horizontally out in front of him at shoulder height with torso and hips rotated - a swing (or at least a check swing), not a take; old ord 690 / 186.520 s bat down low on the far side of his body; old ord 720 / 187.020 s upright with the bat raised vertically while the catcher's arm is up. A swing-type bat movement IS resolvable; what remains unresolvable is full vs check swing and whether the ball was touched."
+      },
+      {
+       "claim": "EVENT: Score-bug strip 'P:6' -> '97 MPH', 186.520-187.020 ('strip reads P:6 at 186.520')",
+       "refuted": true,
+       "evidence": "Enlarged strips: old ord 660 / 186.019 s reads ':07 P:6' (last tile with P:6); old ord 690 / 186.520 s does NOT read P:6 - it shows a partially drawn velocity readout (' MPH' with the number not yet rendered, transition in progress); old ord 720 / 187.020 s reads '97 MPH'. The change begins between 186.019 and 186.520."
+      },
+      {
+       "claim": "EVENT: Score-bug count 0-0 -> 0-1 on the same frame boundary as the hard cut, 188.972-188.989 (frame-exact)",
+       "refuted": true,
+       "evidence": "Enlarged sheet_cut_06 and sheet_regular_15 crops: old ord 836 / 188.955 s and old ord 837 / 188.972 s (both centre-field camera, BEFORE the cut) already read '0-1' with '97 MPH'; old ord 810 / 188.522 s (sheet_regular_15 tile 1) reads '0-0'. The display change therefore lies between 188.522 and 188.955 and is not tied to the cut at 188.989. The reviewer's 'before' description for cut_06 ('bug count 0-0') and the whole_pa_condition line 'frame-exact 188.989' are wrong."
+      },
+      {
+       "claim": "EVENT: Score-bug strip '97 MPH' -> 'P:7', 191.525-192.025",
+       "refuted": false,
+       "evidence": "Enlarged strips: old ord 990 / 191.525 s '97 MPH'; old ord 1020 / 192.025 s 'P:7' with only a residual sliver of a digit at the right edge (transition essentially complete); old ord 1050 / 192.526 s 'P:7'."
+      },
+      {
+       "claim": "EVENT: PA2 pitch 2 motion begins, 199.533-200.033 ('at 199.533 the pitcher is set on the rubber')",
+       "refuted": true,
+       "evidence": "Enlarged pitcher crop (sheet_regular_18 tile 5): old ord 1470 / 199.533 s already shows the leg lift - lead knee raised high, glove at the chest. The set position is last seen at old ord 1455 / 199.282 s (sheet_cut_07 tile 4) and old ord 1454 / 199.266 s. old ord 1500 / 200.033 s is the stride with the arm back. Correct bracket: 199.282-199.533."
+      },
+      {
+       "claim": "EVENT: PA2 pitch 2 release, 200.033-200.534",
+       "refuted": false,
+       "evidence": "old ord 1500 / 200.033 s: stride, throwing arm back, glove forward. old ord 1530 / 200.534 s (enlarged): arm forward past release AND the ball is visible as a white dot in flight beside the batter's front leg. Release lies between; the tiles support it more strongly than the reviewer's 'medium'."
+      },
+      {
+       "claim": "EVENT: PA2 pitch 2 follow-through, 201.034-201.535",
+       "refuted": false,
+       "evidence": "old ord 1560 / 201.034 s: follow-through, trailing leg high, '#56' on his back; old ord 1590 / 201.535 s: recovering upright."
+      },
+      {
+       "claim": "EVENT: PA2 pitch 2 - batter appears to swing, 200.534-202.536 (low confidence)",
+       "refuted": false,
+       "evidence": "Enlarged plate crops: old ord 1530 / 200.534 s loaded with the ball arriving; old ord 1560 / 201.034 s bat extended across the plate toward the pitcher with torso rotated - a clear swing; old ord 1590 / 201.535 s bat wrapped low behind him. The bracket can be tightened to 200.534-201.034 and the confidence raised; nothing refutes it."
+      },
+      {
+       "claim": "EVENT: Score-bug strip 'P:7' -> '96 MPH', 201.034-201.535",
+       "refuted": false,
+       "evidence": "Enlarged strips: old ord 1560 / 201.034 s 'SCHWELLENBACH [blank clock box] P:7'; old ord 1590 / 201.535 s '96 MPH'."
+      },
+      {
+       "claim": "EVENT: Score-bug count 0-1 -> 0-2, 203.036-203.537",
+       "refuted": false,
+       "evidence": "Enlarged strips: old ord 1680 / 203.036 s '0-1 / 96 MPH'; old ord 1710 / 203.537 s '0-2 / 96 MPH'. Additional observation the reviewer omitted: the plate umpire's right arm is extended out to the side at both 203.036 and 203.537 (enlarged crops), and he walks off toward the first-base side at old ord 1740 / 204.037 s."
+      },
+      {
+       "claim": "EVENT: Lower-third '2B JOSE IGLESIAS / 20-GAME HITTING STREAK ...', 206.056-215.816",
+       "refuted": false,
+       "evidence": "sheet_cut_08: old ord 1861 / 206.056 s no lower-third (centre-field camera), old ord 1862 / 206.073 s fully drawn on the tight shot. sheet_cut_09: old ord 2445 / 215.799 s present, old ord 2446 / 215.816 s gone. Present in every tile of sheets 21-23 (206.540-215.048) and sheet_regular_24 tile 1 (215.549)."
+      },
+      {
+       "claim": "EVENT: Score-bug strip '96 MPH' -> 'P:8', 206.540-207.040 ('at 206.540 the strip still shows the velocity readout')",
+       "refuted": true,
+       "evidence": "Enlarged strip: old ord 1890 / 206.540 s shows the transition already in progress - a partially drawn ':8' AND the remnant '96 M' side by side; old ord 1920 / 207.040 s reads 'P:8'. The last clean '96 MPH' is old ord 1863 / 206.089 s (sheet_cut_08 tile 4). The change begins between 206.089 and 206.540, not after 206.540."
+      },
+      {
+       "claim": "EVENT: PA2 pitch 3 motion begins, 222.556-223.056",
+       "refuted": false,
+       "evidence": "Enlarged pitcher crops (sheet_regular_26): old ord 2850 / 222.556 s set, hands together at the belt, clock ':05'; old ord 2880 / 223.056 s lead knee raised high (this is the leg lift, not 'into his stride with the lower body driving forward' as described, but the bracket holds). Stride at old ord 2910 / 223.557 s."
+      },
+      {
+       "claim": "EVENT: PA2 pitch 3 release, 223.557-224.057",
+       "refuted": false,
+       "evidence": "old ord 2910 / 223.557 s: stride, arm back, glove forward. old ord 2940 / 224.057 s: throwing arm forward and down, body bent over the front leg - post-release. Bracket holds for the pitcher. The evidence sentence's second half ('a bat is visible swinging through the zone at the plate') is wrong - see next claim."
+      },
+      {
+       "claim": "EVENT: PA2 pitch 3 - batter swings; catcher and umpire drop low, 224.057-224.558 ('at 224.057 the bat is visibly through the hitting zone')",
+       "refuted": true,
+       "evidence": "Enlarged plate crop old ord 2940 / 224.057 s: Iglesias is still LOADED - bat up over his rear shoulder, pointing upward, hands by his helmet, catcher crouched normally. The swing is first visible at old ord 2970 / 224.558 s: bat low and horizontal across the plate at knee height, torso bent forward, catcher sprawled low, umpire bent. The reviewer's reading of 224.057 is wrong and its basis would place the swing start before 224.057; the swing actually lies inside (224.057, 224.558]."
+      },
+      {
+       "claim": "EVENT: PA2 pitch 3 follow-through, 224.558-225.058",
+       "refuted": false,
+       "evidence": "old ord 2970 / 224.558 s: trailing leg high in follow-through; old ord 3000 / 225.058 s: upright, glove at chest, batter bent over in the box, catcher low."
+      },
+      {
+       "claim": "EVENT: Score-bug strip 'P:8' -> '90 MPH', 224.558-225.058",
+       "refuted": false,
+       "evidence": "Enlarged strips: old ord 2970 / 224.558 s ':05 P:8'; old ord 3000 / 225.058 s '90 MPH'."
+      },
+      {
+       "claim": "EVENT: PA2 outcome - swinging strikeout (composite), 224.057-227.561",
+       "refuted": false,
+       "evidence": "Swing visible at old ord 2970 / 224.558 s (bat low across the plate, catcher sprawled), batter bent over at 3000 / 225.058 s, upright and turning away at 3030 / 225.559 s, #11 walking toward the third-base side at 3060-3120 / 226.059-227.060 s; no throw, tag or running in any tile; bug goes to two out dots at 3150 / 227.561 s. The ball, the catch and the strike-three mechanic are not individually visible, as the reviewer says. Composite reading stands; note the window's start (224.057) precedes the swing."
+      },
+      {
+       "claim": "EVENT: Iglesias leaves the batter's box, 225.058-225.559",
+       "refuted": false,
+       "evidence": "old ord 3000 / 225.058 s: bent over inside the box, bat low; old ord 3030 / 225.559 s: upright, turned away from the plate, catcher still crouched, umpire standing."
+      },
+      {
+       "claim": "EVENT: Iglesias walking away from the plate (centre-field camera), 225.559-228.945",
+       "refuted": false,
+       "evidence": "old ord 3060 / 226.059, 3090 / 226.560, 3120 / 227.060 s #11 walking right (third-base side); old ord 3150-3210 / 227.561-228.562 s still walking in the top-right while the pitcher walks off the mound to the first-base side; old ord 3232-3233 / 228.929-228.945 s centre-field camera (sheet_cut_10)."
+      },
+      {
+       "claim": "EVENT: Score bug resets to 0-0 and outs go 1 -> 2 filled dots, 227.060-227.561",
+       "refuted": false,
+       "evidence": "Enlarged strips: old ord 3120 / 227.060 s '0-2', one filled dot, '90 MPH', '2. IGLESIAS .341'; old ord 3150 / 227.561 s '0-0', two filled yellow dots, '90 MPH', batter row removed (the row clearing is an additional display change the reviewer did not list)."
+      },
+      {
+       "claim": "EVENT: Hard cut to a tight shot of Iglesias walking, 'bat flipped and falling', 228.945-228.962",
+       "refuted": true,
+       "evidence": "The cut is frame-exact as claimed: old ord 3233 / 228.945 s centre-field camera, old ord 3234 / 228.962 s tight shot. But 'bat flipped and falling' is not supported: in old ord 3234-3235 / 228.962-228.979 s (sheet_cut_10) and old ord 3240 / 229.062, 3270 / 229.563, 3297 / 230.030 s (sheet_regular_28, enlarged) the bat keeps the same position and angle relative to his gloved left hand for over a second while he walks - it is being carried low in his hand, not falling."
+      },
+      {
+       "claim": "EVENT: Last frame of the mapped material, 230.030",
+       "refuted": false,
+       "evidence": "sheet_regular_28 tile 6 label 'old ord 3297 | pts 3301298 | src 230.030 s': tight shot of #11 in Mets grey walking right-to-left in front of the stands and brick wall; bug 0-0, two filled out dots, 'SCHWELLENBACH 90 MPH', no batter row; no other batter visible. Only the phrase 'bat in mid-air below him' is wrong - the bat is in his left hand (see previous claim)."
+      },
+      {
+       "claim": "PRECEDING_PA_END: final_pitch_shown = true",
+       "refuted": false,
+       "evidence": "Partially shown, as the reviewer qualifies: set and start hidden behind the graphic through ext ord 480 / 152.169 s; stride at ext ord 510 / 152.669 s, follow-through at 540 / 153.170 s, Lindor's swing at 570 / 153.670 s are visible on the centre-field camera. The boolean is defensible only with the stated 'partial' qualifier."
+      },
+      {
+       "claim": "PRECEDING_PA_END: outcome_shown = true",
+       "refuted": true,
+       "evidence": "No sampled tile shows the ground ball fielded, a throw, a catch at first or an out signal. What is visible is only #28 standing at the bag (ext ord 780 / 157.174 s), the runner at/past the bag (810 / 157.674, 840 / 158.175 s) and an arm motion by #28 (840-870 / 158.175-158.675 s) with no ball visible; the reviewer's own basis calls the outcome 'partially' shown and 'not frame-resolved'. An unqualified true is not supported by the tiles; the honest value is partial/false with the 1-out display change at 160.677 explicitly excluded as evidence."
+      },
+      {
+       "claim": "PRECEDING_PA_END: batter_departure_shown = true",
+       "refuted": false,
+       "evidence": "Lindor past first at ext ord 870 / 158.675 s, jogging through 1410 / 167.684 s, at the dugout rail at 1680 / 172.189 s, helmet off by 2010 / 177.694 s. Fully supported."
+      },
+      {
+       "claim": "BATTER_ENTRY: physical_walk_in_shown = false, first_appearance 180.247 already at the plate after a hard cut",
+       "refuted": false,
+       "evidence": "sheet_cut_04/05: 180.230 dugout close-up, 180.247 centre-field camera with the batter already in the right-handed box. All sampled tiles 161.695-180.230 are the Lindor follow shot or the dugout camera. Identity via '2. IGLESIAS .341' from ext ord 2400 / 184.201 s and the 'IGLESIAS 11' nameplate at old ord 2280 / 213.046 s. Additional display detail: the pitch-clock box is already in the strip on the dugout shot at ext ord 2160 / 180.197 s and 2161-2162 / 180.213-180.230 s (absent at 2130 / 179.696 s), i.e. it appeared before the cut."
+      },
+      {
+       "claim": "TARGET_PA booleans: pitch_motions_seen = 3, final_pitch_shown, outcome_shown, departure_shown, scoreboard_update_shown all true",
+       "refuted": false,
+       "evidence": "Three complete motions on the centre-field camera (lift 184.701 / 199.533 / 223.056; stride 185.001-185.018 / 200.033 / 223.557; post-release 185.519 / 200.534 / 224.057; follow-through 186.019 / 201.034 / 224.558). Final pitch visible from the set (222.556) to follow-through (224.558). Swing at 224.558, departure 225.559-230.030, bug 0-2/1 out -> 0-0/2 outs between 227.060 and 227.561. The booleans hold."
+      },
+      {
+       "claim": "TARGET_PA basis timings: 'leg lift 184.201', 'motion start 199.533-200.033', 'bat visibly through the zone at 224.057'",
+       "refuted": true,
+       "evidence": "All three tile readings are wrong: ext ord 2400 / 184.201 s is still the set position (knee up only at 2430 / 184.701 s); old ord 1470 / 199.533 s is already the leg lift (set last at 1455 / 199.282 s); old ord 2940 / 224.057 s shows the bat still up over the shoulder (swing first at 2970 / 224.558 s). Correct brackets: lift 184.201-184.701, 199.282-199.533, 222.556-223.056; swing on pitch 3 inside 224.057-224.558."
+      },
+      {
+       "claim": "FLAGGED JUMP sheet_cut_00 @154.655: hard_camera_cut",
+       "refuted": false,
+       "evidence": "ext ord 628 / 154.638 s centre-field camera (Lindor running toward first, catcher/umpire rising, pitcher moving off the mound, bug 2-2 / 96 MPH / LINDOR); ext ord 629 / 154.655 s high third-base-side wide camera over the infield. Hard cut confirmed."
+      },
+      {
+       "claim": "FLAGGED JUMP sheet_cut_01 @161.695: hard_camera_cut",
+       "refuted": false,
+       "evidence": "ext ord 1050 / 161.678 s high camera, #12 small jogging on the grass/dirt diagonal; ext ord 1051 / 161.695 s tight frontal camera on #12 'NEW YORK' jogging toward the lens. Confirmed."
+      },
+      {
+       "claim": "FLAGGED JUMP sheet_cut_02 @168.068: hard_camera_cut",
+       "refuted": false,
+       "evidence": "ext ord 1432 / 168.051 s tight Lindor through netting; ext ord 1433 / 168.068 s dugout rail with a capped Mets staffer and 'Ingelheim' signage. Confirmed."
+      },
+      {
+       "claim": "FLAGGED JUMP sheet_cut_03 @176.326: fast_motion_same_camera",
+       "refuted": false,
+       "evidence": "old ord 77-86 / 176.293-176.443 s: all ten frames are the same dugout shot (LINDOR 12 back to camera, 'NexGard PLUS' signage, moustached teammate at left with a raised gloved fist that moves between frames). No framing change between old ord 78 / 176.309 s and 79 / 176.326 s. Confirmed."
+      },
+      {
+       "claim": "FLAGGED JUMP sheet_cut_04 @180.247: hard_camera_cut",
+       "refuted": false,
+       "evidence": "ext ord 2162 / 180.230 s dugout close-up; ext ord 2163 / 180.247 s centre-field camera with the batter already at the plate, strip ':10 P:6', no batter row. Confirmed. Minor omission: the 'before' frames already carry the pitch-clock box in the strip."
+      },
+      {
+       "claim": "FLAGGED JUMP sheet_cut_05 @180.247: hard_camera_cut (duplicate of cut_04 from the old clip)",
+       "refuted": false,
+       "evidence": "old ord 312-315 / 180.213-180.263 s are pixel-for-pixel the same pictures as ext ord 2161-2164 in sheet_cut_04. Same single edit."
+      },
+      {
+       "claim": "FLAGGED JUMP sheet_cut_06 @188.989: hard_camera_cut",
+       "refuted": false,
+       "evidence": "old ord 837 / 188.972 s centre-field camera (catcher's arm raised, batter standing, pitcher on the mound); old ord 838 / 188.989 s medium close-up of Schwellenbach on the grass. The cut classification is correct, but the entry's 'before' description ('bug count 0-0') and 'The count change and the cut fall on the same frame boundary' are wrong: the enlarged bug reads 0-1 at both 836 / 188.955 s and 837 / 188.972 s."
+      },
+      {
+       "claim": "FLAGGED JUMP sheet_cut_07 @199.266: hard_camera_cut",
+       "refuted": false,
+       "evidence": "old ord 1453 / 199.249 s pitcher close-up with 'DOWNLOAD NOW' corner promo, strip ':08 P:7'; old ord 1454 / 199.266 s centre-field camera, pitcher set, batter in the box. Confirmed."
+      },
+      {
+       "claim": "FLAGGED JUMP sheet_cut_08 @206.073: hard_camera_cut",
+       "refuted": false,
+       "evidence": "old ord 1861 / 206.056 s centre-field camera; old ord 1862 / 206.073 s tight shot of #11 with the lower-third already fully drawn. Cut confirmed. Two description errors: the pitcher is standing on the mound facing the plate at 1860-1861 (not 'walking behind the mound'), and a figure in a white uniform standing beside the umpire on the first-base side of the plate (see additional findings) is omitted."
+      },
+      {
+       "claim": "FLAGGED JUMP sheet_cut_09 @215.816: hard_camera_cut",
+       "refuted": false,
+       "evidence": "old ord 2445 / 215.799 s tight shot of #11 'IGLESIAS' with the umpire and lower-third; old ord 2446 / 215.816 s centre-field camera, no lower-third, bug 0-2 / P:8. Confirmed."
+      },
+      {
+       "claim": "FLAGGED JUMP sheet_cut_10 @228.962: hard_camera_cut",
+       "refuted": false,
+       "evidence": "old ord 3233 / 228.945 s centre-field camera (pitcher walking off toward the first-base side, catcher/umpire at the plate, bug 0-0 with two dots, 90 MPH); old ord 3234 / 228.962 s tight shot of #11 walking in front of the stands. Confirmed; only the 'bat in mid-air' phrase is wrong (bat held in his left hand)."
+      }
+     ],
+     "additional_findings": [
+      "Under the PITCH USAGE panel the home-plate cluster is visible: in every graphic tile (ext ord 90-480 / 145.662-152.169 s, sheets 00-02) the exposed strip below the panel shows the batter's boxes with the batter, catcher and umpire at the plate (small, enlarged crop). Only the mound/pitcher and the score bug are hidden, so the reviewer's 'batter completely hidden' wording is wrong even though the pitch-start claim stands.",
+      "Pitch-clock box timing before PA2: the strip reads 'SCHWELLENBACH P:6' with no clock box at ext ord 2130 / 179.696 s, and 'SCHWELLENBACH :1x P:6' at ext ord 2160 / 180.197 s and 2161-2162 / 180.213-180.230 s while the picture is still the dugout close-up. The clock readout (display event) appeared between 179.696 and 180.197, before the 180.247 cut to the batter.",
+      "Count 0-0 -> 0-1 (PA2 pitch 1) is bracketed 188.522-188.955 (old ord 810 reads 0-0; old ord 836 / 188.955 s reads 0-1), not frame-exact at the 188.989 cut; the whole_pa_condition 'verifiable' list repeats the wrong 'frame-exact 188.989' statement.",
+      "A pitch-clock box is still present in the strip after PA1's last pitch at ext ord 540 / 153.170 s (':0x' next to the name) and gone at 570 / 153.670 s - a display detail not noted.",
+      "PA2 pitch 2: the ball is visible in flight next to the batter's front leg at old ord 1530 / 200.534 s, and the swing is unambiguous at 1560 / 201.034 s (bat extended across the plate). The reviewer's 'low' confidence on the pitch-2 swing is unnecessarily weak; conversely the pitch-1 'not resolvable' verdict is contradicted by the bat extended at old ord 660 / 186.019 s.",
+      "Umpire gesture around the 0-1 -> 0-2 display change: the plate umpire's right arm is extended out to the side at old ord 1680 / 203.036 s and 1710 / 203.537 s (enlarged), and he walks off toward the first-base side at 1740 / 204.037 s. Reported as an observed gesture only; not used to time a strike call.",
+      "Unreported on-field figure: a person in a white uniform with a dark cap enters from the first-base side of the plate at old ord 1830 / 205.539 s (bent forward, moving) and stands beside the umpire with the umpire's hand extended toward him at old ord 1860-1861 / 206.039-206.056 s (sheet_regular_20 tiles 5-6, sheet_cut_08 tiles 1-2). Identity/role not resolvable (attendant-like); the reviewer's cut_08 'before' description omits him.",
+      "Corner promo bug: the SNY logo is animating out at old ord 1380 / 198.031 s, 'DOWNLOAD NOW' is up from 1410 / 198.532 s and stays through 1650 / 202.536 s (sheet_regular_19), and the SNY bug is back at 1680 / 203.036 s. The reviewer notes only the start.",
+      "Score-bug batter row ('2. IGLESIAS .341') is cleared at old ord 3150 / 227.561 s together with the out-dot change; the reviewer lists only the count/out change.",
+      "PA1 runner arrival: the runner is already at the first-base bag at ext ord 810 / 157.674 s (enlarged), so 'reaches first' is 157.174-157.674; #28's arm is raised at 840 / 158.175 s and extended at 870 / 158.675 s. The ball is never visible in any PA1 tile.",
+      "Several sheet notes are off by one tile and should be corrected alongside the events: sheet_regular_03 (P:5 -> 96 MPH is 153.670-154.171), sheet_regular_13 (leg lift 184.701, stride 185.001/185.018), sheet_regular_18 (199.533 is already the leg lift), sheet_regular_14 (strip already mid-transition at 186.520), sheet_regular_26 (224.057 bat still loaded), sheet_regular_28/cut_10 (bat carried in hand, not in mid-air).",
+      "At ext ord 510 / 152.669 s the pitcher's throwing arm is still back with the glove forward (stride), not 'arm coming forward'; release remains bracketed 152.669-153.170.",
+      "Method note: all verdicts come from the named contact sheets; enlarged (2-3x) crops of the same sheet files were used for the score-bug strip, plate and pitcher regions. index.json was not opened. No other material or the prior manual timing was used."
+     ],
+     "overall_refuted": true,
+     "summary": "All 11 flagged-jump classifications hold (10 hard cuts plus cut_03 as same-camera motion), the batter-entry claim (Iglesias already at the plate at 180.247 after a frame-exact cut) holds, and the three pitch-motion sequences, Lindor's departure and the lower-third bounds are supported. However, enlarged crops of the same tiles refute a cluster of timeline brackets: the PA1 'P:5 -> 96 MPH' strip change is 153.670-154.171 (not 153.170-153.670); the PA2 count 0-0 -> 0-1 is already displayed at 188.955/188.972 before the cut (bracket 188.522-188.955, not frame-exact at 188.989); the 'P:6 -> 97 MPH' transition is already under way at 186.520 and '96 MPH -> P:8' is under way at 206.540; PA2 pitch 1's leg lift is not visible until 184.701 (184.201 is still the set) and pitch 2's leg lift is already in progress at 199.533 (set last at 199.282); at 224.057 the bat is still loaded over the shoulder, so the pitch-3 swing is first visible at 224.558; pitch 1 does show a swing-type bat extension at 186.019 (not 'unresolvable'); the post-strikeout bat is carried in Iglesias's hand, not 'flipped and falling'; and preceding_pa_end.outcome_shown=true overstates what the tiles show (no fielding, throw, catch or out signal is visible). Additional unreported items: the plate cluster is visible beneath the STATCAST panel, the pitch-clock box appears on the dugout shot between 179.696 and 180.197, the umpire's extended arm at 203.036-203.537, a white-uniformed figure beside the umpire at 205.539-206.056, the ball in flight at 200.534, and the batter row clearing at 227.561."
+    }
+   },
+   {
+    "lens": "coverage",
+    "verdict": {
+     "claims": [
+      {
+       "claim": "sheet_regular_03 note / event: score-bug strip switches from 'P:5' to '96 MPH' between 153.170 and 153.670 (reads '96 MPH' at 153.670).",
+       "refuted": true,
+       "evidence": "Zoomed bug crops: ext ord 540 (153.170) reads 'SCHWELLENBACH :0_ P:5' (clock box still present); ext ord 570 (153.670) reads 'P:5'; ext ord 600 (154.171) reads '96 MPH'. The change lies between 153.670 and 154.171, one tile later than claimed."
+      },
+      {
+       "claim": "sheet_regular_13 note and event 'PA2 pitch 1 - windup/leg lift begins' bracket 183.700-184.201: 'at 184.201 his lead knee is up'; 'leg lift at 184.201, stride at 184.701'.",
+       "refuted": true,
+       "evidence": "Zoomed mound crops: ext ord 2400 (184.201) shows the pitcher upright on the rubber, both feet on the ground, hands together at the chest (set); ext ord 2430 (184.701) is the first tile with the lead knee up (leg lift); ext ord 2448 (185.001) and old ord 600 (185.018) are the stride with the throwing arm back. Correct bracket for the start of motion is 184.201-184.701."
+      },
+      {
+       "claim": "sheet_regular_18 note and event 'PA2 pitch 2 - motion begins' bracket 199.533-200.033: 'At 199.533 the pitcher is set on the rubber; at 200.033 he is into his leg lift/stride'.",
+       "refuted": true,
+       "evidence": "old ord 1470 (199.533) already shows the lead knee fully raised (leg lift), not the set; old ord 1500 (200.033) is the stride with the arm back. The last sampled set frame is sheet_cut_07 old ord 1455 (199.282). Correct bracket for motion start is 199.282-199.533."
+      },
+      {
+       "claim": "PA2 pitch 3: 'at 224.057 the arm is forward in release and a bat is visibly swinging through the zone'; 'batter swings 224.057-224.558: at 224.057 the bat is visibly through the hitting zone'; outcome evidence 'bat visibly through the zone at 224.057'; verifiable item 'The swing on PA2 pitch 3 (bat through the zone at 224.057)'.",
+       "refuted": true,
+       "evidence": "Zoomed plate crop of old ord 2940 (224.057): the batter is still loaded with the bat raised above the back shoulder, catcher in a normal crouch, umpire set. The bat is horizontal through the zone with the catcher's mitt low only at old ord 2970 (224.558). The swing therefore falls between 224.057 and 224.558 and is visible at 224.558, not at 224.057."
+      },
+      {
+       "claim": "sheet_regular_26 note: pitcher 'strides at 223.056-223.557'.",
+       "refuted": true,
+       "evidence": "old ord 2880 (223.056) shows the leg lift (knee up, hands together); the stride with the arm back is at old ord 2910 (223.557). The bracket 222.556-223.056 for 'motion begins' still holds (old ord 2850 at 222.556 is the set)."
+      },
+      {
+       "claim": "Event 'Iglesias walking away from the plate (centre-field camera)' bracket 225.559-228.945, evidence 'visible walking off ... at 227.561-228.562'.",
+       "refuted": true,
+       "evidence": "Zoomed right-edge crops: Iglesias with his bat is at the right edge at old ord 3150 (227.561) and old ord 3180 (228.061), but old ord 3210 (228.562) shows only the catcher and umpire at the plate and the pitcher at left; sheet_cut_10 old ord 3232/3233 (228.929/228.945) also do not contain him. He leaves the centre-field frame between 228.061 and 228.562."
+      },
+      {
+       "claim": "flagged_jumps sheet_cut_08 'before': 'batter stepping out toward the third-base side, pitcher walking behind the mound, umpire moving'.",
+       "refuted": true,
+       "evidence": "old ord 1860 (206.039) and 1861 (206.056): the pitcher is standing on the rubber facing the plate with hands together; the batter is standing upright in the box with the bat raised; the umpire stands to the left of the plate with an arm extended toward a person in Braves white who has come in from the left (already visible jogging in at old ord 1830, 205.539) and is extending an arm toward the umpire. The 'walking behind the mound / stepping out' content belongs to 204.037-204.538 (old ord 1740/1770), not to the cut frames."
+      },
+      {
+       "claim": "sheet_regular_20 note: 'the pitcher walks behind the mound and back up, the batter steps out of the box and back in, and the catcher and umpire reset at the plate' (nothing else in the shot).",
+       "refuted": true,
+       "evidence": "Omits a person in Braves white who enters from the left of frame at old ord 1830 (205.539) and at old ord 1860 (206.039) stands beside the umpire with an arm extended toward him while the umpire reaches toward him; this is the last content before the hard cut at 206.073."
+      },
+      {
+       "claim": "sheet_regular_01 note: 'The mound, pitcher and batter are completely hidden behind the panel'; event: 'While it is up neither the pitcher nor the score bug is visible'.",
+       "refuted": true,
+       "evidence": "Zoomed bottom strips of ext ord 90-480 (145.662-152.169): the home-plate dirt circle is visible below the panel in every tile with small figures at the plate (batter/catcher/umpire positions) and a grey-uniformed figure in first-base-side foul territory; only the mound/pitcher is covered. At ext ord 60 (145.162) a ghosted score bug and SNY corner bug are also visible through the dissolve. The substantive point (pitcher/mound hidden through 152.169) stands."
+      },
+      {
+       "claim": "sheet_regular_00 note: at 145.162 the graphic 'is wiping in over a transitional field image'.",
+       "refuted": true,
+       "evidence": "ext ord 60 (145.162): the PITCH USAGE panel is already at full size; the background is a cross-dissolve (ghost of the 'Health' sign and Lindor's figure superimposed on the overhead camera), i.e. a dissolve, not a wipe. Minor description error."
+      },
+      {
+       "claim": "sheet_regular_03 note 'then pitcher upright with the batter out of the box' at 153.670; event contact evidence 'At 153.670 Lindor is out of the box running'.",
+       "refuted": true,
+       "evidence": "Zoomed plate crop of ext ord 570 (153.670): Lindor is still at the plate in the finish of his swing (torso rotated, bat extended behind him, feet in the first-base-side box) with the pitcher upright at the bottom of frame; he is first seen running up the line at ext ord 600 (154.171). The contact bracket 153.170-153.670 itself is consistent (loaded at 153.170, swing finished at 153.670)."
+      },
+      {
+       "claim": "Event 'Score-bug strip P:6 -> 97 MPH' bracket 186.520-187.020 ('Strip reads P:6 at 186.520'); sheet_regular_14 note 'switches to 97 MPH from 187.020'.",
+       "refuted": true,
+       "evidence": "Zoomed strip at old ord 690 (186.520) reads 'SCHWELLENBACH   MPH' with the 'MPH' label drawn and the number not yet rendered (transition in progress); 'P:6' is last seen at old ord 660 (186.019); '97 MPH' is fully legible at old ord 720 (187.020). The change starts between 186.019 and 186.520."
+      },
+      {
+       "claim": "Event 'Score-bug strip 96 MPH -> P:8' bracket 206.540-207.040 ('At 206.540 the strip still shows the velocity readout').",
+       "refuted": true,
+       "evidence": "Zoomed strip at old ord 1890 (206.540) is a transitional frame showing 'P:8' partly drawn over '96 M'; the last clean '96 MPH' is sheet_cut_08 old ord 1863 (206.089); clean 'P:8' at old ord 1920 (207.040). The change starts between 206.089 and 206.540."
+      },
+      {
+       "claim": "Event 'PA2 pitch 1 - whether the batter swung or took is not resolvable' and not_verifiable item 'Whether the batter swung or took on PA2 pitches 1 and 2'.",
+       "refuted": true,
+       "evidence": "5x plate crops: at old ord 660 (186.019) the batter's torso is rotated toward the pitcher with the bat extended forward above shoulder height (a swing-finish pose), and at old ord 1560 (201.034) the same with the bat extended forward at shoulder height; at 185.519 and 200.534 he is loaded with the bat up. These poses are consistent only with swings, not takes (moderate confidence; ball not visible)."
+      },
+      {
+       "claim": "Score-bug batter rows read 'i. LINDOR .272' and 'i. IGLESIAS .341'.",
+       "refuted": true,
+       "evidence": "Zoomed strips (ext ord 510, old ord 720 etc.) show the lineup slot digits '1. LINDOR .272' and '2. IGLESIAS .341', not 'i.'. Minor transcription error."
+      },
+      {
+       "claim": "sheet_regular_18 note: 'a corner DOWNLOAD NOW promo bug replaces the SNY bug from 198.532'.",
+       "refuted": true,
+       "evidence": "Top-right crops: old ord 1350 (197.531) SNY THE APP; old ord 1380 (198.031) a narrow blue sliver (bug mid-flip); old ord 1410 (198.532) DOWNLOAD NOW. The swap begins between 197.531 and 198.031. The note also omits that it reverts to SNY THE APP between old ord 1650 (202.536, DOWNLOAD NOW) and old ord 1680 (203.036, SNY THE APP)."
+      },
+      {
+       "claim": "Event 'Runner reaches first base; first baseman at the bag and then returning the ball' - 'at 158.675 that player's throwing arm is raised to send the ball back in'.",
+       "refuted": true,
+       "evidence": "Zoomed first-base crops: ext ord 840 (158.175) shows #28 with the throwing arm cocked back (throw starting) as Lindor strides past the bag; ext ord 870 (158.675) shows the arm extended forward in follow-through (ball already released). The return throw falls between 158.175 and 158.675. At ext ord 810 (157.674) #28 is upright beside the bag with Lindor already at the bag, so any catch precedes 157.674."
+      },
+      {
+       "claim": "sheet_regular_02 note: at 152.669 Schwellenbach is 'mid-delivery (front leg down, arm coming forward)'.",
+       "refuted": true,
+       "evidence": "ext ord 510 (152.669) zoom: mid-stride with the lead foot still reaching the ground and the throwing arm back/cocked, glove arm forward. The strip also shows a pitch-clock readout ':05' beside the pitcher name, which the note omits. Minor."
+      },
+      {
+       "claim": "All 11 flagged jumps: cut_00, 01, 02, 04, 05, 06, 07, 08, 09, 10 are hard camera cuts between tiles 2 and 3; cut_03 is same-camera fast motion with no edit.",
+       "refuted": false,
+       "evidence": "Confirmed tile by tile: ext 628->629 (154.638->154.655) CF to high camera; ext 1050->1051 (161.678->161.695) high to tight; ext 1432->1433 (168.051->168.068) tight to dugout; ext 2162->2163 and old 313->314 (180.230->180.247) dugout to CF; old 837->838 (188.972->188.989) CF to pitcher close-up with count 0-0->0-1; old 1453->1454 (199.249->199.266) close-up to CF; old 1861->1862 (206.056->206.073) CF to tight Iglesias with lower-third; old 2445->2446 (215.799->215.816) tight to CF; old 3233->3234 (228.945->228.962) CF to tight Iglesias. old ord 77-86 (176.293-176.443) are all the same dugout shot."
+      },
+      {
+       "claim": "unflagged_changes list is complete: the only scene changes without a flagged jump are 144.661->145.162, 145.162->145.662 and 152.169->152.669.",
+       "refuted": false,
+       "evidence": "Every consecutive regular-tile pair across sheets 00-28 was compared with the flagged jump times. All other shot changes (154.171->154.671, 161.678->162.179, 167.684->168.185, 180.197->180.697, 188.522->189.022, 199.032->199.533, 206.039->206.540, 215.549->216.049, 228.562->229.062) contain a flagged cut. Framing changes within the dugout shot (173.690->174.191, 175.192->176.193) and the pitcher close-up (191.024->191.525) are consistent with pans/turns on the same camera."
+      },
+      {
+       "claim": "Score-bug display events: 2-2/P:5/LINDOR -> 0-0/1 out/P:6/no batter row between 160.177 and 160.677; IGLESIAS row added between 183.700 and 184.201; count 0-0->0-1 frame-exact at 188.972->188.989; '97 MPH'->'P:7' between 191.525 and 192.025; 0-1->0-2 between 203.036 and 203.537; 'P:8'->'90 MPH' between 224.558 and 225.058; reset to 0-0 with two out dots between 227.060 and 227.561.",
+       "refuted": false,
+       "evidence": "All confirmed in zoomed strip crops: ext 960 (160.177) 2-2/P:5/1. LINDOR vs ext 990 (160.677) 0-0/one filled dot/P:6; ext 2370 (183.700) no batter row vs ext 2400 (184.201) '2. IGLESIAS .341'; cut_06 old 837/838; old 990 '97 MPH' vs old 1020 'P:7'; old 1680 0-1 vs old 1710 0-2; old 2970 ':05 P:8' vs old 3000 '90 MPH'; old 3120 0-2/one dot vs old 3150 0-0/two dots."
+      },
+      {
+       "claim": "batter_entry: Iglesias first appears already standing at the plate at 180.247 after a hard cut; no walk-in from the on-deck area or dugout is shown.",
+       "refuted": false,
+       "evidence": "sheet_cut_04/05 ext 2163 / old 314 (180.247): batter in the right-hand box, bent, bat low; ext 2190 (180.697) standing in the box. All earlier sampled frames are the dugout camera or Lindor follow shots. Caveat: a grey-uniformed figure in first-base-side foul territory is visible under the graphic in ext ord 90-480 (145.662-152.169) but cannot be identified."
+      },
+      {
+       "claim": "PITCH USAGE graphic bracket 144.661-152.669 and 'PA1 final pitch - delivery already in progress when the graphic clears' 152.169-152.669; release 152.669-153.170; contact 153.170-153.670.",
+       "refuted": false,
+       "evidence": "ext 30 (144.661) tight Lindor shot; ext 60 (145.162) dissolve with panel; ext 90-480 panel over overhead camera; ext 510 (152.669) CF camera with pitcher mid-stride; ext 540 (153.170) follow-through with Lindor loaded; ext 570 (153.670) Lindor finishing his swing."
+      },
+      {
+       "claim": "PA2 pitch phases: pitch 1 release 185.018-185.519, follow-through at 186.019; pitch 2 release 200.033-200.534, follow-through at 201.034; pitch 3 motion begins 222.556-223.056, release 223.557-224.057, follow-through at 224.558.",
+       "refuted": false,
+       "evidence": "Mound crops: old 600 (185.018) stride/arm back vs old 630 (185.519) arm extended forward; old 660 (186.019) trailing leg high. old 1500 (200.033) stride vs old 1530 (200.534) arm through; old 1560 (201.034) leg high. old 2850 (222.556) set vs old 2880 (223.056) leg lift; old 2910 (223.557) stride vs old 2940 (224.057) arm through; old 2970 (224.558) leg high."
+      },
+      {
+       "claim": "Lower-third '2B JOSE IGLESIAS / 20-GAME HITTING STREAK' bounds: absent 206.056, present 206.073; present 215.799, gone 215.816. Last mapped frame old ord 3297 at 230.030 is a tight shot of Iglesias walking; no next batter is visible anywhere.",
+       "refuted": false,
+       "evidence": "sheet_cut_08 tiles 2/3 and sheet_cut_09 tiles 2/3 confirm the bounds; sheet_regular_28 tile 6 (old 3297, 230.030) shows Iglesias (#11 grey) walking in front of the stands with bug 0-0 / two dots / 90 MPH; no other batter appears in any tile."
+      },
+      {
+       "claim": "Lindor post-out sequence: jogging back on the high camera through 161.678, tight follow shot 162.179-167.684, reaches the dugout rail between 171.188 and 172.189 ('LINDOR 12' at 172.189), helmet off between 176.693 and 177.694.",
+       "refuted": false,
+       "evidence": "Confirmed on sheets 05-11: ext 900-1050 high camera; ext 1080-1410 tight frontal shot; ext 1620 (171.188) manager only, ext 1650 (171.688) helmet rising, ext 1680 (172.189) LINDOR nameplate; ext 1950 (176.693) helmeted, ext 1980 (177.194) helmet in mid-air, ext 2010 (177.694) blue head wrap."
+      },
+      {
+       "claim": "whole_pa_condition not met on sampled evidence: PA1 pitch 6 set/start hidden by the graphic through 152.169; the fielding of the ground ball and the catch at first are not identifiable; Iglesias's entry into the box is not shown.",
+       "refuted": false,
+       "evidence": "Mound covered by the panel in ext ord 90-480; ext 510 already mid-stride. High-camera tiles ext 630-780 show a Braves infielder bent low in the second-base area at ext 660 (155.172) but no ball or throw is resolvable; #28 is already upright beside the bag with Lindor at the bag at ext 810 (157.674). Entry: see batter_entry claim. Conclusion stands even after correcting the per-tile errors above."
+      }
+     ],
+     "additional_findings": [
+      "A person in Braves white enters from the left of the centre-field frame at old ord 1830 (205.539) and at old ord 1860/1861 (206.039/206.056) stands beside the plate umpire with an arm extended toward him while the umpire reaches back; the cut to the Iglesias close-up follows at 206.073. The reviewer did not mention this figure.",
+      "Plate umpire's right arm is raised with a closed fist at old ord 810 (188.522) while the catcher holds the ball up in his bare hand; the catcher's throwing arm is raised holding the ball across old ord 720-837 (187.020-188.972), and at old ord 750 (187.521) the umpire's hand is extended down to the catcher (consistent with handing him a ball). Not interpreted further.",
+      "Pitch-clock readouts not noted by the reviewer: ':05' beside the pitcher name at ext ord 510 (152.669) during the PA1 pitch-6 delivery and a clock box still present at ext ord 540 (153.170); ':07' persists at old ord 630/660 (185.519/186.019) after pitch 1; an empty clock box at old ord 1260 (196.029) before digits appear at 196.530; ':05' still shown at old ord 2970 (224.558).",
+      "A grey-uniformed (Mets) figure stands in first-base-side foul territory in every overhead tile beneath the PITCH USAGE panel (ext ord 90-480, 145.662-152.169); identity (on-deck batter or coach) is not resolvable at tile scale, so it neither confirms nor contradicts the 'no walk-in shown' finding but should be recorded.",
+      "At ext ord 660 (155.172) a Braves infielder is bent low on the dirt in the second-base area (a fielding posture); the ball and any throw are not visible, so the fielding remains unverifiable as the reviewer stated, but the posture itself is on camera.",
+      "Corner promo bug: SNY THE APP is mid-flip at old ord 1380 (198.031), DOWNLOAD NOW from old ord 1410 (198.532) through old ord 1650 (202.536), and SNY THE APP is back at old ord 1680 (203.036).",
+      "Iglesias exits the centre-field frame between old ord 3180 (228.061, at the right edge with his bat) and old ord 3210 (228.562, not in frame); he is likewise absent from sheet_cut_10 tiles 1-2 (228.929/228.945).",
+      "A small white round object sits in mid-air near the catcher's mitt at old ord 1530 (200.534) with the batter still loaded; it is not consistent with the pitch timing (the pitcher is at/just past release in the same tile) and could not be identified, so it is not treated as the ball.",
+      "Lineup-slot digits are legible in the strip ('1. LINDOR', '2. IGLESIAS'), giving an additional identity cue the reviewer transcribed as 'i.'.",
+      "At ext ord 810 (157.674) first baseman #28 is already upright beside the bag with Lindor's foot at the bag; the throwing motion back to the infield is cocked at ext 840 (158.175) and released by ext 870 (158.675).",
+      "Zoom crops used for these verdicts were saved under <local path removed> (bug_a/b/c, pitch_a/b/c, plate_a/b/c, swings, catcher, graphic_bottom, fielders4, firstbase, entry, iglesias_exit, s20, ball8). Only the named contact sheets in <local path removed> were read; index.json and the frames_* directories were not used."
+     ],
+     "overall_refuted": false,
+     "summary": "The review's coverage and continuity conclusions survive: all 11 flagged jumps are correctly classified, the three unflagged scene changes are the only ones missing a flag, the score-bug count/outs progression and lower-third bounds are frame-accurate, Iglesias's first appearance at 180.247 already in the box is confirmed, and the whole-PA condition is correctly judged not met (mound hidden by the graphic through 152.169; fielding/catch at first not resolvable; no walk-in shown). However, a substantial set of per-tile evidence claims is refuted and must be corrected before the brackets are reused: PA2 pitch 1 leg lift is first seen at 184.701 (184.201 is the set), pitch 2 is already in leg lift at 199.533 (motion starts 199.282-199.533), pitch 3 shows no swing at 224.057 (bat through the zone only at 224.558), the P:5->96 MPH strip change is 153.670-154.171 not 153.170-153.670, the P:6->97 MPH and 96 MPH->P:8 changes are already in progress at 186.520 and 206.540, Lindor is still finishing his swing at the plate at 153.670 (running from 154.171), Iglesias is out of the CF frame by 228.562, sheet_cut_08's 'before' description does not match the frames (pitcher set on the rubber, batter upright, umpire reaching toward a Braves-white figure the review never mentions), and the plate area with small figures is visible below the PITCH USAGE panel. Swing-finish poses at 186.019 and 201.034 also contradict the 'swing vs take not resolvable' statements for PA2 pitches 1-2."
+    }
+   }
+  ],
+  "session_integration": [
+   "Core conclusions held under both lenses: all 9 distinct hard cuts (10 flagged sheets incl. the duplicate 180.247 frame pair) and the one same-camera motion cluster; three unflagged graphic dissolves only; Iglesias already in the box at 180.247 after a frame-exact cut; three PA2 pitch motions; Lindor's full departure; whole-PA condition not met.",
+   "Verifier corrections adopted into the session timeline after the session re-checked them on 2-3x crops (sheet_zoom_session_00/01): count 0-1 displayed by 188.955 (before the cut); no swing yet at 224.057, swing by 224.558; pitcher set at 199.266-199.282 and in leg lift by 199.533; batter strip appears 183.700-184.201; P:5 -> 96 MPH at 153.670-154.171; PA1 ball/catch/out signal not resolvable at 0.5 s; leg lift for pitch 1 at 184.701; Iglesias out of the center-field frame from 228.562; 'bat flipped' not supported.",
+   "The boundary lens reported overall_refuted=true because 11 of 57 claims (tile-level brackets and the reviewer's 'outcome_shown=true') failed; the coverage lens reported overall_refuted=false with 18 of 27 tile-level claims corrected. None of the corrections changes the verdict."
+  ]
+ }
+}
