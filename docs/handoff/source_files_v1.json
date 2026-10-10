@@ -271,10 +271,60 @@
       "path": "docs/results/mlb_p0/game_849849_intent_plate_calibration_v0.json",
       "role": "coordinate_calibration_regression_fixture",
       "distribution": "internal_team_source_review; not a public deployment package"
+    },
+    {
+      "path": "scripts/build_service_review.py",
+      "role": "service_review_builder",
+      "distribution": "internal_team_source_review; not a public deployment package"
+    },
+    {
+      "path": "src/integration/service_review_server.py",
+      "role": "service_review_runtime",
+      "distribution": "internal_team_source_review; not a public deployment package"
+    },
+    {
+      "path": "web/service-review/index.html",
+      "role": "service_review_viewer",
+      "distribution": "internal_team_source_review; not a public deployment package"
+    },
+    {
+      "path": "web/service-review/review.js",
+      "role": "service_review_viewer",
+      "distribution": "internal_team_source_review; not a public deployment package"
+    },
+    {
+      "path": "web/service-review/style.css",
+      "role": "service_review_viewer",
+      "distribution": "internal_team_source_review; not a public deployment package"
+    },
+    {
+      "path": "web/service-review/review.test.cjs",
+      "role": "service_review_tests",
+      "distribution": "internal_team_source_review; not a public deployment package"
+    },
+    {
+      "path": "tests/test_service_review_package.py",
+      "role": "service_review_tests",
+      "distribution": "internal_team_source_review; not a public deployment package"
+    },
+    {
+      "path": "tests/test_service_review_server.py",
+      "role": "service_review_tests",
+      "distribution": "internal_team_source_review; not a public deployment package"
+    },
+    {
+      "path": "docs/results/service_integration_20261010/first_pa_media_binding_v1.json",
+      "role": "media_binding_metadata_only",
+      "distribution": "internal_team_source_review; not a public deployment package"
+    },
+    {
+      "path": "docs/examples/service_game_v2_export_synthetic.json",
+      "role": "service_export_synthetic_fixture",
+      "distribution": "internal_team_source_review; not a public deployment package"
     }
   ],
   "exclusions": [
-    "No teammate repository, model source, server response exports, or credentials collected.",
+    "No teammate repository/model source, raw server exports, normalized private reports, credentials or human responses copied. Existing curated display data and identity-binding metadata are included as explicitly selected source files.",
     "All image/video/audio files and model weights excluded, including previously approved public home media.",
     "Raw human responses, private comparison galleries, reviewer packages and machine-bound session records excluded.",
     "Training arrays, raw Statcast/feed/video stores and operational runtime artifacts inventoried separately, not copied.",

@@ -1,166 +1,149 @@
-# 우리 프로토타입 최소 이관 묶음 — H-port5
+# 우리 프로토타입 소스 이관 안내 — H-port7
 
-## 2026-10-09 I-service2 이후 범위 안내
+갱신일: 2026-10-10. 내부 통합 검토용 **64파일**(기존 54 + 최신 서비스 경로 10)이다.
+기준은 `bundle_manifest.json`의 `source_commit`이다. 모든 파일은 그 커밋의 Git blob이며,
+원래 저장소·비공개 영상·가중치가 없는 폴더에서도 아래 계약 검사와 영상 없는 화면 생성을 할 수 있다.
+**모델 실행 번들 또는 공개 배포 사이트는 아니다.** 팀원 저장소는 변경하지 않았다.
 
-이 문서의 **기존 H-port5 ZIP(54파일, 소스 `47ddc8f`)은 고정된 과거 전달물**이다.
-이후 완료한 I-service2의 `teammate_export_20261009_v1` 프로필, 비공개 `web/service-review` 화면,
-검토 팩 생성기는 그 ZIP에 포함되어 있지 않다. 기존 ZIP·manifest·전달 영수증은 수정하지 않았다.
-새 수신 코드와 실행법은 현재 저장소의 [통합 안내](../SERVICE_GAME_V2_INTEGRATION.md)·
-[수신 기록](../SERVICE_GAME_V2_RECEIVED_20261009.md)을 따른다. 실제 원문·정규화 데이터는 비공개다.
-아래의 S 원문 미수신·잠정 규약·연결 대기 서술은 해당 ZIP 기준 설명이며 현재 수신 상태가 아니다.
-I-run1/I-release1·실제 Mac 실행은 이 문서 갱신으로 완료되지 않는다.
+## 먼저 어떤 묶음인지 구분하기
 
-갱신일: 2026-10-09. `Pitcheezy/transition-models`, `feature/intent-v0`의 내부 팀 검토용 소스49개와 보정 회귀 자료5개(총54파일) 부분집합이다.
-정확한 기준 커밋은 함께 받은 `bundle_manifest.json`의 `source_commit`이다.
-파일 목록은 `docs/handoff/source_files_v1.json`, 별도 자료 목록은 `external_artifacts_v1.json`이다.
-모든 파일의 출처는 같은 기준 커밋의 Git blob이다. Windows 체크아웃의 줄바꿈 변환은 적용하지 않는다.
-해시는 전달 중 변경을 탐지하는 식별자이며 저자 인증 서명이나 재배포 권한 증명이 아니다.
-
-## 이번 새 묶음에 반영한 수정
-
-H-port5는 최신 소스로 만든 전달 묶음의 회귀 검사에 필요한 보정 JSON5개 누락을 수정한다.
-기존49소스와 이미 버전 관리된5경기 보정 JSON만 포함하며 영상·사람 응답을 추가하지 않는다.
-이 자료는 H-12 보정 근거 검사에 필요하다. 파일을 빼면 전체 저장소에서는 통과해도
-압축을 받은 쪽의 안내된 테스트가5건 실패했다. 이 검사를 건너뛰는 대신 필수 자료를 동봉한다.
-
-H-12의 실제 적용 보정/잔여 민감도 설명과 H-13의 중복 투구·잘못된 시각 거부도 포함한다.
-5경기 보정 파일 내용과 기존 JSONL/M3/사람 응답은 변경하지 않는다.
-기존 v1/v2 ZIP과 delivery/source_manifest 기록은 그 당시 기준으로 보존한다.
-아래 H-port4 수정도 누적 포함한다.
-
-
-- H-7: 수신기의 존재하지 않는 Gregorian 날짜를 거부한다. 정상 시간대·소수초·생성 시각 원문은 보존한다.
-- H-9: 좌표 변환에서 요청 경기와 timing·points·calibration의 경기 식별자를 대조한다.
-- H-10: 명시적으로 지정한 보정 경로가 잘못되면 출력 전에 거부한다. 보정 옵션을 생략한 경우의 기존 기본 동작은 유지한다.
-- CV-28: 새 AI `marked/partial` 응답은 부분 가림의 비어 있지 않은 이유가 필요하다. 요청 문구와 수신 검사가 이를 명시한다.
-
-좌표 변환의 회귀 검사 `tests/test_intent_m2.py`를 추가했다. 나머지는 기존48개 소스 범위를 유지한다.
-2026-10-07의 H-port1 원본 ZIP·전달 기록·파일 manifest는 보존하며 이 새 ZIP으로 덮어쓰지 않는다.
-표시된 수정은 입력·도구의 동작 수정이며 새 모델 정확도나 팀원 서비스 연결을 의미하지 않는다.
-
-H-8의 `intent/review_ui.js`는 이 부분집합에 없다. 사람 검토 UI를 쓰려면 전체 저장소나
-별도 `outputs/cv_review_20261008_ui_v3/reviewer` 팩을 사용한다. 그 팩의 이미지·사람 응답은 이 ZIP에 넣지 않는다.
-H-10의 반복 판독 RMS 0 보존 수정은 별도 보정 생성기 `intent/calibrate.py`에 있으며 이 부분집합에는 없다.
-보정 생성기와 전체 관측 루프·모델 제공자·과거 관측 보고서는 기준 커밋의 전체 저장소에서 사용한다.
-
-## 무엇을 바로 가져갈 수 있는가
-
-| 부분 | 경로 | 이 묶음에서 확인하는 범위 |
+| 묶음 | 목적 | 포함 / 제외 |
 |---|---|---|
-| S 응답 검사 | `src/integration/service_game.py`, `scripts/inspect_service_game.py` | 투구 키·단위·null·선택 비중·공개 전후 분리. STATUS를 바탕으로 한 잠정 규약이며 실제 새 S 원문 미수신 |
-| 미트 계약 | `intent/schema.py` | IntentEstimate v1의 상태·출처·좌표 변환 근거 검사. 검출 모델이 아님 |
-| 이미지 관측 계약 | `intent/observation_session.py`, `intent/replay.py`, `src/vision/frames.py` | 이미지 SHA·픽셀·가시성·기권을 갖는 별도 `intent_visual_observation_v1`의 begin/finish. mapped 경로와 전체 루프는 전체 저장소 필요 |
-| 좌표 변환 | `intent/geometry.py`, `intent/plate_feet.py`, `intent/run.py` | 저장 주석을 변환·직렬화. `intent.run`은 영상에서 미트를 자동 검출하지 않음 |
-| 화면 | `web/pitch-studio/`의 HTML/CSS/JS | 홈·서비스 콘셉트·첫 타석 수신기·검증 리포트의 기존 소스. 현재 공개 영상 파일은 제외 |
-| 회귀 검사 | `tests/`, `web/pitch-studio-tests/`에 선택한 파일 | 합성 계약 검사와 저장 응답/화면 로직 검사. 실제 API·실기기·모델 성능 검사가 아님 |
+| 이 소스 ZIP v4 | 우리 코드를 다른 프로토타입에 옮길 때 검토·테스트 | 소스·합성 예제·선택된 보정 및 연결 메타데이터. 실제 S 원문·영상·가중치 없음 |
+| 별도 비공개 검토팩 v4 | 전달된 849843 결과와 첫 타석 3클립을 바로 보기 | 정규화 보고서·영상·단독 실행기. 개발용 소스 ZIP과 별개 |
+| 기존 운영 모델 ZIP | 우리 예전 운영 모델 재현 | 별도 14개 프로필·가중치·보정 자료. 전체 소스 필요; 팀원 모델 아님 |
 
-기존 화면은 구형 watch/reveal을 받은 `pitcheezy-receiver-v1` 경로를 사용한다.
-새 S `service-game-v2` 검사 출력과 자동 연결된 상태가 아니다. S의 실제 응답을 받은 뒤 I-service2에서 연결한다.
-`receiver-demo-849843.js`는 이미 수신한 첫 타석의 표시용 자료, `receiver-sample.js`와 `preview-data.js`는 예시다.
-`data.js`는 공개 화면용 투구별 39행과 집계이며 원본 사람 검토 메타데이터를 포함하지 않는다.
+소스 ZIP은 웹 루트에 통째로 올리지 않는다. 같은 v4 표기라도 소스팩과 검토팩은 다른 파일이다.
+실제 원문·사람 응답·비공개 자료·계정은 이 팩에 들어 있지 않다. 해시는 바이트 변경 검사이며
+저자 인증, 권리 증명 또는 모델의 출처 검증이 아니다.
 
-## 압축을 받은 사람이 실행할 순서
+## 무엇을 가져갈 수 있는가
 
-빈 폴더에 압축을 풀고 생성된 최상위 폴더로 이동한다. Python 3.12 이상과 Node가 필요하다.
-Python은 `python`, macOS에서 필요하면 `python3`로 실행한다. 아래 명령은 Windows/macOS/Linux에서 같은 상대 경로를 사용한다.
+| 계층 | 파일 | 범위 |
+|---|---|---|
+| S 정규화 | `src/integration/service_game.py`, `scripts/inspect_service_game.py` | 새 수신 프로필과 옛 잠정 프로필을 분리. 키·cutoff·단위·null·공개 전후 검사 |
+| 새 S 화면 | `web/service-review/{index.html,review.js,style.css}` | 정규화 보고서 → 추천 → 실제 결과 공개 → 조건을 만족하는 미트 가로 표시. 파일 교체 시 식별자 검사·표시 초기화 |
+| 검토팩 생성·실행 | `scripts/build_service_review.py`, `src/integration/service_review_server.py` | 새 폴더/ZIP 생성; SHA 검사, localhost, 허용 파일만 제공, 영상 Range 및 연결 중단 처리 |
+| 미트 계약·변환 | `intent/{schema,geometry,plate_feet,run}.py` | 저장 관측 변환·직렬화·근거 검사. `intent.run`은 영상에서 자동 검출하지 않음 |
+| 관측 세션 | `intent/{observation_session,replay}.py`, `src/vision/frames.py` | 이미지 SHA·가시성·기권 결속. 전체 영상 루프·제공자는 이 부분집합 밖 |
+| 기존 화면 | `web/pitch-studio/` | 이전 홈·서비스 콘셉트·첫 타석 수신기·검증 리포트 소스. 자동 통합/채택을 뜻하지 않음 |
+| 회귀 검사 | 선택된 `tests/`, `web/*/*.test.cjs` | 수신·표시·서버·이관·좌표 규약 검사. 정확도나 실기기 사용 시험이 아님 |
 
-먼저 파일을 수정하지 않은 상태에서 확인한다. Python 표준 라이브러리만 쓴다.
+기존 `receiver-v1` 화면과 새 `service-review-v1` 화면은 별도다. 새 S 자료는 새 화면을 사용한다.
+이 ZIP에서 선택한 기존 `data.js`·`receiver-demo-849843.js`는 이미 관리하던 표시용 자료이며,
+`preview-data.js`·`receiver-sample.js`와 새 예제는 합성/설명 자료다. raw export를 복사한 것이 아니다.
+`first_pa_media_binding_v1.json`은 기존 3클립의 투구 키·SHA 메타데이터만 포함한다.
+영상 파일은 없으며 새 S 응답 자체에 play ID가 있다는 의미도 아니다.
+
+## 1. 소스 무결성 확인
+
+빈 폴더에 압축을 풀고 생성된 최상위 폴더로 이동한다. Python 3.12와 Node가 기준이다.
+Windows는 `python` 또는 `py -3`, Mac은 필요하면 `python3`를 쓴다.
 
 ```text
 python -B -S scripts/build_integration_handoff.py check .
-python -B -S scripts/inspect_service_game.py --input docs/examples/service_game_v2_synthetic.json --source-kind synthetic
 ```
 
-첫 명령은 파일 수·크기·SHA·추가 파일을 확인한다. 묶음 안에 `.venv`, `__pycache__`, 출력 파일을 만들면 추가 파일로 거절한다.
-개발용 사본은 따로 사용한다. 두 번째 명령의 3개 행은 ready/unsupported/missing 각 1개인 **합성 예제**다.
-실제 S 자료를 받으면 별도 위치의 원문과 전달받은 revision으로 `--source-kind provided_export`를 사용한다.
-원문은 그대로 보존하고 화면용 투영과 구분한다. API 호출이나 모델 실행은 일어나지 않는다.
+표준 라이브러리만 사용한다. 원본 소스팩 안에 `.venv`, `__pycache__`, 테스트 캐시나 출력물을 만들면
+추가 파일로 거절한다. 생성물과 개발 사본은 **팩 밖**에 둔다. 삭제·덮어쓰기로 검사를 통과시키지 않는다.
 
-영상 없이 실행하는 화면 회귀 검사:
+## 2. 새 형식의 합성 자료로 바로 실행
 
 ```text
+python -B -S scripts/inspect_service_game.py --input docs/examples/service_game_v2_export_synthetic.json --source-kind synthetic --profile teammate_export_20261009_v1
+python -B -S scripts/build_service_review.py --input docs/examples/service_game_v2_export_synthetic.json --source-kind synthetic --out-dir ../synthetic-review-new --zip ../synthetic-review-new.zip
+python -B -S ../synthetic-review-new/launch_review.py --check
+python -B -S ../synthetic-review-new/launch_review.py --open
+```
+
+출력 폴더·ZIP은 새 이름이어야 하며 부모 폴더는 있어야 한다. 생성팩은 Python 3.10 이상 표준
+라이브러리로 실행된다. 터미널에 표시된 `127.0.0.1` 주소는 그 컴퓨터에서만 열린다. 종료는 Ctrl+C.
+
+합성 3구는 ready/unsupported/missing 각 1개다. 존재하는 ready 행을 선택해 실제 결과를 공개하면
+가상의 미트 가로값 0도 볼 수 있다. 영상은 없고 실제 서비스 응답·정확도·사람 검토 결과가 아니다.
+옛 `service_game_v2_synthetic.json`은 옛 잠정 프로필 검사 용도로 보존했다. 새 빌더에는 새 예제를 쓴다.
+
+## 3. 별도 전달받은 실제 S JSON 연결
+
+실제 원문은 이 ZIP에 없다. 받은 원문을 별도 비공개 폴더에 보존한 뒤 경로를 넣는다.
+
+```text
+python -B -S scripts/inspect_service_game.py --input ../private-input/service-game-849843.json --source-kind provided_export --profile teammate_export_20261009_v1
+python -B -S scripts/build_service_review.py --input ../private-input/service-game-849843.json --source-kind provided_export --out-dir ../private-review-new --zip ../private-review-new.zip
+python -B -S ../private-review-new/launch_review.py --check
+python -B -S ../private-review-new/launch_review.py --open
+```
+
+원문을 변경하지 않고 별도 정규화 자료를 만든다. 출력은 비공개로 보관한다.
+`--include-first-pa-video`는 이 소스팩만으로 사용할 수 없다. 별도 허용된 정확한 6개 미디어 파일이
+`web/pitch-studio/media/`의 지정 경로에 있어야 하며, 원문 SHA와 각 영상/포스터 SHA가 기존 바인딩과
+일치해야 한다. 경로·해시를 바꿔 임의 경기와 연결하지 않는다. 미디어를 추가한 개발 사본은 원본
+소스 ZIP과 구분한다. 이미 생성된 비공개 영상 검토팩을 보는 것과 소스팩 개발은 별개다.
+
+실제 수신 원문은 경기849843의 262구/71타석, ready246·unsupported16·missing0이다.
+미트는 estimated27·unavailable12·null223이다. 원문은 경기 후 as-of 재생이며 런타임 커밋·
+사전 가용성·누출 없음·정책 효용·경기 전체 완전성을 검증하지 않았다. 실제 missing 사례는 없다.
+이 숫자는 기존 수신 검사 결과이고 이 팩의 합성 3구 결과가 아니다.
+
+## 4. 압축 해제본에서 테스트
+
+새 서비스 경로만 검사:
+
+```text
+python -B -m pytest -q -p no:cacheprovider tests/test_service_game_contract.py tests/test_service_game_cli.py tests/test_service_review_package.py tests/test_service_review_server.py
+node --test web/service-review/review.test.cjs
+```
+
+기존 CV·구형 화면과 전달 도구도 검사:
+
+```text
+python -B -m pytest -q -p no:cacheprovider tests/test_integration_handoff.py tests/test_intent_v0.py tests/test_intent_m2.py tests/test_intent_observation_session.py
 node --test tests/js/pitch_receiver.test.cjs tests/js/pitch_home.test.cjs web/pitch-studio-tests/receiver-intake.test.cjs web/pitch-studio-tests/receiver-first-pa.test.cjs
+python -B -S scripts/build_integration_handoff.py check .
 ```
 
-계약·좌표 변환 Python 테스트는 `pytest`, `numpy`, `Pillow`가 있는 **묶음 밖 환경**에서 실행한다.
-개발 환경에서 확인한 버전은 Python 3.12, numpy 2.4.4, Pillow 12.2.0, pytest 9.0.3이다.
+Python 테스트는 팩 밖의 pytest 환경을 사용한다. CV 검사에는 numpy·Pillow가 추가로 필요하고,
+Git 바이트 이관 검사에는 Git이 필요하다. 기존 개발 환경 기준 Python3.12, pytest9.0.3,
+numpy2.4.4, Pillow12.2.0이다. Node 검사는 추가 npm 설치가 없다. 이 팩에는 전체 학습 의존성/lock이
+없어 `uv sync`나 전체 프로젝트 검사를 실행하지 않는다. 전체 재현은 같은 source_commit의 전체
+저장소·`uv.lock`·`docs/MAINTENANCE.md`를 사용한다. 실제 Mac/아이폰 사용 확인과 자동 검사는 다르다.
+
+## 수치·좌표·기능을 옮길 때 유지할 의미
+
+- `detail.probability` / `selection_probability`는 구종 선택 비중이다. 스트라이크·안타 사건확률이 아니다.
+- 후보 위치는 과거 도착 분포의 근사다. 검증된 최적 목표 또는 투수 의도로 표시하지 않는다.
+- actual의 x는 홈플레이트 중심 기준 가로(ft), 포수 시점 오른쪽이 +다. z는 지면 기준 높이(ft).
+  cm 표시는 원 실수에 30.48을 곱한다. 화면/카메라 좌우나 타자 몸쪽/바깥쪽과 같다고 하지 않는다.
+- 새 프로필의 미트는 `estimated`이며 유한 x가 있을 때 **결과 공개 후 가로만** 표시한다.
+  `unavailable` 또는 null은 그리지 않는다. 미트 높이·제구 책임·물리 오차를 계산하지 않는다.
+- 셋업과 실제 도착점은 동일 물리 평면의 정답 쌍으로 검증되지 않았다. 두 값을 빼서 제구 오차라고 하지 않는다.
+- 표시 숨김은 사용자 동선이지 접근 통제/투구 전 추론 증거가 아니다. 자료는 이미 브라우저에 있다.
+- M3는 2경기86프레임, AI58출력·28기권, 함께 표시한58개에서 중앙값2.53px·90분위6.51px.
+  사람1명 판독과의 차이이며 물리 정확도/독립 실시간 정확도가 아니다. 새 모델 성능 주장에 합치지 않는다.
+
+## 남은 통합 조건과 소유권
+
+우리 담당은 CV/좌표 근거·자료 결속·계약 검사·화면의 보존/이식이다. 팀원 모델·API·백엔드는 수정하지 않는다.
+최종 화면/백엔드/기준 브랜치 채택은 미합의다. 모델/API 실행 번들·의존성·정본 버전이 있어야
+I-run1을 시작한다. 실제 기기·공개 권한·운영 검증은 I-release1 조건으로 남는다.
+A-y44구 사람 검토는 사용자가 보류했으며 서비스 마무리 선행 조건이 아니다. 재배정하지 않는다.
+CV-6 추가 독립 검토·CV-7 새 영상 평가는 별도 연구 조건이고 이 소스팩 작업으로 완료되지 않는다.
+추가 의존 목록 `external_artifacts_v1.json`은 10/7 조사 스냅샷이며 최신 원문/모든 산출물 목록이 아니다.
+`LEGACY_PROJECT`는 옛 transition-models, `INTENT_PROJECT`는 현재 feature/intent-v0 경로 별칭이다.
+계정·DNS·API 키를 전달하지 않으며 영상의 기존 공개 결정은 다른 자료의 일반 재배포 권한이 아니다.
+
+## 다시 생성하기와 이전 이력
+
+전체 저장소에서 목록·소스를 커밋한 뒤 명시적인 커밋 SHA로 새 폴더/ZIP을 만든다.
 
 ```text
-python -B -m pytest -q -p no:cacheprovider tests/test_service_game_contract.py tests/test_service_game_cli.py tests/test_intent_v0.py tests/test_intent_m2.py tests/test_intent_observation_session.py
+python -B scripts/build_integration_handoff.py build --source-ref FULL_COMMIT_SHA --out outputs/service_review_source_new
+python -B -S scripts/build_integration_handoff.py check outputs/service_review_source_new
 ```
 
-이 부분집합에는 연구 학습 코드·전체 의존성 lock·모델 가중치가 없다. 이 안에서 `uv sync`나 전체 프로젝트 검사를 실행하는 패키지가 아니다.
-학습/전체 실행이 필요하면 우리 전체 저장소를 같은 `source_commit`으로 체크아웃하고 그 커밋의 `pyproject.toml`, `uv.lock`, `docs/MAINTENANCE.md`를 따른다.
-
-새 AI 응답의 부분 가림 이유 요구는 새 세션에 적용한다. 이전 코드로 시작한 세션을 새 코드로
-끝내는 것은 기존 코드 SHA 검사에서 거부되므로 새 폴더로 시작한다. 과거 응답을 고치거나
-이유를 만들어 채우지 않는다. 전체 저장소의 보고서는 저장된 요청의 옛/새 계약을 구분해 읽는다.
-
-화면 구조만 로컬로 보려면:
-
-```text
-python -B -m http.server 8769 --bind 127.0.0.1 --directory web/pitch-studio
-```
-
-`http://127.0.0.1:8769/report.html`은 저장 수치의 검토 화면이다. 홈/첫 타석 영상은 이 묶음에 없어 재생할 수 없다.
-영상까지 필요하면 외부 목록의 승인된 11개 자산을 개별 확인하여 같은 상대 경로에 별도 복사한다.
-그 시점부터 원본 소스 묶음 검사는 추가 파일을 검출하므로 확장한 사본은 원본과 구분한다.
-`check_pitch_studio.py` 전체 검사는 영상·출처 manifest가 있는 전체 저장소에서만 수행한다.
-이 묶음을 웹 루트에 통째로 올리지 않는다. 외부 자료 목록과 내부 안내는 공개 배포물이 아니다.
-
-## 수치와 좌표를 옮길 때 지킬 의미
-
-- `detail.probability`/`selection_probability`는 구종 선택 비중이다. 스트라이크·안타 확률이나 승률이 아니다.
-- S의 후보 위치는 과거 실제 도착 분포의 근사라는 전달 설명을 유지한다. 검증된 최적 목표라고 부르지 않는다.
-- 미트는 투구 전 프레임에서 읽은 대리값이며 시연에서는 실제 공 공개 후 **x만 ft 단위**로 표시한다. 높이·투수 의도·제구 오차로 확대하지 않는다.
-- 미트 화면 좌표와 Statcast 도착 좌표는 같은 물리 평면의 정답 쌍으로 검증되지 않았다. 둘을 빼서 제구 오차라고 표시하지 않는다.
-- 새 S의 비null `catcher_setup`은 구조·단위가 미확인이라 좌표로 변환하지 않고 null을 유지한다.
-- 기존 시연 39구 중 27구 좌표·12구 기권. M3는 2경기 86프레임, AI 58출력·28기권, 사람이 함께 표시한 58개에서 차이 중앙값 2.53px·90분위 6.51px이다. 한 사람 판독과 동일 변환 기준의 일치도이며 물리 정확도/독립 실시간 정확도가 아니다.
-- CV24의 속도 개선은 개발 표본 측정이며 확정 미트 0을 유지한다. M3 정확도와 합쳐 실시간 정확도를 만들지 않는다.
-- 우리 운영 모델과 팀원 정책의 평가 과제·기간·단위가 다르다. 별도 숫자를 단순 비교해 우수 모델이나 추천 효과를 확정하지 않는다.
-
-## 묶음 밖 자료와 전달 조건
-
-`external_artifacts_v1.json`은 존재를 확인한 파일의 **로컬 바이트** SHA·용도·전달 조건을 기록한다.
-Git blob 해시 목록과 줄바꿈이 다를 수 있다. 별도 파일 수신 시에는 실제 받은 바이트를 비교한다.
-경로 별칭은 전달자가 자기 컴퓨터의 경로에 대응시킨다.
-
-- `LEGACY_PROJECT`: 기존 `transition-models` 체크아웃. 운영 135d 프로필/3개 가중치/보정 보고서와 Sites 작업 사본이 여기에 있다.
-- `INTENT_PROJECT`: 이번 기준 `feature/intent-v0` 체크아웃. CV 검토 자료·비공개 시연 ZIP·현재 화면 자산이 여기에 있다.
-- 운영 모델 코어는 이관 후보 목록일 뿐 이 묶음에서 추론을 재현하지 않았다. pickle/체크포인트는 신뢰한 전달 출처를 확인한 뒤 전체 저장소의 해당 런타임에서만 로드한다. 구형 Arsenal 135d와 운영 135d는 호환되지 않는다.
-- 학습용 배열·전체 원본 영상·사람 응답·비공개 비교 그림·기기별 세션 기록은 기본 전달에서 제외한다. 필요할 때 용도/공유 범위를 정하고 별도로 전달한다.
-- 기존 오프라인 v4 ZIP은 비공개 비교 그림이 포함된 과거 Site v8 자료다. 현재 화면 v9 소스와 다르며 공개 사이트/GitHub 배포용으로 사용하지 않는다.
-- 사이트 작업 사본이 있어도 계정 권한·DNS·비밀키를 이식한 것이 아니다. 별도 배포 권한 확인이 필요하다. API 키와 로그인 정보는 이 묶음에 넣지 않는다.
-- 제3자 영상의 기존 공개 사용 결정은 다른 원본/비공개 비교 그림의 공개 승인이나 일반 재배포 라이선스가 아니다.
-
-## 소유권과 다음 연결 단계
-
-우리 담당은 CV/좌표 근거·검토 도구·계약 검사·화면의 보존/이식이다. 팀원 모델·API·백엔드는 수정하지 않는다.
-공용 기준 브랜치와 최종 화면/백엔드 정본은 미합의이며 이 묶음이 일방적인 채택 결정은 아니다.
-다음은 실제 새 S 원문(발생한 ready/unsupported/missing), 생성 revision/SHA, 셋업 계약을 받은 뒤 한 타석을 대조하는 I-service2다.
-발생하지 않은 상태는 미확인으로 남긴다. 이후 합의한 전체 소스/가중치/데이터로 독립 환경 실행(I-run1), 실제 기기/표시 시점 확인(I-release1)을 한다.
-CV6의 첫 실제 사람 재검토26건은 수신했지만 독립된 두 사람 합의나 AI 오류26건을 뜻하지 않는다.
-추가 독립 사람 검토와 CV7 미열람 자료는 별도로 남는다.
-
-## 다시 생성할 때
-
-전체 저장소에서 변경을 커밋한 다음 해당 커밋을 명시한다. 출력의 부모 폴더만 미리 만들고 같은 이름의 폴더/ZIP은 없어야 한다.
-
-```text
-python -B scripts/build_integration_handoff.py build --source-ref FULL_COMMIT_SHA --out outputs/handoff_new
-python -B scripts/build_integration_handoff.py check outputs/handoff_new
-```
-
-`source_files_v1.json`의 명시 목록만 복사한다. 미커밋 파일·모델·영상·Git LFS 포인터는 전달하지 않는다.
-새 전달 시 생성된 ZIP의 SHA와 기준 커밋을 별도 전달 메시지에 기록하고, 수신자가 가진 기준과 비교한다.
-H-port5의 실행 결과/ZIP 식별자는 전체 저장소의 `docs/handoff/delivery_v3.json`에 기록한다.
-새 파일별 manifest 사본은 `docs/handoff/source_manifest_v3.json`이다. 두 기록은 자기 자신을 포장하는
-순환을 피하기 위해 ZIP에는 넣지 않는다. 과거 `delivery_v1.json`과 `source_manifest_v1.json`은 보존한다.
-
-## 2026-10-08 후속 — 운영 모델 별도 전달 묶음
-
-H-port2는 같은 Windows에서14개 운영 파일의 경로 이관을 실행 확인했고, H-port3는 그 자료만 담은
-별도5.14MB ZIP과 실행 안내를 준비했다. 전체 저장소의 `docs/HANDOFF_OPERATIONAL_RELOCATION_V1.md`,
-`docs/HANDOFF_OPERATIONAL_BUNDLE_V1.md`, `docs/handoff/operational_bundle_delivery_v1.json`을 참조한다.
-이 문서와 운영 자료는 본 소스 ZIP에 포함하지 않는다. 기존 운영14파일 ZIP은 변경하지 않았으며,
-그 전달 기록의 전체 소스 커밋·SHA를 사용한다. 새54파일 묶음도 완전한 모델 런타임이 아니다.
+명시 목록의 Git blob만 담는다. 미커밋 파일·LFS 포인터·영상·가중치를 복사하지 않는다.
+이번 전달 식별·압축 해제 검사 결과는 전체 저장소의 `docs/handoff/delivery_v4.json`, 파일별 근거는
+`docs/handoff/source_manifest_v4.json`에 기록한다. 두 기록은 자기 포장 순환을 피하려고 ZIP 밖에 둔다.
+이전 v1/v2/v3 ZIP·manifest·receipt는 변경하지 않는다. v3(54파일)는 소스47ddc8f의 고정 전달물이며
+새 S 화면은 없었다. v4는 기존 H-7/H-9/H-10/H-12/H-13 수정과 I-service2~6을 포함한다.
+사람 검토 UI·전체 관측 루프·모델 제공자·운영 학습/추론은 부분집합 밖이다.

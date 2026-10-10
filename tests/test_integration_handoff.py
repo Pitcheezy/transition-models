@@ -189,3 +189,75 @@ def test_invalid_selection_paths_rejected(repository, tmp_path, relative):
     with pytest.raises(ValueError):
         handoff.build(repository, commit, tmp_path / "handoff")
     assert not (tmp_path / "handoff").exists()
+
+
+def test_selected_source_builds_current_review_without_repository_imports(tmp_path):
+    """Catch missing transitive files using only the actual source selection in isolation."""
+    root = SCRIPT.parents[1]
+    selection, _ = handoff._selection((root / handoff.CONFIG).read_bytes())
+    exported = tmp_path / "source-only"
+    for relative in selection:
+        target = exported / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes((root / relative).read_bytes())
+    originals = {path: (exported / path).read_bytes() for path in selection}
+    fixture = exported / "docs/examples/service_game_v2_export_synthetic.json"
+    output = tmp_path / "private-review"
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-I",
+            "-S",
+            "-B",
+            "-X",
+            "utf8",
+            str(exported / "scripts/build_service_review.py"),
+            "--input",
+            str(fixture),
+            "--source-kind",
+            "synthetic",
+            "--out-dir",
+            str(output),
+        ],
+        cwd=tmp_path,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        timeout=30,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    receipt = json.loads(result.stdout)
+    assert receipt["input_kind"] == "synthetic"
+    assert receipt["profile"] == "teammate_export_20261009_v1"
+    assert receipt["clip_count"] == 0
+    assert {
+        key: receipt["summary"][key] for key in ("pitches", "ready", "unsupported", "missing")
+    } == {
+        "pitches": 3,
+        "ready": 1,
+        "unsupported": 1,
+        "missing": 1,
+    }
+    checked = subprocess.run(
+        [
+            sys.executable,
+            "-I",
+            "-S",
+            "-B",
+            "-X",
+            "utf8",
+            str(output / "launch_review.py"),
+            "--check",
+        ],
+        cwd=tmp_path,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        timeout=15,
+    )
+    assert checked.returncode == 0, checked.stdout + checked.stderr
+    assert not (exported / ".git").exists()
+    assert {p.relative_to(exported).as_posix() for p in exported.rglob("*") if p.is_file()} == set(
+        selection
+    )
+    assert all((exported / path).read_bytes() == data for path, data in originals.items())

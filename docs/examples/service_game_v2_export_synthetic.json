@@ -1,0 +1,212 @@
+{
+  "schema": "pitcheezy-service-game-v2",
+  "source": {
+    "kind": "demo"
+  },
+  "game": {
+    "game_pk": 900001,
+    "start": "2026-10-07T00:00:00Z",
+    "away_team": "Synthetic Away",
+    "home_team": "Synthetic Home",
+    "date_kst": "2026-10-07"
+  },
+  "feed": {
+    "as_of": "2026-10-07T00:01:00Z",
+    "ok": true,
+    "stale_s": 0
+  },
+  "cutoff": {
+    "index": 19,
+    "pitch_key": "900001:4:1"
+  },
+  "zone_bounds": {
+    "bottom": 1.5,
+    "top": 3.5
+  },
+  "pitches": [
+    {
+      "index": 19,
+      "key": "900001:4:1",
+      "pa_key": "900001:4",
+      "at_bat_number": 4,
+      "pitch_number": 1,
+      "inning": 1,
+      "half": "Bot",
+      "situation_before": {
+        "inning": 1,
+        "half": "Bot",
+        "outs": 0,
+        "balls": 0,
+        "strikes": 0,
+        "home_score": 0,
+        "away_score": 0,
+        "bases": 0,
+        "runners": {
+          "first": false,
+          "second": false,
+          "third": false
+        }
+      },
+      "pitcher": {
+        "id": 900006,
+        "name": "Synthetic Pending Pitcher",
+        "hand": "R"
+      },
+      "batter": {
+        "id": 900007,
+        "name": "Synthetic Batter C",
+        "side": "L"
+      },
+      "rec": {
+        "status": "missing",
+        "reason": "Synthetic pending recommendation",
+        "candidates": [],
+        "provenance": "absent"
+      },
+      "actual": null
+    },
+    {
+      "index": 7,
+      "key": "900001:2:1",
+      "pa_key": "900001:2",
+      "at_bat_number": 2,
+      "pitch_number": 1,
+      "inning": 1,
+      "half": "Top",
+      "situation_before": {
+        "inning": 1,
+        "half": "Top",
+        "outs": 1,
+        "balls": 0,
+        "strikes": 0,
+        "home_score": 0,
+        "away_score": 0,
+        "bases": 0,
+        "runners": {
+          "first": false,
+          "second": false,
+          "third": false
+        }
+      },
+      "pitcher": {
+        "id": 900002,
+        "name": "Synthetic Pitcher A",
+        "hand": "R"
+      },
+      "batter": {
+        "id": 900003,
+        "name": "Synthetic Batter A",
+        "side": "L"
+      },
+      "rec": {
+        "status": "ready",
+        "reason": null,
+        "provenance": "asof_replay",
+        "recorded_at": "2026-10-07T00:00:00Z",
+        "policy": {
+          "name": "Synthetic example only",
+          "identity": "synthetic-policy"
+        },
+        "candidates": [
+          {
+            "rank": 2,
+            "pitch_type": "SL",
+            "pitch_label": "Synthetic slider",
+            "zone_id": "low_right",
+            "zone_label": "Synthetic historical proxy",
+            "target": {
+              "x": 0.5,
+              "z": 1.7
+            },
+            "detail": {
+              "probability": 0.2
+            }
+          },
+          {
+            "rank": 1,
+            "pitch_type": "FF",
+            "pitch_label": "Synthetic fastball",
+            "zone_id": null,
+            "zone_label": null,
+            "target": null,
+            "detail": {
+              "probability": 0.5
+            }
+          },
+          {
+            "rank": 3,
+            "pitch_type": "CH",
+            "pitch_label": "Synthetic changeup",
+            "zone_id": null,
+            "zone_label": null,
+            "target": null,
+            "detail": {
+              "probability": null
+            }
+          }
+        ]
+      },
+      "actual": {
+        "pitch_type": "FF",
+        "pitch_label": "Synthetic fastball",
+        "description": "Synthetic result",
+        "result_label": "Synthetic ball",
+        "event": null,
+        "speed_mph": 94.5,
+        "x": -1.1,
+        "z": 2.1,
+        "catcher_setup": {
+          "status": "estimated",
+          "x_band": "middle",
+          "plate_x_feet": 0.0
+        }
+      }
+    },
+    {
+      "index": 12,
+      "key": "900001:3:1",
+      "pa_key": "900001:3",
+      "at_bat_number": 3,
+      "pitch_number": 1,
+      "inning": 1,
+      "half": "Top",
+      "situation_before": {
+        "inning": 1,
+        "half": "Top",
+        "outs": 2,
+        "balls": 0,
+        "strikes": 0,
+        "home_score": 0,
+        "away_score": 0,
+        "bases": 0,
+        "runners": {
+          "first": false,
+          "second": false,
+          "third": false
+        }
+      },
+      "pitcher": {
+        "id": 900004,
+        "name": "Synthetic Unsupported Pitcher",
+        "hand": "L"
+      },
+      "batter": {
+        "id": 900005,
+        "name": "Synthetic Batter B",
+        "side": "R"
+      },
+      "rec": {
+        "status": "unsupported",
+        "reason": "Synthetic pitcher outside support",
+        "candidates": []
+      },
+      "actual": null
+    }
+  ],
+  "pas": [],
+  "current": null,
+  "next": null,
+  "notes": [
+    "Entirely invented current-export example. Not an API capture, real game, model result, or human observation."
+  ]
+}
