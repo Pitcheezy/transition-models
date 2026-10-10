@@ -1,0 +1,98 @@
+{
+  "schema": "pitcheezy-service-recovery-verification-v1",
+  "date": "2026-10-10",
+  "work_unit": "I-service6",
+  "claim_commit": "cbc6f29",
+  "scope": "Own private service response cancellation and playback recovery; no teammate repo changes.",
+  "observed_issue": "Earlier real local Chrome QA produced an uncaught Windows ConnectionAbortedError (WinError10053) during response body write; this was a request-thread error, not evidence of whole server termination.",
+  "fix": "Handle BrokenPipeError, ConnectionResetError and ConnectionAbortedError at GET/HEAD response boundary including headers and error responses. Close affected connection. Unexpected errors remain visible.",
+  "regression": {
+    "new_cases": 20,
+    "before_failed": 16,
+    "before_passed": 4,
+    "after_passed": 20,
+    "related_python_passed": 115,
+    "related_python_seconds": 27.23,
+    "node_passed": 36,
+    "ruff_formatted_paths": 167,
+    "independent_code_review": "no additional actionable findings"
+  },
+  "browser": {
+    "date": "2026-10-10",
+    "browser": "154.0.8037.58",
+    "mode": "headless_local_chrome",
+    "results": [
+      {
+        "name": "injected_mp4_fetch_failure_preserves_recommendation_and_hides_results",
+        "passed": true
+      },
+      {
+        "name": "manual_reveal_available_when_video_fails",
+        "passed": true
+      },
+      {
+        "name": "retry_resets_manual_reveal_and_real_playback_seek_then_end_reveals",
+        "passed": true
+      },
+      {
+        "name": "switch_during_playback_stops_old_clip_and_ignores_injected_stale_end",
+        "passed": true
+      },
+      {
+        "name": "reload_clears_previous_pitch_result_and_setup",
+        "passed": true
+      },
+      {
+        "name": "unlinked_pitch_retains_explicit_manual_reveal_without_wrong_clip",
+        "passed": true
+      },
+      {
+        "name": "injected_manifest_failure_supports_manual_reveal_and_recovers_on_reload",
+        "passed": true
+      }
+    ],
+    "uncaught_page_errors": [],
+    "external_requests": 0,
+    "non_get_requests": 0,
+    "faults_are_injected": true,
+    "human_review_claim": false,
+    "physical_mac_or_iphone_claim": false
+  },
+  "package": {
+    "zip_relative_path": "outputs/service_review_video_20261010_v4.zip",
+    "bytes": 13571477,
+    "sha256": "cc2c5e46528711b9a026426d53ff8a38fdcad6ebfde3fe5cd5670fcd7a5cfe5b",
+    "files": 16,
+    "changed_from_v3": [
+      "launch_review.py",
+      "receipt.json"
+    ],
+    "extracted_bytes_identical": true,
+    "isolated_launcher_check": "passed",
+    "report_sha256": "154d9cd1cb166552db5975137e2ba431b9ab48f94fcfa6bdd05304f645427c80",
+    "source_sha256": "df606a11c6db465c054252ef8d331aeb23aa21565b4960bd586f3dcf8f62f6b7",
+    "human_response_sha256_unchanged": true
+  },
+  "screenshots": [
+    {
+      "path": "outputs/service_review_recovery_20261010_v1/desktop-video-failure.png",
+      "sha256": "da7a660786a513766b61fb7044a305cd5bd4c0853ab873254ffba2f9b0035569"
+    },
+    {
+      "path": "outputs/service_review_recovery_20261010_v1/desktop-video-recovered.png",
+      "sha256": "d995dd3d131d15344d0f5a882de854e19064d4ccfcaa8ce845ca5dc73800e059"
+    }
+  ],
+  "human_review": {
+    "ay_status": "paused_by_user",
+    "received_response_unchanged": true,
+    "new_human_annotations": 0,
+    "agreement_claim": false
+  },
+  "limitations": [
+    "Browser network failures and stale events were deliberately injected.",
+    "No physical Mac or iPhone operation tested.",
+    "No model execution, live feed, policy utility or scientific accuracy claim.",
+    "Public Site unchanged; package remains private."
+  ]
+}

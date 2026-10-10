@@ -3,6 +3,7 @@
 import hashlib
 import http.client
 import importlib.util
+import io
 import json
 import subprocess
 import sys
@@ -443,3 +444,64 @@ def test_check_mode_never_opens_a_browser_and_bad_port_fails_early(package, monk
     with pytest.raises(SystemExit) as error:
         server_module.main(["--port", "-1"])
     assert error.value.code == 2
+
+
+class InterruptedClient:
+    """Exercise the HTTP handler's real header/body writer without OS timing races."""
+
+    def __init__(self, method, path, headers=None, fail_write=None, error_type=None):
+        request_lines = [f"{method} {path} HTTP/1.0", "Host: localhost"]
+        request_lines.extend(f"{name}: {value}" for name, value in (headers or {}).items())
+        self.request = io.BytesIO(("\r\n".join(request_lines) + "\r\n\r\n").encode())
+        self.fail_write = fail_write
+        self.error_type = error_type
+        self.writes = []
+        self.attempts = 0
+
+    def makefile(self, mode, *args):
+        assert mode == "rb"
+        return self.request
+
+    def sendall(self, data):
+        self.attempts += 1
+        if self.attempts == self.fail_write:
+            raise self.error_type("simulated client cancellation")
+        self.writes.append(bytes(data))
+
+
+@pytest.mark.parametrize(
+    "error_type", [ConnectionAbortedError, ConnectionResetError, BrokenPipeError]
+)
+@pytest.mark.parametrize(
+    ("method", "path", "headers", "fail_write"),
+    [
+        ("GET", "/media/synthetic.mp4", {}, 1),
+        ("GET", "/media/synthetic.mp4", {"Range": "bytes=0-1"}, 2),
+        ("HEAD", "/media/synthetic.mp4", {}, 1),
+        ("GET", "/missing", {}, 1),
+        ("GET", "/missing", {}, 2),
+        ("GET", "/media/synthetic.mp4", {"Range": "bytes=999-"}, 1),
+    ],
+)
+def test_expected_client_cancellation_is_quiet_and_next_response_succeeds(
+    package, method, path, headers, fail_write, error_type
+):
+    snapshot = server_module.load_snapshot(package)
+    handler = server_module.make_handler(snapshot)
+    interrupted = InterruptedClient(method, path, headers, fail_write, error_type)
+    handler(interrupted, ("127.0.0.1", 10000), None)
+    assert interrupted.attempts == fail_write
+    # A new request still returns the correct range and bytes after the aborted response.
+    next_client = InterruptedClient("GET", "/media/synthetic.mp4", {"Range": "bytes=10-"})
+    handler(next_client, ("127.0.0.1", 10001), None)
+    assert b" 206 " in next_client.writes[0]
+    assert b"Content-Range: bytes 10-35/36" in next_client.writes[0]
+    assert next_client.writes[1] == snapshot["/media/synthetic.mp4"][0][10:]
+
+
+@pytest.mark.parametrize("fail_write", [1, 2])
+def test_unexpected_write_errors_are_not_silenced(package, fail_write):
+    handler = server_module.make_handler(server_module.load_snapshot(package))
+    client = InterruptedClient("GET", "/media/synthetic.mp4", {}, fail_write, PermissionError)
+    with pytest.raises(PermissionError, match="simulated client cancellation"):
+        handler(client, ("127.0.0.1", 10000), None)

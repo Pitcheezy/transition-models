@@ -331,10 +331,17 @@ def make_handler(snapshot):
 
     class ReviewHandler(BaseHTTPRequestHandler):
         def do_GET(self):
-            self._send(True)
+            self._respond(True)
 
         def do_HEAD(self):
-            self._send(False)
+            self._respond(False)
+
+        def _respond(self, body):
+            try:
+                self._send(body)
+            except (BrokenPipeError, ConnectionResetError, ConnectionAbortedError):
+                # Seeking or switching pitches may cancel either headers or the body.
+                self.close_connection = True
 
         def _send(self, body):
             try:
@@ -376,10 +383,7 @@ def make_handler(snapshot):
                 self.send_header("Content-Range", f"bytes {start}-{stop}/{len(raw)}")
             self.end_headers()
             if body:
-                try:
-                    self.wfile.write(raw[start : stop + 1])
-                except (BrokenPipeError, ConnectionResetError):
-                    pass  # Browsers cancel the previous request while seeking.
+                self.wfile.write(raw[start : stop + 1])
 
         def log_message(self, format, *args):
             pass

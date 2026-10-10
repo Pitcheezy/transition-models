@@ -5,9 +5,9 @@
 사용자가 A-y44구 수동 검토를 명시적으로 보류했다. 해당 화면·부분 응답·고정 규약을 보존하고 서비스 마무리를 진행한다.
 A-y를 다음 필수 작업으로 다시 배정하거나 AI 검토로 완료 처리하지 않는다. 독립 사람 일치도는 미측정으로 남긴다.
 
-- [~] I-service6. 비공개 검토 서비스의 영상 요청 중단 예외를 재현·수정하고 실제 브라우저에서 재생 실패/재시도/탐색/수동 공개의 복구 경로를 검증한다. 새 팩으로 전달하며 원문·모델·사람 판정·팀원 저장소는 변경하지 않는다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-10 · Codex]`
+- [x] I-service6. Windows 영상 요청 중단 예외 처리 완료. 새20검사 수정 전16실패→후20통과,관련 Python115·Node36·브라우저7시나리오·v4 ZIP16파일 이관 검사 통과. 선점 `cbc6f29`; 구현은 이 기록과 같은 커밋. [복구 검사·현재 팩](docs/SERVICE_REVIEW_RECOVERY_20261010.md). 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-10 · Codex]`
 
-수정 권한: Codex. 범위는 우리 서비스 실행기·관련 회귀 검사·검증 기록이다.
+수정 권한 반납. 현재 전달본은 `outputs/service_review_video_20261010_v4.zip`이며 이전 팩·사람 입력·모델·팀원 저장소는 보존한다.
 
 
 ## A-y 실제 사람 부분 응답 수신 — 2026-10-10
@@ -404,13 +404,13 @@ S 선택 비중은 사건확률이 아니며 S 위치는 과거 투구 분포의
 | 항목 | 값 | 갱신 |
 |---|---|---|
 | 브랜치 | `feature/intent-v0` (우리 CV 작업트리) | 2026-10-06 |
-| 최신 작업 커밋 | A-y 부분 수신 기록(이 커밋); 이전 I-service5 `18cdf8f`, I-device1 `b010f05` | 2026-10-10 |
-| 파일 수정 권한 | **Codex — I-service6 영상 오류 복구** | 2026-10-10 |
+| 최신 작업 커밋 | I-service6 완료(이 커밋; 선점 `cbc6f29`); A-y 사용자 보류, 이전 I-service5 `18cdf8f` | 2026-10-10 |
+| 파일 수정 권한 | **비어 있음 — I-service6 완료·Codex 권한 반납** | 2026-10-10 |
 | 중계 시각 주석 | **297 확인 / 25 확인 불가 / 0 미검토** — 전 경기 322구 검토 완료. 완전 타석 2~4·6~15·18~19·21·23~28·30~32·34·36~38·40~46·49~51·53~55·57~63·65~69·71·74~79·81. 불가 목록·반이닝 집계·리드 분포는 [전 경기 요약](docs/MLB_BROADCAST_TIMING.md). 규약 v2, 수동 시각 | 2026-09-27 |
 | 점수판 평가셋 | timing 322 / 리뷰 297(292구 10필드 confirmed, PA 8/1·16/1·33/1·41/1·44/1 partial) / 라벨 충돌 0 / 판단 화면 불가 25 / 미검토 0 | 2026-09-27 |
 | 점수판 OCR | **현행 v2 유지**. A-15 새 17구: 새 판단 프레임 17구의 필드 정답·기권·오답: v1 119·51·0 / v2 119·51·0 / v3 117·53·0 / v4 119·51·0. unavailable 2구는 예측 대상이 아니다. 공유 280행 변화 0·반복 297행 일치·음성 거짓 판독 0. 이전 오판독은 [알려진 목록](docs/results/mlb_p0/game_747139_scoreboard_known_misreads.json)에 유지. v3 무회귀·v4 사전 등록 기준 실패 유지. 747139는 전 경기 개발 자료; 새 버전 독립 검증은 새 미검토 영상 필요 | 2026-09-27 |
 | 전체 검사 (Windows CPU) | 최신 I-service3/H-port6: 2202passed/8skipped/2deselected,566.80초,Ruff167. 아래 I-service2는 이전 기록. I-service2: 전체 Windows CPU 2120 passed/8 skipped/2 deselected(최종 크기 제한 검사 추가 전, 549.41초); 최종 관련 Python208 passed/1 skipped(25.96초)·Node16 passed; 실제262구 공개 전후 대조 및 로컬 브라우저 확인 완료. 이전 H-13: 2060 passed, 8 skipped, 2 deselected, 3 warnings in 577.39s (0:09:37)이며 이번 변경 검사와 구분 | 2026-10-09 |
-| 원격 검사 (Linux/mac CPU) | I-service3/H-port6 `bbf56f7`: Linux/macOS 각2202passed/8skipped/2deselected(CI38019049569). I-service4 `24ca998`: Linux/macOS 각2202passed/8skipped/2deselected(CI38045093113). I-service5 CI는 푸시 후 별도 확인. 실제 Mac 사용자 검토와 구분 | 2026-10-10 |
+| 원격 검사 (Linux/mac CPU) | I-service3/H-port6 `bbf56f7`: Linux/macOS 각2202passed/8skipped/2deselected(CI38019049569). I-service4 `24ca998`: Linux/macOS 각2202passed/8skipped/2deselected(CI38045093113). I-service5 `18cdf8f` CI38050655893 성공. I-service6 CI는 푸시 후 별도 확인. 실제 Mac 사용자 검토와 구분 | 2026-10-10 |
 | 정책 효용 | **미입증** — delta −0.0862 runs/100, 95% CI [−0.4046, +0.2304] | 2026-09-21 |
 | Claude 모델 배정 | 항목 태그 참조 — `uv run --frozen python scripts/checklist_model.py --next` | 2026-09-22 |
 | 담당 구분 | **C·D = 팀원(외부)**, 그 외 = Claude/Codex. 통합 검증은 I절 | 2026-09-22 |
