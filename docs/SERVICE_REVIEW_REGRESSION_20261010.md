@@ -1,6 +1,6 @@
 # 서비스 검토 화면 경계 검사와 브라우저 회귀 — 2026-10-10
 
-H-browser1 / I-service7 / I-service8. 선점 `c6fd940`, `b984cab`; 구현은 이 기록과 같은 커밋이다.
+H-browser1 / I-service7 / I-service8. 선점 `c6fd940`, `b984cab`; 구현 소스는 `fafc9c6`다.
 팀원 응답이나 사람 판정 없이 합성 입력으로 재현한 우리 코드의 결함을 수정했다.
 
 ## 사용자에게 달라지는 것
@@ -32,7 +32,9 @@ H-browser1 / I-service7 / I-service8. 선점 `c6fd940`, `b984cab`; 구현은 이
 - Windows Chrome 154.0.8037.58: 최종 13/13 passed (15.50초).
 - Windows headless WebKit 26.5: 최종 13/13 passed (12.63초).
 - 전체 Windows CPU 검사: 2225 passed, 8 skipped, 2 deselected (419.00초), 기존 Pillow 폐기 예정 경고 2건. Ruff 167경로 통과.
-- GitHub Actions: Chromium/WebKit 행렬을 추가했다. 원격 실행 결과는 푸시 후 별도 기록한다.
+- GitHub Actions: Linux Chromium151.0.7922.34/WebKit26.5 각각13passed(CI38056890881).
+- 소스 `fafc9c6` Linux/macOS CPU 각각2225passed/8skipped/2deselected(CI38056890856).
+  Linux72.40초·경고4건, macOS145.68초·경고2건. 새 물리 기기 사용 확인과 구분한다.
 
 처음 실행한 브라우저 검사에서는 기존 단위/비중/중복 허용 3건과 포커스 2건이 실패했다.
 소스 CLI의 크기 재현 2건은 수정 후 통과했다. 독립 코드 검토에서 추가 수정 사항은 없었다. 새 성능 실험이나 정확도 평가는 아니다.
@@ -42,7 +44,7 @@ headless WebKit 통과는 실제 Mac Safari/아이폰 확인이 아니다.
 ## 배포·이관 범위
 
 이 변경은 로컬 검토 화면이다. 공개 Site와 팀원 저장소/API를 변경하지 않았다.
-수정된 소스와 화면은 새 v5 전달팩으로 만들고, 파일별 SHA·압축 해제 실행 결과를 별도 기록한다.
+수정 소스와 화면의 v5 전달팩을 완료했다. [파일별 SHA·압축 해제 검사](handoff/delivery_v5.json)를 기록했다.
 기존 v1~v4, 원본 영상·응답·라벨을 보존한다. 사용자가 보류한 A-y는 재개하지 않는다.
 I-0/I-run1/I-release1, CV-6/CV-7 및 의도 정의 등 외부 근거가 필요한 항목은 미완료다.
 

@@ -1,8 +1,8 @@
 # STATUS — Pitcheezy / transition-models
 
-> **2026-10-10 후속:** 로컬 서비스 검토의 키보드 포커스·정규화 파일 크기·단위/후보 검사를 수정했고, 실제 Chrome/WebKit 합성 회귀 13개씩을 추가했다. 전체 Windows CPU2225passed/8skipped/2deselected. [수정 근거](docs/SERVICE_REVIEW_REGRESSION_20261010.md). v5 전달팩 이관 검사와 원격 CI 확인을 진행한다. 아래 v4는 이전 고정 전달본이다.
+> **2026-10-10 후속:** 로컬 서비스 검토의 키보드 포커스·정규화 파일 크기·단위/후보 검사를 수정했고, 실제 Chrome/WebKit 합성 회귀 13개씩을 추가했다. 전체 Windows CPU2225passed/8skipped/2deselected. [수정 근거](docs/SERVICE_REVIEW_REGRESSION_20261010.md). v5 이관을 완료했다. 소스 `fafc9c6`, 압축 해제 Python458passed/1skipped·Node112passed, 별도 영상팩3구 재생/공개 확인. 원격 Chromium/WebKit 각13passed, Linux/macOS CPU 각2225passed. [전달 영수증](docs/handoff/delivery_v5.json). 아래 v4는 이전 고정 전달본이다.
 
-> **현재 상태 — 2026-10-10:** 비공개 영상 검토팩은 v4 (`outputs/service_review_video_20261010_v4.zip`), 코드 `a19069a`까지 좌표 설명·영상 실패 복구를 반영했다. [실행 안내](docs/SERVICE_REVIEW_RECOVERY_20261010.md). A-y 사람 검토는 사용자 요청으로 보류하며 서비스 마무리 선행 조건이 아니다.
+> **이전 v4 전달 기록 — 2026-10-10:** 비공개 영상 검토팩은 v4 (`outputs/service_review_video_20261010_v4.zip`), 코드 `a19069a`까지 좌표 설명·영상 실패 복구를 반영했다. [실행 안내](docs/SERVICE_REVIEW_RECOVERY_20261010.md). A-y 사람 검토는 사용자 요청으로 보류하며 서비스 마무리 선행 조건이 아니다.
 >
 > H-port7의 최신 수신·검토·실행 코드를 포함한 **64파일 소스 전달팩**을 완료했다(소스 `73cf059`). 압축 해제본 Python456passed/1skipped·Node104passed·브라우저3항목, 실제262구 정규화 바이트 동일. [전달 기록](docs/handoff/delivery_v4.json). [소스 이관 안내](docs/handoff/README.md). 모델 실행·공개 배포·실제 Mac/아이폰 확인은 미완료다. 아래 날짜별 기록의 v2/8794/다음 A-y 안내는 당시 상태이며 현재 지시가 아니다.
 

@@ -1,14 +1,20 @@
 # MLB P0 — Codex / Claude 인계 기록
 
-## 서비스 경계·브라우저 회귀 완료 — 2026-10-10
+## 독립 서비스 작업·v5 이관 완료 — 2026-10-10
 
-H-browser1/I-service7/I-service8 구현·로컬 검사 완료. 키보드 선택 포커스, UTF-8 5MiB 출력 제한,
-단위/구종 중복/비중 합 검사를 수정했다. Windows CPU2225passed/8skipped/2deselected,
-Node44passed, Chrome154/WebKit26.5 각각13passed. 실제 Mac/아이폰 검수는 아니다.
-[근거·명령](SERVICE_REVIEW_REGRESSION_20261010.md). 선점 `c6fd940`, `b984cab`.
-H-port8 v5 소스·영상 검토팩 검사를 이어가며 원격 CI는 푸시 후 확인한다. 수정 권한은 Codex.
-팀원 저장소 접근/변경·공개 배포·사람 판정 대행 없음. A-y 보류와 기존 외부 의존은 유지한다.
-
+H-browser1/I-service7/I-service8/H-port8 완료. 소스 `fafc9c69b371bb0b6831fc2f03e3e24cabc78cf8`.
+키보드 포커스·UTF-8 5MiB 출력·단위/중복 구종/비중 합을 수정했고 합성 브라우저 회귀13개를 저장소/CI에 추가했다.
+Windows CPU2225passed/8skipped/2deselected·Node44passed; Windows Chrome154/WebKit26.5 각13passed.
+GitHub Linux Chromium/WebKit 각13passed(CI38056890881); Linux/macOS CPU 각2225passed(CI38056890856). 실제 Mac/아이폰 사용 검수는 아니다.
+v5 소스64파일 ZIP 실제 압축 해제 Python458passed/1skipped·Node112passed·65파일 CRC/SHA/전후목록 통과.
+별도 영상16파일 ZIP도 압축 해제/실행/3구 재생 종료 공개·다음 타석 초기화4항목을 통과했다.
+받은262구 보고서·원문·영상은 v4와 동일하고 영상팩 변경은 review.js/receipt.json뿐이다.
+[수정·검사](SERVICE_REVIEW_REGRESSION_20261010.md) · [이관 안내](handoff/README.md) · [전달 영수증](handoff/delivery_v5.json).
+현재 소스 ZIP `outputs/service_review_source_20261010_v5.zip`; 비공개 영상 ZIP `outputs/service_review_video_20261010_v5.zip`.
+화면 `http://127.0.0.1:59154/`는 이 컴퓨터에서 서버 실행 중에만 열린다. 아래 v4 안내는 이전 고정 기록이다.
+등록된 독립 작업을 완료했고 수정 권한을 반납한다. 다음 조건은 CHECKLIST 상단의 재개 표를 따른다.
+팀원 저장소 접근·변경·전송·공개 배포 없음. A-y는 사용자가 재개할 때까지 보류한다.
+새 외부 입력/구체 재현 결함 없이 같은 검사·팩 발행을 반복하지 않는다.
 
 ## H-port7 소스 전달 완료 — 2026-10-10
 

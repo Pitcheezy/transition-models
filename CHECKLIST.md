@@ -1,16 +1,38 @@
 # 남은 작업 체크리스트
-## 서비스 경계·브라우저 검사 완료 / 새 전달팩 진행 — 2026-10-10
+## 독립 서비스 작업·v5 이관 완료 — 2026-10-10
 
-- [x] H-browser1. 비공개 실자료 없이 새 S 합성 예제로 실제 브라우저 파일 교체·공개 순서·오류 복구를 재현하는 검사를 저장소와 CI에 추가한다. 이전 로컬 임시 스크립트를 반복 실행하는 것과 구분한다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-10 · Codex]`
+- [x] H-browser1. 새 S 합성 자료의 실제 브라우저 파일 교체·공개 순서·오류 복구 검사 13개와 Chromium/WebKit CI를 추가·실행했다. 이전 로컬 임시 스크립트를 반복 실행하는 것과 구분한다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-10 · Codex]`
 
-- [x] I-service7. 키보드 투구 선택 및 화면 갱신 시 버튼 포커스가 BODY로 사라지는 결함을 수정하고 실제 브라우저로 회귀 확인한다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-10 · Codex]`
-- [x] I-service8. CLI 변환 후 5MiB 초과 보고서와 브라우저의 단위·후보 비중 합·중복 구종 수용 불일치를 수정한다. 정상 원문/정규화 바이트와 부분 비중/null 의미는 유지한다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-10 · Codex]`
+- [x] I-service7. 키보드 투구 선택 후 포커스 유실을 수정하고 Enter/Space 및 외부 컨트롤 포커스 보존을 실제 브라우저로 확인했다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-10 · Codex]`
+- [x] I-service8. CLI의 5MiB 초과 출력·브라우저 단위/비중 합/중복 구종 수용 불일치를 수정했다. 기존 수신262구 검토팩의 원문·정규화 바이트와 부분 비중/null 의미는 유지한다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-10 · Codex]`
 
-- [~] H-port8. I-service7/8이 반영된 v5 소스·영상 검토팩을 새 경로에 만들고 압축 해제·실행·해시를 확인한다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-10 · Codex]`
+- [x] H-port8. v5 소스64파일 ZIP 및 별도 영상16파일 ZIP의 압축 해제·CRC/SHA·실행을 확인했다. 소스 Python458passed/1skipped·Node112passed; 영상3구 재생/공개 및 타석 전환4항목 통과. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-10 · Codex]`
 
-H-browser1/I-service7/I-service8 구현·로컬 검사 완료. Windows CPU2225passed/8skipped/2deselected·Node44passed·Chrome/WebKit 각각13passed. [수정과 재현](docs/SERVICE_REVIEW_REGRESSION_20261010.md). 원격 CI는 푸시 후 확인한다.
+H-browser1/I-service7/I-service8 구현·로컬 검사 완료. Windows CPU2225passed/8skipped/2deselected·Node44passed·Chrome/WebKit 각각13passed. [수정과 재현](docs/SERVICE_REVIEW_REGRESSION_20261010.md). 원격 Chromium/WebKit 각13passed(CI38056890881); 같은 소스 Linux/macOS CPU 각2225passed/8skipped/2deselected(CI38056890856).
 
-Codex는 H-port8 전달팩 검사를 이어간다. 팀원 저장소 접근·사람 검토·공개 배포 없이 독립 작업을 진행한다. 주간 잔여53%에서 시작, 약10%에 도달하면 작업 정리 후 중단한다. 한도 초기화/추가 결제는 하지 않는다.
+소스 `fafc9c6`의 v5 전달 기록: [영수증](docs/handoff/delivery_v5.json) · [사용 안내](docs/handoff/README.md).
+현재 영상 화면 `http://127.0.0.1:59154/`는 이 컴퓨터의 실행 세션 주소다. 공개 Site는 변경하지 않았다.
+팀원 저장소 접근·변경·팀원 전송·사람 판정 대행 없음. 기존 팩·응답·영상·라벨 보존. **수정 권한 반납.**
+사용량은 시작 잔여53%, 마지막 작업 단위 확인44%다. 10% 하한에 닿지는 않았으며, 현재 등록된 독립 실행 단위를 완료했다.
+남은 조건을 AI 자료로 대신 채우거나 같은 표본/검사를 되풀이해 완료로 만들지 않는다.
+
+### 지금 남은 조건별 재개
+
+| 남은 작업 묶음 | 재개에 필요한 것 |
+|---|---|
+| I-0 / I-5 최종 통합 기준·지원 범위 | 팀원의 소스/배포 버전 대응, 전체 지원 목록, 공동 기준 합의 |
+| I-run1 모델/API 실제 기동 | 합의된 실행 번들·가중치·데이터 manifest·lock·경로 설정 |
+| I-1 / I-2 / I-4 모델·프로필·타자 연결 | 실제 사건확률/프로필/as-of 공급 계약과 자료 |
+| I-release1 / E-site5 / E-demo2 실사용·배포 확인 | 실제 Mac/아이폰과 사용자/Song 확인 기록·운영 조건 |
+| CV-6 가용성 판단 대조 | 별도 독립 사람이 판정한26장 응답 |
+| CV-5a4 → CV-5a 연속 타석 리플레이 | 시작 정의 결정 또는 엄격 조건을 만족하는 새 원본 |
+| CV-7 독립 영상 평가 | 미열람 영상·독립 라벨러·고정 평가 manifest |
+| F-1 / G-1 / G-3 의도·제구·정책 효용 | 대리값/좌표 평면/보상 단위/공동 평가 규약 합의 |
+
+A-y44구 사람 검토는 사용자 요청으로 보류다. 팀원 C/D, OCR 확대, 옛 영상 정리, KBO 확장은 현재 독립 필수 작업으로 재배정하지 않는다.
+위 목록은 관련 항목을 묶은 것이며 모든 미체크 행이 같은 크기의 개발 작업이라는 뜻은 아니다.
+
+### 이전 H-port7 전달 기록
 
 - [x] H-port7. 기존54→64파일로 최신 S 수신·검토 화면·단독 실행기·검사를 포함했다. 소스 `73cf059` ZIP 실제 압축 해제→Python456passed/1skipped·Node104passed·브라우저3항목·65파일 CRC/SHA 확인 완료. 받은262구 정규화 바이트는 기존 v4와 동일하다. 원문·영상·가중치·사람 응답은 새 소스 ZIP에 넣지 않았다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-10 · Codex]`
 
@@ -422,13 +444,13 @@ S 선택 비중은 사건확률이 아니며 S 위치는 과거 투구 분포의
 | 항목 | 값 | 갱신 |
 |---|---|---|
 | 브랜치 | `feature/intent-v0` (우리 CV 작업트리) | 2026-10-06 |
-| 최신 작업 커밋 | H-port7 소스 `73cf059`·전달검증은 이 커밋; A-y 사용자 보류, I-service6 `a19069a` | 2026-10-10 |
-| 파일 수정 권한 | **Codex — H-port8 최신 소스·검토팩 이관 진행** | 2026-10-10 |
+| 최신 작업 커밋 | H-browser1/I-service7/8 및 H-port8 소스 `fafc9c6`; v5 전달검증은 이 커밋. A-y 보류 | 2026-10-10 |
+| 파일 수정 권한 | **없음 — Codex 독립 작업 완료·권한 반납** | 2026-10-10 |
 | 중계 시각 주석 | **297 확인 / 25 확인 불가 / 0 미검토** — 전 경기 322구 검토 완료. 완전 타석 2~4·6~15·18~19·21·23~28·30~32·34·36~38·40~46·49~51·53~55·57~63·65~69·71·74~79·81. 불가 목록·반이닝 집계·리드 분포는 [전 경기 요약](docs/MLB_BROADCAST_TIMING.md). 규약 v2, 수동 시각 | 2026-09-27 |
 | 점수판 평가셋 | timing 322 / 리뷰 297(292구 10필드 confirmed, PA 8/1·16/1·33/1·41/1·44/1 partial) / 라벨 충돌 0 / 판단 화면 불가 25 / 미검토 0 | 2026-09-27 |
 | 점수판 OCR | **현행 v2 유지**. A-15 새 17구: 새 판단 프레임 17구의 필드 정답·기권·오답: v1 119·51·0 / v2 119·51·0 / v3 117·53·0 / v4 119·51·0. unavailable 2구는 예측 대상이 아니다. 공유 280행 변화 0·반복 297행 일치·음성 거짓 판독 0. 이전 오판독은 [알려진 목록](docs/results/mlb_p0/game_747139_scoreboard_known_misreads.json)에 유지. v3 무회귀·v4 사전 등록 기준 실패 유지. 747139는 전 경기 개발 자료; 새 버전 독립 검증은 새 미검토 영상 필요 | 2026-09-27 |
-| 전체 검사 (Windows CPU) | 최신 I-service3/H-port6: 2202passed/8skipped/2deselected,566.80초,Ruff167. 아래 I-service2는 이전 기록. I-service2: 전체 Windows CPU 2120 passed/8 skipped/2 deselected(최종 크기 제한 검사 추가 전, 549.41초); 최종 관련 Python208 passed/1 skipped(25.96초)·Node16 passed; 실제262구 공개 전후 대조 및 로컬 브라우저 확인 완료. 이전 H-13: 2060 passed, 8 skipped, 2 deselected, 3 warnings in 577.39s (0:09:37)이며 이번 변경 검사와 구분 | 2026-10-09 |
-| 원격 검사 (Linux/mac CPU) | I-service3/H-port6 `bbf56f7`: Linux/macOS 각2202passed/8skipped/2deselected(CI38019049569). I-service4 `24ca998`: Linux/macOS 각2202passed/8skipped/2deselected(CI38045093113). I-service5 `18cdf8f` CI38050655893 성공. I-service6 `a19069a` CI38052810820 성공. 실제 Mac 사용자 검토와 구분 | 2026-10-10 |
+| 전체 검사 (Windows CPU) | `fafc9c6`: 2225passed/8skipped/2deselected,419.00초,기존 Pillow 경고2개,Ruff167. 압축 해제 소스458passed/1skipped·Node112 | 2026-10-10 |
+| 원격 검사 (Linux/mac CPU) | `fafc9c6`: 각2225passed/8skipped/2deselected, Linux72.40초/macOS145.68초(CI38056890856). 새 브라우저 Chromium/WebKit 각13passed(CI38056890881). 실제 Mac/아이폰 검수 아님 | 2026-10-10 |
 | 정책 효용 | **미입증** — delta −0.0862 runs/100, 95% CI [−0.4046, +0.2304] | 2026-09-21 |
 | Claude 모델 배정 | 항목 태그 참조 — `uv run --frozen python scripts/checklist_model.py --next` | 2026-09-22 |
 | 담당 구분 | **C·D = 팀원(외부)**, 그 외 = Claude/Codex. 통합 검증은 I절 | 2026-09-22 |
