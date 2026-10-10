@@ -1,0 +1,92 @@
+{
+  "schema": "pitcheezy_mac_device_preflight_v1",
+  "date": "2026-10-11",
+  "timezone": "Asia/Seoul",
+  "unit": "I-device2",
+  "status": "blocked_missing_private_video_archive",
+  "evidence_kind": "commands_executed_on_user_mac",
+  "environment": {
+    "uname_s": "Darwin",
+    "uname_m": "arm64",
+    "macos_version": "27.0",
+    "macos_build": "26A428",
+    "default_python3": "3.9.6",
+    "available_python": "3.12.13",
+    "available_python_path": "$HOME/Documents/GitHub/transition-models/.venv/bin/python",
+    "uv_version": "0.11.2"
+  },
+  "repository": {
+    "origin": "https://github.com/Pitcheezy/transition-models.git",
+    "initial_directory": "$HOME/Documents/GitHub/transition-models",
+    "initial_branch": "main",
+    "initial_head": "fc7d6475d78953fbb9a0a7f1e417bc006a4b9f68",
+    "initial_tracked_modified_files": 19,
+    "initial_untracked_files": 12,
+    "existing_main_head_status_and_31_file_hashes_unchanged": true,
+    "inspection_directory": "$HOME/.codex/worktrees/mac-i-device2/transition-models",
+    "inspection_branch": "feature/intent-v0",
+    "inspection_base_commit": "06a31107e78bd00abf47e33bf6aa2be8348edc8c",
+    "fetch": "success",
+    "pull_ff_only": "Already up to date; clean inspection worktree before documentation edits",
+    "destructive_git_commands_used": false,
+    "teammate_repository_accessed": false
+  },
+  "archive_search": {
+    "filename": "service_review_video_20261010_v5.zip",
+    "result": "not_found_in_searched_locations",
+    "searched_locations": [
+      "initial repository including ignored outputs, excluding Git metadata and environments",
+      "$HOME/Downloads",
+      "$HOME/Desktop",
+      "$HOME/Documents excluding GitHub and other Git repositories",
+      "$HOME/Movies",
+      "$HOME/Library/Mobile Documents/com~apple~CloudDocs"
+    ],
+    "spotlight_filename_query_matches": 0,
+    "volumes_listed": ["Macintosh HD", "Recovery"],
+    "external_data_volume_mounted": false,
+    "limitation": "Not a claim about unsearched locations, other accounts, disconnected disks or remote Windows."
+  },
+  "required_archive": {
+    "origin_relative_path": "outputs/service_review_video_20261010_v5.zip",
+    "suggested_mac_transfer_destination": "$HOME/Downloads/service_review_video_20261010_v5.zip",
+    "expected_bytes": 13571942,
+    "expected_sha256": "51af1e8861ac5e7294b185acb3f525fa2b421765152ff2a65abdbb2f92317546",
+    "expected_files": 16,
+    "expectations_source": "docs/handoff/delivery_v5.json:separate_private_video_archive",
+    "measured_on_this_mac": false
+  },
+  "service_checks": {
+    "package_integrity": "not_run_missing_archive",
+    "server_started": false,
+    "browser": null,
+    "video_playback": "not_run",
+    "result_reveal": "not_run",
+    "pitch_transition": "not_run",
+    "plate_appearance_transition": "not_run",
+    "horizontal_mitt_display": "not_run",
+    "passed": 0
+  },
+  "unchanged_gates": {
+    "CV-30": "complete_no_redevelopment",
+    "A-y": "user_paused",
+    "I-device2": "incomplete",
+    "I-release1": "incomplete"
+  },
+  "record_validation": {
+    "checklist_tests": {"passed": 7, "seconds": 0.16},
+    "checklist_I_device2_state": "blocked",
+    "json_valid": true,
+    "expected_archive_identity_matches_frozen_receipt": true,
+    "new_document_links_resolve": true,
+    "git_diff_check": "passed",
+    "independent_read_only_review": "no_actionable_findings",
+    "scope": "Documentation and checklist checks only; not service UI acceptance or full regression."
+  },
+  "next_action": "Copy the unchanged private v5 video ZIP via USB or a private transfer channel, verify expected size/SHA/CRC, extract into a new ignored directory, run --check then --open with Python 3.12.13, and record real visible-browser observations.",
+  "notes": [
+    "No new source/video pack was built.",
+    "No video, service response, human label, model or public Site was changed.",
+    "Historical Windows tests, headless browser tests and hosted macOS CI are not counted as this Mac's acceptance."
+  ]
+}

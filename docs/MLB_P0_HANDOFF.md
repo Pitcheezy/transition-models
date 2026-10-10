@@ -1,5 +1,26 @@
 # MLB P0 — Codex / Claude 인계 기록
 
+## I-device2 Mac 환경 확인 완료 · 비공개 영상 ZIP 필요 — 2026-10-11
+
+실제 Mac 명령 결과: Darwin/arm64, macOS27.0(26A428), origin은 우리 `Pitcheezy/transition-models`.
+최초 작업 폴더는 main `fc7d647`, 추적 수정19개·미추적12개였다. 별도 `mac-i-device2` 작업트리를 만들고
+`feature/intent-v0`의 `06a3110`에서 fetch·pull --ff-only(Already up to date)를 완료했다.
+기존31파일 SHA256·main HEAD·상태 목록은 보존했다. 팀원 저장소 접근·수정은 없었다.
+
+저장소·Downloads·Desktop·Documents의 비저장소 영역·Movies·iCloud Drive 및 Spotlight에서
+v5 영상팩을 찾지 못했다. 외장 데이터 볼륨도 현재 없다. 따라서 서버·브라우저는 실행하지 않았고
+영상 재생·결과 공개·투구/타석 전환·미트 가로 표시의 Mac 통과 수는0이다. I-device2 미완료 유지.
+기존 Windows/CI 결과를 이번 검사로 재사용하지 않았다. CV-30 완료·A-y 보류·I-release1 미완료 유지.
+
+필요 파일은 `service_review_video_20261010_v5.zip`(기대13,571,942bytes)이며, 원래 Windows에서
+USB 또는 본인 비공개 전송으로 Mac Downloads에 복사한다. [기대 SHA·첫 실행 명령·미검사 목록](MAC_DEVICE_REVIEW_20261011.md),
+[실제 명령 결과 JSON](results/service_integration_20261011/mac_device_preflight_v1.json)을 따른다.
+기본 python3는3.9.6이므로 확인된 기존 main의 Python3.12.13을 사용한다.
+이번 변경은 환경/부재 기록과 인계 문서뿐이며 기존 v5 전달 영수증·영상팩은 고정한다.
+아래 Mac DNS/연결 대기 설명은 과거 기록이다. 현재 차단 사유는 영상팩 전송이다.
+기록 검증: Mac에서 `tests/test_checklist_model.py`7passed(0.16초), JSON/기대 ZIP 식별값/새 링크/diff 검사 통과.
+서비스 UI 검사가 아니며 전체 회귀를 다시 실행하지 않았다. 수정 권한 반납.
+
 ## CV-30 구간 연결 완료 · Mac 실기기 대기 — 2026-10-11
 
 사용자 요청6번: 기존 CV24 자동 관측14개를 영상 시계·발행 시각에 연결한 비공개 개발 뷰어를 구현했다.

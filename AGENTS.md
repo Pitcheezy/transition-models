@@ -1,5 +1,17 @@
 # SmartPitch MDP Transition Probability Models
 
+## I-device2 실제 Mac 확인 · 영상팩 전송 대기 — 2026-10-11
+
+Darwin/arm64·macOS27.0(26A428)과 우리 origin을 실제 Mac 명령으로 확인했다.
+변경31개가 있는 기존 main은 보존하고 별도 `mac-i-device2` 작업트리의 `feature/intent-v0`에서
+fetch·pull --ff-only 완료, 기준은 `06a3110`이다. 조사한 로컬 경로에 비공개 v5 영상 ZIP이 없다.
+현재 대기 사유는 Mac 연결 정보가 아니라 `service_review_video_20261010_v5.zip` 전송이다.
+영상 재생·결과 공개·투구/타석 전환·미트 가로 표시는 모두 미실행이며 I-device2는 미완료다.
+[실제 결과·전송·첫 실행 명령](docs/MAC_DEVICE_REVIEW_20261011.md)을 따른다. 기본 python3는3.9.6이고
+기존 main 가상환경의3.12.13을 사용한다. CV-30 재개발 없음, A-y 보류·I-release1 미완료 유지.
+팀원 저장소 접근·수정 없음. 아래 Mac DNS/연결 대기 기록은 이번 확인 전의 이력이다.
+기록 검증 checklist7passed·JSON/링크/diff 통과. 수정 권한 반납, 영상팩 도착 후 I-device2만 재개한다.
+
 ## CV-30 구간 연결 완료 · Mac 실기기 대기 — 2026-10-11
 
 사용자 요청6번: 기존 CV24 자동 관측14개를 영상 시계·발행 시각에 연결한 비공개 개발 뷰어를 구현했다.

@@ -1,5 +1,21 @@
 # Codex 재개 프롬프트 — 2026-09-28
 
+## 다음 단위: I-device2 영상 ZIP 수신 후 실제 Mac 화면 검사 — 2026-10-11
+
+Mac 환경 확인은 완료했다: Darwin/arm64·macOS27.0(26A428), 우리 origin, `feature/intent-v0` 기준 `06a3110`.
+기존 main의19수정·12미추적 파일은 그대로 보존했고, 별도 `mac-i-device2` 작업트리에서만 작업한다.
+fetch·pull --ff-only는 이미 최신이었다. 비공개 `service_review_video_20261010_v5.zip`은 검색 범위에서
+미발견이므로 I-device2는 **영상팩 전송 대기**다. 영상/공개/전환/미트 표시는 아직 검사하지 않았다.
+
+다음 첫 행동은 [Mac 실행 기록](MAC_DEVICE_REVIEW_20261011.md)의 ZIP 크기·SHA·CRC 확인이다.
+원래 Windows의 영상 ZIP을 USB 또는 본인 비공개 경로로 Mac Downloads에 옮긴 뒤 새 폴더에 풀고,
+확인된 기존 main의 Python3.12.13으로 `launch_review.py --check`, 성공 후 `--open`을 실행한다.
+이 Mac의 기본 python3는3.9.6이므로 그대로 사용하지 않는다. 이전 Windows localhost 주소를 재사용하지 않는다.
+실제 화면이 보이는 브라우저에서3구 재생·공개·투구/타석 전환·미트 가로 표시만 관찰하여 기록한다.
+CV-30은 완료이므로 재개발하지 않는다. A-y는 보류, I-release1은 미완료다. 팀원 저장소는 접근하지 않는다.
+아래 Mac DNS/연결 대기는 이전 Windows 조사 기록이며 현재 차단 사유가 아니다.
+기록 검증 checklist7passed·JSON/링크/diff 통과. 수정 권한 반납, 영상팩 수신 전 같은 검사를 반복하지 않는다.
+
 ## CV-30 구간 연결 완료 · Mac 실기기 대기 — 2026-10-11
 
 사용자 요청6번: 기존 CV24 자동 관측14개를 영상 시계·발행 시각에 연결한 비공개 개발 뷰어를 구현했다.
