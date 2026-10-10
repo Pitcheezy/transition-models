@@ -1,5 +1,13 @@
 # SmartPitch MDP Transition Probability Models
 
+## 최신 소스 이관 — H-port7 완료 (2026-10-10)
+
+64파일 소스 ZIP에 최신 S 정규화·검토 화면·단독 실행기·검사를 포함했다. 기준 `73cf059`, 선점 `0f165b9`.
+압축 해제본 Python456passed/1skipped·Node104passed·브라우저3항목·65파일 CRC/SHA 확인. 실제262구 정규화 바이트는 기존 v4와 동일하다. [안내](docs/handoff/README.md) · [영수증](docs/handoff/delivery_v4.json).
+소스 ZIP `outputs/service_review_source_20261010_v4.zip`과 영상 검토팩 `outputs/service_review_video_20261010_v4.zip`은 별개다. 소스 ZIP에는 원문·영상·가중치·사람 응답이 없다.
+A-y 사용자 보류와 I-0/I-run1/I-release1 미완료 유지. 팀원 저장소·공개 Site 변경/팀원 전송 없음. 수정 권한 반납.
+아래 H-port5만 최신이라고 하거나 새 S 소스 이관이 없다는 문구는 당시 이력이다.
+
 ## 사용자 우선순위 변경 — 2026-10-10
 
 A-y44구 수동 검토는 사용자 요청으로 보류한다. 서비스 마무리의 필수 선행 조건이 아니다.

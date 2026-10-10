@@ -1,10 +1,14 @@
 # MLB P0 — Codex / Claude 인계 기록
 
-## H-port7 소스 전달 준비 — 2026-10-10
+## H-port7 소스 전달 완료 — 2026-10-10
 
-선점 `0f165b9`. 54→64파일로 최신 S 수신·검토 화면·서버·검사를 포함했다. 현재 프로필의 별도 합성 예제와 원래 저장소 없이 생성하는 검사를 추가했다. README를 실행 순서 중심으로 정리하고 STATUS/통합 안내의 옛 v2·8794 안내를 현재 v4로 연결했다.
-초기 관련30검사는 통과했으나 새 격리 subprocess의 Windows cp949 해독 경고가 있었다. `-X utf8` 명시 후 해당 검사와 체크리스트8검사 경고 없이 통과, Ruff 통과. 아직 H-port7 완료가 아니며 다음은 이 커밋의 ZIP 생성→압축 해제→선택된 전체 검사→원문 별도 연결이다.
-A-y 사람 검토는 보류한다. 팀원 저장소·사람 응답·영상·모델·공개 Site를 변경하지 않았다. Codex가 H-port7 수정 권한을 유지한다.
+선점 `0f165b9`, 구현/소스 `73cf0598bd2e356ce6207365fcc702584c9699d4`. 기존54→64파일로 최신 수신 프로필·화면·실행기·검사를 포함했다. 새 형식 합성 예제와 저장소 밖 실행 회귀 검사 추가, README/STATUS/통합 안내 최신화.
+ZIP `outputs/service_review_source_20261010_v4.zip`, 265852bytes, SHA256 `65ace76069cd874bdac965332d4ee7911ee4662910b6d3c0e8ec0755b5220508`.
+압축 해제본 Python456passed/1skipped(84.46초), Node104passed, stdlib 구/신 예제·화면생성·단독검사, 실제 원문262구 재연결·기존 정규화 바이트 동일. 브라우저3항목과 직접 화면 확인, 65파일 CRC/SHA·검사 전후 목록 동일. 우리 기존 Windows 의존성으로 실행했으며 새 기기 설치나 실제 Mac/아이폰 검증은 아니다.
+초기 새 테스트의 cp949 경고는 명시 UTF-8 모드로 해결했다. 임시 QA 스크립트의 SHA 기대 문자열에 덧붙인 e 오타로 한 번 중단되어 기존 v4 보고서와 직접 바이트 비교로 재개했다. 원본과 성공한 생성물은 수정/재생성하지 않았다. 최종 검사 경고 없음.
+[전달 영수증](handoff/delivery_v4.json)·[파일별 manifest](handoff/source_manifest_v4.json)·[실행 안내](handoff/README.md). source ZIP에는 실제 원문·정규화 보고서·영상·가중치·사람 응답을 넣지 않았다. 실제 자료 연결 검사는 별도 비공개 경로에서 했다. 최신 영상 검토팩은 여전히 `outputs/service_review_video_20261010_v4.zip`이다.
+팀원 저장소·공개 Site·모델·사람 입력 변경 없음. 팀원에게 전송하지 않았다. A-y 보류·I-0/I-run1/I-release1 조건 유지, Codex 수정 권한 반납.
+다음 도구는 `python -B scripts/checklist_model.py --next`로 상태를 확인한다. 새 외부 입력/구체 결함 없이 이미 통과한 검사나 검토팩 재발행을 반복하지 않는다. 받는 쪽은 소스 ZIP을 풀고 `python -B -S scripts/build_integration_handoff.py check .`부터 실행한다.
 
 ## 사용자 우선순위 변경 — 2026-10-10
 
