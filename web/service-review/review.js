@@ -268,6 +268,16 @@
     const replace = (id, ...nodes) => $(id).replaceChildren(...nodes);
     const say = (id, value) => { $(id).textContent = value; };
     const fmt = value => finite(value) ? value.toFixed(2) : "없음";
+    // Convert original coordinates for display only; chart/model values remain in feet.
+    const cm = value => (value * 30.48).toFixed(1);
+    const horizontal = value => {
+      if (!finite(value)) return "가로 미제공";
+      if (value === 0) return "가로 중앙 (0 cm)";
+      const distance = Math.abs(value) * 30.48;
+      return `가로 ${value < 0 ? "왼쪽" : "오른쪽"} ${distance < .1 ? "0.1 cm 미만" : `약 ${distance.toFixed(1)} cm`}`;
+    };
+    const height = value => finite(value) ? `높이 약 ${cm(value)} cm` : "높이 미제공";
+    const rawPosition = (x, z) => `x ${fmt(x)} / z ${fmt(z)} ft`;
     const half = value => value === "Top" ? "초" : "말";
     const team = side => text(state.report.game[side + "_team"]) || (side === "away" ? "원정" : "홈");
     const svg = (tag, attrs = {}, value) => {
@@ -361,8 +371,8 @@
         chart.append(svg("line", { x1: x(vx), x2: x(vx), y1: y(zone.top), y2: y(zone.bottom), stroke: "#b4cbbf", "stroke-dasharray": "3 4" }));
         chart.append(svg("line", { x1: x(zone.left), x2: x(zone.right), y1: y(vz), y2: y(vz), stroke: "#b4cbbf", "stroke-dasharray": "3 4" }));
       }
-      chart.append(svg("text", { x: 388, y: 315, fill: "#8b9aa2", "font-size": 10 }, "x"));
-      chart.append(svg("text", { x: 31, y: 19, fill: "#8b9aa2", "font-size": 10 }, "z"));
+      chart.append(svg("text", { x: 388, y: 315, fill: "#8b9aa2", "font-size": 10 }, "x (ft)"));
+      chart.append(svg("text", { x: 31, y: 19, fill: "#8b9aa2", "font-size": 10 }, "z (ft)"));
       for (const p of model.points) {
         const color = p.kind === "actual" ? "#db6836" : p.ranks[0] === 1 ? "#087e6c" : p.ranks[0] === 2 ? "#427a94" : "#79849e";
         const ring = p.kind === "actual" && p.overlapsCandidate;
@@ -371,7 +381,7 @@
           ring ? Math.min(34, 14 + Math.max(0, matchingGroup.label.length - 1) * 2) + 5 : 8;
         const circle = svg("circle", { cx: x(p.x), cy: y(p.z), r: radius,
           fill: ring ? "none" : color, stroke: ring ? color : "#fff", "stroke-width": 2.5 });
-        circle.append(svg("title", {}, `${p.kind === "actual" ? "실제" : "후보 " + p.label}: x ${fmt(p.x)}, z ${fmt(p.z)} ft${p.clipped ? " · 보기 범위 밖" : ""}`));
+        circle.append(svg("title", {}, `${p.kind === "actual" ? "실제 공" : "후보 " + p.label}: ${horizontal(p.x)} · ${height(p.z)} (${rawPosition(p.x, p.z)})${p.clipped ? " · 보기 범위 밖" : ""}`));
         chart.append(circle);
         if (p.kind === "candidate") chart.append(svg("text", { x: x(p.x), y: y(p.z) + 4, "text-anchor": "middle", fill: "#fff", "font-size": 11, "font-weight": 700 }, p.label));
         if (p.clipped) chart.append(svg("text", { x: x(p.x), y: y(p.z) - 17, "text-anchor": "middle", fill: color, "font-size": 12 }, "↗"));
@@ -382,7 +392,7 @@
       const legends = [legend];
       if (view.revealed) {
         const observed = make("span", "legend-item");
-        observed.append(make("span", "legend-dot actual-dot"), make("span", "", "실제 투구 · 겹치면 테두리"));
+        observed.append(make("span", "legend-dot actual-dot"), make("span", "", "실제 공 위치 · 겹치면 테두리"));
         legends.push(observed);
       }
       replace("plot-legend", ...legends);
@@ -392,19 +402,19 @@
       if (!view.revealed) return;
       const rail = $("setup-rail");
       rail.append(make("h3", "", "미트 가로 위치 추정 · 미검토 · 투수 의도 아님"));
-      rail.append(make("p", "", "포수 시점 · 오른쪽 + · 서비스 좌표 기준"));
+      rail.append(make("p", "", "같은 좌우 방향 · 눈금 ft · 높이 정보는 제공되지 않습니다."));
       if (!model.setup) {
         rail.append(make("p", "", model.setupSummary.message));
         return;
       }
-      const railSvg = svg("svg", { viewBox: "0 0 420 56", role: "img", "aria-label": `미트 가로 위치 ${fmt(model.setup.x)} ft. 높이 정보 없음.` });
+      const railSvg = svg("svg", { viewBox: "0 0 420 56", role: "img", "aria-label": `미트 추정 ${horizontal(model.setup.x)}, x ${fmt(model.setup.x)} ft. 높이 정보 없음.` });
       railSvg.append(svg("line", { x1: 45, x2: 375, y1: 22, y2: 22, stroke: "#c3d2d7", "stroke-width": 2 }));
       for (const value of [-2.5, 0, 2.5]) {
         railSvg.append(svg("line", { x1: x(value), x2: x(value), y1: 18, y2: 27, stroke: "#90a5ae" }));
         railSvg.append(svg("text", { x: x(value), y: 44, fill: "#8b9aa2", "font-size": 10, "text-anchor": "middle" }, value));
       }
       railSvg.append(svg("circle", { cx: x(model.setup.x), cy: 22, r: 6, fill: "#9654a1", stroke: "#fff", "stroke-width": 2 }));
-      rail.append(railSvg, make("p", "", `x ${fmt(model.setup.x)} ft · 높이 미제공${model.setup.clipped ? " · 보기 범위 밖: 경계에 표시" : ""}`));
+      rail.append(railSvg, make("p", "", `${horizontal(model.setup.x)} · x ${fmt(model.setup.x)} ft${model.setup.clipped ? " · 보기 범위 밖: 경계에 표시" : ""}`));
     }
 
     function render() {
@@ -454,7 +464,11 @@
       else replace("candidate-list", ...rec.candidates.slice().sort((a, b) => a.rank - b.rank).map(c => {
         const card = make("article", "candidate"), detail = make("div", "");
         detail.append(make("strong", "", text(c.pitch_label) || c.pitch_type),
-          make("p", "target-description", `${text(c.zone_label) || "구역 미제공"} · ${c.target ? `x ${fmt(c.target.x)} / z ${fmt(c.target.z)} ft` : "위치 없음"}`));
+          make("p", "target-description", text(c.zone_label) || "구역 미제공"));
+        if (c.target) detail.append(
+          make("p", "target-description", `${horizontal(c.target.x)} · ${height(c.target.z)}`),
+          make("p", "coordinate-raw", rawPosition(c.target.x, c.target.z)));
+        else detail.append(make("p", "target-description", "위치 없음"));
         const probability = make("div", "probability", c.selection_probability === null ? "미제공" : `${(c.selection_probability * 100).toFixed(1)}%`);
         probability.append(make("small", "", "구종 선택 비중"));
         card.append(make("span", "rank", c.rank), detail, probability); return card;
@@ -468,11 +482,16 @@
         if (!view.actual) replace("actual-content", make("p", "actual-description", "이 투구의 실제 관측 데이터가 제공되지 않았습니다."));
         else {
           const a = view.actual, grid = make("div", "actual-grid");
-          for (const [label, value] of [["실제 구종", text(a.pitch_label) || text(a.pitch_type) || "미제공"],
+          const hasPosition = finite(a.x) && finite(a.z);
+          for (const [label, value, raw] of [["실제 구종", text(a.pitch_label) || text(a.pitch_type) || "미제공"],
             ["구속", finite(a.speed_mph) ? `${a.speed_mph.toFixed(1)} mph` : "미제공"],
-            ["관측 위치", finite(a.x) && finite(a.z) ? `${fmt(a.x)} / ${fmt(a.z)} ft` : "미제공"],
+            ["실제 공 위치", hasPosition ? `${horizontal(a.x)}\n${height(a.z)}` : "미제공",
+              hasPosition ? rawPosition(a.x, a.z) : null],
             ["투구 결과", text(a.result_label) || text(a.description) || "미제공"]]) {
-            const stat = make("div", "actual-stat"); stat.append(make("small", "", label), make("strong", "", value)); grid.append(stat);
+            const stat = make("div", "actual-stat");
+            stat.append(make("small", "", label), make("strong", raw ? "coordinate-value" : "", value));
+            if (raw) stat.append(make("span", "coordinate-raw", raw));
+            grid.append(stat);
           }
           replace("actual-content", grid);
           if (text(a.play_text)) $("actual-content").append(make("p", "actual-description", a.play_text));

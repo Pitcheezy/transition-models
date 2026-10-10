@@ -1,5 +1,14 @@
 # SmartPitch MDP Transition Probability Models
 
+## 좌표 표시 I-service5 완료 — 2026-10-10
+
+실제 공 위치를 가로 방향·지면 기준 높이·cm로 설명하고 ft 원표시와 미트 가로 축을 보존했다.
+Node36·관련 Python95·브라우저9시나리오·v3 ZIP16파일 이관 검사 통과. 선점 `6ecedbf`; 구현은 이 기록과 같은 커밋.
+현재 전달본은 `outputs/service_review_video_20261010_v3.zip`. [실행·검증 기록](docs/SERVICE_REVIEW_COORDINATES_20261010.md).
+I-device1 사용자 정상 확인은 이전 v2 범위다. 새 사람 판정/실기기/정책 증거는 만들지 않았다. 수정 권한 반납.
+아래 v2 팩 안내는 이전 버전 이력이며 독립 사람 응답·새 영상·Mac/아이폰·모델 실행 대기는 유지한다.
+
+
 ## 브라우저 파일 교체 검수 I-service4 완료 — 2026-10-10
 
 투구 번호/키 불일치 파일의 오표시를 실제 Chrome으로 재현해 거부하도록 수정했다.

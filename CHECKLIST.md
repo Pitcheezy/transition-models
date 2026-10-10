@@ -1,12 +1,12 @@
 # 남은 작업 체크리스트
 
-## 좌표 표시 이해도 개선 I-service5 — 2026-10-10
+## 좌표 표시 이해도 개선 I-service5 완료 — 2026-10-10
 
-- [~] I-service5. 사용자 질문으로 확인한 피트 좌표의 의미 혼동을 해소한다. 실제 공 위치·가로 방향·높이·cm 환산을 설명하고 원래 ft 좌표와 미트 가로 추정의 구분을 보존한다. 비공개 v3 팩과 브라우저 검수까지 진행한다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-10 · Codex]`
+- [x] I-service5. 실제 공 위치·가로 방향·높이·원 실수 기반 cm 환산 설명 완료. ft 눈금·미트 가로 추정·공개 순서는 유지한다. Node36·관련 Python95·Chrome9시나리오·화면 확인·v3 ZIP16파일 이관 검사 통과. 선점 `6ecedbf`; 구현은 이 기록과 같은 커밋. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-10 · Codex]`
 
-수정 권한: Codex. 범위는 `web/service-review`와 관련 안내·검증 기록이다.
-사람 검토 화면·응답·원자료·팀원 저장소·공개 Site는 변경하지 않는다.
-
+[좌표 안내·현재 v3 팩](docs/SERVICE_REVIEW_COORDINATES_20261010.md). v2와 데이터·영상은 동일하다.
+수정 권한 반납. 아래 I-device1 사용자 확인은 v2에 대한 기록이며 v3 사용자/실기기 검수로 확대하지 않는다.
+독립 사람 응답·새 영상·실제 Mac/아이폰·모델 실행 합의·공개 운영 조건은 유지한다.
 
 ## Windows 노트북 실제 사용자 확인 — 2026-10-10
 
@@ -382,13 +382,13 @@ S 선택 비중은 사건확률이 아니며 S 위치는 과거 투구 분포의
 | 항목 | 값 | 갱신 |
 |---|---|---|
 | 브랜치 | `feature/intent-v0` (우리 CV 작업트리) | 2026-10-06 |
-| 최신 작업 커밋 | I-service4 완료(이 커밋; 선점 `9b400cc`); 이전 I-service3/H-port6 `bbf56f7` | 2026-10-10 |
-| 파일 수정 권한 | **Codex — I-service5 좌표 표시 개선 진행** | 2026-10-10 |
+| 최신 작업 커밋 | I-service5 완료(이 커밋; 선점 `6ecedbf`); 이전 I-device1 `b010f05`, I-service4 `24ca998` | 2026-10-10 |
+| 파일 수정 권한 | **비어 있음 — I-service5 완료·Codex 권한 반납** | 2026-10-10 |
 | 중계 시각 주석 | **297 확인 / 25 확인 불가 / 0 미검토** — 전 경기 322구 검토 완료. 완전 타석 2~4·6~15·18~19·21·23~28·30~32·34·36~38·40~46·49~51·53~55·57~63·65~69·71·74~79·81. 불가 목록·반이닝 집계·리드 분포는 [전 경기 요약](docs/MLB_BROADCAST_TIMING.md). 규약 v2, 수동 시각 | 2026-09-27 |
 | 점수판 평가셋 | timing 322 / 리뷰 297(292구 10필드 confirmed, PA 8/1·16/1·33/1·41/1·44/1 partial) / 라벨 충돌 0 / 판단 화면 불가 25 / 미검토 0 | 2026-09-27 |
 | 점수판 OCR | **현행 v2 유지**. A-15 새 17구: 새 판단 프레임 17구의 필드 정답·기권·오답: v1 119·51·0 / v2 119·51·0 / v3 117·53·0 / v4 119·51·0. unavailable 2구는 예측 대상이 아니다. 공유 280행 변화 0·반복 297행 일치·음성 거짓 판독 0. 이전 오판독은 [알려진 목록](docs/results/mlb_p0/game_747139_scoreboard_known_misreads.json)에 유지. v3 무회귀·v4 사전 등록 기준 실패 유지. 747139는 전 경기 개발 자료; 새 버전 독립 검증은 새 미검토 영상 필요 | 2026-09-27 |
 | 전체 검사 (Windows CPU) | 최신 I-service3/H-port6: 2202passed/8skipped/2deselected,566.80초,Ruff167. 아래 I-service2는 이전 기록. I-service2: 전체 Windows CPU 2120 passed/8 skipped/2 deselected(최종 크기 제한 검사 추가 전, 549.41초); 최종 관련 Python208 passed/1 skipped(25.96초)·Node16 passed; 실제262구 공개 전후 대조 및 로컬 브라우저 확인 완료. 이전 H-13: 2060 passed, 8 skipped, 2 deselected, 3 warnings in 577.39s (0:09:37)이며 이번 변경 검사와 구분 | 2026-10-09 |
-| 원격 검사 (Linux/mac CPU) | I-service3/H-port6 `bbf56f7`: Linux/macOS 각2202passed/8skipped/2deselected(CI38019049569). I-service4 커밋은 푸시 후 별도 확인. 실제 Mac 사용자 검토와 구분 | 2026-10-10 |
+| 원격 검사 (Linux/mac CPU) | I-service3/H-port6 `bbf56f7`: Linux/macOS 각2202passed/8skipped/2deselected(CI38019049569). I-service4 `24ca998`: Linux/macOS 각2202passed/8skipped/2deselected(CI38045093113). I-service5 CI는 푸시 후 별도 확인. 실제 Mac 사용자 검토와 구분 | 2026-10-10 |
 | 정책 효용 | **미입증** — delta −0.0862 runs/100, 95% CI [−0.4046, +0.2304] | 2026-09-21 |
 | Claude 모델 배정 | 항목 태그 참조 — `uv run --frozen python scripts/checklist_model.py --next` | 2026-09-22 |
 | 담당 구분 | **C·D = 팀원(외부)**, 그 외 = Claude/Codex. 통합 검증은 I절 | 2026-09-22 |
