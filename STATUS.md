@@ -1,5 +1,7 @@
 # STATUS — Pitcheezy / transition-models
 
+> 2026-10-10 I-service4: 브라우저 파일 교체의 투구 식별자 정합 오류 수정, Chrome21시나리오·Node36·관련 Python95 통과. 수정판 비공개 ZIP v2와 최종 화면 캡처 준비. 실제 Mac/아이폰·모델 실행·공개 운영은 별도. [현재 안내](docs/SERVICE_REVIEW_BROWSER_QA_20261010.md).
+
 > 2026-10-10 후속: [새 S 응답의 공식3클립 연결·간편 실행팩](docs/SERVICE_REVIEW_VIDEO_PACKAGE_20261010.md) 완료. Windows 압축 해제본과 전체2202검사 통과. 로컬 저장 응답 검토이며 모델 자체 실행·라이브·공개 배포·실제 Mac/아이폰 확인은 아니다. 아래 조사 스냅샷과 구분한다.
 
 > **2026-10-09 I-service2 완료**: 실제 S ZIP을 비공개 수신·검사하고 `teammate_export_20261009_v1` 프로필과 `web/service-review` 로컬 화면(`http://127.0.0.1:8794/`)으로 연결했다. 경기849843 262투구/71타석, ready246/unsupported16/missing0, 셋업 estimated27/unavailable12/null223. missing 실제 사례는 미수신이다. 추천→실제 공개→조건에 맞는 가로 셋업 표시를 확인했다. 검사: 전체 Windows CPU 2120 passed/8 skipped/2 deselected(최종 크기 제한 검사 추가 전, 549.41초); 최종 관련 Python208 passed/1 skipped(25.96초)·Node16 passed; 실제262구 공개 전후 대조 및 로컬 브라우저 확인 완료. 선점 `2b11c06`; 완료는 같은 커밋. [수신·연결 기록](docs/SERVICE_GAME_V2_RECEIVED_20261009.md) · [영수증](docs/results/service_integration_20261009/s_export_receipt_v1.json).

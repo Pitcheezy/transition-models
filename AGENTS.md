@@ -1,5 +1,16 @@
 # SmartPitch MDP Transition Probability Models
 
+## 브라우저 파일 교체 검수 I-service4 완료 — 2026-10-10
+
+투구 번호/키 불일치 파일의 오표시를 실제 Chrome으로 재현해 거부하도록 수정했다.
+Node36·관련 Python95·브라우저21시나리오 통과, 최종 캡처와 v2 ZIP16파일 이관 검사 완료.
+새 전달본은 `outputs/service_review_video_20261010_v2.zip`이며 v1·원본 응답·영상은 보존한다.
+선점 `9b400cc`; 구현은 이 기록과 같은 커밋. 수정 권한 반납.
+전용 도구 실패를 Chrome headless로 대체했으며 실제 OS 파일 대화상자·Mac·아이폰 검증과 구분한다.
+[현재 검수·실행 안내](docs/SERVICE_REVIEW_BROWSER_QA_20261010.md). 아래 캡처/파일 선택 검수 미완료 기록은 과거 상태다.
+독립 사람 판단·새 영상·모델 실행 합의·공개 운영 조건은 여전히 미완료다.
+
+
 ## 영상 연결·간편 실행팩 완료 — 2026-10-10
 
 I-service3/H-port6 완료: 새 S 검토 화면에 기존 공식3클립 연결, 결과 공개/탐색 초기화,

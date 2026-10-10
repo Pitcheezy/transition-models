@@ -135,6 +135,10 @@ test("last selected file wins when earlier asynchronous reads finish late", asyn
   const load = api.createLoadCoordinator({ clear: () => { visible = null; clears++; }, commit: r => { visible = r; }, fail: error => { throw error; } });
   const first = load(() => new Promise(resolve => { finishFirst = resolve; }));
   const newer = fixture(); newer.game.game_pk = 456;
+  for (const pitch of newer.pitches) {
+    pitch.pa_key = `456:${pitch.at_bat_number}`;
+    pitch.key = `${pitch.pa_key}:${pitch.pitch_number}`;
+  }
   await load(async () => newer); finishFirst(fixture()); await first;
   assert.equal(visible, newer); assert.equal(clears, 2);
 });
@@ -295,3 +299,19 @@ test("late normal interruption cannot pause the newly selected clip", async () =
   assert.equal(log.statuses.at(-1).phase, "playing");
   controller.signal(next.token, "ended"); assert.equal(log.reveals[0].key, "123:1:2");
 });
+
+for (const [name, mutate] of [
+  ["game", report => { report.game.game_pk = 456; }],
+  ["pitch number", report => { report.pitches[0].pitch_number = 99; }],
+  ["plate appearance number", report => { report.pitches[0].at_bat_number = 9; }],
+  ["pitch key", report => { report.pitches[0].key = "123:9:9"; }],
+  ["plate appearance key", report => { report.pitches[0].pa_key = "123:9"; }],
+  ["padded pitch key", report => { report.pitches[0].key = "123:01:1"; }],
+  ["foreign plate appearance key", report => { report.pitches[0].pa_key = "456:1"; }]
+]) {
+  test(`uploaded report rejects inconsistent ${name} before selecting or binding media`, () => {
+    const report = fixture(); mutate(report);
+    assert.throws(() => api.validateReport(report), /식별자/);
+    assert.throws(() => api.initialState(report), /식별자/);
+  });
+}

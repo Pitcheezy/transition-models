@@ -1,0 +1,159 @@
+{
+  "schema": "pitcheezy-browser-review-verification-v1",
+  "date": "2026-10-10",
+  "baseline_commit": "bbf56f7",
+  "claim_commit": "9b400cc",
+  "source_sha256": "df606a11c6db465c054252ef8d331aeb23aa21565b4960bd586f3dcf8f62f6b7",
+  "report_sha256": "154d9cd1cb166552db5975137e2ba431b9ab48f94fcfa6bdd05304f645427c80",
+  "script_sha256": "3e81535178f293a222cb076962f737b7930591de21b964df14d03f2fccb82e86",
+  "zip": {
+    "filename": "service_review_video_20261010_v2.zip",
+    "bytes": 13570913,
+    "sha256": "31629dc1867b34469d8b7aa624e7eb58df5bc46cfc169282c2e021531b975d49",
+    "files": 16,
+    "crc_ok": true,
+    "relocated_files_identical": 16,
+    "isolated_check": "검토 팩 검사 통과: 영상 3개. 내부 검토 전용입니다."
+  },
+  "preserved": {
+    "previous_zip_sha256": "9f6362ffe048509b59265a99645bbaa125db1445f1c32b89bfc31fd2f7b30f75",
+    "same_files_between_v1_and_v2": 14,
+    "changed_files": [
+      "receipt.json",
+      "review.js"
+    ],
+    "original_response_and_media_changed": false
+  },
+  "regression": {
+    "node_before": {
+      "passed": 29,
+      "failed": 7
+    },
+    "node_after": {
+      "passed": 36,
+      "failed": 0
+    },
+    "related_python": {
+      "passed": 95,
+      "seconds": 32.0
+    },
+    "checklist_after_document_updates": {
+      "passed": 7,
+      "seconds": 2.01
+    },
+    "ruff_paths": 167
+  },
+  "browser": {
+    "browser": "154.0.8037.58",
+    "engine": "Chrome headless via Playwright",
+    "scenarios": [
+      {
+        "name": "initial_load_results_hidden_video_paused",
+        "passed": true
+      },
+      {
+        "name": "invalid_json_after_reveal",
+        "passed": true
+      },
+      {
+        "name": "wrong_schema",
+        "passed": true
+      },
+      {
+        "name": "wrong_profile",
+        "passed": true
+      },
+      {
+        "name": "invalid_utf8",
+        "passed": true
+      },
+      {
+        "name": "oversize",
+        "passed": true
+      },
+      {
+        "name": "identity-game",
+        "passed": true
+      },
+      {
+        "name": "identity-pitch-number",
+        "passed": true
+      },
+      {
+        "name": "identity-pa-number",
+        "passed": true
+      },
+      {
+        "name": "identity-pitch-key",
+        "passed": true
+      },
+      {
+        "name": "identity-pa-key",
+        "passed": true
+      },
+      {
+        "name": "identity-padded-key",
+        "passed": true
+      },
+      {
+        "name": "identity-foreign-pa",
+        "passed": true
+      },
+      {
+        "name": "same_file_reselection_resets_reveal",
+        "passed": true
+      },
+      {
+        "name": "empty_selection_preserves_state_not_native_dialog_cancel",
+        "passed": true
+      },
+      {
+        "name": "source_mismatch_disables_video_retains_manual_reveal",
+        "passed": true
+      },
+      {
+        "name": "invalid_upload_during_playback_clears_media_and_results",
+        "passed": true
+      },
+      {
+        "name": "third_clip_real_playback_end_reveals_actual_and_horizontal_mitt",
+        "passed": true
+      },
+      {
+        "name": "mobile_viewport_no_horizontal_overflow",
+        "passed": true,
+        "layout": {
+          "viewport": 390,
+          "document": 390,
+          "video": 324
+        }
+      },
+      {
+        "name": "navigation_after_reveal_resets_result",
+        "passed": true
+      },
+      {
+        "name": "no_external_requests_uploads_or_uncaught_errors",
+        "passed": true
+      }
+    ],
+    "count": 21,
+    "page_errors": [],
+    "external_requests": 0,
+    "non_get_requests": 0,
+    "native_os_dialog_verified": false,
+    "physical_mac_or_iphone_verified": false,
+    "screenshots": {
+      "desktop-third-revealed.png": "b7ad79faa9104dbc18e5fe344f1c65a00cbd4e0d93eefa5782c3ad00844c787a",
+      "mobile-third-revealed.png": "b453e36422f5c96ee1bbdc6060a9a169fa2fb97a856970d872ca69558b6080a4",
+      "desktop-first-hidden.png": "c160561f5bdd2952c47888630237cc9e2a819c8a0248f57a5ea3aabac1d21a4a"
+    },
+    "screenshots_visually_reviewed": [
+      "desktop-third-revealed.png",
+      "mobile-third-revealed.png"
+    ]
+  },
+  "independent_code_review": "No remaining actionable issue in identity fix or async fixture update.",
+  "teammate_repo_accessed_or_modified": false,
+  "public_deployment": false
+}

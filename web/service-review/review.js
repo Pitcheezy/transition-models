@@ -48,6 +48,10 @@
       assert(integer(pitch.pitch_number, 1, 100) && integer(pitch.at_bat_number, 1, 999) &&
         object(pitch.pre) && object(pitch.pre.situation) && object(pitch.pre.pitcher) &&
         object(pitch.pre.batter), "투구 전 정보가 올바르지 않습니다.");
+      // Local file selection bypasses the launcher's checks; bind the same identity here.
+      const paKey = `${report.game.game_pk}:${pitch.at_bat_number}`;
+      assert(pitch.pa_key === paKey && pitch.key === `${paKey}:${pitch.pitch_number}`,
+        "경기·타석·투구 번호와 식별자가 일치하지 않습니다.");
       assertPreOnly(pitch.pre);
       const s = pitch.pre.situation;
       assert(integer(s.inning, 1, 99) && ["Top", "Bot"].includes(s.half) && integer(s.outs, 0, 2) &&
