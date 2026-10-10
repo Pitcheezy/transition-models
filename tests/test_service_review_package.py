@@ -4,6 +4,8 @@ import hashlib
 import json
 import shutil
 import subprocess
+import sys
+from zipfile import ZipFile
 
 import pytest
 
@@ -47,6 +49,10 @@ def test_build_preserves_input_and_records_exact_assets(source, tmp_path):
         "review-data.json",
         "receipt.json",
         "PRIVATE.txt",
+        "review-media.json",
+        "launch_review.py",
+        "START_WINDOWS.cmd",
+        "START_MAC.command",
     }
 
 
@@ -99,4 +105,95 @@ def test_oversized_normalized_report_creates_no_package(source, tmp_path, monkey
     target = tmp_path / "not-created-too-large"
     with pytest.raises(AuditInputError, match="viewer 5 MiB limit"):
         build_review(source, target, input_kind="synthetic")
+    assert not target.exists()
+
+
+def test_zip_relocation_and_isolated_stdlib_launch(source, tmp_path):
+    target = tmp_path / "package"
+    archive_path = tmp_path / "review.zip"
+    build_review(source, target, input_kind="synthetic", zip_path=archive_path)
+    relocated = tmp_path / "another folder"
+    with ZipFile(archive_path) as archive:
+        assert archive.testzip() is None
+        assert "source.json" not in archive.namelist()
+        assert archive.getinfo("START_MAC.command").external_attr >> 16 & 0o111
+        archive.extractall(relocated)
+    for original in target.iterdir():
+        assert original.read_bytes() == (relocated / original.name).read_bytes()
+    result = subprocess.run(
+        [sys.executable, "-I", str(relocated / "launch_review.py"), "--check"],
+        cwd=tmp_path,
+        capture_output=True,
+        timeout=15,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+
+
+def test_existing_zip_prevents_output_creation(source, tmp_path):
+    archive_path = tmp_path / "keep.zip"
+    archive_path.write_bytes(b"KEEP")
+    target = tmp_path / "package"
+    with pytest.raises(AuditInputError):
+        build_review(source, target, input_kind="synthetic", zip_path=archive_path)
+    assert archive_path.read_bytes() == b"KEEP"
+    assert not target.exists()
+
+
+def test_video_map_is_bound_to_source_before_output(source, tmp_path):
+    target = tmp_path / "wrong-source"
+    with pytest.raises(AuditInputError, match="different source snapshot"):
+        build_review(source, target, input_kind="synthetic", include_video=True)
+    assert not target.exists()
+
+
+@pytest.fixture
+def bound_media(source, tmp_path, monkeypatch):
+    from scripts import build_service_review as module
+
+    payload = json.loads(source.read_text())
+    game = payload["game"]["game_pk"]
+    # Invented local bytes test integrity/packaging, not video decoding or real provenance.
+    root = tmp_path / "assets"
+    (root / "media").mkdir(parents=True)
+    video, poster = b"invented-mp4", b"invented-jpeg"
+    (root / "media/clip.mp4").write_bytes(video)
+    (root / "media/clip.jpg").write_bytes(poster)
+    binding = {
+        "schema": "pitcheezy-service-review-media-v1",
+        "game_pk": game,
+        "source_sha256": hashlib.sha256(source.read_bytes()).hexdigest(),
+        "clips": [
+            {
+                "pitch_key": payload["pitches"][0]["key"],
+                "play_id": "00000000-0000-4000-8000-000000000001",
+                "video": "media/clip.mp4",
+                "poster": "media/clip.jpg",
+                "video_sha256": hashlib.sha256(video).hexdigest(),
+                "poster_sha256": hashlib.sha256(poster).hexdigest(),
+                "duration_seconds": 1.0,
+            }
+        ],
+    }
+    path = tmp_path / "binding.json"
+    path.write_text(json.dumps(binding), encoding="utf-8")
+    monkeypatch.setattr(module, "MEDIA_SOURCE", root)
+    monkeypatch.setattr(module, "MEDIA_MANIFEST", path)
+    return root, path
+
+
+def test_bound_media_is_copied_with_hashes(source, tmp_path, bound_media):
+    root, _ = bound_media
+    target = tmp_path / "with-video"
+    receipt = build_review(source, target, input_kind="synthetic", include_video=True)
+    assert receipt["clip_count"] == 1
+    for name in ("clip.mp4", "clip.jpg"):
+        assert (target / "media" / name).read_bytes() == (root / "media" / name).read_bytes()
+
+
+def test_changed_media_rejected_without_creating_package(source, tmp_path, bound_media):
+    root, _ = bound_media
+    (root / "media/clip.mp4").write_bytes(b"changed")
+    target = tmp_path / "not-created-video"
+    with pytest.raises(AuditInputError, match="Media hash"):
+        build_review(source, target, input_kind="synthetic", include_video=True)
     assert not target.exists()

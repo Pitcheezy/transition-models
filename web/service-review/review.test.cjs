@@ -152,3 +152,146 @@ test("local parser enforces byte limit and readable UTF-8 JSON", () => {
   assert.throws(() => api.parseBytes(new Uint8Array([255])));
   assert.throws(() => api.parseBytes(new TextEncoder().encode("not JSON")));
 });
+
+function mediaFixture() {
+  return { schema: api.MEDIA_SCHEMA, game_pk: 123, source_sha256: "a".repeat(64), clips: [
+    { pitch_key: "123:1:1", play_id: "00000000-0000-0000-0000-000000000001",
+      video: "media/pitch-123-1-1-official.mp4", poster: "media/pitch-123-1-1-official.jpg",
+      video_sha256: "b".repeat(64), poster_sha256: "c".repeat(64), duration_seconds: 6.999 },
+    { pitch_key: "123:1:2", play_id: "00000000-0000-0000-0000-000000000002",
+      video: "media/pitch-123-1-2-official.mp4", poster: "media/pitch-123-1-2-official.jpg",
+      video_sha256: "d".repeat(64), poster_sha256: "e".repeat(64), duration_seconds: 7.13 }
+  ] };
+}
+function mediaHarness() {
+  const log = { clears: 0, statuses: [], reveals: [] };
+  const controller = api.createMediaController({ clear: () => { log.clears++; },
+    status: event => { log.statuses.push(event); }, reveal: event => { log.reveals.push(event); } });
+  return { controller, log };
+}
+test("media binds only exact game, source hash, and an existing pitch key", () => {
+  const report = fixture(), manifest = mediaFixture();
+  assert.equal(api.mediaBinding(report, "123:1:1", manifest).clip.play_id, manifest.clips[0].play_id);
+  assert.equal(api.mediaBinding(report, "123:2:1", manifest).clip, null);
+  assert.equal(api.mediaBinding(report, "123:9:9", manifest).clip, null);
+  assert.equal(api.mediaBinding(report, "123:1:1", null).clip, null);
+  report.source.sha256 = "f".repeat(64);
+  assert.equal(api.mediaBinding(report, "123:1:1", manifest).clip, null);
+  report.source.sha256 = manifest.source_sha256; report.game.game_pk = 456;
+  assert.equal(api.mediaBinding(report, "123:1:1", manifest).clip, null);
+});
+test("media manifest rejects remote, blob, traversal, encoded and ambiguous paths", () => {
+  for (const path of ["https://example.com/v.mp4", "//example.com/v.mp4", "blob:local", "/media/v.mp4",
+    "media/../v.mp4", "media/%2e%2e/v.mp4", "media\\v.mp4", "media/v.mp4?q=1", "media/v.mp4#fragment",
+    "media/sub/v.mp4", "media/a b.mp4", "data:video/mp4;base64,AAA"]) {
+    const manifest = mediaFixture(); manifest.clips[0].video = path;
+    assert.throws(() => api.validateMediaManifest(manifest), path);
+  }
+  const manifest = mediaFixture(); manifest.clips[0].poster = "https://example.com/p.jpg";
+  assert.throws(() => api.validateMediaManifest(manifest));
+});
+test("media manifest rejects wrong schema, bad identities, hashes and durations", () => {
+  for (const mutate of [m => { m.schema = "raw-video-list"; }, m => { m.source_sha256 = "bad"; },
+    m => { m.clips[0].video_sha256 = "bad"; }, m => { m.clips[0].poster_sha256 = "bad"; },
+    m => { m.clips[0].pitch_key = "456:1:1"; }, m => { m.clips[0].play_id = "not-a-uuid"; },
+    m => { m.clips[0].duration_seconds = NaN; }, m => { m.clips[0].duration_seconds = 0; },
+    m => { m.clips.push(m.clips[0]); }, m => { m.clips[1].play_id = m.clips[0].play_id; }]) {
+    const manifest = mediaFixture(); mutate(manifest); assert.throws(() => api.validateMediaManifest(manifest));
+  }
+});
+test("clip binding is copied and cannot mutate the manifest", () => {
+  const manifest = mediaFixture(), binding = api.mediaBinding(fixture(), "123:1:1", manifest);
+  binding.clip.video = "changed";
+  assert.equal(manifest.clips[0].video, "media/pitch-123-1-1-official.mp4");
+});
+test("only a played current clip may reveal its own result once", () => {
+  const { controller, log } = mediaHarness();
+  const selection = controller.select(fixture(), "123:1:1", mediaFixture());
+  assert.equal(controller.signal(selection.token, "ended"), false); assert.equal(log.reveals.length, 0);
+  assert.equal(controller.signal(selection.token, "play"), true);
+  assert.equal(controller.signal(selection.token, "ended"), true);
+  assert.deepEqual(log.reveals, [{ key: "123:1:1", gamePk: 123, sourceSha256: "a".repeat(64) }]);
+  assert.equal(controller.signal(selection.token, "ended"), false); assert.equal(log.reveals.length, 1);
+});
+test("pitch navigation, same-pitch reselection and PA changes invalidate late media events", () => {
+  for (const nextKey of ["123:1:1", "123:1:2", "123:2:1"]) {
+    const { controller, log } = mediaHarness();
+    const old = controller.select(fixture(), "123:1:1", mediaFixture());
+    controller.signal(old.token, "play");
+    const next = controller.select(fixture(), nextKey, mediaFixture()), count = log.statuses.length;
+    assert.notEqual(old.token, next.token); assert.equal(log.clears, 2);
+    for (const event of ["ended", "error", "play", "pause"]) assert.equal(controller.signal(old.token, event), false);
+    assert.equal(log.statuses.length, count); assert.equal(log.reveals.length, 0);
+  }
+});
+test("new report load including failure immediately clears media and blocks old reveal", async () => {
+  const { controller, log } = mediaHarness(), old = controller.select(fixture(), "123:1:1", mediaFixture());
+  controller.signal(old.token, "play");
+  const load = api.createLoadCoordinator({ clear: () => controller.reset(), commit: () => assert.fail("invalid report"), fail: () => {} });
+  await load(async () => { throw new Error("invalid replacement"); });
+  assert.equal(log.clears, 2); assert.equal(controller.signal(old.token, "ended"), false);
+  assert.equal(log.reveals.length, 0);
+});
+test("missing or source-mismatched media never blocks manual result reveal", () => {
+  for (const manifest of [null, { ...mediaFixture(), source_sha256: "f".repeat(64) }]) {
+    const state = api.initialState(fixture()), { controller, log } = mediaHarness();
+    const selection = controller.select(state.report, state.key, manifest);
+    assert.equal(selection.clip, null); assert.equal(controller.signal(selection.token, "ended"), false);
+    assert.equal(api.reveal(state).revealed, true); assert.equal(log.reveals.length, 0);
+  }
+});
+test("play rejection has a recoverable error and cannot reveal; retry has a new session", async () => {
+  const { controller, log } = mediaHarness();
+  const first = controller.select(fixture(), "123:1:1", mediaFixture());
+  await controller.requestPlay(first.token, async () => { throw new DOMException("play not allowed", "NotAllowedError"); });
+  assert.equal(log.statuses.at(-1).phase, "error");
+  assert.equal(controller.signal(first.token, "ended"), false); assert.equal(log.reveals.length, 0);
+  const retry = controller.select(fixture(), "123:1:1", mediaFixture());
+  assert.notEqual(retry.token, first.token);
+  await controller.requestPlay(retry.token, async () => {});
+  controller.signal(retry.token, "ended"); assert.equal(log.reveals.length, 1);
+});
+test("late play promise resolution or rejection cannot affect a new selected clip", async () => {
+  for (const rejected of [false, true]) {
+    const { controller, log } = mediaHarness();
+    let finish;
+    const first = controller.select(fixture(), "123:1:1", mediaFixture());
+    const pending = controller.requestPlay(first.token, () => new Promise((resolve, reject) => { finish = rejected ? reject : resolve; }));
+    controller.select(fixture(), "123:1:2", mediaFixture());
+    const count = log.statuses.length;
+    finish(rejected ? new Error("late playback failure") : undefined);
+    assert.equal(await pending, false); assert.equal(log.statuses.length, count); assert.equal(log.reveals.length, 0);
+  }
+});
+test("native media failure after play blocks ended until an explicit retry", () => {
+  const { controller, log } = mediaHarness(), selection = controller.select(fixture(), "123:1:1", mediaFixture());
+  controller.signal(selection.token, "play"); controller.signal(selection.token, "error");
+  assert.equal(controller.signal(selection.token, "ended"), false);
+  assert.equal(controller.signal(selection.token, "play"), false);
+  assert.equal(log.reveals.length, 0); assert.equal(log.statuses.at(-1).phase, "error");
+});
+test("normal pause AbortError preserves native resume and ended result reveal", async () => {
+  const { controller, log } = mediaHarness(), selection = controller.select(fixture(), "123:1:1", mediaFixture());
+  let interrupt;
+  const pending = controller.requestPlay(selection.token, () => new Promise((_resolve, reject) => { interrupt = reject; }));
+  controller.signal(selection.token, "play"); controller.signal(selection.token, "pause");
+  interrupt(new DOMException("The play request was interrupted by pause", "AbortError"));
+  await pending;
+  assert.equal(log.statuses.at(-1).phase, "paused");
+  assert.equal(log.statuses.some(event => event.phase === "error"), false);
+  assert.equal(controller.signal(selection.token, "play"), true);
+  assert.equal(controller.signal(selection.token, "ended"), true);
+  assert.equal(log.reveals.length, 1);
+});
+test("late normal interruption cannot pause the newly selected clip", async () => {
+  const { controller, log } = mediaHarness(), first = controller.select(fixture(), "123:1:1", mediaFixture());
+  let interrupt;
+  const pending = controller.requestPlay(first.token, () => new Promise((_resolve, reject) => { interrupt = reject; }));
+  const next = controller.select(fixture(), "123:1:2", mediaFixture());
+  controller.signal(next.token, "play");
+  const count = log.statuses.length;
+  interrupt(new DOMException("Detached player interrupted", "AbortError"));
+  assert.equal(await pending, false); assert.equal(log.statuses.length, count);
+  assert.equal(log.statuses.at(-1).phase, "playing");
+  controller.signal(next.token, "ended"); assert.equal(log.reveals[0].key, "123:1:2");
+});

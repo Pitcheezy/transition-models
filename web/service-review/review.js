@@ -7,6 +7,7 @@
   "use strict";
   const SCHEMA = "pitcheezy-service-review-v1";
   const PROFILE = "teammate_export_20261009_v1";
+  const MEDIA_SCHEMA = "pitcheezy-service-review-media-v1";
   const MAX_BYTES = 5 * 1024 * 1024;
   // Supplied S contract geometry; this is not a measurement of the physical plate.
   const SERVICE_ZONE_HALF_WIDTH = .83;
@@ -166,6 +167,84 @@
     };
   }
 
+  function validateMediaManifest(manifest) {
+    assert(object(manifest) && manifest.schema === MEDIA_SCHEMA &&
+      integer(manifest.game_pk, 1, 2147483647) && /^[a-f0-9]{64}$/.test(manifest.source_sha256),
+    "영상 연결 정보의 형식 또는 출처가 올바르지 않습니다.");
+    assert(Array.isArray(manifest.clips) && manifest.clips.length <= 2000,
+      "영상 연결 목록이 올바르지 않습니다.");
+    const keys = new Set(), playIds = new Set();
+    for (const clip of manifest.clips) {
+      assert(object(clip) && typeof clip.pitch_key === "string" &&
+        new RegExp(`^${manifest.game_pk}:[1-9][0-9]{0,2}:[1-9][0-9]{0,2}$`).test(clip.pitch_key) &&
+        !keys.has(clip.pitch_key), "영상 투구 식별자가 누락되었거나 중복되었습니다.");
+      assert(typeof clip.play_id === "string" && /^[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$/i.test(clip.play_id) &&
+        !playIds.has(clip.play_id.toLowerCase()), "영상 play_id가 올바르지 않거나 중복되었습니다.");
+      // Restrict to one local directory and plain filenames. No URL, encoded traversal or queries.
+      assert(typeof clip.video === "string" && /^media\/[A-Za-z0-9][A-Za-z0-9_-]*\.mp4$/.test(clip.video) &&
+        typeof clip.poster === "string" && /^media\/[A-Za-z0-9][A-Za-z0-9_-]*\.(?:jpg|jpeg|png)$/.test(clip.poster),
+      "영상과 포스터는 media 폴더 안의 로컬 파일이어야 합니다.");
+      assert(/^[a-f0-9]{64}$/.test(clip.video_sha256) && /^[a-f0-9]{64}$/.test(clip.poster_sha256) &&
+        numeric(clip.duration_seconds, .001, 3600), "영상 파일 해시 또는 길이가 올바르지 않습니다.");
+      keys.add(clip.pitch_key); playIds.add(clip.play_id.toLowerCase());
+    }
+    return manifest;
+  }
+
+  function mediaBinding(report, key, manifest) {
+    if (manifest === null) return { clip: null, reason: "이 묶음에는 연결된 공식 클립이 없습니다." };
+    validateMediaManifest(manifest);
+    if (manifest.game_pk !== report.game.game_pk || manifest.source_sha256 !== report.source.sha256)
+      return { clip: null, reason: "현재 보고서와 영상의 경기 또는 원문 해시가 달라 연결하지 않았습니다." };
+    if (!report.pitches.some(p => p.key === key)) return { clip: null, reason: "보고서에 해당 투구가 없습니다." };
+    const clip = manifest.clips.find(c => c.pitch_key === key);
+    return { clip: clip ? clone(clip) : null, reason: clip ? "" : "이 투구에 연결된 공식 클립이 없습니다. 결과는 직접 공개할 수 있습니다." };
+  }
+
+  function createMediaController({ clear, status, reveal: revealResult }) {
+    let sequence = 0, current = null;
+    const active = token => current !== null && token === current.token;
+    function reset() {
+      sequence++;
+      current = null;
+      clear();
+    }
+    function select(report, key, manifest) {
+      reset();
+      const binding = mediaBinding(report, key, manifest);
+      current = { token: sequence, key, gamePk: report.game.game_pk, sourceSha256: report.source.sha256,
+        clip: binding.clip, played: false, completed: false, failed: false };
+      status({ phase: binding.clip ? "ready" : "unavailable", message: binding.reason });
+      return { token: current.token, clip: binding.clip };
+    }
+    function signal(token, event) {
+      if (!active(token) || !current.clip || current.failed || current.completed) return false;
+      if (event === "play") { current.played = true; status({ phase: "playing", message: "클립 재생 중 · 종료하면 이 투구의 결과가 공개됩니다." }); }
+      else if (event === "pause") status({ phase: "paused", message: "일시 정지 · 계속 재생하거나 결과를 직접 공개할 수 있습니다." });
+      else if (event === "error") {
+        current.failed = true;
+        status({ phase: "error", message: "영상을 재생하지 못했습니다. 다시 불러오거나 영상 없이 결과를 공개하세요." });
+      } else if (event === "ended" && current.played) {
+        current.completed = true;
+        status({ phase: "ended", message: "클립 재생 종료 · 이 투구의 결과를 공개했습니다." });
+        revealResult({ key: current.key, gamePk: current.gamePk, sourceSha256: current.sourceSha256 });
+      } else return false;
+      return true;
+    }
+    async function requestPlay(token, start) {
+      if (!active(token) || !current.clip || current.failed || current.completed) return false;
+      try {
+        await start();
+        return signal(token, "play");
+      } catch (error) {
+        // Native pause/load can interrupt a pending play promise without a media failure.
+        // signal retains the session guard, so a detached player's interruption stays inert.
+        return signal(token, error && error.name === "AbortError" ? "pause" : "error");
+      }
+    }
+    return { reset, select, signal, requestPlay };
+  }
+
   function parseBytes(bytes) {
     assert(bytes.byteLength <= MAX_BYTES, "보고서는 최대 5 MiB까지 열 수 있습니다.");
     return JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(bytes));
@@ -174,7 +253,8 @@
   function mount(doc) {
     const $ = id => doc.getElementById(id);
     if (!$("report-file")) return;
-    let state = null;
+    let state = null, currentVideo = null, currentMediaToken = null;
+    let mediaManifest = null, mediaManifestLoaded = false, mediaManifestError = "";
     const make = (tag, className, value) => {
       const el = doc.createElement(tag);
       if (className) el.className = className;
@@ -192,6 +272,68 @@
       if (value !== undefined) el.textContent = String(value);
       return el;
     };
+
+    const mediaController = createMediaController({
+      clear() {
+        currentMediaToken = null;
+        if (currentVideo) {
+          const previous = currentVideo;
+          currentVideo = null;
+          previous.pause();
+          previous.removeAttribute("src");
+          previous.removeAttribute("poster");
+          previous.load();
+        }
+        replace("media-player");
+        say("media-caption", ""); say("media-status", "");
+        $("media-play").hidden = true; $("media-retry").hidden = true;
+        $("media-play").disabled = false;
+      },
+      status({ phase, message }) {
+        say("media-status", message || "추천 검토를 마쳤다면 클립을 재생하세요.");
+        $("media-retry").hidden = phase !== "error";
+        $("media-play").disabled = phase === "error" || phase === "ended";
+      },
+      reveal(selection) {
+        if (state && state.key === selection.key && state.report.game.game_pk === selection.gamePk &&
+          state.report.source.sha256 === selection.sourceSha256) { state = reveal(state); render(); }
+      }
+    });
+
+    function prepareMedia() {
+      if (!state || !state.key) { mediaController.reset(); return; }
+      const selection = mediaController.select(state.report, state.key, mediaManifest);
+      currentMediaToken = selection.token;
+      if (!selection.clip) {
+        if (!mediaManifestLoaded) say("media-status", "영상 연결 정보를 확인하고 있습니다. 결과는 직접 공개할 수 있습니다.");
+        else if (mediaManifestError) say("media-status", mediaManifestError);
+        return;
+      }
+      const clip = selection.clip, video = make("video", "official-clip");
+      currentVideo = video;
+      video.controls = true;
+      video.playsInline = true;
+      video.preload = "metadata";
+      video.setAttribute("aria-label", `선택한 투구 ${state.key}의 공식 클립`);
+      video.addEventListener("play", () => mediaController.signal(selection.token, "play"));
+      video.addEventListener("pause", () => mediaController.signal(selection.token, "pause"));
+      video.addEventListener("error", () => mediaController.signal(selection.token, "error"));
+      video.addEventListener("ended", () => {
+        if (video.ended && !video.error) mediaController.signal(selection.token, "ended");
+      });
+      video.src = clip.video;
+      video.poster = clip.poster;
+      replace("media-player", video);
+      $("media-play").hidden = false;
+      say("media-caption", `${state.key} · 공식 클립 ${clip.duration_seconds.toFixed(2)}초 · play_id ${clip.play_id}`);
+      video.load();
+    }
+
+    function changeSelection(nextState) {
+      state = nextState;
+      prepareMedia();
+      render();
+    }
 
     function renderPlot(view) {
       const model = plotModel(state.report, view), b = model.bounds;
@@ -283,7 +425,7 @@
         const button = make("button", "pitch-button", `${p.pitch_number}구`);
         button.type = "button";
         button.setAttribute("aria-pressed", String(p.key === view.key));
-        button.addEventListener("click", () => { state = selectPitch(state, p.key); render(); });
+        button.addEventListener("click", () => changeSelection(selectPitch(state, p.key)));
         return button;
       }));
       say("pitch-heading", `${s.inning}회 ${half(s.half)} · ${view.pitch_number}번째 투구`);
@@ -316,7 +458,7 @@
       renderPlot(view);
       replace("actual-content");
       $("reveal-button").disabled = view.revealed;
-      say("reveal-button", view.revealed ? "공개됨" : "실제 투구 공개");
+      say("reveal-button", view.revealed ? "공개됨" : "영상 없이 결과 공개");
       $("reveal-hint").hidden = view.revealed;
       if (view.revealed) {
         if (!view.actual) replace("actual-content", make("p", "actual-description", "이 투구의 실제 관측 데이터가 제공되지 않았습니다."));
@@ -345,6 +487,7 @@
     const load = createLoadCoordinator({
       clear() {
         state = null;
+        mediaController.reset();
         $("report-content").hidden = true;
         $("empty-state").hidden = true;
         // Remove already revealed content immediately, including pending/failed replacements.
@@ -353,12 +496,17 @@
         $("load-status").classList.remove("error");
         say("load-status", "보고서를 확인하고 있습니다.");
       },
-      commit(report) { state = initialState(report); say("load-status", `로컬 보고서 · ${report.pitches.length}개 투구 · 업로드하지 않습니다.`); render(); },
+      commit(report) { say("load-status", `로컬 보고서 · ${report.pitches.length}개 투구 · 업로드하지 않습니다.`); changeSelection(initialState(report)); },
       fail(error) { $("empty-state").hidden = false; $("load-status").classList.add("error");
         say("load-status", `보고서를 열지 못했습니다. ${error instanceof Error ? error.message : "파일을 확인해주세요."}`); }
     });
-    $("pa-select").addEventListener("change", event => { if (state) { state = selectPA(state, event.target.value); render(); } });
+    $("pa-select").addEventListener("change", event => { if (state) changeSelection(selectPA(state, event.target.value)); });
     $("reveal-button").addEventListener("click", () => { if (state) { state = reveal(state); render(); } });
+    $("media-play").addEventListener("click", () => {
+      const video = currentVideo, token = currentMediaToken;
+      if (video && token !== null) mediaController.requestPlay(token, () => video.play());
+    });
+    $("media-retry").addEventListener("click", () => { if (state) changeSelection(selectPitch(state, state.key)); });
     $("report-file").addEventListener("change", event => {
       const file = event.target.files[0];
       if (!file) return;
@@ -370,10 +518,25 @@
       assert(response.ok, "review-data.json이 없습니다. ‘보고서 열기’에서 로컬 파일을 선택해주세요.");
       return parseBytes(await response.arrayBuffer());
     });
+    (async () => {
+      try {
+        const response = await fetch("./review-media.json", { cache: "no-store" });
+        if (response.status !== 404) {
+          assert(response.ok, "영상 연결 정보를 읽지 못했습니다. 추천 검토와 직접 공개는 계속할 수 있습니다.");
+          mediaManifest = validateMediaManifest(parseBytes(await response.arrayBuffer()));
+        }
+      } catch (_error) {
+        mediaManifest = null;
+        mediaManifestError = "영상 연결 정보를 사용할 수 없습니다. 추천 검토와 직접 공개는 계속할 수 있습니다.";
+      }
+      mediaManifestLoaded = true;
+      if (state) prepareMedia();
+    })();
   }
   function pointsForCoordinate(points, x, z) {
     return points.find(p => p.kind === "candidate" && p.x === x && p.z === z);
   }
-  return { SCHEMA, PROFILE, MAX_BYTES, SERVICE_ZONE_HALF_WIDTH, validateReport, viewFor, initialState, selectPitch, selectPA,
-    reveal, groupsFor, plotModel, setupSummary, createLoadCoordinator, parseBytes, mount };
+  return { SCHEMA, PROFILE, MAX_BYTES, MEDIA_SCHEMA, SERVICE_ZONE_HALF_WIDTH, validateReport, viewFor, initialState, selectPitch, selectPA,
+    reveal, groupsFor, plotModel, setupSummary, createLoadCoordinator, validateMediaManifest, mediaBinding,
+    createMediaController, parseBytes, mount };
 });

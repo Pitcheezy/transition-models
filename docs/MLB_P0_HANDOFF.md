@@ -1,5 +1,14 @@
 # MLB P0 — Codex / Claude 인계 기록
 
+## 영상 연결·간편 실행팩 완료 — 2026-10-10
+
+I-service3/H-port6 완료: 새 S 검토 화면에 기존 공식3클립 연결, 결과 공개/탐색 초기화,
+Python stdlib 실행기·무결성/허용 파일 검사·비공개 ZIP16파일 이관 검증.
+Windows CPU2202passed/8skipped/2deselected·Node29passed·Ruff167경로. 선점 `b44b401`, 구현은 이 기록과 같은 커밋.
+[현재 실행 안내](SERVICE_REVIEW_VIDEO_PACKAGE_20261010.md)를 먼저 읽는다. 원본 응답/영상·팀원 저장소·공개 Site는 변경하지 않았다.
+실제 Mac/아이폰·라이브 모델 실행·공개 운영 검증은 미완료. 파일 선택기 실제 오류 검수/최종 캡처는 도구 중단으로 미완료다.
+이전 '새 화면에 영상 없음'과 I-service2 전용 안내는 과거 상태다. 수정 권한 반납.
+
 ## I-service2 실제 S 원문 수신·로컬 연결 완료 — 2026-10-09
 
 사용자 제공 ZIP의 원본·CRC·manifest 5파일 SHA/크기를 검사하고, 경기 849843의 262투구/71타석을 새

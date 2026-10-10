@@ -1,5 +1,7 @@
 # S service-game-v2 로컬 통합 준비
 
+> 2026-10-10: 새 영상 연결과 portable v2 팩의 실행법은 [최신 안내](SERVICE_REVIEW_VIDEO_PACKAGE_20261010.md)를 따른다. 아래 수동 http.server 방식과 옛 출력은 당시 수신 검토 기록이며 그대로 보존한다.
+
 ## 2026-10-09 실제 수신 프로필·비공개 로컬 연결
 
 I-service2는 사용자 제공 service-game-v2 ZIP의 원본 검사와 로컬 표시까지 완료했다.

@@ -1,12 +1,17 @@
 # 남은 작업 체크리스트
 
-## I-service3 · H-port6 — 2026-10-10 진행
+## I-service3 · H-port6 완료 — 2026-10-10
 
 사용자가 승인한 독립 두 단위다. 팀원 저장소를 참조하거나 수정하지 않고 이미 받은 응답과 우리 영상만 사용한다.
-- [~] I-service3. 새 S 검토 화면에 기존 849843 첫 타석 3구 영상을 투구 키·play ID·SHA로 연결. 영상 재생·결과 공개·전환 초기화·미지원·실패 처리를 검증한다. 별도 미트 정지 장면의 시각을 공식 클립에 추정 대응하지 않는다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-10 · Codex]`
-- [~] H-port6. 새 검토팩의 stdlib 실행 도우미·자료 검사·빈 포트·허용 파일 제공·비공개 ZIP 및 압축 해제 실행 검증. 실제 Mac/아이폰 사용 검증과 공개 배포는 별도다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-10 · Codex]`
+- [x] I-service3. 새 S 검토 화면에 기존 849843 첫 타석 3구 영상을 투구 키·기존 play ID 근거·SHA로 연결 완료. 새 S 자체에는 play ID가 없다. 영상 재생·결과 공개·전환 초기화·미지원·실패 처리를 검증한다. 별도 미트 정지 장면의 시각을 공식 클립에 추정 대응하지 않는다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-10 · Codex]`
+- [x] H-port6. 새 검토팩의 stdlib 실행 도우미·자료 검사·빈 포트·허용 파일 제공·비공개 ZIP 및 압축 해제 실행 검증. 실제 Mac/아이폰 사용 검증과 공개 배포는 별도다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-10 · Codex]`
 
 
+
+검사: Windows CPU2202passed/8skipped/2deselected·Node29passed·Ruff167경로. ZIP16파일 실제 압축 해제/격리 실행 및 영상3구 브라우저 공개 확인.
+파일 선택기 오류 검수·최종 캡처는 도구 중단으로 미완료, 실제 Mac/아이폰은 미검증. 선점 `b44b401`, 구현은 이 완료 기록과 같은 커밋.
+[실행 안내](docs/SERVICE_REVIEW_VIDEO_PACKAGE_20261010.md) · [검증 기록](docs/results/service_integration_20261010/video_package_verification_v1.json).
+팀원 저장소 조회/수정·공개 Site 배포 없음. I-0/I-run1/I-release1 및 독립 사람/영상 평가의 대기는 유지한다.
 
 ## I-service2 실제 S 원문 수신·로컬 연결 완료 — 2026-10-09
 
@@ -352,13 +357,13 @@ S 선택 비중은 사건확률이 아니며 S 위치는 과거 투구 분포의
 | 항목 | 값 | 갱신 |
 |---|---|---|
 | 브랜치 | `feature/intent-v0` (우리 CV 작업트리) | 2026-10-06 |
-| 최신 작업 커밋 | I-service2 실제 수신·로컬 표시 완료(이 커밋; 선점 `2b11c06`); 이전 H-13/H-port5 `47ddc8f` | 2026-10-09 |
-| 파일 수정 권한 | **Codex — I-service3 영상 연결·H-port6 간편 실행팩 진행** | 2026-10-09 |
+| 최신 작업 커밋 | I-service3/H-port6 완료(이 커밋; 선점 `b44b401`); 이전 I-service2 `2dda168` | 2026-10-10 |
+| 파일 수정 권한 | **비어 있음 — I-service3/H-port6 완료·Codex 권한 반납** | 2026-10-09 |
 | 중계 시각 주석 | **297 확인 / 25 확인 불가 / 0 미검토** — 전 경기 322구 검토 완료. 완전 타석 2~4·6~15·18~19·21·23~28·30~32·34·36~38·40~46·49~51·53~55·57~63·65~69·71·74~79·81. 불가 목록·반이닝 집계·리드 분포는 [전 경기 요약](docs/MLB_BROADCAST_TIMING.md). 규약 v2, 수동 시각 | 2026-09-27 |
 | 점수판 평가셋 | timing 322 / 리뷰 297(292구 10필드 confirmed, PA 8/1·16/1·33/1·41/1·44/1 partial) / 라벨 충돌 0 / 판단 화면 불가 25 / 미검토 0 | 2026-09-27 |
 | 점수판 OCR | **현행 v2 유지**. A-15 새 17구: 새 판단 프레임 17구의 필드 정답·기권·오답: v1 119·51·0 / v2 119·51·0 / v3 117·53·0 / v4 119·51·0. unavailable 2구는 예측 대상이 아니다. 공유 280행 변화 0·반복 297행 일치·음성 거짓 판독 0. 이전 오판독은 [알려진 목록](docs/results/mlb_p0/game_747139_scoreboard_known_misreads.json)에 유지. v3 무회귀·v4 사전 등록 기준 실패 유지. 747139는 전 경기 개발 자료; 새 버전 독립 검증은 새 미검토 영상 필요 | 2026-09-27 |
-| 전체 검사 (Windows CPU) | I-service2: 전체 Windows CPU 2120 passed/8 skipped/2 deselected(최종 크기 제한 검사 추가 전, 549.41초); 최종 관련 Python208 passed/1 skipped(25.96초)·Node16 passed; 실제262구 공개 전후 대조 및 로컬 브라우저 확인 완료. 이전 H-13: 2060 passed, 8 skipped, 2 deselected, 3 warnings in 577.39s (0:09:37)이며 이번 변경 검사와 구분 | 2026-10-09 |
-| 원격 검사 (Linux/mac CPU) | 구현 `47ddc8f`: 각2060passed/8skipped/2deselected, Ruff163·JS구문 통과(CI37920381861). 실제 Mac 사용자 검토와 구분 | 2026-10-09 |
+| 전체 검사 (Windows CPU) | 최신 I-service3/H-port6: 2202passed/8skipped/2deselected,566.80초,Ruff167. 아래 I-service2는 이전 기록. I-service2: 전체 Windows CPU 2120 passed/8 skipped/2 deselected(최종 크기 제한 검사 추가 전, 549.41초); 최종 관련 Python208 passed/1 skipped(25.96초)·Node16 passed; 실제262구 공개 전후 대조 및 로컬 브라우저 확인 완료. 이전 H-13: 2060 passed, 8 skipped, 2 deselected, 3 warnings in 577.39s (0:09:37)이며 이번 변경 검사와 구분 | 2026-10-09 |
+| 원격 검사 (Linux/mac CPU) | 이전 I-service2 `2dda168`: 각2121passed/8skipped/2deselected(CI37940897752). 이번 완료 커밋은 푸시 후 별도 확인. 실제 Mac 사용자 검토와 구분 | 2026-10-10 |
 | 정책 효용 | **미입증** — delta −0.0862 runs/100, 95% CI [−0.4046, +0.2304] | 2026-09-21 |
 | Claude 모델 배정 | 항목 태그 참조 — `uv run --frozen python scripts/checklist_model.py --next` | 2026-09-22 |
 | 담당 구분 | **C·D = 팀원(외부)**, 그 외 = Claude/Codex. 통합 검증은 I절 | 2026-09-22 |
