@@ -1,0 +1,55 @@
+{
+  "schema": "pitcheezy-user-device-review-v1",
+  "date": "2026-10-10",
+  "reviewed_code_commit": "24ca998368a9efbcbf831680bbbf0477979436dd",
+  "evidence_type": "user_reported_manual_check",
+  "reporter": "project_owner",
+  "user_statement": "모두 정상인데 관측위치 -0.41/2.97ft 이건 뭔뜻이야",
+  "environment": {
+    "device": "current Windows laptop",
+    "browser_context": "Codex in-app browser",
+    "exact_os_version": null,
+    "exact_browser_version": null,
+    "package": "service_review_video_20261010_v2",
+    "fresh_zip_install_by_user_confirmed": false
+  },
+  "checks": [
+    {
+      "id": "video_1_to_3",
+      "description": "First plate appearance pitch1/2/3 videos play normally.",
+      "result": "user_reported_pass"
+    },
+    {
+      "id": "reveal_on_end",
+      "description": "Actual result hidden before playback and shown after video ends.",
+      "result": "user_reported_pass"
+    },
+    {
+      "id": "navigation_reset",
+      "description": "Selecting another pitch stops previous playback and resets disclosed results.",
+      "result": "user_reported_pass"
+    },
+    {
+      "id": "third_pitch_mitt_x_only",
+      "description": "After third pitch reveal, only horizontal mitt estimate is displayed.",
+      "result": "user_reported_pass"
+    },
+    {
+      "id": "native_file_picker_cancel",
+      "description": "Opening report file picker and cancelling preserves the existing screen.",
+      "result": "user_reported_pass"
+    }
+  ],
+  "remaining": {
+    "mac_manual_check": true,
+    "iphone_manual_check": true,
+    "fresh_machine_or_zip_install_check": true
+  },
+  "scope_note": "Five interactive functions on the running Windows local review page only. User testimony, not a new independent automated observation or model/CV accuracy validation. No human annotation response created.",
+  "changes": {
+    "source_code": false,
+    "model_or_data": false,
+    "teammate_repository": false,
+    "public_deployment": false
+  }
+}
