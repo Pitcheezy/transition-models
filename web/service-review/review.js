@@ -32,6 +32,10 @@
   function validateReport(report) {
     assert(object(report) && report.schema === SCHEMA && report.profile === PROFILE,
       "지원하는 정규화 보고서 형식이 아닙니다. 원본 응답은 먼저 정규화해주세요.");
+    const units = { target_x_z: "feet", actual_x_z: "feet", speed: "mph",
+      candidate_probability: "pitch_type_selection_share", setup_x: "feet_catcher_view_right_positive" };
+    assert(object(report.units) && Object.entries(units).every(([key, value]) => report.units[key] === value),
+      "보고서의 좌표·속도·비중 단위가 지원하는 형식과 다릅니다.");
     assert(object(report.game) && integer(report.game.game_pk, 1, 2147483647) &&
       object(report.source), "경기 또는 출처 정보가 없습니다.");
     assert(["synthetic", "provided_export"].includes(report.source.input_kind) &&
@@ -61,16 +65,21 @@
       assert(object(rec) && ["ready", "unsupported", "missing"].includes(rec.status) &&
         Array.isArray(rec.candidates) && rec.candidates.length <= 30 &&
         ((rec.status === "ready") === (rec.candidates.length > 0)), "추천 상태가 올바르지 않습니다.");
-      const ranks = new Set();
+      const ranks = new Set(), pitchTypes = new Set();
+      let knownMass = 0;
       for (const c of rec.candidates) {
         assert(object(c) && integer(c.rank, 1, 30) && !ranks.has(c.rank) && text(c.pitch_type),
           "추천 후보의 순위 또는 구종이 올바르지 않습니다.");
         ranks.add(c.rank);
+        assert(!pitchTypes.has(c.pitch_type), "추천 후보에 같은 구종이 중복되어 있습니다.");
+        pitchTypes.add(c.pitch_type);
         assert(c.selection_probability === null || numeric(c.selection_probability, 0, 1),
           "구종 선택 비중이 올바르지 않습니다.");
+        if (c.selection_probability !== null) knownMass += c.selection_probability;
         assert(c.target === null || (object(c.target) && numeric(c.target.x, -20, 20) &&
           numeric(c.target.z, -20, 20)), "추천 위치가 올바르지 않습니다.");
       }
+      assert(knownMass <= 1 + 1e-6, "알려진 구종 선택 비중의 합이 100%를 넘습니다.");
       assert(object(pitch.post), "사후 데이터 컨테이너가 없습니다.");
       const a = pitch.post.actual;
       assert(a === null || object(a), "실제 투구 정보가 올바르지 않습니다.");
@@ -429,6 +438,10 @@
         make("span", "badge", `원천: ${text(report.source.upstream_kind) || "미제공"}`),
         make("span", "badge", report.source.input_kind === "synthetic" ? "합성 자료" : "제공된 내보내기"));
       const groups = groupsFor(report);
+      // Re-rendering replaces the buttons. Preserve only an already-focused pitch;
+      // do not move focus away from the selector, file input, or video controls.
+      const focusedPitchKey = $("pitch-buttons").contains(doc.activeElement) ?
+        doc.activeElement.dataset.pitchKey : null;
       replace("pa-select", ...groups.map(group => {
         const first = group.pitches[0], sit = first.pre.situation;
         const option = make("option", "", `${sit.inning}회 ${half(sit.half)} · PA ${first.at_bat_number} · ${text(first.pre.batter.name) || "타자 미제공"}`);
@@ -438,10 +451,15 @@
       replace("pitch-buttons", ...report.pitches.filter(p => p.pa_key === view.pa_key).map(p => {
         const button = make("button", "pitch-button", `${p.pitch_number}구`);
         button.type = "button";
+        button.dataset.pitchKey = p.key;
         button.setAttribute("aria-pressed", String(p.key === view.key));
         button.addEventListener("click", () => changeSelection(selectPitch(state, p.key)));
         return button;
       }));
+      if (focusedPitchKey) {
+        const replacement = Array.from($("pitch-buttons").children).find(button => button.dataset.pitchKey === focusedPitchKey);
+        if (replacement) replacement.focus({ preventScroll: true });
+      }
       say("pitch-heading", `${s.inning}회 ${half(s.half)} · ${view.pitch_number}번째 투구`);
       for (const side of ["away", "home"]) replace(side + "-score",
         make("span", "team-short", team(side)), make("span", "", s[side + "_score"]));

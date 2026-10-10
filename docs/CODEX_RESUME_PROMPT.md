@@ -1,5 +1,15 @@
 # Codex 재개 프롬프트 — 2026-09-28
 
+## 서비스 경계·브라우저 회귀 완료 — 2026-10-10
+
+H-browser1/I-service7/I-service8 구현·로컬 검사 완료. 키보드 선택 포커스, UTF-8 5MiB 출력 제한,
+단위/구종 중복/비중 합 검사를 수정했다. Windows CPU2225passed/8skipped/2deselected,
+Node44passed, Chrome154/WebKit26.5 각각13passed. 실제 Mac/아이폰 검수는 아니다.
+[근거·명령](SERVICE_REVIEW_REGRESSION_20261010.md). 선점 `c6fd940`, `b984cab`.
+H-port8 v5 소스·영상 검토팩 검사를 이어가며 원격 CI는 푸시 후 확인한다. 수정 권한은 Codex.
+팀원 저장소 접근/변경·공개 배포·사람 판정 대행 없음. A-y 보류와 기존 외부 의존은 유지한다.
+
+
 ## 최신 소스 이관 — H-port7 완료 (2026-10-10)
 
 64파일 소스 ZIP에 최신 S 정규화·검토 화면·단독 실행기·검사를 포함했다. 기준 `73cf059`, 선점 `0f165b9`.

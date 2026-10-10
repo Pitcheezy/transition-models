@@ -1,5 +1,15 @@
 # MLB P0 — Codex / Claude 인계 기록
 
+## 서비스 경계·브라우저 회귀 완료 — 2026-10-10
+
+H-browser1/I-service7/I-service8 구현·로컬 검사 완료. 키보드 선택 포커스, UTF-8 5MiB 출력 제한,
+단위/구종 중복/비중 합 검사를 수정했다. Windows CPU2225passed/8skipped/2deselected,
+Node44passed, Chrome154/WebKit26.5 각각13passed. 실제 Mac/아이폰 검수는 아니다.
+[근거·명령](SERVICE_REVIEW_REGRESSION_20261010.md). 선점 `c6fd940`, `b984cab`.
+H-port8 v5 소스·영상 검토팩 검사를 이어가며 원격 CI는 푸시 후 확인한다. 수정 권한은 Codex.
+팀원 저장소 접근/변경·공개 배포·사람 판정 대행 없음. A-y 보류와 기존 외부 의존은 유지한다.
+
+
 ## H-port7 소스 전달 완료 — 2026-10-10
 
 선점 `0f165b9`, 구현/소스 `73cf0598bd2e356ce6207365fcc702584c9699d4`. 기존54→64파일로 최신 수신 프로필·화면·실행기·검사를 포함했다. 새 형식 합성 예제와 저장소 밖 실행 회귀 검사 추가, README/STATUS/통합 안내 최신화.

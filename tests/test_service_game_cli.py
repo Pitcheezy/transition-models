@@ -407,3 +407,63 @@ def test_unknown_profile_is_rejected_without_creating_a_report(tmp_path, synthet
         output,
     )
     assert_rejected(result, output)
+
+
+def test_large_valid_unicode_export_stays_openable_in_viewer(tmp_path):
+    """A valid sub-limit input must not inflate into an unusable successful report."""
+    from copy import deepcopy
+
+    payload = json.loads(
+        (ROOT / "docs/examples/service_game_v2_export_synthetic.json").read_bytes()
+    )
+    base = next(row for row in payload["pitches"] if row["rec"]["status"] == "ready")
+    base["pitcher"]["name"] = "가" * 200
+    base["batter"]["name"] = "나" * 200
+    base["actual"] = None
+    payload["cutoff"] = None
+    payload["pitches"] = []
+    for index in range(1500):
+        row = deepcopy(base)
+        pa, number = index // 2 + 1, index % 2 + 1
+        row.update(
+            index=index,
+            at_bat_number=pa,
+            pitch_number=number,
+            key=f"900001:{pa}:{number}",
+            pa_key=f"900001:{pa}",
+        )
+        payload["pitches"].append(row)
+    source, output = tmp_path / "unicode-input.json", tmp_path / "report.json"
+    original = json.dumps(payload, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
+    assert len(original) < MAX_INPUT_BYTES
+    source.write_bytes(original)
+    result = run_cli(
+        tmp_path,
+        "--input",
+        source,
+        "--source-kind",
+        "synthetic",
+        "--profile",
+        "teammate_export_20261009_v1",
+        "--out",
+        output,
+    )
+    assert result.returncode == 0, result.stderr
+    saved = output.read_bytes()
+    assert len(saved) <= MAX_INPUT_BYTES
+    assert source.read_bytes() == original
+    report = json.loads(saved)
+    assert len(report["pitches"]) == 1500
+    assert report["pitches"][0]["pre"]["pitcher"]["name"] == "가" * 200
+
+
+def test_report_size_guard_counts_utf8_bytes_and_leaves_no_output(tmp_path):
+    """Multibyte text can cross the bound even when its character count does not."""
+    from scripts import inspect_service_game as cli
+
+    output = tmp_path / "must-not-create.json"
+    text = '"' + "가" * (MAX_INPUT_BYTES // 3 + 1) + '"'
+    assert len(text) < MAX_INPUT_BYTES < len(text.encode("utf-8"))
+    with pytest.raises(cli.AuditInputError, match="5 MiB"):
+        cli._write_report(output, tmp_path / "source.json", text)
+    assert not output.exists()

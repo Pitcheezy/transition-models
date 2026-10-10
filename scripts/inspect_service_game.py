@@ -101,6 +101,8 @@ def _read_input(path: Path) -> tuple[object, str]:
 
 def _write_report(path: Path, input_path: Path, serialized: str) -> None:
     """Create only a new explicitly requested JSON report in an existing directory."""
+    if len(serialized.encode("utf-8")) > MAX_INPUT_BYTES:
+        raise AuditInputError("Normalized report exceeds the viewer 5 MiB limit.")
     if path.suffix.lower() != ".json":
         raise AuditInputError("Output must have a .json extension.")
     if path.is_symlink():
@@ -157,7 +159,10 @@ def main(argv: list[str] | None = None) -> int:
         }
         compact = json.dumps(summary, ensure_ascii=True, allow_nan=False, separators=(",", ":"))
         if output_path is not None:
-            serialized = json.dumps(report, ensure_ascii=True, allow_nan=False, indent=2) + "\n"
+            serialized = (
+                json.dumps(report, ensure_ascii=False, allow_nan=False, separators=(",", ":"))
+                + "\n"
+            )
             _write_report(output_path, input_path, serialized)
     except (AuditInputError, ServiceGameError) as exc:
         print(f"error: {exc}", file=sys.stderr)

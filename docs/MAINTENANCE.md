@@ -255,3 +255,12 @@ Windows의기존Pillow경고2건은 남아 있고 CPU검사는 MPS/GPU성능 검
 회귀 검사는 `python -m pytest tests/test_manual_ui.py tests/test_manual_server.py`다.
 UI 검사는 Node.js에서 실제 app.js와 제어한 응답 순서를 실행하며, 브라우저 렌더링·실제 모델 성능
 검사를 뜻하지 않는다. Node.js가 없는 환경은 UI 검사를 건너뛴다.
+
+## 서비스 검토 화면의 실제 브라우저 회귀 검사
+
+`tests/browser/README.md`의 잠금된 Playwright 환경과 실행 명령을 사용한다.
+새 S 합성 예제로 실제 stdlib 서버를 띄워 파일 교체·오류 복구·공개 순서·키보드를 검사한다.
+`.github/workflows/service-review-browser.yml`은 Linux Chromium/WebKit에서 같은 검사를 실행한다.
+Python CPU/Node 단위 검사와 별도이며, 실제 영상·모델·원문·사람 응답이 필요하지 않다.
+브라우저 런타임 설치에는 다운로드가 필요하지만 시험 중 요청은 임시 localhost 서버로 제한한다.
+이 검사는 실제 Mac/아이폰 사용 확인, 사람 판독 일치도 또는 실시간 서비스 검증이 아니다.

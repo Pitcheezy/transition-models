@@ -1,0 +1,63 @@
+name: service review browser
+
+on:
+  push:
+    paths:
+      - '.github/workflows/service-review-browser.yml'
+      - 'tests/browser/**'
+      - 'web/service-review/**'
+      - 'src/integration/**'
+      - 'scripts/build_service_review.py'
+      - 'scripts/inspect_service_game.py'
+      - 'docs/examples/service_game_v2_export_synthetic.json'
+  pull_request:
+    paths:
+      - '.github/workflows/service-review-browser.yml'
+      - 'tests/browser/**'
+      - 'web/service-review/**'
+      - 'src/integration/**'
+      - 'scripts/build_service_review.py'
+      - 'scripts/inspect_service_game.py'
+      - 'docs/examples/service_game_v2_export_synthetic.json'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: service-review-browser-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  browser:
+    name: Synthetic review / ${{ matrix.engine }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    strategy:
+      fail-fast: false
+      matrix:
+        engine: [chromium, webkit]
+    env:
+      PYTHONUTF8: '1'
+      BROWSER_ENGINE: ${{ matrix.engine }}
+      PYTHON_BIN: python
+    steps:
+      # These tests do not load LFS media, real exports, model weights or human labels.
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: tests/browser/package-lock.json
+      - name: Install locked browser test dependencies
+        working-directory: tests/browser
+        run: npm ci --ignore-scripts
+      - name: Install the tested engine
+        working-directory: tests/browser
+        run: npx playwright install --with-deps ${{ matrix.engine }}
+      - name: Test synthetic local service review
+        working-directory: tests/browser
+        run: npm test

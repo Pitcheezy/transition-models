@@ -14,7 +14,7 @@ function fixture() {
     post: { actual: { pitch_type: "SECRET_ACTUAL", pitch_label: "SECRET_ACTUAL_LABEL", x: 0, z: 0,
       speed_mph: 0, result_label: "SECRET_RESULT", play_text: "SECRET_PLAY", setup_status: "estimated", setup_x_ft: 0 } }
   });
-  return { schema: api.SCHEMA, profile: api.PROFILE, game: { game_pk: 123, kst_date: "2026-10-09", away_team: "A", home_team: "B" },
+  return { schema: api.SCHEMA, profile: api.PROFILE, units: { target_x_z: "feet", actual_x_z: "feet", speed: "mph", candidate_probability: "pitch_type_selection_share", setup_x: "feet_catcher_view_right_positive" }, game: { game_pk: 123, kst_date: "2026-10-09", away_team: "A", home_team: "B" },
     source: { input_kind: "synthetic", upstream_kind: "archive", sha256: "a".repeat(64) },
     zone_bounds: { bottom: 1.5, top: 3.5 }, pitches: [makePitch(1, 1), makePitch(1, 2), makePitch(2, 1, "unsupported"), makePitch(2, 2, "missing")] };
 }
@@ -315,3 +315,35 @@ for (const [name, mutate] of [
     assert.throws(() => api.initialState(report), /식별자/);
   });
 }
+
+for (const field of ["target_x_z", "actual_x_z", "speed", "candidate_probability", "setup_x"]) {
+  test(`report rejects contradictory or missing units: ${field}`, () => {
+    for (const value of ["meters", null, undefined]) {
+      const report = fixture(); report.units[field] = value;
+      assert.throws(() => api.validateReport(report));
+    }
+  });
+}
+test("report must carry the current profile unit declaration", () => {
+  const report = fixture(); delete report.units;
+  assert.throws(() => api.validateReport(report));
+});
+test("uploaded candidate shares cannot sum above one and duplicate pitch types are rejected", () => {
+  const excessive = fixture();
+  excessive.pitches[0].pre.recommendation.candidates.forEach(c => { c.selection_probability = .8; });
+  assert.throws(() => api.validateReport(excessive));
+  const duplicate = fixture();
+  duplicate.pitches[0].pre.recommendation.candidates[1].pitch_type = "FF";
+  assert.throws(() => api.validateReport(duplicate));
+});
+test("partial shares and null remain unchanged, matching Python's mass tolerance", () => {
+  const report = fixture(), candidates = report.pitches[0].pre.recommendation.candidates;
+  candidates[0].selection_probability = .8;
+  const before = JSON.stringify(candidates);
+  api.validateReport(report);
+  assert.equal(JSON.stringify(candidates), before);
+  candidates[0].selection_probability = .6; candidates[1].selection_probability = .4000005;
+  assert.doesNotThrow(() => api.validateReport(report));
+  candidates[1].selection_probability = .400002;
+  assert.throws(() => api.validateReport(report));
+});
