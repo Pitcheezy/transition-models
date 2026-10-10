@@ -1,5 +1,21 @@
 # Codex 재개 프롬프트 — 2026-09-28
 
+## CV-30 구간 연결 완료 · Mac 실기기 대기 — 2026-10-11
+
+사용자 요청6번: 기존 CV24 자동 관측14개를 영상 시계·발행 시각에 연결한 비공개 개발 뷰어를 구현했다.
+입력 기준 구간 안10개/구간 앞4개, 수용14개, 확정 미트0개, 보수적 투구 전 시각 충족0/3구다.
+새 모델 실행·독립 평가·전체 타석 완료가 아니다. 기존 timing/M3/사람 응답·팀원 저장소·공개 Site는 변경하지 않았다.
+Python80passed·Node26cases·Windows Chrome154 브라우저15시나리오 통과. 전체 CPU2254passed/8skipped/2deselected(406.51초); 이후 추가한 Range 서버22검사는 관련80검사에 포함해 별도 통과했다. 기존 Pillow 테스트의 폐기 예정 API 경고2개가 있다.
+최종 팩 `outputs/cv_replay_view_20261011_v4`(21파일,52899890bytes); 새 Range 서버는 기존 검토 handler를 재사용한다.
+현재 로컬 주소는 `http://127.0.0.1:59158/`이며 서버 실행 중인 이 컴퓨터에서만 열린다.
+[범위·재현](CV_OBSERVATION_PLAYBACK_20261011.md) · [영수증](results/cv_followup_20261011/observation_playback_v1.json).
+
+요청4번 I-device2는 Mac 호스트 DNS 실패와 사용 가능한 원격 실행 경로 부재로 실제 검사를 못 했다.
+연결 정보를 요청했으며 기다린다. Windows/headless/hosted macOS CI를 실기기 완료로 처리하지 않는다.
+v5 서비스 검토팩은 그대로다. CV-5a4/CV-5a 엄격 조건·CV-6/CV-7·A-y 사용자 보류도 유지한다.
+수정 권한 반납. 다음 도구는 새 영상/독립 응답/실제 Mac 연결 등 조건이 도착한 단위만 재개한다.
+
+
 ## 독립 서비스 작업·v5 이관 완료 — 2026-10-10
 
 H-browser1/I-service7/I-service8/H-port8 완료. 소스 `fafc9c69b371bb0b6831fc2f03e3e24cabc78cf8`.

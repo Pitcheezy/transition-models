@@ -77,3 +77,12 @@ regression test, not a performance study or an accuracy result. No clips are inc
 video codec playback, real Mac/iPhone use, human acceptance, live feeds and teammate
 model execution require separate evidence. Headless WebKit is not an actual Safari
 or iPhone verification.
+
+## Private observation playback (CV-30)
+
+`observation-playback-private.cjs` is a separate, opt-in Chromium check of the existing
+CV24 private video and saved observations. It is **not** run by `npm test` or public CI.
+It records 15 playback/publication/seek checks and screenshots in a private output path.
+See [the run instructions](../../docs/CV_OBSERVATION_PLAYBACK_20261011.md).
+Do not upload its MLB screenshots to public CI artifacts. The portable synthetic
+publication gates run through `tests/test_observation_playback_ui.py` in normal pytest.
