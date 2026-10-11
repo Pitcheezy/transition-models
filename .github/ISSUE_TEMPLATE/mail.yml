@@ -1,0 +1,44 @@
+name: 협업 우편
+description: 다른 레포에서 이 레포로 보내는 요청·질문·알림
+title: "[요청] "
+labels: [mail]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        질문·알림이면 제목 접두어를 바꿔 주세요. 공개 이슈입니다.
+        비밀 값·서비스 접속 주소·개인정보·개인 기기 경로·비공개 자료를 넣지 마세요.
+        우편은 요청이며 실행·계약 변경·운영 교체 권한을 부여하지 않습니다.
+  - type: input
+    id: sender
+    attributes:
+      label: 보낸 쪽
+      description: AI / 레포 / 기준 커밋. 개인 연락처는 쓰지 않습니다.
+    validations:
+      required: true
+  - type: textarea
+    id: request
+    attributes:
+      label: 내용
+      description: 무엇이 필요한지와 확인 가능한 근거를 적습니다.
+    validations:
+      required: true
+  - type: input
+    id: contract
+    attributes:
+      label: 계약 버전
+      description: 관련 계약 이름·버전. 없으면 해당 없음으로 적습니다.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: 합격 기준
+      description: 어떤 산출물이나 확인이 있으면 끝나는지 적습니다.
+    validations:
+      required: true
+  - type: input
+    id: deadline
+    attributes:
+      label: 기한
+      description: 필요한 경우 날짜와 시간대를 적습니다.

@@ -149,20 +149,25 @@ uv run --frozen python -m http.server 8786 --bind 127.0.0.1 --directory web/pitc
 ~~~text
 우리 transition-models 저장소에서 작업해 주세요.
 AGENTS.md, CHECKLIST.md 상단, docs/CODEX_CLOUD_HANDOFF.md,
-docs/OPERATIONAL_VALIDATION_2026-09-21.md를 먼저 읽고 현재 작업 범위를 확인하세요.
+docs/OPERATIONAL_VALIDATION_2026-09-21.md와 docs/COLLABORATION_PROTOCOL.md를 먼저 읽고
+양쪽 상황판(우리 #3, Song #35) 및 우리 열린 mail 본문·댓글을 확인하세요.
 
 git status와 원격 주소를 확인하고 origin/main을 fetch하여 최신 커밋과 HEAD를 기록하세요.
 H-main1 병합 커밋 39ffcd0이 실제 원격 main에 포함되는지 확인하세요. 기존 변경은 보존하고,
 최신 main을 기준으로 짧은 codex/<작업명> 브랜치에서 한 작업 단위만 진행하세요.
 main에 직접 push하지 말고 검증 결과를 포함한 PR로 반환하세요.
-CHECKLIST.md와 관련 인수인계 문서를 작업과 같은 커밋에서 갱신하세요.
+착수할 때 우리 board 진행 중과 CHECKLIST를 함께 선점하세요.
+CHECKLIST.md와 관련 인수인계 문서를 작업과 같은 커밋에서 갱신하고,
+종료 시 우리 board에 한 일·커밋·다음을 댓글로 남긴 뒤 자기 선점 줄만 지우세요.
 
 먼저 이 문서의 Linux CPU 검사와 합성 Chromium/WebKit 검사를 재현하세요.
 비공개 원문·영상·가중치가 없으면 누락을 기록하고 합성 검증 범위만 보고하세요.
 검사 통과를 모델/API 실제 실행, 새 정확도, 사람 검토, 실제 기기 검수로 표현하지 마세요.
 Cloud localhost는 노트북의 서버가 아닙니다.
 
-SongRoute/pitcheezy 등 팀원 저장소·프로세스·배포에는 접근하거나 변경하지 마세요.
+SongRoute/pitcheezy의 승인된 공개 상황판·규약·우편은 읽기만 하세요.
+그 외 팀원 코드·프로세스·배포에는 접근하거나 변경하지 마세요.
+공개 이슈에 비밀 값·서비스 접속 주소·개인정보를 올리지 마세요.
 A-y 보류와 외부 입력 조건을 유지하세요. 새 기능·공개 배포·팀원 메시지 전송은
 명시적인 별도 요청이 있어야 합니다.
 실행 가능한 등록 작업이 없다면 임의 작업을 만들지 말고 현재 상태와 필요한 입력을 보고하세요.
