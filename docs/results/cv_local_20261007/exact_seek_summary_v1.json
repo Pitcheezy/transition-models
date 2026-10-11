@@ -1,0 +1,71 @@
+{
+  "schema": "cv_exact_seek_summary_v1",
+  "comparison": "Same14knowninputs/model/config vs preserved CV23 execution; historical timing comparison, not randomized trial or live guarantee.",
+  "counts": {
+    "attempted": 14,
+    "accepted": 14,
+    "candidate": 5,
+    "ambiguous": 1,
+    "no_candidate": 8,
+    "error": 0,
+    "not_attempted": 0,
+    "verified_mitt": 0,
+    "publication_within_5s": 14,
+    "candidate_publication_within_5s": 5
+  },
+  "publication_seconds": {
+    "n": 14,
+    "min": 3.797,
+    "median": 3.8825000000000003,
+    "max": 4.047
+  },
+  "startup_seconds": 18.563,
+  "whole_command_seconds": 92.19232099992223,
+  "loop_seconds": 69.031,
+  "first_to_last_schedule_seconds": 65,
+  "input_and_candidate_matches": 14,
+  "phase_seconds": {
+    "input_binding_verification": {
+      "median": 0.219,
+      "max": 0.25
+    },
+    "frame_extraction": {
+      "median": 0.8594999999999999,
+      "max": 0.922
+    },
+    "request_preparation": {
+      "median": 0.6645000000000001,
+      "max": 0.921
+    },
+    "dispatch_overhead": {
+      "median": 0.0,
+      "max": 0.016
+    },
+    "observer_process": {
+      "median": 1.265,
+      "max": 1.328
+    },
+    "output_binding_verification": {
+      "median": 0.203,
+      "max": 0.219
+    },
+    "response_validation_publication": {
+      "median": 0.656,
+      "max": 0.688
+    }
+  },
+  "after_interval_end_publications": [
+    {
+      "index": 13,
+      "relative_seconds": 69.015
+    }
+  ],
+  "frozen_m3_files": 25,
+  "frozen_m3_unchanged": 25,
+  "worker_exit_confirmed": true,
+  "model_report_sha256": "33539f9201f98fabe4e9678f241aff95fa4200bcdfb80908a0969a01fab59a77",
+  "human_review_responses_created": 0,
+  "accuracy_evaluated": false,
+  "live_availability_verified": false,
+  "service_promotion": false
+}

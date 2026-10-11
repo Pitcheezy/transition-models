@@ -1,0 +1,3415 @@
+{
+  "schema": "mlb_scoreboard_ocr_provenance_v1",
+  "game_pk": 747139,
+  "recorded_at": "2026-09-27",
+  "recorded_by": "Codex A-15 PA79-82 merge (scripts/70)",
+  "scope": "Refresh 'pa79_82' of OCR v1 (templates from PAs [1, 2, 9]) by scripts/70_refresh_ocr_reports.py: predictions, held-out score, negatives and a repeat check regenerated after the eval set changed. Code and template equality with the reference commit is recorded in code_and_templates.",
+  "git_reference": {
+    "commit": "16e0b18",
+    "meaning": "Commit whose predictions count as previous and whose code/templates the lf-normalized equality flags are computed against."
+  },
+  "runtime": {
+    "python_version": "3.12.12",
+    "python_build": "3.12.12 (main, Feb 12 2026, 00:40:26) [MSC v.1944 64 bit (AMD64)]",
+    "numpy_version": "2.4.4",
+    "pillow_version": "12.2.0",
+    "operating_system": "Windows",
+    "machine": "AMD64"
+  },
+  "source": {
+    "page_url": "https://www.mlb.com/video/9-30-24-mets-win-epic-game-in-playoff-clincher",
+    "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+    "duration_seconds": 9340.748083
+  },
+  "manifest_sha256": "4d036f94f5b5bddc682e846960dbc40de5ae35c4e023581efa12167475e062da",
+  "code_and_templates": [
+    {
+      "path": "docs/results/mlb_p0/sny_digit_templates_v1.json",
+      "sha256": "409a5954bba612c2c094e3ce156b2eb88a965c1eb5943dbc8b1146ddc5033d7d",
+      "bytes": 215089,
+      "lf_normalized_equal_to_reference": true,
+      "json_semantically_equal_to_reference": true
+    },
+    {
+      "path": "src/vision/sny_scoreboard.py",
+      "sha256": "d77f4770ab06e5ae522650ac325e6f048b508cce1bbd56f391826976fbeded19",
+      "bytes": 22226,
+      "lf_normalized_equal_to_reference": true
+    },
+    {
+      "path": "scripts/66_sny_scoreboard_ocr.py",
+      "sha256": "7ed65983d2e368842c071d200f200575c8a04752c6baba0d5f56c413b8940da1",
+      "bytes": 13466,
+      "lf_normalized_equal_to_reference": true
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "docs/results/mlb_p0/game_747139_scoreboard_evalset.json",
+      "sha256": "243076898baa36e1ee4eb8e6ee5e0b3af1084406ce42ec793adc271b2609ef87",
+      "bytes": 958187
+    },
+    {
+      "path": "docs/results/mlb_p0/game_747139_scoreboard_ocr_v1_predictions.json",
+      "sha256": "110fbcefe1aff9dc90318f5dab7469cb08fd29e23587f36ed2fcf1166ec6855c",
+      "bytes": 123421
+    },
+    {
+      "path": "docs/results/mlb_p0/game_747139_scoreboard_ocr_v1.json",
+      "sha256": "86225f6a354d3687862a0d97a16945cb005e0904b46809f3ab903851fab1feac",
+      "bytes": 6706
+    },
+    {
+      "path": "docs/results/mlb_p0/game_747139_scoreboard_negatives_score_v0.json",
+      "sha256": "c96fd45a0058817bc696542ddfea0905ea482fba40000f20a988c0b835dd77b1",
+      "bytes": 7852
+    },
+    {
+      "path": "docs/results/mlb_p0/game_747139_scoreboard_review.json",
+      "sha256": "836b5e33fd371b60c6799daeb34e27f173a85dfc2e290cc38ece5363dc01cb90",
+      "bytes": 294383
+    },
+    {
+      "path": "docs/results/mlb_p0/game_747139_timing.json",
+      "sha256": "9781a52527f5a91069548b5017cd927c94d4959df944a93cd54ec5be6c9760b7",
+      "bytes": 603424
+    }
+  ],
+  "frame_cache": {
+    "path_rule": "outputs/frames/evalset_<frame_seconds:.2f>.jpg",
+    "frame_count": 297,
+    "complete": true,
+    "hash_algorithm": "sha256",
+    "scope": "Exact current JPEG bytes, not a full-video hash. Cache must be transferred separately.",
+    "frames": [
+      {
+        "game_pk": 747139,
+        "at_bat_number": 1,
+        "pitch_number": 1,
+        "play_id": "b757bb63-71f8-4336-a673-92291f7d8365",
+        "frame_seconds": 75.25,
+        "path": "outputs/frames/evalset_75.25.jpg",
+        "sha256": "6b8adfff7a5259a8ff13c77d4ec3e01cfedae86dfb50dd8ea237c06b2ab26a4d",
+        "bytes": 207144
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 1,
+        "pitch_number": 2,
+        "play_id": "4b506b6d-a89a-4a04-9c43-679800254540",
+        "frame_seconds": 87.5,
+        "path": "outputs/frames/evalset_87.50.jpg",
+        "sha256": "0cf72f1080ec614c29485ff629da08155e36a94d560ce84cf71a5be2ab778722",
+        "bytes": 168254
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 1,
+        "pitch_number": 3,
+        "play_id": "10d38f66-d72b-4e0e-95b5-ed7cf3d2d31c",
+        "frame_seconds": 102.8,
+        "path": "outputs/frames/evalset_102.80.jpg",
+        "sha256": "6aa4ed82d230a9e16d304f489e377c0f8081bcf769871d191b67cfa36dd0d135",
+        "bytes": 159740
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 1,
+        "pitch_number": 4,
+        "play_id": "65195cfd-db49-4482-83d8-52b087d2d99f",
+        "frame_seconds": 118.75,
+        "path": "outputs/frames/evalset_118.75.jpg",
+        "sha256": "b9dc314e75a7f1cf7a97a187242ebb4b7c1db54dc8850e04a6f26ba95bc52ed1",
+        "bytes": 182627
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 1,
+        "pitch_number": 5,
+        "play_id": "7b98f509-fba7-458e-8256-d731bdb2e8a3",
+        "frame_seconds": 133.25,
+        "path": "outputs/frames/evalset_133.25.jpg",
+        "sha256": "126b4f0d8f304b2b2ff8503379aa9ab827317f062ca6c625620052f878535737",
+        "bytes": 169567
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 2,
+        "pitch_number": 1,
+        "play_id": "192e427a-164c-4911-96c0-fb85ea2f9d0e",
+        "frame_seconds": 180.25,
+        "path": "outputs/frames/evalset_180.25.jpg",
+        "sha256": "c71dec83537a07f0d1e0e3aef466a1fb44577e75a638bba2515fe2ab4f8930d2",
+        "bytes": 128997
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 2,
+        "pitch_number": 2,
+        "play_id": "19d09f59-514d-4a50-b209-93e39699d36e",
+        "frame_seconds": 199.25,
+        "path": "outputs/frames/evalset_199.25.jpg",
+        "sha256": "4b0d59f747f4ac006d17badb28b495d1cc9c8c8aae1b5234889669ac47351b5c",
+        "bytes": 140945
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 2,
+        "pitch_number": 3,
+        "play_id": "cbefa047-c2f9-4e9b-a74f-69d8ad042942",
+        "frame_seconds": 216.0,
+        "path": "outputs/frames/evalset_216.00.jpg",
+        "sha256": "186c7d009ef25602aaf62626b0b70d3a10a063baf836c5253df73836e68ba184",
+        "bytes": 147627
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 3,
+        "pitch_number": 1,
+        "play_id": "ca0fa379-705a-4020-b4da-179793f283d8",
+        "frame_seconds": 249.75,
+        "path": "outputs/frames/evalset_249.75.jpg",
+        "sha256": "d0cfef93afb1e8c52423fd6ffbbcec4eb16757bd89426ac76e99e8c7f9abf9b6",
+        "bytes": 153454
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 3,
+        "pitch_number": 2,
+        "play_id": "61cef753-822d-4289-9ade-fb71ae880011",
+        "frame_seconds": 271.5,
+        "path": "outputs/frames/evalset_271.50.jpg",
+        "sha256": "592dc0fd443c36e199c0326c24d987d659118990f7a40c9e3dd8a2ffa602f050",
+        "bytes": 132386
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 3,
+        "pitch_number": 3,
+        "play_id": "6e11b966-89ee-47d7-bf5b-90be38c9ed86",
+        "frame_seconds": 287.5,
+        "path": "outputs/frames/evalset_287.50.jpg",
+        "sha256": "366be15bee1fd32a966f0e0ec886e6fad5bb20ff696ac059eec2daac63bcd1ec",
+        "bytes": 148122
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 4,
+        "pitch_number": 1,
+        "play_id": "f148a768-0ed1-4b4a-8fa9-7b48d39e7f32",
+        "frame_seconds": 327.75,
+        "path": "outputs/frames/evalset_327.75.jpg",
+        "sha256": "a913922cadb5bd04bedf09cb811b370de73939e35d0322695a9e0e30dc7a488c",
+        "bytes": 161890
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 4,
+        "pitch_number": 2,
+        "play_id": "8787263c-adad-431a-b1ce-27e25f5ce0cb",
+        "frame_seconds": 341.5,
+        "path": "outputs/frames/evalset_341.50.jpg",
+        "sha256": "bff0b93363e7e9627deb0ab9d142c5539d35546bbe3bebc48a9461dac4d4a588",
+        "bytes": 138253
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 5,
+        "pitch_number": 1,
+        "play_id": "c2b7635d-e9c4-4232-a21b-97b97877be21",
+        "frame_seconds": 356.25,
+        "path": "outputs/frames/evalset_356.25.jpg",
+        "sha256": "088b19dc1bc21e7ee399dd108af452d4aeb24c1693e5442dafb46b4a276c1961",
+        "bytes": 132717
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 5,
+        "pitch_number": 2,
+        "play_id": "e3476495-17d5-4a1b-a908-a187cc329112",
+        "frame_seconds": 369.0,
+        "path": "outputs/frames/evalset_369.00.jpg",
+        "sha256": "d81269b3aa6548bd253c1c8af97cb2c5abc8c2a3ad65a98d71d6d4f98558839a",
+        "bytes": 141580
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 5,
+        "pitch_number": 3,
+        "play_id": "aa1de515-a7ff-4d05-8a33-bd9f90df993b",
+        "frame_seconds": 387.25,
+        "path": "outputs/frames/evalset_387.25.jpg",
+        "sha256": "cca445e4b03dae16b07df7f8a2a3738fba8a02cec54fec236b7dcd17bef6ee4f",
+        "bytes": 136175
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 5,
+        "pitch_number": 4,
+        "play_id": "81336985-53ed-4ca7-a799-303b4cdf544b",
+        "frame_seconds": 407.0,
+        "path": "outputs/frames/evalset_407.00.jpg",
+        "sha256": "5fdd5ff463a61e3ca0e9228ad90ca455eae5cffe53e526191e8cb0a764ac2536",
+        "bytes": 137772
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 5,
+        "pitch_number": 6,
+        "play_id": "82678ad0-6f37-4f77-b230-42284a020e98",
+        "frame_seconds": 446.75,
+        "path": "outputs/frames/evalset_446.75.jpg",
+        "sha256": "1265753fb8c2dda21b2eb362d9a260065ff4372aeba6c9ebf333de5ffe4d9191",
+        "bytes": 137003
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 6,
+        "pitch_number": 1,
+        "play_id": "fb9e321e-1c40-4fec-994b-7e6ece2b9936",
+        "frame_seconds": 481.0,
+        "path": "outputs/frames/evalset_481.00.jpg",
+        "sha256": "a66a8cd7d468d2e035fc67818910041dd0bfdcff01e7c25f5890291800fd8372",
+        "bytes": 116103
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 6,
+        "pitch_number": 2,
+        "play_id": "eca429e5-5002-4855-9d34-1107e82ea67c",
+        "frame_seconds": 525.5,
+        "path": "outputs/frames/evalset_525.50.jpg",
+        "sha256": "cf06d87380ee1f64737206f970ed890f844b6f587bfa886c3dcbca062f8faa96",
+        "bytes": 164833
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 6,
+        "pitch_number": 3,
+        "play_id": "ac3a65fd-1b28-46eb-b5a4-9d64841cbb25",
+        "frame_seconds": 548.95,
+        "path": "outputs/frames/evalset_548.95.jpg",
+        "sha256": "af7c2db04e8ee84ce60b39e2064066fde78600919c78032aaaf4306e0288290f",
+        "bytes": 128480
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 6,
+        "pitch_number": 4,
+        "play_id": "2e3f6c0e-7e2f-495e-9ed6-cd69ed6c6d8d",
+        "frame_seconds": 576.5,
+        "path": "outputs/frames/evalset_576.50.jpg",
+        "sha256": "3dd1e85c8298bd9652d49ea3d97454829d8f227c5fb8697920fe5915eb10656a",
+        "bytes": 138669
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 6,
+        "pitch_number": 5,
+        "play_id": "15c7216f-3f50-439a-bdf2-1412ba6c50c6",
+        "frame_seconds": 611.45,
+        "path": "outputs/frames/evalset_611.45.jpg",
+        "sha256": "eb6b5c3467f015b61593cfd4cfd5ea523570739b1838914d460e253989ff0a2d",
+        "bytes": 135446
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 6,
+        "pitch_number": 6,
+        "play_id": "f8675759-7774-4dca-80a2-a9c0e8fe294f",
+        "frame_seconds": 663.5,
+        "path": "outputs/frames/evalset_663.50.jpg",
+        "sha256": "51e83301e9240fb42a0eb7c9ecf0405990a935f701d1c5534a8d28f29eb2e67e",
+        "bytes": 134260
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 7,
+        "pitch_number": 1,
+        "play_id": "6edcbd65-ca94-49e6-b817-7e7b6460f2fd",
+        "frame_seconds": 698.2,
+        "path": "outputs/frames/evalset_698.20.jpg",
+        "sha256": "c53a05d36bc9dbe072ee0944a171a3afb3cfae2a5c83c413d17bca9687189be4",
+        "bytes": 159521
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 7,
+        "pitch_number": 2,
+        "play_id": "a72b3e4f-95db-4104-8354-019bcf863370",
+        "frame_seconds": 713.75,
+        "path": "outputs/frames/evalset_713.75.jpg",
+        "sha256": "b63c24cbfdb96c44034b5cd2274f7f89cbf0290eb68c65471c13ed95598f67ff",
+        "bytes": 134068
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 7,
+        "pitch_number": 3,
+        "play_id": "d926ce0b-89b8-4db1-b647-e48872027663",
+        "frame_seconds": 738.25,
+        "path": "outputs/frames/evalset_738.25.jpg",
+        "sha256": "cfe164f1513832af4dd6f10d4dcfae0e8b468422fb369f5a633fd2e2e5683d28",
+        "bytes": 136085
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 7,
+        "pitch_number": 4,
+        "play_id": "b234deef-0c7d-4ca5-8a17-7c447d9bdb45",
+        "frame_seconds": 756.5,
+        "path": "outputs/frames/evalset_756.50.jpg",
+        "sha256": "0d7eb646dbb46f3e1b1f3337f06d5ce492f58963b1237db4e1cfa124b6c7b9b2",
+        "bytes": 128064
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 8,
+        "pitch_number": 1,
+        "play_id": "d7262d22-5911-4317-b86e-a9e72f40ba00",
+        "frame_seconds": 777.5,
+        "path": "outputs/frames/evalset_777.50.jpg",
+        "sha256": "55f5cfc19379f2c25c5d820e97d6c8f0a8b59c2e485d8656d88f7472b33674a9",
+        "bytes": 207328
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 8,
+        "pitch_number": 2,
+        "play_id": "fac66f7b-fa33-4148-9448-1bb3676369a7",
+        "frame_seconds": 792,
+        "path": "outputs/frames/evalset_792.00.jpg",
+        "sha256": "986d1287a7b7aa3b34d3420acd760a526022b81e9df74b958c3a9791479ee761",
+        "bytes": 141871
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 8,
+        "pitch_number": 3,
+        "play_id": "5fff0707-e477-45a9-9774-c19e32c932c1",
+        "frame_seconds": 809.5,
+        "path": "outputs/frames/evalset_809.50.jpg",
+        "sha256": "6f3cb2399b12759fd9d42de9e3c295a19a56aa564ae1c340fa3cc6f7a3641a74",
+        "bytes": 130304
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 8,
+        "pitch_number": 4,
+        "play_id": "fe220a74-96e3-40dd-b6e1-0a7571fb8e5f",
+        "frame_seconds": 824.25,
+        "path": "outputs/frames/evalset_824.25.jpg",
+        "sha256": "b937e81c54017185bb100091f2930721d0b205fa51c3a212320a20cb3af390bf",
+        "bytes": 150704
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 9,
+        "pitch_number": 1,
+        "play_id": "b1f3d145-fa41-4df0-a21a-98fb25c9ad28",
+        "frame_seconds": 849.15,
+        "path": "outputs/frames/evalset_849.15.jpg",
+        "sha256": "9ed90a69ef48fb6979c66671236e7888af69800ad73a16316d39e33f87f793b1",
+        "bytes": 133907
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 9,
+        "pitch_number": 2,
+        "play_id": "c979e189-fec4-492b-ab06-97bfc24711ff",
+        "frame_seconds": 865.3,
+        "path": "outputs/frames/evalset_865.30.jpg",
+        "sha256": "599866bde5eb4fce9b1c5eee2b0e526c0e9909efe03287a54aba46097cd17e47",
+        "bytes": 158811
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 10,
+        "pitch_number": 1,
+        "play_id": "4efac6aa-bc10-46ab-87af-dfa2e9478ec2",
+        "frame_seconds": 896.6,
+        "path": "outputs/frames/evalset_896.60.jpg",
+        "sha256": "08a8187048f7e0ebcda689b540fccc96066116bcae7a81db4292cd368e5cb9a2",
+        "bytes": 128639
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 10,
+        "pitch_number": 2,
+        "play_id": "255fce6d-4137-4a82-ae77-5515d9dff481",
+        "frame_seconds": 913.85,
+        "path": "outputs/frames/evalset_913.85.jpg",
+        "sha256": "216f71334d2b08b1df2ec52914d7847107847bc8599faf78bbf5c83c957951e3",
+        "bytes": 144282
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 10,
+        "pitch_number": 3,
+        "play_id": "2538eed2-7573-4b18-ba94-457a497d1b8e",
+        "frame_seconds": 933.05,
+        "path": "outputs/frames/evalset_933.05.jpg",
+        "sha256": "65980c7530baa2478a46b5ee99c01d1b688f2a149b4963011c06b97d21985a72",
+        "bytes": 165124
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 10,
+        "pitch_number": 4,
+        "play_id": "ce4458af-43ab-482d-9cc7-40d4ac6f328c",
+        "frame_seconds": 952.3,
+        "path": "outputs/frames/evalset_952.30.jpg",
+        "sha256": "060c31c5d3673ad75eb0fc98ebfa059e2120e55e03b8e60af2a7130e55cd8731",
+        "bytes": 136732
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 10,
+        "pitch_number": 5,
+        "play_id": "7eb061fe-bf38-485e-b5be-2bb8089b33c3",
+        "frame_seconds": 972.55,
+        "path": "outputs/frames/evalset_972.55.jpg",
+        "sha256": "e345c06c5ea487f63250c50828a13f00487095c51657915d42f7aaa7c7d742b0",
+        "bytes": 133885
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 10,
+        "pitch_number": 6,
+        "play_id": "2cee002c-2761-4342-8913-9d23b56c004c",
+        "frame_seconds": 994.35,
+        "path": "outputs/frames/evalset_994.35.jpg",
+        "sha256": "750d32d4ebdc94fa72c8f2e17a9677fcdc74d9e2a10ac1b74617f89883df015e",
+        "bytes": 127547
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 11,
+        "pitch_number": 1,
+        "play_id": "09592583-1ca6-4387-96a9-1c6be35aa7e0",
+        "frame_seconds": 1038.0,
+        "path": "outputs/frames/evalset_1038.00.jpg",
+        "sha256": "296f380cb48ac4fc34281cc4e1057d5f2ee7d4e4015b2087ef147d77ee1c793a",
+        "bytes": 171030
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 11,
+        "pitch_number": 2,
+        "play_id": "1c6c8f43-62b8-42cd-9f50-3955fafd7f51",
+        "frame_seconds": 1052.25,
+        "path": "outputs/frames/evalset_1052.25.jpg",
+        "sha256": "92b08d7c55142bccb065d7f975dced1fa2a9a8593968105a07803a801f28de5a",
+        "bytes": 132032
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 11,
+        "pitch_number": 3,
+        "play_id": "f5c96292-f031-48f8-9fc2-26a600853fbe",
+        "frame_seconds": 1073.75,
+        "path": "outputs/frames/evalset_1073.75.jpg",
+        "sha256": "66f13b9e60e4081eaff2635641e15e0dd75c170e558f274ce61a69632fe4a1fc",
+        "bytes": 137423
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 11,
+        "pitch_number": 4,
+        "play_id": "1bd3180d-b25c-4872-881a-632fda19769c",
+        "frame_seconds": 1092.75,
+        "path": "outputs/frames/evalset_1092.75.jpg",
+        "sha256": "90e0564cc2f34be4d98031bf94c6cf6ed5a9404333976a559fe67413c7a59ba9",
+        "bytes": 138101
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 11,
+        "pitch_number": 5,
+        "play_id": "93b49a1d-8aef-45f6-aa77-2abaf94e44c7",
+        "frame_seconds": 1114.0,
+        "path": "outputs/frames/evalset_1114.00.jpg",
+        "sha256": "0ce72b017e5c2b417f4d2bf69a3d3aeed228b9d6fb9b5134a377535bccef05f8",
+        "bytes": 138393
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 12,
+        "pitch_number": 1,
+        "play_id": "65879bdc-832f-4d63-8f3e-f92436f6fd95",
+        "frame_seconds": 1158.0,
+        "path": "outputs/frames/evalset_1158.00.jpg",
+        "sha256": "978a44a68cfcfed40531c83a1199d7448cb4d81c6a4b5cc35e6b263651a682d9",
+        "bytes": 127191
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 12,
+        "pitch_number": 2,
+        "play_id": "be5dbc3b-86ab-4d54-8cf4-80005a305a62",
+        "frame_seconds": 1172.75,
+        "path": "outputs/frames/evalset_1172.75.jpg",
+        "sha256": "2592932f10b2eec43d98ec775d97f2c5cdd29a7ae7d8ed60cc460e775bd8e779",
+        "bytes": 133336
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 13,
+        "pitch_number": 1,
+        "play_id": "59a2a6f2-0202-4334-9283-b151e1219f06",
+        "frame_seconds": 1214.25,
+        "path": "outputs/frames/evalset_1214.25.jpg",
+        "sha256": "9ca864eb177253f9465c59f57386fe7ffc7e81865dbe7246d40268439222d1c8",
+        "bytes": 132155
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 13,
+        "pitch_number": 2,
+        "play_id": "050e001f-c25b-4da3-a76b-9c5eaf2e08b0",
+        "frame_seconds": 1235.25,
+        "path": "outputs/frames/evalset_1235.25.jpg",
+        "sha256": "9871e2e6598a935d2543cac000d36e07d74b866dda7d51ec6adc53842dd73bb6",
+        "bytes": 168867
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 13,
+        "pitch_number": 3,
+        "play_id": "4647956d-c63a-4166-8050-61c0204a23fa",
+        "frame_seconds": 1255.75,
+        "path": "outputs/frames/evalset_1255.75.jpg",
+        "sha256": "a5cd0f05cb9438d678d4aa54cc58ffb95c48a3e2c4590f48d62b024dfc73520d",
+        "bytes": 116809
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 14,
+        "pitch_number": 1,
+        "play_id": "c778da9f-7af2-4ccc-b526-6bcd8de6ed7e",
+        "frame_seconds": 1306.25,
+        "path": "outputs/frames/evalset_1306.25.jpg",
+        "sha256": "f3453e2a7c8ca9178b031fdf26edf54487fc97b545ea5749c9278b84040f8fb3",
+        "bytes": 233079
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 14,
+        "pitch_number": 2,
+        "play_id": "e1e73af7-120a-401f-8577-371a8a6bb7ec",
+        "frame_seconds": 1343.5,
+        "path": "outputs/frames/evalset_1343.50.jpg",
+        "sha256": "f70f035aaa6c164c30cd10e047901dc14949e12a03a84386904727f4778e45d4",
+        "bytes": 134409
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 14,
+        "pitch_number": 3,
+        "play_id": "88764d87-cbce-4648-a938-e16112ef711e",
+        "frame_seconds": 1359,
+        "path": "outputs/frames/evalset_1359.00.jpg",
+        "sha256": "8296a6f48a3dadb773b0c8b5149ac8cd8a1009d20f2191c48a6a46f110c700f2",
+        "bytes": 184949
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 14,
+        "pitch_number": 4,
+        "play_id": "71fc6568-15bd-47f7-a0f7-13612b9f4b3d",
+        "frame_seconds": 1385,
+        "path": "outputs/frames/evalset_1385.00.jpg",
+        "sha256": "6f384ccdfa85df66d9b1ffb2ace539880549f44fa3c632659fb4b9757c2cfa7d",
+        "bytes": 132318
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 14,
+        "pitch_number": 5,
+        "play_id": "a640d9b6-1d63-41a8-b737-6269a0f57357",
+        "frame_seconds": 1426.5,
+        "path": "outputs/frames/evalset_1426.50.jpg",
+        "sha256": "db5b86a86d45ba7740f8c279070d59b531f90fed286287f57942df64a0532c4a",
+        "bytes": 140451
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 15,
+        "pitch_number": 1,
+        "play_id": "a214f2a6-24b1-4ac5-accd-fcb29d503ad7",
+        "frame_seconds": 1461.25,
+        "path": "outputs/frames/evalset_1461.25.jpg",
+        "sha256": "7c3a261a93741309a97e799508d6819c279264d76964b8266f2f2ef09a72f51d",
+        "bytes": 146745
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 15,
+        "pitch_number": 2,
+        "play_id": "a340a21b-e67f-492a-9d4f-a23e45cbcff0",
+        "frame_seconds": 1484.75,
+        "path": "outputs/frames/evalset_1484.75.jpg",
+        "sha256": "29513ac1f245100524e7c27306c495aef5d08890e7e167257da37e6684045fb6",
+        "bytes": 146921
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 15,
+        "pitch_number": 3,
+        "play_id": "ce5bcac7-c6ba-45cd-a5bc-9bdb2474907e",
+        "frame_seconds": 1506.75,
+        "path": "outputs/frames/evalset_1506.75.jpg",
+        "sha256": "d7460fd3d021922a194da1ebd612a0b17d0983b94b7e773cc53416271cf897b7",
+        "bytes": 142417
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 15,
+        "pitch_number": 4,
+        "play_id": "971a8c4a-f205-4aaf-8353-0a0d72fa8e78",
+        "frame_seconds": 1528.5,
+        "path": "outputs/frames/evalset_1528.50.jpg",
+        "sha256": "c080825bce2071088b78d4b06c8dba4a268c6410fdc1a45a754b6b41270b5a5d",
+        "bytes": 131821
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 15,
+        "pitch_number": 5,
+        "play_id": "fc2215be-bba1-484e-8067-ebe20d0446e9",
+        "frame_seconds": 1556.25,
+        "path": "outputs/frames/evalset_1556.25.jpg",
+        "sha256": "e2fa72d2276bfe5228b063bf0d3e147dc59ea0f42689589981f7e23fff902c4a",
+        "bytes": 137694
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 16,
+        "pitch_number": 1,
+        "play_id": "ab03826c-49a8-4b93-a2be-25e9a0973b80",
+        "frame_seconds": 1590.5,
+        "path": "outputs/frames/evalset_1590.50.jpg",
+        "sha256": "1a81c09d920feafea4e5926b53897db4754b859997e03de901fd7bbc06caa06e",
+        "bytes": 123325
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 17,
+        "pitch_number": 2,
+        "play_id": "29d9f246-263c-4b22-8410-d06317e98111",
+        "frame_seconds": 1677.75,
+        "path": "outputs/frames/evalset_1677.75.jpg",
+        "sha256": "edd68ab486158a6efbc6eb7b930bf55d09acadbf1dff6ceb6e7bfd809991e77b",
+        "bytes": 134024
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 18,
+        "pitch_number": 1,
+        "play_id": "aedd6988-23b4-4768-b911-81e83b9739cf",
+        "frame_seconds": 1706.25,
+        "path": "outputs/frames/evalset_1706.25.jpg",
+        "sha256": "3f6c799d29201669415c664bb0b710c8022d04ce84ce4e0d08d346be858e4e74",
+        "bytes": 245386
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 19,
+        "pitch_number": 1,
+        "play_id": "e5dea17b-a340-461f-9bb1-430ea61a21d8",
+        "frame_seconds": 1748.5,
+        "path": "outputs/frames/evalset_1748.50.jpg",
+        "sha256": "7fcd4d460d2a79bbc7b0685bc68a2ae14aaed3a465885245f1fb7c24642f35d5",
+        "bytes": 129868
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 19,
+        "pitch_number": 2,
+        "play_id": "c60baa74-6d7e-4eff-9d2b-51591ca74754",
+        "frame_seconds": 1765.5,
+        "path": "outputs/frames/evalset_1765.50.jpg",
+        "sha256": "eec13d155533459c72f3bff25934d85d6ac364459690478ca466134d5ba32695",
+        "bytes": 127747
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 19,
+        "pitch_number": 3,
+        "play_id": "876f4958-f635-40e1-97f8-3e8b3f4a81c0",
+        "frame_seconds": 1803.0,
+        "path": "outputs/frames/evalset_1803.00.jpg",
+        "sha256": "dca57b4e65d05f5f5805451178f2f0be7b0a43e94388c103511aa6b6115cdedd",
+        "bytes": 138648
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 19,
+        "pitch_number": 4,
+        "play_id": "a1b9672f-d262-4107-8aab-c81e1f6bd365",
+        "frame_seconds": 1817.5,
+        "path": "outputs/frames/evalset_1817.50.jpg",
+        "sha256": "a51d8089daffe43da395d2a15dee2fec4cfcf397e7666cf743f38efd90bd852a",
+        "bytes": 167245
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 19,
+        "pitch_number": 5,
+        "play_id": "3cedd8fa-f5c6-4512-9b01-3963e5e5a1e7",
+        "frame_seconds": 1848.0,
+        "path": "outputs/frames/evalset_1848.00.jpg",
+        "sha256": "84266eabdcb2407a8e986f334c4443db01c5f7c11e39bbaf014aceffb0dc06d0",
+        "bytes": 147668
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 20,
+        "pitch_number": 1,
+        "play_id": "cef02454-5dae-44e7-9a85-19051dd4b429",
+        "frame_seconds": 1894.25,
+        "path": "outputs/frames/evalset_1894.25.jpg",
+        "sha256": "d2c612f8288ee6eb64ea042c6c638928b4f5ce48d8db3e283cf724efc47963b4",
+        "bytes": 126314
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 20,
+        "pitch_number": 2,
+        "play_id": "23f8165b-4594-42d0-9b60-d8e6b5a968ce",
+        "frame_seconds": 1909,
+        "path": "outputs/frames/evalset_1909.00.jpg",
+        "sha256": "8dc97d651478aceafc66ed98a3ef0389f1d78d02ad4183c9c8758a87b246f04c",
+        "bytes": 137835
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 20,
+        "pitch_number": 3,
+        "play_id": "a7ef4404-e54c-4e6d-8967-0d5e242ae0a5",
+        "frame_seconds": 1927.5,
+        "path": "outputs/frames/evalset_1927.50.jpg",
+        "sha256": "49b997e4e3ec7ca98f0b0a3278eb24289de3656eca2e2f534e19bb012729f1f6",
+        "bytes": 145333
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 20,
+        "pitch_number": 4,
+        "play_id": "49e9c8ff-4a96-45e7-9e88-261e29e0d340",
+        "frame_seconds": 1947.75,
+        "path": "outputs/frames/evalset_1947.75.jpg",
+        "sha256": "d2efac1afed10b550eab0639368cab2bcb41d830022b22cef7060c75ac6e03de",
+        "bytes": 146577
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 20,
+        "pitch_number": 5,
+        "play_id": "40323f7d-143b-4310-9356-c02a6bcb2193",
+        "frame_seconds": 1969.75,
+        "path": "outputs/frames/evalset_1969.75.jpg",
+        "sha256": "3aa026c564d576b9225731fccf0872ac6622fafb16f495381799a0062d590766",
+        "bytes": 134634
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 20,
+        "pitch_number": 7,
+        "play_id": "500b884c-94b4-48cc-a162-d88de68abfae",
+        "frame_seconds": 2000.75,
+        "path": "outputs/frames/evalset_2000.75.jpg",
+        "sha256": "9bfd5c16eaf0e0a044141a7d6290fd40dfb0a9468ff4068a91cedcac5a5720a1",
+        "bytes": 137039
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 21,
+        "pitch_number": 1,
+        "play_id": "1156d224-4059-4d58-89c0-7dcfd755d786",
+        "frame_seconds": 2040.75,
+        "path": "outputs/frames/evalset_2040.75.jpg",
+        "sha256": "121be0545e3cb76f91a78ed72bcc979f67f261ff87e73c1adc869f22aeda9892",
+        "bytes": 116845
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 21,
+        "pitch_number": 2,
+        "play_id": "34e10cb9-8d48-4ec9-82e5-0f937526f47f",
+        "frame_seconds": 2059.75,
+        "path": "outputs/frames/evalset_2059.75.jpg",
+        "sha256": "eef80fa7cc549a06a3b1a9482a9dc8b2f440144094196c7ceed0e643910a7f69",
+        "bytes": 147599
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 21,
+        "pitch_number": 3,
+        "play_id": "89c85f79-85e2-4940-8271-b28a87f0dd69",
+        "frame_seconds": 2071.75,
+        "path": "outputs/frames/evalset_2071.75.jpg",
+        "sha256": "f0d6c902804e38e4c508598a1f284e29161accbcd44f6f4e6aff7dcc5bd67c55",
+        "bytes": 208186
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 21,
+        "pitch_number": 4,
+        "play_id": "330370f3-e1ed-4158-af57-fb3e6039de78",
+        "frame_seconds": 2123,
+        "path": "outputs/frames/evalset_2123.00.jpg",
+        "sha256": "46436d793bcb601b8ba241d49f7f53bcf9eed089d47819b390a3d53380a9499f",
+        "bytes": 118162
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 21,
+        "pitch_number": 5,
+        "play_id": "acc0aeb1-175d-4dfb-95a1-b07cf73e8ab8",
+        "frame_seconds": 2140.75,
+        "path": "outputs/frames/evalset_2140.75.jpg",
+        "sha256": "c3744f25279c5a083672cdafa71f09db313a014ff3f226f5f5ff1f65888eb35d",
+        "bytes": 133648
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 22,
+        "pitch_number": 2,
+        "play_id": "618cf6eb-e183-425f-a99a-1caa69add2d9",
+        "frame_seconds": 2209.25,
+        "path": "outputs/frames/evalset_2209.25.jpg",
+        "sha256": "af1cebc43365bbe25ed2111ea7f42a7502be1a98fd59edd2916874f154119584",
+        "bytes": 133851
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 23,
+        "pitch_number": 1,
+        "play_id": "17f88dad-a997-4ade-8bda-39f1135f5b50",
+        "frame_seconds": 2253.75,
+        "path": "outputs/frames/evalset_2253.75.jpg",
+        "sha256": "7083b6068f49de7d096007b491b76075ea1af4b79f17a5b0669835b2d2ec692e",
+        "bytes": 131785
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 23,
+        "pitch_number": 2,
+        "play_id": "1af3eded-413c-49f0-a5dc-ef4657921ae6",
+        "frame_seconds": 2269,
+        "path": "outputs/frames/evalset_2269.00.jpg",
+        "sha256": "280922058a5373c766668301f36bc98cbfb807475c7aa5ed98e31659cbf07c0e",
+        "bytes": 151704
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 23,
+        "pitch_number": 3,
+        "play_id": "97edfe44-c93c-4db4-835d-62cc2a6a7138",
+        "frame_seconds": 2296.75,
+        "path": "outputs/frames/evalset_2296.75.jpg",
+        "sha256": "cde55505b6312acf82b065b040a73fe421a978b5485c5f2154d2721335c359db",
+        "bytes": 133225
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 23,
+        "pitch_number": 4,
+        "play_id": "02cefcee-4bdf-4b76-9782-7f1e792213a2",
+        "frame_seconds": 2318.25,
+        "path": "outputs/frames/evalset_2318.25.jpg",
+        "sha256": "dc066402c49c70fc08e5b675a2d5eb7c002416ed75c1eb773d8a7d0cd8353662",
+        "bytes": 134960
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 24,
+        "pitch_number": 1,
+        "play_id": "355f3c74-8e06-440f-bd8f-b265342674ad",
+        "frame_seconds": 2396.25,
+        "path": "outputs/frames/evalset_2396.25.jpg",
+        "sha256": "3da4ce892acb63bd7c5a39ac623bbe6845163bc986ae5114358768c33031ce34",
+        "bytes": 137828
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 24,
+        "pitch_number": 2,
+        "play_id": "3825a8fc-ec3a-4a07-aebd-857805ae6c4e",
+        "frame_seconds": 2412.5,
+        "path": "outputs/frames/evalset_2412.50.jpg",
+        "sha256": "9470c4984474521188386104aa06da5b89d05fcd94ff5682692a44a06b2bd821",
+        "bytes": 142193
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 24,
+        "pitch_number": 3,
+        "play_id": "1b182e36-da26-4e13-9d5b-a01c93b5da49",
+        "frame_seconds": 2440.75,
+        "path": "outputs/frames/evalset_2440.75.jpg",
+        "sha256": "c9d7151e3630a0972a26ef555a0e7846c3a912196f49b876391b02ff4f34c165",
+        "bytes": 139413
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 24,
+        "pitch_number": 4,
+        "play_id": "e5eb1428-cf22-4a2c-9cd4-82d4a7a45d28",
+        "frame_seconds": 2460.25,
+        "path": "outputs/frames/evalset_2460.25.jpg",
+        "sha256": "31020d111ecb5450dee5b86738b5b49aec0a2a23f7fceda836651c394e8c5c68",
+        "bytes": 154394
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 24,
+        "pitch_number": 5,
+        "play_id": "262f21a8-e25a-44a2-90de-e6d11345ebcc",
+        "frame_seconds": 2487.5,
+        "path": "outputs/frames/evalset_2487.50.jpg",
+        "sha256": "32520f5ebcf09c0746131455a31ed6a2f4aef63780a2cf61214c4113b98612dc",
+        "bytes": 137608
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 25,
+        "pitch_number": 1,
+        "play_id": "92104379-7ef8-4f9b-86bc-8dac06bea8f3",
+        "frame_seconds": 2521.25,
+        "path": "outputs/frames/evalset_2521.25.jpg",
+        "sha256": "405448857f87f0a1ba5cdc368394fd9ff2fcd6dc01d878e0b1f9a136157e068c",
+        "bytes": 142174
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 26,
+        "pitch_number": 1,
+        "play_id": "47f278be-0a80-47e2-8127-a1c4567aca8c",
+        "frame_seconds": 2586,
+        "path": "outputs/frames/evalset_2586.00.jpg",
+        "sha256": "e9b0be375cc993a172ef686299cdd4e67cffe03c777ad5f761ab273b729dce90",
+        "bytes": 197185
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 26,
+        "pitch_number": 2,
+        "play_id": "e4dea209-d135-4093-9c62-fbe55a5435ff",
+        "frame_seconds": 2610.25,
+        "path": "outputs/frames/evalset_2610.25.jpg",
+        "sha256": "b958c20152fb9aec03a646f261a5a7465583837db17f5a8542c7696496f69239",
+        "bytes": 127856
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 26,
+        "pitch_number": 3,
+        "play_id": "1f2076e4-9c5f-4489-aa7e-e7bf0ba3cc37",
+        "frame_seconds": 2635.25,
+        "path": "outputs/frames/evalset_2635.25.jpg",
+        "sha256": "3c36bf1ce3972f17a03a10f932b27cc43aba69847347777dfdfae2d0457a27ab",
+        "bytes": 138063
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 26,
+        "pitch_number": 4,
+        "play_id": "ea0465f2-9989-41a6-a936-c71bec4e9f22",
+        "frame_seconds": 2669.5,
+        "path": "outputs/frames/evalset_2669.50.jpg",
+        "sha256": "9f19517190090b046a0ff45133b3c064a9b78aa5cfd46d6dc8cc77f999882dbe",
+        "bytes": 138217
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 26,
+        "pitch_number": 5,
+        "play_id": "f71af92f-0d50-4dbf-b02a-69ace6e2ab79",
+        "frame_seconds": 2689.75,
+        "path": "outputs/frames/evalset_2689.75.jpg",
+        "sha256": "1b59aef16f7a3cd701ecbc3734908afefc1ee9c6aa1ec1cc21cbc7d892cd7d14",
+        "bytes": 225852
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 27,
+        "pitch_number": 1,
+        "play_id": "c37534cb-4cc6-4a73-84bd-6ea2558ffca0",
+        "frame_seconds": 2747,
+        "path": "outputs/frames/evalset_2747.00.jpg",
+        "sha256": "a8b6e550998c589a4a48abb82e6e46625a16064efc645254739da041a30aea4a",
+        "bytes": 163833
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 27,
+        "pitch_number": 2,
+        "play_id": "9488c676-5950-4ff6-8ca8-ee94eec2e90c",
+        "frame_seconds": 2759.75,
+        "path": "outputs/frames/evalset_2759.75.jpg",
+        "sha256": "78ac092f585e2228d6d8ec8972c55df7749d954626cbff036c79012317e959a5",
+        "bytes": 133887
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 28,
+        "pitch_number": 1,
+        "play_id": "7fa4e2a5-3c10-415b-a274-09ecd5cf9c43",
+        "frame_seconds": 2788,
+        "path": "outputs/frames/evalset_2788.00.jpg",
+        "sha256": "4a3d71393a56a050e8634458640d0743a950a95e3b3e41a4876815e72604346a",
+        "bytes": 134034
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 28,
+        "pitch_number": 2,
+        "play_id": "baa06642-8b25-4754-9e1f-1bd5b5769f2a",
+        "frame_seconds": 2801.25,
+        "path": "outputs/frames/evalset_2801.25.jpg",
+        "sha256": "515497a884b474b67e1530961c9ca2a3722e348c9d3503530f7fed2289f83543",
+        "bytes": 131272
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 29,
+        "pitch_number": 1,
+        "play_id": "abf67c34-e844-42ed-8193-7bf8810f6fe6",
+        "frame_seconds": 2835.5,
+        "path": "outputs/frames/evalset_2835.50.jpg",
+        "sha256": "c24900206e1225c1c838b89d50664d46eccd39d796e7012a455561ab989a053a",
+        "bytes": 132063
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 29,
+        "pitch_number": 2,
+        "play_id": "716ae138-bed5-4cd7-a17c-f9231b2348d2",
+        "frame_seconds": 2847.5,
+        "path": "outputs/frames/evalset_2847.50.jpg",
+        "sha256": "836264e0e858d13e1efe6fb89502331ffe511baa039c808bada74609cd75a2f8",
+        "bytes": 135237
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 29,
+        "pitch_number": 3,
+        "play_id": "582c5f2f-5934-450b-bb23-e881fe79c26d",
+        "frame_seconds": 2864,
+        "path": "outputs/frames/evalset_2864.00.jpg",
+        "sha256": "8719f0ff2657d2f0bca7d8bdad6615a18aa30a5aad0f7f6eaf88160267379ce4",
+        "bytes": 131059
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 29,
+        "pitch_number": 4,
+        "play_id": "8c3a4b03-d084-411f-94df-b69f4e65e1dd",
+        "frame_seconds": 2881.25,
+        "path": "outputs/frames/evalset_2881.25.jpg",
+        "sha256": "33bf55efe1bc9b8b0bb48fe455739184905e1366c6e5652a5cc2bf74e7dd7d66",
+        "bytes": 148158
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 29,
+        "pitch_number": 5,
+        "play_id": "7a234851-d485-438b-900a-8e81da117b91",
+        "frame_seconds": 2899.75,
+        "path": "outputs/frames/evalset_2899.75.jpg",
+        "sha256": "1c14dab490119d9e0fd9f387ba6b80122ed36fdeb347225890e920d91feccae5",
+        "bytes": 166560
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 29,
+        "pitch_number": 7,
+        "play_id": "dbf77a0e-1406-463d-ae86-ce51774899f5",
+        "frame_seconds": 2946,
+        "path": "outputs/frames/evalset_2946.00.jpg",
+        "sha256": "9b5a4a8266e53a43a91c495f6c0d5bc27de2d48f55a65ef1adcc6e5be2a3eb8a",
+        "bytes": 136655
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 30,
+        "pitch_number": 1,
+        "play_id": "85c6ab92-afc1-4f92-af7d-1557eb72e7ba",
+        "frame_seconds": 2973.75,
+        "path": "outputs/frames/evalset_2973.75.jpg",
+        "sha256": "bdabfd6c94313c440c5f80526fbeb2fef68095c08369dd0e97fa18039ff75c66",
+        "bytes": 155606
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 30,
+        "pitch_number": 2,
+        "play_id": "2f4e0c44-4441-4980-b1f2-42f897ea625e",
+        "frame_seconds": 2994.25,
+        "path": "outputs/frames/evalset_2994.25.jpg",
+        "sha256": "3b51be01cc7fc82052faad50502616f0725abdca29bd49521f025f0901876976",
+        "bytes": 142830
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 30,
+        "pitch_number": 3,
+        "play_id": "acb5e8bc-8899-4d8d-a0bd-d3e5f71638c3",
+        "frame_seconds": 3016.75,
+        "path": "outputs/frames/evalset_3016.75.jpg",
+        "sha256": "a829f1c9e844c684cb8faddee3dfdbc56cd468a1ff3e8ff665c1c51ebf1ef97d",
+        "bytes": 134893
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 31,
+        "pitch_number": 1,
+        "play_id": "f83f6cca-4aba-439d-b19f-9d7bfda8cd0d",
+        "frame_seconds": 3042.5,
+        "path": "outputs/frames/evalset_3042.50.jpg",
+        "sha256": "4757a37d8d42d937e35be562d4a33a6a0731ded19c0f7ec9dc1a562452108c2f",
+        "bytes": 139906
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 31,
+        "pitch_number": 2,
+        "play_id": "3068016b-76f8-447f-8c6f-99e9c305509d",
+        "frame_seconds": 3061.5,
+        "path": "outputs/frames/evalset_3061.50.jpg",
+        "sha256": "58ac75c1c109a7977ecb43fec9848fb16f8b6694ef3d8d493ca6ceeb74336b36",
+        "bytes": 129843
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 31,
+        "pitch_number": 3,
+        "play_id": "9919d231-a4b5-4ca5-ba54-bd9aced80707",
+        "frame_seconds": 3079.25,
+        "path": "outputs/frames/evalset_3079.25.jpg",
+        "sha256": "66372eeccf2ec9d070fbcf38fa8031ac41ac224b270c48a7fadb1258d3eac474",
+        "bytes": 145861
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 31,
+        "pitch_number": 4,
+        "play_id": "26ab7634-f0c0-43b4-a023-8a9770ba5004",
+        "frame_seconds": 3102,
+        "path": "outputs/frames/evalset_3102.00.jpg",
+        "sha256": "2d8bab366d77333950edd04572a34356a8aa044d5e5d54b9d28692a345985f87",
+        "bytes": 142520
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 32,
+        "pitch_number": 1,
+        "play_id": "c9790f0b-6e08-49eb-a671-137ec716b3e6",
+        "frame_seconds": 3130.25,
+        "path": "outputs/frames/evalset_3130.25.jpg",
+        "sha256": "c222af625b32108baf013a5b627e635e61a7ddbb8fac9ea059997284b3b8ac71",
+        "bytes": 143128
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 33,
+        "pitch_number": 1,
+        "play_id": "672a29ee-fe25-4afa-97a3-72d6687430fd",
+        "frame_seconds": 3165.25,
+        "path": "outputs/frames/evalset_3165.25.jpg",
+        "sha256": "71f06e59737234a9c0c71a370e9f9048476850c011fcb8e154e1c09b561531e5",
+        "bytes": 143906
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 33,
+        "pitch_number": 2,
+        "play_id": "8af32ef8-9756-4453-bbfe-7c8f8d38bf1e",
+        "frame_seconds": 3180.5,
+        "path": "outputs/frames/evalset_3180.50.jpg",
+        "sha256": "0bc5402b921d760b7f3548c2e104f1edb5af0f28aaa10c63df6fb3d0fa8db81b",
+        "bytes": 156699
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 33,
+        "pitch_number": 4,
+        "play_id": "a995244b-5932-4d6a-865a-b925260e76ae",
+        "frame_seconds": 3206,
+        "path": "outputs/frames/evalset_3206.00.jpg",
+        "sha256": "9607dce9faf642b9b81cdd7e654caa013b9becb361f976031ddf39399d540862",
+        "bytes": 142574
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 33,
+        "pitch_number": 5,
+        "play_id": "26ab78c6-0d01-48b0-adf8-92e6c2ecd80b",
+        "frame_seconds": 3231.75,
+        "path": "outputs/frames/evalset_3231.75.jpg",
+        "sha256": "b7bc9680a90bcaf8081ad0b93e05a733661db9ada609ff1a4a5332a5895588eb",
+        "bytes": 137596
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 33,
+        "pitch_number": 6,
+        "play_id": "eda93f66-6cbc-4b28-a84a-bf45a7860193",
+        "frame_seconds": 3246,
+        "path": "outputs/frames/evalset_3246.00.jpg",
+        "sha256": "3df36dd3ac033dc1d3d57264e104b1021bfca266dadc722f597bdcdf5ecaffd2",
+        "bytes": 150353
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 34,
+        "pitch_number": 1,
+        "play_id": "c0bd47e0-9d75-41f2-bff9-a84099700356",
+        "frame_seconds": 3276.75,
+        "path": "outputs/frames/evalset_3276.75.jpg",
+        "sha256": "25cd74ffa5a437169ed4883e9e56f734e762c3c00d32fb632fe890cf1d63c30f",
+        "bytes": 149773
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 34,
+        "pitch_number": 2,
+        "play_id": "ffc08425-98dd-4635-b0c1-0ab3b67083eb",
+        "frame_seconds": 3295.25,
+        "path": "outputs/frames/evalset_3295.25.jpg",
+        "sha256": "b8b8c32c15aa7a66b41ddb70ddfcdcd767f4743f530856a52d201587241cdd96",
+        "bytes": 150256
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 34,
+        "pitch_number": 3,
+        "play_id": "6f1f6855-d675-468a-af70-97d8d1df25b1",
+        "frame_seconds": 3314.5,
+        "path": "outputs/frames/evalset_3314.50.jpg",
+        "sha256": "ebb55f9efffc75a6cdf0bed6b94d8ad2799073c64b8e14049cd1eec86c543de3",
+        "bytes": 294982
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 34,
+        "pitch_number": 4,
+        "play_id": "09ae8e32-99b6-4121-977c-326123582c27",
+        "frame_seconds": 3338.5,
+        "path": "outputs/frames/evalset_3338.50.jpg",
+        "sha256": "b873dad90fca07bb6401512978175c9fb4c9e2010a2312b51fa1391fb440c8ec",
+        "bytes": 142036
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 34,
+        "pitch_number": 5,
+        "play_id": "44d66c64-cb20-432b-9cf2-ef18d5826ed4",
+        "frame_seconds": 3354.75,
+        "path": "outputs/frames/evalset_3354.75.jpg",
+        "sha256": "df505f653c3c0793dc14d6565bf9c7cd80c0ed55bc3e01bf51fd11c85024701f",
+        "bytes": 149086
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 35,
+        "pitch_number": 2,
+        "play_id": "40291398-6199-4158-853c-5007a5a75d9f",
+        "frame_seconds": 3408.75,
+        "path": "outputs/frames/evalset_3408.75.jpg",
+        "sha256": "b4a25c0f4825257ff2a67fbeb3cedaf41c18987795d2562f822b3975f450ef18",
+        "bytes": 153307
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 35,
+        "pitch_number": 3,
+        "play_id": "49fa2757-60f6-42ba-9c2e-3481ed28b5e6",
+        "frame_seconds": 3426.5,
+        "path": "outputs/frames/evalset_3426.50.jpg",
+        "sha256": "9ad5d4906ceb0b45b4d33bc4510c2fac18fab5e8b1744c514483eae32885f8b6",
+        "bytes": 144100
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 35,
+        "pitch_number": 4,
+        "play_id": "bdc1c74a-9165-45af-90eb-38fd1f3d5527",
+        "frame_seconds": 3448.25,
+        "path": "outputs/frames/evalset_3448.25.jpg",
+        "sha256": "4bafa9026b83020a822384d4f749cb76ed7732b6bbc960de0de6ed0714c246eb",
+        "bytes": 124627
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 35,
+        "pitch_number": 5,
+        "play_id": "435a2b81-a049-4f30-9661-4b0f9fd5b489",
+        "frame_seconds": 3477.25,
+        "path": "outputs/frames/evalset_3477.25.jpg",
+        "sha256": "171767c915bfccb66bda49b2d42e6ab25dcb809f7f20a6ff219c6b7ea0eac64a",
+        "bytes": 150617
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 36,
+        "pitch_number": 1,
+        "play_id": "e7f944be-30a7-4774-8ba4-0d6f354a8802",
+        "frame_seconds": 3507,
+        "path": "outputs/frames/evalset_3507.00.jpg",
+        "sha256": "91834db99cbb1c67a7edad9b34107dc6d1fd75df9ccb7e8c5ba285c2a6af596d",
+        "bytes": 126247
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 37,
+        "pitch_number": 1,
+        "play_id": "88c0b23c-f519-4654-8792-2c583e252003",
+        "frame_seconds": 3576.75,
+        "path": "outputs/frames/evalset_3576.75.jpg",
+        "sha256": "efd6201f48435460c4352f4568167878f15dcf622a0fd8bc07e446a9b89ccfc6",
+        "bytes": 140461
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 37,
+        "pitch_number": 2,
+        "play_id": "f272c895-73ba-447e-88ff-95d1a178380a",
+        "frame_seconds": 3598.25,
+        "path": "outputs/frames/evalset_3598.25.jpg",
+        "sha256": "4440580301a8bba0ee64bbcaf71a3ad8bc751e67799f82b0e066f963fb06c38d",
+        "bytes": 135896
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 37,
+        "pitch_number": 3,
+        "play_id": "3eccf67b-580d-460b-a3d7-31317637a6bb",
+        "frame_seconds": 3620,
+        "path": "outputs/frames/evalset_3620.00.jpg",
+        "sha256": "ccb71725c7772ddd9e31d74660ee94b10c38efd367fa0e96ed236f20638900aa",
+        "bytes": 135309
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 37,
+        "pitch_number": 4,
+        "play_id": "f1ae6892-fdd0-4c3e-9950-3c204862a8ef",
+        "frame_seconds": 3657.5,
+        "path": "outputs/frames/evalset_3657.50.jpg",
+        "sha256": "8292f42c6914fab232b65acc42b8e62eb52a76fe90eeef3b38570782cef0ccb1",
+        "bytes": 140632
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 37,
+        "pitch_number": 5,
+        "play_id": "6f5b7dea-40cc-4ef3-9e67-a17aa7798c73",
+        "frame_seconds": 3682.25,
+        "path": "outputs/frames/evalset_3682.25.jpg",
+        "sha256": "01d7e28c90c7032cca4ad53a866ecf4a2898e59974a7108e63d888bffdba5bfd",
+        "bytes": 149164
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 38,
+        "pitch_number": 1,
+        "play_id": "80033ef6-bbbf-44bc-9272-a15bf6df8d00",
+        "frame_seconds": 3733.5,
+        "path": "outputs/frames/evalset_3733.50.jpg",
+        "sha256": "18fcaf4f3f2a4eca5f43562883e9d0cf3169d3c724fce127fbabef1e425b350f",
+        "bytes": 177649
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 38,
+        "pitch_number": 2,
+        "play_id": "e16f7800-a708-41f1-8a13-58cd06a82684",
+        "frame_seconds": 3747,
+        "path": "outputs/frames/evalset_3747.00.jpg",
+        "sha256": "1cc9dab3feb370c6b6639fbbfca342e3e838325e8cb6f2bd272752ca3a6200f8",
+        "bytes": 170621
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 38,
+        "pitch_number": 3,
+        "play_id": "e208202f-3e40-49d6-8161-dbf8ddbd0538",
+        "frame_seconds": 3765.75,
+        "path": "outputs/frames/evalset_3765.75.jpg",
+        "sha256": "899c031ae4ee7774d47b999dae660032243ad2262714e9203514434a1b226e2d",
+        "bytes": 153240
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 38,
+        "pitch_number": 4,
+        "play_id": "ab659245-f891-4916-870d-4d05c57cc016",
+        "frame_seconds": 3778.5,
+        "path": "outputs/frames/evalset_3778.50.jpg",
+        "sha256": "d6a84de49d8c6b997c15d05bd37b565ac29ce1012b2019bea2998a01fbc58fe3",
+        "bytes": 165608
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 39,
+        "pitch_number": 1,
+        "play_id": "ab8d295d-ddb5-4bf6-ac79-c84ee11b8f69",
+        "frame_seconds": 3814.75,
+        "path": "outputs/frames/evalset_3814.75.jpg",
+        "sha256": "85e95f580e39f545c16b5aab16e5da7b059c3eb40cbd87be9127846d843b6791",
+        "bytes": 153866
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 39,
+        "pitch_number": 3,
+        "play_id": "651024e3-4fc2-4a15-8412-0e3b6fc979c4",
+        "frame_seconds": 3867,
+        "path": "outputs/frames/evalset_3867.00.jpg",
+        "sha256": "aff9b4a874138956f11e24115c96301fee1e014041e3241ea80b24c9201c8d5c",
+        "bytes": 158739
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 39,
+        "pitch_number": 5,
+        "play_id": "356fef6e-b53b-4702-a6b9-db2b53d3ee11",
+        "frame_seconds": 3905.25,
+        "path": "outputs/frames/evalset_3905.25.jpg",
+        "sha256": "605826daa82ff5026ade30f8b29db7d729e44f94f70e7378bb22e66c19d7a2bf",
+        "bytes": 150433
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 40,
+        "pitch_number": 1,
+        "play_id": "5609f287-87df-472a-94e8-01957068f7a3",
+        "frame_seconds": 3939.75,
+        "path": "outputs/frames/evalset_3939.75.jpg",
+        "sha256": "3dc6b164f00531ce79970558a86249cd26636297f6adbf5041d31ed9e6fcfe33",
+        "bytes": 137555
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 40,
+        "pitch_number": 2,
+        "play_id": "9f4ef026-48d0-4a6e-ac82-266913664e5c",
+        "frame_seconds": 3955.75,
+        "path": "outputs/frames/evalset_3955.75.jpg",
+        "sha256": "5e9c0ab538164eb0e3648f9f98385dabe1901184918f8c80657c5a7592e38b57",
+        "bytes": 207368
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 41,
+        "pitch_number": 1,
+        "play_id": "afe7e17d-a3e9-4696-8a1f-3992eed9c237",
+        "frame_seconds": 4026.25,
+        "path": "outputs/frames/evalset_4026.25.jpg",
+        "sha256": "0bcfcd99302ea5f575f044c54428a792448acf882ce0a4a06a0dd1105a608c04",
+        "bytes": 170372
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 42,
+        "pitch_number": 1,
+        "play_id": "23f4afe5-fcec-40ae-baae-30f770e869a7",
+        "frame_seconds": 4058.75,
+        "path": "outputs/frames/evalset_4058.75.jpg",
+        "sha256": "bd954a8d8cd6be51e5ba4f057a9c9a7440e9807df6dc7021715e991a418a0668",
+        "bytes": 138851
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 42,
+        "pitch_number": 2,
+        "play_id": "0a8909c3-3e22-415e-81e3-7dc81d296fbf",
+        "frame_seconds": 4072.25,
+        "path": "outputs/frames/evalset_4072.25.jpg",
+        "sha256": "bf40f4e83f2d49d1ef640c792aa96e5d2ab1f1234b15e4969b4be04dd746e7a9",
+        "bytes": 173749
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 42,
+        "pitch_number": 3,
+        "play_id": "6d52f50b-8b24-4c1c-93fb-640715765419",
+        "frame_seconds": 4087.5,
+        "path": "outputs/frames/evalset_4087.50.jpg",
+        "sha256": "597cd9f3c4928ee00093b990f7bfb4c1f4c25d4a2666f05a391ebae93863ad40",
+        "bytes": 153929
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 43,
+        "pitch_number": 1,
+        "play_id": "44612ef5-77c4-4657-80e5-b8237171771e",
+        "frame_seconds": 4115.5,
+        "path": "outputs/frames/evalset_4115.50.jpg",
+        "sha256": "09a6b69ab99a3974b638411bbb0872ec7be0ca0416e95f0e41e4ac312394f14d",
+        "bytes": 153878
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 43,
+        "pitch_number": 2,
+        "play_id": "bced2652-9d48-4838-ba4f-62ad6b223239",
+        "frame_seconds": 4131.75,
+        "path": "outputs/frames/evalset_4131.75.jpg",
+        "sha256": "e3d03c61e03e8e0545532a32b972b0e9439d788a2d9ff7713a3f548106da8a14",
+        "bytes": 160146
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 43,
+        "pitch_number": 3,
+        "play_id": "610e856d-9966-449b-8f50-3b1169ed0e85",
+        "frame_seconds": 4148.75,
+        "path": "outputs/frames/evalset_4148.75.jpg",
+        "sha256": "14c58fd6be0775e6000069cf56e4d52576d26c125649d18edcc1878032989b8c",
+        "bytes": 163388
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 44,
+        "pitch_number": 1,
+        "play_id": "1df614fb-a2a7-4cef-8133-7802897b7c7b",
+        "frame_seconds": 4165.5,
+        "path": "outputs/frames/evalset_4165.50.jpg",
+        "sha256": "ffc3adb1ada8c2c1ab8d3f934f217ff0dbc356af91ed5c69882481ae6075deec",
+        "bytes": 203192
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 45,
+        "pitch_number": 1,
+        "play_id": "920d1572-f872-43ae-98a6-675e73d402c6",
+        "frame_seconds": 4197.5,
+        "path": "outputs/frames/evalset_4197.50.jpg",
+        "sha256": "a34a99f0910fc90469d6004df77203c4c5b8d5f8d13718a9c3eb14ae35447bc8",
+        "bytes": 161418
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 45,
+        "pitch_number": 2,
+        "play_id": "68c55a59-6773-436f-bd16-52f3789d0ae1",
+        "frame_seconds": 4209.75,
+        "path": "outputs/frames/evalset_4209.75.jpg",
+        "sha256": "7077d464b8f0dc1d3ccab63b7c610cd3d0a1987533f79133fb891d4c6ad3fdde",
+        "bytes": 156691
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 46,
+        "pitch_number": 1,
+        "play_id": "fcb6ae5b-7fc8-4e4b-a52a-fbaaa77f8712",
+        "frame_seconds": 4263.5,
+        "path": "outputs/frames/evalset_4263.50.jpg",
+        "sha256": "65b3e0bc99792be55ec3ca57cdc8cbfb5ba0d8bb0d43fe723c99090cb190e17a",
+        "bytes": 178062
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 46,
+        "pitch_number": 2,
+        "play_id": "3e9131cd-5245-4c81-91a8-51523cfc205b",
+        "frame_seconds": 4276.25,
+        "path": "outputs/frames/evalset_4276.25.jpg",
+        "sha256": "ddb6861e19353d0e1b3160b5094744042dacbec6fb5a5d5ca1c72bfe83585466",
+        "bytes": 179561
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 46,
+        "pitch_number": 3,
+        "play_id": "9b1a238a-f3a9-4edd-8b13-0fbae39f74fb",
+        "frame_seconds": 4297.25,
+        "path": "outputs/frames/evalset_4297.25.jpg",
+        "sha256": "d4fd8ce7676d087e1f4e79a5bb00c00b13586b9ae8057f95630aa5378e4c3df8",
+        "bytes": 172635
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 46,
+        "pitch_number": 4,
+        "play_id": "9389d103-41e5-49de-b481-2ca09ddf9bcd",
+        "frame_seconds": 4324,
+        "path": "outputs/frames/evalset_4324.00.jpg",
+        "sha256": "d3a7e07bbedc712776ea3d2cbe0edd3cfa5600b58050101d1ea4ec5bae848714",
+        "bytes": 130387
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 46,
+        "pitch_number": 5,
+        "play_id": "c77618a0-043b-4bd1-b6e0-2c267d3c38c0",
+        "frame_seconds": 4351,
+        "path": "outputs/frames/evalset_4351.00.jpg",
+        "sha256": "0d81c8f01a94c4e180efb6d1a6244c528bd86c766015e08a097c30ddb42a8120",
+        "bytes": 190361
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 46,
+        "pitch_number": 6,
+        "play_id": "58899381-2b9c-4493-95f1-a604e4328ffb",
+        "frame_seconds": 4392.75,
+        "path": "outputs/frames/evalset_4392.75.jpg",
+        "sha256": "1a1d215f5b243788e2ddb6d6dbe0f975dc522aa0c2ed774f831ae54acad7df52",
+        "bytes": 135521
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 46,
+        "pitch_number": 7,
+        "play_id": "cac64a35-8c9a-4d99-915b-682e42a16a7b",
+        "frame_seconds": 4413.25,
+        "path": "outputs/frames/evalset_4413.25.jpg",
+        "sha256": "a9f2dcd1194938495070a33d95312b6dbd7b2ddc97b6a41edd71b22c7ce01769",
+        "bytes": 164278
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 46,
+        "pitch_number": 8,
+        "play_id": "461806e5-2163-480c-9e1d-30af89752372",
+        "frame_seconds": 4434,
+        "path": "outputs/frames/evalset_4434.00.jpg",
+        "sha256": "f0da0162600b883a6df652c27b0ad11fa9418eb46fd6478a0588118bdabe9bf4",
+        "bytes": 155404
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 46,
+        "pitch_number": 9,
+        "play_id": "381024c7-37c4-4e06-ad63-ed2b1cf4bcb9",
+        "frame_seconds": 4458.5,
+        "path": "outputs/frames/evalset_4458.50.jpg",
+        "sha256": "7c7c7304791757d77192b2135d0a34775a06735bd0bd990d2ba86940564835ae",
+        "bytes": 145503
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 47,
+        "pitch_number": 2,
+        "play_id": "b5cd94bc-d1e9-4cda-a9ae-dea418bf31dd",
+        "frame_seconds": 4502.75,
+        "path": "outputs/frames/evalset_4502.75.jpg",
+        "sha256": "06926d6882a594f31e0932134ad6a44bac331e8638aad0f4505a4ede77de225e",
+        "bytes": 190021
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 48,
+        "pitch_number": 1,
+        "play_id": "c2f2e4c3-0451-4526-ba45-de61390a8f41",
+        "frame_seconds": 4571.5,
+        "path": "outputs/frames/evalset_4571.50.jpg",
+        "sha256": "60c1317fdb21ceeb5fed2d5e710e3afb55571e839d1e81367c8a444f6352309c",
+        "bytes": 158717
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 48,
+        "pitch_number": 2,
+        "play_id": "e0beeb4c-5a60-4f5e-8ab6-55fdd9c57d5e",
+        "frame_seconds": 4590.75,
+        "path": "outputs/frames/evalset_4590.75.jpg",
+        "sha256": "0f0630ddd07ce632672c0e2dc763668e835f37c952e102ca6ee6cee0625ca415",
+        "bytes": 143603
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 48,
+        "pitch_number": 3,
+        "play_id": "736f482f-b8f4-49da-b0b9-b214fc83254b",
+        "frame_seconds": 4605.25,
+        "path": "outputs/frames/evalset_4605.25.jpg",
+        "sha256": "519d759ed346772ec480d7d77626b2a6fd0439cb8771675f7e30ae4d71707c5c",
+        "bytes": 145487
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 48,
+        "pitch_number": 4,
+        "play_id": "717b78c3-cf27-4101-bb83-406b3f74970c",
+        "frame_seconds": 4618.25,
+        "path": "outputs/frames/evalset_4618.25.jpg",
+        "sha256": "3576dddd4462b10548e5c0a2fdfbd5e30b4974cede18d8cb3a75f1f0971197c4",
+        "bytes": 156132
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 48,
+        "pitch_number": 6,
+        "play_id": "f980f763-6d7a-44ed-a8e9-136d90549e05",
+        "frame_seconds": 4664,
+        "path": "outputs/frames/evalset_4664.00.jpg",
+        "sha256": "d4aa56c6f6b037e83c6eb1fccc2a512c1b022834be035777f77e4af81ca4549e",
+        "bytes": 138982
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 48,
+        "pitch_number": 7,
+        "play_id": "1f82f2fe-7798-426b-bda4-543cb36b8868",
+        "frame_seconds": 4684.5,
+        "path": "outputs/frames/evalset_4684.50.jpg",
+        "sha256": "1357e9456d0aad1f6676a7ab7e0ef04bb39e3eb92a507f7e0e76152c44c9afef",
+        "bytes": 159837
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 49,
+        "pitch_number": 1,
+        "play_id": "82f84008-e76d-4989-93dd-0034381afece",
+        "frame_seconds": 4720.25,
+        "path": "outputs/frames/evalset_4720.25.jpg",
+        "sha256": "e968fa4cfc772ba4658bffcad32ed3ea00873342736f7cfb7a1503f26c078af5",
+        "bytes": 147882
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 49,
+        "pitch_number": 2,
+        "play_id": "3f04787b-5ad2-40f2-b237-f41ec8a6331e",
+        "frame_seconds": 4740.25,
+        "path": "outputs/frames/evalset_4740.25.jpg",
+        "sha256": "5bc2f83dadd7e0e905573e9ab6f60c6b3d89fe97ba712aa4e1199f2f060f43dd",
+        "bytes": 161913
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 49,
+        "pitch_number": 3,
+        "play_id": "e524ff50-ab03-46d7-b948-fccb17cbaec2",
+        "frame_seconds": 4789.25,
+        "path": "outputs/frames/evalset_4789.25.jpg",
+        "sha256": "5bb2d8cfa8afe0e3f9efc8eb820a6f56f72ac0da78b170044ceb6ec3efe7e8fe",
+        "bytes": 137027
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 49,
+        "pitch_number": 4,
+        "play_id": "4885ee5d-de79-4234-9dc8-31723ac37438",
+        "frame_seconds": 4808,
+        "path": "outputs/frames/evalset_4808.00.jpg",
+        "sha256": "3505d7f47c03b48d8ffa848d3a690bc9ba5a01ed7a3f546ed1f695390d994dc4",
+        "bytes": 138969
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 49,
+        "pitch_number": 5,
+        "play_id": "89efb9a3-a207-4207-a6b9-a071665c4189",
+        "frame_seconds": 4821.25,
+        "path": "outputs/frames/evalset_4821.25.jpg",
+        "sha256": "80dc1a0013ced05ddeae03f93e56f814a8c5bb3d5d717365e28cd663e6c673a6",
+        "bytes": 132582
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 49,
+        "pitch_number": 6,
+        "play_id": "701a4652-7d12-4bdf-9ff7-a0af60c590d1",
+        "frame_seconds": 4841.75,
+        "path": "outputs/frames/evalset_4841.75.jpg",
+        "sha256": "726d0ec4088a160fe8e9671743b375abdb81fe6e812183e1a340f7ec728c690c",
+        "bytes": 145993
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 50,
+        "pitch_number": 1,
+        "play_id": "367c4d6f-a809-490c-ae4c-fa5046c68f9e",
+        "frame_seconds": 4892.5,
+        "path": "outputs/frames/evalset_4892.50.jpg",
+        "sha256": "f12b3d3251ce1ed4f8ae97604b7a9de581055546d42111c648f750c56372022e",
+        "bytes": 173265
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 50,
+        "pitch_number": 2,
+        "play_id": "1e41f14f-1d81-4afb-a386-2a5410c4242d",
+        "frame_seconds": 4906,
+        "path": "outputs/frames/evalset_4906.00.jpg",
+        "sha256": "e9b80e271084f98758c288332d8b8dce99f94b652b490da02d98177c8dd8e967",
+        "bytes": 139954
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 50,
+        "pitch_number": 3,
+        "play_id": "b17d703a-60de-43f0-9e5d-acfdde8ac070",
+        "frame_seconds": 4928.75,
+        "path": "outputs/frames/evalset_4928.75.jpg",
+        "sha256": "ef59f4360b81cec5fbaef3d7e88a54a1775ae08201a2aa13a0791e0eb7adb656",
+        "bytes": 155009
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 51,
+        "pitch_number": 1,
+        "play_id": "f1f40500-2155-4cc6-946f-f85105716aa0",
+        "frame_seconds": 4956.75,
+        "path": "outputs/frames/evalset_4956.75.jpg",
+        "sha256": "60d40f5a22503c98ec8e0e2e4b7d5a7326eac285f09170a40c91e7ef91dcc817",
+        "bytes": 131228
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 52,
+        "pitch_number": 1,
+        "play_id": "480ce5da-f7ec-4841-bb2f-822ef3f995dd",
+        "frame_seconds": 4995,
+        "path": "outputs/frames/evalset_4995.00.jpg",
+        "sha256": "b1cd977ecd9c40192c819a3f132ba94bca4d24f2a69a63d0d52a33dc9c69360b",
+        "bytes": 170125
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 52,
+        "pitch_number": 3,
+        "play_id": "44d27031-68ea-44a1-9c4b-f102f8332cbd",
+        "frame_seconds": 5023,
+        "path": "outputs/frames/evalset_5023.00.jpg",
+        "sha256": "e456c1cda2a5ee11dd981ff6515894aba1e4d257ac76660b3776e6a233a6b0ba",
+        "bytes": 161504
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 52,
+        "pitch_number": 4,
+        "play_id": "5550f613-0c9a-454d-b9e7-a85df981c42d",
+        "frame_seconds": 5035.75,
+        "path": "outputs/frames/evalset_5035.75.jpg",
+        "sha256": "c0bee330d7b5e8365e526cbf44e1a21f873bac8b3ba662811c7b8827b1e98dfb",
+        "bytes": 152297
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 52,
+        "pitch_number": 5,
+        "play_id": "c3e3330c-1e1e-4968-ac2c-d479d3137a73",
+        "frame_seconds": 5051.5,
+        "path": "outputs/frames/evalset_5051.50.jpg",
+        "sha256": "9d5e7bb0b89b25742d2a1e37db4a736bdab581684b174d34aa2fed0855811400",
+        "bytes": 157915
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 53,
+        "pitch_number": 1,
+        "play_id": "7a1cd084-cf4a-4ac1-82e3-bcd9fd04ff91",
+        "frame_seconds": 5104.25,
+        "path": "outputs/frames/evalset_5104.25.jpg",
+        "sha256": "b051631383e3d6523cf4b4ec94fd731dc109ebfbf840e93de9441121a7bb3d68",
+        "bytes": 204634
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 53,
+        "pitch_number": 2,
+        "play_id": "dc107ea1-beb2-4cea-bb30-79634c91bbcf",
+        "frame_seconds": 5119.75,
+        "path": "outputs/frames/evalset_5119.75.jpg",
+        "sha256": "51f411cade50c62c74ca5c1784b1212472973ff0ea22da1c9f3050b1d0c80def",
+        "bytes": 160361
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 53,
+        "pitch_number": 3,
+        "play_id": "c7c54581-f317-480e-a1c3-28052bbf5f16",
+        "frame_seconds": 5138.25,
+        "path": "outputs/frames/evalset_5138.25.jpg",
+        "sha256": "8f852ab09a4bda0943d35d3dbad2af3be7f88305e525eca3f6915643933c923d",
+        "bytes": 163606
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 54,
+        "pitch_number": 1,
+        "play_id": "f7ce95b0-5a55-4789-8425-8f31ff629223",
+        "frame_seconds": 5175.25,
+        "path": "outputs/frames/evalset_5175.25.jpg",
+        "sha256": "bf5cc5d0908de88bfa1b8e23cede57d2420c3b7b9a4afcd632f71fa886354541",
+        "bytes": 179378
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 55,
+        "pitch_number": 1,
+        "play_id": "e9e18908-b2cf-482d-b744-af411c45792d",
+        "frame_seconds": 5211.75,
+        "path": "outputs/frames/evalset_5211.75.jpg",
+        "sha256": "194a685b2ccce3f8ad4a23b8636fa6b2b9de6de3b8881a47dabb04539c34480e",
+        "bytes": 175979
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 55,
+        "pitch_number": 2,
+        "play_id": "f1e1527b-aa42-44b6-9017-1035a869d81e",
+        "frame_seconds": 5228.75,
+        "path": "outputs/frames/evalset_5228.75.jpg",
+        "sha256": "3ecc15241aaf15b74b44bb783e4e83babb4f7f6e40cb798b279bdf7ba6db0d87",
+        "bytes": 192086
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 55,
+        "pitch_number": 3,
+        "play_id": "030504c8-ebaa-4e1d-a1df-a641dd2f3854",
+        "frame_seconds": 5251.5,
+        "path": "outputs/frames/evalset_5251.50.jpg",
+        "sha256": "04704db19c13bdba6d6b76ab468279be2455e88a9f1931a4945f92e4baf57a2a",
+        "bytes": 198473
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 55,
+        "pitch_number": 4,
+        "play_id": "308f7e1e-25c8-403a-938e-f74e1a139f9b",
+        "frame_seconds": 5274.5,
+        "path": "outputs/frames/evalset_5274.50.jpg",
+        "sha256": "c0301551b509a00d7cb679439b999d7c975ca124a7aa61303b1bcc7e666fb3c2",
+        "bytes": 125933
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 55,
+        "pitch_number": 5,
+        "play_id": "74e64a7d-7097-4631-b64b-77a3c83da91c",
+        "frame_seconds": 5292.75,
+        "path": "outputs/frames/evalset_5292.75.jpg",
+        "sha256": "8b2b9744d9880883ca57dd5019439138daabd0cbac2726fd87764482b1cfa63a",
+        "bytes": 155075
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 56,
+        "pitch_number": 3,
+        "play_id": "02c7d4fa-f676-4dca-bdf3-80151eeb04e0",
+        "frame_seconds": 5342.25,
+        "path": "outputs/frames/evalset_5342.25.jpg",
+        "sha256": "b8248df5dc698f168343f8812349d64b79e25fa28815606e2202f55ebe9b5122",
+        "bytes": 177626
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 56,
+        "pitch_number": 4,
+        "play_id": "efafa5e0-a97c-4b60-99dc-486ac0b85fee",
+        "frame_seconds": 5357.5,
+        "path": "outputs/frames/evalset_5357.50.jpg",
+        "sha256": "6ab32ce29d473e3f9f6de47743c4babf6e86ce3cd8e28a9886417d3ed268e319",
+        "bytes": 157095
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 56,
+        "pitch_number": 5,
+        "play_id": "9e1773fd-4d7e-48d8-a9d3-d1bca01e7662",
+        "frame_seconds": 5373.5,
+        "path": "outputs/frames/evalset_5373.50.jpg",
+        "sha256": "a5e0b9d3c700164aef67d0b11f4d80366bc4c9e50c469655ee0dd8c4f22b26eb",
+        "bytes": 153420
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 56,
+        "pitch_number": 6,
+        "play_id": "9ee8c65d-d672-46ad-90b1-682c2e0ec8ec",
+        "frame_seconds": 5392.25,
+        "path": "outputs/frames/evalset_5392.25.jpg",
+        "sha256": "6f66b934ec578540e871eb722c807855425e1346c7794f8d4ee932716f1f503a",
+        "bytes": 154031
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 56,
+        "pitch_number": 7,
+        "play_id": "74672311-685d-4c36-8ade-d9e32f5d128a",
+        "frame_seconds": 5413.25,
+        "path": "outputs/frames/evalset_5413.25.jpg",
+        "sha256": "9129d26097a3bca8458a82c7d7b2c9af4d1ae10a81cae809825a420aba8d042d",
+        "bytes": 163882
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 56,
+        "pitch_number": 9,
+        "play_id": "183ea298-5682-4ca1-bae6-fdbce137a6b1",
+        "frame_seconds": 5435.25,
+        "path": "outputs/frames/evalset_5435.25.jpg",
+        "sha256": "9642e2bec6765590e431e30b90cb3313c5f0568a153f8a7f8c94ed71d2936800",
+        "bytes": 165907
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 56,
+        "pitch_number": 10,
+        "play_id": "91b75300-57e6-414d-8304-0ee53a2026b9",
+        "frame_seconds": 5453.25,
+        "path": "outputs/frames/evalset_5453.25.jpg",
+        "sha256": "38a4dbf9bfb877eb8f2f526f3312dc033a0447a3dcad76f0bed10b2c8cb4a778",
+        "bytes": 149034
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 56,
+        "pitch_number": 11,
+        "play_id": "19866331-6084-4a8d-9471-484862e6d3de",
+        "frame_seconds": 5487.5,
+        "path": "outputs/frames/evalset_5487.50.jpg",
+        "sha256": "5df9a07e59e9dbb23a2dc7b957bc64959438b8e48e0935910950fa9b225e9d05",
+        "bytes": 159636
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 57,
+        "pitch_number": 1,
+        "play_id": "d993a045-96a5-4f35-8814-902ccfa72fbf",
+        "frame_seconds": 5582,
+        "path": "outputs/frames/evalset_5582.00.jpg",
+        "sha256": "5e27a6aed1f8e4af9f3551c2dff45bf05e383f82cc47e9833b5f93afbd31c58f",
+        "bytes": 183041
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 57,
+        "pitch_number": 2,
+        "play_id": "b6afb772-f0cd-4232-9794-36db043f7816",
+        "frame_seconds": 5596.25,
+        "path": "outputs/frames/evalset_5596.25.jpg",
+        "sha256": "077ee131d10f91483888a975307caebf5c63bbd28875f3b33d2d821b5c910606",
+        "bytes": 150139
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 58,
+        "pitch_number": 1,
+        "play_id": "c02ff4c9-f08a-44e3-b36e-e501f2ae9983",
+        "frame_seconds": 5654.5,
+        "path": "outputs/frames/evalset_5654.50.jpg",
+        "sha256": "df540f6f4b1c15a574c3ab16656c159985d35284d31aa2075ae83911b4ad17a9",
+        "bytes": 185021
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 58,
+        "pitch_number": 2,
+        "play_id": "dd3864b9-c243-4060-b47e-cb804a7ed41a",
+        "frame_seconds": 5672.75,
+        "path": "outputs/frames/evalset_5672.75.jpg",
+        "sha256": "6ea1b670afc597481e359d0037bc91fa54773c1c248ddfd2eea11e041edf961a",
+        "bytes": 146107
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 58,
+        "pitch_number": 3,
+        "play_id": "7dccad35-8849-4144-8dfc-834c3478fcff",
+        "frame_seconds": 5695.25,
+        "path": "outputs/frames/evalset_5695.25.jpg",
+        "sha256": "a0928b5602f8aff5d171a026a309ffd43a9ea53df4949342077ee3fd9e119115",
+        "bytes": 169080
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 59,
+        "pitch_number": 1,
+        "play_id": "980250da-67a3-432e-9fb0-b9199b768608",
+        "frame_seconds": 5784.25,
+        "path": "outputs/frames/evalset_5784.25.jpg",
+        "sha256": "018f3d6513993ed93bffd651f6e5a58b94b12e881dd858e817f4403226a8971b",
+        "bytes": 196619
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 59,
+        "pitch_number": 2,
+        "play_id": "9ab81494-c72e-4733-99ac-5792c0396de9",
+        "frame_seconds": 5805.5,
+        "path": "outputs/frames/evalset_5805.50.jpg",
+        "sha256": "a291debc8db5ff2cbf3c74e8eafa590fb8dfecd52d0a0cc63ff22f7f29e34e4c",
+        "bytes": 169245
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 59,
+        "pitch_number": 3,
+        "play_id": "2017b82e-871c-418a-a7ea-2e7768095a21",
+        "frame_seconds": 5837.75,
+        "path": "outputs/frames/evalset_5837.75.jpg",
+        "sha256": "ecf6aab866f3f326d5b3e6991a66c3785af619b0b8180f92b0692dcbe71e94ef",
+        "bytes": 191470
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 60,
+        "pitch_number": 1,
+        "play_id": "31305347-3b22-4856-be77-f2b60424c087",
+        "frame_seconds": 5933.5,
+        "path": "outputs/frames/evalset_5933.50.jpg",
+        "sha256": "1b984d2716406a6dab3f9d77a627e2e2e250c47ebdb7ca7439f562c69b81b4fb",
+        "bytes": 159664
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 60,
+        "pitch_number": 2,
+        "play_id": "94bd7dfc-cb02-482c-b830-1d9e462e7518",
+        "frame_seconds": 5948.75,
+        "path": "outputs/frames/evalset_5948.75.jpg",
+        "sha256": "4b073450f567a8727c27b5f5cb77e0904646c559da51a01ed7f160bee37817eb",
+        "bytes": 142950
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 60,
+        "pitch_number": 3,
+        "play_id": "8b91f857-00fc-42b0-be1f-f9822eeb6e46",
+        "frame_seconds": 5971.5,
+        "path": "outputs/frames/evalset_5971.50.jpg",
+        "sha256": "b7110ca303f237096b9a19ff66dbbc31d90698f9e9872010718cd85fc00df273",
+        "bytes": 166473
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 60,
+        "pitch_number": 4,
+        "play_id": "6f6c8911-3df4-4ee6-9f8e-eb29cc1c3c22",
+        "frame_seconds": 5988,
+        "path": "outputs/frames/evalset_5988.00.jpg",
+        "sha256": "1cb5d513d48b57a4a0eba5e80ba1e14b7554af316ab4e2a4fce82394f90a916f",
+        "bytes": 171449
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 61,
+        "pitch_number": 1,
+        "play_id": "9c2a92d3-2e65-4132-aae3-f7b1eeb9bc1d",
+        "frame_seconds": 6044.75,
+        "path": "outputs/frames/evalset_6044.75.jpg",
+        "sha256": "da361c2fdcc025253a05582d223f915b38994b702d9190ad56ca712099edccec",
+        "bytes": 171367
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 61,
+        "pitch_number": 2,
+        "play_id": "3259fc6d-1af2-4952-8ed6-b8ae03e85d0c",
+        "frame_seconds": 6063,
+        "path": "outputs/frames/evalset_6063.00.jpg",
+        "sha256": "2a41565657f7a737349fb7d1291fe2e52aa7bf10de989cf09ee11ae97f6baa09",
+        "bytes": 130676
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 61,
+        "pitch_number": 3,
+        "play_id": "d77609ba-144a-4743-bb46-38395ae9b037",
+        "frame_seconds": 6077.5,
+        "path": "outputs/frames/evalset_6077.50.jpg",
+        "sha256": "95e53578af6f37586cdb2a3d63533fd437e127aa766dcc7ce97f390734a77e0f",
+        "bytes": 221860
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 61,
+        "pitch_number": 4,
+        "play_id": "7c16a1c0-a07e-4f71-8e3d-7d958c0c7beb",
+        "frame_seconds": 6094,
+        "path": "outputs/frames/evalset_6094.00.jpg",
+        "sha256": "347d35d41e6e8ee7de3c309238d967630622b872c1efdfa23ab0c38c45f335e5",
+        "bytes": 160800
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 62,
+        "pitch_number": 1,
+        "play_id": "9a3658b0-a121-4439-acbf-cd8627283fc6",
+        "frame_seconds": 6142.25,
+        "path": "outputs/frames/evalset_6142.25.jpg",
+        "sha256": "634b601c44f00fccfca1996d25356ebc6bf22d5a80dae4bf8cba433b9902874c",
+        "bytes": 168125
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 62,
+        "pitch_number": 2,
+        "play_id": "1511c46a-6b07-44e2-85f1-67b14a7d4c01",
+        "frame_seconds": 6172.25,
+        "path": "outputs/frames/evalset_6172.25.jpg",
+        "sha256": "6cd5c52209deea8213d96921f24d1a54811c9372cfa9e73e374362c2bbf08d81",
+        "bytes": 158340
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 62,
+        "pitch_number": 3,
+        "play_id": "a20b83f8-8419-49e9-8735-8e6d2717baee",
+        "frame_seconds": 6187.5,
+        "path": "outputs/frames/evalset_6187.50.jpg",
+        "sha256": "dfd8dde766733f47b612527836924df6b096595ed9345b4a484bf0640160f3e7",
+        "bytes": 175277
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 62,
+        "pitch_number": 4,
+        "play_id": "19bd823b-1d2a-4512-813c-07b582a7c6aa",
+        "frame_seconds": 6205.5,
+        "path": "outputs/frames/evalset_6205.50.jpg",
+        "sha256": "071ca617df3d700ddf79d1d20b7beb92542baa0262e10730455ed8ca898ee906",
+        "bytes": 165163
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 63,
+        "pitch_number": 1,
+        "play_id": "152d59ed-5b23-4dd2-b180-ac571fd01621",
+        "frame_seconds": 6334,
+        "path": "outputs/frames/evalset_6334.00.jpg",
+        "sha256": "4be4481ca46c6a1cd6eec70bce252968b4a59913fa4bff654285b50a5608e757",
+        "bytes": 181352
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 63,
+        "pitch_number": 2,
+        "play_id": "a5a962bb-ccc7-4bca-a093-f1a3525ac0a0",
+        "frame_seconds": 6348.75,
+        "path": "outputs/frames/evalset_6348.75.jpg",
+        "sha256": "1b3c433bd4f235c7cfa00f27b881242ae35ca9c9924e6c2b4a66cbe0492c4747",
+        "bytes": 176442
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 63,
+        "pitch_number": 3,
+        "play_id": "90b30591-4ed8-4ccd-a1b8-e65553f86486",
+        "frame_seconds": 6369.25,
+        "path": "outputs/frames/evalset_6369.25.jpg",
+        "sha256": "58ae43e3cdc493de6d8b6ffb706f2469dcd98a131e4883084e1e3e79a636b8e5",
+        "bytes": 127764
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 63,
+        "pitch_number": 4,
+        "play_id": "82fa868e-4ded-44e8-b822-a51df3485183",
+        "frame_seconds": 6393.25,
+        "path": "outputs/frames/evalset_6393.25.jpg",
+        "sha256": "810086e4421479f4bef452327b4b63fa6c814d8ed82771af6af60f3706acd8f3",
+        "bytes": 183754
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 63,
+        "pitch_number": 5,
+        "play_id": "3dfee2a3-9d15-4efc-af3b-4e3eba3d49db",
+        "frame_seconds": 6406.75,
+        "path": "outputs/frames/evalset_6406.75.jpg",
+        "sha256": "1cb1b6a4b8aa40c48494074d70bd0af2c04e1a3014c31e47510fd86362b0a22a",
+        "bytes": 182687
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 64,
+        "pitch_number": 1,
+        "play_id": "36ce9eb0-8b54-4d88-a8ed-5e538b8d7daa",
+        "frame_seconds": 6434.25,
+        "path": "outputs/frames/evalset_6434.25.jpg",
+        "sha256": "53895ace141209bd3484d89661f116b66091446564610232b57f25eaa607385b",
+        "bytes": 144548
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 64,
+        "pitch_number": 4,
+        "play_id": "d79dbd74-c770-46dc-9333-d913555ed157",
+        "frame_seconds": 6485.5,
+        "path": "outputs/frames/evalset_6485.50.jpg",
+        "sha256": "a21b6b07d88bd1b0c33b8ae6e687356861db406d798d4ca3aa72757dc59bdd72",
+        "bytes": 154609
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 64,
+        "pitch_number": 5,
+        "play_id": "1e5ab5ea-a4b3-4228-9df8-183ef306759f",
+        "frame_seconds": 6502.25,
+        "path": "outputs/frames/evalset_6502.25.jpg",
+        "sha256": "4be4704379e856fa30217c2c95c341cd313a6a0554bec46e96324dcb197991c1",
+        "bytes": 161553
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 64,
+        "pitch_number": 6,
+        "play_id": "9ffc9f57-e55d-42b1-90fe-4d3efcf26ab2",
+        "frame_seconds": 6529.25,
+        "path": "outputs/frames/evalset_6529.25.jpg",
+        "sha256": "4d0e68ad14a46132aa8b343a2dfa285c45bb195f9e3931464d3258b30d9cee3a",
+        "bytes": 164579
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 65,
+        "pitch_number": 1,
+        "play_id": "72d03b4e-1a02-4f31-aa52-6c5ae0520aa4",
+        "frame_seconds": 6563.25,
+        "path": "outputs/frames/evalset_6563.25.jpg",
+        "sha256": "8f726280317349f80f92e0bc4cb52c4346acfd270440fce526c4af6595fc2ded",
+        "bytes": 161171
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 65,
+        "pitch_number": 2,
+        "play_id": "d6914717-8f79-452d-b594-3adff253cb62",
+        "frame_seconds": 6579.75,
+        "path": "outputs/frames/evalset_6579.75.jpg",
+        "sha256": "747955fa7b98ac87dfe705f304a274a81dc469fe87d23a9b34d2955dbc2b5eae",
+        "bytes": 163389
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 66,
+        "pitch_number": 1,
+        "play_id": "fb783726-1efc-4a30-a1a9-934e50c9baf4",
+        "frame_seconds": 6623.25,
+        "path": "outputs/frames/evalset_6623.25.jpg",
+        "sha256": "da93fc87413c62fe38ce59e76dc565c36fb5b118d8d54ff6e06b0bf142636e4d",
+        "bytes": 217614
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 66,
+        "pitch_number": 2,
+        "play_id": "2306a16d-61c8-4466-b8c8-f93df11ed156",
+        "frame_seconds": 6641.75,
+        "path": "outputs/frames/evalset_6641.75.jpg",
+        "sha256": "ca06031b6666779e12aa7c9355b5b7327141681264407f0b8d4c735e393ccfc4",
+        "bytes": 138589
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 66,
+        "pitch_number": 3,
+        "play_id": "0a0ad923-d1ad-45b8-a44b-ed405f327ab8",
+        "frame_seconds": 6661.25,
+        "path": "outputs/frames/evalset_6661.25.jpg",
+        "sha256": "cad57592ab6701e4121a9df9dd7528202ffe097663ea90d676ecd2ef32f90c60",
+        "bytes": 159730
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 66,
+        "pitch_number": 4,
+        "play_id": "037ad369-69a9-4573-a5f3-48526f545d04",
+        "frame_seconds": 6677.5,
+        "path": "outputs/frames/evalset_6677.50.jpg",
+        "sha256": "edc770986ffb7d9b20e29ef337bc2f5f0ca0bffd4323f990d6e2eb4b657a4fd7",
+        "bytes": 156422
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 67,
+        "pitch_number": 1,
+        "play_id": "a4d4ec62-2026-4b7d-bfae-58372c92d469",
+        "frame_seconds": 6719.75,
+        "path": "outputs/frames/evalset_6719.75.jpg",
+        "sha256": "2a6366aca34e2bf31d8617bb5fa1f4ec3412af61996ce4fc8f00417e0e6ff532",
+        "bytes": 131883
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 67,
+        "pitch_number": 2,
+        "play_id": "9f2fd7c9-fba9-4a12-91fe-90569fc9244a",
+        "frame_seconds": 6742.75,
+        "path": "outputs/frames/evalset_6742.75.jpg",
+        "sha256": "4d4f5bc8683ee9c7b0e8c67f4a5758c14cffd99e1fe13d13b7d4e7b6e5c22c3d",
+        "bytes": 199347
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 67,
+        "pitch_number": 3,
+        "play_id": "f97c77c5-a64a-457d-9a44-3162393e932f",
+        "frame_seconds": 6760.25,
+        "path": "outputs/frames/evalset_6760.25.jpg",
+        "sha256": "e1d4a75b6dbd621de9b4a4775d9e28c75589faf8896f049801e551cd21c33579",
+        "bytes": 173851
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 67,
+        "pitch_number": 4,
+        "play_id": "970512fe-21a5-4588-b0dd-782bc2d37466",
+        "frame_seconds": 6807,
+        "path": "outputs/frames/evalset_6807.00.jpg",
+        "sha256": "d9b5da8060a135c7fcd740ff4f11ffd9623d62382022a01257b5b6f7a4c0c3f1",
+        "bytes": 152089
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 68,
+        "pitch_number": 1,
+        "play_id": "f22e95f4-7fa3-4bba-9066-a5374b6ccd4e",
+        "frame_seconds": 6848.25,
+        "path": "outputs/frames/evalset_6848.25.jpg",
+        "sha256": "0b98732aa0b2685129228e7034ed275b010a18f1290b44c183c40e00cc97ef4e",
+        "bytes": 157885
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 68,
+        "pitch_number": 2,
+        "play_id": "3236ce35-5103-44be-b8d7-bd1cdc543862",
+        "frame_seconds": 6867.75,
+        "path": "outputs/frames/evalset_6867.75.jpg",
+        "sha256": "614942cf37746ba6dbec18b7022857385e35997610c2d83f18b3cfe404d960e4",
+        "bytes": 155606
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 68,
+        "pitch_number": 3,
+        "play_id": "15f07978-9891-4df4-b393-2d91fb640d4a",
+        "frame_seconds": 6886.75,
+        "path": "outputs/frames/evalset_6886.75.jpg",
+        "sha256": "fc55460f98df8db863b34389ec809efb128f69c1be5598c263c1975ce1001774",
+        "bytes": 148721
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 68,
+        "pitch_number": 4,
+        "play_id": "da67d075-2821-4b77-9ed6-de60d62857e3",
+        "frame_seconds": 6913.75,
+        "path": "outputs/frames/evalset_6913.75.jpg",
+        "sha256": "f34d6415cdd6c2fcf349c20854544a13deeb4546522ef3ad9ea631e7db3a64b5",
+        "bytes": 159106
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 69,
+        "pitch_number": 1,
+        "play_id": "9cc6f2a9-c1e8-4b43-b72b-ad85f876c7f5",
+        "frame_seconds": 7046,
+        "path": "outputs/frames/evalset_7046.00.jpg",
+        "sha256": "6dc468304f451297d674fa67c0dfd8d9d9c676d93526c07b8d04fd881d5fac3a",
+        "bytes": 152809
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 69,
+        "pitch_number": 2,
+        "play_id": "62ce0b18-2cb0-4f33-8eea-b44be03ca2db",
+        "frame_seconds": 7067.25,
+        "path": "outputs/frames/evalset_7067.25.jpg",
+        "sha256": "7fed6590498324b510afac53380721afb49a41a05b8aef6285fe074d610de9fc",
+        "bytes": 178569
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 69,
+        "pitch_number": 3,
+        "play_id": "e4187fcb-cc23-4191-b819-f2bd8a496cdb",
+        "frame_seconds": 7086.75,
+        "path": "outputs/frames/evalset_7086.75.jpg",
+        "sha256": "918cef31187e54402815c684b7577bcb892ee6971618bcc03049f04243abe830",
+        "bytes": 165312
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 70,
+        "pitch_number": 1,
+        "play_id": "aeb0508e-97ed-40af-8809-dd4403ce1898",
+        "frame_seconds": 7120.5,
+        "path": "outputs/frames/evalset_7120.50.jpg",
+        "sha256": "5ed5b480d731849a0e572295dd1e70856b8f43ab45d24e432ecf57fe07f1b799",
+        "bytes": 152995
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 70,
+        "pitch_number": 2,
+        "play_id": "b2b84f3d-e5d5-4f25-b288-1f3227856dcc",
+        "frame_seconds": 7140.25,
+        "path": "outputs/frames/evalset_7140.25.jpg",
+        "sha256": "0e644a466484dc4d71b5f3a5c67e415d763896ed3df07065c8ca1f54fbd5bf70",
+        "bytes": 162560
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 71,
+        "pitch_number": 1,
+        "play_id": "57256215-4596-4c5f-8f22-317e9c007c90",
+        "frame_seconds": 7248.75,
+        "path": "outputs/frames/evalset_7248.75.jpg",
+        "sha256": "bd04fc52fe0a9bdb6183128d7aa86599bf7a2c1a99dd4f367329b2371528e38b",
+        "bytes": 174924
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 71,
+        "pitch_number": 2,
+        "play_id": "26419c8a-d75d-422c-a64c-bb0eeed9d470",
+        "frame_seconds": 7267.25,
+        "path": "outputs/frames/evalset_7267.25.jpg",
+        "sha256": "8a937419bae994ce05bb6516bf733f55767224e676730d77fa1a272714e3fe0b",
+        "bytes": 141879
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 71,
+        "pitch_number": 3,
+        "play_id": "01472021-e85b-42e3-bc37-d11136f7d7f1",
+        "frame_seconds": 7287.25,
+        "path": "outputs/frames/evalset_7287.25.jpg",
+        "sha256": "42c8edf546f1cba70601b449a08aef8ed6624c3b850cad4e1a0776ae178d4438",
+        "bytes": 169493
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 71,
+        "pitch_number": 4,
+        "play_id": "08b5d21b-e289-414d-b028-99048049249e",
+        "frame_seconds": 7304.75,
+        "path": "outputs/frames/evalset_7304.75.jpg",
+        "sha256": "52b29b8bb6f48da7750c102c19236a330ac5b5783849898199a079b60b0ab83f",
+        "bytes": 173217
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 72,
+        "pitch_number": 2,
+        "play_id": "b7aff3e5-bb7b-4df2-8c8a-3956ec88d1ff",
+        "frame_seconds": 7350.5,
+        "path": "outputs/frames/evalset_7350.50.jpg",
+        "sha256": "6872e160a2660219d728b0e4cef7a708555c420bd765eeed923ae84139ec7747",
+        "bytes": 156466
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 72,
+        "pitch_number": 3,
+        "play_id": "ded4c619-40fc-47f6-aafb-29803b933d9e",
+        "frame_seconds": 7366.75,
+        "path": "outputs/frames/evalset_7366.75.jpg",
+        "sha256": "2dfc52de8b190a7156d9749750fbd652338d18f2e2186c16722d691017968fd1",
+        "bytes": 173048
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 72,
+        "pitch_number": 4,
+        "play_id": "d8aa8b7a-7058-485c-884d-54f0964b0f51",
+        "frame_seconds": 7386.25,
+        "path": "outputs/frames/evalset_7386.25.jpg",
+        "sha256": "5190584e88ebbea1828a602a2d2c4268fe20f5c12dc5f1ab4be92c27e85e8206",
+        "bytes": 167688
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 73,
+        "pitch_number": 1,
+        "play_id": "d32a46e5-c960-489d-beb0-4cb5afb440a2",
+        "frame_seconds": 7455,
+        "path": "outputs/frames/evalset_7455.00.jpg",
+        "sha256": "3f147dc951b7901e518bfda96ef37d8e2fe105a889613bb2083f558217651e20",
+        "bytes": 155029
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 73,
+        "pitch_number": 2,
+        "play_id": "badfc90f-f04f-495d-a9a7-bdae572fa81e",
+        "frame_seconds": 7474.25,
+        "path": "outputs/frames/evalset_7474.25.jpg",
+        "sha256": "9e3c9398200433c85daef54cdcb23c9e18c7899bedc2452f11962cf9d9bc4afb",
+        "bytes": 158132
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 73,
+        "pitch_number": 3,
+        "play_id": "c4a32657-4484-45a2-8ccf-be9ab626bd48",
+        "frame_seconds": 7508.75,
+        "path": "outputs/frames/evalset_7508.75.jpg",
+        "sha256": "cedcf56bf4eab963739d8b3da4950183c108f946bb5277f31bedaac19f67ce8c",
+        "bytes": 156924
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 73,
+        "pitch_number": 5,
+        "play_id": "2c002b7b-71de-4809-b832-308c727e0394",
+        "frame_seconds": 7546.25,
+        "path": "outputs/frames/evalset_7546.25.jpg",
+        "sha256": "892e78546ed6d17ab830abd40bf778c778c4bc26b80702d0046808741525a5f2",
+        "bytes": 142843
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 73,
+        "pitch_number": 6,
+        "play_id": "0ef50130-f554-424a-a0bd-bb406a263aa4",
+        "frame_seconds": 7563.75,
+        "path": "outputs/frames/evalset_7563.75.jpg",
+        "sha256": "d6dac30e55ed7461fae64fd16512521d28b150c9b667477a8540fbd932b63181",
+        "bytes": 172241
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 74,
+        "pitch_number": 1,
+        "play_id": "f4549bdd-e0c6-4f6d-b60a-418497483ae0",
+        "frame_seconds": 7623,
+        "path": "outputs/frames/evalset_7623.00.jpg",
+        "sha256": "83b4274ffda5e6c4b9908b555d52e1408ee9a3be325acbdfa28f526bd11f5b60",
+        "bytes": 156257
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 74,
+        "pitch_number": 2,
+        "play_id": "d0f30069-bc15-46d7-9cd9-ee1ba4eb8ea8",
+        "frame_seconds": 7643.25,
+        "path": "outputs/frames/evalset_7643.25.jpg",
+        "sha256": "f421729156eb110afa71e81d61412ffd057701baf19696839dd7d6e24446ae5e",
+        "bytes": 158433
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 75,
+        "pitch_number": 1,
+        "play_id": "e183f2fa-7c71-4fd3-8ada-c061884a9239",
+        "frame_seconds": 7681.25,
+        "path": "outputs/frames/evalset_7681.25.jpg",
+        "sha256": "82282ca1b93fddd721e4a8a4f7cead752d3e410df356d41c33a306688844318d",
+        "bytes": 161418
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 75,
+        "pitch_number": 2,
+        "play_id": "1f33065d-ff52-4a40-ba7c-05e9e1040f62",
+        "frame_seconds": 7700,
+        "path": "outputs/frames/evalset_7700.00.jpg",
+        "sha256": "e96e20948fa3bffc40769847fb07f959a7bc7262f1077afe61f82098bcdb62e4",
+        "bytes": 178239
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 75,
+        "pitch_number": 3,
+        "play_id": "c791040c-6c83-4124-80df-7a97e0828844",
+        "frame_seconds": 7716.75,
+        "path": "outputs/frames/evalset_7716.75.jpg",
+        "sha256": "9b4a3132527b81fb7b9f8033dd4fa7de3cd44cb460e0d848d9def9aba1d57db7",
+        "bytes": 213180
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 75,
+        "pitch_number": 4,
+        "play_id": "c5e08241-26a8-4a15-8f4f-618c7f30f05d",
+        "frame_seconds": 7740,
+        "path": "outputs/frames/evalset_7740.00.jpg",
+        "sha256": "493cfd64495f03a00650a6fb61d7f676a6e8a7c5bd70e4d21dac6eee7f900715",
+        "bytes": 162082
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 76,
+        "pitch_number": 1,
+        "play_id": "f06ec699-f077-4fc6-84b2-527b32001983",
+        "frame_seconds": 7796.5,
+        "path": "outputs/frames/evalset_7796.50.jpg",
+        "sha256": "6a42e514aa5004effe28f268818386426e5c7c219b2b02bec778311a79dc242d",
+        "bytes": 246078
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 77,
+        "pitch_number": 1,
+        "play_id": "3be206be-743d-4dbe-9d8e-7d19498634b9",
+        "frame_seconds": 7861,
+        "path": "outputs/frames/evalset_7861.00.jpg",
+        "sha256": "6e32edb08cb6ed82bed7cf9c6c773065369a35a0599f67a2e502cd0b17877151",
+        "bytes": 160294
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 77,
+        "pitch_number": 2,
+        "play_id": "0f7a16ed-ea26-46c6-8b4e-23b1872c43ac",
+        "frame_seconds": 7876.5,
+        "path": "outputs/frames/evalset_7876.50.jpg",
+        "sha256": "596fd6141a7efcbc96c746f03f08c97114d5904171586b5a3ce5a83c34abb76e",
+        "bytes": 159666
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 77,
+        "pitch_number": 3,
+        "play_id": "d018328c-4add-4a23-8a72-e1031401f6ee",
+        "frame_seconds": 7891.75,
+        "path": "outputs/frames/evalset_7891.75.jpg",
+        "sha256": "5ab939948a882e55e151f548aea780644a3f558de0f99609cf72e04161ecb8c5",
+        "bytes": 153888
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 77,
+        "pitch_number": 4,
+        "play_id": "fc703098-06c4-4433-a3c0-02d0d4474969",
+        "frame_seconds": 7916.25,
+        "path": "outputs/frames/evalset_7916.25.jpg",
+        "sha256": "ddc21e9e6005833cea5843d7a7451d7f958d505cbf2319923d15830bc86cf621",
+        "bytes": 151830
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 78,
+        "pitch_number": 1,
+        "play_id": "3a1dd24b-999e-446a-b201-6a54e1ca6e87",
+        "frame_seconds": 7957.5,
+        "path": "outputs/frames/evalset_7957.50.jpg",
+        "sha256": "a971392d8697ab1917453c4d46e82d62a3880351a5b317ddfa01af636dc576fb",
+        "bytes": 146434
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 78,
+        "pitch_number": 2,
+        "play_id": "6234b5dc-5ef2-4fdb-85d8-09177f9c7809",
+        "frame_seconds": 7973,
+        "path": "outputs/frames/evalset_7973.00.jpg",
+        "sha256": "6fdd0fdefba13bec64f91284070ab2534ef4639aae3b72b8f8b436ac2e7f569b",
+        "bytes": 155450
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 78,
+        "pitch_number": 3,
+        "play_id": "63bdb74e-98bf-4c06-b87c-82811dabcdf5",
+        "frame_seconds": 7991.25,
+        "path": "outputs/frames/evalset_7991.25.jpg",
+        "sha256": "433558fc245f62e64e96bce2f226f05b48422c5d0e05fc137271cf9ade57f9fa",
+        "bytes": 182261
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 78,
+        "pitch_number": 4,
+        "play_id": "a64b1765-489c-42da-a464-643a03f13467",
+        "frame_seconds": 8013.75,
+        "path": "outputs/frames/evalset_8013.75.jpg",
+        "sha256": "cfb1ed3a299d0191f72cf67498e48d4c85c113827447e70015d6d8df233ecb28",
+        "bytes": 171938
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 78,
+        "pitch_number": 5,
+        "play_id": "574794ea-c1fd-4ba8-b3b9-019f462a8496",
+        "frame_seconds": 8037,
+        "path": "outputs/frames/evalset_8037.00.jpg",
+        "sha256": "28b9c7b993b020bbd3ed88b43ca5dc2593e00993c55cc0768b58f6d8500038c0",
+        "bytes": 158952
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 78,
+        "pitch_number": 6,
+        "play_id": "2054de59-4eb4-41ea-8ce7-e33afda83647",
+        "frame_seconds": 8051.5,
+        "path": "outputs/frames/evalset_8051.50.jpg",
+        "sha256": "7b1157192dd1671f4d32497cca58c920cdbd5fa422f2d9a14ba136c7e1975cc2",
+        "bytes": 156403
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 78,
+        "pitch_number": 7,
+        "play_id": "dfee7d2d-32df-4ff0-b6a2-fefa47accdeb",
+        "frame_seconds": 8069,
+        "path": "outputs/frames/evalset_8069.00.jpg",
+        "sha256": "62acf00a45f745bc4a37354daae9e52f5308f9ec97934e772ccc25d50a487cf5",
+        "bytes": 180346
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 78,
+        "pitch_number": 8,
+        "play_id": "3d8cce47-48c5-4a8e-bc5a-26b9874962db",
+        "frame_seconds": 8090.75,
+        "path": "outputs/frames/evalset_8090.75.jpg",
+        "sha256": "237d02ba203cad272c14ddaa1fceceafb32a97e634cb2bb83f9d9261bbbaa832",
+        "bytes": 164293
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 78,
+        "pitch_number": 9,
+        "play_id": "9026331f-1e47-409d-873d-2bbfba1cd7ff",
+        "frame_seconds": 8109.75,
+        "path": "outputs/frames/evalset_8109.75.jpg",
+        "sha256": "6bd7efd9fe60f95fef1469152feb9172eecd64c52723802c384293a47e379c52",
+        "bytes": 161360
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 78,
+        "pitch_number": 10,
+        "play_id": "4d7e7a98-267e-46d7-86a4-d10a29a398cb",
+        "frame_seconds": 8135.25,
+        "path": "outputs/frames/evalset_8135.25.jpg",
+        "sha256": "254435b585b7719c3f6c103804e0b88ea65d4c1369f89de9c4537da33505b377",
+        "bytes": 164662
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 79,
+        "pitch_number": 1,
+        "play_id": "444ca4df-89d9-4236-9656-2f6df72c11b3",
+        "frame_seconds": 8180.25,
+        "path": "outputs/frames/evalset_8180.25.jpg",
+        "sha256": "41aca0536f4504af144c6e98f9e6c8571af8545727410921d998afc725cd0d87",
+        "bytes": 172439
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 80,
+        "pitch_number": 1,
+        "play_id": "21ff8108-019d-4735-84e1-3391d04cf774",
+        "frame_seconds": 8216,
+        "path": "outputs/frames/evalset_8216.00.jpg",
+        "sha256": "50a5afede8046c41e9efc3dd656a42af5338f622bf14f8c8c7511c009e4657aa",
+        "bytes": 161756
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 80,
+        "pitch_number": 2,
+        "play_id": "013ff1a9-6d42-42c7-b5a7-99771207b0f1",
+        "frame_seconds": 8224,
+        "path": "outputs/frames/evalset_8224.00.jpg",
+        "sha256": "9223415c9b55071efb86f2193131656ec442acd723b2aabc89937b22ff1d742e",
+        "bytes": 181439
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 80,
+        "pitch_number": 3,
+        "play_id": "0c08d464-cc70-4ca7-950a-1779f449e80d",
+        "frame_seconds": 8239,
+        "path": "outputs/frames/evalset_8239.00.jpg",
+        "sha256": "3f68af55d402d2aad91586c8e665071a0ffd136b68d827a6cbe932e6785fac8d",
+        "bytes": 161643
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 80,
+        "pitch_number": 4,
+        "play_id": "ae553896-a42f-4df2-b104-d198bcf02dc9",
+        "frame_seconds": 8256,
+        "path": "outputs/frames/evalset_8256.00.jpg",
+        "sha256": "c8b31c9c0222a8b41813e2bf4289dfe2dc1beae4eb7c89f047737811cd196ff4",
+        "bytes": 162144
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 80,
+        "pitch_number": 5,
+        "play_id": "5c693e44-d48b-4e99-a1a7-313a64f984e6",
+        "frame_seconds": 8274.25,
+        "path": "outputs/frames/evalset_8274.25.jpg",
+        "sha256": "e894778381a67bbf1366354b3916a4c425df6267e55cb061ce75f9891a0e00e3",
+        "bytes": 178153
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 80,
+        "pitch_number": 6,
+        "play_id": "b593c5d3-6f87-4a6e-9723-8311ca9c4b86",
+        "frame_seconds": 8289.5,
+        "path": "outputs/frames/evalset_8289.50.jpg",
+        "sha256": "55bad336647b00ac287dabd9f2486b6dba48ff7080c37cbe5f6c169b3d9c855f",
+        "bytes": 156279
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 81,
+        "pitch_number": 1,
+        "play_id": "7d722530-82ac-4688-8a60-0212990a80f2",
+        "frame_seconds": 8380.5,
+        "path": "outputs/frames/evalset_8380.50.jpg",
+        "sha256": "62d6fd2bb83ff9a730b1af112fbf5460857f1ddb83d5c7d94a85eef408d89c82",
+        "bytes": 209157
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 81,
+        "pitch_number": 2,
+        "play_id": "bafac694-b518-44d5-bafc-f9d477f02a5d",
+        "frame_seconds": 8411.5,
+        "path": "outputs/frames/evalset_8411.50.jpg",
+        "sha256": "c264cbfaf3dd171feda741ccf24458836e2a2886b950870f9b72c691a395ba56",
+        "bytes": 172987
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 81,
+        "pitch_number": 3,
+        "play_id": "ec26cd17-7b01-46f9-8b4f-ae8661c55c40",
+        "frame_seconds": 8430.75,
+        "path": "outputs/frames/evalset_8430.75.jpg",
+        "sha256": "baf84257ca49377e1163b7f40a16271ffa51f8bbb3db9ba1c422d3c68bffa72d",
+        "bytes": 225690
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 81,
+        "pitch_number": 4,
+        "play_id": "93632b61-065c-46f8-b401-37bacd4aea43",
+        "frame_seconds": 8444,
+        "path": "outputs/frames/evalset_8444.00.jpg",
+        "sha256": "c69c05c802d9d8c2dc199c5ed7a12fc4f624e26378d07a018b108275fddbf96c",
+        "bytes": 222981
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 81,
+        "pitch_number": 5,
+        "play_id": "350276f1-24bb-48d7-abcb-879e9a45515f",
+        "frame_seconds": 8473.25,
+        "path": "outputs/frames/evalset_8473.25.jpg",
+        "sha256": "6fbaf83697f4f2918876753b730b4167cea99e2517a13b9f885e81eee317ddf8",
+        "bytes": 185135
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 81,
+        "pitch_number": 6,
+        "play_id": "efdf5f3c-f98f-4afe-b18a-53b1a7803d1d",
+        "frame_seconds": 8494.5,
+        "path": "outputs/frames/evalset_8494.50.jpg",
+        "sha256": "a5cfc7805804cbb521ed1e26c898043b5d82c69bd687aeba448f073ffe199c63",
+        "bytes": 203186
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 82,
+        "pitch_number": 1,
+        "play_id": "bfde9e7e-f021-4817-a81d-d1ac03bd87f2",
+        "frame_seconds": 8521.25,
+        "path": "outputs/frames/evalset_8521.25.jpg",
+        "sha256": "cd795dfb1cd7f04448d0964f689cef728721931f5662330bd202cddafce8b576",
+        "bytes": 173448
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 82,
+        "pitch_number": 2,
+        "play_id": "1dddce5e-7360-4599-9a16-c24e2e31b374",
+        "frame_seconds": 8535.5,
+        "path": "outputs/frames/evalset_8535.50.jpg",
+        "sha256": "77bbefbe06addafd5967e7e1bb4a6dcc83758daff341d8936a2ad83cf6a96834",
+        "bytes": 176287
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 82,
+        "pitch_number": 3,
+        "play_id": "30ad7baf-c286-4f70-ad2b-9c3ae2afa320",
+        "frame_seconds": 8549.25,
+        "path": "outputs/frames/evalset_8549.25.jpg",
+        "sha256": "b66d4e7e5d44799e682fe47460e6b2dae36b238a4cee3a05148b042ac8d412f7",
+        "bytes": 186049
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 82,
+        "pitch_number": 5,
+        "play_id": "e448e0c6-7af3-420a-8911-4f62c0f77abb",
+        "frame_seconds": 8598.75,
+        "path": "outputs/frames/evalset_8598.75.jpg",
+        "sha256": "9493e856ec8cd9d95876aa302077a8d89bb2cb091b9ee4c0a581401e0b9afa4e",
+        "bytes": 154623
+      }
+    ]
+  },
+  "current_repeat_check": {
+    "prediction_rows": 297,
+    "matching_rows": 297,
+    "parsed_documents_equal": true,
+    "repeat_output": {
+      "path": "outputs/verification/ocr_v1_repeat.json",
+      "sha256": "110fbcefe1aff9dc90318f5dab7469cb08fd29e23587f36ed2fcf1166ec6855c",
+      "bytes": 123421
+    }
+  },
+  "previous_prediction_comparison": {
+    "reference_commit": "16e0b18",
+    "previous_rows": 280,
+    "current_rows": 297,
+    "shared_rows": 280,
+    "identical_shared_rows": 280,
+    "changed_shared_rows": 0,
+    "new_rows": 17,
+    "removed_rows": 0,
+    "changes": []
+  },
+  "new_rows_comparison": {
+    "label": "pa79_82",
+    "reference_commit": "16e0b18",
+    "totals": {
+      "pitch_count": 17,
+      "fully_evaluable_pitches": 17,
+      "all_fields_correct_pitches": 0,
+      "pitches_with_wrong_field": 0,
+      "pitches_with_abstention": 17,
+      "new_rows_missing_from_evalset": 0
+    },
+    "pitches": [
+      {
+        "game_pk": 747139,
+        "at_bat_number": 79,
+        "pitch_number": 1,
+        "frame_seconds": 8180.25,
+        "evaluable_fields": 10,
+        "correct_fields": 7,
+        "wrong_fields": [],
+        "abstained_fields": [
+          "inning",
+          "home_score",
+          "away_score"
+        ]
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 80,
+        "pitch_number": 1,
+        "frame_seconds": 8216,
+        "evaluable_fields": 10,
+        "correct_fields": 7,
+        "wrong_fields": [],
+        "abstained_fields": [
+          "inning",
+          "home_score",
+          "away_score"
+        ]
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 80,
+        "pitch_number": 2,
+        "frame_seconds": 8224,
+        "evaluable_fields": 10,
+        "correct_fields": 7,
+        "wrong_fields": [],
+        "abstained_fields": [
+          "inning",
+          "home_score",
+          "away_score"
+        ]
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 80,
+        "pitch_number": 3,
+        "frame_seconds": 8239,
+        "evaluable_fields": 10,
+        "correct_fields": 7,
+        "wrong_fields": [],
+        "abstained_fields": [
+          "inning",
+          "home_score",
+          "away_score"
+        ]
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 80,
+        "pitch_number": 4,
+        "frame_seconds": 8256,
+        "evaluable_fields": 10,
+        "correct_fields": 7,
+        "wrong_fields": [],
+        "abstained_fields": [
+          "inning",
+          "home_score",
+          "away_score"
+        ]
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 80,
+        "pitch_number": 5,
+        "frame_seconds": 8274.25,
+        "evaluable_fields": 10,
+        "correct_fields": 7,
+        "wrong_fields": [],
+        "abstained_fields": [
+          "inning",
+          "home_score",
+          "away_score"
+        ]
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 80,
+        "pitch_number": 6,
+        "frame_seconds": 8289.5,
+        "evaluable_fields": 10,
+        "correct_fields": 7,
+        "wrong_fields": [],
+        "abstained_fields": [
+          "inning",
+          "home_score",
+          "away_score"
+        ]
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 81,
+        "pitch_number": 1,
+        "frame_seconds": 8380.5,
+        "evaluable_fields": 10,
+        "correct_fields": 7,
+        "wrong_fields": [],
+        "abstained_fields": [
+          "inning",
+          "home_score",
+          "away_score"
+        ]
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 81,
+        "pitch_number": 2,
+        "frame_seconds": 8411.5,
+        "evaluable_fields": 10,
+        "correct_fields": 7,
+        "wrong_fields": [],
+        "abstained_fields": [
+          "inning",
+          "home_score",
+          "away_score"
+        ]
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 81,
+        "pitch_number": 3,
+        "frame_seconds": 8430.75,
+        "evaluable_fields": 10,
+        "correct_fields": 7,
+        "wrong_fields": [],
+        "abstained_fields": [
+          "inning",
+          "home_score",
+          "away_score"
+        ]
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 81,
+        "pitch_number": 4,
+        "frame_seconds": 8444,
+        "evaluable_fields": 10,
+        "correct_fields": 7,
+        "wrong_fields": [],
+        "abstained_fields": [
+          "inning",
+          "home_score",
+          "away_score"
+        ]
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 81,
+        "pitch_number": 5,
+        "frame_seconds": 8473.25,
+        "evaluable_fields": 10,
+        "correct_fields": 7,
+        "wrong_fields": [],
+        "abstained_fields": [
+          "inning",
+          "home_score",
+          "away_score"
+        ]
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 81,
+        "pitch_number": 6,
+        "frame_seconds": 8494.5,
+        "evaluable_fields": 10,
+        "correct_fields": 7,
+        "wrong_fields": [],
+        "abstained_fields": [
+          "inning",
+          "home_score",
+          "away_score"
+        ]
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 82,
+        "pitch_number": 1,
+        "frame_seconds": 8521.25,
+        "evaluable_fields": 10,
+        "correct_fields": 7,
+        "wrong_fields": [],
+        "abstained_fields": [
+          "inning",
+          "home_score",
+          "away_score"
+        ]
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 82,
+        "pitch_number": 2,
+        "frame_seconds": 8535.5,
+        "evaluable_fields": 10,
+        "correct_fields": 7,
+        "wrong_fields": [],
+        "abstained_fields": [
+          "inning",
+          "home_score",
+          "away_score"
+        ]
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 82,
+        "pitch_number": 3,
+        "frame_seconds": 8549.25,
+        "evaluable_fields": 10,
+        "correct_fields": 7,
+        "wrong_fields": [],
+        "abstained_fields": [
+          "inning",
+          "home_score",
+          "away_score"
+        ]
+      },
+      {
+        "game_pk": 747139,
+        "at_bat_number": 82,
+        "pitch_number": 5,
+        "frame_seconds": 8598.75,
+        "evaluable_fields": 10,
+        "correct_fields": 7,
+        "wrong_fields": [],
+        "abstained_fields": [
+          "inning",
+          "home_score",
+          "away_score"
+        ]
+      }
+    ]
+  },
+  "historical_audit": [
+    {
+      "commit": "1796873",
+      "path": "docs/results/mlb_p0/game_747139_scoreboard_ocr_v1_provenance.json",
+      "note": "The prior PA11-15 audit recorded changed inning outputs for PA8/2 and PA10/1 without historical frame hashes. Cause remains unestablished; this is not evidence of model improvement. The full prior audit remains in Git."
+    },
+    {
+      "commit": "3e395b2",
+      "path": "docs/results/mlb_p0/game_747139_scoreboard_ocr_v1_provenance.json",
+      "note": "Previous provenance (Codex PA16-19 merge audit, 2026-09-24) with its own new-row comparison; kept in Git."
+    },
+    {
+      "commit": "5f69f26",
+      "path": "docs/results/mlb_p0/game_747139_scoreboard_ocr_v1_provenance.json",
+      "note": "Previous provenance (Claude Code pa22_23_25 merge audit, 2026-09-25) with its own new-row comparison; kept in Git."
+    },
+    {
+      "commit": "ca76e65",
+      "path": "docs/results/mlb_p0/game_747139_scoreboard_ocr_v1_provenance.json",
+      "note": "Previous provenance (Claude Code pa21_24_26 merge audit, 2026-09-25) with its own new-row comparison; kept in Git."
+    },
+    {
+      "commit": "2887a52",
+      "path": "docs/results/mlb_p0/game_747139_scoreboard_ocr_v1_provenance.json",
+      "note": "Previous provenance (Claude Code pa20 merge audit, 2026-09-25) replaced by refresh 'pa28_30_32'; kept in Git with its own new-row comparison."
+    },
+    {
+      "commit": "a0388de",
+      "path": "docs/results/mlb_p0/game_747139_scoreboard_ocr_v1_provenance.json",
+      "note": "Previous provenance (Claude Code A-8 PA28/30-32 merge (scripts/70), 2026-09-25) replaced by refresh 'pa27_29'; kept in Git with its own new-row comparison."
+    },
+    {
+      "commit": "119f0c3",
+      "path": "docs/results/mlb_p0/game_747139_scoreboard_ocr_v1_provenance.json",
+      "note": "Previous provenance (Claude Code A-8 PA27/29 merge (scripts/70), 2026-09-25) replaced by refresh 'pa38_40'; kept in Git with its own new-row comparison."
+    },
+    {
+      "commit": "862ec01",
+      "path": "docs/results/mlb_p0/game_747139_scoreboard_ocr_v1_provenance.json",
+      "note": "Previous provenance (Claude Code A-9 PA38-40 merge (scripts/70), 2026-09-25) replaced by refresh 'pa33_37'; kept in Git with its own new-row comparison."
+    },
+    {
+      "commit": "2947a46",
+      "path": "docs/results/mlb_p0/game_747139_scoreboard_ocr_v1_provenance.json",
+      "note": "Previous provenance (Claude Code A-9 PA33-37 merge (scripts/70), 2026-09-25) replaced by refresh 'pa41_49'; kept in Git with its own new-row comparison."
+    },
+    {
+      "commit": "1c7f2bc",
+      "path": "docs/results/mlb_p0/game_747139_scoreboard_ocr_v1_provenance.json",
+      "note": "Previous provenance (Claude Code A-10 PA41-49 merge (scripts/70); first blind rows for the pre-registered OCR v4, 2026-09-25) replaced by refresh 'pa50_55'; kept in Git with its own new-row comparison."
+    },
+    {
+      "commit": "19ca8d2",
+      "path": "docs/results/mlb_p0/game_747139_scoreboard_ocr_v1_provenance.json",
+      "note": "Previous provenance (Claude Code A-11 PA50-55 merge (scripts/70), 2026-09-26) replaced by refresh 'pa56_65'; kept in Git with its own new-row comparison."
+    },
+    {
+      "commit": "4c6e3c7",
+      "path": "docs/results/mlb_p0/game_747139_scoreboard_ocr_v1_provenance.json",
+      "note": "Previous provenance (Claude Code A-12 PA56-65 merge (scripts/70), 2026-09-26) replaced by refresh 'pa66_73'; kept in Git with its own new-row comparison."
+    },
+    {
+      "commit": "3394363",
+      "path": "docs/results/mlb_p0/game_747139_scoreboard_ocr_v1_provenance.json",
+      "note": "Previous provenance (Claude Code A-13 PA66-73 merge (scripts/70), 2026-09-26) replaced by refresh 'pa74_78'; kept in Git with its own new-row comparison."
+    },
+    {
+      "commit": "8b99385",
+      "path": "docs/results/mlb_p0/game_747139_scoreboard_ocr_v1_provenance.json",
+      "note": "Previous provenance (Claude Code A-14 PA74-78 merge (scripts/70), 2026-09-26) replaced by refresh 'pa79_82'; kept in Git with its own new-row comparison."
+    }
+  ],
+  "reproduction_commands": [
+    "python scripts/66_sny_scoreboard_ocr.py templates --template-pas 1 2 9 --no-grab --output docs/results/mlb_p0/sny_digit_templates_v1.json",
+    "python scripts/66_sny_scoreboard_ocr.py predict --templates docs/results/mlb_p0/sny_digit_templates_v1.json --output docs/results/mlb_p0/game_747139_scoreboard_ocr_v1_predictions.json",
+    "python scripts/66_sny_scoreboard_ocr.py score --predictions docs/results/mlb_p0/game_747139_scoreboard_ocr_v1_predictions.json --exclude-pas 1 2 9 --output docs/results/mlb_p0/game_747139_scoreboard_ocr_v1.json",
+    "python scripts/66_sny_scoreboard_ocr.py negatives --templates docs/results/mlb_p0/sny_digit_templates_v1.json --output docs/results/mlb_p0/game_747139_scoreboard_negatives_score_v0.json",
+    "python scripts/66_sny_scoreboard_ocr.py predict --templates docs/results/mlb_p0/sny_digit_templates_v1.json --no-grab --output outputs/verification/ocr_v1_repeat.json"
+  ],
+  "limitations": [
+    "Same-game development evidence, not an independent benchmark.",
+    "Template-source PAs1,2,9 are excluded from held-out scoring; repeat audit includes all prediction rows.",
+    "Timing and labels come from direct selected-frame AI review; no independent human inter-rater measurement.",
+    "Regenerate provenance when hashed artifacts, code, templates or frames change."
+  ]
+}

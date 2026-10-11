@@ -1,0 +1,74 @@
+{
+  "schema": "intent_observation_loop_report_v1",
+  "run_status": "completed_with_errors",
+  "planned": 3,
+  "counts": {
+    "attempted": 3,
+    "accepted": 0,
+    "marked": 0,
+    "unavailable": 0,
+    "unknown": 0,
+    "errors": 3,
+    "dispatched": 3,
+    "dispatch_within_5s": 3,
+    "publication_within_5s": 0,
+    "both_within_5s": 0,
+    "not_attempted": 0
+  },
+  "rates_per_planned": {
+    "attempted": 1.0,
+    "accepted": 0.0,
+    "marked": 0.0,
+    "unavailable": 0.0,
+    "unknown": 0.0,
+    "errors": 1.0,
+    "dispatched": 1.0,
+    "dispatch_within_5s": 1.0,
+    "publication_within_5s": 0.0,
+    "both_within_5s": 0.0,
+    "not_attempted": 0.0
+  },
+  "latency_threshold_seconds": 5,
+  "threshold_scope": "Development schedule-to-dispatch/publication target, not live SLA.",
+  "full_pa_verified": false,
+  "live_availability_verified": false,
+  "accuracy_evaluated": false,
+  "notice": "Local replay timing includes extraction, process and validation. Marked means an accepted point, not a correct point. Unavailable/unknown are model abstentions; errors and not-attempted observations remain separate. Saved-artifact consistency is checked; original video provenance and model execution are not re-attested.",
+  "evidence_sha256": {
+    "manifest": "130d00351e96d1781e8198548e1d15a70904085403ae232118a620dbdd1dadc8",
+    "saved_plan": "f2d321d7586cd266e329398170bde3c9c03b518e3c0e6e82e9a5a93504f20eb1",
+    "summary": "6da571f7dcbc46a378b692520cb0fea3b97d878a379477d84a76ca63f443a67c"
+  },
+  "observations": [
+    {
+      "index": 0,
+      "cutoff_seconds_exact": "3003701/15000",
+      "status": "error",
+      "observation_status": null,
+      "dispatch_lateness_seconds": 2.047,
+      "accepted_latency_from_schedule_seconds": null,
+      "attempt_sha256": "8e68361cce07ac1aa2f99d4cfdad8d95f4b9f6d98eeca89c63251284b604f026",
+      "result_sha256": null
+    },
+    {
+      "index": 1,
+      "cutoff_seconds_exact": "3078701/15000",
+      "status": "error",
+      "observation_status": null,
+      "dispatch_lateness_seconds": 3.578,
+      "accepted_latency_from_schedule_seconds": null,
+      "attempt_sha256": "3a8a82940f5ac5e0acbb03c8281603ce6352bbcd1c03e333b510191354281fc7",
+      "result_sha256": null
+    },
+    {
+      "index": 2,
+      "cutoff_seconds_exact": "3303701/15000",
+      "status": "error",
+      "observation_status": null,
+      "dispatch_lateness_seconds": 2.422,
+      "accepted_latency_from_schedule_seconds": null,
+      "attempt_sha256": "7db4067a41b1fb1d857329fe436193bf05581561aef1167adc5317589d9ef0e4",
+      "result_sha256": null
+    }
+  ]
+}

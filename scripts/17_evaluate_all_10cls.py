@@ -6,6 +6,7 @@ all_models_comparison_10cls.json으로 저장한다.
 모델별 npz가 없으면 graceful skip.
 """
 
+import argparse
 import json
 import sys
 from pathlib import Path
@@ -70,6 +71,16 @@ def build_result(data: dict, input_desc: str, arch: str, params: str,
 
 
 def main():
+    parser = argparse.ArgumentParser(description="Historical, identity-unverified comparison only")
+    parser.add_argument("--allow-legacy", action="store_true")
+    parser.add_argument("--output", type=Path, required=True)
+    args = parser.parse_args()
+    if not args.allow_legacy:
+        parser.error("77d historical labels were misaligned. Use scripts/49_compare_aligned_runs.py. "
+                     "Historical inspection requires --allow-legacy and a fresh --output.")
+    if args.output.exists():
+        raise FileExistsError(args.output)
+    print("WARNING: Historical results only; 77d targets are misaligned and cohorts lack pitch IDs.")
     print("=" * 70)
     print("Phase 10: Multi-Model Comparison (10-class unified)")
     print("=" * 70)
@@ -232,7 +243,8 @@ def main():
         print()
 
     # --- Save JSON ---
-    out_path = OUTPUT_DIR / "all_models_comparison_10cls.json"
+    out_path = args.output
+    out_path.parent.mkdir(parents=True, exist_ok=True)
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump(results, f, indent=2, ensure_ascii=False)
     print(f"\n[OK] Saved: {out_path}")

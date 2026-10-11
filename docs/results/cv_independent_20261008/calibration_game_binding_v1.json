@@ -1,0 +1,108 @@
+{
+  "schema": "calibration_game_binding_verification_v1",
+  "scope": "Reject cross-game timing/calibration before building IntentEstimate records; no inference, new labels or frozen output rewrites.",
+  "change": {
+    "run_source_lines_added": 9,
+    "canonical_run_sha256": "6e82e68d3928d45897ca0193006a66545e38e584e295b149b99b63d3f7f2c26a",
+    "staged_run_sha256": "4093d938731656ed62a86e72f49abc0762c4a5c5f131dd147610ecedaf983895",
+    "calibration_none_preserved": true
+  },
+  "wrong_calibration_before": {
+    "requested_game": 849843,
+    "calibration_game": 849845,
+    "records_accepted": 39,
+    "changed_plate_feet_records": 27,
+    "all_records_passed_schema": true,
+    "x_shift_ft": -0.15420661639180744,
+    "z_shift_ft_min": -0.07203727834248475,
+    "z_shift_ft_max": -0.06738842537319023,
+    "example_pitch_id": "849843:1:3",
+    "correct_plate_feet": {
+      "x": -0.05172667411468945,
+      "z": 2.0163602871167363
+    },
+    "wrong_plate_feet": {
+      "x": -0.2059332905064969,
+      "z": 1.9481273996773019
+    },
+    "wrong_error_status": "measured"
+  },
+  "wrong_calibration_after": {
+    "rejected": true,
+    "error": "calibration file schema/game mismatch",
+    "cli_new_output_not_created": true,
+    "cli_existing_output_unchanged": true
+  },
+  "checks": {
+    "new_regressions_before": {
+      "failed": 12,
+      "deselected": 8
+    },
+    "related_after": {
+      "passed": 83,
+      "elapsed_seconds": 0.7
+    },
+    "ruff_check": "passed",
+    "ruff_format_check": "passed",
+    "canonical_related_after": {
+      "passed": 94,
+      "elapsed_seconds": 3.69
+    },
+    "root_independent_compatibility": {
+      "baseline_commit": "3ee4b93",
+      "games": 4,
+      "records": 178,
+      "same_and_no_calibration_full_json_equal": true,
+      "frozen_input_jsonl_files_unchanged": 16
+    }
+  },
+  "compatibility": {
+    "comparison": "Pre-change function versus staged function full records+counters JSON, in memory; not a rewrite/rebaseline of saved JSONL.",
+    "calibration_cases": [
+      "matching_saved_calibration",
+      "None"
+    ],
+    "games": [
+      {
+        "game": 849843,
+        "records": 39
+      },
+      {
+        "game": 823407,
+        "records": 29
+      },
+      {
+        "game": 849845,
+        "records": 57
+      },
+      {
+        "game": 849849,
+        "records": 53
+      }
+    ],
+    "all_equal": true,
+    "existing_inputs_and_jsonl_sha_unchanged": true
+  },
+  "input_sha256": {
+    "game_849843_timing.json": "cb38a741da9bb92b93935cf9d6f3c32ca11602bb6381203ff716db08c09d142b",
+    "game_849843_intent_points_v0.json": "a9c7c03f856f7afa3c13435568fdb796200dfa7cf8520ffb8b26c21215604141",
+    "game_849843_intent_plate_calibration_v0.json": "556a8b643f540fb6eb2593bbec36c26706cc398adda6ddd9893b6a9102336925",
+    "game_849843_intent_v0.jsonl": "5ad0c28847c12dcea3d6c8589e966553a44d1d8f5829381b87ec6d0b7e2d27dc",
+    "game_823407_timing.json": "43a47ea7e0e90b2ea74a3c8cf573ce33e5aea7a0c3f437def803011ceb5c7f33",
+    "game_823407_intent_points_v0.json": "977bb63c62594b6d5b6b1e1e0e4df360d6df9d96991a50e0c00a9209073eaaaf",
+    "game_823407_intent_plate_calibration_v0.json": "762df619208c86f14686af51de0a950cec8d770c274212692ea20a0dc9a031f4",
+    "game_823407_intent_v0.jsonl": "2ab78c0096fcf14c6120558c363aa00ba89f98935aae386cc72e2a7bd4358e0c",
+    "game_849845_timing.json": "9d81eee53b235cf3eb3b0207a87ee350106ccfd8ad85916ecd8078d8b5394a41",
+    "game_849845_intent_points_v0.json": "17d71d55ee203ccbf9793c189f942f1c4c088ba1bf18ba887b31b3b07bb9f2e9",
+    "game_849845_intent_plate_calibration_v0.json": "89e42fa387ea5c0bbad700c038922c26262b5e28e154de1e94aac5adfe760eeb",
+    "game_849845_intent_v0.jsonl": "6d3a01d7aa0002e2b8c6bcb62e44d0b9723df969d0b8e017210c2863edddf4bc",
+    "game_849849_timing.json": "cfc83d703873b4b595191fbb1d5b9db8712b12b7dff0c61ff8b6c0103e4850b7",
+    "game_849849_intent_points_v0.json": "7e0677c306fd00d15d081335ae3fda52a38eb6c51d4938cc43154959b09ae4dc",
+    "game_849849_intent_plate_calibration_v0.json": "950410f1d98e2f374a28bffd190845e65a86e3dca72b4662bef499872125a87f",
+    "game_849849_intent_v0.jsonl": "f24c18bbbb9acc834d3371a3d2396ef14ed8776103d3cdfef09adbfcae25d9e5"
+  },
+  "staged_test_sha256": {
+    "test_intent_m2.py": "eaaae7248c5d0a919fbb316bbddfc6758c1a90f3c7185643efed297c158e74e9",
+    "test_intent_quality_audit.py": "de5fbe15029ac5d88f5c615a9ee13d6662b884063eea7ddceed85f6fb73a6726"
+  }
+}

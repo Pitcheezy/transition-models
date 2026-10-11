@@ -1,0 +1,55 @@
+{
+  "saved_results_checked": 139,
+  "partial_marked": 17,
+  "legacy_partial_blank_reason_preserved": 5,
+  "saved_result_and_request_files_unchanged": 278,
+  "generic_reports_exactly_unchanged": 15,
+  "local_detector_reports_exactly_unchanged": 1,
+  "unreadable_test_directory_listing_errors": 25,
+  "new_model_calls": 0,
+  "historical_outputs_written": 0,
+  "unit": "CV-28",
+  "canonical_tests": {
+    "passed": 314,
+    "seconds": 85.77,
+    "files": 9
+  },
+  "lint": {
+    "paths": 161,
+    "ruff_check": "passed",
+    "ruff_format": "passed"
+  },
+  "independent_contract_review": "passed",
+  "scope": "Input acceptance and archive compatibility, not model accuracy or human agreement",
+  "canonical_archive_recheck": {
+    "baseline_commit": "cc395c9cb9b8d605fafc342c5e92bf681823d834",
+    "implementation": "canonical working tree",
+    "code_sha256": {
+      "intent/observation_session.py": {
+        "baseline_git_blob_sha256": "7dc5616fed0bc4697efeeb61104175870a340e78a274efed5daee2a41967bfdc",
+        "current_file_sha256": "14d2f98f3e369a338f77f939ae19a239e4f7bf1c6b7789f3e428d0860ec12d75"
+      },
+      "intent/observation_report.py": {
+        "baseline_git_blob_sha256": "30e1e9b5d11acca2d1b9b848f13a70bb25bf35ce3e1a8afbeaa105d4cb9a6ae8",
+        "current_file_sha256": "512e773f4babeaea54cb55cd60c07258241a58c3a06f9e756420b1fe7d44d6d9"
+      },
+      "intent/local_glove_observer.py": {
+        "baseline_git_blob_sha256": "5db3f2538393860db09ed0df02c48bb6944b47c00bd45f0c42ab8f245f5d5947",
+        "current_file_sha256": "de880f4ecb24ac462b6e634789b4e459ef8781c518d371777884d5f5090f9d9d"
+      },
+      "intent/local_glove_observer_report.py": {
+        "baseline_git_blob_sha256": "b544c9505aaa58ef40856ecddcf24772723c3ef7e36ad54ea7f14f197d485ad2",
+        "current_file_sha256": "ef11153c748768cb1ead0baef6bbe6e03d4455ff5f997c746bc294caba3e8624"
+      }
+    },
+    "saved_results_checked": 139,
+    "partial_marked": 17,
+    "legacy_partial_blank_reason_preserved": 5,
+    "saved_result_and_request_files_unchanged": 278,
+    "generic_reports_exactly_unchanged": 15,
+    "local_detector_reports_exactly_unchanged": 1,
+    "scope": "Fixed previously audited cohort; not every local output or inaccessible test directory.",
+    "new_model_calls": 0,
+    "historical_outputs_written": 0
+  }
+}

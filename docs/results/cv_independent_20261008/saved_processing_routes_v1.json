@@ -1,0 +1,87 @@
+{
+  "schema": "cv6b_saved_processing_routes_v1",
+  "scope": {
+    "description": "Saved processing-route audit of 26 disagreement-selected development frames.",
+    "reader_evidence": "Saved AI claims, not verified visual facts or human judgments.",
+    "candidate_definition": "bool(row and setup_frame is not None and mitt_center and setup_plate_front), exactly as frozen decide_setup.",
+    "reported_not_presented_or_lowered_reason_values": [
+      "glove_already_lowered_at_cut",
+      "glove_not_presented: catcher drops glove to rest on the ground before release",
+      "glove_not_presented_resting_on_ground",
+      "glove_resting_on_dirt_not_presented"
+    ],
+    "human_link": "Source ID/hash binding and submitted status/visibility only; no pose use.",
+    "missing_reason_definition": "Null/blank setup_reason only among null setup_frame rows; a null reason on a supplied setup is not a missing abstention explanation.",
+    "limits": [
+      "No image viewing, new annotation, relabeling, model invocation or training.",
+      "No AI error rate, human agreement, target/intent truth or unseen validation.",
+      "No change to frozen M3 decisions, points, prompt or consensus rule.",
+      "Successful exported reader rows do not authenticate complete attempt/error history.",
+      "Final reason names combine mitt, frame eligibility and plate prerequisites."
+    ]
+  },
+  "totals": {
+    "selected_frames": 26,
+    "raw_reader_rows": 52,
+    "reproduced_decisions": 26,
+    "human_source_bindings": 26,
+    "human_submitted_marked_full": 26,
+    "null_setup_frame_rows": 14,
+    "null_setup_frame_rows_without_reason": 0
+  },
+  "routes": {
+    "reported_not_presented_or_lowered": {
+      "count": 7,
+      "exact_predicate": "Exactly one eligible candidate; the other has null setup_frame and mitt_center, and setup_reason exactly matches reported_not_presented_or_lowered_reason_values: stored claims of not presented, resting or lowered; no actual target absence inferred."
+    },
+    "camera_rejection_one_candidate": {
+      "count": 2,
+      "exact_predicate": "Exactly one eligible candidate; the other has null setup_frame and mitt_center and setup_reason == not_centre_field."
+    },
+    "replay_rejection_one_candidate": {
+      "count": 2,
+      "exact_predicate": "Exactly one eligible candidate; the other has null setup_frame and mitt_center and setup_reason == slow_motion_replay_not_live."
+    },
+    "plate_missing_with_two_mitt_readings": {
+      "count": 3,
+      "exact_predicate": "Exactly one eligible candidate; both have non-null setup_frame and mitt_center, both setup_frame values are equal; the excluded reader has no setup_plate_front."
+    },
+    "different_frame_mitt_disagreement": {
+      "count": 6,
+      "exact_predicate": "Two eligible candidates; decide_setup returns readers_disagree_on_mitt under the frozen >15px rule; setup_frame values differ."
+    },
+    "same_frame_mitt_disagreement": {
+      "count": 3,
+      "exact_predicate": "Two eligible candidates; decide_setup returns readers_disagree_on_mitt under the frozen >15px rule; setup_frame values are equal."
+    },
+    "camera_rejection_and_plate_missing": {
+      "count": 3,
+      "exact_predicate": "Zero eligible candidates; one has null setup_frame/mitt_center and reason not_centre_field; the other has non-null setup_frame/mitt_center but no plate."
+    }
+  },
+  "source_digests": {
+    "audit_script": "86ffb4b4bc035ad7b38eddc9df573426d0c48b96ab6c5660d4b1b3cae31005df",
+    "code_condensed.py": "28da193dd54af6c5cc694a5b0f384b10ac3569b80709e810fe2416811ec05e2d",
+    "code_quality_audit.py": "eb1c32559ac54ede93830d44d78001e69642bdc1033d14da83bc2a48e5d5b5ef",
+    "code_review_queue.py": "887a42e91e8c890d3a8e29d583816354d1b2aefe2913e8f6923ed638523acb64",
+    "first_human_response": "d25fa9908aa90aacfcdab6e068543e62e8eca698bd7322e615c428fb6df5ffeb",
+    "frozen_reader_prompt": "0e0d5132c12b390316b51a7cb1d4ae73523a9e85e05afa85824e4ceff680729a",
+    "legacy_823407_calibration": "762df619208c86f14686af51de0a950cec8d770c274212692ea20a0dc9a031f4",
+    "legacy_823407_jsonl": "2ab78c0096fcf14c6120558c363aa00ba89f98935aae386cc72e2a7bd4358e0c",
+    "legacy_823407_labels": "bce2a324c1cd4c8af1301e79ac6ec8a65137c2170c77236ee102ca80fb0585d1",
+    "legacy_823407_manifest": "42cc7ea193ad4fb8c06aeddb132a42e1e1ddf3b0fac13fd163e4127dd115614c",
+    "legacy_823407_plan": "7a253d77dc57eb9902f019a3b201cdf0183c914b3420902daba239f5cf561bdc",
+    "legacy_823407_points": "977bb63c62594b6d5b6b1e1e0e4df360d6df9d96991a50e0c00a9209073eaaaf",
+    "legacy_849845_calibration": "89e42fa387ea5c0bbad700c038922c26262b5e28e154de1e94aac5adfe760eeb",
+    "legacy_849845_jsonl": "6d3a01d7aa0002e2b8c6bcb62e44d0b9723df969d0b8e017210c2863edddf4bc",
+    "legacy_849845_labels": "b1c9b97068ef6e6d8456cd834351cb24c3d82da15e7113ff5a75a80ecace96eb",
+    "legacy_849845_manifest": "ae55fb2472b4b3caddb92c42e7651a1e74b5b8ece22003dd9611389bd1f47461",
+    "legacy_849845_plan": "7a253d77dc57eb9902f019a3b201cdf0183c914b3420902daba239f5cf561bdc",
+    "legacy_849845_points": "17d71d55ee203ccbf9793c189f942f1c4c088ba1bf18ba887b31b3b07bb9f2e9",
+    "private_selection": "d0adb8ec87f7562b045fc2f0f40b80fa75116d79367193f92b4c172a6156fe37",
+    "quality_audit": "ba14fb651465c049da02fe8227ab96da3980ca99883c15275af5e7397960fa0c",
+    "raw_readers_823407": "009cdf6864a20ab37dc8f69e5d2df52f6e90868856054c227c73d9023083e75d",
+    "raw_readers_849845": "f42f838b5749264c04516c474f8d4118774213238b447a9b3e3b356d06f30dd5",
+    "reviewer_manifest": "d7d01b7776436c4539900e3a44115343e2b7db2eb6ae27489c3ae2f7a7f1a468"
+  }
+}

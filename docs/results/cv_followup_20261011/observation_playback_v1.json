@@ -1,0 +1,138 @@
+{
+  "schema": "cv_observation_playback_validation_v1",
+  "date": "2026-10-11",
+  "work_unit": "CV-30",
+  "scope": {
+    "game_pk": 747139,
+    "pa": 2,
+    "start_source_seconds_exact": "2703701/15000",
+    "end_source_seconds_exact": "13800787/60000",
+    "full_pa_verified": false,
+    "live_availability_verified": false,
+    "human_label": false
+  },
+  "summary": {
+    "planned_observations": 14,
+    "interval_observations": 10,
+    "outside_interval_observations": 4,
+    "accepted": 14,
+    "errors": 0,
+    "not_attempted": 0,
+    "verified_mitt": 0,
+    "conservative_ready_pitches": 0
+  },
+  "package_directory": "outputs/cv_replay_view_20261011_v4",
+  "package_manifest_sha256": "ef7fcbd7ea5734900aeb8195dcc72b486f9c3f736700a6bdc2b14ae18fe70f11",
+  "package_files": 21,
+  "package_bytes": 52899890,
+  "inputs_unchanged": true,
+  "input_evidence_sha256": {
+    "saved_run_inventory": "5a1ecb040f8249e4a11fefecefd7cec76da06535aabb5fb0df2de4b286b47773",
+    "capture_receipt_sha256": "fef4d27b42d303be2ca45de97696978360bafb6c262be0368c83f84e40f6de75",
+    "source_framemd5_sha256": "16ee21be1759dfe459e57c3c0ac0b3ab74942360500f30ef92c92546e3265e35",
+    "clip_framemd5_sha256": "b4f2df02423004c57ed3ced83bfbb8b8c61dfe588be9b94cd8fa5445b77555e3",
+    "clip_media_sha256": "75fd139c9ad8e88bbcca3020a65926b6c9873a2037ad6de3a664ea98705386b0",
+    "timing": "9781a52527f5a91069548b5017cd927c94d4959df944a93cd54ec5be6c9760b7",
+    "manifest": "d73b9f642ae45b15567e4a3b91638828c6ea080db4e57fa4549956781f66a99e",
+    "sources": "0e431d53b398e5b6504b99ed000a1ccdd9bb3745640415e2cc58ff9a06cc5dfd",
+    "deadline_report": "39b0791d91c68776b45fedfdd3c75694f4a93b3e78a88edc0b6c72f6184f702d"
+  },
+  "replay_data_sha256": "ca2a758be62bf3894751abe69438e26bc5b0a0ae55806a91152df289dfa3e36d",
+  "browser": {
+    "browser": "154.0.8037.58",
+    "scope": "Headless Chromium; saved private media; not actual user device acceptance",
+    "platform": "win32",
+    "results": [
+      {
+        "name": "all14rows_10inside_4outside",
+        "passed": true
+      },
+      {
+        "name": "scope_starts_at_exact_mapped_clock",
+        "passed": true
+      },
+      {
+        "name": "no_output_before_first_publication",
+        "passed": true
+      },
+      {
+        "name": "future_observation_hidden",
+        "passed": true
+      },
+      {
+        "name": "published_frame_matches_row_004",
+        "passed": true
+      },
+      {
+        "name": "first_pitch_uncertainty_not_ready",
+        "passed": true
+      },
+      {
+        "name": "old_bitmap_hidden_during_frame_replacement",
+        "passed": true
+      },
+      {
+        "name": "replaced_frame_matches_row_005",
+        "passed": true
+      },
+      {
+        "name": "different_pitch_not_current_value",
+        "passed": true
+      },
+      {
+        "name": "post_release_output_not_ready",
+        "passed": true
+      },
+      {
+        "name": "backward_seek_retracts_future_frame",
+        "passed": true
+      },
+      {
+        "name": "actual_continuous_video_plays",
+        "passed": true
+      },
+      {
+        "name": "stops_at_scope_end",
+        "passed": true
+      },
+      {
+        "name": "320px_no_page_overflow",
+        "passed": true
+      },
+      {
+        "name": "no_javascript_errors",
+        "passed": true
+      }
+    ],
+    "errors": []
+  },
+  "package_checks": [
+    "all_package_artifact_hashes_and_sizes_after_browser"
+  ],
+  "local_screenshots_directory": "outputs/cv_replay_browser_20261011_final",
+  "new_model_run": false,
+  "independent_evaluation": false,
+  "full_pa_complete": false,
+  "human_review_complete": false,
+  "mac_physical_execution": {
+    "status": "not_executed",
+    "reason": "Mac hostname did not resolve; no usable registered SSH target or remote execution path; connection information requested"
+  },
+  "teammate_repository_accessed": false,
+  "public_site_modified": false,
+  "verification": {
+    "targeted_python": "80 passed (builder28 + server22 + deadline29 + Node wrapper1)",
+    "node_publication_cases": 26,
+    "full_cpu": {
+      "passed": 2254,
+      "skipped": 8,
+      "deselected": 2,
+      "warnings": 2,
+      "seconds": 406.51,
+      "scope": "CPU full run collected before the Range server addition; its 22 tests passed in the final targeted 80-test run. Existing Pillow getdata deprecation warnings."
+    },
+    "checklist_tests": 7
+  },
+  "usage_remaining_percent_start": 41,
+  "usage_remaining_percent_before_commit": 33
+}

@@ -1,0 +1,30 @@
+{
+  "schema": "cv_structured_output_preregistration_v1",
+  "date": "2026-10-06",
+  "status": "frozen_before_calls",
+  "scope": "Failure-selected development contract diagnostic; not accuracy or unbiased coverage comparison. Original10 attempts stay frozen.",
+  "previous_run": "cv_latency_10_run_v1",
+  "selected_previous_indices": [
+    4,
+    5,
+    8
+  ],
+  "selection_reason": "All three previous errors returned mitt as a JSON string. New calls test schema-constrained serialization.",
+  "planned": 3,
+  "cutoffs": [
+    "3003701/15000",
+    "3078701/15000",
+    "3303701/15000"
+  ],
+  "requested_model": "claude-opus-4-8[1m]",
+  "adapter_sha256": "7fee79ec2d97e4b25dc3f61a744261807cbedb7b9e1d0e81fce4903fae5c148a",
+  "local_plan_sha256": "f2d321d7586cd266e329398170bde3c9c03b518e3c0e6e82e9a5a93504f20eb1",
+  "protocol_change": "Optional CLI --json-schema; accept only validated structured_output with request-bound identities; narrowly matched StructuredOutput serialization events only. All unrelated tool calls rejected.",
+  "retry_policy": "No outer retry or replacement. Provider may internally re-prompt for structured serialization; internal retries are not assumed absent and this is not directly comparable with old free-JSON latency.",
+  "denominator": 3,
+  "latency_threshold_seconds": 5,
+  "success_definition": "Existing strict response contract accepted; not correct mitt localization.",
+  "human_label": false,
+  "full_pa_verified": false,
+  "accuracy_evaluated": false
+}

@@ -1,0 +1,695 @@
+{
+ "schema": "intent_points_v0",
+ "game_pk": 823407,
+ "method": {
+  "kind": "assistant_visual_estimate",
+  "version": "v0"
+ },
+ "label_source": "assistant_visual_estimate",
+ "video": {
+  "fps_num": 60000,
+  "fps_den": 1001,
+  "basis": "ffprobe r_frame_rate of the condensed-game MP4",
+  "frame_index_rule": "frames cut by source frame index (accurate seek), so frame_index is exact"
+ },
+ "uncertainty_basis": "max of the two readers' stated +/- and half their disagreement, original pixels; not measured against ground truth",
+ "method_notes": {
+  "description": "Two Claude Code workflow agents per pitch read 20-fps frame windows (2x gridded crops) of the official condensed game (intent/workflows/condensed_read.js); the decision frame is the last live centre-field frame before release with the glove presented; points averaged when both readers chose the same frame, otherwise reader A's; abstain when the readers' mitt points are more than 15 px apart or only one reader found a setup frame (python -m intent.condensed assemble).",
+  "selection_bias": "condensed games show mostly plate-appearance-ending pitches (balls in play, strikeouts); the pitches are not representative of the game"
+ },
+ "frames": [
+  {
+   "at_bat_number": 1,
+   "pitch_number": 3,
+   "frame_seconds": 66.29956666666666,
+   "frame_index": 3974,
+   "image_sha256": "1053991a06fdcf0e5baad1526662da2e9a0b03e83a148425ab7bf7189c4b9940",
+   "path": "outputs/frames/823407_windows/pa1_p3/frame_003974.jpg",
+   "status": "estimated",
+   "unavailable_reason": null,
+   "mitt_center": [
+    684.0,
+    400.0
+   ],
+   "mitt_visible_fraction": "partial",
+   "uncertainty_pixels": 12.0,
+   "plate_corners": {
+    "front_left": [
+     640.0,
+     433.5
+    ],
+    "front_right": [
+     714.5,
+     433.0
+    ]
+   },
+   "plate_corners_reason": null,
+   "camera": "centre_field",
+   "note": "two readers same frame, averaged"
+  },
+  {
+   "at_bat_number": 4,
+   "pitch_number": 2,
+   "frame_seconds": 92.15873333333333,
+   "frame_index": 5524,
+   "image_sha256": "e6f952445b2a6fb9c9631e45861281fb654893f1a54232266671f5250d4835a5",
+   "path": "outputs/frames/823407_windows/pa4_p2/frame_005524.jpg",
+   "status": "estimated",
+   "unavailable_reason": null,
+   "mitt_center": [
+    688.0,
+    405.0
+   ],
+   "mitt_visible_fraction": "partial",
+   "uncertainty_pixels": 12.0,
+   "plate_corners": {
+    "front_left": [
+     640.5,
+     436.5
+    ],
+    "front_right": [
+     717.0,
+     436.0
+    ]
+   },
+   "plate_corners_reason": null,
+   "camera": "centre_field",
+   "note": "two readers same frame, averaged"
+  },
+  {
+   "at_bat_number": 5,
+   "pitch_number": 2,
+   "frame_seconds": 129.24578333333332,
+   "frame_index": 7747,
+   "image_sha256": "d0b7ca574995103b46e9275eab2feca54534181d3c0a31880602645705b03ff2",
+   "path": "outputs/frames/823407_windows/pa5_p2/frame_007747.jpg",
+   "status": "estimated",
+   "unavailable_reason": null,
+   "mitt_center": [
+    816.0,
+    401.5
+   ],
+   "mitt_visible_fraction": "partial",
+   "uncertainty_pixels": 12.0,
+   "plate_corners": {
+    "front_left": [
+     698.5,
+     437.0
+    ],
+    "front_right": [
+     775.5,
+     437.0
+    ]
+   },
+   "plate_corners_reason": null,
+   "camera": "centre_field",
+   "note": "two readers same frame, averaged"
+  },
+  {
+   "at_bat_number": 6,
+   "pitch_number": 4,
+   "frame_seconds": 152.8527,
+   "frame_index": 9162,
+   "image_sha256": "954cc026d5b1ecb111281630ad278e9470f6c9727356893c9afc863d5a7a4796",
+   "path": "outputs/frames/823407_windows/pa6_p4/frame_009162.jpg",
+   "status": "estimated",
+   "unavailable_reason": null,
+   "mitt_center": [
+    842.5,
+    402.0
+   ],
+   "mitt_visible_fraction": "partial",
+   "uncertainty_pixels": 12.0,
+   "plate_corners": {
+    "front_left": [
+     711.5,
+     434.5
+    ],
+    "front_right": [
+     790.5,
+     433.5
+    ]
+   },
+   "plate_corners_reason": null,
+   "camera": "centre_field",
+   "note": "two readers same frame, averaged"
+  },
+  {
+   "at_bat_number": 8,
+   "pitch_number": 5,
+   "frame_seconds": 187.10358333333335,
+   "frame_index": 11215,
+   "image_sha256": "d6025ef576495585eae4538bc6cd398edacc153a5dda1dbaf825d902fa63e0aa",
+   "path": "outputs/frames/823407_windows/pa8_p5/frame_011215.jpg",
+   "status": "estimated",
+   "unavailable_reason": null,
+   "mitt_center": [
+    711.5,
+    401.0
+   ],
+   "mitt_visible_fraction": "partial",
+   "uncertainty_pixels": 15.0,
+   "plate_corners": {
+    "front_left": [
+     646.0,
+     435.5
+    ],
+    "front_right": [
+     719.5,
+     435.5
+    ]
+   },
+   "plate_corners_reason": null,
+   "camera": "centre_field",
+   "note": "two readers same frame, averaged"
+  },
+  {
+   "at_bat_number": 10,
+   "pitch_number": 6,
+   "frame_seconds": 194.4943,
+   "frame_index": 11658,
+   "image_sha256": "186b78f65e39e4af77f7d0e55b946ad0f7ff2e5737c52bdc966bd33e410bd9c1",
+   "path": "outputs/frames/823407_windows/pa10_p6/frame_011658.jpg",
+   "status": "estimated",
+   "unavailable_reason": null,
+   "mitt_center": [
+    776.0,
+    390.5
+   ],
+   "mitt_visible_fraction": "partial",
+   "uncertainty_pixels": 12.0,
+   "plate_corners": {
+    "front_left": [
+     697.0,
+     436.0
+    ],
+    "front_right": [
+     771.5,
+     435.5
+    ]
+   },
+   "plate_corners_reason": null,
+   "camera": "centre_field",
+   "note": "two readers same frame, averaged"
+  },
+  {
+   "at_bat_number": 12,
+   "pitch_number": 4,
+   "frame_seconds": 216.19931666666668,
+   "frame_index": 12959,
+   "image_sha256": "dea06e8a9437b993dd851c847c82157547da41f8638a4eb6fd2db7b2e01061d9",
+   "path": "outputs/frames/823407_windows/pa12_p4/frame_012959.jpg",
+   "status": "unavailable",
+   "unavailable_reason": "only_one_reader_found_a_setup_frame",
+   "mitt_center": null,
+   "mitt_visible_fraction": null,
+   "uncertainty_pixels": null,
+   "plate_corners": null,
+   "plate_corners_reason": "not read",
+   "camera": "centre_field",
+   "note": "other reader: not_centre_field"
+  },
+  {
+   "at_bat_number": 13,
+   "pitch_number": 5,
+   "frame_seconds": 219.75286666666668,
+   "frame_index": 13172,
+   "image_sha256": "d2cfe4235a12df54b64ff4ff30f39e737be431b278be8d75c6246bf9d0e6d789",
+   "path": "outputs/frames/823407_windows/pa13_p5/frame_013172.jpg",
+   "status": "unavailable",
+   "unavailable_reason": "only_one_reader_found_a_setup_frame",
+   "mitt_center": null,
+   "mitt_visible_fraction": null,
+   "uncertainty_pixels": null,
+   "plate_corners": null,
+   "plate_corners_reason": "not read",
+   "camera": "centre_field",
+   "note": "other reader: not_centre_field"
+  },
+  {
+   "at_bat_number": 18,
+   "pitch_number": 1,
+   "frame_seconds": 230.49693333333335,
+   "frame_index": 13816,
+   "image_sha256": "e8c3e59b5678606d7ac8be037e18e9b54663a063254960fb917411521542fb43",
+   "path": "outputs/frames/823407_windows/pa18_p1/frame_013816.jpg",
+   "status": "unavailable",
+   "unavailable_reason": "cut_after_release",
+   "mitt_center": null,
+   "mitt_visible_fraction": null,
+   "uncertainty_pixels": null,
+   "plate_corners": null,
+   "plate_corners_reason": "not read",
+   "camera": "centre_field",
+   "note": ""
+  },
+  {
+   "at_bat_number": 19,
+   "pitch_number": 4,
+   "frame_seconds": 259.10885,
+   "frame_index": 15531,
+   "image_sha256": "8b9f0cb039dab614ead704e45a7fef89ee7a1d89615efd34c096fc7aef33df71",
+   "path": "outputs/frames/823407_windows/pa19_p4/frame_015531.jpg",
+   "status": "estimated",
+   "unavailable_reason": null,
+   "mitt_center": [
+    682.0,
+    392.5
+   ],
+   "mitt_visible_fraction": "full",
+   "uncertainty_pixels": 10.0,
+   "plate_corners": {
+    "front_left": [
+     647.5,
+     425.0
+    ],
+    "front_right": [
+     724.5,
+     425.0
+    ]
+   },
+   "plate_corners_reason": null,
+   "camera": "centre_field",
+   "note": "two readers same frame, averaged"
+  },
+  {
+   "at_bat_number": 20,
+   "pitch_number": 3,
+   "frame_seconds": 268.3013666666667,
+   "frame_index": 16082,
+   "image_sha256": "fa02fd76f2f058c06f57a2acbf7e36c8dfdbf2cdb0c77cd461b4dc9859460eb8",
+   "path": "outputs/frames/823407_windows/pa20_p3/frame_016082.jpg",
+   "status": "estimated",
+   "unavailable_reason": null,
+   "mitt_center": [
+    805,
+    312
+   ],
+   "mitt_visible_fraction": "full",
+   "uncertainty_pixels": 8.0,
+   "plate_corners": {
+    "front_left": [
+     693,
+     436
+    ],
+    "front_right": [
+     770,
+     435
+    ]
+   },
+   "plate_corners_reason": null,
+   "camera": "centre_field",
+   "note": "two readers different frames; reader A frame and points, reader B within 10.0 px"
+  },
+  {
+   "at_bat_number": 21,
+   "pitch_number": 2,
+   "frame_seconds": 288.55493333333334,
+   "frame_index": 17296,
+   "image_sha256": "2070342ee1b807c3c83795acd90851d5e78e01d5906d875096bdcd81381d56fb",
+   "path": "outputs/frames/823407_windows/pa21_p2/frame_017296.jpg",
+   "status": "estimated",
+   "unavailable_reason": null,
+   "mitt_center": [
+    669.0,
+    391.0
+   ],
+   "mitt_visible_fraction": "partial",
+   "uncertainty_pixels": 14.0,
+   "plate_corners": {
+    "front_left": [
+     596.0,
+     435.0
+    ],
+    "front_right": [
+     675.5,
+     435.0
+    ]
+   },
+   "plate_corners_reason": null,
+   "camera": "centre_field",
+   "note": "two readers same frame, averaged"
+  },
+  {
+   "at_bat_number": 22,
+   "pitch_number": 3,
+   "frame_seconds": 295.94565,
+   "frame_index": 17739,
+   "image_sha256": "ea1044782b939d55c2532988bc63dd479f72256b8dc83b52e3e7b90d8f7f9e23",
+   "path": "outputs/frames/823407_windows/pa22_p3/frame_017739.jpg",
+   "status": "estimated",
+   "unavailable_reason": null,
+   "mitt_center": [
+    718.5,
+    401.0
+   ],
+   "mitt_visible_fraction": "partial",
+   "uncertainty_pixels": 15.0,
+   "plate_corners": {
+    "front_left": [
+     592.0,
+     434.5
+    ],
+    "front_right": [
+     670.5,
+     434.5
+    ]
+   },
+   "plate_corners_reason": null,
+   "camera": "centre_field",
+   "note": "two readers same frame, averaged"
+  },
+  {
+   "at_bat_number": 23,
+   "pitch_number": 6,
+   "frame_seconds": 308.15785,
+   "frame_index": 18471,
+   "image_sha256": "c478495b28a4c99c03118da6d4a8538a78e375593a92e07211444f9e973d012f",
+   "path": "outputs/frames/823407_windows/pa23_p6/frame_018471.jpg",
+   "status": "estimated",
+   "unavailable_reason": null,
+   "mitt_center": [
+    780.0,
+    402.0
+   ],
+   "mitt_visible_fraction": "partial",
+   "uncertainty_pixels": 12.0,
+   "plate_corners": {
+    "front_left": [
+     694.0,
+     435.0
+    ],
+    "front_right": [
+     775.0,
+     434.5
+    ]
+   },
+   "plate_corners_reason": null,
+   "camera": "centre_field",
+   "note": "two readers same frame, averaged"
+  },
+  {
+   "at_bat_number": 24,
+   "pitch_number": 5,
+   "frame_seconds": 323.45646666666664,
+   "frame_index": 19388,
+   "image_sha256": "909151f12a7d4482d3213246828289f17f84a988823ba544761585418fb70e90",
+   "path": "outputs/frames/823407_windows/pa24_p5/frame_019388.jpg",
+   "status": "estimated",
+   "unavailable_reason": null,
+   "mitt_center": [
+    681.5,
+    401.5
+   ],
+   "mitt_visible_fraction": "partial",
+   "uncertainty_pixels": 14.0,
+   "plate_corners": {
+    "front_left": [
+     621.5,
+     432.5
+    ],
+    "front_right": [
+     701.0,
+     432.5
+    ]
+   },
+   "plate_corners_reason": null,
+   "camera": "centre_field",
+   "note": "two readers same frame, averaged"
+  },
+  {
+   "at_bat_number": 29,
+   "pitch_number": 3,
+   "frame_seconds": 371.05401666666666,
+   "frame_index": 22241,
+   "image_sha256": "6d532e95f19f676feaa128f0600cfe1cf123bd65b54578f8850ac03bed10e2df",
+   "path": "outputs/frames/823407_windows/pa29_p3/frame_022241.jpg",
+   "status": "unavailable",
+   "unavailable_reason": "not_centre_field",
+   "mitt_center": null,
+   "mitt_visible_fraction": null,
+   "uncertainty_pixels": null,
+   "plate_corners": null,
+   "plate_corners_reason": "not read",
+   "camera": "centre_field",
+   "note": ""
+  },
+  {
+   "at_bat_number": 31,
+   "pitch_number": 4,
+   "frame_seconds": 378.5448333333333,
+   "frame_index": 22690,
+   "image_sha256": "5cc909197a2f4414cceb75bdcc8fda590e48b80f4cfc12400c53f9267b08796c",
+   "path": "outputs/frames/823407_windows/pa31_p4/frame_022690.jpg",
+   "status": "unavailable",
+   "unavailable_reason": "not_centre_field",
+   "mitt_center": null,
+   "mitt_visible_fraction": null,
+   "uncertainty_pixels": null,
+   "plate_corners": null,
+   "plate_corners_reason": "not read",
+   "camera": "centre_field",
+   "note": ""
+  },
+  {
+   "at_bat_number": 34,
+   "pitch_number": 5,
+   "frame_seconds": 404.8044,
+   "frame_index": 24264,
+   "image_sha256": "5d657fdc54c8be2ab8a58d32428e55a7088047eb02fc47ccea4d1fee4cf19903",
+   "path": "outputs/frames/823407_windows/pa34_p5/frame_024264.jpg",
+   "status": "unavailable",
+   "unavailable_reason": "not_centre_field",
+   "mitt_center": null,
+   "mitt_visible_fraction": null,
+   "uncertainty_pixels": null,
+   "plate_corners": null,
+   "plate_corners_reason": "not read",
+   "camera": "centre_field",
+   "note": ""
+  },
+  {
+   "at_bat_number": 36,
+   "pitch_number": 1,
+   "frame_seconds": 420.0529666666667,
+   "frame_index": 25178,
+   "image_sha256": "5db496d2c0423db93b6b235c375523ac20a23a45cc47e2dbfe08925950cdf9f6",
+   "path": "outputs/frames/823407_windows/pa36_p1/frame_025178.jpg",
+   "status": "unavailable",
+   "unavailable_reason": "readers_disagree_on_mitt",
+   "mitt_center": null,
+   "mitt_visible_fraction": null,
+   "uncertainty_pixels": null,
+   "plate_corners": null,
+   "plate_corners_reason": "not read",
+   "camera": "centre_field",
+   "note": "reader mitt points 99.2 px apart (frames 25178, 25178)"
+  },
+  {
+   "at_bat_number": 37,
+   "pitch_number": 4,
+   "frame_seconds": 435.8020333333333,
+   "frame_index": 26122,
+   "image_sha256": "800588107b446b21303deea3fa3c7eea337818933ad3b9902be3dbf11aa1f93d",
+   "path": "outputs/frames/823407_windows/pa37_p4/frame_026122.jpg",
+   "status": "unavailable",
+   "unavailable_reason": "readers_disagree_on_mitt",
+   "mitt_center": null,
+   "mitt_visible_fraction": null,
+   "uncertainty_pixels": null,
+   "plate_corners": null,
+   "plate_corners_reason": "not read",
+   "camera": "centre_field",
+   "note": "reader mitt points 93.5 px apart (frames 26122, 26122)"
+  },
+  {
+   "at_bat_number": 39,
+   "pitch_number": 3,
+   "frame_seconds": 459.20875,
+   "frame_index": 27525,
+   "image_sha256": "20a2a5a354f112c98289bba29cf949be81b7ce06fc01b4e0c579a34f38739b56",
+   "path": "outputs/frames/823407_windows/pa39_p3/frame_027525.jpg",
+   "status": "unavailable",
+   "unavailable_reason": "readers_disagree_on_mitt",
+   "mitt_center": null,
+   "mitt_visible_fraction": null,
+   "uncertainty_pixels": null,
+   "plate_corners": null,
+   "plate_corners_reason": "not read",
+   "camera": "centre_field",
+   "note": "reader mitt points 107.3 px apart (frames 27525, 27525)"
+  },
+  {
+   "at_bat_number": 49,
+   "pitch_number": 1,
+   "frame_seconds": 492.20838333333336,
+   "frame_index": 29503,
+   "image_sha256": "a553c2e7a09994004331e48f36a9528a5812a2752b2c8c909c1bade9fd098ddd",
+   "path": "outputs/frames/823407_windows/pa49_p1/frame_029503.jpg",
+   "status": "estimated",
+   "unavailable_reason": null,
+   "mitt_center": [
+    781.0,
+    403.5
+   ],
+   "mitt_visible_fraction": "partial",
+   "uncertainty_pixels": 12.0,
+   "plate_corners": {
+    "front_left": [
+     696.0,
+     435.5
+    ],
+    "front_right": [
+     758.0,
+     435.5
+    ]
+   },
+   "plate_corners_reason": null,
+   "camera": "centre_field",
+   "note": "two readers same frame, averaged"
+  },
+  {
+   "at_bat_number": 50,
+   "pitch_number": 1,
+   "frame_seconds": 511.7445666666667,
+   "frame_index": 30674,
+   "image_sha256": "7477fc62a4034a6e2a70982e45f345badd77023b1e0379f4a42ecbac8f2bf31e",
+   "path": "outputs/frames/823407_windows/pa50_p1/frame_030674.jpg",
+   "status": "estimated",
+   "unavailable_reason": null,
+   "mitt_center": [
+    744.0,
+    400.0
+   ],
+   "mitt_visible_fraction": "partial",
+   "uncertainty_pixels": 12.0,
+   "plate_corners": {
+    "front_left": [
+     691.0,
+     434.5
+    ],
+    "front_right": [
+     760.0,
+     434.5
+    ]
+   },
+   "plate_corners_reason": null,
+   "camera": "centre_field",
+   "note": "two readers same frame, averaged"
+  },
+  {
+   "at_bat_number": 61,
+   "pitch_number": 3,
+   "frame_seconds": 536.0521833333333,
+   "frame_index": 32131,
+   "image_sha256": "d02d7b9502c4a46cd47e917012057c89f91f3cf41ca82ffa5d029ff3688e6bfc",
+   "path": "outputs/frames/823407_windows/pa61_p3/frame_032131.jpg",
+   "status": "estimated",
+   "unavailable_reason": null,
+   "mitt_center": [
+    779.0,
+    377.5
+   ],
+   "mitt_visible_fraction": "partial",
+   "uncertainty_pixels": 15.0,
+   "plate_corners": {
+    "front_left": [
+     700.0,
+     435.0
+    ],
+    "front_right": [
+     777.5,
+     435.0
+    ]
+   },
+   "plate_corners_reason": null,
+   "camera": "centre_field",
+   "note": "two readers same frame, averaged"
+  },
+  {
+   "at_bat_number": 63,
+   "pitch_number": 4,
+   "frame_seconds": 560.10955,
+   "frame_index": 33573,
+   "image_sha256": "fe66c29615cdf14b7daca30b1ab2fdee29b418c2bac0a5e776dc8924ff1a5f2e",
+   "path": "outputs/frames/823407_windows/pa63_p4/frame_033573.jpg",
+   "status": "unavailable",
+   "unavailable_reason": "only_one_reader_found_a_setup_frame",
+   "mitt_center": null,
+   "mitt_visible_fraction": null,
+   "uncertainty_pixels": null,
+   "plate_corners": null,
+   "plate_corners_reason": "not read",
+   "camera": "centre_field",
+   "note": "other reader: None"
+  },
+  {
+   "at_bat_number": 65,
+   "pitch_number": 2,
+   "frame_seconds": 574.7575166666667,
+   "frame_index": 34451,
+   "image_sha256": "f794ef1df41296fd320c54d1ae985e5403992f42d520e140be1833d92cfc1cd8",
+   "path": "outputs/frames/823407_windows/pa65_p2/frame_034451.jpg",
+   "status": "unavailable",
+   "unavailable_reason": "only_one_reader_found_a_setup_frame",
+   "mitt_center": null,
+   "mitt_visible_fraction": null,
+   "uncertainty_pixels": null,
+   "plate_corners": null,
+   "plate_corners_reason": "not read",
+   "camera": "centre_field",
+   "note": "other reader: None"
+  },
+  {
+   "at_bat_number": 73,
+   "pitch_number": 10,
+   "frame_seconds": 594.8943,
+   "frame_index": 35658,
+   "image_sha256": "a1eff676ee9f7f1e2bf80c21fa244f7aa50acdc2e9ba30b54d5a4d28761bdad3",
+   "path": "outputs/frames/823407_windows/pa73_p10/frame_035658.jpg",
+   "status": "unavailable",
+   "unavailable_reason": "only_one_reader_found_a_setup_frame",
+   "mitt_center": null,
+   "mitt_visible_fraction": null,
+   "uncertainty_pixels": null,
+   "plate_corners": null,
+   "plate_corners_reason": "not read",
+   "camera": "centre_field",
+   "note": "other reader: None"
+  },
+  {
+   "at_bat_number": 80,
+   "pitch_number": 3,
+   "frame_seconds": 621.8545666666666,
+   "frame_index": 37274,
+   "image_sha256": "e200a768a576f53ee8c6feaa6a5ac7e8e487b50fb63a93f51d2564e78e497743",
+   "path": "outputs/frames/823407_windows/pa80_p3/frame_037274.jpg",
+   "status": "unavailable",
+   "unavailable_reason": "only_one_reader_found_a_setup_frame",
+   "mitt_center": null,
+   "mitt_visible_fraction": null,
+   "uncertainty_pixels": null,
+   "plate_corners": null,
+   "plate_corners_reason": "not read",
+   "camera": "centre_field",
+   "note": "other reader: slow_motion_replay_not_live"
+  },
+  {
+   "at_bat_number": 88,
+   "pitch_number": 3,
+   "frame_seconds": 638.0040333333334,
+   "frame_index": 38242,
+   "image_sha256": "2c0220331fe81defedac3e6750f7996c04184bb9354178dafa6cc3781f589db4",
+   "path": "outputs/frames/823407_windows/pa88_p3/frame_038242.jpg",
+   "status": "unavailable",
+   "unavailable_reason": "only_one_reader_found_a_setup_frame",
+   "mitt_center": null,
+   "mitt_visible_fraction": null,
+   "uncertainty_pixels": null,
+   "plate_corners": null,
+   "plate_corners_reason": "not read",
+   "camera": "centre_field",
+   "note": "other reader: slow_motion_replay_not_live"
+  }
+ ]
+}

@@ -1,5 +1,9 @@
 # Transition Model Inference Guide
 
+> **2026-09-21:** 기존 기본 체크포인트는 호환성을 위해 유지합니다.
+> 정확도만으로 추천 모델을 정하지 마세요. 77d 기준선 정렬 오류, 클러스터 평균 대체,
+> 물리량 평균 대체의 영향을 [수정 보고서](ALIGNMENT_REPAIR_2026-09-21.md)에 기록했습니다.
+
 DQN/MDP 팀을 위한 전이확률 모델 사용 가이드.
 
 작성: 조현준 | 모델 버전: model_b_full_v2, model_c_full_v3 | 최종 업데이트: 2026-05-14
@@ -233,7 +237,7 @@ class SmartPitchEnvironment:
 | Cross-entropy | 0.880 |
 | Baseline (empirical) | 41.4% |
 
-### Model C Per-class accuracy
+### Model C 과거 클래스별 argmax recall (사건 확률과 다름)
 
 | Class | Accuracy | 비고 |
 |-------|----------|------|
@@ -248,8 +252,8 @@ class SmartPitchEnvironment:
 | HomeRun | 0.0% | ❌ class imbalance |
 | HitByPitch | 3.1% | ❌ class imbalance |
 
-**주의**: 안타류(Single/Double/Triple/HomeRun) 예측 정확도가 낮습니다.
-향후 weighted loss 또는 focal loss로 개선 예정입니다.
+위 0%는 해당 클래스를 최대 확률로 선택하지 못했다는 뜻입니다. 사건 확률은 0이 아닙니다.
+불균형이 단독 원인인지, weighted/focal loss가 확률 품질을 개선하는지는 별도 검증 대상입니다.
 
 ---
 

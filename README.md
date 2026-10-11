@@ -1,5 +1,28 @@
 # transition-models
 
+개발·검사·중단 후 재개·Mac 이관: [유지보수 안내](docs/MAINTENANCE.md).
+기본 검사 명령은 `uv run --frozen python scripts/check_project.py`입니다.
+
+> **MLB P0 — 2026-09-22:** 투구 ID 322건을 공식 경기 feed와 대조하고, 실제 운영 모델을
+> 수동 입력 화면에 연결했습니다. `uv run --frozen python scripts/59_serve_manual_demo.py
+> --with-example-video`로 실행한 뒤 Chrome에서 `http://127.0.0.1:8770`을 엽니다.
+> 기존 운영 모델 파일이 필요합니다. 자동 영상 인식·목표 위치 추천·독립 파울 확률은 아직
+> 구현 전입니다. [실행 안내와 남은 작업](docs/MLB_P0.md) ·
+> [Codex/Claude 인계 기록](docs/MLB_P0_HANDOFF.md) · [입출력 규약](docs/PREPITCH_CONTRACT.md)
+
+> **현재 결과 — 2026-09-21:** 기준선 복구와 운영 모델 9개 학습, 독립 확률 보정,
+> 정책 평가, 시연을 완료했습니다. 운영 MLP의 CE는 경험적 기준선 1.2874 → 1.2743입니다.
+> 다만 정책 실점 차이의 신뢰구간이 0을 포함해 **실점 개선은 입증하지 못했습니다**.
+> [최종 검증 보고서](docs/OPERATIONAL_VALIDATION_2026-09-21.md) ·
+> [검증 시연](docs/results/operational_20260921/demo.html) ·
+> [정정한 발표 구성](docs/presentation_slides.md)
+
+> **2026-09-21 정정:** 과거 77d 10-class 실험은 입력과 정답의 순서가 달랐습니다.
+> 아래 Phase 9~10 표는 역사적 기록이며, collapse·Arsenal +26.5pp·MDP 최선 주장의 근거로
+> 사용하면 안 됩니다. 같은 투구로 재학습한 77d MLP CE는 **67.67%, CE 0.8517**,
+> 135d MLP CE는 **67.60%, CE 0.8546**입니다(각 seed 42, 관측된 투구 특징 사용).
+> [수정·재현 결과와 운영 한계](docs/ALIGNMENT_REPAIR_2026-09-21.md)를 먼저 확인하세요.
+
 SmartPitch MDP의 전이확률(transition probability) 추정 모델 3가지를 비교하는 프로젝트.
 
 ## Models
@@ -15,7 +38,7 @@ SmartPitch MDP의 전이확률(transition probability) 추정 모델 3가지를 
 | **Top-1** | 35.6% | 60.9% | 67.2% |
 | **Reference** | Internal | Otremba 2022 | MIT Sloan 2025 |
 
-### Phase 9 아키텍처 사다리 (Track B) — 10-class 통일 비교
+### Phase 9 아키텍처 사다리 (Track B) — 과거 결과, 정렬 오류로 비교 철회
 
 | 모델 | Input | Top-1 | Macro-F1 | MDP 호환 |
 |------|-------|-------|----------|---------|
@@ -27,11 +50,11 @@ SmartPitch MDP의 전이확률(transition probability) 추정 모델 3가지를 
 
 † Strike majority collapse  ‡ 역방향 collapse (균등 예측)
 
-### Phase 9.5 MDP 호환 돌파 (Track C) — 135-dim Arsenal MLP
+### Phase 9.5 (Track C) — 과거 135-dim Arsenal MLP 결과
 
 | 모델 | Input | Top-1 | MDP 호환 | 권장 |
 |------|-------|-------|---------|------|
-| **TransitionModelMLP10** | **135d (77d+arsenal 58d)** | **67.6%** | **✅** | **⭐ 권장** |
+| **TransitionModelMLP10** | **135d (77d+arsenal 58d)** | **67.6%** | 입력 형식 호환 | 과거 모델, 권장 철회 |
 | LR 135d | 135d | 62.4% | ✅ | |
 | LightGBM 135d | 135d | 67.3% | ✅ | |
 
@@ -82,7 +105,11 @@ uv run python scripts/06_sanity_check_model_c.py
 
 ## Inference (DQN/MDP 팀용)
 
-### ⭐ 권장 모델: TransitionModelMLP10 (135-dim, 10-class, MDP 호환)
+### 과거 API: TransitionModelMLP10 (기존 실험 재현 전용)
+
+아래 checkpoint는 새 운영 평가 모델이 아닙니다. 투구 전 추천에는
+[운영 검증 보고서](docs/OPERATIONAL_VALIDATION_2026-09-21.md)와
+`scripts/57_recommend_operational.py`를 사용하세요. 입력 차원이 135로 같아도 특징 의미가 다릅니다.
 
 ```python
 import json
@@ -136,6 +163,44 @@ outputs/        Checkpoints, logs, figures (git-ignored)
 references/     Papers
 tests/          121 pytest tests (Phase 10 완료 기준)
 ```
+
+## Intent (catcher setup) module v0 — branch `feature/intent-v0`
+
+동료(Pitcheezy) 작업 지시서 [docs/INTENT_V0_WORK_ORDER.md](docs/INTENT_V0_WORK_ORDER.md)의 M0·M1 구현이다.
+포수 셋업(미트 위치)은 **의도의 대리값**이며(`is_intent_proxy=true`), 포수 의도를 확인한 값이 아니다.
+
+```bash
+# M1: 경기 747139의 판단 프레임 297구 → IntentEstimate v1 JSONL (한 줄 = 한 투구)
+uv run --frozen python -m intent.run --game 747139 --out intent_747139.jsonl
+# 로컬 프레임 바이트까지 다시 확인하려면 (프레임이 있는 체크아웃을 지정)
+uv run --frozen python -m intent.run --game 747139 --out intent_747139.jsonl --frames-root <checkout> --verify-frames
+uv run --frozen python -m pytest tests/test_intent_v0.py -q
+```
+
+- 입력: 고정 수동 timing(`docs/results/mlb_p0/game_747139_timing.json`)과 점 파일
+  `docs/results/mlb_p0/game_747139_intent_points_v0.json`(`method.kind=assistant_visual_estimate`:
+  Claude Code 워크플로 에이전트가 2배 확대 crop 격자에서 미트 중심·홈플레이트 네 모서리를 읽어 적은 값, 셋업 미트 좌표는 사람 검토 없음).
+- 출력: `docs/results/mlb_p0/game_747139_intent_v0.jsonl`과 `.run.json`(건수·소요 시간·주의 사항). 모든 줄이 `intent.schema.validate_intent_estimate`를 통과한다.
+  `review_status`는 항상 `unreviewed`, `accuracy_estimate`는 측정 전이라 `null`이다.
+- 좌표 홉(M2, 2026-10-01): `image_pixels` → `annotated_image_zone` v1(플레이트 **앞선**에 고정한 유사변환: u = 앞선 폭 단위 가로 위치, v = 지면선 위 높이;
+  카메라 롤·타석별 배율은 M1 모서리에서 합산) → `plate_feet` v0(상수 3×3 아핀: x = −(17/12)(u−0.5), z = (17/12)·v/cos θ − d0·tan θ;
+  `x_convention=statcast_plate_x_catcher_view`, 카메라 틸트 θ = 5.84°(타자석 6 ft 기준선), 공칭 미트 깊이 d0 = 2.5 ft). 측정 방법·검사·한계는
+  [docs/INTENT_V0_M2_NOTES.md](docs/INTENT_V0_M2_NOTES.md), 수치는 `docs/results/mlb_p0/game_747139_intent_plate_calibration_v0.json`(`rms_error_feet`,
+  `human_verified_count`) — 판독은 에이전트 시각 추정이고, 포구 프레임 19구의 공 위치는 2026-10-02 소유자가 몽타주로 확인했다(`rms_error_feet` 0.277 ft, 개발 경기 안의 값). 앞선 모서리가 없는 추정 프레임은 `image_pixels`에서 멈추고
+  `blocked_by=no_image_plane_calibration`으로 남는다. `plate_feet`까지 간 줄은 `blocked_by=no_batter_zone_bounds`(서비스의 다음 좌표계 zone9에 필요한 타자 존 경계가 없음)이다.
+- 계약 조정(2026-10-02, 서비스 쪽 요청): `evidence.frame_index`는 원본 영상 프레임 번호(시각으로 뽑은 프레임은 `round(frame_time × 60000/1001)`), `points.plate_feet`의 키는 Statcast와 같은 `x`/`z`, 멈춘 깊이마다 `blocked_by` 이름을 둔다. 서비스 쪽 `validate_intent_estimate`(SongRoute/pitcheezy 8771c06)로 297줄 전부 통과를 확인했다.
+  ```bash
+  uv run --frozen python -m intent.calibrate --game 747139   # readings json → calibration json
+  ```
+- 시연 경기 849843(2026-10-02): MLB 공식 압축 경기에서 39구를 찾아 의도 v0 JSONL을 만들었다(추정 27, 기권 12, 서비스 검사 39/39 통과). 출처·절차·한계(선정 편향, 낮게 쉬는 글러브)는 [docs/INTENT_V0_DEMO_849843.md](docs/INTENT_V0_DEMO_849843.md).
+- 사람 라벨(M3 준비, 2026-10-02): 아래 첫 명령이 판단 프레임 40장(에이전트 추정 32 + 기권 8, 고르게 분산)을 넣은 라벨링 HTML을 `outputs/intent_label/`(git 제외)에 만든다.
+  브라우저로 열어 미트 중심과 플레이트 앞선 양 끝을 클릭하고 JSON을 내려받는다. 에이전트 표시는 보이지 않는다. 두 번째 명령이 라벨을 커밋용 파일로 옮기고 에이전트 판독과 비교한다.
+  ```bash
+  uv run --frozen python -m intent.label_pack --game 747139 --frames-root <프레임이 있는 체크아웃> --sample 40 --out outputs/intent_label/game_747139_pack.html
+  uv run --frozen python -m intent.human_labels --game 747139 --labels <내려받은 JSON>
+  ```
+- **영상 권리**: 프레임은 MLB.com 공개 영상에서 로컬 `outputs/frames/`에만 추출했고 저장소에는 넣지 않는다(좌표·해시만 커밋).
+  프레임·crop·영상 파일을 공개 저장소나 산출물에 넣지 않으며, 대량 수집·공개 범위는 M4에서 별도로 합의한다.
 
 ## Daily Memo
 

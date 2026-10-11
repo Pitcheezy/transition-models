@@ -73,6 +73,7 @@ class TestOtrembaMLP:
         out = model(x)
         assert out.shape == (1, 4)
 
+    @pytest.mark.mps
     def test_mps_compatible(self):
         """Model can be moved to MPS if available."""
         if not torch.backends.mps.is_available():

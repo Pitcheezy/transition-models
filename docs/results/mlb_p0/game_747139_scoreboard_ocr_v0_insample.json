@@ -1,0 +1,219 @@
+{
+  "schema": "mlb_scoreboard_evalset_score_v2",
+  "denominators": [
+    "coverage = evaluable / total_pitches",
+    "attempt_rate = attempted / evaluable",
+    "correct_rate = correct / evaluable",
+    "error_rate = wrong / evaluable",
+    "abstain_rate = abstained / evaluable",
+    "accuracy = correct / attempted"
+  ],
+  "coverage_counts": {
+    "total_pitches": 322,
+    "timing_rows": 42,
+    "timing_annotated": 40,
+    "timing_unavailable": 2,
+    "timing_unreviewed": 280,
+    "scoreboard_reviewed": 40,
+    "evaluable_pitches": 40,
+    "fully_evaluable_pitches": 39,
+    "per_field_evaluable": {
+      "balls": 39,
+      "strikes": 39,
+      "outs": 39,
+      "runner_on_1b": 39,
+      "runner_on_2b": 39,
+      "runner_on_3b": 39,
+      "inning": 40,
+      "inning_topbot": 40,
+      "home_score": 40,
+      "away_score": 40
+    },
+    "excluded": {
+      "occluded": 2,
+      "scoreboard_unreviewed": 0,
+      "no_confirmed_field": 0
+    },
+    "label_conflicts": 0,
+    "complete_plate_appearances": [
+      2,
+      3,
+      4,
+      6,
+      7,
+      8,
+      9,
+      10
+    ]
+  },
+  "predictions_received": 40,
+  "non_evaluable_attempts": {
+    "excluded": {
+      "occluded": 0,
+      "scoreboard_unreviewed": 0,
+      "no_confirmed_field": 0
+    },
+    "unconfirmed_field": 0
+  },
+  "per_field": {
+    "balls": {
+      "total_pitches": 322,
+      "evaluable": 39,
+      "attempted": 38,
+      "correct": 38,
+      "wrong": 0,
+      "abstained": 1,
+      "coverage": 0.12111801242236025,
+      "attempt_rate": 0.9743589743589743,
+      "correct_rate": 0.9743589743589743,
+      "error_rate": 0.0,
+      "abstain_rate": 0.02564102564102564,
+      "accuracy": 1.0
+    },
+    "strikes": {
+      "total_pitches": 322,
+      "evaluable": 39,
+      "attempted": 39,
+      "correct": 39,
+      "wrong": 0,
+      "abstained": 0,
+      "coverage": 0.12111801242236025,
+      "attempt_rate": 1.0,
+      "correct_rate": 1.0,
+      "error_rate": 0.0,
+      "abstain_rate": 0.0,
+      "accuracy": 1.0
+    },
+    "outs": {
+      "total_pitches": 322,
+      "evaluable": 39,
+      "attempted": 39,
+      "correct": 39,
+      "wrong": 0,
+      "abstained": 0,
+      "coverage": 0.12111801242236025,
+      "attempt_rate": 1.0,
+      "correct_rate": 1.0,
+      "error_rate": 0.0,
+      "abstain_rate": 0.0,
+      "accuracy": 1.0
+    },
+    "runner_on_1b": {
+      "total_pitches": 322,
+      "evaluable": 39,
+      "attempted": 39,
+      "correct": 39,
+      "wrong": 0,
+      "abstained": 0,
+      "coverage": 0.12111801242236025,
+      "attempt_rate": 1.0,
+      "correct_rate": 1.0,
+      "error_rate": 0.0,
+      "abstain_rate": 0.0,
+      "accuracy": 1.0
+    },
+    "runner_on_2b": {
+      "total_pitches": 322,
+      "evaluable": 39,
+      "attempted": 39,
+      "correct": 39,
+      "wrong": 0,
+      "abstained": 0,
+      "coverage": 0.12111801242236025,
+      "attempt_rate": 1.0,
+      "correct_rate": 1.0,
+      "error_rate": 0.0,
+      "abstain_rate": 0.0,
+      "accuracy": 1.0
+    },
+    "runner_on_3b": {
+      "total_pitches": 322,
+      "evaluable": 39,
+      "attempted": 39,
+      "correct": 39,
+      "wrong": 0,
+      "abstained": 0,
+      "coverage": 0.12111801242236025,
+      "attempt_rate": 1.0,
+      "correct_rate": 1.0,
+      "error_rate": 0.0,
+      "abstain_rate": 0.0,
+      "accuracy": 1.0
+    },
+    "inning": {
+      "total_pitches": 322,
+      "evaluable": 40,
+      "attempted": 27,
+      "correct": 27,
+      "wrong": 0,
+      "abstained": 13,
+      "coverage": 0.12422360248447205,
+      "attempt_rate": 0.675,
+      "correct_rate": 0.675,
+      "error_rate": 0.0,
+      "abstain_rate": 0.325,
+      "accuracy": 1.0
+    },
+    "inning_topbot": {
+      "total_pitches": 322,
+      "evaluable": 40,
+      "attempted": 39,
+      "correct": 39,
+      "wrong": 0,
+      "abstained": 1,
+      "coverage": 0.12422360248447205,
+      "attempt_rate": 0.975,
+      "correct_rate": 0.975,
+      "error_rate": 0.0,
+      "abstain_rate": 0.025,
+      "accuracy": 1.0
+    },
+    "home_score": {
+      "total_pitches": 322,
+      "evaluable": 40,
+      "attempted": 39,
+      "correct": 39,
+      "wrong": 0,
+      "abstained": 1,
+      "coverage": 0.12422360248447205,
+      "attempt_rate": 0.975,
+      "correct_rate": 0.975,
+      "error_rate": 0.0,
+      "abstain_rate": 0.025,
+      "accuracy": 1.0
+    },
+    "away_score": {
+      "total_pitches": 322,
+      "evaluable": 40,
+      "attempted": 39,
+      "correct": 39,
+      "wrong": 0,
+      "abstained": 1,
+      "coverage": 0.12422360248447205,
+      "attempt_rate": 0.975,
+      "correct_rate": 0.975,
+      "error_rate": 0.0,
+      "abstain_rate": 0.025,
+      "accuracy": 1.0
+    }
+  },
+  "all_fields": {
+    "total_pitches": 322,
+    "evaluable": 39,
+    "attempted": 26,
+    "correct": 26,
+    "wrong": 0,
+    "abstained": 13,
+    "coverage": 0.12111801242236025,
+    "attempt_rate": 0.6666666666666666,
+    "correct_rate": 0.6666666666666666,
+    "error_rate": 0.0,
+    "abstain_rate": 0.3333333333333333,
+    "accuracy": 1.0
+  },
+  "note": "evaluable is per field (confirmed by a human reading); excluded pitches and unconfirmed fields are never counted as correct or wrong",
+  "holdout": {
+    "excluded_plate_appearances": [],
+    "note": "no plate appearance excluded; template-source pitches are in-sample"
+  }
+}

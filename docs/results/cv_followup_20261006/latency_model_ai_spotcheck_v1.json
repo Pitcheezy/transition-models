@@ -1,0 +1,54 @@
+{
+  "schema": "cv_latency_model_ai_spotcheck_v1",
+  "reviewer": "Codex AI visual inspection; not a human annotator",
+  "selection": "Post-hoc: first paired marked frame (index0) and largest paired coordinate disagreement (index6). Not representative or blind.",
+  "human_label": false,
+  "accuracy_evaluated": false,
+  "independent_validation": false,
+  "reference_coordinates_created": false,
+  "same_interpreter_clock_inspected_after_runs": {
+    "implementation": "GetTickCount64()",
+    "resolution_seconds": 0.015625,
+    "note": "monotonic_ns API name does not imply nanosecond resolution. Zero measured durations do not establish zero processing cost."
+  },
+  "observations": [
+    {
+      "index": 0,
+      "ai_visual_note": "Haiku [375,280] falls on turf well left of the catcher in the original1280x720 frame. This is a localization concern despite schema acceptance. No exact correct point was assigned for either model.",
+      "model_points": {
+        "opus": [
+          665,
+          289
+        ],
+        "haiku": [
+          375,
+          280
+        ]
+      },
+      "image_sha256": "c103b67dbde86972fdf0d92cdc5b765adeda9b426dc68ae38a29285a1f0d52dc",
+      "dimensions": [
+        1280,
+        720
+      ]
+    },
+    {
+      "index": 6,
+      "ai_visual_note": "The mitt is visible at the lower left. Haiku [105,168] falls in the upper-left background rather than that mitt; Opus [52,600] is near the visible lower-left glove region. Proximity is not a measured accuracy claim.",
+      "model_points": {
+        "opus": [
+          52,
+          600
+        ],
+        "haiku": [
+          105,
+          168
+        ]
+      },
+      "image_sha256": "68ae55db2590c89fa7f6ddc1691d17d8dcf78b6bcd862c82d6778aef37b82bd5",
+      "dimensions": [
+        1280,
+        720
+      ]
+    }
+  ]
+}

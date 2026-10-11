@@ -27,38 +27,38 @@ def _c_available():
     return Path(TransitionModelC.DEFAULT_CHECKPOINT).exists()
 
 
-def test_model_b_load():
+def test_model_b_load(inference_device):
     if not _b_available():
         pytest.skip("Model B checkpoint not found")
-    model = TransitionModelB()
+    model = TransitionModelB(device=inference_device)
     assert model.num_classes == 4
     assert len(model.classes) == 4
 
 
-def test_model_b_predict_single(dummy_b):
+def test_model_b_predict_single(dummy_b, inference_device):
     if not _b_available():
         pytest.skip("Model B checkpoint not found")
-    model = TransitionModelB()
+    model = TransitionModelB(device=inference_device)
     probs = model.predict(dummy_b)
     assert probs.shape == (4,)
     assert np.allclose(probs.sum(), 1.0, atol=1e-5)
     assert (probs >= 0).all()
 
 
-def test_model_b_predict_batch():
+def test_model_b_predict_batch(inference_device):
     if not _b_available():
         pytest.skip("Model B checkpoint not found")
-    model = TransitionModelB()
+    model = TransitionModelB(device=inference_device)
     batch = np.random.randn(5, 77).astype(np.float32)
     probs = model.predict(batch)
     assert probs.shape == (5, 4)
     assert np.allclose(probs.sum(axis=1), 1.0, atol=1e-5)
 
 
-def test_model_b_top_k(dummy_b):
+def test_model_b_top_k(dummy_b, inference_device):
     if not _b_available():
         pytest.skip("Model B checkpoint not found")
-    model = TransitionModelB()
+    model = TransitionModelB(device=inference_device)
     top3 = model.predict_top_k(dummy_b, k=3)
     assert len(top3) == 3
     assert all("class" in item and "probability" in item for item in top3)
@@ -66,18 +66,18 @@ def test_model_b_top_k(dummy_b):
     assert p == sorted(p, reverse=True)
 
 
-def test_model_c_load():
+def test_model_c_load(inference_device):
     if not _c_available():
         pytest.skip("Model C checkpoint not found")
-    model = TransitionModelC()
+    model = TransitionModelC(device=inference_device)
     assert len(model.pr_classes) == 10
     assert len(model.hl_classes) == 9
 
 
-def test_model_c_predict_single(dummy_c):
+def test_model_c_predict_single(dummy_c, inference_device):
     if not _c_available():
         pytest.skip("Model C checkpoint not found")
-    model = TransitionModelC()
+    model = TransitionModelC(device=inference_device)
     result = model.predict(dummy_c)
     assert result["pitch_result"].shape == (10,)
     assert result["hit_location"].shape == (9,)
@@ -85,10 +85,10 @@ def test_model_c_predict_single(dummy_c):
     assert np.allclose(result["hit_location"].sum(), 1.0, atol=1e-5)
 
 
-def test_model_c_predict_batch():
+def test_model_c_predict_batch(inference_device):
     if not _c_available():
         pytest.skip("Model C checkpoint not found")
-    model = TransitionModelC()
+    model = TransitionModelC(device=inference_device)
     batch = np.random.randn(3, 400, 87).astype(np.float32)
     batch[:, -1, 68:87] = 0.0
     result = model.predict(batch)
@@ -96,10 +96,10 @@ def test_model_c_predict_batch():
     assert result["hit_location"].shape == (3, 9)
 
 
-def test_model_c_top_k(dummy_c):
+def test_model_c_top_k(dummy_c, inference_device):
     if not _c_available():
         pytest.skip("Model C checkpoint not found")
-    model = TransitionModelC()
+    model = TransitionModelC(device=inference_device)
     top3 = model.predict_top_k(dummy_c, k=3)
     assert len(top3) == 3
     assert all("class" in item and "probability" in item for item in top3)
@@ -131,18 +131,18 @@ def test_build_135dim_feature():
     assert np.allclose(feat[77:82], 0.0)  # UMAP zero-filled
 
 
-def test_model_mlp10_load():
+def test_model_mlp10_load(inference_device):
     if not _mlp10_available():
         pytest.skip("MLP10 checkpoint not found")
-    model = TransitionModelMLP10()
+    model = TransitionModelMLP10(device=inference_device)
     assert model.num_classes == 10
     assert len(model.classes) == 10
 
 
-def test_model_mlp10_predict():
+def test_model_mlp10_predict(inference_device):
     if not _mlp10_available():
         pytest.skip("MLP10 checkpoint not found")
-    model = TransitionModelMLP10()
+    model = TransitionModelMLP10(device=inference_device)
     x = np.random.randn(135).astype(np.float32)
     probs = model.predict(x)
     assert probs.shape == (10,)

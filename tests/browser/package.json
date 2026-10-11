@@ -1,0 +1,17 @@
+{
+  "name": "pitcheezy-service-review-browser-tests",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Synthetic local service review browser regression tests",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "test": "node --test --test-concurrency=1 service-review.test.cjs observation-playback.test.cjs",
+    "test:service": "node --test --test-concurrency=1 service-review.test.cjs",
+    "test:observation": "node --test --test-concurrency=1 observation-playback.test.cjs"
+  },
+  "devDependencies": {
+    "playwright": "1.62.1"
+  }
+}

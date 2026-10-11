@@ -1,0 +1,269 @@
+{
+  "schema": "official_first_pa_media_provenance_v1",
+  "game_pk": 849843,
+  "game_date": "2026-09-29",
+  "purpose": "Development/demo first-PA video connection; no new held-out performance claim.",
+  "source_access": "Ordinary HTTPS GET of public official pages and the exact public MP4 sources advertised in their video elements; no authentication or restriction bypass.",
+  "feed": {
+    "official_url": "https://statsapi.mlb.com/api/v1.1/game/849843/feed/live",
+    "bytes": 752675,
+    "sha256": "89fac0c065eca51b97e499e237c7c02e186d27c06989f9d91a0b36281d4aa64b"
+  },
+  "identity_method": "gamePk + atBatIndex+1 + explicit pitchNumber + exact playId, corroborated by official Savant page player IDs, matchup, date, pitch type, speed, and count; not list-order pairing.",
+  "clips": [
+    {
+      "game_pk": 849843,
+      "at_bat_number": 1,
+      "pitch_number": 1,
+      "play_id": "f6d7a0f3-d111-3c6d-92cd-2b5a867ac931",
+      "pitcher": {
+        "id": 650633,
+        "name": "Michael King"
+      },
+      "batter": {
+        "id": 691718,
+        "name": "Pete Crow-Armstrong"
+      },
+      "official_pitch_metadata": {
+        "pitch_type": "SI",
+        "start_speed_mph": 96.3,
+        "description": "Called Strike",
+        "pre_pitch_count": {
+          "balls": 0,
+          "strikes": 0
+        },
+        "inning": 1,
+        "half_inning": "top"
+      },
+      "official_page_url": "https://baseballsavant.mlb.com/sporty-videos?playId=f6d7a0f3-d111-3c6d-92cd-2b5a867ac931",
+      "official_page_snapshot": {
+        "bytes": 88229,
+        "sha256": "3ac4cb772493bba4cc173eb7eb638ba9a0d4db261ec5816f7c277acc421a3d72"
+      },
+      "media": {
+        "official_url": "https://sporty-clips.mlb.com/dnZWVmpfV0ZRVkV3dEdEUT09X1VBY0ZVd1VFQUFFQVhGTURWd0FIVWdBQ0FGZ0hBQVVBQUFjQVVRc0RCbElHQ1FGWA==.mp4",
+        "retrieved_utc": "2026-10-06T06:51:14.5675468Z",
+        "http_status": 200,
+        "mime": "video/mp4",
+        "bytes": 5139146,
+        "sha256": "78c7325e6d79afc13f2c1990262e2872483db907283c7571a6a2c468d0a7ca42",
+        "format_duration_seconds": 6.999,
+        "video_duration_seconds": 6.974733,
+        "video_start_time_seconds": 0.013,
+        "width": 1280,
+        "height": 720,
+        "video_codec": "h264",
+        "video_profile": "High",
+        "pixel_format": "yuv420p",
+        "nominal_frame_rate": "60000/1001",
+        "average_frame_rate": "6240000/104621",
+        "frame_count": 416,
+        "audio_codec": "aac",
+        "audio_sample_rate_hz": 48000,
+        "audio_channels": 2,
+        "full_decode_passed": true,
+        "rendition_source": "The single MP4 source directly advertised in the public Savant page video element; no alternate rendition inferred."
+      },
+      "poster": {
+        "mime": "image/jpeg",
+        "width": 1280,
+        "height": 720,
+        "requested_seek_seconds": 0,
+        "selection": "First decoded video frame at/after the requested zero-second seek; original video stream starts at 0.013000 seconds.",
+        "bytes": 188744,
+        "sha256": "cb996e01792960cf0e10a6a84689b06a4f6ae0b158802f997492aadc1fe8fcaa",
+        "pre_pitch_scene_confirmed": true,
+        "current_pitch_result_visible": false,
+        "mitt_annotation_available": false,
+        "target_location_available": false
+      },
+      "visual_review": {
+        "method": "Assistant inspection of decoded still frames; not human inter-rater agreement or OCR validation.",
+        "reviewed_seconds": [
+          0,
+          2,
+          3.2,
+          4,
+          4.6,
+          6,
+          6.7
+        ],
+        "initial_scoreboard_readable": false,
+        "initial_frame_observation": "Pre-pitch setup, KING 34 jersey visible. Main CHC/SD scorebug has not appeared, so initial 0-0 count and inning are not visually readable. Top-right BOS/NYY graphic concerns another game.",
+        "later_frame_observation": "At 3.2s batter holds the bat while pitch passes, and 4s shows receipt without swing. Main scorebug at 4s shows CHC 0, SD 0, top 1, no outs, bases empty, count 0-0. At 6.7s it shows CROW-ARMSTRONG and SINKER 96 MPH but count still 0-0 (display delay). Official page/feed supply Called Strike; still-frame sampling alone does not independently prove the umpire call.",
+        "use_limitations": "Identity is bound through exact page playId and explicit feed PA/pitch IDs with corroborating game/player/type/speed metadata, supplemented by visual frames. No timing is derived from feed UTC; no mitt or target coordinates were assigned."
+      },
+      "site_video": "media/pitch-849843-1-1-official.mp4",
+      "site_poster": "media/pitch-849843-1-1-official.jpg"
+    },
+    {
+      "game_pk": 849843,
+      "at_bat_number": 1,
+      "pitch_number": 2,
+      "play_id": "aa3ecf43-5435-3238-aac7-5bfeef1cabe2",
+      "pitcher": {
+        "id": 650633,
+        "name": "Michael King"
+      },
+      "batter": {
+        "id": 691718,
+        "name": "Pete Crow-Armstrong"
+      },
+      "official_pitch_metadata": {
+        "pitch_type": "ST",
+        "start_speed_mph": 86.4,
+        "description": "Swinging Strike",
+        "pre_pitch_count": {
+          "balls": 0,
+          "strikes": 1
+        },
+        "inning": 1,
+        "half_inning": "top"
+      },
+      "official_page_url": "https://baseballsavant.mlb.com/sporty-videos?playId=aa3ecf43-5435-3238-aac7-5bfeef1cabe2",
+      "official_page_snapshot": {
+        "bytes": 88472,
+        "sha256": "dcd120e6bc76b6bfcfa5c155d66125f7b07644aaea3647e3b537763fcb65d8bd"
+      },
+      "media": {
+        "official_url": "https://sporty-clips.mlb.com/dnZWVmpfV0ZRVkV3dEdEUT09X1YxQlNBUWRTVWdFQURWWUJVd0FIQXdWZUFBQlVBRllBQndkVFZWWlRBRkFFVWxkVQ==.mp4",
+        "retrieved_utc": "2026-10-06T06:51:15.945925Z",
+        "http_status": 200,
+        "mime": "video/mp4",
+        "bytes": 3788892,
+        "sha256": "989cdc26ebe9c86d59720519827d3290cbc82984758cb180793e7c3e3353c4b2",
+        "format_duration_seconds": 6.829,
+        "video_duration_seconds": 6.809333,
+        "video_start_time_seconds": 0.011,
+        "width": 1280,
+        "height": 720,
+        "video_codec": "h264",
+        "video_profile": "High",
+        "pixel_format": "yuv420p",
+        "nominal_frame_rate": "60000/1001",
+        "average_frame_rate": "304500/5107",
+        "frame_count": 406,
+        "audio_codec": "aac",
+        "audio_sample_rate_hz": 48000,
+        "audio_channels": 2,
+        "full_decode_passed": true,
+        "rendition_source": "The single MP4 source directly advertised in the public Savant page video element; no alternate rendition inferred."
+      },
+      "poster": {
+        "mime": "image/jpeg",
+        "width": 1280,
+        "height": 720,
+        "requested_seek_seconds": 0,
+        "selection": "First decoded video frame at/after the requested zero-second seek; original video stream starts at 0.011000 seconds.",
+        "bytes": 183409,
+        "sha256": "90360e50aeb7a7f2202333fa67b2f5d09b3760af50bacf69eaa19d8a5be85f00",
+        "pre_pitch_scene_confirmed": true,
+        "current_pitch_result_visible": false,
+        "mitt_annotation_available": false,
+        "target_location_available": false
+      },
+      "visual_review": {
+        "method": "Assistant inspection of decoded still frames; not human inter-rater agreement or OCR validation.",
+        "reviewed_seconds": [
+          0,
+          2,
+          3.2,
+          4,
+          4.6,
+          6
+        ],
+        "initial_scoreboard_readable": true,
+        "initial_frame_observation": "Pre-pitch setup. Main scorebug reads CHC 0, SD 0, top 1, no outs, bases empty, CROW-ARMSTRONG, KING, P:1, count 0-1.",
+        "later_frame_observation": "At 4s batter is in swing follow-through. At 4.6s scorebug shows SWEEPER 86 MPH; at 6s count advances to 0-2. Official page/feed supply Swinging Strike.",
+        "use_limitations": "Identity is bound through exact page playId and explicit feed PA/pitch IDs with corroborating game/player/type/speed metadata, supplemented by visual frames. No timing is derived from feed UTC; no mitt or target coordinates were assigned."
+      },
+      "site_video": "media/pitch-849843-1-2-official.mp4",
+      "site_poster": "media/pitch-849843-1-2-official.jpg"
+    },
+    {
+      "game_pk": 849843,
+      "at_bat_number": 1,
+      "pitch_number": 3,
+      "play_id": "f29b740f-f187-3089-b57a-3b55e8370c19",
+      "pitcher": {
+        "id": 650633,
+        "name": "Michael King"
+      },
+      "batter": {
+        "id": 691718,
+        "name": "Pete Crow-Armstrong"
+      },
+      "official_pitch_metadata": {
+        "pitch_type": "FF",
+        "start_speed_mph": 97.6,
+        "description": "Foul Tip",
+        "pre_pitch_count": {
+          "balls": 0,
+          "strikes": 2
+        },
+        "inning": 1,
+        "half_inning": "top"
+      },
+      "official_page_url": "https://baseballsavant.mlb.com/sporty-videos?playId=f29b740f-f187-3089-b57a-3b55e8370c19",
+      "official_page_snapshot": {
+        "bytes": 88407,
+        "sha256": "a906ce555d697f7484021cedc763ec42d1a1fe8d2dbf118b6f07c2692ed7660e"
+      },
+      "media": {
+        "official_url": "https://sporty-clips.mlb.com/dnZWVmpfV0ZRVkV3dEdEUT09X1VBTllCbE1BVmxRQVhsTUtVUUFIQVE1ZkFBTUFWQUFBQVFjQUJWWU5BZ1JWVXdOZg==.mp4",
+        "retrieved_utc": "2026-10-06T06:53:40.3803993Z",
+        "http_status": 200,
+        "mime": "video/mp4",
+        "bytes": 4070010,
+        "sha256": "8e5fbfdd9172eadfb69e3316fbe97d592e7201e3d4ebac4fd1d6e17403420ce5",
+        "format_duration_seconds": 6.929,
+        "video_duration_seconds": 6.921089,
+        "video_start_time_seconds": 0.0,
+        "width": 1280,
+        "height": 720,
+        "video_codec": "h264",
+        "video_profile": "High",
+        "pixel_format": "yuv420p",
+        "nominal_frame_rate": "60/1",
+        "average_frame_rate": "18540000/311449",
+        "frame_count": 412,
+        "audio_codec": "aac",
+        "audio_sample_rate_hz": 48000,
+        "audio_channels": 2,
+        "full_decode_passed": true,
+        "rendition_source": "The single MP4 source directly advertised in the public Savant page video element; no alternate rendition inferred."
+      },
+      "poster": {
+        "mime": "image/jpeg",
+        "width": 1280,
+        "height": 720,
+        "requested_seek_seconds": 0,
+        "selection": "First decoded video frame at/after the requested zero-second seek; original video stream starts at 0.000000 seconds.",
+        "bytes": 189102,
+        "sha256": "2fb66a6d84c1a41e1e14837b9cd6a32720c7f4c8f77af9b80bf9866ac9e15ac5",
+        "pre_pitch_scene_confirmed": true,
+        "current_pitch_result_visible": false,
+        "mitt_annotation_available": false,
+        "target_location_available": false
+      },
+      "visual_review": {
+        "method": "Assistant inspection of decoded still frames; not human inter-rater agreement or OCR validation.",
+        "reviewed_seconds": [
+          0,
+          2,
+          3.2,
+          4,
+          4.6,
+          6
+        ],
+        "initial_scoreboard_readable": true,
+        "initial_frame_observation": "Pre-pitch setup. Main scorebug reads CHC 0, SD 0, top 1, no outs, bases empty, CROW-ARMSTRONG, KING, P:2, count 0-2.",
+        "later_frame_observation": "At 4s batter is in swing follow-through and catcher rises; 4.6s shows FOUR SEAM 98 MPH and batter departing the box; 6s shows a batter close-up. Official page/feed supply Foul Tip and the PA strikeout; still-frame sampling does not independently distinguish foul tip from swinging strike. The sampled scorebug still shows 0-2 with no outs, so it must not be used to infer final outcome.",
+        "use_limitations": "Identity is bound through exact page playId and explicit feed PA/pitch IDs with corroborating game/player/type/speed metadata, supplemented by visual frames. No timing is derived from feed UTC; no mitt or target coordinates were assigned."
+      },
+      "site_video": "media/pitch-849843-1-3-official.mp4",
+      "site_poster": "media/pitch-849843-1-3-official.jpg"
+    }
+  ],
+  "existing_condensed_pitch3": "Not changed or reprocessed. The newly retrieved official pitch3 clip has a separate source and clock. Existing condensed-video mitt annotations are not transferred to this clip or poster."
+}

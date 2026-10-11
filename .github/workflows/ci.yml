@@ -1,0 +1,56 @@
+name: validation
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: validation-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, macos-15]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 25
+    env:
+      WANDB_MODE: offline
+      PYTHONUTF8: '1'
+      # Small regression tests do not need competing native thread pools.
+      OMP_NUM_THREADS: '1'
+      OPENBLAS_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          lfs: true
+      - uses: astral-sh/setup-uv@v7
+        with:
+          version: '0.10.4'
+          enable-cache: true
+      - name: Install OpenMP on macOS
+        if: runner.os == 'macOS'
+        run: brew install libomp
+      - name: Install locked Python environment
+        run: uv sync --frozen --python 3.12
+      - name: Report PyTorch runtime
+        run: |
+          uv run --frozen python -c "import platform, torch; from src.utils.device import get_device; print(platform.platform()); print('torch:', torch.__version__, 'device:', get_device(), 'threads:', torch.get_num_threads(), 'MPS built:', torch.backends.mps.is_built(), 'MPS available:', torch.backends.mps.is_available())"
+      # Hosted macOS reports MPS available but Transformer inference crashes on it.
+      # Keep real checkpoint inference on CPU; run MPS tests on a physical Mac.
+      - name: Lint and test on CPU
+        run: uv run --frozen python scripts/check_project.py --cpu-only --test-timeout 180
+      - name: Check browser JavaScript syntax
+        run: |
+          node --check src/web/static/app.js
+          node --check src/web/static/annotation.js
+          node --check src/web/static/blind_review.js
+          node --check web/observation-playback/playback.js
+          node --check tests/browser/observation-playback-private.cjs
+          node --check tests/browser/observation-playback.test.cjs

@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SmartPitch · 독립 재검토</title>
+<style>
+body{font:16px system-ui,sans-serif;background:#101926;color:#edf3fc;max-width:1180px;margin:24px auto;padding:0 16px;line-height:1.55}h1{font-size:26px}h2{font-size:20px}p{color:#c4d1e1}a{color:#99ceff}video{width:100%;max-height:540px;background:#000}button,input,select,textarea{font:inherit;border:1px solid #75869c;border-radius:6px;padding:8px;background:#192a40;color:#fff}button{cursor:pointer}button:hover{background:#294261}button:disabled{opacity:.45;cursor:default}label{display:inline-flex;flex-direction:column;gap:4px;margin:6px 10px 6px 0}input[type=number]{width:120px}textarea{width:100%;box-sizing:border-box}section{background:#152237;padding:18px;margin:18px 0;border-radius:10px}.row{display:flex;align-items:center;flex-wrap:wrap;gap:8px}.hint{font-size:14px;color:#b6c7db}.warning{color:#ffdb90}#message{min-height:1.6em;color:#ffdb90;white-space:pre-wrap}#identity{overflow-wrap:anywhere;font-family:ui-monospace,monospace;font-size:14px}output{font-variant-numeric:tabular-nums}summary{cursor:pointer}button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #90c7ff;outline-offset:2px}
+</style>
+</head>
+<body>
+<h1>독립 재검토 · 영상에서 직접 기록</h1>
+<p>다른 검토자의 기록을 보지 않고 같은 규약으로 기록하는 양식입니다. 기존 정답·판정·리뷰 이미지를 확인하지 마세요. 검토할 장면을 못 찾거나 영상이 열리지 않으면 <strong>미검토</strong>로 남깁니다.</p>
+<p><a id="source" target="_blank" rel="noreferrer">공식 영상 페이지</a> · <span id="progress"></span><br><span id="package" class="hint"></span></p>
+<section aria-labelledby="reviewer-title">
+<h2 id="reviewer-title">검토자 정보</h2>
+<label>이름 또는 공개 가능한 별칭<input id="reviewer-name" autocomplete="off"></label>
+<label>실제 검토 방식<select id="reviewer-kind"><option value="">선택하지 않음</option><option value="human">사람만 검토</option><option value="ai">AI만 검토</option><option value="mixed">사람·AI 함께 검토</option></select></label>
+<label>검토 날짜<input id="reviewer-date" type="date"></label>
+<label>이번 기록 전에 기존 정답을 본 적이 있나요?<select id="reviewer-exposure"><option value="">아직 답하지 않음</option><option value="false">아니요</option><option value="true">예</option></select></label>
+<p class="hint">이름·별칭과 결과는 파일에 저장됩니다. 개인 연락처를 적지 마세요. AI의 도움을 받았으면 검토 방식에 반영하세요. 기존 정답 노출을 숨기지 마세요.</p>
+</section>
+<section aria-labelledby="video-title">
+<h2 id="video-title">원본 영상 탐색</h2>
+<video id="video" controls preload="metadata" muted playsinline></video>
+<p id="video-status" class="hint" role="status"></p>
+<div class="row"><output id="clock">0.000초</output><label>이동할 재생 초<input id="seek" type="number" min="0" step="any" value="0"></label><button id="jump" type="button">이동·일시정지</button><button type="button" data-step="-0.25">−0.25초</button><button type="button" data-step="0.25">+0.25초</button><button type="button" data-step="-0.05">−0.05초</button><button type="button" data-step="0.05">+0.05초</button></div>
+<p class="warning">이 영상의 재생 초를 직접 확인하세요. feed UTC를 재생 초로 변환·외삽·보간하지 마세요. 이동 간격은 프레임 정확도를 보장하지 않습니다.</p>
+<label>스트리밍이 안 되면 같은 편집본의 로컬 영상 열기<input id="local-video" type="file" accept="video/*"></label><button id="remote-video" type="button">원래 스트리밍으로 돌아가기</button>
+<p class="hint">로컬 파일은 업로드하지 않습니다. 길이가 같아도 같은 편집본임을 보장하지 않으므로 출처와 장면을 확인하세요. 다른 영상의 재생 초를 입력하면 안 됩니다.</p>
+</section>
+<section aria-labelledby="row-title">
+<h2 id="row-title">투구별 기록</h2>
+<div class="row"><label>검토할 투구<select id="pitch"></select></label><button id="previous" type="button">이전 투구</button><button id="next" type="button">다음 투구</button></div>
+<p id="identity"></p>
+<label>상태<select id="status"><option value="unreviewed">미검토 / 아직 장면을 찾지 못함</option><option value="annotated">유효 판단 화면·릴리스 확인</option><option value="unavailable">영상 확인 후 유효 판단 화면 없음</option></select></label>
+<p class="hint">시각·판독값을 기록하려면 먼저 '유효 판단 화면·릴리스 확인'을 선택하세요. 저장하려면 검토자 정보 전체와 두 시각·양의 오차·직접 판독값·확인 근거가 필요합니다. 미검토·판단 불가에서는 시각·판독값을 모두 비우며, 미완성 탐색 메모는 남길 수 있습니다. 판단 불가에는 검토자 정보 전체와 직접 확인한 사유가 필요합니다. 미검토만 있는 초안은 검토자 정보를 비워 둘 수 있습니다.</p>
+<div class="row"><label>판단 재생 초<input id="decision" type="number" min="0" step="0.25"></label><button id="capture-decision" type="button">현재 시각을 판단 입력으로</button><label>릴리스 재생 초<input id="release" type="number" min="0" step="any"></label><button id="capture-release" type="button">현재 시각을 릴리스 입력으로</button><label>시각 오차 ±초<input id="uncertainty" type="number" min="0" step="any"></label></div>
+<p class="hint">판단 시각은 조건을 만족하는 최초 0.25초 격자입니다. 캡처 버튼은 현재 재생 시각만 복사하며 반올림하거나 유효성을 판정하지 않습니다.</p>
+<label>판단 화면의 점수판 판독<select id="readability"><option value="">미기록</option><option value="readable">모든 필드 판독 가능</option><option value="partial">일부만 판독 가능</option></select></label>
+<div id="observed-fields" class="row"></div>
+<p class="hint">아래 값은 판단 화면에서 직접 읽습니다. 빈칸은 판독 불가(null), 숫자 0·주자 없음은 실제 판독값입니다. 기억·이전 화면·경기 기록으로 빈칸을 채우지 마세요.</p>
+<label style="display:flex">직접 확인한 근거 / 확인 불가 사유 / 남은 불확실성<textarea id="note" rows="5" placeholder="직전 격자가 실패한 이유, 준비 구간 확인 간격, 동작 시작, 릴리스 전후 확인 및 화면 해상도 한계를 적으세요."></textarea></label>
+<div class="row"><button id="clear-values" type="button">시각·판독값 비우기</button><button id="save" type="button">이 투구 저장</button></div>
+<p id="message" role="status" aria-live="polite"></p>
+<p class="hint">저장은 이 페이지의 메모리에만 반영됩니다. 페이지를 닫기 전에 JSON을 내보내세요. 투구 이동은 영상을 자동 이동하지 않습니다.</p>
+</section>
+<section aria-labelledby="files-title">
+<h2 id="files-title">기록 파일</h2>
+<button id="export" type="button">현재 입력 저장 후 JSON 내보내기</button>
+<p class="hint">미완성 기록도 내보낼 수 있습니다. 최종 제출 전 모든 투구·검토자 정보를 완료하세요. 여기서는 일치도나 정확도를 계산하지 않습니다.</p>
+<label style="display:flex">이전에 내보낸 같은 묶음의 JSON<input id="import-file" type="file" accept=".json,application/json"></label>
+<button id="import" type="button">선택한 JSON 검증 후 불러오기</button>
+<p class="hint">불러오기는 현재 메모리의 기록 전체를 바꿉니다. 먼저 JSON으로 백업하세요. 다른 묶음·출처·투구 목록은 거부합니다.</p>
+</section>
+<details><summary>판단 규약 요약</summary><p>라이브 화면, 러버 위에서 정지한 투수, 타석 안 타자, 판독 가능한 점수판이 동시에 성립하는 최초 0.25초 격자를 선택합니다. 직전 격자의 실패를 확인하고 판단부터 동작 시작까지 최대 1초 간격으로 점검합니다. 견제·스텝오프·타자 이탈·컷어웨이 등으로 끊기면 마지막 단절 뒤에서 다시 찾습니다. 릴리스는 약 0.05초 간격 전후 프레임으로 공 분리를 확인하고 양의 수동 오차를 기록합니다. 판단 창이 없음을 영상을 보고 확인한 경우에만 unavailable을 사용합니다. 자세한 독립 안내는 함께 제공된 README를 읽으세요.</p></details>
+<script id="review-data" type="application/json">__BLIND_REVIEW_JSON__</script>
+<script>__BLIND_REVIEW_JS__</script>
+</body>
+</html>

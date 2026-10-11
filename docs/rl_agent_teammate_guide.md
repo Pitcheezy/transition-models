@@ -1,5 +1,9 @@
 # rl-agent 팀원 가이드 — 다운로드 및 통합 방법
 
+> **2026-09-21 정정:** 아래 기본 모델·성과 설명은 과거 기록입니다.
+> 77d 기준선 정렬 오류 수정과 추론 입력 분포 차이가 확인됐습니다.
+> [최신 수정 보고서](ALIGNMENT_REPAIR_2026-09-21.md)를 먼저 읽고 모델을 선택하세요.
+
 **최종 업데이트**: 2026-05-27 (Phase 10 완료)
 **최초 작성**: 2026-05-25  
 **레포**: https://github.com/Pitcheezy/transition-models
@@ -238,14 +242,13 @@ _CKPT_C = "model_b3_focal_135dim_10cls_best.pt"
 
 ## 주의사항
 
-### Single / Double / Triple / HomeRun = 0%
+### Single / Double / Triple / HomeRun의 argmax recall과 확률
 
-Focal Loss (γ=2.0)로 Walk·Strikeout·FieldOut은 개선됐지만  
-단타~홈런은 훈련 데이터에서 극희소 (Single 3.6%, HR 0.78%)라 여전히 0%.
+과거 표의 0%는 argmax recall이며 사건에 배정한 확률이 0이라는 뜻이 아니다.
+타자 특징 부재나 클래스 불균형을 유일한 원인으로 확인한 실험도 없다.
 
-**현재 권장 대응**: 기존 BIP 테이블 (`_expand_transitions_4class()`)과 병행  
-→ FieldOut / Walk / Strikeout / HitByPitch는 MLP 직접 예측값 사용  
-→ Single / Double / Triple / HR는 InPlay 확률 × BIP 테이블 비율로 추정
+확률값과 클래스별 calibration을 먼저 검증한다. argmax recall만 보고 안타 확률을
+BIP 테이블로 덮어쓰는 권고는 철회한다. 변경 시 전체 확률의 정규화와 정책 결과를 재평가해야 한다.
 
 **장기 개선**: γ=3.0 + weighted sampler (transition-models 팀에 요청 가능)
 
@@ -255,8 +258,9 @@ Focal Loss (γ=2.0)로 Walk·Strikeout·FieldOut은 개선됐지만
 
 ### UMAP 0-fill 영향
 
-UMAP [77:82] = 0.0은 StandardScaler 기준 평균값이므로  
-"평균적인 투구 메카닉"으로 처리됩니다. Top-1 정확도에 미치는 영향은 미미합니다.
+UMAP [77:82]의 0-fill은 표준화 좌표의 평균 대체다. 손실이나 확률 품질을 보존한다는
+보장은 없다. 운영 생성기 전체의 입력 대체 영향은 별도 평가가 필요하며,
+새 운영 파이프라인은 이 UMAP 좌표를 사용하지 않는다.
 
 ---
 

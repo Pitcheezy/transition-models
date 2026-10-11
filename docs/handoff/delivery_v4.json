@@ -1,0 +1,104 @@
+{
+  "schema": "pitcheezy_handoff_delivery_v4",
+  "date": "2026-10-10",
+  "source_commit": "73cf0598bd2e356ce6207365fcc702584c9699d4",
+  "claim_commit": "0f165b9",
+  "archive": "outputs/service_review_source_20261010_v4.zip",
+  "archive_bytes": 265852,
+  "archive_sha256": "65ace76069cd874bdac965332d4ee7911ee4662910b6d3c0e8ec0755b5220508",
+  "selected_files": 64,
+  "archive_files_including_manifest": 65,
+  "zip_crc_and_extracted_bytes_match": true,
+  "source_inventory_before_and_after": "verified",
+  "python_tests": {
+    "passed": 456,
+    "skipped": 1,
+    "seconds": 84.46,
+    "scope": "All selected Python tests executed from extracted ZIP using existing host dependencies"
+  },
+  "node_tests": {
+    "passed": 104,
+    "failed": 0,
+    "scope": "All five selected Node test files from extracted ZIP"
+  },
+  "standard_library_checks": [
+    "source bundle inventory",
+    "legacy synthetic contract",
+    "current synthetic contract",
+    "new synthetic review generation and isolated launch check",
+    "received export review generation and isolated launch check"
+  ],
+  "module_origin": "intent.run, src.integration.service_game, src.integration.service_review_server resolve inside extracted ZIP",
+  "synthetic_review": {
+    "sha256": "1bac16688f9fc22d769ea3850e895668937119821e8a6a4af493ee387d8b17d4",
+    "input_sha256": "90589c4b2e71b32d2f4a7ab75b96309a4d92053a7007d91c0de8aa9cc3e59c85",
+    "profile": "teammate_export_20261009_v1",
+    "input_kind": "synthetic",
+    "summary": {
+      "pitches": 3,
+      "ready": 1,
+      "unsupported": 1,
+      "missing": 1,
+      "actual_available": 1,
+      "uninterpreted_setup": 0,
+      "setup_estimated": 1,
+      "setup_unavailable": 0,
+      "setup_not_supplied": 2,
+      "setup_displayable": 1
+    }
+  },
+  "received_review": {
+    "sha256": "154d9cd1cb166552db5975137e2ba431b9ab48f94fcfa6bdd05304f645427c80",
+    "input_sha256": "df606a11c6db465c054252ef8d331aeb23aa21565b4960bd586f3dcf8f62f6b7",
+    "profile": "teammate_export_20261009_v1",
+    "input_kind": "provided_export",
+    "summary": {
+      "pitches": 262,
+      "ready": 246,
+      "unsupported": 16,
+      "missing": 0,
+      "actual_available": 262,
+      "uninterpreted_setup": 0,
+      "setup_estimated": 27,
+      "setup_unavailable": 12,
+      "setup_not_supplied": 223,
+      "setup_displayable": 27
+    },
+    "normalized_bytes_equal_previous_video_review_v4": true,
+    "raw_export_copied_into_source_zip": false,
+    "video_included_in_rebuilt_review": false
+  },
+  "browser": {
+    "browser": "154.0.8037.58",
+    "results": [
+      {
+        "case": "received_262_pitch_gates_27_setup_displays",
+        "passed": true
+      },
+      {
+        "case": "synthetic_ready_zero_setup_unsupported_missing_navigation",
+        "passed": true
+      },
+      {
+        "case": "received_game_71_pa_reveal_first_pa_pitch3_setup",
+        "passed": true
+      }
+    ],
+    "page_errors": [],
+    "all_requests_loopback_get": true,
+    "scope": "Headless Windows Chrome. Extracted source built synthetic/received no-video packages. No physical Mac/iPhone or public deployment."
+  },
+  "reviewed_screenshot": "Private outputs/service_review_handoff_qa_20261010_v4/received-from-extracted-source.png; not included in source ZIP or Git",
+  "orchestration_note": "Initial local QA script had an extra trailing e in the expected report SHA literal. It stopped after successful builds/checks. Existing source bytes and reports were preserved; resumed by direct byte equality against the previously verified v4 report, without rebuilding or changing input.",
+  "regression_note": "Initial isolated-check output decoding warned on Windows cp949. Added -X utf8; focused check plus checklist 8 passed without warning before source commit. Final extracted Python run had no warnings.",
+  "limitations": [
+    "Existing Windows host with external Python/Node dependencies; not a clean installation or physical Mac/iPhone acceptance.",
+    "Received export and browser tests validate saved-data portability, not live model execution, event probabilities or policy benefit.",
+    "Source-only archive does not contain raw received exports, normalized private reports, media files, model weights, raw human responses or credentials.",
+    "Existing curated display data and media-binding metadata remain explicitly selected source files; this is an internal review package, not a public deployment.",
+    "Prepared locally, not sent to teammate. Teammate repository and public Site were not modified.",
+    "A-y human review remains user-paused. I-0/I-run1/I-release1 and other independent evidence requirements remain incomplete."
+  ],
+  "previous_archives": "v1/v2/v3 files and receipts were not overwritten",
+  "next_entry": "docs/handoff/README.md"
+}

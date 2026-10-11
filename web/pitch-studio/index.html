@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pitcheezy — 한 구의 의도를 읽다</title>
+    <meta
+      name="description"
+      content="포수의 요구, 투수의 실행, 타자의 대응. 투구의 맥락을 읽는 야구 분석 서비스 콘셉트 데모."
+    />
+    <meta name="theme-color" content="#091811" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23ceff78'/%3E%3Ctext x='8' y='25' font-family='Arial' font-weight='bold' font-size='25' fill='%23091811'%3EP%3C/text%3E%3C/svg%3E"
+    />
+    <link rel="stylesheet" href="product.css" />
+    <script src="home.js?v=9" defer></script>
+  </head>
+  <body>
+    <a class="skip" href="#main">본문으로 이동</a>
+    <header class="product-header">
+      <a href="./" class="wordmark"
+        ><span class="seal">P</span>PITCHEEZY<i>●</i></a
+      >
+      <nav aria-label="주요 메뉴">
+        <a href="#vision">서비스 소개</a
+        ><a href="report.html#validation">검증 기록</a
+        ><a class="nav-cta" href="receiver.html?demo=849843-pa1">실제 첫 타석 보기</a>
+      </nav>
+    </header>
+    <main id="main">
+      <section class="hero">
+        <div class="hero-copy">
+          <span class="eyebrow">BEYOND THE BOX SCORE</span>
+          <h1>결과는 한 구.<br />이유는 그 안에.</h1>
+          <p>
+            포수의 요구에서 벤치의 선택까지.<br />야구의 다음 장면을 읽는 새로운
+            관점.
+          </p>
+          <a class="primary" href="receiver.html?demo=849843-pa1">실제 영상과 추천 보기</a
+          ><span class="hero-demo">RECORDED GAME DEMO</span>
+          <p><a href="service.html">서비스 전체 구상 살펴보기</a></p>
+        </div>
+        <div class="film-stage">
+          <video
+            id="hero-video"
+            autoplay
+            muted
+            loop
+            playsinline
+            preload="metadata"
+            poster="media/pitch-849843-1-1-official.jpg"
+            aria-label="컵스 대 파드리스의 서로 다른 네 투구를 이어 붙인 약 24초 무음 하이라이트"
+          >
+            <source src="media/hero-849843-four-pitches-v1.mp4" type="video/mp4" /></video
+          ><img
+            id="hero-still"
+            src="media/pitch-849843-1-3.jpg"
+            width="1280"
+            height="720"
+            alt="마이클 킹의 투구 전 미트를 판독한 정지 장면"
+            hidden
+          />
+          <div class="film-shade"></div>
+          <div class="scorebug">
+            <small>MLB · RECORDED</small><strong>CHC <em>vs</em> SD</strong
+            ><span>1회 초 · 4투구 하이라이트</span>
+          </div>
+          <div
+            id="hero-marker"
+            class="mitt-marker"
+            style="left: 44.609375%; top: 51.736111%"
+            hidden
+          >
+            <i></i><span>관측 미트 위치<b>−0.05 ft</b></span>
+          </div>
+          <div class="film-controls">
+            <span id="film-mode" role="status">4투구 하이라이트 · 약 24초</span>
+            <div class="film-buttons">
+              <button id="hero-play" type="button">영상 재생 ▶</button>
+              <button id="hero-toggle" type="button">대표 미트 장면</button>
+            </div>
+          </div>
+        </div>
+        <div class="match-caption">
+          <span><b>2026 NL WILD CARD / GAME 1</b> 2026.09.29 · PETCO PARK</span
+          ><strong>시카고 컵스 @ 샌디에이고 파드리스</strong>
+        </div>
+      </section>
+      <section class="game-strip">
+        <div class="strip-title">
+          <span class="eyebrow">THE GAMES</span>
+          <h2>실제 경기에서<br />출발합니다.</h2>
+        </div>
+        <a href="receiver.html?demo=849843-pa1" class="game-tile"
+          ><small>시연 경기</small>
+          <div class="team-pair">CHC <i>@</i> SD</div>
+          <strong>컵스 · 파드리스</strong
+          ><span>2026.09.29 · NL 와일드카드 1차전</span>
+          <p>마이클 킹 × 피트 크로암스트롱</p></a
+        ><a href="report.html#validation" class="game-tile"
+          ><small>평가 경기 01</small>
+          <div class="team-pair">PHI <i>@</i> ATL</div>
+          <strong>필리스 · 브레이브스</strong
+          ><span>2026.09.29 · NL 와일드카드 1차전</span>
+          <p>Truist Park · 57장 평가</p></a
+        ><a href="report.html#validation" class="game-tile"
+          ><small>평가 경기 02</small>
+          <div class="team-pair">TB <i>@</i> PHI</div>
+          <strong>레이스 · 필리스</strong><span>2026.09.26 · 정규시즌</span>
+          <p>Citizens Bank Park · 29장 평가</p></a
+        >
+      </section>
+      <section class="vision section-pad" id="vision">
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow">ONE PITCH. FOUR PERSPECTIVES.</span>
+            <h2>안타 한 개로,<br />모든 판단을 끝내지 않도록.</h2>
+          </div>
+          <p>
+            좋은 선택과 좋은 실행은 다를 수 있습니다.<br />목표는 결과 뒤에 숨은
+            판단의 근거를 보여주는 것.
+          </p>
+        </div>
+        <div class="feature-grid">
+          <a href="service.html?phase=pre"
+            ><span>01 / PREDICT</span>
+            <h3>다음 공을 읽다.</h3>
+            <p>구종과 목표 위치, 스트라이크·파울·안타 확률을 한눈에.</p>
+            <b>투구 전 전략</b></a
+          ><a href="service.html?phase=post"
+            ><span>02 / EXECUTE</span>
+            <h3>의도와 실행을 나누다.</h3>
+            <p>요구한 곳에 던졌는지, 제구 이탈이 있었는지 확인.</p>
+            <b>투수의 실행</b></a
+          ><a href="service.html?phase=batter"
+            ><span>03 / RESPOND</span>
+            <h3>타격의 질을 보다.</h3>
+            <p>좋은 공을 공략했는지, 결과보다 대응의 질을 살펴보기.</p>
+            <b>타자의 대응</b></a
+          ><a href="service.html?phase=manager"
+            ><span>04 / DECIDE</span>
+            <h3>그때의 선택으로.</h3>
+            <p>투수 유지와 교체 대안을 당시 정보로 비교.</p>
+            <b>벤치의 판단</b></a
+          >
+        </div>
+        <p class="concept-note">
+          완성형 서비스를 보여주는 콘셉트 화면입니다. 예측·평가 예시와 실제 관측
+          자료를 구분해 표시합니다.
+        </p>
+      </section>
+      <section class="evidence-preview">
+        <div>
+          <span class="eyebrow">OBSERVATION COMES FIRST</span>
+          <h2>첫 번째 근거는,<br />포수의 미트입니다.</h2>
+          <p>
+            AI가 읽은 위치를 사람의 표시와 비교했습니다.<br />좌표 출력과 기권을
+            함께 공개합니다.
+          </p>
+          <a href="report.html#validation" class="text-link"
+            >검증 결과 자세히 보기</a
+          >
+        </div>
+        <div class="evidence-stats">
+          <div>
+            <strong>2.5<em>px</em></strong>
+            <p>AI·사람 공동 표시 58구<br />미트 점 차이 중앙값</p>
+          </div>
+          <div>
+            <strong>58<em>/86</em></strong>
+            <p>평가 장면 중 AI 출력<br />나머지 28장 기권</p>
+          </div>
+          <small
+            >같은 변환 기준 좌표 차이 중앙값 약 1.1인치.<br />물리 정확도나 투수
+            의도를 검증한 값은 아닙니다.</small
+          >
+        </div>
+      </section>
+      <section class="closing">
+        <span class="eyebrow">YOUR NEXT PITCH, WITH CONTEXT</span>
+        <h2>이제, 한 구를 직접 살펴보세요.</h2>
+        <a href="service.html" class="primary">분석 스튜디오 열기</a>
+        <p>실제 MLB 기록 · 영상 리플레이 · 최종 서비스 콘셉트</p>
+      </section>
+    </main>
+    <footer class="product-footer">
+      <a href="./" class="wordmark">PITCHEEZY<i>●</i></a>
+      <p>
+        MLB 공식 투구 영상과 압축 경기 발췌로 구성한 하이라이트.<br />실시간
+        예측·투수/타자/감독 판정은 콘셉트 예시이며 실제 모델 출력이 아닙니다.
+      </p>
+      <a href="report.html#story">프로젝트 방향</a>
+    </footer>
+  </body>
+</html>

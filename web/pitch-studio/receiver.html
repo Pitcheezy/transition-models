@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>받은 모델 결과 · Pitcheezy</title>
+    <meta name="theme-color" content="#091811" />
+    <link rel="stylesheet" href="product.css" />
+    <link rel="stylesheet" href="receiver.css?v=8" />
+    <script src="data.js" defer></script>
+    <script src="receiver-contract.js?v=6" defer></script>
+    <script src="receiver-sample.js" defer></script>
+    <script src="receiver-demo-849843.js" defer></script>
+    <script src="receiver-media.js?v=8" defer></script>
+    <script src="receiver-video.js?v=8" defer></script>
+    <script src="receiver.js?v=8" defer></script>
+  </head>
+  <body>
+    <a class="skip" href="#receiver">본문으로 이동</a>
+    <header class="product-header">
+      <a href="./" class="wordmark"
+        ><span class="seal">P</span>PITCHEEZY<i>●</i></a
+      >
+      <nav aria-label="주요 메뉴">
+        <a href="service.html">분석 스튜디오</a
+        ><a href="report.html#analysis">관측 기록</a>
+      </nav>
+    </header>
+    <main id="receiver" class="receiver-main">
+      <div class="receiver-heading">
+        <span class="eyebrow">ONE AT BAT · MODEL RESULTS</span>
+        <h1>첫 타석,<br />세 번의 선택.</h1>
+        <p>
+          전달받은 추천·결과 파일을 확인하고, 같은 투구의 미트 관측과 나란히
+          살펴봅니다.
+        </p>
+      </div>
+      <section class="featured-pa" aria-labelledby="featured-title">
+        <span class="eyebrow">2026.09.29 · FIRST AT BAT</span>
+        <h2 id="featured-title">
+          시카고 컵스 <span>@</span> 샌디에이고 파드리스
+        </h2>
+        <p class="featured-matchup">
+          Michael King <span>vs</span> Pete Crow-Armstrong
+        </p>
+        <p>
+          공식 투구 영상 세 구와 제공받은 모델 응답을 연결했습니다.
+          추천을 살펴보고, 실제 투구를 재생한 뒤 결과를 확인하세요.
+        </p>
+        <button id="load-first-pa" class="primary">
+          첫 타석 처음부터 보기
+        </button>
+        <a class="video-jump" href="receiver.html?demo=849843-pa1&amp;pitch=3#response-workspace">3구 미트 관측으로 바로 가기</a>
+        <p class="scientific-note">
+          과거 경기 재생 · 검증 전 실험 추천입니다. 구종 비율은 사건확률이
+          아닙니다. 추천 위치는 과거 실제 투구 분포의 근사이며, 미트 표시는
+          미검토 AI 가로 위치 추정입니다.
+        </p>
+        <details class="demo-provenance">
+          <summary>이 자료의 범위와 버전</summary>
+          <p>
+            경기 전체 추천 제공률: 246 / 262구 (93.89%). 정확도가 아닙니다. 이
+            화면에는 첫 타석 3구만 연결했습니다.
+          </p>
+          <p>
+            정책: ARM-B P3 (pitch type only), frozen &lt;=2025
+            (ML-POLICY-VAL-v1).
+          </p>
+          <p>
+            자료 생성: 2026-09-30 17:48:53 KST<br />생성 코드 커밋:
+            <code>2eb718ef13024ad2d98d28e248388db7f8dc1bc9</code>
+          </p>
+          <p>
+            실행 서버에 로드된 정확한 커밋: 미확인. 생성 버전과 서버 버전은
+            구별합니다.
+          </p>
+        </details>
+      </section>
+      <details id="file-tools" class="import-tools">
+        <summary>다른 응답 파일 열기 · 파일 검사 기록</summary>
+        <section class="import-card" aria-labelledby="import-title">
+          <h2 id="import-title">전달받은 모델 결과 열기</h2>
+          <p>
+            파일은 이 브라우저 안에서만 읽습니다. 서버 전송·자동 저장·팀원
+            서비스 호출은 없습니다.
+          </p>
+          <details class="raw-intake" open>
+            <summary>원본 응답 파일로 시작하기</summary>
+            <p>
+              경기 응답 1개와 한 타석의 투구별 결과 파일을 선택하세요. 원래 요청
+              주소와 모델 정보는 제공자가 알려준 값으로 입력합니다.
+            </p>
+            <form id="raw-form">
+              <div class="raw-fields">
+                <label
+                  >경기 응답 파일 (timeline)<input
+                    id="timeline-file"
+                    type="file"
+                    accept=".json,application/json"
+                    required
+                /></label>
+                <label
+                  >투구별 결과 파일 (reveal)<input
+                    id="reveal-files"
+                    type="file"
+                    accept=".json,application/json"
+                    multiple
+                    required
+                /></label>
+                <label
+                  >연결할 타석 번호<input
+                    id="raw-pa"
+                    type="number"
+                    min="1"
+                    max="999"
+                    step="1"
+                    value="1"
+                    required
+                /></label>
+                <label
+                  >자료 종류<select id="raw-kind" required>
+                    <option value="">선택해주세요</option>
+                    <option value="provided_export">제공받은 모델 응답</option>
+                    <option value="synthetic">합성 연결 테스트</option>
+                  </select></label
+                >
+              </div>
+              <div id="raw-endpoints"></div>
+              <fieldset class="raw-fields">
+                <legend>제공받은 모델 정보</legend>
+                <label
+                  >모델 이름·버전<input
+                    id="raw-model"
+                    type="text"
+                    maxlength="200"
+                    autocomplete="off"
+                    required
+                /></label>
+                <label
+                  >코드 커밋<input
+                    id="raw-revision"
+                    type="text"
+                    minlength="40"
+                    maxlength="40"
+                    pattern="[a-f0-9]{40}"
+                    autocomplete="off"
+                    required
+                    aria-describedby="revision-help"
+                  /><small id="revision-help"
+                    >40자리 전체 값을 입력하세요.</small
+                  ></label
+                >
+                <label class="raw-wide"
+                  >결과 생성 시각<input
+                    id="raw-generated"
+                    type="text"
+                    placeholder="예: 2026-10-06T12:00:00+09:00"
+                    maxlength="200"
+                    autocomplete="off"
+                    required
+                  /><small
+                    >파일을 받은 시각이 아닌 결과를 생성한 시각입니다.</small
+                  ></label
+                >
+              </fieldset>
+              <p class="receiver-note">
+                권장 시작: 컵스 @ 파드리스(849843), 1번 타석. 미트 관측은 해당
+                투구 키가 일치할 때만 대조합니다. 원본 파일 전체 합계는 5MB
+                이하입니다.
+              </p>
+              <button class="primary" type="submit">
+                검사하고 한 타석 열기
+              </button>
+            </form>
+          </details>
+          <details class="packed-intake">
+            <summary>이미 묶은 파일·연결 테스트</summary>
+            <div class="import-actions">
+              <label class="primary file-label"
+                >묶음 JSON 선택<input
+                  id="response-file"
+                  type="file"
+                  accept=".json,application/json" /></label
+              ><button id="try-sample" class="secondary">
+                합성 자료로 동작 확인</button
+              ><button id="download-template" class="secondary">
+                전달 양식 받기
+              </button>
+            </div>
+          </details>
+          <div class="import-actions intake-secondary">
+            <button id="download-prepared" class="secondary" disabled>
+              검사한 묶음 저장
+            </button>
+            <button id="clear-import" class="secondary">자료 비우기</button>
+          </div>
+          <p id="import-status" role="status">
+            파일 대기 · 전달받은 응답을 선택하면 이 화면에 표시합니다.
+          </p>
+          <p id="import-error" role="alert" hidden></p>
+          <details>
+            <summary>전달 파일과 검증 범위</summary>
+            <p>
+              공개용 watch 응답, 선택 타석 번호, 투구별 reveal 응답과 투구
+              키·원본 경로, 모델 식별자·소스 커밋·생성 시각을 하나로 묶습니다.
+              내부 원본 파일의 최종 점수·투구 후 필드는 거절합니다.
+            </p>
+            <p>
+              검사 통과는 파일 구조와 연결 정보가 맞다는 뜻입니다. 원본의 진위,
+              실제 모델 실행, 영상과의 대응을 인증하지 않습니다. 파일에 담긴
+              결과를 화면에서 가리는 기능이며 실시간 보안 경계는 아닙니다.
+            </p>
+          </details>
+          <div id="source-details" hidden></div>
+        </section>
+      </details>
+      <section
+        id="response-workspace"
+        hidden
+        aria-labelledby="game-name"
+        tabindex="-1"
+      >
+        <div class="response-status">
+          <strong id="source-badge"></strong
+          ><span id="publication-state"></span>
+        </div>
+        <h2 id="game-name"></h2>
+        <p id="pitch-identity"></p>
+        <div id="current-situation" class="receiver-situation"></div>
+        <p id="players" class="receiver-players"></p>
+        <nav id="pitch-tabs" class="pitch-tabs" aria-label="첫 타석 투구 선택" hidden>
+          <button type="button" data-pitch="1">1구</button>
+          <button type="button" data-pitch="2">2구</button>
+          <button type="button" data-pitch="3">3구</button>
+          <span>추천 확인 · 영상 재생 · 결과 공개</span>
+        </nav>
+        <p class="scientific-note">
+          과거 경기 재생 · 검증 전 실험 추천입니다. 구종 비율은 사건확률이
+          아닙니다. 추천 위치는 과거 실제 투구 분포의 근사이며, 미트 표시는
+          미검토 AI 가로 위치 추정입니다.
+        </p>
+        <div class="receiver-controls">
+          <button id="previous-pitch" class="secondary">이전 투구</button
+          ><button id="reveal-pitch" class="primary">현재 투구 결과 공개</button
+          ><button id="hide-pitch" class="secondary">결과 다시 숨기기</button
+          ><button id="next-pitch" class="secondary">다음 투구</button>
+        </div>
+        <div id="receiver-stage" class="receiver-stage">
+        <section id="pitch-video-section" class="pitch-video-section" hidden aria-labelledby="pitch-video-title">
+          <div class="pitch-video-heading">
+            <div><span class="eyebrow">ACTUAL BROADCAST EXCERPT</span><h3 id="pitch-video-title">같은 투구, 실제 영상</h3></div>
+            <span class="video-scope">공식 영상 3 / 3구</span>
+          </div>
+          <div id="pitch-video-missing" class="pitch-video-missing">
+            <p>이 투구의 영상은 아직 확보하지 못했습니다.</p>
+            <p>확인되지 않은 영상으로 대신하지 않습니다.</p>
+          </div>
+          <div id="pitch-video-frame" class="pitch-video-frame" hidden>
+            <video id="pitch-video" controls playsinline muted preload="metadata" aria-label="선택한 투구의 실제 영상"></video>
+            <img id="pitch-video-fallback" src="media/pitch-849843-1-3.jpg" alt="Michael King 대 Pete Crow-Armstrong, 1회초 0볼 2스트라이크의 투구 전 정지 장면" hidden />
+            <img id="pitch-observation-image" src="media/pitch-849843-1-3.jpg" width="1280" height="720" alt="3구의 별도 판독 정지 프레임, 저장된 AI 미트 중심을 확인하는 장면" hidden />
+            <span id="pitch-observation-marker" class="observation-marker" aria-hidden="true" hidden></span>
+          </div>
+          <div class="pitch-video-actions">
+            <button id="play-pitch-video" class="primary" hidden>투구 영상 재생</button>
+            <button id="inspect-pitch-mitt" class="secondary" disabled hidden>미트 판독 장면</button>
+            <button id="video-next-pitch" class="secondary" hidden>다음 투구 보기</button>
+          </div>
+          <p id="pitch-video-status" role="status"></p>
+          <p id="pitch-observation-note" class="observation-legend" hidden>초록 표시: 별도 정지 프레임에 저장된 AI 미트 중심 · 미검토 추정. 높이·투수 의도·제구 오차를 검증한 값이 아닙니다.</p>
+          <p class="receiver-note">투구별 공식 클립입니다. 투구 사이의 연속 중계 영상은 아닙니다. 미트 표시는 3구의 별도 판독 정지 장면에서만 볼 수 있습니다.</p>
+          <a id="pitch-video-source" class="source-link" target="_blank" rel="noopener noreferrer" hidden>이 투구의 MLB 공식 영상 출처</a>
+        </section>
+          <section class="receiver-panel recommendation-panel">
+            <span class="eyebrow">BEFORE THE PITCH</span>
+            <h3>받은 구종 추천</h3>
+            <p id="recommendation-status"></p>
+            <div id="received-candidates"></div>
+            <p class="receiver-note">
+              표시 비율은 모델의 구종 선택 비율입니다. 상위 후보의 합이 100%
+              미만일 수 있으며 그대로 표시합니다. 목표 위치는 도달 분포의
+              근사값으로 포수의 실제 요구를 뜻하지 않습니다.
+            </p>
+          </section>
+        </div>
+          <section class="receiver-panel receiver-results">
+            <span class="eyebrow">AFTER REVEAL</span>
+            <h3>실제 결과와 저장 관측</h3>
+            <p id="post-placeholder">결과 공개 후에만 표시합니다.</p>
+            <div id="received-post" hidden></div>
+          </section>
+        <div class="receiver-unavailable">
+          <strong>아직 연결하지 않은 분석</strong>
+          <p>
+            스트라이크·볼·파울·안타 확률, 투수·타자 책임, 교체 효과는 이 응답에
+            없습니다. 예시 수치로 대체하지 않습니다.
+          </p>
+        </div>
+      </section>
+      <footer class="receiver-footer">
+        저장 응답과 투구 키로 연결한 발췌 영상 · 실시간 모델 추론·중계 자동 동기화 아님
+      </footer>
+    </main>
+  </body>
+</html>

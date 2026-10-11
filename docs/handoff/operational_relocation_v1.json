@@ -1,0 +1,491 @@
+{
+  "schema": "operational_relocation_receipt_v1",
+  "unit": "H-port2",
+  "status": "passed",
+  "recorded_at_utc": "2026-10-08T03:59:10.467160+00:00",
+  "scope": "Same Windows machine, existing canonical Python environment, byte-identical named artifacts moved to a fresh directory; existing CPU CLI executed once per location with the same existing state.",
+  "not_verified": [
+    "fresh dependency installation",
+    "different machine",
+    "Mac or MPS",
+    "GPU runtime",
+    "new model accuracy or policy utility",
+    "calibration re-fitting",
+    "independent holdout evaluation",
+    "HTTP server or public deployment",
+    "complete source/runtime distribution bundle"
+  ],
+  "source": {
+    "expected_commit": "ae7db0119125782502d356288d0c5910a3417f26",
+    "observed_commit_before": "ae7db0119125782502d356288d0c5910a3417f26",
+    "observed_commit_after": "ae7db0119125782502d356288d0c5910a3417f26",
+    "named_files_match_expected_commit": true,
+    "named_source_bytes_unchanged_after_execution": true,
+    "files": [
+      {
+        "relative_path": "src/__init__.py",
+        "bytes": 788,
+        "sha256": "e5540ed95903726098f0973c3ae1afcd44d075d32cc3289a1042ad4778590990"
+      },
+      {
+        "relative_path": "src/data/__init__.py",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "relative_path": "src/inference/__init__.py",
+        "bytes": 453,
+        "sha256": "bc8f1b949a1c9d4d0a22e07a9af50aab09c1cd9d67e66e31237a9b8f8581532e"
+      },
+      {
+        "relative_path": "src/evaluation/__init__.py",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "relative_path": "src/models/__init__.py",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "relative_path": "src/utils/__init__.py",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "relative_path": "src/data/features.py",
+        "bytes": 8611,
+        "sha256": "93d68e4418d40358d41ab85349a265a659ea8d95cebfc446a845b740b5977c0b"
+      },
+      {
+        "relative_path": "src/data/preprocess.py",
+        "bytes": 22068,
+        "sha256": "0160931cf18c87cffffd5778c57d5fc5e52c2669217c9d7e7768545d4c7f63a6"
+      },
+      {
+        "relative_path": "src/data/operational.py",
+        "bytes": 9277,
+        "sha256": "ee457991c0cba89405380d2c65d7f38b141d49493193c7ee14d4c79c348ce1e2"
+      },
+      {
+        "relative_path": "src/data/point_data.py",
+        "bytes": 4449,
+        "sha256": "1b1c812151f3a060ae8a0f2375c36f2bac31e6a00d9da538acff0f05fad44ccc"
+      },
+      {
+        "relative_path": "src/inference/operational.py",
+        "bytes": 5711,
+        "sha256": "5dced93661fada1e0b7eb68bd4a78617103c4fcee757556c2d757232f320ff11"
+      },
+      {
+        "relative_path": "src/inference/recommendation.py",
+        "bytes": 5401,
+        "sha256": "2a1f59e04c26582c9e320b2a2e0cfff409dad9e80d5bd0d26f9ad8a3cd44b64e"
+      },
+      {
+        "relative_path": "src/inference/prepitch_contract.py",
+        "bytes": 5198,
+        "sha256": "c79837031dd3b657166c44baabd0c57a8e13ed92dd9a0342d288937ba674fb46"
+      },
+      {
+        "relative_path": "src/inference/outcome_contracts.py",
+        "bytes": 15866,
+        "sha256": "e73b1ece5d5d7236055d8ce48edadd0b64b5e5c87d8337be01d4b1d0cbd083ae"
+      },
+      {
+        "relative_path": "src/inference/transition_model.py",
+        "bytes": 12387,
+        "sha256": "1bf04ebe18de5857a7fe72bf842cfb3d9df95c48e0ce1da1509399fcd774fc02"
+      },
+      {
+        "relative_path": "src/evaluation/operational_metrics.py",
+        "bytes": 4102,
+        "sha256": "c496d5a55b5cff6a5e8187bcd1af53aa7273aa8044a1f72c729457dee8c7acfc"
+      },
+      {
+        "relative_path": "src/evaluation/policy_value.py",
+        "bytes": 2393,
+        "sha256": "e5c7ead5a4b8fd2aa12a518c11c908b5fbf1375866dc618d21b533fbc4138d23"
+      },
+      {
+        "relative_path": "src/models/base.py",
+        "bytes": 1289,
+        "sha256": "d1f2d3337d487e09fe7652931fead3131e52226c254691024f1e7507bcc20f90"
+      },
+      {
+        "relative_path": "src/models/otremba_mlp.py",
+        "bytes": 1807,
+        "sha256": "8e2b2de12f33ec04add8bd381b31b4617f870749c5b6f03ab36cccb70a1e6a0e"
+      },
+      {
+        "relative_path": "src/models/transformer.py",
+        "bytes": 6042,
+        "sha256": "f7fe93726f0148ce3c33459258874a04d44840655d93289e5fb9b3e4bb4d8d8b"
+      },
+      {
+        "relative_path": "src/utils/device.py",
+        "bytes": 302,
+        "sha256": "ea37ea4c1c09c5dbaa3d750da743553187bb8756a60f5a0f45ffe904714c5017"
+      },
+      {
+        "relative_path": "src/utils/model_prediction.py",
+        "bytes": 652,
+        "sha256": "f4d58bff47f280a381dddf2251e140caa3bf116a5ff64be2c11086942dfd406e"
+      },
+      {
+        "relative_path": "src/utils/experiment_paths.py",
+        "bytes": 1147,
+        "sha256": "b1386a31aee75beb08b21ed8225306e3b5365ecff32b4ce544a26e023fac5178"
+      },
+      {
+        "relative_path": "scripts/57_recommend_operational.py",
+        "bytes": 1134,
+        "sha256": "0766b0eaaaebc33a820fbebeddcb8bd5caf44bb5812ad31c8e6b23fb502c6159"
+      },
+      {
+        "relative_path": "pyproject.toml",
+        "bytes": 1915,
+        "sha256": "11f4a00b3c6f0bdf75bb642304c0764f9d3596549060c1b41a588e333c0d41d5"
+      },
+      {
+        "relative_path": "uv.lock",
+        "bytes": 507909,
+        "sha256": "e31fc9e3f59b663b263c5708a81f44c82c496bb9efb7740d67c67f845e360018"
+      },
+      {
+        "relative_path": "docs/results/operational_20260921/example_state.json",
+        "bytes": 218,
+        "sha256": "6a865f5864838f5bed622f8df6e9bd804ff5ecbfb3e122b570a543c88977652b"
+      }
+    ]
+  },
+  "runtime": {
+    "python": "3.12.12",
+    "implementation": "CPython",
+    "os": "Windows",
+    "os_release": "11",
+    "machine": "AMD64",
+    "distributions": {
+      "torch": "2.6.0+cu124",
+      "numpy": "2.4.4",
+      "pandas": "3.0.2",
+      "pyarrow": "24.0.0",
+      "scipy": "1.17.1",
+      "scikit-learn": "1.8.0",
+      "lightgbm": "4.6.0"
+    },
+    "device": "cpu",
+    "torch_threads": 1,
+    "device_and_threads_evidence": "Existing CLI sets one Torch thread; OperationalRecommender constructs OperationalPredictor with default CPU and threads=1; no override or alternate predictor used.",
+    "bytecode_writes_disabled": true
+  },
+  "inventory": {
+    "alias": "CANONICAL_PROJECT",
+    "relative_path": "docs/handoff/external_artifacts_v1.json",
+    "bytes": 26292,
+    "sha256": "c0dbfa65c58a58adce722a19a15ac4ec33925dc39199a2a13809276af2c6c5e0"
+  },
+  "artifact_count": 14,
+  "artifacts": [
+    {
+      "relative_path": "data/operational_20260921_v2/dataset_manifest.json",
+      "bytes": 1649,
+      "sha256": "98d77564855f4e33ebda65f56fe8d77142e45c9552225e76f528745ecbd02156"
+    },
+    {
+      "relative_path": "data/operational_20260921_v2/feature_builder.pkl",
+      "bytes": 1411663,
+      "sha256": "6538080fe55f668a16d1071c5bff6e3f91eeb2d103835c780aa05f0d450443fe"
+    },
+    {
+      "relative_path": "data/operational_20260921_v2/run_value_model.npz",
+      "bytes": 25884,
+      "sha256": "4d0d7337e3c4da4120af8c4e50c208f569a1b77a6e31bfb4fd54b4ddfa17c711"
+    },
+    {
+      "relative_path": "outputs/operational_20260921/evaluation/selection.json",
+      "bytes": 982,
+      "sha256": "8702238d45cbe543a6cb3484d527821576009f351b158b451462004c872b0d42"
+    },
+    {
+      "relative_path": "outputs/operational_20260921/evaluation/probability_report.json",
+      "bytes": 696027,
+      "sha256": "d75d36b444b7dcd9f065aa830073135d3b5f562efceeb37c1a76e093d31b4168"
+    },
+    {
+      "relative_path": "outputs/operational_20260921/mlp135_seed42/manifest.json",
+      "bytes": 3769,
+      "sha256": "2830c1f03d8f8707569859bfe18ddc9394faa90404924243dd2226563212b29c"
+    },
+    {
+      "relative_path": "outputs/operational_20260921/mlp135_seed42/best.pt",
+      "bytes": 432634,
+      "sha256": "1c783878357ea4a2a680118c47e8f2d237cff4853ee28e46ce25f7b05c9c50b3"
+    },
+    {
+      "relative_path": "outputs/operational_20260921/mlp135_seed43/manifest.json",
+      "bytes": 3768,
+      "sha256": "74cacb27996b9ae0c3ca927bff05b0b3a294d15164998c84f080052803e3a2ed"
+    },
+    {
+      "relative_path": "outputs/operational_20260921/mlp135_seed43/best.pt",
+      "bytes": 432634,
+      "sha256": "36e0720678e94a11c5f5abb459b9fea85dd07879b2afe9746db1ac58aeb0303f"
+    },
+    {
+      "relative_path": "outputs/operational_20260921/mlp135_seed44/manifest.json",
+      "bytes": 3766,
+      "sha256": "3ea3dcd7bdb82488222356f9d3205c4c2aa6d10e7d110406e86596380bc2361a"
+    },
+    {
+      "relative_path": "outputs/operational_20260921/mlp135_seed44/best.pt",
+      "bytes": 432634,
+      "sha256": "ed3221a42630fff7d83ebfb228519782a8845d382b1fb337da42615c916352cc"
+    },
+    {
+      "relative_path": "outputs/operational_20260921/evaluation/empirical.pkl",
+      "bytes": 1566950,
+      "sha256": "c0495623406373961d1cb0027697c85e78045204cb1b602035629e60e7c6dccd"
+    },
+    {
+      "relative_path": "outputs/operational_20260921/policy_nuisance_v2/manifest.json",
+      "bytes": 2519,
+      "sha256": "b9a1d639e277aca6f427b600784452b0afc1d75f53a569eca3f9e8e6b767340c"
+    },
+    {
+      "relative_path": "outputs/operational_20260921/policy_nuisance_v2/propensity.txt",
+      "bytes": 3972075,
+      "sha256": "44aab078f1363830bb2fd698841a62812768105e5e54326468ce6f77f64c2ce3"
+    }
+  ],
+  "artifact_verification": {
+    "all_listed_sha_and_sizes_matched_before_copy": true,
+    "all_copies_matched_immediately": true,
+    "originals_unchanged_after_execution": true,
+    "copies_unchanged_after_execution": true,
+    "entire_directory_copy": false,
+    "selection_json": "Included as original selection provenance; runtime reads report.selection."
+  },
+  "closure": {
+    "checks": {
+      "selected_mlp135": true,
+      "exact_three_seed_runs": true,
+      "seeds_42_43_44": true,
+      "three_complete_mlp135_manifests": true,
+      "all_model_dataset_manifests_match": true,
+      "report_dataset_matches": true,
+      "nuisance_complete_and_dataset_matches": true,
+      "profile_schema_matches": true,
+      "profile_bytes_sha_matches_dataset": true,
+      "selection_provenance_matches_report": true,
+      "selected_temperature_matches_inventory": true,
+      "empirical_temperature_matches_inventory": true
+    },
+    "selected_runs": [
+      "mlp135_seed42",
+      "mlp135_seed43",
+      "mlp135_seed44"
+    ],
+    "selected_temperature": 1.0022222351524148,
+    "empirical_temperature": 1.0336899602754714,
+    "propensity_temperature": 1.09794610049746,
+    "seed_calibration_execution_evidence": "Metadata verified; the unchanged executed constructor loads every selected run, averages seed probabilities then applies saved temperature, loads empirical and propensity and outcome-cost kernel. No extra model invocation or instrumentation performed."
+  },
+  "input": {
+    "relative_path": "docs/results/operational_20260921/example_state.json",
+    "bytes": 218,
+    "sha256": "6a865f5864838f5bed622f8df6e9bd804ff5ecbfb3e122b570a543c88977652b",
+    "payload": {
+      "pitcher": 621242,
+      "game_date": "2024-09-30",
+      "balls": 3,
+      "strikes": 2,
+      "outs_when_up": 2,
+      "inning": 8,
+      "on_1b": null,
+      "on_2b": 645277,
+      "on_3b": null,
+      "stand": "R",
+      "p_throws": "R"
+    }
+  },
+  "runs": [
+    {
+      "label": "original",
+      "command_args": [
+        "CANONICAL_PYTHON",
+        "-B",
+        "CANONICAL_PROJECT/scripts/57_recommend_operational.py",
+        "--data-dir",
+        "LEGACY_PROJECT/data/operational_20260921_v2",
+        "--evaluation-dir",
+        "LEGACY_PROJECT/outputs/operational_20260921/evaluation",
+        "--nuisance-dir",
+        "LEGACY_PROJECT/outputs/operational_20260921/policy_nuisance_v2",
+        "--runs-dir",
+        "LEGACY_PROJECT/outputs/operational_20260921",
+        "--state-json",
+        "CANONICAL_PROJECT/docs/results/operational_20260921/example_state.json"
+      ],
+      "working_directory": "CANONICAL_PROJECT",
+      "exit_code": 0,
+      "timed_out": false,
+      "elapsed_seconds": 51.97328269993886,
+      "stdout": {
+        "bytes": 14661,
+        "sha256": "8eb2a90e58851db34dd09ac71154355b1060393478953a6a27cb07f57c23db73"
+      },
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "automatic_retries": 0,
+      "output_checks": {
+        "passed": true,
+        "checks": {
+          "schema": true,
+          "selected_model": true,
+          "feature_schema": true,
+          "nine_candidates": true,
+          "unique_actions": true,
+          "ten_outcome_probabilities_each": true,
+          "outcome_probabilities_finite_in_unit_interval": true,
+          "outcome_probability_mass_within_1e_6": true,
+          "policy_finite_in_unit_interval": true,
+          "policy_mass_within_1e_12": true,
+          "unsupported_policy_zero": true,
+          "at_least_two_supported": true,
+          "chosen_action_supported": true,
+          "finite_in_scope_costs": true,
+          "target_location_null": true,
+          "independent_strike_ball_foul_null": true
+        },
+        "probability_mass": [
+          0.9999999999999999,
+          1.0,
+          1.0,
+          1.0,
+          0.9999999999999999,
+          1.0,
+          0.9999999999999999,
+          0.9999999999999999,
+          1.0
+        ],
+        "policy_mass": 1.0,
+        "supported_actions": [
+          "FF",
+          "SL"
+        ],
+        "recommendation": "SL",
+        "empirical_recommendation": "SL"
+      }
+    },
+    {
+      "label": "relocated",
+      "command_args": [
+        "CANONICAL_PYTHON",
+        "-B",
+        "CANONICAL_PROJECT/scripts/57_recommend_operational.py",
+        "--data-dir",
+        "RELOCATED_ARTIFACTS/data/operational_20260921_v2",
+        "--evaluation-dir",
+        "RELOCATED_ARTIFACTS/outputs/operational_20260921/evaluation",
+        "--nuisance-dir",
+        "RELOCATED_ARTIFACTS/outputs/operational_20260921/policy_nuisance_v2",
+        "--runs-dir",
+        "RELOCATED_ARTIFACTS/outputs/operational_20260921",
+        "--state-json",
+        "CANONICAL_PROJECT/docs/results/operational_20260921/example_state.json"
+      ],
+      "working_directory": "CANONICAL_PROJECT",
+      "exit_code": 0,
+      "timed_out": false,
+      "elapsed_seconds": 34.38195970002562,
+      "stdout": {
+        "bytes": 14661,
+        "sha256": "8eb2a90e58851db34dd09ac71154355b1060393478953a6a27cb07f57c23db73"
+      },
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "automatic_retries": 0,
+      "output_checks": {
+        "passed": true,
+        "checks": {
+          "schema": true,
+          "selected_model": true,
+          "feature_schema": true,
+          "nine_candidates": true,
+          "unique_actions": true,
+          "ten_outcome_probabilities_each": true,
+          "outcome_probabilities_finite_in_unit_interval": true,
+          "outcome_probability_mass_within_1e_6": true,
+          "policy_finite_in_unit_interval": true,
+          "policy_mass_within_1e_12": true,
+          "unsupported_policy_zero": true,
+          "at_least_two_supported": true,
+          "chosen_action_supported": true,
+          "finite_in_scope_costs": true,
+          "target_location_null": true,
+          "independent_strike_ball_foul_null": true
+        },
+        "probability_mass": [
+          0.9999999999999999,
+          1.0,
+          1.0,
+          1.0,
+          0.9999999999999999,
+          1.0,
+          0.9999999999999999,
+          0.9999999999999999,
+          1.0
+        ],
+        "policy_mass": 1.0,
+        "supported_actions": [
+          "FF",
+          "SL"
+        ],
+        "recommendation": "SL",
+        "empirical_recommendation": "SL"
+      }
+    }
+  ],
+  "comparison": {
+    "performed": true,
+    "numeric_tolerance": 0,
+    "all_fields_compared": true,
+    "parsed_json_exact_match": true,
+    "differences": [],
+    "stdout_bytes_exact_match": true,
+    "maximum_outcome_probability_absolute_difference": 0.0
+  },
+  "actions_not_performed": [
+    "training",
+    "recalibration",
+    "network calls",
+    "server launch",
+    "canonical source edits",
+    "original artifact edits",
+    "automatic retry"
+  ],
+  "preparation_history": {
+    "failed_preparation_attempts": 1,
+    "failure_stage": "Read-only Git source revision query before artifact copying or model execution",
+    "underlying_failure_cause": "Unverified; initial helper did not retain Git stderr",
+    "recovery": "Separate read-only revision check succeeded; outer working directory changed to CANONICAL_PROJECT before preparation resumed",
+    "artifact_copies_before_failure": 0,
+    "model_cli_invocations_before_failure": 0,
+    "model_cli_invocations_total": 2,
+    "model_cli_invocations_by_location": {
+      "original": 1,
+      "relocated": 1
+    },
+    "model_cli_retries": 0,
+    "private_failure_record": "private/preflight_failure.txt"
+  },
+  "local_harness": {
+    "sha256": "67989aff8dd5035f7c5c15915e8c93c192c0b6a9c68173e58462135efa15b720",
+    "source_edits": "Local one-shot harness only; canonical source unchanged"
+  }
+}

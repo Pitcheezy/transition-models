@@ -1,0 +1,138 @@
+{
+  "schema": "cv_broadcast_interval_run_audit_v1",
+  "plan_sha256": "bf08aabaeec99599cd5135de86e13ed4ceef8991cc3b98e8e0b05662629ab106",
+  "preregister_sha256": "8552bbba4e266bf3a58c1749b7a90b10dec9ed3f6c54268bca1bcb16610b876b",
+  "code_bytes_unchanged": true,
+  "loop_exit_code": 0,
+  "external_process_elapsed_seconds": 99.92217530007474,
+  "external_timing_scope": "New single-run interval diagnostic, not paired speed comparison with CV22. Parent launch-to-exit, preflight, startup and scheduled input-to-validated-publication measured separately; 65-second first-to-last input schedule included.",
+  "report_sha256": "28e1cf6eb26bd7dbe21a9dde1bc4c28b75f85e839f0b9a668f064cccd7ce9cd0",
+  "report_error": null,
+  "readiness_receipt_sha256": "9b902e0bd732c69639de06d9974d81644809b90e6154c256b8926c97234d3ec6",
+  "readiness": {
+    "schema": "local_glove_ready_run_v1",
+    "status": "completed",
+    "planned": 14,
+    "attempted": 14,
+    "accepted": 14,
+    "not_attempted": 0,
+    "startup_ready": true,
+    "warmup_count_planned": 5,
+    "warmup_size": [
+      1280,
+      720
+    ],
+    "warmup_source": "generated_black_rgb",
+    "study_frame_inputs_before_ready": 0,
+    "preflight_elapsed_seconds": 0.703,
+    "startup_elapsed_seconds": 20.359,
+    "loop_elapsed_seconds": 74.859,
+    "readiness_to_schedule_seconds": 1.36,
+    "cold_user_elapsed_seconds": 98.922,
+    "timing_notice": "Startup is before the replay schedule, not free. Cold elapsed includes preflight, startup, replay and worker cleanup; excludes interpreter launch/import and final summary write. Loop latency after readiness is not cold-start or live latency.",
+    "worker_exit_confirmed": true,
+    "worker_exitcode": 0
+  },
+  "planned_input_checks": [
+    {
+      "index": 0,
+      "extracted": true,
+      "expected_mapping_matches": true,
+      "image_sha256": "9e7cb2b4d9314b68130718f0f8d9350fc375a8b3be331dae79862f7dc12e7ea6"
+    },
+    {
+      "index": 1,
+      "extracted": true,
+      "expected_mapping_matches": true,
+      "image_sha256": "ab22c81da32829146ec783846f302ddb2caa4ba5e08f6611f44cb5bcc4b42200"
+    },
+    {
+      "index": 2,
+      "extracted": true,
+      "expected_mapping_matches": true,
+      "image_sha256": "c10e76c82d79b87a082e6ab758d3f05f0b10bd9053666f49325bd2de2d21fd79"
+    },
+    {
+      "index": 3,
+      "extracted": true,
+      "expected_mapping_matches": true,
+      "image_sha256": "3b3e8a9eab13a5c0bb2a7ad0088a754751331b1741adb3ae4d51329b22f51837"
+    },
+    {
+      "index": 4,
+      "extracted": true,
+      "expected_mapping_matches": true,
+      "image_sha256": "0d2bc42da31ec46313c47c17bc5d6dd0822bfa005968b26291912b8797fb98d0"
+    },
+    {
+      "index": 5,
+      "extracted": true,
+      "expected_mapping_matches": true,
+      "image_sha256": "59a8b94972494a1d7c0911e93163487d448f5d08d4a8ebffa5c6c25892fc3005"
+    },
+    {
+      "index": 6,
+      "extracted": true,
+      "expected_mapping_matches": true,
+      "image_sha256": "61d01d2ff2575d65cafa710c80cbbfc36ba8cd282cffc187ff1c90b113cee4e0"
+    },
+    {
+      "index": 7,
+      "extracted": true,
+      "expected_mapping_matches": true,
+      "image_sha256": "a5de11f98c21382b44dfc90a3475ebd3a3b6ab4ab5ce4e907fd0e0d175400e4b"
+    },
+    {
+      "index": 8,
+      "extracted": true,
+      "expected_mapping_matches": true,
+      "image_sha256": "d7e97007d7864fc546b57e0aaa824033a39a660e789a52d776278bb417014b66"
+    },
+    {
+      "index": 9,
+      "extracted": true,
+      "expected_mapping_matches": true,
+      "image_sha256": "99e3d26a6eaa11ca1bf44f179dec73ffb3985db8dc1d1528cf50b576302b95f5"
+    },
+    {
+      "index": 10,
+      "extracted": true,
+      "expected_mapping_matches": true,
+      "image_sha256": "51f0c8c5c2e96e5f27f34c152159d1d183c90447b2388f1babf8f3b55f1534a9"
+    },
+    {
+      "index": 11,
+      "extracted": true,
+      "expected_mapping_matches": true,
+      "image_sha256": "9376551492ec43ff1f8c48746adc462d82ff6c59c9adeaeb203d9d615506d8a5"
+    },
+    {
+      "index": 12,
+      "extracted": true,
+      "expected_mapping_matches": true,
+      "image_sha256": "249e5fdeb053cbf9c921182ded4dada97a25e7d584e42523edfa5f0989e46c48"
+    },
+    {
+      "index": 13,
+      "extracted": true,
+      "expected_mapping_matches": true,
+      "image_sha256": "459bfb96ab9caefd2352519eaaa34dbeb1666a4318c33f48541533fa1dff6fcd"
+    }
+  ],
+  "counts": {
+    "attempted": 14,
+    "accepted": 14,
+    "candidate": 5,
+    "ambiguous": 1,
+    "no_candidate": 8,
+    "error": 0,
+    "not_attempted": 0,
+    "verified_mitt": 0,
+    "publication_within_5s": 5,
+    "candidate_publication_within_5s": 0
+  },
+  "full_pa_verified": false,
+  "live_availability_verified": false,
+  "independent_validation": false,
+  "accuracy_evaluated": false
+}

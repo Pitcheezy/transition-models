@@ -1,0 +1,86 @@
+{
+ "schema": "intent_eval_plan_v0",
+ "written": "2026-10-02",
+ "purpose": "M3 accuracy table of docs/INTENT_V0_WORK_ORDER.md: pixel and feet error and abstention rate of the assistant catcher-setup reading against one person's hand labels, on games the method was not built on",
+ "status_at_writing": "the evaluation games were chosen from the schedule and content listings only (game ids, broadcasters, condensed-game titles and durations); no frame of them had been viewed or read",
+ "development_games": [
+  {
+   "game_pk": 747139,
+   "broadcast": "SNY",
+   "video": "full game",
+   "built_on_it": "M1 reading protocol, hop 1 v1 front-edge similarity, hop 2 tilt from the batter's box, the human-verified catch subset"
+  },
+  {
+   "game_pk": 849843,
+   "broadcast": "NBC",
+   "video": "official condensed game",
+   "built_on_it": "the condensed-game scan and read prompts, the two-reader consensus rule (15 px), the hop-2 pan term from the pitching rubber"
+  }
+ ],
+ "evaluation_games": {
+  "rule": "E1: among the 2026 Wild Card Game 1s other than 849843 (849845, 849849, 849851), the lowest gamePk whose statsapi content lists a Condensed Game with an mp4Avc playback. E2 (a broadcaster other than SNY and NBC): among the regular-season games of the final weekend (2026-09-26/27), the latest one whose statsapi schedule lists a national TV broadcaster, with a Condensed Game mp4Avc playback.",
+  "games": [
+   {
+    "game_pk": 849845,
+    "label": "E1",
+    "date": "2026-09-29",
+    "matchup": "Philadelphia Phillies at Atlanta Braves (NL Wild Card Game 1)",
+    "venue": "Truist Park",
+    "broadcast": "NBC/Peacock",
+    "video": "official condensed game (00:18:33)"
+   },
+   {
+    "game_pk": 823407,
+    "label": "E2",
+    "date": "2026-09-26",
+    "matchup": "Tampa Bay Rays at Philadelphia Phillies",
+    "venue": "Citizens Bank Park",
+    "broadcast": "FOX",
+    "video": "official condensed game (00:10:59)"
+   }
+  ],
+  "fallback": "if E1 and E2 together give fewer than 50 person-marked pitches, add 849849 and then 849851 (the next Wild Card Game 1s by gamePk) under the same frozen method; record the addition in the evaluation notes"
+ },
+ "frozen_method": {
+  "code": "intent/ as of the commit that adds this file. Any change to intent/ before both evaluation games are read and their outputs committed is a deviation and is listed in docs/INTENT_V0_M3_EVAL.md.",
+  "steps": [
+   "python -m intent.condensed source / sheets",
+   "Workflow intent/workflows/condensed_scan.js (two readers per ~80 s range of 2-fps contact sheets)",
+   "python -m intent.condensed map (pair readers <= 1.5 s; match by half, inning, batter, count; ties broken by the post-pitch type/speed graphic, then the outcome)",
+   "python -m intent.broadcast_windows (release +/- 1.5 s, every 3rd source frame, 2x gridded crops)",
+   "python -m intent.condensed read-args, then Workflow intent/workflows/condensed_read.js (two readers per three pitches)",
+   "python -m intent.condensed assemble (mean of the two readers on the same frame, reader A otherwise; abstain when mitt points are > 15 px apart or only one reader found a setup frame)",
+   "python -m intent.calibrate (tilt from the batter's-box lines, pan from the pitching rubber, catch-vs-Statcast check)",
+   "python -m intent.run, checked with the service validator validate_intent_estimate"
+  ],
+  "operator_choices_allowed": [
+   "the reading crop box and the labeling-pack crop boxes: one fixed box per game, chosen from the plate position on one centre-field frame before any reading, without marking a mitt",
+   "scan decisions the map step leaves open (unresolved ties, graphic conflicts, detections without a score bug): assign or drop with a written reason, using the score bug, the post-pitch graphic, the pitch order and the visible outcome, never the Statcast pitch location or the mitt",
+   "re-running a reader agent that ended with a tool or API error, with the identical prompt"
+  ],
+  "not_allowed": [
+   "changing the reader prompts, the consensus rule, the calibration or the hop formulas after seeing any evaluation frame",
+   "looking at the person's labels before the assistant outputs (points, calibration, JSONL) of that game are committed"
+  ]
+ },
+ "human_labels": {
+  "pack": "python -m intent.label_pack with a sample larger than the game's pitch count, so every output line of the game is in the pack (no sampling)",
+  "blind": "the page shows no assistant point, no assistant status and no pitch result",
+  "frame": "the person labels the assistant's decision frame (the setup frame, or for an abstention the frame the assistant cited); which frame is the right setup frame is not evaluated",
+  "labeler": "the repository owner, one pass, time recorded by the page",
+  "order": "the assistant outputs of a game are committed before its pack is handed to the person"
+ },
+ "metrics": {
+  "per_game": [
+   "pitches in the output and their share of the game's feed pitches",
+   "assistant abstention rate",
+   "person abstention rate and the availability table (both marked, both abstained, assistant only, person only)",
+   "mitt pixel distance, assistant vs person, median and 90th percentile (both marked)",
+   "output feet error: published plate_feet minus the person's mitt through the person's plate edge and the game's hop-2 matrix; distance, |x| and |z|, median and 90th percentile",
+   "camera check: catch-vs-Statcast rms (assistant readers), as already defined in intent.calibrate"
+  ],
+  "pooled": "the same error summaries over the evaluation games only; development games are never pooled with them",
+  "threshold": "none set in advance; the report states the numbers with n",
+  "tool": "python -m intent.human_labels per game, then python -m intent.accuracy_report -> docs/results/mlb_p0/intent_accuracy_report_v0.json"
+ }
+}

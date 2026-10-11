@@ -1,0 +1,1324 @@
+{
+  "schema": "mlb_scoreboard_ocr_preregistration_v1",
+  "game_pk": 747139,
+  "version": "v4",
+  "registered": {
+    "date": "2026-09-25",
+    "recorded_by": "Claude Code F-3d v4 pre-registration (Fable 5.1 workflow, scripts/70)",
+    "statement": "The v4 rule (template set, reader options, thresholds and the A-10 acceptance criterion) was fixed after every 1st-5th inning eval-set frame (142 pitches, PA 1-40) and every negatives frame (14) had been seen and their v1-v3 results and failure causes diagnosed (F-3c comparison, the 34/3 misread register entry, the F-3d design/judge scratch under outputs/verification/f3d/), and before any 6th-inning frame was annotated or looked at. Nothing measured on those frames is held-out, blind or generalisation evidence for v4; it is development evidence. The first blind evaluation of v4 is the A-10 6th-inning new-row comparison (PA 41-49), judged by acceptance_criterion_for_A10 below.",
+    "frames_seen_before_the_rule_was_fixed": {
+      "evalset_pitches": 142,
+      "evalset_plate_appearances": "PA 1-40 (innings 1-5)",
+      "negatives_frames": 14,
+      "sixth_inning_frames_seen": 0
+    }
+  },
+  "amendments": [
+    {
+      "date": "2026-09-25",
+      "stage": "F-3d repair round, before the pre-registration was committed",
+      "before_any_sixth_inning_frame_was_seen": true,
+      "changes": [
+        "Criterion (4): dropped the unsatisfiable requirement that the v1-v3 predictions and score files be byte-identical after the A-10 merge (the refresh appends the new rows to every version and recomputes coverage counts); byte-identity now applies to the v1-v3 template and negatives files, and the predictions/score files are checked through changed_shared_rows 0 / removed_rows 0 / parsed_documents_equal.",
+        "Criterion (4): the clause 'v1-v3 wrong reads are exactly the registered 34/3 topbot' now applies to the 142 shared rows only; what the frozen v1-v3 read on the PA 41-49 rows is outside v4's control and does not decide v4's pass/fail.",
+        "Criterion (4): the anchor is the committed v4 predictions file (LF-normalised sha256 and git blob id recorded), not the git-ignored design scratch file; equality with that scratch file on all 142 rows is recorded as a registration-time fact.",
+        "Criterion (5): the per-glyph evidence now comes from `scripts/66 predict --diagnostics` (added in this round; predict printed only counts before), and the balls/strikes clause excludes gate-failing rows and no-glyph windows explicitly, as the inning_topbot clause already did.",
+        "files_as_built: hashes are LF-normalised sha256 (plus git blob ids) so that they verify on LF checkouts (CI, macOS/Linux); the earlier hashes were of the CRLF working-tree bytes of one Windows machine.",
+        "acceptance_helper: new_rows_acceptance now also takes the wrong_reads list over all candidate rows and reports valid=false when a baseline block covers other pitches; validate_reader_options rejects a non-finite topbot_rule.min_slope and a null min_margin_by_field is treated as absent on the read path."
+      ],
+      "unchanged": "Template set, reader option values, thresholds, criteria (1)-(3), the v4 template, prediction, score and negatives files (byte-identical to the first build; rerun via scripts/70 in the repair round) and the development-set numbers."
+    }
+  ],
+  "template_rule": "v4 source plate appearances = exactly {1, 2, 9, 18, 29}, the v3 set; nothing added or removed (no 5th-inning PA, so inning '5' stays untemplated and every 5th-inning row stays outside the template set). Glyphs are cut exactly as in v1-v3: `scripts/66_sny_scoreboard_ocr.py templates` mode, `glyphs_for_label` with the default `segment_glyphs` on the cached decision frames outputs/frames/evalset_<frame_seconds .2f>.jpg of every eval-set entry of those PAs, confirmed DIGIT_FIELDS only (85 fields used, 0 skipped), reader options never applied at cut time; each glyph normalised to 16x12 and stored pooled digit -> list (0:45, 1:14, 2:18, 3:2, 4:6), TEMPLATE_SCHEMA sny_digit_templates_v0, glyph_shape [16, 12]. Build command: `PYTHONIOENCODING=utf-8 uv run --frozen python scripts/66_sny_scoreboard_ocr.py templates --template-pas 1 2 9 18 29 --no-grab --reader-options '{\"top_line_gate\": {\"aggregate\": \"max_row\", \"threshold\": 0.6}, \"border_sliver_max_width\": 2, \"min_margin_by_field\": {\"balls\": 0.1, \"strikes\": 0.1}, \"arrow_window\": [262, 46, 279, 64], \"topbot_rule\": {\"method\": \"blob_slope\", \"min_slope\": 0.4, \"min_rows\": 6}}' --output docs/results/mlb_p0/sny_digit_templates_v4.json`. Mechanical check after the build: the `templates` key of the v4 file must equal the `templates` key of sny_digit_templates_v3.json (the judge verified that the same command with only the v3 options reproduces the v3 file as an equal document), and `source.template_plate_appearances` must be [1, 2, 9, 18, 29].",
+  "template_plate_appearances": [
+    1,
+    2,
+    9,
+    18,
+    29
+  ],
+  "template_build_command": "PYTHONIOENCODING=utf-8 uv run --frozen python scripts/66_sny_scoreboard_ocr.py templates --template-pas 1 2 9 18 29 --no-grab --reader-options '{\"top_line_gate\": {\"aggregate\": \"max_row\", \"threshold\": 0.6}, \"border_sliver_max_width\": 2, \"min_margin_by_field\": {\"balls\": 0.1, \"strikes\": 0.1}, \"arrow_window\": [262, 46, 279, 64], \"topbot_rule\": {\"method\": \"blob_slope\", \"min_slope\": 0.4, \"min_rows\": 6}}' --output docs/results/mlb_p0/sny_digit_templates_v4.json",
+  "template_checks": {
+    "templates_key_identical_to_v3": true,
+    "source_identical_to_v3": true,
+    "pooled_digit_counts": {
+      "0": 45,
+      "1": 14,
+      "2": 18,
+      "3": 2,
+      "4": 6
+    },
+    "fields_used": 85,
+    "fields_skipped": []
+  },
+  "reader_options": {
+    "top_line_gate": {
+      "aggregate": "max_row",
+      "threshold": 0.6
+    },
+    "border_sliver_max_width": 2,
+    "min_margin_by_field": {
+      "balls": 0.1,
+      "strikes": 0.1
+    },
+    "arrow_window": [
+      262,
+      46,
+      279,
+      64
+    ],
+    "topbot_rule": {
+      "method": "blob_slope",
+      "min_slope": 0.4,
+      "min_rows": 6
+    }
+  },
+  "reader_options_semantics": [
+    {
+      "name": "top_line_gate",
+      "value": "{\"aggregate\": \"max_row\", \"threshold\": 0.6}",
+      "semantics": "Unchanged from v3: the top-line presence test passes when any single row of the top_line window reaches the threshold.",
+      "validation": "Existing validate_reader_options rules (aggregate in TOP_LINE_AGGREGATES, threshold a number in [0, 1])."
+    },
+    {
+      "name": "border_sliver_max_width",
+      "value": "2",
+      "semantics": "Unchanged from v3: a column group at most 2 px wide touching a digit window's edge is dropped before the size tests.",
+      "validation": "Existing rule: non-negative int (bool rejected)."
+    },
+    {
+      "name": "min_margin_by_field",
+      "value": "{\"balls\": 0.1, \"strikes\": 0.1}",
+      "semantics": "Per-DIGIT_FIELD replacement for MIN_MARGIN. `DigitTemplates.match(glyph, min_margin=MIN_MARGIN)` gains a keyword whose default is today's constant; `read_number(white, name, templates, options)` passes `options.get('min_margin_by_field', {}).get(name, MIN_MARGIN)`. Fields not listed (inning, away_score, home_score) keep 0.15. MAX_DISTANCE 0.12 is untouched, so a probe farther than 0.12 from every template still abstains (13/3 balls, distance 0.1234, stays abstained). Templates stay pooled: the count window still competes against every digit of every font, so the floor is at least as conservative as the same floor on grouped templates.",
+      "validation": "Must be a JSON object; every key in DIGIT_FIELDS ('balls', 'strikes', 'inning', 'away_score', 'home_score'); every value a number (bool rejected) within [0, 1]. Unknown field names or out-of-range values raise ValueError naming the offending key; absent key = MIN_MARGIN everywhere (v0-v3 behaviour)."
+    },
+    {
+      "name": "arrow_window",
+      "value": "[262, 46, 279, 64]",
+      "semantics": "Replaces WINDOWS['arrow'] for `read_topbot` only: `read_topbot(white, options=None)` takes `(options or {}).get('arrow_window') or WINDOWS['arrow']` and slices `white[y0:y1, x0:x1]` exactly as `window()` does (x1 exclusive: columns 262-278). The arrow's left edge is x 269 in the 1st inning and 264/265 in innings 2-5 (the arrow+digit block shifts with the inning digit width), so the default x0 266 clips 1-2 columns and the base rows measure 7-9 px; with x0 262 every base row is measured in full. x1 stays 279 because the 5th-inning inning digit's left edge sits at x 278/279 (dropping column 278 was measured and does not help). WINDOWS itself is not edited; `read_scoreboard` forwards the options it already has.",
+      "validation": "Must be a list of exactly 4 integers (bool rejected) [x0, y0, x1, y1] with 0 <= x0 < x1 <= 1280 and 0 <= y0 < y1 <= 720; anything else raises ValueError naming the option. Absent key = WINDOWS['arrow'] (v0-v3 behaviour)."
+    },
+    {
+      "name": "topbot_rule",
+      "value": "{\"method\": \"blob_slope\", \"min_slope\": 0.4, \"min_rows\": 6}",
+      "semantics": "Opt-in decision rule inside `read_topbot`, applied to the arrow window (the `arrow_window` option when present, else WINDOWS['arrow']): (1) connected column groups of white pixels (same construction as `segment_glyphs`, but without MIN_GLYPH_WIDTH/HEIGHT and without the sliver option); the widest group (ties: leftmost) is the arrow blob, cropped to its non-empty row span (this drops the inning digit's 1-px left edge at column 278 and any narrower stray); (2) abstain (None) if the blob has fewer than `min_rows` rows; (3) widths = white count per blob row, slope = least-squares slope of width against row index (np.polyfit degree 1 or the closed form); Top if slope >= min_slope (widths grow downward = up arrow), Bot if slope <= -min_slope, else None. Independent of the widest row and of which corner the window clips: clipping scales the widths but not the sign of the trend, and a single-row tie cannot flip a slope. When the key is absent the existing argmax body runs verbatim (widths >= 2, >= 6 rows, widest-row position >= 0.6 Top / <= 0.4 Bot).",
+      "validation": "Must be a JSON object with `method` == 'blob_slope' (the only method), `min_slope` a number > 0 (bool rejected), `min_rows` an int >= 2 (bool rejected); unknown keys rejected; every violation raises ValueError naming `topbot_rule` and the offending key. Absent key = v0-v3 argmax behaviour."
+    }
+  ],
+  "topbot_rule": "blob_slope on the widened window (both opt-in): arrow window x 262-278, y 46-63; largest connected column group = arrow blob; abstain below 6 rows; least-squares slope of the blob's row widths; Top if >= 0.4 px/row, Bot if <= -0.4, else abstain. Measured cause of 34/3 and 37/5: the arrow's left edge is x 264/265 from the 2nd inning on, the default window x0 266 clips it, the base rows measure 7-9 px and JPEG jitter tied four rows at 8 px, so argmax picked the first tied row (34/3 position 0.375 -> Bot, 37/5 0.5 -> abstain). Judge measurements on the 139 confirmed, gate-passing arrows (58 Top, 81 Bot): current argmax 137/1 wrong/1 abstain with 33 of 58 Top frames within 1 px of a tie; argmax at x0 262 139/139 (Top 0.75-0.875, Bot 0.0) but still 14 Top frames within 2 px of a tie and 7 abstentions under 1-px vertical+horizontal dilation, 58 under 2-px vertical dilation, 3 wrong reads under dilation at the current window; blob_slope at x0 262 139/139 clean (Top slopes 0.717-1.267, Bot -1.2..-1.1; lowest Top 29/3 at 0.717, 34/3 reads 1.05, 37/5 reads Top), 139/139 under every 1-px dilation/erosion and 2-px dilation (Top min 0.544, Bot max -0.75), 120/139 under 2-px vertical+horizontal erosion with 0 wrong (the arrow falls below 6 rows and abstains). blob_slope at x0 262 reproduces the pre-registered inning_topbot value on all 142 eval rows (8/1, 16/1, 33/1 abstain via the gate) and on the negatives reads the 4 cutaways Bot (slopes -1.1..-1.167), misses 780 via the gate, 0 false reads. The thirds ratio on the raw window is NOT adopted (17 wrong reads under 1-px horizontal dilation from the inning digit's edge column); the v0-v3 argmax body stays verbatim for documents without `topbot_rule`.",
+  "count_2_vs_3_fix": "Cause (both designers, same numbers): the count-font '2' probes that abstain (20/5, 20/7, 33/5, 35/5; all 17x11 boxes) sit 0.065-0.081 from the nearest of the 10 count-'2' templates but the templates themselves spread up to 0.148 apart, so against the single count-font '3' template (29/7) at 0.208-0.219 the margin lands at 0.1325-0.1432, below MIN_MARGIN 0.15. The count-font 2 and 3 are not close at 16x12 (template-to-template 0.246-0.30; the 4 count-'3' probes sit 0.0-0.021 from the '3' and >= 0.236 from any '2'), and per-field grouping changes nothing (identical distances to 4 decimals; the pooled runner-up was already the count-font '3'). Fix: opt-in `min_margin_by_field` {\"balls\": 0.10, \"strikes\": 0.10} on the unchanged pooled templates, MAX_DISTANCE 0.12 untouched. Evidence: on all 278 count glyphs of the 139 gate-passing frames the best digit equals the label in every case ('0' n=122 margin >= 0.262, '1' n=75 >= 0.292, '2' n=77 with the lowest 0.1155 (13/3, abstains on distance 0.1234 regardless), 0.1325, 0.1325, 0.1432, 0.1432, then 0.1543 and >= 0.1765, '3' n=4 >= 0.214); the floor sweep 0.15/0.13/0.12/0.11/0.10/0.09/0.08/0.06 gives margin abstentions 4/0/0/0/0/0/0/0 and 0 wrong reads at every floor, so the development result does not depend on the exact value; 0.10 is 0.0325 below the lowest accepted margin and 0.10 above the wrong-read boundary. A wrong count read would need a '3' (or '0') template closer than the nearest '2' template while within 0.12, which no count glyph of 278 comes near (runner-up distances >= 0.208). Strikes gets the same floor because it shows the same count font (its lowest '2' margin today is 0.1765). This is honestly a floor lowered after seeing the margins; the robust native matcher (count-2 margins 0.25-0.26 with unchanged thresholds) was rejected because it moves the risk to the distance side (16x5 '1' at 0.100 of 0.12) and costs a second matcher.",
+  "acceptance_criterion_for_A10": "Fixed now, before the A-10 rows exist. Inputs: the output of `scripts/70_refresh_ocr_reports.py --reference <last commit before the A-10 merge> --no-grab` run for every version at once after the merge, i.e. the `new_rows_comparison` block (totals + per-pitch `wrong_fields` / `abstained_fields` / `evaluable_fields`) of each version's provenance file, its `previous_prediction_comparison`, its negatives score file and `wrong_reads` over all prediction rows. The new rows are the PA 41-49 pitches (34); `new_rows_missing_from_evalset` must be 0 for the check to be valid (otherwise the eval set was not rebuilt and the check is rerun after rebuilding, not judged). v4 PASSES only if ALL hold: (1) v4 `new_rows_comparison.totals.pitches_with_wrong_field` == 0 and `wrong_reads(v4)` over all v4 rows is empty; v4 has no entry in game_747139_scoreboard_known_misreads.json, so any wrong read anywhere fails scripts/70 for v4 and fails this criterion. (2) Per field, for each of the 10 LABEL_FIELDS, correct_v(field) = number of new-row pitches where the field is confirmed (in the entry's field_status) minus those listing it in `abstained_fields` or `wrong_fields`, computed from the per-pitch lists of that version's block; v4 must satisfy correct_v4 >= correct_v2 AND correct_v4 >= correct_v3 for every field. No exclusion clause: a score or count label digit without a template that v2/v3 happen to read and v4 does not counts against v4. The inning field is expected to be 0 correct / 34 abstained for v1-v4 (no '6' template); that is not a failure, but any v4 inning value on a new row is a wrong read and fails (1). (3) v4 negatives `false_reads` == 0 and `wrong_reads` == 0. (4) v4 `previous_prediction_comparison.changed_shared_rows` == 0 and `removed_rows` == 0 against the pre-registered v4 predictions file committed before the merge (docs/results/mlb_p0/game_747139_scoreboard_ocr_v4_predictions.json at the pre-merge commit: 142 PA 1-40 rows, hashes under preregistered_v4_predictions; at registration it equalled the design scratch file on all 142 rows), and v4 `current_repeat_check.parsed_documents_equal` true. Isolation of v1, v2 and v3 (their read paths must not have moved): each reports changed_shared_rows 0, removed_rows 0 and current_repeat_check.parsed_documents_equal true against the pre-merge commit; their template files (sny_digit_templates_v1/v2/v3.json) and their negatives score files are byte-identical to the pre-merge commit; their predictions and score files change only by the addition of the new rows (the A-10 refresh appends the PA 41-49 rows to every version's predictions file and recomputes the score file's coverage counts, so byte-identity is not required of those two files; the shared-row checks establish that nothing else moved). On the 142 shared PA 1-40 rows the v1-v3 wrong reads are exactly the registered 34/3 inning_topbot. What v1-v3 read on the new rows is outside v4's control and does not decide v4's pass/fail: a new v1-v3 misread on a PA 41-49 row is registered as v1-v3 evidence in game_747139_scoreboard_known_misreads.json (versions v1-v3 only) and does not fail (4). (5) Pre-stated field expectations, computed from `scripts/66_sny_scoreboard_ocr.py predict --templates docs/results/mlb_p0/sny_digit_templates_v4.json --diagnostics <path> --no-grab` on the cached A-10 frames (per pitch: `gate_passed`, and per digit field every segmented glyph's best digit, distance, margin, min_margin and read; `digit_field_diagnostics`): v4 inning_topbot on the new rows has 0 wrong and abstains only on pitches whose frame fails the presence gate (gate_passed false, every field None on that row), i.e. no arrow-rule abstention on a gate-passing frame; on gate-passing new rows every v4 balls/strikes abstention is a distance abstention (a segmented glyph of that window has distance > MAX_DISTANCE 0.12) or a no-glyph window (the window's diagnostics list is empty); a margin abstention (every glyph of the window within 0.12 but one with margin < its min_margin) on a gate-passing new row fails (5). Gate-failing rows are excluded from this clause for every field, as for inning_topbot. Any failure of (1)-(5) is reported as a FAILED v4 like v3's failed check; v4 is not re-optioned, re-templated or re-thresholded afterwards, and the PA 41-49 rows are then no longer blind for any successor. Pre-registered expectations that are not pass conditions: v4 reads count digits 0-3 on every gate-passing 6th-inning frame, abstains on inning 34/34, reads Top/Bot on every gate-passing frame, and reads scores only while they consist of the digits 0 and 2.",
+  "acceptance_helper": "src.vision.ocr_reports.new_rows_acceptance(evalset, v4_block, {'v2': v2_block, 'v3': v3_block}, negatives_totals=<v4 negatives score totals>, wrong_reads=ocr_reports.wrong_reads(evalset, <all v4 prediction rows>)) evaluates criteria (1)-(3) in full from the new_rows_comparison blocks of the provenance files written by scripts/70 after the A-10 merge: both halves of (1) (new-row wrong fields and wrong reads over all v4 rows), the per-field rule (2) and the negatives rule (3). It reports valid=false (never a pass) when new_rows_missing_from_evalset > 0 or when a baseline block covers other pitches than the candidate block. (4) is checked from previous_prediction_comparison / current_repeat_check and the byte-compare of the v1-v3 template and negatives files; (5) from the `predict --diagnostics` dump, as the criterion states.",
+  "preregistered_v4_predictions": {
+    "path": "docs/results/mlb_p0/game_747139_scoreboard_ocr_v4_predictions.json",
+    "sha256_lf": "49f3abab30ab981cd0e9c4436b2fd13f2caa8d452bc24a35b5c0b2d3490ae6c5",
+    "git_blob_sha1": "f8cd00c79cf71954954623827d7680c695c11694",
+    "rows": 142,
+    "equal_to_design_scratch_predictions_v4_pooled_margin_window_on_all_142_rows": true,
+    "mismatching_rows": [],
+    "note": "This committed file is what criterion (4) compares against after the A-10 merge (changed_shared_rows must be 0 on these 142 rows). Its equality with the git-ignored design scratch file outputs/verification/f3d/minimal/predictions_v4_pooled_margin_window.json was verified at registration and again in the repair round; the committed file, not the scratch file, is the anchor."
+  },
+  "files_as_built": {
+    "docs/results/mlb_p0/sny_digit_templates_v4.json": "a1178223b16e63fffb6abfc90fa76202f57a89795f76fd7bb4a4a12e4eff6dfe",
+    "src/vision/sny_scoreboard.py": "3ee9d0b8ce296a6e0b19b13409dcec5c470a5fa0b11cb3153da6f2939d3f55f4",
+    "scripts/66_sny_scoreboard_ocr.py": "4545a623b254c5e3558ef99536fe3137524d723bb7487161f2a2f62375950d98",
+    "docs/results/mlb_p0/game_747139_scoreboard_ocr_v4_predictions.json": "49f3abab30ab981cd0e9c4436b2fd13f2caa8d452bc24a35b5c0b2d3490ae6c5",
+    "docs/results/mlb_p0/game_747139_scoreboard_ocr_v4.json": "f98e2b534a685915d4daba980acb1bc2c142859d251453dec407c10fbc17074e",
+    "docs/results/mlb_p0/game_747139_scoreboard_negatives_score_v4.json": "c6b7f144fb432ca4e5df44cc550d75f4e48114299b8d08354cf3ac262ad73a18",
+    "docs/results/mlb_p0/game_747139_scoreboard_evalset.json": "35806f80fbbf51cb545a9fe2b0d575cc645940c40a537778765bb0be2e9aef9b",
+    "docs/results/mlb_p0/sny_digit_templates_v3.json": "48962538546819b8d68fd4e91ff26cf4953fdcfd374457b5d7c98eef262a4a03"
+  },
+  "files_as_built_git_blob_sha1": {
+    "docs/results/mlb_p0/sny_digit_templates_v4.json": "577df0d71a2e036d4a829fc85e7bc56bd5291d56",
+    "src/vision/sny_scoreboard.py": "2a5f3af37ef396c64e2bed947bcdd0501c13e46d",
+    "scripts/66_sny_scoreboard_ocr.py": "b80c85462815fa2871cb57bd12ba51cc19776499",
+    "docs/results/mlb_p0/game_747139_scoreboard_ocr_v4_predictions.json": "f8cd00c79cf71954954623827d7680c695c11694",
+    "docs/results/mlb_p0/game_747139_scoreboard_ocr_v4.json": "aa723808fda5afda5dfd845aa52d630cbececfc8",
+    "docs/results/mlb_p0/game_747139_scoreboard_negatives_score_v4.json": "11a6175758d768dc8609fd622d58c6e301c166c4",
+    "docs/results/mlb_p0/game_747139_scoreboard_evalset.json": "a88b3ac7c0b73fefad3fbf803a64485266b1a8c8",
+    "docs/results/mlb_p0/sny_digit_templates_v3.json": "379920f6e9aae90fd9089811712abdb64fb6ea8c"
+  },
+  "files_as_built_hashing": "sha256 of the file bytes with CRLF line endings normalised to LF (this repository checks out CRLF on Windows under core.autocrlf while git, CI and macOS/Linux clones hold LF; the hashes verify on every checkout). files_as_built_git_blob_sha1 is `git hash-object <path>` with the clean filter applied, i.e. the blob id `git rev-parse <commit>:<path>` shows at the registered commit. Only the sny_digit_templates_v4.json hash is pinned by a test (tests/test_sny_scoreboard.py); the source hashes (src/vision/sny_scoreboard.py, scripts/66_sny_scoreboard_ocr.py) and the prediction/score/negatives hashes are a registration-time record to verify against the registered commit's blobs, because successors edit the sources and the A-10 refresh appends rows to the prediction and score files.",
+  "development_set_results": {
+    "label": "DEVELOPMENT set, not held-out, not blind: every frame below was seen and diagnosed before the v4 options were chosen. Numbers are reported next to v2 and v3 on the same rows.",
+    "held_out_pitches": 0,
+    "blind": false,
+    "score_file_exclude_pas_1_2_9_18_29": {
+      "all_fields": {
+        "evaluable": 122,
+        "correct": 93,
+        "abstained": 29,
+        "wrong": 0
+      },
+      "per_field_wrong": {
+        "balls": 0,
+        "strikes": 0,
+        "outs": 0,
+        "runner_on_1b": 0,
+        "runner_on_2b": 0,
+        "runner_on_3b": 0,
+        "inning": 0,
+        "inning_topbot": 0,
+        "home_score": 0,
+        "away_score": 0
+      }
+    },
+    "by_scope": {
+      "outside_template_pas_122": {
+        "v2": {
+          "all_fields": {
+            "fully_evaluable": 122,
+            "all_fields_correct": 75,
+            "abstained": 46,
+            "wrong": 1
+          },
+          "per_field": {
+            "balls": {
+              "correct": 116,
+              "abstain": 6,
+              "wrong": 0
+            },
+            "strikes": {
+              "correct": 120,
+              "abstain": 2,
+              "wrong": 0
+            },
+            "outs": {
+              "correct": 120,
+              "abstain": 2,
+              "wrong": 0
+            },
+            "runner_on_1b": {
+              "correct": 120,
+              "abstain": 2,
+              "wrong": 0
+            },
+            "runner_on_2b": {
+              "correct": 120,
+              "abstain": 2,
+              "wrong": 0
+            },
+            "runner_on_3b": {
+              "correct": 120,
+              "abstain": 2,
+              "wrong": 0
+            },
+            "inning": {
+              "correct": 78,
+              "abstain": 47,
+              "wrong": 0
+            },
+            "inning_topbot": {
+              "correct": 118,
+              "abstain": 6,
+              "wrong": 1
+            },
+            "home_score": {
+              "correct": 117,
+              "abstain": 8,
+              "wrong": 0
+            },
+            "away_score": {
+              "correct": 120,
+              "abstain": 5,
+              "wrong": 0
+            }
+          }
+        },
+        "v3": {
+          "all_fields": {
+            "fully_evaluable": 122,
+            "all_fields_correct": 91,
+            "abstained": 30,
+            "wrong": 1
+          },
+          "per_field": {
+            "balls": {
+              "correct": 117,
+              "abstain": 5,
+              "wrong": 0
+            },
+            "strikes": {
+              "correct": 122,
+              "abstain": 0,
+              "wrong": 0
+            },
+            "outs": {
+              "correct": 122,
+              "abstain": 0,
+              "wrong": 0
+            },
+            "runner_on_1b": {
+              "correct": 122,
+              "abstain": 0,
+              "wrong": 0
+            },
+            "runner_on_2b": {
+              "correct": 122,
+              "abstain": 0,
+              "wrong": 0
+            },
+            "runner_on_3b": {
+              "correct": 122,
+              "abstain": 0,
+              "wrong": 0
+            },
+            "inning": {
+              "correct": 94,
+              "abstain": 31,
+              "wrong": 0
+            },
+            "inning_topbot": {
+              "correct": 120,
+              "abstain": 4,
+              "wrong": 1
+            },
+            "home_score": {
+              "correct": 122,
+              "abstain": 3,
+              "wrong": 0
+            },
+            "away_score": {
+              "correct": 122,
+              "abstain": 3,
+              "wrong": 0
+            }
+          }
+        },
+        "v4": {
+          "all_fields": {
+            "fully_evaluable": 122,
+            "all_fields_correct": 93,
+            "abstained": 29,
+            "wrong": 0
+          },
+          "per_field": {
+            "balls": {
+              "correct": 121,
+              "abstain": 1,
+              "wrong": 0
+            },
+            "strikes": {
+              "correct": 122,
+              "abstain": 0,
+              "wrong": 0
+            },
+            "outs": {
+              "correct": 122,
+              "abstain": 0,
+              "wrong": 0
+            },
+            "runner_on_1b": {
+              "correct": 122,
+              "abstain": 0,
+              "wrong": 0
+            },
+            "runner_on_2b": {
+              "correct": 122,
+              "abstain": 0,
+              "wrong": 0
+            },
+            "runner_on_3b": {
+              "correct": 122,
+              "abstain": 0,
+              "wrong": 0
+            },
+            "inning": {
+              "correct": 94,
+              "abstain": 31,
+              "wrong": 0
+            },
+            "inning_topbot": {
+              "correct": 122,
+              "abstain": 3,
+              "wrong": 0
+            },
+            "home_score": {
+              "correct": 122,
+              "abstain": 3,
+              "wrong": 0
+            },
+            "away_score": {
+              "correct": 122,
+              "abstain": 3,
+              "wrong": 0
+            }
+          }
+        }
+      },
+      "fifth_inning_pa33_40": {
+        "v2": {
+          "all_fields": {
+            "fully_evaluable": 28,
+            "all_fields_correct": 0,
+            "abstained": 27,
+            "wrong": 1
+          },
+          "per_field": {
+            "balls": {
+              "correct": 26,
+              "abstain": 2,
+              "wrong": 0
+            },
+            "strikes": {
+              "correct": 28,
+              "abstain": 0,
+              "wrong": 0
+            },
+            "outs": {
+              "correct": 28,
+              "abstain": 0,
+              "wrong": 0
+            },
+            "runner_on_1b": {
+              "correct": 28,
+              "abstain": 0,
+              "wrong": 0
+            },
+            "runner_on_2b": {
+              "correct": 28,
+              "abstain": 0,
+              "wrong": 0
+            },
+            "runner_on_3b": {
+              "correct": 28,
+              "abstain": 0,
+              "wrong": 0
+            },
+            "inning": {
+              "correct": 0,
+              "abstain": 29,
+              "wrong": 0
+            },
+            "inning_topbot": {
+              "correct": 26,
+              "abstain": 2,
+              "wrong": 1
+            },
+            "home_score": {
+              "correct": 26,
+              "abstain": 3,
+              "wrong": 0
+            },
+            "away_score": {
+              "correct": 28,
+              "abstain": 1,
+              "wrong": 0
+            }
+          }
+        },
+        "v3": {
+          "all_fields": {
+            "fully_evaluable": 28,
+            "all_fields_correct": 0,
+            "abstained": 27,
+            "wrong": 1
+          },
+          "per_field": {
+            "balls": {
+              "correct": 26,
+              "abstain": 2,
+              "wrong": 0
+            },
+            "strikes": {
+              "correct": 28,
+              "abstain": 0,
+              "wrong": 0
+            },
+            "outs": {
+              "correct": 28,
+              "abstain": 0,
+              "wrong": 0
+            },
+            "runner_on_1b": {
+              "correct": 28,
+              "abstain": 0,
+              "wrong": 0
+            },
+            "runner_on_2b": {
+              "correct": 28,
+              "abstain": 0,
+              "wrong": 0
+            },
+            "runner_on_3b": {
+              "correct": 28,
+              "abstain": 0,
+              "wrong": 0
+            },
+            "inning": {
+              "correct": 0,
+              "abstain": 29,
+              "wrong": 0
+            },
+            "inning_topbot": {
+              "correct": 26,
+              "abstain": 2,
+              "wrong": 1
+            },
+            "home_score": {
+              "correct": 28,
+              "abstain": 1,
+              "wrong": 0
+            },
+            "away_score": {
+              "correct": 28,
+              "abstain": 1,
+              "wrong": 0
+            }
+          }
+        },
+        "v4": {
+          "all_fields": {
+            "fully_evaluable": 28,
+            "all_fields_correct": 0,
+            "abstained": 28,
+            "wrong": 0
+          },
+          "per_field": {
+            "balls": {
+              "correct": 28,
+              "abstain": 0,
+              "wrong": 0
+            },
+            "strikes": {
+              "correct": 28,
+              "abstain": 0,
+              "wrong": 0
+            },
+            "outs": {
+              "correct": 28,
+              "abstain": 0,
+              "wrong": 0
+            },
+            "runner_on_1b": {
+              "correct": 28,
+              "abstain": 0,
+              "wrong": 0
+            },
+            "runner_on_2b": {
+              "correct": 28,
+              "abstain": 0,
+              "wrong": 0
+            },
+            "runner_on_3b": {
+              "correct": 28,
+              "abstain": 0,
+              "wrong": 0
+            },
+            "inning": {
+              "correct": 0,
+              "abstain": 29,
+              "wrong": 0
+            },
+            "inning_topbot": {
+              "correct": 28,
+              "abstain": 1,
+              "wrong": 0
+            },
+            "home_score": {
+              "correct": 28,
+              "abstain": 1,
+              "wrong": 0
+            },
+            "away_score": {
+              "correct": 28,
+              "abstain": 1,
+              "wrong": 0
+            }
+          }
+        }
+      },
+      "template_pas_insample": {
+        "v2": {
+          "all_fields": {
+            "fully_evaluable": 17,
+            "all_fields_correct": 11,
+            "abstained": 6,
+            "wrong": 0
+          },
+          "per_field": {
+            "balls": {
+              "correct": 16,
+              "abstain": 1,
+              "wrong": 0
+            },
+            "strikes": {
+              "correct": 17,
+              "abstain": 0,
+              "wrong": 0
+            },
+            "outs": {
+              "correct": 17,
+              "abstain": 0,
+              "wrong": 0
+            },
+            "runner_on_1b": {
+              "correct": 17,
+              "abstain": 0,
+              "wrong": 0
+            },
+            "runner_on_2b": {
+              "correct": 17,
+              "abstain": 0,
+              "wrong": 0
+            },
+            "runner_on_3b": {
+              "correct": 17,
+              "abstain": 0,
+              "wrong": 0
+            },
+            "inning": {
+              "correct": 11,
+              "abstain": 6,
+              "wrong": 0
+            },
+            "inning_topbot": {
+              "correct": 17,
+              "abstain": 0,
+              "wrong": 0
+            },
+            "home_score": {
+              "correct": 17,
+              "abstain": 0,
+              "wrong": 0
+            },
+            "away_score": {
+              "correct": 17,
+              "abstain": 0,
+              "wrong": 0
+            }
+          }
+        },
+        "v3": {
+          "all_fields": {
+            "fully_evaluable": 17,
+            "all_fields_correct": 17,
+            "abstained": 0,
+            "wrong": 0
+          },
+          "per_field": {
+            "balls": {
+              "correct": 17,
+              "abstain": 0,
+              "wrong": 0
+            },
+            "strikes": {
+              "correct": 17,
+              "abstain": 0,
+              "wrong": 0
+            },
+            "outs": {
+              "correct": 17,
+              "abstain": 0,
+              "wrong": 0
+            },
+            "runner_on_1b": {
+              "correct": 17,
+              "abstain": 0,
+              "wrong": 0
+            },
+            "runner_on_2b": {
+              "correct": 17,
+              "abstain": 0,
+              "wrong": 0
+            },
+            "runner_on_3b": {
+              "correct": 17,
+              "abstain": 0,
+              "wrong": 0
+            },
+            "inning": {
+              "correct": 17,
+              "abstain": 0,
+              "wrong": 0
+            },
+            "inning_topbot": {
+              "correct": 17,
+              "abstain": 0,
+              "wrong": 0
+            },
+            "home_score": {
+              "correct": 17,
+              "abstain": 0,
+              "wrong": 0
+            },
+            "away_score": {
+              "correct": 17,
+              "abstain": 0,
+              "wrong": 0
+            }
+          }
+        },
+        "v4": {
+          "all_fields": {
+            "fully_evaluable": 17,
+            "all_fields_correct": 17,
+            "abstained": 0,
+            "wrong": 0
+          },
+          "per_field": {
+            "balls": {
+              "correct": 17,
+              "abstain": 0,
+              "wrong": 0
+            },
+            "strikes": {
+              "correct": 17,
+              "abstain": 0,
+              "wrong": 0
+            },
+            "outs": {
+              "correct": 17,
+              "abstain": 0,
+              "wrong": 0
+            },
+            "runner_on_1b": {
+              "correct": 17,
+              "abstain": 0,
+              "wrong": 0
+            },
+            "runner_on_2b": {
+              "correct": 17,
+              "abstain": 0,
+              "wrong": 0
+            },
+            "runner_on_3b": {
+              "correct": 17,
+              "abstain": 0,
+              "wrong": 0
+            },
+            "inning": {
+              "correct": 17,
+              "abstain": 0,
+              "wrong": 0
+            },
+            "inning_topbot": {
+              "correct": 17,
+              "abstain": 0,
+              "wrong": 0
+            },
+            "home_score": {
+              "correct": 17,
+              "abstain": 0,
+              "wrong": 0
+            },
+            "away_score": {
+              "correct": 17,
+              "abstain": 0,
+              "wrong": 0
+            }
+          }
+        }
+      },
+      "all_rows_142": {
+        "v2": {
+          "all_fields": {
+            "fully_evaluable": 139,
+            "all_fields_correct": 86,
+            "abstained": 52,
+            "wrong": 1
+          },
+          "per_field": {
+            "balls": {
+              "correct": 132,
+              "abstain": 7,
+              "wrong": 0
+            },
+            "strikes": {
+              "correct": 137,
+              "abstain": 2,
+              "wrong": 0
+            },
+            "outs": {
+              "correct": 137,
+              "abstain": 2,
+              "wrong": 0
+            },
+            "runner_on_1b": {
+              "correct": 137,
+              "abstain": 2,
+              "wrong": 0
+            },
+            "runner_on_2b": {
+              "correct": 137,
+              "abstain": 2,
+              "wrong": 0
+            },
+            "runner_on_3b": {
+              "correct": 137,
+              "abstain": 2,
+              "wrong": 0
+            },
+            "inning": {
+              "correct": 89,
+              "abstain": 53,
+              "wrong": 0
+            },
+            "inning_topbot": {
+              "correct": 135,
+              "abstain": 6,
+              "wrong": 1
+            },
+            "home_score": {
+              "correct": 134,
+              "abstain": 8,
+              "wrong": 0
+            },
+            "away_score": {
+              "correct": 137,
+              "abstain": 5,
+              "wrong": 0
+            }
+          }
+        },
+        "v3": {
+          "all_fields": {
+            "fully_evaluable": 139,
+            "all_fields_correct": 108,
+            "abstained": 30,
+            "wrong": 1
+          },
+          "per_field": {
+            "balls": {
+              "correct": 134,
+              "abstain": 5,
+              "wrong": 0
+            },
+            "strikes": {
+              "correct": 139,
+              "abstain": 0,
+              "wrong": 0
+            },
+            "outs": {
+              "correct": 139,
+              "abstain": 0,
+              "wrong": 0
+            },
+            "runner_on_1b": {
+              "correct": 139,
+              "abstain": 0,
+              "wrong": 0
+            },
+            "runner_on_2b": {
+              "correct": 139,
+              "abstain": 0,
+              "wrong": 0
+            },
+            "runner_on_3b": {
+              "correct": 139,
+              "abstain": 0,
+              "wrong": 0
+            },
+            "inning": {
+              "correct": 111,
+              "abstain": 31,
+              "wrong": 0
+            },
+            "inning_topbot": {
+              "correct": 137,
+              "abstain": 4,
+              "wrong": 1
+            },
+            "home_score": {
+              "correct": 139,
+              "abstain": 3,
+              "wrong": 0
+            },
+            "away_score": {
+              "correct": 139,
+              "abstain": 3,
+              "wrong": 0
+            }
+          }
+        },
+        "v4": {
+          "all_fields": {
+            "fully_evaluable": 139,
+            "all_fields_correct": 110,
+            "abstained": 29,
+            "wrong": 0
+          },
+          "per_field": {
+            "balls": {
+              "correct": 138,
+              "abstain": 1,
+              "wrong": 0
+            },
+            "strikes": {
+              "correct": 139,
+              "abstain": 0,
+              "wrong": 0
+            },
+            "outs": {
+              "correct": 139,
+              "abstain": 0,
+              "wrong": 0
+            },
+            "runner_on_1b": {
+              "correct": 139,
+              "abstain": 0,
+              "wrong": 0
+            },
+            "runner_on_2b": {
+              "correct": 139,
+              "abstain": 0,
+              "wrong": 0
+            },
+            "runner_on_3b": {
+              "correct": 139,
+              "abstain": 0,
+              "wrong": 0
+            },
+            "inning": {
+              "correct": 111,
+              "abstain": 31,
+              "wrong": 0
+            },
+            "inning_topbot": {
+              "correct": 139,
+              "abstain": 3,
+              "wrong": 0
+            },
+            "home_score": {
+              "correct": 139,
+              "abstain": 3,
+              "wrong": 0
+            },
+            "away_score": {
+              "correct": 139,
+              "abstain": 3,
+              "wrong": 0
+            }
+          }
+        }
+      }
+    },
+    "rows_changed_vs_v3": [
+      {
+        "at_bat_number": 20,
+        "pitch_number": 5,
+        "frame_seconds": 1969.75,
+        "fields": {
+          "balls": {
+            "v3": null,
+            "v4": 2,
+            "label": 2
+          }
+        },
+        "every_change_equals_label": true
+      },
+      {
+        "at_bat_number": 20,
+        "pitch_number": 7,
+        "frame_seconds": 2000.75,
+        "fields": {
+          "balls": {
+            "v3": null,
+            "v4": 2,
+            "label": 2
+          }
+        },
+        "every_change_equals_label": true
+      },
+      {
+        "at_bat_number": 33,
+        "pitch_number": 5,
+        "frame_seconds": 3231.75,
+        "fields": {
+          "balls": {
+            "v3": null,
+            "v4": 2,
+            "label": 2
+          }
+        },
+        "every_change_equals_label": true
+      },
+      {
+        "at_bat_number": 34,
+        "pitch_number": 3,
+        "frame_seconds": 3314.5,
+        "fields": {
+          "inning_topbot": {
+            "v3": "Bot",
+            "v4": "Top",
+            "label": "Top"
+          }
+        },
+        "every_change_equals_label": true
+      },
+      {
+        "at_bat_number": 35,
+        "pitch_number": 5,
+        "frame_seconds": 3477.25,
+        "fields": {
+          "balls": {
+            "v3": null,
+            "v4": 2,
+            "label": 2
+          }
+        },
+        "every_change_equals_label": true
+      },
+      {
+        "at_bat_number": 37,
+        "pitch_number": 5,
+        "frame_seconds": 3682.25,
+        "fields": {
+          "inning_topbot": {
+            "v3": null,
+            "v4": "Top",
+            "label": "Top"
+          }
+        },
+        "every_change_equals_label": true
+      }
+    ],
+    "rows_changed_vs_v3_count": 6,
+    "remaining_v4_abstentions_on_confirmed_fields": {
+      "count": 41,
+      "summary": {
+        "inning label 2": 1,
+        "inning_topbot label Top": 3,
+        "home_score label 0": 2,
+        "away_score label 0": 3,
+        "balls label 2": 1,
+        "inning label 3": 1,
+        "inning label 5": 29,
+        "home_score label 2": 1
+      },
+      "rows": [
+        {
+          "at_bat_number": 8,
+          "pitch_number": 1,
+          "field": "inning",
+          "label": 2
+        },
+        {
+          "at_bat_number": 8,
+          "pitch_number": 1,
+          "field": "inning_topbot",
+          "label": "Top"
+        },
+        {
+          "at_bat_number": 8,
+          "pitch_number": 1,
+          "field": "home_score",
+          "label": 0
+        },
+        {
+          "at_bat_number": 8,
+          "pitch_number": 1,
+          "field": "away_score",
+          "label": 0
+        },
+        {
+          "at_bat_number": 13,
+          "pitch_number": 3,
+          "field": "balls",
+          "label": 2
+        },
+        {
+          "at_bat_number": 16,
+          "pitch_number": 1,
+          "field": "inning",
+          "label": 3
+        },
+        {
+          "at_bat_number": 16,
+          "pitch_number": 1,
+          "field": "inning_topbot",
+          "label": "Top"
+        },
+        {
+          "at_bat_number": 16,
+          "pitch_number": 1,
+          "field": "home_score",
+          "label": 0
+        },
+        {
+          "at_bat_number": 16,
+          "pitch_number": 1,
+          "field": "away_score",
+          "label": 0
+        },
+        {
+          "at_bat_number": 33,
+          "pitch_number": 1,
+          "field": "inning",
+          "label": 5
+        },
+        {
+          "at_bat_number": 33,
+          "pitch_number": 1,
+          "field": "inning_topbot",
+          "label": "Top"
+        },
+        {
+          "at_bat_number": 33,
+          "pitch_number": 1,
+          "field": "home_score",
+          "label": 2
+        },
+        {
+          "at_bat_number": 33,
+          "pitch_number": 1,
+          "field": "away_score",
+          "label": 0
+        },
+        {
+          "at_bat_number": 33,
+          "pitch_number": 2,
+          "field": "inning",
+          "label": 5
+        },
+        {
+          "at_bat_number": 33,
+          "pitch_number": 4,
+          "field": "inning",
+          "label": 5
+        },
+        {
+          "at_bat_number": 33,
+          "pitch_number": 5,
+          "field": "inning",
+          "label": 5
+        },
+        {
+          "at_bat_number": 33,
+          "pitch_number": 6,
+          "field": "inning",
+          "label": 5
+        },
+        {
+          "at_bat_number": 34,
+          "pitch_number": 1,
+          "field": "inning",
+          "label": 5
+        },
+        {
+          "at_bat_number": 34,
+          "pitch_number": 2,
+          "field": "inning",
+          "label": 5
+        },
+        {
+          "at_bat_number": 34,
+          "pitch_number": 3,
+          "field": "inning",
+          "label": 5
+        },
+        {
+          "at_bat_number": 34,
+          "pitch_number": 4,
+          "field": "inning",
+          "label": 5
+        },
+        {
+          "at_bat_number": 34,
+          "pitch_number": 5,
+          "field": "inning",
+          "label": 5
+        },
+        {
+          "at_bat_number": 35,
+          "pitch_number": 2,
+          "field": "inning",
+          "label": 5
+        },
+        {
+          "at_bat_number": 35,
+          "pitch_number": 3,
+          "field": "inning",
+          "label": 5
+        },
+        {
+          "at_bat_number": 35,
+          "pitch_number": 4,
+          "field": "inning",
+          "label": 5
+        },
+        {
+          "at_bat_number": 35,
+          "pitch_number": 5,
+          "field": "inning",
+          "label": 5
+        },
+        {
+          "at_bat_number": 36,
+          "pitch_number": 1,
+          "field": "inning",
+          "label": 5
+        },
+        {
+          "at_bat_number": 37,
+          "pitch_number": 1,
+          "field": "inning",
+          "label": 5
+        },
+        {
+          "at_bat_number": 37,
+          "pitch_number": 2,
+          "field": "inning",
+          "label": 5
+        },
+        {
+          "at_bat_number": 37,
+          "pitch_number": 3,
+          "field": "inning",
+          "label": 5
+        },
+        {
+          "at_bat_number": 37,
+          "pitch_number": 4,
+          "field": "inning",
+          "label": 5
+        },
+        {
+          "at_bat_number": 37,
+          "pitch_number": 5,
+          "field": "inning",
+          "label": 5
+        },
+        {
+          "at_bat_number": 38,
+          "pitch_number": 1,
+          "field": "inning",
+          "label": 5
+        },
+        {
+          "at_bat_number": 38,
+          "pitch_number": 2,
+          "field": "inning",
+          "label": 5
+        },
+        {
+          "at_bat_number": 38,
+          "pitch_number": 3,
+          "field": "inning",
+          "label": 5
+        },
+        {
+          "at_bat_number": 38,
+          "pitch_number": 4,
+          "field": "inning",
+          "label": 5
+        },
+        {
+          "at_bat_number": 39,
+          "pitch_number": 1,
+          "field": "inning",
+          "label": 5
+        },
+        {
+          "at_bat_number": 39,
+          "pitch_number": 3,
+          "field": "inning",
+          "label": 5
+        },
+        {
+          "at_bat_number": 39,
+          "pitch_number": 5,
+          "field": "inning",
+          "label": 5
+        },
+        {
+          "at_bat_number": 40,
+          "pitch_number": 1,
+          "field": "inning",
+          "label": 5
+        },
+        {
+          "at_bat_number": 40,
+          "pitch_number": 2,
+          "field": "inning",
+          "label": 5
+        }
+      ],
+      "note": "Inning abstentions are the 5th-inning rows without an inning '5' template (expected) plus the three presence-gate failures (8/1, 16/1, 33/1: every field None); 13/3 balls '2' sits 0.1234 > MAX_DISTANCE 0.12 from every template."
+    },
+    "wrong_reads_v4_all_142_rows": [],
+    "negatives_14_frames": {
+      "frames": 14,
+      "unreadable_fields": 96,
+      "readable_fields": 44,
+      "totals": {
+        "false_reads": 0,
+        "wrong_reads": 0,
+        "correct_reads": 40,
+        "missed_reads": 4
+      }
+    },
+    "provenance_new_rows_comparison_totals": {
+      "pitch_count": 142,
+      "fully_evaluable_pitches": 139,
+      "all_fields_correct_pitches": 110,
+      "pitches_with_wrong_field": 0,
+      "pitches_with_abstention": 32,
+      "new_rows_missing_from_evalset": 0
+    },
+    "repeat_check_equal": true,
+    "dev_measurements_from_the_design_and_judge_scratch": [
+      "DEVELOPMENT evidence only: all 142 eval-set frames (139 pass the v3 presence gate; 8/1, 16/1, 33/1 fail as in v1-v3) and all 14 negatives frames were seen before any v4 option was chosen; nothing here is held-out.",
+      "Templates: rebuild from PAs 1,2,9,18,29 with the v3 options == sny_digit_templates_v3.json as a whole document (judge-verified); pooled counts 0:45 1:14 2:18 3:2 4:6 (= grouped count {0:17,1:6,2:10,3:1} + inning {1:8,2:2,3:1,4:6} + score {0:28,2:6}); 85 fields used, 0 skipped; 0 segmentation-count mismatches on 695 labelled glyphs.",
+      "Count 2-vs-3 at 16x12: count-2 vs count-3 template distance 0.246-0.30, count-2 vs inning-3 >= 0.3127, count-2 vs count-2 up to 0.1479. Abstaining balls-'2' probes: 20/5 d 0.076 runner-up 0.2085 margin 0.1325; 20/7 0.0813 / 0.2138 / 0.1325; 33/5 0.0759 / 0.2191 / 0.1432; 35/5 0.0651 / 0.2083 / 0.1432; 13/3 d 0.1234 (> MAX_DISTANCE) / 0.2389 / 0.1155; next lowest 10/6 margin 0.1543, 6/3 strikes 0.1765. Grouped templates: identical to 4 decimals, 0 of 4 fixed. Both designers' independent scripts agree on these numbers.",
+      "All 278 count glyphs on the 139 gate-passing frames, pooled v3 templates: best digit == label 278/278; per-label margin_min 0:0.262 (n=122, distance_max 0.0649), 1:0.2923 (75, 0.0747), 2:0.1155 (77, 0.1235), 3:0.2141 (4, 0.0215); count-window floor sweep 0.15/0.13/0.12/0.11/0.10/0.09/0.08/0.06 -> margin abstentions 4/0/0/0/0/0/0/0, wrong 0 everywhere.",
+      "Other digits, pooled: inning 1 n=28 d<=0.0326 m>=0.3202; inning 2 n=31 d<=0.1187 m>=0.1712 (10/1 at 0.1187 is the closest distance call in the whole set, pre-existing since v3); inning 3 n=34 d<=0.0676 m>=0.1769; inning 4 n=18 d<=0.0066 m>=0.3567; score 0 n=216 d<=0.0925 m>=0.2217; score 2 n=62 d<=0.0467 m>=0.2647; all best digits correct. Inning '5' probes n=28 (no template): pooled best distance 0.2317-0.2386 (> 0.12) and margin 0.057-0.082 (< 0.15) -> abstain on both tests (grouped tables would keep only the distance test: margin 0.16).",
+      "Topbot on the 139 confirmed gate-passing arrows (58 Top, 81 Bot), arrow left edge 269 (inning 1) / 264-265 (innings 2-5): current argmax x0 266: 137 correct / 1 wrong (34/3, 0.375) / 1 abstain (37/5, 0.5), Top frames by px gap between the widest row and the widest row at position < 0.6: {0:2, 1:31, 2:24, 3:1}. argmax x0 262: 139/0/0, Top 0.75-0.875, Bot 0.0, gap {2:14, 3:32, 4:12}. blob_slope x0 266: 139/0/0, Top 0.633-1.1, Bot -1.183..-0.917 (robust designer, judge-reproduced). blob_slope x0 262: 139/0/0, Top 0.717-1.267, Bot -1.2..-1.1. thirds on raw window x0 262: 139/0/0 clean (1.857-3.4 / 0.263-0.357) but 17 wrong under 1-px horizontal dilation.",
+      "Synthetic degradation of the white mask in the x0 262 window (correct/abstain/wrong): 1-px vertical dilation argmax 139/0/0 with Top positions 0.6-0.7 (on the threshold), blob_slope 139/0/0 (Top 0.645-1.064); 1-px horizontal dilation argmax 139/0/0 (Bot up to 0.308), blob_slope 139/0/0; both dilations argmax 132/7/0, blob_slope 139/0/0 (Top 0.618-1.064); 1-px erosions argmax 135/4/0 and 137/2/0, blob_slope 139/0/0 (Top >= 0.56); both erosions argmax 0/139/0, blob_slope 120/19/0; 2-px vertical dilation argmax 81/58/0, blob_slope 139/0/0 (Top 0.544-0.875); at the current window both dilations give argmax 3 wrong reads, blob_slope 139/0/0. blob_slope never produced a wrong read in any condition.",
+      "White at x 262-263 in rows 46-64 occurs only on frames the presence gate rejects (eval 8/1, 16/1, 33/1; negatives 150.0, 151.8, 152.4, 780.0, 880.0); on every gate-passing eval frame the white at x 264-265 is the arrow itself (111/114 frames). Column 278 (inside the window) carries the inning digit's left edge on innings 2-5; the blob step drops it.",
+      "End-to-end v4 (pooled + min_margin_by_field + arrow_window + blob_slope) vs v2 / v3, confirmed fields on the 122 rows outside PAs 1,2,9,18,29 (correct/abstain/wrong): balls 116/6/0, 117/5/0, 121/1/0 (v4 abstains only 13/3); strikes 120/2/0, 122/0/0, 122/0/0; outs and runner_on_1b/2b/3b each 120/2/0, 122/0/0, 122/0/0; inning 78/47/0, 94/31/0, 94/31/0 (31 = 28 fifth-inning rows without a '5' template + 3 gate failures); inning_topbot 118/6/1, 120/4/1, 122/3/0 (3 = gate failures); home_score 117/8/0, 122/3/0, 122/3/0; away_score 120/5/0, 122/3/0, 122/3/0. Fifth inning PA 33-40: balls v2 26/2/0, v3 26/2/0, v4 28/0/0; inning_topbot 26/2/1, 26/2/1, 28/1/0; home_score 26/3/0, 28/1/0, 28/1/0; inning 0/29/0 for all (expected). All-fields-correct on the 122 rows: v2 75 / v3 91 / v4 93, rows with a wrong field 1 / 1 / 0; in-sample 17 rows: 11 / 17 / 17.",
+      "Rows changed vs v3 predictions: exactly 6 (judge re-diffed outputs/verification/f3d/minimal/predictions_v4_pooled_margin_window.json against the committed v3 predictions): 20/5, 20/7, 33/5, 35/5 balls None->2; 34/3 inning_topbot Bot->Top; 37/5 None->Top; every change equals the label; blob_slope at x0 262 reproduces that file's inning_topbot on all 142 rows (0 mismatches), so it is the pre-registered v4 prediction set.",
+      "Negatives (14 frames, 96 unreadable / 44 readable fields): false_reads 0, wrong_reads 0, correct_reads 40, missed_reads 4 (780 line-score via the gate), identical to v2 and v3; judge-checked the arrow on all 14 frames under blob_slope x0 262: 465/495/606/610 Bot as labelled, everything else gate-rejected.",
+      "Expected v4 refresh numbers: score --exclude-pas 1 2 9 18 29 = 93 all-fields-correct / 0 wrong / 29 abstained of 122 fully evaluable rows, per-field wrong 0 everywhere; v4 must NOT be added to the 34/3 register entry (it reads Top)."
+    ],
+    "criterion_5_form_on_the_development_set": {
+      "note": "DEVELOPMENT evidence (every frame seen): scripts/66 predict --diagnostics with the v4 template file over the 142 PA 1-40 rows, classified as criterion (5) will classify the A-10 rows.",
+      "gate_failed_rows": [
+        "8/1",
+        "16/1",
+        "33/1"
+      ],
+      "inning_topbot_abstentions": [
+        "8/1",
+        "16/1",
+        "33/1"
+      ],
+      "inning_topbot_abstentions_on_gate_passing_rows": 0,
+      "count_abstentions_on_gate_passing_rows": {
+        "distance": [
+          {
+            "row": "13/3",
+            "field": "balls",
+            "distance": 0.1235,
+            "margin": 0.1155,
+            "best": "2"
+          }
+        ],
+        "margin": [],
+        "no_glyph": []
+      },
+      "diagnostics_predictions_equal_committed_v4_predictions": true
+    }
+  },
+  "v1_v3_isolation": {
+    "statement": "v1, v2, v3 template files, predictions, scores, negatives and provenance files are not touched (only scripts/70 writes provenance refreshes of its own). Code changes are strictly additive and keyed on option presence: READER_OPTION_KEYS extended with 'min_margin_by_field', 'arrow_window', 'topbot_rule' and validate_reader_options extended with their checks (v1/v2 files have no reader_options, the v3 file carries only its two keys, so their validated dicts are unchanged); `DigitTemplates.match(glyph, min_margin=MIN_MARGIN)` with the default equal to today's constant; `read_number` reads the per-field floor only from `options` (absent -> MIN_MARGIN); `read_topbot(white, options=None)` uses WINDOWS['arrow'] when `arrow_window` is absent and runs the existing argmax body verbatim when `topbot_rule` is absent; `read_scoreboard` only forwards the options it already has. WINDOWS, MAX_DISTANCE, MIN_MARGIN, GLYPH_SHAPE, MIN_GLYPH_WIDTH/HEIGHT, masks, FILLED/EMPTY, presence-gate constants, TEMPLATE_SCHEMA and every function default stay as they are; templates are still cut with the default segmentation. Verification before claiming v4: (a) run scripts/70 for --version v1 v2 v3 into outputs/verification/f3d/v123_before (pre-change) and outputs/verification/f3d/v1v3 (post-change) with --skip-provenance and byte-compare predictions, score and negatives files, plus sha256 of sny_digit_templates_v1/v2/v3.json unchanged (the f3c procedure); (b) `scripts/check_project.py --cpu-only` stays green (335 passed + new tests); (c) new tests in tests/test_sny_scoreboard.py: a v3-options document produces predictions identical to the committed v3 file on cached frames (extend test_reader_options_absent_or_empty_is_the_default_path / test_stored_heldout_score_excludes_its_template_plate_appearances to v4); validate_reader_options rejects a malformed min_margin_by_field (unknown field, value 1.5, bool), arrow_window (3 items, x0 >= x1, bool) and topbot_rule (unknown method, min_slope 0, min_rows 1, unknown key) each with a ValueError naming the option; a synthetic-frame test that read_topbot without options returns Bot on a clipped up arrow with tied base rows while read_topbot with the v4 arrow_window + topbot_rule returns Top, and that a synthetic down arrow returns Bot under both; a test that a v3-layout document loaded and re-serialised keeps its key order and no new keys. The known-misread register keeps versions v1-v3 for 34/3; v4 is not added because it does not make that read.",
+    "verification_2026_09_25": "scripts/70 --version v1/v2/v3 --reference HEAD --skip-provenance --no-grab run before the change (outputs/verification/f3d/v123_before) and, after the change and again after the repair round, into outputs/verification/f3d/v1v3: all nine predictions/score/negatives files byte-identical to the committed files; sha256 of sny_digit_templates_v1/v2/v3.json unchanged; git diff shows no v1-v3 file changed.",
+    "template_sha256_unchanged": {
+      "hashing": "LF-normalised sha256, see files_as_built_hashing",
+      "v1": "af1c2722edb9884e8aebb17ba172cf3747a98e1a3694b3f90d9473ded3a91a8c",
+      "v2": "d1ebe276becca1e54e197dcb6f4238c7edd690d6a122cd4a518d1b08bfa68b88",
+      "v3": "48962538546819b8d68fd4e91ff26cf4953fdcfd374457b5d7c98eef262a4a03"
+    }
+  },
+  "risks": [
+    "All numbers are development evidence: the four balls-'2' fixes and the two topbot fixes were made after those exact frames were diagnosed; the margin floor 0.10 was chosen after seeing margins of 0.1325-0.1432 (the sweep 0.06-0.13 limits but does not remove the tuning); the slope threshold 0.4 was set with the dev-set Top minimum 0.633/0.717 in view. Nothing is held-out; the A-10 rows are the first blind test and only for the 6th-inning content they contain.",
+    "No count glyph in the dev set has a wrong best digit, so the lower bound of a safe count margin is unmeasured; a blurred count glyph within 0.12 of a wrong template with margin >= 0.10 would be read wrong. MAX_DISTANCE 0.12 is the remaining guard and the 2-vs-3 decision rests on a single count-font '3' template (4 probes seen).",
+    "Inning '6' has no template; v4 abstains only if the '6' glyph is > 0.12 from every 0-4 template or its pooled margin < 0.15. The inning '5' proxy sits at 0.23 from its nearest template with margin 0.06-0.08, which suggests but does not prove the same for '6' (a '6' resembling '0' more than a '5' does). A '6' read as any digit is a wrong read and fails the criterion. The 5th-inning inning glyph starts at x 278/279, one or two columns left of the inning window, so a wider '6' would be clipped there.",
+    "The arrow rule assumes the arrow is the widest connected column group in x 262-278, y 46-63 on gate-passing frames; a graphic that places a wider white shape there while the presence gate passes would be read Top/Bot. Foreign white at x 262-265 was absent on every gate-passing frame seen, but that is 139 frames of one broadcast layout; the arrow's position depends on the inning digit width (269 in inning 1, 264/265 in innings 2-5), and a '6' of unusual width could move it (clip margin 2 px; the slope rule tolerates clipping, the window widening only makes the statistic cleaner).",
+    "Pooled templates keep cross-font recall but also mean every new template lowers other fields' margins; if the score changes in the 6th inning, a score-font '1' or '3' is matched through count/inning templates with unmeasured distances, and the strict per-field rule (no exclusion clause) can then fail v4 through an abstention where v2 reads by luck. That is accepted so that the criterion cannot be softened after the fact.",
+    "The `score --exclude-pas 1 2 9 18 29` set for v4 contains 0 held-out pitches today; the v4 SCORE_SET_NOTES entry and this pre-registration file (there is no separate v4 comparison file) must say so, and the v4 all-fields number (93/122) must never be presented as a held-out result.",
+    "The topbot_rule branch is new code on the read path (about 15 lines); its default-off behaviour is guaranteed only by the v1-v3 byte-compare and the new synthetic tests listed under v1_v3_isolation.",
+    "Layout-specific to the SNY bug of game 747139 (1280x720): nothing here is general OCR, automatic sync or run reduction, and video time is never derived from feed UTC."
+  ],
+  "scope_limits": "Layout-specific to the SNY bug of game 747139 (1280x720). Not general OCR, not automatic sync, not run reduction; video time is never derived from feed UTC."
+}

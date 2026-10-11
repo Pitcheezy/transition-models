@@ -1,0 +1,98 @@
+{
+  "schema": "cv_latency_model_comparison_preregistration_v1",
+  "frozen_at_utc": "2026-10-06T08:23:30.006001+00:00",
+  "status": "frozen_before_calls",
+  "scope": "Within-host fixed-input development diagnostic. Two sequential runs in prespecified order; not randomized, independent localization accuracy, full-PA coverage or live performance.",
+  "run_order": [
+    "opus",
+    "haiku"
+  ],
+  "arms": {
+    "opus": {
+      "requested_model": "claude-opus-4-8[1m]",
+      "plan_sha256": "0b99de23d23e18914bd83e1394c19ee47248ac3e7971d7869545980894d20070",
+      "run_directory": "outputs/cv_latency_compare_opus_v1"
+    },
+    "haiku": {
+      "requested_model": "claude-haiku-4-5-20251001",
+      "plan_sha256": "331356eca63ed13e2c51960b0323f4f82136eb91a2ae77ce5d9a5879c6ea001f",
+      "run_directory": "outputs/cv_latency_compare_haiku_v1"
+    }
+  },
+  "planned_per_arm": 10,
+  "cutoffs": [
+    "2703701/15000",
+    "2778701/15000",
+    "2853701/15000",
+    "2928701/15000",
+    "3003701/15000",
+    "3078701/15000",
+    "3153701/15000",
+    "3228701/15000",
+    "3303701/15000",
+    "3378701/15000"
+  ],
+  "source_clip_sha256": "e11a9879cd4f5b61a16bb678030a97f794f807d5ab5d43faf408fb719fe51b65",
+  "expected_image_sha256": [
+    "c103b67dbde86972fdf0d92cdc5b765adeda9b426dc68ae38a29285a1f0d52dc",
+    "291e3fdeaf97d9325e908659a641146f0c02b0b71a575a23f23675574d8daeb3",
+    "fc10baed4c2294538a1545f700b247ffb6fe3a654efe392a292b80208f4eed49",
+    "255d8767662f26f2280aa170278459f5f5fb5ad92e0771db409073dc1ddc60fa",
+    "49af438deaeba35ad2592c28d925239f9dfbdc199be63c2b6ef25e72cdb631b5",
+    "9f0aa8d630d7da11d2864cc244b4a8f54ed8016212d69833c5f8bccb0310611f",
+    "68ae55db2590c89fa7f6ddc1691d17d8dcf78b6bcd862c82d6778aef37b82bd5",
+    "2ff551b33f25c080f844b7527fe2c3fec54493b5223bd2035b1e70802763ffd3",
+    "13642f03ac843850adf76b0cd44b9689a3253427df5608eecb5e03e6b1a25c45",
+    "37c5f2263d2b10f00fb430def12fce7efac2e9d0254f1f61ae175a1af8f514dc"
+  ],
+  "source_capture_hashes": {
+    "receipt.json": "ef03502c5a90364e70e234437476ff58ad48790847d6f47e494f0bcb9923f834",
+    "mapping.json": "ff2b4c40a050abb139bd78f688933f8c29b226860b69f70575cde2824b01ba10",
+    "source.framemd5": "143821fbbfc52e10c931c362901e97e4b20e31da275ebf70d3d62fccaefbf82f",
+    "clip.framemd5": "98b058c7908c1e743ed963fe0f3f6b0f425ab992e689a4293fd097373e9f76ac"
+  },
+  "code_sha256": {
+    "intent/observation_loop.py": "13c5d9d2091c233022dc7d7d3eeaf2a2713034e71748a5fc862527dc99a38c1e",
+    "intent/observation_report.py": "2292a6c6e5ae70d57c6cbde30546016e43d8fa6dc4f24c9c6ae22a50425e3751",
+    "intent/observation_session.py": "7dc5616fed0bc4697efeeb61104175870a340e78a274efed5daee2a41967bfdc",
+    "intent/clip_frames.py": "aff1e24a9acffd98824a60bc134de20815b9fe311fbe7a7753a81370507bf0fb",
+    "scripts/observe_claude_frame.py": "05f19a2148128eb78358a12ba245d5e2f3357cafcfeac8710e82e704732d136d"
+  },
+  "controls": [
+    "Same fixed decoded frames and cutoffs",
+    "Same prompt, structured schema and validator",
+    "Same source/code/executable integrity checks",
+    "Fresh isolated per-image CLI session with no retained conversation",
+    "Same computer and sequential runner; no concurrent model calls"
+  ],
+  "treatment": "Explicit primary model ID only; modelUsage auxiliaries do not establish primary model identity.",
+  "retry_policy": "No external retry, replacement, credential/provider fallback, or correction. Preserve every failure and abstention in the planned denominator. Provider-internal schema retries may occur and are not inferred absent.",
+  "authentication": "Existing claude.ai subscription only; no API billing or bare mode.",
+  "abort_policy": "If interrupted or quota/auth unavailable, preserve all completed/error attempts and unattempted denominator; do not relabel them model abstentions. Do not resume into existing output directories.",
+  "outcomes": [
+    "Contract accepted/marked/unavailable/unknown/error/unattempted",
+    "Schedule-to-dispatch/publication <=5s per planned input",
+    "Non-overlapping outer measured phases and separately nested provider phases",
+    "Total wall time, per-attempt service time and backlog",
+    "Paired status/point disagreement, if both valid; not accuracy"
+  ],
+  "threshold_seconds": 5,
+  "model_identity_rule": "Require one matching initialization model and all assistant primary models equal to requested ID; literal [1m] request allows only removal of that context suffix on assistant reports. Missing or different primary model is an error, no silent substitute.",
+  "limitations": [
+    "Small previously reviewed development sample",
+    "Prespecified sequential order, server/network/cache/load may differ",
+    "Two calls can disagree stochastically; no inferential speed/quality ranking",
+    "Structured output is a different protocol from old free-text JSON CV-9",
+    "No new human reference for these ten points",
+    "No physical full-PA or live broadcast validation"
+  ],
+  "human_label": false,
+  "accuracy_evaluated": false,
+  "full_pa_verified": false,
+  "live_availability_verified": false,
+  "model_documentation": [
+    "https://platform.claude.com/docs/en/models/haiku-4-5/overview",
+    "https://platform.claude.com/docs/en/build-with-claude/structured-outputs",
+    "https://code.claude.com/docs/en/model-config"
+  ]
+}

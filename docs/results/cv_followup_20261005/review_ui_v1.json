@@ -1,0 +1,34 @@
+{
+  "schema": "intent_human_review_ui_execution_v1",
+  "date": "2026-10-05",
+  "scope": "human_entry_tool_preparation_not_cv_inference_or_human_adjudication",
+  "package": "outputs/cv_review_20261005_ui_v1",
+  "source_sha256": {
+    "intent/review_queue.py": "65290767c63cece0dda4bf7f7ba061beaa47bce75ed30cf219d95927ad046763",
+    "intent/reviewer_ui.py": "d457ceaabaa1e86bcfe99ac69d393f530a16b9bddbf17552fd30463370b28d84",
+    "intent/review_ui.js": "07825127d9decfdc7654262a1cbc932c52363416f17400c263b696ccfa471097"
+  },
+  "package_sha256": {
+    "reviewer/index.html": "7a8786734e51c9b3eee166380b9007b1101e0f17f11cfbdb95122299f4369ca2",
+    "reviewer/review_ui.js": "07825127d9decfdc7654262a1cbc932c52363416f17400c263b696ccfa471097",
+    "reviewer/manifest.json": "d7d01b7776436c4539900e3a44115343e2b7db2eb6ae27489c3ae2f7a7f1a468",
+    "reviewer/response_template.json": "bd00305e54535186559d56294d0b9218c774cd661e067325bda9f92d80d1c712",
+    "private_selection.json": "d0adb8ec87f7562b045fc2f0f40b80fa75116d79367193f92b4c172a6156fe37"
+  },
+  "prepared": 26,
+  "human_response_counts": {
+    "completed": 0,
+    "unreviewed": 26,
+    "unknown": 0
+  },
+  "embedded_data_matches_public_manifest_and_empty_response": true,
+  "copied_images_sha256_verified": 26,
+  "prior_static_package_unchanged": true,
+  "frozen_source_files_unchanged": 186,
+  "checks": "794 passed / 5 skipped / 2 deselected",
+  "lint_paths": 96,
+  "browser_render_verified": false,
+  "browser_limitation": "Prior file-URL security denial was not bypassed; static HTML and Node logic tests only.",
+  "independent_validation": false,
+  "cv_inference_performed": false
+}

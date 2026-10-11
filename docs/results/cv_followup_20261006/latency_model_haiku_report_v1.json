@@ -1,0 +1,411 @@
+{
+  "schema": "intent_observation_loop_report_v1",
+  "run_status": "completed",
+  "planned": 10,
+  "counts": {
+    "attempted": 10,
+    "accepted": 10,
+    "marked": 8,
+    "unavailable": 2,
+    "unknown": 0,
+    "errors": 0,
+    "dispatched": 10,
+    "dispatch_within_5s": 1,
+    "publication_within_5s": 0,
+    "both_within_5s": 0,
+    "not_attempted": 0
+  },
+  "rates_per_planned": {
+    "attempted": 1.0,
+    "accepted": 1.0,
+    "marked": 0.8,
+    "unavailable": 0.2,
+    "unknown": 0.0,
+    "errors": 0.0,
+    "dispatched": 1.0,
+    "dispatch_within_5s": 0.1,
+    "publication_within_5s": 0.0,
+    "both_within_5s": 0.0,
+    "not_attempted": 0.0
+  },
+  "latency_threshold_seconds": 5,
+  "threshold_scope": "Development schedule-to-dispatch/publication target, not live SLA.",
+  "full_pa_verified": false,
+  "live_availability_verified": false,
+  "accuracy_evaluated": false,
+  "notice": "Local replay timing includes extraction, process and validation. Marked means an accepted point, not a correct point. Unavailable/unknown are model abstentions; errors and not-attempted observations remain separate. Saved-artifact consistency is checked; original video provenance and model execution are not re-attested.",
+  "evidence_sha256": {
+    "manifest": "d0fb84925607ce2cd6dfdc74f737bb1307e0aaea8617ee4ae6985e5c0729b11f",
+    "saved_plan": "331356eca63ed13e2c51960b0323f4f82136eb91a2ae77ce5d9a5879c6ea001f",
+    "summary": "1bbb4992b9a434d1095660f6bcfb3110faa599e002d64d39db36635c75bac7e8"
+  },
+  "observations": [
+    {
+      "index": 0,
+      "cutoff_seconds_exact": "2703701/15000",
+      "status": "accepted",
+      "observation_status": "marked",
+      "dispatch_lateness_seconds": 1.531,
+      "accepted_latency_from_schedule_seconds": 21.766,
+      "attempt_sha256": "ea25a763187406b3b81aeaef8c3db2f0f6a860eeb1f40e5b2b3311bb84560c96",
+      "result_sha256": "b4436590048b879fd39e5ea7ca2d23f0ce2dea9f87f89808e6e246b21f02c7e9",
+      "provider_metadata_sha256": "e52bbe55eda2e938aace98d0bc7b0828a781480cf6198f7f53d5b8c2da325ca4",
+      "provider_timing_status": "validated_with_outer_bounds",
+      "phase_seconds": {
+        "input_binding_verification": 0.421,
+        "frame_extraction": 0.641,
+        "request_preparation": 0.453,
+        "dispatch_overhead": 0.0,
+        "observer_process": 18.719,
+        "output_binding_verification": 0.797,
+        "response_validation_publication": 0.719,
+        "provider.total": 17.906,
+        "process_start_to_adapter": 0.719,
+        "process_exit_tail": 0.094,
+        "provider.input_validation": 0.047,
+        "provider.auth_status": 0.828,
+        "provider.cli_call": 17.0,
+        "provider.parse_validate_write": 0.031
+      }
+    },
+    {
+      "index": 1,
+      "cutoff_seconds_exact": "2778701/15000",
+      "status": "accepted",
+      "observation_status": "marked",
+      "dispatch_lateness_seconds": 19.406,
+      "accepted_latency_from_schedule_seconds": 42.844,
+      "attempt_sha256": "2629dfd8255b5111b5f9e765b351be84d4e5af88a83976097c2175acdc204bfa",
+      "result_sha256": "97a56c2fc319f95ebca2229971b8f00b7a907f0ddc1cef3109e80bc08e3cd35b",
+      "provider_metadata_sha256": "559c043f715d2ad53043bb4c3785f23906e2d58c5eba296b179c28072475c5e7",
+      "provider_timing_status": "validated_with_outer_bounds",
+      "phase_seconds": {
+        "input_binding_verification": 0.812,
+        "frame_extraction": 1.094,
+        "request_preparation": 0.734,
+        "dispatch_overhead": 0.0,
+        "observer_process": 21.906,
+        "output_binding_verification": 0.782,
+        "response_validation_publication": 0.75,
+        "provider.total": 21.062,
+        "process_start_to_adapter": 0.766,
+        "process_exit_tail": 0.078,
+        "provider.input_validation": 0.047,
+        "provider.auth_status": 0.782,
+        "provider.cli_call": 20.171,
+        "provider.parse_validate_write": 0.047
+      }
+    },
+    {
+      "index": 2,
+      "cutoff_seconds_exact": "2853701/15000",
+      "status": "accepted",
+      "observation_status": "unavailable",
+      "dispatch_lateness_seconds": 40.578,
+      "accepted_latency_from_schedule_seconds": 59.375,
+      "attempt_sha256": "cfa864717c15d0574c46b447d888d7d204dd43668a519cc91d296bc3ac512172",
+      "result_sha256": "77fe552838f84662fb851323d60c885f9b26c13be81a654c4cb2fbd1a6c33f73",
+      "provider_metadata_sha256": "42b88847700873f2c67490ad59ac1b7244d71c6d70228deb03aa6b4784cdfbb3",
+      "provider_timing_status": "validated_with_outer_bounds",
+      "phase_seconds": {
+        "input_binding_verification": 0.797,
+        "frame_extraction": 1.234,
+        "request_preparation": 0.703,
+        "dispatch_overhead": 0.0,
+        "observer_process": 17.25,
+        "output_binding_verification": 0.781,
+        "response_validation_publication": 0.766,
+        "provider.total": 16.406,
+        "process_start_to_adapter": 0.766,
+        "process_exit_tail": 0.078,
+        "provider.input_validation": 0.047,
+        "provider.auth_status": 0.781,
+        "provider.cli_call": 15.547,
+        "provider.parse_validate_write": 0.031
+      }
+    },
+    {
+      "index": 3,
+      "cutoff_seconds_exact": "2928701/15000",
+      "status": "accepted",
+      "observation_status": "unavailable",
+      "dispatch_lateness_seconds": 57.312,
+      "accepted_latency_from_schedule_seconds": 79.078,
+      "attempt_sha256": "5b20a6db85f23403c1bdb7d6c4a41cce6fefbab097e0e37c957ac8953f1b1929",
+      "result_sha256": "28795ac241be63c3f0e9729a784890f8d5cca8eb99cbe4975ceb44a369696bbc",
+      "provider_metadata_sha256": "ffb328f8d94f6bb5db9a605fe8fd694fffece441924e13d28b25385d41dc76c4",
+      "provider_timing_status": "validated_with_outer_bounds",
+      "phase_seconds": {
+        "input_binding_verification": 0.781,
+        "frame_extraction": 1.36,
+        "request_preparation": 0.796,
+        "dispatch_overhead": 0.0,
+        "observer_process": 20.188,
+        "output_binding_verification": 0.828,
+        "response_validation_publication": 0.75,
+        "provider.total": 19.328,
+        "process_start_to_adapter": 0.766,
+        "process_exit_tail": 0.094,
+        "provider.input_validation": 0.047,
+        "provider.auth_status": 0.796,
+        "provider.cli_call": 18.438,
+        "provider.parse_validate_write": 0.031
+      }
+    },
+    {
+      "index": 4,
+      "cutoff_seconds_exact": "3003701/15000",
+      "status": "accepted",
+      "observation_status": "marked",
+      "dispatch_lateness_seconds": 77.219,
+      "accepted_latency_from_schedule_seconds": 97.578,
+      "attempt_sha256": "2463160286bf3a6a7471860056dbcf09783b8ff3706246a0b1a23e4a005d3d53",
+      "result_sha256": "ce7df4c9801abdeb47826535ee564db082683e6094ad1c0a9db80a1508e8fb20",
+      "provider_metadata_sha256": "cf1aaa2afc206407c50b249136d7b5a923e6b389c798cb26d5ee7a038b07581d",
+      "provider_timing_status": "validated_with_outer_bounds",
+      "phase_seconds": {
+        "input_binding_verification": 0.797,
+        "frame_extraction": 1.531,
+        "request_preparation": 0.797,
+        "dispatch_overhead": 0.0,
+        "observer_process": 18.812,
+        "output_binding_verification": 0.797,
+        "response_validation_publication": 0.75,
+        "provider.total": 17.953,
+        "process_start_to_adapter": 0.765,
+        "process_exit_tail": 0.094,
+        "provider.input_validation": 0.047,
+        "provider.auth_status": 0.797,
+        "provider.cli_call": 17.078,
+        "provider.parse_validate_write": 0.031
+      }
+    },
+    {
+      "index": 5,
+      "cutoff_seconds_exact": "3078701/15000",
+      "status": "accepted",
+      "observation_status": "marked",
+      "dispatch_lateness_seconds": 95.859,
+      "accepted_latency_from_schedule_seconds": 141.266,
+      "attempt_sha256": "f10f402c48a272d18e1d4377f6adc4b4925e5364691266b286901b6d08dc90a2",
+      "result_sha256": "c871cb73a9b4c62e3aedfbf449a0a0298e83df93d6cf5c67c99c808bc7c2bffc",
+      "provider_metadata_sha256": "26d2b1195ddafe647c8828b6526d7632916e402c17b9a88a1065c1c92030d3da",
+      "provider_timing_status": "validated_with_outer_bounds",
+      "phase_seconds": {
+        "input_binding_verification": 0.844,
+        "frame_extraction": 1.656,
+        "request_preparation": 0.781,
+        "dispatch_overhead": 0.0,
+        "observer_process": 43.766,
+        "output_binding_verification": 0.844,
+        "response_validation_publication": 0.797,
+        "provider.total": 42.875,
+        "process_start_to_adapter": 0.797,
+        "process_exit_tail": 0.094,
+        "provider.input_validation": 0.047,
+        "provider.auth_status": 0.813,
+        "provider.cli_call": 41.968,
+        "provider.parse_validate_write": 0.047
+      }
+    },
+    {
+      "index": 6,
+      "cutoff_seconds_exact": "3153701/15000",
+      "status": "accepted",
+      "observation_status": "marked",
+      "dispatch_lateness_seconds": 139.734,
+      "accepted_latency_from_schedule_seconds": 158.75,
+      "attempt_sha256": "6018f8befede0cf835b48bd2a5dabb91f14116fa151b6b06ef42e0e4b5f980e5",
+      "result_sha256": "88b82be259bb84c51fe8eac04f2540261d40df41920640e3523eeea362bc1c17",
+      "provider_metadata_sha256": "1e12923d0c4485da82e7c9a9c2afee1221b4c661df2d9edd1a749512e80c753f",
+      "provider_timing_status": "validated_with_outer_bounds",
+      "phase_seconds": {
+        "input_binding_verification": 0.875,
+        "frame_extraction": 1.812,
+        "request_preparation": 0.781,
+        "dispatch_overhead": 0.0,
+        "observer_process": 17.36,
+        "output_binding_verification": 0.828,
+        "response_validation_publication": 0.828,
+        "provider.total": 16.375,
+        "process_start_to_adapter": 0.891,
+        "process_exit_tail": 0.094,
+        "provider.input_validation": 0.047,
+        "provider.auth_status": 0.844,
+        "provider.cli_call": 15.453,
+        "provider.parse_validate_write": 0.031
+      }
+    },
+    {
+      "index": 7,
+      "cutoff_seconds_exact": "3228701/15000",
+      "status": "accepted",
+      "observation_status": "marked",
+      "dispatch_lateness_seconds": 157.469,
+      "accepted_latency_from_schedule_seconds": 178.172,
+      "attempt_sha256": "6e49e9ab22eb8ba31a953351e8ac5168358465d8f3c6315123308db4a4221964",
+      "result_sha256": "68efa90b4eab188017ee2421c715c15688578cda3c80fa9ff8628675ab65eb35",
+      "provider_metadata_sha256": "84be11219f3cf8003cdf53aaf23c2cb404e59a04296693bde7c03a46a51c76e7",
+      "provider_timing_status": "validated_with_outer_bounds",
+      "phase_seconds": {
+        "input_binding_verification": 0.875,
+        "frame_extraction": 2.0,
+        "request_preparation": 0.844,
+        "dispatch_overhead": 0.0,
+        "observer_process": 19.093,
+        "output_binding_verification": 0.844,
+        "response_validation_publication": 0.766,
+        "provider.total": 18.078,
+        "process_start_to_adapter": 0.922,
+        "process_exit_tail": 0.093,
+        "provider.input_validation": 0.046,
+        "provider.auth_status": 0.859,
+        "provider.cli_call": 17.125,
+        "provider.parse_validate_write": 0.032
+      }
+    },
+    {
+      "index": 8,
+      "cutoff_seconds_exact": "3303701/15000",
+      "status": "accepted",
+      "observation_status": "marked",
+      "dispatch_lateness_seconds": 176.937,
+      "accepted_latency_from_schedule_seconds": 202.359,
+      "attempt_sha256": "3f876902267bc8799075179bb13b35a79392cc05ef264ff1a85d4f1853aa24e5",
+      "result_sha256": "e3a8a4c914840dd119b0f7fd5553eac4a08c55b17f4d12a23356afaa9c75df88",
+      "provider_metadata_sha256": "b2012dfbf2829132b2c934449a56873cfb099e90957e832b0b76f0561527ba9c",
+      "provider_timing_status": "validated_with_outer_bounds",
+      "phase_seconds": {
+        "input_binding_verification": 0.86,
+        "frame_extraction": 2.125,
+        "request_preparation": 0.765,
+        "dispatch_overhead": 0.0,
+        "observer_process": 23.844,
+        "output_binding_verification": 0.813,
+        "response_validation_publication": 0.765,
+        "provider.total": 22.921,
+        "process_start_to_adapter": 0.829,
+        "process_exit_tail": 0.094,
+        "provider.input_validation": 0.046,
+        "provider.auth_status": 0.86,
+        "provider.cli_call": 21.984,
+        "provider.parse_validate_write": 0.031
+      }
+    },
+    {
+      "index": 9,
+      "cutoff_seconds_exact": "3378701/15000",
+      "status": "accepted",
+      "observation_status": "marked",
+      "dispatch_lateness_seconds": 201.062,
+      "accepted_latency_from_schedule_seconds": 222.437,
+      "attempt_sha256": "c1b51159d6a2e6f835b6a5603e8a2d3cf1a16383bb014dd6e4f7e52b50c05587",
+      "result_sha256": "29f3f746e93eaf5283231b0b81a6e366b743d5669f142e1ccb388a1d01f8ec55",
+      "provider_metadata_sha256": "280c36fb3423b934c8a63b49acaa86040810bd061e94d2bd1ca0e1d171dff9b5",
+      "provider_timing_status": "validated_with_outer_bounds",
+      "phase_seconds": {
+        "input_binding_verification": 0.797,
+        "frame_extraction": 2.172,
+        "request_preparation": 0.734,
+        "dispatch_overhead": 0.0,
+        "observer_process": 19.829,
+        "output_binding_verification": 0.796,
+        "response_validation_publication": 0.75,
+        "provider.total": 19.0,
+        "process_start_to_adapter": 0.75,
+        "process_exit_tail": 0.079,
+        "provider.input_validation": 0.063,
+        "provider.auth_status": 0.781,
+        "provider.cli_call": 18.11,
+        "provider.parse_validate_write": 0.046
+      }
+    }
+  ],
+  "phase_summary_seconds": {
+    "dispatch_overhead": {
+      "n": 10,
+      "min": 0.0,
+      "median": 0.0,
+      "max": 0.0
+    },
+    "frame_extraction": {
+      "n": 10,
+      "min": 0.641,
+      "median": 1.5935,
+      "max": 2.172
+    },
+    "input_binding_verification": {
+      "n": 10,
+      "min": 0.421,
+      "median": 0.8045,
+      "max": 0.875
+    },
+    "observer_process": {
+      "n": 10,
+      "min": 17.25,
+      "median": 19.461,
+      "max": 43.766
+    },
+    "output_binding_verification": {
+      "n": 10,
+      "min": 0.781,
+      "median": 0.8049999999999999,
+      "max": 0.844
+    },
+    "process_exit_tail": {
+      "n": 10,
+      "min": 0.078,
+      "median": 0.094,
+      "max": 0.094
+    },
+    "process_start_to_adapter": {
+      "n": 10,
+      "min": 0.719,
+      "median": 0.766,
+      "max": 0.922
+    },
+    "provider.auth_status": {
+      "n": 10,
+      "min": 0.781,
+      "median": 0.8049999999999999,
+      "max": 0.86
+    },
+    "provider.cli_call": {
+      "n": 10,
+      "min": 15.453,
+      "median": 17.6175,
+      "max": 41.968
+    },
+    "provider.input_validation": {
+      "n": 10,
+      "min": 0.046,
+      "median": 0.047,
+      "max": 0.063
+    },
+    "provider.parse_validate_write": {
+      "n": 10,
+      "min": 0.031,
+      "median": 0.031,
+      "max": 0.047
+    },
+    "provider.total": {
+      "n": 10,
+      "min": 16.375,
+      "median": 18.539,
+      "max": 42.875
+    },
+    "request_preparation": {
+      "n": 10,
+      "min": 0.453,
+      "median": 0.773,
+      "max": 0.844
+    },
+    "response_validation_publication": {
+      "n": 10,
+      "min": 0.719,
+      "median": 0.7575000000000001,
+      "max": 0.828
+    }
+  },
+  "phase_notice": "Optional measured phases only; omitted stages are not zero. Provider CLI time includes network/server work, not pure model inference. Provider timings are nested within observer_process and must not be added to outer phases twice. process_start_to_adapter includes launch, imports and argument setup; it is not interpreter startup alone."
+}

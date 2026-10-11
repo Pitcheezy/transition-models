@@ -1,5 +1,11 @@
 # Top-4 Precision 비교: MIT Sloan 2025 평가 기준
 
+> **2026-09-21 정정 — 과거 기록 전용.** 77d 10-class 기준선의 입력/정답 정렬 오류가
+> 발견되어 아래 모델 순위와 맥락 효과 해석은 철회합니다. 서로 다른 평가 행의 수치도
+> 통제 비교가 아닙니다. 이 문서의 지표는 top-k accuracy/recall이며 precision@k와 다릅니다.
+> 현재 모델 선택은 [운영 검증](OPERATIONAL_VALIDATION_2026-09-21.md)의 CE·Brier와
+> 별도 정책 평가를 사용합니다. 희소 클래스 argmax recall 0은 사건 확률 0이 아닙니다.
+
 > 작성일: 2026-05-25  
 > 소스: `scripts/21_top4_precision.py`, `outputs/top4_precision_comparison.json`
 

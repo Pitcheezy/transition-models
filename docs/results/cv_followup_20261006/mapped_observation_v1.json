@@ -1,0 +1,158 @@
+{
+  "schema": "intent_mapped_observation_smoke_v1",
+  "date": "2026-10-06",
+  "game_pk_evaluator_only": 747139,
+  "role": "previously_reviewed_development_video",
+  "plan": {
+    "schema": "intent_mapped_observation_development_plan_v1",
+    "date": "2026-10-06",
+    "role": "development_adapter_smoke_not_accuracy_or_live_availability",
+    "capture_directory": "outputs/cv_clip_clock_20261006_v2",
+    "source_cutoffs_seconds": [
+      180,
+      185,
+      190
+    ],
+    "selection_rule": "Fixed five-second sequence over the existing development clip, declared before these three new AI responses; all responses and failures retained.",
+    "source_game_pk_evaluator_only": 747139,
+    "source_is_previously_reviewed": true,
+    "observer_access": "Only its own anonymous request directory (image.jpg, request.json). No source/evaluator files, other responses, pitch key or release times.",
+    "observer_type": "Fresh Codex subagent with no forked conversation",
+    "observations_per_request": 1,
+    "automatic_retry": false,
+    "human_labels": false,
+    "independent_validation": false,
+    "timing_scope": "Local request publication to response acceptance, including orchestration and tool latency; not live stream reception or model-only timing.",
+    "failure_policy": "Preserve failed or incomplete requests; never turn missing model responses into abstentions."
+  },
+  "plan_sha256": "95ba366ca37de53cabd6c1927e60ad83d22bfbce49da0a734c7a3cac769bce0c",
+  "selection_declared_before_responses": true,
+  "observer": "Three separate Codex subagents without forked conversation; one assigned request directory each.",
+  "model_version": "Not exposed by observation response contract; no deterministic model-reproduction claim.",
+  "source_capture_receipt_sha256": "ef03502c5a90364e70e234437476ff58ad48790847d6f47e494f0bcb9923f834",
+  "source_mapping_report": "docs/results/cv_followup_20261006/clip_clock_v1.json",
+  "rows": [
+    {
+      "requested_cutoff_seconds": 180,
+      "actual_source_seconds_exact": "10799789/60000",
+      "actual_source_seconds": 179.99648333333334,
+      "clip_decode_ordinal": 299,
+      "source_pts": 10799789,
+      "decoded_frame_md5": "274ece4ce0aa669fe87300e9f85df8d1",
+      "image_sha256": "1a628232f2b950802679a1cf7ec3a831cc659c2f8af2436d2fed4f9eafc8b6aa",
+      "mapped_receipt_sha256": "4e36dc3feff24a3641b53b02ada1d43a1c3563240daa084d7e3b8174af423933",
+      "request_sha256": "d081523651baf4d17e378b4d0c50e537bd04f6eaca2ad63fd15c6a0c26c5dad3",
+      "private_session_sha256": "b6ede91567bfd92c9196692050d9176b6395ea93eb72e3e156c0f5dc69bafa69",
+      "raw_response_sha256": "5a8b8555d66cc536d5e4748186fc00fb31ebdf31f185af7e9c202f6945a15297",
+      "raw_ai_response": {
+        "schema": "intent_visual_observation_v1",
+        "observation_id": "890ee44fe4eb4fc19a6eca12a16cd191",
+        "image_sha256": "1a628232f2b950802679a1cf7ec3a831cc659c2f8af2436d2fed4f9eafc8b6aa",
+        "status": "unavailable",
+        "mitt": null,
+        "visibility": "hidden",
+        "pose": "unknown",
+        "reason": "The image shows people in a dugout; no catcher's mitt is visible, so its center cannot be located."
+      },
+      "request_to_accept_seconds": 69.062,
+      "elapsed_scope": "request publication through response receipt; includes Codex orchestration and tool delays; not model-only latency or live availability"
+    },
+    {
+      "requested_cutoff_seconds": 185,
+      "actual_source_seconds_exact": "231231/1250",
+      "actual_source_seconds": 184.9848,
+      "clip_decode_ordinal": 598,
+      "source_pts": 11099088,
+      "decoded_frame_md5": "24f439c918bf1da0a7b5fb4812964718",
+      "image_sha256": "352d1e58314a87601af4946b1b53fb9fdfb66fddcd211b02b887925d40335cb6",
+      "mapped_receipt_sha256": "0cf7b46eae0a1dc8b16d3b1c4f20a596debb346e9334dbf988289c303f6d1d59",
+      "request_sha256": "f3b64a18645d55c938c206c008a76b5aad4d38f0f73be2a7e66d8c3a90364830",
+      "private_session_sha256": "8caa0bfac90ac7580ebe88ac1a6eff1fdbc7ac580b01bc03019d78041b418063",
+      "raw_response_sha256": "ac1cc959bd67d241bd66e2d768161a6f584d11bce4597382bddfd8c240b0ad77",
+      "raw_ai_response": {
+        "schema": "intent_visual_observation_v1",
+        "observation_id": "53777100492243f294921d33c9f4e14b",
+        "image_sha256": "352d1e58314a87601af4946b1b53fb9fdfb66fddcd211b02b887925d40335cb6",
+        "status": "marked",
+        "mitt": [
+          665,
+          270
+        ],
+        "visibility": "full",
+        "pose": "unknown",
+        "reason": "The dark mitt body is visible low in front of the catcher. This still image does not let me confidently distinguish a resting mitt from a presented target or establish motion."
+      },
+      "request_to_accept_seconds": 69.156,
+      "elapsed_scope": "request publication through response receipt; includes Codex orchestration and tool delays; not model-only latency or live availability"
+    },
+    {
+      "requested_cutoff_seconds": 190,
+      "actual_source_seconds_exact": "949949/5000",
+      "actual_source_seconds": 189.9898,
+      "clip_decode_ordinal": 898,
+      "source_pts": 11399388,
+      "decoded_frame_md5": "850ded223ae88c9bde12285e280f9246",
+      "image_sha256": "00c80647aafeea44f5cceb209254c1952e3c8f778de36697cab69a186a599655",
+      "mapped_receipt_sha256": "365efb603bf57c5156e7d9c8aa201d80f6fd3798537f7efda7bdac6e6c49dab9",
+      "request_sha256": "04bba735312360862b1db4546072c10a1374804f8d950579521cdc7a23a3571b",
+      "private_session_sha256": "e5914e9c99ca035383c9b11c168b89cb0a2222d769f9d79712663baf6807ca53",
+      "raw_response_sha256": "44196e125f757d0fd3ea1df906dc280135e3bb20da6fb0ae9824a5d2a3053eb9",
+      "raw_ai_response": {
+        "schema": "intent_visual_observation_v1",
+        "observation_id": "486a204983b04b71af6025a69be6c548",
+        "image_sha256": "00c80647aafeea44f5cceb209254c1952e3c8f778de36697cab69a186a599655",
+        "status": "unavailable",
+        "mitt": null,
+        "visibility": "hidden",
+        "pose": "unknown",
+        "reason": "The catcher and catcher's mitt are not visible in this frame."
+      },
+      "request_to_accept_seconds": 69.172,
+      "elapsed_scope": "request publication through response receipt; includes Codex orchestration and tool delays; not model-only latency or live availability"
+    }
+  ],
+  "counts": {
+    "scheduled": 3,
+    "responses_accepted": 3,
+    "marked": 1,
+    "unavailable": 2,
+    "failed_or_pending": 0
+  },
+  "causal_extract_refusals": [
+    {
+      "requested_source_seconds_exact": "175",
+      "reason": "before first mapped frame",
+      "output_created": false
+    },
+    {
+      "requested_source_seconds_exact": "13800787/60000",
+      "reason": "missing presentation interval",
+      "output_created": false
+    },
+    {
+      "requested_source_seconds_exact": "231",
+      "reason": "after mapped coverage",
+      "output_created": false
+    }
+  ],
+  "checks": {
+    "focused_tests": 180,
+    "full_cpu": "987 passed / 5 skipped / 2 deselected",
+    "ruff_paths": 107,
+    "frozen_files_and_site_unchanged": 207
+  },
+  "human_labels_changed": false,
+  "independent_validation": false,
+  "accuracy_measured": false,
+  "live_availability_measured": false,
+  "whole_pa_completed": false,
+  "fully_automatic_model_loop": false,
+  "teammate_changed": false,
+  "limitations": [
+    "Actual decoded PTS and raw-frame identity are validated. This does not authenticate game identity or establish physical calibration or pitcher intent.",
+    "The accepted AI responses are not human ground truth or an independent validation set.",
+    "Elapsed times include publication, controller/approval/tool/queue delays and response acceptance. They are not model-only inference or broadcast-to-output latency.",
+    "Three prepared frames and Codex orchestration are not a continuous full-PA automatic observer.",
+    "Saved private receipts include local paths; this report deliberately omits them. Frozen public demo and teammate code remain unchanged."
+  ]
+}

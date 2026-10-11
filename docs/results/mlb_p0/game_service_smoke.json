@@ -1,0 +1,72 @@
+{
+  "game_pk": 747139,
+  "checked_at": "2026-09-21T17:08:19.531171+00:00",
+  "source_manifest_sha256": "d73b9f642ae45b15567e4a3b91638828c6ea080db4e57fa4549956781f66a99e",
+  "scope": "Real HTTP service check; development only, not accuracy or causal-policy evaluation.",
+  "selected_model": "mlp135",
+  "feature_schema": "prepitch_profiles_2022_v1",
+  "states_processed": 322,
+  "probability_validation": "Nine candidates per state, ten finite normalized probabilities each.",
+  "recommendations": {
+    "withheld": 134,
+    "recommended": 188
+  },
+  "withheld_reasons": {
+    "Insufficient historically supported actions": 94,
+    "Policy evaluation covers innings 1-8 only; recommendation withheld.": 40
+  },
+  "pitchers": {
+    "680885": {
+      "pitches": 94,
+      "recommended": 0
+    },
+    "656731": {
+      "pitches": 100,
+      "recommended": 100
+    },
+    "623211": {
+      "pitches": 13,
+      "recommended": 13
+    },
+    "493603": {
+      "pitches": 9,
+      "recommended": 9
+    },
+    "641729": {
+      "pitches": 8,
+      "recommended": 8
+    },
+    "628452": {
+      "pitches": 12,
+      "recommended": 12
+    },
+    "607481": {
+      "pitches": 13,
+      "recommended": 13
+    },
+    "664208": {
+      "pitches": 12,
+      "recommended": 12
+    },
+    "621242": {
+      "pitches": 40,
+      "recommended": 21
+    },
+    "572955": {
+      "pitches": 21,
+      "recommended": 0
+    }
+  },
+  "latency": {
+    "unit": "ms",
+    "server_computation": {
+      "median": 93.41,
+      "p95": 134.4205
+    },
+    "http_round_trip": {
+      "median": 108.05624999920838,
+      "p95": 139.7624299974268
+    },
+    "scope": "Sequential local API calls; excludes startup, video, OCR and UI rendering."
+  }
+}

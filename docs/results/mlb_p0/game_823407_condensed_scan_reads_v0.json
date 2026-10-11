@@ -1,0 +1,1723 @@
+{
+ "schema": "intent_condensed_scan_reads_v0",
+ "workflow": "intent/workflows/condensed_scan.js",
+ "workflow_run_id": "wf_9057070b-8fe",
+ "readers": "two independent Claude Code workflow agents per block (A, B), model claude-opus-5-5",
+ "note": "raw agent results exported from the workflow journal; coordinates and text only, no images",
+ "results": [
+  {
+   "range": [
+    0,
+    80
+   ],
+   "A": {
+    "range": [
+     0,
+     80
+    ],
+    "pitches": [
+     {
+      "release_t": 66,
+      "release_bracket": [
+       66,
+       66.5
+      ],
+      "camera_at_release": "centre_field",
+      "centre_field_setup_visible": true,
+      "setup_t": 66,
+      "half": "top",
+      "inning": 1,
+      "outs": 0,
+      "balls_before": 2,
+      "strikes_before": 0,
+      "batter_text": "I. DÍAZ",
+      "pitcher_text": "NOLA",
+      "pitch_count_text": "P: 2",
+      "post_pitch_graphic": {
+       "type_text": "FOUR-SEAM FASTBALL",
+       "mph": 92
+      },
+      "outcome_seen": "in play: line drive/hit to right-centre outfield; batter runs to second and slides in (looks like a double)",
+      "confidence": "high",
+      "note": "Fox broadcast; this shot is a lower, slightly offset centre-field angle, not the usual high one. It shows the pitcher's back, the batter facing the camera, and the catcher and umpire. At 66.0 the arm is cocked high with the ball in hand; at 66.5 Nola is in his follow-through and Diaz is mid-swing. The score bug (bottom-right) reads ▲1, 2-0, 0 OUT, TB 0 PHI 0, NOLA P: 2. At 67.5 the FOUR-SEAM FASTBALL 92MPH graphic appears. Afterwards the bug shows P: 3."
+     }
+    ],
+    "note": "I found one live pitch in 0-80 s: Nola's 2-0 four-seam fastball (92 mph) to I. Diaz, top of the 1st, released at about 66.0 s and put in play for an apparent double. Nothing else in the range is a pitch: 0-1.5 s is the matchup intro, 2-28.5 s an outfield ballpark shot with the pregame matchup box, 29-31.5 s an NL Wild Card graphic, 31.5-52 s a Mattingly interview, 52.5-55 s a TOP 1ST INNING bumper, and 55.5-65 s close-ups of Nola on the mound. From 66.5 to 76.5 s the broadcast follows the ball, Diaz's run and slide into second, and a 2026 STATS graphic. At 77-80 s there is a slow-motion replay of the same pitch from a low camera behind and beside the plate, with no score bug. It is not a new pitch, so it is not listed. One label is uncertain: I marked the release camera \"centre_field\", but it is a lower, offset centre-field angle, not the usual high one."
+   },
+   "B": {
+    "range": [
+     0,
+     80
+    ],
+    "pitches": [
+     {
+      "release_t": 66,
+      "release_bracket": [
+       66,
+       66.5
+      ],
+      "camera_at_release": "centre_field",
+      "centre_field_setup_visible": true,
+      "setup_t": 66,
+      "half": "top",
+      "inning": 1,
+      "outs": 0,
+      "balls_before": 2,
+      "strikes_before": 0,
+      "batter_text": "1. DÍAZ",
+      "pitcher_text": "NOLA",
+      "pitch_count_text": "P: 2",
+      "post_pitch_graphic": {
+       "type_text": "FOUR-SEAM FASTBALL",
+       "mph": 92
+      },
+      "outcome_seen": "in play: line drive/fly to the outfield, hit; batter ran to second and slid in safely (looks like a double)",
+      "confidence": "high",
+      "note": "The centre-field view starts at 65.5 with the catcher already set. At 66.0 Nola's arm is still cocked high behind his head and the ball has not been released. By 66.5 he is in his follow-through and Díaz is making contact, so release falls just after 66.0. The score bug at 65.5 and 66.0 reads NOLA P: 2, 1. DÍAZ .291, TB 0 PHI 0, top 1st, count 2-0, 0 OUT. At 67.5 the graphic shows FOUR-SEAM FASTBALL 92MPH. Frames 68-71 follow the ball in the outfield. At 74.5 the bug reads P: 3 with second base lit. 'P: 2' is copied exactly as shown on the bug."
+     }
+    ],
+    "note": "I found one live pitch in 0-80 s: Nola's 2-0 four-seam fastball (92) to I. Díaz, released at about 66.0 s and hit to the outfield. Díaz slid into second, so it looks like a double. Before that there is no live play: 0-1.5 is the open graphic, 2-28.5 a GEICO bullpen cam with the probables card, 29-31 an NL wild card graphic, 32-52 a Don Mattingly interview, 52.5-55 the TOP 1ST INNING graphic, and 55.5-65 close-ups of Nola. After the pitch, 72-75 shows Díaz rounding first and sliding into second. At 75.5-76.5 there is a 2026 STATS graphic. Left out as a replay: 77-79.5 is a slow-motion, low-angle replay of the same pitch to Díaz (#2, no score bug); the ball is seen leaving Nola's hand at about 77.0."
+   }
+  },
+  {
+   "range": [
+    80,
+    160
+   ],
+   "A": {
+    "range": [
+     80,
+     160
+    ],
+    "pitches": [
+     {
+      "release_t": 92,
+      "release_bracket": [
+       91.5,
+       92
+      ],
+      "camera_at_release": "centre_field",
+      "centre_field_setup_visible": true,
+      "setup_t": 91.5,
+      "half": "top",
+      "inning": 1,
+      "outs": 2,
+      "balls_before": 0,
+      "strikes_before": 1,
+      "batter_text": "4. CAMINERO",
+      "pitcher_text": "NOLA",
+      "pitch_count_text": "P: 12",
+      "post_pitch_graphic": {
+       "type_text": "KNUCKLE CURVE",
+       "mph": 79
+      },
+      "outcome_seen": "in play: home run (TB 0 -> 2 on later bug)",
+      "confidence": "high",
+      "note": "Leg lift at 91.5, ball already in flight about halfway to plate at 92.0, contact by 92.5. Broadcast's main pitching camera is a slightly low/offset centre-field view but shows pitcher, batter, catcher and umpire together. Bug read at 91.0: TB 0 PHI 0, top 1, 0-1, 2 outs."
+     },
+     {
+      "release_t": 129,
+      "release_bracket": [
+       129,
+       129.5
+      ],
+      "camera_at_release": "centre_field",
+      "centre_field_setup_visible": true,
+      "setup_t": 129,
+      "half": "top",
+      "inning": 1,
+      "outs": 2,
+      "balls_before": 0,
+      "strikes_before": 1,
+      "batter_text": "S. MESA JR.",
+      "pitcher_text": "NOLA",
+      "pitch_count_text": "P: 14",
+      "post_pitch_graphic": {
+       "type_text": "CHANGEUP",
+       "mph": 87
+      },
+      "outcome_seen": "in play: base hit to left field, batter reaches first (bug then shows runner on first, P: 15)",
+      "confidence": "medium",
+      "note": "Leg lift 128.0, stride 128.5, arm cocked high at 129.0, follow-through with swing at 129.5; release between 129.0 and 129.5. Bug read 127.5-129.0: TB 2 PHI 0, top 1, 0-1, 2 outs."
+     },
+     {
+      "release_t": 152.5,
+      "release_bracket": [
+       152.5,
+       153
+      ],
+      "camera_at_release": "centre_field",
+      "centre_field_setup_visible": true,
+      "setup_t": 152.5,
+      "half": "top",
+      "inning": 1,
+      "outs": 2,
+      "balls_before": 2,
+      "strikes_before": 1,
+      "batter_text": "6. PALACIOS",
+      "pitcher_text": "NOLA",
+      "pitch_count_text": "P: 18",
+      "post_pitch_graphic": {
+       "type_text": "FOUR-SEAM FASTBALL",
+       "mph": 92
+      },
+      "outcome_seen": "in play: base hit to right field (fielder retrieves ball near wall), batter reaches; bug then shows runners on first and second, P: 19",
+      "confidence": "medium",
+      "note": "Cut from pitcher close-up (152.0) to main camera at 152.5 with arm already cocked; follow-through and swing at 153.0, so release ~152.6-152.8. Bug at 152.5: TB 2 PHI 0, top 1, 2-1, 2 outs, runner on second."
+     }
+    ],
+    "note": "I found 3 live pitches in t=80-160, all in the top of the 1st with Nola pitching. These are not new pitches and are left out: (1) t=77-82, a side-angle replay with no score bug of the earlier hit (by the batter running at ~t=72), followed by a stat graphic with changeup 86 mph and launch angle 16°. (2) t=112.5-123.5, replays from several angles of Caminero's home run with no score bug. Everything else is non-pitch footage: crowd, home-run trot, close-ups, fielding, and t=141.5-152.0 of Nola close-ups. All three pitches use the same Fox main camera behind the pitcher, slightly low and offset. It shows the pitcher, batter, catcher and umpire together, so I classed it as centre_field."
+   },
+   "B": {
+    "range": [
+     80,
+     160
+    ],
+    "pitches": [
+     {
+      "release_t": 92,
+      "release_bracket": [
+       91.5,
+       92
+      ],
+      "camera_at_release": "centre_field",
+      "centre_field_setup_visible": true,
+      "setup_t": 91.5,
+      "half": "top",
+      "inning": 1,
+      "outs": 2,
+      "balls_before": 0,
+      "strikes_before": 1,
+      "batter_text": "4. CAMINERO .274",
+      "pitcher_text": "NOLA",
+      "pitch_count_text": "P: 12",
+      "post_pitch_graphic": {
+       "type_text": "KNUCKLE CURVE",
+       "mph": 79
+      },
+      "outcome_seen": "in play: home run (swing at 92.5, ball to the outfield seats, batter celebrates rounding the bases)",
+      "confidence": "high",
+      "note": "CF view starts at 91.0 with the leg kick; 91.5 stride with arm back; 92.0 ball already about halfway to the plate. Bug read at 91.0/91.5: NOLA P:12, 4. CAMINERO .274, top 1, 0-1, 2 outs, TB 0 PHI 0. Graphic at 94.0-95.5."
+     },
+     {
+      "release_t": 129,
+      "release_bracket": [
+       128.5,
+       129
+      ],
+      "camera_at_release": "centre_field",
+      "centre_field_setup_visible": true,
+      "setup_t": 128.5,
+      "half": "top",
+      "inning": 1,
+      "outs": 2,
+      "balls_before": 0,
+      "strikes_before": 1,
+      "batter_text": "5. MESA JR. .249",
+      "pitcher_text": "NOLA",
+      "pitch_count_text": "P: 14",
+      "post_pitch_graphic": {
+       "type_text": "CHANGEUP",
+       "mph": 87
+      },
+      "outcome_seen": "in play: fly ball to deep left-centre, a hit; batter ends up on second (double)",
+      "confidence": "high",
+      "note": "CF view from 127.0 (fade) and 127.5; catcher set from 127.5 to 128.5; at 129.0 the arm is in follow-through and the ball is not visible; contact at about 129.5. Bug at 127.5-128.5: TB 2 PHI 0, top 1, 0-1, 2 outs. At 135.5 the bug shows P:15 with a runner on second."
+     },
+     {
+      "release_t": 152.5,
+      "release_bracket": [
+       152.5,
+       153
+      ],
+      "camera_at_release": "centre_field",
+      "centre_field_setup_visible": true,
+      "setup_t": 152.5,
+      "half": "top",
+      "inning": 1,
+      "outs": 2,
+      "balls_before": 2,
+      "strikes_before": 1,
+      "batter_text": "6. PALACIOS .232",
+      "pitcher_text": "NOLA",
+      "pitch_count_text": "P: 18",
+      "post_pitch_graphic": {
+       "type_text": "FOUR-SEAM FASTBALL",
+       "mph": 92
+      },
+      "outcome_seen": "in play: base hit to the outfield (ball fielded on the bounce near the wall by #41); runners end up on first and second",
+      "confidence": "medium",
+      "note": "There is only one CF frame before release (152.5, arm cocked behind the head, catcher set). At 153.0 the ball is at the plate as the batter swings, so release was about 152.6, between the two frames. Bug at 152.5: P:18, 2-1, 2 outs, TB 2 PHI 0. At 159.5 the bug shows P:19 with runners on first and second."
+     }
+    ],
+    "note": "I found three live pitches, all Nola pitching in the top of the 1st with 2 outs. Everything else in the range is replays, close-ups or crowd shots, which I left out:\n- 80.0-82.0: a side-angle replay of an earlier hit, with no score bug. A Statcast graphic follows (\"CHANGEUP 86 MPH\", launch angle 16°, 292 ft), so the live pitch came before 80.\n- 99-111: Caminero's home run trot and celebration.\n- 112.0-116.5: a low-angle replay of the Caminero home run swing (no bug).\n- 117-120: scoreboard and Ghost ad.\n- 120.5-126.5: another replay of the home run swing from the first-base side, then the celebration. It is not a new pitch.\n- 136-151.5: Mesa Jr. at second base, then close-ups of Nola.\nThe pitch counts jump from P:12 to P:14 and from P:15 to P:18, so some pitches were skipped in the edit."
+   }
+  },
+  {
+   "range": [
+    160,
+    240
+   ],
+   "A": {
+    "range": [
+     160,
+     240
+    ],
+    "pitches": [
+     {
+      "release_t": 187,
+      "release_bracket": [
+       186.5,
+       187
+      ],
+      "camera_at_release": "other",
+      "centre_field_setup_visible": false,
+      "setup_t": null,
+      "half": "bottom",
+      "inning": 1,
+      "outs": 0,
+      "balls_before": 2,
+      "strikes_before": 2,
+      "batter_text": "1. TURNER",
+      "pitcher_text": "JAX",
+      "pitch_count_text": "P: 4",
+      "post_pitch_graphic": {
+       "type_text": "CHANGEUP",
+       "mph": 89
+      },
+      "outcome_seen": "swinging strike (strike three, swing and miss, catcher holds ball)",
+      "confidence": "high",
+      "note": "186.5 is a pitcher close-up; cut to third-base-side high camera with ball already in flight at 187.0. Bug at 187.0 shows ▼1 2-2 0 OUT. Slow-motion replay 189.0-193.5 from first-base side, not counted."
+     },
+     {
+      "release_t": 194,
+      "release_bracket": [
+       194,
+       194.5
+      ],
+      "camera_at_release": "other",
+      "centre_field_setup_visible": false,
+      "setup_t": null,
+      "half": "bottom",
+      "inning": 1,
+      "outs": 2,
+      "balls_before": 3,
+      "strikes_before": 2,
+      "batter_text": "3. HARPER",
+      "pitcher_text": "JAX",
+      "pitch_count_text": "P: 20",
+      "post_pitch_graphic": {
+       "type_text": "FOUR-SEAM FASTBALL",
+       "mph": 95
+      },
+      "outcome_seen": "in play: ground ball to the infield, Harper runs to first and appears to be out (inning ends, Top 2nd graphic follows)",
+      "confidence": "medium",
+      "note": "Third-base-side camera cuts in at 194.0 with the pitcher striding and the arm still back. At 194.5 the ball is near the plate, so release was about 194.2. Bug reads ▼1 3-2 2 OUTS."
+     },
+     {
+      "release_t": 216,
+      "release_bracket": [
+       215.5,
+       216
+      ],
+      "camera_at_release": "other",
+      "centre_field_setup_visible": false,
+      "setup_t": null,
+      "half": "top",
+      "inning": 2,
+      "outs": 1,
+      "balls_before": 1,
+      "strikes_before": 2,
+      "batter_text": "9. WALLS",
+      "pitcher_text": "BANKS",
+      "pitch_count_text": "P: 7",
+      "post_pitch_graphic": {
+       "type_text": "FOUR-SEAM FASTBALL",
+       "mph": 93
+      },
+      "outcome_seen": "swinging strike, strikeout (bug then shows 'K 1ST STRIKEOUT')",
+      "confidence": "high",
+      "note": "215.5 is a close-up of Banks. At 216.0 the third-base-side camera shows the ball just out of his hand. Bug reads ▲2 1-2 1 OUT."
+     },
+     {
+      "release_t": 219.5,
+      "release_bracket": [
+       219.5,
+       220
+      ],
+      "camera_at_release": "other",
+      "centre_field_setup_visible": false,
+      "setup_t": null,
+      "half": "top",
+      "inning": 2,
+      "outs": 2,
+      "balls_before": 2,
+      "strikes_before": 2,
+      "batter_text": "1. DÍAZ",
+      "pitcher_text": "BANKS",
+      "pitch_count_text": "P: 12",
+      "post_pitch_graphic": {
+       "type_text": "FOUR-SEAM FASTBALL",
+       "mph": 93
+      },
+      "outcome_seen": "in play: fly ball to outfield, caught (inning over)",
+      "confidence": "medium",
+      "note": "Third-base-side camera. Arm is cocked at 219.5 and the batter is swinging at 220.0, so release was about 219.6-219.7. The catcher's setup is visible only from this side camera, not from centre field. Bug reads ▲2 2-2 2 OUTS."
+     },
+     {
+      "release_t": 230.5,
+      "release_bracket": [
+       230.5,
+       231
+      ],
+      "camera_at_release": "other",
+      "centre_field_setup_visible": false,
+      "setup_t": null,
+      "half": "top",
+      "inning": 3,
+      "outs": 0,
+      "balls_before": null,
+      "strikes_before": null,
+      "batter_text": "3. HICKS",
+      "pitcher_text": "BANKS",
+      "pitch_count_text": "P: 20",
+      "post_pitch_graphic": {
+       "type_text": "SLIDER",
+       "mph": 87
+      },
+      "outcome_seen": "in play: batted ball to the outfield, base hit (runner on first; batter later on base)",
+      "confidence": "low",
+      "note": "The 'Top 3rd inning' graphic runs until 230.5. The video cuts in at 231.0, already after contact, with the batter finishing his swing and the pitcher in follow-through, so the release itself is not shown and was estimated at about 230.6-230.8. The bug's count field is blank (only ▲3, 0 OUT, runner on 1st), so the count is null."
+     }
+    ],
+    "note": "I found 5 live pitches in the range, all filmed from the third-base-side high camera; none is shot from the centre-field camera. The FOX score bug sits bottom-right. Left out as replays or non-pitches: 160-169 shows the end of an earlier play (runner reaching second, dugout celebration, and the score bug only at 160-162). 169.5-171.5 is a low-angle swing replay with no score bug, apparently that earlier hit. 189.0-193.5 is a slow-motion replay of Turner's swinging strike. 235-239 is a pitch-break graphic on the videoboard for Hicks' slider. 175-183.5 and 199-215.5 are close-ups and the Bottom 1st / Top 2nd graphics, and 228-230.5 is the Top 3rd graphic."
+   },
+   "B": {
+    "range": [
+     160,
+     240
+    ],
+    "pitches": [
+     {
+      "release_t": 187,
+      "release_bracket": [
+       186.5,
+       187
+      ],
+      "camera_at_release": "centre_field",
+      "centre_field_setup_visible": false,
+      "setup_t": null,
+      "half": "bottom",
+      "inning": 1,
+      "outs": 0,
+      "balls_before": 2,
+      "strikes_before": 2,
+      "batter_text": "1. TURNER",
+      "pitcher_text": "JAX",
+      "pitch_count_text": "P: 4",
+      "post_pitch_graphic": {
+       "type_text": "CHANGEUP",
+       "mph": 89
+      },
+      "outcome_seen": "swinging strike (catcher holds ball, batter walks off; strikeout swinging)",
+      "confidence": "medium",
+      "note": "186.5 is a tight close-up of Jax. At 187.0 the centre-field shot is already up and the ball is in flight about mid-way, so release was about 186.7-186.9, just after the cut. The bug was read at 187.0 (ball in flight, count not yet updated): bottom-arrow 1, 2-2, 0 OUT, .241. No centre-field frame shows the catcher set up before release."
+     },
+     {
+      "release_t": 194,
+      "release_bracket": [
+       194,
+       194.5
+      ],
+      "camera_at_release": "centre_field",
+      "centre_field_setup_visible": true,
+      "setup_t": 194,
+      "half": "bottom",
+      "inning": 1,
+      "outs": 2,
+      "balls_before": 3,
+      "strikes_before": 2,
+      "batter_text": "3. HARPER",
+      "pitcher_text": "JAX",
+      "pitch_count_text": "P: 20",
+      "post_pitch_graphic": {
+       "type_text": "FOUR-SEAM FASTBALL",
+       "mph": 95
+      },
+      "outcome_seen": "in play: ground ball to the right side, fielded and taken to first as Harper runs (apparent groundout, ending the inning)",
+      "confidence": "high",
+      "note": "At 194.0 the stride is landing with the arm back and the catcher set. At 194.5 the ball is near the plate, so release was about 194.1-194.2. The 193.5 frame is still the replay, so 194.0 is the only centre-field pre-release frame. The 95 MPH graphic appears from 195.5."
+     },
+     {
+      "release_t": 216,
+      "release_bracket": [
+       215.5,
+       216
+      ],
+      "camera_at_release": "centre_field",
+      "centre_field_setup_visible": false,
+      "setup_t": null,
+      "half": "top",
+      "inning": 2,
+      "outs": 1,
+      "balls_before": 1,
+      "strikes_before": 2,
+      "batter_text": "9. WALLS",
+      "pitcher_text": "BANKS",
+      "pitch_count_text": "P: 7",
+      "post_pitch_graphic": {
+       "type_text": "FOUR-SEAM FASTBALL",
+       "mph": 93
+      },
+      "outcome_seen": "swinging strike, strikeout (bug then shows K 1ST STRIKEOUT)",
+      "confidence": "medium",
+      "note": "208.0-215.5 are close-ups of Banks. The cut to centre field at 216.0 shows the ball just out of the hand, so release was at about 216.0. No centre-field frame shows the catcher set before release. Bug at 216.0: up-arrow 2, 1-2, 1 OUT."
+     },
+     {
+      "release_t": 219.5,
+      "release_bracket": [
+       219.5,
+       220
+      ],
+      "camera_at_release": "centre_field",
+      "centre_field_setup_visible": true,
+      "setup_t": 219,
+      "half": "top",
+      "inning": 2,
+      "outs": 2,
+      "balls_before": 2,
+      "strikes_before": 2,
+      "batter_text": "1. DÍAZ",
+      "pitcher_text": "BANKS",
+      "pitch_count_text": "P: 12",
+      "post_pitch_graphic": {
+       "type_text": "FOUR-SEAM FASTBALL",
+       "mph": 93
+      },
+      "outcome_seen": "in play: fly ball to centre/right-centre, caught by the outfielder (about 225), apparently the third out",
+      "confidence": "high",
+      "note": "At 219.0 the catcher is set and the arm is back. At 219.5 the arm is over the top with the ball not yet released. At 220.0 the batter is making contact, so release was about 219.6-219.7. The bug shows 1 FOR 1."
+     },
+     {
+      "release_t": 230.5,
+      "release_bracket": [
+       230.5,
+       231
+      ],
+      "camera_at_release": "other",
+      "centre_field_setup_visible": false,
+      "setup_t": null,
+      "half": "top",
+      "inning": 3,
+      "outs": 0,
+      "balls_before": null,
+      "strikes_before": null,
+      "batter_text": "3. HICKS",
+      "pitcher_text": "BANKS",
+      "pitch_count_text": "P: 20",
+      "post_pitch_graphic": {
+       "type_text": "SLIDER",
+       "mph": 87
+      },
+      "outcome_seen": "in play: batted ball to the outfield, batter reaches first (apparent single)",
+      "confidence": "low",
+      "note": "228.0-230.5 show the TOP 3RD inning graphic. At the first live frame (231.0) the bat is already through the zone, so release came during or just after the transition graphic and was not seen; I set camera 'other' because the release is not visible. The bug at 231.0 shows up-arrow 3, 0 OUT, 0 FOR 1, with the count field blank (possibly 0-0 but not shown), so balls/strikes are null. Ball tracer '87' at 231.5-232.5."
+     }
+    ],
+    "note": "FOX broadcast. The score bug is at bottom right: pitcher and P count, batter, then TB score, an inning arrow with the count, outs, and PHI score. I found 5 live deliveries in the range. Left out as non-pitches or replays: 160-168 (runner jogging after an earlier play, dugout celebration, runner/fielder replays at second without the bug); 169.5-171.5 (low-angle replay of a TB swing, no bug); 172-183.5 (manager, Nola close-ups, BOTTOM 1ST graphic, Jax close-ups); 189.0-193.5 (low-angle replay of the Turner strikeout, no bug); 195.5-198.5 (live follow of the Harper grounder); 199-207.5 (Jax close-ups, TOP 2ND graphic); 208-215.5 (Banks close-ups); 221.5-227.5 (live follow of the Diaz fly ball and Banks walking off); 228-230.5 (TOP 3RD graphic); 232.0-239.5 (follow of the Hicks hit, a pitch-break graphic, Hicks at first). Turner, Walls and Hicks were each released at or right around a cut, so their exact release frames were not captured."
+   }
+  },
+  {
+   "range": [
+    240,
+    320
+   ],
+   "A": {
+    "range": [
+     240,
+     320
+    ],
+    "pitches": [
+     {
+      "release_t": 258.5,
+      "release_bracket": [
+       258.5,
+       259
+      ],
+      "camera_at_release": "other",
+      "centre_field_setup_visible": false,
+      "setup_t": null,
+      "half": "top",
+      "inning": 3,
+      "outs": 1,
+      "balls_before": 1,
+      "strikes_before": 2,
+      "batter_text": "4. CAMINERO",
+      "pitcher_text": "SHUGART",
+      "pitch_count_text": "P: 3",
+      "post_pitch_graphic": {
+       "type_text": "SINKER",
+       "mph": 95
+      },
+      "outcome_seen": "called strike (strike three); catcher signals, Rays ABS challenge shown 262-267.5, next batter comes up with 2 outs so the call stood",
+      "confidence": "medium",
+      "note": "Low side camera behind the pitcher, not centre field. At 258.5 the arm is still back; at 259.0 the ball is already about 70% of the way to the plate, so release is about 258.7. Score bug reads TB 3 PHI 0, top 3, 1-2, 1 OUT."
+     },
+     {
+      "release_t": 268,
+      "release_bracket": [
+       268,
+       268.5
+      ],
+      "camera_at_release": "other",
+      "centre_field_setup_visible": false,
+      "setup_t": null,
+      "half": "top",
+      "inning": 3,
+      "outs": 2,
+      "balls_before": 1,
+      "strikes_before": 1,
+      "batter_text": "5. MESA JR.",
+      "pitcher_text": "SHUGART",
+      "pitch_count_text": "P: 6",
+      "post_pitch_graphic": {
+       "type_text": "CHANGEUP",
+       "mph": 88
+      },
+      "outcome_seen": "in play: fly ball to the outfield, caught by the Phillies outfielder (inning ends; Bottom 3rd graphic follows)",
+      "confidence": "medium",
+      "note": "Same side camera. At 268.0 the arm is high and back; at 268.5 the ball is almost at the catcher, so release is about 268.1."
+     },
+     {
+      "release_t": 288,
+      "release_bracket": [
+       288,
+       288.5
+      ],
+      "camera_at_release": "other",
+      "centre_field_setup_visible": false,
+      "setup_t": null,
+      "half": "bottom",
+      "inning": 3,
+      "outs": 0,
+      "balls_before": 0,
+      "strikes_before": 1,
+      "batter_text": "7. MARSH",
+      "pitcher_text": "JAX",
+      "pitch_count_text": "P: 37",
+      "post_pitch_graphic": {
+       "type_text": "CURVEBALL",
+       "mph": 84
+      },
+      "outcome_seen": "in play: ground ball past the diving second baseman into right field, apparently a single",
+      "confidence": "medium",
+      "note": "The camera cuts from a batter close-up (288.0) to the side view behind the pitcher (288.5). The pitcher is already in full follow-through at 288.5, and the ball is in the catcher's area at 289.0 as the batter swings. Release is about 288.2 and could round to either frame."
+     },
+     {
+      "release_t": 296,
+      "release_bracket": [
+       295.5,
+       296
+      ],
+      "camera_at_release": "other",
+      "centre_field_setup_visible": false,
+      "setup_t": null,
+      "half": "bottom",
+      "inning": 3,
+      "outs": 0,
+      "balls_before": 1,
+      "strikes_before": 1,
+      "batter_text": "8. REALMUTO",
+      "pitcher_text": "JAX",
+      "pitch_count_text": "P: 40",
+      "post_pitch_graphic": {
+       "type_text": "SINKER",
+       "mph": 94
+      },
+      "outcome_seen": "in play: ground ball to the shortstop side; force at second, batter safe at first (bug then shows 1 OUT, P: 41)",
+      "confidence": "medium",
+      "note": "295.5 is a dissolve with the arm still back; at 296.0 the ball is about halfway to the plate, so release is about 295.8. A runner is on first."
+     },
+     {
+      "release_t": 308.5,
+      "release_bracket": [
+       308,
+       308.5
+      ],
+      "camera_at_release": "other",
+      "centre_field_setup_visible": false,
+      "setup_t": null,
+      "half": "bottom",
+      "inning": 3,
+      "outs": 2,
+      "balls_before": 1,
+      "strikes_before": 2,
+      "batter_text": "9. CRAWFORD",
+      "pitcher_text": "JAX",
+      "pitch_count_text": "P: 46",
+      "post_pitch_graphic": {
+       "type_text": "CHANGEUP",
+       "mph": 90
+      },
+      "outcome_seen": "in play: ground ball up the middle through the infield into centre field, apparently a single",
+      "confidence": "medium",
+      "note": "Side camera. At 308.0 the pitcher is striding and the hands are separating; at 308.5 he has just released, and the ball is roughly midway or later, so release is about 308.3."
+     }
+    ],
+    "note": "Score bug: FOX style, bottom right. The top line shows the pitcher (or batter, while TB pitches) and P:count, the second line the batter, and below that TB score, an arrow with the inning, the count, outs and PHI score. Five live pitches were found, all from a low side camera behind the pitcher; no centre-field camera is used in this range. Not counted as pitches: 240.0-240.5 is live footage of Hicks at first after a hit (bug BANKS P:21, top 3, 1 OUT). 241.0-247.5 is a replay with no bug, from a high third-base-side angle, of Liam Hicks's hit. 248-256 shows runners at first. 256.5-258 is a close-up of the pitcher. 262-267.5 is the Automated Balls & Strikes challenge graphic with a replay of the Caminero pitch. 279-281.5 is the Bottom 3rd transition. 282-288 are batter close-ups. 290-295 is live follow and close-ups of Marsh. 301.0-306.5 is a replay with no bug, from a high third-base-side camera, of Realmuto's ground ball and the play at first; 307.0 is a dissolve. 311-312.5 shows Crawford at first. 313.0-316.5 has no bug and shows Crawford sliding headfirst into second with a tag. No pitch release is visible there; it is probably a replay or a steal whose pitch is not shown. 317-319.5 are close-ups of Crawford and the next batter. No release falls in 312-320."
+   },
+   "B": {
+    "range": [
+     240,
+     320
+    ],
+    "pitches": [
+     {
+      "release_t": 259,
+      "release_bracket": [
+       258.5,
+       259
+      ],
+      "camera_at_release": "centre_field",
+      "centre_field_setup_visible": true,
+      "setup_t": 258.5,
+      "half": "top",
+      "inning": 3,
+      "outs": 1,
+      "balls_before": 1,
+      "strikes_before": 2,
+      "batter_text": "4. CAMINERO",
+      "pitcher_text": "SHUGART",
+      "pitch_count_text": "P: 3",
+      "post_pitch_graphic": {
+       "type_text": "SINKER",
+       "mph": 95
+      },
+      "outcome_seen": "called strike three; Rays ABS challenge (262-267.5) upheld the strike, bug then shows 2 OUTS",
+      "confidence": "high",
+      "note": "Cut from pitcher close-up (258.0) to CF view at 258.5 with pitcher already striding; ball about midway to plate at 259.0, so release ~258.8. 4. is the lineup slot."
+     },
+     {
+      "release_t": 268,
+      "release_bracket": [
+       268,
+       268.5
+      ],
+      "camera_at_release": "centre_field",
+      "centre_field_setup_visible": true,
+      "setup_t": 268,
+      "half": "top",
+      "inning": 3,
+      "outs": 2,
+      "balls_before": 1,
+      "strikes_before": 1,
+      "batter_text": "5. MESA JR.",
+      "pitcher_text": "SHUGART",
+      "pitch_count_text": "P: 6",
+      "post_pitch_graphic": {
+       "type_text": "CHANGEUP",
+       "mph": 88
+      },
+      "outcome_seen": "in play: fly ball to right field, caught (275.0), ends top 3",
+      "confidence": "high",
+      "note": "First CF frame 268.0 (after ABS graphic) shows the pitcher with his arm cocked and the catcher set; ball reaching the plate at 268.5."
+     },
+     {
+      "release_t": 288.5,
+      "release_bracket": [
+       288,
+       288.5
+      ],
+      "camera_at_release": "centre_field",
+      "centre_field_setup_visible": false,
+      "setup_t": null,
+      "half": "bottom",
+      "inning": 3,
+      "outs": 0,
+      "balls_before": 0,
+      "strikes_before": 1,
+      "batter_text": "7. MARSH",
+      "pitcher_text": "JAX",
+      "pitch_count_text": "P: 37",
+      "post_pitch_graphic": {
+       "type_text": "CURVEBALL",
+       "mph": 84
+      },
+      "outcome_seen": "in play: ground ball past diving infielder into centre field, single",
+      "confidence": "medium",
+      "note": "288.0 is a batter close-up; first CF frame 288.5 already shows the pitcher in follow-through, so release ~288.25-288.3 and the camera at the exact release moment is uncertain. No CF setup frame. 291.5-295 are close-ups of Marsh at first."
+     },
+     {
+      "release_t": 296,
+      "release_bracket": [
+       295.5,
+       296
+      ],
+      "camera_at_release": "centre_field",
+      "centre_field_setup_visible": true,
+      "setup_t": 295.5,
+      "half": "bottom",
+      "inning": 3,
+      "outs": 0,
+      "balls_before": 1,
+      "strikes_before": 1,
+      "batter_text": "8. REALMUTO",
+      "pitcher_text": "JAX",
+      "pitch_count_text": "P: 40",
+      "post_pitch_graphic": {
+       "type_text": "SINKER",
+       "mph": 94
+      },
+      "outcome_seen": "in play: ground ball, force out at second (Marsh), batter reaches first; bug then 1 OUT, P: 41",
+      "confidence": "high",
+      "note": "295.5 is a dissolve into the CF view; the catcher is set and the pitcher is striding. Ball past midway at 296.0, release ~295.75-295.8. 301.0-306.5 are replays of this play from other angles."
+     },
+     {
+      "release_t": 307.5,
+      "release_bracket": [
+       307.5,
+       308
+      ],
+      "camera_at_release": "centre_field",
+      "centre_field_setup_visible": true,
+      "setup_t": 307.5,
+      "half": "bottom",
+      "inning": 3,
+      "outs": 2,
+      "balls_before": 1,
+      "strikes_before": 2,
+      "batter_text": "9. CRAWFORD",
+      "pitcher_text": "JAX",
+      "pitch_count_text": "P: 46",
+      "post_pitch_graphic": {
+       "type_text": "CHANGEUP",
+       "mph": 90
+      },
+      "outcome_seen": "in play: hit to left field, batter reaches second (extra-base hit, appears to be a double)",
+      "confidence": "medium",
+      "note": "At 307.5 the pitcher is striding with the ball not yet released; at 308.0 the ball is about 75% of the way to the plate, so release ~307.7 (between 307.5 and 308.0). 313.0-316.5 are a replay of the slide into second. The bug shows the bases empty before this pitch."
+     }
+    ],
+    "note": "Score bug: FOX, bottom-right (pitcher / batter rows, TB-PHI score, inning arrow, count, outs). The numbers before batter names are lineup slots (4., 5., 7., 8., 9.). Not counted as new pitches: 241.0-255.5 is a replay of the earlier Hicks hit from other cameras with no bug (live shot at 240 shows Hicks already on first, 1 out); 262.0-267.5 is the ABS challenge replay of the Caminero pitch; 301.0-306.5 replays the Realmuto ground-ball play; 313.0-316.5 replays Crawford's slide into second. 276-287.5 is pitcher/batter close-ups and the BOTTOM 3RD graphic, and 317-319.5 is close-ups of the next batter (Crawford is shown on the 2026 STATS board). The bug's 0-1 count before Marsh and the empty bases before Crawford mean the condensed edit skipped some pitches."
+   }
+  },
+  {
+   "range": [
+    320,
+    400
+   ],
+   "A": {
+    "range": [
+     320,
+     400
+    ],
+    "pitches": [
+     {
+      "release_t": 323.5,
+      "release_bracket": [
+       323,
+       323.5
+      ],
+      "camera_at_release": "centre_field",
+      "centre_field_setup_visible": true,
+      "setup_t": 323,
+      "half": "bottom",
+      "inning": 3,
+      "outs": 2,
+      "balls_before": 2,
+      "strikes_before": 2,
+      "batter_text": "1. TURNER",
+      "pitcher_text": "JAX",
+      "pitch_count_text": "P: 51",
+      "post_pitch_graphic": {
+       "type_text": "CHANGEUP",
+       "mph": 89
+      },
+      "outcome_seen": "in play: ground ball to the left side of the infield, throw to first; close play at first base (inning appears to end, Rays walk off with trainer afterwards)",
+      "confidence": "medium",
+      "note": "The game camera only cuts in at 323.0, after a Turner close-up. At 323.0 the pitcher is in his stride with the catcher set; at 323.5 the ball is in flight about 40% of the way to the plate, so release is about 323.3. The camera is the broadcast's standard pitch view: low, offset, from centre field, showing pitcher, batter, catcher and umpire. Bug reads ▼3, 2-2, 2 OUTS, TB 3 PHI 0."
+     },
+     {
+      "release_t": 370.5,
+      "release_bracket": [
+       370.5,
+       371
+      ],
+      "camera_at_release": "centre_field",
+      "centre_field_setup_visible": true,
+      "setup_t": 370.5,
+      "half": "bottom",
+      "inning": 4,
+      "outs": 0,
+      "balls_before": 0,
+      "strikes_before": 2,
+      "batter_text": "2. SCHWARBER",
+      "pitcher_text": "MATZ",
+      "pitch_count_text": "P: 2",
+      "post_pitch_graphic": {
+       "type_text": "SINKER",
+       "mph": 94
+      },
+      "outcome_seen": "swinging strike (strike three, catcher holds the ball)",
+      "confidence": "medium",
+      "note": "First live frame after the BOTTOM 4TH bumper and Matz close-ups. At 370.5 the arm is cocked and the front foot is landing; at 371.0 he is in his follow-through. Release is about 370.7, which could round to 371.0. The bug shows P: 2 with a 0-2 count. At 371.5 the ball is in the glove with a 94 tracer."
+     },
+     {
+      "release_t": 378.5,
+      "release_bracket": [
+       378,
+       378.5
+      ],
+      "camera_at_release": "centre_field",
+      "centre_field_setup_visible": true,
+      "setup_t": 378,
+      "half": "bottom",
+      "inning": 4,
+      "outs": 2,
+      "balls_before": 2,
+      "strikes_before": 1,
+      "batter_text": "4. BOHM",
+      "pitcher_text": "MATZ",
+      "pitch_count_text": "P: 9",
+      "post_pitch_graphic": {
+       "type_text": "CHANGEUP",
+       "mph": 84
+      },
+      "outcome_seen": "in play: fly ball to the outfield, caught by an outfielder (about 384.5) for the third out",
+      "confidence": "medium",
+      "note": "Cuts in via a dissolve at 377.5–378.0. At 378.0 the arm is coming through; at 378.5 the ball is in flight about 25–30% of the way to the plate, so release is about 378.35. At 379.0 an 84 tracer is near the glove and the bat is swinging."
+     }
+    ],
+    "note": "Three live pitches in t = 320–400: Turner at 323.5 (bottom 3rd), Schwarber at 370.5 (bottom 4th, Matz) and Bohm at 378.5 (bottom 4th). The score bug is FOX, bottom-right. It shows the pitcher and pitch count on the top line, the batter on a red line, then TB score, inning arrow, count, outs and PHI score. Pitch type and mph appear above it after each pitch. Everything else is excluded:\n- 320.0–322.5: Turner close-ups.\n- 325.5–329.0: fielding of the ground ball.\n- 329–333: close-ups of a Rays player bent over.\n- 333.5–339.5: replay of the Turner at-bat from behind home plate, no bug.\n- 340–346.5: replay of the play at first base.\n- 347–355.5: Rays trainer and group on the field.\n- 356–365: dugout interview with the Rays manager, with a 'longest tenured managers' graphic.\n- 365.5–368.0: BOTTOM 4TH bumper.\n- 368.5–370.0: Matz close-ups.\n- 373.0–377.5: replay of the Schwarber pitch from a first-base-side low angle, no bug.\n- 380–384.5: fly-ball coverage.\n- 385–391.5: Matz close-ups.\n- 392–394: TOP 5TH bumper.\n- 394.5–397: infield view with no pitch.\n- 397.5–399.5: Alvarado close-ups.\nThe broadcast's pitch camera is a low, offset centre-field angle rather than a high one, but it shows pitcher, batter, catcher and umpire together, so I labelled it centre_field."
+   },
+   "B": {
+    "range": [
+     320,
+     400
+    ],
+    "pitches": [
+     {
+      "release_t": 323,
+      "release_bracket": [
+       323,
+       323.5
+      ],
+      "camera_at_release": "other",
+      "centre_field_setup_visible": false,
+      "setup_t": null,
+      "half": "bottom",
+      "inning": 3,
+      "outs": 2,
+      "balls_before": 2,
+      "strikes_before": 2,
+      "batter_text": "1. TURNER",
+      "pitcher_text": "JAX",
+      "pitch_count_text": "P: 51",
+      "post_pitch_graphic": {
+       "type_text": "CHANGEUP",
+       "mph": 89
+      },
+      "outcome_seen": "in play: ground ball to the left side of the infield; throw to first, runner (Turner) appears safe at first (infield hit); 2 OUTS still shown at 328.0",
+      "confidence": "high",
+      "note": "Low side camera (pitcher left, batter right, NLDS/PLAYBALL.ORG board), not centre field. At 323.0 the arm is still cocked; at 323.5 the pitcher is in follow-through with the ball in flight near the plate. Bug read at 323.0 and 323.5: JAX P: 51 / 1. TURNER 0 FOR 1 / down-arrow 3, 2-2, 2 OUTS."
+     },
+     {
+      "release_t": 371,
+      "release_bracket": [
+       370.5,
+       371
+      ],
+      "camera_at_release": "other",
+      "centre_field_setup_visible": false,
+      "setup_t": null,
+      "half": "bottom",
+      "inning": 4,
+      "outs": 0,
+      "balls_before": 0,
+      "strikes_before": 2,
+      "batter_text": "2. SCHWARBER",
+      "pitcher_text": "MATZ",
+      "pitch_count_text": "P: 2",
+      "post_pitch_graphic": {
+       "type_text": "SINKER",
+       "mph": 94
+      },
+      "outcome_seen": "taken, no swing; catcher receives the pitch (looks like a called strike). The bug at 372.5 still shows 0-2, 0 OUT; the next live pitch is to Bohm with 2 OUTS",
+      "confidence": "medium",
+      "note": "Same low side camera. At 370.5 the arm is cocked; at 371.0 the pitcher is in follow-through. Bug read at 370.5 and 371.0. Exact release could be about 370.7. The bug count 0-2 with P: 2 is shown as read."
+     },
+     {
+      "release_t": 378.5,
+      "release_bracket": [
+       378,
+       378.5
+      ],
+      "camera_at_release": "other",
+      "centre_field_setup_visible": false,
+      "setup_t": null,
+      "half": "bottom",
+      "inning": 4,
+      "outs": 2,
+      "balls_before": 2,
+      "strikes_before": 1,
+      "batter_text": "4. BOHM",
+      "pitcher_text": "MATZ",
+      "pitch_count_text": "P: 9",
+      "post_pitch_graphic": {
+       "type_text": "CHANGEUP",
+       "mph": 84
+      },
+      "outcome_seen": "in play: fly ball to left field, caught by the left fielder (about 384.5), which ends the bottom of the 4th",
+      "confidence": "high",
+      "note": "Same low side camera. It cross-dissolves in from the replay at 377.5. At 378.0 the arm is back; at 378.5 the pitcher is in follow-through; at 379.0 the batter swings. Bug read at 378.0 and 378.5: MATZ P: 9 / 4. BOHM 0 FOR 1 / down-arrow 4, 2-1, 2 OUTS."
+     }
+    ],
+    "note": "I found 3 live pitches in 320-400. The FOX bug sits at the bottom right, with pitcher/P: count, batter, then the inning arrow, count and outs. In this game no live delivery is shown from the high centre-field camera. All three are from a low side camera (pitcher left, batter right), so camera_at_release is \"other\" and no setup_t is given. Replays left out: (1) 333.5-335.5, the Turner pitch again from a high camera behind home plate, with no bug. (2) 336-346.5, replays of that ground ball and the play at first from several angles; a stats board on the scoreboard shows the batted-ball data and \"CHANGEUP 89 MPH\". (3) 373.0-377.5, replays from the low first-base-side SHOP camera, with no live bug. They seem to show a taken pitch (375.0-375.5) and then a separate swinging pitch (376.0-377.0), which may be from an earlier at-bat that was skipped. None of them were counted. The rest is not a pitch: 328.5-333 a TB fielder bent over and attended to; 347-355.5 a TB mound/trainer meeting; 356-365 interview with the TB manager; 365.5-368 'BOTTOM 4TH' graphic; 368.5-370 Matz close-up; 384.5-391.5 Matz close-ups; 392-394 'TOP 5TH' graphic; 394.5-397 infield view; 397.5-399.5 Alvarado (#46) close-ups. No delivery is released before 400."
+   }
+  },
+  {
+   "range": [
+    400,
+    480
+   ],
+   "A": {
+    "range": [
+     400,
+     480
+    ],
+    "pitches": [
+     {
+      "release_t": 404.5,
+      "release_bracket": [
+       404.5,
+       405
+      ],
+      "camera_at_release": "centre_field",
+      "centre_field_setup_visible": true,
+      "setup_t": 404.5,
+      "half": "top",
+      "inning": 5,
+      "outs": 0,
+      "balls_before": 1,
+      "strikes_before": 2,
+      "batter_text": "3. HICKS",
+      "pitcher_text": "ALVARADO",
+      "pitch_count_text": "P: 11",
+      "post_pitch_graphic": {
+       "type_text": "CUTTER",
+       "mph": 90
+      },
+      "outcome_seen": "in play: ground ball to the infield; force play / slide at second base (406-410)",
+      "confidence": "high",
+      "note": "Cut to CF camera at 404.0 with pitcher already in delivery; arm fully cocked at 404.5, follow-through and swing at 405.0. Bug shows runners on 1st and 2nd. Graphic 'CUTTER 90MPH' at ~406-408."
+     },
+     {
+      "release_t": 420,
+      "release_bracket": [
+       419.5,
+       420
+      ],
+      "camera_at_release": "centre_field",
+      "centre_field_setup_visible": true,
+      "setup_t": 419.5,
+      "half": "top",
+      "inning": 5,
+      "outs": 1,
+      "balls_before": null,
+      "strikes_before": null,
+      "batter_text": "5. MESA JR.",
+      "pitcher_text": "ALVARADO",
+      "pitch_count_text": "P: 12",
+      "post_pitch_graphic": {
+       "type_text": "SINKER",
+       "mph": 97
+      },
+      "outcome_seen": "in play: fly ball to the outfield, caught; runner scores from third (TB 3->4) - apparent sacrifice fly",
+      "confidence": "high",
+      "note": "Bug shows no count (blank count field) before this pitch, so balls/strikes left null; bases loaded. Arm cocked at 419.5, follow-through at 420.0, ball near plate at 420.5. Low home-plate slow-motion replay of this pitch at 429-433.5 (no score bug) excluded."
+     },
+     {
+      "release_t": 436,
+      "release_bracket": [
+       436,
+       436.5
+      ],
+      "camera_at_release": "centre_field",
+      "centre_field_setup_visible": true,
+      "setup_t": 435.5,
+      "half": "top",
+      "inning": 5,
+      "outs": 1,
+      "balls_before": 3,
+      "strikes_before": 0,
+      "batter_text": "6. PALACIOS",
+      "pitcher_text": "ALVARADO",
+      "pitch_count_text": "P: 16",
+      "post_pitch_graphic": {
+       "type_text": "SINKER",
+       "mph": 96
+      },
+      "outcome_seen": "ball (batter takes; count cleared afterwards at 439.5 with P: 17, apparently ball four / walk)",
+      "confidence": "medium",
+      "note": "Bases loaded, TB 4-0. Arm coming through at 436.0, follow-through with ball reaching catcher at 436.5; release estimated ~436.0-436.2. Bug at 439.5 still shows TB 4 with bases loaded."
+     },
+     {
+      "release_t": 459,
+      "release_bracket": [
+       459,
+       459.5
+      ],
+      "camera_at_release": "centre_field",
+      "centre_field_setup_visible": true,
+      "setup_t": 459,
+      "half": "top",
+      "inning": 5,
+      "outs": 2,
+      "balls_before": 1,
+      "strikes_before": 1,
+      "batter_text": "8. MULLINS",
+      "pitcher_text": "URQUIDY",
+      "pitch_count_text": "P: 8",
+      "post_pitch_graphic": {
+       "type_text": "CHANGEUP",
+       "mph": 85
+      },
+      "outcome_seen": "in play: hit to the outfield; two runs score (TB 5->7), batter ends up at second base (apparent double)",
+      "confidence": "medium",
+      "note": "New pitcher (#70 Urquidy). CF camera appears via dissolve at ~458.5-459.0 with arm already at full layback at 459.0; follow-through and swing at 459.5, so release ~459.1-459.3. Bases loaded, TB 5-0."
+     }
+    ],
+    "note": "Score bug: FOX, lower right (pitcher/pitch count on top row, batter row, then TB score, half-arrow plus inning plus count, outs, bases diamond). Found 4 live pitches, all in the top of the 5th. Left out: (1) the low home-plate slow-motion replay of the Mesa Jr. pitch at 429-433.5 (no bug). (2) The high wide shot from behind home at 456-458.5 (no bug), where the pitcher stands still on the mound and no delivery is seen. (3) Close-ups, crowd shots and dugout shots at 400-403.5, 410.5-416.5, 426.5-428.5, 440.5-455.5 and 468-480. The video skips ahead between pitches: between 440 and 459 the score went from 4 to 5, outs went from 1 to 2, and the pitcher changed from Alvarado to Urquidy, all off-camera. Mesa Jr. pitch: the count field is blank in the bug, so balls and strikes are null."
+   },
+   "B": {
+    "range": [
+     400,
+     480
+    ],
+    "pitches": [
+     {
+      "release_t": 404.5,
+      "release_bracket": [
+       404.5,
+       405
+      ],
+      "camera_at_release": "centre_field",
+      "centre_field_setup_visible": true,
+      "setup_t": 404,
+      "half": "top",
+      "inning": 5,
+      "outs": 0,
+      "balls_before": 1,
+      "strikes_before": 2,
+      "batter_text": "3. HICKS",
+      "pitcher_text": "ALVARADO",
+      "pitch_count_text": "P: 11",
+      "post_pitch_graphic": {
+       "type_text": "CUTTER",
+       "mph": 90
+      },
+      "outcome_seen": "in play, ground ball; play at second base (runner sliding in), batter reaches first; outs go 0 to 1 by the next at-bat",
+      "confidence": "high",
+      "note": "The arm is overhead at 404.5 and in follow-through at 405.0, with the batter already swinging, so release is about 404.6. The bug reads ▲5 1-2 0 OUT. Frames 406-414 follow the play."
+     },
+     {
+      "release_t": 420,
+      "release_bracket": [
+       419.5,
+       420
+      ],
+      "camera_at_release": "centre_field",
+      "centre_field_setup_visible": true,
+      "setup_t": 419.5,
+      "half": "top",
+      "inning": 5,
+      "outs": 1,
+      "balls_before": null,
+      "strikes_before": null,
+      "batter_text": "5. MESA JR.",
+      "pitcher_text": "ALVARADO",
+      "pitch_count_text": "P: 12",
+      "post_pitch_graphic": {
+       "type_text": "SINKER",
+       "mph": 97
+      },
+      "outcome_seen": "in play, hit to the outfield (first pitch); TB score goes from 3 to 4",
+      "confidence": "high",
+      "note": "The bug's count field is blank before the pitch, with no number shown, so I left it null; it is probably 0-0. The pitch type label is partly cut off at the top of the bug, and SINKER is read from the contact sheet. 97MPH is clear."
+     },
+     {
+      "release_t": 436,
+      "release_bracket": [
+       435.5,
+       436
+      ],
+      "camera_at_release": "centre_field",
+      "centre_field_setup_visible": true,
+      "setup_t": 435.5,
+      "half": "top",
+      "inning": 5,
+      "outs": 1,
+      "balls_before": 3,
+      "strikes_before": 0,
+      "batter_text": "6. PALACIOS",
+      "pitcher_text": "ALVARADO",
+      "pitch_count_text": "P: 16",
+      "post_pitch_graphic": {
+       "type_text": "SINKER",
+       "mph": 96
+      },
+      "outcome_seen": "ball (ball four, walk): the bug then shows P: 17 and a blank count",
+      "confidence": "high",
+      "note": "The pitcher is in his stride at 435.5 and in follow-through at 436.0. The bug reads ▲5 3-0 1 OUT, TB 4."
+     },
+     {
+      "release_t": 459,
+      "release_bracket": [
+       459,
+       459.5
+      ],
+      "camera_at_release": "centre_field",
+      "centre_field_setup_visible": true,
+      "setup_t": 459,
+      "half": "top",
+      "inning": 5,
+      "outs": 2,
+      "balls_before": 1,
+      "strikes_before": 1,
+      "batter_text": "8. MULLINS",
+      "pitcher_text": "URQUIDY",
+      "pitch_count_text": "P: 8",
+      "post_pitch_graphic": {
+       "type_text": "CHANGEUP",
+       "mph": 85
+      },
+      "outcome_seen": "in play, hit to the outfield; runs score (TB 5 to 6 to 7)",
+      "confidence": "medium",
+      "note": "The centre-field shot starts at 459.0 with the arm already coming forward (456-458.5 is a wide aerial view), so the only frame showing the catcher's setup is 459.0. The batter swings at 459.5. Release is between 459.0 and 459.5."
+     }
+    ],
+    "note": "Score bug: FOX style, bottom right, showing pitcher and P count, batter and stats, then TB, ▲inning, count, outs, PHI. Four live pitches, all in the top of the 5th. Not counted: 400-403.5 is an Alvarado close-up. 406-414 follows the Hicks play from field angles. 415-416.5 is a low behind-pitcher view before the Mesa at-bat. 421.5-428.5 follows Mesa's hit and shows the dugout. 429-433.5 is a slow-motion replay of Mesa's hit from a low angle behind the mound (batter #25, no score bug), not a new pitch. At 440.0 Alvarado is shown at P: 17 with no delivery before the cut to fans and manager shots (440.5-449.5). 450-455.5 are batter close-ups and 456-458.5 a wide aerial view. 460.5-467.5 follows Mullins' hit and runners scoring. 468-479.5 shows the dugout, fans and a player close-up, with no pitches."
+   }
+  },
+  {
+   "range": [
+    480,
+    560
+   ],
+   "A": {
+    "range": [
+     480,
+     560
+    ],
+    "pitches": [
+     {
+      "release_t": 492,
+      "release_bracket": [
+       491.5,
+       492
+      ],
+      "camera_at_release": "other",
+      "centre_field_setup_visible": false,
+      "setup_t": null,
+      "half": "top",
+      "inning": 6,
+      "outs": 2,
+      "balls_before": null,
+      "strikes_before": null,
+      "batter_text": "5. MESA JR.",
+      "pitcher_text": "URQUIDY",
+      "pitch_count_text": "P: 34",
+      "post_pitch_graphic": {
+       "type_text": "CURVEBALL",
+       "mph": 76
+      },
+      "outcome_seen": "in play: hit to the left-field corner, fielder (#41) chases it to the wall; batter reaches base (likely extra-base hit)",
+      "confidence": "medium",
+      "note": "Delivery is shown from the low third-base-side camera behind the pitcher, not centre field. It is preceded by side close-ups of the batter (489.5-491.5), so no catcher setup is visible in centre-field view. At 492.0 the arm is already forward and the swing follows by 492.5. The bug shows no count, only '▲6 2 OUTS', so balls and strikes are left null. Bug reads TB 7 PHI 0."
+     },
+     {
+      "release_t": 511.5,
+      "release_bracket": [
+       511.5,
+       512
+      ],
+      "camera_at_release": "other",
+      "centre_field_setup_visible": false,
+      "setup_t": null,
+      "half": "top",
+      "inning": 6,
+      "outs": 2,
+      "balls_before": null,
+      "strikes_before": null,
+      "batter_text": "6. PALACIOS",
+      "pitcher_text": "URQUIDY",
+      "pitch_count_text": "P: 35",
+      "post_pitch_graphic": {
+       "type_text": "FOUR-SEAM FASTBALL",
+       "mph": 91
+      },
+      "outcome_seen": "in play: hit to left/left-centre field, a run scores (TB goes 8 to 9 by 517.5)",
+      "confidence": "medium",
+      "note": "The cut into the delivery comes at 511.5, after fan shots, with the arm cocked high. Contact is already made at 512.0, so release is about 511.6. Same third-base-side camera, not centre field. The bug shows no count. Bug reads TB 8 PHI 0."
+     },
+     {
+      "release_t": 536,
+      "release_bracket": [
+       535.5,
+       536
+      ],
+      "camera_at_release": "other",
+      "centre_field_setup_visible": false,
+      "setup_t": null,
+      "half": "bottom",
+      "inning": 7,
+      "outs": 1,
+      "balls_before": 0,
+      "strikes_before": 2,
+      "batter_text": "5. STOTT",
+      "pitcher_text": "RODRÍGUEZ",
+      "pitch_count_text": "P: 3",
+      "post_pitch_graphic": {
+       "type_text": "FOUR-SEAM FASTBALL",
+       "mph": 98
+      },
+      "outcome_seen": "in play: line drive to the right-field corner, fielder retrieves it at the wall (329 sign); Stott ends up on base (likely double)",
+      "confidence": "medium",
+      "note": "Video cuts from the 'BOTTOM 7TH' graphic (ends at 535.5) straight to a pitcher already in follow-through at 536.0, so release happened right around the cut. Same third-base-side camera. Count 0-2 read from bug '▼7 0-2 1 OUT', TB 10 PHI 0."
+     },
+     {
+      "release_t": 560,
+      "release_bracket": [
+       559.5,
+       560
+      ],
+      "camera_at_release": "other",
+      "centre_field_setup_visible": false,
+      "setup_t": null,
+      "half": "bottom",
+      "inning": 7,
+      "outs": 1,
+      "balls_before": 1,
+      "strikes_before": 2,
+      "batter_text": "7. MARSH",
+      "pitcher_text": "RODRÍGUEZ",
+      "pitch_count_text": "P: 14",
+      "post_pitch_graphic": {
+       "type_text": "SINKER",
+       "mph": 97
+      },
+      "outcome_seen": "called strike (taken, appears to be called strike three; batter walks away dejected)",
+      "confidence": "medium",
+      "note": "Boundary case: release is about 559.7-560.0, right at the end of the range, so the next reader may report it too. At 559.5 the pitcher is striding with the arm back; at 560.0 he is in follow-through; at 560.5 the ball (97 tracer) is at the catcher. Bug '▼7 1-2 1 OUT', TB 10 PHI 0. Third-base-side camera."
+     }
+    ],
+    "note": "FOX score bug (bottom right) shows pitcher with pitch count, batter with lineup number, and inning arrow with count and outs. Before pitches 1 and 2 (top 6) no count was displayed, so balls and strikes are null. Every live delivery in this broadcast is shown from the low camera behind the pitcher on the third-base side, never the high centre-field camera, so centre_field_setup_visible is false for all. Not counted: 480-487.5 (player close-ups and the TOP 6TH graphic), 496-503.5 and 513-519.5 (follow-up action of the batted balls), 520-535.5 (fans, mound visit, BOTTOM 7TH graphic), 537-551.5 (Stott's hit play and close-ups). Replays left out: 552.5-559.0 is a slow-motion replay of a Phillies batter's swing (Stott's hit) plus a high wide shot, with no score bug. The live bug returns at 559.5."
+   },
+   "B": {
+    "range": [
+     480,
+     560
+    ],
+    "pitches": [
+     {
+      "release_t": 492,
+      "release_bracket": [
+       491.5,
+       492
+      ],
+      "camera_at_release": "centre_field",
+      "centre_field_setup_visible": false,
+      "setup_t": null,
+      "half": "top",
+      "inning": 6,
+      "outs": 2,
+      "balls_before": null,
+      "strikes_before": null,
+      "batter_text": "5. MESA JR.",
+      "pitcher_text": "URQUIDY",
+      "pitch_count_text": "P: 34",
+      "post_pitch_graphic": {
+       "type_text": "CURVEBALL",
+       "mph": 76
+      },
+      "outcome_seen": "in play: hit to right-field corner (fly/liner), batter reaches and celebrates; TB score goes 7 to 8 by the next pitch",
+      "confidence": "medium",
+      "note": "Setup was a close-up of the batter from a side camera (489.5-491.5). The cut to centre field comes just before 492.0, and the pitcher is already in follow-through there, so release fell around the cut. The bug shows '2 FOR 3' and no count, so balls and strikes are null. Bug reads ▲6, 2 OUTS, TB 7 PHI 0."
+     },
+     {
+      "release_t": 511.5,
+      "release_bracket": [
+       511.5,
+       512
+      ],
+      "camera_at_release": "centre_field",
+      "centre_field_setup_visible": true,
+      "setup_t": 511.5,
+      "half": "top",
+      "inning": 6,
+      "outs": 2,
+      "balls_before": null,
+      "strikes_before": null,
+      "batter_text": "6. PALACIOS",
+      "pitcher_text": "URQUIDY",
+      "pitch_count_text": "P: 35",
+      "post_pitch_graphic": {
+       "type_text": "FOUR-SEAM FASTBALL",
+       "mph": 91
+      },
+      "outcome_seen": "in play: swung and hit to left field; outfielder throws in, a TB runner scores (TB 8 to 9 at 517.5)",
+      "confidence": "high",
+      "note": "Cut from a fan close-up at 511.0. At 511.5 the ball is still in the hand at the top of the arm path and the catcher is set (the only centre-field frame before release). At 512.0 the batter is making contact. The bug shows '1 FOR 2' and no count. Bug reads ▲6, 2 OUTS, TB 8 PHI 0."
+     },
+     {
+      "release_t": 536,
+      "release_bracket": [
+       535.5,
+       536
+      ],
+      "camera_at_release": "centre_field",
+      "centre_field_setup_visible": false,
+      "setup_t": null,
+      "half": "bottom",
+      "inning": 7,
+      "outs": 1,
+      "balls_before": 0,
+      "strikes_before": 2,
+      "batter_text": "5. STOTT",
+      "pitcher_text": "RODRÍGUEZ",
+      "pitch_count_text": "P: 3",
+      "post_pitch_graphic": {
+       "type_text": "FOUR-SEAM FASTBALL",
+       "mph": 98
+      },
+      "outcome_seen": "in play: hit to the left-field corner, fielder picks the ball up at the wall; Stott ends on first (runner on 1st, P: 4)",
+      "confidence": "medium",
+      "note": "Comes straight after the BOTTOM 7TH graphic (532.5-535.5). At 536.0 the pitcher is already in follow-through, so there is no centre-field setup frame. Count 0-2 read at 536.0 before the bug updated. Bug reads ▼7 0-2, 1 OUT, TB 10 PHI 0."
+     },
+     {
+      "release_t": 559.5,
+      "release_bracket": [
+       559.5,
+       560
+      ],
+      "camera_at_release": "centre_field",
+      "centre_field_setup_visible": true,
+      "setup_t": 559.5,
+      "half": "bottom",
+      "inning": 7,
+      "outs": 1,
+      "balls_before": 1,
+      "strikes_before": 2,
+      "batter_text": "7. MARSH",
+      "pitcher_text": "RODRÍGUEZ",
+      "pitch_count_text": "P: 14",
+      "post_pitch_graphic": {
+       "type_text": "SINKER",
+       "mph": 97
+      },
+      "outcome_seen": "taken pitch, caught by the catcher (no swing); batter then looks dejected, so likely called strike three, but the bug count had not updated as of 563",
+      "confidence": "medium",
+      "note": "At 559.5 the stride is planted, the arm is cocked and the catcher is set. At 560.0 the pitcher is in deep follow-through, so release was about 559.6-559.8. The 97 mph SINKER graphic appears 561.0-563.0 (just outside the range end). Release falls inside the range."
+     }
+    ],
+    "note": "There are 4 live pitches in 480-560: Urquidy to Mesa Jr. (~492), Urquidy to Palacios (~511.5), Rodríguez to Stott (~536) and Rodríguez to Marsh (~559.5). The FOX score bug sits bottom-right. In the top 6th it shows the batter's line ('x FOR y') and no count, so balls and strikes are null for the first two pitches. Nothing in the range is a new pitch beyond these four, and no pitch replay was identified. 480-488 is player close-ups plus the TOP 6TH graphic. 496-503 and 513-520 are follow-up views of the plays. 504-511 and 520-532 are crowd, dugout and mound-visit close-ups. 532.5-535.5 is the BOTTOM 7TH graphic. 537.5-551.5 follows the Stott play and his reaction. 552.5-557 is a side angle of Marsh taking practice swings between pitches, with the catcher standing and no delivery. 557.5-559 is a wide shot from behind the plate with the pitcher standing set, no delivery."
+   }
+  },
+  {
+   "range": [
+    560,
+    640
+   ],
+   "A": {
+    "range": [
+     560,
+     640
+    ],
+    "pitches": [
+     {
+      "release_t": 560,
+      "release_bracket": [
+       559.5,
+       560
+      ],
+      "camera_at_release": "centre_field",
+      "centre_field_setup_visible": true,
+      "setup_t": 559.5,
+      "half": "bottom",
+      "inning": 7,
+      "outs": 1,
+      "balls_before": 1,
+      "strikes_before": 2,
+      "batter_text": "7. MARSH",
+      "pitcher_text": "RODRÍGUEZ",
+      "pitch_count_text": "P: 14",
+      "post_pitch_graphic": {
+       "type_text": "SINKER",
+       "mph": 97
+      },
+      "outcome_seen": "taken pitch, no swing, caught by catcher; looks like called strike three (Marsh walks off, and the next batter comes up with 2 outs)",
+      "confidence": "medium",
+      "note": "The CF view starts at 559.5 (558.5-559.0 is a different shot). At 559.5 the pitcher is landing his stride; at 560.0 he is in full follow-through, so release is about 559.7, near the start of the range. The 560.5 frame shows an odd pitcher pose, possibly an edit or overlay. The 97 tracer is at the mitt at 560.5-561.5. The bug count stays at 1-2 afterwards."
+     },
+     {
+      "release_t": 574.5,
+      "release_bracket": [
+       574.5,
+       575
+      ],
+      "camera_at_release": "centre_field",
+      "centre_field_setup_visible": true,
+      "setup_t": 574.5,
+      "half": "bottom",
+      "inning": 7,
+      "outs": 2,
+      "balls_before": 0,
+      "strikes_before": 1,
+      "batter_text": "9. CRAWFORD",
+      "pitcher_text": "RODRÍGUEZ",
+      "pitch_count_text": "P: 21",
+      "post_pitch_graphic": {
+       "type_text": "SLIDER",
+       "mph": 89
+      },
+      "outcome_seen": "swung, in play: ground ball to the infield, runner forced out sliding into second, ending the inning",
+      "confidence": "high",
+      "note": "The CF view fades in at 573.5. Arm is cocked high at 574.5 and in follow-through at 575.0 as the batter swings."
+     },
+     {
+      "release_t": 594.5,
+      "release_bracket": [
+       594.5,
+       595
+      ],
+      "camera_at_release": "centre_field",
+      "centre_field_setup_visible": true,
+      "setup_t": 594.5,
+      "half": "bottom",
+      "inning": 8,
+      "outs": 1,
+      "balls_before": 3,
+      "strikes_before": 2,
+      "batter_text": "4. BOHM",
+      "pitcher_text": "JOHNSON",
+      "pitch_count_text": "P: 19",
+      "post_pitch_graphic": {
+       "type_text": "SLIDER",
+       "mph": 85
+      },
+      "outcome_seen": "swung, in play: fly or liner to the shallow outfield, outfielder makes a diving catch (appears caught)",
+      "confidence": "high",
+      "note": "Comes right after the BOTTOM 8TH graphic. Arm is high at 594.5; at 595.0 the pitcher is in follow-through with the ball near the plate."
+     },
+     {
+      "release_t": 621.5,
+      "release_bracket": [
+       621.5,
+       622
+      ],
+      "camera_at_release": "centre_field",
+      "centre_field_setup_visible": true,
+      "setup_t": 621.5,
+      "half": "top",
+      "inning": 9,
+      "outs": 1,
+      "balls_before": 2,
+      "strikes_before": 0,
+      "batter_text": "1. VILADE",
+      "pitcher_text": "LAZAR",
+      "pitch_count_text": "P: 9",
+      "post_pitch_graphic": {
+       "type_text": "CUTTER",
+       "mph": 89
+      },
+      "outcome_seen": "swung, in play: ground ball through the middle into centre field for a hit; TB score goes 10 to 11",
+      "confidence": "high",
+      "note": "A dissolve from the dugout-side shot ends at 621.0. Arm is cocked at 621.5, follow-through at 622.0, and the 89 tracer is at the mitt at 622.5."
+     },
+     {
+      "release_t": 637.5,
+      "release_bracket": [
+       637.5,
+       638
+      ],
+      "camera_at_release": "centre_field",
+      "centre_field_setup_visible": true,
+      "setup_t": 637.5,
+      "half": "bottom",
+      "inning": 9,
+      "outs": 2,
+      "balls_before": 1,
+      "strikes_before": 1,
+      "batter_text": "3. HARPER",
+      "pitcher_text": "SULSER",
+      "pitch_count_text": "P: 24",
+      "post_pitch_graphic": {
+       "type_text": "CHANGEUP",
+       "mph": 84
+      },
+      "outcome_seen": "swung, in play: ground ball to the right side of the infield (play continues past 640)",
+      "confidence": "high",
+      "note": "The CF view starts at 637.5 after pitcher close-ups (633-637). The pitcher is in his stride with the arm back at 637.5 and in follow-through at 638.0."
+     }
+    ],
+    "note": "I found five live pitches in 560-640, all released in the centre-field view. Pitch 1 is borderline: its release falls about 559.7, right at the start of the range, so it may also be reported by the previous reader.\n\nThese segments are not new pitches and are left out:\n- 563.5-571.5: close-ups of Marsh and a runner near a base.\n- 576-581: live continuation of Crawford's ground ball.\n- 586-591: reverse-angle replay of the Crawford play, no score bug.\n- 600.5-615: Mullins close-ups, then replays of Bohm's diving-catch fly, no score bug.\n- 616-617.5: TOP 9TH graphic.\n- 618-620.5: TB players on the field, then the Vilade play continues to 629.\n- 629.5-632.5: BOTTOM 9TH graphic.\n- 633-637: Sulser close-ups.\n- 586-594: inning-transition graphics.\n\nThe score bug sits bottom right (FOX style): pitcher and P count on the top line, batter on the second, then the inning arrow with the count and outs."
+   },
+   "B": {
+    "range": [
+     560,
+     640
+    ],
+    "pitches": [
+     {
+      "release_t": 560,
+      "release_bracket": [
+       559.5,
+       560
+      ],
+      "camera_at_release": "centre_field",
+      "centre_field_setup_visible": true,
+      "setup_t": 559.5,
+      "half": "bottom",
+      "inning": 7,
+      "outs": 1,
+      "balls_before": 1,
+      "strikes_before": 2,
+      "batter_text": "7. MARSH",
+      "pitcher_text": "RODRÍGUEZ",
+      "pitch_count_text": "P: 14",
+      "post_pitch_graphic": {
+       "type_text": "SINKER",
+       "mph": 97
+      },
+      "outcome_seen": "Taken (no swing), caught by catcher; batter then walks off and next batter comes up with 2 outs, so it looks like called strike three",
+      "confidence": "medium",
+      "note": "Release is right at the start of the range. At 559.5 the pitcher is in his stride with his arm back. At 560.0 he is deep in follow-through, so release was about 559.8. 559.0 is a third-base-side camera, so the only centre-field setup frame is 559.5. Bug read at 559.5: ▼7 1-2, 1 OUT, '1 FOR 1'. The SINKER label shows at 561.0 and '97MPH' at 562.0-563.0."
+     },
+     {
+      "release_t": 574.5,
+      "release_bracket": [
+       574.5,
+       575
+      ],
+      "camera_at_release": "centre_field",
+      "centre_field_setup_visible": true,
+      "setup_t": 574,
+      "half": "bottom",
+      "inning": 7,
+      "outs": 2,
+      "balls_before": 0,
+      "strikes_before": 1,
+      "batter_text": "9. CRAWFORD",
+      "pitcher_text": "RODRÍGUEZ",
+      "pitch_count_text": "P: 21",
+      "post_pitch_graphic": {
+       "type_text": "SLIDER",
+       "mph": 89
+      },
+      "outcome_seen": "Swung and put in play: ground ball through the infield for a base hit. A runner scores at 580-581 and a runner slides into second at 577.5-579.5",
+      "confidence": "high",
+      "note": "At 574.5 the arm is high and cocked, before release. At 575.0 the batter is already making contact, so release was about 574.6-574.7. From 572 to 573 there is a close-up of the batter; the centre-field shot starts at 573.5. Bug read at 574.0: ▼7 0-1, 2 OUTS, '1 FOR 2'."
+     },
+     {
+      "release_t": 595,
+      "release_bracket": [
+       594.5,
+       595
+      ],
+      "camera_at_release": "centre_field",
+      "centre_field_setup_visible": true,
+      "setup_t": 594.5,
+      "half": "bottom",
+      "inning": 8,
+      "outs": 1,
+      "balls_before": 3,
+      "strikes_before": 2,
+      "batter_text": "4. BOHM",
+      "pitcher_text": "JOHNSON",
+      "pitch_count_text": "P: 19",
+      "post_pitch_graphic": {
+       "type_text": "SLIDER",
+       "mph": 85
+      },
+      "outcome_seen": "Swung and put in play: fly or liner to the outfield, caught on a diving catch at about 599.5-600.5 (appears out)",
+      "confidence": "high",
+      "note": "The ball is visible in flight halfway to the plate at 595.0, so release was about 594.8. Bug read at 594.5: ▼8 3-2, 1 OUT, 'TB 10 PHI 1', '0 FOR 3'. The SLIDER 85MPH graphic shows from 596.0 to 599.5."
+     },
+     {
+      "release_t": 621.5,
+      "release_bracket": [
+       621.5,
+       622
+      ],
+      "camera_at_release": "centre_field",
+      "centre_field_setup_visible": true,
+      "setup_t": 621.5,
+      "half": "top",
+      "inning": 9,
+      "outs": 1,
+      "balls_before": 2,
+      "strikes_before": 0,
+      "batter_text": "1. VILADE",
+      "pitcher_text": "LAZAR",
+      "pitch_count_text": "P: 9",
+      "post_pitch_graphic": {
+       "type_text": "CUTTER",
+       "mph": 89
+      },
+      "outcome_seen": "Swung and put in play: ground ball up the middle into centre field for a base hit. TB score goes from 10 to 11 at 627.0",
+      "confidence": "high",
+      "note": "621.0 is a crossfade from the side camera. At 621.5 (first clean centre-field frame) the arm is cocked. At 622.0 the batter is at or through contact, so release was about 621.6. Bug read at 621.5: ▲9 2-0, 1 OUT, '0 FOR 1'. The CUTTER 89MPH graphic shows from 623.0 to 625.0."
+     },
+     {
+      "release_t": 638,
+      "release_bracket": [
+       637.5,
+       638
+      ],
+      "camera_at_release": "centre_field",
+      "centre_field_setup_visible": true,
+      "setup_t": 637.5,
+      "half": "bottom",
+      "inning": 9,
+      "outs": 2,
+      "balls_before": 1,
+      "strikes_before": 1,
+      "batter_text": "3. HARPER",
+      "pitcher_text": "SULSER",
+      "pitch_count_text": "P: 24",
+      "post_pitch_graphic": {
+       "type_text": "CHANGEUP",
+       "mph": 84
+      },
+      "outcome_seen": "Swung and put in play: ground ball to the right side. The fielder takes first base as Harper arrives (looked at 641-643, past the range end); appears to be a ground out",
+      "confidence": "medium",
+      "note": "At 637.5 the pitcher is in his stride with his arm back. At 638.0 he is in follow-through and the batter is starting his swing, so release was about 637.8. 633.0 to 637.0 are close-ups of the pitcher; 637.5 is the only centre-field frame before release. Bug read at 637.5: ▼9 1-1, 2 OUTS, 'TB 12 PHI 1', '1 FOR 4'. The CHANGEUP 84MPH graphic shows at 639.0-639.5."
+     }
+    ],
+    "note": "I found 5 live pitches in 560-640, each one a single pitch between graphics and replays. Bug position: lower right, FOX style. Half-inning is shown by the ▲ or ▼ arrow next to the inning. Left out as replays or non-pitches: 581.5-585.5 close-ups of Palacios; 586.0-591.0 a replay of the Crawford play from the high home-plate camera with no bug; 591.5-594.0 the Bottom 8th graphic; 601.0-604.0 close-ups of Mullins; 604.0-615.0 a replay of the diving catch with no bug; 615.5-617.5 the Top 9th graphic; 618.0-620.5 a side view of Rays players at a base with no pitch; 627.5-629.0 the runner after Vilade's hit (live, not a pitch); 629.5-632.5 the Bottom 9th graphic; 633.0-637.0 close-ups of Sulser. Pitch 1 (Marsh) is at the very start of the range: release is between 559.5 and 560.0, about 559.8, so reader A may also report it."
+   }
+  },
+  {
+   "range": [
+    640,
+    658.5
+   ],
+   "A": {
+    "range": [
+     640,
+     658.5
+    ],
+    "pitches": [],
+    "note": "No pitch is released between t=640 and 658.5. At t=640 a ball is already in play: the wide fielding camera shows Harper (#3) running out of the box and the runners going. The score bug shows bottom 9, count 1-1, 2 outs, TB 12 PHI 1, Sulser pitching to 3. HARPER (1 FOR 4), with the post-pitch graphic CHANGEUP 84MPH. The ball was therefore released before t=640 and belongs to the previous reader's range. From t=640 to 643 the play reaches the force/out at second base, which is the final out. From t=643.5 to 646.5 the Rays celebrate. From t=647 to 658.5 the camera shows the Phillies dugout with the FINAL graphic (Rays 12, Phillies 1). No replays of a pitch appear in this range."
+   },
+   "B": {
+    "range": [
+     640,
+     658.5
+    ],
+    "pitches": [],
+    "note": "There are no pitch releases in 640-658.5. At t=640-643 the ball is already in play: a ground ball to the right side and the out at first base, with the Rays fielders converging. The score bug shows SULSER, CHANGEUP 84MPH (the post-pitch graphic), 3. HARPER 1 FOR 4, bottom 9th, count 1-1, 2 OUTS, TB 12 PHI 1. By t=642 the bug reads P: 24. In the out-of-range frame at t=639.0 the batter is already running toward first, so this pitch was released before t=639 and belongs to the previous range. That makes it the game-ending ground out. From t=643.5 to t=646.5 the Rays celebrate on the field (no score bug). From t=647 to t=658.5 the camera shows the Phillies dugout, with a FINAL graphic reading RAYS 12, PHILLIES 1, Caminero/Mesa Jr./Palacios lines. There are no further deliveries and no replays of a pitch in this range."
+   }
+  }
+ ]
+}

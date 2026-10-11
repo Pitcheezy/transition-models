@@ -1,0 +1,102 @@
+{
+  "schema": "intent_clip_clock_audit_v1",
+  "date": "2026-10-05",
+  "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+  "candidate_clip": {
+    "requested_start_seconds": 175,
+    "requested_duration_seconds": 55,
+    "probe_duration_seconds": 55.047,
+    "bytes": 27922727,
+    "sha256": "e11a9879cd4f5b61a16bb678030a97f794f807d5ab5d43faf408fb719fe51b65",
+    "remux_clock_mapping_verified": false
+  },
+  "method": "ffmpeg -ss SEEK -i CLIP -frames:v 1 -q:v 2 OUTPUT.jpg; compare exact JPEG SHA256 with existing source-bound frames",
+  "ffmpeg_version": "8.0-essentials_build",
+  "frame_rate": "60000/1001",
+  "fixed_offset_probes": [
+    {
+      "source_seconds": 175,
+      "clip_seconds": 0,
+      "bytes_equal": true,
+      "pixels_equal": true,
+      "clip_frame_sha256": "3e1e13cc8055de9eedfde76d330506a13cff25ea8a7f43b108b59390ff7575bc",
+      "source_frame_sha256": "3e1e13cc8055de9eedfde76d330506a13cff25ea8a7f43b108b59390ff7575bc"
+    },
+    {
+      "source_seconds": 180,
+      "clip_seconds": 5,
+      "bytes_equal": true,
+      "pixels_equal": true,
+      "clip_frame_sha256": "e14573c07a415fafa4e3b672ea84f67bf7ca34aee4948a8c52ec0c42a4d410e2",
+      "source_frame_sha256": "e14573c07a415fafa4e3b672ea84f67bf7ca34aee4948a8c52ec0c42a4d410e2"
+    },
+    {
+      "source_seconds": 185,
+      "clip_seconds": 10,
+      "bytes_equal": false,
+      "pixels_equal": false,
+      "clip_frame_sha256": "9208cfc085362a39c6a0ea16d6f78061b3725c7936bf8290e1a4d45532cec5e7",
+      "source_frame_sha256": "c76a304dcbc1b01559f124951ad3a21b74a7d05f9188b923b46df9371ba45061"
+    }
+  ],
+  "source_185_neighborhood_probes": [
+    {
+      "clip_seek_seconds": 9.95,
+      "sha256": "80c68ffba8916bb11ee90f390e9ec9efe7e42ca2133b7a50f59ac60ef35205c5",
+      "matches_source_185": false
+    },
+    {
+      "clip_seek_seconds": 9.966633,
+      "sha256": "352d1e58314a87601af4946b1b53fb9fdfb66fddcd211b02b887925d40335cb6",
+      "matches_source_185": false
+    },
+    {
+      "clip_seek_seconds": 9.983317,
+      "sha256": "c76a304dcbc1b01559f124951ad3a21b74a7d05f9188b923b46df9371ba45061",
+      "matches_source_185": true
+    },
+    {
+      "clip_seek_seconds": 10.016683,
+      "sha256": "02ed8a215db44f52e7dee3ff5035398ea262801cd329cf92ddac34f000f7ea49",
+      "matches_source_185": false
+    },
+    {
+      "clip_seek_seconds": 10.033367,
+      "sha256": "fbad0f78e992635d5d0565fed907d40ef462c2fb37d7f902436b1e2b82e95a4b",
+      "matches_source_185": false
+    },
+    {
+      "clip_seek_seconds": 10.05,
+      "sha256": "fc2a88c28b90b537cc3c12e742718578e6ac23b1ae603034ef4779cc9af4df6e",
+      "matches_source_185": false
+    }
+  ],
+  "conclusion": "source_seconds minus 175 does not reproduce all three source frames; no global offset correction established",
+  "pitch_moments": [
+    {
+      "pa": 2,
+      "pitch": 1,
+      "decision_seconds": 180.25,
+      "release_seconds": 185.5
+    },
+    {
+      "pa": 2,
+      "pitch": 2,
+      "decision_seconds": 199.25,
+      "release_seconds": 200.4
+    },
+    {
+      "pa": 2,
+      "pitch": 3,
+      "decision_seconds": 216.0,
+      "release_seconds": 224.0
+    }
+  ],
+  "timing_evidence": "docs/results/mlb_p0/game_747139_timing.json",
+  "coverage": "175..230 includes all recorded PA2 decision/release moments, not verified full PA audiovisual boundaries",
+  "whole_pa_verified": false,
+  "global_frame_mapping_verified": false,
+  "human_labels_changed": false,
+  "new_ai_observations": 0,
+  "frozen_files_unchanged": 186
+}

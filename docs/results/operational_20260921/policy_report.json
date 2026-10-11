@@ -1,0 +1,258 @@
+{
+  "scope": "one pitch intervention, innings 1-8, observational continuation",
+  "selected_model": "mlp135",
+  "policy": "90% minimum expected cost + 10% uniform support",
+  "support": "2022 pitch count >=30 and propensity >=0.02, at least 2 actions",
+  "all_test_n": 342054,
+  "observed_cost_n": 302360,
+  "eligible_n": 195066,
+  "eligible_fraction": 0.5702783770983529,
+  "online_feature_exact_match_n": 1000,
+  "estimators": {
+    "unclipped": {
+      "metric_order": [
+        "empirical_cost",
+        "learned_cost",
+        "learned_minus_empirical"
+      ],
+      "units": "runs per 100 pitch decisions",
+      "dr": {
+        "mean": [
+          0.14237506641387646,
+          0.05622480345078183,
+          -0.08615026296309447
+        ],
+        "ci95": [
+          [
+            -0.13370387502175834,
+            0.4053815168455614
+          ],
+          [
+            -0.19419408642038352,
+            0.3062742980857035
+          ],
+          [
+            -0.4046170184099112,
+            0.2303901374595834
+          ]
+        ],
+        "games": 1165,
+        "repetitions": 2000
+      },
+      "diagnostics": {
+        "empirical": {
+          "weight_mean": 0.9330781593812149,
+          "weight_max": 46.43056714139396,
+          "weight_p95": 4.334462871101998,
+          "effective_sample_size": 29545.86883870863,
+          "snips_cost": 0.0012915077680607167,
+          "clip": null
+        },
+        "learned": {
+          "weight_mean": 1.0147040006219603,
+          "weight_max": 45.936861923981255,
+          "weight_p95": 4.1214495383816,
+          "effective_sample_size": 36808.12227594831,
+          "snips_cost": 0.0005713147830222489,
+          "clip": null
+        }
+      }
+    },
+    "clip_5": {
+      "metric_order": [
+        "empirical_cost",
+        "learned_cost",
+        "learned_minus_empirical"
+      ],
+      "units": "runs per 100 pitch decisions",
+      "dr": {
+        "mean": [
+          0.0033964809543755403,
+          -0.0070762057945641405,
+          -0.010472686748939022
+        ],
+        "ci95": [
+          [
+            -0.16478458782715216,
+            0.16642253337715712
+          ],
+          [
+            -0.18268685934698678,
+            0.16803541924741505
+          ],
+          [
+            -0.19701840599423995,
+            0.19643569398894137
+          ]
+        ],
+        "games": 1165,
+        "repetitions": 2000
+      },
+      "diagnostics": {
+        "empirical": {
+          "weight_mean": 0.7881477683203424,
+          "weight_max": 5.0,
+          "weight_p95": 4.334462871101998,
+          "effective_sample_size": 47304.616841846364,
+          "snips_cost": -0.0005325745035394862,
+          "clip": 5
+        },
+        "learned": {
+          "weight_mean": 0.8877500422974388,
+          "weight_max": 5.0,
+          "weight_p95": 4.1214495383816,
+          "effective_sample_size": 56313.16636014955,
+          "snips_cost": -0.0003151825630746266,
+          "clip": 5
+        }
+      }
+    },
+    "clip_10": {
+      "metric_order": [
+        "empirical_cost",
+        "learned_cost",
+        "learned_minus_empirical"
+      ],
+      "units": "runs per 100 pitch decisions",
+      "dr": {
+        "mean": [
+          0.07338676330021303,
+          0.030814711764002908,
+          -0.04257205153620892
+        ],
+        "ci95": [
+          [
+            -0.1345273131861341,
+            0.2747110133317662
+          ],
+          [
+            -0.17282039082817915,
+            0.22936458819852107
+          ],
+          [
+            -0.2741782062024471,
+            0.20361456036892978
+          ]
+        ],
+        "games": 1165,
+        "repetitions": 2000
+      },
+      "diagnostics": {
+        "empirical": {
+          "weight_mean": 0.875334727902027,
+          "weight_max": 10.0,
+          "weight_p95": 4.334462871101998,
+          "effective_sample_size": 39752.18858027979,
+          "snips_cost": 0.00046839631596767693,
+          "clip": 10
+        },
+        "learned": {
+          "weight_mean": 0.9646369320133549,
+          "weight_max": 10.0,
+          "weight_p95": 4.1214495383816,
+          "effective_sample_size": 47831.58822310004,
+          "snips_cost": 0.00023168207640243669,
+          "clip": 10
+        }
+      }
+    },
+    "clip_20": {
+      "metric_order": [
+        "empirical_cost",
+        "learned_cost",
+        "learned_minus_empirical"
+      ],
+      "units": "runs per 100 pitch decisions",
+      "dr": {
+        "mean": [
+          0.12039639048301119,
+          0.04795166334936857,
+          -0.0724447271336375
+        ],
+        "ci95": [
+          [
+            -0.11640585187667835,
+            0.3522522297985299
+          ],
+          [
+            -0.1855784332569597,
+            0.27732882117043955
+          ],
+          [
+            -0.35226540871891904,
+            0.21434063644917928
+          ]
+        ],
+        "games": 1165,
+        "repetitions": 2000
+      },
+      "diagnostics": {
+        "empirical": {
+          "weight_mean": 0.9178542263879955,
+          "weight_max": 20.0,
+          "weight_p95": 4.334462871101998,
+          "effective_sample_size": 33296.575272028735,
+          "snips_cost": 0.0010430016788103673,
+          "clip": 20
+        },
+        "learned": {
+          "weight_mean": 1.0037880512354282,
+          "weight_max": 20.0,
+          "weight_p95": 4.1214495383816,
+          "effective_sample_size": 40228.49319808521,
+          "snips_cost": 0.00046613628022151924,
+          "clip": 20
+        }
+      }
+    }
+  },
+  "limitations": [
+    "Conditional exchangeability is unverified; omitted batter ability, intent and game context may confound.",
+    "One-step run-expectancy cost, not a season-level causal run saving.",
+    "Uncertainty intervals resample games conditional on fitted policies/nuisance models.",
+    "Completed 1-8 innings and overlap restriction limit generalization."
+  ],
+  "eligible_pitch_ids_sha256": "8c81603e08fc39e72495347f0342e448d52d79a2a0c77d4dbb1651270ec07b89",
+  "batch_counterfactual_seconds": 15.241838099999768,
+  "recommendation_change_fraction": 0.6306685942193924,
+  "recommendation_distribution": {
+    "empirical": {
+      "FF": 33461,
+      "SI": 29962,
+      "FC": 19282,
+      "SL": 39650,
+      "ST": 13160,
+      "CU": 18806,
+      "KC": 7134,
+      "CH": 28431,
+      "FS": 5180
+    },
+    "learned": {
+      "FF": 32736,
+      "SI": 32994,
+      "FC": 11104,
+      "SL": 45583,
+      "ST": 14908,
+      "CU": 18648,
+      "KC": 3495,
+      "CH": 30974,
+      "FS": 4624
+    }
+  },
+  "overlap": {
+    "mean_propensity_mass_on_supported_actions": 0.8993620423706123,
+    "mean_candidate_count": 3.9545384639045245,
+    "logged_action_outside_candidates_fraction": 0.130068797227605,
+    "propensity_test_ce_eligible": 1.4859907033145163
+  },
+  "improvement_supported_under_assumptions": false,
+  "latency": {
+    "device": "CPU",
+    "threads": 3,
+    "repetitions": 30,
+    "scope": "shared feature builder plus learned prediction for nine candidate actions",
+    "nine_actions_p50_ms": 73.41129999986151,
+    "nine_actions_p95_ms": 83.11581500015564,
+    "concurrent_training_may_affect_measurement": true
+  }
+}

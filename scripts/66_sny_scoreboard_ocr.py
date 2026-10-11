@@ -1,0 +1,307 @@
+"""SNY scoreboard reader prototype (F-3): templates -> predictions -> score on the eval set.
+
+Usage::
+
+    uv run --frozen python scripts/66_sny_scoreboard_ocr.py templates --template-pas 1 2 --output docs/results/mlb_p0/sny_digit_templates_v0.json
+    uv run --frozen python scripts/66_sny_scoreboard_ocr.py predict --templates docs/results/mlb_p0/sny_digit_templates_v0.json --output outputs/scoreboard_ocr/predictions.json
+    uv run --frozen python scripts/66_sny_scoreboard_ocr.py score --predictions outputs/scoreboard_ocr/predictions.json --exclude-pas 1 2 --output docs/results/mlb_p0/game_747139_scoreboard_ocr_v0.json
+
+``templates`` cuts digit glyphs from the decision frames of the given plate appearances, paired
+with the eval set's verified labels (those frames are then in-sample). ``predict`` reads every
+eval-set frame (grabbing missing ones with ffmpeg from the eval set's media_url) and writes one
+prediction per pitch with ``null`` for every abstention. ``score`` runs
+``score_predictions``; with ``--exclude-pas`` the template-source plate appearances are removed
+from the review before the eval set is rebuilt, so they count as ``scoreboard_unreviewed`` and
+the reported rates are held-out with respect to the templates. They are held-out evidence only
+for pitches whose failure was not already diagnosed before the version's rule was fixed: the v3
+set mixes 75 held-out and 19 seen/diagnosed pitches (``ocr_reports.SCORE_SET_NOTES``), and the
+split is reported in the version's comparison file, never by this score alone. Frames are read
+from source/time/hash-verified cache entries; unbound legacy JPGs are not reused.
+
+``templates --reader-options '<json>'`` (OCR v3, F-3c; extended for OCR v4, F-3d) stores opt-in
+read-time options in the template file under ``reader_options``; ``predict`` and ``negatives``
+apply them only when the loaded template file carries the key. Glyphs are always cut with the
+default segmentation. The v4 file was cut with the v3 options plus ``min_margin_by_field``
+{"balls": 0.1, "strikes": 0.1}, ``arrow_window`` [262, 46, 279, 64] and ``topbot_rule``
+{"method": "blob_slope", "min_slope": 0.4, "min_rows": 6} (see
+``docs/results/mlb_p0/game_747139_scoreboard_ocr_v4_preregistration.json``); its ``templates``
+key equals the v3 file's. The ``score --exclude-pas`` set of v4 is a development set with 0
+held-out pitches (every frame was seen before the options were chosen). ``predict --diagnostics
+<path>`` also dumps, per pitch and digit field, every segmented glyph's best digit, distance,
+margin, margin floor and read (``digit_field_diagnostics``) plus the presence-gate result: the
+per-glyph evidence the F-3d acceptance criterion (5) asks for on the A-10 rows.
+"""
+
+import argparse
+import json
+import sys
+from collections import Counter
+from pathlib import Path
+
+import numpy as np
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from src.data.broadcast_timing import KEYS
+from src.data.scoreboard_evalset import (
+    LABEL_FIELDS,
+    build_evalset,
+    read_json,
+    score_predictions,
+    validate_evalset,
+)
+from src.vision.frames import resolve_frame
+from src.vision.negatives import score_negatives, validate_negatives
+from src.vision.sny_scoreboard import (
+    DIGIT_FIELDS,
+    DigitTemplates,
+    bug_present,
+    digit_field_diagnostics,
+    glyphs_for_label,
+    masks,
+    read_scoreboard,
+    validate_reader_options,
+)
+
+RESULTS = Path("docs/results/mlb_p0")
+
+
+def load_frame(entry, args, media_url):
+    path = resolve_frame(
+        media_url, entry["frame_seconds"], args.frames_dir, args.frames_label, no_grab=args.no_grab
+    )
+    from PIL import Image
+
+    return np.asarray(Image.open(path).convert("RGB"))
+
+
+def write(path, document):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        json.dumps(document, indent=2, ensure_ascii=False, allow_nan=False) + "\n",
+        encoding="utf-8",
+    )
+
+
+def inputs(args):
+    manifest, sources, timing, review = (
+        read_json(p) for p in (args.manifest, args.sources, args.timing, args.review)
+    )
+    evalset = read_json(args.evalset)
+    validate_evalset(evalset, manifest, sources, timing, review)
+    return manifest, sources, timing, review, evalset
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("mode", choices=("templates", "predict", "score", "negatives"))
+    parser.add_argument("--manifest", type=Path, default=RESULTS / "game_747139_manifest.json")
+    parser.add_argument("--sources", type=Path, default=RESULTS / "game_747139_sources.json")
+    parser.add_argument("--timing", type=Path, default=RESULTS / "game_747139_timing.json")
+    parser.add_argument(
+        "--review", type=Path, default=RESULTS / "game_747139_scoreboard_review.json"
+    )
+    parser.add_argument(
+        "--evalset", type=Path, default=RESULTS / "game_747139_scoreboard_evalset.json"
+    )
+    parser.add_argument("--frames-dir", type=Path, default=Path("outputs/frames"))
+    parser.add_argument("--frames-label", default="evalset")
+    parser.add_argument(
+        "--no-grab", action="store_true", help="fail instead of grabbing missing frames"
+    )
+    parser.add_argument("--template-pas", type=int, nargs="*", default=[1, 2])
+    parser.add_argument(
+        "--reader-options",
+        help="templates mode: JSON object written into the template file as reader_options "
+        "(opt-in read-time options, see src.vision.sny_scoreboard.validate_reader_options); "
+        "omitted = no key, i.e. the v1/v2 file layout and behaviour",
+    )
+    parser.add_argument("--templates", type=Path)
+    parser.add_argument(
+        "--diagnostics",
+        type=Path,
+        help="predict mode: also write per-pitch, per-digit-field glyph diagnostics "
+        "(best digit, distance, margin, floor, read) and whether the presence gate passed; "
+        "the per-glyph dump the F-3d criterion (5) asks for",
+    )
+    parser.add_argument("--predictions", type=Path)
+    parser.add_argument("--exclude-pas", type=int, nargs="*", default=[])
+    parser.add_argument(
+        "--negatives", type=Path, default=RESULTS / "game_747139_scoreboard_negatives.json"
+    )
+    parser.add_argument("--output", type=Path)
+    args = parser.parse_args()
+    manifest, sources, timing, review, evalset = inputs(args)
+    media_url = evalset["source"]["media_url"]
+
+    if args.mode == "templates":
+        reader_options = None
+        if args.reader_options:
+            try:
+                reader_options = validate_reader_options(json.loads(args.reader_options))
+            except ValueError as error:
+                parser.error(f"--reader-options: {error}")
+        # options ride on the document only; glyphs are cut with the default segmentation
+        templates = DigitTemplates(reader_options=reader_options)
+        used, skipped = [], []
+        for entry in evalset["entries"]:
+            if entry["at_bat_number"] not in args.template_pas:
+                continue
+            white, _, _ = masks(load_frame(entry, args, media_url))
+            for name in DIGIT_FIELDS:
+                if entry["field_status"][name] != "confirmed":
+                    continue
+                pairs = glyphs_for_label(white, name, entry["labels"][name])
+                key = f"PA{entry['at_bat_number']}/{entry['pitch_number']}:{name}"
+                if pairs is None:
+                    skipped.append(key)
+                    continue
+                for digit, glyph in pairs:
+                    templates.add(digit, glyph)
+                used.append(key)
+        document = {
+            **templates.to_json(),
+            "source": {
+                "evalset_manifest_sha256": evalset["manifest_sha256"],
+                "template_plate_appearances": sorted(args.template_pas),
+                "fields_used": used,
+                "fields_skipped": skipped,
+                "note": "glyphs cut from verified decision frames; these plate appearances are in-sample",
+            },
+        }
+        if args.output:
+            write(args.output, document)
+        print(
+            json.dumps(
+                {
+                    "digits": {d: len(g) for d, g in templates.templates.items()},
+                    "fields_used": len(used),
+                    "fields_skipped": skipped,
+                    "reader_options": templates.reader_options,
+                },
+                indent=2,
+            )
+        )
+        return
+
+    if args.mode == "predict":
+        if not args.templates:
+            parser.error("predict requires --templates")
+        templates = DigitTemplates.from_json(read_json(args.templates))
+        predictions, abstain, diagnostics = [], Counter(), []
+        for entry in evalset["entries"]:
+            frame = load_frame(entry, args, media_url)
+            fields = read_scoreboard(frame, templates)
+            for name in LABEL_FIELDS:
+                abstain[name] += fields[name] is None
+            predictions.append(
+                {
+                    **{k: entry[k] for k in KEYS},
+                    "play_id": entry["play_id"],
+                    "fields": {name: fields[name] for name in LABEL_FIELDS},
+                }
+            )
+            if args.diagnostics:
+                white, _, navy = masks(frame)
+                options = templates.reader_options
+                gate = bug_present(navy, white, options)
+                diagnostics.append(
+                    {
+                        **{k: entry[k] for k in KEYS},
+                        "frame_seconds": entry["frame_seconds"],
+                        "gate_passed": gate,
+                        "fields": {
+                            name: digit_field_diagnostics(white, name, templates, options)
+                            for name in DIGIT_FIELDS
+                        }
+                        if gate
+                        else {},
+                    }
+                )
+        if args.output:
+            write(args.output, predictions)
+        if args.diagnostics:
+            write(args.diagnostics, diagnostics)
+        print(json.dumps({"predictions": len(predictions), "abstained": dict(abstain)}, indent=2))
+        return
+
+    if args.mode == "negatives":
+        if not args.templates:
+            parser.error("negatives requires --templates")
+        templates = DigitTemplates.from_json(read_json(args.templates))
+        frames = validate_negatives(read_json(args.negatives), evalset)
+        outputs = {}
+        for frame in frames:
+            entry = {"frame_seconds": frame["seconds"]}
+            label_args = argparse.Namespace(**{**vars(args), "frames_label": "neg"})
+            outputs[frame["seconds"]] = read_scoreboard(
+                load_frame(entry, label_args, media_url), templates
+            )
+        result = score_negatives(frames, outputs)
+        result["outputs"] = {str(k): v for k, v in outputs.items()}
+        if args.output:
+            write(args.output, result)
+        print(
+            json.dumps(
+                {
+                    k: result[k]
+                    for k in (
+                        "frames",
+                        "unreadable_fields",
+                        "readable_fields",
+                        "totals",
+                        "abstain_rate_on_unreadable",
+                        "correct_rate_on_readable",
+                    )
+                },
+                indent=2,
+            )
+        )
+        for row in result["per_frame"]:
+            if row["false_reads"] or row["wrong_reads"] or row["missed_reads"]:
+                print(row)
+        return
+
+    if not args.predictions:
+        parser.error("score requires --predictions")
+    predictions = read_json(args.predictions)
+    if args.exclude_pas:
+        review = {
+            **review,
+            "reviews": [r for r in review["reviews"] if r["at_bat_number"] not in args.exclude_pas],
+        }
+        evalset = build_evalset(manifest, sources, timing, review)
+        predictions = [p for p in predictions if p["at_bat_number"] not in args.exclude_pas]
+    result = score_predictions(evalset, predictions)
+    result["holdout"] = {
+        "excluded_plate_appearances": sorted(args.exclude_pas),
+        "note": (
+            "template-source plate appearances removed from the review before scoring; "
+            "their pitches count as scoreboard_unreviewed"
+            if args.exclude_pas
+            else "no plate appearance excluded; template-source pitches are in-sample"
+        ),
+    }
+    if args.output:
+        write(args.output, result)
+    summary = {
+        name: {
+            k: result["per_field"][name][k]
+            for k in ("evaluable", "attempted", "correct", "wrong", "abstained")
+        }
+        for name in LABEL_FIELDS
+    }
+    print(
+        json.dumps(
+            {
+                "per_field": summary,
+                "all_fields": result["all_fields"],
+                "non_evaluable_attempts": result["non_evaluable_attempts"],
+            },
+            indent=2,
+        )
+    )
+
+
+if __name__ == "__main__":
+    main()

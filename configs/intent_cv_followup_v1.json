@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "project_root": "..",
+  "inputs": {
+    "game_747139_intent_points_v0_json": "docs/results/mlb_p0/game_747139_intent_points_v0.json",
+    "game_747139_timing_json": "docs/results/mlb_p0/game_747139_timing.json",
+    "game_747139_intent_plate_calibration_v0_json": "docs/results/mlb_p0/game_747139_intent_plate_calibration_v0.json",
+    "game_849843_intent_points_v0_json": "docs/results/mlb_p0/game_849843_intent_points_v0.json",
+    "game_849843_timing_json": "docs/results/mlb_p0/game_849843_timing.json",
+    "game_849843_condensed_windows_v0_json": "docs/results/mlb_p0/game_849843_condensed_windows_v0.json",
+    "game_849843_condensed_scan_v0_json": "docs/results/mlb_p0/game_849843_condensed_scan_v0.json",
+    "game_849843_intent_plate_calibration_v0_json": "docs/results/mlb_p0/game_849843_intent_plate_calibration_v0.json",
+    "game_849845_intent_points_v0_json": "docs/results/mlb_p0/game_849845_intent_points_v0.json",
+    "game_849845_timing_json": "docs/results/mlb_p0/game_849845_timing.json",
+    "game_849845_condensed_windows_v0_json": "docs/results/mlb_p0/game_849845_condensed_windows_v0.json",
+    "game_849845_condensed_scan_v0_json": "docs/results/mlb_p0/game_849845_condensed_scan_v0.json",
+    "game_849845_intent_plate_calibration_v0_json": "docs/results/mlb_p0/game_849845_intent_plate_calibration_v0.json",
+    "game_823407_intent_points_v0_json": "docs/results/mlb_p0/game_823407_intent_points_v0.json",
+    "game_823407_timing_json": "docs/results/mlb_p0/game_823407_timing.json",
+    "game_823407_condensed_windows_v0_json": "docs/results/mlb_p0/game_823407_condensed_windows_v0.json",
+    "game_823407_condensed_scan_v0_json": "docs/results/mlb_p0/game_823407_condensed_scan_v0.json",
+    "game_823407_intent_plate_calibration_v0_json": "docs/results/mlb_p0/game_823407_intent_plate_calibration_v0.json",
+    "game_849845_intent_human_labels_v0_json": "docs/results/mlb_p0/game_849845_intent_human_labels_v0.json",
+    "game_849845_intent_label_pack_v0_json": "docs/results/mlb_p0/game_849845_intent_label_pack_v0.json",
+    "game_849845_intent_v0_jsonl": "docs/results/mlb_p0/game_849845_intent_v0.jsonl",
+    "game_823407_intent_human_labels_v0_json": "docs/results/mlb_p0/game_823407_intent_human_labels_v0.json",
+    "game_823407_intent_label_pack_v0_json": "docs/results/mlb_p0/game_823407_intent_label_pack_v0.json",
+    "game_823407_intent_v0_jsonl": "docs/results/mlb_p0/game_823407_intent_v0.jsonl",
+    "intent_eval_plan_v0_json": "docs/results/mlb_p0/intent_eval_plan_v0.json",
+    "uv_lock": "uv.lock",
+    "pyproject_toml": "pyproject.toml"
+  },
+  "absent_inputs": [
+    "docs/results/mlb_p0/game_747139_condensed_windows_v0.json",
+    "docs/results/mlb_p0/game_747139_condensed_scan_v0.json"
+  ],
+  "source_files": [
+    "intent/batch.py",
+    "intent/temporal_audit.py",
+    "intent/quality_audit.py",
+    "intent/run.py",
+    "intent/geometry.py",
+    "intent/plate_feet.py",
+    "intent/schema.py",
+    "intent/human_labels.py",
+    "intent/condensed.py",
+    "intent/calibrate.py",
+    "intent/__init__.py"
+  ],
+  "config": {
+    "purpose": "development_diagnostics_only",
+    "frozen_m3_and_demo_unchanged": true
+  },
+  "jobs": [
+    {
+      "id": "temporal",
+      "argv": [
+        "-m",
+        "intent.temporal_audit",
+        "audit",
+        "--games",
+        "747139",
+        "849843",
+        "849845",
+        "823407",
+        "--out",
+        "{output:report}"
+      ],
+      "outputs": {
+        "report": "temporal_audit_v1.json"
+      },
+      "timeout_seconds": 120
+    },
+    {
+      "id": "quality",
+      "argv": [
+        "-m",
+        "intent.quality_audit",
+        "--games",
+        "849845",
+        "823407",
+        "--out",
+        "{output:report}"
+      ],
+      "outputs": {
+        "report": "quality_audit_v1.json"
+      },
+      "timeout_seconds": 120
+    }
+  ]
+}

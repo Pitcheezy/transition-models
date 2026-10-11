@@ -1,0 +1,92 @@
+{
+  "schema": "pitcheezy_handoff_delivery_v1",
+  "created_on": "2026-10-07",
+  "repository": "Pitcheezy/transition-models",
+  "branch": "feature/intent-v0",
+  "source_commit": "441f5e5efd0cfc1f020b640869581db8fa918df6",
+  "archive": {
+    "path_alias": "LEGACY_PROJECT",
+    "relative_path": "outputs/integration_delivery/pitcheezy_source_handoff_20261007_v1.zip",
+    "bytes": 148178,
+    "sha256": "8ecec737a4fdc775c426fe894fbfe40735c11f8e1c26d0ad42a50193d8b4f0e7",
+    "source_files": 48,
+    "manifest_files": 1,
+    "source_manifest_sha256": "829d951ae3384ac2c6dad44b9ce1dcbd17c0f8b6825bf1e9eb6e248d04047f85"
+  },
+  "manifest_copy": "docs/handoff/source_manifest_v1.json",
+  "scope": "Internal source-only team handoff. No media, weights, human responses, private gallery or teammate code is included.",
+  "external_inventory": {
+    "entries": 31,
+    "locally_hashed_files": 29,
+    "opaque_weight_references": 1,
+    "directory_references": 1
+  },
+  "environment": {
+    "host": "Windows",
+    "python": "3.12.12",
+    "node": "24.1.0",
+    "numpy": "2.4.4",
+    "pillow": "12.2.0",
+    "pytest": "9.0.3"
+  },
+  "checks": {
+    "zip_crc_and_byte_roundtrip": "passed",
+    "extracted_stdlib_only_check": {
+      "result": "passed",
+      "command": "python -I -S -B scripts/build_integration_handoff.py check .",
+      "after_tests": "passed",
+      "without_git_checkout": true
+    },
+    "synthetic_service_inspection": {
+      "result": "passed",
+      "command": "python -I -S -B scripts/inspect_service_game.py --input docs/examples/service_game_v2_synthetic.json --source-kind synthetic",
+      "input_sha256": "4ad91d47139ddd34c735d7a9d1b073a5532905a77d77edfb655bab18d9a3a2ae",
+      "pitches": 3,
+      "ready": 1,
+      "unsupported": 1,
+      "missing": 1,
+      "note": "Git-blob LF bytes differ from CRLF checkout bytes; this is not real S compatibility evidence."
+    },
+    "extracted_python_tests": {
+      "passed": 213,
+      "skipped": 1,
+      "seconds": 31.15,
+      "skip_reason": "POSIX named-pipe fixture unavailable on Windows",
+      "command": "python -B -m pytest -q -p no:cacheprovider tests/test_service_game_contract.py tests/test_service_game_cli.py tests/test_intent_v0.py tests/test_intent_observation_session.py"
+    },
+    "extracted_node_tests": {
+      "passed": 64,
+      "failed": 0,
+      "command": "node --test tests/js/pitch_receiver.test.cjs tests/js/pitch_home.test.cjs web/pitch-studio-tests/receiver-intake.test.cjs web/pitch-studio-tests/receiver-first-pa.test.cjs"
+    },
+    "packager_tests_in_staging": {
+      "passed": 17,
+      "seconds": 36.41,
+      "note": "Repeated as part of full repository check."
+    },
+    "full_repository_check": {
+      "status": "passed",
+      "source_commit": "441f5e5efd0cfc1f020b640869581db8fa918df6",
+      "command": "python -B scripts/check_project.py --cpu-only",
+      "passed": 1830,
+      "skipped": 8,
+      "deselected": 2,
+      "warnings": 2,
+      "seconds": 486.63,
+      "ruff_paths": 152
+    }
+  },
+  "not_verified": [
+    "Actual new S response/API compatibility",
+    "Full model/runtime portability",
+    "macOS/Linux extracted-bundle execution",
+    "Physical device operation or live latency",
+    "Video playback in source-only ZIP",
+    "Additional human labels or independent accuracy",
+    "Hosting account migration or publication"
+  ],
+  "teammate_repo_accessed": false,
+  "deployment_changed": false,
+  "new_research_inference_or_training_runs": 0,
+  "test_scope_note": "Full repository unit tests may execute synthetic model/decoder fixtures; no research dataset was retrained or relabeled."
+}

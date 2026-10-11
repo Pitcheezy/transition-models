@@ -1,0 +1,40 @@
+{
+  "schema": "cv_review_intake_receipt_v1",
+  "source_response_sha256": "d25fa9908aa90aacfcdab6e068543e62e8eca698bd7322e615c428fb6df5ffeb",
+  "source_response_bytes": 9035,
+  "manifest_sha256": "d7d01b7776436c4539900e3a44115343e2b7db2eb6ae27489c3ae2f7a7f1a468",
+  "validation": {
+    "completed": 26,
+    "unreviewed": 0,
+    "unknown": 0
+  },
+  "reviewer_count": 1,
+  "coverage": {
+    "denominator_observations": 26,
+    "reviewed_union": 26,
+    "unreviewed_by_all": 0,
+    "decided_union": 26,
+    "only_unknown_union": 0,
+    "reviewed_definition": "at least one marked, unavailable or unknown response",
+    "decided_definition": "at least one marked or unavailable response"
+  },
+  "pose_counts_as_submitted": {
+    "resting": 18,
+    "unknown": 1,
+    "moving": 5,
+    "presented_target": 2
+  },
+  "original_response_unchanged": true,
+  "existing_package_files_unchanged": 31,
+  "row_relabeling_performed": false,
+  "human_identity_authenticated": false,
+  "independent_validation": false,
+  "inter_rater_agreement_measured": false,
+  "training_performed": false,
+  "notes": [
+    "Single supplied development response; coordinate bounds and image identity validation, not visual accuracy.",
+    "Pose enum values are preserved as supplied; the reviewer reported a global ambiguity.",
+    "Resting cannot be reinterpreted as actual rest, and moving is not verified motion from a still frame.",
+    "No row-specific temporal interpretation or target/intent ground truth was added."
+  ]
+}

@@ -1,0 +1,181 @@
+{
+  "schema": "pitcheezy_handoff_delivery_v5",
+  "date": "2026-10-10",
+  "source_commit": "fafc9c69b371bb0b6831fc2f03e3e24cabc78cf8",
+  "units": [
+    "H-browser1",
+    "I-service7",
+    "I-service8",
+    "H-port8"
+  ],
+  "claim_commits": [
+    "c6fd940",
+    "b984cab"
+  ],
+  "archive": "outputs/service_review_source_20261010_v5.zip",
+  "archive_bytes": 267626,
+  "archive_sha256": "057578788c4315cd38cf96d213c899e90b6bcc62b8523bbfb78caa43ec16b8e9",
+  "selected_files": 64,
+  "archive_files_including_manifest": 65,
+  "zip_crc_and_extracted_bytes_match": true,
+  "source_inventory_before_and_after": "verified",
+  "python_tests": {
+    "passed": 458,
+    "skipped": 1,
+    "pytest_seconds": 83.44,
+    "command_seconds": 84.95,
+    "scope": "All selected Python tests from actually extracted source ZIP, existing host dependencies."
+  },
+  "node_tests": {
+    "passed": 112,
+    "failed": 0,
+    "scope": "All five selected Node files from actually extracted source ZIP."
+  },
+  "standard_library_checks": [
+    "source bundle inventory before/after",
+    "legacy synthetic contract",
+    "current synthetic contract",
+    "synthetic and received review generation",
+    "isolated no-site-package launch checks"
+  ],
+  "module_origin": "intent.run, src.integration.service_game, src.integration.service_review_server resolve inside extracted ZIP",
+  "synthetic_review": {
+    "sha256": "1bac16688f9fc22d769ea3850e895668937119821e8a6a4af493ee387d8b17d4",
+    "input_sha256": "90589c4b2e71b32d2f4a7ab75b96309a4d92053a7007d91c0de8aa9cc3e59c85",
+    "profile": "teammate_export_20261009_v1",
+    "input_kind": "synthetic",
+    "summary": {
+      "pitches": 3,
+      "ready": 1,
+      "unsupported": 1,
+      "missing": 1,
+      "actual_available": 1,
+      "uninterpreted_setup": 0,
+      "setup_estimated": 1,
+      "setup_unavailable": 0,
+      "setup_not_supplied": 2,
+      "setup_displayable": 1
+    }
+  },
+  "received_review": {
+    "sha256": "154d9cd1cb166552db5975137e2ba431b9ab48f94fcfa6bdd05304f645427c80",
+    "input_sha256": "df606a11c6db465c054252ef8d331aeb23aa21565b4960bd586f3dcf8f62f6b7",
+    "profile": "teammate_export_20261009_v1",
+    "input_kind": "provided_export",
+    "summary": {
+      "pitches": 262,
+      "ready": 246,
+      "unsupported": 16,
+      "missing": 0,
+      "actual_available": 262,
+      "uninterpreted_setup": 0,
+      "setup_estimated": 27,
+      "setup_unavailable": 12,
+      "setup_not_supplied": 223,
+      "setup_displayable": 27
+    },
+    "normalized_bytes_equal_previous_video_review_v4": true,
+    "raw_export_copied_into_source_zip": false,
+    "video_included_in_rebuilt_review": false
+  },
+  "separate_private_video_archive": {
+    "archive": "outputs/service_review_video_20261010_v5.zip",
+    "bytes": 13571942,
+    "sha256": "51af1e8861ac5e7294b185acb3f525fa2b421765152ff2a65abdbb2f92317546",
+    "files": 16,
+    "crc_ok": true,
+    "extracted_bytes_match": true,
+    "changed_from_v4": [
+      "receipt.json",
+      "review.js"
+    ],
+    "extract_relative": "outputs/service_review_handoff_qa_20261010_v5/video-extracted",
+    "browser": {
+      "browser": "154.0.8037.58",
+      "results": [
+        {
+          "pitch_key": "849843:1:1",
+          "video_decoded_played_and_ended": true,
+          "result_revealed": true
+        },
+        {
+          "pitch_key": "849843:1:2",
+          "video_decoded_played_and_ended": true,
+          "result_revealed": true
+        },
+        {
+          "pitch_key": "849843:1:3",
+          "video_decoded_played_and_ended": true,
+          "result_revealed": true
+        }
+      ],
+      "next_pa_hidden_without_wrong_video": true,
+      "page_errors": [],
+      "unexpected_requests": [],
+      "scope": "Windows headless Chrome on an actually extracted v5 ZIP. Clips were played then sought near their end. Not physical Mac/iPhone or human review."
+    },
+    "reviewed_screenshot": "Private outputs/service_review_handoff_qa_20261010_v5/video-pitch3.png; not in Git/source ZIP"
+  },
+  "repository_checks": {
+    "windows_cpu": {
+      "passed": 2225,
+      "skipped": 8,
+      "deselected": 2,
+      "warnings": 2,
+      "seconds": 419.0
+    },
+    "related_python": {
+      "passed": 215,
+      "skipped": 1
+    },
+    "node": {
+      "passed": 44
+    },
+    "local_browser": {
+      "windows_chrome": "154.0.8037.58",
+      "chrome_passed": 13,
+      "headless_windows_webkit": "26.5",
+      "webkit_passed": 13
+    },
+    "browser_ci": {
+      "run_id": 38056890881,
+      "url": "https://github.com/Pitcheezy/transition-models/actions/runs/38056890881",
+      "source_commit": "fafc9c69b371bb0b6831fc2f03e3e24cabc78cf8",
+      "conclusion": "success",
+      "linux_chromium": "151.0.7922.34",
+      "chromium_passed": 13,
+      "linux_webkit": "26.5",
+      "webkit_passed": 13
+    },
+    "python_ci": {
+      "run_id": 38056890856,
+      "url": "https://github.com/Pitcheezy/transition-models/actions/runs/38056890856",
+      "source_commit": "fafc9c69b371bb0b6831fc2f03e3e24cabc78cf8",
+      "conclusion": "success",
+      "linux": {
+        "passed": 2225,
+        "skipped": 8,
+        "deselected": 2,
+        "warnings": 4,
+        "seconds": 72.4
+      },
+      "macos_hosted": {
+        "passed": 2225,
+        "skipped": 8,
+        "deselected": 2,
+        "warnings": 2,
+        "seconds": 145.68
+      }
+    }
+  },
+  "limits": [
+    "No teammate repository access, model retraining, public Site modification, or teammate messaging.",
+    "Headless WebKit and hosted macOS CI are not physical Mac/iPhone acceptance.",
+    "Saved-data playback and input checks do not establish live model performance, event probabilities or policy benefit.",
+    "Source ZIP excludes raw service export, private normalized report, media, weights, human responses and credentials.",
+    "Full repository Playwright suite, workflow and downloaded engines are outside the minimal 64-file source pack.",
+    "A-y remains user-paused. I-0/I-run1/I-release1 and independent human/new-video requirements remain incomplete."
+  ],
+  "previous_archives": "v1/v2/v3/v4 preserved",
+  "next_entry": "docs/handoff/README.md"
+}

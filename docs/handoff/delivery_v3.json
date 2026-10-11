@@ -1,0 +1,69 @@
+{
+  "schema": "pitcheezy_handoff_delivery_v3",
+  "date": "2026-10-09",
+  "source_commit": "47ddc8f1cc063efbccf8964f5477daa735eea828",
+  "archive": "LEGACY_PROJECT/outputs/integration_delivery/transition_models_handoff_20261009_v3.zip",
+  "archive_bytes": 218861,
+  "archive_sha256": "1298a018b02d9eb92e7013a200c6653d33f32572401e37ea7eecad9b9f5779e9",
+  "selected_files": 54,
+  "archive_files_including_manifest": 55,
+  "zip_crc_and_extracted_bytes_match": true,
+  "missing_calibration_regressions_before": {
+    "failed": 5
+  },
+  "python_tests": {
+    "passed": 276,
+    "skipped": 1,
+    "seconds": 30.49
+  },
+  "node_tests": {
+    "passed": 68,
+    "failed": 0
+  },
+  "standard_library_inventory_before_and_after": "verified",
+  "synthetic_contract": {
+    "passed": true,
+    "pitches": 3,
+    "is_real_service_response": false
+  },
+  "module_origin": "intent.run and src.integration.service_game loaded from extracted ZIP",
+  "source_inventory_after_tests_unchanged": true,
+  "orchestration_note": "After successful Python and Node commands, the temporary log printer hit Windows cp949 on a Node status symbol. UTF-8 logs were preserved; final inventory was then run separately. No tests were rerun to conceal a failure.",
+  "limitations": [
+    "Same Windows host with existing Python/Node dependencies; not a fresh machine or Mac run.",
+    "Synthetic service contract and existing development coordinate regressions, not actual S response validation.",
+    "No video, model weights, human response, credentials, deployment, or teammate repository changes.",
+    "Prepared locally, not transmitted."
+  ],
+  "previous_archives_preserved": [
+    {
+      "version": 1,
+      "sha256": "8ecec737a4fdc775c426fe894fbfe40735c11f8e1c26d0ad42a50193d8b4f0e7"
+    },
+    {
+      "version": 2,
+      "sha256": "9387621a3850dc5109ca8fe5d770504c01761dc01c4db9db3f3520b640c7f2bd"
+    }
+  ],
+  "source_commit_ci": {
+    "run_id": 37920381861,
+    "url": "https://github.com/Pitcheezy/transition-models/actions/runs/37920381861",
+    "source_commit": "47ddc8f1cc063efbccf8964f5477daa735eea828",
+    "conclusion": "success",
+    "ubuntu": {
+      "passed": 2060,
+      "skipped": 8,
+      "deselected": 2,
+      "warnings": 4,
+      "seconds": 49.78
+    },
+    "macos": {
+      "passed": 2060,
+      "skipped": 8,
+      "deselected": 2,
+      "warnings": 2,
+      "seconds": 118.82
+    },
+    "scope": "Full source CPU CI, not physical Mac reviewer operation."
+  }
+}

@@ -1,0 +1,578 @@
+{
+ "schema": "intent_setup_check_v0",
+ "game_pk": 823407,
+ "pack_id": "c72e8a15a8a67507",
+ "role": "evaluation",
+ "scope": "evaluation game: assistant setup-frame readings vs one person's hand labels on the same frames",
+ "jsonl": "docs/results/mlb_p0/game_823407_intent_v0.jsonl",
+ "labeler": "owner",
+ "labeler_source": "cli",
+ "exported_at": "2026-10-04T01:55:22.266Z",
+ "elapsed_seconds": 146,
+ "raw_file": "docs/results/mlb_p0/game_823407_intent_human_labels_raw_v0.json",
+ "raw_sha256": "c7242bb3560985f86492437cb4d52344d65475dbd03d79acfb672f08a42955b2",
+ "labels_file": "docs/results/mlb_p0/game_823407_intent_human_labels_v0.json",
+ "frames_labeled": 29,
+ "availability": {
+  "both_marked": 15,
+  "both_abstained": 1,
+  "assistant_only": 0,
+  "person_only": 13,
+  "person_undecided": 0
+ },
+ "mitt_pixels": {
+  "n": 15,
+  "distance_median": 5.798275605729683,
+  "distance_p90": 9.442986815621433,
+  "distance_rms": 6.62374516418016,
+  "dx_assistant_minus_person": {
+   "n": 15,
+   "mean": 2.6866666666666714,
+   "se_of_mean": 1.2437220125270925,
+   "sd": 4.816914641829001,
+   "rms": 5.373453265824499
+  },
+  "dy_assistant_minus_person": {
+   "n": 15,
+   "mean": -2.32000000000002,
+   "se_of_mean": 0.8288373957365992,
+   "sd": 3.210073430401775,
+   "rms": 3.8729833462074272
+  }
+ },
+ "mitt_feet_same_plate": {
+  "x": {
+   "n": 15,
+   "mean": -0.0536287462757094,
+   "se_of_mean": 0.024481629255557767,
+   "sd": 0.09481694239479951,
+   "rms": 0.10614586577534031
+  },
+  "z": {
+   "n": 15,
+   "mean": 0.04627532415159315,
+   "se_of_mean": 0.016147936781745545,
+   "sd": 0.06254069023131069,
+   "rms": 0.0761051095369853
+  }
+ },
+ "full_chain_feet": {
+  "x": {
+   "n": 15,
+   "mean": 0.028442543799644525,
+   "se_of_mean": 0.03174287783675777,
+   "sd": 0.12293963722245936,
+   "rms": 0.12212912185398404
+  },
+  "z": {
+   "n": 15,
+   "mean": -0.04235862485963258,
+   "se_of_mean": 0.024529186964250552,
+   "sd": 0.09500113260855046,
+   "rms": 0.10108307120274548
+  }
+ },
+ "output_feet": {
+  "x": {
+   "n": 15,
+   "mean": 0.032030357668159155,
+   "se_of_mean": 0.03191368781773714,
+   "sd": 0.12360118143415846,
+   "rms": 0.12363135684017214
+  },
+  "z": {
+   "n": 15,
+   "mean": -0.03896355837979692,
+   "se_of_mean": 0.023792816023468933,
+   "sd": 0.09214918021827216,
+   "rms": 0.0971778380197296
+  },
+  "abs_x_median": 0.08640322594680216,
+  "abs_x_p90": 0.22604621094954291,
+  "abs_z_median": 0.07223912695623724,
+  "abs_z_p90": 0.14844495970144478,
+  "distance_median": 0.13907283565268835,
+  "distance_p90": 0.26615439389163753
+ },
+ "plate_front_end_pixels": {
+  "n_ends": 30,
+  "median": 2.2999999999999545,
+  "rms": 3.863978950943352
+ },
+ "per_frame": [
+  {
+   "pitch_id": "823407:1:3",
+   "assistant_status": "estimated",
+   "assistant_reason": null,
+   "person_status": "marked",
+   "mitt_px_diff": [
+    -4.4,
+    -4.1
+   ],
+   "mitt_feet_diff_same_plate": [
+    0.0825,
+    0.074
+   ],
+   "full_chain_feet_diff": [
+    0.0822,
+    0.0719
+   ],
+   "output_feet_diff": [
+    0.0864,
+    0.0728
+   ],
+   "plate_end_px_diff": [
+    2.3,
+    2.0
+   ]
+  },
+  {
+   "pitch_id": "823407:4:2",
+   "assistant_status": "estimated",
+   "assistant_reason": null,
+   "person_status": "marked",
+   "mitt_px_diff": [
+    8.6,
+    -1.6
+   ],
+   "mitt_feet_diff_same_plate": [
+    -0.1643,
+    0.0313
+   ],
+   "full_chain_feet_diff": [
+    -0.1477,
+    0.0068
+   ],
+   "output_feet_diff": [
+    -0.144,
+    0.0079
+   ],
+   "plate_end_px_diff": [
+    0.36,
+    2.18
+   ]
+  },
+  {
+   "pitch_id": "823407:5:2",
+   "assistant_status": "estimated",
+   "assistant_reason": null,
+   "person_status": "marked",
+   "mitt_px_diff": [
+    0.5,
+    -2.1
+   ],
+   "mitt_feet_diff_same_plate": [
+    -0.0094,
+    0.0395
+   ],
+   "full_chain_feet_diff": [
+    0.0553,
+    0.0106
+   ],
+   "output_feet_diff": [
+    0.0553,
+    0.0106
+   ],
+   "plate_end_px_diff": [
+    1.28,
+    2.72
+   ]
+  },
+  {
+   "pitch_id": "823407:6:4",
+   "assistant_status": "estimated",
+   "assistant_reason": null,
+   "person_status": "marked",
+   "mitt_px_diff": [
+    3.1,
+    0.9
+   ],
+   "mitt_feet_diff_same_plate": [
+    -0.057,
+    -0.0163
+   ],
+   "full_chain_feet_diff": [
+    -0.006,
+    -0.0729
+   ],
+   "output_feet_diff": [
+    0.0011,
+    -0.052
+   ],
+   "plate_end_px_diff": [
+    0.36,
+    2.58
+   ]
+  },
+  {
+   "pitch_id": "823407:8:5",
+   "assistant_status": "estimated",
+   "assistant_reason": null,
+   "person_status": "marked",
+   "mitt_px_diff": [
+    5.7,
+    3.9
+   ],
+   "mitt_feet_diff_same_plate": [
+    -0.1194,
+    -0.0785
+   ],
+   "full_chain_feet_diff": [
+    -0.0432,
+    -0.1484
+   ],
+   "output_feet_diff": [
+    -0.0432,
+    -0.1484
+   ],
+   "plate_end_px_diff": [
+    0.22,
+    5.02
+   ]
+  },
+  {
+   "pitch_id": "823407:10:6",
+   "assistant_status": "estimated",
+   "assistant_reason": null,
+   "person_status": "marked",
+   "mitt_px_diff": [
+    4.9,
+    -3.1
+   ],
+   "mitt_feet_diff_same_plate": [
+    -0.099,
+    0.0641
+   ],
+   "full_chain_feet_diff": [
+    -0.0147,
+    -0.0197
+   ],
+   "output_feet_diff": [
+    -0.009,
+    -0.0143
+   ],
+   "plate_end_px_diff": [
+    0.22,
+    4.73
+   ]
+  },
+  {
+   "pitch_id": "823407:12:4",
+   "assistant_status": "unavailable",
+   "assistant_reason": "only_one_reader_found_a_setup_frame",
+   "person_status": "marked"
+  },
+  {
+   "pitch_id": "823407:13:5",
+   "assistant_status": "unavailable",
+   "assistant_reason": "only_one_reader_found_a_setup_frame",
+   "person_status": "marked"
+  },
+  {
+   "pitch_id": "823407:18:1",
+   "assistant_status": "unavailable",
+   "assistant_reason": "cut_after_release",
+   "person_status": "not_centre_field"
+  },
+  {
+   "pitch_id": "823407:19:4",
+   "assistant_status": "estimated",
+   "assistant_reason": null,
+   "person_status": "marked",
+   "mitt_px_diff": [
+    2.1,
+    1.4
+   ],
+   "mitt_feet_diff_same_plate": [
+    -0.0409,
+    -0.0276
+   ],
+   "full_chain_feet_diff": [
+    -0.0077,
+    -0.0689
+   ],
+   "output_feet_diff": [
+    -0.0077,
+    -0.0689
+   ],
+   "plate_end_px_diff": [
+    0.64,
+    4.0
+   ]
+  },
+  {
+   "pitch_id": "823407:20:3",
+   "assistant_status": "estimated",
+   "assistant_reason": null,
+   "person_status": "marked",
+   "mitt_px_diff": [
+    4.5,
+    -3.9
+   ],
+   "mitt_feet_diff_same_plate": [
+    -0.0923,
+    0.0825
+   ],
+   "full_chain_feet_diff": [
+    0.0709,
+    -0.2643
+   ],
+   "output_feet_diff": [
+    0.1003,
+    -0.2465
+   ],
+   "plate_end_px_diff": [
+    1.75,
+    7.28
+   ]
+  },
+  {
+   "pitch_id": "823407:21:2",
+   "assistant_status": "estimated",
+   "assistant_reason": null,
+   "person_status": "marked",
+   "mitt_px_diff": [
+    12.0,
+    -7.6
+   ],
+   "mitt_feet_diff_same_plate": [
+    -0.2235,
+    0.146
+   ],
+   "full_chain_feet_diff": [
+    -0.1867,
+    0.0742
+   ],
+   "output_feet_diff": [
+    -0.1867,
+    0.0742
+   ],
+   "plate_end_px_diff": [
+    1.34,
+    3.31
+   ]
+  },
+  {
+   "pitch_id": "823407:22:3",
+   "assistant_status": "estimated",
+   "assistant_reason": null,
+   "person_status": "marked",
+   "mitt_px_diff": [
+    -5.3,
+    -1.6
+   ],
+   "mitt_feet_diff_same_plate": [
+    0.1023,
+    0.0305
+   ],
+   "full_chain_feet_diff": [
+    0.226,
+    -0.007
+   ],
+   "output_feet_diff": [
+    0.226,
+    -0.007
+   ],
+   "plate_end_px_diff": [
+    1.66,
+    3.52
+   ]
+  },
+  {
+   "pitch_id": "823407:23:6",
+   "assistant_status": "estimated",
+   "assistant_reason": null,
+   "person_status": "marked",
+   "mitt_px_diff": [
+    -1.6,
+    -3.6
+   ],
+   "mitt_feet_diff_same_plate": [
+    0.0297,
+    0.0684
+   ],
+   "full_chain_feet_diff": [
+    0.1496,
+    0.0088
+   ],
+   "output_feet_diff": [
+    0.1532,
+    0.0137
+   ],
+   "plate_end_px_diff": [
+    0.91,
+    5.95
+   ]
+  },
+  {
+   "pitch_id": "823407:24:5",
+   "assistant_status": "estimated",
+   "assistant_reason": null,
+   "person_status": "marked",
+   "mitt_px_diff": [
+    1.1,
+    -3.1
+   ],
+   "mitt_feet_diff_same_plate": [
+    -0.0222,
+    0.0668
+   ],
+   "full_chain_feet_diff": [
+    0.0511,
+    -0.0722
+   ],
+   "output_feet_diff": [
+    0.0511,
+    -0.0722
+   ],
+   "plate_end_px_diff": [
+    5.91,
+    7.47
+   ]
+  },
+  {
+   "pitch_id": "823407:29:3",
+   "assistant_status": "unavailable",
+   "assistant_reason": "not_centre_field",
+   "person_status": "marked"
+  },
+  {
+   "pitch_id": "823407:31:4",
+   "assistant_status": "unavailable",
+   "assistant_reason": "not_centre_field",
+   "person_status": "marked"
+  },
+  {
+   "pitch_id": "823407:34:5",
+   "assistant_status": "unavailable",
+   "assistant_reason": "not_centre_field",
+   "person_status": "marked"
+  },
+  {
+   "pitch_id": "823407:36:1",
+   "assistant_status": "unavailable",
+   "assistant_reason": "readers_disagree_on_mitt",
+   "person_status": "marked"
+  },
+  {
+   "pitch_id": "823407:37:4",
+   "assistant_status": "unavailable",
+   "assistant_reason": "readers_disagree_on_mitt",
+   "person_status": "marked"
+  },
+  {
+   "pitch_id": "823407:39:3",
+   "assistant_status": "unavailable",
+   "assistant_reason": "readers_disagree_on_mitt",
+   "person_status": "marked"
+  },
+  {
+   "pitch_id": "823407:49:1",
+   "assistant_status": "estimated",
+   "assistant_reason": null,
+   "person_status": "marked",
+   "mitt_px_diff": [
+    -2.1,
+    -0.6
+   ],
+   "mitt_feet_diff_same_plate": [
+    0.0519,
+    0.0149
+   ],
+   "full_chain_feet_diff": [
+    0.2508,
+    -0.1344
+   ],
+   "output_feet_diff": [
+    0.2508,
+    -0.1344
+   ],
+   "plate_end_px_diff": [
+    3.94,
+    7.26
+   ]
+  },
+  {
+   "pitch_id": "823407:50:1",
+   "assistant_status": "estimated",
+   "assistant_reason": null,
+   "person_status": "marked",
+   "mitt_px_diff": [
+    7.3,
+    -1.1
+   ],
+   "mitt_feet_diff_same_plate": [
+    -0.1641,
+    0.0307
+   ],
+   "full_chain_feet_diff": [
+    -0.096,
+    -0.1007
+   ],
+   "output_feet_diff": [
+    -0.096,
+    -0.1007
+   ],
+   "plate_end_px_diff": [
+    1.0,
+    6.53
+   ]
+  },
+  {
+   "pitch_id": "823407:61:3",
+   "assistant_status": "estimated",
+   "assistant_reason": null,
+   "person_status": "marked",
+   "mitt_px_diff": [
+    3.9,
+    -8.6
+   ],
+   "mitt_feet_diff_same_plate": [
+    -0.0788,
+    0.1679
+   ],
+   "full_chain_feet_diff": [
+    0.0429,
+    0.0809
+   ],
+   "output_feet_diff": [
+    0.0429,
+    0.0809
+   ],
+   "plate_end_px_diff": [
+    1.6,
+    5.33
+   ]
+  },
+  {
+   "pitch_id": "823407:63:4",
+   "assistant_status": "unavailable",
+   "assistant_reason": "only_one_reader_found_a_setup_frame",
+   "person_status": "marked"
+  },
+  {
+   "pitch_id": "823407:65:2",
+   "assistant_status": "unavailable",
+   "assistant_reason": "only_one_reader_found_a_setup_frame",
+   "person_status": "marked"
+  },
+  {
+   "pitch_id": "823407:73:10",
+   "assistant_status": "unavailable",
+   "assistant_reason": "only_one_reader_found_a_setup_frame",
+   "person_status": "marked"
+  },
+  {
+   "pitch_id": "823407:80:3",
+   "assistant_status": "unavailable",
+   "assistant_reason": "only_one_reader_found_a_setup_frame",
+   "person_status": "marked"
+  },
+  {
+   "pitch_id": "823407:88:3",
+   "assistant_status": "unavailable",
+   "assistant_reason": "only_one_reader_found_a_setup_frame",
+   "person_status": "marked"
+  }
+ ]
+}

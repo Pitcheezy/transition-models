@@ -1,4 +1,7 @@
 # Byte-compiled / optimized / DLL files
+# Generated reviewer packages and private response drafts
+outputs/blind_review/
+
 __pycache__/
 *.py[codz]
 *$py.class
@@ -220,6 +223,10 @@ __marimo__/
 # === Project-specific ===
 
 # Data (keep directory structure via .gitkeep)
+data/aligned_*/
+outputs/alignment_repair_*/
+data/operational_*/
+outputs/operational_*/
 data/raw/*
 data/processed/*
 data/splits/*
@@ -267,8 +274,52 @@ Phase9_5models_comparison_prompt.md
 # Node.js (pipeline roadmap visualization)
 node_modules/
 outputs/manual-20260602-pipeline-roadmap/
+outputs/annotation/
+outputs/frames/
+outputs/intent_crops*/
+outputs/verification/
+outputs/scoreboard_ocr/
 
 # Presentation artifacts (generated, not core)
 outputs/presentations/
 outputs/SmartPitch_TransitionModels_Presentation.md
 docs/presentations/
+
+# intent module: crops and hand-labeling pages embed MLB frames; keep them local
+outputs/intent_crops*/
+outputs/intent_label/
+
+# Local CV diagnostics, resumable batches and development replay artifacts
+outputs/cv_followup_*/
+outputs/cv_batch_*/
+outputs/cv_replay_*/
+outputs/cv_review_*/
+outputs/cv_observation_*/
+
+# Private offline demo delivery (includes local comparison figures)
+outputs/demo_delivery/
+
+# Private decoded-frame capture and source-bound frame preparation
+outputs/cv_clip_*/
+
+# Private observer images, provider/session logs and machine-specific plans
+outputs/cv_latency_*/
+outputs/cv_structured_*/
+
+# Local glove detector checkpoints, private frame manifests and raw development runs
+outputs/cv_local_*/
+
+outputs/cv12_label_audit_tests*/
+
+outputs/cv14_observer_*/
+
+outputs/cv15_point_*/
+
+outputs/cv15_experiment_*/
+
+# Private CV24 frame comparisons, decoder probes and machine-bound replay plans
+outputs/cv24_*/
+outputs/cv_exact_seek_*/
+
+# Private received service responses and local review packages
+outputs/service_review_*

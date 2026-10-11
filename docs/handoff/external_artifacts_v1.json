@@ -1,0 +1,463 @@
+{
+  "schema": "pitcheezy_external_inventory_v1",
+  "observed_at": "2026-10-07",
+  "source_checkout": {
+    "path_alias": "INTENT_PROJECT",
+    "commit": "9e844b79bedcf52e278d701bb9995f7ad9238302"
+  },
+  "aliases": {
+    "LEGACY_PROJECT": "Our legacy transition-models checkout; resolve locally when transferring named artifacts.",
+    "INTENT_PROJECT": "Our canonical transition-models-intent checkout; resolve locally when transferring named artifacts."
+  },
+  "scope": "Internal team inventory of explicit named artifacts only. This is not authorization to publish assets, a copy of those assets, or a complete portable runtime bundle.",
+  "inspection": {
+    "full_directory_scan": false,
+    "private_home_scan": false,
+    "network_access": false,
+    "model_loading": false,
+    "pickle_deserialization": false,
+    "training_or_inference": false,
+    "artifact_copying": false,
+    "note": "Only named file bytes were hashed; selected JSON metadata and runtime source were read. The Sites path was existence-checked without reading its contents."
+  },
+  "operational_runtime": {
+    "selected_model": "mlp135",
+    "feature_schema": "prepitch_profiles_2022_v1",
+    "selected_temperature": 1.0022222351524148,
+    "empirical_temperature": 1.0336899602754714,
+    "calibration_source": {
+      "path_alias": "LEGACY_PROJECT",
+      "relative_path": "outputs/operational_20260921/evaluation/probability_report.json",
+      "selected_temperature_field": "models.mlp135.temperature",
+      "empirical_temperature_field": "models.empirical.temperature",
+      "selection_field": "selection"
+    },
+    "application": "OperationalRecommender reads the selected temperature from probability_report.json and passes it to OperationalPredictor. The predictor averages seed probability arrays, then applies normalized log-probability temperature scaling. Its direct-constructor default of 1.0 is not a substitute for the saved calibration.",
+    "selection_note": "selection.json is retained as selection provenance. Runtime uses report.selection; resolve_selected_runs accepts legacy Windows path spellings by extracting run names and supports an explicit runs_dir. Preserve original evidence bytes.",
+    "profile_sha256_matches_hashed_builder": true,
+    "additional_required_for_full_recommender": [
+      {
+        "path_alias": "LEGACY_PROJECT",
+        "relative_path": "outputs/operational_20260921/evaluation/empirical.pkl",
+        "status": "bytes_hashed_no_deserialization",
+        "needed_for": "Empirical baseline probabilities and comparison costs",
+        "bytes": 1566950,
+        "sha256": "c0495623406373961d1cb0027697c85e78045204cb1b602035629e60e7c6dccd",
+        "observed": true
+      },
+      {
+        "path_alias": "LEGACY_PROJECT",
+        "relative_path": "outputs/operational_20260921/policy_nuisance_v2/manifest.json",
+        "status": "bytes_hashed_no_deserialization",
+        "needed_for": "Dataset compatibility and propensity.temperature calibration",
+        "bytes": 2519,
+        "sha256": "b9a1d639e277aca6f427b600784452b0afc1d75f53a569eca3f9e8e6b767340c",
+        "observed": true
+      },
+      {
+        "path_alias": "LEGACY_PROJECT",
+        "relative_path": "outputs/operational_20260921/policy_nuisance_v2/propensity.txt",
+        "status": "bytes_hashed_no_deserialization",
+        "needed_for": "Behavior propensity and supported-action filtering",
+        "bytes": 3972075,
+        "sha256": "44aab078f1363830bb2fd698841a62812768105e5e54326468ce6f77f64c2ce3",
+        "observed": true
+      }
+    ],
+    "portable_runtime_verified": false,
+    "additional_limits": "Compatible source/dependencies and platform-specific torch installation remain required. Calibration fitting, probability re-evaluation or policy re-evaluation need separate holdout arrays/metadata and nuisance artifacts. No stored model or calibration was executed or re-estimated here.",
+    "source_evidence": [
+      "INTENT_PROJECT:src/inference/recommendation.py:23",
+      "INTENT_PROJECT:src/inference/operational.py:72",
+      "INTENT_PROJECT:src/evaluation/operational_metrics.py:10",
+      "INTENT_PROJECT:src/utils/experiment_paths.py:6"
+    ]
+  },
+  "artifacts": [
+    {
+      "path_alias": "LEGACY_PROJECT",
+      "relative_path": "data/operational_20260921_v2/dataset_manifest.json",
+      "bytes": 1649,
+      "sha256": "98d77564855f4e33ebda65f56fe8d77142e45c9552225e76f528745ecbd02156",
+      "observed": true,
+      "status": "bytes_hashed_no_deserialization",
+      "needed_for": "Operational feature schema and feature-builder SHA binding",
+      "distribution": "internal_team_model_evidence_not_public_site",
+      "transfer_required": "Separate controlled transfer is required for runtime use; H-port1 records metadata only and does not provide a complete runtime bundle."
+    },
+    {
+      "path_alias": "LEGACY_PROJECT",
+      "relative_path": "data/operational_20260921_v2/feature_builder.pkl",
+      "bytes": 1411663,
+      "sha256": "6538080fe55f668a16d1071c5bff6e3f91eeb2d103835c780aa05f0d450443fe",
+      "observed": true,
+      "status": "bytes_hashed_no_deserialization",
+      "needed_for": "Frozen 2022 operational profiles and feature construction; hashed only, not unpickled",
+      "distribution": "internal_team_model_evidence_not_public_site",
+      "transfer_required": "Separate controlled transfer is required for runtime use; H-port1 records metadata only and does not provide a complete runtime bundle."
+    },
+    {
+      "path_alias": "LEGACY_PROJECT",
+      "relative_path": "data/operational_20260921_v2/run_value_model.npz",
+      "bytes": 25884,
+      "sha256": "4d0d7337e3c4da4120af8c4e50c208f569a1b77a6e31bfb4fd54b4ddfa17c711",
+      "observed": true,
+      "status": "bytes_hashed_no_deserialization",
+      "needed_for": "Outcome-cost kernel for recommendation; not needed for probability-only prediction",
+      "distribution": "internal_team_model_evidence_not_public_site",
+      "transfer_required": "Separate controlled transfer is required for runtime use; H-port1 records metadata only and does not provide a complete runtime bundle."
+    },
+    {
+      "path_alias": "LEGACY_PROJECT",
+      "relative_path": "outputs/operational_20260921/evaluation/selection.json",
+      "bytes": 982,
+      "sha256": "8702238d45cbe543a6cb3484d527821576009f351b158b451462004c872b0d42",
+      "observed": true,
+      "status": "bytes_hashed_no_deserialization",
+      "needed_for": "Selection provenance; runtime recommender reads selection embedded in probability_report.json",
+      "distribution": "internal_team_model_evidence_not_public_site",
+      "transfer_required": "Separate controlled transfer is required for runtime use; H-port1 records metadata only and does not provide a complete runtime bundle."
+    },
+    {
+      "path_alias": "LEGACY_PROJECT",
+      "relative_path": "outputs/operational_20260921/evaluation/probability_report.json",
+      "bytes": 696027,
+      "sha256": "d75d36b444b7dcd9f065aa830073135d3b5f562efceeb37c1a76e093d31b4168",
+      "observed": true,
+      "status": "bytes_hashed_no_deserialization",
+      "needed_for": "Runtime selected model, selected-run references, calibrated MLP and empirical temperatures",
+      "distribution": "internal_team_model_evidence_not_public_site",
+      "transfer_required": "Separate controlled transfer is required for runtime use; H-port1 records metadata only and does not provide a complete runtime bundle."
+    },
+    {
+      "path_alias": "LEGACY_PROJECT",
+      "relative_path": "outputs/operational_20260921/mlp135_seed42/manifest.json",
+      "bytes": 3769,
+      "sha256": "2830c1f03d8f8707569859bfe18ddc9394faa90404924243dd2226563212b29c",
+      "observed": true,
+      "status": "bytes_hashed_no_deserialization",
+      "needed_for": "Selected MLP135 seed training schema/profile compatibility",
+      "distribution": "internal_team_model_evidence_not_public_site",
+      "transfer_required": "Separate controlled transfer is required for runtime use; H-port1 records metadata only and does not provide a complete runtime bundle."
+    },
+    {
+      "path_alias": "LEGACY_PROJECT",
+      "relative_path": "outputs/operational_20260921/mlp135_seed42/best.pt",
+      "bytes": 432634,
+      "sha256": "1c783878357ea4a2a680118c47e8f2d237cff4853ee28e46ce25f7b05c9c50b3",
+      "observed": true,
+      "status": "bytes_hashed_no_deserialization",
+      "needed_for": "Selected MLP135 seed checkpoint; hashed only, not loaded",
+      "distribution": "internal_team_model_evidence_not_public_site",
+      "transfer_required": "Separate controlled transfer is required for runtime use; H-port1 records metadata only and does not provide a complete runtime bundle."
+    },
+    {
+      "path_alias": "LEGACY_PROJECT",
+      "relative_path": "outputs/operational_20260921/mlp135_seed43/manifest.json",
+      "bytes": 3768,
+      "sha256": "74cacb27996b9ae0c3ca927bff05b0b3a294d15164998c84f080052803e3a2ed",
+      "observed": true,
+      "status": "bytes_hashed_no_deserialization",
+      "needed_for": "Selected MLP135 seed training schema/profile compatibility",
+      "distribution": "internal_team_model_evidence_not_public_site",
+      "transfer_required": "Separate controlled transfer is required for runtime use; H-port1 records metadata only and does not provide a complete runtime bundle."
+    },
+    {
+      "path_alias": "LEGACY_PROJECT",
+      "relative_path": "outputs/operational_20260921/mlp135_seed43/best.pt",
+      "bytes": 432634,
+      "sha256": "36e0720678e94a11c5f5abb459b9fea85dd07879b2afe9746db1ac58aeb0303f",
+      "observed": true,
+      "status": "bytes_hashed_no_deserialization",
+      "needed_for": "Selected MLP135 seed checkpoint; hashed only, not loaded",
+      "distribution": "internal_team_model_evidence_not_public_site",
+      "transfer_required": "Separate controlled transfer is required for runtime use; H-port1 records metadata only and does not provide a complete runtime bundle."
+    },
+    {
+      "path_alias": "LEGACY_PROJECT",
+      "relative_path": "outputs/operational_20260921/mlp135_seed44/manifest.json",
+      "bytes": 3766,
+      "sha256": "3ea3dcd7bdb82488222356f9d3205c4c2aa6d10e7d110406e86596380bc2361a",
+      "observed": true,
+      "status": "bytes_hashed_no_deserialization",
+      "needed_for": "Selected MLP135 seed training schema/profile compatibility",
+      "distribution": "internal_team_model_evidence_not_public_site",
+      "transfer_required": "Separate controlled transfer is required for runtime use; H-port1 records metadata only and does not provide a complete runtime bundle."
+    },
+    {
+      "path_alias": "LEGACY_PROJECT",
+      "relative_path": "outputs/operational_20260921/mlp135_seed44/best.pt",
+      "bytes": 432634,
+      "sha256": "ed3221a42630fff7d83ebfb228519782a8845d382b1fb337da42615c916352cc",
+      "observed": true,
+      "status": "bytes_hashed_no_deserialization",
+      "needed_for": "Selected MLP135 seed checkpoint; hashed only, not loaded",
+      "distribution": "internal_team_model_evidence_not_public_site",
+      "transfer_required": "Separate controlled transfer is required for runtime use; H-port1 records metadata only and does not provide a complete runtime bundle."
+    },
+    {
+      "path_alias": "INTENT_PROJECT",
+      "relative_path": "outputs/demo_delivery/pitcheezy_offline_demo_20261006_v4.zip",
+      "bytes": 18087236,
+      "sha256": "c9eed39629a90ec57dd3988c29fedc10358da4138dcef02c44e13025330bcdc9",
+      "observed": true,
+      "status": "bytes_hashed_no_deserialization",
+      "needed_for": "Private Site v8 presentation snapshot including comparison images; current tracked viewer is later Site v9",
+      "distribution": "private_designated_team_or_onsite_only_do_not_publish",
+      "transfer_required": "Optional separate private transfer for the old offline presentation; not required for current tracked viewer.",
+      "expected_sha256": "c9eed39629a90ec57dd3988c29fedc10358da4138dcef02c44e13025330bcdc9",
+      "matches_existing_evidence": true
+    },
+    {
+      "path_alias": "INTENT_PROJECT",
+      "relative_path": "outputs/demo_delivery/pitcheezy_offline_demo_20261006_v4/bundle_manifest.json",
+      "bytes": 13334,
+      "sha256": "b8e8fe18f900a014e9d4a546c9995ee6d9c3bf4de84e25f8428c7e74bc55d1fa",
+      "observed": true,
+      "status": "bytes_hashed_no_deserialization",
+      "needed_for": "Per-file provenance for the private offline presentation",
+      "distribution": "private_designated_team_only",
+      "transfer_required": "Transfer only with the corresponding private ZIP if that old presentation is requested."
+    },
+    {
+      "path_alias": "INTENT_PROJECT",
+      "relative_path": "outputs/cv_review_20261005_ui_v1/reviewer/manifest.json",
+      "bytes": 7181,
+      "sha256": "d7d01b7776436c4539900e3a44115343e2b7db2eb6ae27489c3ae2f7a7f1a468",
+      "observed": true,
+      "status": "bytes_hashed_no_deserialization",
+      "needed_for": "CV6 source-only reviewer package binding; 26 existing development frames, no new human response claimed",
+      "distribution": "private_review_metadata_not_public_payload",
+      "transfer_required": "Only needed for controlled CV6 review; the manifest alone is not a complete reviewer package.",
+      "expected_sha256": "d7d01b7776436c4539900e3a44115343e2b7db2eb6ae27489c3ae2f7a7f1a468",
+      "matches_existing_evidence": true
+    },
+    {
+      "path_alias": "INTENT_PROJECT",
+      "relative_path": "web/pitch-studio/media/hero-849843-four-pitches-v1.mp4",
+      "bytes": 11571137,
+      "sha256": "f7aa424da1198f645a04d1554e22d2709d511fa5e1dc43ac65673e09b39b8c09",
+      "observed": true,
+      "status": "bytes_hashed_no_deserialization",
+      "needed_for": "Existing approved static viewer media and its media-hash checks",
+      "distribution": "existing_site_approved_asset_only_no_general_redistribution_grant",
+      "transfer_required": "Tracked source asset; no separate external transfer when the complete tracked viewer is supplied. No asset copy is made by this inventory."
+    },
+    {
+      "path_alias": "INTENT_PROJECT",
+      "relative_path": "web/pitch-studio/media/pitch-849843-1-1-official.jpg",
+      "bytes": 188744,
+      "sha256": "cb996e01792960cf0e10a6a84689b06a4f6ae0b158802f997492aadc1fe8fcaa",
+      "observed": true,
+      "status": "bytes_hashed_no_deserialization",
+      "needed_for": "Existing approved static viewer media and its media-hash checks",
+      "distribution": "existing_site_approved_asset_only_no_general_redistribution_grant",
+      "transfer_required": "Tracked source asset; no separate external transfer when the complete tracked viewer is supplied. No asset copy is made by this inventory."
+    },
+    {
+      "path_alias": "INTENT_PROJECT",
+      "relative_path": "web/pitch-studio/media/pitch-849843-1-1-official.mp4",
+      "bytes": 5139146,
+      "sha256": "78c7325e6d79afc13f2c1990262e2872483db907283c7571a6a2c468d0a7ca42",
+      "observed": true,
+      "status": "bytes_hashed_no_deserialization",
+      "needed_for": "Existing approved static viewer media and its media-hash checks",
+      "distribution": "existing_site_approved_asset_only_no_general_redistribution_grant",
+      "transfer_required": "Tracked source asset; no separate external transfer when the complete tracked viewer is supplied. No asset copy is made by this inventory."
+    },
+    {
+      "path_alias": "INTENT_PROJECT",
+      "relative_path": "web/pitch-studio/media/pitch-849843-1-2-official.jpg",
+      "bytes": 183409,
+      "sha256": "90360e50aeb7a7f2202333fa67b2f5d09b3760af50bacf69eaa19d8a5be85f00",
+      "observed": true,
+      "status": "bytes_hashed_no_deserialization",
+      "needed_for": "Existing approved static viewer media and its media-hash checks",
+      "distribution": "existing_site_approved_asset_only_no_general_redistribution_grant",
+      "transfer_required": "Tracked source asset; no separate external transfer when the complete tracked viewer is supplied. No asset copy is made by this inventory."
+    },
+    {
+      "path_alias": "INTENT_PROJECT",
+      "relative_path": "web/pitch-studio/media/pitch-849843-1-2-official.mp4",
+      "bytes": 3788892,
+      "sha256": "989cdc26ebe9c86d59720519827d3290cbc82984758cb180793e7c3e3353c4b2",
+      "observed": true,
+      "status": "bytes_hashed_no_deserialization",
+      "needed_for": "Existing approved static viewer media and its media-hash checks",
+      "distribution": "existing_site_approved_asset_only_no_general_redistribution_grant",
+      "transfer_required": "Tracked source asset; no separate external transfer when the complete tracked viewer is supplied. No asset copy is made by this inventory."
+    },
+    {
+      "path_alias": "INTENT_PROJECT",
+      "relative_path": "web/pitch-studio/media/pitch-849843-1-3-official.jpg",
+      "bytes": 189102,
+      "sha256": "2fb66a6d84c1a41e1e14837b9cd6a32720c7f4c8f77af9b80bf9866ac9e15ac5",
+      "observed": true,
+      "status": "bytes_hashed_no_deserialization",
+      "needed_for": "Existing approved static viewer media and its media-hash checks",
+      "distribution": "existing_site_approved_asset_only_no_general_redistribution_grant",
+      "transfer_required": "Tracked source asset; no separate external transfer when the complete tracked viewer is supplied. No asset copy is made by this inventory."
+    },
+    {
+      "path_alias": "INTENT_PROJECT",
+      "relative_path": "web/pitch-studio/media/pitch-849843-1-3-official.mp4",
+      "bytes": 4070010,
+      "sha256": "8e5fbfdd9172eadfb69e3316fbe97d592e7201e3d4ebac4fd1d6e17403420ce5",
+      "observed": true,
+      "status": "bytes_hashed_no_deserialization",
+      "needed_for": "Existing approved static viewer media and its media-hash checks",
+      "distribution": "existing_site_approved_asset_only_no_general_redistribution_grant",
+      "transfer_required": "Tracked source asset; no separate external transfer when the complete tracked viewer is supplied. No asset copy is made by this inventory."
+    },
+    {
+      "path_alias": "INTENT_PROJECT",
+      "relative_path": "web/pitch-studio/media/pitch-849843-1-3.jpg",
+      "bytes": 174807,
+      "sha256": "7e85135f29934adf98ef0d2eac1992c6ecb20bfc41016b75bd212296c4def44c",
+      "observed": true,
+      "status": "bytes_hashed_no_deserialization",
+      "needed_for": "Existing approved static viewer media and its media-hash checks",
+      "distribution": "existing_site_approved_asset_only_no_general_redistribution_grant",
+      "transfer_required": "Tracked source asset; no separate external transfer when the complete tracked viewer is supplied. No asset copy is made by this inventory."
+    },
+    {
+      "path_alias": "INTENT_PROJECT",
+      "relative_path": "web/pitch-studio/media/pitch-849843-1-3.mp4",
+      "bytes": 1683359,
+      "sha256": "393bc18339e8f64a3e8c70efb43df7412afb5eeb87faf7d707de4bd8a0eeb78d",
+      "observed": true,
+      "status": "bytes_hashed_no_deserialization",
+      "needed_for": "Existing approved static viewer media and its media-hash checks",
+      "distribution": "existing_site_approved_asset_only_no_general_redistribution_grant",
+      "transfer_required": "Tracked source asset; no separate external transfer when the complete tracked viewer is supplied. No asset copy is made by this inventory."
+    },
+    {
+      "path_alias": "INTENT_PROJECT",
+      "relative_path": "web/pitch-studio/media/pitch-849843-2-5.jpg",
+      "bytes": 174445,
+      "sha256": "f0a5e613275d21f516f76d1dac3c0e12a222148ccd74c2609c872e7a7f2e8380",
+      "observed": true,
+      "status": "bytes_hashed_no_deserialization",
+      "needed_for": "Existing approved static viewer media and its media-hash checks",
+      "distribution": "existing_site_approved_asset_only_no_general_redistribution_grant",
+      "transfer_required": "Tracked source asset; no separate external transfer when the complete tracked viewer is supplied. No asset copy is made by this inventory."
+    },
+    {
+      "path_alias": "INTENT_PROJECT",
+      "relative_path": "web/pitch-studio/media/pitch-849843-2-5.mp4",
+      "bytes": 1748441,
+      "sha256": "e523328fcdd06759f27b15e2e4c0a14e32e3a573552cddafbe6ca355557142ca",
+      "observed": true,
+      "status": "bytes_hashed_no_deserialization",
+      "needed_for": "Existing approved static viewer media and its media-hash checks",
+      "distribution": "existing_site_approved_asset_only_no_general_redistribution_grant",
+      "transfer_required": "Tracked source asset; no separate external transfer when the complete tracked viewer is supplied. No asset copy is made by this inventory."
+    },
+    {
+      "path_alias": "INTENT_PROJECT",
+      "relative_path": "docs/results/cv_local_20261007/exact_seek_preregister_v1.json",
+      "bytes": 12921,
+      "sha256": "52ad31e23077ace81287b2b880c29c6d56f09e0494eb996289750f9145260f0a",
+      "observed": true,
+      "status": "bytes_hashed_no_deserialization",
+      "needed_for": "CV24 frozen method, code/input hashes and opaque local-detector weight identity; not a portable execution plan",
+      "distribution": "internal_team_cv_evidence",
+      "transfer_required": "Tracked evidence only; capture data, machine-bound config and private sessions are excluded."
+    },
+    {
+      "path_alias": null,
+      "relative_path": null,
+      "bytes": null,
+      "sha256": "fb6a3cc702b1df54c18a44b26708cd083614211062d0c36d2ca7bf9270df3533",
+      "observed": false,
+      "status": "opaque_weight_digest_from_tracked_evidence_no_file_discovery",
+      "needed_for": "Optional CV24 generic glove detector experiment: fasterrcnn_mobilenet_v3_large_fpn; not required by CV contracts, frozen summaries or viewer",
+      "distribution": "external_weight_distribution_and_local_machine_compatibility_not_verified",
+      "transfer_required": "Outside H-port1. Resolve an authorized compatible weight source and build a new local plan before a separate CV experiment.",
+      "evidence": {
+        "path_alias": "INTENT_PROJECT",
+        "relative_path": "docs/results/cv_local_20261007/exact_seek_preregister_v1.json",
+        "field": "weights_sha256"
+      }
+    },
+    {
+      "path_alias": "LEGACY_PROJECT",
+      "relative_path": "outputs/cv_followup_20261005/pitcheezy-demo-site",
+      "bytes": null,
+      "sha256": null,
+      "observed": true,
+      "status": "directory_reference_only_contents_not_scanned",
+      "needed_for": "Existing Sites source checkout reference; tracked web/pitch-studio remains the portable viewer source",
+      "distribution": "deployment_workspace_requires_separate_site_access",
+      "transfer_required": "Not required for local tracked-viewer use. Deployment workspace and account ownership are separate from this handoff."
+    },
+    {
+      "path_alias": "LEGACY_PROJECT",
+      "relative_path": "outputs/operational_20260921/evaluation/empirical.pkl",
+      "status": "bytes_hashed_no_deserialization",
+      "needed_for": "Empirical baseline probabilities and comparison costs",
+      "bytes": 1566950,
+      "sha256": "c0495623406373961d1cb0027697c85e78045204cb1b602035629e60e7c6dccd",
+      "observed": true,
+      "distribution": "internal_team_model_evidence_not_public_site",
+      "transfer_required": "Separate transfer for the full recommender only; not included in source handoff."
+    },
+    {
+      "path_alias": "LEGACY_PROJECT",
+      "relative_path": "outputs/operational_20260921/policy_nuisance_v2/manifest.json",
+      "status": "bytes_hashed_no_deserialization",
+      "needed_for": "Dataset compatibility and propensity.temperature calibration",
+      "bytes": 2519,
+      "sha256": "b9a1d639e277aca6f427b600784452b0afc1d75f53a569eca3f9e8e6b767340c",
+      "observed": true,
+      "distribution": "internal_team_model_evidence_not_public_site",
+      "transfer_required": "Separate transfer for the full recommender only; not included in source handoff."
+    },
+    {
+      "path_alias": "LEGACY_PROJECT",
+      "relative_path": "outputs/operational_20260921/policy_nuisance_v2/propensity.txt",
+      "status": "bytes_hashed_no_deserialization",
+      "needed_for": "Behavior propensity and supported-action filtering",
+      "bytes": 3972075,
+      "sha256": "44aab078f1363830bb2fd698841a62812768105e5e54326468ce6f77f64c2ce3",
+      "observed": true,
+      "distribution": "internal_team_model_evidence_not_public_site",
+      "transfer_required": "Separate transfer for the full recommender only; not included in source handoff."
+    }
+  ],
+  "exclusion_groups": [
+    {
+      "group": "training_evaluation_arrays_and_raw_statcast",
+      "path_alias": "LEGACY_PROJECT",
+      "scope": "data/raw and operational split arrays/metadata, prediction arrays and full experiment directories",
+      "status": "excluded_not_scanned",
+      "reason": "Not needed for this minimum metadata handoff; separate transfer is needed to retrain or re-evaluate."
+    },
+    {
+      "group": "raw_video_frames_capture_inputs",
+      "path_alias": "INTENT_PROJECT",
+      "scope": "data/raw/mlb_video; outputs/frames; CV capture media and decoder receipts",
+      "status": "excluded_not_scanned",
+      "reason": "Only the 11 named approved site media files were hashed. General broadcast redistribution and private capture transfer are outside scope."
+    },
+    {
+      "group": "human_labels_identity_and_private_review_material",
+      "path_alias": "INTENT_PROJECT",
+      "scope": "Raw/normalized human responses, setup checks, reviewer images, private_selection.json and comparison images",
+      "status": "excluded_not_scanned",
+      "reason": "Only the named CV6 manifest and private offline ZIP/manifest were hashed. Their metadata does not authorize publishing enclosed private material."
+    },
+    {
+      "group": "private_sessions_logs_and_credentials",
+      "path_alias": "INTENT_PROJECT",
+      "scope": "Observation session.json, private run logs/model responses, account state and credentials",
+      "status": "excluded_not_scanned",
+      "reason": "Sessions are machine-bound and can contain host, source-path and timing data. No session or authentication material is included."
+    }
+  ],
+  "media_approval_evidence": [
+    "INTENT_PROJECT:docs/INTENT_DEMO_SITE.md",
+    "INTENT_PROJECT:docs/PITCH_STUDIO_RECEIVER.md",
+    "INTENT_PROJECT:docs/PITCH_STUDIO_OFFLINE_BUNDLE.md"
+  ]
+}

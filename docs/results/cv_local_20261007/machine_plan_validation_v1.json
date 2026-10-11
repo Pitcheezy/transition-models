@@ -1,0 +1,143 @@
+{
+  "schema": "local_glove_plan_validation_v1",
+  "status": "validated",
+  "plan_sha256": "c24ec4ddbf8c2f693374528bc306096622383a905ac5251dccf81ddc64e4ffdf",
+  "config_sha256": "e68fb6be292f227d52c4033be35e44bee033b55d630447a5cd512d41179306ba",
+  "weights_sha256": "fb6a3cc702b1df54c18a44b26708cd083614211062d0c36d2ca7bf9270df3533",
+  "config_copied_or_modified": false,
+  "model_calls": 0,
+  "decoder_calls": 0,
+  "subprocess_calls": 0,
+  "device_operation_verified": false,
+  "decoder_operation_verified": false,
+  "model_operation_verified": false,
+  "notice": "File/SHA/PTS preflight only. This new plan is machine-bound, not a portable rewrite of prior evidence. Capture receipts must already be valid on this machine. No extraction, readiness, model load or device check was performed.",
+  "private_receipt_sha256": "63e1e85ce3cf7d53b13ed5ff93988aebd8b6712b1baa5f6430be86c5be2ba340",
+  "input_code_bindings": [
+    {
+      "artifact": "outputs/cv_clip_clock_20261006_v2/receipt.json",
+      "sha256": "ef03502c5a90364e70e234437476ff58ad48790847d6f47e494f0bcb9923f834",
+      "bytes": 6689
+    },
+    {
+      "artifact": "pa2_source_candidate.mp4",
+      "sha256": "e11a9879cd4f5b61a16bb678030a97f794f807d5ab5d43faf408fb719fe51b65",
+      "bytes": null
+    },
+    {
+      "artifact": "outputs/cv_clip_clock_20261006_v2/clip.framemd5",
+      "sha256": "98b058c7908c1e743ed963fe0f3f6b0f425ab992e689a4293fd097373e9f76ac",
+      "bytes": 264058
+    },
+    {
+      "artifact": "outputs/cv_clip_clock_20261006_v2/clip.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "artifact": "outputs/cv_clip_clock_20261006_v2/clip.stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "artifact": "outputs/cv_clip_clock_20261006_v2/ffmpeg_version.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "artifact": "outputs/cv_clip_clock_20261006_v2/ffmpeg_version.stdout.txt",
+      "sha256": "31f06c84af11b04f5dd0f8be33d954fff1ea8b85323980744d54bd88d2b198e5",
+      "bytes": 1483
+    },
+    {
+      "artifact": "outputs/cv_clip_clock_20261006_v2/source.framemd5",
+      "sha256": "143821fbbfc52e10c931c362901e97e4b20e31da275ebf70d3d62fccaefbf82f",
+      "bytes": 297578
+    },
+    {
+      "artifact": "outputs/cv_clip_clock_20261006_v2/source.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "artifact": "outputs/cv_clip_clock_20261006_v2/source.stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "artifact": "intent/observation_loop.py",
+      "sha256": "7927235043277e0c10c2585a4e223a7f4c98ab260e676f5db0c2e9bd937f320b",
+      "bytes": 15891
+    },
+    {
+      "artifact": "intent/clip_capture.py",
+      "sha256": "8667aa6ebd8746818974950d831c7e1c2deba32b12a5916795cf42854b703109",
+      "bytes": 12441
+    },
+    {
+      "artifact": "intent/clip_clock.py",
+      "sha256": "8ce740cb475265c2f12673111d462edb62140b9a8e00826567379c5529104810",
+      "bytes": 13494
+    },
+    {
+      "artifact": "intent/clip_frames.py",
+      "sha256": "960b475abba47e49246ecb462079dbf1e5cfa02a15a0cb322edef2c6d5d7de32",
+      "bytes": 13721
+    },
+    {
+      "artifact": "intent/observation_session.py",
+      "sha256": "7dc5616fed0bc4697efeeb61104175870a340e78a274efed5daee2a41967bfdc",
+      "bytes": 14768
+    },
+    {
+      "artifact": "intent/local_glove_observer.py",
+      "sha256": "5db3f2538393860db09ed0df02c48bb6944b47c00bd45f0c42ab8f245f5d5947",
+      "bytes": 17177
+    },
+    {
+      "artifact": "intent/local_glove_detector.py",
+      "sha256": "4818373655ee9906e662b47ff2bf0d989a550dd62c855c5bf0f001885f363d6b",
+      "bytes": 15957
+    },
+    {
+      "artifact": "intent/local_glove_observer_report.py",
+      "sha256": "9385f35b964cd03139fa90562b13276490d3b66d824192a22e2a2698e2dcbb1e",
+      "bytes": 21616
+    },
+    {
+      "artifact": "intent/local_glove_worker.py",
+      "sha256": "eedabbeefa3ea693f645b725fe21d4cd34fb3071eb2929a3190f97d521c4c666",
+      "bytes": 46450
+    },
+    {
+      "artifact": "intent/local_glove_ready.py",
+      "sha256": "eaefe0346f7ef3784d30d0b157d3ec82b6e4250201020754dd85505f90ec8e91",
+      "bytes": 8633
+    },
+    {
+      "artifact": "intent/local_glove_plan.py",
+      "sha256": "13d25c31f1a9489044030dedf4ab97e3c232254a743f63b48f05f17a9cdc751f",
+      "bytes": 10978
+    },
+    {
+      "artifact": "outputs/cv_local_observer_preregister_v1/config.json",
+      "sha256": "e68fb6be292f227d52c4033be35e44bee033b55d630447a5cd512d41179306ba",
+      "bytes": 453
+    },
+    {
+      "artifact": ".venv/Scripts/python.exe",
+      "sha256": "711df14e4ef9f0890c5c84330faba821839f3f6757dbe27cbf69ac3de6852446",
+      "bytes": 262144
+    },
+    {
+      "artifact": "outputs/cv_local_machine_plan_v1/plan.json",
+      "sha256": "c24ec4ddbf8c2f693374528bc306096622383a905ac5251dccf81ddc64e4ffdf",
+      "bytes": 1660
+    }
+  ],
+  "planned_cutoffs": 10,
+  "original_plan_and_config_unchanged": true,
+  "run_and_startup_absent": true,
+  "environment": "Windows; active project virtualenv; file-only preparation",
+  "mac_hardware_execution_verified": false
+}

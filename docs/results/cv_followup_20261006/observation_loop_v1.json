@@ -1,0 +1,444 @@
+{
+  "schema": "cv_observation_loop_smoke_v1",
+  "game_role": "Previously reviewed development footage; not independent validation",
+  "fixed_cutoffs_seconds": [
+    "180",
+    "185",
+    "190"
+  ],
+  "human_labels": false,
+  "accuracy_measured": false,
+  "full_pa_verified": false,
+  "live_availability_verified": false,
+  "first_run_preserved": true,
+  "frozen_files_unchanged": 207,
+  "runs": [
+    {
+      "run_id": "cv_clip_loop_20261006_v1",
+      "summary": {
+        "schema": "intent_observation_loop_run_v1",
+        "status": "completed_with_errors",
+        "planned": 3,
+        "attempted": 3,
+        "accepted": 2,
+        "errors": 1,
+        "elapsed_seconds": 37.891,
+        "full_pa_verified": false,
+        "live_availability_verified": false
+      },
+      "manifest_sha256": "34d0f95b2b67f22dd9422b124c9b484ac909a891583f3f1144c896fbd5e817d7",
+      "attempts": [
+        {
+          "attempt": {
+            "index": 0,
+            "cutoff_seconds_exact": "180",
+            "status": "accepted",
+            "scheduled_input_monotonic_ns": 1248720296000000,
+            "scheduled_input_utc_ns": 1791229059825849100,
+            "scheduled_offset_seconds_exact": "0",
+            "preparation_started": {
+              "monotonic_ns": 1248720296000000,
+              "utc_ns": 1791229059827417100,
+              "elapsed_seconds": 0.0
+            },
+            "observer_dispatch": {
+              "monotonic_ns": 1248721921000000,
+              "utc_ns": 1791229061443400900,
+              "elapsed_seconds": 1.625
+            },
+            "response_accepted": {
+              "monotonic_ns": 1248733140000000,
+              "utc_ns": 1791229072670701400,
+              "elapsed_seconds": 12.844
+            },
+            "observation_status": "unavailable",
+            "errors": [],
+            "actual_source_seconds_exact": "10799789/60000",
+            "frame_ready": {
+              "monotonic_ns": 1248721921000000,
+              "utc_ns": 1791229061443400900,
+              "elapsed_seconds": 1.625
+            },
+            "dispatch_lateness_seconds": 1.625,
+            "observer_exit": {
+              "monotonic_ns": 1248732312000000,
+              "utc_ns": 1791229071840456900,
+              "elapsed_seconds": 12.016
+            },
+            "observer_exit_code": 0,
+            "accepted_latency_from_schedule_seconds": 12.844,
+            "attempt_finished": {
+              "monotonic_ns": 1248733140000000,
+              "utc_ns": 1791229072670701400,
+              "elapsed_seconds": 12.844
+            }
+          },
+          "attempt_sha256": "06a3d97edbc921ccd39d8faa8ae3ddbb8516eee246f60de902163d41b69cda12",
+          "request_sha256": "7c01d934626c8ddf401abf2feaeff9770cce3e3a403e937868883801c8955b78",
+          "provider_stdout_sha256": "2ea95bbf8b45edf16f0314ca1361d63dcf9c88e33e9d8b48a7acecf9693800cd",
+          "provider_stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "provider_status": "accepted",
+          "provider_error_type": null,
+          "provider_result_format": null,
+          "provider_models": [
+            "claude-opus-4-8[1m]"
+          ],
+          "raw_response": {
+            "schema": "intent_visual_observation_v1",
+            "observation_id": "594128b7b1a54615a1de8c941e273733",
+            "image_sha256": "1a628232f2b950802679a1cf7ec3a831cc659c2f8af2436d2fed4f9eafc8b6aa",
+            "status": "unavailable",
+            "mitt": null,
+            "visibility": "hidden",
+            "pose": "unknown",
+            "reason": "The image shows a dugout scene with players and equipment; no catcher's mitt is visible in the frame."
+          },
+          "result_sha256": "b25e3684a42250533fd530e35ed994837f9253ffe5bced392a2752d36c5f9c13"
+        },
+        {
+          "attempt": {
+            "index": 1,
+            "cutoff_seconds_exact": "185",
+            "status": "error",
+            "scheduled_input_monotonic_ns": 1248725296000000,
+            "scheduled_input_utc_ns": 1791229064825849100,
+            "scheduled_offset_seconds_exact": "5",
+            "preparation_started": {
+              "monotonic_ns": 1248733156000000,
+              "utc_ns": 1791229072671799700,
+              "elapsed_seconds": 12.86
+            },
+            "observer_dispatch": {
+              "monotonic_ns": 1248734890000000,
+              "utc_ns": 1791229074418336400,
+              "elapsed_seconds": 14.594
+            },
+            "response_accepted": null,
+            "observation_status": null,
+            "errors": [
+              "RuntimeError: Observer process failed with exit 1"
+            ],
+            "actual_source_seconds_exact": "231231/1250",
+            "frame_ready": {
+              "monotonic_ns": 1248734890000000,
+              "utc_ns": 1791229074418336400,
+              "elapsed_seconds": 14.594
+            },
+            "dispatch_lateness_seconds": 9.594,
+            "observer_exit": {
+              "monotonic_ns": 1248745703000000,
+              "utc_ns": 1791229085229210700,
+              "elapsed_seconds": 25.407
+            },
+            "observer_exit_code": 1,
+            "attempt_finished": {
+              "monotonic_ns": 1248745703000000,
+              "utc_ns": 1791229085229210700,
+              "elapsed_seconds": 25.407
+            }
+          },
+          "attempt_sha256": "93911317220492cb9bb6198592bf549f120cc2b01a44c2dd920baaf47f80ceff",
+          "request_sha256": "bcd0b7bf22a13c1b0310c99ae74cae83d28bf289a8fb9172a58ffdae0c001077",
+          "provider_stdout_sha256": "1de705f4a26a33a391d6705cf9778bd43bf7fe3affa70ee4387ba6604dbd0a06",
+          "provider_stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "provider_status": "failed",
+          "provider_error_type": "JSONDecodeError",
+          "provider_result_format": null,
+          "provider_models": [
+            "claude-opus-4-8[1m]"
+          ],
+          "raw_response": null,
+          "result_sha256": null
+        },
+        {
+          "attempt": {
+            "index": 2,
+            "cutoff_seconds_exact": "190",
+            "status": "accepted",
+            "scheduled_input_monotonic_ns": 1248730296000000,
+            "scheduled_input_utc_ns": 1791229069825849100,
+            "scheduled_offset_seconds_exact": "10",
+            "preparation_started": {
+              "monotonic_ns": 1248745703000000,
+              "utc_ns": 1791229085229925400,
+              "elapsed_seconds": 25.407
+            },
+            "observer_dispatch": {
+              "monotonic_ns": 1248747328000000,
+              "utc_ns": 1791229086849680800,
+              "elapsed_seconds": 27.032
+            },
+            "response_accepted": {
+              "monotonic_ns": 1248758187000000,
+              "utc_ns": 1791229097714509700,
+              "elapsed_seconds": 37.891
+            },
+            "observation_status": "unavailable",
+            "errors": [],
+            "actual_source_seconds_exact": "949949/5000",
+            "frame_ready": {
+              "monotonic_ns": 1248747328000000,
+              "utc_ns": 1791229086849680800,
+              "elapsed_seconds": 27.032
+            },
+            "dispatch_lateness_seconds": 17.032,
+            "observer_exit": {
+              "monotonic_ns": 1248757343000000,
+              "utc_ns": 1791229096874099800,
+              "elapsed_seconds": 37.047
+            },
+            "observer_exit_code": 0,
+            "accepted_latency_from_schedule_seconds": 27.891,
+            "attempt_finished": {
+              "monotonic_ns": 1248758187000000,
+              "utc_ns": 1791229097714509700,
+              "elapsed_seconds": 37.891
+            }
+          },
+          "attempt_sha256": "322521dbc05457662a5e67eb9d1e67387729eab9d3d753678cc1f215c4db3705",
+          "request_sha256": "9a24bdfcef37669ab9a30bc645a7bc5d1190468028adb2810b276c0e974e2199",
+          "provider_stdout_sha256": "9febe528cae7348ebf22846ed16614315d27617f2313ba280d22010efba553d4",
+          "provider_stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "provider_status": "accepted",
+          "provider_error_type": null,
+          "provider_result_format": null,
+          "provider_models": [
+            "claude-opus-4-8[1m]"
+          ],
+          "raw_response": {
+            "schema": "intent_visual_observation_v1",
+            "observation_id": "15906a6eff994ac0bd91e32eb4595fe4",
+            "image_sha256": "00c80647aafeea44f5cceb209254c1952e3c8f778de36697cab69a186a599655",
+            "status": "unavailable",
+            "mitt": null,
+            "visibility": "unknown",
+            "pose": "unknown",
+            "reason": "The visible figure is a pitcher holding a fielding glove near his face; no catcher's mitt is present in the frame."
+          },
+          "result_sha256": "d0e00c1950d0cbdebaf7557095f5eaab2712a3838760e90417711af1cabd65b5"
+        }
+      ]
+    },
+    {
+      "run_id": "cv_clip_loop_20261006_v2",
+      "summary": {
+        "schema": "intent_observation_loop_run_v1",
+        "status": "completed",
+        "planned": 3,
+        "attempted": 3,
+        "accepted": 3,
+        "errors": 0,
+        "elapsed_seconds": 42.313,
+        "full_pa_verified": false,
+        "live_availability_verified": false
+      },
+      "manifest_sha256": "2cd93631513976f10b215dfc80b01925c31f82b83a9316aeba14a2c6c0509364",
+      "attempts": [
+        {
+          "attempt": {
+            "index": 0,
+            "cutoff_seconds_exact": "180",
+            "status": "accepted",
+            "scheduled_input_monotonic_ns": 1248876046000000,
+            "scheduled_input_utc_ns": 1791229215573875600,
+            "scheduled_offset_seconds_exact": "0",
+            "preparation_started": {
+              "monotonic_ns": 1248876046000000,
+              "utc_ns": 1791229215575712400,
+              "elapsed_seconds": 0.0
+            },
+            "observer_dispatch": {
+              "monotonic_ns": 1248877562000000,
+              "utc_ns": 1791229217086695000,
+              "elapsed_seconds": 1.516
+            },
+            "response_accepted": {
+              "monotonic_ns": 1248889437000000,
+              "utc_ns": 1791229228963447200,
+              "elapsed_seconds": 13.391
+            },
+            "observation_status": "unavailable",
+            "errors": [],
+            "actual_source_seconds_exact": "10799789/60000",
+            "frame_ready": {
+              "monotonic_ns": 1248877562000000,
+              "utc_ns": 1791229217086695000,
+              "elapsed_seconds": 1.516
+            },
+            "dispatch_lateness_seconds": 1.516,
+            "observer_exit": {
+              "monotonic_ns": 1248888562000000,
+              "utc_ns": 1791229228085091800,
+              "elapsed_seconds": 12.516
+            },
+            "observer_exit_code": 0,
+            "accepted_latency_from_schedule_seconds": 13.391,
+            "attempt_finished": {
+              "monotonic_ns": 1248889437000000,
+              "utc_ns": 1791229228963447200,
+              "elapsed_seconds": 13.391
+            }
+          },
+          "attempt_sha256": "8acbc3d3209c512423bf9a3b818e397a5f553bc7832fe3839a329fdbfb4c9620",
+          "request_sha256": "7840b19c54b5b7edf1dde9830646f00c12e0bcc458ecd83231ebfd08ea1da841",
+          "provider_stdout_sha256": "9578d72a31ad4abd5d368c1bdd95d727977c12b8ca84320a0dc81722d45a543d",
+          "provider_stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "provider_status": "accepted",
+          "provider_error_type": null,
+          "provider_result_format": "bare_json",
+          "provider_models": [
+            "claude-opus-4-8[1m]"
+          ],
+          "raw_response": {
+            "schema": "intent_visual_observation_v1",
+            "observation_id": "f76ea1f137ac494484c5451088060eca",
+            "image_sha256": "1a628232f2b950802679a1cf7ec3a831cc659c2f8af2436d2fed4f9eafc8b6aa",
+            "status": "unavailable",
+            "mitt": null,
+            "visibility": "hidden",
+            "pose": "unknown",
+            "reason": "The image shows a dugout scene with players; no catcher's mitt is visible in the frame. Only a green batting glove and player equipment are present, which cannot be substituted for a catcher's mitt."
+          },
+          "result_sha256": "5655cfa34806ff0a8d83280b9a766a1f1d3aae7c7508eca73c9b8d8e93dd8228"
+        },
+        {
+          "attempt": {
+            "index": 1,
+            "cutoff_seconds_exact": "185",
+            "status": "accepted",
+            "scheduled_input_monotonic_ns": 1248881046000000,
+            "scheduled_input_utc_ns": 1791229220573875600,
+            "scheduled_offset_seconds_exact": "5",
+            "preparation_started": {
+              "monotonic_ns": 1248889437000000,
+              "utc_ns": 1791229228964454400,
+              "elapsed_seconds": 13.391
+            },
+            "observer_dispatch": {
+              "monotonic_ns": 1248891218000000,
+              "utc_ns": 1791229230744859900,
+              "elapsed_seconds": 15.172
+            },
+            "response_accepted": {
+              "monotonic_ns": 1248904906000000,
+              "utc_ns": 1791229244426265300,
+              "elapsed_seconds": 28.86
+            },
+            "observation_status": "marked",
+            "errors": [],
+            "actual_source_seconds_exact": "231231/1250",
+            "frame_ready": {
+              "monotonic_ns": 1248891218000000,
+              "utc_ns": 1791229230744859900,
+              "elapsed_seconds": 15.172
+            },
+            "dispatch_lateness_seconds": 10.172,
+            "observer_exit": {
+              "monotonic_ns": 1248904125000000,
+              "utc_ns": 1791229243651936600,
+              "elapsed_seconds": 28.079
+            },
+            "observer_exit_code": 0,
+            "accepted_latency_from_schedule_seconds": 23.86,
+            "attempt_finished": {
+              "monotonic_ns": 1248904906000000,
+              "utc_ns": 1791229244426265300,
+              "elapsed_seconds": 28.86
+            }
+          },
+          "attempt_sha256": "c552147453fcb0a9ac113770530e91b0d9119152ff1ac04d9a995d1a7bb03dd4",
+          "request_sha256": "e88747eb93cd1c47d45f9b234b42f674dd867f973efe7849c7587489eab1e58d",
+          "provider_stdout_sha256": "98271964ef084ddf691eded43f48ad9dea8e25c5161ed9ead1b9c94b28025a5e",
+          "provider_stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "provider_status": "accepted",
+          "provider_error_type": null,
+          "provider_result_format": "bare_json",
+          "provider_models": [
+            "claude-opus-4-8[1m]"
+          ],
+          "raw_response": {
+            "schema": "intent_visual_observation_v1",
+            "observation_id": "86c03f6e9b7c477aaeaa66f460127c52",
+            "image_sha256": "352d1e58314a87601af4946b1b53fb9fdfb66fddcd211b02b887925d40335cb6",
+            "status": "marked",
+            "mitt": [
+              703,
+              273
+            ],
+            "visibility": "partial",
+            "pose": "presented_target",
+            "reason": ""
+          },
+          "result_sha256": "ba2cb0a64cbd75b3d057df73d032b0a1ea00dfd6495d0a5d50cf745e59513203"
+        },
+        {
+          "attempt": {
+            "index": 2,
+            "cutoff_seconds_exact": "190",
+            "status": "accepted",
+            "scheduled_input_monotonic_ns": 1248886046000000,
+            "scheduled_input_utc_ns": 1791229225573875600,
+            "scheduled_offset_seconds_exact": "10",
+            "preparation_started": {
+              "monotonic_ns": 1248904906000000,
+              "utc_ns": 1791229244427274100,
+              "elapsed_seconds": 28.86
+            },
+            "observer_dispatch": {
+              "monotonic_ns": 1248906546000000,
+              "utc_ns": 1791229246077601000,
+              "elapsed_seconds": 30.5
+            },
+            "response_accepted": {
+              "monotonic_ns": 1248918343000000,
+              "utc_ns": 1791229257874022800,
+              "elapsed_seconds": 42.297
+            },
+            "observation_status": "unavailable",
+            "errors": [],
+            "actual_source_seconds_exact": "949949/5000",
+            "frame_ready": {
+              "monotonic_ns": 1248906546000000,
+              "utc_ns": 1791229246077601000,
+              "elapsed_seconds": 30.5
+            },
+            "dispatch_lateness_seconds": 20.5,
+            "observer_exit": {
+              "monotonic_ns": 1248917546000000,
+              "utc_ns": 1791229257070590500,
+              "elapsed_seconds": 41.5
+            },
+            "observer_exit_code": 0,
+            "accepted_latency_from_schedule_seconds": 32.297,
+            "attempt_finished": {
+              "monotonic_ns": 1248918343000000,
+              "utc_ns": 1791229257874022800,
+              "elapsed_seconds": 42.297
+            }
+          },
+          "attempt_sha256": "5a667bf46bd47a8a86ae46e486d87a6e25be840c58c62d2ebc4a2f65fd213842",
+          "request_sha256": "cb814d61905a53f922fc918782de26aa121c79e249bc5ffdc7622d6ada08b3cf",
+          "provider_stdout_sha256": "609dc89db8e0cabc53b60d38842cfc9993e7ed4ce7a6d8ef9ca205a9e43e7cd5",
+          "provider_stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "provider_status": "accepted",
+          "provider_error_type": null,
+          "provider_result_format": "bare_json",
+          "provider_models": [
+            "claude-opus-4-8[1m]"
+          ],
+          "raw_response": {
+            "schema": "intent_visual_observation_v1",
+            "observation_id": "6e9ca307738a49f1bc0cfb7c778b0e76",
+            "image_sha256": "00c80647aafeea44f5cceb209254c1952e3c8f778de36697cab69a186a599655",
+            "status": "unavailable",
+            "mitt": null,
+            "visibility": "hidden",
+            "pose": "unknown",
+            "reason": "The frame shows a pitcher holding a fielder's/pitcher's glove in a close-up; no catcher's mitt is visible anywhere in the image."
+          },
+          "result_sha256": "9f9218df565e3e203da38c1b9d74b1eee48dc44a6a3f644a8a4eb9f3d50b2abe"
+        }
+      ]
+    }
+  ]
+}

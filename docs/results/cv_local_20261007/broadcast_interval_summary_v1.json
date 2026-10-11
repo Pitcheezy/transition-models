@@ -1,0 +1,82 @@
+{
+  "schema": "cv_broadcast_interval_summary_v1",
+  "scope": "Single fixed 14-cutoff development replay over a fully mapped broadcast interval; no accuracy or full-PA certification.",
+  "registration_commit": "e5a1c58",
+  "report_file": "broadcast_interval_model_report_v2.json",
+  "report_sha256": "b6dba172505c4eb73e37fc0ef1421c214ef0d12a3b8f465de51c948a907f43f9",
+  "interval_seconds": 66.81675,
+  "mapped_interval_frames": 4005,
+  "interval_gap_seconds": 0,
+  "counts": {
+    "attempted": 14,
+    "accepted": 14,
+    "candidate": 5,
+    "ambiguous": 1,
+    "no_candidate": 8,
+    "error": 0,
+    "not_attempted": 0,
+    "verified_mitt": 0,
+    "publication_within_5s": 5,
+    "candidate_publication_within_5s": 0
+  },
+  "publication_seconds": {
+    "n": 14,
+    "min": 4.578,
+    "median": 5.375,
+    "max": 9.859
+  },
+  "dispatch_within_5s": 11,
+  "publication_over_5s": 9,
+  "first_to_last_input_schedule_seconds": 65,
+  "after_interval_end_publications": [
+    {
+      "index": 12,
+      "publication_relative_seconds": 68.703
+    },
+    {
+      "index": 13,
+      "publication_relative_seconds": 74.859
+    }
+  ],
+  "startup_seconds": 20.359,
+  "loop_seconds": 74.859,
+  "whole_command_seconds": 99.92217530007474,
+  "phase_seconds": {
+    "input_binding_verification": {
+      "median": 0.2185,
+      "max": 0.234
+    },
+    "frame_extraction": {
+      "median": 2.2184999999999997,
+      "max": 3.093
+    },
+    "request_preparation": {
+      "median": 0.672,
+      "max": 0.969
+    },
+    "dispatch_overhead": {
+      "median": 0.0,
+      "max": 0.016
+    },
+    "observer_process": {
+      "median": 1.2894999999999999,
+      "max": 1.344
+    },
+    "output_binding_verification": {
+      "median": 0.203,
+      "max": 0.25
+    },
+    "response_validation_publication": {
+      "median": 0.656,
+      "max": 0.688
+    }
+  },
+  "input_mappings_match_preregistration": true,
+  "frozen_m3_files_unchanged": 25,
+  "worker_exit_confirmed": true,
+  "human_reference_count": 0,
+  "full_pa_verified": false,
+  "live_availability_verified": false,
+  "accuracy_evaluated": false,
+  "next_decision": "No service promotion. Prioritize target-specific data/actual CV6 review and independent model validation. Do not describe CV22 timing as complete live performance."
+}

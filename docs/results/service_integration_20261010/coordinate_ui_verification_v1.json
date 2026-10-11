@@ -1,0 +1,112 @@
+{
+  "schema": "pitcheezy-coordinate-ui-verification-v1",
+  "date": "2026-10-10",
+  "work_unit": "I-service5",
+  "claim_commit": "6ecedbf",
+  "scope": "Private local service-review presentation only. No teammate repository or public Site changes.",
+  "coordinate_basis": "Previously received local CONTRACT.md section 5: feet; x centered at plate, catcher view right positive; z height above ground.",
+  "conversion": "Original numeric feet values multiplied by 30.48 before display rounding; model/report coordinates unchanged.",
+  "browser": {
+    "date": "2026-10-10",
+    "browser": "154.0.8037.58",
+    "mode": "headless_local_chrome",
+    "results": [
+      {
+        "name": "third_pitch_actual_and_mitt_hidden_in_dom_and_titles",
+        "passed": true
+      },
+      {
+        "name": "video_end_reveals_original_precision_conversion_actual_mitt_candidates",
+        "passed": true
+      },
+      {
+        "name": "mobile_390px_no_document_or_actual_card_overflow",
+        "passed": true
+      },
+      {
+        "name": "navigation_rehides_and_absent_mitt_has_no_phantom_point",
+        "passed": true
+      },
+      {
+        "name": "synthetic-zero_display_only_not_human_evidence",
+        "passed": true
+      },
+      {
+        "name": "synthetic-right-negative-height_display_only_not_human_evidence",
+        "passed": true
+      },
+      {
+        "name": "synthetic-near-zero_display_only_not_human_evidence",
+        "passed": true
+      },
+      {
+        "name": "synthetic-missing_display_only_not_human_evidence",
+        "passed": true
+      },
+      {
+        "name": "no_uncaught_errors_external_requests_or_non_get_requests",
+        "passed": true
+      }
+    ],
+    "uncaught_errors": [],
+    "external_requests": 0,
+    "non_get_requests": 0,
+    "actual_device_claim": false,
+    "human_review_claim": false
+  },
+  "package": {
+    "zip_relative_path": "outputs/service_review_video_20261010_v3.zip",
+    "bytes": 13571442,
+    "sha256": "c185473271ecee60fa99fa2c3689b854b1bfe071f587024ba04291555dc86cfa",
+    "files": 16,
+    "changed_from_v2": [
+      "index.html",
+      "receipt.json",
+      "review.js",
+      "style.css"
+    ],
+    "extracted_bytes_identical": true,
+    "isolated_launcher_check": "passed",
+    "report_sha256": "154d9cd1cb166552db5975137e2ba431b9ab48f94fcfa6bdd05304f645427c80",
+    "source_sha256": "df606a11c6db465c054252ef8d331aeb23aa21565b4960bd586f3dcf8f62f6b7"
+  },
+  "validation": {
+    "node_tests": 36,
+    "python_related_tests": 95,
+    "python_related_seconds": 24.74,
+    "visual_inspection": [
+      "desktop-coordinate-panels.png",
+      "mobile-actual-position.png",
+      "mobile-coordinate-panel.png"
+    ],
+    "final_checklist_tests": 7,
+    "ruff_formatted_paths": 167,
+    "js_syntax": "passed",
+    "diff_whitespace": "passed"
+  },
+  "private_screenshots": [
+    {
+      "path": "outputs/service_review_coordinates_20261010_v1/desktop-coordinate-panels.png",
+      "sha256": "6940f0430e20436eb4b1e12f47651bb56d736de14f7d2c29a8652420d3beee74"
+    },
+    {
+      "path": "outputs/service_review_coordinates_20261010_v1/desktop-actual-position.png",
+      "sha256": "10fc4090cbbc65eafb29bb4524fd9d8521209d00585d486d204d3467394b93f2"
+    },
+    {
+      "path": "outputs/service_review_coordinates_20261010_v1/mobile-actual-position.png",
+      "sha256": "a994df5485f758b1fd53c5f5ed48d73f37d3fbbffb1916a6c8fe508acf8228d3"
+    },
+    {
+      "path": "outputs/service_review_coordinates_20261010_v1/mobile-coordinate-panel.png",
+      "sha256": "742d3a5bd10f3a81b96cbc398089dd880ff6517e13093177b143585789b4f683"
+    }
+  ],
+  "limits": [
+    "Browser synthetic edge cases are not human annotations or scientific evaluations.",
+    "390px viewport is not a physical iPhone test.",
+    "Existing I-device1 user acceptance applies to v2; v3 has not been user-confirmed.",
+    "Mitt remains an unreviewed horizontal estimate, not pitcher intent or control error.",
+    "No new model accuracy, live inference, physical coordinate accuracy or policy utility evidence."
+  ]
+}

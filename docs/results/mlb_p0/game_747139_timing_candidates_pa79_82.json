@@ -1,0 +1,98 @@
+{
+  "schema": "mlb_broadcast_timing_candidates_v1",
+  "game_pk": 747139,
+  "manifest_sha256": "4d036f94f5b5bddc682e846960dbc40de5ae35c4e023581efa12167475e062da",
+  "source": {
+    "page_url": "https://www.mlb.com/video/9-30-24-mets-win-epic-game-in-playoff-clincher",
+    "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+    "duration_seconds": 9340.748083
+  },
+  "convention": "decision-frame convention v2 (docs/MLB_BROADCAST_TIMING.md: earliest 0.25 s grid frame with live shot + pitcher still on the rubber + batter in the box + readable bug, continuous until motion)",
+  "status": "All 19 PA79-82 rows directly reviewed and merged on 2026-09-26 to 2026-09-27: 17 annotated, 2 unavailable. No candidates remain. See merge_history and game_747139_timing_verification_pa79_82.json.",
+  "produced_by": "PA79-80: prior Claude candidates, retained verdicts and Codex direct verification/corrections. PA81-82: Codex subagent direct frame annotation followed by main-session timing/scoreboard image review, 2026-09-26 to 2026-09-27.",
+  "rows": [],
+  "merge_history": [
+    {
+      "date": "2026-09-26",
+      "plate_appearances": [
+        79
+      ],
+      "pitches": 1,
+      "annotated": 1,
+      "unavailable": 0,
+      "work_commit": "a708d48",
+      "verification_report": "game_747139_timing_verification_pa79_82.json"
+    },
+    {
+      "date": "2026-09-26",
+      "plate_appearances": [
+        80
+      ],
+      "pitches": 7,
+      "annotated": 6,
+      "unavailable": 1,
+      "work_commit": "a708d48",
+      "verification_report": "game_747139_timing_verification_pa79_82.json"
+    },
+    {
+      "date": "2026-09-27",
+      "plate_appearances": [
+        82
+      ],
+      "pitches": 5,
+      "annotated": 4,
+      "unavailable": 1,
+      "work_commit": "a708d48",
+      "verification_report": "game_747139_timing_verification_pa79_82.json"
+    },
+    {
+      "date": "2026-09-27",
+      "plate_appearances": [
+        81
+      ],
+      "pitches": 6,
+      "annotated": 6,
+      "unavailable": 0,
+      "work_commit": "a708d48",
+      "verification_report": "game_747139_timing_verification_pa79_82.json"
+    }
+  ],
+  "pa_notes": {
+    "79": {
+      "annotator_problems": [
+        "At the decision frame 8180.25 the bug's second banner line is blank, so '4. OLSON' is not readable there; I read the batter banner '4. OLSON  1-4' on the same unbroken shot at 8181.50 through 8183.75 and used that for identity. P:21 IS readable at 8180.25.",
+        "Motion start 8183.70 is the first frame with a barely-begun front-leg lift; the preceding frame 8183.65 is unambiguously still and 8183.80 is an unambiguous knee lift, so the motion start could be 8183.70 +/- 0.05 s. This does not affect the decision frame, which is far earlier.",
+        "Release is a manual estimate: at 8184.90 the ball already shows a small gap from the fingertips, so true release may be a frame earlier (~8184.87). Reported with uncertainty 0.15 s as required.",
+        "The shot cut at 8180.10-8180.25 is very close to the decision frame, so the valid pre-pitch window is only about 3.45 s long (8180.25 to 8183.70). I searched back past the cut and confirmed the earlier shot (8180.00, 8180.10) is a batter-less close-up of Diaz, i.e. the window genuinely cannot start earlier."
+      ],
+      "end_of_pa_evidence": "Pitch 1 was put in play. At 8186.00 the bug banner is mid-refresh showing a partial speed readout ('MPH' / 'P') and the batter's follow-through is visible; at 8189.00 the banner reads 'DIAZ  94 MPH' with the bug still at 0 outs and P:21 (the bug lags), and the picture is a wide outfield shot with a Mets fielder settling under the ball and the batter-runner heading up the line. By 8192.00 the bug has updated to NYM 8 / ATL 7, bases empty, down-arrow 9, ONE gold out circle (0 outs -> 1 out), 0-0, 'DIAZ  P:22' (pitch count 21 -> 22), while a Mets fielder (#12) is shown making/completing the catch in shallow left-centre. The same 1-out, P:22, bases-empty, NYM 8 / ATL 7 bug persists at 8195.00, 8198.00 and 8201.00, over shots of Olson (#28, Braves) walking back into the Braves dugout and the Braves manager in the dugout. That confirms PA 79 ended on pitch 1 as a field out with 1 out recorded and no runner reaching, and that PA 80 begins after 8201.",
+      "last_release_seconds": 8184.9,
+      "workflow_outcome": {
+        "1": "both_lenses_passed"
+      }
+    },
+    "80": {
+      "annotator_problems": [
+        "Pitch 7 has no valid v2 decision frame. The broadcast stays on close-ups of Diaz (8302.00, 8302.50, 8303.00, 8303.10, 8303.25, 8303.30 - the last four an extreme head-and-glove shot showing neither the rubber nor the batter) until the cut at ~8303.33, and the first live wide frame (8303.35) already shows the leg lift. Grid points 8303.00/8303.25 fail condition (1) and 8303.50 fails condition (2), so the row is marked unavailable. I kept release_seconds and motion_start_seconds populated for that row because I directly observed them; only the decision fields are null.",
+        "Pitch 2 is limited by the batter, not by the shot. The live centre-field camera is back by 8221.00 and Diaz has both feet planted at the rubber from 8222.00, but White is out of the box with the bat lowered at 8222.00/8223.00/8223.25, stepping in with the bat tip down at 8223.50, and bent over the plate digging in at 8223.75, so condition (3) is what fails at the previous grid point.",
+        "The batter second line on the bug is not shown for the first two pitches. At the pitch 1 decision frame (8216.00) and the pitch 2 decision frame (8224.00) the bug has only the DIAZ banner row; the '5. WHITE   HBP' second line first appears from about 8230 onward, so batter_banner_seen is null for pitches 1 and 2.",
+        "At the pitch 2 decision frame the banner is cycling the previous pitch's speed ('96 MPH') rather than the pitch count, so P:23 was read from the nearby frames 8226.00, 8227.50 and 8228.00 and not from the decision frame itself.",
+        "Several decision frames sit only a short time before the motion start because of long between-pitch close-ups of Diaz: pitch 6 has only 0.50 s of valid pre-motion window (8289.50 to 8290.00) and pitch 5 only 1.75 s (8274.25 to 8276.00). These are genuine, not search artefacts - I sampled back through the cut in each case.",
+        "Release times are manual estimates. Each is the midpoint of a 0.10 s bracket between the last frame with the ball still in the hand at high cock and the first frame with the arm through and the hand empty; I did not resolve them to the video's individual 1/30 s frames, hence uncertainty 0.15 s on every row.",
+        "Bug lag is not uniform and should not be used as a timing cross-check. The speed readout appears about 1.0 s after release (pitch 1 released 8218.75, '96 MPH' already up at 8219.80) while the count digits lag 2-4 s (pitch 6 released 8291.05, count still 2-2 at 8292.20 and only 3-2 by 8296.00). The pitch clock also freezes during the delivery (:07 held from 8217.00 through 8219.20 on pitch 1).",
+        "After the last pitch the broadcast shows a player captioned 'WHITE 36' at the Braves dugout rail being congratulated at 8312.00 and 8314.00 while the bug simultaneously shows a runner on first. I could not tell from these frames whether White stayed at first or was replaced by a pinch-runner; I report only what the bug shows and flag the dugout shots as unexplained."
+      ],
+      "end_of_pa_evidence": "Pitch 7 is put in play: at 8305.00 the bat is blurred through the swing and at 8305.40 White is out of the box running, with the bug reading 3-2 / DIAZ 90 MPH. The high camera at 8306.00 and 8308.00 shows the ball dropping in front of the converging outfielders in shallow left-centre while the bug still reads 3-2 with 1 out and no runners. The bug flips at 8310.00: it reads NYM 8 / ATL 7, down-9, 1 out (one gold circle, one open), the lower-right diamond gold (runner on 1B), count 0-0, banner 'DIAZ  90 MPH' - the single that ends PA 80. At 8312.00, 8314.00 and 8316.00 the same bug reads 0-0 with the runner on 1B, 1 out, and the banner has advanced to 'DIAZ  P:29', confirming PA 81 has begun. Note that the 8312.00 and 8314.00 shots are dugout cutaways in which a player captioned 'WHITE 36' is at the Braves rail being congratulated, which I cannot reconcile with him standing on first; I report the bug reading and flag the discrepancy rather than interpreting it.",
+      "last_release_seconds": 8304.35,
+      "workflow_outcome": {
+        "1": "both_lenses_passed",
+        "2": "both_lenses_passed",
+        "3": "both_lenses_passed",
+        "4": "both_lenses_passed",
+        "5": "both_lenses_passed",
+        "6": "both_lenses_passed",
+        "7": "both_lenses_passed"
+      }
+    }
+  }
+}

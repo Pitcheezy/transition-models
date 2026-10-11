@@ -1,0 +1,48 @@
+{
+  "schema": "local_glove_data_audit_v1",
+  "scope": "development_comparison_to_legacy_single_labeler_points",
+  "limitations": [
+    "Previously reviewed games; not unseen or independent validation.",
+    "Legacy points are not certified equivalent to the current visible mitt-body center.",
+    "Legacy setup/camera abstentions are not current-protocol visibility negatives.",
+    "Fixed game crops are manual camera regions, not automatic catcher localization.",
+    "Point labels provide neither bounding boxes nor segmentation masks.",
+    "Post-hoc selected condensed-video frames cannot establish pre-pitch availability."
+  ],
+  "manifest_sha256": "8501772cebc32c85c02c4adae0ed26e666ed22180a1272d9b2f95688ab65cc6a",
+  "references_sha256": "dc38d678f4891bcf1a9ba2379d585608b8d2d7d8232b302186e2dba13dd6f7ad",
+  "frames": 86,
+  "source_image_bytes_verified": 86,
+  "games": [
+    {
+      "game_pk": 823407,
+      "source_sha256": {
+        "manifest": "42cc7ea193ad4fb8c06aeddb132a42e1e1ddf3b0fac13fd163e4127dd115614c",
+        "labels": "bce2a324c1cd4c8af1301e79ac6ec8a65137c2170c77236ee102ca80fb0585d1",
+        "raw_labels": "c7242bb3560985f86492437cb4d52344d65475dbd03d79acfb672f08a42955b2",
+        "points": "977bb63c62594b6d5b6b1e1e0e4df360d6df9d96991a50e0c00a9209073eaaaf",
+        "source": "42d3ae2dc937576ad7576e68bafd1bef93960e6a66417aa06332ad682d5ef5e2"
+      },
+      "frames": 29,
+      "legacy_mitt_status_counts": {
+        "marked": 28,
+        "not_centre_field": 1
+      }
+    },
+    {
+      "game_pk": 849845,
+      "source_sha256": {
+        "manifest": "ae55fb2472b4b3caddb92c42e7651a1e74b5b8ece22003dd9611389bd1f47461",
+        "labels": "b1c9b97068ef6e6d8456cd834351cb24c3d82da15e7113ff5a75a80ecace96eb",
+        "raw_labels": "776c1c19fa00ccd568faaae6fe46362eb730016cf3d31c56b7c4a13a530a4766",
+        "points": "17d71d55ee203ccbf9793c189f942f1c4c088ba1bf18ba887b31b3b07bb9f2e9",
+        "source": "ac7d5524aac601aed30b992713cdd6f54f4ed0e87e30de60b3ece99977cc57a4"
+      },
+      "frames": 57,
+      "legacy_mitt_status_counts": {
+        "not_in_setup": 1,
+        "marked": 56
+      }
+    }
+  ]
+}

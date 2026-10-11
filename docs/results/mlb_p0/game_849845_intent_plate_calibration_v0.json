@@ -1,0 +1,4076 @@
+{
+ "schema": "intent_plate_calibration_v0",
+ "game_pk": 849845,
+ "readings_sha256": "51033cf4d4db3d08d5a2e70431377e29881e0cf0d0e587f2d49e5dceb92e6553",
+ "hop2": {
+  "method": "plate_front_edge_affine_with_depth_parallax",
+  "version": "v0",
+  "matrix": [
+   [
+    -1.4166666666666667,
+    0.0,
+    0.7385111539379468
+   ],
+   [
+    0.0,
+    1.4237271662984503,
+    -0.2499075237308338
+   ],
+   [
+    0.0,
+    0.0,
+    1.0
+   ]
+  ],
+  "tilt_sin": 0.09946727631506504,
+  "pan_tan": -0.012071128241845338,
+  "pan_estimate": {
+   "pan_tan": -0.012071128241845338,
+   "pan_degrees": -0.6915911124510634,
+   "sd": 0.0021861090523859535,
+   "n": 42,
+   "basis": "rubber centre and width read on centre-field frames, plate front edge of the same frame"
+  },
+  "mitt_depth_feet": 2.5,
+  "x_convention": "statcast_plate_x_catcher_view",
+  "source": "tilt = mean sin(tilt) from the batter's-box 6-ft depth readings; pan = mean from rubber readings (0 when none were read); nominal mitt depth 2.5 ft behind the plate front (assumed, not measured)"
+ },
+ "hop1_front_edge_rms_pixels": 0.708458372317049,
+ "hop1_front_edge_noise": {
+  "frames_with_both_readers": 49,
+  "rms_pixels": 0.708458372317049,
+  "definition": "rms(A - B)/sqrt(2) over both ends and both coordinates"
+ },
+ "camera": {
+  "pan": {},
+  "pan_from_rubber": null,
+  "depth_parallax_feet_at_nominal_mitt_depth": 0.24990752373083377,
+  "nominal_mitt_depth_feet": 2.5,
+  "tilt": {
+   "sin_mean": 0.09946727631506504,
+   "sin_sd": 0.005445413479313661,
+   "sin_se": 0.0004794419233179482,
+   "degrees": 5.708494714002056,
+   "n_box_readings": 129,
+   "basis": "batter's box front/back chalk lines 6 ft apart, lateral scale from the same frame's plate front edge (M1 corners)"
+  }
+ },
+ "lateral_check": {
+  "known_feet": {
+   "left_inner_x": 1.2083333333333333,
+   "right_inner_x": -1.2083333333333333,
+   "left_outer_x": 5.208333333333333,
+   "right_outer_x": -5.208333333333333
+  },
+  "all": {
+   "n": 0,
+   "mean_signed_feet": null,
+   "se_of_mean_feet": null,
+   "sd_feet": null,
+   "rms_feet": null
+  },
+  "inner_lines": {
+   "n": 0,
+   "mean_signed_feet": null,
+   "se_of_mean_feet": null,
+   "sd_feet": null,
+   "rms_feet": null
+  },
+  "outer_lines": {
+   "n": 0,
+   "mean_signed_feet": null,
+   "se_of_mean_feet": null,
+   "sd_feet": null,
+   "rms_feet": null
+  },
+  "per_line_mean_signed_feet": {
+   "left_inner_x": null,
+   "right_inner_x": null,
+   "left_outer_x": null,
+   "right_outer_x": null
+  },
+  "caveat": "readers marked line centres; chalk lines are 2-4 in wide, so a +/-0.1-0.17 ft convention term is included; transform-only, on-plane, no depth parallax"
+ },
+ "overlay_check": {
+  "n": 0,
+  "width_ratio_mean": null,
+  "height_ratio_implied_over_feed": null,
+  "implied_height_feet_mean": null,
+  "feed_height_feet_mean": null,
+  "implied_minus_feed_bottom_mean": null,
+  "implied_minus_feed_top_mean": null,
+  "conclusion": "the overlay's height does not follow the per-pitch feed zone under the lateral scale; its vertical edges are not usable as sz ground truth",
+  "vertical_scale_verified": false
+ },
+ "end_to_end_check": {
+  "pitches_sampled": 57,
+  "pitches_used": 13,
+  "pitches_skipped": [
+   {
+    "at_bat_number": 4,
+    "pitch_number": 5,
+    "reason": "A: batter_hit_ball; B: batter_hit_ball"
+   },
+   {
+    "at_bat_number": 5,
+    "pitch_number": 2,
+    "reason": "A: batter_hit_ball; B: batter_hit_ball"
+   },
+   {
+    "at_bat_number": 6,
+    "pitch_number": 5,
+    "reason": "A: batter_hit_ball; B: batter_hit_ball"
+   },
+   {
+    "at_bat_number": 7,
+    "pitch_number": 1,
+    "reason": "A: batter_hit_ball; B: batter_hit_ball"
+   },
+   {
+    "at_bat_number": 8,
+    "pitch_number": 4,
+    "reason": "B: cannot_tell: ball last seen at about (645,301) in 9459, then hidden; catcher turns the glove and drives it into the dirt (9468-9480), possibly a short hop"
+   },
+   {
+    "at_bat_number": 10,
+    "pitch_number": 4,
+    "reason": "A: no pocket/plate reading on the chosen frame; B: no pocket/plate reading on the chosen frame"
+   },
+   {
+    "at_bat_number": 11,
+    "pitch_number": 3,
+    "reason": "A: not_caught_cleanly_ball_in_dirt_blocked; B: not_caught_cleanly (pitch in the dirt, catcher blocks it with glove down at the ground)"
+   },
+   {
+    "at_bat_number": 12,
+    "pitch_number": 2,
+    "reason": "A: batter_hit_ball; B: batter_hit_ball (in play)"
+   },
+   {
+    "at_bat_number": 13,
+    "pitch_number": 1,
+    "reason": "A: batter_hit_ball_bunt; B: batter_hit_ball (in play)"
+   },
+   {
+    "at_bat_number": 15,
+    "pitch_number": 3,
+    "reason": "A: batter_hit_ball (ball reaches the hitting area at about 13744, then comes back toward the pitcher, who fields it and throws to first); B: batter_hit_ball"
+   },
+   {
+    "at_bat_number": 16,
+    "pitch_number": 1,
+    "reason": "A: batter_hit_ball (the ball passes in front of the glove at about 13806-15812, then is hit back up the middle by 15818); B: batter_hit_ball"
+   },
+   {
+    "at_bat_number": 19,
+    "pitch_number": 3,
+    "reason": "A: hit_by_pitch; B: hit_by_pitch: the ball struck the batter and the catcher did not catch it"
+   },
+   {
+    "at_bat_number": 20,
+    "pitch_number": 5,
+    "reason": "A: batted_ball_in_play; B: batter_hit_ball: the ball was put in play"
+   },
+   {
+    "at_bat_number": 23,
+    "pitch_number": 6,
+    "reason": "A: batter_hit_ball; B: batted_ball: batter swings and makes contact (in play), the ball never settles in the glove"
+   },
+   {
+    "at_bat_number": 24,
+    "pitch_number": 5,
+    "reason": "B: no pocket/plate reading on the chosen frame"
+   },
+   {
+    "at_bat_number": 29,
+    "pitch_number": 3,
+    "reason": "A: batter_hit_ball_in_play; B: batter_hit_ball"
+   },
+   {
+    "at_bat_number": 30,
+    "pitch_number": 4,
+    "reason": "A: batter_fouled_ball; B: batter_fouled_ball"
+   },
+   {
+    "at_bat_number": 30,
+    "pitch_number": 5,
+    "reason": "A: batter_hit_ball_in_play; B: batter_hit_ball"
+   },
+   {
+    "at_bat_number": 31,
+    "pitch_number": 2,
+    "reason": "A: hit_by_pitch_not_caught; B: hit_by_pitch"
+   },
+   {
+    "at_bat_number": 32,
+    "pitch_number": 2,
+    "reason": "A: batter_hit_ball; B: batter_hit_ball"
+   },
+   {
+    "at_bat_number": 35,
+    "pitch_number": 6,
+    "reason": "A: batted_ball_in_play; B: batted_ball"
+   },
+   {
+    "at_bat_number": 37,
+    "pitch_number": 5,
+    "reason": "A: ball_in_dirt_blocked_not_clean_catch; B: not_caught_cleanly_ball_in_dirt_blocked"
+   },
+   {
+    "at_bat_number": 38,
+    "pitch_number": 6,
+    "reason": "A: no pocket/plate reading on the chosen frame; B: no pocket/plate reading on the chosen frame"
+   },
+   {
+    "at_bat_number": 39,
+    "pitch_number": 3,
+    "reason": "A: hit_by_pitch_no_catch; B: hit_by_pitch_not_caught"
+   },
+   {
+    "at_bat_number": 40,
+    "pitch_number": 2,
+    "reason": "A: batter_hit_ball; B: batter_hit_ball_in_play"
+   },
+   {
+    "at_bat_number": 42,
+    "pitch_number": 3,
+    "reason": "A: batter_hit_ball; B: batter_hit_ball_in_play"
+   },
+   {
+    "at_bat_number": 43,
+    "pitch_number": 3,
+    "reason": "A: batter_hit_ball; B: batter_hit_ball_foul"
+   },
+   {
+    "at_bat_number": 44,
+    "pitch_number": 2,
+    "reason": "A: batter_hit_ball; B: batter_hit_ball"
+   },
+   {
+    "at_bat_number": 46,
+    "pitch_number": 2,
+    "reason": "A: batter_hit_ball; B: batter_hit_ball"
+   },
+   {
+    "at_bat_number": 47,
+    "pitch_number": 3,
+    "reason": "A: batter_hit_ball; B: batter_hit_ball"
+   },
+   {
+    "at_bat_number": 48,
+    "pitch_number": 4,
+    "reason": "A: batter_hit_ball; B: batter_hit_ball"
+   },
+   {
+    "at_bat_number": 50,
+    "pitch_number": 2,
+    "reason": "B: pitch in the dirt, scooped and not caught cleanly: the ball slows near the ground at the catcher's knee (45225-45228), is at the glove's edge at 45234, and dust is kicked up at 45240"
+   },
+   {
+    "at_bat_number": 51,
+    "pitch_number": 4,
+    "reason": "A: hit_by_pitch; B: ball went to the batter's legs (last seen at about [587,239] at 46082) and the catcher's glove reached toward the batter without a visible catch; consistent with hit by pitch"
+   },
+   {
+    "at_bat_number": 52,
+    "pitch_number": 4,
+    "reason": "A: batter_hit_ball; B: batted_ball_in_play"
+   },
+   {
+    "at_bat_number": 53,
+    "pitch_number": 5,
+    "reason": "A: batter_hit_ball; B: batted_ball_in_play"
+   },
+   {
+    "at_bat_number": 54,
+    "pitch_number": 2,
+    "reason": "A: batter_hit_ball; B: batted_ball_in_play"
+   },
+   {
+    "at_bat_number": 55,
+    "pitch_number": 5,
+    "reason": "A: batter_hit_ball; B: batter_swung_in_play"
+   },
+   {
+    "at_bat_number": 58,
+    "pitch_number": 5,
+    "reason": "A: batter_hit_ball; B: batter_swung_in_play"
+   },
+   {
+    "at_bat_number": 62,
+    "pitch_number": 2,
+    "reason": "A: batter_hit_ball; B: batter_hit_ball"
+   },
+   {
+    "at_bat_number": 64,
+    "pitch_number": 3,
+    "reason": "A: batter_hit_ball; B: batter_hit_ball"
+   },
+   {
+    "at_bat_number": 66,
+    "pitch_number": 1,
+    "reason": "A: batter_hit_ball; B: batter_hit_ball"
+   },
+   {
+    "at_bat_number": 68,
+    "pitch_number": 1,
+    "reason": "A: batter_hit_ball; B: batter_hit_ball"
+   },
+   {
+    "at_bat_number": 69,
+    "pitch_number": 2,
+    "reason": "A: batter_hit_ball; B: batter_hit_ball"
+   },
+   {
+    "at_bat_number": 70,
+    "pitch_number": 4,
+    "reason": "A: batter_hit_ball; B: batter_hit_ball"
+   }
+  ],
+  "chosen_offset_seconds": {
+   "definition": "offset of the first ball-in-mitt frame relative to release_seconds + plateTime (the catch-time residual of the manual release annotation)",
+   "values": [
+    3758,
+    3758,
+    4178,
+    4178,
+    4747,
+    4747,
+    12815,
+    12815,
+    17137,
+    17137,
+    22969,
+    22969,
+    28052,
+    28052,
+    28849,
+    28849,
+    31541,
+    31544,
+    38215,
+    38221,
+    39974,
+    39977,
+    43987,
+    43987,
+    54785,
+    54788
+   ],
+   "mean": 25462.653846153848
+  },
+  "reader_disagreement_feet": {
+   "dx_sd": 0.08542229787566577,
+   "dz_sd": 0.1333647216259194,
+   "same_frame_fraction": 0.6923076923076923
+  },
+  "by_depth_y": {
+   "-0.5": {
+    "x": {
+     "n": 13,
+     "mean_signed_feet": -0.016484615384615386,
+     "se_of_mean_feet": 0.030358479671558684,
+     "sd_feet": 0.109459055100936,
+     "rms_feet": 0.10644900187413689
+    },
+    "z": {
+     "n": 13,
+     "mean_signed_feet": 0.0037384615384615377,
+     "se_of_mean_feet": 0.023343034261224697,
+     "sd_feet": 0.08416450695375831,
+     "rms_feet": 0.08094901529310333
+    },
+    "x_by_ball_visibility": {
+     "ball_read_directly": {
+      "n": 7,
+      "mean_signed_feet": 0.0019285714285714268,
+      "se_of_mean_feet": 0.029140780738353876,
+      "sd_feet": 0.07709925884394554,
+      "rms_feet": 0.07140609217706848
+     },
+     "pocket_inferred_by_a_reader": {
+      "n": 6,
+      "mean_signed_feet": -0.03796666666666667,
+      "se_of_mean_feet": 0.058585394463504685,
+      "sd_feet": 0.1435043228152611,
+      "rms_feet": 0.13639175195003544
+     }
+    },
+    "z_by_ball_visibility": {
+     "ball_read_directly": {
+      "n": 7,
+      "mean_signed_feet": -0.01024285714285714,
+      "se_of_mean_feet": 0.03379687120727835,
+      "sd_feet": 0.08941811630653781,
+      "rms_feet": 0.08341634817502588
+     },
+     "pocket_inferred_by_a_reader": {
+      "n": 6,
+      "mean_signed_feet": 0.020049999999999995,
+      "se_of_mean_feet": 0.033697494961297446,
+      "sd_feet": 0.08254166826518591,
+      "rms_feet": 0.07797184320851555
+     }
+    },
+    "z_uncorrected_diagnostic": {
+     "n": 13,
+     "mean_signed_feet": 0.24104615384615385,
+     "se_of_mean_feet": 0.023429087267273448,
+     "sd_feet": 0.08447477547947489,
+     "rms_feet": 0.2543429060267926
+    },
+    "rms_2d_feet": 0.1337315709805395,
+    "regression_mapped_on_reference": {
+     "x": {
+      "slope": 0.9736568511174187,
+      "intercept": -0.02695662498426188,
+      "slope_se": 0.04620215610275282,
+      "n": 13,
+      "x_range": [
+       -1.6632,
+       0.6273
+      ]
+     },
+     "z": {
+      "slope": 0.9917048717537306,
+      "intercept": 0.022714715958021436,
+      "slope_se": 0.02356230096012924,
+      "n": 13,
+      "x_range": [
+       0.6504,
+       3.6224
+      ]
+     }
+    }
+   },
+   "-1.0": {
+    "x": {
+     "n": 13,
+     "mean_signed_feet": 0.00806923076923077,
+     "se_of_mean_feet": 0.031031954962535704,
+     "sd_feet": 0.11188730479531167,
+     "rms_feet": 0.10780027472492466
+    },
+    "z": {
+     "n": 13,
+     "mean_signed_feet": 0.0578,
+     "se_of_mean_feet": 0.02448539596136063,
+     "sd_feet": 0.08828335063872463,
+     "rms_feet": 0.10264139216035305
+    },
+    "x_by_ball_visibility": {
+     "ball_read_directly": {
+      "n": 7,
+      "mean_signed_feet": 0.024557142857142857,
+      "se_of_mean_feet": 0.02778590647503615,
+      "sd_feet": 0.07351459848544499,
+      "rms_feet": 0.07235601465768314
+     },
+     "pocket_inferred_by_a_reader": {
+      "n": 6,
+      "mean_signed_feet": -0.01116666666666667,
+      "se_of_mean_feet": 0.06155641676092303,
+      "sd_feet": 0.15078181145836744,
+      "rms_feet": 0.13809654835174798
+     }
+    },
+    "z_by_ball_visibility": {
+     "ball_read_directly": {
+      "n": 7,
+      "mean_signed_feet": 0.04175714285714286,
+      "se_of_mean_feet": 0.036354195782886026,
+      "sd_feet": 0.09618416115526951,
+      "rms_feet": 0.09835356773251434
+     },
+     "pocket_inferred_by_a_reader": {
+      "n": 6,
+      "mean_signed_feet": 0.07651666666666666,
+      "se_of_mean_feet": 0.033722172890317204,
+      "sd_feet": 0.08260211659919293,
+      "rms_feet": 0.10742776642935475
+     }
+    },
+    "z_uncorrected_diagnostic": {
+     "n": 13,
+     "mean_signed_feet": 0.29513846153846157,
+     "se_of_mean_feet": 0.02490039011758429,
+     "sd_feet": 0.08977963334800695,
+     "rms_feet": 0.30748506405252374
+    },
+    "rms_2d_feet": 0.1488494360600154,
+    "regression_mapped_on_reference": {
+     "x": {
+      "slope": 0.954905943461981,
+      "intercept": -0.01097127529372749,
+      "slope_se": 0.0449796360173223,
+      "n": 13,
+      "x_range": [
+       -1.722,
+       0.6424
+      ]
+     },
+     "z": {
+      "slope": 0.973469050778574,
+      "intercept": 0.11706640415176972,
+      "slope_se": 0.023050203566008058,
+      "n": 13,
+      "x_range": [
+       0.5686,
+       3.5924
+      ]
+     }
+    }
+   },
+   "-1.5": {
+    "x": {
+     "n": 13,
+     "mean_signed_feet": 0.03266923076923077,
+     "se_of_mean_feet": 0.03317879185258023,
+     "sd_feet": 0.11962783528242485,
+     "rms_feet": 0.11948751141694845
+    },
+    "z": {
+     "n": 13,
+     "mean_signed_feet": 0.11241538461538461,
+     "se_of_mean_feet": 0.026915344127595754,
+     "sd_feet": 0.09704465334880506,
+     "rms_feet": 0.1460494700172092
+    },
+    "x_by_ball_visibility": {
+     "ball_read_directly": {
+      "n": 7,
+      "mean_signed_feet": 0.04724285714285714,
+      "se_of_mean_feet": 0.030430231343054833,
+      "sd_feet": 0.08051082447188612,
+      "rms_feet": 0.08824897409359175
+     },
+     "pocket_inferred_by_a_reader": {
+      "n": 6,
+      "mean_signed_feet": 0.015666666666666662,
+      "se_of_mean_feet": 0.06573091949590983,
+      "sd_feet": 0.16100721308893792,
+      "rms_feet": 0.14781141137724563
+     }
+    },
+    "z_by_ball_visibility": {
+     "ball_read_directly": {
+      "n": 7,
+      "mean_signed_feet": 0.09430000000000001,
+      "se_of_mean_feet": 0.04091818782935157,
+      "sd_feet": 0.10825934909589409,
+      "rms_feet": 0.13761641824807305
+     },
+     "pocket_inferred_by_a_reader": {
+      "n": 6,
+      "mean_signed_feet": 0.13355,
+      "se_of_mean_feet": 0.035456195979452355,
+      "sd_feet": 0.0868495883697787,
+      "rms_feet": 0.15531037205115011
+     }
+    },
+    "z_uncorrected_diagnostic": {
+     "n": 13,
+     "mean_signed_feet": 0.34971538461538465,
+     "se_of_mean_feet": 0.02759602778493498,
+     "sd_feet": 0.099498893177712,
+     "rms_feet": 0.3625456374455073
+    },
+    "rms_2d_feet": 0.18870006114711008,
+    "regression_mapped_on_reference": {
+     "x": {
+      "slope": 0.9352833202133887,
+      "intercept": 0.0037761723445497997,
+      "slope_se": 0.04520935548376595,
+      "n": 13,
+      "x_range": [
+       -1.7812,
+       0.6574
+      ]
+     },
+     "z": {
+      "slope": 0.9556042858498662,
+      "intercept": 0.2091519382210585,
+      "slope_se": 0.022670173894334424,
+      "n": 13,
+      "x_range": [
+       0.4859,
+       3.5622
+      ]
+     }
+    }
+   }
+  }
+ },
+ "human_verified_check": null,
+ "rms_error_feet": 0.1488494360600154,
+ "rms_basis": "all_used_pitches_assistant_read",
+ "error_status": "measured",
+ "error_definition": "2-D rms over called pitches of (hops 1-2 with the calibrated matrix applied to the ball/pocket on the first frame with the ball in the mitt, A/B reader mean) minus (Statcast trajectory at y = -1.0 ft, i.e. 2.4 ft behind the plate front); computed on the human-verified pitches when at least min_pitches were confirmed, otherwise on all used pitches; the parallax term is removed for the nominal 2.5 ft depth, so a residual mean offset reflects the true catch depth differing from that assumption plus reader noise; pixel readings are assistant visual estimates; evaluation game (docs/results/mlb_p0/intent_eval_plan_v0.json)",
+ "measured_on": "13 called pitches of game 849845 (in-sample)",
+ "min_pitches": 10,
+ "human_verified_count": 0,
+ "human_verified_pitch_ids": [],
+ "human_verification": null,
+ "per_item": {
+  "tilt_rows": [
+   {
+    "at_bat_number": 4,
+    "pitch_number": 5,
+    "reader": "A",
+    "box": "left_box",
+    "depth_px": 23,
+    "px_per_foot": 40.588235294117645,
+    "sin_tilt": 0.09444444444444446
+   },
+   {
+    "at_bat_number": 4,
+    "pitch_number": 5,
+    "reader": "A",
+    "box": "right_box",
+    "depth_px": 23,
+    "px_per_foot": 40.588235294117645,
+    "sin_tilt": 0.09444444444444446
+   },
+   {
+    "at_bat_number": 4,
+    "pitch_number": 5,
+    "reader": "B",
+    "box": "left_box",
+    "depth_px": 22.0,
+    "px_per_foot": 40.588235294117645,
+    "sin_tilt": 0.09033816425120773
+   },
+   {
+    "at_bat_number": 4,
+    "pitch_number": 5,
+    "reader": "B",
+    "box": "right_box",
+    "depth_px": 21.5,
+    "px_per_foot": 40.588235294117645,
+    "sin_tilt": 0.08828502415458939
+   },
+   {
+    "at_bat_number": 5,
+    "pitch_number": 2,
+    "reader": "A",
+    "box": "left_box",
+    "depth_px": 23,
+    "px_per_foot": 39.17647058823529,
+    "sin_tilt": 0.09784784784784786
+   },
+   {
+    "at_bat_number": 5,
+    "pitch_number": 2,
+    "reader": "A",
+    "box": "right_box",
+    "depth_px": 23,
+    "px_per_foot": 39.17647058823529,
+    "sin_tilt": 0.09784784784784786
+   },
+   {
+    "at_bat_number": 5,
+    "pitch_number": 2,
+    "reader": "B",
+    "box": "left_box",
+    "depth_px": 22.75,
+    "px_per_foot": 39.17647058823529,
+    "sin_tilt": 0.09678428428428429
+   },
+   {
+    "at_bat_number": 5,
+    "pitch_number": 2,
+    "reader": "B",
+    "box": "right_box",
+    "depth_px": 23.25,
+    "px_per_foot": 39.17647058823529,
+    "sin_tilt": 0.09891141141141142
+   },
+   {
+    "at_bat_number": 6,
+    "pitch_number": 5,
+    "reader": "A",
+    "box": "left_box",
+    "depth_px": 23,
+    "px_per_foot": 39.52941176470588,
+    "sin_tilt": 0.09697420634920637
+   },
+   {
+    "at_bat_number": 6,
+    "pitch_number": 5,
+    "reader": "A",
+    "box": "right_box",
+    "depth_px": 21,
+    "px_per_foot": 39.52941176470588,
+    "sin_tilt": 0.08854166666666669
+   },
+   {
+    "at_bat_number": 6,
+    "pitch_number": 5,
+    "reader": "B",
+    "box": "left_box",
+    "depth_px": 22.5,
+    "px_per_foot": 39.52941176470588,
+    "sin_tilt": 0.09486607142857144
+   },
+   {
+    "at_bat_number": 6,
+    "pitch_number": 5,
+    "reader": "B",
+    "box": "right_box",
+    "depth_px": 23.25,
+    "px_per_foot": 39.52941176470588,
+    "sin_tilt": 0.09802827380952382
+   },
+   {
+    "at_bat_number": 7,
+    "pitch_number": 1,
+    "reader": "A",
+    "box": "left_box",
+    "depth_px": 23,
+    "px_per_foot": 38.8235294117647,
+    "sin_tilt": 0.09873737373737375
+   },
+   {
+    "at_bat_number": 7,
+    "pitch_number": 1,
+    "reader": "A",
+    "box": "right_box",
+    "depth_px": 23,
+    "px_per_foot": 38.8235294117647,
+    "sin_tilt": 0.09873737373737375
+   },
+   {
+    "at_bat_number": 7,
+    "pitch_number": 1,
+    "reader": "B",
+    "box": "left_box",
+    "depth_px": 23,
+    "px_per_foot": 38.8235294117647,
+    "sin_tilt": 0.09873737373737375
+   },
+   {
+    "at_bat_number": 8,
+    "pitch_number": 4,
+    "reader": "A",
+    "box": "left_box",
+    "depth_px": 22,
+    "px_per_foot": 38.470588235294116,
+    "sin_tilt": 0.09531090723751275
+   },
+   {
+    "at_bat_number": 8,
+    "pitch_number": 4,
+    "reader": "A",
+    "box": "right_box",
+    "depth_px": 23,
+    "px_per_foot": 38.470588235294116,
+    "sin_tilt": 0.09964322120285424
+   },
+   {
+    "at_bat_number": 8,
+    "pitch_number": 4,
+    "reader": "B",
+    "box": "left_box",
+    "depth_px": 23,
+    "px_per_foot": 38.470588235294116,
+    "sin_tilt": 0.09964322120285424
+   },
+   {
+    "at_bat_number": 8,
+    "pitch_number": 4,
+    "reader": "B",
+    "box": "right_box",
+    "depth_px": 22.0,
+    "px_per_foot": 38.470588235294116,
+    "sin_tilt": 0.09531090723751275
+   },
+   {
+    "at_bat_number": 10,
+    "pitch_number": 4,
+    "reader": "A",
+    "box": "left_box",
+    "depth_px": 22,
+    "px_per_foot": 39.17647058823529,
+    "sin_tilt": 0.0935935935935936
+   },
+   {
+    "at_bat_number": 10,
+    "pitch_number": 4,
+    "reader": "A",
+    "box": "right_box",
+    "depth_px": 23,
+    "px_per_foot": 39.17647058823529,
+    "sin_tilt": 0.09784784784784786
+   },
+   {
+    "at_bat_number": 10,
+    "pitch_number": 4,
+    "reader": "B",
+    "box": "left_box",
+    "depth_px": 23.0,
+    "px_per_foot": 39.17647058823529,
+    "sin_tilt": 0.09784784784784786
+   },
+   {
+    "at_bat_number": 10,
+    "pitch_number": 4,
+    "reader": "B",
+    "box": "right_box",
+    "depth_px": 21.5,
+    "px_per_foot": 39.17647058823529,
+    "sin_tilt": 0.09146646646646649
+   },
+   {
+    "at_bat_number": 11,
+    "pitch_number": 3,
+    "reader": "A",
+    "box": "left_box",
+    "depth_px": 23,
+    "px_per_foot": 38.11764705882353,
+    "sin_tilt": 0.10056584362139918
+   },
+   {
+    "at_bat_number": 11,
+    "pitch_number": 3,
+    "reader": "B",
+    "box": "left_box",
+    "depth_px": 21,
+    "px_per_foot": 38.11764705882353,
+    "sin_tilt": 0.09182098765432099
+   },
+   {
+    "at_bat_number": 12,
+    "pitch_number": 2,
+    "reader": "A",
+    "box": "left_box",
+    "depth_px": 23,
+    "px_per_foot": 38.11764705882353,
+    "sin_tilt": 0.10056584362139918
+   },
+   {
+    "at_bat_number": 12,
+    "pitch_number": 2,
+    "reader": "B",
+    "box": "left_box",
+    "depth_px": 22,
+    "px_per_foot": 38.11764705882353,
+    "sin_tilt": 0.09619341563786007
+   },
+   {
+    "at_bat_number": 12,
+    "pitch_number": 2,
+    "reader": "B",
+    "box": "right_box",
+    "depth_px": 23,
+    "px_per_foot": 38.11764705882353,
+    "sin_tilt": 0.10056584362139918
+   },
+   {
+    "at_bat_number": 13,
+    "pitch_number": 1,
+    "reader": "A",
+    "box": "left_box",
+    "depth_px": 22.0,
+    "px_per_foot": 37.41176470588235,
+    "sin_tilt": 0.09800838574423482
+   },
+   {
+    "at_bat_number": 13,
+    "pitch_number": 1,
+    "reader": "A",
+    "box": "right_box",
+    "depth_px": 22.5,
+    "px_per_foot": 37.41176470588235,
+    "sin_tilt": 0.10023584905660379
+   },
+   {
+    "at_bat_number": 13,
+    "pitch_number": 1,
+    "reader": "B",
+    "box": "left_box",
+    "depth_px": 22,
+    "px_per_foot": 37.41176470588235,
+    "sin_tilt": 0.09800838574423482
+   },
+   {
+    "at_bat_number": 13,
+    "pitch_number": 1,
+    "reader": "B",
+    "box": "right_box",
+    "depth_px": 22.5,
+    "px_per_foot": 37.41176470588235,
+    "sin_tilt": 0.10023584905660379
+   },
+   {
+    "at_bat_number": 15,
+    "pitch_number": 3,
+    "reader": "A",
+    "box": "left_box",
+    "depth_px": 23,
+    "px_per_foot": 38.12418244627984,
+    "sin_tilt": 0.10054860425491932
+   },
+   {
+    "at_bat_number": 15,
+    "pitch_number": 3,
+    "reader": "A",
+    "box": "right_box",
+    "depth_px": 20,
+    "px_per_foot": 38.12418244627984,
+    "sin_tilt": 0.08743356891732115
+   },
+   {
+    "at_bat_number": 15,
+    "pitch_number": 3,
+    "reader": "B",
+    "box": "left_box",
+    "depth_px": 23,
+    "px_per_foot": 38.12418244627984,
+    "sin_tilt": 0.10054860425491932
+   },
+   {
+    "at_bat_number": 15,
+    "pitch_number": 3,
+    "reader": "B",
+    "box": "right_box",
+    "depth_px": 22,
+    "px_per_foot": 38.12418244627984,
+    "sin_tilt": 0.09617692580905325
+   },
+   {
+    "at_bat_number": 17,
+    "pitch_number": 6,
+    "reader": "A",
+    "box": "left_box",
+    "depth_px": 23.5,
+    "px_per_foot": 38.470588235294116,
+    "sin_tilt": 0.10180937818552498
+   },
+   {
+    "at_bat_number": 17,
+    "pitch_number": 6,
+    "reader": "B",
+    "box": "left_box",
+    "depth_px": 23,
+    "px_per_foot": 38.470588235294116,
+    "sin_tilt": 0.09964322120285424
+   },
+   {
+    "at_bat_number": 19,
+    "pitch_number": 3,
+    "reader": "A",
+    "box": "left_box",
+    "depth_px": 22.0,
+    "px_per_foot": 39.705882352941174,
+    "sin_tilt": 0.09234567901234568
+   },
+   {
+    "at_bat_number": 19,
+    "pitch_number": 3,
+    "reader": "B",
+    "box": "left_box",
+    "depth_px": 23,
+    "px_per_foot": 39.705882352941174,
+    "sin_tilt": 0.09654320987654322
+   },
+   {
+    "at_bat_number": 20,
+    "pitch_number": 5,
+    "reader": "A",
+    "box": "left_box",
+    "depth_px": 21.5,
+    "px_per_foot": 40.94117647058823,
+    "sin_tilt": 0.08752394636015327
+   },
+   {
+    "at_bat_number": 20,
+    "pitch_number": 5,
+    "reader": "A",
+    "box": "right_box",
+    "depth_px": 23.0,
+    "px_per_foot": 40.94117647058823,
+    "sin_tilt": 0.09363026819923373
+   },
+   {
+    "at_bat_number": 20,
+    "pitch_number": 5,
+    "reader": "B",
+    "box": "left_box",
+    "depth_px": 23,
+    "px_per_foot": 40.94117647058823,
+    "sin_tilt": 0.09363026819923373
+   },
+   {
+    "at_bat_number": 20,
+    "pitch_number": 5,
+    "reader": "B",
+    "box": "right_box",
+    "depth_px": 23,
+    "px_per_foot": 40.94117647058823,
+    "sin_tilt": 0.09363026819923373
+   },
+   {
+    "at_bat_number": 23,
+    "pitch_number": 6,
+    "reader": "A",
+    "box": "left_box",
+    "depth_px": 22,
+    "px_per_foot": 39.52941176470588,
+    "sin_tilt": 0.09275793650793651
+   },
+   {
+    "at_bat_number": 23,
+    "pitch_number": 6,
+    "reader": "B",
+    "box": "left_box",
+    "depth_px": 22,
+    "px_per_foot": 39.52941176470588,
+    "sin_tilt": 0.09275793650793651
+   },
+   {
+    "at_bat_number": 24,
+    "pitch_number": 5,
+    "reader": "A",
+    "box": "left_box",
+    "depth_px": 23,
+    "px_per_foot": 38.47220719745098,
+    "sin_tilt": 0.09963902808225975
+   },
+   {
+    "at_bat_number": 24,
+    "pitch_number": 5,
+    "reader": "A",
+    "box": "right_box",
+    "depth_px": 22,
+    "px_per_foot": 38.47220719745098,
+    "sin_tilt": 0.09530689642650932
+   },
+   {
+    "at_bat_number": 24,
+    "pitch_number": 5,
+    "reader": "B",
+    "box": "left_box",
+    "depth_px": 24,
+    "px_per_foot": 38.47220719745098,
+    "sin_tilt": 0.10397115973801016
+   },
+   {
+    "at_bat_number": 24,
+    "pitch_number": 5,
+    "reader": "B",
+    "box": "right_box",
+    "depth_px": 23,
+    "px_per_foot": 38.47220719745098,
+    "sin_tilt": 0.09963902808225975
+   },
+   {
+    "at_bat_number": 28,
+    "pitch_number": 5,
+    "reader": "A",
+    "box": "left_box",
+    "depth_px": 23,
+    "px_per_foot": 38.11764705882353,
+    "sin_tilt": 0.10056584362139918
+   },
+   {
+    "at_bat_number": 28,
+    "pitch_number": 5,
+    "reader": "B",
+    "box": "left_box",
+    "depth_px": 23,
+    "px_per_foot": 38.11764705882353,
+    "sin_tilt": 0.10056584362139918
+   },
+   {
+    "at_bat_number": 28,
+    "pitch_number": 5,
+    "reader": "B",
+    "box": "right_box",
+    "depth_px": 28,
+    "px_per_foot": 38.11764705882353,
+    "sin_tilt": 0.12242798353909466
+   },
+   {
+    "at_bat_number": 31,
+    "pitch_number": 2,
+    "reader": "A",
+    "box": "left_box",
+    "depth_px": 23,
+    "px_per_foot": 37.06050416357192,
+    "sin_tilt": 0.10343446264018319
+   },
+   {
+    "at_bat_number": 31,
+    "pitch_number": 2,
+    "reader": "B",
+    "box": "left_box",
+    "depth_px": 22,
+    "px_per_foot": 37.06050416357192,
+    "sin_tilt": 0.09893731209061
+   },
+   {
+    "at_bat_number": 31,
+    "pitch_number": 2,
+    "reader": "B",
+    "box": "right_box",
+    "depth_px": 23,
+    "px_per_foot": 37.06050416357192,
+    "sin_tilt": 0.10343446264018319
+   },
+   {
+    "at_bat_number": 32,
+    "pitch_number": 2,
+    "reader": "A",
+    "box": "left_box",
+    "depth_px": 21,
+    "px_per_foot": 34.94117647058823,
+    "sin_tilt": 0.10016835016835018
+   },
+   {
+    "at_bat_number": 32,
+    "pitch_number": 2,
+    "reader": "A",
+    "box": "right_box",
+    "depth_px": 20,
+    "px_per_foot": 34.94117647058823,
+    "sin_tilt": 0.09539842873176207
+   },
+   {
+    "at_bat_number": 32,
+    "pitch_number": 2,
+    "reader": "B",
+    "box": "left_box",
+    "depth_px": 21,
+    "px_per_foot": 34.94117647058823,
+    "sin_tilt": 0.10016835016835018
+   },
+   {
+    "at_bat_number": 32,
+    "pitch_number": 2,
+    "reader": "B",
+    "box": "right_box",
+    "depth_px": 20,
+    "px_per_foot": 34.94117647058823,
+    "sin_tilt": 0.09539842873176207
+   },
+   {
+    "at_bat_number": 33,
+    "pitch_number": 4,
+    "reader": "A",
+    "box": "left_box",
+    "depth_px": 23,
+    "px_per_foot": 38.11928101073112,
+    "sin_tilt": 0.1005615329484886
+   },
+   {
+    "at_bat_number": 33,
+    "pitch_number": 4,
+    "reader": "B",
+    "box": "left_box",
+    "depth_px": 23,
+    "px_per_foot": 38.11928101073112,
+    "sin_tilt": 0.1005615329484886
+   },
+   {
+    "at_bat_number": 33,
+    "pitch_number": 4,
+    "reader": "B",
+    "box": "right_box",
+    "depth_px": 22,
+    "px_per_foot": 38.11928101073112,
+    "sin_tilt": 0.09618929238551083
+   },
+   {
+    "at_bat_number": 34,
+    "pitch_number": 5,
+    "reader": "A",
+    "box": "left_box",
+    "depth_px": 23,
+    "px_per_foot": 37.76470588235294,
+    "sin_tilt": 0.10150571131879543
+   },
+   {
+    "at_bat_number": 34,
+    "pitch_number": 5,
+    "reader": "A",
+    "box": "right_box",
+    "depth_px": 23,
+    "px_per_foot": 37.76470588235294,
+    "sin_tilt": 0.10150571131879543
+   },
+   {
+    "at_bat_number": 34,
+    "pitch_number": 5,
+    "reader": "B",
+    "box": "left_box",
+    "depth_px": 22.5,
+    "px_per_foot": 37.76470588235294,
+    "sin_tilt": 0.09929906542056074
+   },
+   {
+    "at_bat_number": 35,
+    "pitch_number": 6,
+    "reader": "A",
+    "box": "left_box",
+    "depth_px": 23,
+    "px_per_foot": 37.76470588235294,
+    "sin_tilt": 0.10150571131879543
+   },
+   {
+    "at_bat_number": 35,
+    "pitch_number": 6,
+    "reader": "B",
+    "box": "left_box",
+    "depth_px": 25.5,
+    "px_per_foot": 37.76470588235294,
+    "sin_tilt": 0.11253894080996885
+   },
+   {
+    "at_bat_number": 36,
+    "pitch_number": 5,
+    "reader": "A",
+    "box": "left_box",
+    "depth_px": 23,
+    "px_per_foot": 38.825133656694696,
+    "sin_tilt": 0.09873329393348641
+   },
+   {
+    "at_bat_number": 36,
+    "pitch_number": 5,
+    "reader": "B",
+    "box": "left_box",
+    "depth_px": 26,
+    "px_per_foot": 38.825133656694696,
+    "sin_tilt": 0.11161154966394114
+   },
+   {
+    "at_bat_number": 37,
+    "pitch_number": 5,
+    "reader": "A",
+    "box": "left_box",
+    "depth_px": 23,
+    "px_per_foot": 37.41176470588235,
+    "sin_tilt": 0.10246331236897277
+   },
+   {
+    "at_bat_number": 37,
+    "pitch_number": 5,
+    "reader": "B",
+    "box": "left_box",
+    "depth_px": 23,
+    "px_per_foot": 37.41176470588235,
+    "sin_tilt": 0.10246331236897277
+   },
+   {
+    "at_bat_number": 38,
+    "pitch_number": 6,
+    "reader": "A",
+    "box": "left_box",
+    "depth_px": 23,
+    "px_per_foot": 40.94117647058823,
+    "sin_tilt": 0.09363026819923373
+   },
+   {
+    "at_bat_number": 38,
+    "pitch_number": 6,
+    "reader": "A",
+    "box": "right_box",
+    "depth_px": 23,
+    "px_per_foot": 40.94117647058823,
+    "sin_tilt": 0.09363026819923373
+   },
+   {
+    "at_bat_number": 38,
+    "pitch_number": 6,
+    "reader": "B",
+    "box": "left_box",
+    "depth_px": 24,
+    "px_per_foot": 40.94117647058823,
+    "sin_tilt": 0.09770114942528736
+   },
+   {
+    "at_bat_number": 38,
+    "pitch_number": 6,
+    "reader": "B",
+    "box": "right_box",
+    "depth_px": 24,
+    "px_per_foot": 40.94117647058823,
+    "sin_tilt": 0.09770114942528736
+   },
+   {
+    "at_bat_number": 39,
+    "pitch_number": 3,
+    "reader": "A",
+    "box": "left_box",
+    "depth_px": 22,
+    "px_per_foot": 38.470588235294116,
+    "sin_tilt": 0.09531090723751275
+   },
+   {
+    "at_bat_number": 39,
+    "pitch_number": 3,
+    "reader": "B",
+    "box": "left_box",
+    "depth_px": 24,
+    "px_per_foot": 38.470588235294116,
+    "sin_tilt": 0.10397553516819573
+   },
+   {
+    "at_bat_number": 40,
+    "pitch_number": 2,
+    "reader": "A",
+    "box": "left_box",
+    "depth_px": 23,
+    "px_per_foot": 37.413429485712115,
+    "sin_tilt": 0.1024587530741402
+   },
+   {
+    "at_bat_number": 40,
+    "pitch_number": 2,
+    "reader": "A",
+    "box": "right_box",
+    "depth_px": 22,
+    "px_per_foot": 37.413429485712115,
+    "sin_tilt": 0.09800402467961235
+   },
+   {
+    "at_bat_number": 40,
+    "pitch_number": 2,
+    "reader": "B",
+    "box": "left_box",
+    "depth_px": 23,
+    "px_per_foot": 37.413429485712115,
+    "sin_tilt": 0.1024587530741402
+   },
+   {
+    "at_bat_number": 40,
+    "pitch_number": 2,
+    "reader": "B",
+    "box": "right_box",
+    "depth_px": 22,
+    "px_per_foot": 37.413429485712115,
+    "sin_tilt": 0.09800402467961235
+   },
+   {
+    "at_bat_number": 42,
+    "pitch_number": 3,
+    "reader": "A",
+    "box": "left_box",
+    "depth_px": 24,
+    "px_per_foot": 38.12418244627984,
+    "sin_tilt": 0.10492028270078538
+   },
+   {
+    "at_bat_number": 42,
+    "pitch_number": 3,
+    "reader": "A",
+    "box": "right_box",
+    "depth_px": 23,
+    "px_per_foot": 38.12418244627984,
+    "sin_tilt": 0.10054860425491932
+   },
+   {
+    "at_bat_number": 42,
+    "pitch_number": 3,
+    "reader": "B",
+    "box": "left_box",
+    "depth_px": 24,
+    "px_per_foot": 38.12418244627984,
+    "sin_tilt": 0.10492028270078538
+   },
+   {
+    "at_bat_number": 42,
+    "pitch_number": 3,
+    "reader": "B",
+    "box": "right_box",
+    "depth_px": 24,
+    "px_per_foot": 38.12418244627984,
+    "sin_tilt": 0.10492028270078538
+   },
+   {
+    "at_bat_number": 43,
+    "pitch_number": 3,
+    "reader": "A",
+    "box": "left_box",
+    "depth_px": 24,
+    "px_per_foot": 40.236842075486145,
+    "sin_tilt": 0.0994113800604883
+   },
+   {
+    "at_bat_number": 43,
+    "pitch_number": 3,
+    "reader": "A",
+    "box": "right_box",
+    "depth_px": 23,
+    "px_per_foot": 40.236842075486145,
+    "sin_tilt": 0.09526923922463462
+   },
+   {
+    "at_bat_number": 43,
+    "pitch_number": 3,
+    "reader": "B",
+    "box": "left_box",
+    "depth_px": 23,
+    "px_per_foot": 40.236842075486145,
+    "sin_tilt": 0.09526923922463462
+   },
+   {
+    "at_bat_number": 43,
+    "pitch_number": 3,
+    "reader": "B",
+    "box": "right_box",
+    "depth_px": 24,
+    "px_per_foot": 40.236842075486145,
+    "sin_tilt": 0.0994113800604883
+   },
+   {
+    "at_bat_number": 43,
+    "pitch_number": 5,
+    "reader": "A",
+    "box": "left_box",
+    "depth_px": 23,
+    "px_per_foot": 38.11764705882353,
+    "sin_tilt": 0.10056584362139918
+   },
+   {
+    "at_bat_number": 43,
+    "pitch_number": 5,
+    "reader": "A",
+    "box": "right_box",
+    "depth_px": 23,
+    "px_per_foot": 38.11764705882353,
+    "sin_tilt": 0.10056584362139918
+   },
+   {
+    "at_bat_number": 43,
+    "pitch_number": 5,
+    "reader": "B",
+    "box": "left_box",
+    "depth_px": 25,
+    "px_per_foot": 38.11764705882353,
+    "sin_tilt": 0.10931069958847738
+   },
+   {
+    "at_bat_number": 44,
+    "pitch_number": 2,
+    "reader": "A",
+    "box": "left_box",
+    "depth_px": 23.0,
+    "px_per_foot": 37.41176470588235,
+    "sin_tilt": 0.10246331236897277
+   },
+   {
+    "at_bat_number": 44,
+    "pitch_number": 2,
+    "reader": "B",
+    "box": "left_box",
+    "depth_px": 21,
+    "px_per_foot": 37.41176470588235,
+    "sin_tilt": 0.09355345911949686
+   },
+   {
+    "at_bat_number": 45,
+    "pitch_number": 4,
+    "reader": "A",
+    "box": "left_box",
+    "depth_px": 23,
+    "px_per_foot": 39.17647058823529,
+    "sin_tilt": 0.09784784784784786
+   },
+   {
+    "at_bat_number": 45,
+    "pitch_number": 4,
+    "reader": "B",
+    "box": "left_box",
+    "depth_px": 23,
+    "px_per_foot": 39.17647058823529,
+    "sin_tilt": 0.09784784784784786
+   },
+   {
+    "at_bat_number": 45,
+    "pitch_number": 4,
+    "reader": "B",
+    "box": "right_box",
+    "depth_px": 24,
+    "px_per_foot": 39.17647058823529,
+    "sin_tilt": 0.10210210210210212
+   },
+   {
+    "at_bat_number": 46,
+    "pitch_number": 2,
+    "reader": "A",
+    "box": "left_box",
+    "depth_px": 23,
+    "px_per_foot": 37.76635510417535,
+    "sin_tilt": 0.10150127865819729
+   },
+   {
+    "at_bat_number": 46,
+    "pitch_number": 2,
+    "reader": "A",
+    "box": "right_box",
+    "depth_px": 23,
+    "px_per_foot": 37.76635510417535,
+    "sin_tilt": 0.10150127865819729
+   },
+   {
+    "at_bat_number": 46,
+    "pitch_number": 2,
+    "reader": "B",
+    "box": "left_box",
+    "depth_px": 24,
+    "px_per_foot": 37.76635510417535,
+    "sin_tilt": 0.10591437773029282
+   },
+   {
+    "at_bat_number": 46,
+    "pitch_number": 2,
+    "reader": "B",
+    "box": "right_box",
+    "depth_px": 24,
+    "px_per_foot": 37.76635510417535,
+    "sin_tilt": 0.10591437773029282
+   },
+   {
+    "at_bat_number": 47,
+    "pitch_number": 3,
+    "reader": "A",
+    "box": "left_box",
+    "depth_px": 22,
+    "px_per_foot": 37.06050416357192,
+    "sin_tilt": 0.09893731209061
+   },
+   {
+    "at_bat_number": 47,
+    "pitch_number": 3,
+    "reader": "A",
+    "box": "right_box",
+    "depth_px": 23,
+    "px_per_foot": 37.06050416357192,
+    "sin_tilt": 0.10343446264018319
+   },
+   {
+    "at_bat_number": 47,
+    "pitch_number": 3,
+    "reader": "B",
+    "box": "left_box",
+    "depth_px": 23,
+    "px_per_foot": 37.06050416357192,
+    "sin_tilt": 0.10343446264018319
+   },
+   {
+    "at_bat_number": 47,
+    "pitch_number": 3,
+    "reader": "B",
+    "box": "right_box",
+    "depth_px": 25,
+    "px_per_foot": 37.06050416357192,
+    "sin_tilt": 0.11242876373932956
+   },
+   {
+    "at_bat_number": 48,
+    "pitch_number": 4,
+    "reader": "A",
+    "box": "left_box",
+    "depth_px": 23,
+    "px_per_foot": 38.825133656694696,
+    "sin_tilt": 0.09873329393348641
+   },
+   {
+    "at_bat_number": 48,
+    "pitch_number": 4,
+    "reader": "B",
+    "box": "left_box",
+    "depth_px": 24,
+    "px_per_foot": 38.825133656694696,
+    "sin_tilt": 0.10302604584363799
+   },
+   {
+    "at_bat_number": 49,
+    "pitch_number": 3,
+    "reader": "A",
+    "box": "left_box",
+    "depth_px": 23,
+    "px_per_foot": 37.41176470588235,
+    "sin_tilt": 0.10246331236897277
+   },
+   {
+    "at_bat_number": 49,
+    "pitch_number": 3,
+    "reader": "A",
+    "box": "right_box",
+    "depth_px": 22,
+    "px_per_foot": 37.41176470588235,
+    "sin_tilt": 0.09800838574423482
+   },
+   {
+    "at_bat_number": 49,
+    "pitch_number": 3,
+    "reader": "B",
+    "box": "left_box",
+    "depth_px": 22.5,
+    "px_per_foot": 37.41176470588235,
+    "sin_tilt": 0.10023584905660379
+   },
+   {
+    "at_bat_number": 50,
+    "pitch_number": 2,
+    "reader": "A",
+    "box": "left_box",
+    "depth_px": 23,
+    "px_per_foot": 39.52941176470588,
+    "sin_tilt": 0.09697420634920637
+   },
+   {
+    "at_bat_number": 50,
+    "pitch_number": 2,
+    "reader": "B",
+    "box": "left_box",
+    "depth_px": 24,
+    "px_per_foot": 39.52941176470588,
+    "sin_tilt": 0.1011904761904762
+   },
+   {
+    "at_bat_number": 50,
+    "pitch_number": 2,
+    "reader": "B",
+    "box": "right_box",
+    "depth_px": 21,
+    "px_per_foot": 39.52941176470588,
+    "sin_tilt": 0.08854166666666669
+   },
+   {
+    "at_bat_number": 51,
+    "pitch_number": 4,
+    "reader": "A",
+    "box": "left_box",
+    "depth_px": 23,
+    "px_per_foot": 38.11764705882353,
+    "sin_tilt": 0.10056584362139918
+   },
+   {
+    "at_bat_number": 51,
+    "pitch_number": 4,
+    "reader": "B",
+    "box": "left_box",
+    "depth_px": 23,
+    "px_per_foot": 38.11764705882353,
+    "sin_tilt": 0.10056584362139918
+   },
+   {
+    "at_bat_number": 51,
+    "pitch_number": 4,
+    "reader": "B",
+    "box": "right_box",
+    "depth_px": 21,
+    "px_per_foot": 38.11764705882353,
+    "sin_tilt": 0.09182098765432099
+   },
+   {
+    "at_bat_number": 52,
+    "pitch_number": 4,
+    "reader": "A",
+    "box": "left_box",
+    "depth_px": 25,
+    "px_per_foot": 38.470588235294116,
+    "sin_tilt": 0.10830784913353722
+   },
+   {
+    "at_bat_number": 52,
+    "pitch_number": 4,
+    "reader": "A",
+    "box": "right_box",
+    "depth_px": 25,
+    "px_per_foot": 38.470588235294116,
+    "sin_tilt": 0.10830784913353722
+   },
+   {
+    "at_bat_number": 52,
+    "pitch_number": 4,
+    "reader": "B",
+    "box": "left_box",
+    "depth_px": 22,
+    "px_per_foot": 38.470588235294116,
+    "sin_tilt": 0.09531090723751275
+   },
+   {
+    "at_bat_number": 53,
+    "pitch_number": 5,
+    "reader": "A",
+    "box": "left_box",
+    "depth_px": 24,
+    "px_per_foot": 36.35979375733757,
+    "sin_tilt": 0.11001162511249894
+   },
+   {
+    "at_bat_number": 53,
+    "pitch_number": 5,
+    "reader": "B",
+    "box": "left_box",
+    "depth_px": 23,
+    "px_per_foot": 36.35979375733757,
+    "sin_tilt": 0.10542780739947816
+   },
+   {
+    "at_bat_number": 54,
+    "pitch_number": 2,
+    "reader": "A",
+    "box": "left_box",
+    "depth_px": 22,
+    "px_per_foot": 38.8235294117647,
+    "sin_tilt": 0.09444444444444444
+   },
+   {
+    "at_bat_number": 54,
+    "pitch_number": 2,
+    "reader": "B",
+    "box": "left_box",
+    "depth_px": 24,
+    "px_per_foot": 38.8235294117647,
+    "sin_tilt": 0.10303030303030304
+   },
+   {
+    "at_bat_number": 68,
+    "pitch_number": 1,
+    "reader": "B",
+    "box": "left_box",
+    "depth_px": 25,
+    "px_per_foot": 37.41176470588235,
+    "sin_tilt": 0.11137316561844866
+   },
+   {
+    "at_bat_number": 68,
+    "pitch_number": 1,
+    "reader": "B",
+    "box": "right_box",
+    "depth_px": 24,
+    "px_per_foot": 37.41176470588235,
+    "sin_tilt": 0.10691823899371071
+   },
+   {
+    "at_bat_number": 69,
+    "pitch_number": 2,
+    "reader": "B",
+    "box": "left_box",
+    "depth_px": 24,
+    "px_per_foot": 37.41176470588235,
+    "sin_tilt": 0.10691823899371071
+   },
+   {
+    "at_bat_number": 70,
+    "pitch_number": 4,
+    "reader": "B",
+    "box": "left_box",
+    "depth_px": 22,
+    "px_per_foot": 37.06050416357192,
+    "sin_tilt": 0.09893731209061
+   },
+   {
+    "at_bat_number": 70,
+    "pitch_number": 4,
+    "reader": "B",
+    "box": "right_box",
+    "depth_px": 24,
+    "px_per_foot": 37.06050416357192,
+    "sin_tilt": 0.10793161318975637
+   }
+  ],
+  "pan_rows": [
+   {
+    "frame": "1:4",
+    "reader": "A",
+    "rubber_x_on_plate_scale_feet": 0.7870370370370368,
+    "scale_ratio": 1.1936728395061729,
+    "camera_distance_feet": 364.1510624169986,
+    "pan_tan": -0.011159503402098602
+   },
+   {
+    "frame": "2:7",
+    "reader": "A",
+    "rubber_x_on_plate_scale_feet": 0.7598484848484859,
+    "scale_ratio": 1.171969696969697,
+    "camera_distance_feet": 402.65161527165907,
+    "pan_tan": -0.01097351167873031
+   },
+   {
+    "frame": "3:5",
+    "reader": "A",
+    "rubber_x_on_plate_scale_feet": 0.7589285714285725,
+    "scale_ratio": 1.1636904761904763,
+    "camera_distance_feet": 420.0287878787877,
+    "pan_tan": -0.01103820445207581
+   },
+   {
+    "frame": "4:5",
+    "reader": "A",
+    "rubber_x_on_plate_scale_feet": 0.7083333333333359,
+    "scale_ratio": 1.1763392857142858,
+    "camera_distance_feet": 394.1381856540083,
+    "pan_tan": -0.010191546476181847
+   },
+   {
+    "frame": "4:5",
+    "reader": "B",
+    "rubber_x_on_plate_scale_feet": 0.8764124293785319,
+    "scale_ratio": 0.9604519774011299,
+    "camera_distance_feet": null,
+    "pan_tan": null
+   },
+   {
+    "frame": "5:2",
+    "reader": "A",
+    "rubber_x_on_plate_scale_feet": 0.7842261904761934,
+    "scale_ratio": 1.1510416666666667,
+    "camera_distance_feet": 450.2557471264366,
+    "pan_tan": -0.011531486848835268
+   },
+   {
+    "frame": "5:2",
+    "reader": "B",
+    "rubber_x_on_plate_scale_feet": 1.0174242424242432,
+    "scale_ratio": 0.9916666666666667,
+    "camera_distance_feet": null,
+    "pan_tan": null
+   },
+   {
+    "frame": "6:5",
+    "reader": "A",
+    "rubber_x_on_plate_scale_feet": 0.7589285714285725,
+    "scale_ratio": 1.1510416666666667,
+    "camera_distance_feet": 450.2557471264366,
+    "pan_tan": -0.011159503402098621
+   },
+   {
+    "frame": "6:5",
+    "reader": "B",
+    "rubber_x_on_plate_scale_feet": 0.6071428571428575,
+    "scale_ratio": 0.986607142857143,
+    "camera_distance_feet": null,
+    "pan_tan": null
+   },
+   {
+    "frame": "7:1",
+    "reader": "A",
+    "rubber_x_on_plate_scale_feet": 0.7340909090909109,
+    "scale_ratio": 1.1333333333333335,
+    "camera_distance_feet": 502.2083333333327,
+    "pan_tan": -0.010962943967175306
+   },
+   {
+    "frame": "7:1",
+    "reader": "B",
+    "rubber_x_on_plate_scale_feet": 0.7856060606060609,
+    "scale_ratio": 1.1590909090909092,
+    "camera_distance_feet": 430.4642857142855,
+    "pan_tan": -0.011471556182416551
+   },
+   {
+    "frame": "8:4",
+    "reader": "A",
+    "rubber_x_on_plate_scale_feet": 0.7617924528301894,
+    "scale_ratio": 1.2028301886792454,
+    "camera_distance_feet": 350.37790697674404,
+    "pan_tan": -0.010719322990126949
+   },
+   {
+    "frame": "8:4",
+    "reader": "B",
+    "rubber_x_on_plate_scale_feet": 0.7589285714285725,
+    "scale_ratio": 1.1383928571428572,
+    "camera_distance_feet": 486.00806451612885,
+    "pan_tan": -0.011283497884344162
+   },
+   {
+    "frame": "10:4",
+    "reader": "A",
+    "rubber_x_on_plate_scale_feet": 0.8371212121212133,
+    "scale_ratio": 1.1204545454545456,
+    "camera_distance_feet": 549.586477987421,
+    "pan_tan": -0.012645299353144318
+   },
+   {
+    "frame": "10:4",
+    "reader": "B",
+    "rubber_x_on_plate_scale_feet": 0.7842261904761909,
+    "scale_ratio": 1.1636904761904763,
+    "camera_distance_feet": 420.0287878787877,
+    "pan_tan": -0.011406144600478327
+   },
+   {
+    "frame": "11:3",
+    "reader": "A",
+    "rubber_x_on_plate_scale_feet": 0.970679012345679,
+    "scale_ratio": 0.9313271604938271,
+    "camera_distance_feet": null,
+    "pan_tan": null
+   },
+   {
+    "frame": "11:3",
+    "reader": "B",
+    "rubber_x_on_plate_scale_feet": 1.0290880503144666,
+    "scale_ratio": 0.9355345911949687,
+    "camera_distance_feet": null,
+    "pan_tan": null
+   },
+   {
+    "frame": "12:2",
+    "reader": "A",
+    "rubber_x_on_plate_scale_feet": 0.9444444444444436,
+    "scale_ratio": 1.0493827160493827,
+    "camera_distance_feet": 1255.5208333333335,
+    "pan_tan": -0.015232722143864586
+   },
+   {
+    "frame": "12:2",
+    "reader": "B",
+    "rubber_x_on_plate_scale_feet": 0.7345679012345687,
+    "scale_ratio": 0.9182098765432098,
+    "camera_distance_feet": null,
+    "pan_tan": null
+   },
+   {
+    "frame": "13:1",
+    "reader": "A",
+    "rubber_x_on_plate_scale_feet": 0.9756289308176107,
+    "scale_ratio": 1.1226415094339623,
+    "camera_distance_feet": 540.8397435897432,
+    "pan_tan": -0.0147088454563772
+   },
+   {
+    "frame": "13:1",
+    "reader": "B",
+    "rubber_x_on_plate_scale_feet": 0.7083333333333334,
+    "scale_ratio": 0.9050925925925926,
+    "camera_distance_feet": null,
+    "pan_tan": null
+   },
+   {
+    "frame": "14:5",
+    "reader": "A",
+    "rubber_x_on_plate_scale_feet": 1.0290880503144666,
+    "scale_ratio": 1.2028301886792454,
+    "camera_distance_feet": 350.37790697674404,
+    "pan_tan": -0.014480488951575004
+   },
+   {
+    "frame": "14:5",
+    "reader": "B",
+    "rubber_x_on_plate_scale_feet": 0.6014150943396239,
+    "scale_ratio": 0.8954402515723272,
+    "camera_distance_feet": null,
+    "pan_tan": null
+   },
+   {
+    "frame": "15:3",
+    "reader": "A",
+    "rubber_x_on_plate_scale_feet": 1.034696034738888,
+    "scale_ratio": 1.2459283570718263,
+    "camera_distance_feet": 299.3294523121112,
+    "pan_tan": -0.014055772692685977
+   },
+   {
+    "frame": "15:3",
+    "reader": "B",
+    "rubber_x_on_plate_scale_feet": 0.6014150943396239,
+    "scale_ratio": 0.9355345911949687,
+    "camera_distance_feet": null,
+    "pan_tan": null
+   },
+   {
+    "frame": "17:6",
+    "reader": "A",
+    "rubber_x_on_plate_scale_feet": 0.9444444444444462,
+    "scale_ratio": 0.9837962962962963,
+    "camera_distance_feet": null,
+    "pan_tan": null
+   },
+   {
+    "frame": "17:6",
+    "reader": "B",
+    "rubber_x_on_plate_scale_feet": 0.7083333333333359,
+    "scale_ratio": 0.7083333333333334,
+    "camera_distance_feet": null,
+    "pan_tan": null
+   },
+   {
+    "frame": "19:3",
+    "reader": "A",
+    "rubber_x_on_plate_scale_feet": 0.6957964601769934,
+    "scale_ratio": 0.8525073746312685,
+    "camera_distance_feet": null,
+    "pan_tan": null
+   },
+   {
+    "frame": "19:3",
+    "reader": "B",
+    "rubber_x_on_plate_scale_feet": 0.83482142857143,
+    "scale_ratio": 0.5691964285714286,
+    "camera_distance_feet": null,
+    "pan_tan": null
+   },
+   {
+    "frame": "20:5",
+    "reader": "A",
+    "rubber_x_on_plate_scale_feet": 0.8499999999999995,
+    "scale_ratio": 0.9444444444444444,
+    "camera_distance_feet": null,
+    "pan_tan": null
+   },
+   {
+    "frame": "20:5",
+    "reader": "B",
+    "rubber_x_on_plate_scale_feet": 0.5312500000000026,
+    "scale_ratio": 0.8854166666666667,
+    "camera_distance_feet": null,
+    "pan_tan": null
+   },
+   {
+    "frame": "23:6",
+    "reader": "A",
+    "rubber_x_on_plate_scale_feet": 0.8823099415204703,
+    "scale_ratio": 0.9444444444444444,
+    "camera_distance_feet": null,
+    "pan_tan": null
+   },
+   {
+    "frame": "24:5",
+    "reader": "A",
+    "rubber_x_on_plate_scale_feet": 1.0514981273408246,
+    "scale_ratio": 0.9786261357678886,
+    "camera_distance_feet": null,
+    "pan_tan": null
+   },
+   {
+    "frame": "28:5",
+    "reader": "A",
+    "rubber_x_on_plate_scale_feet": 0.9659090909090907,
+    "scale_ratio": 1.0303030303030303,
+    "camera_distance_feet": 2008.8333333333353,
+    "pan_tan": -0.015867418899858952
+   },
+   {
+    "frame": "43:5",
+    "reader": "A",
+    "rubber_x_on_plate_scale_feet": 1.0493827160493825,
+    "scale_ratio": 1.1805555555555556,
+    "camera_distance_feet": 386.3141025641025,
+    "pan_tan": -0.01504466384579219
+   },
+   {
+    "frame": "43:5",
+    "reader": "B",
+    "rubber_x_on_plate_scale_feet": 0.9107142857142876,
+    "scale_ratio": 1.2016369047619049,
+    "camera_distance_feet": 352.101783517835,
+    "pan_tan": -0.012827555489570215
+   },
+   {
+    "frame": "44:2",
+    "reader": "A",
+    "rubber_x_on_plate_scale_feet": 0.8687106918239013,
+    "scale_ratio": 1.1360062893081762,
+    "camera_distance_feet": 493.49951830443143,
+    "pan_tan": -0.01294283580851243
+   },
+   {
+    "frame": "44:2",
+    "reader": "B",
+    "rubber_x_on_plate_scale_feet": 0.9444444444444462,
+    "scale_ratio": 1.1805555555555556,
+    "camera_distance_feet": 386.3141025641025,
+    "pan_tan": -0.013540197461212999
+   },
+   {
+    "frame": "45:4",
+    "reader": "A",
+    "rubber_x_on_plate_scale_feet": 0.8113636363636383,
+    "scale_ratio": 1.184848484848485,
+    "camera_distance_feet": 378.7144808743167,
+    "pan_tan": -0.01159011467467961
+   },
+   {
+    "frame": "45:4",
+    "reader": "B",
+    "rubber_x_on_plate_scale_feet": 0.7589285714285725,
+    "scale_ratio": 1.1130952380952381,
+    "camera_distance_feet": 581.5043859649121,
+    "pan_tan": -0.011539941018079257
+   },
+   {
+    "frame": "46:2",
+    "reader": "A",
+    "rubber_x_on_plate_scale_feet": 1.0163701067615631,
+    "scale_ratio": 1.1625289381466897,
+    "camera_distance_feet": 422.60834006172263,
+    "pan_tan": -0.014797321907062483
+   },
+   {
+    "frame": "46:2",
+    "reader": "B",
+    "rubber_x_on_plate_scale_feet": 0.970679012345679,
+    "scale_ratio": 1.0493827160493827,
+    "camera_distance_feet": 1255.5208333333335,
+    "pan_tan": -0.015655853314527502
+   },
+   {
+    "frame": "47:3",
+    "reader": "A",
+    "rubber_x_on_plate_scale_feet": 1.2152957486136784,
+    "scale_ratio": 0.9261108188096978,
+    "camera_distance_feet": null,
+    "pan_tan": null
+   },
+   {
+    "frame": "47:3",
+    "reader": "B",
+    "rubber_x_on_plate_scale_feet": 0.895440251572328,
+    "scale_ratio": 1.1360062893081762,
+    "camera_distance_feet": 493.49951830443143,
+    "pan_tan": -0.0133410769103128
+   },
+   {
+    "frame": "48:4",
+    "reader": "A",
+    "rubber_x_on_plate_scale_feet": 0.9440681117840848,
+    "scale_ratio": 1.1761517764621638,
+    "camera_distance_feet": 394.4948433388768,
+    "pan_tan": -0.013585479470219347
+   },
+   {
+    "frame": "48:4",
+    "reader": "B",
+    "rubber_x_on_plate_scale_feet": 0.8657407407407403,
+    "scale_ratio": 1.1805555555555556,
+    "camera_distance_feet": 386.3141025641025,
+    "pan_tan": -0.012411847672778552
+   },
+   {
+    "frame": "49:3",
+    "reader": "A",
+    "rubber_x_on_plate_scale_feet": 0.9221698113207547,
+    "scale_ratio": 1.162735849056604,
+    "camera_distance_feet": 422.1461352657,
+    "pan_tan": -0.013423471621030103
+   },
+   {
+    "frame": "49:3",
+    "reader": "B",
+    "rubber_x_on_plate_scale_feet": 0.7870370370370393,
+    "scale_ratio": 1.154320987654321,
+    "camera_distance_feet": 441.9433333333333,
+    "pan_tan": -0.011539941018079276
+   },
+   {
+    "frame": "50:2",
+    "reader": "A",
+    "rubber_x_on_plate_scale_feet": 0.7842261904761909,
+    "scale_ratio": 1.1383928571428572,
+    "camera_distance_feet": 486.00806451612885,
+    "pan_tan": -0.011659614480488958
+   },
+   {
+    "frame": "50:2",
+    "reader": "B",
+    "rubber_x_on_plate_scale_feet": 0.8095238095238118,
+    "scale_ratio": 1.1636904761904763,
+    "camera_distance_feet": 420.0287878787877,
+    "pan_tan": -0.011774084748880882
+   },
+   {
+    "frame": "51:4",
+    "reader": "A",
+    "rubber_x_on_plate_scale_feet": 0.8395061728395049,
+    "scale_ratio": 1.2067901234567902,
+    "camera_distance_feet": 344.79975124378103,
+    "pan_tan": -0.011774084748880831
+   },
+   {
+    "frame": "51:4",
+    "reader": "B",
+    "rubber_x_on_plate_scale_feet": 0.901515151515152,
+    "scale_ratio": 1.0946969696969697,
+    "camera_distance_feet": 683.0033333333331,
+    "pan_tan": -0.013938438563013366
+   },
+   {
+    "frame": "52:4",
+    "reader": "A",
+    "rubber_x_on_plate_scale_feet": 0.5246913580246912,
+    "scale_ratio": 1.4429012345679013,
+    "camera_distance_feet": 192.48403019744484,
+    "pan_tan": -0.00615463520964226
+   },
+   {
+    "frame": "53:5",
+    "reader": "A",
+    "rubber_x_on_plate_scale_feet": 0.6145871842267399,
+    "scale_ratio": 1.4708818886977553,
+    "camera_distance_feet": 184.55711933247403,
+    "pan_tan": -0.007071974894368037
+   },
+   {
+    "frame": "54:2",
+    "reader": "A",
+    "rubber_x_on_plate_scale_feet": 0.6053030303030309,
+    "scale_ratio": 1.390909090909091,
+    "camera_distance_feet": 210.22674418604643,
+    "pan_tan": -0.007365616674502434
+   },
+   {
+    "frame": "55:5",
+    "reader": "A",
+    "rubber_x_on_plate_scale_feet": 0.253930817610064,
+    "scale_ratio": 0.8553459119496857,
+    "camera_distance_feet": null,
+    "pan_tan": null
+   },
+   {
+    "frame": "56:5",
+    "reader": "A",
+    "rubber_x_on_plate_scale_feet": 0.05246913580247059,
+    "scale_ratio": 0.8132716049382717,
+    "camera_distance_feet": null,
+    "pan_tan": null
+   },
+   {
+    "frame": "56:5",
+    "reader": "B",
+    "rubber_x_on_plate_scale_feet": 0.20238095238095422,
+    "scale_ratio": 0.7336309523809524,
+    "camera_distance_feet": null,
+    "pan_tan": null
+   },
+   {
+    "frame": "58:5",
+    "reader": "A",
+    "rubber_x_on_plate_scale_feet": 0.19318181818181868,
+    "scale_ratio": 0.7984848484848486,
+    "camera_distance_feet": null,
+    "pan_tan": null
+   },
+   {
+    "frame": "58:5",
+    "reader": "B",
+    "rubber_x_on_plate_scale_feet": 0.2885802469135809,
+    "scale_ratio": 0.7608024691358025,
+    "camera_distance_feet": null,
+    "pan_tan": null
+   },
+   {
+    "frame": "62:2",
+    "reader": "A",
+    "rubber_x_on_plate_scale_feet": 0.6538461538461515,
+    "scale_ratio": 1.0625,
+    "camera_distance_feet": 1004.4166666666667,
+    "pan_tan": -0.010415536508625329
+   },
+   {
+    "frame": "64:3",
+    "reader": "A",
+    "rubber_x_on_plate_scale_feet": 0.547955974842768,
+    "scale_ratio": 1.0424528301886793,
+    "camera_distance_feet": 1450.8240740740725,
+    "pan_tan": -0.00889660410111751
+   },
+   {
+    "frame": "68:1",
+    "reader": "A",
+    "rubber_x_on_plate_scale_feet": 0.6548742138364774,
+    "scale_ratio": 1.0290880503144655,
+    "camera_distance_feet": 2090.272522522517,
+    "pan_tan": -0.010770611616873947
+   },
+   {
+    "frame": "68:1",
+    "reader": "B",
+    "rubber_x_on_plate_scale_feet": 0.8152515723270428,
+    "scale_ratio": 1.0023584905660379,
+    "camera_distance_feet": null,
+    "pan_tan": null
+   },
+   {
+    "frame": "69:2",
+    "reader": "A",
+    "rubber_x_on_plate_scale_feet": 0.9182098765432108,
+    "scale_ratio": 0.9837962962962963,
+    "camera_distance_feet": null,
+    "pan_tan": null
+   },
+   {
+    "frame": "69:2",
+    "reader": "B",
+    "rubber_x_on_plate_scale_feet": 0.8990384615384597,
+    "scale_ratio": 1.1169871794871795,
+    "camera_distance_feet": 564.1244292237443,
+    "pan_tan": -0.01362275964085449
+   },
+   {
+    "frame": "70:4",
+    "reader": "A",
+    "rubber_x_on_plate_scale_feet": 1.0023584905660399,
+    "scale_ratio": 0.9355345911949687,
+    "camera_distance_feet": null,
+    "pan_tan": null
+   },
+   {
+    "frame": "70:4",
+    "reader": "B",
+    "rubber_x_on_plate_scale_feet": 0.8591651263093016,
+    "scale_ratio": 1.1712578002593237,
+    "camera_distance_feet": 404.0797845540519,
+    "pan_tan": -0.012415355376331597
+   }
+  ],
+  "lateral_rows": [],
+  "overlay_rows": [],
+  "end_to_end_per_pitch": [
+   {
+    "at_bat_number": 1,
+    "pitch_number": 4,
+    "call": "Swinging Strike",
+    "pitch_type": "SL",
+    "used": true,
+    "ball_visible_all_readers": true,
+    "readers": {
+     "A": {
+      "offset": 3758,
+      "ball_visible": true,
+      "pocket_px": [
+       648,
+       318
+      ],
+      "plate_front_px": {
+       "left_end": [
+        612,
+        363
+       ],
+       "right_end": [
+        668,
+        363
+       ]
+      },
+      "plate_front_reason": null,
+      "px_per_foot": 39.52941176470588,
+      "plate_x_feet": -0.1722,
+      "plate_z_feet": 0.8942,
+      "plate_z_feet_uncorrected": 1.1384,
+      "uncertainty_pixels": 10
+     },
+     "B": {
+      "offset": 3758,
+      "ball_visible": true,
+      "pocket_px": [
+       646,
+       317
+      ],
+      "plate_front_px": {
+       "left_end": [
+        613,
+        362
+       ],
+       "right_end": [
+        668,
+        362
+       ]
+      },
+      "plate_front_reason": null,
+      "px_per_foot": 38.8235294117647,
+      "plate_x_feet": -0.1115,
+      "plate_z_feet": 0.915,
+      "plate_z_feet_uncorrected": 1.1591,
+      "uncertainty_pixels": 6
+     }
+    },
+    "skipped_readers": [],
+    "reader_agreement": {
+     "same_frame": true,
+     "offsets": [
+      3758
+     ],
+     "dx_feet": 0.0607,
+     "dz_feet": 0.0208
+    },
+    "mean_plate_feet": {
+     "x": -0.1419,
+     "z": 0.9046,
+     "z_uncorrected": 1.1488
+    },
+    "statcast_front": {
+     "pX": -0.04770125128169513,
+     "pZ": 1.1350817764700512
+    },
+    "statcast_at_depth_y": {
+     "-0.5": {
+      "x": -0.2122,
+      "z": 0.8201
+     },
+     "-1.0": {
+      "x": -0.2558,
+      "z": 0.7357
+     },
+     "-1.5": {
+      "x": -0.2996,
+      "z": 0.6504
+     }
+    },
+    "error_vs_depth": {
+     "-0.5": {
+      "dx_feet": 0.0703,
+      "dz_feet": 0.0845,
+      "dz_feet_uncorrected": 0.3287
+     },
+     "-1.0": {
+      "dx_feet": 0.114,
+      "dz_feet": 0.1689,
+      "dz_feet_uncorrected": 0.4131
+     },
+     "-1.5": {
+      "dx_feet": 0.1577,
+      "dz_feet": 0.2542,
+      "dz_feet_uncorrected": 0.4984
+     }
+    }
+   },
+   {
+    "at_bat_number": 2,
+    "pitch_number": 7,
+    "call": "Ball",
+    "pitch_type": "SL",
+    "used": true,
+    "ball_visible_all_readers": true,
+    "readers": {
+     "A": {
+      "offset": 4178,
+      "ball_visible": true,
+      "pocket_px": [
+       709,
+       301
+      ],
+      "plate_front_px": {
+       "left_end": [
+        610,
+        361
+       ],
+       "right_end": [
+        665,
+        361
+       ]
+      },
+      "plate_front_reason": null,
+      "px_per_foot": 38.8235294117647,
+      "plate_x_feet": -1.8115,
+      "plate_z_feet": 1.3032,
+      "plate_z_feet_uncorrected": 1.5455,
+      "uncertainty_pixels": 8
+     },
+     "B": {
+      "offset": 4178,
+      "ball_visible": true,
+      "pocket_px": [
+       708,
+       302
+      ],
+      "plate_front_px": {
+       "left_end": [
+        610,
+        362
+       ],
+       "right_end": [
+        665,
+        361
+       ]
+      },
+      "plate_front_reason": null,
+      "px_per_foot": 38.829945993811954,
+      "plate_x_feet": -1.813,
+      "plate_z_feet": 1.2566,
+      "plate_z_feet_uncorrected": 1.4991,
+      "uncertainty_pixels": 7
+     }
+    },
+    "skipped_readers": [],
+    "reader_agreement": {
+     "same_frame": true,
+     "offsets": [
+      4178
+     ],
+     "dx_feet": 0.0015,
+     "dz_feet": 0.0466
+    },
+    "mean_plate_feet": {
+     "x": -1.8123,
+     "z": 1.2799,
+     "z_uncorrected": 1.5223
+    },
+    "statcast_front": {
+     "pX": -1.440383419328301,
+     "pZ": 1.6656781748314866
+    },
+    "statcast_at_depth_y": {
+     "-0.5": {
+      "x": -1.6632,
+      "z": 1.3914
+     },
+     "-1.0": {
+      "x": -1.722,
+      "z": 1.318
+     },
+     "-1.5": {
+      "x": -1.7812,
+      "z": 1.2436
+     }
+    },
+    "error_vs_depth": {
+     "-0.5": {
+      "dx_feet": -0.1491,
+      "dz_feet": -0.1115,
+      "dz_feet_uncorrected": 0.1309
+     },
+     "-1.0": {
+      "dx_feet": -0.0903,
+      "dz_feet": -0.0381,
+      "dz_feet_uncorrected": 0.2043
+     },
+     "-1.5": {
+      "dx_feet": -0.0311,
+      "dz_feet": 0.0363,
+      "dz_feet_uncorrected": 0.2787
+     }
+    }
+   },
+   {
+    "at_bat_number": 3,
+    "pitch_number": 5,
+    "call": "Swinging Strike",
+    "pitch_type": "FF",
+    "used": true,
+    "ball_visible_all_readers": false,
+    "readers": {
+     "A": {
+      "offset": 4747,
+      "ball_visible": true,
+      "pocket_px": [
+       656,
+       251
+      ],
+      "plate_front_px": {
+       "left_end": [
+        619,
+        362
+       ],
+       "right_end": [
+        672,
+        362
+       ]
+      },
+      "plate_front_reason": null,
+      "px_per_foot": 37.41176470588235,
+      "plate_x_feet": -0.2505,
+      "plate_z_feet": 2.7319,
+      "plate_z_feet_uncorrected": 2.967,
+      "uncertainty_pixels": 10
+     },
+     "B": {
+      "offset": 4747,
+      "ball_visible": false,
+      "pocket_px": [
+       656,
+       252
+      ],
+      "plate_front_px": {
+       "left_end": [
+        619,
+        361
+       ],
+       "right_end": [
+        672,
+        360
+       ]
+      },
+      "plate_front_reason": null,
+      "px_per_foot": 37.418423380795964,
+      "plate_x_feet": -0.3051,
+      "plate_z_feet": 2.6583,
+      "plate_z_feet_uncorrected": 2.8938,
+      "uncertainty_pixels": 9
+     }
+    },
+    "skipped_readers": [],
+    "reader_agreement": {
+     "same_frame": true,
+     "offsets": [
+      4747
+     ],
+     "dx_feet": 0.0546,
+     "dz_feet": 0.0736
+    },
+    "mean_plate_feet": {
+     "x": -0.2778,
+     "z": 2.6951,
+     "z_uncorrected": 2.9304
+    },
+    "statcast_front": {
+     "pX": -0.14303552346071505,
+     "pZ": 2.7072696715883002
+    },
+    "statcast_at_depth_y": {
+     "-0.5": {
+      "x": -0.2079,
+      "z": 2.5617
+     },
+     "-1.0": {
+      "x": -0.2242,
+      "z": 2.5229
+     },
+     "-1.5": {
+      "x": -0.2402,
+      "z": 2.4839
+     }
+    },
+    "error_vs_depth": {
+     "-0.5": {
+      "dx_feet": -0.0699,
+      "dz_feet": 0.1334,
+      "dz_feet_uncorrected": 0.3687
+     },
+     "-1.0": {
+      "dx_feet": -0.0536,
+      "dz_feet": 0.1722,
+      "dz_feet_uncorrected": 0.4075
+     },
+     "-1.5": {
+      "dx_feet": -0.0376,
+      "dz_feet": 0.2112,
+      "dz_feet_uncorrected": 0.4465
+     }
+    }
+   },
+   {
+    "at_bat_number": 4,
+    "pitch_number": 5,
+    "call": "In play, run(s)",
+    "pitch_type": "FF",
+    "used": false,
+    "reason": "A: batter_hit_ball; B: batter_hit_ball"
+   },
+   {
+    "at_bat_number": 5,
+    "pitch_number": 2,
+    "call": "In play, out(s)",
+    "pitch_type": "SL",
+    "used": false,
+    "reason": "A: batter_hit_ball; B: batter_hit_ball"
+   },
+   {
+    "at_bat_number": 6,
+    "pitch_number": 5,
+    "call": "In play, out(s)",
+    "pitch_type": "ST",
+    "used": false,
+    "reason": "A: batter_hit_ball; B: batter_hit_ball"
+   },
+   {
+    "at_bat_number": 7,
+    "pitch_number": 1,
+    "call": "In play, out(s)",
+    "pitch_type": "FF",
+    "used": false,
+    "reason": "A: batter_hit_ball; B: batter_hit_ball"
+   },
+   {
+    "at_bat_number": 8,
+    "pitch_number": 4,
+    "call": "Swinging Strike",
+    "pitch_type": "ST",
+    "used": false,
+    "reason": "B: cannot_tell: ball last seen at about (645,301) in 9459, then hidden; catcher turns the glove and drives it into the dirt (9468-9480), possibly a short hop"
+   },
+   {
+    "at_bat_number": 10,
+    "pitch_number": 4,
+    "call": "Swinging Strike",
+    "pitch_type": "SL",
+    "used": false,
+    "reason": "A: no pocket/plate reading on the chosen frame; B: no pocket/plate reading on the chosen frame"
+   },
+   {
+    "at_bat_number": 11,
+    "pitch_number": 3,
+    "call": "Swinging Strike (Blocked)",
+    "pitch_type": "SL",
+    "used": false,
+    "reason": "A: not_caught_cleanly_ball_in_dirt_blocked; B: not_caught_cleanly (pitch in the dirt, catcher blocks it with glove down at the ground)"
+   },
+   {
+    "at_bat_number": 12,
+    "pitch_number": 2,
+    "call": "In play, no out",
+    "pitch_type": "CH",
+    "used": false,
+    "reason": "A: batter_hit_ball; B: batter_hit_ball (in play)"
+   },
+   {
+    "at_bat_number": 13,
+    "pitch_number": 1,
+    "call": "In play, out(s)",
+    "pitch_type": "ST",
+    "used": false,
+    "reason": "A: batter_hit_ball_bunt; B: batter_hit_ball (in play)"
+   },
+   {
+    "at_bat_number": 14,
+    "pitch_number": 5,
+    "call": "Ball",
+    "pitch_type": "ST",
+    "used": true,
+    "ball_visible_all_readers": false,
+    "readers": {
+     "A": {
+      "offset": 12815,
+      "ball_visible": true,
+      "pocket_px": [
+       633,
+       225
+      ],
+      "plate_front_px": {
+       "left_end": [
+        618,
+        359
+       ],
+       "right_end": [
+        672,
+        359
+       ]
+      },
+      "plate_front_reason": null,
+      "px_per_foot": 38.11764705882353,
+      "plate_x_feet": 0.345,
+      "plate_z_feet": 3.283,
+      "plate_z_feet_uncorrected": 3.5154,
+      "uncertainty_pixels": 8
+     },
+     "B": {
+      "offset": 12815,
+      "ball_visible": false,
+      "pocket_px": [
+       634,
+       227
+      ],
+      "plate_front_px": {
+       "left_end": [
+        619,
+        359
+       ],
+       "right_end": [
+        672,
+        359
+       ]
+      },
+      "plate_front_reason": null,
+      "px_per_foot": 37.41176470588235,
+      "plate_x_feet": 0.3376,
+      "plate_z_feet": 3.296,
+      "plate_z_feet_uncorrected": 3.5283,
+      "uncertainty_pixels": 10
+     }
+    },
+    "skipped_readers": [],
+    "reader_agreement": {
+     "same_frame": true,
+     "offsets": [
+      12815
+     ],
+     "dx_feet": 0.0074,
+     "dz_feet": 0.013
+    },
+    "mean_plate_feet": {
+     "x": 0.3413,
+     "z": 3.2895,
+     "z_uncorrected": 3.5219
+    },
+    "statcast_front": {
+     "pX": 0.4924188918031346,
+     "pZ": 3.4598140845067014
+    },
+    "statcast_at_depth_y": {
+     "-0.5": {
+      "x": 0.3767,
+      "z": 3.2703
+     },
+     "-1.0": {
+      "x": 0.3461,
+      "z": 3.2194
+     },
+     "-1.5": {
+      "x": 0.3154,
+      "z": 3.1678
+     }
+    },
+    "error_vs_depth": {
+     "-0.5": {
+      "dx_feet": -0.0354,
+      "dz_feet": 0.0192,
+      "dz_feet_uncorrected": 0.2515
+     },
+     "-1.0": {
+      "dx_feet": -0.0048,
+      "dz_feet": 0.0701,
+      "dz_feet_uncorrected": 0.3025
+     },
+     "-1.5": {
+      "dx_feet": 0.0259,
+      "dz_feet": 0.1217,
+      "dz_feet_uncorrected": 0.354
+     }
+    }
+   },
+   {
+    "at_bat_number": 15,
+    "pitch_number": 3,
+    "call": "In play, out(s)",
+    "pitch_type": "FF",
+    "used": false,
+    "reason": "A: batter_hit_ball (ball reaches the hitting area at about 13744, then comes back toward the pitcher, who fields it and throws to first); B: batter_hit_ball"
+   },
+   {
+    "at_bat_number": 16,
+    "pitch_number": 1,
+    "call": "In play, run(s)",
+    "pitch_type": "SI",
+    "used": false,
+    "reason": "A: batter_hit_ball (the ball passes in front of the glove at about 13806-15812, then is hit back up the middle by 15818); B: batter_hit_ball"
+   },
+   {
+    "at_bat_number": 17,
+    "pitch_number": 6,
+    "call": "Foul Tip",
+    "pitch_type": "FF",
+    "used": true,
+    "ball_visible_all_readers": true,
+    "readers": {
+     "A": {
+      "offset": 17137,
+      "ball_visible": true,
+      "pocket_px": [
+       683,
+       257
+      ],
+      "plate_front_px": {
+       "left_end": [
+        610,
+        358.5
+       ],
+       "right_end": [
+        666,
+        358.5
+       ]
+      },
+      "plate_front_reason": null,
+      "px_per_foot": 39.52941176470588,
+      "plate_x_feet": -1.1082,
+      "plate_z_feet": 2.3306,
+      "plate_z_feet_uncorrected": 2.5677,
+      "uncertainty_pixels": 7
+     },
+     "B": {
+      "offset": 17137,
+      "ball_visible": true,
+      "pocket_px": [
+       684,
+       256
+      ],
+      "plate_front_px": {
+       "left_end": [
+        610,
+        360
+       ],
+       "right_end": [
+        665,
+        360
+       ]
+      },
+      "plate_front_reason": null,
+      "px_per_foot": 38.8235294117647,
+      "plate_x_feet": -1.1675,
+      "plate_z_feet": 2.4422,
+      "plate_z_feet_uncorrected": 2.6788,
+      "uncertainty_pixels": 10
+     }
+    },
+    "skipped_readers": [],
+    "reader_agreement": {
+     "same_frame": true,
+     "offsets": [
+      17137
+     ],
+     "dx_feet": 0.0593,
+     "dz_feet": 0.1116
+    },
+    "mean_plate_feet": {
+     "x": -1.1379,
+     "z": 2.3864,
+     "z_uncorrected": 2.6232
+    },
+    "statcast_front": {
+     "pX": -1.0825341937263577,
+     "pZ": 2.5861195652730316
+    },
+    "statcast_at_depth_y": {
+     "-0.5": {
+      "x": -1.1669,
+      "z": 2.4289
+     },
+     "-1.0": {
+      "x": -1.1884,
+      "z": 2.3873
+     },
+     "-1.5": {
+      "x": -1.2096,
+      "z": 2.3455
+     }
+    },
+    "error_vs_depth": {
+     "-0.5": {
+      "dx_feet": 0.0291,
+      "dz_feet": -0.0425,
+      "dz_feet_uncorrected": 0.1943
+     },
+     "-1.0": {
+      "dx_feet": 0.0505,
+      "dz_feet": -0.0009,
+      "dz_feet_uncorrected": 0.2359
+     },
+     "-1.5": {
+      "dx_feet": 0.0717,
+      "dz_feet": 0.0409,
+      "dz_feet_uncorrected": 0.2777
+     }
+    }
+   },
+   {
+    "at_bat_number": 19,
+    "pitch_number": 3,
+    "call": "Hit By Pitch",
+    "pitch_type": "SL",
+    "used": false,
+    "reason": "A: hit_by_pitch; B: hit_by_pitch: the ball struck the batter and the catcher did not catch it"
+   },
+   {
+    "at_bat_number": 20,
+    "pitch_number": 5,
+    "call": "In play, out(s)",
+    "pitch_type": "SI",
+    "used": false,
+    "reason": "A: batted_ball_in_play; B: batter_hit_ball: the ball was put in play"
+   },
+   {
+    "at_bat_number": 23,
+    "pitch_number": 6,
+    "call": "In play, out(s)",
+    "pitch_type": "FF",
+    "used": false,
+    "reason": "A: batter_hit_ball; B: batted_ball: batter swings and makes contact (in play), the ball never settles in the glove"
+   },
+   {
+    "at_bat_number": 24,
+    "pitch_number": 5,
+    "call": "Swinging Strike",
+    "pitch_type": "ST",
+    "used": false,
+    "reason": "B: no pocket/plate reading on the chosen frame"
+   },
+   {
+    "at_bat_number": 28,
+    "pitch_number": 5,
+    "call": "Swinging Strike",
+    "pitch_type": "FF",
+    "used": true,
+    "ball_visible_all_readers": true,
+    "readers": {
+     "A": {
+      "offset": 22969,
+      "ball_visible": true,
+      "pocket_px": [
+       631,
+       216
+      ],
+      "plate_front_px": {
+       "left_end": [
+        615,
+        358
+       ],
+       "right_end": [
+        670,
+        358
+       ]
+      },
+      "plate_front_reason": null,
+      "px_per_foot": 38.8235294117647,
+      "plate_x_feet": 0.3264,
+      "plate_z_feet": 3.4259,
+      "plate_z_feet_uncorrected": 3.6576,
+      "uncertainty_pixels": 4
+     },
+     "B": {
+      "offset": 22969,
+      "ball_visible": true,
+      "pocket_px": [
+       631,
+       215
+      ],
+      "plate_front_px": {
+       "left_end": [
+        615,
+        358
+       ],
+       "right_end": [
+        669,
+        358
+       ]
+      },
+      "plate_front_reason": null,
+      "px_per_foot": 38.11764705882353,
+      "plate_x_feet": 0.3188,
+      "plate_z_feet": 3.5203,
+      "plate_z_feet_uncorrected": 3.7515,
+      "uncertainty_pixels": 6
+     }
+    },
+    "skipped_readers": [],
+    "reader_agreement": {
+     "same_frame": true,
+     "offsets": [
+      22969
+     ],
+     "dx_feet": 0.0076,
+     "dz_feet": 0.0944
+    },
+    "mean_plate_feet": {
+     "x": 0.3226,
+     "z": 3.4731,
+     "z_uncorrected": 3.7046
+    },
+    "statcast_front": {
+     "pX": 0.41899134341873884,
+     "pZ": 3.578995322541033
+    },
+    "statcast_at_depth_y": {
+     "-0.5": {
+      "x": 0.3709,
+      "z": 3.4548
+     },
+     "-1.0": {
+      "x": 0.3587,
+      "z": 3.4219
+     },
+     "-1.5": {
+      "x": 0.3467,
+      "z": 3.3886
+     }
+    },
+    "error_vs_depth": {
+     "-0.5": {
+      "dx_feet": -0.0483,
+      "dz_feet": 0.0183,
+      "dz_feet_uncorrected": 0.2498
+     },
+     "-1.0": {
+      "dx_feet": -0.0361,
+      "dz_feet": 0.0512,
+      "dz_feet_uncorrected": 0.2827
+     },
+     "-1.5": {
+      "dx_feet": -0.0241,
+      "dz_feet": 0.0845,
+      "dz_feet_uncorrected": 0.316
+     }
+    }
+   },
+   {
+    "at_bat_number": 29,
+    "pitch_number": 3,
+    "call": "In play, no out",
+    "pitch_type": "SI",
+    "used": false,
+    "reason": "A: batter_hit_ball_in_play; B: batter_hit_ball"
+   },
+   {
+    "at_bat_number": 30,
+    "pitch_number": 4,
+    "call": "Foul",
+    "pitch_type": "SI",
+    "used": false,
+    "reason": "A: batter_fouled_ball; B: batter_fouled_ball"
+   },
+   {
+    "at_bat_number": 30,
+    "pitch_number": 5,
+    "call": "In play, out(s)",
+    "pitch_type": "ST",
+    "used": false,
+    "reason": "A: batter_hit_ball_in_play; B: batter_hit_ball"
+   },
+   {
+    "at_bat_number": 31,
+    "pitch_number": 2,
+    "call": "Hit By Pitch",
+    "pitch_type": "ST",
+    "used": false,
+    "reason": "A: hit_by_pitch_not_caught; B: hit_by_pitch"
+   },
+   {
+    "at_bat_number": 32,
+    "pitch_number": 2,
+    "call": "In play, out(s)",
+    "pitch_type": "SI",
+    "used": false,
+    "reason": "A: batter_hit_ball; B: batter_hit_ball"
+   },
+   {
+    "at_bat_number": 33,
+    "pitch_number": 4,
+    "call": "Swinging Strike",
+    "pitch_type": "SL",
+    "used": true,
+    "ball_visible_all_readers": true,
+    "readers": {
+     "A": {
+      "offset": 28052,
+      "ball_visible": true,
+      "pocket_px": [
+       655,
+       293
+      ],
+      "plate_front_px": {
+       "left_end": [
+        614,
+        360
+       ],
+       "right_end": [
+        667,
+        360
+       ]
+      },
+      "plate_front_reason": null,
+      "px_per_foot": 37.41176470588235,
+      "plate_x_feet": -0.3574,
+      "plate_z_feet": 1.5499,
+      "plate_z_feet_uncorrected": 1.7909,
+      "uncertainty_pixels": 10
+     },
+     "B": {
+      "offset": 28052,
+      "ball_visible": true,
+      "pocket_px": [
+       656,
+       292
+      ],
+      "plate_front_px": {
+       "left_end": [
+        613,
+        358
+       ],
+       "right_end": [
+        668,
+        358
+       ]
+      },
+      "plate_front_reason": null,
+      "px_per_foot": 38.8235294117647,
+      "plate_x_feet": -0.3691,
+      "plate_z_feet": 1.4586,
+      "plate_z_feet_uncorrected": 1.7,
+      "uncertainty_pixels": 10
+     }
+    },
+    "skipped_readers": [],
+    "reader_agreement": {
+     "same_frame": true,
+     "offsets": [
+      28052
+     ],
+     "dx_feet": 0.0117,
+     "dz_feet": 0.0913
+    },
+    "mean_plate_feet": {
+     "x": -0.3632,
+     "z": 1.5042,
+     "z_uncorrected": 1.7454
+    },
+    "statcast_front": {
+     "pX": -0.24214851464814044,
+     "pZ": 1.757964998315764
+    },
+    "statcast_at_depth_y": {
+     "-0.5": {
+      "x": -0.417,
+      "z": 1.4838
+     },
+     "-1.0": {
+      "x": -0.4634,
+      "z": 1.4102
+     },
+     "-1.5": {
+      "x": -0.5101,
+      "z": 1.3358
+     }
+    },
+    "error_vs_depth": {
+     "-0.5": {
+      "dx_feet": 0.0538,
+      "dz_feet": 0.0204,
+      "dz_feet_uncorrected": 0.2616
+     },
+     "-1.0": {
+      "dx_feet": 0.1002,
+      "dz_feet": 0.094,
+      "dz_feet_uncorrected": 0.3353
+     },
+     "-1.5": {
+      "dx_feet": 0.1469,
+      "dz_feet": 0.1684,
+      "dz_feet_uncorrected": 0.4096
+     }
+    }
+   },
+   {
+    "at_bat_number": 34,
+    "pitch_number": 5,
+    "call": "Swinging Strike",
+    "pitch_type": "FF",
+    "used": true,
+    "ball_visible_all_readers": false,
+    "readers": {
+     "A": {
+      "offset": 28849,
+      "ball_visible": true,
+      "pocket_px": [
+       651,
+       236
+      ],
+      "plate_front_px": {
+       "left_end": [
+        612,
+        364
+       ],
+       "right_end": [
+        664,
+        364
+       ]
+      },
+      "plate_front_reason": null,
+      "px_per_foot": 36.705882352941174,
+      "plate_x_feet": -0.324,
+      "plate_z_feet": 3.2547,
+      "plate_z_feet_uncorrected": 3.4872,
+      "uncertainty_pixels": 12
+     },
+     "B": {
+      "offset": 28849,
+      "ball_visible": false,
+      "pocket_px": [
+       652,
+       237
+      ],
+      "plate_front_px": {
+       "left_end": [
+        611,
+        364
+       ],
+       "right_end": [
+        666,
+        364
+       ]
+      },
+      "plate_front_reason": null,
+      "px_per_foot": 38.8235294117647,
+      "plate_x_feet": -0.3175,
+      "plate_z_feet": 3.0376,
+      "plate_z_feet_uncorrected": 3.2712,
+      "uncertainty_pixels": 12
+     }
+    },
+    "skipped_readers": [],
+    "reader_agreement": {
+     "same_frame": true,
+     "offsets": [
+      28849
+     ],
+     "dx_feet": 0.0065,
+     "dz_feet": 0.2171
+    },
+    "mean_plate_feet": {
+     "x": -0.3207,
+     "z": 3.1462,
+     "z_uncorrected": 3.3792
+    },
+    "statcast_front": {
+     "pX": -0.34104629493896926,
+     "pZ": 3.3019353817154458
+    },
+    "statcast_at_depth_y": {
+     "-0.5": {
+      "x": -0.4213,
+      "z": 3.1768
+     },
+     "-1.0": {
+      "x": -0.4417,
+      "z": 3.1434
+     },
+     "-1.5": {
+      "x": -0.4619,
+      "z": 3.1097
+     }
+    },
+    "error_vs_depth": {
+     "-0.5": {
+      "dx_feet": 0.1006,
+      "dz_feet": -0.0307,
+      "dz_feet_uncorrected": 0.2024
+     },
+     "-1.0": {
+      "dx_feet": 0.121,
+      "dz_feet": 0.0027,
+      "dz_feet_uncorrected": 0.2358
+     },
+     "-1.5": {
+      "dx_feet": 0.1411,
+      "dz_feet": 0.0364,
+      "dz_feet_uncorrected": 0.2695
+     }
+    }
+   },
+   {
+    "at_bat_number": 35,
+    "pitch_number": 6,
+    "call": "In play, no out",
+    "pitch_type": "CH",
+    "used": false,
+    "reason": "A: batted_ball_in_play; B: batted_ball"
+   },
+   {
+    "at_bat_number": 36,
+    "pitch_number": 5,
+    "call": "Swinging Strike",
+    "pitch_type": "SL",
+    "used": true,
+    "ball_visible_all_readers": false,
+    "readers": {
+     "A": {
+      "offset": 31544,
+      "ball_visible": false,
+      "pocket_px": [
+       663,
+       289
+      ],
+      "plate_front_px": {
+       "left_end": [
+        617,
+        358
+       ],
+       "right_end": [
+        669,
+        358
+       ]
+      },
+      "plate_front_reason": null,
+      "px_per_foot": 36.705882352941174,
+      "plate_x_feet": -0.5147,
+      "plate_z_feet": 1.6393,
+      "plate_z_feet_uncorrected": 1.8798,
+      "uncertainty_pixels": 12
+     },
+     "B": {
+      "offset": 31541,
+      "ball_visible": false,
+      "pocket_px": [
+       655,
+       303
+      ],
+      "plate_front_px": {
+       "left_end": [
+        615,
+        359
+       ],
+       "right_end": [
+        672,
+        358
+       ]
+      },
+      "plate_front_reason": null,
+      "px_per_foot": 40.24148559173428,
+      "plate_x_feet": -0.2797,
+      "plate_z_feet": 1.1309,
+      "plate_z_feet_uncorrected": 1.3739,
+      "uncertainty_pixels": 12
+     }
+    },
+    "skipped_readers": [],
+    "reader_agreement": {
+     "same_frame": false,
+     "offsets": [
+      31541,
+      31544
+     ],
+     "dx_feet": 0.235,
+     "dz_feet": 0.5084
+    },
+    "mean_plate_feet": {
+     "x": -0.3972,
+     "z": 1.3851,
+     "z_uncorrected": 1.6268
+    },
+    "statcast_front": {
+     "pX": 0.018554336893429415,
+     "pZ": 1.7470845087322147
+    },
+    "statcast_at_depth_y": {
+     "-0.5": {
+      "x": -0.1436,
+      "z": 1.4821
+     },
+     "-1.0": {
+      "x": -0.1865,
+      "z": 1.4112
+     },
+     "-1.5": {
+      "x": -0.2297,
+      "z": 1.3394
+     }
+    },
+    "error_vs_depth": {
+     "-0.5": {
+      "dx_feet": -0.2536,
+      "dz_feet": -0.097,
+      "dz_feet_uncorrected": 0.1447
+     },
+     "-1.0": {
+      "dx_feet": -0.2107,
+      "dz_feet": -0.0261,
+      "dz_feet_uncorrected": 0.2156
+     },
+     "-1.5": {
+      "dx_feet": -0.1675,
+      "dz_feet": 0.0457,
+      "dz_feet_uncorrected": 0.2874
+     }
+    }
+   },
+   {
+    "at_bat_number": 37,
+    "pitch_number": 5,
+    "call": "Swinging Strike (Blocked)",
+    "pitch_type": "ST",
+    "used": false,
+    "reason": "A: ball_in_dirt_blocked_not_clean_catch; B: not_caught_cleanly_ball_in_dirt_blocked"
+   },
+   {
+    "at_bat_number": 38,
+    "pitch_number": 6,
+    "call": "Called Strike",
+    "pitch_type": "FF",
+    "used": false,
+    "reason": "A: no pocket/plate reading on the chosen frame; B: no pocket/plate reading on the chosen frame"
+   },
+   {
+    "at_bat_number": 39,
+    "pitch_number": 3,
+    "call": "Hit By Pitch",
+    "pitch_type": "ST",
+    "used": false,
+    "reason": "A: hit_by_pitch_no_catch; B: hit_by_pitch_not_caught"
+   },
+   {
+    "at_bat_number": 40,
+    "pitch_number": 2,
+    "call": "In play, out(s)",
+    "pitch_type": "FF",
+    "used": false,
+    "reason": "A: batter_hit_ball; B: batter_hit_ball_in_play"
+   },
+   {
+    "at_bat_number": 42,
+    "pitch_number": 3,
+    "call": "In play, no out",
+    "pitch_type": "SI",
+    "used": false,
+    "reason": "A: batter_hit_ball; B: batter_hit_ball_in_play"
+   },
+   {
+    "at_bat_number": 43,
+    "pitch_number": 3,
+    "call": "Foul",
+    "pitch_type": "SL",
+    "used": false,
+    "reason": "A: batter_hit_ball; B: batter_hit_ball_foul"
+   },
+   {
+    "at_bat_number": 43,
+    "pitch_number": 5,
+    "call": "Swinging Strike",
+    "pitch_type": "SL",
+    "used": true,
+    "ball_visible_all_readers": false,
+    "readers": {
+     "A": {
+      "offset": 38215,
+      "ball_visible": false,
+      "pocket_px": [
+       692,
+       329
+      ],
+      "plate_front_px": {
+       "left_end": [
+        615,
+        364.5
+       ],
+       "right_end": [
+        668,
+        364.5
+       ]
+      },
+      "plate_front_reason": null,
+      "px_per_foot": 37.41176470588235,
+      "plate_x_feet": -1.3197,
+      "plate_z_feet": 0.7037,
+      "plate_z_feet_uncorrected": 0.9489,
+      "uncertainty_pixels": 10
+     },
+     "B": {
+      "offset": 38221,
+      "ball_visible": true,
+      "pocket_px": [
+       693,
+       328
+      ],
+      "plate_front_px": {
+       "left_end": [
+        619,
+        364
+       ],
+       "right_end": [
+        669,
+        364
+       ]
+      },
+      "plate_front_reason": null,
+      "px_per_foot": 35.29411764705882,
+      "plate_x_feet": -1.3582,
+      "plate_z_feet": 0.7752,
+      "plate_z_feet_uncorrected": 1.02,
+      "uncertainty_pixels": 6
+     }
+    },
+    "skipped_readers": [],
+    "reader_agreement": {
+     "same_frame": false,
+     "offsets": [
+      38215,
+      38221
+     ],
+     "dx_feet": 0.0385,
+     "dz_feet": 0.0715
+    },
+    "mean_plate_feet": {
+     "x": -1.339,
+     "z": 0.7394,
+     "z_uncorrected": 0.9845
+    },
+    "statcast_front": {
+     "pX": -1.2567993529934596,
+     "pZ": 0.9554932983339421
+    },
+    "statcast_at_depth_y": {
+     "-0.5": {
+      "x": -1.4779,
+      "z": 0.6504
+     },
+     "-1.0": {
+      "x": -1.5364,
+      "z": 0.5686
+     },
+     "-1.5": {
+      "x": -1.5952,
+      "z": 0.4859
+     }
+    },
+    "error_vs_depth": {
+     "-0.5": {
+      "dx_feet": 0.1389,
+      "dz_feet": 0.089,
+      "dz_feet_uncorrected": 0.3341
+     },
+     "-1.0": {
+      "dx_feet": 0.1974,
+      "dz_feet": 0.1708,
+      "dz_feet_uncorrected": 0.4159
+     },
+     "-1.5": {
+      "dx_feet": 0.2562,
+      "dz_feet": 0.2535,
+      "dz_feet_uncorrected": 0.4986
+     }
+    }
+   },
+   {
+    "at_bat_number": 44,
+    "pitch_number": 2,
+    "call": "In play, out(s)",
+    "pitch_type": "CH",
+    "used": false,
+    "reason": "A: batter_hit_ball; B: batter_hit_ball"
+   },
+   {
+    "at_bat_number": 45,
+    "pitch_number": 4,
+    "call": "Swinging Strike",
+    "pitch_type": "FF",
+    "used": true,
+    "ball_visible_all_readers": true,
+    "readers": {
+     "A": {
+      "offset": 39974,
+      "ball_visible": true,
+      "pocket_px": [
+       614,
+       221
+      ],
+      "plate_front_px": {
+       "left_end": [
+        608,
+        360.5
+       ],
+       "right_end": [
+        663,
+        360.5
+       ]
+      },
+      "plate_front_reason": null,
+      "px_per_foot": 38.8235294117647,
+      "plate_x_feet": 0.584,
+      "plate_z_feet": 3.3612,
+      "plate_z_feet_uncorrected": 3.5932,
+      "uncertainty_pixels": 6
+     },
+     "B": {
+      "offset": 39977,
+      "ball_visible": true,
+      "pocket_px": [
+       609,
+       210
+      ],
+      "plate_front_px": {
+       "left_end": [
+        607,
+        360
+       ],
+       "right_end": [
+        664,
+        360
+       ]
+      },
+      "plate_front_reason": null,
+      "px_per_foot": 40.23529411764706,
+      "plate_x_feet": 0.6888,
+      "plate_z_feet": 3.4967,
+      "plate_z_feet_uncorrected": 3.7281,
+      "uncertainty_pixels": 8
+     }
+    },
+    "skipped_readers": [],
+    "reader_agreement": {
+     "same_frame": false,
+     "offsets": [
+      39974,
+      39977
+     ],
+     "dx_feet": 0.1048,
+     "dz_feet": 0.1355
+    },
+    "mean_plate_feet": {
+     "x": 0.6364,
+     "z": 3.429,
+     "z_uncorrected": 3.6606
+    },
+    "statcast_front": {
+     "pX": 0.5681202173702349,
+     "pZ": 3.6690423762629893
+    },
+    "statcast_at_depth_y": {
+     "-0.5": {
+      "x": 0.6273,
+      "z": 3.5629
+     },
+     "-1.0": {
+      "x": 0.6424,
+      "z": 3.5347
+     },
+     "-1.5": {
+      "x": 0.6574,
+      "z": 3.5064
+     }
+    },
+    "error_vs_depth": {
+     "-0.5": {
+      "dx_feet": 0.0091,
+      "dz_feet": -0.1339,
+      "dz_feet_uncorrected": 0.0978
+     },
+     "-1.0": {
+      "dx_feet": -0.006,
+      "dz_feet": -0.1057,
+      "dz_feet_uncorrected": 0.126
+     },
+     "-1.5": {
+      "dx_feet": -0.021,
+      "dz_feet": -0.0774,
+      "dz_feet_uncorrected": 0.1542
+     }
+    }
+   },
+   {
+    "at_bat_number": 46,
+    "pitch_number": 2,
+    "call": "In play, no out",
+    "pitch_type": "SI",
+    "used": false,
+    "reason": "A: batter_hit_ball; B: batter_hit_ball"
+   },
+   {
+    "at_bat_number": 47,
+    "pitch_number": 3,
+    "call": "In play, run(s)",
+    "pitch_type": "FF",
+    "used": false,
+    "reason": "A: batter_hit_ball; B: batter_hit_ball"
+   },
+   {
+    "at_bat_number": 48,
+    "pitch_number": 4,
+    "call": "In play, out(s)",
+    "pitch_type": "SI",
+    "used": false,
+    "reason": "A: batter_hit_ball; B: batter_hit_ball"
+   },
+   {
+    "at_bat_number": 49,
+    "pitch_number": 3,
+    "call": "Swinging Strike",
+    "pitch_type": "FF",
+    "used": true,
+    "ball_visible_all_readers": true,
+    "readers": {
+     "A": {
+      "offset": 43987,
+      "ball_visible": true,
+      "pocket_px": [
+       666,
+       214
+      ],
+      "plate_front_px": {
+       "left_end": [
+        612,
+        362
+       ],
+       "right_end": [
+        665,
+        362
+       ]
+      },
+      "plate_front_reason": null,
+      "px_per_foot": 37.41176470588235,
+      "plate_x_feet": -0.7049,
+      "plate_z_feet": 3.7258,
+      "plate_z_feet_uncorrected": 3.956,
+      "uncertainty_pixels": 5
+     },
+     "B": {
+      "offset": 43987,
+      "ball_visible": true,
+      "pocket_px": [
+       666,
+       213
+      ],
+      "plate_front_px": {
+       "left_end": [
+        612,
+        363
+       ],
+       "right_end": [
+        666,
+        363
+       ]
+      },
+      "plate_front_reason": null,
+      "px_per_foot": 38.11764705882353,
+      "plate_x_feet": -0.6782,
+      "plate_z_feet": 3.7049,
+      "plate_z_feet_uncorrected": 3.9352,
+      "uncertainty_pixels": 4
+     }
+    },
+    "skipped_readers": [],
+    "reader_agreement": {
+     "same_frame": true,
+     "offsets": [
+      43987
+     ],
+     "dx_feet": 0.0267,
+     "dz_feet": 0.0209
+    },
+    "mean_plate_feet": {
+     "x": -0.6915,
+     "z": 3.7153,
+     "z_uncorrected": 3.9456
+    },
+    "statcast_front": {
+     "pX": -0.7758201284500509,
+     "pZ": 3.7351260623312115
+    },
+    "statcast_at_depth_y": {
+     "-0.5": {
+      "x": -0.7402,
+      "z": 3.6224
+     },
+     "-1.0": {
+      "x": -0.7312,
+      "z": 3.5924
+     },
+     "-1.5": {
+      "x": -0.7222,
+      "z": 3.5622
+     }
+    },
+    "error_vs_depth": {
+     "-0.5": {
+      "dx_feet": 0.0486,
+      "dz_feet": 0.093,
+      "dz_feet_uncorrected": 0.3232
+     },
+     "-1.0": {
+      "dx_feet": 0.0396,
+      "dz_feet": 0.1229,
+      "dz_feet_uncorrected": 0.3532
+     },
+     "-1.5": {
+      "dx_feet": 0.0306,
+      "dz_feet": 0.1532,
+      "dz_feet_uncorrected": 0.3834
+     }
+    }
+   },
+   {
+    "at_bat_number": 50,
+    "pitch_number": 2,
+    "call": "Swinging Strike",
+    "pitch_type": "CH",
+    "used": false,
+    "reason": "B: pitch in the dirt, scooped and not caught cleanly: the ball slows near the ground at the catcher's knee (45225-45228), is at the glove's edge at 45234, and dust is kicked up at 45240"
+   },
+   {
+    "at_bat_number": 51,
+    "pitch_number": 4,
+    "call": "Hit By Pitch",
+    "pitch_type": "SL",
+    "used": false,
+    "reason": "A: hit_by_pitch; B: ball went to the batter's legs (last seen at about [587,239] at 46082) and the catcher's glove reached toward the batter without a visible catch; consistent with hit by pitch"
+   },
+   {
+    "at_bat_number": 52,
+    "pitch_number": 4,
+    "call": "In play, no out",
+    "pitch_type": "FF",
+    "used": false,
+    "reason": "A: batter_hit_ball; B: batted_ball_in_play"
+   },
+   {
+    "at_bat_number": 53,
+    "pitch_number": 5,
+    "call": "In play, out(s)",
+    "pitch_type": "SL",
+    "used": false,
+    "reason": "A: batter_hit_ball; B: batted_ball_in_play"
+   },
+   {
+    "at_bat_number": 54,
+    "pitch_number": 2,
+    "call": "In play, run(s)",
+    "pitch_type": "FF",
+    "used": false,
+    "reason": "A: batter_hit_ball; B: batted_ball_in_play"
+   },
+   {
+    "at_bat_number": 55,
+    "pitch_number": 5,
+    "call": "In play, out(s)",
+    "pitch_type": "FF",
+    "used": false,
+    "reason": "A: batter_hit_ball; B: batter_swung_in_play"
+   },
+   {
+    "at_bat_number": 56,
+    "pitch_number": 5,
+    "call": "Swinging Strike",
+    "pitch_type": "FS",
+    "used": true,
+    "ball_visible_all_readers": false,
+    "readers": {
+     "A": {
+      "offset": 54785,
+      "ball_visible": false,
+      "pocket_px": [
+       652,
+       281
+      ],
+      "plate_front_px": {
+       "left_end": [
+        612,
+        359
+       ],
+       "right_end": [
+        665,
+        359
+       ]
+      },
+      "plate_front_reason": null,
+      "px_per_foot": 37.41176470588235,
+      "plate_x_feet": -0.3307,
+      "plate_z_feet": 1.8454,
+      "plate_z_feet_uncorrected": 2.0849,
+      "uncertainty_pixels": 9
+     },
+     "B": {
+      "offset": 54788,
+      "ball_visible": true,
+      "pocket_px": [
+       643,
+       278
+      ],
+      "plate_front_px": {
+       "left_end": [
+        611,
+        360
+       ],
+       "right_end": [
+        667,
+        360
+       ]
+      },
+      "plate_front_reason": null,
+      "px_per_foot": 39.52941176470588,
+      "plate_x_feet": -0.071,
+      "plate_z_feet": 1.8348,
+      "plate_z_feet_uncorrected": 2.0744,
+      "uncertainty_pixels": 4
+     }
+    },
+    "skipped_readers": [],
+    "reader_agreement": {
+     "same_frame": false,
+     "offsets": [
+      54785,
+      54788
+     ],
+     "dx_feet": 0.2597,
+     "dz_feet": 0.0106
+    },
+    "mean_plate_feet": {
+     "x": -0.2009,
+     "z": 1.8401,
+     "z_uncorrected": 2.0796
+    },
+    "statcast_front": {
+     "pX": -0.12502221828132132,
+     "pZ": 2.0710436986582073
+    },
+    "statcast_at_depth_y": {
+     "-0.5": {
+      "x": -0.0925,
+      "z": 1.8337
+     },
+     "-1.0": {
+      "x": -0.0845,
+      "z": 1.7707
+     },
+     "-1.5": {
+      "x": -0.0768,
+      "z": 1.7073
+     }
+    },
+    "error_vs_depth": {
+     "-0.5": {
+      "dx_feet": -0.1084,
+      "dz_feet": 0.0064,
+      "dz_feet_uncorrected": 0.2459
+     },
+     "-1.0": {
+      "dx_feet": -0.1163,
+      "dz_feet": 0.0694,
+      "dz_feet_uncorrected": 0.309
+     },
+     "-1.5": {
+      "dx_feet": -0.1241,
+      "dz_feet": 0.1328,
+      "dz_feet_uncorrected": 0.3723
+     }
+    }
+   },
+   {
+    "at_bat_number": 58,
+    "pitch_number": 5,
+    "call": "In play, out(s)",
+    "pitch_type": "FS",
+    "used": false,
+    "reason": "A: batter_hit_ball; B: batter_swung_in_play"
+   },
+   {
+    "at_bat_number": 62,
+    "pitch_number": 2,
+    "call": "In play, out(s)",
+    "pitch_type": "FS",
+    "used": false,
+    "reason": "A: batter_hit_ball; B: batter_hit_ball"
+   },
+   {
+    "at_bat_number": 64,
+    "pitch_number": 3,
+    "call": "In play, no out",
+    "pitch_type": "FS",
+    "used": false,
+    "reason": "A: batter_hit_ball; B: batter_hit_ball"
+   },
+   {
+    "at_bat_number": 66,
+    "pitch_number": 1,
+    "call": "In play, run(s)",
+    "pitch_type": "FF",
+    "used": false,
+    "reason": "A: batter_hit_ball; B: batter_hit_ball"
+   },
+   {
+    "at_bat_number": 68,
+    "pitch_number": 1,
+    "call": "In play, no out",
+    "pitch_type": "FF",
+    "used": false,
+    "reason": "A: batter_hit_ball; B: batter_hit_ball"
+   },
+   {
+    "at_bat_number": 69,
+    "pitch_number": 2,
+    "call": "In play, out(s)",
+    "pitch_type": "SI",
+    "used": false,
+    "reason": "A: batter_hit_ball; B: batter_hit_ball"
+   },
+   {
+    "at_bat_number": 70,
+    "pitch_number": 4,
+    "call": "In play, out(s)",
+    "pitch_type": "FF",
+    "used": false,
+    "reason": "A: batter_hit_ball; B: batter_hit_ball"
+   }
+  ]
+ }
+}

@@ -1,0 +1,1636 @@
+{
+  "schema": "local_glove_report_v1",
+  "development_only": true,
+  "independent_validation": false,
+  "catcher_association_verified": false,
+  "live": false,
+  "physical_accuracy_measured": false,
+  "manifest_sha256": "8501772cebc32c85c02c4adae0ed26e666ed22180a1272d9b2f95688ab65cc6a",
+  "provenance": {
+    "manifest_bytes_verified": true,
+    "image_bytes_verified": false,
+    "reference_kind": "legacy_single_labeler_development",
+    "run_integrity": {
+      "metadata_present": true,
+      "declared_claims_checked": true,
+      "assessment": "declared_eligible_not_independently_reverified",
+      "run_status": "completed",
+      "frozen_input_bytes_reverified": false
+    },
+    "detection_contract_checked": true,
+    "input_files": {
+      "manifest": {
+        "filename": "manifest.json",
+        "sha256": "8501772cebc32c85c02c4adae0ed26e666ed22180a1272d9b2f95688ab65cc6a"
+      },
+      "references": {
+        "filename": "references.json",
+        "sha256": "dc38d678f4891bcf1a9ba2379d585608b8d2d7d8232b302186e2dba13dd6f7ad"
+      },
+      "predictions": {
+        "filename": "predictions.json",
+        "sha256": "c51a4021a7acf6df319e63cb467d7690ba8fac59241d9d7126d25652e2db8e23"
+      }
+    }
+  },
+  "model": {
+    "model_id": "ssdlite320_mobilenet_v3_large",
+    "input_view": "full_frame",
+    "threshold": 0.5,
+    "device": "cuda"
+  },
+  "limitations": [
+    "Previously reviewed, single-labeler development frames; not new independent validation.",
+    "Legacy nonmarked labels use older definitions and are not current true negatives.",
+    "Availability cross-tabs are descriptive; no false-positive or abstention-correctness rates.",
+    "Point differences are conditional on both points existing, not overall accuracy.",
+    "Fixed pixel sensitivity fractions include every legacy marked frame in their denominator.",
+    "Pixel sensitivity cutoffs are descriptive, not success thresholds or physical tolerances.",
+    "No physical-coordinate accuracy, pitcher intent, live latency, or pre-pitch success claim.",
+    "Stored image hashes are matched; image bytes are not reopened by this report.",
+    "Timing describes the supplied first pass; repeat timings belong to a separate artifact."
+  ],
+  "summary": {
+    "counts": {
+      "planned": 86,
+      "attempted": 86,
+      "completed": 86,
+      "error": 0,
+      "not_attempted": 0,
+      "candidate": 0,
+      "no_candidate": 86,
+      "ambiguous": 0,
+      "human_marked": 84,
+      "legacy_abstained": 2
+    },
+    "availability": {
+      "completed_over_planned": {
+        "numerator": 86,
+        "denominator": 86,
+        "fraction": 1.0
+      },
+      "candidate_over_planned": {
+        "numerator": 0,
+        "denominator": 86,
+        "fraction": 0.0
+      },
+      "legacy_reference_by_prediction_state": {
+        "legacy_marked": {
+          "candidate": 0,
+          "no_candidate": 84,
+          "ambiguous": 0,
+          "error": 0,
+          "not_attempted": 0
+        },
+        "legacy_abstained": {
+          "candidate": 0,
+          "no_candidate": 2,
+          "ambiguous": 0,
+          "error": 0,
+          "not_attempted": 0
+        }
+      },
+      "legacy_status_counts": {
+        "marked": 84,
+        "not_centre_field": 1,
+        "not_in_setup": 1
+      }
+    },
+    "conditional_point_discrepancy": {
+      "n": 0,
+      "sign_convention": "prediction_minus_legacy_reference; x right, y down",
+      "normalization": "sqrt(width**2 + height**2), original full image",
+      "percentile_method": "linear",
+      "distance_pixels": {
+        "n": 0,
+        "median": null,
+        "p90": null
+      },
+      "dx_pixels": {
+        "n": 0,
+        "median": null,
+        "p90": null
+      },
+      "dy_pixels": {
+        "n": 0,
+        "median": null,
+        "p90": null
+      },
+      "distance_image_diagonal": {
+        "n": 0,
+        "median": null,
+        "p90": null
+      },
+      "dx_image_diagonal": {
+        "n": 0,
+        "median": null,
+        "p90": null
+      },
+      "dy_image_diagonal": {
+        "n": 0,
+        "median": null,
+        "p90": null
+      }
+    },
+    "fixed_pixel_sensitivity": {
+      "interpretation": "descriptive fractions, not accuracy or a success criterion",
+      "denominator_basis": "all_legacy_marked_in_manifest_including_error_abstention_missing",
+      "cutoffs": [
+        {
+          "maximum_distance_pixels": 5,
+          "numerator": 0,
+          "denominator": 84,
+          "fraction": 0.0
+        },
+        {
+          "maximum_distance_pixels": 10,
+          "numerator": 0,
+          "denominator": 84,
+          "fraction": 0.0
+        },
+        {
+          "maximum_distance_pixels": 20,
+          "numerator": 0,
+          "denominator": 84,
+          "fraction": 0.0
+        },
+        {
+          "maximum_distance_pixels": 50,
+          "numerator": 0,
+          "denominator": 84,
+          "fraction": 0.0
+        }
+      ]
+    },
+    "first_pass_timing_seconds": {
+      "model_seconds": {
+        "n": 86,
+        "median": 0.3109390998724848,
+        "p90": 0.3287755500059575
+      },
+      "service_seconds": {
+        "n": 86,
+        "median": 0.3786266000242904,
+        "p90": 0.39918760012369603
+      }
+    }
+  },
+  "games": [
+    {
+      "game_pk": 823407,
+      "counts": {
+        "planned": 29,
+        "attempted": 29,
+        "completed": 29,
+        "error": 0,
+        "not_attempted": 0,
+        "candidate": 0,
+        "no_candidate": 29,
+        "ambiguous": 0,
+        "human_marked": 28,
+        "legacy_abstained": 1
+      },
+      "availability": {
+        "completed_over_planned": {
+          "numerator": 29,
+          "denominator": 29,
+          "fraction": 1.0
+        },
+        "candidate_over_planned": {
+          "numerator": 0,
+          "denominator": 29,
+          "fraction": 0.0
+        },
+        "legacy_reference_by_prediction_state": {
+          "legacy_marked": {
+            "candidate": 0,
+            "no_candidate": 28,
+            "ambiguous": 0,
+            "error": 0,
+            "not_attempted": 0
+          },
+          "legacy_abstained": {
+            "candidate": 0,
+            "no_candidate": 1,
+            "ambiguous": 0,
+            "error": 0,
+            "not_attempted": 0
+          }
+        },
+        "legacy_status_counts": {
+          "marked": 28,
+          "not_centre_field": 1
+        }
+      },
+      "conditional_point_discrepancy": {
+        "n": 0,
+        "sign_convention": "prediction_minus_legacy_reference; x right, y down",
+        "normalization": "sqrt(width**2 + height**2), original full image",
+        "percentile_method": "linear",
+        "distance_pixels": {
+          "n": 0,
+          "median": null,
+          "p90": null
+        },
+        "dx_pixels": {
+          "n": 0,
+          "median": null,
+          "p90": null
+        },
+        "dy_pixels": {
+          "n": 0,
+          "median": null,
+          "p90": null
+        },
+        "distance_image_diagonal": {
+          "n": 0,
+          "median": null,
+          "p90": null
+        },
+        "dx_image_diagonal": {
+          "n": 0,
+          "median": null,
+          "p90": null
+        },
+        "dy_image_diagonal": {
+          "n": 0,
+          "median": null,
+          "p90": null
+        }
+      },
+      "fixed_pixel_sensitivity": {
+        "interpretation": "descriptive fractions, not accuracy or a success criterion",
+        "denominator_basis": "all_legacy_marked_in_manifest_including_error_abstention_missing",
+        "cutoffs": [
+          {
+            "maximum_distance_pixels": 5,
+            "numerator": 0,
+            "denominator": 28,
+            "fraction": 0.0
+          },
+          {
+            "maximum_distance_pixels": 10,
+            "numerator": 0,
+            "denominator": 28,
+            "fraction": 0.0
+          },
+          {
+            "maximum_distance_pixels": 20,
+            "numerator": 0,
+            "denominator": 28,
+            "fraction": 0.0
+          },
+          {
+            "maximum_distance_pixels": 50,
+            "numerator": 0,
+            "denominator": 28,
+            "fraction": 0.0
+          }
+        ]
+      },
+      "first_pass_timing_seconds": {
+        "model_seconds": {
+          "n": 29,
+          "median": 0.29453019984066486,
+          "p90": 0.3154750600457191
+        },
+        "service_seconds": {
+          "n": 29,
+          "median": 0.3649748000316322,
+          "p90": 0.3887099599000067
+        }
+      }
+    },
+    {
+      "game_pk": 849845,
+      "counts": {
+        "planned": 57,
+        "attempted": 57,
+        "completed": 57,
+        "error": 0,
+        "not_attempted": 0,
+        "candidate": 0,
+        "no_candidate": 57,
+        "ambiguous": 0,
+        "human_marked": 56,
+        "legacy_abstained": 1
+      },
+      "availability": {
+        "completed_over_planned": {
+          "numerator": 57,
+          "denominator": 57,
+          "fraction": 1.0
+        },
+        "candidate_over_planned": {
+          "numerator": 0,
+          "denominator": 57,
+          "fraction": 0.0
+        },
+        "legacy_reference_by_prediction_state": {
+          "legacy_marked": {
+            "candidate": 0,
+            "no_candidate": 56,
+            "ambiguous": 0,
+            "error": 0,
+            "not_attempted": 0
+          },
+          "legacy_abstained": {
+            "candidate": 0,
+            "no_candidate": 1,
+            "ambiguous": 0,
+            "error": 0,
+            "not_attempted": 0
+          }
+        },
+        "legacy_status_counts": {
+          "marked": 56,
+          "not_in_setup": 1
+        }
+      },
+      "conditional_point_discrepancy": {
+        "n": 0,
+        "sign_convention": "prediction_minus_legacy_reference; x right, y down",
+        "normalization": "sqrt(width**2 + height**2), original full image",
+        "percentile_method": "linear",
+        "distance_pixels": {
+          "n": 0,
+          "median": null,
+          "p90": null
+        },
+        "dx_pixels": {
+          "n": 0,
+          "median": null,
+          "p90": null
+        },
+        "dy_pixels": {
+          "n": 0,
+          "median": null,
+          "p90": null
+        },
+        "distance_image_diagonal": {
+          "n": 0,
+          "median": null,
+          "p90": null
+        },
+        "dx_image_diagonal": {
+          "n": 0,
+          "median": null,
+          "p90": null
+        },
+        "dy_image_diagonal": {
+          "n": 0,
+          "median": null,
+          "p90": null
+        }
+      },
+      "fixed_pixel_sensitivity": {
+        "interpretation": "descriptive fractions, not accuracy or a success criterion",
+        "denominator_basis": "all_legacy_marked_in_manifest_including_error_abstention_missing",
+        "cutoffs": [
+          {
+            "maximum_distance_pixels": 5,
+            "numerator": 0,
+            "denominator": 56,
+            "fraction": 0.0
+          },
+          {
+            "maximum_distance_pixels": 10,
+            "numerator": 0,
+            "denominator": 56,
+            "fraction": 0.0
+          },
+          {
+            "maximum_distance_pixels": 20,
+            "numerator": 0,
+            "denominator": 56,
+            "fraction": 0.0
+          },
+          {
+            "maximum_distance_pixels": 50,
+            "numerator": 0,
+            "denominator": 56,
+            "fraction": 0.0
+          }
+        ]
+      },
+      "first_pass_timing_seconds": {
+        "model_seconds": {
+          "n": 57,
+          "median": 0.3163821001071483,
+          "p90": 0.3293636799789965
+        },
+        "service_seconds": {
+          "n": 57,
+          "median": 0.3863163001369685,
+          "p90": 0.4020666599739343
+        }
+      }
+    }
+  ],
+  "frames": [
+    {
+      "observation_id": "823407:1:3",
+      "game_pk": 823407,
+      "image_sha256": "1053991a06fdcf0e5baad1526662da2e9a0b03e83a148425ab7bf7189c4b9940",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.532464699819684,
+        "service_seconds": 0.6029205999802798
+      },
+      "error": null
+    },
+    {
+      "observation_id": "823407:4:2",
+      "game_pk": 823407,
+      "image_sha256": "e6f952445b2a6fb9c9631e45861281fb654893f1a54232266671f5250d4835a5",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.2943096999078989,
+        "service_seconds": 0.36827780003659427
+      },
+      "error": null
+    },
+    {
+      "observation_id": "823407:5:2",
+      "game_pk": 823407,
+      "image_sha256": "d0b7ca574995103b46e9275eab2feca54534181d3c0a31880602645705b03ff2",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.2773027999792248,
+        "service_seconds": 0.3574735000729561
+      },
+      "error": null
+    },
+    {
+      "observation_id": "823407:6:4",
+      "game_pk": 823407,
+      "image_sha256": "954cc026d5b1ecb111281630ad278e9470f6c9727356893c9afc863d5a7a4796",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.2867195999715477,
+        "service_seconds": 0.3533781999722123
+      },
+      "error": null
+    },
+    {
+      "observation_id": "823407:8:5",
+      "game_pk": 823407,
+      "image_sha256": "d6025ef576495585eae4538bc6cd398edacc153a5dda1dbaf825d902fa63e0aa",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.28231079992838204,
+        "service_seconds": 0.3497798000462353
+      },
+      "error": null
+    },
+    {
+      "observation_id": "823407:10:6",
+      "game_pk": 823407,
+      "image_sha256": "186b78f65e39e4af77f7d0e55b946ad0f7ff2e5737c52bdc966bd33e410bd9c1",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.2840462001040578,
+        "service_seconds": 0.3638510999735445
+      },
+      "error": null
+    },
+    {
+      "observation_id": "823407:12:4",
+      "game_pk": 823407,
+      "image_sha256": "dea06e8a9437b993dd851c847c82157547da41f8638a4eb6fd2db7b2e01061d9",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.3135525998659432,
+        "service_seconds": 0.38027559989131987
+      },
+      "error": null
+    },
+    {
+      "observation_id": "823407:13:5",
+      "game_pk": 823407,
+      "image_sha256": "d2cfe4235a12df54b64ff4ff30f39e737be431b278be8d75c6246bf9d0e6d789",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.3141898000612855,
+        "service_seconds": 0.38177280011586845
+      },
+      "error": null
+    },
+    {
+      "observation_id": "823407:18:1",
+      "game_pk": 823407,
+      "image_sha256": "e8c3e59b5678606d7ac8be037e18e9b54663a063254960fb917411521542fb43",
+      "legacy_mitt_status": "not_centre_field",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.30841080006211996,
+        "service_seconds": 0.3644719000440091
+      },
+      "error": null
+    },
+    {
+      "observation_id": "823407:19:4",
+      "game_pk": 823407,
+      "image_sha256": "8b9f0cb039dab614ead704e45a7fef89ee7a1d89615efd34c096fc7aef33df71",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.2879700001794845,
+        "service_seconds": 0.3718493999913335
+      },
+      "error": null
+    },
+    {
+      "observation_id": "823407:20:3",
+      "game_pk": 823407,
+      "image_sha256": "fa02fd76f2f058c06f57a2acbf7e36c8dfdbf2cdb0c77cd461b4dc9859460eb8",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.2682623998261988,
+        "service_seconds": 0.33815960003994405
+      },
+      "error": null
+    },
+    {
+      "observation_id": "823407:21:2",
+      "game_pk": 823407,
+      "image_sha256": "2070342ee1b807c3c83795acd90851d5e78e01d5906d875096bdcd81381d56fb",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.2923657998908311,
+        "service_seconds": 0.3642198999878019
+      },
+      "error": null
+    },
+    {
+      "observation_id": "823407:22:3",
+      "game_pk": 823407,
+      "image_sha256": "ea1044782b939d55c2532988bc63dd479f72256b8dc83b52e3e7b90d8f7f9e23",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.29686210001818836,
+        "service_seconds": 0.3646922998595983
+      },
+      "error": null
+    },
+    {
+      "observation_id": "823407:23:6",
+      "game_pk": 823407,
+      "image_sha256": "c478495b28a4c99c03118da6d4a8538a78e375593a92e07211444f9e973d012f",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.30061040003784,
+        "service_seconds": 0.36737870005890727
+      },
+      "error": null
+    },
+    {
+      "observation_id": "823407:24:5",
+      "game_pk": 823407,
+      "image_sha256": "909151f12a7d4482d3213246828289f17f84a988823ba544761585418fb70e90",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.29453019984066486,
+        "service_seconds": 0.3628324999008328
+      },
+      "error": null
+    },
+    {
+      "observation_id": "823407:29:3",
+      "game_pk": 823407,
+      "image_sha256": "6d532e95f19f676feaa128f0600cfe1cf123bd65b54578f8850ac03bed10e2df",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.2976997001096606,
+        "service_seconds": 0.36845769989304245
+      },
+      "error": null
+    },
+    {
+      "observation_id": "823407:31:4",
+      "game_pk": 823407,
+      "image_sha256": "5cc909197a2f4414cceb75bdcc8fda590e48b80f4cfc12400c53f9267b08796c",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.30998969986103475,
+        "service_seconds": 0.394621399929747
+      },
+      "error": null
+    },
+    {
+      "observation_id": "823407:34:5",
+      "game_pk": 823407,
+      "image_sha256": "5d657fdc54c8be2ab8a58d32428e55a7088047eb02fc47ccea4d1fee4cf19903",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.2470254001673311,
+        "service_seconds": 0.3164433999918401
+      },
+      "error": null
+    },
+    {
+      "observation_id": "823407:36:1",
+      "game_pk": 823407,
+      "image_sha256": "5db496d2c0423db93b6b235c375523ac20a23a45cc47e2dbfe08925950cdf9f6",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.304669399978593,
+        "service_seconds": 0.3744936999864876
+      },
+      "error": null
+    },
+    {
+      "observation_id": "823407:37:4",
+      "game_pk": 823407,
+      "image_sha256": "800588107b446b21303deea3fa3c7eea337818933ad3b9902be3dbf11aa1f93d",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.3110016998834908,
+        "service_seconds": 0.38269719993695617
+      },
+      "error": null
+    },
+    {
+      "observation_id": "823407:39:3",
+      "game_pk": 823407,
+      "image_sha256": "20a2a5a354f112c98289bba29cf949be81b7ce06fc01b4e0c579a34f38739b56",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.2885056999512017,
+        "service_seconds": 0.3587034000083804
+      },
+      "error": null
+    },
+    {
+      "observation_id": "823407:49:1",
+      "game_pk": 823407,
+      "image_sha256": "a553c2e7a09994004331e48f36a9528a5812a2752b2c8c909c1bade9fd098ddd",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.28869970003142953,
+        "service_seconds": 0.35777280014008284
+      },
+      "error": null
+    },
+    {
+      "observation_id": "823407:50:1",
+      "game_pk": 823407,
+      "image_sha256": "7477fc62a4034a6e2a70982e45f345badd77023b1e0379f4a42ecbac8f2bf31e",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.32061609998345375,
+        "service_seconds": 0.38723209989257157
+      },
+      "error": null
+    },
+    {
+      "observation_id": "823407:61:3",
+      "game_pk": 823407,
+      "image_sha256": "d02d7b9502c4a46cd47e917012057c89f91f3cf41ca82ffa5d029ff3688e6bfc",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.293844599975273,
+        "service_seconds": 0.3649748000316322
+      },
+      "error": null
+    },
+    {
+      "observation_id": "823407:63:4",
+      "game_pk": 823407,
+      "image_sha256": "fe66c29615cdf14b7daca30b1ab2fdee29b418c2bac0a5e776dc8924ff1a5f2e",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.349299400113523,
+        "service_seconds": 0.41946729994378984
+      },
+      "error": null
+    },
+    {
+      "observation_id": "823407:65:2",
+      "game_pk": 823407,
+      "image_sha256": "f794ef1df41296fd320c54d1ae985e5403992f42d520e140be1833d92cfc1cd8",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.28399630007334054,
+        "service_seconds": 0.3548785001039505
+      },
+      "error": null
+    },
+    {
+      "observation_id": "823407:73:10",
+      "game_pk": 823407,
+      "image_sha256": "a1eff676ee9f7f1e2bf80c21fa244f7aa50acdc2e9ba30b54d5a4d28761bdad3",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.2993964001070708,
+        "service_seconds": 0.37034209980629385
+      },
+      "error": null
+    },
+    {
+      "observation_id": "823407:80:3",
+      "game_pk": 823407,
+      "image_sha256": "e200a768a576f53ee8c6feaa6a5ac7e8e487b50fb63a93f51d2564e78e497743",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.27356910007074475,
+        "service_seconds": 0.3413389001507312
+      },
+      "error": null
+    },
+    {
+      "observation_id": "823407:88:3",
+      "game_pk": 823407,
+      "image_sha256": "2c0220331fe81defedac3e6750f7996c04184bb9354178dafa6cc3781f589db4",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.308201199863106,
+        "service_seconds": 0.3729312000796199
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:1:4",
+      "game_pk": 849845,
+      "image_sha256": "29676d5da4949e851a4c61afa1be4defe8c3e2fd64b2cf5fd70cadae46b74115",
+      "legacy_mitt_status": "not_in_setup",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.3411224000155926,
+        "service_seconds": 0.421172299887985
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:2:7",
+      "game_pk": 849845,
+      "image_sha256": "e825ca304e7257ba9c8d74e7994c4839d7296fe22a27bd1eaf18074508af4666",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.30347329983487725,
+        "service_seconds": 0.37083299993537366
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:3:5",
+      "game_pk": 849845,
+      "image_sha256": "ff2562d3176d64cb587615b21ded4784524e80b55c2b2ab543a1c6c43a8944e8",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.30367699987255037,
+        "service_seconds": 0.3643822001758963
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:4:5",
+      "game_pk": 849845,
+      "image_sha256": "b7392f7c9d828a4c688643855230619867510dd73b60a7abdfb4b047141b160b",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.3207729000132531,
+        "service_seconds": 0.3870965999085456
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:5:2",
+      "game_pk": 849845,
+      "image_sha256": "2d21fbc9259e083cd3203d4e13eaa85583b4263bce4973d17e1ba1de5956eb11",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.3163821001071483,
+        "service_seconds": 0.3922357000410557
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:6:5",
+      "game_pk": 849845,
+      "image_sha256": "ec45069bc767e89656b6770176b765fb7938364fefab09c5a9f39ee0eca05a6b",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.31002620002254844,
+        "service_seconds": 0.38651550002396107
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:7:1",
+      "game_pk": 849845,
+      "image_sha256": "b335b0939bd45fba75678ed59703cb6d5bfe326053b95e3d54c148df0f0504c4",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.30701750004664063,
+        "service_seconds": 0.3757823999039829
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:8:4",
+      "game_pk": 849845,
+      "image_sha256": "cd4cdf275e1e0598f520e5d6e2ddb204bac058a14b405e78713cb0e6effb307f",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.30697759985923767,
+        "service_seconds": 0.3734118998982012
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:10:4",
+      "game_pk": 849845,
+      "image_sha256": "4a721eb59b5e3aedae99884f3ac2693d5814fb3de8b938efb3169c8fe65f4e1f",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.3020089000929147,
+        "service_seconds": 0.3738865000195801
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:11:3",
+      "game_pk": 849845,
+      "image_sha256": "2e19b737eceff3207679967c074843d0aa11e23ec9af6413922e359ecc401481",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.3286268999800086,
+        "service_seconds": 0.39705850020982325
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:12:2",
+      "game_pk": 849845,
+      "image_sha256": "bde9b339362bf3218b69fda84670cc55c51019f774f83f5cca49106bc35a6ff1",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.3187881000339985,
+        "service_seconds": 0.3841536999680102
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:13:1",
+      "game_pk": 849845,
+      "image_sha256": "d5a5a9ab5712e72ac1bb0f8889a54722cf5117a3668f95ad10df25c4f33c5776",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.3136032000184059,
+        "service_seconds": 0.3757980999071151
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:14:5",
+      "game_pk": 849845,
+      "image_sha256": "e36c83ac82bd1ab9285ba5db99f874402501670d9710973611f515668b729edd",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.31487130001187325,
+        "service_seconds": 0.3863163001369685
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:15:3",
+      "game_pk": 849845,
+      "image_sha256": "593d45ddd61a9c6057d561c5700fcfde1a74bcff69d69a383d4ba5249b8701cd",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.3387841999065131,
+        "service_seconds": 0.409293299773708
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:16:1",
+      "game_pk": 849845,
+      "image_sha256": "f8c89340f0071eebdd6e150c4ca340c13279b8072e1b119c7fd492ef679766c5",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.31138439988717437,
+        "service_seconds": 0.374042300041765
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:17:6",
+      "game_pk": 849845,
+      "image_sha256": "155421039f25b98c383f2d488e96288c5262d36bfe32edd44fd0d8637a2f09d0",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.3058272001799196,
+        "service_seconds": 0.3677880000323057
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:19:3",
+      "game_pk": 849845,
+      "image_sha256": "0676419b93a5ba9724de6bca335e298369ced94a5b8e2d55bfc50bb50329cea5",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.326389400055632,
+        "service_seconds": 0.3871296998113394
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:20:5",
+      "game_pk": 849845,
+      "image_sha256": "2ed896ac1c7ae2816447fc21dcde21e928b4d557983d6f8b2355bd15de4b14ab",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.3257796000689268,
+        "service_seconds": 0.3862872999161482
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:23:6",
+      "game_pk": 849845,
+      "image_sha256": "dfb33b718048764d0e0b4074577e4afcecda70f3d10cd9d219de6ce1da9de07d",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.3058701001573354,
+        "service_seconds": 0.37532250001095235
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:24:5",
+      "game_pk": 849845,
+      "image_sha256": "ee1278a504964a2901876feefb5598c6a6b737c7d51f1bc7f8bf6fc221490b43",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.3104946999810636,
+        "service_seconds": 0.375618799822405
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:28:5",
+      "game_pk": 849845,
+      "image_sha256": "cf543bef83efe6b6aefec875db215661f96910036533ee6d305e8f3e1619e39d",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.3164888999890536,
+        "service_seconds": 0.39335229992866516
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:29:3",
+      "game_pk": 849845,
+      "image_sha256": "4c69a97bce108077da995e8e52b083f108b464f384891ed5394818449f7c83c4",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.32892420003190637,
+        "service_seconds": 0.3961396999657154
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:30:4",
+      "game_pk": 849845,
+      "image_sha256": "465948f71189d760fb1605f3495ab049a586c6cb74d04a569e3b2f63afd65756",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.3113939000759274,
+        "service_seconds": 0.3778271998744458
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:30:5",
+      "game_pk": 849845,
+      "image_sha256": "dae11cd7d6e79e2dd5cf14b1b6fa40c992f0631a80b0dc4790e20112aa19eeda",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.3108764998614788,
+        "service_seconds": 0.3782101001124829
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:31:2",
+      "game_pk": 849845,
+      "image_sha256": "2df75511d5bed489e055e1aafefd7834783de3e9c0e2a19642a52b0804603b9b",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.3168460000306368,
+        "service_seconds": 0.3929659998975694
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:32:2",
+      "game_pk": 849845,
+      "image_sha256": "a4048209209def6071d335875e06d214bd4fa7444f2c4d5bab3762fd64a7193d",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.30376400006935,
+        "service_seconds": 0.37327730003744364
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:33:4",
+      "game_pk": 849845,
+      "image_sha256": "3deff8c15012a5a90cd75fb8bd78c50def892fa631fc25ef18d876f2a1fb84fd",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.2937602000311017,
+        "service_seconds": 0.35988410003483295
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:34:5",
+      "game_pk": 849845,
+      "image_sha256": "8fc4d3b1640e3f82840b617cfee631ea5ebdc39fff68088239b5874992f0fccf",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.3302710000425577,
+        "service_seconds": 0.4010431000497192
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:35:6",
+      "game_pk": 849845,
+      "image_sha256": "5083164ff0a743b4807e0274962c489f971c0dc4b6bde4cc8fdf2051701a92b6",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.313349099829793,
+        "service_seconds": 0.3881548000499606
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:36:5",
+      "game_pk": 849845,
+      "image_sha256": "06c27ef6445082a1513dd526c037d341cfe5595145667c9dc58aa2f87e99ba5b",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.30465329997241497,
+        "service_seconds": 0.3716015999671072
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:37:5",
+      "game_pk": 849845,
+      "image_sha256": "6c8725986ca78352b5661d93c806b5b96cfaa6ec6ec4ede8e54110021f0c007b",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.3249437001068145,
+        "service_seconds": 0.3893817998468876
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:38:6",
+      "game_pk": 849845,
+      "image_sha256": "f0a29d9f43101aaeb09ac9845270234ba57c52f4e3ac5e1a524a16399a550edb",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.32073600008152425,
+        "service_seconds": 0.39049070002511144
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:39:3",
+      "game_pk": 849845,
+      "image_sha256": "a5998c7ea70162e7a2021c322117822dae203d7bff00555c6f08192822bf4132",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.35459830006584525,
+        "service_seconds": 0.43466969998553395
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:40:2",
+      "game_pk": 849845,
+      "image_sha256": "53004120f5c6e3bbcd081b9e71c75fff4e0c6c534ff32d2c86b7dc6f42c04cfe",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.3090701000764966,
+        "service_seconds": 0.37528020003810525
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:42:3",
+      "game_pk": 849845,
+      "image_sha256": "37dd0372d6bd85caa816285433e56aeb9b8f9f5874219847f82e64d752bbd9cc",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.31855939980596304,
+        "service_seconds": 0.38341469992883503
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:43:3",
+      "game_pk": 849845,
+      "image_sha256": "a5f7a277c36482a3f68b93cf9dbfe97416bfafd027d156becc504c035de78848",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.32732589985243976,
+        "service_seconds": 0.39316889992915094
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:43:5",
+      "game_pk": 849845,
+      "image_sha256": "ee3d2de5f1fdf951779f74dce1e19f03231d5289f79c2419e60e4d80f448cfeb",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.3243019999936223,
+        "service_seconds": 0.3913563000969589
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:44:2",
+      "game_pk": 849845,
+      "image_sha256": "41dbb4cd15afe958c102f0881f535915f64f2ee2eb44e6fea7d528c5ca744177",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.30430549988523126,
+        "service_seconds": 0.37446469999849796
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:45:4",
+      "game_pk": 849845,
+      "image_sha256": "89e8778a54a75caa672dd8bf4e1305222092c8c557b67493cf0d56e742efe4f9",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.3084131998475641,
+        "service_seconds": 0.3759608999826014
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:46:2",
+      "game_pk": 849845,
+      "image_sha256": "6f76e3837fc544fda5bd15361ce2bbe0a1959f028dfd6400e46ca7080ae11e58",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.31161159998737276,
+        "service_seconds": 0.37965080002322793
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:47:3",
+      "game_pk": 849845,
+      "image_sha256": "e06ca657df984ac8b33c2a6514604e94ae41811297610fe3ae5e1da48a63712d",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.3262457000091672,
+        "service_seconds": 0.4036019998602569
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:48:4",
+      "game_pk": 849845,
+      "image_sha256": "53dab96fe0b7ee019cc8507c3f2313b774debc9a09330e00da9533c8f68e141c",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.33002289989963174,
+        "service_seconds": 0.40687159984372556
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:49:3",
+      "game_pk": 849845,
+      "image_sha256": "df5fc2244feded86ac4c31517264b4bcf65ccd366c5cf1921ea5752c435b2464",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.3232437002006918,
+        "service_seconds": 0.3921286000404507
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:50:2",
+      "game_pk": 849845,
+      "image_sha256": "c813e4a68e72ba3ce17757a6f17e0abbf2cc622fc3193901bcb38e0d8b348861",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.32197499996982515,
+        "service_seconds": 0.3898481000214815
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:51:4",
+      "game_pk": 849845,
+      "image_sha256": "8c26f0403e21a5ea260dafec84733ffcc2c53fb6cc71f6cd0b3c297839bc0944",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.2932247999124229,
+        "service_seconds": 0.35888339998200536
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:52:4",
+      "game_pk": 849845,
+      "image_sha256": "8d34544132502eb5555760979919c20297c62b083f869cedcaa4b60daac94c03",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.3037489000707865,
+        "service_seconds": 0.36711400002241135
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:53:5",
+      "game_pk": 849845,
+      "image_sha256": "f0822d1ed113eb45828c4238b128bfb4e2d1de98cefa281ad45c54d35774f64a",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.31248650001361966,
+        "service_seconds": 0.37904309993609786
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:54:2",
+      "game_pk": 849845,
+      "image_sha256": "b75b5d9b7a4d904091a1f3c085a01d50e6bc04c7168c2b4a361660c9de9dac38",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.31989200017414987,
+        "service_seconds": 0.38733819988556206
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:55:5",
+      "game_pk": 849845,
+      "image_sha256": "652901153726759dfd910a273ecdf10d64953188171095fbb1a1639a86fd5f34",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.33908799989148974,
+        "service_seconds": 0.4101960000116378
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:56:5",
+      "game_pk": 849845,
+      "image_sha256": "73edc4b046c2aaa3b6d0dcb79d42b1ae0db8c20625b386baf3d316e067855725",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.3262371001765132,
+        "service_seconds": 0.3935938000213355
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:58:5",
+      "game_pk": 849845,
+      "image_sha256": "2da2f0b2a9a8124a24b488bc6412af6b96d3aea35e7fed2a7f64da6e11b46f3f",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.3247616000007838,
+        "service_seconds": 0.39280949998646975
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:62:2",
+      "game_pk": 849845,
+      "image_sha256": "19b13c34e9f7498ab1c955f1dcdecc47ce2af88e9eda834f8bdb8339a83b0c71",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.3071414998266846,
+        "service_seconds": 0.3745212000794709
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:64:3",
+      "game_pk": 849845,
+      "image_sha256": "88e725bdf95867a1e72625f244fa5db2fe59b5e7146b2a392eea25fc1d94c3c4",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.3271710001863539,
+        "service_seconds": 0.39733210019767284
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:66:1",
+      "game_pk": 849845,
+      "image_sha256": "45da6f15d489925872ec57f04b4c87b8310b6a019f4505ce97ca8d24ea2de0dd",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.30845080013386905,
+        "service_seconds": 0.38123150006867945
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:68:1",
+      "game_pk": 849845,
+      "image_sha256": "26c91ab60895768ec8c4ba2365dd62a9a7f7ece054b87e10b8336f95d8cab5d9",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.3267065000254661,
+        "service_seconds": 0.38726980006322265
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:69:2",
+      "game_pk": 849845,
+      "image_sha256": "7431c96f2e65cf23aec59494e30a4dd97cd0e97203e18ba4c6d36b552bc66ed0",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.31549070007167757,
+        "service_seconds": 0.38181300018914044
+      },
+      "error": null
+    },
+    {
+      "observation_id": "849845:70:4",
+      "game_pk": 849845,
+      "image_sha256": "efa90e50f420be76720cc8b8a911af6f01ebc9b131e436d890f31ea1c7ce0a93",
+      "legacy_mitt_status": "marked",
+      "prediction_state": "no_candidate",
+      "point": null,
+      "difference": null,
+      "timing": {
+        "model_seconds": 0.3231275000143796,
+        "service_seconds": 0.39557089982554317
+      },
+      "error": null
+    }
+  ]
+}

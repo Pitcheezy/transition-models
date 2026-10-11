@@ -1,0 +1,94 @@
+{
+  "schema": "pitcheezy-service-video-package-verification-v1",
+  "date": "2026-10-10",
+  "claim_commit": "b44b401",
+  "source_sha256": "df606a11c6db465c054252ef8d331aeb23aa21565b4960bd586f3dcf8f62f6b7",
+  "report_sha256": "154d9cd1cb166552db5975137e2ba431b9ab48f94fcfa6bdd05304f645427c80",
+  "zip": {
+    "filename": "service_review_video_20261010_v1.zip",
+    "bytes": 13570764,
+    "sha256": "9f6362ffe048509b59265a99645bbaa125db1445f1c32b89bfc31fd2f7b30f75",
+    "crc_ok": true,
+    "files": 16,
+    "relocated_files_byte_identical": 16
+  },
+  "assets_sha256": {
+    "index.html": "233ae1162ec63f84b582fe8bf1ecfe6310b3f49ec17cc1158d15c822c1b0a943",
+    "review.js": "59f9f4e0e8f04574293cf121455d5a32082750a8635e87ceb52f61ae3274cb12",
+    "style.css": "736e2e62d52be4a2f5ba565ea7baf73c8afd8e4082d5a91700eec9ad05637d32",
+    "media/pitch-849843-1-1-official.mp4": "78c7325e6d79afc13f2c1990262e2872483db907283c7571a6a2c468d0a7ca42",
+    "media/pitch-849843-1-1-official.jpg": "cb996e01792960cf0e10a6a84689b06a4f6ae0b158802f997492aadc1fe8fcaa",
+    "media/pitch-849843-1-2-official.mp4": "989cdc26ebe9c86d59720519827d3290cbc82984758cb180793e7c3e3353c4b2",
+    "media/pitch-849843-1-2-official.jpg": "90360e50aeb7a7f2202333fa67b2f5d09b3760af50bacf69eaa19d8a5be85f00",
+    "media/pitch-849843-1-3-official.mp4": "8e5fbfdd9172eadfb69e3316fbe97d592e7201e3d4ebac4fd1d6e17403420ce5",
+    "media/pitch-849843-1-3-official.jpg": "2fb66a6d84c1a41e1e14837b9cd6a32720c7f4c8f77af9b80bf9866ac9e15ac5",
+    "review-media.json": "c4d9aa1dffce70db6b2eb4ff50e27d7ad412407909b871f9686f5cb5a9b191f4",
+    "launch_review.py": "fb5b1c256c560ee3b59f05b0f9226ed515c211c933d101acc52deeb033e9b29a",
+    "START_WINDOWS.cmd": "81cb6632aff8e52a23b5560c797995c3c14609323a626773235f5497642188e1",
+    "START_MAC.command": "f64ecc30635405656e6462a5753f5f30bc796627cee3f7918de2608a991eb7bc",
+    "PRIVATE.txt": "e5f451918136167c4753d795e210552a5e0bb65c588ace3fe064f9c282a1f9b4"
+  },
+  "summary": {
+    "pitches": 262,
+    "ready": 246,
+    "unsupported": 16,
+    "missing": 0,
+    "actual_available": 262,
+    "uninterpreted_setup": 0,
+    "setup_estimated": 27,
+    "setup_unavailable": 12,
+    "setup_not_supplied": 223,
+    "setup_displayable": 27
+  },
+  "clips": 3,
+  "source_binding": {
+    "new_s_has_play_id": false,
+    "existing_official_key_play_id_mapping_reused": true,
+    "shared_actual_fields_matching_per_pitch": 8,
+    "pre_situation_and_player_ids_match": true,
+    "original_received_files_unchanged": 6,
+    "original_media_files_unchanged": 6,
+    "separate_mitt_frame_included": false
+  },
+  "tests": {
+    "windows_full_cpu": {
+      "passed": 2202,
+      "skipped": 8,
+      "deselected": 2,
+      "warnings": 2,
+      "seconds": 566.8
+    },
+    "related_python_before_final_js_abort_fix": {
+      "passed": 289,
+      "skipped": 1,
+      "seconds": 56.93
+    },
+    "node_final_passed": 29,
+    "ruff_paths": 167
+  },
+  "portable": {
+    "python_minimum": "3.10",
+    "stdlib_only_isolated_check_passed": true,
+    "unicode_space_relocation_check_passed": true,
+    "loopback_ephemeral_port_started": true,
+    "actual_mp4_range_status": 206,
+    "actual_mp4_range_bytes": 128,
+    "private_receipt_launcher_raw_listing_http_status": 404,
+    "real_mac_or_iphone_run_verified": false,
+    "desktop_double_click_wrappers_verified": false
+  },
+  "browser": {
+    "environment": "Windows Codex in-app browser",
+    "all_three_clips_played_to_end_and_revealed": true,
+    "navigation_during_playback_reset_verified": true,
+    "third_pitch_mitt_x_reveal_verified": true,
+    "width_390_no_horizontal_overflow": true,
+    "width_390_video_width_px": 309.6,
+    "invalid_file_picker_check": "not_completed_tool_interrupted",
+    "new_final_screenshot": "unavailable_browser_sandbox_setup_refresh_error"
+  },
+  "independent_audit": "Final ZIP, 16 relocated files, source assets and original inputs verified; pause AbortError fix checked; no remaining actionable issue found.",
+  "public_deployment": false,
+  "teammate_repository_accessed_or_modified": false,
+  "live_inference_verified": false
+}

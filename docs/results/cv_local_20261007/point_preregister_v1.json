@@ -1,0 +1,169 @@
+{
+  "schema": "local_point_development_preregister_v1",
+  "frozen_at_utc": "2026-10-07T01:43:01.880743+00:00",
+  "status": "before_any_training_or_evaluation_on_actual_84_points",
+  "plan_sha256": "b2328dbf5cc8486aaaa0e71155e70b38cf5b9879322fb6e85a5a809b116dfca7",
+  "manifest_sha256": "8501772cebc32c85c02c4adae0ed26e666ed22180a1272d9b2f95688ab65cc6a",
+  "references_sha256": "dc38d678f4891bcf1a9ba2379d585608b8d2d7d8232b302186e2dba13dd6f7ad",
+  "code_sha256": {
+    "intent/local_point_model.py": "496180af4dd3d51def3b6cbb5c62ef147a2df1103edb934d63b55c975a19caa9",
+    "intent/local_point_experiment.py": "2f4f97c4b34efed56b5012aba50989cd58dfda8575540aee695cb19987f70dc2",
+    "intent/replay.py": "4fcc323a3369a73012301b66142d24a0a9c2d988dd7240249a8667c95fdfe6fc",
+    "src/__init__.py": "e5540ed95903726098f0973c3ae1afcd44d075d32cc3289a1042ad4778590990",
+    "pyproject.toml": "11f4a00b3c6f0bdf75bb642304c0764f9d3596549060c1b41a588e333c0d41d5",
+    "uv.lock": "e31fc9e3f59b663b263c5708a81f44c82c496bb9efb7740d67c67f845e360018"
+  },
+  "model_and_training": {
+    "input_size_wh": [
+      192,
+      128
+    ],
+    "input_channels": 3,
+    "input_dtype": "float32",
+    "input_range": [
+      0.0,
+      1.0
+    ],
+    "preprocessing": "Pillow RGB, BILINEAR resize, divide by 255, CHW",
+    "architecture": [
+      {
+        "in": 3,
+        "out": 16,
+        "kernel": 3,
+        "stride": 2,
+        "padding": 1,
+        "relu": true
+      },
+      {
+        "in": 16,
+        "out": 32,
+        "kernel": 3,
+        "stride": 2,
+        "padding": 1,
+        "relu": true
+      },
+      {
+        "in": 32,
+        "out": 32,
+        "kernel": 3,
+        "stride": 1,
+        "padding": 1,
+        "relu": true
+      },
+      {
+        "in": 32,
+        "out": 1,
+        "kernel": 1,
+        "stride": 1,
+        "padding": 0,
+        "relu": false
+      }
+    ],
+    "parameter_count": 14369,
+    "heatmap_size_wh": [
+      48,
+      32
+    ],
+    "lattice": "u=(column+0.5)/width; v=(row+0.5)/height",
+    "gaussian_sigma_cells": 1.5,
+    "target_distribution": "unit-mass Gaussian on the finite heatmap lattice",
+    "objective": "mean spatial soft-label cross entropy",
+    "coordinate_decoder": "spatial softmax expected pixel-center coordinates",
+    "epochs": 20,
+    "batch_size": 8,
+    "optimizer": "AdamW",
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "optimizer_betas": [
+      0.9,
+      0.999
+    ],
+    "optimizer_eps": 1e-08,
+    "optimizer_foreach": false,
+    "optimizer_fused": false,
+    "threads": 4,
+    "allowed_seeds": [
+      42,
+      43,
+      44
+    ],
+    "shuffle": "CPU torch.Generator seeded once; randperm each epoch",
+    "augmentation": null,
+    "early_stopping": false,
+    "checkpoint_selection": "fixed final epoch",
+    "semantics": "conditional legacy manual-point regression",
+    "calibrated_confidence": false,
+    "verified_abstention": false
+  },
+  "device": "cpu",
+  "threads": 4,
+  "cpu_reason": "Small fixed model and sample; explicit portable CPU reference chosen before results, not a device-speed competition.",
+  "training_order": [
+    {
+      "train_game": 823407,
+      "test_game": 849845,
+      "seed": 42,
+      "train_count": 28,
+      "test_marked": 56
+    },
+    {
+      "train_game": 823407,
+      "test_game": 849845,
+      "seed": 43,
+      "train_count": 28,
+      "test_marked": 56
+    },
+    {
+      "train_game": 823407,
+      "test_game": 849845,
+      "seed": 44,
+      "train_count": 28,
+      "test_marked": 56
+    },
+    {
+      "train_game": 849845,
+      "test_game": 823407,
+      "seed": 42,
+      "train_count": 56,
+      "test_marked": 28
+    },
+    {
+      "train_game": 849845,
+      "test_game": 823407,
+      "seed": 43,
+      "train_count": 56,
+      "test_marked": 28
+    },
+    {
+      "train_game": 849845,
+      "test_game": 823407,
+      "seed": 44,
+      "train_count": 56,
+      "test_marked": 28
+    }
+  ],
+  "optimizer_steps_planned": 660,
+  "unique_marked_frames": 84,
+  "legacy_abstentions_excluded": 2,
+  "seed_repetitions": 3,
+  "planned_predictions": 252,
+  "independent_sample_count_is_not_252": true,
+  "checkpoint_policy": "Train all six fixed final-epoch checkpoints, hash and seal ledger, then evaluate. No target-game checkpoint selection, early stopping, best seed selection, augmentation, hyperparameter search or retries.",
+  "baselines": [
+    "Fixed normalized crop center (0.5,0.5)",
+    "Normalized training-game point mean, projected into the target camera crop"
+  ],
+  "coordinate_contract": "u=(x-left)/crop_width; v=(y-top)/crop_height. Model heatmap expected pixel centers. No clipping/replacement of out-of-crop references. Original-pixel and normalized-crop discrepancies are distinct.",
+  "reporting": "Every marked target frame remains in its per-seed denominator with errors/missing counts. Per-direction and per-seed pooled median/p90 plus paired model-minus-baseline differences. Repeated seeds are not independent frames; no population CI from two development games.",
+  "next_candidate_gate": "Only nominate this candidate for later development if all six arms have complete predictions and both median and p90 original-pixel discrepancy are lower than BOTH baselines in every arm. Regardless of gate, no service adoption or independent accuracy claim from this study.",
+  "timing_scope": "Training and held-out batch inference durations only; not video service latency or single-frame publication.",
+  "limitations": [
+    "Known marked legacy frames and manually fixed game crops; conditional point regression, not detection.",
+    "No bounding-box, mask, current-protocol negative, calibrated confidence, or abstention training.",
+    "Both games were previously reviewed and used for development. Cross-game training separation does not make them unseen.",
+    "Legacy coordinates are not certified equivalent to the current visible mitt-body center.",
+    "No verified catcher identity, pitcher intent, physical-coordinate accuracy, pre-pitch availability, or policy utility."
+  ],
+  "run_directory": "outputs/cv_local_point_run_v1",
+  "actual_label_training_calls_before_registration": 0
+}

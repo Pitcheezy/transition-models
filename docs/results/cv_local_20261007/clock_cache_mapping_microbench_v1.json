@@ -1,0 +1,65 @@
+{
+  "schema": "cv20_mapping_microbenchmark_v1",
+  "preregister_sha256": "12c78ed72ed83fa6a24e6c3c15051d731788ed7023ae002b0816885caf68a26a",
+  "clip_clock_sha256": "8ce740cb475265c2f12673111d462edb62140b9a8e00826567379c5529104810",
+  "source_framemd5_sha256": "143821fbbfc52e10c931c362901e97e4b20e31da275ebf70d3d62fccaefbf82f",
+  "clip_framemd5_sha256": "98b058c7908c1e743ed963fe0f3f6b0f425ab992e689a4293fd097373e9f76ac",
+  "input_bytes": 561636,
+  "matched_frames": 3298,
+  "first_uncached_seconds": 0.10308729996904731,
+  "first_cached_miss_seconds": 0.17484130011871457,
+  "pairs": [
+    {
+      "index": 0,
+      "order": [
+        "uncached",
+        "cached"
+      ],
+      "uncached_seconds": 0.09914710000157356,
+      "cached_seconds": 0.008980599930509925
+    },
+    {
+      "index": 1,
+      "order": [
+        "cached",
+        "uncached"
+      ],
+      "cached_seconds": 0.00855919998139143,
+      "uncached_seconds": 0.10131649998947978
+    },
+    {
+      "index": 2,
+      "order": [
+        "uncached",
+        "cached"
+      ],
+      "uncached_seconds": 0.10336750000715256,
+      "cached_seconds": 0.008674700045958161
+    },
+    {
+      "index": 3,
+      "order": [
+        "cached",
+        "uncached"
+      ],
+      "cached_seconds": 0.00853689992800355,
+      "uncached_seconds": 0.0992567001376301
+    },
+    {
+      "index": 4,
+      "order": [
+        "uncached",
+        "cached"
+      ],
+      "uncached_seconds": 0.09960309998132288,
+      "cached_seconds": 0.00848810002207756
+    }
+  ],
+  "uncached_median_seconds": 0.09960309998132288,
+  "cached_hit_median_seconds": 0.00855919998139143,
+  "all_reports_semantically_equal": true,
+  "notice": "Known byte tables only, five alternating-order pairs after separately recorded first calls. File reading/hash verification and frame extraction are outside these timed functions. Not a replay, model, cold-start or live-broadcast latency claim.",
+  "model_calls": 0,
+  "new_images": 0,
+  "independent_validation": false
+}

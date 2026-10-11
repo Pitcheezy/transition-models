@@ -1,0 +1,56 @@
+{
+  "schema": "local_glove_repeatability_trace_diagnostic_v1",
+  "analysis_scope": "Exploratory analysis of saved traces after all preregistered runs; no new model calls or threshold change.",
+  "report_sha256": {
+    "1": "bd188f766b26ed2b4dda66dcb78019ed1cc71becb6a0658469cd23176851bd67",
+    "2": "a98366806001591fe73d826fd935c7b1f344d756a8e141366dcc4b48c7618af4",
+    "3": "8fb5af0d7bdd33b837050ed81979c1f33472a0df511d09afa04cb2e434804bd3"
+  },
+  "phase_seconds": {
+    "input_binding_verification": {
+      "median": 0.406,
+      "max": 0.438
+    },
+    "frame_extraction": {
+      "median": 1.3279999999999998,
+      "max": 1.968
+    },
+    "request_preparation": {
+      "median": 0.485,
+      "max": 0.735
+    },
+    "dispatch_overhead": {
+      "median": 0.0,
+      "max": 0.015
+    },
+    "observer_process": {
+      "median": 1.2574999999999998,
+      "max": 1.328
+    },
+    "output_binding_verification": {
+      "median": 0.39,
+      "max": 0.407
+    },
+    "response_validation_publication": {
+      "median": 0.469,
+      "max": 0.515
+    }
+  },
+  "over_target": [
+    {
+      "run": 2,
+      "index": 9,
+      "publication_seconds": 5.11,
+      "phase_seconds": {
+        "input_binding_verification": 0.407,
+        "frame_extraction": 1.968,
+        "request_preparation": 0.532,
+        "dispatch_overhead": 0.015,
+        "observer_process": 1.328,
+        "output_binding_verification": 0.391,
+        "response_validation_publication": 0.469
+      }
+    }
+  ],
+  "notice": "Phase medians are descriptive; do not add medians or nested model times to reconstruct end-to-end timing. Slower extraction at later frames suggests a follow-up diagnostic, not a causal proof."
+}

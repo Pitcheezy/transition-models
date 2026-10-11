@@ -1,0 +1,224 @@
+{
+  "schema": "mlb_player_identity_ocr_predictions_v1",
+  "game_pk": 747139,
+  "evalset_sha256": "e7d634356329a6a810074a984c01d26c3daf99ace7e9f9eb2ba511ad7503ec69",
+  "roster_sha256": "20da6d29b18f2781b51b73a73ff37d17e1c70767e42588e9a4ee9cb9b29f00b4",
+  "source": {
+    "page_url": "https://www.mlb.com/video/9-30-24-mets-win-epic-game-in-playoff-clincher",
+    "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+    "duration_seconds": 9340.748083
+  },
+  "reader_metadata": {
+    "engine": {
+      "engine": "windows_ocr",
+      "language": "en-US",
+      "os_version": "10.0.26200.0",
+      "dll_version": "10.0.26100.9278 (WinBuild.160101.0800)"
+    },
+    "config": {
+      "schema": "sny_player_names_v4",
+      "frame_size": [
+        1280,
+        720
+      ],
+      "crops": {
+        "pitcher": [
+          64,
+          111,
+          168,
+          129
+        ],
+        "batter": [
+          64,
+          133,
+          252,
+          151
+        ]
+      },
+      "presence": {
+        "count_bug": "sny_scoreboard_v2_default_gate",
+        "min_neutral_bright_fraction": 0.5,
+        "min_channel": 160,
+        "max_channel_spread": 50
+      },
+      "preprocessing": {
+        "scale": 4,
+        "resampling": "LANCZOS",
+        "border": 16,
+        "grayscale": true
+      },
+      "parser": "v2_parser_plus_nfkd_accent_fold",
+      "state": "current_frame_only_no_hold",
+      "options": {
+        "uppercase_context_l_to_I": true,
+        "decoupled_unreadable_batter_slot": true,
+        "nfkd_accent_fold": true
+      },
+      "pitcher_dynamic_right_edge": {
+        "max_x": 230,
+        "ink_max_channel": 100,
+        "ink_min_pixels": 3,
+        "gap": 8,
+        "margin": 4,
+        "box_blue_minus_red": 30
+      }
+    }
+  },
+  "reader_metadata_sha256": "602e626cbce4817f4261570532e37db4d7b66b2c78d57aec47ac786eea464a90",
+  "pipeline_code_sha256": {
+    "src/evaluation/player_identity_ocr.py": "1faa7c4fc6b3790f45627c8e75a3edf2f6c23515a6262f64474b90047472b4b7",
+    "src/data/player_identity.py": "9b117dab270c32073920d25a7304738ac6fdea74770b5736e7ae1f9923f8c5ed",
+    "src/vision/frames.py": "8abffcc1c787e7d43102fbba5066770b13a68bcfb08f45ac1328ed00a3cc705e",
+    "src/vision/sny_player_names.py": "2e8391792e25b51bc6dd54160405b4e25032c3e72da20e89936c5bdf78f39e1f",
+    "src/vision/sny_scoreboard.py": "a886460da1ce866b664983e3cd36a5cc77388113e0c7014015183ade50006714",
+    "src/vision/windows_ocr.ps1": "5605def973ec8a515619c2fb421fb54ec5da0ebd82e0965fcc2d05fb0eb80ed2",
+    "scripts/74_evaluate_player_identity_ocr.py": "18de7244aecd3e217187e5d11f2867bdf2cf230fd957a0763fae4f451dbee6c2"
+  },
+  "predictions": [
+    {
+      "game_pk": 747139,
+      "at_bat_number": 60,
+      "pitch_number": 1,
+      "play_id": "31305347-3b22-4856-be77-f2b60424c087",
+      "role": "pitcher",
+      "evidence": {
+        "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+        "frame_seconds": 5933.5,
+        "image_sha256": "1b984d2716406a6dab3f9d77a627e2e2e250c47ebdb7ca7439f562c69b81b4fb",
+        "path": "outputs/frames/evalset_5933.50.jpg"
+      },
+      "raw_text": "IGLESIAS",
+      "name_text": "IGLESIAS",
+      "lineup_order": null,
+      "status": "read",
+      "reason": "literal_name"
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 60,
+      "pitch_number": 1,
+      "play_id": "31305347-3b22-4856-be77-f2b60424c087",
+      "role": "batter",
+      "evidence": {
+        "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+        "frame_seconds": 5933.5,
+        "image_sha256": "1b984d2716406a6dab3f9d77a627e2e2e250c47ebdb7ca7439f562c69b81b4fb",
+        "path": "outputs/frames/evalset_5933.50.jpg"
+      },
+      "raw_text": "",
+      "name_text": null,
+      "lineup_order": null,
+      "status": "abstain",
+      "reason": "name_panel_absent"
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 60,
+      "pitch_number": 2,
+      "play_id": "94bd7dfc-cb02-482c-b830-1d9e462e7518",
+      "role": "pitcher",
+      "evidence": {
+        "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+        "frame_seconds": 5948.75,
+        "image_sha256": "4b073450f567a8727c27b5f5cb77e0904646c559da51a01ed7f160bee37817eb",
+        "path": "outputs/frames/evalset_5948.75.jpg"
+      },
+      "raw_text": "IGLESIAS",
+      "name_text": "IGLESIAS",
+      "lineup_order": null,
+      "status": "read",
+      "reason": "literal_name"
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 60,
+      "pitch_number": 2,
+      "play_id": "94bd7dfc-cb02-482c-b830-1d9e462e7518",
+      "role": "batter",
+      "evidence": {
+        "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+        "frame_seconds": 5948.75,
+        "image_sha256": "4b073450f567a8727c27b5f5cb77e0904646c559da51a01ed7f160bee37817eb",
+        "path": "outputs/frames/evalset_5948.75.jpg"
+      },
+      "raw_text": "",
+      "name_text": null,
+      "lineup_order": null,
+      "status": "abstain",
+      "reason": "name_panel_absent"
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 60,
+      "pitch_number": 3,
+      "play_id": "8b91f857-00fc-42b0-be1f-f9822eeb6e46",
+      "role": "pitcher",
+      "evidence": {
+        "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+        "frame_seconds": 5971.5,
+        "image_sha256": "b7110ca303f237096b9a19ff66dbbc31d90698f9e9872010718cd85fc00df273",
+        "path": "outputs/frames/evalset_5971.50.jpg"
+      },
+      "raw_text": "IGLESIAS",
+      "name_text": "IGLESIAS",
+      "lineup_order": null,
+      "status": "read",
+      "reason": "literal_name"
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 60,
+      "pitch_number": 3,
+      "play_id": "8b91f857-00fc-42b0-be1f-f9822eeb6e46",
+      "role": "batter",
+      "evidence": {
+        "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+        "frame_seconds": 5971.5,
+        "image_sha256": "b7110ca303f237096b9a19ff66dbbc31d90698f9e9872010718cd85fc00df273",
+        "path": "outputs/frames/evalset_5971.50.jpg"
+      },
+      "raw_text": "2.1GLESlAS",
+      "name_text": null,
+      "lineup_order": 2,
+      "status": "abstain",
+      "reason": "name_syntax_or_empty"
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 60,
+      "pitch_number": 4,
+      "play_id": "6f6c8911-3df4-4ee6-9f8e-eb29cc1c3c22",
+      "role": "pitcher",
+      "evidence": {
+        "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+        "frame_seconds": 5988.0,
+        "image_sha256": "1cb5d513d48b57a4a0eba5e80ba1e14b7554af316ab4e2a4fce82394f90a916f",
+        "path": "outputs/frames/evalset_5988.00.jpg"
+      },
+      "raw_text": "IGLESIAS",
+      "name_text": "IGLESIAS",
+      "lineup_order": null,
+      "status": "read",
+      "reason": "literal_name"
+    },
+    {
+      "game_pk": 747139,
+      "at_bat_number": 60,
+      "pitch_number": 4,
+      "play_id": "6f6c8911-3df4-4ee6-9f8e-eb29cc1c3c22",
+      "role": "batter",
+      "evidence": {
+        "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+        "frame_seconds": 5988.0,
+        "image_sha256": "1cb5d513d48b57a4a0eba5e80ba1e14b7554af316ab4e2a4fce82394f90a916f",
+        "path": "outputs/frames/evalset_5988.00.jpg"
+      },
+      "raw_text": "2.1GLESlAS",
+      "name_text": null,
+      "lineup_order": 2,
+      "status": "abstain",
+      "reason": "name_syntax_or_empty"
+    }
+  ],
+  "context_predictions": []
+}

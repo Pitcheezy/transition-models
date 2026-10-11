@@ -1,0 +1,34 @@
+{
+  "selected": "mlp135",
+  "criterion": "minimum uncalibrated validation CE",
+  "selection_period": "2024 Jan-May",
+  "calibration_period": "2024 June",
+  "groups": {
+    "mlp77": [
+      "outputs\\operational_20260921\\mlp77_seed42",
+      "outputs\\operational_20260921\\mlp77_seed43",
+      "outputs\\operational_20260921\\mlp77_seed44"
+    ],
+    "mlp135": [
+      "outputs\\operational_20260921\\mlp135_seed42",
+      "outputs\\operational_20260921\\mlp135_seed43",
+      "outputs\\operational_20260921\\mlp135_seed44"
+    ],
+    "lr77": [
+      "outputs\\operational_20260921\\lr77_seed42"
+    ],
+    "lgb77": [
+      "outputs\\operational_20260921\\lgb77_seed42"
+    ],
+    "lgb135": [
+      "outputs\\operational_20260921\\lgb135_seed42"
+    ]
+  },
+  "validation_ce": {
+    "mlp77": 1.2723928447335235,
+    "mlp135": 1.2714918776615554,
+    "lr77": 1.2765130757284806,
+    "lgb77": 1.2739599474127632,
+    "lgb135": 1.2743873924435083
+  }
+}
