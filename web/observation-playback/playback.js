@@ -72,6 +72,9 @@
     if (!response.ok) fail("재생 기록 파일을 읽지 못했습니다.");
     const data = validateData(await response.json()), video = $("video");
     const offset = seconds(data.media.source_offset_seconds_exact), low = seconds(data.scope.start_source_seconds_exact) - offset, high = seconds(data.scope.end_source_seconds_exact) - offset;
+    // Transport-only settling margin: decoded seeks can land one frame from the requested time.
+    // Recorded clocks and stateAt publication/deadline comparisons remain unchanged.
+    const seekSettling = 0.1;
     $("scope").textContent = `개발 경기 ${data.scope.game_pk} · ${data.scope.pa}번째 타석의 제한 구간 · 원본 ${time(data.scope.start_source_seconds_exact)}–${time(data.scope.end_source_seconds_exact)}초`;
     for (const [value, label] of [[data.summary.planned_observations,"전체 계획"],[data.summary.interval_observations,"구간 안 입력"],[data.summary.outside_interval_observations,"구간 밖 입력"],[data.summary.verified_mitt,"확정 미트"]]) { const box = add($("summary"), "div", ""); box.className = "stat"; add(box,"strong",String(value)); add(box,"span",label); }
     const seek = source => { video.currentTime = Math.min(high, Math.max(low, source - offset)); render(); };
@@ -92,15 +95,19 @@
       for (const {o,row,status} of rows) { const visible = o.status === "accepted" && seconds(o.publication_seconds_exact) < high + offset && seconds(o.publication_seconds_exact) <= state.source; status.textContent = visible ? statusText[o.candidate_status] : o.status === "accepted" ? "발행 전" : state.source >= seconds(o.cutoff_seconds_exact) ? `저장 실행: ${statusText[o.status]}` : "계획 · 시각 도달 전"; row.dataset.current = String(last === o); }
       $("toggle").textContent = video.paused ? "재생" : "일시정지";
     }
-    video.addEventListener("loadedmetadata",() => { if (video.duration + 0.05 < high) return showError(new Error("영상 길이가 구간보다 짧습니다.")); video.currentTime = low; render(); });
-    video.addEventListener("timeupdate",() => { if (video.currentTime >= high) { video.pause(); if (video.currentTime > high) video.currentTime = high; } render(); });
-    video.addEventListener("seeking",() => { if (video.currentTime < low) video.currentTime = low; if (video.currentTime > high) video.currentTime = high; render(); });
-    video.addEventListener("play",render); video.addEventListener("pause",render);
+    // WebKit may discard a seek made at loadedmetadata; wait for decoded data once.
+    video.addEventListener("loadeddata",() => { if (video.duration + 0.05 < high) return showError(new Error("영상 길이가 구간보다 짧습니다.")); video.currentTime = low; render(); }, { once: true });
+    video.addEventListener("timeupdate",() => { if (video.currentTime >= high) { video.pause(); if (video.currentTime > high + seekSettling) video.currentTime = high; } render(); });
+    // Recheck the completed seek: WebKit can finish its first seek before our lower bound.
+    for (const event of ["seeking", "seeked"]) video.addEventListener(event,() => { if (video.currentTime < low - seekSettling) video.currentTime = low; if (video.currentTime > high + seekSettling) video.currentTime = high; render(); });
+    // Native video controls and keyboard playback must follow the same restart rule.
+    video.addEventListener("play",() => { if (video.currentTime >= high - seekSettling) seek(low + offset); render(); });
+    video.addEventListener("pause",render);
     video.addEventListener("error",() => showError(new Error("영상을 읽을 수 없습니다. 검증된 팩을 다시 확인하세요.")));
     $("frame").addEventListener("load",() => { const latest = stateAt(data, video.currentTime).latest; $("frame").hidden = !latest || $("frame").getAttribute("src") !== latest.image_path; });
     $("frame").addEventListener("error",() => showError(new Error("입력 프레임을 읽을 수 없습니다.")));
     $("restart").addEventListener("click",() => seek(low + offset));
-    $("toggle").addEventListener("click",async () => { if (video.paused) { if (video.currentTime >= high - 0.01) seek(low + offset); try { await video.play(); } catch { showError(new Error("브라우저가 재생을 시작하지 못했습니다.")); } } else video.pause(); });
+    $("toggle").addEventListener("click",async () => { if (video.paused) { try { await video.play(); } catch { showError(new Error("브라우저가 재생을 시작하지 못했습니다.")); } } else video.pause(); });
     video.src = data.media.path; $("app").hidden = false; render();
   }
   function showError(error) { $("video").pause(); $("app").hidden = true; $("error").textContent = error.message; $("error").hidden = false; }

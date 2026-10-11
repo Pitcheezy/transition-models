@@ -1,4 +1,4 @@
-name: service review browser
+name: review and observation browser
 
 on:
   push:
@@ -6,6 +6,8 @@ on:
       - '.github/workflows/service-review-browser.yml'
       - 'tests/browser/**'
       - 'web/service-review/**'
+      - 'web/observation-playback/**'
+      - 'intent/observation_playback_server.py'
       - 'src/integration/**'
       - 'scripts/build_service_review.py'
       - 'scripts/inspect_service_game.py'
@@ -15,6 +17,8 @@ on:
       - '.github/workflows/service-review-browser.yml'
       - 'tests/browser/**'
       - 'web/service-review/**'
+      - 'web/observation-playback/**'
+      - 'intent/observation_playback_server.py'
       - 'src/integration/**'
       - 'scripts/build_service_review.py'
       - 'scripts/inspect_service_game.py'
@@ -42,7 +46,7 @@ jobs:
       BROWSER_ENGINE: ${{ matrix.engine }}
       PYTHON_BIN: python
     steps:
-      # These tests do not load LFS media, real exports, model weights or human labels.
+      # These tests use invented records and self-generated color media only; no private inputs.
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v5
         with:
@@ -58,6 +62,6 @@ jobs:
       - name: Install the tested engine
         working-directory: tests/browser
         run: npx playwright install --with-deps ${{ matrix.engine }}
-      - name: Test synthetic local service review
+      - name: Test synthetic service review and observation playback
         working-directory: tests/browser
         run: npm test

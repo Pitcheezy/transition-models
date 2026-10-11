@@ -1,5 +1,15 @@
 # MLB P0 — Codex / Claude 인계 기록
 
+## CV-31 노트북 재생 수정·자동 회귀 완료 — 2026-10-11
+
+영상 자체 재생/Space가 구간 끝에서 멈추는 결함과 Windows WebKit 최초 탐색/반복 탐색을 수정했다.
+공통 play 처리·data-ready 최초 이동·seeked 경계 확인을 사용한다.100ms는 재생 제어 정착 여유일 뿐이며 관측 발행/마감 기준·정답은 그대로다.
+합성 Chrome154/WebKit26.5 각각22passed, 실제 개발 영상Chrome16passed, Node26passed, 관련Python58passed.
+체크리스트는 UTF8 환경으로7passed 재확인했다. [수정과 재현](CV_PLAYBACK_BROWSER_REGRESSION_20261011.md), [검증 기록](results/cv_followup_20261011/playback_browser_regression_v1.json).
+새 관측팩v9를59158에 적용했고 원문·영상·관측 데이터·v4를 보존했다. 서비스v5 ZIP은 변경하지 않았다.
+[파일별 내용과 팀원 복사 문안](handoff/FILE_GUIDE_20261011.md)을 작성했으며 전송하지 않았다.
+Mac I-device2는 별도 대기이며 노트북 작업의 선행 조건이 아니다. A-y 보류·외부 입력 조건 유지. 선점c8f9fe8, 구현은 같은 완료 커밋. 수정 권한 반납.
+
 ## I-device2 Mac 환경 확인 완료 · 비공개 영상 ZIP 필요 — 2026-10-11
 
 실제 Mac 명령 결과: Darwin/arm64, macOS27.0(26A428), origin은 우리 `Pitcheezy/transition-models`.

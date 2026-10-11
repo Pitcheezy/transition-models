@@ -1,5 +1,13 @@
 # SmartPitch MDP Transition Probability Models
 
+## 노트북 후속 CV-31 완료 — 2026-10-11
+
+노트북에서 기본 영상 재시작·WebKit 탐색을 수정하고 합성 브라우저 회귀를 CI에 연결했다.
+Chrome/WebKit 각각22·실제 개발 영상Chrome16·Node26·관련Python58 통과. 관측/발행/평가 기준은 동일하다.
+[현재 재현·범위](docs/CV_PLAYBACK_BROWSER_REGRESSION_20261011.md), [파일 종류·팀원 설명](docs/handoff/FILE_GUIDE_20261011.md).
+현재 관측팩은v9, 노트북59158에서 실행 중이다. 서비스 검토용v5 ZIP은 별개이며 그대로다.
+Mac 전송은 Mac I-device2를 할 때만 필요하다. A-y 보류·외부 입력 대기를 유지하며 수정 권한을 반납한다.
+
 ## I-device2 실제 Mac 확인 · 영상팩 전송 대기 — 2026-10-11
 
 Darwin/arm64·macOS27.0(26A428)과 우리 origin을 실제 Mac 명령으로 확인했다.

@@ -1,0 +1,132 @@
+{
+  "schema": "cv_playback_browser_regression_v1",
+  "date": "2026-10-11",
+  "unit": "CV-31",
+  "claim_commit": "c8f9fe8",
+  "fixes": [
+    "common play-event restart",
+    "one-time data-ready seek",
+    "completed-seek scope checks with transport-only 100ms settling"
+  ],
+  "scientific_publication_and_deadline_rules_unchanged": true,
+  "local_synthetic_browser": {
+    "chrome": {
+      "version": "154.0.8037.58",
+      "passed": 22,
+      "seconds": 35.83622
+    },
+    "webkit": {
+      "version": "26.5",
+      "passed": 22,
+      "seconds": 56.8161829
+    },
+    "platform": "Windows",
+    "new_observation_cases": 9,
+    "existing_service_cases": 13,
+    "fixtures": "self-generated color/geometry media; no baseball or human labels"
+  },
+  "private_browser": {
+    "browser": "154.0.8037.58",
+    "scope": "Headless Chromium; saved private media; not actual user device acceptance",
+    "platform": "win32",
+    "results": [
+      {
+        "name": "all14rows_10inside_4outside",
+        "passed": true
+      },
+      {
+        "name": "scope_starts_at_exact_mapped_clock",
+        "passed": true
+      },
+      {
+        "name": "no_output_before_first_publication",
+        "passed": true
+      },
+      {
+        "name": "future_observation_hidden",
+        "passed": true
+      },
+      {
+        "name": "published_frame_matches_row_004",
+        "passed": true
+      },
+      {
+        "name": "first_pitch_uncertainty_not_ready",
+        "passed": true
+      },
+      {
+        "name": "old_bitmap_hidden_during_frame_replacement",
+        "passed": true
+      },
+      {
+        "name": "replaced_frame_matches_row_005",
+        "passed": true
+      },
+      {
+        "name": "different_pitch_not_current_value",
+        "passed": true
+      },
+      {
+        "name": "post_release_output_not_ready",
+        "passed": true
+      },
+      {
+        "name": "backward_seek_retracts_future_frame",
+        "passed": true
+      },
+      {
+        "name": "actual_continuous_video_plays",
+        "passed": true
+      },
+      {
+        "name": "stops_at_scope_end",
+        "passed": true
+      },
+      {
+        "name": "native_keyboard_restarts_after_scope_end",
+        "passed": true
+      },
+      {
+        "name": "320px_no_page_overflow",
+        "passed": true
+      },
+      {
+        "name": "no_javascript_errors",
+        "passed": true
+      }
+    ],
+    "errors": []
+  },
+  "node_contract_cases": 26,
+  "related_python_passed": 58,
+  "checklist_utf8_recheck_passed": 7,
+  "python_warning_note": "Initial related run had one child-process UTF-8 decode warning; checklist recheck with PYTHONUTF8=1 passed without warnings.",
+  "package": {
+    "directory": "outputs/cv_replay_view_20261011_v9",
+    "files": 21,
+    "bytes": 52900379,
+    "manifest_sha256": "766b8d723679f89ccab701a83998f0fb90c90e1111f0da73b7ebc104b85aced3",
+    "changed_from_v4": [
+      "playback.js",
+      "manifest.json"
+    ],
+    "input_evidence_sha256": {
+      "saved_run_inventory": "5a1ecb040f8249e4a11fefecefd7cec76da06535aabb5fb0df2de4b286b47773",
+      "capture_receipt_sha256": "fef4d27b42d303be2ca45de97696978360bafb6c262be0368c83f84e40f6de75",
+      "source_framemd5_sha256": "16ee21be1759dfe459e57c3c0ac0b3ab74942360500f30ef92c92546e3265e35",
+      "clip_framemd5_sha256": "b4f2df02423004c57ed3ced83bfbb8b8c61dfe588be9b94cd8fa5445b77555e3",
+      "clip_media_sha256": "75fd139c9ad8e88bbcca3020a65926b6c9873a2037ad6de3a664ea98705386b0",
+      "timing": "9781a52527f5a91069548b5017cd927c94d4959df944a93cd54ec5be6c9760b7",
+      "manifest": "d73b9f642ae45b15567e4a3b91638828c6ea080db4e57fa4549956781f66a99e",
+      "sources": "0e431d53b398e5b6504b99ed000a1ccdd9bb3745640415e2cc58ff9a06cc5dfd",
+      "deadline_report": "39b0791d91c68776b45fedfdd3c75694f4a93b3e78a88edc0b6c72f6184f702d"
+    },
+    "replay_data_unchanged": true
+  },
+  "service_review_v5_archives_changed": false,
+  "teammate_repository_accessed": false,
+  "public_site_modified": false,
+  "physical_mac_acceptance": false,
+  "new_model_or_independent_accuracy_evaluation": false,
+  "ci": "Workflow configured; remote result is separate from these local checks."
+}

@@ -7,7 +7,9 @@
     "node": ">=20"
   },
   "scripts": {
-    "test": "node --test --test-concurrency=1 service-review.test.cjs"
+    "test": "node --test --test-concurrency=1 service-review.test.cjs observation-playback.test.cjs",
+    "test:service": "node --test --test-concurrency=1 service-review.test.cjs",
+    "test:observation": "node --test --test-concurrency=1 observation-playback.test.cjs"
   },
   "devDependencies": {
     "playwright": "1.62.1"
