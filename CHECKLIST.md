@@ -1,5 +1,12 @@
 # 남은 작업 체크리스트
 
+## GitHub 상황판·우편 협업 도입 — 2026-10-11
+
+- [~] H-collab1. 사용자 요청으로 우리 레포에 고정 상황판(board)·우편(mail)·사람 결정(needs-human) 체계를 도입하고 AGENTS/CLAUDE/Cloud 인계의 세션 규칙을 맞춘다. Song #35/#36은 읽기만 하며 최종 서비스 정본·계약·실행 권한 합의와 구분한다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-11 · Codex]`
+
+수정 권한: Codex — `codex/collaboration-board`, 협업 문서와 우리 GitHub 이슈 설정만 담당한다.
+A-y·F-4i 보류, 기존 영상·모델·사람 응답·서버·공개 배포 상태는 유지한다.
+
 ## main 통합·Codex Cloud 인계 완료 — 2026-10-11
 
 - [x] H-main1. 우리 feature/intent-v0·codex/fix-point-label-alignment·codex/cv-m3-oct05-deliverables 이력을 PR #2로 main에 병합했다(39ffcd0). Linux/macOS 전체 CPU 각2283passed/8skipped/2deselected, Chrome/WebKit 각22passed, Node70passed. 운영 구조·Cloud 설치/LFS·실행·프롬프트를 문서화했다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-11 · Codex]`
@@ -492,7 +499,7 @@ S 선택 비중은 사건확률이 아니며 S 위치는 과거 투구 분포의
 |---|---|---|
 | 브랜치 | 정본 `main` (통합 PR #2, `39ffcd0`); 기존 Windows/Mac 작업 폴더·원본 브랜치 보존 | 2026-10-11 |
 | 최신 작업 커밋 | Mac 기록 `6792ca3`; CV-31 선점 `c8f9fe8`, 구현은 이 완료 커밋. 서비스 v5 팩 소스 `fafc9c6` 고정 | 2026-10-11 |
-| 파일 수정 권한 | **반납 — H-main1 main 통합 완료** | 2026-10-11 |
+| 파일 수정 권한 | **Codex — H-collab1 협업 규칙 반영** | 2026-10-11 |
 | Mac 실기기 I-device2 | 환경 확인 완료·v5 영상 ZIP 전송 대기. 재생/결과 공개/투구 전환/타석 전환/미트 가로 표시 모두 미실행 | 2026-10-11 |
 | 저장 공간 운영 | 내부 용량 부족 시 연결된 외장 SSD의 실제 경로·여유를 확인해 사용. 확인 장치 `D:` T7 Shield (exFAT), 여유 3,723.1 GiB; 재확인·이관 원칙은 [MAINTENANCE](docs/MAINTENANCE.md). 기존 데이터 이동 없음 | 2026-10-04 |
 | 중계 시각 주석 | **297 확인 / 25 확인 불가 / 0 미검토** — 전 경기 322구 검토 완료. 완전 타석 2~4·6~15·18~19·21·23~28·30~32·34·36~38·40~46·49~51·53~55·57~63·65~69·71·74~79·81. 불가 목록·반이닝 집계·리드 분포는 [전 경기 요약](docs/MLB_BROADCAST_TIMING.md). 규약 v2, 수동 시각 | 2026-09-27 |
