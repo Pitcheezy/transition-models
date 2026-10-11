@@ -1,5 +1,14 @@
 # MLB P0 — Codex / Claude 인계 기록
 
+## H-main1 — 브랜치 통합·Cloud 인계 — 2026-10-11
+
+feature `78f4bcc`, Codex OCR `dad5522`, 과거 M3 요청 `ed05b3a`를 새 통합 작업트리에서 병합했다.
+선점 `ecffd54`, 병합 `5d1dd67`·`9474efb`. 현재 원격 main 반영/검증 상태는
+[통합 기록](MAIN_INTEGRATION_20261011.md)과 CHECKLIST 상단이 기준이다.
+[Cloud 운영 설명·명령·프롬프트](CODEX_CLOUD_HANDOFF.md)를 추가했다. 코드 통합과 사이트 배포는 구분한다.
+F-4h 완료·F-4i 보류·A-y 사용자 보류와 최신 CV/서비스 기능을 보존했다. 기존 작업 폴더·개인 자료·서버,
+팀원 저장소·M3 측정/JSONL/사람 판정은 변경하지 않았다. 이후 main 반영 후 새 작업의 기준은 main이다.
+
 ## CV-31 노트북 재생 수정·자동 회귀 완료 — 2026-10-11
 
 영상 자체 재생/Space가 구간 끝에서 멈추는 결함과 Windows WebKit 최초 탐색/반복 탐색을 수정했다.

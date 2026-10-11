@@ -1,5 +1,14 @@
 # SmartPitch MDP Transition Probability Models
 
+## main 통합과 Cloud 재개 기준 — 2026-10-11
+
+사용자 요청으로 별도 `codex/integrate-main`에서 feature의 최신 웹·CV와 Codex의 OCR 작업,
+과거 M3 요청 이력을 병합했다. 현재 main 반영 상태는 CHECKLIST H-main1 및 실제 원격으로 확인한다.
+[통합 근거](docs/MAIN_INTEGRATION_20261011.md), [Cloud 운영·실행·프롬프트](docs/CODEX_CLOUD_HANDOFF.md)를 먼저 읽는다.
+통합 main 반영 후 새 작업은 최신 main의 짧은 작업 브랜치에서 시작한다. 아래 날짜별 feature 경로·선점 기록은 당시 이력이다.
+기존 미커밋 변경·비공개 자료·실행 서버를 보존한다. 팀원 저장소 접근/변경 금지, A-y 사용자 보류,
+F-4i 보류·독립 사람/영상/실제 기기/실행 번들 조건 유지. Git 병합은 Sites 공개 배포와 별개다.
+
 ## 노트북 후속 CV-31 완료 — 2026-10-11
 
 노트북에서 기본 영상 재시작·WebKit 탐색을 수정하고 합성 브라우저 회귀를 CI에 연결했다.

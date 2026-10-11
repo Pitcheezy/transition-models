@@ -1,5 +1,14 @@
 # SmartPitch transition-models
 
+## Integration baseline — 2026-10-11
+
+Read [the main integration record](docs/MAIN_INTEGRATION_20261011.md) and CHECKLIST H-main1
+before choosing a branch. After the integration reaches origin/main, start new work from that
+main in a short-lived work branch; do not resume an old feature branch without reconciling it.
+Preserve existing changes and private data. Do not access or edit SongRoute/pitcheezy.
+The user's A-y hold and external-input requirements remain in force.
+[Cloud handoff](docs/CODEX_CLOUD_HANDOFF.md) distinguishes deployed Sites from local review tools.
+
 Read [AGENTS.md](AGENTS.md) first. It is the single source of project instructions,
 current verified results, coding conventions, and historical experiment corrections.
 

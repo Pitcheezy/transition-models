@@ -6,6 +6,10 @@
 
 수정 권한: Codex — codex/integrate-main에서만 작업. 기존 작업 폴더·비공개 자료·서버와 SongRoute/pitcheezy는 변경하지 않는다. A-y 보류와 외부 입력 조건은 유지한다.
 
+[통합 범위·검증·원격 반영 기록](docs/MAIN_INTEGRATION_20261011.md) · [Codex Cloud 운영 설명과 복사 프롬프트](docs/CODEX_CLOUD_HANDOFF.md).
+통합 후 새 작업의 기준은 최신 main이며, 원본 브랜치와 미커밋/비공개 자료는 보존한다.
+
+
 
 ## 노트북 후속 CV-31 완료 — 2026-10-11
 

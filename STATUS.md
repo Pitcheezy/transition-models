@@ -1,5 +1,10 @@
 # STATUS — Pitcheezy / transition-models
 
+> **2026-10-11 main 통합:** feature `78f4bcc`와 Codex OCR `dad5522`, 과거 M3 요청 `ed05b3a`를 이력 보존 병합했다.
+> 이전 STATUS의 “OCR 미통합”은 과거 조사 상태다. 실제 main 반영·검사 결과는 [통합 기록](docs/MAIN_INTEGRATION_20261011.md)을 따른다.
+> [Cloud 운영·실행 안내](docs/CODEX_CLOUD_HANDOFF.md)는 공개 Sites, 로컬 서비스 v5, 관측 v9를 구분한다.
+> 소스 병합으로 공개 배포·모델 실제 실행·사람/실기기 검수가 추가 완료된 것은 아니다.
+
 > **2026-10-10 후속:** 로컬 서비스 검토의 키보드 포커스·정규화 파일 크기·단위/후보 검사를 수정했고, 실제 Chrome/WebKit 합성 회귀 13개씩을 추가했다. 전체 Windows CPU2225passed/8skipped/2deselected. [수정 근거](docs/SERVICE_REVIEW_REGRESSION_20261010.md). v5 이관을 완료했다. 소스 `fafc9c6`, 압축 해제 Python458passed/1skipped·Node112passed, 별도 영상팩3구 재생/공개 확인. 원격 Chromium/WebKit 각13passed, Linux/macOS CPU 각2225passed. [전달 영수증](docs/handoff/delivery_v5.json). 아래 v4는 이전 고정 전달본이다.
 
 > **이전 v4 전달 기록 — 2026-10-10:** 비공개 영상 검토팩은 v4 (`outputs/service_review_video_20261010_v4.zip`), 코드 `a19069a`까지 좌표 설명·영상 실패 복구를 반영했다. [실행 안내](docs/SERVICE_REVIEW_RECOVERY_20261010.md). A-y 사람 검토는 사용자 요청으로 보류하며 서비스 마무리 선행 조건이 아니다.
