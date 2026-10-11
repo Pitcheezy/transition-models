@@ -1,10 +1,10 @@
 # 남은 작업 체크리스트
 
-## main 통합·Codex Cloud 인계 진행 — 2026-10-11
+## main 통합·Codex Cloud 인계 완료 — 2026-10-11
 
-- [~] H-main1. 사용자 요청으로 우리 저장소의 feature/intent-v0, codex/fix-point-label-alignment, codex/cv-m3-oct05-deliverables 커밋을 별도 통합 브랜치에서 병합·검증하고 main에 반영한다. 현재 운영 구조와 Cloud 실행 조건을 문서화한다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-11 · Codex]`
+- [x] H-main1. 우리 feature/intent-v0·codex/fix-point-label-alignment·codex/cv-m3-oct05-deliverables 이력을 PR #2로 main에 병합했다(39ffcd0). Linux/macOS 전체 CPU 각2283passed/8skipped/2deselected, Chrome/WebKit 각22passed, Node70passed. 운영 구조·Cloud 설치/LFS·실행·프롬프트를 문서화했다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-11 · Codex]`
 
-수정 권한: Codex — codex/integrate-main에서만 작업. 기존 작업 폴더·비공개 자료·서버와 SongRoute/pitcheezy는 변경하지 않는다. A-y 보류와 외부 입력 조건은 유지한다.
+**수정 권한 반납.** 다음 작업은 최신 main에서 짧은 새 작업 브랜치로 시작한다. 기존 작업 폴더·미커밋/비공개 자료·서버·원본 브랜치를 보존했고, SongRoute/pitcheezy에는 접근/변경하지 않았다. A-y·F-4i 보류와 외부 입력 조건은 유지한다.
 
 [통합 범위·검증·원격 반영 기록](docs/MAIN_INTEGRATION_20261011.md) · [Codex Cloud 운영 설명과 복사 프롬프트](docs/CODEX_CLOUD_HANDOFF.md).
 통합 후 새 작업의 기준은 최신 main이며, 원본 브랜치와 미커밋/비공개 자료는 보존한다.
@@ -490,9 +490,9 @@ S 선택 비중은 사건확률이 아니며 S 위치는 과거 투구 분포의
 
 | 항목 | 값 | 갱신 |
 |---|---|---|
-| 브랜치 | `codex/integrate-main`에서 main 통합 검사; 기존 Windows/Mac 작업 폴더 보존 | 2026-10-11 |
+| 브랜치 | 정본 `main` (통합 PR #2, `39ffcd0`); 기존 Windows/Mac 작업 폴더·원본 브랜치 보존 | 2026-10-11 |
 | 최신 작업 커밋 | Mac 기록 `6792ca3`; CV-31 선점 `c8f9fe8`, 구현은 이 완료 커밋. 서비스 v5 팩 소스 `fafc9c6` 고정 | 2026-10-11 |
-| 파일 수정 권한 | **Codex — H-main1 통합·검사 진행 중** | 2026-10-11 |
+| 파일 수정 권한 | **반납 — H-main1 main 통합 완료** | 2026-10-11 |
 | Mac 실기기 I-device2 | 환경 확인 완료·v5 영상 ZIP 전송 대기. 재생/결과 공개/투구 전환/타석 전환/미트 가로 표시 모두 미실행 | 2026-10-11 |
 | 저장 공간 운영 | 내부 용량 부족 시 연결된 외장 SSD의 실제 경로·여유를 확인해 사용. 확인 장치 `D:` T7 Shield (exFAT), 여유 3,723.1 GiB; 재확인·이관 원칙은 [MAINTENANCE](docs/MAINTENANCE.md). 기존 데이터 이동 없음 | 2026-10-04 |
 | 중계 시각 주석 | **297 확인 / 25 확인 불가 / 0 미검토** — 전 경기 322구 검토 완료. 완전 타석 2~4·6~15·18~19·21·23~28·30~32·34·36~38·40~46·49~51·53~55·57~63·65~69·71·74~79·81. 불가 목록·반이닝 집계·리드 분포는 [전 경기 요약](docs/MLB_BROADCAST_TIMING.md). 규약 v2, 수동 시각 | 2026-09-27 |

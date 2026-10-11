@@ -37,9 +37,16 @@
 
 검사 환경은 Windows 노트북/Python 3.12.12/Node 24.1.0이다.
 Python은 기존 feature 가상환경을 재사용하고 검사 cwd는 새 통합 작업트리로 고정했다.
-이는 새 환경 설치 검사가 아니다. 새 Linux/macOS 설치는 PR CI에서 별도로 확인한다.
+이는 새 환경 설치 검사가 아니다. 새 Linux/macOS 설치는 최종 PR CI에서 별도로 통과했다.
 
-- `python scripts/check_project.py --cpu-only --test-timeout 900`: 전체 검사 진행 중.
+- Windows `python scripts/check_project.py --cpu-only --test-timeout 900`: 최초 2273 passed,
+  10 failed, 8 skipped, 2 deselected(556.56초). 실패 10개는 모두 아래 LFS 포인터 문제다.
+  환경 복원 후 실패한 파일만 재검사했으며 Windows 전체를 다시 실행한 것으로 기록하지 않는다.
+- 최종 PR 소스 `fe6aca5`의 [Linux/macOS CPU CI](https://github.com/Pitcheezy/transition-models/actions/runs/38121808147):
+  각 2283 passed, 8 skipped, 2 deselected(Linux74.17초, macOS154.50초).
+  [push CI](https://github.com/Pitcheezy/transition-models/actions/runs/38121805695)도 양쪽 통과했다.
+- [최종 원격 브라우저 CI](https://github.com/Pitcheezy/transition-models/actions/runs/38121808067):
+  Chromium/WebKit 각각22검사 통과. 체크리스트·문서 링크 검사도 통과했다.
 - `python scripts/check_pitch_studio.py`: 공개 정적 화면 자산·JS·미디어 출처/SHA·회귀 통과.
 - `node --test web/service-review/review.test.cjs web/observation-playback/playback.test.cjs`: 70 passed.
 - `scripts/74_evaluate_player_identity_ocr.py check`: PA6 v1/v2, PA60 v2/v4 저장 보고서 4개가
@@ -59,10 +66,12 @@ Python 기본 User-Agent의 공개 HEAD는403이었으므로 이를 일괄 접�
 
 ## main 반영과 이후 작업
 
-이 문서 작성 시점에는 통합 브랜치 검사 중이다. 원격 main 반영 여부는 PR과 실제 원격 해시로
-확인한다. merge commit을 사용하여 세 원본 이력을 남기고, main 반영 직전 원격 변경을 다시 확인한다.
+[통합 PR #2](https://github.com/Pitcheezy/transition-models/pull/2)를
+2026-10-11 07:39:10 UTC에 merge commit `39ffcd071439715a4bf8433ac1d4c479b93c45a1`로 main에 반영했다.
+병합 직전 fetch에서 세 입력 브랜치와 기존 main이 바뀌지 않았고, 모두 통합 HEAD의 조상임을 확인했다.
+병합 뒤에도 실제 origin/main 포함 여부를 다시 확인한다. 이 완료 기록은 병합 뒤 문서만 갱신한 것이다.
 
-통합 완료 후 새 작업은 최신 main에서 짧은 `codex/<작업명>` 또는 작업자별 짧은 브랜치로 시작한다.
+새 작업은 최신 main에서 짧은 `codex/<작업명>` 또는 작업자별 짧은 브랜치로 시작한다.
 오래된 feature/OCR 브랜치에서 계속 작업하면 다시 갈라지므로 현재 변경을 보존한 채 새 기준으로 옮긴다.
 Mac의 미커밋 변경은 이 노트북에서 처리하지 않았다. 그 환경은 별도 status 확인·보존 후 전환한다.
 

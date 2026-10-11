@@ -1,8 +1,9 @@
 # Codex Cloud 인수인계 — 2026-10-11
 
 이 문서는 transition-models의 현재 사이트 구조와 Cloud에서 재현할 수 있는 범위를 설명한다.
-최신 작업 상태는 [CHECKLIST](../CHECKLIST.md) 상단이 기준이다. main 통합은 H-main1에서 진행하며,
-이 문서의 존재만으로 원격 main 반영 완료를 판단하지 않는다. 시작할 때 실제 origin/main과 HEAD를 확인한다.
+최신 작업 상태는 [CHECKLIST](../CHECKLIST.md) 상단이 기준이다. H-main1은
+[PR #2](https://github.com/Pitcheezy/transition-models/pull/2), main 병합 커밋 `39ffcd0`으로 완료했다.
+[병합·검증 기록](MAIN_INTEGRATION_20261011.md)을 읽고 시작할 때 실제 origin/main과 HEAD를 확인한다.
 
 ## 현재 실행 중인 세 화면
 
@@ -151,7 +152,7 @@ AGENTS.md, CHECKLIST.md 상단, docs/CODEX_CLOUD_HANDOFF.md,
 docs/OPERATIONAL_VALIDATION_2026-09-21.md를 먼저 읽고 현재 작업 범위를 확인하세요.
 
 git status와 원격 주소를 확인하고 origin/main을 fetch하여 최신 커밋과 HEAD를 기록하세요.
-H-main1 통합 완료 여부를 실제 원격 main에서 확인하세요. 기존 변경은 보존하고,
+H-main1 병합 커밋 39ffcd0이 실제 원격 main에 포함되는지 확인하세요. 기존 변경은 보존하고,
 최신 main을 기준으로 짧은 codex/<작업명> 브랜치에서 한 작업 단위만 진행하세요.
 main에 직접 push하지 말고 검증 결과를 포함한 PR로 반환하세요.
 CHECKLIST.md와 관련 인수인계 문서를 작업과 같은 커밋에서 갱신하세요.

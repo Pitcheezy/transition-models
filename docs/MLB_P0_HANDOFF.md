@@ -3,7 +3,7 @@
 ## H-main1 — 브랜치 통합·Cloud 인계 — 2026-10-11
 
 feature `78f4bcc`, Codex OCR `dad5522`, 과거 M3 요청 `ed05b3a`를 새 통합 작업트리에서 병합했다.
-선점 `ecffd54`, 병합 `5d1dd67`·`9474efb`. 현재 원격 main 반영/검증 상태는
+선점 `ecffd54`, 병합 `5d1dd67`·`9474efb`, PR #2 main 반영 `39ffcd0`. 원격 main 반영/검증 근거는
 [통합 기록](MAIN_INTEGRATION_20261011.md)과 CHECKLIST 상단이 기준이다.
 [Cloud 운영 설명·명령·프롬프트](CODEX_CLOUD_HANDOFF.md)를 추가했다. 코드 통합과 사이트 배포는 구분한다.
 F-4h 완료·F-4i 보류·A-y 사용자 보류와 최신 CV/서비스 기능을 보존했다. 기존 작업 폴더·개인 자료·서버,

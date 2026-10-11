@@ -3,7 +3,7 @@
 ## main 통합을 기준으로 재개 — 2026-10-11
 
 [병합 기록](MAIN_INTEGRATION_20261011.md)과 CHECKLIST H-main1을 먼저 확인한다.
-우리 feature/Codex OCR/과거 M3 요청을 이력 보존 병합했다. 원격 main에 반영되면 이후 기준은 main이다.
+우리 feature/Codex OCR/과거 M3 요청을 이력 보존 병합했다. PR #2의 `39ffcd0`으로 원격 main에 반영했으므로 이후 기준은 main이다.
 Cloud에는 [현재 사이트 운영·설치·검사·복사용 프롬프트](CODEX_CLOUD_HANDOFF.md)를 전달한다.
 기존 로컬 변경은 보존하고 실제 origin/main 포함 여부를 확인한 뒤 짧은 새 작업 브랜치를 만든다.
 아래 feature 경로/권한 반납/다음 작업은 날짜별 이력이다. 현재 A-y와 F-4i 보류 및 외부 입력 조건이 우선한다.
