@@ -1,0 +1,27 @@
+name: Public host transport
+on:
+  pull_request:
+    paths: ["ops/public-host/**", ".github/workflows/public-host.yml"]
+  push:
+    paths: ["ops/public-host/**", ".github/workflows/public-host.yml"]
+permissions:
+  contents: read
+jobs:
+  transport:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - run: npm ci --ignore-scripts
+        working-directory: ops/public-host
+      - run: npm run check
+        working-directory: ops/public-host
+      - run: npm test
+        working-directory: ops/public-host
