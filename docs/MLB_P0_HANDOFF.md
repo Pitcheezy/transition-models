@@ -1,5 +1,19 @@
 # MLB P0 — Codex / Claude 인계 기록
 
+## H-collab1 — GitHub 상황판·우편 협업 — 2026-10-11
+
+사용자가 Song의 협업 제안 반영을 요청했다. Song #35/#36을 읽고 우리 레포에
+[고정 상황판 #3](https://github.com/Pitcheezy/transition-models/issues/3), `board`/`mail`/`needs-human` 라벨,
+우편 양식을 만들었다. [협업 규약](COLLABORATION_PROTOCOL.md)과 AGENTS/CLAUDE/Cloud/재개 진입점을 맞췄다.
+양쪽 상황판·우리 우편 조회 → 우리 board/CHECKLIST 선점 → 종료 댓글·자기 줄 해제를 사용한다.
+이슈는 요약/요청이며 검증 정본·사용자 승인·정본/역할 합의나 외부 발신 허가를 대체하지 않는다.
+기존 한 도구 수정 원칙·선점 커밋·A-y/F-4i 보류·I-0/I-run1/I-5 대기를 유지한다.
+
+선점 `a880e82`, 구현은 이 문서와 같은 커밋. 체크리스트7passed, 우편 YAML/링크/diff검사 통과.
+작성: root Codex. 검토: 별도 Codex 보조 세션(Claude 교차 검토나 사람 검토 아님), 필수 수정 없음.
+팀원 코드·이슈·프로세스·배포 수정이나 상대 발신은 하지 않았다. 서비스 코드·모델·자료·서버도 변경하지 않았다.
+우리 board에 완료 커밋/규약 원문 SHA-256/다음을 댓글로 기록하고 자기 선점을 해제한다.
+
 ## H-main1 — 브랜치 통합·Cloud 인계 — 2026-10-11
 
 feature `78f4bcc`, Codex OCR `dad5522`, 과거 M3 요청 `ed05b3a`를 새 통합 작업트리에서 병합했다.

@@ -1,5 +1,11 @@
 # Codex 재개 프롬프트 — 2026-09-28
 
+## 시작 전 협업 확인 — 2026-10-11
+
+[협업 규약](COLLABORATION_PROTOCOL.md)을 읽고 양쪽 board와 우리 열린 mail을 확인한다.
+우리 board는 #3, Song board는 #35다. 선점/종료 댓글과 CHECKLIST 인계를 함께 유지한다.
+상대 협업 이슈는 읽기만 하며 코드·프로세스·배포 금지와 A-y/F-4i 보류는 유지한다.
+
 ## main 통합을 기준으로 재개 — 2026-10-11
 
 [병합 기록](MAIN_INTEGRATION_20261011.md)과 CHECKLIST H-main1을 먼저 확인한다.

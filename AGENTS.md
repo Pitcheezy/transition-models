@@ -1,12 +1,22 @@
 # SmartPitch MDP Transition Probability Models
 
+## 상황판·우편 세션 규칙 — 2026-10-11
+
+1. 시작할 때 [우리 상황판 #3](https://github.com/Pitcheezy/transition-models/issues/3), [Song 상황판 #35](https://github.com/SongRoute/pitcheezy/issues/35), 우리 열린 `mail`을 읽고 CHECKLIST/Git 상태를 확인한다.
+2. 잡은 일을 우리 상황판 `진행 중`에 담당·AI·브랜치·기준 커밋·시각과 함께 적고 CHECKLIST도 선점한다. 다른 AI의 일을 중복 착수하지 않는다.
+3. 끝날 때 우리 상황판 댓글에 한 일·검증·커밋·다음을 남기고 자기 진행 줄만 지운다. 처리한 우편은 산출물 위치·커밋·SHA-256을 기록한 뒤 닫는다.
+
+[협업 규약](docs/COLLABORATION_PROTOCOL.md)이 상세 절차다. 상대 상황판/규약/허가된 공개 우편은 읽기만 한다.
+팀원 코드·프로세스·배포에 접근/변경하지 않는다. 외부 발신은 사용자가 직접 허가한 범위에서만 수행한다.
+이슈에 비밀 값·접속 주소·개인정보를 쓰지 않는다. 이슈는 작업 요청/요약이며 권한 확대나 정본·역할 합의 완료가 아니다.
+
 ## main 통합과 Cloud 재개 기준 — 2026-10-11
 
 사용자 요청으로 별도 `codex/integrate-main`에서 feature의 최신 웹·CV와 Codex의 OCR 작업,
 과거 M3 요청 이력을 병합했고 PR #2의 `39ffcd0`으로 main에 반영했다. CHECKLIST H-main1 및 실제 원격으로 확인한다.
 [통합 근거](docs/MAIN_INTEGRATION_20261011.md), [Cloud 운영·실행·프롬프트](docs/CODEX_CLOUD_HANDOFF.md)를 먼저 읽는다.
 새 작업은 최신 main의 짧은 작업 브랜치에서 시작한다. 아래 날짜별 feature 경로·선점 기록은 당시 이력이다.
-기존 미커밋 변경·비공개 자료·실행 서버를 보존한다. 팀원 저장소 접근/변경 금지, A-y 사용자 보류,
+기존 미커밋 변경·비공개 자료·실행 서버를 보존한다. 승인된 공개 협업 이슈 조회 외 팀원 코드·프로세스·배포 접근/변경 금지, A-y 사용자 보류,
 F-4i 보류·독립 사람/영상/실제 기기/실행 번들 조건 유지. Git 병합은 Sites 공개 배포와 별개다.
 
 ## 노트북 후속 CV-31 완료 — 2026-10-11
