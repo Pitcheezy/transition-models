@@ -1,5 +1,12 @@
 # 남은 작업 체크리스트
 
+## main 통합·Codex Cloud 인계 진행 — 2026-10-11
+
+- [~] H-main1. 사용자 요청으로 우리 저장소의 feature/intent-v0, codex/fix-point-label-alignment, codex/cv-m3-oct05-deliverables 커밋을 별도 통합 브랜치에서 병합·검증하고 main에 반영한다. 현재 운영 구조와 Cloud 실행 조건을 문서화한다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-11 · Codex]`
+
+수정 권한: Codex — codex/integrate-main에서만 작업. 기존 작업 폴더·비공개 자료·서버와 SongRoute/pitcheezy는 변경하지 않는다. A-y 보류와 외부 입력 조건은 유지한다.
+
+
 ## 노트북 후속 CV-31 완료 — 2026-10-11
 
 - [x] CV-31. 구간 끝 기본 영상 재생/키보드 재시작과 WebKit 최초 탐색·반복 이동을 수정했다. 합성 Chrome/WebKit 각22검사(신규9+기존13), 실제 개발 영상 Chrome16, Node26, 관련 Python58 통과. 발행/마감 기준·원본 관측은 동일하다. [수정·재현·한계](docs/CV_PLAYBACK_BROWSER_REGRESSION_20261011.md). 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-11 · Codex]`
