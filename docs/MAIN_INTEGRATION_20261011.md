@@ -44,9 +44,16 @@ Python은 기존 feature 가상환경을 재사용하고 검사 cwd는 새 통�
 - `node --test web/service-review/review.test.cjs web/observation-playback/playback.test.cjs`: 70 passed.
 - `scripts/74_evaluate_player_identity_ocr.py check`: PA6 v1/v2, PA60 v2/v4 저장 보고서 4개가
   새 키 기반 집계와 일치하고 pipeline_matches_current_code=true. 새 OCR/사람 판독은 하지 않았다.
-- `tests/browser` 합성 Chrome/WebKit: 검사 진행 중. 테스트가 만든 임시 서버/합성 영상만 사용한다.
+- `tests/browser` 합성 Chrome 154/WebKit 26.5: 각각 22 passed. 테스트가 만든 임시 서버/합성 영상만 사용했다.
+- 새 worktree의 LFS 포인터만 존재하여 최초 전체 검사 중 추론 10개가 실패했다.
+  실제 LFS 객체를 checkout한 뒤 `tests/test_inference.py`는 11 passed(8.55초).
+  새 checkout에서는 `git lfs pull` 후 검사한다. 코드나 테스트를 우회·변경하지 않았다.
 - 별도 읽기 전용 병합 검토: feature 기능·비OCR 보고서 유지, Codex OCR 코드·테스트·보고서 동일,
   세 입력 커밋 포함, 잔여 충돌 표식/차단 사유 없음.
+
+공개 두 도메인의 PowerShell HEAD(Mozilla User-Agent)는 200, 로컬59154/59158도200이었다.
+Python 기본 User-Agent의 공개 HEAD는403이었으므로 이를 일괄 접속 불능으로 해석하지 않는다.
+현재 로컬 listener PID37460/45424는 보존했다.
 
 검사 통과는 기능 회귀 범위다. 정책 효용·새 정확도·라이브 추론·실제 Mac/아이폰 검수는 아니다.
 

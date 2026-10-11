@@ -12,7 +12,7 @@
 | 비공개 S 서비스 검토 v5 | `web/service-review/`, 노트북 `http://127.0.0.1:59154/` | 받은 S 응답의 추천 표시 → 공식 3클립 → 실제 결과/미트 가로 추정 공개 |
 | 비공개 관측 재생 v9 | `web/observation-playback/`, 노트북 `http://127.0.0.1:59158/` | 기존 CV24 관측을 제한 영상 구간과 발행 시각에 맞춰 재생 |
 
-공개 도메인은 Cloudflare DNS를 사용한다. 2026-10-11 DNS와 HTTPS 200을 재확인했다.
+공개 도메인은 Cloudflare DNS를 사용한다. 2026-10-11 DNS와 PowerShell 브라우저 User-Agent의 HEAD 조회에서 HTTPS 200을 재확인했다.
 기록된 Sites 배포는 v9, 소스 `a3a7a6bb7bc434c6ba93ae45f12bca23c8898012`,
 배포 ID `appgdep_6ac4a34611d08191bc5d9d1ae7cc93ba`다.
 main 병합·push와 Sites 배포는 별도 작업이다. HTTP 200은 가용성 확인이며 배포 소스 재검증이나 모델 실행 증거가 아니다.
@@ -39,7 +39,9 @@ v9의 재생 수정은 서비스 v5 소스/영상 ZIP에 포함되지 않는다.
 
 Git checkout에는 노트북의 Git 제외 `outputs/`, 실제 S 원문, 비공개 영상팩, CV24 입력 이미지·저장 실행,
 Git 제외 모델 가중치·대용량 데이터, 실행 중인 서버가 자동 복사되지 않는다.
-추적된 LFS 파일도 포인터만 받았는지 확인한다. CI는 LFS checkout을 사용한다.
+추적된 구형 checkpoint는 Git LFS다. 포인터만 받은 상태에서 파일 존재만 확인하면 추론 검사가 실패한다.
+CI는 LFS checkout을 사용하며 Cloud도 검사 전에 `git lfs pull`로 실제 바이트를 받아야 한다.
+이 공개 구형 가중치를 별도 운영 schema의 Git 제외 모델 번들과 혼동하지 않는다.
 특정 비공개 실행에는 합의된 별도 자료 전달과 경로 설정이 필요하다.
 
 Cloud의 `127.0.0.1`은 그 Cloud 작업 환경을 가리킨다. 노트북의 59154/59158 서버에 연결하는 주소가 아니다.
@@ -60,6 +62,8 @@ Python 3.12, uv 0.10.4, Node.js 24를 기준으로 준비한다. 브라우저 �
 합성 검사는 API 키·W&B 로그인·팀원 서비스 자격증명을 요구하지 않는다.
 
 ~~~sh
+git lfs version
+git lfs pull
 uv sync --frozen --python 3.12
 export WANDB_MODE=offline
 export PYTHONUTF8=1
@@ -162,4 +166,3 @@ A-y 보류와 외부 입력 조건을 유지하세요. 새 기능·공개 배포
 명시적인 별도 요청이 있어야 합니다.
 실행 가능한 등록 작업이 없다면 임의 작업을 만들지 말고 현재 상태와 필요한 입력을 보고하세요.
 ~~~
-
