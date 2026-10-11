@@ -10,6 +10,7 @@ from src.vision.sny_player_names import (
     CONFIG,
     CONFIG_V2,
     CONFIG_V3,
+    CONFIG_V4,
     SNYPlayerNameReader,
     WindowsOCR,
     parse_panel_text,
@@ -145,6 +146,63 @@ def test_v3_changes_only_the_preprocessing_handed_to_the_engine():
     assert v2.calls[0][0].size == ((x1 - x0) * 4 + 32, (y1 - y0) * 4 + 32)
     assert len(set(v2.calls[0][0].convert("L").getdata())) > 2
     assert "binarize_threshold" not in CONFIG["preprocessing"]
+
+
+@pytest.mark.parametrize(
+    "raw,role,name",
+    [
+        ("BRAZOBÅN", "pitcher", "BRAZOBAN"),
+        ("DÍAZ", "pitcher", "DIAZ"),
+        ("7.D'ARNAUD", "batter", "D'ARNAUD"),
+    ],
+)
+def test_v4_folds_accents_without_touching_other_glyphs(raw, role, name):
+    assert parse_panel_text(raw, role, CONFIG_V4["options"])["name_text"] == name
+    assert parse_panel_text("BRAZOBÅN", "pitcher", CONFIG_V2["options"])["name_text"] is None
+    assert parse_panel_text("7.DtARNAUD", "batter", CONFIG_V4["options"])["name_text"] == "DTARNAUD"
+
+
+def test_v4_pitcher_crop_extends_only_while_ink_crosses_the_fixed_edge():
+    x0, y0, x1, y1 = CONFIG["crops"]["pitcher"]
+    rule = CONFIG_V4["pitcher_dynamic_right_edge"]
+
+    def strip_frame():
+        frame = synthetic_frame()
+        ImageDraw.Draw(frame).rectangle((x0, y0, 260, y1), fill=(220, 220, 220))
+        return frame
+
+    def read(frame, texts=("SCHWELLENBACH", "7.JONES")):
+        backend = FakeOCR(list(texts))
+        result = SNYPlayerNameReader(backend, config=CONFIG_V4).read(frame)
+        return backend.calls[0][0].size[0], result["pitcher"]
+
+    # A clean last column keeps the v2 crop, even with a long bright strip to the right.
+    plain_width, plain = read(synthetic_frame(), ("SMITH", "7.JONES"))
+    assert plain_width == (x1 - x0) * 4 + 32 and plain["name_text"] == "SMITH"
+    assert read(strip_frame(), ("SMITH", "7.JONES"))[0] == (x1 - x0) * 4 + 32
+    # Ink crossing the edge moves it to the last ink column plus the margin.
+    crossing = strip_frame()
+    ImageDraw.Draw(crossing).rectangle((150, y0 + 5, 180, y1 - 6), fill="black")
+    crossing_width, crossing_result = read(crossing)
+    assert crossing_width == (180 + rule["margin"] + 1 - x0) * 4 + 32
+    assert crossing_result["name_text"] == "SCHWELLENBACH"
+    # The navy pitch-clock box ends the scan before the margin would reach into it.
+    boxed = strip_frame()
+    ImageDraw.Draw(boxed).rectangle((150, y0 + 5, 172, y1 - 6), fill="black")
+    ImageDraw.Draw(boxed).rectangle((178, y0, 200, y1), fill=(20, 40, 90))
+    assert read(boxed)[0] == (177 - x0) * 4 + 32
+    # Ink running past the limit still ends as a possible truncation, never a read.
+    beyond = strip_frame()
+    ImageDraw.Draw(beyond).rectangle((150, y0 + 5, 240, y1 - 6), fill="black")
+    backend = FakeOCR(["7.JONES"])
+    beyond_result = SNYPlayerNameReader(backend, config=CONFIG_V4).read(beyond)
+    assert beyond_result["pitcher"]["reason"] == "possible_truncated_name"
+    assert len(backend.calls[0]) == 1
+    # v2 keeps its fixed crop and abstains on the same crossing frame.
+    v2 = FakeOCR(["7.JONES"])
+    v2_result = SNYPlayerNameReader(v2, config=CONFIG_V2).read(crossing)
+    assert v2_result["pitcher"]["reason"] == "possible_truncated_name"
+    assert "pitcher_dynamic_right_edge" not in CONFIG and CONFIG_V4["crops"] == CONFIG["crops"]
 
 
 def test_reader_gets_only_image_crops_and_keeps_a_wrong_literal():

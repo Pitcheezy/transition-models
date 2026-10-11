@@ -64,13 +64,14 @@ def main():
     )
     parser.add_argument(
         "--reader",
-        choices=("v1", "v2", "v3"),
+        choices=("v1", "v2", "v3", "v4"),
         default=DEFAULT_READER,
         help=(
             "v2 (default, current reader: v1 + pre-registered parser options), the frozen v1 "
-            "baseline, or the v3 preprocessing candidate recorded as failed (F-4d/F-4e). Also "
+            "baseline, the v3 preprocessing candidate recorded as failed (F-4d/F-4e), or the "
+            "pre-registered v4 reader rules (F-4h: dynamic pitcher crop edge, accent fold). Also "
             "selects which canonical PA6 prediction/report files are used when none is given; "
-            "v3 has no canonical files and always needs explicit --predictions/--report"
+            "v3 and v4 have no canonical files and always need explicit --predictions/--report"
         ),
     )
     args = parser.parse_args()
@@ -124,9 +125,15 @@ def main():
     check_player_identity_evalset(evalset, verify_frames=args.verify_frames)
     if args.command == "predict":
         # Import/initialize Windows OCR only for actual prediction; scoring remains portable.
-        from src.vision.sny_player_names import CONFIG, CONFIG_V2, CONFIG_V3, SNYPlayerNameReader
+        from src.vision.sny_player_names import (
+            CONFIG,
+            CONFIG_V2,
+            CONFIG_V3,
+            CONFIG_V4,
+            SNYPlayerNameReader,
+        )
 
-        configs = {"v1": CONFIG, "v2": CONFIG_V2, "v3": CONFIG_V3}
+        configs = {"v1": CONFIG, "v2": CONFIG_V2, "v3": CONFIG_V3, "v4": CONFIG_V4}
         reader = SNYPlayerNameReader(config=configs[args.reader])
         predictions = build_predictions(evalset, reader)
         report = score_predictions(evalset, predictions)

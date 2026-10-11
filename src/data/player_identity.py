@@ -419,15 +419,26 @@ def build_player_identity_evalset(
     reference = {}
     for play in feed["liveData"]["plays"]["allPlays"]:
         pa = play["about"]["atBatIndex"] + 1
-        if pa in scoped_pas and any(
-            event.get("isSubstitution")
-            or "substitution" in str(event.get("details", {}).get("eventType", ""))
-            or event.get("details", {}).get("eventType") == "defensive_switch"
-            for event in play["playEvents"]
-        ):
-            raise ValueError(
-                "Scoped PA has a substitution/switch; PA-level matchup is not a safe reference"
-            )
+        if pa in scoped_pas:
+            # A substitution or defensive switch recorded BEFORE the plate appearance's first
+            # pitch only explains who starts the PA, so the PA-level matchup still holds for
+            # every pitch. One recorded after a pitch could change the pitcher or batter in
+            # the middle of the PA, where no per-pitch reference exists: refuse that PA.
+            events = play["playEvents"]
+            first_pitch = next((i for i, e in enumerate(events) if e.get("isPitch")), len(events))
+            if any(
+                i >= first_pitch
+                and (
+                    event.get("isSubstitution")
+                    or "substitution" in str(event.get("details", {}).get("eventType", ""))
+                    or event.get("details", {}).get("eventType") == "defensive_switch"
+                )
+                for i, event in enumerate(events)
+            ):
+                raise ValueError(
+                    "Scoped PA has a substitution/switch after its first pitch; "
+                    "PA-level matchup is not a safe per-pitch reference"
+                )
         for event in play["playEvents"]:
             if event.get("isPitch"):
                 key = (game, pa, event["pitchNumber"])

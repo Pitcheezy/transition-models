@@ -245,6 +245,21 @@ def test_scoped_player_changes_are_unsupported_instead_of_trusting_pa_matchup(in
 
 
 @pytest.mark.parametrize(
+    "event",
+    [
+        {"isSubstitution": True},
+        {"details": {"eventType": "pitching_substitution"}},
+        {"details": {"eventType": "defensive_switch"}},
+    ],
+)
+def test_player_changes_recorded_before_the_first_pitch_keep_the_pa_matchup(inputs, event):
+    # F-4h: a substitution/switch that precedes every pitch of the PA only says who starts it.
+    inputs[2]["liveData"]["plays"]["allPlays"][0]["playEvents"].insert(0, event)
+    document = build(inputs)
+    assert document["summary"]["role_opportunities"] > 0
+
+
+@pytest.mark.parametrize(
     "change", ["missing", "duplicate", "play_id", "feed_id", "future_source", "boolean_slot"]
 )
 def test_review_contract_rejects_invalid_or_incomplete_observed_rows(inputs, change):

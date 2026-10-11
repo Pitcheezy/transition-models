@@ -933,6 +933,9 @@ CV-6 [응답 검증·집계](CV_REVIEW_SUMMARY_V1.md) 추가 완료. 실제 입�
   docs/OPERATIONAL_VALIDATION_2026-09-21.md를 먼저 읽는다.
 - 브랜치는 `codex/fix-point-label-alignment`. 검증한 단위마다 커밋·푸시한다.
 - 원본 영상, 데이터, 모델 캐시, 로그인 정보는 새로 Git에 넣지 않는다.
+- 2026-10-04 사용자 지침: 내부 용량이 부족하면 외장 SSD를 확인해 대형 자료 저장에 사용한다.
+  노트북의 USB Samsung T7 Shield(`D:`, exFAT) 연결·여유를 확인했다. 작업마다 실제 경로와
+  용량을 다시 확인하며, 상세·이관 원칙은 [MAINTENANCE](MAINTENANCE.md)를 따른다. 기존 데이터 이동 없음.
 - 독립 스트라이크·볼·파울 확률과 목표 위치는 현재 미지원이다. 0으로 대체하지 않는다.
 - 한도 약 20%에서는 인계 기록을 갱신하고 약 10%에서는 새 대형 작업을 시작하지 않는 것을
   운영 기준으로 삼는다. 서비스의 실제 한도·복구 시각은 별도로 확인한다.
@@ -1428,8 +1431,14 @@ CV-6 [응답 검증·집계](CV_REVIEW_SUMMARY_V1.md) 추가 완료. 실제 입�
     전환 실행: scripts74 `--reader` 기본값 v2·reader별 정본 경로·타 reader 정본 덮어쓰기 거부, 정본 PA6 v2 [예측](docs/results/mlb_p0/game_747139_player_identity_ocr_v2_predictions.json)·[보고서](docs/results/mlb_p0/game_747139_player_identity_ocr_v2_report.json) 추가, v1은 `--reader v1`로 보존. scripts74가 해시 대상이라 저장 예측/보고서 19세트를 재생성해 행 동일성 확인. 남은 유형(긴 이름 crop 잘림, `Á`, 아포스트로피, 공백)은 F-4h로.
     누적 204역할: v1 이름 기준 164·정답 102·오답 26·기권 76, ID 기준 156·정답 94·오답 0·기권 110; v2 이름 정답 115·오답 17, ID 정답 107. 전체 **588 passed, 2 deselected**, Ruff 84경로 통과. A-y 실제 응답 대기, 수정 권한 반납.
 
+57. `2876d8f`: **F-4h 교체 타석 규약(첫 투구 전 교체 수용)·PA60 평가셋·이름 OCR v4 후보 사전 등록** (Claude 세션 Fable 5.1, 2026-10-01; 선점 `feb9d4b`).
+    규약: 생성기는 교체·수비 전환 이벤트가 타석의 첫 투구 **이후**에 있을 때만 거부한다([player_identity.py](../src/data/player_identity.py), 검사 추가). feed 기준 이 경기 교체 타석 13개(PA48·50·53·57·58·60·63·65·66·69·70·71·74)는 이벤트가 모두 첫 투구 전이라 PA matchup이 투구별 기준이 된다([규약 표](PLAYER_IDENTITY_PROTOCOL.md)). 타석 도중 교체는 이 경기에 없다.
+    PA60(8회초 Raisel Iglesias 628452 대 Jose Iglesias 578428, 투수 교체 후 4구) [직접 판독](results/mlb_p0/game_747139_player_identity_review_pa60.json)·[평가셋](results/mlb_p0/game_747139_player_identity_evalset_pa60.json): 이름 6 판독·배너 부재 2, ID 8 전부 기권(동성 IGLESIAS 모호성 6, 연속성 unknown 2). [v2 OCR](results/mlb_p0/game_747139_player_identity_ocr_v2_pa60_report.json) 이름 4 정답·0 오답·4 기권(`2.1GLESlAS`×2: 새 유형 어두 `I`→`1`), ID 시도 0. 규칙 충족 타석이 아니므로 누적 204역할 집계에 넣지 않는다.
+    v4 후보(`CONFIG_V4`, scripts74 `--reader v4`, 정본 없음): 투수 crop 잉크 연장 규칙(고정 경계 x=168의 마지막 열에 잉크가 있을 때만 잉크 끝+4px, 최대 230, 남색 피치클록 칸 앞 정지) + NFKD 악센트 접기. 규칙은 PA26·34·49·60 개발 프레임으로 만들었고 첫 안(고정 230 확장)은 엔진이 넓은 빈 crop에서 MEGILL 13행·IGLESIAS 2행을 빈 문자열로 돌려 폐기했다(8폭 실험 기록). 개발 재채점([v4 pa_rest](results/mlb_p0/game_747139_player_identity_ocr_v4_pa_rest_report.json)·[v4 pa60](results/mlb_p0/game_747139_player_identity_ocr_v4_pa60_report.json)): 9타석 98역할 이름 v2 53·13·32 → v4 68·13·17(차이 17행: SCHWELLENBACH 9 정답·1 기권, BRAZOBÁN 6 정답, 26/4 기권 유지), ID 53→68·오답 0, 거짓 판독 0; PA60 v2와 동일. **근거가 아니다** — 사전 등록 시험은 다음 미검토 영상(F-4i).
+    해시 대상(reader·생성기·scripts74) 변경으로 저장 예측/보고서 22세트(v1 8·v2 9·v3 3·v4 2, 44파일)를 실제 Windows OCR로 재생성해 행이 전부 같음을 확인(변경은 predictions의 pipeline_code_sha256과 report의 predictions_sha256뿐). 전체 **595 passed, 2 deselected**, Ruff 통과. A-y 실제 응답 대기, 수정 권한 반납. 동료 의도 모듈 v0는 `feature/intent-v0` 브랜치(별도 커밋).
+
 이 문서와 함께 추가되는 후속 커밋의 해시는 `git log -6 --oneline`으로 확인한다.
-최신 Windows CPU 검사: **588 passed, 2 deselected (`check_project.py --cpu-only`, Ruff 84경로 통과)**(체크포인트 56). 아래 브라우저·서비스 검증은 이전 체크포인트 기록이다.
+최신 Windows CPU 검사: **595 passed, 2 deselected (`check_project.py --cpu-only`, Ruff 통과)**(체크포인트 57). 아래 브라우저·서비스 검증은 이전 체크포인트 기록이다.
 JavaScript 구문 검사 및 Chrome 수동 입력·실제 추론·9회 이후 추천 보류 확인.
 GitHub CI 결과는 해당 커밋의 validation 워크플로에서 따로 확인한다.
 주석 모듈을 먼저 import한 새 프로세스에서도 Torch→Pandas 문자열 생성이 성공하는지
@@ -1484,7 +1493,11 @@ Claude/Codex의 순서는 [../CHECKLIST.md](../CHECKLIST.md)의 "진행 순서" 
 팀원 레포(SongRoute/pitcheezy) 대조 결과는 [TEAMMATE_PITCHEEZY_2026-09-22.md](TEAMMATE_PITCHEEZY_2026-09-22.md) — 우리 쪽 참조가 없는 별도
 트랙이라 I-0(인터페이스 합의)·I-5(시연 경기)·I-6(클래스 대응표)·G-3(통화)를 A/B와 병행해 먼저 진행한다.
 
-1. **다음 한 단위 F-4h: 이름 OCR 남은 유형별 후속 결정(v4 후보 사전 등록)과 교체 타석 규약** — F-4g(체크포인트 56)로 이름 OCR 현행은 v2가 됐고 이 경기의 규칙 충족 타석은 모두 평가했다. 남은 오인식 유형(SCHWELLENBACH crop 잘림, `Á`→`Å`, 아포스트로피→`t`, 이름 내부 공백)은 결과를 본 표본에서 튜닝하지 말고 v4 후보로 사전 등록해 다른 타석·다른 영상에서 평가한다. F-4a 전체는 부분 완료다.
+1. **F-4i(새 미검토 영상에서 이름 OCR v4 사전 등록 평가)는 2026-10-04 보류** — F-4h(체크포인트 57)로 교체 타석 규약과 v4 후보 사전 등록을 마쳤다. 이름 OCR 현행은 v2이고 v4의 개발 재채점은 근거가 아니다.
+   - 2026-10-04 조사: MLB 공식 압축 경기의 메츠 홈 SNY 화면(823574)이 747139와 같은 형식이고, 2026 Statcast는 Savant CSV로 받을 수 있다.
+   - 하지만 압축 경기는 타석당 1~2구만 보여 줘서 F-4e 대상 규칙·평가셋 builder(타석 전 투구 annotated 요구)·timing 계약(`full_game` 키)을 바꿔야 한다. 상세는 CHECKLIST F-4i 항목이다.
+   - 사용자 결정으로 보류했다. 재개 조건은 SNY 전체 경기 영상 확보, 또는 압축 경기용 변경을 사전 등록하고 진행하기로 정하는 것이다.
+   - 그동안 동료 답변(A-y·I-0·I-5)을 기다린다. 동료 의도 모듈은 `feature/intent-v0`에서 M3 측정을 마쳤다(`1687c1e`). F-4a 전체는 부분 완료다.
    영상 시간 주석은 PA1~82, 322구(297 확인·25 불가·미검토0) 완료. A-y는 v2 묶음 준비 완료 후 실제 다른 검토자 응답을 기다린다.
 
 ```bash
