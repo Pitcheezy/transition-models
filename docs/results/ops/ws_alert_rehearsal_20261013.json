@@ -1,0 +1,595 @@
+{
+  "schema": "pitcheezy-local-alert-rehearsal-v1",
+  "synthetic": true,
+  "transport": "mock",
+  "delivery_confirmed": false,
+  "real_contacts": false,
+  "channel_decided": false,
+  "environment": {
+    "node": "v24.1.0",
+    "platform": "win32",
+    "arch": "x64"
+  },
+  "source_sha256": {
+    "monitor.mjs": "0b22cd428743d46f034c25fb14562d6d40f061320fad42d3b32870f8402eb6f5",
+    "alerts.mjs": "6167df5ace5b3973cb47d17ca6376fe0264fff2ae6c8ffec5e492285757e1883",
+    "alerts-cli.mjs": "6db106483a8e5426fabb2038fa9f7b53dbd089cc94ec2f4799c730aa87a7932d",
+    "rehearse-alerts.mjs": "c205cceedb60f64c18db40e342f38015e641ff9a0776cee665d010ef7b0d5b38",
+    "examples/alerts.example.json": "ec77c50a08bf097f97909301cd27f246f47592c0ff7c7383a1511514b577ae23"
+  },
+  "scenarios": [
+    {
+      "name": "publish_stalled_then_recovery",
+      "timeline": [
+        {
+          "t_min": 1,
+          "issues": [],
+          "monitor_event": null,
+          "category": null,
+          "acknowledged": 0,
+          "failed": 0,
+          "suppressed": 0,
+          "reminders": 0,
+          "pending": 0
+        },
+        {
+          "t_min": 2,
+          "issues": [
+            "freshness_stale"
+          ],
+          "monitor_event": null,
+          "category": null,
+          "acknowledged": 0,
+          "failed": 0,
+          "suppressed": 0,
+          "reminders": 0,
+          "pending": 0
+        },
+        {
+          "t_min": 3,
+          "issues": [
+            "freshness_stale"
+          ],
+          "monitor_event": "opened",
+          "category": "publish_stalled",
+          "acknowledged": 2,
+          "failed": 0,
+          "suppressed": 0,
+          "reminders": 0,
+          "pending": 0
+        },
+        {
+          "t_min": 4,
+          "issues": [
+            "freshness_stale"
+          ],
+          "monitor_event": null,
+          "category": null,
+          "acknowledged": 0,
+          "failed": 0,
+          "suppressed": 2,
+          "reminders": 0,
+          "pending": 0
+        },
+        {
+          "t_min": 35,
+          "issues": [
+            "freshness_stale"
+          ],
+          "monitor_event": null,
+          "category": null,
+          "acknowledged": 2,
+          "failed": 0,
+          "suppressed": 2,
+          "reminders": 2,
+          "pending": 0
+        },
+        {
+          "t_min": 36,
+          "issues": [],
+          "monitor_event": null,
+          "category": null,
+          "acknowledged": 0,
+          "failed": 0,
+          "suppressed": 2,
+          "reminders": 0,
+          "pending": 0
+        },
+        {
+          "t_min": 37,
+          "issues": [],
+          "monitor_event": "recovered",
+          "category": "recovered",
+          "acknowledged": 2,
+          "failed": 0,
+          "suppressed": 2,
+          "reminders": 0,
+          "pending": 0
+        },
+        {
+          "t_min": 38,
+          "issues": [],
+          "monitor_event": null,
+          "category": null,
+          "acknowledged": 0,
+          "failed": 0,
+          "suppressed": 4,
+          "reminders": 0,
+          "pending": 0
+        }
+      ],
+      "messages": [
+        {
+          "recipient": "song",
+          "category": "publish_stalled",
+          "kind": "opened",
+          "reminder": 0,
+          "first_responder": "song"
+        },
+        {
+          "recipient": "ours",
+          "category": "publish_stalled",
+          "kind": "opened",
+          "reminder": 0,
+          "first_responder": "song"
+        },
+        {
+          "recipient": "song",
+          "category": "publish_stalled",
+          "kind": "opened",
+          "reminder": 1,
+          "first_responder": "song"
+        },
+        {
+          "recipient": "ours",
+          "category": "publish_stalled",
+          "kind": "opened",
+          "reminder": 1,
+          "first_responder": "song"
+        },
+        {
+          "recipient": "song",
+          "category": "recovered",
+          "kind": "recovered",
+          "reminder": 0,
+          "first_responder": "none"
+        },
+        {
+          "recipient": "ours",
+          "category": "recovered",
+          "kind": "recovered",
+          "reminder": 0,
+          "first_responder": "none"
+        }
+      ],
+      "final_state": {
+        "deliveries": 6,
+        "pending": 0
+      }
+    },
+    {
+      "name": "host_error_with_transport_retry",
+      "timeline": [
+        {
+          "t_min": 1,
+          "issues": [],
+          "monitor_event": null,
+          "category": null,
+          "acknowledged": 0,
+          "failed": 0,
+          "suppressed": 0,
+          "reminders": 0,
+          "pending": 0
+        },
+        {
+          "t_min": 2,
+          "issues": [
+            "page_http_error",
+            "health_http_error"
+          ],
+          "monitor_event": null,
+          "category": null,
+          "acknowledged": 0,
+          "failed": 0,
+          "suppressed": 0,
+          "reminders": 0,
+          "pending": 0
+        },
+        {
+          "t_min": 3,
+          "issues": [
+            "page_http_error",
+            "health_http_error"
+          ],
+          "monitor_event": "opened",
+          "category": "host_error",
+          "acknowledged": 1,
+          "failed": 1,
+          "suppressed": 0,
+          "reminders": 0,
+          "pending": 1
+        },
+        {
+          "t_min": 4,
+          "issues": [
+            "page_http_error",
+            "health_http_error"
+          ],
+          "monitor_event": null,
+          "category": null,
+          "acknowledged": 0,
+          "failed": 1,
+          "suppressed": 1,
+          "reminders": 0,
+          "pending": 1
+        },
+        {
+          "t_min": 5,
+          "issues": [
+            "page_http_error",
+            "health_http_error"
+          ],
+          "monitor_event": null,
+          "category": null,
+          "acknowledged": 1,
+          "failed": 0,
+          "suppressed": 1,
+          "reminders": 0,
+          "pending": 0
+        },
+        {
+          "t_min": 6,
+          "issues": [],
+          "monitor_event": null,
+          "category": null,
+          "acknowledged": 0,
+          "failed": 0,
+          "suppressed": 2,
+          "reminders": 0,
+          "pending": 0
+        },
+        {
+          "t_min": 7,
+          "issues": [],
+          "monitor_event": "recovered",
+          "category": "recovered",
+          "acknowledged": 2,
+          "failed": 0,
+          "suppressed": 2,
+          "reminders": 0,
+          "pending": 0
+        }
+      ],
+      "messages": [
+        {
+          "recipient": "song",
+          "category": "host_error",
+          "kind": "opened",
+          "reminder": 0,
+          "first_responder": "ours"
+        },
+        {
+          "recipient": "ours",
+          "category": "host_error",
+          "kind": "opened",
+          "reminder": 0,
+          "first_responder": "ours"
+        },
+        {
+          "recipient": "song",
+          "category": "recovered",
+          "kind": "recovered",
+          "reminder": 0,
+          "first_responder": "none"
+        },
+        {
+          "recipient": "ours",
+          "category": "recovered",
+          "kind": "recovered",
+          "reminder": 0,
+          "first_responder": "none"
+        }
+      ],
+      "final_state": {
+        "deliveries": 4,
+        "pending": 0
+      }
+    },
+    {
+      "name": "notice_then_access_gate_are_informational",
+      "timeline": [
+        {
+          "t_min": 1,
+          "issues": [],
+          "monitor_event": null,
+          "category": null,
+          "acknowledged": 0,
+          "failed": 0,
+          "suppressed": 0,
+          "reminders": 0,
+          "pending": 0
+        },
+        {
+          "t_min": 2,
+          "issues": [
+            "page_notice_active",
+            "health_notice_active"
+          ],
+          "monitor_event": null,
+          "category": null,
+          "acknowledged": 0,
+          "failed": 0,
+          "suppressed": 0,
+          "reminders": 0,
+          "pending": 0
+        },
+        {
+          "t_min": 3,
+          "issues": [
+            "page_notice_active",
+            "health_notice_active"
+          ],
+          "monitor_event": "opened",
+          "category": "notice_active",
+          "acknowledged": 2,
+          "failed": 0,
+          "suppressed": 0,
+          "reminders": 0,
+          "pending": 0
+        },
+        {
+          "t_min": 4,
+          "issues": [],
+          "monitor_event": null,
+          "category": null,
+          "acknowledged": 0,
+          "failed": 0,
+          "suppressed": 2,
+          "reminders": 0,
+          "pending": 0
+        },
+        {
+          "t_min": 5,
+          "issues": [],
+          "monitor_event": "recovered",
+          "category": "recovered",
+          "acknowledged": 2,
+          "failed": 0,
+          "suppressed": 2,
+          "reminders": 0,
+          "pending": 0
+        },
+        {
+          "t_min": 6,
+          "issues": [
+            "page_access_required",
+            "health_access_required"
+          ],
+          "monitor_event": null,
+          "category": null,
+          "acknowledged": 0,
+          "failed": 0,
+          "suppressed": 4,
+          "reminders": 0,
+          "pending": 0
+        },
+        {
+          "t_min": 7,
+          "issues": [
+            "page_access_required",
+            "health_access_required"
+          ],
+          "monitor_event": "opened",
+          "category": "access_gate",
+          "acknowledged": 2,
+          "failed": 0,
+          "suppressed": 4,
+          "reminders": 0,
+          "pending": 0
+        }
+      ],
+      "messages": [
+        {
+          "recipient": "song",
+          "category": "notice_active",
+          "kind": "opened",
+          "reminder": 0,
+          "first_responder": "none"
+        },
+        {
+          "recipient": "ours",
+          "category": "notice_active",
+          "kind": "opened",
+          "reminder": 0,
+          "first_responder": "none"
+        },
+        {
+          "recipient": "song",
+          "category": "recovered",
+          "kind": "recovered",
+          "reminder": 0,
+          "first_responder": "none"
+        },
+        {
+          "recipient": "ours",
+          "category": "recovered",
+          "kind": "recovered",
+          "reminder": 0,
+          "first_responder": "none"
+        },
+        {
+          "recipient": "song",
+          "category": "access_gate",
+          "kind": "opened",
+          "reminder": 0,
+          "first_responder": "none"
+        },
+        {
+          "recipient": "ours",
+          "category": "access_gate",
+          "kind": "opened",
+          "reminder": 0,
+          "first_responder": "none"
+        }
+      ],
+      "final_state": {
+        "deliveries": 6,
+        "pending": 0
+      }
+    },
+    {
+      "name": "mixed_causes_go_to_both",
+      "timeline": [
+        {
+          "t_min": 1,
+          "issues": [],
+          "monitor_event": null,
+          "category": null,
+          "acknowledged": 0,
+          "failed": 0,
+          "suppressed": 0,
+          "reminders": 0,
+          "pending": 0
+        },
+        {
+          "t_min": 2,
+          "issues": [
+            "freshness_stale",
+            "page_http_error",
+            "health_http_error"
+          ],
+          "monitor_event": null,
+          "category": null,
+          "acknowledged": 0,
+          "failed": 0,
+          "suppressed": 0,
+          "reminders": 0,
+          "pending": 0
+        },
+        {
+          "t_min": 3,
+          "issues": [
+            "freshness_stale",
+            "page_http_error",
+            "health_http_error"
+          ],
+          "monitor_event": "opened",
+          "category": "unclassified",
+          "acknowledged": 2,
+          "failed": 0,
+          "suppressed": 0,
+          "reminders": 0,
+          "pending": 0
+        }
+      ],
+      "messages": [
+        {
+          "recipient": "song",
+          "category": "unclassified",
+          "kind": "opened",
+          "reminder": 0,
+          "first_responder": "both"
+        },
+        {
+          "recipient": "ours",
+          "category": "unclassified",
+          "kind": "opened",
+          "reminder": 0,
+          "first_responder": "both"
+        }
+      ],
+      "final_state": {
+        "deliveries": 2,
+        "pending": 0
+      }
+    },
+    {
+      "name": "permanent_transport_failure_is_recorded_not_hidden",
+      "timeline": [
+        {
+          "t_min": 1,
+          "issues": [],
+          "monitor_event": null,
+          "category": null,
+          "acknowledged": 0,
+          "failed": 0,
+          "suppressed": 0,
+          "reminders": 0,
+          "pending": 0
+        },
+        {
+          "t_min": 2,
+          "issues": [
+            "freshness_stale"
+          ],
+          "monitor_event": null,
+          "category": null,
+          "acknowledged": 0,
+          "failed": 0,
+          "suppressed": 0,
+          "reminders": 0,
+          "pending": 0
+        },
+        {
+          "t_min": 3,
+          "issues": [
+            "freshness_stale"
+          ],
+          "monitor_event": "opened",
+          "category": "publish_stalled",
+          "acknowledged": 0,
+          "failed": 2,
+          "suppressed": 0,
+          "reminders": 0,
+          "pending": 2
+        },
+        {
+          "t_min": 4,
+          "issues": [
+            "freshness_stale"
+          ],
+          "monitor_event": null,
+          "category": null,
+          "acknowledged": 0,
+          "failed": 2,
+          "suppressed": 0,
+          "reminders": 0,
+          "pending": 2
+        },
+        {
+          "t_min": 5,
+          "issues": [
+            "freshness_stale"
+          ],
+          "monitor_event": null,
+          "category": null,
+          "acknowledged": 0,
+          "failed": 2,
+          "suppressed": 0,
+          "reminders": 0,
+          "pending": 0
+        },
+        {
+          "t_min": 6,
+          "issues": [
+            "freshness_stale"
+          ],
+          "monitor_event": null,
+          "category": null,
+          "acknowledged": 0,
+          "failed": 0,
+          "suppressed": 2,
+          "reminders": 0,
+          "pending": 0
+        }
+      ],
+      "messages": [],
+      "final_state": {
+        "deliveries": 2,
+        "pending": 0
+      }
+    }
+  ],
+  "passed": true,
+  "total_ms": 29
+}
