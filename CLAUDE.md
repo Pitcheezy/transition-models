@@ -1,5 +1,11 @@
 # SmartPitch transition-models
 
+## WS-ops3 진행 — 2026-10-12
+
+D1 저장·집계·정리(WS-ops3a)는 합성 검증 완료, 브라우저 동의·시간 측정(WS-ops3b)은 이어서 진행 중이다.
+[수집 계약과 한계](ops/public-host/TELEMETRY.md)를 읽는다. 실제 계정·수집·Song 화면은 변경하지 않았다.
+
+
 ## 월드시리즈 우리 운영 기반 — 2026-10-12
 
 WS-ops1의 Cloudflare Worker/R2 전송 기반과 합성·로컬 런타임 검사를 구현했다.
