@@ -2,6 +2,7 @@ name: review and observation browser
 
 on:
   push:
+    branches: [main]
     paths:
       - '.github/workflows/service-review-browser.yml'
       - 'tests/browser/**'

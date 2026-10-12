@@ -3,11 +3,19 @@ on:
   pull_request:
     paths: ["src/operations/**", "scripts/build_public_host_release.py", "scripts/check_public_host_config.py", "scripts/estimate_public_host_cost.py", "tests/test_public_host_release.py", "tests/test_public_host_config.py", "tests/test_public_host_cost.py", "ops/public-host/examples/**", ".github/workflows/public-host-release.yml"]
   push:
+    branches: [main]
     paths: ["src/operations/**", "scripts/build_public_host_release.py", "scripts/check_public_host_config.py", "scripts/estimate_public_host_cost.py", "tests/test_public_host_release.py", "tests/test_public_host_config.py", "tests/test_public_host_cost.py", "ops/public-host/examples/**", ".github/workflows/public-host-release.yml"]
+  workflow_dispatch:
+
 permissions:
   contents: read
+concurrency:
+  group: public-host-release-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   release:
+    timeout-minutes: 10
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
