@@ -12,7 +12,13 @@ from . import release_bundle as rb
 MAX_CONFIG_BYTES = 64 * 1024
 CONFIG_PATH = "host/wrangler.deploy.json"
 CLIENT_PATH = "public/collection-settings.json"
-GATES = ("DATA_READ_ENABLED", "UPLOAD_ENABLED", "TELEMETRY_ENABLED", "FEEDBACK_ENABLED")
+GATES = (
+    "DATA_READ_ENABLED",
+    "UPLOAD_ENABLED",
+    "TELEMETRY_ENABLED",
+    "FEEDBACK_ENABLED",
+    "ACCESS_GATE_ENABLED",
+)
 VARIABLES = (
     *GATES,
     "READ_ORIGIN",
@@ -20,6 +26,16 @@ VARIABLES = (
     "TELEMETRY_RETAIN_DAYS",
     "SESSION_WRITES_PER_DAY",
     "FEEDBACK_ROWS_PER_DAY",
+    "ACCESS_SESSION_SECONDS",
+)
+SECRETS = frozenset(
+    {
+        "PUBLISH_TOKEN_SHA256",
+        "TELEMETRY_RATE_SECRET",
+        "NOTICE_TOKEN_SHA256",
+        "ACCESS_CODE_SHA256",
+        "ACCESS_SESSION_SECRET",
+    }
 )
 UNVERIFIED = (
     "account_and_provider_configuration",
@@ -210,8 +226,7 @@ def validate_config(config, client, root):
     variables = config["vars"]
     require(isinstance(variables, dict), "object_required")
     require(
-        not {"PUBLISH_TOKEN_SHA256", "TELEMETRY_RATE_SECRET", "NOTICE_TOKEN_SHA256"}
-        & variables.keys(),
+        not SECRETS & variables.keys(),
         "inline_secret_not_allowed",
     )
     fields(variables, VARIABLES)
@@ -223,6 +238,12 @@ def validate_config(config, client, root):
     days = positive_setting(variables["TELEMETRY_RETAIN_DAYS"], 90)
     positive_setting(variables["SESSION_WRITES_PER_DAY"], 1000000)
     positive_setting(variables["FEEDBACK_ROWS_PER_DAY"], 1000000)
+    positive_setting(variables["ACCESS_SESSION_SECONDS"], 604800)
+    # The viewer gate uses same-site cookies; a cross-origin screen cannot carry them.
+    require(
+        variables["ACCESS_GATE_ENABLED"] != "true" or variables["READ_ORIGIN"] == "",
+        "access_gate_same_origin_required",
+    )
     fields(client, ("telemetryEnabled", "feedbackEnabled", "retainDays"))
     require(
         type(client["telemetryEnabled"]) is bool

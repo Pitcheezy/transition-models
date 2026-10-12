@@ -16,6 +16,8 @@ Song 모델/수집기/Mac, 외부 알림, 스케줄러에 연결하지 않았다
 - 503에 `X-Pitcheezy-Notice` 헤더가 있으면 [긴급 안내 스위치](NOTICE.md)가 켜진 상태다. 코드 `notice_active`,
   report `notice_active=true`, issues `page_notice_active`/`health_notice_active`로 기록하며 전체 상태는 여전히 `failed`다
   (뷰어에게는 이용 불가). 발행 중단·저장소 장애와 구별해 알림 경로(WS-alert1)에서 다르게 다룰 수 있다. 본문 문구는 기록하지 않는다.
+- 401에 `X-Pitcheezy-Access: required`가 있으면 [관람 접근 문](ACCESS.md)이 켜진 상태다. 코드 `access_required`,
+  report `access_gate_active=true`로 기록하며 이 도구는 세션을 갖지 않아 게이트 뒤의 발행 시각을 검사하지 못한다(감시용 세션 미구현).
 - 시각은 초 단위 이상·시간대가 있는 RFC3339 문자열만 받는다. 숫자의 초/밀리초는 추정하지 않는다.
   예제의 지연120초·시계차30초는 합의된 운영값이 아니며 실제 리허설에서 정해야 한다.
 

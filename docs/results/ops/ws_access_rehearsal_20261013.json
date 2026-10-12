@@ -1,0 +1,209 @@
+{
+  "schema": "pitcheezy-local-access-rehearsal-v1",
+  "target": "ephemeral-loopback-miniflare",
+  "synthetic": true,
+  "real_viewer_codes": false,
+  "access_targets_decided": false,
+  "mlb_usage_permission": "not_implied",
+  "environment": {
+    "node": "v24.1.0",
+    "platform": "win32",
+    "arch": "x64",
+    "miniflare": "4.20260730.0"
+  },
+  "source_sha256": {
+    "worker.mjs": "9f3d818686bc6af847bf4c292658a1c71f22f4dd72f6282c8b00e84e0ca33d1b",
+    "gateway.mjs": "463b477138ec584e9642ebb25ebe5443d1ce54d691ff0aa7bae42b4fc334b84b",
+    "access.mjs": "92c1d4382e6feb3898374d37fbe713aa5c46d5b705a4a3145e1070cfe083141a",
+    "notice.mjs": "571d9033eeac9208e30e08df1dcd23efc65639c191993a6334f053f453fb0ae7",
+    "monitor.mjs": "0b22cd428743d46f034c25fb14562d6d40f061320fad42d3b32870f8402eb6f5",
+    "telemetry.mjs": "545569404a68e8a5159984c3b328e4982c217247d1cd5af01e1831165ebf6739",
+    "rehearsal/local-host.mjs": "faf7c00f54bfdf5ee10308457f5d18cae56e39808185a2e246f56b9bd7a7bde8",
+    "rehearse-access.mjs": "555134031260f9b51f2a15c3eae149914b0557fe19973fa4370e3d93e2fd9644",
+    "package-lock.json": "71ff25032a7eb452e5788b7d13c1a0ff96efd3b768da0c01ac4ae5bc187897a5"
+  },
+  "completed_phases": [
+    "locked",
+    "login",
+    "unlocked",
+    "logout_and_expiry"
+  ],
+  "passed": true,
+  "note": "Loopback http uses the unprefixed cookie without Secure; production https uses __Host- and Secure. Edge IP absent locally: shared limiter pool.",
+  "startup_ms": 386,
+  "locked": {
+    "GET /": {
+      "status": 401,
+      "content_type": "text/html; charset=utf-8",
+      "cache_control": "no-store",
+      "access": "required",
+      "vary": "Cookie",
+      "html": true,
+      "body_bytes": 1044
+    },
+    "HEAD /": {
+      "status": 401,
+      "content_type": "text/html; charset=utf-8",
+      "cache_control": "no-store",
+      "access": "required",
+      "vary": "Cookie",
+      "html": false,
+      "body_bytes": 0
+    },
+    "GET /fixture.mjs": {
+      "status": 401,
+      "content_type": "text/html; charset=utf-8",
+      "cache_control": "no-store",
+      "access": "required",
+      "vary": "Cookie",
+      "html": true,
+      "body_bytes": 1044
+    },
+    "GET /v1/game/123.json": {
+      "status": 401,
+      "content_type": "application/json; charset=utf-8",
+      "cache_control": "no-store",
+      "access": "required",
+      "vary": "Origin",
+      "html": false,
+      "body_bytes": 27
+    },
+    "HEAD /v1/game/123.json": {
+      "status": 401,
+      "content_type": "application/json; charset=utf-8",
+      "cache_control": "no-store",
+      "access": "required",
+      "vary": "Origin",
+      "html": false,
+      "body_bytes": 0
+    },
+    "GET /v1/health.json": {
+      "status": 401,
+      "content_type": "application/json; charset=utf-8",
+      "cache_control": "no-store",
+      "access": "required",
+      "vary": "Origin",
+      "html": false,
+      "body_bytes": 27
+    },
+    "OPTIONS /v1/game/123.json": {
+      "status": 204,
+      "content_type": "application/json; charset=utf-8",
+      "cache_control": "no-store",
+      "access": null,
+      "vary": "Origin",
+      "html": false,
+      "body_bytes": 0
+    },
+    "POST /_telemetry/session": {
+      "status": 401,
+      "content_type": "application/json; charset=utf-8",
+      "cache_control": "no-store",
+      "access": "required",
+      "vary": "Cookie",
+      "html": false,
+      "body_bytes": 27
+    }
+  },
+  "upload_while_locked": "accepted",
+  "monitor_while_locked": {
+    "status": "failed",
+    "access_gate_active": true,
+    "issues": [
+      "page_access_required",
+      "health_access_required"
+    ]
+  },
+  "login": {
+    "wrong_code_status": 401,
+    "json_login_ms": 3.39,
+    "cookie_attributes": "pz_viewer=<redacted>; Path=/; Max-Age=2; HttpOnly; SameSite=Strict",
+    "form_login_status": 303
+  },
+  "unlocked": {
+    "GET /": {
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "cache_control": "private, no-store",
+      "access": null,
+      "vary": "Cookie",
+      "html": true,
+      "body_bytes": 418
+    },
+    "HEAD /": {
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "cache_control": "private, no-store",
+      "access": null,
+      "vary": "Cookie",
+      "html": false,
+      "body_bytes": 0
+    },
+    "GET /fixture.mjs": {
+      "status": 200,
+      "content_type": "text/javascript",
+      "cache_control": "private, no-store",
+      "access": null,
+      "vary": "Cookie",
+      "html": false,
+      "body_bytes": 1035
+    },
+    "GET /v1/game/123.json": {
+      "status": 200,
+      "content_type": "application/json; charset=utf-8",
+      "cache_control": "no-store",
+      "access": null,
+      "vary": "Origin",
+      "html": false,
+      "body_bytes": 40
+    },
+    "HEAD /v1/game/123.json": {
+      "status": 200,
+      "content_type": "application/json; charset=utf-8",
+      "cache_control": "no-store",
+      "access": null,
+      "vary": "Origin",
+      "html": false,
+      "body_bytes": 0
+    },
+    "GET /v1/health.json": {
+      "status": 200,
+      "content_type": "application/json; charset=utf-8",
+      "cache_control": "no-store",
+      "access": null,
+      "vary": "Origin",
+      "html": false,
+      "body_bytes": 72
+    },
+    "OPTIONS /v1/game/123.json": {
+      "status": 204,
+      "content_type": "application/json; charset=utf-8",
+      "cache_control": "no-store",
+      "access": null,
+      "vary": "Origin",
+      "html": false,
+      "body_bytes": 0
+    },
+    "POST /_telemetry/session": {
+      "status": 503,
+      "content_type": "application/json; charset=utf-8",
+      "cache_control": "no-store",
+      "access": null,
+      "vary": null,
+      "html": false,
+      "body_bytes": 31
+    }
+  },
+  "logout_and_expiry": {
+    "logout_status": 204,
+    "cookie_cleared_then_locked": true,
+    "stateless_note": "Logout clears the browser cookie; a copied cookie value stays valid until expiry or code/secret rotation.",
+    "session_seconds": 2,
+    "expired_after_wait_ms": 2300,
+    "expired_status": 401
+  },
+  "cleanup": {
+    "status": "complete"
+  },
+  "total_ms": 3183
+}

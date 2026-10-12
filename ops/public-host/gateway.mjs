@@ -1,5 +1,6 @@
 import { handleTelemetry } from "./telemetry.mjs";
 import { currentNotice, handleNotice, noticeHtml, noticeJson, NOTICE_HEADER } from "./notice.mjs";
+import { handleAccess, requireViewer, loginHtml, privatizeHeaders, ACCESS_HEADER } from "./access.mjs";
 /**
  * File transport candidate for COLLAB-001. No baseball-schema validation here.
  * Both gates default closed. Only a reviewed publisher may supply public data.
@@ -252,11 +253,31 @@ export default {
       // This foundation uses ASCII asset paths. Do not let encoded API prefixes reach SPA fallback.
       if (url.pathname.includes("%")) return json(request, env, 404, { error: "not_found" });
       if (url.pathname === "/_notice" || url.pathname.startsWith("/_notice/")) return await handleNotice(request, env);
+      if (url.pathname === "/_access" || url.pathname.startsWith("/_access/")) return await handleAccess(request, env);
+      let viewer = { gated: false, session: null };
       if (!uploadRoute) {
         // Fails closed: an unreadable switch state is a 503, never a silently served screen.
         const notice = await currentNotice(env);
         if (notice.active) {
           return noticeResponse(request, env, notice, publicRoute ? "public" : telemetryRoute ? "telemetry" : "page");
+        }
+        // Viewer access gate (WS-access1): a missing or invalid session answers 401 before any content.
+        // Preflight stays answerable so a same-origin screen can read the 401 body.
+        if (!(publicRoute && request.method === "OPTIONS")) {
+          try { viewer = await requireViewer(request, env, url); }
+          catch (error) {
+            if (error?.message !== "access_required") throw error;
+            if (publicRoute || telemetryRoute) return json(request, env, 401, { error: "access_required" }, error.headers, publicRoute);
+            const headers = new Headers({
+              "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store", "CDN-Cache-Control": "no-store",
+              "Date": new Date().toUTCString(), "Age": "0", "X-Content-Type-Options": "nosniff", "X-Robots-Tag": "noindex", ...error.headers,
+            });
+            if (!["GET", "HEAD"].includes(request.method)) {
+              headers.set("Content-Type", "application/json; charset=utf-8");
+              return new Response(request.method === "HEAD" ? null : '{"error":"access_required"}', { status: 401, headers });
+            }
+            return new Response(request.method === "HEAD" ? null : loginHtml(), { status: 401, headers });
+          }
         }
       }
       if (telemetryRoute) return await handleTelemetry(request, env);
@@ -276,14 +297,18 @@ export default {
       if (!["GET", "HEAD"].includes(request.method)) {
         return json(request, env, 405, { error: "method_not_allowed" }, { Allow: "GET, HEAD" });
       }
-      return env.ASSETS ? await env.ASSETS.fetch(request) :
-        json(request, env, 503, { error: "frontend_not_installed" });
+      if (!env.ASSETS) return json(request, env, 503, { error: "frontend_not_installed" });
+      const asset = await env.ASSETS.fetch(request);
+      if (!viewer.gated) return asset;
+      // Gated screens are cached per browser only; intermediaries must not reuse them for other viewers.
+      return new Response(asset.body, { status: asset.status, statusText: asset.statusText, headers: privatizeHeaders(asset.headers) });
     } catch (error) {
       // Do not reflect input, credentials, storage paths, or provider exception messages.
       const known = error instanceof HttpError || (error && typeof error.status === "number" && typeof error.message === "string" && /^[a-z_]{1,64}$/.test(error.message));
+      const headers = known ? { ...(error.headers || {}) } : {};
+      if (headers[ACCESS_HEADER] === undefined && error?.message === "access_not_configured") headers[ACCESS_HEADER] = "misconfigured";
       return json(request, env, known ? error.status : 503,
-        { error: known ? error.message : "storage_unavailable" },
-        known ? error.headers || {} : {}, publicRoute);
+        { error: known ? error.message : "storage_unavailable" }, headers, publicRoute);
     }
   },
 };

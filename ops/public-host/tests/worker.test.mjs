@@ -328,6 +328,9 @@ test("example config keeps both gates closed and routes through Worker before as
   const config = JSON.parse(readFileSync(new URL("../wrangler.example.jsonc", import.meta.url), "utf8"));
   assert.equal(config.vars.DATA_READ_ENABLED, "false");
   assert.equal(config.vars.UPLOAD_ENABLED, "false");
+  assert.equal(config.vars.ACCESS_GATE_ENABLED, "false");
+  assert.equal(config.vars.ACCESS_CODE_SHA256, undefined);
+  assert.equal(config.vars.ACCESS_SESSION_SECRET, undefined);
   assert.equal(config.assets.run_worker_first, true);
   assert.equal(config.workers_dev, false);
   assert.equal(config.preview_urls, false);

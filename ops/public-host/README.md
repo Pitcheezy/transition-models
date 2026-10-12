@@ -36,6 +36,12 @@ COLLAB-001의 파일 전달 경계를 구현한 후보이며, 실제 서비스 �
 화면·asset·공개 JSON·수집이 503 안내 응답으로 바뀌고 업로드·운영자 경로는 유지된다. 감사 기록·복구 조건·로컬 실측·한계는 문서에 있다.
 실제 공개 문구·전환·토큰 전달은 사람 결정이며 내려받은 자료 회수 기능이 아니다.
 
+## 관람 접근 문
+
+[WS-access1 접근 문](ACCESS.md): `ACCESS_GATE_ENABLED=true`이면 접속 코드(digest 비밀)로 연 무상태 세션 쿠키 없이는
+화면·asset·공개 JSON·수집이 401이다. 업로드·안내 스위치와 인증이 분리되며, 화면은 호스트와 같은 출처여야 한다.
+접근 제한은 MLB 이용 허가가 아니고 실제 대상·활성화·코드 전달은 사람 결정이다.
+
 ## 읽기 감시
 
 [감시 도구](MONITORING.md)는 운영자용 단발 CLI다. 실제 알림/상시 실행은 별도이며 host ZIP에 자동 포함되지 않는다.
@@ -50,7 +56,7 @@ COLLAB-001의 파일 전달 경계를 구현한 후보이며, 실제 서비스 �
 
 ## 구현
 
-`worker.mjs`는 Worker 진입점이며, 내부 `gateway.mjs`를 호출한다. `notice.mjs`는 긴급 안내 스위치다.
+`worker.mjs`는 Worker 진입점이며, 내부 `gateway.mjs`를 호출한다. `notice.mjs`는 긴급 안내 스위치, `access.mjs`는 관람 접근 문이다.
 모델 호출·맥미니 프록시·임의 URL fetch·파일 목록 API는 없다.
 
 - GET/HEAD: `/v1/manifest.json`, `health.json`, `dates.json`,
@@ -137,8 +143,8 @@ npm test
 - 실제 CDN에서 Date/Age/404/삭제/CORS 확인, 공개 재배포 범위 결정과 롤백 검사.
 - 이용 기록·피드백·감시·부하/실기기는 별도 단위. 이 Worker만으로 완료되지 않는다.
 
-환경 변수 이름은 `DATA_READ_ENABLED`, `UPLOAD_ENABLED`, `PUBLISH_TOKEN_SHA256`,
-`READ_ORIGIN`; 비밀 `NOTICE_TOKEN_SHA256`(운영자 digest 목록); binding은 `PUBLISH_BUCKET`, `PUBLISH_LIMITER`, `ASSETS`다.
+환경 변수 이름은 `DATA_READ_ENABLED`, `UPLOAD_ENABLED`, `ACCESS_GATE_ENABLED`, `ACCESS_SESSION_SECONDS`, `PUBLISH_TOKEN_SHA256`,
+`READ_ORIGIN`; 비밀 `NOTICE_TOKEN_SHA256`(운영자 digest 목록)·`ACCESS_CODE_SHA256`·`ACCESS_SESSION_SECRET`; binding은 `PUBLISH_BUCKET`, `PUBLISH_LIMITER`, `ASSETS`다.
 기존 Sites 화면을 public 디렉터리에 자동 복사하지 않는다(공개 영상 없는 WS 범위와 다름).
 
 ## 참고

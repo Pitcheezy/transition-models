@@ -104,6 +104,8 @@ async function fetchBounded(url, config, fetchImpl) {
       // for a publisher or storage outage: the host marks it with a header, never by body text.
       const notice = response.headers.get("X-Pitcheezy-Notice");
       if (response.status === 503 && notice && /^[a-z_]{1,40}$/.test(notice)) refuse("notice_active");
+      // The viewer access gate (WS-access1) answers 401 to this credential-less probe by design.
+      if (response.status === 401 && response.headers.get("X-Pitcheezy-Access") === "required") refuse("access_required");
       refuse(response.status >= 300 && response.status < 400 ? "redirect" :
         response.status === 404 ? "missing" : "http_error");
     }
@@ -187,6 +189,8 @@ export async function probe(config, { fetchImpl = fetch, now = () => Date.now() 
     observed_at_ms: end, status, issues, page, health,
     // Viewer-facing unavailability caused by the operator notice, distinguished from outages for routing.
     notice_active: page.code === "notice_active" || health.code === "notice_active",
+    // The probe carries no viewer session, so a gated host is unavailable to it; not a publisher outage.
+    access_gate_active: page.code === "access_required" || health.code === "access_required",
     semantic_health: "unmeasured", javascript_execution: "unmeasured",
   };
 }

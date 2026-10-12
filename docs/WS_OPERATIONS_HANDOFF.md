@@ -20,7 +20,7 @@
 추가는 알림 후 진행, 삭제/의미 변경은 Song 승인 후 v2. 역할 확정과 실제 파일 검증/출시는 구별한다.
 [실행 계획](WS_COLLAB_V1_ACTIONS.md)에 즉시 안내 화면(WS-safe1), 접근 문(WS-access1),
 양쪽 알림(WS-alert1), 경기별 기록(WS-report1), 다른 모델 검토(WS-review1)의 합격 기준을 적었다.
-WS-safe1은 2026-10-13 로컬 구현·합성 검증을 마쳤고(실제 전환·문구·토큰·다른 모델 검토는 남음), 나머지는 문서 반영만으로 완료되지 않았다.
+WS-safe1·WS-access1은 2026-10-13 로컬 구현·합성 검증을 마쳤고(실제 전환·문구·토큰·코드·대상·다른 모델 검토는 남음), 나머지는 문서 반영만으로 완료되지 않았다.
 독립 로컬 개발은 가능하며 실제 계정/공개 전환은 사람 결정이다.
 10/20 연락/응답 시간 결정, 10/21 이후 고장 수리만, 10/23~31 경기별 근거를 기록한다.
 
@@ -40,7 +40,9 @@ WS-safe1은 2026-10-13 로컬 구현·합성 검증을 마쳤고(실제 전환·
   계정 자원과 secret 존재를 확인하는 도구는 아니다.
 - [긴급 안내 스위치](../ops/public-host/NOTICE.md): 운영자 토큰 digest·조건부 쓰기·감사 기록으로 화면/asset/JSON/수집을
   503 안내로 전환하고 업로드는 유지. 로컬 Worker·Chromium 검증과 loopback 실측까지이며 실제 문구·전환·토큰·다중 colo 지연은 별도다.
-- [감시](../ops/public-host/MONITORING.md): 단발 읽기·지정된 발행 시각·장애/복구 상태·안내 상태 구별(`notice_active`).
+- [관람 접근 문](../ops/public-host/ACCESS.md): `ACCESS_GATE_ENABLED`·코드 digest·세션 비밀로 화면/asset/JSON/수집을 401로 막는 무상태 세션 쿠키.
+  업로드·안내 인증과 분리, 같은 출처 전제. 로컬 Worker·Chromium 검증까지이며 실제 대상·코드·https/Safari는 별도다.
+- [감시](../ops/public-host/MONITORING.md): 단발 읽기·지정된 발행 시각·장애/복구 상태·안내 상태 구별(`notice_active`)·접근 문 구별(`access_gate_active`).
   현재 상시 스케줄과 외부 알림은 미연결이다.
 - [합성 리허설](../ops/public-host/REHEARSAL.md) ·
   [영속 재시작](../ops/public-host/LIFECYCLE.md): 실제 로컬 Worker/R2/D1,
