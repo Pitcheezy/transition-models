@@ -12,7 +12,7 @@ const RECORD_PREFIX = RECORD_FORMAT + ":";
 const RECORD_HEADER_BYTES = encoder.encode(RECORD_PREFIX + "0".repeat(36) + "\n").length;
 
 class HttpError extends Error {
-  constructor(status, code) { super(code); this.status = status; }
+  constructor(status, code, headers = {}) { super(code); this.status = status; this.headers = headers; }
 }
 
 export function permittedKey(pathname) {
@@ -73,6 +73,23 @@ async function authorize(request, env) {
   if (difference !== 0) throw new HttpError(401, "unauthorized");
 }
 
+
+async function enforceUploadLimit(env) {
+  let result;
+  try {
+    if (typeof env.PUBLISH_LIMITER?.limit !== "function") throw new Error();
+    // One authenticated publisher pool: changing method/path/IP cannot bypass it.
+    // Namespace must be separate from telemetry and other deployment environments.
+    result = await env.PUBLISH_LIMITER.limit({ key: "publisher" });
+  } catch { throw new HttpError(503, "upload_limiter_unavailable"); }
+  if (!result || typeof result !== "object" || typeof result.success !== "boolean") {
+    throw new HttpError(503, "upload_limiter_unavailable");
+  }
+  if (result.success === false) {
+    throw new HttpError(429, "upload_rate_limited", { "Retry-After": "60" });
+  }
+}
+
 function precondition(request, deletion) {
   const match = request.headers.get("If-Match");
   const none = request.headers.get("If-None-Match");
@@ -115,6 +132,7 @@ async function upload(request, env, key) {
   if (!["PUT", "DELETE", "HEAD"].includes(request.method)) {
     return json(request, env, 405, { error: "method_not_allowed" }, { Allow: "PUT, DELETE, HEAD" });
   }
+  await enforceUploadLimit(env);
   if (!env.PUBLISH_BUCKET) throw new HttpError(503, "storage_not_configured");
   if (request.method === "HEAD") {
     const obj = await env.PUBLISH_BUCKET.head(key);
@@ -234,7 +252,8 @@ export default {
     } catch (error) {
       // Do not reflect input, credentials, storage paths, or provider exception messages.
       return json(request, env, error instanceof HttpError ? error.status : 503,
-        { error: error instanceof HttpError ? error.message : "storage_unavailable" }, {}, publicRoute);
+        { error: error instanceof HttpError ? error.message : "storage_unavailable" },
+        error instanceof HttpError ? error.headers : {}, publicRoute);
     }
   },
 };

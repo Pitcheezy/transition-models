@@ -11,6 +11,7 @@ test("actual local Worker/R2 runtime: publish, conditional updates, withdrawal a
   const mf = new Miniflare({
     modules: true, scriptPath: fileURLToPath(new URL("../worker.mjs", import.meta.url)),
     compatibilityDate: "2026-07-30", r2Buckets: ["PUBLISH_BUCKET"],
+    ratelimits: { PUBLISH_LIMITER: { namespace_id: "1002", simple: { limit: 60, period: 60 } } },
     bindings: {
       DATA_READ_ENABLED: "true", UPLOAD_ENABLED: "true", PUBLISH_TOKEN_SHA256: hash(token),
       READ_ORIGIN: "https://ui.example.test",
@@ -89,4 +90,35 @@ test("actual local Worker/R2 runtime: publish, conditional updates, withdrawal a
   } finally {
     await mf.dispose();
   }
+});
+
+test("actual rate binding blocks authenticated storage calls while public reads continue", { timeout: 30000 }, async () => {
+  const mf = new Miniflare({
+    modules: true, modulesRoot: fileURLToPath(new URL("../", import.meta.url)),
+    scriptPath: fileURLToPath(new URL("../worker.mjs", import.meta.url)),
+    compatibilityDate: "2026-07-30", r2Buckets: ["PUBLISH_BUCKET"],
+    ratelimits: { PUBLISH_LIMITER: { namespace_id: "1002", simple: { limit: 2, period: 60 } } },
+    bindings: { DATA_READ_ENABLED: "true", UPLOAD_ENABLED: "true", PUBLISH_TOKEN_SHA256: hash(token) },
+  });
+  try {
+    await mf.ready;
+    const body = '{"synthetic":true}';
+    const call = (path, init) => mf.dispatchFetch("http://localhost" + path, init);
+    const response = await call("/_publish/v1/game/123.json", { method: "PUT", body,
+      headers: { Authorization: "Bearer " + token, "Content-Type": "application/json",
+        "X-Content-SHA256": hash(body), "If-None-Match": "*" } });
+    assert.equal(response.status, 200);
+    const tag = response.headers.get("ETag");
+    const head = await call("/_publish/v1/game/123.json", { method: "HEAD", headers: { Authorization: "Bearer " + token } });
+    assert.equal(head.status, 200);
+    for (const [path, method] of [["/v1/game/123.json","DELETE"],["/v1/health.json","HEAD"],["/v1/setup/456.json","PUT"]]) {
+      const blocked = await call("/_publish" + path, { method, headers: { Authorization: "Bearer " + token, "If-Match": tag } });
+      assert.equal(blocked.status, 429);
+      assert.equal(blocked.headers.get("Retry-After"), "60");
+      await blocked.arrayBuffer();
+    }
+    const publicRead = await call("/v1/game/123.json");
+    assert.equal(publicRead.status, 200); assert.equal(await publicRead.text(), body);
+    assert.equal(publicRead.headers.get("ETag"), tag);
+  } finally { await mf.dispose(); }
 });

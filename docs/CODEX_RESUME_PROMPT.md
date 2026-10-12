@@ -1,9 +1,14 @@
 # Codex 재개 프롬프트 — 2026-09-28
 
+## WS-ops1b 인증 업로드 제한 완료 — 2026-10-12
+
+[제한·재시도·경계](../ops/public-host/UPLOAD_LIMITS.md): Node71·별도 Codex 관련39통과. 실제 계정/주기 확정은 별도다.
+다음 독립 작업은 WS-ops3c 수집 UI 토글·보관 안내 설정 연결이다. 팀원 파일·공개 배포 변경 금지를 유지한다.
+
 ## WS-ops4c 로컬 호스팅 리허설 완료 — 2026-10-12
 
 [조회·철회/복구·감시·브라우저 리허설](../ops/public-host/REHEARSAL.md)을 수행했다. 합성120/120·Node66·Chrome/WebKit 각2통과.
-브라우저 실행 폴더에서 Worker 모듈 경로 실패를 재현해 modulesRoot를 명시했다. 원격 재검사 진행 중.
+브라우저 실행 폴더에서 Worker 모듈 경로 실패를 재현해 modulesRoot를 명시했다. 원격 Chromium/WebKit 각29·Node66·전체 CPU Linux/macOS CI 통과(PR #9).
 Windows WebKit 종료의 WSARecv64 진단은 남아 있으나 종료 후 Worker GET200도 확인했다.
 공개 CDN/실제 Song/Safari 검사가 아니다. 다음은 WS-ops1b 인증 업로드 제한이며 실제 배포 조건은 유지한다.
 

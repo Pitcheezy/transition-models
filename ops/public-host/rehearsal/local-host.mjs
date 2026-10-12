@@ -37,6 +37,7 @@ export async function startLocalHost({ signal } = {}) {
     modules: true, modulesRoot: fileURLToPath(new URL("../", import.meta.url)), scriptPath: fileURLToPath(new URL("../worker.mjs", import.meta.url)),
     compatibilityDate: "2026-07-30", host: "127.0.0.1", port: 0,
     r2Buckets: ["PUBLISH_BUCKET"],
+    ratelimits: { PUBLISH_LIMITER: { namespace_id: "1002", simple: { limit: 60, period: 60 } } },
     bindings: { DATA_READ_ENABLED: "true", UPLOAD_ENABLED: "true", PUBLISH_TOKEN_SHA256: hash(token) },
     serviceBindings: {
       ASSETS: request => {

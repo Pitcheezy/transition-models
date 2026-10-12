@@ -41,6 +41,7 @@ async function fixture() {
     DATA_READ_ENABLED: "true", UPLOAD_ENABLED: "true",
     PUBLISH_TOKEN_SHA256: await sha256(new TextEncoder().encode(TOKEN)),
     PUBLISH_BUCKET: new Bucket(),
+    PUBLISH_LIMITER: { limit: async () => ({ success: true }) },
     READ_ORIGIN: "https://ui.example.test",
     ASSETS: { fetch: async () => new Response("frontend", { headers: { "Content-Type": "text/html" } }) },
   };
@@ -331,4 +332,68 @@ test("example config keeps both gates closed and routes through Worker before as
   assert.equal(config.workers_dev, false);
   assert.equal(config.preview_urls, false);
   assert.equal(config.vars.PUBLISH_TOKEN_SHA256, undefined);
+});
+
+test("authenticated requests share one limit across files and methods", async () => {
+  const { env, call, put } = await fixture(); const keys = [];
+  env.PUBLISH_LIMITER = { limit: async ({ key }) => { keys.push(key); return { success: true }; } };
+  assert.equal((await put()).status, 200);
+  assert.equal((await call("/_publish/v1/health.json", { method: "HEAD", headers: { Authorization: "Bearer " + TOKEN } })).status, 404);
+  assert.equal((await call("/_publish/v1/setup/456.json", { method: "DELETE", headers: { Authorization: "Bearer " + TOKEN } })).status, 428);
+  assert.deepEqual(keys, ["publisher", "publisher", "publisher"]);
+});
+
+test("rate rejection and unavailable limiter never read request body or storage", async () => {
+  const variants = [
+    [undefined, 503], [{}, 503], [{ limit: 1 }, 503],
+    ...[null, {}, "yes", { success: "true" }, { success: 1 }, { success: false }].map(x => [
+      { limit: async () => x }, x?.success === false ? 429 : 503]),
+    [{ limit: async () => { throw new Error("provider secret"); } }, 503],
+  ];
+  for (const [limiter, status] of variants) {
+    const { env } = await fixture(); env.PUBLISH_LIMITER = limiter;
+    let storage = 0, bodyReads = 0;
+    env.PUBLISH_BUCKET = { get: () => { storage++; }, head: () => { storage++; }, put: () => { storage++; } };
+    for (const method of ["PUT", "DELETE", "HEAD"]) {
+      const request = new Request("https://host.example.test/_publish" + path, {
+        method, ...(method === "PUT" ? { body: "{}" } : {}),
+        headers: { Authorization: "Bearer " + TOKEN },
+      });
+      Object.defineProperty(request, "body", { get() { bodyReads++; throw Error("body must stay unread"); } });
+      const response = await worker.fetch(request, env);
+      assert.equal(response.status, status);
+      assert.equal(response.headers.get("Retry-After"), status === 429 ? "60" : null);
+      assert.equal(response.headers.get("Cache-Control"), "no-store");
+      assert.equal(await response.text(), method === "HEAD" ? "" :
+        JSON.stringify({ error: status === 429 ? "upload_rate_limited" : "upload_limiter_unavailable" }));
+    }
+    assert.equal(storage, 0); assert.equal(bodyReads, 0);
+  }
+});
+
+test("disabled, unauthorized and disallowed requests do not consume publisher quota", async () => {
+  const { env, call, put } = await fixture(); let count = 0;
+  env.PUBLISH_LIMITER = { limit: async () => { count++; return { success: true }; } };
+  assert.equal((await put(undefined, undefined, { Authorization: "wrong" })).status, 401);
+  assert.equal((await call("/_publish" + path, { method: "POST", headers: { Authorization: "Bearer " + TOKEN } })).status, 405);
+  assert.equal((await call("/_publish/v1/private.json", { method: "HEAD", headers: { Authorization: "Bearer " + TOKEN } })).status, 404);
+  assert.equal((await call(path)).status, 404);
+  assert.equal((await call(path, { method: "HEAD" })).status, 404);
+  env.UPLOAD_ENABLED = "false"; assert.equal((await put()).status, 503);
+  assert.equal(count, 0);
+});
+
+test("example limiter is separate and explicit; retries remain conditional", async () => {
+  const c = JSON.parse(readFileSync(new URL("../wrangler.example.jsonc", import.meta.url), "utf8"));
+  const upload = c.ratelimits.find(x => x.name === "PUBLISH_LIMITER");
+  assert.deepEqual(upload.simple, { limit: 60, period: 60 });
+  assert.notEqual(upload.namespace_id, c.ratelimits.find(x => x.name === "TELEMETRY_LIMITER").namespace_id);
+  const { env, put, call } = await fixture();
+  const created = await put(); const old = created.headers.get("ETag");
+  env.PUBLISH_LIMITER = { limit: async () => ({ success: false }) };
+  assert.equal((await put('{"synthetic":2}', { "If-Match": old })).status, 429);
+  env.PUBLISH_LIMITER = { limit: async () => ({ success: true }) };
+  assert.equal((await put('{"synthetic":3}', { "If-Match": old })).status, 200);
+  assert.equal((await put('{"synthetic":2}', { "If-Match": old })).status, 412);
+  assert.equal(await (await call(path)).text(), '{"synthetic":3}');
 });

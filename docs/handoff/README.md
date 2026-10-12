@@ -1,5 +1,9 @@
 # 우리 프로토타입 소스 이관 안내 — H-port8
 
+## WS-ops1b — 2026-10-12
+
+[업로드 제한](../../ops/public-host/UPLOAD_LIMITS.md) 구현·Node71/별도 관련39검사 통과. 다음 WS-ops3c 수집 UI 설정 일치. 기존 영상/소스 ZIP은 그대로다.
+
 ## WS 로컬 리허설 — 2026-10-12
 
 [Worker 합성 리허설](../../ops/public-host/REHEARSAL.md)은 신규 임시 저장소만 사용한다.
