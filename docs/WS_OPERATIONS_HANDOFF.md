@@ -20,7 +20,8 @@
 추가는 알림 후 진행, 삭제/의미 변경은 Song 승인 후 v2. 역할 확정과 실제 파일 검증/출시는 구별한다.
 [실행 계획](WS_COLLAB_V1_ACTIONS.md)에 즉시 안내 화면(WS-safe1), 접근 문(WS-access1),
 양쪽 알림(WS-alert1), 경기별 기록(WS-report1), 다른 모델 검토(WS-review1)의 합격 기준을 적었다.
-이 기능들은 문서 반영만으로 완료되지 않았다. 독립 로컬 개발은 가능하며 실제 계정/공개 전환은 사람 결정이다.
+WS-safe1은 2026-10-13 로컬 구현·합성 검증을 마쳤고(실제 전환·문구·토큰·다른 모델 검토는 남음), 나머지는 문서 반영만으로 완료되지 않았다.
+독립 로컬 개발은 가능하며 실제 계정/공개 전환은 사람 결정이다.
 10/20 연락/응답 시간 결정, 10/21 이후 고장 수리만, 10/23~31 경기별 근거를 기록한다.
 
 ## 준비된 것의 위치
@@ -37,7 +38,9 @@
   출처·권리·서비스 동작 인증이 아니며 deployable=false다.
 - [설정 검사](../ops/public-host/CONFIG_CHECK.md): 파일 목록/경로/설정과 화면 보관 안내 대조.
   계정 자원과 secret 존재를 확인하는 도구는 아니다.
-- [감시](../ops/public-host/MONITORING.md): 단발 읽기·지정된 발행 시각·장애/복구 상태.
+- [긴급 안내 스위치](../ops/public-host/NOTICE.md): 운영자 토큰 digest·조건부 쓰기·감사 기록으로 화면/asset/JSON/수집을
+  503 안내로 전환하고 업로드는 유지. 로컬 Worker·Chromium 검증과 loopback 실측까지이며 실제 문구·전환·토큰·다중 colo 지연은 별도다.
+- [감시](../ops/public-host/MONITORING.md): 단발 읽기·지정된 발행 시각·장애/복구 상태·안내 상태 구별(`notice_active`).
   현재 상시 스케줄과 외부 알림은 미연결이다.
 - [합성 리허설](../ops/public-host/REHEARSAL.md) ·
   [영속 재시작](../ops/public-host/LIFECYCLE.md): 실제 로컬 Worker/R2/D1,
@@ -93,7 +96,8 @@ node ops/public-host/rehearse-lifecycle.mjs
 
 - 구종 선택 비중은 사건확률이 아니다. 추천 효과나 투수 의도를 운영 기반이 증명하지 않는다.
 - 여러 파일의 ETag는 같은 발행 묶음이나 투구 공개 시점을 보장하지 않는다.
-- 네 기능 스위치를 꺼도 정적 화면은 남고 요청 비용이 자동 중단되지 않는다.
+- 네 기능 스위치를 꺼도 정적 화면은 남는다. 화면 전체를 안내로 바꾸는 것은 [안내 스위치](../ops/public-host/NOTICE.md)이며,
+  둘 다 요청 비용을 자동 중단하지 않고 내려받은 자료를 회수하지 않는다.
 - 제한기는 위치별 근사치이며 전역 비용 상한이 아니다. D1 당일 상한은 HTTP/읽기 과금 상한이 아니다.
 - Windows workerd WSARecv64 종료 진단과 Windows WebKit의 credentials=omit 쿠키 전송 관찰은
   미해결 한계다. 실제 Safari/운영 로그 정책과 함께 확인해야 한다.

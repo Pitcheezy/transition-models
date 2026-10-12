@@ -96,6 +96,7 @@ def set_value(config, keys, value):
         (["vars", "UPLOAD_ENABLED"], True, "invalid_gate"),
         (["vars", "PUBLISH_TOKEN_SHA256"], "secret-must-not-print", "inline_secret"),
         (["vars", "TELEMETRY_RATE_SECRET"], "secret-must-not-print", "inline_secret"),
+        (["vars", "NOTICE_TOKEN_SHA256"], "secret-must-not-print", "inline_secret"),
         (["vars", "TELEMETRY_RETAIN_DAYS"], "91", "invalid_numeric_setting"),
         (["vars", "TELEMETRY_RETAIN_DAYS"], 30, "invalid_numeric_setting"),
         (["vars", "SESSION_WRITES_PER_DAY"], "0", "invalid_numeric_setting"),

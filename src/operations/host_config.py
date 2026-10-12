@@ -210,7 +210,8 @@ def validate_config(config, client, root):
     variables = config["vars"]
     require(isinstance(variables, dict), "object_required")
     require(
-        not {"PUBLISH_TOKEN_SHA256", "TELEMETRY_RATE_SECRET"} & variables.keys(),
+        not {"PUBLISH_TOKEN_SHA256", "TELEMETRY_RATE_SECRET", "NOTICE_TOKEN_SHA256"}
+        & variables.keys(),
         "inline_secret_not_allowed",
     )
     fields(variables, VARIABLES)

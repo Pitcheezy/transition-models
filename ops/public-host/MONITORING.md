@@ -13,6 +13,9 @@ Song 모델/수집기/Mac, 외부 알림, 스케줄러에 연결하지 않았다
   HTTP200만으로 추천·정책·경기 피드가 정상이라는 뜻이 아니다.
 - Date+Age는 캐시/응답 시계 검사다. Age=0이어도 본문은 오래될 수 있다.
   로컬 UTC와 큰 차이가 나면 clock_mismatch. 발행 시각으로 현재 시각을 대신하지 않는다.
+- 503에 `X-Pitcheezy-Notice` 헤더가 있으면 [긴급 안내 스위치](NOTICE.md)가 켜진 상태다. 코드 `notice_active`,
+  report `notice_active=true`, issues `page_notice_active`/`health_notice_active`로 기록하며 전체 상태는 여전히 `failed`다
+  (뷰어에게는 이용 불가). 발행 중단·저장소 장애와 구별해 알림 경로(WS-alert1)에서 다르게 다룰 수 있다. 본문 문구는 기록하지 않는다.
 - 시각은 초 단위 이상·시간대가 있는 RFC3339 문자열만 받는다. 숫자의 초/밀리초는 추정하지 않는다.
   예제의 지연120초·시계차30초는 합의된 운영값이 아니며 실제 리허설에서 정해야 한다.
 
