@@ -4,7 +4,7 @@ import { createHash, randomBytes } from "node:crypto";
 import { fileURLToPath } from "node:url";
 
 export const fixtureHtml = '<!doctype html><html lang="ko"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>합성 호스트 리허설</title><h1>합성 운영 리허설</h1><p>실제 경기·추천·성능 자료가 아닙니다.</p><button id="refresh">합성 파일 다시 읽기</button><output id="state" aria-live="polite">아직 읽지 않음</output><script type="module" src="/fixture.mjs"></script></html>';
-const fixtureJs = 'let current;document.querySelector("#refresh").addEventListener("click",async()=>{current?.abort();const c=new AbortController();current=c;const timer=setTimeout(()=>c.abort(),3000);const out=document.querySelector("#state");out.textContent="읽는 중";try{const r=await fetch("/v1/game/123.json",{signal:c.signal,cache:"no-store",credentials:"omit"});if(current!==c)return;if(r.status===404){out.textContent="파일 없음";return;}if(r.status===503&&r.headers.get("X-Pitcheezy-Notice")){const n=await r.json();if(current!==c)return;out.textContent=n.error==="service_notice"?"안내 중: "+n.notice.id:"읽기 실패";return;}if(!r.ok)throw Error();const x=await r.json();if(current!==c)return;if(x.synthetic!==true||!Number.isInteger(x.synthetic_version))throw Error();out.textContent="합성 v"+x.synthetic_version;}catch{if(current===c)out.textContent="읽기 실패";}finally{clearTimeout(timer);}});window.fixtureReady=true;';
+const fixtureJs = 'let current;document.querySelector("#refresh").addEventListener("click",async()=>{current?.abort();const c=new AbortController();current=c;const timer=setTimeout(()=>c.abort(),3000);const out=document.querySelector("#state");out.textContent="읽는 중";try{const r=await fetch("/v1/game/123.json",{signal:c.signal,cache:"no-store",credentials:"same-origin"});if(current!==c)return;if(r.status===404){out.textContent="파일 없음";return;}if(r.status===401&&r.headers.get("X-Pitcheezy-Access")){out.textContent="접속 필요";return;}if(r.status===503&&r.headers.get("X-Pitcheezy-Notice")){const n=await r.json();if(current!==c)return;out.textContent=n.error==="service_notice"?"안내 중: "+n.notice.id:"읽기 실패";return;}if(!r.ok)throw Error();const x=await r.json();if(current!==c)return;if(x.synthetic!==true||!Number.isInteger(x.synthetic_version))throw Error();out.textContent="합성 v"+x.synthetic_version;}catch{if(current===c)out.textContent="읽기 실패";}finally{clearTimeout(timer);}});window.fixtureReady=true;';
 export const hash = value => createHash("sha256").update(value).digest("hex");
 
 /** Bound runtime waits; a timed-out shutdown is reported as unconfirmed, never as success. */
@@ -31,17 +31,24 @@ export async function boundedCleanup(dispose, timeoutMs = 5000) {
   } finally { clearTimeout(timer); }
 }
 
-export async function startLocalHost({ signal, notice = true } = {}) {
+export async function startLocalHost({ signal, notice = true, access = null } = {}) {
   const token = randomBytes(32).toString("base64url");
   // Separate ephemeral operator token for the emergency notice switch (never the publisher token).
   const noticeToken = randomBytes(32).toString("base64url");
+  // Optional viewer access gate: ephemeral codes and a separate session secret, never written to receipts.
+  const accessCodes = access ? (access.codes || [randomBytes(12).toString("base64url")]) : [];
+  const accessSecret = randomBytes(32).toString("base64url");
+  const accessBindings = access ? {
+    ACCESS_GATE_ENABLED: "true", ACCESS_CODE_SHA256: accessCodes.map(hash).join(","),
+    ACCESS_SESSION_SECRET: accessSecret, ACCESS_SESSION_SECONDS: String(access.sessionSeconds || 3600),
+  } : {};
   const mf = new Miniflare({
     modules: true, modulesRoot: fileURLToPath(new URL("../", import.meta.url)), scriptPath: fileURLToPath(new URL("../worker.mjs", import.meta.url)),
     compatibilityDate: "2026-07-30", host: "127.0.0.1", port: 0,
     r2Buckets: ["PUBLISH_BUCKET"],
     ratelimits: { PUBLISH_LIMITER: { namespace_id: "1002", simple: { limit: 60, period: 60 } } },
     bindings: { DATA_READ_ENABLED: "true", UPLOAD_ENABLED: "true", PUBLISH_TOKEN_SHA256: hash(token),
-      ...(notice ? { NOTICE_TOKEN_SHA256: hash(noticeToken) } : {}) },
+      ...(notice ? { NOTICE_TOKEN_SHA256: hash(noticeToken) } : {}), ...accessBindings },
     serviceBindings: {
       ASSETS: request => {
         const path = new URL(request.url).pathname;
@@ -80,6 +87,14 @@ export async function startLocalHost({ signal, notice = true } = {}) {
         },
       }),
       noticeState: () => admin({ method: "GET" }),
+      /** Test-only: the ephemeral viewer codes (never put them into receipts, HTML or logs). */
+      accessCodes,
+      /** Viewer login from Node; returns the response (Set-Cookie header carries the session). */
+      login: (code, { form = false, headers = {} } = {}) => fetch(origin + "/_access/v1/session", {
+        method: "POST", redirect: "manual", signal: AbortSignal.timeout(5000),
+        headers: { "Content-Type": form ? "application/x-www-form-urlencoded" : "application/json", ...headers },
+        body: form ? new URLSearchParams({ code }).toString() : JSON.stringify({ code }),
+      }),
       dispose: () => mf.dispose(),
     };
   } catch {

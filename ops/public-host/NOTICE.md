@@ -17,7 +17,7 @@
 | `/_publish/...` 인증 업로드 | 조건부 저장 | **변경 없음** (발행기는 계속 쓸 수 있다) |
 | `/_notice/v1/state` 운영자 경로 | 인증 조회/변경 | **변경 없음** (끄기 위해 필요) |
 
-모든 안내 응답은 `Cache-Control: no-store`, `CDN-Cache-Control: no-store`, `Retry-After: 60`, `X-Robots-Tag: noindex`,
+안내는 [관람 접근 문](ACCESS.md)보다 먼저 적용된다. 모든 안내 응답은 `Cache-Control: no-store`, `CDN-Cache-Control: no-store`, `Retry-After: 60`, `X-Robots-Tag: noindex`,
 `X-Pitcheezy-Notice: <문구 id>` 헤더를 가진다. 내부 사유·조작자·토큰은 어떤 공개 응답에도 나오지 않는다.
 
 문구는 코드의 고정 목록(`NOTICE_MESSAGES`)에서 **id로만** 고른다. 현재 두 id(`maintenance`, `data_hold`)의 텍스트는

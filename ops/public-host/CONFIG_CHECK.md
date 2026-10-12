@@ -10,7 +10,7 @@
 candidate/
   release-manifest.json
   host/
-    worker.mjs ... (manifest의 운영 파일 11개, notice.mjs 포함)
+    worker.mjs ... (manifest의 운영 파일 12개, notice.mjs·access.mjs 포함)
     migrations/0001_telemetry.sql
     wrangler.deploy.json
   public/
@@ -18,7 +18,7 @@ candidate/
     collection-settings.json
 ~~~
 
-manifest에 적힌 11개 운영 파일에는 migrations/0001_telemetry.sql과 notice.mjs가 이미 포함된다.
+manifest에 적힌 12개 운영 파일에는 migrations/0001_telemetry.sql·notice.mjs·access.mjs가 이미 포함된다.
 추가 파일은 `host/wrangler.deploy.json`과 `public/collection-settings.json` 두 개만 허용한다.
 manifest의 SHA/바이트를 재검사하며, 공개 폴더에 목록 밖 영상·메모 등이 하나라도 섞이면 거부한다.
 검사한 폴더에 파일을 추가하거나 고치면 다시 검사해야 한다. 동시 파일 변경 방지나 서명 인증 도구는 아니다.
@@ -53,14 +53,15 @@ Python3.12 표준 라이브러리만 사용한다. 성공은 종료0, 입력 거
 - 테스트한 compatibility_date, Worker 우선 처리, ASSETS, SPA fallback, 기본 공개 엔드포인트 비활성 확인.
 - private R2와 D1의 **binding 이름/형식** 확인. 실제 private 여부·계정·DB 존재는 확인하지 못한다.
 - 업로드/수집 limiter 이름·주기·서로 다른 namespace 확인. 다른 Worker와의 충돌은 계정에서 별도 확인.
-- 네 서버 토글은 문자열 true/false만, 공개 수집 설정은 정확한 불리언2개·정수 보관일1개만 허용한다.
+- 다섯 서버 토글(읽기·업로드·통계·피드백·접근 문)은 문자열 true/false만, 공개 수집 설정은 정확한 불리언2개·정수 보관일1개만 허용한다.
+  접근 문 세션 길이 ACCESS_SESSION_SECONDS는 1~604800이며, 접근 문이 켜진 설정은 READ_ORIGIN이 비어 있어야 한다(같은 출처 쿠키).
   공개 설정과 서버 통계/피드백/보관일이 같아야 한다. 이전 enabled만으로 켜는 설정은 수용하지 않는다.
 - 수집 OFF여도 기존 행은 만료되어야 하므로 UTC03:17 정리 cron을 반드시 요구한다.
 - origin은 정규화된 HTTPS DNS/IPv4/IPv6의 제한된 형식만 받는다. 경로·사용자 정보·쿼리·fragment,
   대문자·명시적 기본443포트·IPv6 zone ID·xn-- IDNA 라벨은 지원하지 않는다.
   비기본 포트1~65535는 허용한다. DNS 등록·TLS·접속 가능 여부는 별도다.
-- 비밀 변수는 설정 파일에 넣지 않는다. PUBLISH_TOKEN_SHA256·TELEMETRY_RATE_SECRET·NOTICE_TOKEN_SHA256은
-  별도 비밀 저장소에서 설치할 이름이며 설치 여부는 검사하지 못한다. 값은 문서/로그/이슈에 쓰지 않는다.
+- 비밀 변수는 설정 파일에 넣지 않는다. PUBLISH_TOKEN_SHA256·TELEMETRY_RATE_SECRET·NOTICE_TOKEN_SHA256·
+  ACCESS_CODE_SHA256·ACCESS_SESSION_SECRET은 별도 비밀 저장소에서 설치할 이름이며 설치 여부는 검사하지 못한다. 값은 문서/로그/이슈에 쓰지 않는다.
 
 실제 화면이 collection-settings.json을 읽어 UI에 넘기는지, 실제 배포가 검사한 설정/바이트를
 사용하는지는 **미검증**이다. 환경 변수나 배포 인자로 나중에 덮어쓰면 이 검사 결과의 범위 밖이다.

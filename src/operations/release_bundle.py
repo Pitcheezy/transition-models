@@ -19,6 +19,7 @@ HOST_FILES = (
     "worker.mjs",
     "gateway.mjs",
     "notice.mjs",
+    "access.mjs",
     "telemetry.mjs",
     "package.json",
     "package-lock.json",
