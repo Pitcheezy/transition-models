@@ -1,6 +1,7 @@
 "use strict";
 // Synthetic HTTP acknowledgements; no production data, account or Song code.
-const {before,after,test}=require("node:test");
+const {before,after,test:nodeTest}=require("node:test");
+const test=(name,fn)=>nodeTest(name,{timeout:30000},fn);
 const assert=require("node:assert/strict");
 const http=require("node:http");
 const fs=require("node:fs/promises");
@@ -38,6 +39,8 @@ async function pageFor(options={}){
   requests=[];mode="ok";delayed=[];
   const context=await browser.newContext({viewport:{width:375,height:700}});
   const page=await context.newPage();await page.clock.install({time:new Date("2026-10-12T12:00:00Z")});
+  // Freeze rather than merely install: CI wall time must not add 16-110ms to the synthetic interval.
+  await page.clock.pauseAt(new Date("2026-10-12T12:01:00Z"));
   await page.goto(origin);await page.waitForFunction(()=>window.ready);
   await page.evaluate(opts=>window.mount(opts),options);
   return {page,context};
