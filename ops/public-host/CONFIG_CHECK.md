@@ -10,7 +10,7 @@
 candidate/
   release-manifest.json
   host/
-    worker.mjs ... (manifest의 운영 파일 10개)
+    worker.mjs ... (manifest의 운영 파일 11개, notice.mjs 포함)
     migrations/0001_telemetry.sql
     wrangler.deploy.json
   public/
@@ -18,7 +18,7 @@ candidate/
     collection-settings.json
 ~~~
 
-manifest에 적힌 10개 운영 파일에는 migrations/0001_telemetry.sql이 이미 포함된다.
+manifest에 적힌 11개 운영 파일에는 migrations/0001_telemetry.sql과 notice.mjs가 이미 포함된다.
 추가 파일은 `host/wrangler.deploy.json`과 `public/collection-settings.json` 두 개만 허용한다.
 manifest의 SHA/바이트를 재검사하며, 공개 폴더에 목록 밖 영상·메모 등이 하나라도 섞이면 거부한다.
 검사한 폴더에 파일을 추가하거나 고치면 다시 검사해야 한다. 동시 파일 변경 방지나 서명 인증 도구는 아니다.
@@ -59,7 +59,7 @@ Python3.12 표준 라이브러리만 사용한다. 성공은 종료0, 입력 거
 - origin은 정규화된 HTTPS DNS/IPv4/IPv6의 제한된 형식만 받는다. 경로·사용자 정보·쿼리·fragment,
   대문자·명시적 기본443포트·IPv6 zone ID·xn-- IDNA 라벨은 지원하지 않는다.
   비기본 포트1~65535는 허용한다. DNS 등록·TLS·접속 가능 여부는 별도다.
-- 비밀 변수는 설정 파일에 넣지 않는다. PUBLISH_TOKEN_SHA256·TELEMETRY_RATE_SECRET은
+- 비밀 변수는 설정 파일에 넣지 않는다. PUBLISH_TOKEN_SHA256·TELEMETRY_RATE_SECRET·NOTICE_TOKEN_SHA256은
   별도 비밀 저장소에서 설치할 이름이며 설치 여부는 검사하지 못한다. 값은 문서/로그/이슈에 쓰지 않는다.
 
 실제 화면이 collection-settings.json을 읽어 UI에 넘기는지, 실제 배포가 검사한 설정/바이트를
