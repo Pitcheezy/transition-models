@@ -1,4 +1,5 @@
 import { handleTelemetry } from "./telemetry.mjs";
+import { currentNotice, handleNotice, noticeHtml, noticeJson, NOTICE_HEADER } from "./notice.mjs";
 /**
  * File transport candidate for COLLAB-001. No baseball-schema validation here.
  * Both gates default closed. Only a reviewed publisher may supply public data.
@@ -222,15 +223,43 @@ async function read(request, env, key) {
   }, true);
 }
 
+/**
+ * Emergency notice (WS-safe1): while the switch is on, every viewer-facing route answers 503 with the
+ * pre-registered development notice and no-store. Uploads and the admin route stay reachable so the
+ * publisher keeps writing and an operator can turn the notice off. Data already downloaded by a
+ * browser is not recalled.
+ */
+function noticeResponse(request, env, notice, kind) {
+  const extra = { "Retry-After": "60", [NOTICE_HEADER]: notice.message_id, "X-Robots-Tag": "noindex" };
+  if (kind === "page") {
+    const headers = new Headers({
+      "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store", "CDN-Cache-Control": "no-store",
+      "Date": new Date().toUTCString(), "Age": "0", "X-Content-Type-Options": "nosniff", ...extra,
+    });
+    return new Response(request.method === "HEAD" ? null : noticeHtml(notice.message_id), { status: 503, headers });
+  }
+  if (kind === "public" && request.method === "OPTIONS") return response(request, env, 204, null, {}, true);
+  return json(request, env, 503, noticeJson(notice.message_id), extra, kind === "public");
+}
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
     const uploadRoute = url.pathname === "/_publish" || url.pathname.startsWith("/_publish/");
     const publicRoute = url.pathname === "/v1" || url.pathname.startsWith("/v1/");
+    const telemetryRoute = url.pathname === "/_telemetry" || url.pathname.startsWith("/_telemetry/");
     try {
       // This foundation uses ASCII asset paths. Do not let encoded API prefixes reach SPA fallback.
       if (url.pathname.includes("%")) return json(request, env, 404, { error: "not_found" });
-      if (url.pathname === "/_telemetry" || url.pathname.startsWith("/_telemetry/")) return await handleTelemetry(request, env);
+      if (url.pathname === "/_notice" || url.pathname.startsWith("/_notice/")) return await handleNotice(request, env);
+      if (!uploadRoute) {
+        // Fails closed: an unreadable switch state is a 503, never a silently served screen.
+        const notice = await currentNotice(env);
+        if (notice.active) {
+          return noticeResponse(request, env, notice, publicRoute ? "public" : telemetryRoute ? "telemetry" : "page");
+        }
+      }
+      if (telemetryRoute) return await handleTelemetry(request, env);
       if (uploadRoute || publicRoute) {
         const path = uploadRoute ? url.pathname.slice("/_publish".length) : url.pathname;
         const key = permittedKey(path);
@@ -251,9 +280,10 @@ export default {
         json(request, env, 503, { error: "frontend_not_installed" });
     } catch (error) {
       // Do not reflect input, credentials, storage paths, or provider exception messages.
-      return json(request, env, error instanceof HttpError ? error.status : 503,
-        { error: error instanceof HttpError ? error.message : "storage_unavailable" },
-        error instanceof HttpError ? error.headers : {}, publicRoute);
+      const known = error instanceof HttpError || (error && typeof error.status === "number" && typeof error.message === "string" && /^[a-z_]{1,64}$/.test(error.message));
+      return json(request, env, known ? error.status : 503,
+        { error: known ? error.message : "storage_unavailable" },
+        known ? error.headers || {} : {}, publicRoute);
     }
   },
 };

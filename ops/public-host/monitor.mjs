@@ -100,6 +100,10 @@ async function fetchBounded(url, config, fetchImpl) {
     } catch { refuse("network_error"); }
     if (response.status !== 200) {
       response.body?.cancel().catch(() => {});
+      // An intentional notice (WS-safe1) is still unavailable to viewers, but it must not be mistaken
+      // for a publisher or storage outage: the host marks it with a header, never by body text.
+      const notice = response.headers.get("X-Pitcheezy-Notice");
+      if (response.status === 503 && notice && /^[a-z_]{1,40}$/.test(notice)) refuse("notice_active");
       refuse(response.status >= 300 && response.status < 400 ? "redirect" :
         response.status === 404 ? "missing" : "http_error");
     }
@@ -181,6 +185,8 @@ export async function probe(config, { fetchImpl = fetch, now = () => Date.now() 
   return {
     schema: "pitcheezy-host-probe-v1", config_sha256: configFingerprint(config),
     observed_at_ms: end, status, issues, page, health,
+    // Viewer-facing unavailability caused by the operator notice, distinguished from outages for routing.
+    notice_active: page.code === "notice_active" || health.code === "notice_active",
     semantic_health: "unmeasured", javascript_execution: "unmeasured",
   };
 }

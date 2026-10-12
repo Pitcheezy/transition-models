@@ -1,0 +1,162 @@
+{
+  "schema": "pitcheezy-local-notice-rehearsal-v1",
+  "target": "ephemeral-loopback-miniflare",
+  "synthetic": true,
+  "public_wording_approved": false,
+  "song_screen_verified": false,
+  "real_operator_tokens": false,
+  "environment": {
+    "node": "v24.1.0",
+    "platform": "win32",
+    "arch": "x64",
+    "miniflare": "4.20260730.0"
+  },
+  "source_sha256": {
+    "worker.mjs": "9f3d818686bc6af847bf4c292658a1c71f22f4dd72f6282c8b00e84e0ca33d1b",
+    "gateway.mjs": "1c5f88f2e332f13abec424b88e2bd6c79306de00fbc5b6e8571b9a9c51dd33ec",
+    "notice.mjs": "571d9033eeac9208e30e08df1dcd23efc65639c191993a6334f053f453fb0ae7",
+    "monitor.mjs": "8f57b826a671450ca80b3e0265afec549c0d238a4352ae0d34f14af15b13eb6b",
+    "telemetry.mjs": "545569404a68e8a5159984c3b328e4982c217247d1cd5af01e1831165ebf6739",
+    "rehearsal/local-host.mjs": "43318c435e95f5bedac0208e96abf3e739276c91958e13ef328ccc345bf0189d",
+    "rehearse-notice.mjs": "d6fd90e2931ad67d92ee584a3de3bdd6430f93e021182588c82ddd2161b91246",
+    "package-lock.json": "71ff25032a7eb452e5788b7d13c1a0ff96efd3b768da0c01ac4ae5bc187897a5"
+  },
+  "completed_phases": [
+    "baseline",
+    "switch_on",
+    "notice_matrix",
+    "switch_off"
+  ],
+  "passed": true,
+  "note": "Switch latency is loopback and single-isolate; production propagation across isolates/colos is unmeasured.",
+  "startup_ms": 366,
+  "baseline": {
+    "GET /": 200,
+    "GET /fixture.mjs": 200,
+    "GET /v1/game/123.json": 200,
+    "HEAD /v1/game/123.json": 200
+  },
+  "switch_on": {
+    "admin_request_ms": 18.45,
+    "first_notice_response_after_admin_ok_ms": 11.71,
+    "polls_until_notice": 1,
+    "memo_window_ms": 2000
+  },
+  "notice_matrix": {
+    "GET /": {
+      "status": 503,
+      "content_type": "text/html; charset=utf-8",
+      "cache_control": "no-store",
+      "notice": "maintenance",
+      "body_bytes": 698,
+      "html": true,
+      "json_error": null
+    },
+    "HEAD /": {
+      "status": 503,
+      "content_type": "text/html; charset=utf-8",
+      "cache_control": "no-store",
+      "notice": "maintenance",
+      "body_bytes": 0,
+      "html": false,
+      "json_error": null
+    },
+    "GET /index.html": {
+      "status": 503,
+      "content_type": "text/html; charset=utf-8",
+      "cache_control": "no-store",
+      "notice": "maintenance",
+      "body_bytes": 698,
+      "html": true,
+      "json_error": null
+    },
+    "GET /fixture.mjs": {
+      "status": 503,
+      "content_type": "text/html; charset=utf-8",
+      "cache_control": "no-store",
+      "notice": "maintenance",
+      "body_bytes": 698,
+      "html": true,
+      "json_error": null
+    },
+    "GET /v1/game/123.json": {
+      "status": 503,
+      "content_type": "application/json; charset=utf-8",
+      "cache_control": "no-store",
+      "notice": "maintenance",
+      "body_bytes": 175,
+      "html": false,
+      "json_error": "service_notice"
+    },
+    "HEAD /v1/game/123.json": {
+      "status": 503,
+      "content_type": "application/json; charset=utf-8",
+      "cache_control": "no-store",
+      "notice": "maintenance",
+      "body_bytes": 0,
+      "html": false,
+      "json_error": null
+    },
+    "GET /v1/health.json": {
+      "status": 503,
+      "content_type": "application/json; charset=utf-8",
+      "cache_control": "no-store",
+      "notice": "maintenance",
+      "body_bytes": 175,
+      "html": false,
+      "json_error": "service_notice"
+    },
+    "OPTIONS /v1/game/123.json": {
+      "status": 204,
+      "content_type": "application/json; charset=utf-8",
+      "cache_control": "no-store",
+      "notice": null,
+      "body_bytes": 0,
+      "html": false,
+      "json_error": null
+    },
+    "POST /_telemetry/session": {
+      "status": 503,
+      "content_type": "application/json; charset=utf-8",
+      "cache_control": "no-store",
+      "notice": "maintenance",
+      "body_bytes": 175,
+      "html": false,
+      "json_error": "service_notice"
+    }
+  },
+  "upload_during_notice": "accepted",
+  "monitor_during_notice": {
+    "status": "failed",
+    "notice_active": true,
+    "issues": [
+      "page_notice_active",
+      "health_notice_active"
+    ]
+  },
+  "switch_off": {
+    "admin_request_ms": 17.45,
+    "first_normal_response_after_admin_ok_ms": 7.37,
+    "polls_until_normal": 1
+  },
+  "audit_entries": [
+    {
+      "at": "2026-10-12T17:11:37.031Z",
+      "active": true,
+      "operator": "rehearsal-a",
+      "revision": 1,
+      "operator_token_prefix": "eba052adf2ec"
+    },
+    {
+      "at": "2026-10-12T17:11:37.160Z",
+      "active": false,
+      "operator": "rehearsal-b",
+      "revision": 2,
+      "operator_token_prefix": "eba052adf2ec"
+    }
+  ],
+  "cleanup": {
+    "status": "complete"
+  },
+  "total_ms": 831
+}
