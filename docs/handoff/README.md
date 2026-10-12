@@ -1,5 +1,9 @@
 # 우리 프로토타입 소스 이관 안내 — H-port8
 
+## WS-ops3d 수집 제한기 차단 보강 — 2026-10-12
+
+[수집 계약](../../ops/public-host/TELEMETRY.md)의 제한기는 boolean true만 허용한다. false는429, 나머지/예외는503이며 본문/DB 접근 전에 차단한다. 신규2·Node95통과. 실제 수집 활성화 없음. 다음 H-ops1은 인계·CI 중복 정리다.
+
 ## WS-ops4f 로컬 재시작 검사 완료 — 2026-10-12
 
 [영속 저장소 리허설](../../ops/public-host/LIFECYCLE.md): 4회 시작·3회 재시작·키 교체·수집 OFF 실제 scheduled 정리를 확인했다. 신규/독립 각3·Node93통과.
