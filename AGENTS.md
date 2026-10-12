@@ -1,5 +1,12 @@
 # SmartPitch MDP Transition Probability Models
 
+## WS-ops4a 고정 배포 패키지 완료 — 2026-10-12
+
+[패키지 생성/검사](ops/public-host/RELEASE.md)는 관련58검사·체크리스트7검사를 통과했다.
+고정 우리 host와 합성 화면11파일을 두 번 생성해 ZIP SHA가 일치했다. 공급자 출처/공개 권리/배포는 검증하지 않으며 deployable=false다.
+다음 독립 단위는 WS-ops4b 감시·오류/복구 판정 기반이다. 실제 Song 전달물·계정·기기는 기존 조건을 유지한다.
+
+
 ## WS-ops3 구현 완료 — 2026-10-12
 
 D1 저장·집계·정리와 브라우저 동의·시간 측정·의견 UI를 구현했다. Node46, Chrome/WebKit 각5 통과.
