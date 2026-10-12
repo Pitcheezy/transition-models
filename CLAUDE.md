@@ -1,5 +1,12 @@
 # SmartPitch transition-models
 
+## WS-ops4b 읽기 감시 완료 — 2026-10-12
+
+[단발 감시·장애/복구](ops/public-host/MONITORING.md)를 합성/실제 로컬 HTTP로 검증했다. 신규15·전체Node61검사 통과.
+시각 필드 미설정은 partial/unmeasured이고 업무 health·JS 실행을 정상 판정하지 않는다.
+외부 알림·상시 실행·실제 도메인 연결은 미완료다. 다음 독립 단위 WS-ops4c는 로컬 Worker 합성 리허설이다.
+
+
 ## WS-ops4a 고정 배포 패키지 완료 — 2026-10-12
 
 [패키지 생성/검사](ops/public-host/RELEASE.md)는 관련58검사·체크리스트7검사를 통과했다.

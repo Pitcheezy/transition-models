@@ -64,3 +64,15 @@ manifest SHA는 070eb354a7c2dc577dc0a5348b5cc30f13d52fb689e398b17da8e87740639d21
 관련58·체크리스트7검사, ruff 통과. 별도 Codex 검토가 ZIP 여분 데이터·잘못된 mode 타입·
 provenance 입력 경계를 발견했고 모두 수정한 뒤 독립적으로58검사를 통과했다.
 Claude/사람 교차 검토는 아니다. WS-ops4b 감시/오류·복구 기반을 다음 독립 단위로 둔다.
+
+## WS-ops4b 후속 — 읽기 감시
+
+기준 main b00ec71, 선점55598a5. [운영자 명령·판정](../ops/public-host/MONITORING.md).
+루트 HTML 골격과 health JSON/Date/Age를 확인하고, 지정 발행 시각만 freshness로 계산한다.
+필드 미설정은 unmeasured/partial이며 업무상 정상 여부와 JS 실행은 미측정이다.
+전체 본문 타임아웃·크기 제한·redirect 거부·설정 지문·중복 실행 잠금·손상/시계 역행 보존을 구현했다.
+
+신규15·기존46 포함 Node61검사 통과. 실제 로컬 HTTP CLI로 2회 실패/2회 복구·잠금·
+설정 변경/손상 상태 보존을 확인했다. 별도 Codex 검토에서 JSON Pointer 배열 처리 누락을
+발견해 수정하고 회귀를 추가했다. 클라이언트/Worker/R2/D1의 기존 검사는 계속 통과했다.
+실제 도메인/스키마/상시 실행/메신저 알림은 미완료다. 다음 단위는 WS-ops4c 로컬 합성 리허설이다.
