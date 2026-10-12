@@ -1,5 +1,7 @@
 # WS-ops1 — 월드시리즈 공개 호스팅 기반
 
+이 문서는 초기 WS-ops1–4c 구현 이력이다. 현재 전체 범위와 다음 작업은 [운영 인계](WS_OPERATIONS_HANDOFF.md)·CHECKLIST 상단을 따른다.
+
 2026-10-12, 우리 main `7128cd3`에서 `codex/ws-host-foundation`으로 진행.
 선점 `c932219`. 사용자 직접 요청에 따라 우리 운영 범위를 개발했다.
 

@@ -3,11 +3,19 @@ on:
   pull_request:
     paths: ["ops/public-host/**", ".github/workflows/public-host.yml"]
   push:
+    branches: [main]
     paths: ["ops/public-host/**", ".github/workflows/public-host.yml"]
+  workflow_dispatch:
+
 permissions:
   contents: read
+concurrency:
+  group: public-host-transport-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   transport:
+    timeout-minutes: 10
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
