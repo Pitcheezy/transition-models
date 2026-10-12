@@ -1,5 +1,11 @@
 # SmartPitch transition-models
 
+## WS-ops1c 단일 파일 전송 후보 완료 — 2026-10-12
+
+[전송 도구](ops/public-host/PUBLISHER.md)는 기본 dry-run·고정 조건 재시도·모호한 저장 결과 분리를 제공한다. 신규17·독립17통과.
+Windows WSARecv64 종료 진단은 남아 있다. 실제 발행기/계약/계정 연결은 별도다. 다음 독립 단위 WS-ops4f는 로컬 영속 재시작 리허설이다.
+
+
 ## WS-ops4e 운영 준비 완료 — 2026-10-12
 
 [장애·복구 절차](ops/public-host/RUNBOOK.md)와 [비용 가정](ops/public-host/COST_PLAN.md)을 작성했다. 산정25·별도 Codex25통과.
