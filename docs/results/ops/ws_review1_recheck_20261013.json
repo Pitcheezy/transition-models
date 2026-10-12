@@ -1,0 +1,123 @@
+{
+  "schema": "pitcheezy-ws-review1-recheck-v1",
+  "generated_at": "2026-10-12T19:17:36Z",
+  "base_commit": "70aa2419c5bfaba751a0b90777262eb5af5f3b24",
+  "review_workflow": "wf_72b94abf-12b",
+  "review_model": "claude-fable-5-1",
+  "findings": {
+    "total": 24,
+    "confirmed_fixed": 12,
+    "rejected": 12,
+    "rejected_but_hardened": 9,
+    "rejected_unchanged": 3
+  },
+  "environment": {
+    "os": "Windows x64",
+    "node": "24",
+    "miniflare": "4.20260730.0",
+    "chromium": "151.0.7922.34",
+    "playwright": "1.62.1"
+  },
+  "checks": [
+    {
+      "name": "ops_syntax",
+      "command": "npm run check",
+      "cwd": "ops/public-host",
+      "result": "pass"
+    },
+    {
+      "name": "ops_node_tests",
+      "command": "npm test",
+      "cwd": "ops/public-host",
+      "passed": 130,
+      "failed": 0,
+      "new_tests": 6
+    },
+    {
+      "name": "python_tests",
+      "command": "uv run --frozen python -m pytest tests/test_publish_contract_verify.py tests/test_public_host_release.py tests/test_public_host_config.py tests/test_checklist_model.py -q",
+      "passed": 147,
+      "failed": 0
+    },
+    {
+      "name": "ruff",
+      "command": "uv run --frozen ruff check / ruff format --check (changed Python files)",
+      "result": "pass"
+    },
+    {
+      "name": "browser_suite",
+      "command": "npm test",
+      "cwd": "tests/browser",
+      "passed": 35,
+      "failed": 0,
+      "skipped": 3,
+      "skipped_reason": "first-connection without PZ_FIRST_CONNECTION_* env"
+    },
+    {
+      "name": "browser_first_connection",
+      "command": "node --test --test-concurrency=1 first-connection.test.cjs (with PZ_FIRST_CONNECTION_EXAMPLES/DIST)",
+      "cwd": "tests/browser",
+      "passed": 3,
+      "failed": 0
+    },
+    {
+      "name": "manual_existing_output_refused",
+      "command": "node ops/public-host/rehearse-first-connection.mjs --examples … --dist … --output <existing>",
+      "exit_code": 2,
+      "receipt_unchanged": true
+    }
+  ],
+  "rehearsals": {
+    "notice": {
+      "schema": "pitcheezy-local-notice-rehearsal-v1",
+      "passed": true,
+      "failure": null,
+      "total_ms": 905,
+      "steps": null
+    },
+    "access": {
+      "schema": "pitcheezy-local-access-rehearsal-v1",
+      "passed": true,
+      "failure": null,
+      "total_ms": 3195,
+      "steps": null
+    },
+    "alerts": {
+      "schema": "pitcheezy-local-alert-rehearsal-v1",
+      "passed": true,
+      "failure": null,
+      "total_ms": 31,
+      "steps": null
+    },
+    "report": {
+      "schema": "pitcheezy-local-report-rehearsal-v1",
+      "passed": true,
+      "failure": null,
+      "total_ms": 2810,
+      "steps": null
+    },
+    "first-connection": {
+      "schema": "pitcheezy-first-connection-rehearsal-v1",
+      "passed": true,
+      "failure": null,
+      "total_ms": 1453,
+      "steps": [
+        "hashes",
+        "empty_host",
+        "procedure_uploads",
+        "replacement_chain",
+        "hosting_conditions"
+      ]
+    }
+  },
+  "evidence": "synthetic (local Miniflare Worker/R2/D1, Song synthetic examples at d5a1dd9, static screen build at ef4e4df)",
+  "not_measured": [
+    "real CDN ETag/Date/Age behaviour",
+    "real https / Safari / mobile",
+    "real account, real game, real delivery"
+  ],
+  "release_review_condition": {
+    "codex_written": "reviewed by claude-fable-5-1; condition pending the user's confirmation of the Codex model id",
+    "claude_written": "NOT met: same model family; implementation and self-check complete, release review incomplete"
+  }
+}

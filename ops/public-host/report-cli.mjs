@@ -1,10 +1,15 @@
 /** Writes a per-game report draft (Markdown + JSON) from an input file. Never posts; refuses to overwrite. */
-import { open } from "node:fs/promises";
+import { open, lstat } from "node:fs/promises";
 import { resolve, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { parseArgs } from "node:util";
 import { ReportError, buildReport } from "./report.mjs";
 import { readJson, plainPath } from "./monitor-cli.mjs";
+
+async function absent(path) {
+  try { await lstat(path); } catch (e) { if (e.code === "ENOENT") return; throw e; }
+  const error = new Error("EEXIST"); error.code = "EEXIST"; throw error;
+}
 
 async function writeNew(path, content) {
   const file = await open(path, "wx", 0o600);
@@ -17,6 +22,8 @@ export async function runReport(inputPath, outputDir, { now = Date.now() } = {})
   const dir = await plainPath(outputDir);
   const base = `game_${json.game_pk}_${json.window.from.slice(0, 10)}_report`;
   const mdPath = join(dir, base + ".md"), jsonPath = join(dir, base + ".json");
+  // Both outputs are checked before either is written so a refusal never leaves a lone .md behind.
+  for (const path of [mdPath, jsonPath]) await absent(path);
   await writeNew(mdPath, markdown);
   await writeNew(jsonPath, JSON.stringify(json, null, 2) + "\n");
   return { schema: "pitcheezy-game-report-run-v1", markdown: base + ".md", json: base + ".json", posted: false,

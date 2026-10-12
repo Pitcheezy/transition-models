@@ -184,6 +184,9 @@ test("cross-origin public reads expose clock headers only to configured exact or
   const options = await call(path, { method: "OPTIONS", headers: { Origin: "https://ui.example.test" } });
   assert.equal(options.status, 204);
   assert.equal(options.headers.get("Access-Control-Allow-Credentials"), null);
+  // If-None-Match is not CORS-safelisted: the read origin's conditional (304) read must pass preflight.
+  assert.equal(options.headers.get("Access-Control-Allow-Headers"), "If-None-Match");
+  assert.equal((await call(path, { method: "OPTIONS", headers: { Origin: "https://evil.test" } })).headers.get("Access-Control-Allow-Headers"), null);
 });
 
 test("upload forbids URL credentials via query and has no CORS", async () => {

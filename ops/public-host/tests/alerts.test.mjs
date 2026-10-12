@@ -1,13 +1,13 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { mkdtemp, readFile, writeFile } from "node:fs/promises";
+import { mkdtemp, readFile, writeFile, unlink } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import { fileURLToPath } from "node:url";
-import { classifyEvent, validateAlertConfig, initialAlertState, validateAlertState, buildMessage, mockTransport, dispatchAlerts } from "../alerts.mjs";
+import { classifyEvent, validateAlertConfig, initialAlertState, validateAlertState, buildMessage, mockTransport, dispatchAlerts, PRUNE_AFTER_DAYS } from "../alerts.mjs";
 import { initialState, advanceState } from "../monitor.mjs";
 
 const NOW = Date.parse("2026-10-13T03:00:00Z");
@@ -108,6 +108,37 @@ test("reminders for a still-open incident fire once per window and stop after re
   assert.equal(transport.sent.at(-1).category, "recovered");
 });
 
+test("a failed reminder is retried in the same window until max_attempts; settled old rows are pruned", async () => {
+  const sent = []; let failReminderOnce = true;
+  const transport = { name: "mock", sent, async deliver(m) {
+    if (m.reminder && failReminderOnce) { failReminderOnce = false; return { ok: false, code: "mock_transport_failure" }; }
+    sent.push(m); return { ok: true, code: "mock_acknowledged" };
+  } };
+  const opened = event("opened", ["freshness_stale"]);
+  const cfg = config({ remind_after_minutes: 30 });
+  let { state } = await dispatchAlerts(initialAlertState(), monitor([opened], opened), cfg, transport, { now: NOW });
+  let result = await dispatchAlerts(state, monitor([opened], opened), cfg, transport, { now: NOW + 31 * 60000 });
+  assert.equal(result.receipt.failed.length, 1);
+  assert.equal(result.state.deliveries[opened.id + ":reminder:1:song"].status, "undelivered");
+  result = await dispatchAlerts(result.state, monitor([opened], opened), cfg, transport, { now: NOW + 32 * 60000 });
+  assert.deepEqual(result.receipt.reminders, [opened.id + ":reminder:1:song"], "only the failed reminder is retried");
+  assert.equal(result.state.deliveries[opened.id + ":reminder:1:song"].status, "acknowledged");
+  assert.equal(result.state.deliveries[opened.id + ":reminder:1:song"].attempts, 2);
+  result = await dispatchAlerts(result.state, monitor([opened], opened), cfg, transport, { now: NOW + 33 * 60000 });
+  assert.equal(result.receipt.reminders.length, 0, "an acknowledged reminder is not repeated");
+  // Pruning: settled rows older than the retention window disappear; live or retryable rows stay.
+  const old = NOW - (PRUNE_AFTER_DAYS + 1) * 86400000;
+  const seeded = { ...initialAlertState(), deliveries: {
+    [sha("old") + ":opened:song"]: { status: "acknowledged", attempts: 1, last_attempt_ms: old, acknowledged_by_transport: true },
+    [sha("old") + ":opened:ours"]: { status: "undelivered", attempts: 3, last_attempt_ms: old, acknowledged_by_transport: false },
+    [sha("retry") + ":opened:ours"]: { status: "undelivered", attempts: 1, last_attempt_ms: old, acknowledged_by_transport: false },
+    [sha("recent") + ":opened:song"]: { status: "acknowledged", attempts: 1, last_attempt_ms: NOW - 1000, acknowledged_by_transport: true },
+  } };
+  const pruned = await dispatchAlerts(seeded, monitor([]), config(), mockTransport(), { now: NOW });
+  assert.equal(pruned.receipt.pruned, 2);
+  assert.deepEqual(Object.keys(pruned.state.deliveries).sort(), [sha("recent") + ":opened:song", sha("retry") + ":opened:ours"].sort());
+});
+
 test("messages carry categories and placeholder wording only, never addresses, origins or tokens", () => {
   const m = buildMessage(event("opened", ["health_http_error"]), "host_error", "ours");
   assert.equal(m.first_responder, "ours");
@@ -152,6 +183,14 @@ test("CLI runs once over a monitor state file with a mock transport and refuses 
   assert.equal(Object.keys(saved.deliveries).length, 2);
   const second = await run(process.execPath, [cli, "--monitor-state", join(dir, "monitor.json"), "--config", join(dir, "alerts.json"), "--state", join(dir, "alert-state.json")]);
   assert.equal(JSON.parse(second.stdout).receipt.suppressed.length, 2);
+  // A lock file held by another run refuses this one before any delivery or state write.
+  await writeFile(join(dir, "alert-state.json.lock"), "");
+  await assert.rejects(run(process.execPath, [cli, "--monitor-state", join(dir, "monitor.json"), "--config", join(dir, "alerts.json"), "--state", join(dir, "alert-state.json")]),
+    e => e.code === 2 && /already_running_or_stale_lock/.test(e.stderr));
+  await unlink(join(dir, "alert-state.json.lock"));
+  const third = await run(process.execPath, [cli, "--monitor-state", join(dir, "monitor.json"), "--config", join(dir, "alerts.json"), "--state", join(dir, "alert-state.json")]);
+  assert.equal(JSON.parse(third.stdout).receipt.suppressed.length, 2);
+  await assert.rejects(readFile(join(dir, "alert-state.json.lock")), e => e.code === "ENOENT", "the lock is released after the run");
   await writeFile(join(dir, "bad.json"), JSON.stringify(config({ transport: "email" })));
   await assert.rejects(run(process.execPath, [cli, "--monitor-state", join(dir, "monitor.json"), "--config", join(dir, "bad.json"), "--state", join(dir, "other-state.json")]),
     e => e.code === 2 && /unsupported_transport/.test(e.stderr));

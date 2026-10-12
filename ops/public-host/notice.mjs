@@ -149,8 +149,17 @@ function reply(request, status, body, extra = {}) {
 
 async function listAudit(bucket) {
   if (typeof bucket.list !== "function") return { entries: [], truncated: true, unavailable: true };
-  const listed = await bucket.list({ prefix: NOTICE_AUDIT_PREFIX, limit: 1000 });
-  const keys = (listed?.objects || []).map(o => o.key).sort();
+  // Keys are time-prefixed and listed oldest first; walk every page so the tail really is the most recent.
+  const keys = [];
+  let cursor;
+  let pages = 0;
+  do {
+    const listed = await bucket.list({ prefix: NOTICE_AUDIT_PREFIX, limit: 1000, ...(cursor ? { cursor } : {}) });
+    for (const o of listed?.objects || []) keys.push(o.key);
+    cursor = listed?.truncated ? listed.cursor : undefined;
+    pages++;
+  } while (cursor && pages < 100);
+  keys.sort();
   const tail = keys.slice(-MAX_AUDIT_LIST);
   const entries = [];
   for (const key of tail) {
@@ -161,7 +170,7 @@ async function listAudit(bucket) {
       if (object(value) && value.schema === AUDIT_SCHEMA) entries.push(value);
     } catch { entries.push({ schema: AUDIT_SCHEMA, key, unreadable: true }); }
   }
-  return { entries, truncated: Boolean(listed?.truncated) || keys.length > MAX_AUDIT_LIST, unavailable: false };
+  return { entries, truncated: keys.length > MAX_AUDIT_LIST || Boolean(cursor), unavailable: false, total: keys.length };
 }
 
 /** Admin route: GET/HEAD current state + recent audit, PUT a change. Never affected by the notice itself. */
@@ -210,14 +219,19 @@ export async function handleNotice(request, env) {
     };
     const auditBytes = encoder.encode(JSON.stringify(audit));
     const auditKey = NOTICE_AUDIT_PREFIX + now.toISOString().replace(/[-:.]/g, "") + "-" + id + ".json";
-    const auditStored = await bucket.put(auditKey, auditBytes, {
-      onlyIf: new Headers({ "If-None-Match": "*" }), sha256: await sha256(auditBytes),
-      httpMetadata: { contentType: "application/json; charset=utf-8", cacheControl: "no-store" },
-      customMetadata: { kind: "notice-audit-v1" },
-    });
+    // The switch is already committed above; a failed audit write must not be reported as a failed switch.
+    let auditStored = null;
+    let auditError = null;
+    try {
+      auditStored = await bucket.put(auditKey, auditBytes, {
+        onlyIf: new Headers({ "If-None-Match": "*" }), sha256: await sha256(auditBytes),
+        httpMetadata: { contentType: "application/json; charset=utf-8", cacheControl: "no-store" },
+        customMetadata: { kind: "notice-audit-v1" },
+      });
+    } catch { auditError = "audit_write_failed"; }
     return reply(request, 200, {
       active: next.active, message_id: next.message_id, revision: next.revision, since: next.since,
-      change_id: id, audit_recorded: Boolean(auditStored),
+      change_id: id, audit_recorded: Boolean(auditStored), ...(auditError ? { audit_error: auditError } : {}),
     }, { ETag: stored.httpEtag });
   } catch (error) {
     const known = error instanceof NoticeError;

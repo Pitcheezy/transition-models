@@ -58,8 +58,9 @@ curl -sS -X PUT -H "Authorization: Bearer $NOTICE_TOKEN" -H "Content-Type: appli
 ## 감사 기록
 
 받아들인 변경마다 `_notice/audit/<UTC 시각>-<id>.json`에 `{at, active, operator, reason, message_id, operator_token_prefix(12 hex),
-revision, etag_before, etag_after}`를 추가한다(덮어쓰기 금지). 운영자 GET은 최근 20건을 돌려준다. 어떤 digest 접두어가 누구인지는
-비공개 운영 기록에 둔다. 상태 객체도 `revision`·`last_change_id`를 갖고 내용이 매번 달라지므로 옛 ETag가 되살아나지 않는다.
+revision, etag_before, etag_after}`를 추가한다(덮어쓰기 금지). 운영자 GET은 전체 목록을 훑어 가장 최근 20건을 돌려준다(`audit_truncated`).
+어떤 digest 접두어가 누구인지는 비공개 운영 기록에 둔다. 상태 변경이 이미 저장된 뒤 감사 기록 쓰기가 실패하면 스위치는 그대로 유지되고
+응답에 `audit_recorded:false`·`audit_error:"audit_write_failed"`가 남는다 — 이때는 사람이 사유·시각을 board에 직접 기록한다. 상태 객체도 `revision`·`last_change_id`를 갖고 내용이 매번 달라지므로 옛 ETag가 되살아나지 않는다.
 
 내린 뒤에는 규약대로 **사유·시각·영향을 우리 board 또는 관련 mail에 기록**한다(감사 객체는 공개 이슈를 대신하지 않는다).
 

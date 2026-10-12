@@ -150,6 +150,11 @@ def test_envelope_rules_distinguish_final_placement():
         "published_at_invalid",
     ]
     assert check_envelope("x", {}, "dates")["issue"] == "publish_missing"
+    assert check_envelope(
+        "x",
+        {"publish": {"contract": "v1", "sequence": True, "published_at": "2026-10-13T00:00:00Z"}},
+        "dates",
+    )["issues"] == ["sequence_invalid"], "a boolean is not a sequence number"
 
 
 def test_expected_list_is_validated_before_use():
@@ -252,6 +257,66 @@ def test_cli_writes_receipt_once_and_fails_on_mismatch(pack, tmp_path):
     )
     assert third.returncode == 1
     assert json.loads(third.stdout)["all_hashes_match_pack"] is False
+
+
+def test_trailing_newline_values_are_not_certified():
+    assert check_envelope(
+        "x",
+        {"publish": {"contract": "v1", "sequence": 1, "published_at": "2026-10-13T00:00:00Z\n"}},
+        "dates",
+    )["issues"] == ["published_at_invalid"]
+    bad = {
+        "schema": "pitcheezy-collab001-expected-files-v1",
+        "commit": "d" * 40,
+        "files": [
+            {
+                "path": "examples/health.json",
+                "sha256": "0" * 64,
+                "schema": "health",
+                "target": "v1/health.json\n",
+            }
+        ],
+    }
+    with pytest.raises(VerifyError, match="expected_invalid"):
+        load_expected(json.dumps(bad).encode())
+
+
+def test_unusable_received_schema_is_a_reported_row_not_a_crash(pack):
+    received, expected, _, _ = pack
+    (received / "schema" / "game.schema.json").write_bytes(b'{"type": 12}')
+    report = verify(received, expected)
+    row = next(r for r in report["files"] if r["path"] == "examples/game-live.json")
+    assert row["status"] == "schema_unusable"
+    assert row["code"] == "schema_evaluation_failed"
+    assert report["all_examples_valid_against_schema"] is False
+    assert report["ok"] is False
+
+
+def test_each_received_file_is_read_once(pack, monkeypatch):
+    import scripts.verify_publish_contract as vpc
+
+    received, expected, _, files = pack
+    reads = []
+    original = vpc._read
+
+    def counting(path, limit=vpc.MAX_JSON_BYTES):
+        reads.append(path)
+        return original(path, limit)
+
+    monkeypatch.setattr(vpc, "_read", counting)
+    assert verify(received, expected)["ok"] is True
+    assert len(reads) == len(files), "hashing and schema checks share one read per file"
+
+
+def test_symlinked_received_directory_is_refused(pack, tmp_path):
+    received, expected, _, _ = pack
+    link = tmp_path / "linked-received"
+    try:
+        link.symlink_to(received, target_is_directory=True)
+    except OSError:
+        pytest.skip("OS does not permit creating a symlink in this test account")
+    with pytest.raises(VerifyError, match="linked_path"):
+        verify(link, expected)
 
 
 def test_committed_expected_list_matches_the_pack_shape():

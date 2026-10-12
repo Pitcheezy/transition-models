@@ -284,6 +284,24 @@ def test_git_host_uses_fixed_commit_not_working_tree(tmp_path):
     assert rb.read_host_commit(repo, commit)["host/worker.mjs"] == b"fixed git blob\n"
     with pytest.raises(rb.BundleError, match="full_host_commit_required"):
         rb.read_host_commit(repo, "HEAD")
+    # A git replace ref pointing the pinned commit at other bytes is ignored.
+    subprocess.run(git + ["add", "."], check=True)
+    subprocess.run(
+        git
+        + [
+            "-c",
+            "user.name=Test",
+            "-c",
+            "user.email=test@example.invalid",
+            "commit",
+            "-qm",
+            "replacement candidate",
+        ],
+        check=True,
+    )
+    other = subprocess.check_output(git + ["rev-parse", "HEAD"], text=True).strip()
+    subprocess.run(git + ["replace", commit, other], check=True)
+    assert rb.read_host_commit(repo, commit)["host/worker.mjs"] == b"fixed git blob\n"
 
 
 def test_candidate_is_never_a_deployment_approval(payload, provenance):
@@ -312,6 +330,14 @@ def test_cli_check_clean_and_changed_bundle(tmp_path, files):
     assert bad.returncode == 2
     assert "inventory_mismatch" in bad.stderr
     assert "Traceback" not in bad.stderr
+    missing = tmp_path / "secret-dir-name" / "absent.zip"
+    gone = subprocess.run(
+        cmd[:-1] + [str(missing)], capture_output=True, text=True, encoding="utf-8"
+    )
+    assert gone.returncode == 2
+    payload = json.loads(gone.stderr)
+    assert payload["error"] == "io_error" and isinstance(payload["errno"], int)
+    assert "secret-dir-name" not in gone.stderr, "OSError text (paths) is not echoed"
 
 
 @pytest.mark.parametrize("position", ["prefix", "suffix", "comment"])

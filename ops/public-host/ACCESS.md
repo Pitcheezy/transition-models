@@ -37,6 +37,8 @@
 
 - 로그인 성공 시 쿠키 `__Host-pz_viewer`(https) / `pz_viewer`(http loopback 검사용)를 발급한다:
   `HttpOnly; SameSite=Strict; Path=/; Max-Age=<ACCESS_SESSION_SECONDS>`(https에서는 `Secure`).
+  loopback(127.0.0.1·[::1]·localhost)이 아닌 호스트의 평문 http 로그인은 503 `https_required`로 거부하며 쿠키를 발급하지 않는다.
+- `ACCESS_SESSION_SECONDS`를 줄이면 더 길게 발급된 기존 세션도 즉시 끝난다(남은 수명이 설정보다 길면 무효).
 - 값은 `v1.<만료 ms>.<코드 digest 앞 8자>.<난수>.<HMAC-SHA256>`이며 서버에 저장하지 않는다(무상태). 만료·서명·코드 유효 여부를 매 요청 검사한다.
 - **로그아웃(DELETE)은 브라우저의 쿠키를 지운다.** 복사된 쿠키 값은 만료·코드 삭제·비밀 회전 전까지 유효하다(영수증에 기록).
   개별 세션 강제 종료 목록은 없다. 필요하면 코드 교체 또는 비밀 회전으로 끝낸다.

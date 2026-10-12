@@ -11,6 +11,7 @@ export class AlertError extends Error { constructor(code) { super(code); this.co
 const refuse = code => { throw new AlertError(code); };
 
 export const RECIPIENTS = Object.freeze(["song", "ours"]);
+export const PRUNE_AFTER_DAYS = 30;
 /** Which side looks first. Mac/publisher causes -> Song, hosting causes -> ours, mixed/unknown -> both. */
 export const CATEGORIES = Object.freeze({
   publish_stalled: { first_responder: "song", severity: "incident" },
@@ -132,11 +133,20 @@ export async function dispatchAlerts(state, monitorState, config, transport, { n
     if (slot >= 1) {
       for (const recipient of RECIPIENTS) {
         const k = key(open, `reminder:${slot}`, recipient);
-        if (next.deliveries[k]) continue;
+        const row = next.deliveries[k];
+        // A failed reminder is retried like any other delivery until max_attempts; an acknowledged one is not repeated.
+        if (row && (row.status === "acknowledged" || row.attempts >= config.max_attempts)) continue;
         queue.push({ key: k, message: buildMessage(open, category, recipient, { reminder: slot }) });
         receipt.reminders.push(k);
       }
     }
+  }
+  // Bounded state: rows that are settled (acknowledged or out of attempts) and older than the retention window are dropped.
+  const retainMs = PRUNE_AFTER_DAYS * 86400000;
+  receipt.pruned = 0;
+  for (const [k, row] of Object.entries(next.deliveries)) {
+    const settled = row.status === "acknowledged" || row.attempts >= config.max_attempts;
+    if (settled && now - row.last_attempt_ms > retainMs) { delete next.deliveries[k]; receipt.pruned++; }
   }
   next.pending = [];
   for (const item of queue) {
