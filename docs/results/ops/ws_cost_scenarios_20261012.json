@@ -1,0 +1,206 @@
+{
+  "schema": "pitcheezy-host-cost-estimate-v1",
+  "pricing_as_of": "2026-10-12",
+  "currency": "USD",
+  "plan": "Workers Paid Standard + R2 Standard + D1 Paid",
+  "measurement": false,
+  "budget_approved": false,
+  "sources": [
+    "https://developers.cloudflare.com/workers/platform/pricing/",
+    "https://developers.cloudflare.com/r2/pricing/",
+    "https://developers.cloudflare.com/d1/platform/pricing/"
+  ],
+  "exclusions": [
+    "taxes_and_exchange_rates",
+    "domain_and_other_products",
+    "logs_and_alerts",
+    "unmodeled_traffic_and_retries",
+    "actual_account_usage_and_contract"
+  ],
+  "scenarios": [
+    {
+      "name": "small",
+      "public_reads": 3024000,
+      "peak_public_requests_per_second": "120.000",
+      "public_json_transfer_gb": "99.09",
+      "usage": {
+        "worker_requests": "3094020",
+        "worker_cpu_ms": "15470100",
+        "r2_class_a": "10010",
+        "r2_class_b": "3036010",
+        "r2_storage_gb_month": "1",
+        "d1_rows_read": "0",
+        "d1_rows_written": "0",
+        "d1_storage_gb_month": "0"
+      },
+      "costs": {
+        "allowances_available": {
+          "base_usd": "5.00",
+          "charges_usd": {
+            "worker_requests": "0.000000",
+            "worker_cpu_ms": "0.000000",
+            "r2_class_a": "0.000000",
+            "r2_class_b": "0.000000",
+            "r2_storage_gb_month": "0.000000",
+            "d1_rows_read": "0.000000",
+            "d1_rows_written": "0.000000",
+            "d1_storage_gb_month": "0.000000"
+          },
+          "subtotal_usd": "5.00"
+        },
+        "allowances_exhausted_sensitivity": {
+          "base_usd": "5.00",
+          "charges_usd": {
+            "worker_requests": "0.928206",
+            "worker_cpu_ms": "0.309402",
+            "r2_class_a": "4.500000",
+            "r2_class_b": "1.440000",
+            "r2_storage_gb_month": "0.015000",
+            "d1_rows_read": "0.000000",
+            "d1_rows_written": "0.000000",
+            "d1_storage_gb_month": "0.000000"
+          },
+          "subtotal_usd": "12.19"
+        }
+      }
+    },
+    {
+      "name": "medium",
+      "public_reads": 30240000,
+      "peak_public_requests_per_second": "1200.000",
+      "public_json_transfer_gb": "990.90",
+      "usage": {
+        "worker_requests": "30760020",
+        "worker_cpu_ms": "153800100",
+        "r2_class_a": "10010",
+        "r2_class_b": "30252010",
+        "r2_storage_gb_month": "1",
+        "d1_rows_read": "0",
+        "d1_rows_written": "0",
+        "d1_storage_gb_month": "0"
+      },
+      "costs": {
+        "allowances_available": {
+          "base_usd": "5.00",
+          "charges_usd": {
+            "worker_requests": "6.228006",
+            "worker_cpu_ms": "2.476002",
+            "r2_class_a": "0.000000",
+            "r2_class_b": "7.560000",
+            "r2_storage_gb_month": "0.000000",
+            "d1_rows_read": "0.000000",
+            "d1_rows_written": "0.000000",
+            "d1_storage_gb_month": "0.000000"
+          },
+          "subtotal_usd": "21.26"
+        },
+        "allowances_exhausted_sensitivity": {
+          "base_usd": "5.00",
+          "charges_usd": {
+            "worker_requests": "9.228006",
+            "worker_cpu_ms": "3.076002",
+            "r2_class_a": "4.500000",
+            "r2_class_b": "11.160000",
+            "r2_storage_gb_month": "0.015000",
+            "d1_rows_read": "0.000000",
+            "d1_rows_written": "0.000000",
+            "d1_storage_gb_month": "0.000000"
+          },
+          "subtotal_usd": "32.98"
+        }
+      }
+    },
+    {
+      "name": "large",
+      "public_reads": 302400000,
+      "peak_public_requests_per_second": "12000.000",
+      "public_json_transfer_gb": "9909.04",
+      "usage": {
+        "worker_requests": "307420020",
+        "worker_cpu_ms": "1537100100",
+        "r2_class_a": "10010",
+        "r2_class_b": "302412010",
+        "r2_storage_gb_month": "1",
+        "d1_rows_read": "0",
+        "d1_rows_written": "0",
+        "d1_storage_gb_month": "0"
+      },
+      "costs": {
+        "allowances_available": {
+          "base_usd": "5.00",
+          "charges_usd": {
+            "worker_requests": "89.226006",
+            "worker_cpu_ms": "30.142002",
+            "r2_class_a": "0.000000",
+            "r2_class_b": "105.480000",
+            "r2_storage_gb_month": "0.000000",
+            "d1_rows_read": "0.000000",
+            "d1_rows_written": "0.000000",
+            "d1_storage_gb_month": "0.000000"
+          },
+          "subtotal_usd": "229.85"
+        },
+        "allowances_exhausted_sensitivity": {
+          "base_usd": "5.00",
+          "charges_usd": {
+            "worker_requests": "92.226006",
+            "worker_cpu_ms": "30.742002",
+            "r2_class_a": "4.500000",
+            "r2_class_b": "109.080000",
+            "r2_storage_gb_month": "0.015000",
+            "d1_rows_read": "0.000000",
+            "d1_rows_written": "0.000000",
+            "d1_storage_gb_month": "0.000000"
+          },
+          "subtotal_usd": "241.56"
+        }
+      }
+    },
+    {
+      "name": "medium_fast_poll",
+      "public_reads": 151200000,
+      "peak_public_requests_per_second": "6000.000",
+      "public_json_transfer_gb": "4954.52",
+      "usage": {
+        "worker_requests": "151720020",
+        "worker_cpu_ms": "758600100",
+        "r2_class_a": "10010",
+        "r2_class_b": "151212010",
+        "r2_storage_gb_month": "1",
+        "d1_rows_read": "0",
+        "d1_rows_written": "0",
+        "d1_storage_gb_month": "0"
+      },
+      "costs": {
+        "allowances_available": {
+          "base_usd": "5.00",
+          "charges_usd": {
+            "worker_requests": "42.516006",
+            "worker_cpu_ms": "14.572002",
+            "r2_class_a": "0.000000",
+            "r2_class_b": "51.120000",
+            "r2_storage_gb_month": "0.000000",
+            "d1_rows_read": "0.000000",
+            "d1_rows_written": "0.000000",
+            "d1_storage_gb_month": "0.000000"
+          },
+          "subtotal_usd": "113.21"
+        },
+        "allowances_exhausted_sensitivity": {
+          "base_usd": "5.00",
+          "charges_usd": {
+            "worker_requests": "45.516006",
+            "worker_cpu_ms": "15.172002",
+            "r2_class_a": "4.500000",
+            "r2_class_b": "54.720000",
+            "r2_storage_gb_month": "0.015000",
+            "d1_rows_read": "0.000000",
+            "d1_rows_written": "0.000000",
+            "d1_storage_gb_month": "0.000000"
+          },
+          "subtotal_usd": "124.92"
+        }
+      }
+    }
+  ]
+}
