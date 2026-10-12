@@ -18,6 +18,7 @@ MAX_MANIFEST_BYTES = 2 * 1024 * 1024
 HOST_FILES = (
     "worker.mjs",
     "gateway.mjs",
+    "notice.mjs",
     "telemetry.mjs",
     "package.json",
     "package-lock.json",
