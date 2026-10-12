@@ -1,5 +1,10 @@
 # SmartPitch transition-models
 
+## WS-ops1b 인증 업로드 제한 완료 — 2026-10-12
+
+[제한·재시도·경계](ops/public-host/UPLOAD_LIMITS.md): Node71·별도 Codex 관련39통과. 실제 계정/주기 확정은 별도다.
+다음 독립 작업은 WS-ops3c 수집 UI 토글·보관 안내 설정 연결이다. 팀원 파일·공개 배포 변경 금지를 유지한다.
+
 ## WS-ops4c 로컬 호스팅 리허설 완료 — 2026-10-12
 
 [조회·철회/복구·감시·브라우저 리허설](ops/public-host/REHEARSAL.md)을 수행했다. 합성120/120·Node66·Chrome/WebKit 각2통과.

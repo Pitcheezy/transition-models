@@ -14,6 +14,10 @@ COLLAB-001의 파일 전달 경계를 구현한 후보이며, 실제 서비스 �
 - 토큰/버킷/도메인을 만들지 않았고 Cloudflare·Sites·DNS·기존 서버는 변경하지 않았다.
 - 모든 테스트 본문은 `synthetic`으로 표시한 임의 전송 자료다. Song 경기 스키마 예제가 아니다.
 
+## 인증 업로드 요청 제한
+
+[제한·오류·재시도](UPLOAD_LIMITS.md): 필수 PUBLISH_LIMITER가 허용한 요청만 저장소에 접근한다. 실제 한도는 별도 결정한다.
+
 ## 이용 기록·피드백
 
 별도 private D1 기반의 [수집 계약·보관·제한](TELEMETRY.md)을 추가했다. 기본 비활성이며 실제 수집/배포는 별도다.
@@ -119,7 +123,7 @@ npm test
 - 이용 기록·피드백·감시·부하/실기기는 별도 단위. 이 Worker만으로 완료되지 않는다.
 
 환경 변수 이름은 `DATA_READ_ENABLED`, `UPLOAD_ENABLED`, `PUBLISH_TOKEN_SHA256`,
-`READ_ORIGIN`; binding은 `PUBLISH_BUCKET`, `ASSETS`다.
+`READ_ORIGIN`; binding은 `PUBLISH_BUCKET`, `PUBLISH_LIMITER`, `ASSETS`다.
 기존 Sites 화면을 public 디렉터리에 자동 복사하지 않는다(공개 영상 없는 WS 범위와 다름).
 
 ## 참고
