@@ -56,3 +56,8 @@ node --test ops/public-host/tests/rehearsal.test.mjs
 
 브라우저는 tests/browser/README.md에 따른다. CI가 잠긴 Miniflare/Playwright 의존성을 설치하고
 두 엔진을 검사한다. 새 시도마다 임시 저장소·임시 인증값을 만들어 끝나면 정리한다.
+
+## 실행 위치 수정
+
+첫 Linux 브라우저 CI에서 `tests/browser` 실행 위치를 기준으로 Worker 모듈 이름에 상위 경로가 생겨 시작이 실패했다.
+Windows에서도 같은 폴더에서 재현했다. Miniflare `modulesRoot`를 호스트 소스 디렉터리에 고정하여 실행 위치 의존을 제거했다. 기존 측정 영수증은 수정 전 소스의 Windows 측정 기록으로 보존한다.

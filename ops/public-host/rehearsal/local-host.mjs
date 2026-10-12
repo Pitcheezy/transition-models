@@ -34,7 +34,7 @@ export async function boundedCleanup(dispose, timeoutMs = 5000) {
 export async function startLocalHost({ signal } = {}) {
   const token = randomBytes(32).toString("base64url");
   const mf = new Miniflare({
-    modules: true, scriptPath: fileURLToPath(new URL("../worker.mjs", import.meta.url)),
+    modules: true, modulesRoot: fileURLToPath(new URL("../", import.meta.url)), scriptPath: fileURLToPath(new URL("../worker.mjs", import.meta.url)),
     compatibilityDate: "2026-07-30", host: "127.0.0.1", port: 0,
     r2Buckets: ["PUBLISH_BUCKET"],
     bindings: { DATA_READ_ENABLED: "true", UPLOAD_ENABLED: "true", PUBLISH_TOKEN_SHA256: hash(token) },
