@@ -36,9 +36,10 @@
   요청 제한, 쿠키/CSRF·private 캐시 분리, 직접 파일 접근 및 업로드/안내 인증 분리를 실제 로컬 Worker와 Chromium으로 검증했다(WebKit은 CI).
   소스/URL/로그/응답/영수증에 코드·digest·비밀을 남기지 않는다. 기본값은 게이트 OFF이며 승인된 접근 범위·활성화·코드 전달은 사람 결정이다.
   [ACCESS.md](../ops/public-host/ACCESS.md) · [영수증](results/ops/ws_access_rehearsal_20261013.json). 실제 https/Safari/CDN은 미검사.
-- **WS-alert1: 양쪽 알림 연결 후보.** 합성 발행 중단/호스팅 오류/복구를 분리해 두 수신자 전달,
-  중복 억제/전송 실패/재시도와 장애 담당을 로컬 모의 전송으로 검증한다.
-  실제 채널·연락처·발송 승인은 WS-human1 대기이며 모의 성공을 전달 성공으로 적지 않는다.
+- **WS-alert1: 양쪽 알림 연결 후보 — 모의 전송 구현·검증 완료(2026-10-13, Claude Fable 5.1, PR #22).** 감시 이벤트를 발행 중단(Song 우선)·
+  호스팅 오류(우리 우선)·혼합(양쪽)·안내/접근 문/복구(정보)로 분류해 두 수신자에게 전달하고, 중복 억제·재알림 창·전송 실패 재시도/소진 기록을
+  mock transport로 검증했다([ALERTS.md](../ops/public-host/ALERTS.md) · [영수증](results/ops/ws_alert_rehearsal_20261013.json)).
+  실제 채널·연락처·발송 승인은 WS-human1 대기이며 `delivery_confirmed:false`를 항상 남긴다. 모의 성공은 전달 성공이 아니다.
 - **WS-report1: 경기 종료 기록 양식/생성.** 경기 ID·집계 범위/누락·기록 OFF·문제·조치·
   소스와 명령을 포함한 이슈 초안을 만든다. 합성/오프라인/실경기 라벨을 분리하고,
   자료 없음과 0명을 구별한다. 자동 게시 범위는 사람 결정이다.
