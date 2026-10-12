@@ -2,6 +2,9 @@
 
 ## 월드시리즈 공개 운영 착수 — 2026-10-12
 
+**Codex 수정 권한 선점 — WS-ops1b 인증 업로드 제한.** 기준 `ce37caf`, 브랜치 `codex/ws-publish-limit`. 팀원 파일/계정/기존 서비스 변경 없음.
+
+
 - [x] WS-ops1. 공개 JSON 호스팅 후보(Cloudflare Worker/R2)의 제한된 업로드·GET/HEAD·삭제·캐시/Date/Age·실제404 처리와 CI를 구현했다. 단위28·실제 로컬 workerd/R2 통합1 검사 통과. 공개 배포·실제 스키마 연결은 별도다. 사용자 직접 요청으로 Codex가 수행하며 Claude 교대 태그는 후속 세션용이다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-12 · Codex]`
 - [ ] WS-ops1b. 인증 업로드 요청 제한·limiter 장애 시 차단을 구현하고 로컬 실제 바인딩으로 검증한다. 실제 주기/계정별 한도 설정은 별도이며 엄격한 비용 상한으로 표현하지 않는다. ← **다음 독립 단위** 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-12 · Codex]`
 - [!] WS-ops2. Song 공개용 화면·JSON Schema·예제·고정 커밋 수신 후 실제 계약 검증과 비공개 첫 연결. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-12 · Codex]`
@@ -12,7 +15,7 @@
 - [x] WS-ops4c. 로컬 Worker 합성 조회120/120·실제최대동시6·충돌/철회/복원/감시복구와 Chrome/WebKit 각2검사를 통과했다. 전체Node66, 별도Codex 신규5통과. Windows WebKit 종료의 WSARecv64 진단은 남아 있다. 공개 CDN/Song 성능이 아니다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-12 · Codex]`
 - [!] WS-ops4. 호스팅 계정·비용 한도·수집 안내·알림 채널 확정 후 실제 배포·이용 기록·피드백·감시 및 부하/실기기 검증. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-12 · Codex]`
 
-브라우저 실행 폴더에서 Worker 모듈 경로 실패를 재현해 modulesRoot를 명시했다. 원격 재검사 진행 중.
+브라우저 실행 폴더에서 Worker 모듈 경로 실패를 재현해 modulesRoot를 명시했다. 원격 Chromium/WebKit 각29·전체 CPU Linux/macOS·Node66 CI 통과(PR #9).
 
 **WS-ops4c 구현 완료·수정 권한 반납.** 기준 `3898083`, 선점 `a648376`. [리허설 결과·한계](ops/public-host/REHEARSAL.md).
 
