@@ -1,5 +1,11 @@
 # Codex 재개 프롬프트 — 2026-09-28
 
+## WS-ops4e 운영 준비 완료 — 2026-10-12
+
+[장애·복구 절차](../ops/public-host/RUNBOOK.md)와 [비용 가정](../ops/public-host/COST_PLAN.md)을 작성했다. 산정25·별도 Codex25통과.
+계정·예산·실측/실복구 승인은 별도다. 다음 독립 단위 WS-ops1c는 우리 제안 계약의 제한된 전송 클라이언트다.
+
+
 ## WS-ops4d 후보 설정 검사 완료 — 2026-10-12
 
 [오프라인 설정 검사](../ops/public-host/CONFIG_CHECK.md)는 새 공개 파일 혼입·경로·수집 안내·정리 cron을 확인한다. 신규66·기존58·별도 Codex64/경계6검사 통과.
