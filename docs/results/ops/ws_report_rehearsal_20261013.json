@@ -1,0 +1,88 @@
+{
+  "schema": "pitcheezy-local-report-rehearsal-v1",
+  "synthetic": true,
+  "posted": false,
+  "approval_required": true,
+  "environment": {
+    "node": "v24.1.0",
+    "platform": "win32",
+    "arch": "x64"
+  },
+  "source_sha256": {
+    "telemetry.mjs": "545569404a68e8a5159984c3b328e4982c217247d1cd5af01e1831165ebf6739",
+    "monitor.mjs": "0b22cd428743d46f034c25fb14562d6d40f061320fad42d3b32870f8402eb6f5",
+    "alerts.mjs": "6167df5ace5b3973cb47d17ca6376fe0264fff2ae6c8ffec5e492285757e1883",
+    "report.mjs": "f9adbb90c2d09305c52becd97ddb4e944c864dd7614c55537b182e18e5cfc33f",
+    "report-cli.mjs": "0ff867f0ae6b28c99df6e8c510b985f6bc2803410568889ed56469b22b9ae229",
+    "rehearse-report.mjs": "27f7f17b321c3e05d9022bc90a5d1412aa6e9e1c22f872d1082cd6e8be6d1a48",
+    "migrations/0001_telemetry.sql": "72c1ab1a8cc0512dd8b301749e5161a163b7aeb27262bc302d61132e15cdf0e0"
+  },
+  "cases": [
+    {
+      "case": "counted",
+      "usage_status": "counted",
+      "sessions": 2,
+      "active_ms": 90000,
+      "monitor_events": 2,
+      "notice_changes": 2,
+      "alerts": {
+        "acknowledged_by_mock": 4,
+        "undelivered": 0,
+        "pending": 0,
+        "delivery_confirmed": false
+      },
+      "markdown_sha256": "ac2c30a7585ae38d9ec17d9f55cf362fa19c44832d1dae4ba8d1bf963cff7180",
+      "markdown_bytes": 1857
+    },
+    {
+      "case": "zero_rows",
+      "usage_status": "zero_rows",
+      "sessions": 0,
+      "active_ms": 0,
+      "monitor_events": 2,
+      "notice_changes": 2,
+      "alerts": {
+        "acknowledged_by_mock": 4,
+        "undelivered": 0,
+        "pending": 0,
+        "delivery_confirmed": false
+      },
+      "markdown_sha256": "ac72fd71b9618b6c92a5a08695a1d57446d03d87e1c66f541f533db49cde044f",
+      "markdown_bytes": 1838
+    },
+    {
+      "case": "no_data",
+      "usage_status": "no_data",
+      "sessions": null,
+      "active_ms": null,
+      "monitor_events": 2,
+      "notice_changes": 2,
+      "alerts": {
+        "acknowledged_by_mock": 4,
+        "undelivered": 0,
+        "pending": 0,
+        "delivery_confirmed": false
+      },
+      "markdown_sha256": "3c3cb739a56744d729822ffdf0d6e710174f87fecc48af0956c8d3165c2f6813",
+      "markdown_bytes": 1816
+    },
+    {
+      "case": "collection_off",
+      "usage_status": "collection_off",
+      "sessions": null,
+      "active_ms": null,
+      "monitor_events": 2,
+      "notice_changes": 2,
+      "alerts": {
+        "acknowledged_by_mock": 4,
+        "undelivered": 0,
+        "pending": 0,
+        "delivery_confirmed": false
+      },
+      "markdown_sha256": "703f00ca5bbdbd99fd989b64dc5214e586c0cc23858fbf23fa5ea33fd8d87027",
+      "markdown_bytes": 1789
+    }
+  ],
+  "passed": true,
+  "total_ms": 4573
+}
