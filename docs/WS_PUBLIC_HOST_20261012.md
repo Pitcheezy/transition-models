@@ -52,3 +52,15 @@ Windows WebKit은 credentials omit 지정에도 쿠키가 서버까지 전송돼
 
 CI 브라우저 시간 검사의 실행 중 실제16~110ms 혼입은 가상 시계 pauseAt 고정으로 수정했다.
 허용 오차를 넓히지 않고 30초 누적값 검사를 유지한다.
+
+## WS-ops4a 후속 — 고정 배포 후보
+
+기준 main c8a6865, 선점09b28ca. [패키지 형식·명령](../ops/public-host/RELEASE.md).
+우리 Git blob10개와 별도 합성 화면1파일을 고정 목록·ZIP·영수증으로 묶었다.
+CLI로 두 번 생성한 SHA-256은 7f3d73af82f35e0d0c98bd50f6edf4e78696ef7f876f5e53e5cdfe5b4a369e54,
+manifest SHA는 070eb354a7c2dc577dc0a5348b5cc30f13d52fb689e398b17da8e87740639d21다.
+공급자 화면/계약 커밋은 예제용 가상값이며 실전 배포가 아니다.
+
+관련58·체크리스트7검사, ruff 통과. 별도 Codex 검토가 ZIP 여분 데이터·잘못된 mode 타입·
+provenance 입력 경계를 발견했고 모두 수정한 뒤 독립적으로58검사를 통과했다.
+Claude/사람 교차 검토는 아니다. WS-ops4b 감시/오류·복구 기반을 다음 독립 단위로 둔다.
