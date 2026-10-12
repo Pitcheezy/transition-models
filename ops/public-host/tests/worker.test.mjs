@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import worker, { MAX_JSON_BYTES, permittedKey, sha256 } from "../gateway.mjs";
+import worker, { MAX_JSON_BYTES, permittedKey, sha256, etagMatches } from "../gateway.mjs";
 
 // Synthetic-only credentials and payloads, never an account secret or Song schema fixture.
 const TOKEN = "synthetic-only-token-for-unit-tests-not-a-real-credential";
@@ -120,13 +120,31 @@ test("create, exact-byte read and HEAD provide Date Age and no-store", async () 
   assert.equal(head.headers.get("Content-Length"), String(Buffer.byteLength(body)));
 });
 
-test("cache validators do not turn changed or deleted objects into stale 304 responses", async () => {
+test("conditional GET answers 304 only for the current strong ETag; changed or deleted objects re-download or 404", async () => {
   const { call, put, del } = await fixture();
   const first = await put();
   const tag = first.headers.get("ETag");
-  assert.equal((await call(path, { headers: { "If-None-Match": tag } })).status, 200);
-  await del(tag);
-  assert.equal((await call(path, { headers: { "If-None-Match": tag } })).status, 404);
+  const fresh = await call(path, { headers: { "If-None-Match": tag, Origin: "https://ui.example.test" } });
+  assert.equal(fresh.status, 304);
+  assert.equal(await fresh.text(), "");
+  assert.equal(fresh.headers.get("ETag"), tag);
+  assert.equal(fresh.headers.get("Cache-Control"), "no-store");
+  assert.equal(fresh.headers.get("Age"), "0");
+  assert.equal(fresh.headers.get("Access-Control-Expose-Headers"), "Date, Age, ETag");
+  assert.equal((await call(path, { method: "HEAD", headers: { "If-None-Match": tag } })).status, 304);
+  assert.equal((await call(path, { headers: { "If-None-Match": '"' + "0".repeat(32) + '", ' + tag } })).status, 304);
+  for (const header of ["*", "W/" + tag, '"' + "0".repeat(32) + '"', tag.slice(1, -1)]) {
+    assert.equal((await call(path, { headers: { "If-None-Match": header } })).status, 200, header);
+  }
+  assert.equal(etagMatches(tag, tag), true); assert.equal(etagMatches("*", tag), false); assert.equal(etagMatches(tag, "bad"), false);
+  const updated = await put('{"synthetic":2}', { "If-Match": tag });
+  const next = updated.headers.get("ETag");
+  const changed = await call(path, { headers: { "If-None-Match": tag } });
+  assert.equal(changed.status, 200);
+  assert.equal(changed.headers.get("ETag"), next);
+  assert.equal(await changed.text(), '{"synthetic":2}');
+  await del(next);
+  assert.equal((await call(path, { headers: { "If-None-Match": next } })).status, 404);
 });
 
 test("reserved API paths cannot fall through to SPA including 404 and HEAD", async () => {

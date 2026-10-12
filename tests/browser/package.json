@@ -7,10 +7,10 @@
     "node": ">=24"
   },
   "scripts": {
-    "test": "node --test --test-concurrency=1 service-review.test.cjs observation-playback.test.cjs host-telemetry.test.cjs public-host-rehearsal.test.cjs public-host-notice.test.cjs public-host-access.test.cjs",
+    "test": "node --test --test-concurrency=1 service-review.test.cjs observation-playback.test.cjs host-telemetry.test.cjs public-host-rehearsal.test.cjs public-host-notice.test.cjs public-host-access.test.cjs first-connection.test.cjs",
     "test:service": "node --test --test-concurrency=1 service-review.test.cjs",
     "test:observation": "node --test --test-concurrency=1 observation-playback.test.cjs",
-    "test:host": "node --test --test-concurrency=1 host-telemetry.test.cjs public-host-rehearsal.test.cjs public-host-notice.test.cjs public-host-access.test.cjs"
+    "test:host": "node --test --test-concurrency=1 host-telemetry.test.cjs public-host-rehearsal.test.cjs public-host-notice.test.cjs public-host-access.test.cjs first-connection.test.cjs"
   },
   "devDependencies": {
     "playwright": "1.62.1"

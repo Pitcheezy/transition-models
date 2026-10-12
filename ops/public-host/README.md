@@ -30,6 +30,12 @@ COLLAB-001의 파일 전달 경계를 구현한 후보이며, 실제 서비스 �
 
 [오프라인 후보 설정 검사](CONFIG_CHECK.md)는 배포 폴더의 경로·바이트·수집 안내 일치를 확인한다.
 
+## 첫 연결 검증 (COLLAB-001)
+
+[검증 기록](../../docs/WS_OPS2_FIRST_CONNECTION_20261013.md): Song의 예시 13·스키마 6을 고정 커밋 SHA로 대조·스키마 검증하고, 문서 절차대로
+이 Worker에 올린 뒤 고정 커밋의 공개 화면 빌드가 상태를 구별해 읽는지 Chromium으로 확인했다. `node ops/public-host/rehearse-first-connection.mjs`,
+`uv run --frozen python scripts/verify_publish_contract.py`, `tests/browser/first-connection.test.cjs`(환경 변수 없으면 건너뜀). 실제 발행기·실계정 연결은 별도다.
+
 ## 긴급 안내 화면 스위치
 
 [WS-safe1 스위치](NOTICE.md): 운영자 토큰(`NOTICE_TOKEN_SHA256`, 발행기 토큰과 별개)으로 `/_notice/v1/state`를 바꾸면
@@ -74,6 +80,8 @@ COLLAB-001의 파일 전달 경계를 구현한 후보이며, 실제 서비스 �
   파일 자체가 최신이라는 의미가 아니다. 화면은 원래 `publish` 시각도 사용해야 한다.
 - 모든 JSON 응답과 오류에 `Cache-Control: no-store`, `CDN-Cache-Control: no-store`.
   정정/삭제가 우선이다. 종료 파일 장기 캐시는 아직 구현하지 않았다.
+- 공개 GET/HEAD의 `If-None-Match`가 현재 강한 ETag와 같으면 본문 없는 **304**(ETag·Date·Age·no-store 유지). 약한 태그·`*`·삭제/교체된 객체는 304가 아니다.
+  이는 Song 화면의 ETag 재조회 변경 예고에 대응한 읽기 계약이며 업로드 조건부 ETag(If-Match/If-None-Match:*)와 다른 것이다.
 - 선택한 단일 `READ_ORIGIN`만 CORS 허용하며 Date/Age/ETag를 노출한다.
   기본은 동일 출처. 업로드 CORS·credential cookie는 제공하지 않는다.
 - UTF-8 JSON object, SHA-256, 본문 크기를 검증하고 원래 JSON 바이트를 그대로 제공.

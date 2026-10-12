@@ -49,9 +49,12 @@ test("actual local Worker/R2 runtime: publish, conditional updates, withdrawal a
       assert.match(await record.text(), /^pitcheezy-host-record-v1:/);
       assert.equal(record.customMetadata.sha256, hash(body));
     }
-    { // reader returns exactly original bytes, origin Date/Age and payload HEAD size
+    { // reader returns exactly original bytes, origin Date/Age and payload HEAD size; a held ETag answers 304
       const response = await call(route, { headers: { Origin: "https://ui.example.test" } });
       assert.equal(await response.text(), body);
+      const conditional = await call(route, { headers: { "If-None-Match": response.headers.get("ETag") } });
+      assert.equal(conditional.status, 304);
+      assert.equal(await conditional.text(), "");
       assert.equal(response.headers.get("Age"), "0");
       assert.equal(response.headers.get("Cache-Control"), "no-store");
       assert.ok(Number.isFinite(Date.parse(response.headers.get("Date"))));

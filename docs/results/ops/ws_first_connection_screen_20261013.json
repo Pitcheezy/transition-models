@@ -1,0 +1,278 @@
+{
+  "schema": "pitcheezy-first-connection-screen-receipt-v1",
+  "engine": "chromium",
+  "synthetic": true,
+  "live_data": false,
+  "examples_commit": "d5a1dd98003672235cc50509391fd4c41b28be32",
+  "screen_commit": "ef4e4df2f0547331459f9d952c5d76e1090f11e8",
+  "checks": [
+    {
+      "name": "list_page_served",
+      "ok": true,
+      "status": 200
+    },
+    {
+      "name": "live_card_visible",
+      "ok": true,
+      "date": "2026-10-05",
+      "game_pk": 900200
+    },
+    {
+      "name": "stale_notice_with_original_publish_times",
+      "ok": true,
+      "note": "examples carry 2026-10-05 publish times; the screen flags the stopped publication"
+    },
+    {
+      "name": "archive_card_visible",
+      "ok": true,
+      "date": "2026-09-30",
+      "game_pk": 900101
+    },
+    {
+      "name": "pregame_original_shows_scheduled_and_stale",
+      "ok": true
+    },
+    {
+      "name": "no_api_requests_phase_a",
+      "ok": true,
+      "count": 0
+    },
+    {
+      "name": "v1_files_requested",
+      "ok": true,
+      "seen": [
+        "/v1/dates.json",
+        "/v1/manifest.json",
+        "/v1/games/2026-10-05.json",
+        "/v1/health.json",
+        "/v1/games/2026-09-30.json",
+        "/v1/game/900200.json"
+      ]
+    },
+    {
+      "name": "game_page_served",
+      "ok": true,
+      "status": 200
+    },
+    {
+      "name": "state_pregame",
+      "ok": true,
+      "label": "경기 전"
+    },
+    {
+      "name": "state_recommended",
+      "ok": true,
+      "label": "다음 공 추천",
+      "seconds_until_shown": 10.1
+    },
+    {
+      "name": "state_unconfirmed",
+      "ok": true,
+      "label": "확인 중",
+      "seconds_until_shown": 2
+    },
+    {
+      "name": "state_disconnected",
+      "ok": true,
+      "label": "연결 끊김",
+      "seconds_until_shown": 1.9
+    },
+    {
+      "name": "state_waiting",
+      "ok": true,
+      "label": "공수 교대",
+      "seconds_until_shown": 1.9
+    },
+    {
+      "name": "stopped_publication_flagged_while_live",
+      "ok": true,
+      "seconds_until_flagged": 28,
+      "note": "threshold VITE_PUBLISH_STALE_S=30 is provisional per the pack"
+    },
+    {
+      "name": "state_final",
+      "ok": true,
+      "label": "경기가 끝났어요",
+      "seconds_until_shown": 1.9
+    },
+    {
+      "name": "stale_notice_after_final",
+      "ok": true,
+      "observed": false,
+      "note": "a finished game needs no further publication; observed only"
+    },
+    {
+      "name": "no_api_requests_phase_b",
+      "ok": true,
+      "count": 0
+    },
+    {
+      "name": "fits_mobile_width",
+      "ok": true
+    },
+    {
+      "name": "archive_game_final_visible",
+      "ok": true,
+      "label": "종료"
+    },
+    {
+      "name": "setup_file_not_requested",
+      "ok": true,
+      "v1": [
+        "/v1/game/900101.json",
+        "/v1/health.json"
+      ]
+    },
+    {
+      "name": "withdrawn_file_404_for_screen_fetch",
+      "ok": true,
+      "status": 404
+    },
+    {
+      "name": "no_api_requests_phase_c",
+      "ok": true,
+      "count": 0
+    }
+  ],
+  "shifted_artifacts": [
+    {
+      "example": "examples/game-pregame.json",
+      "target": "v1/game/900200.json",
+      "shifted_sha256": "d814436020c79609fc1292f237fe68fd202fb84d6f49d3028c48e9f69e51335d",
+      "original_sha256": "b8ec23572fd042e6cb9edd461d483a4740d536da8200d2a4b012fa74025ce517",
+      "published_at": "2026-10-12T18:24:28Z"
+    },
+    {
+      "example": "examples/health-live.json",
+      "target": "v1/health.json",
+      "shifted_sha256": "5f45cf4e01948c75e80f60f7e08b37f3d0be0696f04e0f64e4f45d801922af0d",
+      "original_sha256": "73fcc38d5d6bff12564ea20286c801a964a33ba954c038b73478acabf8e0b5e9",
+      "published_at": "2026-10-12T18:24:28Z"
+    },
+    {
+      "example": "examples/game-live.json",
+      "target": "v1/game/900200.json",
+      "shifted_sha256": "66aa58febaf03fe16b0ab53086b0a5740ec29ba5980c4f8841b1714b00105a99",
+      "original_sha256": "0de4cd9e8fb92f6a0c0efcfa2a99530988602f960fdbd70d1fbc9a04407cff92",
+      "published_at": "2026-10-12T18:24:29Z"
+    },
+    {
+      "example": "examples/health-live.json",
+      "target": "v1/health.json",
+      "shifted_sha256": "195515208c56a3263ad1cee768f364c2934b7798e496ab2c735c4c2cb88caac0",
+      "original_sha256": "73fcc38d5d6bff12564ea20286c801a964a33ba954c038b73478acabf8e0b5e9",
+      "published_at": "2026-10-12T18:24:29Z"
+    },
+    {
+      "example": "examples/game-live-unconfirmed.json",
+      "target": "v1/game/900200.json",
+      "shifted_sha256": "c82d7f63d4e8a84c8971b6b6b9f6137261088d8ab47af9a8a0d46f1b86c346dd",
+      "original_sha256": "8d2a2ec14b0619202d0c80c3fdd7fca960df3a24a7e83bb9930aeb1c03f23f43",
+      "published_at": "2026-10-12T18:24:39Z"
+    },
+    {
+      "example": "examples/health-live.json",
+      "target": "v1/health.json",
+      "shifted_sha256": "91037196c0f59baec248204ee42ab312965fb42ae93243a2228f125a2bb3456c",
+      "original_sha256": "73fcc38d5d6bff12564ea20286c801a964a33ba954c038b73478acabf8e0b5e9",
+      "published_at": "2026-10-12T18:24:39Z"
+    },
+    {
+      "example": "examples/game-disconnected.json",
+      "target": "v1/game/900200.json",
+      "shifted_sha256": "6d02b747ba934824d239febfa5b422c6143e4608496a05237dd43e894edc7b62",
+      "original_sha256": "e54eaca9bc5d4eaaeb145c91d9217230adee5429d22fca75c0479b9f9e0a0930",
+      "published_at": "2026-10-12T18:24:41Z"
+    },
+    {
+      "example": "examples/health-live.json",
+      "target": "v1/health.json",
+      "shifted_sha256": "30252c18d609d12df40c4935d62d9caa00d4de1d9216a30e90cdbfe70efc3f35",
+      "original_sha256": "73fcc38d5d6bff12564ea20286c801a964a33ba954c038b73478acabf8e0b5e9",
+      "published_at": "2026-10-12T18:24:41Z"
+    },
+    {
+      "example": "examples/game-between-innings.json",
+      "target": "v1/game/900200.json",
+      "shifted_sha256": "eb3fc384e55e8b1039b8eab84818d4742590ed0d1942b12ee160a47fffe6fb31",
+      "original_sha256": "493c68af92f7cb97f6417511b34f6a43226ecced2a9ed57bbd78202fb8db0d84",
+      "published_at": "2026-10-12T18:24:43Z"
+    },
+    {
+      "example": "examples/health-live.json",
+      "target": "v1/health.json",
+      "shifted_sha256": "61727777ec700b164f1206e5e2cea3ec17d770bd06ec6bfab683e9fe9fcf8c4b",
+      "original_sha256": "73fcc38d5d6bff12564ea20286c801a964a33ba954c038b73478acabf8e0b5e9",
+      "published_at": "2026-10-12T18:24:43Z"
+    },
+    {
+      "example": "examples/game-final.json",
+      "target": "v1/game/900200.json",
+      "shifted_sha256": "aaa943958a1fd2bac6be59029870926ddd8e82c895922cfa2a894bd7dcb54c7a",
+      "original_sha256": "25fd54a8c793869848c0fac8b5c0a25302de2f833ba23b4ccca3e691808eb74b",
+      "published_at": "2026-10-12T18:25:13Z"
+    },
+    {
+      "example": "examples/health-live.json",
+      "target": "v1/health.json",
+      "shifted_sha256": "f4a842a41773a47dcd3d27fa9a726d6c48365f0392f4df4b04b08ec9353ff13b",
+      "original_sha256": "73fcc38d5d6bff12564ea20286c801a964a33ba954c038b73478acabf8e0b5e9",
+      "published_at": "2026-10-12T18:25:13Z"
+    }
+  ],
+  "api_requests": [],
+  "v1_requests": [
+    "/v1/dates.json",
+    "/v1/manifest.json",
+    "/v1/games/2026-10-05.json",
+    "/v1/health.json",
+    "/v1/dates.json",
+    "/v1/manifest.json",
+    "/v1/games/2026-09-30.json",
+    "/v1/health.json",
+    "/v1/game/900200.json",
+    "/v1/health.json",
+    "/v1/game/900200.json",
+    "/v1/health.json",
+    "/v1/health.json",
+    "/v1/game/900200.json",
+    "/v1/health.json",
+    "/v1/game/900200.json",
+    "/v1/health.json",
+    "/v1/game/900200.json",
+    "/v1/health.json",
+    "/v1/game/900200.json",
+    "/v1/health.json",
+    "/v1/game/900200.json",
+    "/v1/health.json",
+    "/v1/game/900200.json",
+    "/v1/health.json",
+    "/v1/game/900200.json",
+    "/v1/health.json",
+    "/v1/game/900200.json",
+    "/v1/health.json",
+    "/v1/game/900200.json",
+    "/v1/health.json",
+    "/v1/game/900200.json",
+    "/v1/health.json",
+    "/v1/game/900200.json",
+    "/v1/health.json",
+    "/v1/game/900200.json",
+    "/v1/health.json",
+    "/v1/game/900200.json",
+    "/v1/health.json",
+    "/v1/game/900200.json",
+    "/v1/health.json",
+    "/v1/game/900200.json",
+    "/v1/health.json",
+    "/v1/game/900200.json",
+    "/v1/health.json",
+    "/v1/game/900200.json",
+    "/v1/health.json",
+    "/v1/game/900200.json",
+    "/v1/health.json",
+    "/v1/game/900200.json",
+    "/v1/game/900101.json",
+    "/v1/health.json"
+  ]
+}

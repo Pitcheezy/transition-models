@@ -2,7 +2,7 @@
 
 ## 협업 v1 반영 — 2026-10-12
 
-**WS-report1 구현·검증 완료·수정 권한 반납 (2026-10-13, Claude Fable 5.1, 브랜치 `claude/ws-report1`, 기준 `c5e3376`, PR #23).** WS-safe1 PR #20·WS-access1 PR #21·WS-alert1 PR #22 병합. 네 독립 단위의 실제 전환·문구·토큰·코드·채널·게시는 사람 결정, 다른 모델 검토는 WS-review1. WS-safe1 PR #20·WS-access1 PR #21 병합. 실제 전환·문구·토큰·코드·채널·다른 모델 검토(WS-review1)는 별도. WS-safe1은 PR #20 병합 `2a29f51`. 실제 전환·문구·토큰·코드·대상·다른 모델 검토(WS-review1)는 별도. 실제 전환·문구·토큰·다른 모델 검토(WS-review1)는 별도. H-collab2 문서 반영·검증 완료. 기준 `8f1aca6`, 선점 `12d4639`. [규약](docs/COLLABORATION_PROTOCOL.md) · [세 질문 답안/작업별 합격 기준](docs/WS_COLLAB_V1_ACTIONS.md). 운영 코드·상대 레포·공개 배포 변경 없음.
+**WS-ops2 로컬 첫 연결 검증 완료·수정 권한 반납 (2026-10-13, Claude Fable 5.1, 브랜치 `claude/ws-ops2`, 기준 `3cf1bee`, PR #24).** WS-safe1 #20·WS-access1 #21·WS-alert1 #22·WS-report1 #23 병합. 실제 발행기·계정·실경기·다른 모델 검토(WS-review1)는 별도. WS-safe1 PR #20·WS-access1 PR #21·WS-alert1 PR #22 병합. 네 독립 단위의 실제 전환·문구·토큰·코드·채널·게시는 사람 결정, 다른 모델 검토는 WS-review1. WS-safe1 PR #20·WS-access1 PR #21 병합. 실제 전환·문구·토큰·코드·채널·다른 모델 검토(WS-review1)는 별도. WS-safe1은 PR #20 병합 `2a29f51`. 실제 전환·문구·토큰·코드·대상·다른 모델 검토(WS-review1)는 별도. 실제 전환·문구·토큰·다른 모델 검토(WS-review1)는 별도. H-collab2 문서 반영·검증 완료. 기준 `8f1aca6`, 선점 `12d4639`. [규약](docs/COLLABORATION_PROTOCOL.md) · [세 질문 답안/작업별 합격 기준](docs/WS_COLLAB_V1_ACTIONS.md). 운영 코드·상대 레포·공개 배포 변경 없음.
 
 - [x] H-collab2. 사용자 채택 협업 v1의 역할/파일 경계/사람 결정/우편/다른 모델 검토/일정/비상 대응/경기별 증거를 지침에 반영했다. 일일 읽기 예약 등록, mail #18 첫 연결 안내 수신 반영. 체크리스트7·YAML·현재 상대 링크24·별도 Codex 문서 대조 통과. 기능 완료/실제 실행 성공과 구별한다. 〔모델: Fable 5.1〕
 - [x] WS-safe1. 긴급 안내 스위치를 로컬 구현·합성 검증했다: 운영자 토큰 digest(`NOTICE_TOKEN_SHA256`, 발행기 토큰과 분리)로 `/_notice/v1/state`를 조건부 변경하면 화면·asset·공개 JSON·수집이 503 안내(no-store, `X-Pitcheezy-Notice`)로 바뀌고 업로드·운영자 경로는 유지, 변경마다 private R2 감사 기록. 신규 Node 7(단위·메모·감시 구별·실제 로컬 Worker/R2)·전체 Node 102, Chromium 호스트 브라우저 11(열린 화면 다음 읽기·새로고침·직접 파일·뒤로가기·복구), Python 설정 검사 67(관련 132)·checklist 7 통과. loopback 실측 PUT 후 첫 안내 응답 11.71 ms(단일 isolate; 다중 colo 미측정). 실제 공개 문구·전환·토큰 전달·Song 화면 안내 표시(요청 초안만)·다른 모델 검토는 남는다. 내려받은 자료 회수 기능 아님. [기록](ops/public-host/NOTICE.md) · [영수증](docs/results/ops/ws_notice_rehearsal_20261013.json). 선점 `51958c1`; 구현은 완료 커밋(PR #20). 〔모델: Fable 5.1〕
@@ -35,7 +35,7 @@
 - [x] WS-ops1. 공개 JSON 호스팅 후보(Cloudflare Worker/R2)의 제한된 업로드·GET/HEAD·삭제·캐시/Date/Age·실제404 처리와 CI를 구현했다. 단위28·실제 로컬 workerd/R2 통합1 검사 통과. 공개 배포·실제 스키마 연결은 별도다. 사용자 직접 요청으로 Codex가 수행하며 Claude 교대 태그는 후속 세션용이다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-12 · Codex]`
 - [x] WS-ops1b. 인증 업로드 공통 요청 제한·limiter 장애 시 저장소 차단을 구현했다. Node71·체크리스트7·별도 Codex 관련39통과. 실제 Cloudflare 분산/과금 상한이나 발행 주기 확정은 아니다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-12 · Codex]`
 - [x] WS-ops3c. 통계/피드백 독립 토글과 실제 보관일 안내, 미설정 시 양쪽 차단을 연결했다. Node73·체크리스트7·Chrome/WebKit 각7·별도 Codex client10통과. 서버설정/실제배포 일치 확인은 별도. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-12 · Codex]`
-- [!] WS-ops2. mail #18 첫 연결 안내 수신: 공개 화면/예제/스키마 고정 경로를 실제 검증하고 비공개 첫 연결. 미지원 예제·후보 스키마 수정과 GET 304 계약 대조는 남아 있다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-12 · Codex]`
+- [x] WS-ops2. mail #18 첫 연결 자료를 실제로 검증했다: 예시 13·스키마 6을 `svc/ws-publisher@d5a1dd9`에서 받아 문서 SHA 19/19 일치, JSON Schema 오류 0, 호스트 경로/크기 제약 통과(`scripts/verify_publish_contract.py`, 영수증 `docs/results/ops/collab001_contract_verification_20261013.json`). 문서 절차대로 로컬 Worker에 업로드·6단계 교체·철회/복원·404·CORS·no-store를 확인하고 공개 GET `If-None-Match`→304를 구현했다(영수증 `ws_first_connection_rehearsal_20261013.json`). `svc/ws-static-web@ef4e4df` 공개 빌드(Windows는 셸 `VITE_PUBLISH_BASE=.` 필요)를 같은 Worker에서 Chromium으로 열어 목록·경기 전·추천·확인 중·연결 끊김·공수 교대·종료·발행 중단(갱신 지연 28 s)·철회를 구별, `/api/**` 0건, setup 미요청(영수증 `ws_first_connection_screen_20261013.json`). `unsupported` 예시 없음(Song 후속)·추천 후보 스키마 2곳 미반영·실제 발행기 업로드/실계정/CDN/Safari는 미확인. 회신 초안 `docs/mail_drafts/COLLAB-001-reply-draft-20261013.md`(미발송). [기록](docs/WS_OPS2_FIRST_CONNECTION_20261013.md). 선점 `dca5339`; 구현은 완료 커밋(PR #24). 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-12 · Codex]`
 - [x] WS-ops3a. 전용 D1 이용 기록·선택형 피드백 저장, 원자적 일별 상한, 중복/역순 방지, UTC 집계·만료 정리를 구현했다. 신규9·전체Node38검사 통과. 실제 수집 비활성. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-12 · Codex]`
 - [x] WS-ops3b. 동의·철회·활성 시간 측정·선택형 피드백 독립 UI와 브라우저 회귀를 구현했다. Node46·Chrome/WebKit 각5 통과. Windows WebKit의 omit 지정에도 쿠키 전송되는 현상은 미해결 한계로 기록했다. 실제 Song 화면 삽입·수집 활성화·Safari 기기는 별도다. CI에서 드러난 가상시계의 실제 시간 혼입을 pauseAt으로 고정했다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-12 · Codex]`
 - [x] WS-ops4a. 고정 호스트 커밋·공급자 화면/계약 메타데이터·파일 해시의 결정적 ZIP 생성/검사를 구현했다. 관련58검사·체크리스트7검사 통과, 합성 빌드2회 SHA 일치. 출처/권리/배포 승인이 아니며 deployable=false 유지. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-12 · Codex]`
@@ -564,9 +564,9 @@ S 선택 비중은 사건확률이 아니며 S 위치는 과거 투구 분포의
 
 | 항목 | 값 | 갱신 |
 |---|---|---|
-| 브랜치 | 정본 main, 현재 `claude/ws-report1`(PR #23); 기존 작업 폴더·원본 브랜치 보존 | 2026-10-13 |
-| 최신 작업 커밋 | WS-report1 선점 `02893ba`, 구현은 PR #23 완료 커밋; WS-alert1 병합 `c5e3376`; 이후 근거는 상단과 우리 board | 2026-10-13 |
-| 파일 수정 권한 | 반납 — WS-report1 완료, PR #23 CI/병합 확인 | 2026-10-13 |
+| 브랜치 | 정본 main, 현재 `claude/ws-ops2`(PR #24); 기존 작업 폴더·원본 브랜치 보존 | 2026-10-13 |
+| 최신 작업 커밋 | WS-ops2 선점 `dca5339`, 구현은 PR #24 완료 커밋; WS-report1 병합 `3cf1bee`; 이후 근거는 상단과 우리 board | 2026-10-13 |
+| 파일 수정 권한 | 반납 — WS-ops2 로컬 완료, PR #24 CI/병합 확인 | 2026-10-13 |
 | Mac 실기기 I-device2 | 환경 확인 완료·v5 영상 ZIP 전송 대기. 재생/결과 공개/투구 전환/타석 전환/미트 가로 표시 모두 미실행 | 2026-10-11 |
 | 저장 공간 운영 | 내부 용량 부족 시 연결된 외장 SSD의 실제 경로·여유를 확인해 사용. 확인 장치 `D:` T7 Shield (exFAT), 여유 3,723.1 GiB; 재확인·이관 원칙은 [MAINTENANCE](docs/MAINTENANCE.md). 기존 데이터 이동 없음 | 2026-10-04 |
 | 중계 시각 주석 | **297 확인 / 25 확인 불가 / 0 미검토** — 전 경기 322구 검토 완료. 완전 타석 2~4·6~15·18~19·21·23~28·30~32·34·36~38·40~46·49~51·53~55·57~63·65~69·71·74~79·81. 불가 목록·반이닝 집계·리드 분포는 [전 경기 요약](docs/MLB_BROADCAST_TIMING.md). 규약 v2, 수동 시각 | 2026-09-27 |
