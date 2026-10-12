@@ -43,8 +43,15 @@ def main(argv=None):
             result = write_bundle(args.output, files, args.frontend)
         print(json.dumps(result, ensure_ascii=False, indent=2))
         return 0
-    except (BundleError, OSError, subprocess.SubprocessError) as exc:
+    except BundleError as exc:
         print(json.dumps({"ok": False, "error": str(exc)}), file=sys.stderr)
+        return 2
+    except OSError as exc:
+        # OSError text carries file system paths; only the errno is reported.
+        print(json.dumps({"ok": False, "error": "io_error", "errno": exc.errno}), file=sys.stderr)
+        return 2
+    except subprocess.SubprocessError:
+        print(json.dumps({"ok": False, "error": "subprocess_error"}), file=sys.stderr)
         return 2
 
 

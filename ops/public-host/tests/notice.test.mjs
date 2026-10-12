@@ -300,3 +300,49 @@ test("actual local Worker/R2 runtime: notice switch changes every viewer route a
     assert.equal(parsed.state.active, false); assert.equal(parsed.audit.length, 2);
   } finally { await mf.dispose(); }
 });
+
+test("audit view shows the newest 20 entries even when the bucket lists them in several pages", async () => {
+  class PagedBucket extends Bucket {
+    async list({ prefix = "", cursor } = {}) {
+      const keys = [...this.objects.keys()].filter(k => k.startsWith(prefix)).sort();
+      const start = cursor ? Number(cursor) : 0;
+      const page = keys.slice(start, start + 7);
+      const truncated = start + 7 < keys.length;
+      return { objects: page.map(key => ({ key })), truncated, ...(truncated ? { cursor: String(start + 7) } : {}) };
+    }
+  }
+  const { env, call } = await fixture();
+  env.PUBLISH_BUCKET = new PagedBucket();
+  for (let i = 0; i < 30; i++) {
+    const at = new Date(Date.UTC(2026, 9, 13, 0, i)).toISOString();
+    const bytes = new TextEncoder().encode(JSON.stringify({ schema: "pitcheezy-notice-audit-v1", id: "synthetic-" + i, at, active: i % 2 === 0,
+      message_id: "maintenance", operator: "ops-a", reason: "paged " + i, operator_token_prefix: "0".repeat(12), revision: i + 1, etag_before: null, etag_after: null }));
+    await env.PUBLISH_BUCKET.put("_notice/audit/" + at.replace(/[-:.]/g, "") + "-synthetic-" + i + ".json", bytes,
+      { onlyIf: new Headers({ "If-None-Match": "*" }), sha256: digest(bytes), customMetadata: { kind: "notice-audit-v1" } });
+  }
+  const view = await call(NOTICE_ROUTE, { headers: { Authorization: "Bearer " + OPERATOR_A } });
+  assert.equal(view.status, 200);
+  const parsed = await view.json();
+  assert.equal(parsed.audit.length, 20);
+  assert.equal(parsed.audit_truncated, true);
+  assert.equal(parsed.audit[0].reason, "paged 10", "the oldest shown entry is the 11th, not the first page's tail");
+  assert.equal(parsed.audit.at(-1).reason, "paged 29", "the newest entry is shown");
+});
+
+test("a failed audit write after a committed switch is reported, not mistaken for a failed switch", async () => {
+  const { env, call } = await fixture();
+  const bucket = env.PUBLISH_BUCKET;
+  const originalPut = bucket.put.bind(bucket);
+  bucket.put = async (key, bytes, options) => {
+    if (key.startsWith("_notice/audit/")) throw new Error("synthetic audit storage failure");
+    return originalPut(key, bytes, options);
+  };
+  const turned = await call(NOTICE_ROUTE, { method: "PUT", headers: {
+    Authorization: "Bearer " + OPERATOR_A, "Content-Type": "application/json", "If-None-Match": "*" },
+    body: JSON.stringify({ active: true, operator: "ops-a", reason: "audit failure drill", message_id: "maintenance" }) });
+  assert.equal(turned.status, 200);
+  const body = await turned.json();
+  assert.equal(body.active, true); assert.equal(body.audit_recorded, false); assert.equal(body.audit_error, "audit_write_failed");
+  assert.doesNotMatch(JSON.stringify(body), /synthetic audit storage failure/);
+  assert.equal((await call("/")).status, 503, "the switch itself is on");
+});

@@ -42,6 +42,10 @@ export function accessConfig(env) {
 }
 
 export function cookieName(url) { return url.protocol === "https:" ? "__Host-pz_viewer" : "pz_viewer"; }
+/** Plain http is tolerated only on loopback (local rehearsal); anywhere else the session must be Secure. */
+export function transportAllowed(url) {
+  return url.protocol === "https:" || (url.protocol === "http:" && ["127.0.0.1", "[::1]", "localhost"].includes(url.hostname));
+}
 
 async function hmac(secret, text) {
   const key = await crypto.subtle.importKey("raw", encoder.encode(secret), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
@@ -74,7 +78,8 @@ export async function verifySession(request, env, config, url, now = Date.now())
   if (!match) return null;
   const [, expiresText, prefix, nonce, mac] = match;
   const expires = Number(expiresText);
-  if (!Number.isSafeInteger(expires) || expires <= now || expires - now > MAX_SESSION_SECONDS * 1000) return null;
+  // A cookie must not outlive the configured session length (a shortened setting ends longer sessions early).
+  if (!Number.isSafeInteger(expires) || expires <= now || expires - now > config.seconds * 1000) return null;
   // Removing a code from the list revokes every session opened with it.
   if (!config.digests.some(d => d.slice(0, 8) === prefix)) return null;
   const expected = await hmac(config.secret, `v1|${expires}|${prefix}|${nonce}`);
@@ -194,6 +199,7 @@ export async function handleAccess(request, env, now = Date.now()) {
     if (url.pathname !== ACCESS_ROUTE || url.search) return reply(request, 404, { error: "not_found" });
     const config = accessConfig(env);
     if (!config) return reply(request, 404, { error: "not_found" });
+    if (!transportAllowed(url)) fail(503, "https_required");
     if (["GET", "HEAD"].includes(request.method)) {
       const session = await verifySession(request, env, config, url, now);
       return reply(request, 200, { authenticated: session !== null,

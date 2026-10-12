@@ -31,10 +31,11 @@ class VerifyError(ValueError):
 
 
 def _plain(path: Path) -> Path:
-    path = path.resolve()
+    # Link check runs on the unresolved absolute path: resolve() would already have followed any link.
+    path = path.absolute()
     if any(part.is_symlink() for part in [path, *path.parents]):
         raise VerifyError("linked_path")
-    return path
+    return path.resolve()
 
 
 def _read(path: Path, limit: int = MAX_JSON_BYTES) -> bytes:
@@ -71,7 +72,7 @@ def load_expected(raw: bytes) -> dict:
         ):
             raise VerifyError("expected_invalid")
         if row["path"].startswith("examples/"):
-            if row.get("schema") not in SCHEMA_NAMES or not HOST_PATH.match(
+            if row.get("schema") not in SCHEMA_NAMES or not HOST_PATH.fullmatch(
                 str(row.get("target", ""))
             ):
                 raise VerifyError("expected_invalid")
@@ -97,9 +98,12 @@ def check_envelope(name: str, value: dict, schema_name: str) -> dict:
     issues = []
     if publish.get("contract") != "v1":
         issues.append("contract_not_v1")
-    if not isinstance(publish.get("sequence"), int) or publish["sequence"] < 0:
+    sequence = publish.get("sequence")
+    if type(sequence) is not int or sequence < 0:  # bool is an int subclass and is not a sequence
         issues.append("sequence_invalid")
-    if not isinstance(publish.get("published_at"), str) or not ISO.match(publish["published_at"]):
+    if not isinstance(publish.get("published_at"), str) or not ISO.fullmatch(
+        publish["published_at"]
+    ):
         issues.append("published_at_invalid")
     has_final = "final" in publish
     if schema_name in ("game", "setup") and not isinstance(publish.get("final"), bool):
@@ -121,6 +125,7 @@ def verify(received: Path, expected: dict) -> dict:
         raise VerifyError("jsonschema_unavailable")
     received = _plain(received)
     schemas: dict[str, dict] = {}
+    contents: dict[str, bytes] = {}
     rows = []
     hash_ok = 0
     for row in expected["files"]:
@@ -130,6 +135,7 @@ def verify(received: Path, expected: dict) -> dict:
         except VerifyError as exc:
             rows.append({"path": row["path"], "status": "missing", "code": str(exc)})
             continue
+        contents[row["path"]] = raw
         actual = digest(raw)
         matched = actual == row["sha256"]
         hash_ok += matched
@@ -163,7 +169,7 @@ def verify(received: Path, expected: dict) -> dict:
     ):
         if entry.get("status") == "missing":
             continue
-        raw = _read(received / row["path"])
+        raw = contents[row["path"]]  # the bytes that were hashed, read once
         try:
             value = _json_object(raw)
         except VerifyError as exc:
@@ -173,11 +179,20 @@ def verify(received: Path, expected: dict) -> dict:
         if schema is None:
             entry.update(status="schema_unavailable", schema=row["schema"])
             continue
-        validator_class = jsonschema.validators.validator_for(schema)
-        validator_class.check_schema(schema)
-        errors = sorted(
-            validator_class(schema).iter_errors(value), key=lambda e: [str(p) for p in e.path]
-        )
+        try:
+            validator_class = jsonschema.validators.validator_for(schema)
+            validator_class.check_schema(schema)
+            errors = sorted(
+                validator_class(schema).iter_errors(value),
+                key=lambda e: [str(p) for p in e.path],
+            )
+        except Exception:
+            # The received schema is untrusted input: an unusable schema (invalid, unresolvable $ref, ...)
+            # is a reported row with a fixed code, never a traceback that echoes its content.
+            entry.update(
+                status="schema_unusable", schema=row["schema"], code="schema_evaluation_failed"
+            )
+            continue
         game = value.get("game") if isinstance(value.get("game"), dict) else {}
         display = value.get("display_state") if isinstance(value.get("display_state"), dict) else {}
         rec = value.get("next", {}).get("rec", {}) if isinstance(value.get("next"), dict) else {}
@@ -186,7 +201,7 @@ def verify(received: Path, expected: dict) -> dict:
             schema=row["schema"],
             target=row["target"],
             stage=row.get("stage"),
-            target_allowed_by_host=bool(HOST_PATH.match(row["target"])),
+            target_allowed_by_host=bool(HOST_PATH.fullmatch(row["target"])),
             within_host_size_limit=len(raw) <= MAX_JSON_BYTES,
             utf8_json_object=True,
             schema_errors=len(errors),

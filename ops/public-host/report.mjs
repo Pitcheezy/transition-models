@@ -54,36 +54,61 @@ export function validateReportInput(input) {
   if (!Array.isArray(input.commands) || input.commands.length > 50 || !input.commands.every(x => text(x, 300) && !/\n/.test(x))) refuse("invalid_commands");
   if (!Array.isArray(input.unmeasured) || input.unmeasured.length > 50 || !input.unmeasured.every(x => text(x, 200))) refuse("invalid_unmeasured");
   if (!text(input.notes, 2000)) refuse("invalid_notes");
-  // Secrets, addresses and tokens never belong in an issue draft.
-  if (/https?:\/\/|Bearer |[A-Za-z0-9_-]{43,}/.test(input.notes + input.commands.join(" ") + input.actions.map(x => x.what).join(" "))) refuse("secret_or_address_like_content");
+  // Secrets, addresses and tokens never belong in an issue draft: every free-text field that can reach the draft is scanned.
+  if (/https?:\/\/|Bearer |[A-Za-z0-9_-]{43,}/.test(freeText(input))) refuse("secret_or_address_like_content");
   return input;
 }
 
-/** "no data" (collection off or no summary) is reported distinctly from "zero sessions in the window". */
+function freeText(input) {
+  const audit = input.notice_audit || [];
+  const feedback = input.usage_summary ? input.usage_summary.feedback : [];
+  return [input.notes, ...input.commands, ...input.actions.flatMap(x => [x.by, x.what]), input.collection.consent_note,
+    ...input.unmeasured, input.sources.contract_version || "", ...audit.flatMap(a => [a.operator || "", a.reason || "", a.message_id]),
+    ...feedback.map(r => `${r.rating} ${r.reason}`)].join(" ");
+}
+
+/**
+ * "no data" (collection off, no summary, or a summary that does not cover the window) is reported distinctly
+ * from "zero sessions in the window". Session counts exist only while telemetry was ON; feedback counts only
+ * while feedback was ON. A count for a channel that was OFF is null (unmeasured), never 0.
+ */
 export function usageSection(input) {
   const c = input.collection;
   const days = new Set();
   for (let t = Date.parse(input.window.from); t <= Date.parse(input.window.to); t += 86400000) days.add(new Date(t).toISOString().slice(0, 10));
   days.add(input.window.to.slice(0, 10));
   if (!c.telemetry_enabled && !c.feedback_enabled) {
-    return { status: "collection_off", sessions: null, active_ms: null, feedback: null,
-      statement: "수집 OFF — 이용자 수·활성 시간은 **미측정**이다(0명이 아님)." };
+    return { status: "collection_off", sessions: null, active_ms: null, feedback: null, summary_covers_window: null,
+      statement: "수집 OFF — 이용자 수·활성 시간·피드백은 **미측정**이다(0명이 아님)." };
   }
-  if (input.usage_summary === null) {
-    return { status: "no_data", sessions: null, active_ms: null, feedback: null,
+  const s = input.usage_summary;
+  if (s === null) {
+    return { status: "no_data", sessions: null, active_ms: null, feedback: null, summary_covers_window: null,
       statement: "집계 자료 없음(요약 미수신) — 이용자 수는 **미측정**이다(0명이 아님)." };
   }
-  const rows = input.usage_summary.sessions.filter(r => r.game_pk === input.game_pk && days.has(r.utc_day));
-  const fb = input.usage_summary.feedback.filter(r => r.game_pk === input.game_pk && days.has(r.utc_day));
+  const sorted = [...days].sort();
+  const covers = s.from_day <= sorted[0] && s.to_day >= sorted[sorted.length - 1];
+  const rows = c.telemetry_enabled ? s.sessions.filter(r => r.game_pk === input.game_pk && days.has(r.utc_day)) : [];
+  const fb = c.feedback_enabled ? s.feedback.filter(r => r.game_pk === input.game_pk && days.has(r.utc_day)) : [];
+  const feedback = c.feedback_enabled ? fb.map(r => ({ rating: r.rating, reason: r.reason, responses: r.responses })) : null;
+  const responses = fb.reduce((n, r) => n + r.responses, 0);
+  if (!covers && rows.length === 0 && fb.length === 0) {
+    return { status: "no_data", sessions: null, active_ms: null, feedback: null, summary_covers_window: false,
+      statement: "집계 자료가 집계 기간을 덮지 않는다(요약 범위 밖) — 이용자 수는 **미측정**이다(0명이 아님)." };
+  }
+  if (!c.telemetry_enabled) {
+    return { status: "feedback_only", sessions: null, active_ms: null, feedback, summary_covers_window: covers,
+      statement: `통계 수집 OFF — 이용자 수·활성 시간은 **미측정**이다(0명이 아님). 피드백 수집 ON: 응답 ${responses}건.` };
+  }
   const sessions = rows.reduce((n, r) => n + r.sessions, 0);
   const active = rows.reduce((n, r) => n + (Number.isSafeInteger(r.active_ms) ? r.active_ms : 0), 0);
-  const feedback = fb.map(r => ({ rating: r.rating, reason: r.reason, responses: r.responses }));
+  const feedbackNote = c.feedback_enabled ? "" : " 피드백 수집 OFF(미측정).";
   if (rows.length === 0 && fb.length === 0) {
-    return { status: "zero_rows", sessions: 0, active_ms: 0, feedback: [],
-      statement: "수집 ON이었으나 집계 기간·이 경기의 opt-in 세션 행이 0개다(자료 없음이 아니라 0세션)." };
+    return { status: "zero_rows", sessions: 0, active_ms: 0, feedback: c.feedback_enabled ? [] : null, summary_covers_window: covers,
+      statement: "수집 ON이었으나 집계 기간·이 경기의 opt-in 세션 행이 0개다(자료 없음이 아니라 0세션)." + feedbackNote };
   }
-  return { status: "counted", sessions, active_ms: active, feedback,
-    statement: `opt-in 브라우저 세션 ${sessions}개, 브라우저가 보고한 활성 시간 합계 ${Math.round(active / 60000)}분(사람 수·검증된 주의 시간이 아님).` };
+  return { status: "counted", sessions, active_ms: active, feedback, summary_covers_window: covers,
+    statement: `opt-in 브라우저 세션 ${sessions}개, 브라우저가 보고한 활성 시간 합계 ${Math.round(active / 60000)}분(사람 수·검증된 주의 시간이 아님).` + feedbackNote };
 }
 
 function withinWindow(ms, input) { return ms >= Date.parse(input.window.from) && ms <= Date.parse(input.window.to); }
@@ -93,7 +118,8 @@ export function problemsSection(input) {
     .map(e => ({ at: new Date(e.at_ms).toISOString(), kind: e.kind, issues: [...e.issues], incident_id: e.id.slice(0, 12) }));
   const notice = (input.notice_audit || []).filter(a => withinWindow(Date.parse(a.at), input))
     .map(a => ({ at: a.at, active: a.active, message_id: a.message_id, operator: a.operator, reason: a.reason }));
-  const deliveries = Object.values(input.alert_state?.deliveries || {});
+  // Delivery rows accumulate across games; only attempts made inside this window belong to this report. Pending is current state.
+  const deliveries = Object.values(input.alert_state?.deliveries || {}).filter(d => withinWindow(d.last_attempt_ms, input));
   const alerts = input.alert_state === null ? null : {
     acknowledged_by_mock: deliveries.filter(d => d.status === "acknowledged").length,
     undelivered: deliveries.filter(d => d.status === "undelivered").length,
@@ -131,7 +157,7 @@ export function buildReport(input, { now = Date.now() } = {}) {
   else if (problems.notice_changes.length === 0) lines.push("- 안내 화면 전환 없음.");
   else for (const n of problems.notice_changes) lines.push(`- ${n.at} 안내 ${n.active ? "ON" : "OFF"} (${n.message_id}) by ${n.operator}: ${n.reason}`);
   if (problems.alerts === null) lines.push("- 알림 기록 없음(알림 상태 파일 미제공).");
-  else lines.push(`- 알림(모의 transport): 모의 확인 ${problems.alerts.acknowledged_by_mock}건, 미전달 ${problems.alerts.undelivered}건, 대기 ${problems.alerts.pending}건 — 실제 전달 확인 아님.`);
+  else lines.push(`- 알림(모의 transport, 집계 기간 내 시도분): 모의 확인 ${problems.alerts.acknowledged_by_mock}건, 미전달 ${problems.alerts.undelivered}건, 현재 대기 ${problems.alerts.pending}건 — 실제 전달 확인 아님.`);
   lines.push("", "### 조치");
   if (input.actions.length === 0) lines.push("- 기록된 조치 없음.");
   else for (const a of input.actions) lines.push(`- ${a.at} ${a.by}: ${a.what}`);
@@ -142,7 +168,8 @@ export function buildReport(input, { now = Date.now() } = {}) {
   if (input.commands.length) { lines.push("- 실행 명령:"); for (const c of input.commands) lines.push("  - `" + c.replace(/`/g, "'") + "`"); }
   lines.push("", "## 미측정");
   const unmeasured = [...input.unmeasured];
-  if (usage.status !== "counted") unmeasured.unshift("이용자 수·활성 시간");
+  if (usage.sessions === null) unmeasured.unshift("이용자 수·활성 시간");
+  if (usage.feedback === null && usage.status !== "collection_off") unmeasured.push("피드백 응답");
   if (!problems.monitor_available) unmeasured.push("장애 유무·지속 시간");
   if (unmeasured.length === 0) lines.push("- (기재 없음)"); else for (const u of unmeasured) lines.push(`- ${u}`);
   lines.push("", "## 비고", input.notes || "(없음)", "", "---",

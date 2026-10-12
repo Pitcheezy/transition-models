@@ -53,6 +53,8 @@ function response(request, env, status, body = null, extra = {}, publicRead = fa
       headers.set("Access-Control-Allow-Origin", origin);
       headers.set("Access-Control-Expose-Headers", "Date, Age, ETag");
       headers.set("Access-Control-Allow-Methods", "GET, HEAD, OPTIONS");
+      // If-None-Match is not CORS-safelisted: without this the cross-origin conditional read (304) cannot even preflight.
+      headers.set("Access-Control-Allow-Headers", "If-None-Match");
     }
   }
   return new Response(request.method === "HEAD" ? null : body, { status, headers });

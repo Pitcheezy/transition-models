@@ -4,7 +4,7 @@ import { createHash } from "node:crypto";
 import { fileURLToPath } from "node:url";
 import { Miniflare } from "miniflare";
 import worker from "../gateway.mjs";
-import { accessConfig, verifySession, ACCESS_ROUTE, MAX_SESSION_SECONDS } from "../access.mjs";
+import { accessConfig, verifySession, transportAllowed, ACCESS_ROUTE, MAX_SESSION_SECONDS } from "../access.mjs";
 import { NOTICE_ROUTE } from "../notice.mjs";
 import { probe } from "../monitor.mjs";
 
@@ -221,6 +221,10 @@ test("expiry, tampering, code removal, secret rotation and logout all end the se
   assert.equal((await call("/", { headers: { Cookie: viaB } })).status, 401);
   const fresh = cookieOf(await login(CODE_B));
   assert.equal((await call("/", { headers: { Cookie: fresh } })).status, 200);
+  env.ACCESS_SESSION_SECONDS = "60"; // shortening the setting ends sessions minted for longer
+  assert.equal((await call("/", { headers: { Cookie: fresh } })).status, 401);
+  env.ACCESS_SESSION_SECONDS = "3600";
+  assert.equal((await call("/", { headers: { Cookie: fresh } })).status, 200);
   const logout = await call(ACCESS_ROUTE, { method: "DELETE", headers: { Cookie: fresh, "Sec-Fetch-Site": "same-origin" } });
   assert.equal(logout.status, 204);
   assert.match(logout.headers.get("Set-Cookie"), /^__Host-pz_viewer=; Path=\/; Max-Age=0; HttpOnly; SameSite=Strict; Secure$/);
@@ -238,6 +242,20 @@ test("plain http loopback uses an unprefixed cookie without Secure; notice takes
   assert.equal(r.status, 503);
   assert.equal(r.headers.get("X-Pitcheezy-Notice"), "maintenance");
   assert.equal((await call(ACCESS_ROUTE)).status, 200, "session route stays reachable during a notice");
+});
+
+test("sessions are never minted over plain http away from loopback", async () => {
+  assert.equal(transportAllowed(new URL("https://host.example.test/")), true);
+  assert.equal(transportAllowed(new URL("http://127.0.0.1:8787/")), true);
+  assert.equal(transportAllowed(new URL("http://localhost:8787/")), true);
+  assert.equal(transportAllowed(new URL("http://host.example.test/")), false);
+  assert.equal(transportAllowed(new URL("http://10.0.0.5/")), false);
+  const { call, login } = fixture({ origin: "http://host.example.test" });
+  const opened = await login(CODE_A);
+  assert.equal(opened.status, 503);
+  assert.equal((await opened.json()).error, "https_required");
+  assert.equal(opened.headers.get("Set-Cookie"), null);
+  assert.equal((await call("/")).status, 401, "the gate stays closed");
 });
 
 test("monitor records a gated host as access_required, not as an outage", async () => {

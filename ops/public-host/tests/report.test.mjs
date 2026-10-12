@@ -36,6 +36,11 @@ test("input validation refuses wrong shapes, windows, labels and secret-like con
     [base({ actions: [{ at: "2026-10-12T01:00:00Z", by: "ops a", what: "x" }] }), "invalid_actions"],
     [base({ sources: { host_commit: "short", frontend_commit: null, contract_version: null, release_manifest_sha256: null } }), "invalid_sources"],
     [base({ notes: "see https://host.example.test" }), "secret_or_address_like_content"],
+    [base({ collection: { telemetry_enabled: true, feedback_enabled: true, consent_note: "Bearer " + "x".repeat(50), retain_days: 30 } }), "secret_or_address_like_content"],
+    [base({ unmeasured: ["https://host.example.test/v1"] }), "secret_or_address_like_content"],
+    [base({ sources: { host_commit: "a".repeat(40), frontend_commit: null, contract_version: "k".repeat(44), release_manifest_sha256: null } }), "secret_or_address_like_content"],
+    [base({ actions: [{ at: "2026-10-12T01:00:00Z", by: "ops-a", what: "token " + "a".repeat(43) }] }), "secret_or_address_like_content"],
+    [base({ notice_audit: [{ schema: "pitcheezy-notice-audit-v1", id: "x", at: "2026-10-12T10:01:00Z", active: true, message_id: "maintenance", operator: "ops-a", reason: "https://host.example.test", operator_token_prefix: "abc", revision: 1, etag_before: null, etag_after: null }] }), "secret_or_address_like_content"],
     [base({ commands: ["curl -H 'Authorization: Bearer abc'"] }), "secret_or_address_like_content"],
     [base({ extra: 1 }), "invalid_input"],
   ]) assert.throws(() => validateReportInput(bad), new RegExp(code), code);
@@ -53,6 +58,29 @@ test("usage distinguishes collection off, no data, zero rows and counted session
   assert.equal(counted.status, "counted"); assert.equal(counted.sessions, 2); assert.equal(counted.active_ms, 90000);
   assert.deepEqual(counted.feedback, [{ rating: "helpful", reason: "none", responses: 2 }]);
   assert.match(counted.statement, /사람 수/);
+  assert.equal(counted.summary_covers_window, true);
+});
+
+test("a channel that was OFF is unmeasured (null), never 0, even when the other channel has rows", () => {
+  const rows = [{ utc_day: "2026-10-12", game_pk: 123, sessions: 2, active_ms: 90000, mean_active_ms: 45000 }];
+  const fb = [{ utc_day: "2026-10-12", game_pk: 123, rating: "helpful", reason: "none", responses: 2 }];
+  const feedbackOnly = usageSection(base({ collection: { telemetry_enabled: false, feedback_enabled: true, consent_note: "", retain_days: 30 }, usage_summary: summary(rows, fb) }));
+  assert.equal(feedbackOnly.status, "feedback_only"); assert.equal(feedbackOnly.sessions, null); assert.equal(feedbackOnly.active_ms, null);
+  assert.deepEqual(feedbackOnly.feedback, [{ rating: "helpful", reason: "none", responses: 2 }]);
+  assert.match(feedbackOnly.statement, /미측정/);
+  const noFeedbackRows = usageSection(base({ collection: { telemetry_enabled: false, feedback_enabled: true, consent_note: "", retain_days: 30 }, usage_summary: summary(rows, []) }));
+  assert.equal(noFeedbackRows.status, "feedback_only"); assert.equal(noFeedbackRows.sessions, null); assert.deepEqual(noFeedbackRows.feedback, []);
+  const telemetryOnly = usageSection(base({ collection: { telemetry_enabled: true, feedback_enabled: false, consent_note: "", retain_days: 30 }, usage_summary: summary(rows, fb) }));
+  assert.equal(telemetryOnly.status, "counted"); assert.equal(telemetryOnly.sessions, 2); assert.equal(telemetryOnly.feedback, null);
+  const md = buildReport(base({ collection: { telemetry_enabled: false, feedback_enabled: true, consent_note: "", retain_days: 30 }, usage_summary: summary(rows, fb) }), { now: NOW });
+  assert.match(md.markdown, /## 미측정\n- 이용자 수·활성 시간/);
+  assert.equal(md.json.usage.sessions, null);
+  const zero = buildReport(base({ usage_summary: summary([{ utc_day: "2026-10-12", game_pk: 999, sessions: 5, active_ms: 1000, mean_active_ms: 200 }]) }), { now: NOW });
+  assert.doesNotMatch(zero.markdown, /## 미측정\n- 이용자 수·활성 시간/, "zero rows is a measurement, not unmeasured");
+  // A summary whose day range does not reach the window is "no data", not zero sessions.
+  const outside = { ...summary([]), from_day: "2026-10-01", to_day: "2026-10-05" };
+  const uncovered = usageSection(base({ usage_summary: outside }));
+  assert.equal(uncovered.status, "no_data"); assert.equal(uncovered.sessions, null); assert.equal(uncovered.summary_covers_window, false);
 });
 
 test("problems collect monitor events, notice changes and mock alert counts inside the window only", () => {
@@ -63,13 +91,15 @@ test("problems collect monitor events, notice changes and mock alert counts insi
     notice_audit: [{ schema: "pitcheezy-notice-audit-v1", id: "x", at: "2026-10-12T10:01:00Z", active: true, message_id: "maintenance", operator: "ops-a", reason: "drill", operator_token_prefix: "abc", revision: 1, etag_before: null, etag_after: '"x"' },
       { schema: "pitcheezy-notice-audit-v1", id: "y", at: "2026-10-14T10:01:00Z", active: false, message_id: "maintenance", operator: "ops-a", reason: "late", operator_token_prefix: "abc", revision: 2, etag_before: '"x"', etag_after: '"y"' }],
     alert_state: { schema: "pitcheezy-host-alert-state-v1", mock_only: true, pending: [], deliveries: {
-      [sha("a") + ":opened:song"]: { status: "acknowledged", attempts: 1, last_attempt_ms: NOW, acknowledged_by_transport: true },
-      [sha("a") + ":opened:ours"]: { status: "undelivered", attempts: 3, last_attempt_ms: NOW, acknowledged_by_transport: false } } },
+      [sha("a") + ":opened:song"]: { status: "acknowledged", attempts: 1, last_attempt_ms: Date.parse("2026-10-12T10:02:00Z"), acknowledged_by_transport: true },
+      [sha("a") + ":opened:ours"]: { status: "undelivered", attempts: 3, last_attempt_ms: Date.parse("2026-10-12T10:02:00Z"), acknowledged_by_transport: false },
+      [sha("b") + ":opened:song"]: { status: "acknowledged", attempts: 1, last_attempt_ms: NOW, acknowledged_by_transport: true },
+      [sha("b") + ":opened:ours"]: { status: "undelivered", attempts: 3, last_attempt_ms: NOW, acknowledged_by_transport: false } } },
   });
   const p = problemsSection(input);
   assert.equal(p.monitor_events.length, 2);
   assert.equal(p.notice_changes.length, 1);
-  assert.deepEqual(p.alerts, { acknowledged_by_mock: 1, undelivered: 1, pending: 0, delivery_confirmed: false });
+  assert.deepEqual(p.alerts, { acknowledged_by_mock: 1, undelivered: 1, pending: 0, delivery_confirmed: false }, "alert attempts outside the window are not counted");
   assert.equal(p.incident_still_open, true);
   assert.equal(p.dropped_monitor_events, 1);
 });
@@ -98,6 +128,11 @@ test("CLI writes markdown and JSON once, refuses overwrite and invalid input", a
   const md = await readFile(join(dir, first.markdown), "utf8");
   assert.match(md, /^# \[경기별 운영 기록 초안\] 경기 123/);
   await assert.rejects(run(process.execPath, [cli, "--input", join(dir, "input.json"), "--output-dir", dir]), e => e.code === 2 && /EEXIST/.test(e.stderr));
+  // A lone existing .json refuses the run before the .md is written (no orphan draft).
+  const other = await mkdtemp(join(tmpdir(), "pitcheezy-report-"));
+  await writeFile(join(other, first.json), "{}");
+  await assert.rejects(run(process.execPath, [cli, "--input", join(dir, "input.json"), "--output-dir", other]), e => e.code === 2 && /EEXIST/.test(e.stderr));
+  await assert.rejects(readFile(join(other, first.markdown)), e => e.code === "ENOENT");
   await writeFile(join(dir, "bad.json"), JSON.stringify(base({ evidence: "real" })));
   await assert.rejects(run(process.execPath, [cli, "--input", join(dir, "bad.json"), "--output-dir", dir]), e => e.code === 2 && /invalid_game_or_evidence/.test(e.stderr));
 });

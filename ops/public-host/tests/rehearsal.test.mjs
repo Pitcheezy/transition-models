@@ -2,6 +2,10 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { runLocalRehearsal, validateWorkload, syntheticBody, summarizeLoad, checkRead } from "../rehearse-local.mjs";
 import { hash, waitForReady, boundedCleanup } from "../rehearsal/local-host.mjs";
+import { main as firstConnectionMain } from "../rehearse-first-connection.mjs";
+import { mkdtemp, writeFile, readFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 
 test("workload caps prevent accidental external or unbounded load", () => {
   for (const bad of [
@@ -58,4 +62,18 @@ test("startup abort and cleanup failures are bounded and never reported as succe
   assert.equal(result.status, "unconfirmed");
   assert.equal(result.code, "runtime_cleanup_timeout");
   assert.ok(performance.now() - begin < 2000);
+});
+
+test("first-connection rehearsal refuses an existing receipt path before running", async () => {
+  const dir = await mkdtemp(join(tmpdir(), "pitcheezy-first-"));
+  const receipt = join(dir, "receipt.json");
+  await writeFile(receipt, "keep");
+  const errors = []; const original = process.stderr.write;
+  process.stderr.write = chunk => { errors.push(String(chunk)); return true; };
+  let code;
+  try { code = await firstConnectionMain(["--examples", dir, "--dist", dir, "--output", receipt]); }
+  finally { process.stderr.write = original; }
+  assert.equal(code, 2, "refused as an argument error, not as a failed rehearsal");
+  assert.equal(await readFile(receipt, "utf8"), "keep");
+  assert.match(errors.join(""), /rehearsal_arguments_or_output_error/);
 });

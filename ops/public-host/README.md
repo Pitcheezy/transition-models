@@ -36,6 +36,11 @@ COLLAB-001의 파일 전달 경계를 구현한 후보이며, 실제 서비스 �
 이 Worker에 올린 뒤 고정 커밋의 공개 화면 빌드가 상태를 구별해 읽는지 Chromium으로 확인했다. `node ops/public-host/rehearse-first-connection.mjs`,
 `uv run --frozen python scripts/verify_publish_contract.py`, `tests/browser/first-connection.test.cjs`(환경 변수 없으면 건너뜀). 실제 발행기·실계정 연결은 별도다.
 
+## 교차 검토 (WS-review1)
+
+[검토 기록](../../docs/WS_REVIEW1_20261013.md): main `70aa241`의 운영 코드를 네 관점 + 반박 2명으로 검토해 확정 12건을 수정하고 기각 12건의 사유를 남겼다
+(재검사 [영수증](../../docs/results/ops/ws_review1_recheck_20261013.json)). 작성 모델 묶음별 규약 조건은 아직 미충족이다(Codex 모델 id 확인·비Claude 검토자 지정은 사람 결정).
+
 ## 긴급 안내 화면 스위치
 
 [WS-safe1 스위치](NOTICE.md): 운영자 토큰(`NOTICE_TOKEN_SHA256`, 발행기 토큰과 별개)으로 `/_notice/v1/state`를 바꾸면

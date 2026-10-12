@@ -251,7 +251,15 @@ def read_host_commit(repo: Path, commit: str) -> dict[str, bytes]:
     if not isinstance(commit, str) or not HEX40.fullmatch(commit):
         raise BundleError("full_host_commit_required")
     repo = _plain_path(repo)
-    command = ["git", "-c", f"safe.directory={repo.as_posix()}", "-C", str(repo)]
+    # --no-replace-objects: a refs/replace entry must not swap the pinned commit's bytes.
+    command = [
+        "git",
+        "--no-replace-objects",
+        "-c",
+        f"safe.directory={repo.as_posix()}",
+        "-C",
+        str(repo),
+    ]
     try:
         if subprocess.check_output(command + ["cat-file", "-t", commit]).strip() != b"commit":
             raise BundleError("host_commit_required")

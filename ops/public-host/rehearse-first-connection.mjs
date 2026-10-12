@@ -224,6 +224,11 @@ export async function main(args) {
     const { values } = parseArgs({ args, options: { examples: { type: "string" }, dist: { type: "string" }, output: { type: "string" } } });
     need(values.examples && values.dist, "arguments_required");
     for (const dir of [values.examples, values.dist]) need((await stat(dir)).isDirectory(), "directory_required");
+    // An existing receipt path is refused before the rehearsal runs, so a finished run is never discarded by EEXIST.
+    if (values.output) {
+      const exists = await stat(values.output).then(() => true, e => { if (e.code === "ENOENT") return false; throw e; });
+      need(!exists, "output_exists");
+    }
     const report = await runFirstConnection({ examples: values.examples, dist: values.dist });
     const text = JSON.stringify(report, null, 2) + "\n";
     if (values.output) await writeFile(values.output, text, { flag: "wx", mode: 0o600 });
