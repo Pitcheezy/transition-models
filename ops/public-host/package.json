@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "test": "node --test tests/*.test.mjs",
-    "check": "node --check worker.mjs && node --check gateway.mjs && node --check telemetry.mjs"
+    "check": "node --check worker.mjs && node --check gateway.mjs && node --check telemetry.mjs && node --check client/usage-client.mjs && node --check client/widget.mjs"
   },
   "engines": {
     "node": ">=24"

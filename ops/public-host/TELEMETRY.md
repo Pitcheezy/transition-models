@@ -87,3 +87,24 @@ feedback_id 동일 요청은 한 번만 저장한다. 같은 ID의 다른 내용
 [D1 batch 트랜잭션](https://developers.cloudflare.com/d1/worker-api/d1-database/),
 [위치별 rate-limit 한계](https://developers.cloudflare.com/workers/runtime-apis/bindings/rate-limit/),
 [Time Travel](https://developers.cloudflare.com/d1/reference/time-travel/).
+
+## 브라우저 모듈
+
+- `client/widget.mjs`의 `mountUsageWidget(element, {enabled:false, gamePk:0})`와
+  `client/widget.css`를 우리 호스트에서 사용한다. 기본 비활성이다. `setGame(gamePk)`로
+  명시적 경기 번호만 전달하고 `destroy()`로 이벤트/타이머를 해제한다.
+- Song의 실제 slot 이벤트 형식은 아직 연결하지 않았다. 실제 화면 코드를 변경하지 않았다.
+- 방문 통계 체크박스와 의견 버튼은 별도다. 체크 전 자동 전송 없음. GPC/DNT 거부 시 둘 다 비활성.
+- UUID는 메모리에만 있다. 새로고침·경기·UTC 날짜 변경에 새 세션을 만든다.
+- 최초 저장 성공 응답 뒤부터 시간 측정. hidden 제외, 60초 넘는 sleep/throttle 간격은 제외,
+  30초마다 누적 값을 보낸다. 종료·전환 때 마지막 일부가 유실될 수 있어 과소 집계 가능하다.
+- 동의 해제는 이후 전송을 중단한다. 이미 전송된 자료의 즉시 삭제는 아니다.
+- 네트워크/본문 응답 전체에 5초 제한. 같은 payload 재시도, 3회 연속 실패 시 통계 일시 정지.
+  실패해도 관전 기능은 중단하지 않는다. 피드백 확인 실패 시 같은 선택만 다시 시도한다.
+- fetch에 credentials=omit을 지정한다. 실제 Chrome 검사에서는 쿠키가 전송되지 않았다.
+  **Windows Playwright WebKit2336에서는 omit 지정에도 같은 출처 쿠키가 전송됐다.**
+  keepalive 여부를 바꿔도 동일했다. 이는 해결된 것으로 표시하지 않는다. 서버 저장 경로는
+  Cookie를 읽거나 D1에 넣지 않으며, 무쿠키 전송을 모든 브라우저에 보장하지 않는다.
+  실제 Safari/공개 도메인 확인과 인프라 로그 정책은 출시 전 별도 검사다.
+- `tests/browser/host-telemetry.test.cjs`는 실제 엔진 UI와 합성 HTTP 응답을 검사한다.
+  D1까지 포함한 검사는 telemetry-runtime과 별도이며 실제 Song 연결 증거가 아니다.
