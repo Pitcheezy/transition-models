@@ -1,5 +1,11 @@
 # SmartPitch transition-models
 
+## WS-ops4f 로컬 재시작 검사 완료 — 2026-10-12
+
+[영속 저장소 리허설](ops/public-host/LIFECYCLE.md): 4회 시작·3회 재시작·키 교체·수집 OFF 실제 scheduled 정리를 확인했다. 신규/독립 각3·Node93통과.
+정상 종료 후 로컬 검사이며 실계정/강제종료/백업복원은 미검증이다. Windows WSARecv64 진단을 유지한다. 실제 연결·배포는 WS-ops2/4 전달·결정 조건을 따른다.
+
+
 ## WS-ops1c 단일 파일 전송 후보 완료 — 2026-10-12
 
 [전송 도구](ops/public-host/PUBLISHER.md)는 기본 dry-run·고정 조건 재시도·모호한 저장 결과 분리를 제공한다. 신규17·독립17통과.

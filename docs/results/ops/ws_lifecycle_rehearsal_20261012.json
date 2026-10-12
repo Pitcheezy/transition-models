@@ -1,0 +1,156 @@
+{
+  "schema": "pitcheezy-local-lifecycle-v1",
+  "synthetic": true,
+  "target": "new-local-persistent-miniflare",
+  "passed": true,
+  "public_deployment_verified": false,
+  "crash_recovery_verified": false,
+  "cloud_backup_restore_verified": false,
+  "production_cron_verified": false,
+  "environment": {
+    "node": "v24.1.0",
+    "platform": "win32",
+    "arch": "x64",
+    "miniflare": "4.20260730.0"
+  },
+  "source_sha256": {
+    "worker.mjs": "9f3d818686bc6af847bf4c292658a1c71f22f4dd72f6282c8b00e84e0ca33d1b",
+    "gateway.mjs": "f739aa265778d8508cacb362a9276346e59551f384c1bb01109aef1f0a878fd0",
+    "telemetry.mjs": "8748f0d98afcad90cc203e5e8072c7bbed4fff846d9e2cf1a2e6ff9c695a9c62",
+    "publisher.mjs": "28f4bacaadaeecb3dfb40f24cf1dbe014d4641cb36c68b0ad9a5e4337d31f893",
+    "rehearsal/local-host.mjs": "86b27bb9de7579247735cb1ac9cb5f66ffaeac4760cc74c1f6ae4232d77a89b2",
+    "rehearse-lifecycle.mjs": "849ba5ef85e4ea9f1b1f26c264736e5fab1b7f8de25e1d072eeede1d45b9ab34",
+    "migrations/0001_telemetry.sql": "72c1ab1a8cc0512dd8b301749e5161a163b7aeb27262bc302d61132e15cdf0e0",
+    "package-lock.json": "71ff25032a7eb452e5788b7d13c1a0ff96efd3b768da0c01ac4ae5bc187897a5"
+  },
+  "completed_phases": [
+    {
+      "name": "seed",
+      "public_sha256": "ebb4d0fa785b3e1148bfbda9dd49f73d2f216e851f91c70c091cf28849455f51",
+      "sessions": 2,
+      "feedback": 2,
+      "records_sha256": "e29cf7b301877e84d65b24332ba5eb4ee46cbc6bb501a013f9c3fedf77e20988",
+      "budget": [
+        {
+          "utc_day": "2026-10-10",
+          "kind": "feedback",
+          "used": 1
+        },
+        {
+          "utc_day": "2026-10-10",
+          "kind": "session",
+          "used": 1
+        },
+        {
+          "utc_day": "2026-10-12",
+          "kind": "feedback",
+          "used": 1
+        },
+        {
+          "utc_day": "2026-10-12",
+          "kind": "session",
+          "used": 2
+        }
+      ]
+    },
+    {
+      "name": "restart_and_rotate",
+      "public_bytes_and_etag_preserved": true,
+      "tombstone_preserved": true,
+      "old_token_denied_methods": [
+        "PUT",
+        "DELETE",
+        "HEAD"
+      ],
+      "duplicate_budget_unchanged": true,
+      "current_day_session_limit": 3,
+      "current_day_feedback_limit": 2,
+      "stale_delete_status": 412
+    },
+    {
+      "name": "collection_off_scheduled",
+      "denied_session_and_feedback_status": 503,
+      "denied_upload_status": 503,
+      "scheduled_outcome": "ok",
+      "repeat_cleanup_unchanged": true,
+      "before": {
+        "sessions": 3,
+        "feedback": 3,
+        "records_sha256": "6a9cbfde357cabfeaee14339879c396a807120f69f8087fe465f4681d667466b",
+        "budget": [
+          {
+            "utc_day": "2026-10-10",
+            "kind": "feedback",
+            "used": 1
+          },
+          {
+            "utc_day": "2026-10-10",
+            "kind": "session",
+            "used": 1
+          },
+          {
+            "utc_day": "2026-10-12",
+            "kind": "feedback",
+            "used": 2
+          },
+          {
+            "utc_day": "2026-10-12",
+            "kind": "session",
+            "used": 3
+          }
+        ]
+      },
+      "after": {
+        "sessions": 2,
+        "feedback": 2,
+        "records_sha256": "daf8101513246833692e8b98532b286536c1c2bd1ccaf75a28e978187f14dd39",
+        "budget": [
+          {
+            "utc_day": "2026-10-12",
+            "kind": "feedback",
+            "used": 2
+          },
+          {
+            "utc_day": "2026-10-12",
+            "kind": "session",
+            "used": 3
+          }
+        ]
+      }
+    },
+    {
+      "name": "cleanup_persisted",
+      "public_sha256": "13b46a4859ba7cb22b5919d243f2c25c87d0406da85d28095520280874edb8b2",
+      "sessions": 2,
+      "feedback": 2,
+      "records_sha256": "daf8101513246833692e8b98532b286536c1c2bd1ccaf75a28e978187f14dd39",
+      "budget": [
+        {
+          "utc_day": "2026-10-12",
+          "kind": "feedback",
+          "used": 2
+        },
+        {
+          "utc_day": "2026-10-12",
+          "kind": "session",
+          "used": 3
+        }
+      ]
+    }
+  ],
+  "shutdowns": [
+    {
+      "status": "complete"
+    },
+    {
+      "status": "complete"
+    },
+    {
+      "status": "complete"
+    },
+    {
+      "status": "complete"
+    }
+  ],
+  "temporary_storage": "removed"
+}

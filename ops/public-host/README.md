@@ -138,3 +138,7 @@ npm test
 - [R2 조건부 put, checksum, delete API](https://developers.cloudflare.com/r2/api/workers/workers-api-reference/)
 - [Worker 우선 경로 처리](https://developers.cloudflare.com/workers/static-assets/routing/advanced/)
 - [R2 저장소와 CDN 캐시는 별개](https://developers.cloudflare.com/r2/reference/consistency/)
+
+## 로컬 재시작 검사
+
+[영속 R2/D1·키 회전·수집 OFF 예약 정리](LIFECYCLE.md). 실계정 백업 복원과 구별한다.
