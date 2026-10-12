@@ -89,7 +89,9 @@ async function rateLimit(request, env, day) {
     { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
   const signature = await crypto.subtle.sign("HMAC", key, encoder.encode(day + ":" + ip));
   const digest = Array.from(new Uint8Array(signature), b => b.toString(16).padStart(2, "0")).join("");
-  if (!(await env.TELEMETRY_LIMITER.limit({ key: digest })).success) fail(429, "rate_limited");
+  const decision = await env.TELEMETRY_LIMITER.limit({ key: digest });
+  if (decision?.success === false) fail(429, "rate_limited");
+  if (decision?.success !== true) fail(503, "collection_unavailable");
 }
 export async function saveMeasurement(db, value, kind, now, options) {
   const day = new Date(now).toISOString().slice(0, 10);

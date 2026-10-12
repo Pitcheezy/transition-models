@@ -84,3 +84,52 @@ test("configuration has distinct opt-in gates, private D1 and cleanup schedule",
   assert.equal(c.d1_databases[0].binding,"TELEMETRY_DB");
   assert.ok(c.triggers.crons.length);
 });
+
+test("only boolean true limiter responses can reach session or feedback storage", async () => {
+  for (const kind of ["session", "feedback"]) {
+    for (const result of [{}, { success: undefined }, { success: null }, { success: 0 },
+      { success: 1 }, { success: "false" }, { success: "true" }, { success: {} },
+      { success: [] }, null, undefined, false, true]) {
+      const e = env(); let prepared = 0, batched = 0, bodyRead = 0, limited = 0;
+      e.TELEMETRY_DB = {
+        prepare() { prepared++; throw new Error("must not reach DB"); },
+        batch() { batched++; throw new Error("must not reach DB"); },
+      };
+      e.TELEMETRY_LIMITER.limit = async () => { limited++; return result; };
+      const request = new Request(origin + "/_telemetry/" + kind, {
+        method: "POST", headers: { "Content-Type": "application/json", Origin: origin,
+          "CF-Connecting-IP": "192.0.2.1" },
+        body: JSON.stringify(kind === "session" ? session() : feedback()),
+      });
+      Object.defineProperty(request, "body", { get() { bodyRead++; throw new Error("body must remain unread"); } });
+      const r = await gateway.fetch(request, e);
+      assert.equal(r.status, 503, kind + ":" + JSON.stringify(result));
+      assert.deepEqual(await r.json(), { error: "collection_unavailable" });
+      assert.equal(r.headers.get("Retry-After"), null);
+      assert.equal(limited, 1);
+      assert.equal(prepared + batched + bodyRead, 0);
+    }
+  }
+});
+
+test("false quota denial and thrown limiter failure remain distinct without DB access", async () => {
+  for (const kind of ["session", "feedback"]) {
+    for (const scenario of ["denied", "thrown"]) {
+      const e = env(); let prepared = 0, batched = 0;
+      e.TELEMETRY_DB = {
+        prepare() { prepared++; throw new Error("unexpected DB access"); },
+        batch() { batched++; throw new Error("unexpected DB access"); },
+      };
+      e.TELEMETRY_LIMITER.limit = async () => {
+        if (scenario === "thrown") throw new Error("provider private detail");
+        return { success: false };
+      };
+      const r = await call(e, { path: "/_telemetry/" + kind,
+        body: JSON.stringify(kind === "session" ? session() : feedback()) });
+      assert.equal(r.status, scenario === "denied" ? 429 : 503);
+      assert.equal(r.headers.get("Retry-After"), scenario === "denied" ? "60" : null);
+      assert.deepEqual(await r.json(), { error: scenario === "denied" ? "rate_limited" : "collection_unavailable" });
+      assert.equal(prepared + batched, 0);
+    }
+  }
+});
