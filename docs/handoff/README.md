@@ -1,5 +1,11 @@
 # 우리 프로토타입 소스 이관 안내 — H-port8
 
+## WS-ops4d 후보 설정 검사 완료 — 2026-10-12
+
+[오프라인 설정 검사](../../ops/public-host/CONFIG_CHECK.md)는 새 공개 파일 혼입·경로·수집 안내·정리 cron을 확인한다. 신규66·기존58·별도 Codex64/경계6검사 통과.
+실제 계정/배포 검증은 별도이며 deployable=false다. 다음 독립 단위는 WS-ops4e 운영 절차·비용 산정이다.
+
+
 ## WS-ops3c — 2026-10-12
 
 수집 UI에 독립 토글/보관일이 필수다. Node73·브라우저각7·별도 client10통과. 다음 WS-ops4d 설정검사. [계약](../../ops/public-host/TELEMETRY.md). 기존 ZIP 변경 없음.

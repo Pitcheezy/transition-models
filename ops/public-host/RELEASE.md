@@ -18,6 +18,7 @@
 mode는 synthetic 또는 candidate다. **어느 모드든 deployable=false**다.
 검사 통과는 패키지 바이트와 목록의 일치만 뜻한다. 서명·저자 인증·공개 권리·기능·실계정 검사를 대신하지 않는다.
 후보를 배포할 때 필요한 Wrangler 실계정 설정도 별도로 검토해야 한다.
+[오프라인 설정 검사](CONFIG_CHECK.md)는 패키지 경로·설정 일치까지만 확인한다.
 동봉한 wrangler.example.jsonc의 상대 assets 경로는 패키지 실행용으로 자동 수정하지 않는다.
 
 ## 실행
