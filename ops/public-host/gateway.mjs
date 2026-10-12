@@ -1,3 +1,4 @@
+import { handleTelemetry } from "./telemetry.mjs";
 /**
  * File transport candidate for COLLAB-001. No baseball-schema validation here.
  * Both gates default closed. Only a reviewed publisher may supply public data.
@@ -211,6 +212,7 @@ export default {
     try {
       // This foundation uses ASCII asset paths. Do not let encoded API prefixes reach SPA fallback.
       if (url.pathname.includes("%")) return json(request, env, 404, { error: "not_found" });
+      if (url.pathname === "/_telemetry" || url.pathname.startsWith("/_telemetry/")) return await handleTelemetry(request, env);
       if (uploadRoute || publicRoute) {
         const path = uploadRoute ? url.pathname.slice("/_publish".length) : url.pathname;
         const key = permittedKey(path);
