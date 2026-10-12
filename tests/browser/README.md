@@ -4,15 +4,16 @@ These tests build a new review package from the committed **synthetic** current-
 example, start its real Python standard-library server on a free loopback port, and
 exercise it in headless Playwright. They never read teammate repositories, actual
 service exports, human responses, MLB footage, or existing browser tabs. All browser
-requests must stay on this test server and use GET or HEAD; file selection stays local.
+requests stay on their own test servers. Review/observation reads use GET or HEAD; the separately described telemetry checks send synthetic opt-in POSTs. File selection stays local.
 
 ## Install
 
-Use Node.js 20 or newer and Python 3.12 (project baseline; no Python third-party
+Use Node.js 24 or newer and Python 3.12 (project baseline; no Python third-party
 packages are needed for this suite). From this directory:
 
 ```text
-npm ci
+npm ci --ignore-scripts
+npm --prefix ../../ops/public-host ci --ignore-scripts
 npx playwright install chromium webkit
 ```
 
@@ -86,3 +87,17 @@ It records 15 playback/publication/seek checks and screenshots in a private outp
 See [the run instructions](../../docs/CV_OBSERVATION_PLAYBACK_20261011.md).
 Do not upload its MLB screenshots to public CI artifacts. The portable synthetic
 publication gates run through `tests/test_observation_playback_ui.py` in normal pytest.
+
+## Local Worker rehearsal (WS-ops4c)
+
+public-host-rehearsal.test.cjs starts an isolated Miniflare Worker/R2 with synthetic HTML/data.
+Node-side helpers publish/withdraw via authenticated requests; the browser only reads the same local
+Worker. No upload credential enters browser JavaScript and responses are not mocked by Playwright.
+Two checks cover keyboard/375px version changes, withdrawal/restore, actual JSON404, and successful
+Worker reads after the browser closes. Both browser engines run in CI.
+
+Set BROWSER_CHANNEL=chrome for the new host tests to use local Chrome; the older review tests use
+BROWSER_EXECUTABLE. CI uses the bundled engines. Headless WebKit is not physical Safari.
+Windows WebKit closing a connection can print workerd WSARecv64 despite passing functions and a
+successful post-close Worker read; this runtime diagnostic remains unresolved.
+See ../../ops/public-host/REHEARSAL.md for measured local scope and limits.

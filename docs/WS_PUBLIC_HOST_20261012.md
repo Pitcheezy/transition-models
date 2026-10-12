@@ -76,3 +76,15 @@ Claude/사람 교차 검토는 아니다. WS-ops4b 감시/오류·복구 기반�
 설정 변경/손상 상태 보존을 확인했다. 별도 Codex 검토에서 JSON Pointer 배열 처리 누락을
 발견해 수정하고 회귀를 추가했다. 클라이언트/Worker/R2/D1의 기존 검사는 계속 통과했다.
 실제 도메인/스키마/상시 실행/메신저 알림은 미완료다. 다음 단위는 WS-ops4c 로컬 합성 리허설이다.
+
+## WS-ops4c 후속 — 로컬 리허설
+
+기준3898083·선점a648376. [리허설 명령·범위](../ops/public-host/REHEARSAL.md)와
+[합성 영수증](results/ops/ws_local_rehearsal_20261012.json)을 저장했다.
+32KiB·동시6·120/120 정상 조회, 변경 충돌200/412·삭제404·같은 본문 복원과 낡은 ETag 거부,
+합성 stale로 장애open·정상2회로recovered를 확인했다. 전체Node66·신규5·독립Codex5 통과.
+브라우저Chrome/WebKit 각2도 실제 Worker에 GET하여 확인했다. 토큰은 Node 내부만 쓴다.
+별도 검토의 시작/정리 timeout·정리 실패 보고 문제를 수정했고, cleanup complete를 기록했다.
+Windows WebKit 종료 WSARecv64 런타임 진단은 재현돼 남겼다. 종료 후에도 Worker GET200은 통과했다.
+이 값을 CDN 수용량·실사용 지연·Song 서비스 완료 근거로 쓰지 않는다.
+다음 독립 단위 WS-ops1b는 인증 업로드 제한과 제한기 장애 시 차단이다.

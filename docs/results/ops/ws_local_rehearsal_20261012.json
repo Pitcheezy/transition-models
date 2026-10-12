@@ -1,0 +1,89 @@
+{
+  "schema": "pitcheezy-local-host-rehearsal-v1",
+  "target": "ephemeral-loopback-miniflare",
+  "synthetic": true,
+  "public_capacity_verified": false,
+  "song_contract_verified": false,
+  "environment": {
+    "node": "v24.1.0",
+    "platform": "win32",
+    "arch": "x64",
+    "miniflare": "4.20260730.0"
+  },
+  "source_sha256": {
+    "worker.mjs": "9f3d818686bc6af847bf4c292658a1c71f22f4dd72f6282c8b00e84e0ca33d1b",
+    "gateway.mjs": "46f1470bbd1be2543440be1a735f067987ba938e00a1884a4d59fe98beffe238",
+    "telemetry.mjs": "8748f0d98afcad90cc203e5e8072c7bbed4fff846d9e2cf1a2e6ff9c695a9c62",
+    "monitor.mjs": "5741ae80687a73da268f74acb50cd61f224bbca1d40c029509b0e7d9e01f1aaf",
+    "rehearsal/local-host.mjs": "c66e7c1a83a0655e769d140f5e8f6b506a7602290e2819fec52d6167b222e773",
+    "rehearse-local.mjs": "82ea3188d04864e558b3e775bb4304d6b07e56d742d7f0bbf59ade419477204a",
+    "package-lock.json": "71ff25032a7eb452e5788b7d13c1a0ff96efd3b768da0c01ac4ae5bc187897a5"
+  },
+  "options": {
+    "requests": 120,
+    "concurrency": 6,
+    "payload_bytes": 32768
+  },
+  "completed_phases": [
+    "warmup",
+    "read_load",
+    "concurrent_conflict",
+    "withdraw_restore",
+    "freshness_incident"
+  ],
+  "load": {
+    "requests": 120,
+    "concurrency": 6,
+    "payload_bytes": 32768,
+    "attempted": 120,
+    "successful": 120,
+    "failed": 0,
+    "failure_codes": [],
+    "elapsed_ms": 444.14,
+    "maximum_in_flight": 6,
+    "p50_ms": 21.5,
+    "p95_ms": 26.35,
+    "max_ms": 29.46,
+    "observed_requests_per_second": 270.18,
+    "latency_scope": "loopback request start through body receipt and SHA verification",
+    "workload": "closed-loop synthetic, no user think time"
+  },
+  "passed": true,
+  "startup_ms": 346,
+  "monitor_observations": [
+    {
+      "status": "available",
+      "freshness": "fresh",
+      "incident_open": false,
+      "event": null
+    },
+    {
+      "status": "failed",
+      "freshness": "stale",
+      "incident_open": false,
+      "event": null
+    },
+    {
+      "status": "failed",
+      "freshness": "stale",
+      "incident_open": true,
+      "event": "opened"
+    },
+    {
+      "status": "available",
+      "freshness": "fresh",
+      "incident_open": true,
+      "event": null
+    },
+    {
+      "status": "available",
+      "freshness": "fresh",
+      "incident_open": false,
+      "event": "recovered"
+    }
+  ],
+  "cleanup": {
+    "status": "complete"
+  },
+  "total_ms": 1281
+}

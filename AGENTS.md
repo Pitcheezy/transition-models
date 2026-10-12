@@ -1,5 +1,12 @@
 # SmartPitch MDP Transition Probability Models
 
+## WS-ops4c 로컬 호스팅 리허설 완료 — 2026-10-12
+
+[조회·철회/복구·감시·브라우저 리허설](ops/public-host/REHEARSAL.md)을 수행했다. 합성120/120·Node66·Chrome/WebKit 각2통과.
+Windows WebKit 종료의 WSARecv64 진단은 남아 있으나 종료 후 Worker GET200도 확인했다.
+공개 CDN/실제 Song/Safari 검사가 아니다. 다음은 WS-ops1b 인증 업로드 제한이며 실제 배포 조건은 유지한다.
+
+
 ## WS-ops4b 읽기 감시 완료 — 2026-10-12
 
 [단발 감시·장애/복구](ops/public-host/MONITORING.md)를 합성/실제 로컬 HTTP로 검증했다. 신규15·전체Node61검사 통과.
