@@ -90,7 +90,7 @@ feedback_id 동일 요청은 한 번만 저장한다. 같은 ID의 다른 내용
 
 ## 브라우저 모듈
 
-- `client/widget.mjs`의 `mountUsageWidget(element, {enabled:false, gamePk:0})`와
+- `client/widget.mjs`의 `mountUsageWidget(element, {telemetryEnabled:false, feedbackEnabled:false, retainDays:30, gamePk:0})`와
   `client/widget.css`를 우리 호스트에서 사용한다. 기본 비활성이다. `setGame(gamePk)`로
   명시적 경기 번호만 전달하고 `destroy()`로 이벤트/타이머를 해제한다.
 - Song의 실제 slot 이벤트 형식은 아직 연결하지 않았다. 실제 화면 코드를 변경하지 않았다.
@@ -108,3 +108,23 @@ feedback_id 동일 요청은 한 번만 저장한다. 같은 ID의 다른 내용
   실제 Safari/공개 도메인 확인과 인프라 로그 정책은 출시 전 별도 검사다.
 - `tests/browser/host-telemetry.test.cjs`는 실제 엔진 UI와 합성 HTTP 응답을 검사한다.
   D1까지 포함한 검사는 telemetry-runtime과 별도이며 실제 Song 연결 증거가 아니다.
+
+## WS-ops3c: 실제 수집 설정과 화면 안내
+
+단일 enabled 옵션은 더 이상 사용하지 않는다. telemetryEnabled/feedbackEnabled 각각 boolean true일 때만
+해당 기능을 허용하고, 공통 retainDays는 정수1~90이 필수다. 누락/문자열/범위 오류면 둘 다 비활성이다.
+기존 enabled:true만 전달해도 켜지지 않는다. 우리 호출부/검사는 명시 옵션으로 갱신했다.
+
+배포 연결자는 서버 TELEMETRY_ENABLED/FEEDBACK_ENABLED/TELEMETRY_RETAIN_DAYS와 동일한 값을 전달해야 한다.
+이 모듈은 서버 설정을 조회하거나 승인 여부를 판정하지 않는다. 다른 값을 보내면 배포 설정 불일치이므로
+출시 전에 오프라인 대조와 실제 화면 확인이 필요하다. 세션/피드백의 HTTP 본문·DB 계약은 변경하지 않았다.
+
+화면은 "새로 저장하는 기록은 N일"이라고 표시한다. 기존 행은 생성 당시 expires_ms를 유지하므로
+보관 설정 변경이 기존 기록을 소급 갱신한다고 설명하지 않는다. 만료 후 집계 제외·정기 정리 및
+Time Travel 사본의 별도 보관은 위 보관 절을 따른다. 통계 참여 철회는 이후 통계 전송을 멈추며
+피드백 버튼의 독립 선택을 막거나 기존 기록을 즉시 삭제하지 않는다.
+
+검증: 클라이언트10검사, Chrome/WebKit 각각7검사. 통계만/피드백만 켬, 보관일 누락·오류와1/90일 경계,
+기존 enabled 무시, 직접 메서드 호출 차단, 안내의7일 표시와 기본30일 비표시를 확인했다.
+브라우저 케이스는 위젯 destroy 후 context를 닫아 이전 pagehide 전송이 다음 케이스에 섞이지 않게 했다.
+실제 수집 활성화·Song 화면 삽입·독립 Safari 검증은 아니다.

@@ -48,10 +48,10 @@ async function pageFor(options={}){
 test("default off; keyboard accessible and no unsolicited collection",async()=>{
   const {page,context}=await pageFor();
   assert.equal(await page.getByRole("checkbox",{name:"방문 통계 참여"}).isDisabled(),true);
-  await page.clock.fastForward(60000);assert.equal(requests.length,0);await context.close();
+  await page.clock.fastForward(60000);assert.equal(requests.length,0);await page.evaluate(()=>window.widget?.destroy());await context.close();
 });
 test("explicit consent, active pulse, credential-omit intent and withdrawal",async(t)=>{
-  const {page,context}=await pageFor({enabled:true,gamePk:123});
+  const {page,context}=await pageFor({telemetryEnabled:true,feedbackEnabled:true,retainDays:30,gamePk:123});
   await context.addCookies([{name:"private_cookie",value:"must-not-send",url:origin}]);
   const checkbox=page.getByRole("checkbox",{name:"방문 통계 참여"});await checkbox.focus();await page.keyboard.press("Space");
   await page.waitForFunction(()=>document.querySelector('[role="status"]').textContent.startsWith("참여 중"));
@@ -64,10 +64,10 @@ test("explicit consent, active pulse, credential-omit intent and withdrawal",asy
   await new Promise(r=>setTimeout(r,100));assert.equal(requests.length,2);
   assert.equal(requests[1].body.active_ms,30000);
   await checkbox.uncheck();await page.clock.fastForward(60000);assert.equal(requests.length,2);
-  assert.match(await page.getByRole("status").first().textContent(),/참여하지/);await context.close();
+  assert.match(await page.getByRole("status").first().textContent(),/참여하지/);await page.evaluate(()=>window.widget?.destroy());await context.close();
 });
 test("one-click feedback is separate from usage participation and resends the same ID",async()=>{
-  const {page,context}=await pageFor({enabled:true,gamePk:123});mode="fail";
+  const {page,context}=await pageFor({telemetryEnabled:true,feedbackEnabled:true,retainDays:30,gamePk:123});mode="fail";
   await page.getByRole("button",{name:"도움이 돼요",exact:true}).click();
   await page.getByText("전송 확인이 안 됐습니다.",{exact:false}).waitFor();
   assert.equal(requests.length,1);assert.equal(requests[0].path,"/_telemetry/feedback");
@@ -76,10 +76,10 @@ test("one-click feedback is separate from usage participation and resends the sa
   await page.getByText("의견을 받았습니다. 감사합니다.",{exact:true}).waitFor();
   assert.deepEqual(requests[1].body,requests[0].body);
   assert.equal(await page.getByRole("button",{name:"도움이 돼요",exact:true}).isDisabled(),true);
-  await context.close();
+  await page.evaluate(()=>window.widget?.destroy());await context.close();
 });
 test("game switch while feedback pending cannot display an old receipt for the new game",async()=>{
-  const {page,context}=await pageFor({enabled:true,gamePk:123});mode="delay";
+  const {page,context}=await pageFor({telemetryEnabled:true,feedbackEnabled:true,retainDays:30,gamePk:123});mode="delay";
   await page.getByRole("button",{name:"불편한 점이 있어요"}).click();
   while(!delayed.length)await new Promise(r=>setTimeout(r,10));
   await page.evaluate(()=>window.widget.setGame(456));
@@ -88,16 +88,41 @@ test("game switch while feedback pending cannot display an old receipt for the n
   assert.equal(await page.getByRole("status").nth(1).textContent(),"");
   mode="ok";await page.getByRole("button",{name:"도움이 돼요",exact:true}).click();
   await page.getByText("의견을 받았습니다. 감사합니다.",{exact:true}).waitFor();
-  assert.equal(requests.at(-1).body.game_pk,456);await context.close();
+  assert.equal(requests.at(-1).body.game_pk,456);await page.evaluate(()=>window.widget?.destroy());await context.close();
 });
 test("privacy preference disables collection, widget fits mobile width, teardown is safe",async()=>{
   const {page,context}=await pageFor();
-  await page.evaluate(()=>{Object.defineProperty(navigator,"globalPrivacyControl",{value:true,configurable:true});window.mount({enabled:true,gamePk:123});});
+  await page.evaluate(()=>{Object.defineProperty(navigator,"globalPrivacyControl",{value:true,configurable:true});window.mount({telemetryEnabled:true,feedbackEnabled:true,retainDays:30,gamePk:123});});
   assert.equal(await page.getByRole("checkbox",{name:"방문 통계 참여"}).isDisabled(),true);
   assert.equal(await page.getByRole("button",{name:"도움이 돼요",exact:true}).isDisabled(),true);
   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
   await fs.mkdir(path.join(ROOT,".cache"),{recursive:true});
   await page.screenshot({path:path.join(ROOT,".cache","telemetry-widget-"+ENGINE+".png"),fullPage:true});
   await page.evaluate(()=>{window.widget.destroy();window.widget.destroy();});
-  await page.clock.fastForward(60000);assert.equal(requests.length,0);await context.close();
+  await page.clock.fastForward(60000);assert.equal(requests.length,0);await page.evaluate(()=>window.widget?.destroy());await context.close();
+});
+
+test("independent collection switches and retention are visible before interaction",async()=>{
+  const f=await pageFor({telemetryEnabled:false,feedbackEnabled:true,retainDays:7,gamePk:123});
+  assert.equal(await f.page.getByRole("checkbox",{name:"방문 통계 참여"}).isDisabled(),true);
+  assert.equal(await f.page.getByRole("button",{name:"도움이 돼요",exact:true}).isDisabled(),false);
+  assert.match(await f.page.locator(".pitcheezy-usage-widget").textContent(),/새로 저장하는 기록은 7일/);
+  assert.doesNotMatch(await f.page.locator(".pitcheezy-usage-widget").textContent(),/30일/);
+  await f.page.getByRole("button",{name:"도움이 돼요",exact:true}).click();
+  await f.page.getByText("의견을 받았습니다. 감사합니다.",{exact:true}).waitFor();
+  assert.deepEqual(requests.map(x=>x.path),["/_telemetry/feedback"]);await f.page.evaluate(()=>window.widget?.destroy());await f.context.close();
+  const g=await pageFor({telemetryEnabled:true,feedbackEnabled:false,retainDays:90,gamePk:123});
+  assert.equal(await g.page.getByRole("checkbox",{name:"방문 통계 참여"}).isDisabled(),false);
+  assert.equal(await g.page.getByRole("button",{name:"도움이 돼요",exact:true}).isDisabled(),true);
+  await g.page.getByRole("checkbox",{name:"방문 통계 참여"}).check();
+  await g.page.waitForFunction(()=>document.querySelector('[role="status"]').textContent.startsWith("참여 중"));
+  assert.deepEqual(requests.map(x=>x.path),["/_telemetry/session"]);await g.page.evaluate(()=>window.widget?.destroy());await g.context.close();
+});
+
+test("missing retention keeps both controls disabled and does not claim thirty days",async()=>{
+  const {page,context}=await pageFor({telemetryEnabled:true,feedbackEnabled:true,gamePk:123});
+  assert.equal(await page.getByRole("checkbox",{name:"방문 통계 참여"}).isDisabled(),true);
+  assert.equal(await page.getByRole("button",{name:"도움이 돼요",exact:true}).isDisabled(),true);
+  assert.match(await page.locator(".pitcheezy-usage-widget").textContent(),/보관 기간이 확정되지 않아/);
+  await page.clock.fastForward(60000);assert.equal(requests.length,0);await page.evaluate(()=>window.widget?.destroy());await context.close();
 });
