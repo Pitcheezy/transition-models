@@ -2,8 +2,15 @@
 const RATINGS = new Set(["helpful", "unclear", "problem"]);
 const REASONS = new Set(["none", "recommendation", "explanation", "delay", "display", "other"]);
 const validGame = n => Number.isSafeInteger(n) && n >= 0 && n <= 999999999999;
+/** Explicit deployment settings, not an approval or a server configuration probe. */
+export function collectionSettings(options = {}) {
+  const retainDays = Number.isInteger(options.retainDays) && options.retainDays >= 1 && options.retainDays <= 90 ? options.retainDays : null;
+  return Object.freeze({ retainDays,
+    telemetryEnabled: retainDays !== null && options.telemetryEnabled === true,
+    feedbackEnabled: retainDays !== null && options.feedbackEnabled === true });
+}
 export function createUsageClient(options = {}) {
-  const enabled = options.enabled === true;
+  const settings = collectionSettings(options);
   const fetchFn = options.fetchFn || globalThis.fetch.bind(globalThis);
   const now = options.now || (() => performance.now());
   const wall = options.wall || (() => Date.now());
@@ -15,7 +22,9 @@ export function createUsageClient(options = {}) {
   if (!validGame(game)) throw new Error("invalid_game");
   let consent = false, session = null, feedback = null, destroyed = false;
   const day = () => new Date(wall()).toISOString().slice(0,10);
-  const allowed = () => enabled && !destroyed && !optedOut();
+  const permitted = () => !destroyed && !optedOut();
+  const allowedSession = () => settings.telemetryEnabled && permitted();
+  const allowedFeedback = () => settings.feedbackEnabled && permitted();
   const abort = value => value?.controller?.abort();
   function freshSession() {
     abort(session);
@@ -51,7 +60,7 @@ export function createUsageClient(options = {}) {
     }
   }
   async function flush() {
-    if (!consent || !allowed()) { if(consent) withdraw(); return false; }
+    if (!consent || !allowedSession()) { if(consent) withdraw(); return false; }
     sample();
     const target=session;
     if (target.running || target.paused || now()<target.retryAt) return false;
@@ -60,7 +69,7 @@ export function createUsageClient(options = {}) {
     const pending=target.pending; target.running=true;
     try {
       const response=await transmit("/_telemetry/session",pending,target);
-      if (session!==target || !consent || !allowed()) return false;
+      if (session!==target || !consent || !allowedSession()) return false;
       if (!response.ok) {
         if ([400,403,409,413,415].includes(response.status)) target.paused=true;
         const retry=Number(response.headers.get("Retry-After"));
@@ -69,7 +78,7 @@ export function createUsageClient(options = {}) {
       }
       const ack=response.ack;
       if (ack?.accepted!==true) throw new Error("invalid_ack");
-      if (session!==target || !consent || !allowed()) return false;
+      if (session!==target || !consent || !allowedSession()) return false;
       if (!target.started) { target.active=0; target.last=now(); target.visible=visible(); target.started=true; }
       target.sequence=pending.sequence; target.pending=null; target.failures=0;
       status("active"); return true;
@@ -82,7 +91,7 @@ export function createUsageClient(options = {}) {
     } finally { target.running=false; }
   }
   function grant() {
-    if (!allowed()) { status("disabled"); return Promise.resolve(false); }
+    if (!allowedSession()) { status("disabled"); return Promise.resolve(false); }
     if(consent) return flush();
     consent=true; freshSession(); status("starting"); return flush();
   }
@@ -97,7 +106,7 @@ export function createUsageClient(options = {}) {
     if(consent) { freshSession(); void flush(); }
   }
   async function sendFeedback(rating, reason="none") {
-    if(!allowed() || !RATINGS.has(rating) || !REASONS.has(reason)) return {ok:false,disabled:true};
+    if(!allowedFeedback() || !RATINGS.has(rating) || !REASONS.has(reason)) return {ok:false,disabled:true};
     if(feedback?.running || feedback?.done) return {ok:feedback?.done===true,busy:feedback?.running===true};
     if(feedback && (feedback.body.rating!==rating || feedback.body.reason!==reason || feedback.day!==day())) {
       return {ok:false,uncertain:true}; // A lost acknowledgement must not create a second response.
@@ -107,12 +116,12 @@ export function createUsageClient(options = {}) {
     try {
       const response=await transmit("/_telemetry/feedback",target.body,target);
       if(!response.ok || response.ack?.accepted!==true) return {ok:false,uncertain:true};
-      if(feedback!==target || !allowed()) return {ok:false,uncertain:true};
+      if(feedback!==target || !allowedFeedback()) return {ok:false,uncertain:true};
       target.done=true; return {ok:true};
     } catch { return {ok:false,uncertain:true}; }
     finally {target.running=false;}
   }
   function destroy() {withdraw();destroyed=true;abort(feedback);feedback=null;}
   return {grant,withdraw,setGame,flush,sample,sendFeedback,destroy,
-    get state(){return {enabled:allowed(),consent,gamePk:game,started:session?.started===true};}};
+    get state(){return {telemetryEnabled:allowedSession(),feedbackEnabled:allowedFeedback(),retainDays:settings.retainDays,consent,gamePk:game,started:session?.started===true};}};
 }

@@ -1,5 +1,9 @@
 # 우리 프로토타입 소스 이관 안내 — H-port8
 
+## WS-ops3c — 2026-10-12
+
+수집 UI에 독립 토글/보관일이 필수다. Node73·브라우저각7·별도 client10통과. 다음 WS-ops4d 설정검사. [계약](../../ops/public-host/TELEMETRY.md). 기존 ZIP 변경 없음.
+
 ## WS-ops1b — 2026-10-12
 
 [업로드 제한](../../ops/public-host/UPLOAD_LIMITS.md) 구현·Node71/별도 관련39검사 통과. 다음 WS-ops3c 수집 UI 설정 일치. 기존 영상/소스 ZIP은 그대로다.

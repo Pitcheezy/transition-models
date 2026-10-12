@@ -1,5 +1,10 @@
 # SmartPitch MDP Transition Probability Models
 
+## WS-ops3c 수집 설정·안내 일치 완료 — 2026-10-12
+
+[수집 안내](ops/public-host/TELEMETRY.md)의 telemetryEnabled/feedbackEnabled/retainDays를 명시한다. old enabled는 켜지지 않는다.
+Node73·Chrome/WebKit 각7·별도 Codex client10통과. 다음 WS-ops4d 오프라인 후보 설정 검사. 실제 계정/배포와 팀원 자료 대기는 유지한다.
+
 ## WS-ops1b 인증 업로드 제한 완료 — 2026-10-12
 
 [제한·재시도·경계](ops/public-host/UPLOAD_LIMITS.md): Node71·별도 Codex 관련39통과. 실제 계정/주기 확정은 별도다.

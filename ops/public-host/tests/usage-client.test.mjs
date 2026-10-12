@@ -5,7 +5,7 @@ function fixture(extra={}) {
   let time=0,utc=Date.parse("2026-10-12T12:00:00Z"),visible=true,deny=false,n=0;
   const calls=[],statuses=[];
   const ok=()=>new Response('{"accepted":true}',{status:200});
-  const client=createUsageClient({enabled:true,gamePk:123,now:()=>time,wall:()=>utc,visible:()=>visible,
+  const client=createUsageClient({telemetryEnabled:true,feedbackEnabled:true,retainDays:30,gamePk:123,now:()=>time,wall:()=>utc,visible:()=>visible,
     optedOut:()=>deny,uuid:()=>String(++n),onStatus:s=>statuses.push(s),
     fetchFn:async(path,init)=>{calls.push({path,body:JSON.parse(init.body),init});return ok();},...extra});
   return {client,calls,statuses,ok,advance:ms=>{time+=ms;utc+=ms;},setDay:x=>{utc=Date.parse(x);},
@@ -72,4 +72,35 @@ test("response headers without a completing JSON body time out and unlock retry"
   const f=fixture({fetchFn:async()=>({ok:true,json:()=>new Promise(()=>{})})});
   assert.equal(await f.client.grant(),false);
   assert.equal(f.client.state.started,false);assert.equal(f.statuses.at(-1),"retry");f.client.destroy();
+});
+
+test("independent gates prevent direct calls to the disabled collection kind", async () => {
+  const onlyFeedback=fixture({telemetryEnabled:false});
+  assert.equal(await onlyFeedback.client.grant(),false);
+  assert.equal((await onlyFeedback.client.sendFeedback("helpful")).ok,true);
+  assert.deepEqual(onlyFeedback.calls.map(x=>x.path),["/_telemetry/feedback"]);
+  assert.equal(onlyFeedback.client.state.telemetryEnabled,false);
+  assert.equal(onlyFeedback.client.state.feedbackEnabled,true);onlyFeedback.client.destroy();
+  const onlySession=fixture({feedbackEnabled:false});
+  assert.equal((await onlySession.client.sendFeedback("helpful")).disabled,true);
+  assert.equal(await onlySession.client.grant(),true);
+  assert.deepEqual(onlySession.calls.map(x=>x.path),["/_telemetry/session"]);onlySession.client.destroy();
+});
+
+test("retention is required and strictly bounded; legacy enabled never enables collection", async () => {
+  for(const retainDays of [undefined,null,0,91,30.5,"30",true,NaN]){
+    const f=fixture({retainDays});
+    assert.equal(await f.client.grant(),false);
+    assert.equal((await f.client.sendFeedback("helpful")).disabled,true);
+    assert.equal(f.calls.length,0);assert.equal(f.client.state.retainDays,null);f.client.destroy();
+  }
+  const legacy=fixture({telemetryEnabled:undefined,feedbackEnabled:undefined,enabled:true});
+  assert.equal(await legacy.client.grant(),false);
+  assert.equal((await legacy.client.sendFeedback("helpful")).disabled,true);
+  assert.equal(legacy.calls.length,0);legacy.client.destroy();
+  for(const retainDays of [1,90]){
+    const f=fixture({retainDays});assert.equal(f.client.state.retainDays,retainDays);
+    assert.equal(await f.client.grant(),true);f.client.withdraw();
+    assert.equal((await f.client.sendFeedback("helpful")).ok,true);f.client.destroy();
+  }
 });
