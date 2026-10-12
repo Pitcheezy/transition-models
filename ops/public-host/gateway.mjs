@@ -92,6 +92,12 @@ async function enforceUploadLimit(env) {
   }
 }
 
+/** Exact strong-ETag comparison over a comma-separated If-None-Match list; weak tags and "*" never match. */
+export function etagMatches(header, etag) {
+  if (!header || !ETAG.test(etag || "")) return false;
+  return header.split(",").map(x => x.trim()).some(x => x === etag);
+}
+
 function precondition(request, deletion) {
   const match = request.headers.get("If-Match");
   const none = request.headers.get("If-None-Match");
@@ -207,6 +213,11 @@ async function read(request, env, key) {
   if (meta.recordFormat !== RECORD_FORMAT || !/^[0-9]+$/.test(meta.payloadBytes || "") ||
       !SHA256.test(meta.sha256 || "") || length > MAX_JSON_BYTES ||
       obj.size !== length + RECORD_HEADER_BYTES) throw new HttpError(503, "invalid_stored_record");
+  // Conditional read (WS-ops2): a strong ETag the client already holds answers 304 without a body.
+  // Deleted or replaced objects never match (new UUID header => new ETag), so a stale tag re-downloads.
+  if (etagMatches(request.headers.get("If-None-Match"), obj.httpEtag)) {
+    return response(request, env, 304, null, { ETag: obj.httpEtag }, true);
+  }
   let payload = null;
   if (request.method === "GET") {
     const record = new Uint8Array(await obj.arrayBuffer());

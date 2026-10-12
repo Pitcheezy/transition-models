@@ -1,0 +1,269 @@
+{
+  "schema": "pitcheezy-first-connection-rehearsal-v1",
+  "target": "ephemeral-loopback-miniflare",
+  "synthetic": true,
+  "song_examples_commit": "d5a1dd98003672235cc50509391fd4c41b28be32",
+  "screen_commit": "ef4e4df2f0547331459f9d952c5d76e1090f11e8",
+  "screen_rendering_verified": "separate browser receipt",
+  "live_data": false,
+  "real_hosting": false,
+  "environment": {
+    "node": "v24.1.0",
+    "platform": "win32",
+    "arch": "x64",
+    "miniflare": "4.20260730.0"
+  },
+  "source_sha256": {
+    "worker.mjs": "9f3d818686bc6af847bf4c292658a1c71f22f4dd72f6282c8b00e84e0ca33d1b",
+    "gateway.mjs": "3269472902fc6a619618fc054199249420b91a69aba261b2114297404edecfdf",
+    "notice.mjs": "571d9033eeac9208e30e08df1dcd23efc65639c191993a6334f053f453fb0ae7",
+    "access.mjs": "92c1d4382e6feb3898374d37fbe713aa5c46d5b705a4a3145e1070cfe083141a",
+    "rehearsal/local-host.mjs": "faf7c00f54bfdf5ee10308457f5d18cae56e39808185a2e246f56b9bd7a7bde8",
+    "rehearse-first-connection.mjs": "b067710b698d66706707990ec85d60cd97765ba9a90d153bc30542fd5794e3b2",
+    "examples/collab001-expected-files.json": "74ee2a6bdc9c9aece3a8239e9738dbde5de453d66c196b3b361761aece35ce6c",
+    "package-lock.json": "71ff25032a7eb452e5788b7d13c1a0ff96efd3b768da0c01ac4ae5bc187897a5"
+  },
+  "steps": [
+    {
+      "step": "hashes",
+      "ok": true,
+      "files": 19
+    },
+    {
+      "step": "empty_host",
+      "missing_json_404": true,
+      "screen_served": true
+    },
+    {
+      "step": "procedure_uploads",
+      "ok": true,
+      "uploads": [
+        {
+          "example": "examples/manifest-live.json",
+          "target": "v1/manifest.json",
+          "bytes": 774,
+          "etag": "\"06fbae9234ee4b754bc3ec228bf3e50c\"",
+          "readback_sha256_matches": true
+        },
+        {
+          "example": "examples/dates.json",
+          "target": "v1/dates.json",
+          "bytes": 231,
+          "etag": "\"5ef34fb2ea5830c0f14a96e947d35bba\"",
+          "readback_sha256_matches": true
+        },
+        {
+          "example": "examples/games-live.json",
+          "target": "v1/games/2026-10-05.json",
+          "bytes": 803,
+          "etag": "\"a53ec3b5c05c28fabdbf71e3d06516f7\"",
+          "readback_sha256_matches": true
+        },
+        {
+          "example": "examples/games-archive.json",
+          "target": "v1/games/2026-09-30.json",
+          "bytes": 819,
+          "etag": "\"a2a2670be06fdb50bbfd20f8e3fa1759\"",
+          "readback_sha256_matches": true
+        },
+        {
+          "example": "examples/game-pregame.json",
+          "target": "v1/game/900200.json",
+          "bytes": 2237,
+          "etag": "\"f6021ca8bffdca09d83f59a3e60ac969\"",
+          "readback_sha256_matches": true
+        },
+        {
+          "example": "examples/game-live.json",
+          "target": "v1/game/900200.json",
+          "bytes": 31885,
+          "etag": "\"e76ecf80741a3b864d2073e7c09dfe32\"",
+          "readback_sha256_matches": true
+        },
+        {
+          "example": "examples/game-live-unconfirmed.json",
+          "target": "v1/game/900200.json",
+          "bytes": 34633,
+          "etag": "\"422ecb9dd81c2dbdf0c7530f138680b1\"",
+          "readback_sha256_matches": true
+        },
+        {
+          "example": "examples/game-disconnected.json",
+          "target": "v1/game/900200.json",
+          "bytes": 34668,
+          "etag": "\"29d5a4eb79a2f691a6d06aaf49d99d39\"",
+          "readback_sha256_matches": true
+        },
+        {
+          "example": "examples/game-between-innings.json",
+          "target": "v1/game/900200.json",
+          "bytes": 30911,
+          "etag": "\"25726e08dca5a9d8431f33a6d98c2f35\"",
+          "readback_sha256_matches": true
+        },
+        {
+          "example": "examples/game-final.json",
+          "target": "v1/game/900200.json",
+          "bytes": 31166,
+          "etag": "\"49088893ad70ae9326e9c6dc94e7dfdb\"",
+          "readback_sha256_matches": true
+        },
+        {
+          "example": "examples/game-final-archive.json",
+          "target": "v1/game/900101.json",
+          "bytes": 34546,
+          "etag": "\"975feab324974badbe4bebdb907db67f\"",
+          "readback_sha256_matches": true
+        },
+        {
+          "example": "examples/setup.json",
+          "target": "v1/setup/900101.json",
+          "bytes": 1733,
+          "etag": "\"17f40829331b2d28700cdee5ae17a3bc\"",
+          "readback_sha256_matches": true
+        },
+        {
+          "example": "examples/health-live.json",
+          "target": "v1/health.json",
+          "bytes": 325,
+          "etag": "\"f796f7dca843a411b015365e2b4ff592\"",
+          "readback_sha256_matches": true
+        }
+      ]
+    },
+    {
+      "step": "replacement_chain",
+      "ok": true,
+      "snapshots": 6
+    },
+    {
+      "step": "hosting_conditions",
+      "conditional_get_304": true,
+      "cross_origin_exposes_date_age_etag": true,
+      "other_origin_blocked": true,
+      "missing_is_json_404": true,
+      "deletion_reflected_immediately": true,
+      "restore_new_etag": true,
+      "cache_control": "no-store (revalidate every time)",
+      "not_checked": [
+        "real CDN Date/Age behaviour",
+        "long cache for final files (not implemented)",
+        "partial file visibility on a real uploader"
+      ]
+    }
+  ],
+  "passed": true,
+  "assets": {
+    "count": 4,
+    "bytes": 352514,
+    "index_sha256": "0fcdd63e0d42598b258ec6525e4d4a8659bfe9e8c5afe035e528d3578ae6b43a"
+  },
+  "examples": {
+    "examples/dates.json": {
+      "bytes": 231,
+      "sha256": "0d82da07ff35f63502dabbafbf0c9e19aec007c63e4968a3fbbb657573401113",
+      "hash_matches_pack": true
+    },
+    "examples/manifest-live.json": {
+      "bytes": 774,
+      "sha256": "26c7227140e00643bf7d007b69a4b748fedcad1f86646daa59bb85287df8a505",
+      "hash_matches_pack": true
+    },
+    "examples/games-live.json": {
+      "bytes": 803,
+      "sha256": "c46eb01f6ea3cf6e9f8d1260f4b6f56ab278850fad3b023442d0b92fa5c8002d",
+      "hash_matches_pack": true
+    },
+    "examples/games-archive.json": {
+      "bytes": 819,
+      "sha256": "83ddab03fe985ff97271a9381dfde5ab253555f747d1ba7559576ab2824d4aac",
+      "hash_matches_pack": true
+    },
+    "examples/game-pregame.json": {
+      "bytes": 2237,
+      "sha256": "b8ec23572fd042e6cb9edd461d483a4740d536da8200d2a4b012fa74025ce517",
+      "hash_matches_pack": true
+    },
+    "examples/game-live.json": {
+      "bytes": 31885,
+      "sha256": "0de4cd9e8fb92f6a0c0efcfa2a99530988602f960fdbd70d1fbc9a04407cff92",
+      "hash_matches_pack": true
+    },
+    "examples/game-live-unconfirmed.json": {
+      "bytes": 34633,
+      "sha256": "8d2a2ec14b0619202d0c80c3fdd7fca960df3a24a7e83bb9930aeb1c03f23f43",
+      "hash_matches_pack": true
+    },
+    "examples/game-disconnected.json": {
+      "bytes": 34668,
+      "sha256": "e54eaca9bc5d4eaaeb145c91d9217230adee5429d22fca75c0479b9f9e0a0930",
+      "hash_matches_pack": true
+    },
+    "examples/game-between-innings.json": {
+      "bytes": 30911,
+      "sha256": "493c68af92f7cb97f6417511b34f6a43226ecced2a9ed57bbd78202fb8db0d84",
+      "hash_matches_pack": true
+    },
+    "examples/game-final.json": {
+      "bytes": 31166,
+      "sha256": "25fd54a8c793869848c0fac8b5c0a25302de2f833ba23b4ccca3e691808eb74b",
+      "hash_matches_pack": true
+    },
+    "examples/game-final-archive.json": {
+      "bytes": 34546,
+      "sha256": "724112fc4f61627ba63d2ca19a5b55f83474fb6f9b8680044125dfcef84f8bf6",
+      "hash_matches_pack": true
+    },
+    "examples/setup.json": {
+      "bytes": 1733,
+      "sha256": "b552f7043abce807607970ee0357b510b21e52a3a22809ae85dcf4a2363713f2",
+      "hash_matches_pack": true
+    },
+    "examples/health-live.json": {
+      "bytes": 325,
+      "sha256": "73fcc38d5d6bff12564ea20286c801a964a33ba954c038b73478acabf8e0b5e9",
+      "hash_matches_pack": true
+    },
+    "schema/dates.schema.json": {
+      "bytes": 1397,
+      "sha256": "24c2602ed2b0da117139690e0387cbbcb9fd6f36671e6c547298f751965c05cc",
+      "hash_matches_pack": true
+    },
+    "schema/games.schema.json": {
+      "bytes": 3115,
+      "sha256": "f885e45f093e1d63f8070a12ac0eb20157c66aaf585406a194e9c290f6401d96",
+      "hash_matches_pack": true
+    },
+    "schema/game.schema.json": {
+      "bytes": 29300,
+      "sha256": "78d2f67890b0129861dc473ba4188d0f7d2512b87d09ecf667c7ea32ef5ee37a",
+      "hash_matches_pack": true
+    },
+    "schema/setup.schema.json": {
+      "bytes": 3340,
+      "sha256": "7d07e650137930d0e6065ea2b84541683179dd7da6741fdaa7edb051c1191d1b",
+      "hash_matches_pack": true
+    },
+    "schema/manifest.schema.json": {
+      "bytes": 2165,
+      "sha256": "d4b09e762f2c38e5c9cc638846ffbcaafdab3ae791663e6ed251e8c044404d6c",
+      "hash_matches_pack": true
+    },
+    "schema/health.schema.json": {
+      "bytes": 1896,
+      "sha256": "3c39efa163a4e81c239cefcb70a0f4bac346f44fbd2e031a5c5b5ede4b12524a",
+      "hash_matches_pack": true
+    }
+  },
+  "deployment_list": {
+    "contract": "v1",
+    "song_publisher_commit": "d5a1dd98003672235cc50509391fd4c41b28be32",
+    "song_screen_commit": "ef4e4df2f0547331459f9d952c5d76e1090f11e8",
+    "our_host_commit": "recorded in the handoff record (git HEAD at receipt time)",
+    "screen_index_sha256": "0fcdd63e0d42598b258ec6525e4d4a8659bfe9e8c5afe035e528d3578ae6b43a"
+  },
+  "cleanup": {
+    "status": "complete"
+  },
+  "total_ms": 1180
+}
