@@ -1,0 +1,34 @@
+{
+  "schema": "pitcheezy-host-config-check-v1",
+  "ok": true,
+  "deployable": false,
+  "mode": "synthetic",
+  "manifest_sha256": "e8ac7771f1f91971c065c816c0e6c66da0a92fffd4609e8b19929fc15ac37b85",
+  "host_commit": "c2d1d0d6ae855d82c44875bd12f5ae9f5351099e",
+  "frontend_commit": "1111111111111111111111111111111111111111",
+  "config_sha256": "e334fa4cc4eee340c429e5132f6fa7781b0d67e7d8f7d6656fe6a89ad3d17d88",
+  "client_settings_sha256": "6b2cf0104f1c4c0b7b10a2f14478a9a165e857257a97f7004dc884d02845fd93",
+  "checks": [
+    "inventory_bytes",
+    "single_environment_config",
+    "package_paths",
+    "worker_first",
+    "private_endpoint_defaults",
+    "bindings_and_local_namespaces",
+    "collection_settings_match",
+    "cleanup_cron_present"
+  ],
+  "unverified": [
+    "account_and_provider_configuration",
+    "r2_private_access",
+    "d1_migration_and_backups",
+    "secret_installation",
+    "cron_execution",
+    "namespace_isolation_across_account",
+    "frontend_build_provenance_and_settings_consumption",
+    "song_contract",
+    "public_rights",
+    "deployed_bytes_and_routes",
+    "live_browser_and_load"
+  ]
+}

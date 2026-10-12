@@ -1,5 +1,11 @@
 # SmartPitch MDP Transition Probability Models
 
+## WS-ops4d 후보 설정 검사 완료 — 2026-10-12
+
+[오프라인 설정 검사](ops/public-host/CONFIG_CHECK.md)는 새 공개 파일 혼입·경로·수집 안내·정리 cron을 확인한다. 신규66·기존58·별도 Codex64/경계6검사 통과.
+실제 계정/배포 검증은 별도이며 deployable=false다. 다음 독립 단위는 WS-ops4e 운영 절차·비용 산정이다.
+
+
 ## WS-ops3c 수집 설정·안내 일치 완료 — 2026-10-12
 
 [수집 안내](ops/public-host/TELEMETRY.md)의 telemetryEnabled/feedbackEnabled/retainDays를 명시한다. old enabled는 켜지지 않는다.
