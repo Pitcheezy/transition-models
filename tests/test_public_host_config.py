@@ -35,7 +35,12 @@ def candidate(tmp_path):
     config["d1_databases"][0].update(
         database_name="offline-fixture-private", database_id="11111111-1111-4111-8111-111111111111"
     )
-    client = {"telemetryEnabled": False, "feedbackEnabled": False, "retainDays": 30}
+    client = {
+        "telemetryEnabled": False,
+        "feedbackEnabled": False,
+        "retainDays": 30,
+        "accessGate": False,
+    }
 
     def write(c=None, u=None):
         (root / CONFIG_PATH).write_text(json.dumps(config if c is None else c), encoding="utf-8")
@@ -136,6 +141,9 @@ def test_unsafe_or_unsupported_config_fails(candidate, keys, value, code):
         ("retainDays", 7),
         ("retainDays", True),
         ("retainDays", "30"),
+        ("accessGate", True),
+        ("accessGate", "false"),
+        ("accessGate", 0),
         ("extra", "not-allowed"),
     ],
 )
@@ -278,3 +286,24 @@ def test_supported_canonical_origin_forms(candidate, value):
     config["vars"]["READ_ORIGIN"] = value
     write()
     assert check_release_config(root)["ok"]
+
+
+def test_client_access_gate_must_follow_the_server_gate(candidate):
+    """WS-access3: gate ON needs accessGate true (same-origin cookie on collection), and vice versa."""
+    root, config, client, write = candidate
+    config["vars"]["ACCESS_GATE_ENABLED"] = "true"
+    config["vars"]["READ_ORIGIN"] = ""
+    write()
+    with pytest.raises(ConfigError, match="client_server_settings_mismatch"):
+        check_release_config(root)
+    client["accessGate"] = True
+    write()
+    assert check_release_config(root)["ok"] is True
+    config["vars"]["ACCESS_GATE_ENABLED"] = "false"
+    write()
+    with pytest.raises(ConfigError, match="client_server_settings_mismatch"):
+        check_release_config(root)
+    del client["accessGate"]
+    write()
+    with pytest.raises(ConfigError):
+        check_release_config(root)

@@ -104,3 +104,58 @@ test("retention is required and strictly bounded; legacy enabled never enables c
     assert.equal((await f.client.sendFeedback("helpful")).ok,true);f.client.destroy();
   }
 });
+
+// WS-access3: the viewer gate protects the collection routes as well.
+const gateRefusal=()=>new Response('{"error":"access_required"}',{status:401,headers:{"X-Pitcheezy-Access":"required","Content-Type":"application/json"}});
+test("credentials follow the explicit accessGate setting: omit by default, same-origin only when the gate is on",async()=>{
+  const off=fixture();await off.client.grant();await off.client.sendFeedback("helpful");
+  assert.deepEqual(off.calls.map(c=>c.init.credentials),["omit","omit"]);assert.equal(off.client.state.accessGate,false);off.client.destroy();
+  const on=fixture({accessGate:true});await on.client.grant();await on.client.sendFeedback("helpful");
+  assert.deepEqual(on.calls.map(c=>c.init.credentials),["same-origin","same-origin"]);assert.equal(on.client.state.accessGate,true);
+  for(const c of on.calls){assert.equal(c.init.redirect,"error");assert.equal(c.init.referrerPolicy,"no-referrer");assert.equal(c.init.headers.Cookie,undefined);}
+  assert.equal(fixture({accessGate:"true"}).client.state.accessGate,false,"only boolean true enables it");
+  on.client.destroy();
+});
+test("a gate refusal ends participation (consent off) without retries; game or day changes cannot restart it, only a new grant",async()=>{
+  let refuse=false;const f=fixture({accessGate:true,fetchFn:async(path,init)=>{f.calls.push({path,body:JSON.parse(init.body),init});return refuse?gateRefusal():f.ok();}});
+  await f.client.grant();assert.equal(f.calls.length,1);
+  refuse=true;f.advance(30000);assert.equal(await f.client.flush(),false);
+  assert.equal(f.statuses.at(-1),"access_required");assert.equal(f.client.state.accessRequired,true);assert.equal(f.client.state.consent,false);
+  for(let i=0;i<5;i++){f.advance(300000);await f.client.flush();}
+  assert.equal(f.calls.length,2,"no retry storm against the gate");
+  refuse=false;
+  f.client.setGame(456);await new Promise(r=>setImmediate(r));
+  f.setDay("2026-10-13T00:00:00Z");await f.client.flush();
+  assert.equal(f.calls.length,2,"a game change or UTC day rollover does not silently resume after a refusal");
+  assert.equal(f.statuses.at(-1),"access_required");
+  await f.client.grant();assert.equal(f.calls.length,3);
+  assert.equal(f.calls[2].body.sequence,0);assert.notEqual(f.calls[2].body.session_id,f.calls[0].body.session_id);
+  assert.equal(f.client.state.accessRequired,false);assert.equal(f.client.state.consent,true);f.client.destroy();
+});
+test("a 401 without the gate header is an ordinary failure, not an access refusal",async()=>{
+  const f=fixture({accessGate:true,fetchFn:async(path,init)=>{f.calls.push({path,body:JSON.parse(init.body),init});return new Response("{}",{status:401});}});
+  await f.client.grant();assert.equal(f.statuses.at(-1),"retry");assert.equal(f.client.state.accessRequired,false);f.client.destroy();
+});
+test("feedback refused by the gate is reported as not stored and may be chosen again; uncertain failures still resend the same id",async()=>{
+  let mode="refuse";const f=fixture({accessGate:true,fetchFn:async(path,init)=>{f.calls.push({path,body:JSON.parse(init.body),init});
+    return mode==="refuse"?gateRefusal():mode==="fail"?new Response("{}",{status:503}):f.ok();}});
+  assert.deepEqual(await f.client.sendFeedback("helpful"),{ok:false,accessRequired:true});
+  mode="fail";assert.deepEqual(await f.client.sendFeedback("problem"),{ok:false,uncertain:true},"a different rating is allowed after a certain refusal");
+  assert.deepEqual(await f.client.sendFeedback("helpful"),{ok:false,uncertain:true},"after an uncertain failure only the same rating may be resent");
+  assert.equal(f.calls.length,2);
+  mode="ok";assert.deepEqual(await f.client.sendFeedback("problem"),{ok:true});
+  assert.equal(f.calls[2].body.feedback_id,f.calls[1].body.feedback_id);assert.notEqual(f.calls[1].body.feedback_id,f.calls[0].body.feedback_id);
+  f.client.destroy();
+});
+test("a refusal after an uncertain attempt keeps that record: no second response with a new id",async()=>{
+  let mode="lost";const f=fixture({accessGate:true,fetchFn:async(path,init)=>{f.calls.push({path,body:JSON.parse(init.body),init});
+    if(mode==="lost")throw new Error("acknowledgement lost");return mode==="refuse"?gateRefusal():f.ok();}});
+  assert.deepEqual(await f.client.sendFeedback("helpful"),{ok:false,uncertain:true});
+  mode="refuse";assert.deepEqual(await f.client.sendFeedback("helpful"),{ok:false,accessRequired:true,uncertain:true});
+  assert.deepEqual(await f.client.sendFeedback("problem"),{ok:false,uncertain:true},"a different rating is still refused locally");
+  assert.equal(f.calls.length,2);
+  mode="ok";assert.deepEqual(await f.client.sendFeedback("helpful"),{ok:true});
+  assert.equal(new Set(f.calls.map(c=>c.body.feedback_id)).size,1,"every attempt reused the same id");
+  f.client.destroy();
+});
+

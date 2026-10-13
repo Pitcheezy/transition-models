@@ -8,7 +8,10 @@
 const encoder = new TextEncoder();
 const SHA256 = /^[a-f0-9]{64}$/;
 const SECRET = /^[A-Za-z0-9_-]{43,128}$/;
-const COOKIE_VALUE = /^v1\.([1-9][0-9]{0,15})\.([a-f0-9]{8})\.([a-f0-9]{16})\.([a-f0-9]{64})$/;
+// v2: issue time and expiry are both signed so the lifetime rule below does not depend on the current time.
+const COOKIE_VALUE = /^v2\.([1-9][0-9]{0,15})\.([1-9][0-9]{0,15})\.([a-f0-9]{8})\.([a-f0-9]{16})\.([a-f0-9]{64})$/;
+/** Tolerated difference between edge clocks for a cookie issued "in the future". */
+export const ISSUE_CLOCK_SKEW_MS = 60000;
 const MAX_BODY = 1024;
 export const ACCESS_ROUTE = "/_access/v1/session";
 export const ACCESS_HEADER = "X-Pitcheezy-Access";
@@ -53,11 +56,12 @@ async function hmac(secret, text) {
 }
 
 async function mint(config, digest, now) {
-  const expires = now + config.seconds * 1000;
+  const issued = now;
+  const expires = issued + config.seconds * 1000;
   const prefix = digest.slice(0, 8);
   const nonce = hex(crypto.getRandomValues(new Uint8Array(8)));
-  const mac = await hmac(config.secret, `v1|${expires}|${prefix}|${nonce}`);
-  return { value: `v1.${expires}.${prefix}.${nonce}.${mac}`, expires };
+  const mac = await hmac(config.secret, `v2|${issued}|${expires}|${prefix}|${nonce}`);
+  return { value: `v2.${issued}.${expires}.${prefix}.${nonce}.${mac}`, issued, expires };
 }
 
 function readCookie(request, name) {
@@ -71,19 +75,25 @@ function readCookie(request, name) {
   return null;
 }
 
-/** Valid session => { expires }; otherwise null. Never throws on malformed cookies. */
+/**
+ * Valid session => { issued, expires }; otherwise null. Never throws on malformed cookies.
+ * Lifetime rule (WS-access2): the cookie's whole signed lifetime (expires - issued) must fit the CURRENT
+ * ACCESS_SESSION_SECONDS. This does not depend on the current time, so a cookie rejected after the setting
+ * was shortened stays rejected at every later moment; comparing only the remaining lifetime let it come back.
+ */
 export async function verifySession(request, env, config, url, now = Date.now()) {
   const value = readCookie(request, cookieName(url));
   const match = value ? COOKIE_VALUE.exec(value) : null;
   if (!match) return null;
-  const [, expiresText, prefix, nonce, mac] = match;
-  const expires = Number(expiresText);
-  // A cookie must not outlive the configured session length (a shortened setting ends longer sessions early).
-  if (!Number.isSafeInteger(expires) || expires <= now || expires - now > config.seconds * 1000) return null;
+  const [, issuedText, expiresText, prefix, nonce, mac] = match;
+  const issued = Number(issuedText), expires = Number(expiresText);
+  if (!Number.isSafeInteger(issued) || !Number.isSafeInteger(expires) || expires <= issued) return null;
+  if (expires - issued > config.seconds * 1000) return null;
+  if (issued > now + ISSUE_CLOCK_SKEW_MS || expires <= now) return null;
   // Removing a code from the list revokes every session opened with it.
   if (!config.digests.some(d => d.slice(0, 8) === prefix)) return null;
-  const expected = await hmac(config.secret, `v1|${expires}|${prefix}|${nonce}`);
-  return constantEqual(expected, mac) ? { expires } : null;
+  const expected = await hmac(config.secret, `v2|${issued}|${expires}|${prefix}|${nonce}`);
+  return constantEqual(expected, mac) ? { issued, expires } : null;
 }
 
 function setCookie(url, value, maxAge) {

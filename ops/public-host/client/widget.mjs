@@ -17,9 +17,10 @@ export function mountUsageWidget(container, options={}) {
   const feedbackState=el("p");feedbackState.setAttribute("role","status");feedbackState.setAttribute("aria-live","polite");
   const feedbackGroup=el("div");feedbackGroup.setAttribute("role","group");feedbackGroup.setAttribute("aria-label","짧은 의견");
   const meanings={off:"참여하지 않고 있습니다.",starting:"참여 연결 중입니다.",active:"참여 중입니다. 언제든 해제하면 이후 전송을 멈춥니다.",
-    retry:"통계 연결이 지연됩니다. 관전은 계속할 수 있습니다.",paused:"통계 전송을 멈췄습니다. 다시 참여하려면 해제 후 선택하세요.",disabled:"방문 통계 수집이 꺼져 있거나 보관 안내가 미확정이거나 브라우저의 수집 거부 설정이 켜져 있습니다."};
+    retry:"통계 연결이 지연됩니다. 관전은 계속할 수 있습니다.",paused:"통계 전송을 멈췄습니다. 다시 참여하려면 해제 후 선택하세요.",
+    access_required:"접속이 끝나 통계 참여를 멈췄습니다(이 요청은 저장되지 않음). 다시 접속한 뒤 참여를 선택하면 새로 시작합니다.",disabled:"방문 통계 수집이 꺼져 있거나 보관 안내가 미확정이거나 브라우저의 수집 거부 설정이 켜져 있습니다."};
   const client=createUsageClient({...options,visible:options.visible||(()=>doc.visibilityState==="visible"),
-    onStatus:value=>{state.textContent=meanings[value]||meanings.off;}});
+    onStatus:value=>{state.textContent=meanings[value]||meanings.off;if(value==="access_required")check.checked=false;}});
   check.disabled=!client.state.telemetryEnabled;
   state.textContent=client.state.telemetryEnabled?meanings.off:meanings.disabled;
   feedbackState.textContent=client.state.feedbackEnabled?"의견은 통계 참여 없이도 보낼 수 있습니다.":"의견 수집이 비활성 상태입니다.";
@@ -34,11 +35,23 @@ export function mountUsageWidget(container, options={}) {
       feedbackState.textContent="의견을 보내는 중입니다.";
       const result=await client.sendFeedback(rating);
       if(disposed || current!==generation)return;
+      if(result.accessRequired&&result.uncertain){
+        // This retry was refused, but an earlier attempt of the same choice may already be stored.
+        feedbackState.textContent="접속이 끝나 다시 보내지 못했습니다. 앞선 전송의 저장 여부는 확인되지 않았습니다. 다시 접속한 뒤 같은 의견 버튼으로만 다시 시도할 수 있습니다.";
+        for(const b of buttons)b.disabled=b!==button||!client.state.feedbackEnabled;return;
+      }
+      if(result.accessRequired){
+        // Refused by the gate before collection and no earlier attempt: not stored, so any rating may be chosen.
+        feedbackState.textContent="접속이 끝나 의견이 저장되지 않았습니다. 다시 접속한 뒤 보낼 수 있습니다.";
+        for(const b of buttons)b.disabled=!client.state.feedbackEnabled;return;
+      }
       feedbackState.textContent=result.ok?"의견을 받았습니다. 감사합니다.":"전송 확인이 안 됐습니다. 같은 의견 버튼으로 다시 시도할 수 있습니다.";
       if(!result.ok) for(const b of buttons)b.disabled=b!==button||!client.state.feedbackEnabled;
     });buttons.push(button);feedbackGroup.append(button);
   }
-  root.append(title,notice,retention,label,state,feedbackGroup,feedbackState);
+  // Disclosure only while the viewer gate is on: the access cookie travels with these requests but is not stored.
+  const gateNote=settings.accessGate?el("p","접속 제한이 켜져 있는 동안에는 기록·의견 요청에 이 사이트의 쿠키(접속 확인용 포함)가 함께 전송됩니다. 쿠키는 기록에 저장하지 않습니다."):null;
+  root.append(title,notice,retention,...(gateNote?[gateNote]:[]),label,state,feedbackGroup,feedbackState);
   container.replaceChildren(root);
   const tick=setInterval(()=>void client.flush(),30000);
   const visibility=()=>{client.sample();void client.flush();};

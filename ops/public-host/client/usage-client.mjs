@@ -1,4 +1,9 @@
-/** Optional session measurement. No persistent storage, cookies, URLs or page contents. */
+/**
+ * Optional session measurement. No persistent storage, URLs or page contents; the client never reads or
+ * writes cookies. Collection requests omit credentials unless the deployment turns the viewer access gate
+ * on (`accessGate`), because the gate protects these routes too; then only same-origin cookies travel
+ * with the request and the server stores none of them.
+ */
 const RATINGS = new Set(["helpful", "unclear", "problem"]);
 const REASONS = new Set(["none", "recommendation", "explanation", "delay", "display", "other"]);
 const validGame = n => Number.isSafeInteger(n) && n >= 0 && n <= 999999999999;
@@ -7,7 +12,9 @@ export function collectionSettings(options = {}) {
   const retainDays = Number.isInteger(options.retainDays) && options.retainDays >= 1 && options.retainDays <= 90 ? options.retainDays : null;
   return Object.freeze({ retainDays,
     telemetryEnabled: retainDays !== null && options.telemetryEnabled === true,
-    feedbackEnabled: retainDays !== null && options.feedbackEnabled === true });
+    feedbackEnabled: retainDays !== null && options.feedbackEnabled === true,
+    // Must equal the server's ACCESS_GATE_ENABLED (enforced by the offline config check).
+    accessGate: options.accessGate === true });
 }
 export function createUsageClient(options = {}) {
   const settings = collectionSettings(options);
@@ -20,12 +27,14 @@ export function createUsageClient(options = {}) {
   const status = options.onStatus || (() => {});
   let game = options.gamePk ?? 0;
   if (!validGame(game)) throw new Error("invalid_game");
-  let consent = false, session = null, feedback = null, destroyed = false;
+  let consent = false, session = null, feedback = null, destroyed = false, accessStopped = false;
   const day = () => new Date(wall()).toISOString().slice(0,10);
   const permitted = () => !destroyed && !optedOut();
   const allowedSession = () => settings.telemetryEnabled && permitted();
   const allowedFeedback = () => settings.feedbackEnabled && permitted();
   const abort = value => value?.controller?.abort();
+  // The gate answers before collection runs, so this refusal is certain: nothing was stored.
+  const accessRefused = response => response.status === 401 && response.headers?.get?.("X-Pitcheezy-Access") === "required";
   function freshSession() {
     abort(session);
     session = { id: uuid(), day: day(), game, sequence: 0, active: 0, started: false,
@@ -50,7 +59,7 @@ export function createUsageClient(options = {}) {
     const timeout=setTimeout(()=>controller.abort(),5000);
     try {
       const response=await Promise.race([fetchFn(route,{method:"POST",headers:{"Content-Type":"application/json"},
-        credentials:"omit",referrerPolicy:"no-referrer",cache:"no-store",redirect:"error",keepalive:true,
+        credentials:settings.accessGate?"same-origin":"omit",referrerPolicy:"no-referrer",cache:"no-store",redirect:"error",keepalive:true,
         body:JSON.stringify(body),signal:controller.signal}),aborted]);
       const ack=response.ok ? await Promise.race([response.json(),aborted]) : null;
       return {ok:response.ok,status:response.status,headers:response.headers,ack};
@@ -70,6 +79,11 @@ export function createUsageClient(options = {}) {
     try {
       const response=await transmit("/_telemetry/session",pending,target);
       if (session!==target || !consent || !allowedSession()) return false;
+      if (accessRefused(response)) {
+        // Viewer session expired or missing: participation ends here. Consent is dropped (the widget unchecks the
+        // box) so a game or UTC day change cannot restart sending; only a new explicit choice after re-entry does.
+        consent=false; session=null; accessStopped=true; status("access_required"); return false;
+      }
       if (!response.ok) {
         if ([400,403,409,413,415].includes(response.status)) target.paused=true;
         const retry=Number(response.headers.get("Retry-After"));
@@ -93,7 +107,7 @@ export function createUsageClient(options = {}) {
   function grant() {
     if (!allowedSession()) { status("disabled"); return Promise.resolve(false); }
     if(consent) return flush();
-    consent=true; freshSession(); status("starting"); return flush();
+    consent=true; accessStopped=false; freshSession(); status("starting"); return flush();
   }
   function withdraw() {
     consent=false; abort(session); session=null; status("off");
@@ -115,13 +129,21 @@ export function createUsageClient(options = {}) {
     const target=feedback; target.running=true;
     try {
       const response=await transmit("/_telemetry/feedback",target.body,target);
-      if(!response.ok || response.ack?.accepted!==true) return {ok:false,uncertain:true};
-      if(feedback!==target || !allowedFeedback()) return {ok:false,uncertain:true};
+      if(accessRefused(response)) {
+        // Certain only for THIS request. An earlier uncertain attempt of the same record may be stored, so keep
+        // that record (same id and rating) rather than allowing a second response after re-entry.
+        if(target.uncertain) return {ok:false,accessRequired:true,uncertain:true};
+        if(feedback===target) feedback=null;
+        return {ok:false,accessRequired:true};
+      }
+      if(!response.ok || response.ack?.accepted!==true) { target.uncertain=true; return {ok:false,uncertain:true}; }
+      if(feedback!==target || !allowedFeedback()) { target.uncertain=true; return {ok:false,uncertain:true}; }
       target.done=true; return {ok:true};
-    } catch { return {ok:false,uncertain:true}; }
+    } catch { target.uncertain=true; return {ok:false,uncertain:true}; }
     finally {target.running=false;}
   }
   function destroy() {withdraw();destroyed=true;abort(feedback);feedback=null;}
   return {grant,withdraw,setGame,flush,sample,sendFeedback,destroy,
-    get state(){return {telemetryEnabled:allowedSession(),feedbackEnabled:allowedFeedback(),retainDays:settings.retainDays,consent,gamePk:game,started:session?.started===true};}};
+    get state(){return {telemetryEnabled:allowedSession(),feedbackEnabled:allowedFeedback(),retainDays:settings.retainDays,consent,gamePk:game,started:session?.started===true,
+      accessGate:settings.accessGate,accessRequired:accessStopped};}};
 }

@@ -13,7 +13,7 @@
 | `game_pk`, `window{from,to}`(UTC, ≤14일), `evidence` | 운영자 | `evidence`는 `synthetic`(합성 자료) / `offline_replay`(오프라인 재생) / `live`(실경기) 중 하나 |
 | `collection{telemetry_enabled,feedback_enabled,consent_note,retain_days}` | 배포 설정·운영 기록 | 동의/누락 범위 설명 |
 | `usage_summary` 또는 `null` | `summarizeTelemetry`(D1) 결과 `pitcheezy-usage-summary-v1` | D1 내보내기 CLI는 아직 없다(계정 도구로 실행) |
-| `monitor_state` 또는 `null` | 감시 상태 파일의 `state` | 이벤트·열린 장애·잘린 건수 |
+| `monitor_state` 또는 `null` | 감시 상태 파일의 `state` | 이벤트·열린 장애·잘린 건수·`last_observed_ms`(마지막 관측) |
 | `notice_audit` 또는 `null` | 안내 스위치 운영자 GET의 `audit` | 전환 시각·사유·조작자 |
 | `alert_state` 또는 `null` | 알림 상태 파일 | 모의 확인/미전달 수 |
 | `actions[]`, `sources{}`, `commands[]`, `unmeasured[]`, `notes` | 운영자 | 주소·토큰·43자 이상 토큰 모양 문자열이 있으면 거부 |
@@ -35,6 +35,9 @@
 문제 목록은 집계 기간 안의 감시 open/복구 이벤트, 안내 전환 기록, 알림 모의 확인/미전달 수(집계 기간 안에 시도한 전달만; 실제 전달 확인 아님)를 담는다.
 비고·명령·조치·동의 문구·미측정·계약 버전·안내 사유·피드백 사유 등 초안에 들어가는 모든 자유 문구에서 주소·토큰 모양을 거부한다.
 감시·안내·알림 자료가 없으면 "기록 없음/미측정"으로 쓴다. 증거 라벨은 제목과 본문에 반복된다.
+감시 상태는 마지막 관측 시각만 남기므로 "감시 이벤트 없음"은 감시가 기간 끝까지 관측했을 때만 쓴다(`monitor_coverage`):
+`covers_end`(기간 끝 이후 관측) · `stopped_in_window`(기간 중 마지막 관측 — 그 이후 미측정) · `before_window`/`never`(기간 중 관측 없음 — 장애 유무 미측정) ·
+`unknown`(마지막 관측 시각 없음 — 실행 범위 미측정). 감시 코드 환경 변수가 빠져 감시가 종료 2로 멈춘 경우 등이 여기서 드러난다.
 
 ~~~text
 node ops/public-host/report-cli.mjs --input <입력.json> --output-dir <폴더>

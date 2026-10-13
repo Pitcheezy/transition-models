@@ -1,10 +1,10 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { createHash } from "node:crypto";
+import { createHash, createHmac } from "node:crypto";
 import { fileURLToPath } from "node:url";
 import { Miniflare } from "miniflare";
 import worker from "../gateway.mjs";
-import { accessConfig, verifySession, transportAllowed, ACCESS_ROUTE, MAX_SESSION_SECONDS } from "../access.mjs";
+import { accessConfig, verifySession, transportAllowed, handleAccess, requireViewer, ACCESS_ROUTE, MAX_SESSION_SECONDS, ISSUE_CLOCK_SKEW_MS } from "../access.mjs";
 import { NOTICE_ROUTE } from "../notice.mjs";
 import { probe } from "../monitor.mjs";
 
@@ -169,7 +169,7 @@ test("a correct code opens a strict, private session that unlocks screen, data a
   const opened = await login(CODE_A, { headers: { "Sec-Fetch-Site": "same-origin", Origin: "https://host.example.test" } });
   assert.equal(opened.status, 200);
   const set = opened.headers.get("Set-Cookie");
-  assert.match(set, /^__Host-pz_viewer=v1\.[1-9][0-9]*\.[a-f0-9]{8}\.[a-f0-9]{16}\.[a-f0-9]{64}; Path=\/; Max-Age=3600; HttpOnly; SameSite=Strict; Secure$/);
+  assert.match(set, /^__Host-pz_viewer=v2\.[1-9][0-9]*\.[1-9][0-9]*\.[a-f0-9]{8}\.[a-f0-9]{16}\.[a-f0-9]{64}; Path=\/; Max-Age=3600; HttpOnly; SameSite=Strict; Secure$/);
   const body = await opened.json();
   assert.equal(body.authenticated, true);
   assert.ok(Date.parse(body.expires_at) > Date.now());
@@ -187,7 +187,7 @@ test("a correct code opens a strict, private session that unlocks screen, data a
   const form = await login(CODE_B, { form: true });
   assert.equal(form.status, 303);
   assert.equal(form.headers.get("Location"), "/");
-  assert.match(form.headers.get("Set-Cookie"), /^__Host-pz_viewer=v1\./);
+  assert.match(form.headers.get("Set-Cookie"), /^__Host-pz_viewer=v2\./);
   // No secret material in any response.
   for (const r of [opened, screen, form]) {
     const text = JSON.stringify([...r.headers]) + (r.bodyUsed ? "" : await r.clone().text());
@@ -206,9 +206,11 @@ test("expiry, tampering, code removal, secret rotation and logout all end the se
   assert.equal(await verifySession(request(), env, config, url, Date.now() + 3600 * 1000 + 1), null);
   const [name, value] = cookie.split("=");
   const parts = value.split(".");
-  const tamperedMac = [...parts.slice(0, 4), parts[4].replace(/^./, c => (c === "a" ? "b" : "a"))].join(".");
-  const tamperedExpiry = [parts[0], String(Number(parts[1]) + 60000), ...parts.slice(2)].join(".");
-  for (const bad of [tamperedMac, tamperedExpiry, "v1.1.2.3.4", "", "garbage"]) {
+  assert.equal(parts.length, 6, "v2.<issued>.<expires>.<prefix>.<nonce>.<mac>");
+  const tamperedMac = [...parts.slice(0, 5), parts[5].replace(/^./, c => (c === "a" ? "b" : "a"))].join(".");
+  const tamperedExpiry = [parts[0], parts[1], String(Number(parts[2]) + 60000), ...parts.slice(3)].join(".");
+  const tamperedIssued = [parts[0], String(Number(parts[1]) - 60000), ...parts.slice(2)].join(".");
+  for (const bad of [tamperedMac, tamperedExpiry, tamperedIssued, "v1.1.2.3.4", "v2.1.2.3.4.5", "", "garbage"]) {
     assert.equal(await verifySession(request(name + "=" + bad), env, config, url), null, bad);
     assert.equal((await call("/", { headers: { Cookie: name + "=" + bad } })).status, 401);
   }
@@ -230,10 +232,72 @@ test("expiry, tampering, code removal, secret rotation and logout all end the se
   assert.match(logout.headers.get("Set-Cookie"), /^__Host-pz_viewer=; Path=\/; Max-Age=0; HttpOnly; SameSite=Strict; Secure$/);
 });
 
+// WS-access2: shortening ACCESS_SESSION_SECONDS must never let an already rejected cookie become valid later.
+const T0 = Date.parse("2026-10-13T12:00:00Z");
+const gateEnv = (seconds, code = CODE_A) => ({ ACCESS_GATE_ENABLED: "true", ACCESS_CODE_SHA256: digest(code), ACCESS_SESSION_SECRET: SECRET,
+  ACCESS_SESSION_SECONDS: String(seconds), PUBLISH_LIMITER: { limit: async () => ({ success: true }) } });
+async function mintAt(env, now, code = CODE_A) {
+  const r = await handleAccess(new Request("https://host.example.test" + ACCESS_ROUTE, { method: "POST",
+    headers: { "Content-Type": "application/json" }, body: JSON.stringify({ code }) }), env, now);
+  assert.equal(r.status, 200);
+  return r.headers.get("Set-Cookie").split(";")[0];
+}
+async function validAt(env, cookie, now) {
+  const url = new URL("https://host.example.test/");
+  try { await requireViewer(new Request(url, { headers: { Cookie: cookie } }), env, url, now); return true; }
+  catch (e) { if (e.message !== "access_required") throw e; return false; }
+}
+const signed = (issued, expires, code = CODE_A, version = "v2") => {
+  const prefix = digest(code).slice(0, 8), nonce = "0123456789abcdef";
+  const text = version === "v2" ? `v2|${issued}|${expires}|${prefix}|${nonce}` : `v1|${expires}|${prefix}|${nonce}`;
+  const mac = createHmac("sha256", SECRET).update(text).digest("hex");
+  return "__Host-pz_viewer=" + (version === "v2" ? `v2.${issued}.${expires}.${prefix}.${nonce}.${mac}` : `v1.${expires}.${prefix}.${nonce}.${mac}`);
+};
+
+test("shortening the session length rejects longer cookies at every later minute; it never resurrects them", async () => {
+  const env = gateEnv(7200);
+  const cookie = await mintAt(env, T0);
+  assert.equal(await validAt(env, cookie, T0 + 10 * 60000), true);
+  env.ACCESS_SESSION_SECONDS = "1800";
+  const resurrected = [];
+  for (let minute = 0; minute <= 180; minute++) if (await validAt(env, cookie, T0 + minute * 60000)) resurrected.push(minute);
+  assert.deepEqual(resurrected, [], "main 9c99a5d accepted this cookie again at minutes 91-119");
+  // A cookie minted under the short setting behaves normally under it.
+  const short = await mintAt(env, T0 + 100 * 60000);
+  assert.equal(await validAt(env, short, T0 + 100 * 60000), true);
+  assert.equal(await validAt(env, short, T0 + 129 * 60000), true);
+  assert.equal(await validAt(env, short, T0 + 130 * 60000), false, "expires at issue + 1800 s");
+});
+
+test("extending the session length keeps existing sessions until their own expiry; equal lengths stay valid", async () => {
+  const env = gateEnv(1800);
+  const cookie = await mintAt(env, T0);
+  env.ACCESS_SESSION_SECONDS = "7200";
+  assert.equal(await validAt(env, cookie, T0 + 29 * 60000), true);
+  assert.equal(await validAt(env, cookie, T0 + 30 * 60000), false, "the signed expiry still ends it");
+  env.ACCESS_SESSION_SECONDS = "1800";
+  assert.equal(await validAt(env, cookie, T0 + 5 * 60000), true, "lifetime equal to the setting is allowed");
+  env.ACCESS_SESSION_SECONDS = "1799";
+  for (const minute of [0, 5, 29]) assert.equal(await validAt(env, cookie, T0 + minute * 60000), false);
+});
+
+test("legacy v1, forged lifetimes and future issue times are refused even with a valid signature", async () => {
+  const env = gateEnv(3600);
+  // A correctly signed v1 cookie (pre-WS-access2 format) is not accepted: it carries no issue time.
+  assert.equal(await validAt(env, signed(null, T0 + 1800000, CODE_A, "v1"), T0), false);
+  assert.equal(await validAt(env, signed(T0, T0 + 1800000), T0 + 1000), true, "control: a well-formed v2 cookie");
+  assert.equal(await validAt(env, signed(T0, T0 + 3600000 + 1), T0 + 1000), false, "lifetime above the setting");
+  assert.equal(await validAt(env, signed(T0, T0), T0 - 1), false, "expiry not after issue");
+  assert.equal(await validAt(env, signed(T0 + 1000, T0), T0 - 5000), false, "expiry before issue");
+  assert.equal(await validAt(env, signed(T0 + ISSUE_CLOCK_SKEW_MS, T0 + ISSUE_CLOCK_SKEW_MS + 60000), T0), true, "skew tolerance");
+  assert.equal(await validAt(env, signed(T0 + ISSUE_CLOCK_SKEW_MS + 1, T0 + ISSUE_CLOCK_SKEW_MS + 60000), T0), false, "issued in the future");
+  assert.equal(await validAt(env, signed(T0, T0 + 1800000, CODE_B), T0 + 1000), false, "code not in the list");
+});
+
 test("plain http loopback uses an unprefixed cookie without Secure; notice takes precedence over the gate", async () => {
   const { call, login, cookieOf } = fixture({ origin: "http://127.0.0.1:8787" });
   const opened = await login(CODE_A);
-  assert.match(opened.headers.get("Set-Cookie"), /^pz_viewer=v1\..*; HttpOnly; SameSite=Strict$/);
+  assert.match(opened.headers.get("Set-Cookie"), /^pz_viewer=v2\..*; HttpOnly; SameSite=Strict$/);
   assert.equal((await call("/", { headers: { Cookie: cookieOf(opened) } })).status, 200);
   const on = await call(NOTICE_ROUTE, { method: "PUT", headers: { Authorization: "Bearer " + OPERATOR, "Content-Type": "application/json", "If-None-Match": "*" },
     body: JSON.stringify({ active: true, operator: "ops-a", reason: "drill", message_id: "maintenance" }) });
@@ -296,7 +360,7 @@ test("actual local Worker runtime: gate, login, cookie round trip, logout and fo
     const opened = await call(ACCESS_ROUTE, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ code: CODE_A }) });
     assert.equal(opened.status, 200, await opened.clone().text());
     const cookie = opened.headers.get("Set-Cookie").split(";")[0];
-    assert.match(cookie, /^pz_viewer=v1\./);
+    assert.match(cookie, /^pz_viewer=v2\./);
     await opened.arrayBuffer();
     const screen = await call("/", { headers: { Cookie: cookie } });
     assert.equal(screen.status, 200); assert.equal(screen.headers.get("Cache-Control"), "private, max-age=60"); await screen.arrayBuffer();
@@ -307,5 +371,36 @@ test("actual local Worker runtime: gate, login, cookie round trip, logout and fo
     const logout = await call(ACCESS_ROUTE, { method: "DELETE", headers: { Cookie: cookie } });
     assert.equal(logout.status, 204); assert.match(logout.headers.get("Set-Cookie"), /Max-Age=0/); await logout.arrayBuffer();
     assert.equal((await call("/")).status, 401);
+    // WS-access2 on the real runtime. main 9c99a5d compared only the remaining lifetime, so a cookie refused right
+    // after shortening became valid again once its remaining lifetime fell below the new setting. Mint a 6 s cookie,
+    // restart with 3 s, and check both right away and inside that window (about 3.8 s after minting).
+    const restart = seconds => mf.setOptions({
+      modules: true, modulesRoot: fileURLToPath(new URL("../", import.meta.url)),
+      scriptPath: fileURLToPath(new URL("../worker.mjs", import.meta.url)),
+      compatibilityDate: "2026-07-30", r2Buckets: ["PUBLISH_BUCKET"],
+      ratelimits: { PUBLISH_LIMITER: { namespace_id: "1002", simple: { limit: 60, period: 60 } } },
+      bindings: { DATA_READ_ENABLED: "true", UPLOAD_ENABLED: "true", PUBLISH_TOKEN_SHA256: digest(PUBLISH_TOKEN),
+        ACCESS_GATE_ENABLED: "true", ACCESS_CODE_SHA256: digest(CODE_A), ACCESS_SESSION_SECRET: SECRET, ACCESS_SESSION_SECONDS: String(seconds) },
+      serviceBindings: { ASSETS: () => new Response("<!doctype html><html>frontend</html>", { headers: { "Content-Type": "text/html" } }) },
+    });
+    const loginNow = async () => {
+      const r = await call(ACCESS_ROUTE, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ code: CODE_A }) });
+      assert.equal(r.status, 200); const c = r.headers.get("Set-Cookie").split(";")[0]; await r.arrayBuffer(); return c;
+    };
+    await restart(6);
+    const mintedAt = Date.now();
+    const sixSecond = await loginNow();
+    const before = await call("/", { headers: { Cookie: sixSecond } });
+    assert.equal(before.status, 200); await before.arrayBuffer();
+    await restart(3);
+    const refused = await call("/", { headers: { Cookie: sixSecond } });
+    assert.equal(refused.status, 401, "a 6 s cookie does not fit a 3 s setting"); await refused.arrayBuffer();
+    await new Promise(r => setTimeout(r, Math.max(0, mintedAt + 3800 - Date.now())));
+    assert.ok(Date.now() < mintedAt + 5600, "the check must run before the cookie's own expiry to be meaningful");
+    const stillRefused = await call("/", { headers: { Cookie: sixSecond } });
+    assert.equal(stillRefused.status, 401, "remaining lifetime is now below 3 s: main accepted here, the fix must not"); await stillRefused.arrayBuffer();
+    const shortCookie = await loginNow();
+    const ok = await call("/", { headers: { Cookie: shortCookie } });
+    assert.equal(ok.status, 200); await ok.arrayBuffer();
   } finally { await mf.dispose(); }
 });

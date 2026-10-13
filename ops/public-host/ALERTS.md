@@ -13,9 +13,10 @@
 |---|---|---|
 | `freshness_*`, `health_missing`, `health_invalid_json*`, `health_invalid_utf8` | `publish_stalled` (발행 중단/지연) | **Song**(맥미니·발행기), 우리는 호스팅 확인 |
 | `page_*`/`health_*`의 HTTP·네트워크·시간초과·본문·헤더 오류 | `host_error` (호스팅 오류) | **우리**, Song은 발행기 확인 |
+| `access_login_*`, `*_access_session_rejected`, `*_access_gate_without_login` (감시 코드로 세션을 못 열거나 거절됨, WS-monitor2) | `host_error` | **우리**(접근 문·감시 코드) |
 | 두 종류가 섞임 또는 모르는 issue | `unclassified` | 양쪽 |
 | `*_notice_active` | `notice_active` (정보) | 조치 불필요(사람이 켠 안내) |
-| `*_access_required` | `access_gate` (정보) | 조치 불필요(감시에 세션 없음) |
+| `*_access_required` | `access_gate` (정보) | 조치 불필요(감시 코드 미설정; 게이트 뒤 발행 시각 미측정) |
 | `recovered` 이벤트 | `recovered` (정보) | — |
 
 - **중복 억제:** (장애 id, 종류, 수신자)마다 한 번만 보낸다. 같은 장애가 계속 열려 있어도 반복하지 않는다.

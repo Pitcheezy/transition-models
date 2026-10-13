@@ -1,6 +1,10 @@
 /**
- * One-shot availability/freshness probe. No publisher calls, credentials, or alerts sent.
+ * One-shot availability/freshness probe. No publisher calls or alerts sent.
  * Config is OUR monitor configuration, not a Song health-file schema.
+ * WS-monitor2: when the viewer access gate is on, an optional monitor access code (read from the
+ * environment variable named by `access_code_env`, never from the config file) opens a viewer session
+ * through the same login route a viewer uses. No bypass route or extra credential type exists; the code
+ * and the session cookie stay in memory and never reach the report, state, output or logs.
  */
 import { createHash } from "node:crypto";
 const sha = text => createHash("sha256").update(text).digest("hex");
@@ -12,11 +16,20 @@ const STATES = new Set(["available", "partial", "failed"]);
 export class MonitorError extends Error { constructor(code) { super(code); this.code = code; } }
 function refuse(code) { throw new MonitorError(code); }
 
+export const ACCESS_ROUTE = "/_access/v1/session";
+const GATE_LOGIN_ANSWERS = new Set(["access_login_denied", "access_login_rate_limited", "access_login_invalid_cookie"]);
+const GATE_READ_ANSWERS = new Set(["access_required", "access_session_rejected", "access_gate_without_login"]);
+const ENV_NAME = /^[A-Z][A-Z0-9_]{2,63}$/;
+
 export function validateConfig(config) {
   const keys = ["schema", "origin", "allow_loopback_http", "timeout_ms", "max_body_bytes",
     "timestamp_pointer", "timestamp_format", "max_age_seconds", "clock_skew_seconds",
     "page_sha256"];
+  // Optional (WS-monitor2): the NAME of an environment variable holding a monitor access code.
+  if (object(config) && own(config, "access_code_env")) keys.push("access_code_env");
   if (!exact(config, keys) || config.schema !== "pitcheezy-host-monitor-v1") refuse("invalid_config");
+  if (own(config, "access_code_env") && !(config.access_code_env === null ||
+      (typeof config.access_code_env === "string" && ENV_NAME.test(config.access_code_env)))) refuse("invalid_access_code_env");
   let url;
   try { url = new URL(config.origin); } catch { refuse("invalid_origin"); }
   if (typeof config.origin !== "string" || url.origin !== config.origin ||
@@ -86,7 +99,59 @@ function timingHeaders(headers, nowMs, skew) {
   return "valid";
 }
 
-async function fetchBounded(url, config, fetchImpl) {
+/** Same shape the gate accepts; checked before any request so a bad value never leaves the process. */
+export function validAccessCode(code) {
+  return typeof code === "string" && code.length >= 8 && code.length <= 128 && !/[\p{Cc}\s]/u.test(code);
+}
+
+/**
+ * Opens a viewer session through the public login route. Returns { session: "established", cookie } or
+ * { session: "gate_off", cookie: null } (the route is hidden while the gate is off); throws a fixed code.
+ */
+export async function accessLogin(config, code, fetchImpl) {
+  const controller = new AbortController();
+  let timer;
+  const work = async () => {
+    let response;
+    try {
+      response = await fetchImpl(config.origin + ACCESS_ROUTE, {
+        method: "POST", redirect: "manual", credentials: "omit", referrerPolicy: "no-referrer", cache: "no-store",
+        signal: controller.signal, headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({ code }),
+      });
+    } catch { refuse("access_login_network_error"); }
+    response.body?.cancel().catch(() => {}); // the session travels in Set-Cookie; the body is not needed
+    if (response.status === 404) return { session: "gate_off", cookie: null };
+    if (response.status === 401) refuse("access_login_denied");
+    if (response.status === 429) refuse("access_login_rate_limited");
+    if (response.status === 503) refuse("access_login_unavailable");
+    if (response.status !== 200) refuse("access_login_http_error");
+    const lines = typeof response.headers.getSetCookie === "function" ? response.headers.getSetCookie() :
+      [response.headers.get("Set-Cookie")].filter(Boolean);
+    const name = new URL(config.origin).protocol === "https:" ? "__Host-pz_viewer" : "pz_viewer";
+    for (const line of lines) {
+      const pair = line.split(";")[0];
+      const index = pair.indexOf("=");
+      if (index > 0 && pair.slice(0, index) === name && /^[A-Za-z0-9._-]{1,512}$/.test(pair.slice(index + 1))) {
+        return { session: "established", cookie: pair };
+      }
+    }
+    refuse("access_login_invalid_cookie");
+  };
+  try {
+    return await Promise.race([
+      work(),
+      new Promise((_, reject) => { timer = setTimeout(() => {
+        controller.abort(); reject(new MonitorError("access_login_timeout"));
+      }, config.timeout_ms); }),
+    ]);
+  } catch (error) {
+    if (error instanceof MonitorError) throw error;
+    refuse("access_login_error");
+  } finally { clearTimeout(timer); controller.abort(); }
+}
+
+async function fetchBounded(url, config, fetchImpl, cookie = null, accessConfigured = false) {
   const controller = new AbortController();
   let timer;
   const work = async () => {
@@ -95,7 +160,7 @@ async function fetchBounded(url, config, fetchImpl) {
       response = await fetchImpl(url, {
         method: "GET", redirect: "manual", credentials: "omit",
         referrerPolicy: "no-referrer", cache: "no-store", signal: controller.signal,
-        headers: { Accept: url.endsWith(".json") ? "application/json" : "text/html" },
+        headers: { Accept: url.endsWith(".json") ? "application/json" : "text/html", ...(cookie ? { Cookie: cookie } : {}) },
       });
     } catch { refuse("network_error"); }
     if (response.status !== 200) {
@@ -104,8 +169,13 @@ async function fetchBounded(url, config, fetchImpl) {
       // for a publisher or storage outage: the host marks it with a header, never by body text.
       const notice = response.headers.get("X-Pitcheezy-Notice");
       if (response.status === 503 && notice && /^[a-z_]{1,40}$/.test(notice)) refuse("notice_active");
-      // The viewer access gate (WS-access1) answers 401 to this credential-less probe by design.
-      if (response.status === 401 && response.headers.get("X-Pitcheezy-Access") === "required") refuse("access_required");
+      // The viewer access gate (WS-access1) answers 401 to a probe without a session by design; with a
+      // session from our own login (WS-monitor2) the same answer means the gate refused that session.
+      // A configured monitor that found no login route (404 = "gate off") yet meets the gate is inconsistent:
+      // that is ours to investigate, never the info-only "gate seen without a monitor code".
+      if (response.status === 401 && response.headers.get("X-Pitcheezy-Access") === "required") {
+        refuse(cookie ? "access_session_rejected" : accessConfigured ? "access_gate_without_login" : "access_required");
+      }
       refuse(response.status >= 300 && response.status < 400 ? "redirect" :
         response.status === 404 ? "missing" : "http_error");
     }
@@ -141,13 +211,22 @@ async function fetchBounded(url, config, fetchImpl) {
   } finally { clearTimeout(timer); controller.abort(); }
 }
 
-export async function probe(config, { fetchImpl = fetch, now = () => Date.now() } = {}) {
+export async function probe(config, { fetchImpl = fetch, now = () => Date.now(), accessCode = null } = {}) {
   validateConfig(config);
+  const accessConfigured = typeof config.access_code_env === "string";
+  if (accessConfigured && !validAccessCode(accessCode)) refuse(accessCode ? "access_code_invalid" : "access_code_unavailable");
   const started = now();
+  let access = { session: accessConfigured ? null : "not_configured", cookie: null, code: null };
+  if (accessConfigured) {
+    try { access = { ...(await accessLogin(config, accessCode, fetchImpl)), code: null }; }
+    catch (error) { access = { session: "login_failed", cookie: null, code: error instanceof MonitorError ? error.code : "access_login_error" }; }
+  }
   const check = async (path, kind) => {
     const begin = performance.now();
+    // Without a session nothing behind the gate can be read; do not mislabel that as a page outage.
+    if (access.session === "login_failed") return { status: "skipped", code: "access_login_failed", elapsed_ms: 0 };
     try {
-      const result = await fetchBounded(config.origin + path, config, fetchImpl);
+      const result = await fetchBounded(config.origin + path, config, fetchImpl, access.cookie, accessConfigured);
       const mime = result.headers.get("Content-Type")?.split(";")[0].trim().toLowerCase();
       const expected = kind === "page" ? "text/html" : "application/json";
       if (mime !== expected) refuse("content_type");
@@ -176,9 +255,10 @@ export async function probe(config, { fetchImpl = fetch, now = () => Date.now() 
   const end = now();
   if (!Number.isSafeInteger(started) || !Number.isSafeInteger(end) || end < started) refuse("clock_error");
   const issues = [];
-  if (page.status !== "ok") issues.push("page_" + page.code);
-  if (health.status !== "ok") issues.push("health_" + health.code);
-  else {
+  if (access.session === "login_failed") issues.push(access.code);
+  if (page.status === "error") issues.push("page_" + page.code);
+  if (health.status === "error") issues.push("health_" + health.code);
+  else if (health.status === "ok") {
     if (health.headers !== "valid") issues.push("health_" + health.headers);
     if (!["fresh", "unmeasured"].includes(health.freshness.status)) issues.push("freshness_" + health.freshness.status);
   }
@@ -189,8 +269,13 @@ export async function probe(config, { fetchImpl = fetch, now = () => Date.now() 
     observed_at_ms: end, status, issues, page, health,
     // Viewer-facing unavailability caused by the operator notice, distinguished from outages for routing.
     notice_active: page.code === "notice_active" || health.code === "notice_active",
-    // The probe carries no viewer session, so a gated host is unavailable to it; not a publisher outage.
-    access_gate_active: page.code === "access_required" || health.code === "access_required",
+    // True only when this probe saw the gate itself answer: a session opened, a login answered by the gate
+    // (refused, rate-limited, or 200 without a usable cookie), or a read refused by the gate. Network errors,
+    // timeouts and other HTTP answers prove nothing about the gate and leave it false.
+    access_gate_active: access.session === "established" || GATE_LOGIN_ANSWERS.has(access.code) ||
+      [page.code, health.code].some(code => GATE_READ_ANSWERS.has(code)),
+    // not_configured | established | gate_off | login_failed. Never the code or the cookie.
+    access_session: access.session,
     semantic_health: "unmeasured", javascript_execution: "unmeasured",
   };
 }

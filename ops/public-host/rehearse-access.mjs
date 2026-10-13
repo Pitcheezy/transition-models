@@ -72,10 +72,10 @@ export async function runAccessRehearsal() {
     need(opened.status === 200, "login_failed"); await opened.arrayBuffer();
     const setCookie = opened.headers.get("Set-Cookie") || "";
     const cookie = setCookie.split(";")[0];
-    need(/^pz_viewer=v1\./.test(cookie) && /HttpOnly/.test(setCookie) && /SameSite=Strict/.test(setCookie) && /Path=\//.test(setCookie), "cookie_attributes");
+    need(/^pz_viewer=v2\./.test(cookie) && /HttpOnly/.test(setCookie) && /SameSite=Strict/.test(setCookie) && /Path=\//.test(setCookie), "cookie_attributes");
     const form = await host.login(host.accessCodes[0], { form: true });
     need(form.status === 303 && form.headers.get("Location") === "/", "form_redirect"); await form.arrayBuffer();
-    report.login = { wrong_code_status: 401, json_login_ms: loginMs, cookie_attributes: setCookie.replace(/=v1\.[^;]+/, "=<redacted>"), form_login_status: 303 };
+    report.login = { wrong_code_status: 401, json_login_ms: loginMs, cookie_attributes: setCookie.replace(/=v2\.[^;]+/, "=<redacted>"), form_login_status: 303 };
     completed.push("login");
 
     phase = "unlocked";

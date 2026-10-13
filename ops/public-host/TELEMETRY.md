@@ -101,7 +101,15 @@ feedback_id 동일 요청은 한 번만 저장한다. 같은 ID의 다른 내용
 - 동의 해제는 이후 전송을 중단한다. 이미 전송된 자료의 즉시 삭제는 아니다.
 - 네트워크/본문 응답 전체에 5초 제한. 같은 payload 재시도, 3회 연속 실패 시 통계 일시 정지.
   실패해도 관전 기능은 중단하지 않는다. 피드백 확인 실패 시 같은 선택만 다시 시도한다.
-- fetch에 credentials=omit을 지정한다. 실제 Chrome 검사에서는 쿠키가 전송되지 않았다.
+- **접근 문(WS-access3):** 공개 수집 설정 `accessGate`(기본 false)가 서버 `ACCESS_GATE_ENABLED`와 같아야 한다(설정 검사가 강제).
+  true면 게이트가 수집 경로도 보호하므로 `credentials:"same-origin"`으로 **같은 출처 쿠키만**(이 사이트의 모든 쿠키, 접속 확인용 포함) 함께 보낸다.
+  위젯은 이때만 "이 사이트의 쿠키(접속 확인용 포함)가 함께 전송되지만 기록에 저장하지 않는다"는 개발용 안내를 덧붙인다.
+  401 + `X-Pitcheezy-Access: required`는 게이트가 그 요청을 확실히 거절한 것(미저장)이다. 통계는 `access_required`로 참여를 끝낸다
+  (동의 해제·체크 해제, 재시도·실패 누적 없음, 경기·날짜 변경으로도 재개하지 않음, 새 선택으로만 새 세션).
+  의견은 첫 시도가 거절되면 `accessRequired`(미저장 확정, 다른 평가 선택 가능)이고, 앞선 시도가 불확실했으면
+  `accessRequired`+`uncertain`(같은 평가·같은 id로만 재시도)이다. 실제 로컬(https 로컬 Worker·D1·Chromium) 조합 검사는
+  `tests/browser/host-access-collection.test.cjs`와 [영수증](../../docs/results/ops/ws_access_collection_20261013.json)에 있다.
+- `accessGate:false`면 fetch에 credentials=omit을 지정한다. 실제 Chrome 검사에서는 쿠키가 전송되지 않았다.
   **Windows Playwright WebKit2336에서는 omit 지정에도 같은 출처 쿠키가 전송됐다.**
   keepalive 여부를 바꿔도 동일했다. 이는 해결된 것으로 표시하지 않는다. 서버 저장 경로는
   Cookie를 읽거나 D1에 넣지 않으며, 무쿠키 전송을 모든 브라우저에 보장하지 않는다.
