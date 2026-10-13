@@ -8,8 +8,8 @@
 const encoder = new TextEncoder();
 const SHA256 = /^[a-f0-9]{64}$/;
 const SECRET = /^[A-Za-z0-9_-]{43,128}$/;
-// v2: issue time and expiry are both signed so the lifetime rule below does not depend on the current time.
-const COOKIE_VALUE = /^v2\.([1-9][0-9]{0,15})\.([1-9][0-9]{0,15})\.([a-f0-9]{8})\.([a-f0-9]{16})\.([a-f0-9]{64})$/;
+// v3 binds the complete code digest through a keyed tag without exposing that digest to viewers.
+const COOKIE_VALUE = /^v3\.([1-9][0-9]{0,15})\.([1-9][0-9]{0,15})\.([a-f0-9]{64})\.([a-f0-9]{16})\.([a-f0-9]{64})$/;
 /** Tolerated difference between edge clocks for a cookie issued "in the future". */
 export const ISSUE_CLOCK_SKEW_MS = 60000;
 const MAX_BODY = 1024;
@@ -54,14 +54,15 @@ async function hmac(secret, text) {
   const key = await crypto.subtle.importKey("raw", encoder.encode(secret), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
   return hex(await crypto.subtle.sign("HMAC", key, encoder.encode(text)));
 }
+const codeTagFor = (secret, digest) => hmac(secret, `code-tag-v3|${digest}`);
 
 async function mint(config, digest, now) {
   const issued = now;
   const expires = issued + config.seconds * 1000;
-  const prefix = digest.slice(0, 8);
+  const codeTag = await codeTagFor(config.secret, digest);
   const nonce = hex(crypto.getRandomValues(new Uint8Array(8)));
-  const mac = await hmac(config.secret, `v2|${issued}|${expires}|${prefix}|${nonce}`);
-  return { value: `v2.${issued}.${expires}.${prefix}.${nonce}.${mac}`, issued, expires };
+  const mac = await hmac(config.secret, `v3|${issued}|${expires}|${codeTag}|${nonce}`);
+  return { value: `v3.${issued}.${expires}.${codeTag}.${nonce}.${mac}`, issued, expires };
 }
 
 function readCookie(request, name) {
@@ -85,15 +86,17 @@ export async function verifySession(request, env, config, url, now = Date.now())
   const value = readCookie(request, cookieName(url));
   const match = value ? COOKIE_VALUE.exec(value) : null;
   if (!match) return null;
-  const [, issuedText, expiresText, prefix, nonce, mac] = match;
+  const [, issuedText, expiresText, codeTag, nonce, mac] = match;
   const issued = Number(issuedText), expires = Number(expiresText);
   if (!Number.isSafeInteger(issued) || !Number.isSafeInteger(expires) || expires <= issued) return null;
   if (expires - issued > config.seconds * 1000) return null;
   if (issued > now + ISSUE_CLOCK_SKEW_MS || expires <= now) return null;
-  // Removing a code from the list revokes every session opened with it.
-  if (!config.digests.some(d => d.slice(0, 8) === prefix)) return null;
-  const expected = await hmac(config.secret, `v2|${issued}|${expires}|${prefix}|${nonce}`);
-  return constantEqual(expected, mac) ? { issued, expires } : null;
+  const expected = await hmac(config.secret, `v3|${issued}|${expires}|${codeTag}|${nonce}`);
+  if (!constantEqual(expected, mac)) return null;
+  // Removing a code revokes its sessions even if another digest shares its old 32-bit prefix.
+  let allowed = false;
+  for (const digest of config.digests) allowed = constantEqual(await codeTagFor(config.secret, digest), codeTag) || allowed;
+  return allowed ? { issued, expires } : null;
 }
 
 function setCookie(url, value, maxAge) {

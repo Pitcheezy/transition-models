@@ -169,7 +169,7 @@ test("a correct code opens a strict, private session that unlocks screen, data a
   const opened = await login(CODE_A, { headers: { "Sec-Fetch-Site": "same-origin", Origin: "https://host.example.test" } });
   assert.equal(opened.status, 200);
   const set = opened.headers.get("Set-Cookie");
-  assert.match(set, /^__Host-pz_viewer=v2\.[1-9][0-9]*\.[1-9][0-9]*\.[a-f0-9]{8}\.[a-f0-9]{16}\.[a-f0-9]{64}; Path=\/; Max-Age=3600; HttpOnly; SameSite=Strict; Secure$/);
+  assert.match(set, /^__Host-pz_viewer=v3\.[1-9][0-9]*\.[1-9][0-9]*\.[a-f0-9]{64}\.[a-f0-9]{16}\.[a-f0-9]{64}; Path=\/; Max-Age=3600; HttpOnly; SameSite=Strict; Secure$/);
   const body = await opened.json();
   assert.equal(body.authenticated, true);
   assert.ok(Date.parse(body.expires_at) > Date.now());
@@ -187,7 +187,7 @@ test("a correct code opens a strict, private session that unlocks screen, data a
   const form = await login(CODE_B, { form: true });
   assert.equal(form.status, 303);
   assert.equal(form.headers.get("Location"), "/");
-  assert.match(form.headers.get("Set-Cookie"), /^__Host-pz_viewer=v2\./);
+  assert.match(form.headers.get("Set-Cookie"), /^__Host-pz_viewer=v3\./);
   // No secret material in any response.
   for (const r of [opened, screen, form]) {
     const text = JSON.stringify([...r.headers]) + (r.bodyUsed ? "" : await r.clone().text());
@@ -206,7 +206,7 @@ test("expiry, tampering, code removal, secret rotation and logout all end the se
   assert.equal(await verifySession(request(), env, config, url, Date.now() + 3600 * 1000 + 1), null);
   const [name, value] = cookie.split("=");
   const parts = value.split(".");
-  assert.equal(parts.length, 6, "v2.<issued>.<expires>.<prefix>.<nonce>.<mac>");
+  assert.equal(parts.length, 6, "v3.<issued>.<expires>.<codeTag>.<nonce>.<mac>");
   const tamperedMac = [...parts.slice(0, 5), parts[5].replace(/^./, c => (c === "a" ? "b" : "a"))].join(".");
   const tamperedExpiry = [parts[0], parts[1], String(Number(parts[2]) + 60000), ...parts.slice(3)].join(".");
   const tamperedIssued = [parts[0], String(Number(parts[1]) - 60000), ...parts.slice(2)].join(".");
@@ -247,12 +247,33 @@ async function validAt(env, cookie, now) {
   try { await requireViewer(new Request(url, { headers: { Cookie: cookie } }), env, url, now); return true; }
   catch (e) { if (e.message !== "access_required") throw e; return false; }
 }
-const signed = (issued, expires, code = CODE_A, version = "v2") => {
+const signed = (issued, expires, code = CODE_A, version = "v3") => {
   const prefix = digest(code).slice(0, 8), nonce = "0123456789abcdef";
-  const text = version === "v2" ? `v2|${issued}|${expires}|${prefix}|${nonce}` : `v1|${expires}|${prefix}|${nonce}`;
+  const tag = createHmac("sha256", SECRET).update(`code-tag-v3|${digest(code)}`).digest("hex");
+  const text = version === "v3" ? `v3|${issued}|${expires}|${tag}|${nonce}` :
+    version === "v2" ? `v2|${issued}|${expires}|${prefix}|${nonce}` : `v1|${expires}|${prefix}|${nonce}`;
   const mac = createHmac("sha256", SECRET).update(text).digest("hex");
-  return "__Host-pz_viewer=" + (version === "v2" ? `v2.${issued}.${expires}.${prefix}.${nonce}.${mac}` : `v1.${expires}.${prefix}.${nonce}.${mac}`);
+  return "__Host-pz_viewer=" + (version === "v3" ? `v3.${issued}.${expires}.${tag}.${nonce}.${mac}` :
+    version === "v2" ? `v2.${issued}.${expires}.${prefix}.${nonce}.${mac}` : `v1.${expires}.${prefix}.${nonce}.${mac}`);
 };
+
+test("removing one code revokes only its sessions even when code digests share an eight-character prefix", async () => {
+  const a = "synthetic-prefix-collision-2388", b = "synthetic-prefix-collision-79593";
+  assert.notEqual(digest(a), digest(b));
+  assert.equal(digest(a).slice(0, 8), digest(b).slice(0, 8));
+  const env = gateEnv(3600, a);
+  env.ACCESS_CODE_SHA256 = `${digest(a)},${digest(b)}`;
+  const cookieA = await mintAt(env, T0, a), cookieB = await mintAt(env, T0, b);
+  assert.equal(await validAt(env, cookieA, T0 + 1), true);
+  assert.equal(await validAt(env, cookieB, T0 + 1), true);
+  env.ACCESS_CODE_SHA256 = digest(b);
+  assert.equal(await validAt(env, cookieA, T0 + 2), false, "the removed code must not inherit another code's prefix");
+  assert.equal(await validAt(env, cookieB, T0 + 2), true);
+  for (const value of [a, b, digest(a), digest(b)]) {
+    assert.equal(cookieA.includes(value), false);
+    assert.equal(cookieB.includes(value), false);
+  }
+});
 
 test("shortening the session length rejects longer cookies at every later minute; it never resurrects them", async () => {
   const env = gateEnv(7200);
@@ -281,11 +302,12 @@ test("extending the session length keeps existing sessions until their own expir
   for (const minute of [0, 5, 29]) assert.equal(await validAt(env, cookie, T0 + minute * 60000), false);
 });
 
-test("legacy v1, forged lifetimes and future issue times are refused even with a valid signature", async () => {
+test("legacy v1/v2, forged lifetimes and future issue times are refused even with a valid signature", async () => {
   const env = gateEnv(3600);
   // A correctly signed v1 cookie (pre-WS-access2 format) is not accepted: it carries no issue time.
   assert.equal(await validAt(env, signed(null, T0 + 1800000, CODE_A, "v1"), T0), false);
-  assert.equal(await validAt(env, signed(T0, T0 + 1800000), T0 + 1000), true, "control: a well-formed v2 cookie");
+  assert.equal(await validAt(env, signed(T0, T0 + 1800000, CODE_A, "v2"), T0), false, "v2 cannot bind the full code digest");
+  assert.equal(await validAt(env, signed(T0, T0 + 1800000), T0 + 1000), true, "control: a well-formed v3 cookie");
   assert.equal(await validAt(env, signed(T0, T0 + 3600000 + 1), T0 + 1000), false, "lifetime above the setting");
   assert.equal(await validAt(env, signed(T0, T0), T0 - 1), false, "expiry not after issue");
   assert.equal(await validAt(env, signed(T0 + 1000, T0), T0 - 5000), false, "expiry before issue");
@@ -297,7 +319,7 @@ test("legacy v1, forged lifetimes and future issue times are refused even with a
 test("plain http loopback uses an unprefixed cookie without Secure; notice takes precedence over the gate", async () => {
   const { call, login, cookieOf } = fixture({ origin: "http://127.0.0.1:8787" });
   const opened = await login(CODE_A);
-  assert.match(opened.headers.get("Set-Cookie"), /^pz_viewer=v2\..*; HttpOnly; SameSite=Strict$/);
+  assert.match(opened.headers.get("Set-Cookie"), /^pz_viewer=v3\..*; HttpOnly; SameSite=Strict$/);
   assert.equal((await call("/", { headers: { Cookie: cookieOf(opened) } })).status, 200);
   const on = await call(NOTICE_ROUTE, { method: "PUT", headers: { Authorization: "Bearer " + OPERATOR, "Content-Type": "application/json", "If-None-Match": "*" },
     body: JSON.stringify({ active: true, operator: "ops-a", reason: "drill", message_id: "maintenance" }) });
@@ -360,7 +382,7 @@ test("actual local Worker runtime: gate, login, cookie round trip, logout and fo
     const opened = await call(ACCESS_ROUTE, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ code: CODE_A }) });
     assert.equal(opened.status, 200, await opened.clone().text());
     const cookie = opened.headers.get("Set-Cookie").split(";")[0];
-    assert.match(cookie, /^pz_viewer=v2\./);
+    assert.match(cookie, /^pz_viewer=v3\./);
     await opened.arrayBuffer();
     const screen = await call("/", { headers: { Cookie: cookie } });
     assert.equal(screen.status, 200); assert.equal(screen.headers.get("Cache-Control"), "private, max-age=60"); await screen.arrayBuffer();
