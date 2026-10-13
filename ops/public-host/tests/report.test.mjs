@@ -62,6 +62,22 @@ test("usage distinguishes collection off, no data, zero rows and counted session
   assert.equal(counted.summary_covers_window, true);
 });
 
+test("report rejects invalid fixed summary fields instead of emitting misleading activity or labels", () => {
+  const session = { utc_day: "2026-10-12", game_pk: 123, sessions: 2, active_ms: 90000, mean_active_ms: 45000 };
+  const feedback = { utc_day: "2026-10-12", game_pk: 123, rating: "helpful", reason: "none", responses: 1 };
+  for (const bad of [
+    ...[{ active_ms: -999 }, { active_ms: "90000" }, { active_ms: 0.5 }, { mean_active_ms: -1 },
+      { utc_day: "2026-02-31" }, { utc_day: "2026-10-11" }].map(change => summary([{ ...session, ...change }], [feedback])),
+    ...[{ rating: "helpful\n## forged" }, { reason: "unknown" }, { game_pk: "123" },
+      { utc_day: "2026-10-11" }].map(change => summary([session], [{ ...feedback, ...change }])),
+    summary([session, session], [feedback]), summary([session], [feedback, feedback]),
+    summary([{ ...session, active_ms: Number.MAX_SAFE_INTEGER }, { ...session, game_pk: 124 }]),
+  ]) assert.throws(() => buildReport(base({ usage_summary: bad }), { now: NOW }), /invalid_usage_summary/);
+  const result = buildReport(base({ usage_summary: summary([session], [feedback]) }), { now: NOW });
+  assert.equal(result.json.usage.active_ms, 90000);
+  assert.deepEqual(result.json.usage.feedback, [{ rating: "helpful", reason: "none", responses: 1 }]);
+});
+
 test("a channel that was OFF is unmeasured (null), never 0, even when the other channel has rows", () => {
   const rows = [{ utc_day: "2026-10-12", game_pk: 123, sessions: 2, active_ms: 90000, mean_active_ms: 45000 }];
   const fb = [{ utc_day: "2026-10-12", game_pk: 123, rating: "helpful", reason: "none", responses: 2 }];

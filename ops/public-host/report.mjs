@@ -35,10 +35,27 @@ export function validateReportInput(input) {
       !Array.isArray(s.sessions) || !Array.isArray(s.feedback) || !day(s.from_day) || !day(s.to_day) ||
       s.from_day > s.to_day)) refuse("invalid_usage_summary");
   if (s !== null) {
-    for (const row of s.sessions) if (!exact(row, ["utc_day", "game_pk", "sessions", "active_ms", "mean_active_ms"]) ||
-      !int(row.sessions, 0, 1e9) || !int(row.game_pk, 0, 999999999999)) refuse("invalid_usage_summary");
-    for (const row of s.feedback) if (!exact(row, ["utc_day", "game_pk", "rating", "reason", "responses"]) ||
-      !int(row.responses, 0, 1e9)) refuse("invalid_usage_summary");
+    const inSummary = value => day(value) && value >= s.from_day && value <= s.to_day;
+    const sessionGroups = new Set(), feedbackGroups = new Set();
+    let totalActive = 0;
+    for (const row of s.sessions) {
+      if (!exact(row, ["utc_day", "game_pk", "sessions", "active_ms", "mean_active_ms"]) ||
+          !int(row.sessions, 0, 1e9) || !int(row.game_pk, 0, 999999999999) || !inSummary(row.utc_day) ||
+          !int(row.active_ms, 0, Number.MAX_SAFE_INTEGER) || !int(row.mean_active_ms, 0, Number.MAX_SAFE_INTEGER)) refuse("invalid_usage_summary");
+      const key = `${row.utc_day}:${row.game_pk}`;
+      totalActive += row.active_ms;
+      if (sessionGroups.has(key) || !Number.isSafeInteger(totalActive)) refuse("invalid_usage_summary");
+      sessionGroups.add(key);
+    }
+    for (const row of s.feedback) {
+      if (!exact(row, ["utc_day", "game_pk", "rating", "reason", "responses"]) ||
+          !int(row.responses, 0, 1e9) || !int(row.game_pk, 0, 999999999999) || !inSummary(row.utc_day) ||
+          !["helpful", "unclear", "problem"].includes(row.rating) ||
+          !["none", "recommendation", "explanation", "delay", "display", "other"].includes(row.reason)) refuse("invalid_usage_summary");
+      const key = `${row.utc_day}:${row.game_pk}:${row.rating}:${row.reason}`;
+      if (feedbackGroups.has(key)) refuse("invalid_usage_summary");
+      feedbackGroups.add(key);
+    }
   }
   const m = input.monitor_state;
   if (m !== null && (!object(m) || !Array.isArray(m.events) || !int(m.dropped_events ?? 0, 0, Number.MAX_SAFE_INTEGER) ||
@@ -115,7 +132,7 @@ export function usageSection(input) {
       statement: partialNote + `통계 수집 OFF — 이용자 수·활성 시간은 **미측정**이다(0명이 아님). 피드백 수집 ON: 응답 ${responses}건.` };
   }
   const sessions = rows.reduce((n, r) => n + r.sessions, 0);
-  const active = rows.reduce((n, r) => n + (Number.isSafeInteger(r.active_ms) ? r.active_ms : 0), 0);
+  const active = rows.reduce((n, r) => n + r.active_ms, 0);
   const feedbackNote = c.feedback_enabled ? "" : " 피드백 수집 OFF(미측정).";
   if (rows.length === 0 && fb.length === 0) {
     return { status: "zero_rows", sessions: 0, active_ms: 0, feedback: c.feedback_enabled ? [] : null, summary_covers_window: covers,
