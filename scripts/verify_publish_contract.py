@@ -15,6 +15,7 @@ from pathlib import Path
 
 try:
     import jsonschema
+    from referencing import Registry
 except ImportError:  # pragma: no cover - the project environment pins jsonschema
     jsonschema = None
 
@@ -183,7 +184,10 @@ def verify(received: Path, expected: dict) -> dict:
             validator_class = jsonschema.validators.validator_for(schema)
             validator_class.check_schema(schema)
             errors = sorted(
-                validator_class(schema).iter_errors(value),
+                # An explicit registry keeps untrusted $ref values offline. The
+                # jsonschema default may retrieve HTTP or file URLs implicitly.
+                # In-document references still resolve against this schema.
+                validator_class(schema, registry=Registry()).iter_errors(value),
                 key=lambda e: [str(p) for p in e.path],
             )
         except Exception:
