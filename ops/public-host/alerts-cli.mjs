@@ -4,7 +4,7 @@ import { resolve, dirname, basename } from "node:path";
 import { randomUUID } from "node:crypto";
 import { fileURLToPath } from "node:url";
 import { parseArgs } from "node:util";
-import { AlertError, validateAlertConfig, initialAlertState, validateAlertState, mockTransport, dispatchAlerts, toV1State } from "./alerts.mjs";
+import { AlertError, validateAlertConfig, initialAlertState, validateAlertState, mockTransport, dispatchAlerts, toV1State, serializeAlertState, MAX_ALERT_STATE_READ_BYTES } from "./alerts.mjs";
 import { readJson, plainPath } from "./monitor-cli.mjs";
 
 export async function runAlertsOnce(monitorStatePath, configPath, statePath, { now = Date.now() } = {}) {
@@ -19,17 +19,18 @@ export async function runAlertsOnce(monitorStatePath, configPath, statePath, { n
   catch (e) { if (e.code === "EEXIST") throw new AlertError("already_running_or_stale_lock"); throw e; }
   try {
     let state;
-    try { state = validateAlertState(await readJson(path, 1048576)); }
+    try { state = validateAlertState(await readJson(path, MAX_ALERT_STATE_READ_BYTES)); }
     catch (e) { if (e.code !== "ENOENT") throw e; state = initialAlertState(); }
     if (config.transport !== "mock") throw new AlertError("unsupported_transport");
     const transport = mockTransport();
     // WS-alert2: the latest probe report lets an open incident be re-classified when its cause changes.
     const latestReport = record.report && typeof record.report === "object" ? record.report : null;
     const { state: next, receipt } = await dispatchAlerts(state, record.state, config, transport, { now, latestReport });
+    const serialized = serializeAlertState(next);
     const tempPath = resolve(dirname(path), "." + basename(path) + "." + randomUUID() + ".tmp");
     const file = await open(tempPath, "wx", 0o600);
     try {
-      await file.writeFile(JSON.stringify(next, null, 2) + "\n", "utf8");
+      await file.writeFile(serialized, "utf8");
       await file.sync();
     } finally { await file.close(); }
     try { await rename(tempPath, path); } catch (e) { await unlink(tempPath).catch(() => {}); throw e; }
@@ -41,13 +42,14 @@ export async function runAlertsOnce(monitorStatePath, configPath, statePath, { n
   }
 }
 
-/** Rollback aid (WS-alert2): writes a v1 copy of a v2 alert state to a NEW file; the source file is not changed. */
+/** Rollback aid (WS-alert2): writes a v1 copy of a v2/v3 alert state to a NEW file; the source file is not changed. */
 export async function downgradeState(configPath, statePath, outputPath) {
   const config = validateAlertConfig(await readJson(configPath, 16384));
-  const v1 = toV1State(await readJson(await plainPath(statePath), 1048576), config.max_attempts);
+  const v1 = toV1State(await readJson(await plainPath(statePath), MAX_ALERT_STATE_READ_BYTES), config.max_attempts);
+  const serialized = serializeAlertState(v1);
   const file = await open(await plainPath(outputPath), "wx", 0o600);
-  try { await file.writeFile(JSON.stringify(v1, null, 2) + "\n", "utf8"); await file.sync(); } finally { await file.close(); }
-  return { schema: "pitcheezy-host-alerts-downgrade-v1", deliveries: Object.keys(v1.deliveries).length, pending: v1.pending.length };
+  try { await file.writeFile(serialized, "utf8"); await file.sync(); } finally { await file.close(); }
+  return { schema: "pitcheezy-host-alerts-downgrade-v1", deliveries: Object.keys(v1.deliveries).length, pending: v1.pending.length, history_coverage: "unknown" };
 }
 
 export async function main(args) {
