@@ -99,7 +99,7 @@ test("problems collect monitor events, notice changes and mock alert counts insi
   const p = problemsSection(input);
   assert.equal(p.monitor_events.length, 2);
   assert.equal(p.notice_changes.length, 1);
-  assert.deepEqual(p.alerts, { acknowledged_by_mock: 1, undelivered: 1, pending: 0, delivery_confirmed: false }, "alert attempts outside the window are not counted");
+  assert.deepEqual(p.alerts, { acknowledged_by_mock: 1, undelivered: 1, abandoned: 0, waiting_unattempted: 0, pending: 0, delivery_confirmed: false }, "alert attempts outside the window are not counted");
   assert.equal(p.incident_still_open, true);
   assert.equal(p.dropped_monitor_events, 1);
 });

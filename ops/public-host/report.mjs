@@ -44,7 +44,8 @@ export function validateReportInput(input) {
   if (n !== null && (!Array.isArray(n) || n.length > 200 || !n.every(a => object(a) && a.schema === "pitcheezy-notice-audit-v1" &&
       iso(a.at) && typeof a.active === "boolean" && text(a.operator || "", 64) && text(a.reason || "", 500) && typeof a.message_id === "string"))) refuse("invalid_notice_audit");
   const a = input.alert_state;
-  if (a !== null && (!object(a) || a.schema !== "pitcheezy-host-alert-state-v1" || !object(a.deliveries) || a.mock_only !== true)) refuse("invalid_alert_state");
+  if (a !== null && (!object(a) || !["pitcheezy-host-alert-state-v1", "pitcheezy-host-alert-state-v2"].includes(a.schema) ||
+      !object(a.deliveries) || a.mock_only !== true)) refuse("invalid_alert_state");
   if (!Array.isArray(input.actions) || input.actions.length > 100 ||
       !input.actions.every(x => exact(x, ["at", "by", "what"]) && iso(x.at) && /^[A-Za-z0-9._-]{1,64}$/.test(x.by) && text(x.what, 500))) refuse("invalid_actions");
   const src = input.sources;
@@ -123,7 +124,11 @@ export function problemsSection(input) {
   const deliveries = Object.values(input.alert_state?.deliveries || {}).filter(d => withinWindow(d.last_attempt_ms, input));
   const alerts = input.alert_state === null ? null : {
     acknowledged_by_mock: deliveries.filter(d => d.status === "acknowledged").length,
-    undelivered: deliveries.filter(d => d.status === "undelivered").length,
+    undelivered: deliveries.filter(d => d.status === "undelivered" && d.attempts > 0).length,
+    // WS-alert2: a reminder/re-classification settled without delivery (incident closed, reminder window passed,
+    // or superseded by a newer re-classification). Rows only queued behind an opening alert (0 attempts) are separate.
+    abandoned: deliveries.filter(d => d.status === "abandoned").length,
+    waiting_unattempted: deliveries.filter(d => d.status === "undelivered" && d.attempts === 0).length,
     pending: (input.alert_state.pending || []).length, delivery_confirmed: false,
   };
   const incident_still_open = Boolean(input.monitor_state?.incident);
@@ -172,7 +177,7 @@ export function buildReport(input, { now = Date.now() } = {}) {
   else if (problems.notice_changes.length === 0) lines.push("- 안내 화면 전환 없음.");
   else for (const n of problems.notice_changes) lines.push(`- ${n.at} 안내 ${n.active ? "ON" : "OFF"} (${n.message_id}) by ${n.operator}: ${n.reason}`);
   if (problems.alerts === null) lines.push("- 알림 기록 없음(알림 상태 파일 미제공).");
-  else lines.push(`- 알림(모의 transport, 집계 기간 내 시도분): 모의 확인 ${problems.alerts.acknowledged_by_mock}건, 미전달 ${problems.alerts.undelivered}건, 현재 대기 ${problems.alerts.pending}건 — 실제 전달 확인 아님.`);
+  else lines.push(`- 알림(모의 transport, 집계 기간 내 시도분): 모의 확인 ${problems.alerts.acknowledged_by_mock}건, 미전달 ${problems.alerts.undelivered}건, 전달 전 정리(장애 종료·재알림 창 경과·새 재분류로 대체) ${problems.alerts.abandoned}건, 순서 대기 ${problems.alerts.waiting_unattempted}건, 현재 대기 ${problems.alerts.pending}건 — 실제 전달 확인 아님.`);
   lines.push("", "### 조치");
   if (input.actions.length === 0) lines.push("- 기록된 조치 없음.");
   else for (const a of input.actions) lines.push(`- ${a.at} ${a.by}: ${a.what}`);

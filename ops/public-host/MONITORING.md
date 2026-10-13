@@ -66,7 +66,8 @@ GET /와 GET /v1/health.json 각1회. `access_code_env`가 없으면 인증·Coo
 
 연속 **기록 실행** 두 번 실패하면 opened, 두 번 통과하면 recovered 이벤트를 남긴다.
 실행 간격을 정하는 기능은 없으며 장애 지속 시간·가동률·실경기 지연률 측정 결과가 아니다.
-열린 장애의 원인이 바뀌어도 opened를 반복하지 않는다. 최신 원인은 report.issues다.
+열린 장애의 원인이 바뀌어도 opened를 반복하지 않는다. 최신 원인은 report.issues다. 알림 경로는 이 최신 report로 원인 재분류 알림을 보낸다
+([알림](ALERTS.md) WS-alert2). 감시 상태 기계와 이벤트 형식은 그대로다.
 pointer=null의 partial은 가용성 복구만 나타낸다. 시각 미측정은 계속 남는다.
 
 상태 파일 하나에 state와 최신 report를 함께 기록한다. 전체 probe/저장 동안 잠금을 잡고,

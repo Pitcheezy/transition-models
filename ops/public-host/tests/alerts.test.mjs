@@ -7,7 +7,7 @@ import { join } from "node:path";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import { fileURLToPath } from "node:url";
-import { classifyEvent, validateAlertConfig, initialAlertState, validateAlertState, buildMessage, mockTransport, dispatchAlerts, PRUNE_AFTER_DAYS } from "../alerts.mjs";
+import { classifyEvent, validateAlertConfig, initialAlertState, validateAlertState, buildMessage, mockTransport, dispatchAlerts, PRUNE_AFTER_DAYS, toV1State } from "../alerts.mjs";
 import { initialState, advanceState } from "../monitor.mjs";
 
 const NOW = Date.parse("2026-10-13T03:00:00Z");
@@ -195,3 +195,234 @@ test("CLI runs once over a monitor state file with a mock transport and refuses 
   await assert.rejects(run(process.execPath, [cli, "--monitor-state", join(dir, "monitor.json"), "--config", join(dir, "bad.json"), "--state", join(dir, "other-state.json")]),
     e => e.code === 2 && /unsupported_transport/.test(e.stderr));
 });
+
+// WS-alert2: re-classification of an open incident (two-run rule, numbered announcements, no downgrade in reminders).
+const MCFG = { schema: "pitcheezy-host-monitor-v1", origin: "https://public.example.test", allow_loopback_http: false,
+  timeout_ms: 200, max_body_bytes: 4096, timestamp_pointer: "/synthetic/at", timestamp_format: "rfc3339",
+  max_age_seconds: 120, clock_skew_seconds: 30, page_sha256: null };
+const NOTICE = ["page_notice_active", "health_notice_active"], STALE = ["freshness_stale"], HOST = ["page_http_error", "health_http_error"];
+const LOGIN = ["access_login_rate_limited"];
+/** Plays probe outcomes through the REAL monitor state machine and the dispatcher, one dispatch per recorded run. */
+async function play(steps, { cfg = config(), transport = mockTransport(), stepMs = 60000 } = {}) {
+  let mstate = initialState(MCFG), astate = initialAlertState(), clock = NOW;
+  const receipts = [];
+  for (const issues of steps) {
+    clock += stepMs;
+    const report = { schema: "pitcheezy-host-probe-v1", config_sha256: mstate.config_sha256, observed_at_ms: clock,
+      status: issues.length ? "failed" : "available", issues, page: {}, health: {} };
+    mstate = advanceState(mstate, report, MCFG).state;
+    const r = await dispatchAlerts(astate, mstate, cfg, transport, { now: clock, latestReport: report });
+    astate = r.state; receipts.push(r.receipt);
+  }
+  return { transport, receipts, mstate, astate, clock };
+}
+const rows = t => t.sent.map(m => [m.recipient, m.event_kind, m.category, m.first_responder, m.reclassified_from]);
+
+test("an incident opened under the notice is re-announced to both sides once publishing has stalled for two runs", async () => {
+  const { transport, receipts } = await play([[], NOTICE, NOTICE, STALE, STALE, STALE]);
+  assert.deepEqual(rows(transport), [
+    ["song", "opened", "notice_active", "none", null], ["ours", "opened", "notice_active", "none", null],
+    ["song", "reclassified", "publish_stalled", "song", "notice_active"], ["ours", "reclassified", "publish_stalled", "song", "notice_active"]]);
+  assert.equal(receipts[3].reclassified.length, 0, "one stale run is not enough");
+  assert.equal(receipts[4].reclassified.length, 2);
+  const m = transport.sent[2];
+  assert.match(m.text, /원인 재분류: notice_active → publish_stalled/);
+  assert.deepEqual(m.issues, STALE); assert.notEqual(m.cause_observed_at, m.observed_at);
+  assert.equal(m.schema, "pitcheezy-host-alert-message-v2");
+});
+
+test("a one-run blip never re-routes; a sustained change and the return to the earlier cause are both announced", async () => {
+  const blip = await play([[], STALE, STALE, LOGIN, STALE, HOST, STALE, STALE]);
+  assert.deepEqual(blip.transport.sent.map(m => m.category), ["publish_stalled", "publish_stalled"], "single-run blips are silent");
+  const flip = await play([[], STALE, STALE, HOST, HOST, STALE, STALE]);
+  assert.deepEqual(rows(flip.transport).slice(2), [
+    ["song", "reclassified", "host_error", "ours", "publish_stalled"], ["ours", "reclassified", "host_error", "ours", "publish_stalled"],
+    ["song", "reclassified", "publish_stalled", "song", "host_error"], ["ours", "reclassified", "publish_stalled", "song", "host_error"]]);
+  assert.ok(flip.receipts[6].reclassified.every(k => k.includes(":reclassified:2:publish_stalled:")), "announcements are numbered");
+});
+
+test("a transient monitor login failure that opened the incident does not keep a later stall on our side", async () => {
+  const { transport } = await play([[], LOGIN, LOGIN, STALE, STALE]);
+  assert.deepEqual(transport.sent.map(m => [m.category, m.first_responder]),
+    [["host_error", "ours"], ["host_error", "ours"], ["publish_stalled", "song"], ["publish_stalled", "song"]]);
+});
+
+test("informational causes never replace an announced cause; reminders keep the last announced cause", async () => {
+  const cfg = config({ remind_after_minutes: 3 });
+  // Stall, then someone switches the notice on (health becomes unmeasurable): reminders stay publish_stalled / Song.
+  const a = await play([[], STALE, STALE, NOTICE, NOTICE, NOTICE, NOTICE, NOTICE, NOTICE], { cfg });
+  const remindersA = a.transport.sent.filter(m => m.reminder > 0);
+  assert.ok(remindersA.length >= 2);
+  assert.ok(remindersA.every(m => m.category === "publish_stalled" && m.first_responder === "song" && m.severity === "incident"));
+  assert.equal(a.transport.sent.filter(m => m.event_kind === "reclassified").length, 0);
+  // Opened under the notice, re-announced as a stall, then one passing run at a window boundary: still publish_stalled.
+  const b = await play([[], NOTICE, NOTICE, STALE, STALE, [], STALE, STALE, STALE], { cfg });
+  const remindersB = b.transport.sent.filter(m => m.reminder > 0);
+  assert.ok(remindersB.length >= 1);
+  assert.ok(remindersB.every(m => m.category === "publish_stalled"), JSON.stringify(remindersB.map(m => m.category)));
+});
+
+test("a failed re-classification is retried while the incident stays open, whatever the current cause; closing settles it", async () => {
+  const transport = mockTransport({ failBeforeSuccess: {} });
+  let failSong = true;
+  const flaky = { name: "mock", sent: transport.sent, async deliver(m) {
+    if (failSong && m.recipient === "song" && m.event_kind === "reclassified") return { ok: false, code: "mock_transport_failure" };
+    return transport.deliver(m);
+  } };
+  let r = await play([[], NOTICE, NOTICE, STALE, STALE, NOTICE], { transport: flaky });
+  const key = r.receipts[4].reclassified.find(k => k.endsWith(":song"));
+  assert.equal(r.astate.deliveries[key].status, "undelivered");
+  assert.equal(r.astate.deliveries[key].attempts, 2, "retried on the next run although the current cause is the notice again");
+  failSong = false;
+  const mstate = r.mstate;
+  const third = await dispatchAlerts(r.astate, mstate, config(), flaky, { now: r.clock + 1 });
+  assert.equal(third.state.deliveries[key].status, "acknowledged");
+  // Same failure, but the incident closes before delivery: the row is settled as abandoned (and later pruned).
+  failSong = true;
+  r = await play([[], NOTICE, NOTICE, STALE, STALE, [], []], { transport: flaky });
+  const k2 = r.receipts[4].reclassified.find(k => k.endsWith(":song"));
+  assert.equal(r.astate.deliveries[k2].status, "abandoned");
+  assert.equal(r.astate.pending.length, 0);
+  assert.deepEqual(r.astate.incidents, {}, "closed incidents leave no memory");
+  const later = await dispatchAlerts(r.astate, r.mstate, config(), mockTransport(), { now: r.clock + (PRUNE_AFTER_DAYS + 1) * 86400000 });
+  assert.equal(later.state.deliveries[k2], undefined, "settled abandoned rows are pruned");
+});
+
+test("a recipient whose opening alert is still retrying gets the re-classification after it, not before", async () => {
+  let songFailures = 1;
+  const transport = mockTransport();
+  const flaky = { name: "mock", sent: transport.sent, async deliver(m) {
+    if (m.recipient === "song" && m.event_kind === "opened" && songFailures > 0) { songFailures--; return { ok: false, code: "mock_transport_failure" }; }
+    return transport.deliver(m);
+  } };
+  // The incident opens and is re-classified in quick succession while Song's opening alert keeps failing once.
+  songFailures = 3;
+  const { receipts } = await play([[], NOTICE, NOTICE, STALE, STALE, STALE, STALE], { transport: flaky, cfg: config({ max_attempts: 5 }) });
+  assert.ok(receipts.some(r => r.deferred.some(k => k.endsWith(":song"))), "deferred while the opening alert retried");
+  const song = transport.sent.filter(m => m.recipient === "song").map(m => m.event_kind);
+  assert.deepEqual(song, ["opened", "reclassified"], "Song hears the opening before the re-classification");
+});
+
+test("malformed monitor records are skipped without blocking other alerts; the same report is counted once", async () => {
+  const good = event("opened", ["page_http_error"]);
+  const bad = { id: "not-a-hash", kind: "opened", at_ms: NOW, issues: [] };
+  const r = await dispatchAlerts(initialAlertState(), { events: [bad, good], incident: { ...good, issues: ["Bad Issue"] } }, config(), mockTransport(), { now: NOW });
+  assert.equal(r.receipt.invalid_events, 1); assert.equal(r.receipt.incident_invalid, true);
+  assert.equal(r.receipt.acknowledged.length, 2, "the valid event still reached both sides");
+  // Running the CLI twice on the same monitor record must not count one run as two.
+  let mstate = initialState(MCFG), clock = NOW, report;
+  for (const issues of [[], NOTICE, NOTICE, STALE]) {
+    clock += 60000;
+    report = { schema: "pitcheezy-host-probe-v1", config_sha256: mstate.config_sha256, observed_at_ms: clock,
+      status: issues.length ? "failed" : "available", issues, page: {}, health: {} };
+    mstate = advanceState(mstate, report, MCFG).state;
+  }
+  let a = initialAlertState();
+  for (let i = 0; i < 3; i++) ({ state: a } = await dispatchAlerts(a, mstate, config(), mockTransport(), { now: clock, latestReport: report }));
+  assert.equal(a.incidents[mstate.incident.id].candidate_runs, 1);
+  assert.equal(Object.keys(a.deliveries).some(k => k.includes(":reclassified:")), false);
+});
+
+test("v1 alert state files are upgraded; v2 keys and statuses are validated", async () => {
+  const v1 = { schema: "pitcheezy-host-alert-state-v1", deliveries: { [sha("o") + ":opened:song"]: { status: "acknowledged", attempts: 1, last_attempt_ms: NOW, acknowledged_by_transport: true } },
+    pending: [], mock_only: true };
+  const up = validateAlertState(v1);
+  assert.equal(up.schema, "pitcheezy-host-alert-state-v2"); assert.deepEqual(up.incidents, {});
+  assert.throws(() => validateAlertState({ ...v1, deliveries: { [sha("o") + ":opened:song"]: { status: "abandoned", attempts: 0, last_attempt_ms: NOW, acknowledged_by_transport: false } } }), /state_invalid/);
+  const v2 = initialAlertState();
+  for (const bad of [sha("x") + ":reclassified:publish_stalled:song", sha("x") + ":reclassified:1:Bad-Name:song", sha("x") + ":reminder:1:song:extra"]) {
+    assert.throws(() => validateAlertState({ ...v2, deliveries: { [bad]: { status: "acknowledged", attempts: 1, last_attempt_ms: NOW, acknowledged_by_transport: true } } }), /state_invalid/, bad);
+  }
+  validateAlertState({ ...v2, deliveries: { [sha("x") + ":reclassified:3:host_error:ours"]: { status: "abandoned", attempts: 1, last_attempt_ms: NOW, acknowledged_by_transport: false } } });
+  assert.throws(() => validateAlertState({ ...v2, incidents: { [sha("x")]: { opened_category: "nope" } } }), /state_invalid/);
+});
+
+test("the CLI forwards the latest report and writes a v2 state", async () => {
+  const dir = await mkdtemp(join(tmpdir(), "pitcheezy-alerts-reclass-"));
+  let mstate = initialState(MCFG), clock = Date.now() - 600000, report;
+  const run = promisify(execFile);
+  const cli = fileURLToPath(new URL("../alerts-cli.mjs", import.meta.url));
+  await writeFile(join(dir, "alerts.json"), JSON.stringify(config()));
+  const messages = [];
+  for (const issues of [[], NOTICE, NOTICE, STALE, STALE]) {
+    clock += 60000;
+    report = { schema: "pitcheezy-host-probe-v1", config_sha256: mstate.config_sha256, observed_at_ms: clock,
+      status: issues.length ? "failed" : "available", issues, page: {}, health: {} };
+    mstate = advanceState(mstate, report, MCFG).state;
+    await writeFile(join(dir, "monitor.json"), JSON.stringify({ state: mstate, report }));
+    const out = JSON.parse((await run(process.execPath, [cli, "--monitor-state", join(dir, "monitor.json"), "--config", join(dir, "alerts.json"), "--state", join(dir, "state.json")])).stdout);
+    messages.push(...out.mock_messages.map(m => [m.event_kind, m.category]));
+  }
+  assert.deepEqual(messages, [["opened", "notice_active"], ["opened", "notice_active"], ["reclassified", "publish_stalled"], ["reclassified", "publish_stalled"]]);
+  assert.equal(JSON.parse(await readFile(join(dir, "state.json"), "utf8")).schema, "pitcheezy-host-alert-state-v2");
+});
+
+test("a newer re-classification supersedes an older one still retrying; each recipient ends on the current cause", async () => {
+  // Song's channel fails every re-classification during runs 4-6, then recovers.
+  let run = 0;
+  const transport = mockTransport();
+  const flaky = { name: "mock", sent: transport.sent, async deliver(m) {
+    if (m.recipient === "song" && m.event_kind === "reclassified" && run < 7) return { ok: false, code: "mock_transport_failure" };
+    return transport.deliver(m);
+  } };
+  let mstate = initialState(MCFG), astate = initialAlertState(), clock = NOW;
+  for (const issues of [[], STALE, STALE, HOST, HOST, STALE, STALE, STALE]) {
+    run++; clock += 60000;
+    const report = { schema: "pitcheezy-host-probe-v1", config_sha256: mstate.config_sha256, observed_at_ms: clock,
+      status: issues.length ? "failed" : "available", issues, page: {}, health: {} };
+    mstate = advanceState(mstate, report, MCFG).state;
+    ({ state: astate } = await dispatchAlerts(astate, mstate, config(), flaky, { now: clock, latestReport: report }));
+  }
+  const song = transport.sent.filter(m => m.recipient === "song");
+  assert.equal(song.at(-1).category, "publish_stalled", "Song's latest message names the current cause");
+  assert.equal(song.some(m => m.event_kind === "reclassified" && m.category === "host_error"), false, "the superseded announcement is never delivered late");
+  const old = Object.entries(astate.deliveries).find(([k]) => k.includes(":reclassified:1:host_error:song"));
+  assert.equal(old[1].status, "abandoned");
+  assert.equal(transport.sent.filter(m => m.event_kind === "reclassified").every(m => Number.isInteger(m.announcement)), true);
+});
+
+test("an incident announced as informational escalates when two consecutive runs need action, even if their causes alternate", async () => {
+  const { transport } = await play([[], NOTICE, NOTICE, STALE, HOST, STALE, HOST, STALE]);
+  const reclassified = transport.sent.filter(m => m.event_kind === "reclassified");
+  assert.deepEqual(reclassified.map(m => [m.recipient, m.category, m.first_responder]), [["song", "unclassified", "both"], ["ours", "unclassified", "both"]]);
+  // Once an actionable cause is announced, a one-run blip still does not re-route (the alternation rule only lifts informational ones).
+  const blip = await play([[], STALE, STALE, LOGIN, STALE, STALE]);
+  assert.equal(blip.transport.sent.filter(m => m.event_kind === "reclassified").length, 0);
+});
+
+test("pruning never forgets opened/recovered rows whose events the monitor still lists (no re-send after 30 days)", async () => {
+  const { transport, mstate, astate, clock } = await play([[], STALE, STALE, [], []]);
+  assert.deepEqual(transport.sent.map(m => m.event_kind), ["opened", "opened", "recovered", "recovered"]);
+  const later = mockTransport();
+  const r = await dispatchAlerts(astate, mstate, config(), later, { now: clock + (PRUNE_AFTER_DAYS + 5) * 86400000 });
+  assert.equal(later.sent.length, 0, "old events still listed by the monitor are not alerted again");
+  assert.equal(r.receipt.pruned, 0);
+  const gone = await dispatchAlerts(r.state, { ...mstate, events: [] }, config(), mockTransport(), { now: clock + (PRUNE_AFTER_DAYS + 5) * 86400000 });
+  assert.equal(gone.receipt.pruned, 4, "rows are pruned once the monitor no longer lists their events");
+});
+
+test("rollback aid: a v2 state converts to a v1 state that keeps the dedup history", async () => {
+  const cfg = config();
+  const flaky = mockTransport({ failBeforeSuccess: { song: 0 } });
+  const { astate, mstate } = await play([[], NOTICE, NOTICE, STALE, STALE, [], []], { transport: flaky });
+  const v1 = toV1State(astate, cfg.max_attempts);
+  assert.equal(v1.schema, "pitcheezy-host-alert-state-v1");
+  assert.equal(Object.keys(v1).sort().join(","), "deliveries,mock_only,pending,schema");
+  assert.equal(Object.keys(v1.deliveries).some(k => k.includes(":reclassified:")), false);
+  assert.ok(Object.values(v1.deliveries).every(r => ["acknowledged", "undelivered"].includes(r.status)));
+  // The previous dispatcher logic (dedup on opened/recovered) would send nothing new from this history:
+  const replay = await dispatchAlerts(v1, mstate, cfg, mockTransport(), { now: NOW + 3600000 });
+  assert.equal(replay.receipt.attempted.length, 0);
+  const dir = await mkdtemp(join(tmpdir(), "pitcheezy-alerts-downgrade-"));
+  await writeFile(join(dir, "alerts.json"), JSON.stringify(cfg));
+  await writeFile(join(dir, "state.json"), JSON.stringify(astate));
+  const run = promisify(execFile);
+  const cli = fileURLToPath(new URL("../alerts-cli.mjs", import.meta.url));
+  const out = JSON.parse((await run(process.execPath, [cli, "--config", join(dir, "alerts.json"), "--state", join(dir, "state.json"), "--downgrade-to-v1", join(dir, "v1.json")])).stdout);
+  assert.equal(out.schema, "pitcheezy-host-alerts-downgrade-v1");
+  assert.equal(JSON.parse(await readFile(join(dir, "v1.json"), "utf8")).schema, "pitcheezy-host-alert-state-v1");
+  assert.equal(JSON.parse(await readFile(join(dir, "state.json"), "utf8")).schema, "pitcheezy-host-alert-state-v2", "the source is unchanged");
+  await assert.rejects(run(process.execPath, [cli, "--config", join(dir, "alerts.json"), "--state", join(dir, "state.json"), "--downgrade-to-v1", join(dir, "v1.json")]),
+    e => e.code === 2, "never overwrites an existing file");
+});
+
