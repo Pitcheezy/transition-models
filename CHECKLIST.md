@@ -1,5 +1,12 @@
 # 남은 작업 체크리스트
 
+## WS-review2 Codex 교차검토 진행 — 2026-10-13
+
+사용자가 이전 작업을 이어 검토·수정하도록 직접 지정했다. 기준 main `b40e8a6e7ff3baf0f9b86b794c7b5ce002f5feb7`, 브랜치 `codex/ws-review2`.
+Claude 작성 접근 제어·동의 수집·감시·알림·기록을 고정 소스에서 검토하고, 재현된 결함만 회귀 검사와 함께 수정한다.
+검토 기록과 합격 기준은 [WS_CODEX_REVIEW2_20261013.md](docs/WS_CODEX_REVIEW2_20261013.md). 기존 보류·실제 배포/실발송/상대 코드 변경 제한은 유지한다.
+현재 수정분의 다른 모델 검토와 실운영 검증을 이 교차검토 기록으로 대체하지 않는다.
+
 ## 협업 v1 반영 — 2026-10-12
 
 **WS-alert2 완료·수정 권한 반납 — Claude Opus 5.5, 브랜치 `claude/ws-alert2`, 기준 `28449cb` (2026-10-13).** 열린 장애 원인 재분류 알림(두 번 연속 규칙·알린 범주 기억·번호 붙은 재분류·낮추지 않는 재알림)과 30일 정리 결함을 고쳤다; Codex 교차 검토 대기. **WS-access2·WS-access3·WS-monitor2 완료·수정 권한 반납 — Claude Opus 5.5, 브랜치 `claude/ws-access2`(PR #26), 기준 main `9c99a5d` (2026-10-13).** 결함 2건을 main에서 재현한 뒤 고치고 접근 문 ON 감시를 보완했다; 실제 로컬 조합 검사·리허설 영수증·같은 모델 자체 검토(지적 16, 확정·분류 후 수정)를 남겼다. **수정분은 Codex 교차 검토 대기(WS-review2).** 다음 실행 가능 단위는 WS-alert2(열린 장애 재분류 알림). 직전 "실행 가능한 우리 작업 없음" 판정은 틀렸다: 우리 코드의 결함 2건(세션 길이 축소 후 쿠키 부활 — WS-review1 보강 b가 만든 결함, 접근 문 ON에서 수집 요청이 쿠키 없이 401)이 main에서 재현됐고, 접근 문 ON 발행 감시 불가는 한계로만 적혀 있었다. 수정분은 Codex 교차 검토 대상(WS-review2)이다. **WS-review1 검토 기록·확정 결함 수정 완료·수정 권한 반납 — Claude Fable 5.1, 브랜치 `claude/ws-review1`(PR #25), 기준 `70aa241` (2026-10-13).** 지적 24건 중 확정 12건 수정, 기각 12건 중 9건 추가 보강·3건 유지, 문서 4건 갱신, 로컬 재검사 전부 통과([기록](docs/WS_REVIEW1_20261013.md) · [영수증](docs/results/ops/ws_review1_recheck_20261013.json)). **규약 5절 조건은 미충족이다:** Codex 작성분은 Codex 모델 id 사용자 확인 대기, Claude 작성분은 비Claude 검토자 지정 전까지 "구현/자체검사 완료 · 출시 검토 미완료"(WS-review2, 사람 결정). 다음 단위는 최신 main에서 새 브랜치로 선점한다. WS-ops2 로컬 첫 연결 검증 완료(PR #24 병합 `70aa241`). WS-safe1 #20·WS-access1 #21·WS-alert1 #22·WS-report1 #23 병합. 실제 발행기·계정·실경기·다른 모델 검토(WS-review1)는 별도. WS-safe1 PR #20·WS-access1 PR #21·WS-alert1 PR #22 병합. 네 독립 단위의 실제 전환·문구·토큰·코드·채널·게시는 사람 결정, 다른 모델 검토는 WS-review1. WS-safe1 PR #20·WS-access1 PR #21 병합. 실제 전환·문구·토큰·코드·채널·다른 모델 검토(WS-review1)는 별도. WS-safe1은 PR #20 병합 `2a29f51`. 실제 전환·문구·토큰·코드·대상·다른 모델 검토(WS-review1)는 별도. 실제 전환·문구·토큰·다른 모델 검토(WS-review1)는 별도. H-collab2 문서 반영·검증 완료. 기준 `8f1aca6`, 선점 `12d4639`. [규약](docs/COLLABORATION_PROTOCOL.md) · [세 질문 답안/작업별 합격 기준](docs/WS_COLLAB_V1_ACTIONS.md). 운영 코드·상대 레포·공개 배포 변경 없음.
