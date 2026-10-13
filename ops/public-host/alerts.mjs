@@ -74,7 +74,7 @@ export const MAX_ALERT_STATE_READ_BYTES = MAX_ALERT_STATE_BYTES;
 export const MAX_V1_STATE_BYTES = 1024 * 1024;
 export const MAX_PENDING_DELIVERIES = 2048;
 const MAX_MONITOR_EVENTS = 100;
-const DELIVERY_KEY = /^([a-f0-9]{64}):(opened|recovered|reminder:[0-9]{1,6}|reclassified:[0-9]{1,4}:[a-z_]{1,40}):(song|ours)$/;
+const DELIVERY_KEY = /^([a-f0-9]{64}):(opened|recovered|reminder:[0-9]{1,16}|reclassified:[0-9]{1,16}:[a-z_]{1,40}):(song|ours)$/;
 const CATEGORY_NAMES = new Set(Object.keys(CATEGORIES));
 const ISSUE = i => typeof i === "string" && /^[a-z_]{1,80}$/.test(i);
 const MAX_INCIDENT_MEMORY = 16;
@@ -90,7 +90,7 @@ export function initialAlertState() {
 const incidentValid = v => exact(v, ["opened_category", "announced", "announced_issues", "seq", "candidate", "candidate_runs", "previous", "last_report_ms"]) &&
   (v.previous === null || CATEGORY_NAMES.has(v.previous)) &&
   CATEGORY_NAMES.has(v.opened_category) && CATEGORY_NAMES.has(v.announced) && Array.isArray(v.announced_issues) &&
-  v.announced_issues.length <= 8 && v.announced_issues.every(ISSUE) && int(v.seq, 0, 9999) &&
+  v.announced_issues.length <= 8 && v.announced_issues.every(ISSUE) && int(v.seq, 0, Number.MAX_SAFE_INTEGER) &&
   (v.candidate === null || CATEGORY_NAMES.has(v.candidate)) && int(v.candidate_runs, 0, 2) &&
   (v.last_report_ms === null || int(v.last_report_ms, 0, Number.MAX_SAFE_INTEGER));
 
@@ -106,7 +106,9 @@ export function validateAlertState(state) {
     .every(ms => ms === null || int(ms, 0, Number.MAX_SAFE_INTEGER))) refuse("state_invalid");
   const statuses = v1 ? ["acknowledged", "undelivered"] : ["acknowledged", "undelivered", "abandoned"];
   for (const [key, row] of Object.entries(state.deliveries)) {
-    if (!DELIVERY_KEY.test(key) || (v1 && key.includes(":reclassified:")) ||
+    const match = DELIVERY_KEY.exec(key), kind = match?.[2];
+    const counterValid = !kind || !/^(reminder|reclassified):/.test(kind) || int(Number(kind.split(":")[1]), 1, Number.MAX_SAFE_INTEGER);
+    if (!match || !counterValid || (v1 && key.includes(":reclassified:")) ||
         !exact(row, ["status", "attempts", "last_attempt_ms", "acknowledged_by_transport"]) ||
         !statuses.includes(row.status) || !int(row.attempts, 0, 100) ||
         !int(row.last_attempt_ms, 0, Number.MAX_SAFE_INTEGER) || typeof row.acknowledged_by_transport !== "boolean") refuse("state_invalid");
@@ -219,12 +221,12 @@ function canonicalPending(item) {
     if (m.event_kind !== kind || (m.reminder ?? 0) !== 0 || classifyEvent(event) !== m.category) refuse("state_invalid");
   } else if (kind.startsWith("reminder:")) {
     const reminder = Number(kind.slice(9));
-    if (m.event_kind !== "opened" || !int(reminder, 1, 999999) || m.reminder !== reminder) refuse("state_invalid");
+    if (m.event_kind !== "opened" || !int(reminder, 1, Number.MAX_SAFE_INTEGER) || m.reminder !== reminder) refuse("state_invalid");
     options = { reminder, causeIssues: m.issues };
   } else {
     const [, number, category] = kind.split(":");
     const announcement = Number(number), causeAt = typeof m.cause_observed_at === "string" && m.cause_observed_at.length <= 30 ? Date.parse(m.cause_observed_at) : NaN;
-    if (m.event_kind !== "reclassified" || !int(announcement, 1, 9999) || m.announcement !== announcement ||
+    if (m.event_kind !== "reclassified" || !int(announcement, 1, Number.MAX_SAFE_INTEGER) || m.announcement !== announcement ||
         m.category !== category || !ACTIONABLE.has(category) || !CATEGORY_NAMES.has(m.reclassified_from) ||
         !Number.isSafeInteger(causeAt) || causeAt < at) refuse("state_invalid");
     options = { kind: "reclassified", announcement, reclassifiedFrom: m.reclassified_from, causeIssues: m.issues, causeObservedMs: causeAt };
@@ -326,6 +328,7 @@ export async function dispatchAlerts(state, monitorState, config, transport, { n
         target = cause === previous ? cause : "unclassified";
       }
       if (target) {
+        if (incident.seq === Number.MAX_SAFE_INTEGER) refuse("reclassification_capacity_exceeded");
         const from = incident.announced;
         incident.seq += 1; incident.announced = target; incident.announced_issues = issues;
         // A newer announcement supersedes every older one still waiting for any recipient, so a late retry can
@@ -351,6 +354,7 @@ export async function dispatchAlerts(state, monitorState, config, transport, { n
     }
     if (config.remind_after_minutes > 0) {
       const slot = Math.floor((now - open.at_ms) / (config.remind_after_minutes * 60000));
+      if (!Number.isSafeInteger(slot)) refuse("clock_error");
       for (const [k, row] of Object.entries(next.deliveries)) {
         const [, id, kind] = DELIVERY_KEY.exec(k);
         if (id === openId && kind.startsWith("reminder:") && Number(kind.slice(9)) < slot && !settled(row)) settleAbandoned(k, row);
@@ -433,6 +437,8 @@ export function toV1State(state, maxAttempts) {
   const deliveries = {};
   for (const [k, row] of Object.entries(v2.deliveries)) {
     if (k.includes(":reclassified:")) continue;
+    const kind = DELIVERY_KEY.exec(k)[2];
+    if (kind.startsWith("reminder:") && (kind.slice(9).length > 6 || Number(kind.slice(9)) > 999999)) refuse("v1_counter_capacity_exceeded");
     deliveries[k] = row.status === "abandoned" ? { ...row, status: "undelivered", attempts: Math.max(row.attempts, maxAttempts) } : { ...row };
   }
   // Refuse rather than truncate a queue the old state format cannot hold. Even a

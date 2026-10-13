@@ -7,7 +7,7 @@ import { join } from "node:path";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import { fileURLToPath } from "node:url";
-import { classifyEvent, validateAlertConfig, initialAlertState, validateAlertState, buildMessage, mockTransport, dispatchAlerts, PRUNE_AFTER_DAYS, toV1State, MAX_DELIVERY_ROWS, MAX_ALERT_STATE_BYTES, MAX_V1_STATE_BYTES, MAX_PENDING_DELIVERIES, serializeAlertState } from "../alerts.mjs";
+import { AlertError, classifyEvent, validateAlertConfig, initialAlertState, validateAlertState, buildMessage, mockTransport, dispatchAlerts, PRUNE_AFTER_DAYS, toV1State, MAX_DELIVERY_ROWS, MAX_ALERT_STATE_BYTES, MAX_V1_STATE_BYTES, MAX_PENDING_DELIVERIES, serializeAlertState } from "../alerts.mjs";
 import { runAlertsOnce, downgradeState } from "../alerts-cli.mjs";
 import { initialState, advanceState } from "../monitor.mjs";
 
@@ -693,4 +693,117 @@ test("pending payloads are canonicalized and invalid identity or oversized monit
   await assert.rejects(dispatchAlerts(invalid, monitor([], null), config(), untouched, { now: NOW + 1 }), /state_invalid/);
   await assert.rejects(dispatchAlerts(initialAlertState(), monitor(Array(101).fill(opened), opened), config(), untouched, { now: NOW }), /invalid_monitor_state/);
   assert.equal(untouched.sent.length, 0);
+});
+
+
+async function pendingReclassification(seq) {
+  const result = await play([HOST, HOST, STALE]);
+  result.astate.incidents[result.mstate.incident.id].seq = seq;
+  result.clock += 60000;
+  result.report = { schema: "pitcheezy-host-probe-v1", config_sha256: result.mstate.config_sha256,
+    observed_at_ms: result.clock, status: "failed", issues: STALE, page: {}, health: {} };
+  result.mstate = advanceState(result.mstate, result.report, MCFG).state;
+  return result;
+}
+
+test("re-classification 9999 to 10000 persists a retry and the next saved invocation does not duplicate it", async () => {
+  const { astate, mstate, report, clock } = await pendingReclassification(9999);
+  validateAlertState(astate);
+  const firstTransport = mockTransport({ failBeforeSuccess: { song: 1 } });
+  const first = await dispatchAlerts(astate, mstate, config(), firstTransport, { now: clock, latestReport: report });
+  assert.equal(first.state.incidents[mstate.incident.id].seq, 10000);
+  assert.equal(first.state.pending[0].message.announcement, 10000);
+  assert.deepEqual(firstTransport.sent.map(m => [m.recipient, m.announcement]), [["ours", 10000]]);
+  const dir = await mkdtemp(join(tmpdir(), "pitcheezy-alerts-seq-boundary-"));
+  const paths = ["monitor.json", "config.json", "state.json"].map(name => join(dir, name));
+  await writeFile(paths[0], JSON.stringify({ state: mstate, report }));
+  await writeFile(paths[1], JSON.stringify(config()));
+  await writeFile(paths[2], serializeAlertState(first.state));
+  const retry = await runAlertsOnce(...paths, { now: clock });
+  assert.deepEqual(retry.mock_messages.map(m => [m.recipient, m.announcement]), [["song", 10000]]);
+  assert.equal((await runAlertsOnce(...paths, { now: clock })).mock_messages.length, 0);
+});
+
+test("the absolute re-classification counter bound refuses before transport and leaves source state unchanged", async () => {
+  const { astate, mstate, report, clock } = await pendingReclassification(Number.MAX_SAFE_INTEGER);
+  const key = `${mstate.incident.id}:reclassified:${Number.MAX_SAFE_INTEGER}:host_error:song`;
+  astate.deliveries[key] = { status: "acknowledged", attempts: 1, last_attempt_ms: clock - 1, acknowledged_by_transport: true };
+  validateAlertState(astate);
+  const original = serializeAlertState(astate), transport = mockTransport();
+  await assert.rejects(dispatchAlerts(astate, mstate, config(), transport, { now: clock, latestReport: report }),
+    e => e instanceof AlertError && e.code === "reclassification_capacity_exceeded");
+  assert.equal(transport.sent.length, 0);
+  assert.equal(serializeAlertState(astate), original);
+  const invalid = structuredClone(astate);
+  invalid.deliveries[key.replace(String(Number.MAX_SAFE_INTEGER), "9007199254740992")] = invalid.deliveries[key];
+  assert.throws(() => validateAlertState(invalid), /state_invalid/);
+});
+
+test("millionth and large-clock reminder slots persist, retry once and refuse incompatible v1 rollback", async () => {
+  const opened = event("opened", STALE, 1), cfg = config({ remind_after_minutes: 1 });
+  for (const now of [60000000001, Number.MAX_SAFE_INTEGER]) {
+    const slot = Math.floor((now - opened.at_ms) / 60000), sent = [];
+    const first = await dispatchAlerts(initialAlertState(), monitor([opened], opened), cfg, { name: "mock", async deliver(m) {
+      if (m.recipient === "song" && m.reminder) return { ok: false };
+      sent.push(m); return { ok: true };
+    } }, { now });
+    assert.equal(first.state.pending[0].message.reminder, slot);
+    assert.equal(first.state.pending.length, 1);
+    assert.throws(() => toV1State(first.state, cfg.max_attempts), /v1_counter_capacity_exceeded/, "pending long counters cannot be silently removed during rollback");
+    assert.ok(sent.some(m => m.reminder === slot && m.recipient === "ours"));
+    const dir = await mkdtemp(join(tmpdir(), "pitcheezy-alerts-reminder-boundary-"));
+    const paths = ["monitor.json", "config.json", "state.json"].map(name => join(dir, name));
+    await writeFile(paths[0], JSON.stringify({ state: monitor([opened], opened), report: {} }));
+    await writeFile(paths[1], JSON.stringify(cfg));
+    await writeFile(paths[2], serializeAlertState(first.state));
+    const retry = await runAlertsOnce(...paths, { now });
+    assert.deepEqual(retry.mock_messages.map(m => [m.recipient, m.reminder]), [["song", slot]]);
+    assert.equal((await runAlertsOnce(...paths, { now })).mock_messages.length, 0);
+    const original = await readFile(paths[2], "utf8"), output = join(dir, "v1.json");
+    await assert.rejects(downgradeState(paths[1], paths[2], output), /v1_counter_capacity_exceeded/);
+    await assert.rejects(readFile(output), { code: "ENOENT" });
+    assert.equal(await readFile(paths[2], "utf8"), original);
+    await writeFile(output, "existing-v1");
+    await assert.rejects(downgradeState(paths[1], paths[2], output), /v1_counter_capacity_exceeded/);
+    assert.equal(await readFile(output, "utf8"), "existing-v1");
+  }
+  const transport = mockTransport();
+  await assert.rejects(dispatchAlerts(initialAlertState(), monitor([opened], opened), cfg, transport, { now: Number.MAX_SAFE_INTEGER + 1 }),
+    e => e instanceof AlertError && e.code === "clock_error");
+  assert.equal(transport.sent.length, 0);
+});
+
+test("legacy orphan delivery evidence remains visible in the receipt and produces CLI exit one", async () => {
+  const key = `${sha("missing-legacy-payload")}:opened:song`;
+  const legacy = { schema: "pitcheezy-host-alert-state-v2", deliveries: { [key]: {
+    status: "undelivered", attempts: 1, last_attempt_ms: NOW, acknowledged_by_transport: false,
+  } }, pending: [], incidents: {}, mock_only: true };
+  const dir = await mkdtemp(join(tmpdir(), "pitcheezy-alerts-orphan-"));
+  const paths = ["monitor.json", "config.json", "state.json"].map(name => join(dir, name));
+  await writeFile(paths[0], JSON.stringify({ state: monitor([]), report: {} }));
+  await writeFile(paths[1], JSON.stringify(config()));
+  await writeFile(paths[2], JSON.stringify(legacy));
+  const cli = fileURLToPath(new URL("../alerts-cli.mjs", import.meta.url));
+  await assert.rejects(promisify(execFile)(process.execPath, [cli, "--monitor-state", paths[0], "--config", paths[1], "--state", paths[2]]), e => {
+    assert.equal(e.code, 1);
+    const out = JSON.parse(e.stdout);
+    assert.deepEqual(out.receipt.unrecoverable_events, [key]);
+    assert.equal(out.mock_messages.length, 0);
+    return true;
+  });
+  assert.deepEqual(JSON.parse(await readFile(paths[2], "utf8")).deliveries[key], legacy.deliveries[key]);
+});
+
+test("a recovery depending on an orphan opening refuses before any transport and preserves its source", async () => {
+  const opened = event("opened", STALE), recovered = { ...opened, kind: "recovered", issues: [], at_ms: NOW + 1 };
+  const state = initialAlertState(), openingKey = `${opened.id}:opened:song`, recoveryKey = `${opened.id}:recovered:song`;
+  state.deliveries[openingKey] = { status: "undelivered", attempts: 1, last_attempt_ms: NOW, acknowledged_by_transport: false };
+  state.deliveries[recoveryKey] = { status: "undelivered", attempts: 0, last_attempt_ms: NOW + 1, acknowledged_by_transport: false };
+  state.pending.push({ key: recoveryKey, message: buildMessage(recovered, "recovered", "song") });
+  validateAlertState(state);
+  const original = serializeAlertState(state), transport = mockTransport();
+  await assert.rejects(dispatchAlerts(state, monitor([]), config(), transport, { now: NOW + 2 }),
+    e => e instanceof AlertError && e.code === "pending_opening_unavailable");
+  assert.equal(transport.sent.length, 0);
+  assert.equal(serializeAlertState(state), original);
 });
