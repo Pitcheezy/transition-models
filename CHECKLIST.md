@@ -1,11 +1,12 @@
 # 남은 작업 체크리스트
 
-## WS-review2 Codex 교차검토 진행 — 2026-10-13
+## WS-review2 교차검토·수정 완료 — 2026-10-14
 
-사용자가 이전 작업을 이어 검토·수정하도록 직접 지정했다. 기준 main `b40e8a6e7ff3baf0f9b86b794c7b5ce002f5feb7`, 브랜치 `codex/ws-review2`.
-Claude 작성 접근 제어·동의 수집·감시·알림·기록을 고정 소스에서 검토하고, 재현된 결함만 회귀 검사와 함께 수정한다.
-검토 기록과 합격 기준은 [WS_CODEX_REVIEW2_20261013.md](docs/WS_CODEX_REVIEW2_20261013.md). 기존 보류·실제 배포/실발송/상대 코드 변경 제한은 유지한다.
-현재 수정분의 다른 모델 검토와 실운영 검증을 이 교차검토 기록으로 대체하지 않는다.
+사용자 직접 지시로 기준 main `b40e8a6`에서 작업했다. [PR #28](https://github.com/Pitcheezy/transition-models/pull/28)의 최종 코드 `2ce3a70a142c592d1db06d242616669766e1a6f7`에 재현 결함 11건과 로컬 검사 의존성 패치를 반영했다.
+Node 186·관련 Python 172·Chromium/WebKit 각19 및 감시·알림·보고서 리허설 통과. 외부 첫 연결 자료가 필요한 브라우저3개는 각 엔진에서 건너뛰었다.
+작성 GPT-6 계열과 다른 `gpt-5.6-sol`이 최종 고정 코드를 검토해 PASS로 판정했다. [범위·재현·해시·한계](docs/WS_CODEX_REVIEW2_20261013.md).
+이번 수정 권한을 반납한다. 이전 Codex 작성 묶음의 정확한 모델 id 확인·실제 출시 조건, WS-human1 결정, Song 후속 자료 수신은 남아 있다.
+아래 원래 완료 기록의 ‘교차 검토 대기’는 WS-review2 이전 상태이며, 현재 상태는 이 절과 WS-review2 기록을 따른다. A-y/F-4i 보류와 실제 배포·발송·상대 코드 변경 제한은 유지한다.
 
 ## 협업 v1 반영 — 2026-10-12
 
@@ -21,7 +22,7 @@ Claude 작성 접근 제어·동의 수집·감시·알림·기록을 고정 소
 - [x] WS-access3. 접근 문×수집 충돌을 고쳤다. 재현(main `9c99a5d`, 로컬 https Worker·실제 D1·Chromium): 로그인·동의 후 통계/의견이 `omit`으로 쿠키 없이 401, D1 0행, 위젯 "지연" 오표시. 수정: 공개 수집 설정 `accessGate`(설정 검사가 ACCESS_GATE_ENABLED와 일치 강제)일 때만 `same-origin`, 아니면 `omit`; 401+접근 헤더는 참여 종료(동의 해제·체크 해제, 재시도 없음, 경기·날짜 변경으로 재개 없음), 의견은 첫 거절이면 미저장 확정·앞선 시도 불확실이면 같은 id로만 재시도; 게이트 우회·수집 예외·동의 완화 없음, 서버 쿠키 미저장. 실제 로컬 조합 6(세션 없는 직접 전송·로그인 미동의/의견/동의/갱신/철회·로그아웃·재로그인 동의 미승계·4초 만료·게이트 OFF omit·설정 불일치) Chromium 통과, [영수증](docs/results/ops/ws_access_collection_20261013.json). WebKit은 CI(로컬 미설치). [기록](docs/WS_ACCESS2_20261013.md). 작성 `claude-opus-5-5`, **Codex 교차 검토 대기.** 〔모델: Opus 5.5〕 `[추가되었음 · 2026-10-13 · Claude]`
 - [x] WS-monitor2. 접근 문 ON 상태 발행 감시를 보완했다: 감시 설정 선택 키 `access_code_env`(환경 변수 이름)의 감시 전용 코드로 매 실행 관람자와 같은 로그인 경로에서 세션을 받아 page/health를 읽는다(우회·새 자격 증명 없음). 코드·쿠키는 report·state·출력에 없음; 로그인 실패 `access_login_*`(읽기 skipped)·세션 거부 `*_access_session_rejected`·404 뒤 게이트 `*_access_gate_without_login`은 host_error; `access_gate_active`는 게이트 응답을 본 경우만. 실제 로컬 Worker: 게이트 ON 신선→available, 오래된 health 2회→incident→모의 알림 publish_stalled(Song 우선), 복구, 틀린 코드→host_error, 코드 없음→access_required, 안내 ON에서 notice_active; CLI 환경 변수 경로. [리허설 영수증](docs/results/ops/ws_monitor_gate_rehearsal_20261013.json). 함께 고침: 경기별 기록이 감시 미관측 기간을 "이벤트 없음"으로 쓰던 결함(`monitor_coverage`). [기록](docs/WS_ACCESS2_20261013.md). 작성 `claude-opus-5-5`, **Codex 교차 검토 대기.** 〔모델: Opus 5.5〕 `[추가되었음 · 2026-10-13 · Claude]`
 - [x] WS-alert2. 열린 장애의 원인 범주가 바뀔 때 재분류 알림을 더했다(main에도 있던 고정 분류 문제; WS-access2 검토에서 재현). 알림 CLI가 감시 최신 report(마지막 기록 실행, 실행당 1회)로 원인을 따라가며 두 번 연속 규칙(감시와 같음), 알린 범주 기억(상태 v2 `incidents`), 번호 붙은 재분류(`reclassified:<n>:<범주>`, 원래 원인 복귀도 알림), 정보성에서 두 번 연속 조치 필요 시 올림, 재알림은 마지막으로 알린 범주(낮추지 않음), 새 재분류가 이전 미전달분 대체, 최신 재분류 재시도·장애 종료 시 `abandoned` 정리, opened 재시도 중 순서 대기, 형식 오류 건너뜀(종료 1). 함께 고침: 30일 정리가 감시 목록의 opened/recovered를 지워 다시 보내던 WS-review1 결함, 경기별 기록 집계 라벨. 상태 v1→v2 자동 올림, 되돌리기는 `--downgrade-to-v1`. 같은 모델 자체 검토 2회(`wf_9fc85390-ca8` 첫 판 결함 → 재설계, `wf_8e661cda-61b` 퍼징 약 1,600 수열·확정 3 수정). 검사 alerts+report 29·ops 163·리허설 7 시나리오 [영수증](docs/results/ops/ws_alert2_rehearsal_20261013.json). [기록](docs/WS_ALERT2_20261013.md). 선점 `f0a2311`; 구현은 완료 커밋(PR). 작성 `claude-opus-5-5`, **Codex 교차 검토 대기(WS-review2).** 〔모델: Opus 5.5〕 `[추가되었음 · 2026-10-13 · Claude]`
-- [!] WS-review2. 다른 모델 검토 조건 확정(사람): ① Codex 작성분의 Codex 모델 id를 세션 기록으로 확인해 기록, ② Claude 작성분(`notice`·`access`·`alerts`·`report`·`first-connection`·`verify_publish_contract`·2026-10-13 수정분)의 비Claude 검토자와 대상 커밋 지정 후 검토 실행·지적/수정/재검사 기록. 조건 전에는 어느 묶음도 "출시 검토 완료"로 표시하지 않는다. **추가 대상(2026-10-13, Claude Opus 5.5 작성): WS-access2·WS-access3·WS-monitor2 수정분 — 범위·중점은 [기록 7절](docs/WS_ACCESS2_20261013.md); WS-alert2(`alerts.mjs`·`alerts-cli.mjs`·`report.mjs` 알림 집계, [기록](docs/WS_ALERT2_20261013.md)).** 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-13 · Claude]`
+- [!] WS-review2. 전체 출시 검토의 남은 조건: 이전 Codex 작성 묶음의 정확한 모델 id를 세션 근거로 확인한다. Claude 운영 코드 교차검토와 이번 GPT-6 계열 수정분의 다른 모델 검토는 PR #28에서 완료했다(`2ce3a70`, `gpt-5.6-sol` PASS). 이 결과를 이전 전체 묶음의 출시 검토 완료로 소급하지 않는다. [범위·근거](docs/WS_CODEX_REVIEW2_20261013.md). 〔모델: Fable 5.1〕
 - [!] WS-human1. 10/20까지 양쪽 연락/응답 시간·접근/비용·안내 문구/합의된 긴급 내림의 조작 경로·접근 권한/복구·실경기/발신 범위 확정. 10/21 이후 고장 수리만, 10/23~31 경기별 기록. 〔모델: Fable 5.1〕
 
 

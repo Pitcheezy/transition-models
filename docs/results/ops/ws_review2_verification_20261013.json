@@ -1,0 +1,114 @@
+{
+  "schema": "pitcheezy-ws-review2-verification-v1",
+  "recorded_at": "2026-10-13T15:06:02.158113+00:00",
+  "task_started_local_date": "2026-10-13",
+  "final_verified_local_date": "2026-10-14",
+  "base_commit": "b40e8a6e7ff3baf0f9b86b794c7b5ce002f5feb7",
+  "code_commit": "2ce3a70a142c592d1db06d242616669766e1a6f7",
+  "pull_request": "https://github.com/Pitcheezy/transition-models/pull/28",
+  "confirmed_defect_groups_fixed": 11,
+  "authors_model": "GPT-6 family (exact variant not exposed in session)",
+  "independent_review": {
+    "model": "gpt-5.6-sol",
+    "code_commit": "2ce3a70a142c592d1db06d242616669766e1a6f7",
+    "verdict": "PASS",
+    "outstanding_actionable_findings": 0,
+    "independently_run_alert_tests_passed": 36,
+    "scope": "Incremental exact-snapshot review consolidated across e68c8a2, 2fd915e, and 2ce3a70; no changes by reviewer"
+  },
+  "checks": {
+    "final_public_host_node": {
+      "command": "TMPDIR=/private/tmp npm --prefix ops/public-host test",
+      "passed": 186,
+      "failed": 0,
+      "skipped": 0
+    },
+    "python_unchanged_since_initial_review": {
+      "command": "TMPDIR=/private/tmp python -B -m pytest tests/test_public_host_config.py tests/test_public_host_cost.py tests/test_public_host_release.py tests/test_publish_contract_verify.py -p no:cacheprovider",
+      "passed": 172,
+      "python": "3.12.13"
+    },
+    "browser_unchanged_since_initial_review": {
+      "engines": [
+        "chromium",
+        "webkit"
+      ],
+      "passed_per_engine": 19,
+      "skipped_per_engine": 3,
+      "reason_for_skips": "PZ_FIRST_CONNECTION_EXAMPLES and PZ_FIRST_CONNECTION_DIST not supplied",
+      "cwd": "tests/browser",
+      "commands": [
+        "BROWSER_ENGINE=<engine> node --test --test-concurrency=1 host-telemetry.test.cjs public-host-rehearsal.test.cjs public-host-notice.test.cjs first-connection.test.cjs",
+        "BROWSER_ENGINE=<engine> node --test --test-concurrency=1 public-host-access.test.cjs host-access-collection.test.cjs"
+      ]
+    },
+    "syntax": "passed",
+    "python_changed_files_ruff": "passed",
+    "development_dependency_npm_audit": {
+      "high_before": 3,
+      "total_after": 0,
+      "overrides": {
+        "miniflare/sharp": "0.35.5",
+        "miniflare/undici": "7.29.1"
+      }
+    },
+    "durable_pending_stress": {
+      "maximum_issue_strings": 8,
+      "characters_per_issue": 80,
+      "monitor_events_per_run": 100,
+      "all_failure_generations": 24,
+      "peak_pending": 1200,
+      "saved_reloaded_drained_and_repeated_without_duplicates": true
+    },
+    "prior_retention_experiment": {
+      "policy": "1000 rows / 1 MiB at 86822f7; superseded, not a measurement of final 4096 rows / 8 MiB policy",
+      "successful_cli_save_reload_cycles": 2307
+    },
+    "initial_remote_ci": {
+      "code_commit": "e68c8a20c495c70b3a726d7cb736e002189bd992",
+      "checks_passed": 6,
+      "checks_failed": 0,
+      "ubuntu_python_passed": 2456,
+      "ubuntu_python_skipped": 8,
+      "ubuntu_python_deselected": 2,
+      "note": "Final PR-head CI is recorded by GitHub and in the final PR description; do not treat this initial run as final-head CI."
+    }
+  },
+  "source_sha256": {
+    "ops/public-host/access.mjs": "67c3865be7754a9cf172075db67f60a8bc2cd076203799b0bf64a8fe0ef1219a",
+    "ops/public-host/alerts-cli.mjs": "48d2df94a8e73afca994ab40a6197cc0b8cfccd09ffcf863249cc1487ede22aa",
+    "ops/public-host/alerts.mjs": "e9fe8941221601a7b7cbc7429c7bf34d5dbedc2ee2479d1cbbcdb4eec62d62cb",
+    "ops/public-host/notice.mjs": "3f7473bb63aad87bde343cee8de10574219624c496e6f39895a0406642b500bf",
+    "ops/public-host/package-lock.json": "cece953d79da7738410cc570742afaa99282e66543eda69693edafb243371e6b",
+    "ops/public-host/package.json": "4a04dd3ce3b12a1f2d4f6151bb98e4fb72c53bd5ef15f2a45eda10ebc339e90d",
+    "ops/public-host/report.mjs": "f20d5034fd785d5b38fd991c96c3d8f1d9a68c3cd827e5a393aa9663c238b6c0",
+    "ops/public-host/tests/access.test.mjs": "ee36b1e304be17b89f1303c865a331695a5bfee5fc5e0e74d0de20623eb0ea9b",
+    "ops/public-host/tests/alerts.test.mjs": "05d6744169ea4bbe6aa4f9c646f700e744369ad5bbcd76942d2ae52cb7ff3e76",
+    "ops/public-host/tests/notice.test.mjs": "26464e94e64a9d5c2c6635441830e6581192d94723c84f06ccc1d65127b927b9",
+    "ops/public-host/tests/report.test.mjs": "70b5ce920ab205f09199f99c92a7526ffc57f498d335d5bd300fd6ad4471b7e9",
+    "scripts/verify_publish_contract.py": "47f532d0db7d75303ef2ed8470dd9e039184bdb7a3d2d3248824d65e88fb0abf",
+    "tests/test_publish_contract_verify.py": "01644f4dbc21d49cfac582bd76271418ce25b8a98b7db93ad926b18ab0d6b62a"
+  },
+  "receipts": {
+    "docs/results/ops/ws_review2_monitor_gate_20261013.json": {
+      "sha256": "49d4f94c4f295ae4112876d267c4a04cd89187f10b9277533096b7ee17f2c41b",
+      "passed": true
+    },
+    "docs/results/ops/ws_review2_alerts_20261013.json": {
+      "sha256": "656a92c234a0fed16ecb520685f72c83b6c5071295b682f7568e340946feff40",
+      "passed": true
+    },
+    "docs/results/ops/ws_review2_report_20261013.json": {
+      "sha256": "b152c0266d8c97f7a4cd4e5899e9f5a7c111cac6e94ede4781964f1cd488b0fb",
+      "passed": true
+    }
+  },
+  "limits": [
+    "Synthetic/local tests; real alert delivery and report posting not performed",
+    "Real Cloudflare account/CDN, Safari device and live game connection not verified",
+    "New Song local-only contract candidate not received or treated as verified",
+    "Events never consumed before monitor eviction and legacy discarded message payloads cannot be recovered",
+    "Access cookie v3 upgrade or rollback requires re-login; v1 alert rollback refuses unrepresentable queues, sizes and counters",
+    "Earlier Codex-authored release bundle exact-model provenance and full-release approval are not resolved by this review"
+  ]
+}
