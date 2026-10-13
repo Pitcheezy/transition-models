@@ -4,7 +4,7 @@ import { resolve, dirname, basename } from "node:path";
 import { randomUUID } from "node:crypto";
 import { fileURLToPath } from "node:url";
 import { parseArgs } from "node:util";
-import { AlertError, validateAlertConfig, initialAlertState, validateAlertState, mockTransport, dispatchAlerts, toV1State, serializeAlertState, MAX_ALERT_STATE_READ_BYTES } from "./alerts.mjs";
+import { AlertError, validateAlertConfig, initialAlertState, validateAlertState, mockTransport, dispatchAlerts, toV1State, serializeAlertState, MAX_ALERT_STATE_READ_BYTES, MAX_V1_STATE_BYTES } from "./alerts.mjs";
 import { readJson, plainPath } from "./monitor-cli.mjs";
 
 export async function runAlertsOnce(monitorStatePath, configPath, statePath, { now = Date.now() } = {}) {
@@ -46,7 +46,7 @@ export async function runAlertsOnce(monitorStatePath, configPath, statePath, { n
 export async function downgradeState(configPath, statePath, outputPath) {
   const config = validateAlertConfig(await readJson(configPath, 16384));
   const v1 = toV1State(await readJson(await plainPath(statePath), MAX_ALERT_STATE_READ_BYTES), config.max_attempts);
-  const serialized = serializeAlertState(v1);
+  const serialized = serializeAlertState(v1, { maxBytes: MAX_V1_STATE_BYTES });
   const file = await open(await plainPath(outputPath), "wx", 0o600);
   try { await file.writeFile(serialized, "utf8"); await file.sync(); } finally { await file.close(); }
   return { schema: "pitcheezy-host-alerts-downgrade-v1", deliveries: Object.keys(v1.deliveries).length, pending: v1.pending.length, history_coverage: "unknown" };
@@ -65,7 +65,7 @@ export async function main(args) {
     const result = await runAlertsOnce(values["monitor-state"], values.config, values.state);
     process.stdout.write(JSON.stringify(result, null, 2) + "\n");
     // Exit 1 also when a monitor record could not be classified (skipped, so the rest still went out).
-    return result.receipt.failed.length || result.receipt.invalid_events || result.receipt.incident_invalid ? 1 : 0;
+    return result.receipt.failed.length || result.receipt.invalid_events || result.receipt.incident_invalid || result.receipt.unrecoverable_events.length ? 1 : 0;
   } catch (error) {
     process.stderr.write(JSON.stringify({ ok: false, code: error instanceof AlertError ? error.code : (error?.code && typeof error.code === "string" ? error.code : "alerts_io_or_argument_error") }) + "\n");
     return 2;
