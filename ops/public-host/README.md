@@ -36,6 +36,12 @@ COLLAB-001의 파일 전달 경계를 구현한 후보이며, 실제 서비스 �
 이 Worker에 올린 뒤 고정 커밋의 공개 화면 빌드가 상태를 구별해 읽는지 Chromium으로 확인했다. `node ops/public-host/rehearse-first-connection.mjs`,
 `uv run --frozen python scripts/verify_publish_contract.py`, `tests/browser/first-connection.test.cjs`(환경 변수 없으면 건너뜀). 실제 발행기·실계정 연결은 별도다.
 
+## 접근 문 결함 수정과 접근 문 ON 감시 (WS-access2 · WS-access3 · WS-monitor2)
+
+[기록](../../docs/WS_ACCESS2_20261013.md): 세션 길이 축소 뒤 쿠키가 다시 유효해지던 결함(서명된 발급 시각 v2와 시간 무관 수명 규칙), 접근 문 ON에서
+수집 요청이 쿠키 없이 401이던 충돌(명시적 `accessGate`와 설정 검사), 접근 문 ON 발행 감시(감시 전용 코드 로그인)를 고쳤다. 실제 로컬 조합 검사와
+리허설 영수증을 남겼고 수정분은 Codex 교차 검토 대상이다.
+
 ## 교차 검토 (WS-review1)
 
 [검토 기록](../../docs/WS_REVIEW1_20261013.md): main `70aa241`의 운영 코드를 네 관점 + 반박 2명으로 검토해 확정 12건을 수정하고 기각 12건의 사유를 남겼다

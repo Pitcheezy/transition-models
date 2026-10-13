@@ -37,6 +37,7 @@ export function validateReportInput(input) {
   }
   const m = input.monitor_state;
   if (m !== null && (!object(m) || !Array.isArray(m.events) || !int(m.dropped_events ?? 0, 0, Number.MAX_SAFE_INTEGER) ||
+      !(m.last_observed_ms === undefined || m.last_observed_ms === null || int(m.last_observed_ms, 0, Number.MAX_SAFE_INTEGER)) ||
       !m.events.every(e => exact(e, ["id", "kind", "at_ms", "issues"]) && HEX64.test(e.id) && ["opened", "recovered"].includes(e.kind) &&
         int(e.at_ms, 0, Number.MAX_SAFE_INTEGER) && Array.isArray(e.issues) && e.issues.every(i => typeof i === "string" && /^[a-z_]{1,80}$/.test(i))))) refuse("invalid_monitor_state");
   const n = input.notice_audit;
@@ -127,8 +128,15 @@ export function problemsSection(input) {
   };
   const incident_still_open = Boolean(input.monitor_state?.incident);
   const dropped = input.monitor_state?.dropped_events ?? 0;
+  // "No events" is only meaningful if the monitor was observing. The state keeps only its last observation, so the
+  // end of the window is the part that can be verified: covers_end | stopped_in_window | before_window | never | unknown.
+  const last = input.monitor_state?.last_observed_ms;
+  const coverage = input.monitor_state === null ? "absent" : last === undefined ? "unknown" : last === null ? "never" :
+    last < Date.parse(input.window.from) ? "before_window" : last < Date.parse(input.window.to) ? "stopped_in_window" : "covers_end";
   return { monitor_events: monitor, notice_changes: notice, alerts, incident_still_open, dropped_monitor_events: dropped,
-    monitor_available: input.monitor_state !== null, notice_available: input.notice_audit !== null };
+    monitor_available: input.monitor_state !== null, monitor_coverage: coverage,
+    monitor_last_observed: Number.isSafeInteger(last) ? new Date(last).toISOString() : null,
+    notice_available: input.notice_audit !== null };
 }
 
 export function buildReport(input, { now = Date.now() } = {}) {
@@ -149,9 +157,16 @@ export function buildReport(input, { now = Date.now() } = {}) {
   }
   lines.push("- 세션은 opt-in 브라우저 단위이며 사람 수가 아니다. 활성 시간은 브라우저 보고값이다.", "");
   lines.push("## 문제와 조치");
+  const coverage = problems.monitor_coverage;
   if (!problems.monitor_available) lines.push("- 감시 기록 없음(감시 상태 파일 미제공) — 장애 유무 **미측정**.");
-  else if (problems.monitor_events.length === 0) lines.push("- 감시 이벤트 없음(집계 기간 내 open/복구 없음)." + (problems.incident_still_open ? " 단, 기간 밖에서 열린 장애가 아직 열려 있다." : ""));
-  else for (const e of problems.monitor_events) lines.push(`- ${e.at} 감시 ${e.kind} (${e.incident_id}…): ${e.issues.join(", ") || "-"}`);
+  else if (coverage === "never" || coverage === "before_window") {
+    lines.push(`- 감시가 집계 기간에 관측하지 않았다(마지막 관측 ${problems.monitor_last_observed ?? "없음"}) — 기간 중 장애 유무 **미측정**(감시 미실행 가능).`);
+  } else {
+    if (coverage === "stopped_in_window") lines.push(`- 감시 마지막 관측 ${problems.monitor_last_observed}(집계 기간 끝 전) — 그 이후는 **미측정**.`);
+    if (coverage === "unknown") lines.push("- 감시 상태에 마지막 관측 시각이 없어 기간을 덮었는지 확인할 수 없다.");
+    if (problems.monitor_events.length === 0) lines.push("- 감시 이벤트 없음(관측한 동안 집계 기간 내 open/복구 없음)." + (problems.incident_still_open ? " 단, 기간 밖에서 열린 장애가 아직 열려 있다." : ""));
+    else for (const e of problems.monitor_events) lines.push(`- ${e.at} 감시 ${e.kind} (${e.incident_id}…): ${e.issues.join(", ") || "-"}`);
+  }
   if (problems.dropped_monitor_events > 0) lines.push(`- 감시 기록이 ${problems.dropped_monitor_events}건 잘렸다(최근 100건만 보존).`);
   if (!problems.notice_available) lines.push("- 안내 화면 전환 기록 없음(감사 기록 미제공).");
   else if (problems.notice_changes.length === 0) lines.push("- 안내 화면 전환 없음.");
@@ -170,7 +185,9 @@ export function buildReport(input, { now = Date.now() } = {}) {
   const unmeasured = [...input.unmeasured];
   if (usage.sessions === null) unmeasured.unshift("이용자 수·활성 시간");
   if (usage.feedback === null && usage.status !== "collection_off") unmeasured.push("피드백 응답");
-  if (!problems.monitor_available) unmeasured.push("장애 유무·지속 시간");
+  if (!problems.monitor_available || ["never", "before_window"].includes(problems.monitor_coverage)) unmeasured.push("장애 유무·지속 시간");
+  else if (problems.monitor_coverage === "stopped_in_window") unmeasured.push("감시 마지막 관측 이후의 장애 유무");
+  else if (problems.monitor_coverage === "unknown") unmeasured.push("감시 실행 범위");
   if (unmeasured.length === 0) lines.push("- (기재 없음)"); else for (const u of unmeasured) lines.push(`- ${u}`);
   lines.push("", "## 비고", input.notes || "(없음)", "", "---",
     "게시 범위·문구는 사람의 발신 승인을 따른다. 이 초안은 11월 전시 근거로 보존하되 실경기가 아닌 자료는 그 라벨을 유지한다.");

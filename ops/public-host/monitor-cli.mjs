@@ -59,7 +59,9 @@ export async function runOnce(configPath, statePath) {
       if (e.code !== "ENOENT") throw e;
       state = initialState(config);
     }
-    const report = await probe(config);
+    // WS-monitor2: the code comes from the environment variable named in the config, never from a file.
+    const accessCode = typeof config.access_code_env === "string" ? process.env[config.access_code_env] || null : null;
+    const report = await probe(config, { accessCode });
     const next = advanceState(state, report, config);
     const file = await open(tempPath, "wx", 0o600);
     tempCreated = true;

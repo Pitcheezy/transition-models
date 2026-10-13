@@ -1,0 +1,123 @@
+{
+  "schema": "pitcheezy-access-collection-check-v1",
+  "engine": "chromium",
+  "evidence": "synthetic local runtime",
+  "environment": "https loopback Miniflare Worker (built-in development certificate), local D1 with migrations/0001_telemetry.sql, edge stand-in for CF-Connecting-IP",
+  "not_checked": [
+    "real Cloudflare edge and certificate",
+    "real Safari/mobile",
+    "real viewers or real games"
+  ],
+  "cases": [
+    {
+      "case": "no_session_direct_post",
+      "status": 401,
+      "d1_delta": {
+        "sessions": 0,
+        "feedback": 0,
+        "budget_used": 0
+      }
+    },
+    {
+      "case": "login_no_consent_feedback_consent_withdraw",
+      "requests": [
+        {
+          "path": "/_telemetry/feedback",
+          "status": 200,
+          "cookie": true
+        },
+        {
+          "path": "/_telemetry/session",
+          "status": 200,
+          "cookie": true
+        },
+        {
+          "path": "/_telemetry/session",
+          "status": 200,
+          "cookie": true
+        }
+      ],
+      "d1_delta": {
+        "sessions": 1,
+        "feedback": 1,
+        "budget_used": 3
+      }
+    },
+    {
+      "case": "logout_refusal_relogin_reconsent",
+      "requests": [
+        {
+          "path": "/_telemetry/session",
+          "status": 200,
+          "cookie": true
+        },
+        {
+          "path": "/_telemetry/session",
+          "status": 401,
+          "cookie": false
+        },
+        {
+          "path": "/_telemetry/feedback",
+          "status": 401,
+          "cookie": false
+        },
+        {
+          "path": "/_telemetry/session",
+          "status": 200,
+          "cookie": true
+        }
+      ],
+      "d1_delta": {
+        "sessions": 2,
+        "feedback": 0,
+        "budget_used": 2
+      }
+    },
+    {
+      "case": "session_expiry_mid_collection",
+      "session_seconds": 4,
+      "requests": [
+        {
+          "path": "/_telemetry/session",
+          "status": 200,
+          "cookie": true
+        },
+        {
+          "path": "/_telemetry/session",
+          "status": 401,
+          "cookie": false
+        },
+        {
+          "path": "/_telemetry/feedback",
+          "status": 401,
+          "cookie": false
+        }
+      ],
+      "d1_delta": {
+        "sessions": 1,
+        "feedback": 0,
+        "budget_used": 1
+      }
+    },
+    {
+      "case": "gate_off_credentials_omit",
+      "other_cookie_sent": false,
+      "d1_delta": {
+        "sessions": 1,
+        "feedback": 0,
+        "budget_used": 1
+      }
+    },
+    {
+      "case": "client_server_mismatch",
+      "status": 401,
+      "widget": "access_required",
+      "d1_delta": {
+        "sessions": 0,
+        "feedback": 0,
+        "budget_used": 0
+      },
+      "note": "the offline config check refuses this pairing (client_server_settings_mismatch)"
+    }
+  ]
+}

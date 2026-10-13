@@ -16,8 +16,22 @@ Song 모델/수집기/Mac, 외부 알림, 스케줄러에 연결하지 않았다
 - 503에 `X-Pitcheezy-Notice` 헤더가 있으면 [긴급 안내 스위치](NOTICE.md)가 켜진 상태다. 코드 `notice_active`,
   report `notice_active=true`, issues `page_notice_active`/`health_notice_active`로 기록하며 전체 상태는 여전히 `failed`다
   (뷰어에게는 이용 불가). 발행 중단·저장소 장애와 구별해 알림 경로(WS-alert1)에서 다르게 다룰 수 있다. 본문 문구는 기록하지 않는다.
-- 401에 `X-Pitcheezy-Access: required`가 있으면 [관람 접근 문](ACCESS.md)이 켜진 상태다. 코드 `access_required`,
-  report `access_gate_active=true`로 기록하며 이 도구는 세션을 갖지 않아 게이트 뒤의 발행 시각을 검사하지 못한다(감시용 세션 미구현).
+- 401에 `X-Pitcheezy-Access: required`가 있으면 [관람 접근 문](ACCESS.md)이 켜진 상태다. 감시 코드를 설정하지 않았으면 코드 `access_required`,
+  report `access_gate_active=true`로 기록하며 게이트 뒤의 발행 시각을 검사하지 못한다(알림 분류 `access_gate`, 정보).
+- **접근 문 ON 감시(WS-monitor2):** 선택 키 `access_code_env`에 **환경 변수 이름**(예 `PZ_MONITOR_ACCESS_CODE`, 대문자·숫자·밑줄)을 적으면
+  매 실행 그 변수의 코드로 `POST /_access/v1/session`(관람자와 같은 경로, 리다이렉트 미추적)에서 세션을 받아 page/health를 `Cookie`와 함께 읽는다.
+  우회 경로나 새 자격 증명 종류는 없다. 감시 전용 코드를 접근 코드 목록에 따로 두기를 권한다(그 코드만 지워 감시 세션만 철회).
+  - report `access_session`: `not_configured`(키 없음/null) · `established` · `gate_off`(로그인 경로 404 = 게이트 꺼짐, 쿠키 없이 읽음) · `login_failed`.
+  - 로그인 실패는 issues 하나(`access_login_denied`/`_rate_limited`/`_unavailable`/`_http_error`/`_network_error`/`_timeout`/`_invalid_cookie`/`_error`)로 기록하고
+    page/health는 `skipped`다(쪽 장애로 오기하지 않음). 세션을 받고도 401이면 `page_access_session_rejected`/`health_access_session_rejected`,
+    로그인 경로가 404(게이트 꺼짐)였는데 읽기가 게이트에 막히면 `page_access_gate_without_login`/`health_access_gate_without_login`이다.
+    모두 알림 분류 `host_error`(우리 우선)다.
+  - `access_gate_active`는 이 실행에서 게이트 자체의 응답을 본 경우만 true다(세션 받음, 로그인 거절 401·제한 429·쿠키 없는 200, 읽기 401).
+    네트워크 오류·시간 초과·기타 HTTP 응답은 게이트를 증명하지 않으므로 false다.
+  - 로그인 뒤 두 읽기가 이어지므로 한 실행은 최대 약 `timeout_ms`의 2배가 걸린다.
+  - 설정에 키를 추가하면(값이 null이어도) 설정 지문이 바뀌므로 새 상태 파일로 시작한다(`config_changed_use_new_state`).
+  - 변수가 비었거나 코드 모양이 틀리면 요청 없이 종료 2(`access_code_unavailable`/`access_code_invalid`), 상태 파일을 쓰지 않는다.
+  - 코드와 쿠키는 메모리에만 있고 report·state·stdout·stderr에 남지 않는다(검사로 확인). 로그인 1회가 접근 문 요청자 제한 1회를 쓴다.
 - 시각은 초 단위 이상·시간대가 있는 RFC3339 문자열만 받는다. 숫자의 초/밀리초는 추정하지 않는다.
   예제의 지연120초·시계차30초는 합의된 운영값이 아니며 실제 리허설에서 정해야 한다.
 
@@ -37,7 +51,8 @@ HTTPS origin만 받으며 credentials/query/fragment/path를 거부한다.
 로컬 검증은 allow_loopback_http=true와 문자 그대로 127.0.0.1 또는 [::1]의 HTTP만 허용한다.
 이 옵션으로 hostname이나 사설 LAN 주소를 HTTP 대상으로 열지 않는다.
 
-GET /와 GET /v1/health.json 각1회. 인증·Cookie·외부 메시지를 보내지 않는다.
+GET /와 GET /v1/health.json 각1회. `access_code_env`가 없으면 인증·Cookie를 보내지 않는다. 있으면 그 앞에 로그인 POST 1회를 하고
+두 GET에 받은 세션 Cookie만 붙인다. 외부 메시지는 보내지 않는다.
 리다이렉트를 따라가지 않고 헤더만 온 응답도 본문까지 전체 제한 시간으로 중단한다.
 선언 길이와 실제 스트림 길이를 제한한다. 원문·URL·서버 예외 텍스트는 결과에 기록하지 않는다.
 실행 환경의 네트워크/프록시 로그까지 지우는 도구는 아니다.

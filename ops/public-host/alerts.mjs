@@ -27,7 +27,12 @@ const HOST_ISSUES = new Set(["page_http_error", "page_network_error", "page_time
   "page_body_too_large", "page_body_error", "page_empty_body", "page_content_type", "page_not_html_document",
   "page_page_hash_mismatch", "page_invalid_utf8", "page_probe_error", "health_http_error", "health_network_error",
   "health_timeout", "health_redirect", "health_body_too_large", "health_body_error", "health_empty_body",
-  "health_content_type", "health_probe_error", "health_date_invalid", "health_age_invalid", "health_clock_mismatch"]);
+  "health_content_type", "health_probe_error", "health_date_invalid", "health_age_invalid", "health_clock_mismatch",
+  // WS-monitor2: our monitor could not open or keep a viewer session; our side (gate/monitor code) looks first.
+  "access_login_denied", "access_login_rate_limited", "access_login_unavailable", "access_login_http_error",
+  "access_login_network_error", "access_login_timeout", "access_login_invalid_cookie", "access_login_error",
+  "page_access_session_rejected", "health_access_session_rejected",
+  "page_access_gate_without_login", "health_access_gate_without_login"]);
 
 /** Maps a monitor event (opened/recovered with issues) to an alert category. Pure; no I/O. */
 export function classifyEvent(event) {

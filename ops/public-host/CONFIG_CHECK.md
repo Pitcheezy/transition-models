@@ -25,7 +25,7 @@ manifest의 SHA/바이트를 재검사하며, 공개 폴더에 목록 밖 영상
 
 `wrangler.deploy.json`을 기준으로 main은 `worker.mjs`, assets는 **`../public`**이다.
 기존 소스 예제의 `./public`을 그대로 복사하면 패키지에서는 다른 폴더를 가리키므로 거부한다.
-운영자 설정은 host에 있고 공개 수집 안내 파일에는 불리언2개와 보관일만 들어간다.
+운영자 설정은 host에 있고 공개 수집 안내 파일에는 불리언3개(`telemetryEnabled`·`feedbackEnabled`·`accessGate`)와 보관일만 들어간다.
 
 ## 실행
 
@@ -53,7 +53,8 @@ Python3.12 표준 라이브러리만 사용한다. 성공은 종료0, 입력 거
 - 테스트한 compatibility_date, Worker 우선 처리, ASSETS, SPA fallback, 기본 공개 엔드포인트 비활성 확인.
 - private R2와 D1의 **binding 이름/형식** 확인. 실제 private 여부·계정·DB 존재는 확인하지 못한다.
 - 업로드/수집 limiter 이름·주기·서로 다른 namespace 확인. 다른 Worker와의 충돌은 계정에서 별도 확인.
-- 다섯 서버 토글(읽기·업로드·통계·피드백·접근 문)은 문자열 true/false만, 공개 수집 설정은 정확한 불리언2개·정수 보관일1개만 허용한다.
+- 다섯 서버 토글(읽기·업로드·통계·피드백·접근 문)은 문자열 true/false만, 공개 수집 설정은 정확한 불리언3개·정수 보관일1개만 허용한다.
+  공개 설정 `accessGate`는 `ACCESS_GATE_ENABLED`와 같아야 한다(WS-access3: 게이트가 수집 경로도 보호하므로 그때만 같은 출처 쿠키를 보낸다).
   접근 문 세션 길이 ACCESS_SESSION_SECONDS는 1~604800이며, 접근 문이 켜진 설정은 READ_ORIGIN이 비어 있어야 한다(같은 출처 쿠키).
   공개 설정과 서버 통계/피드백/보관일이 같아야 한다. 이전 enabled만으로 켜는 설정은 수용하지 않는다.
 - 수집 OFF여도 기존 행은 만료되어야 하므로 UTC03:17 정리 cron을 반드시 요구한다.

@@ -63,7 +63,7 @@ export async function runReportRehearsal() {
     const input = (extra = {}) => ({ schema: "pitcheezy-game-report-input-v1", game_pk: 123, evidence: "synthetic",
       window: { from: "2026-10-12T00:00:00Z", to: "2026-10-12T23:59:59Z" },
       collection: { telemetry_enabled: true, feedback_enabled: true, consent_note: "opt-in 위젯 체크, 합성 세션 2개", retain_days: 30 },
-      usage_summary: summary, monitor_state: { events: mstate.events, incident: mstate.incident, dropped_events: mstate.dropped_events },
+      usage_summary: summary, monitor_state: { events: mstate.events, incident: mstate.incident, dropped_events: mstate.dropped_events, last_observed_ms: mstate.last_observed_ms },
       notice_audit: notice, alert_state: alerts.state,
       actions: [{ at: new Date(now + 90000).toISOString(), by: "ops-a", what: "안내 ON(합성 리허설)" }, { at: new Date(now + 200000).toISOString(), by: "ops-b", what: "안내 OFF" }],
       sources: { host_commit: "0".repeat(40), frontend_commit: null, contract_version: "public-file-v1 draft v0", release_manifest_sha256: null },

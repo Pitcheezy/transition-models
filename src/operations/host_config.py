@@ -244,17 +244,21 @@ def validate_config(config, client, root):
         variables["ACCESS_GATE_ENABLED"] != "true" or variables["READ_ORIGIN"] == "",
         "access_gate_same_origin_required",
     )
-    fields(client, ("telemetryEnabled", "feedbackEnabled", "retainDays"))
+    fields(client, ("telemetryEnabled", "feedbackEnabled", "retainDays", "accessGate"))
     require(
         type(client["telemetryEnabled"]) is bool
         and type(client["feedbackEnabled"]) is bool
-        and type(client["retainDays"]) is int,
+        and type(client["retainDays"]) is int
+        and type(client["accessGate"]) is bool,
         "invalid_client_settings",
     )
+    # The viewer gate also protects the collection routes: the client sends the same-origin session
+    # cookie only when it knows the gate is on, so a mismatch would silently break collection (WS-access3).
     require(
         client["telemetryEnabled"] == (variables["TELEMETRY_ENABLED"] == "true")
         and client["feedbackEnabled"] == (variables["FEEDBACK_ENABLED"] == "true")
-        and client["retainDays"] == days,
+        and client["retainDays"] == days
+        and client["accessGate"] == (variables["ACCESS_GATE_ENABLED"] == "true"),
         "client_server_settings_mismatch",
     )
     r2 = config["r2_buckets"]

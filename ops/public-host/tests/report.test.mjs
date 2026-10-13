@@ -118,6 +118,28 @@ test("markdown draft carries every required section, labels and the no-posting n
   assert.doesNotMatch(markdown, /https?:\/\//);
 });
 
+test("monitor coverage of the window decides whether 'no events' is a measurement", () => {
+  const ev = { id: sha("x"), kind: "opened", at_ms: Date.parse("2026-10-12T10:00:00Z"), issues: ["freshness_stale"] };
+  const state = last => ({ events: [], incident: null, dropped_events: 0, ...(last === "absent" ? {} : { last_observed_ms: last }) });
+  const cases = [
+    [state(Date.parse("2026-10-13T00:00:30Z")), "covers_end", /감시 이벤트 없음\(관측한 동안/, false],
+    [state(Date.parse("2026-10-12T15:00:00Z")), "stopped_in_window", /감시 마지막 관측 2026-10-12T15:00:00.000Z\(집계 기간 끝 전\)/, "감시 마지막 관측 이후의 장애 유무"],
+    [state(Date.parse("2026-10-10T00:00:00Z")), "before_window", /감시가 집계 기간에 관측하지 않았다/, "장애 유무·지속 시간"],
+    [state(null), "never", /마지막 관측 없음/, "장애 유무·지속 시간"],
+    [state("absent"), "unknown", /마지막 관측 시각이 없어/, "감시 실행 범위"],
+  ];
+  for (const [monitor_state, coverage, line, unmeasured] of cases) {
+    const r = buildReport(base({ monitor_state }), { now: NOW });
+    assert.equal(r.json.problems.monitor_coverage, coverage);
+    assert.match(r.markdown, line, coverage);
+    if (unmeasured) assert.ok(r.json.unmeasured.includes(unmeasured), coverage);
+    else assert.equal(r.json.unmeasured.some(u => /장애|감시/.test(u)), false);
+  }
+  const before = buildReport(base({ monitor_state: { ...state(Date.parse("2026-10-10T00:00:00Z")), events: [ev] } }), { now: NOW });
+  assert.doesNotMatch(before.markdown, /감시 이벤트 없음/, "a monitor that did not run cannot report 'no events'");
+  assert.throws(() => validateReportInput(base({ monitor_state: { ...state(1), last_observed_ms: -1 } })), /invalid_monitor_state/);
+});
+
 test("CLI writes markdown and JSON once, refuses overwrite and invalid input", async () => {
   const dir = await mkdtemp(join(tmpdir(), "pitcheezy-report-"));
   const run = promisify(execFile);
