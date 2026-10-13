@@ -8,6 +8,7 @@ import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import { fileURLToPath } from "node:url";
 import { validateReportInput, usageSection, problemsSection, buildReport, EVIDENCE } from "../report.mjs";
+import { initialAlertState, dispatchAlerts, mockTransport } from "../alerts.mjs";
 
 const sha = text => createHash("sha256").update(text).digest("hex");
 const NOW = Date.parse("2026-10-13T06:00:00Z");
@@ -99,7 +100,7 @@ test("problems collect monitor events, notice changes and mock alert counts insi
   const p = problemsSection(input);
   assert.equal(p.monitor_events.length, 2);
   assert.equal(p.notice_changes.length, 1);
-  assert.deepEqual(p.alerts, { acknowledged_by_mock: 1, undelivered: 1, abandoned: 0, waiting_unattempted: 0, pending: 0, delivery_confirmed: false }, "alert attempts outside the window are not counted");
+  assert.deepEqual(p.alerts, { acknowledged_by_mock: 1, undelivered: 1, abandoned: 0, waiting_unattempted: 0, pending: 0, delivery_confirmed: false, history_coverage: "unknown" }, "alert attempts outside the window are not counted");
   assert.equal(p.incident_still_open, true);
   assert.equal(p.dropped_monitor_events, 1);
 });
@@ -122,7 +123,7 @@ test("monitor coverage of the window decides whether 'no events' is a measuremen
   const ev = { id: sha("x"), kind: "opened", at_ms: Date.parse("2026-10-12T10:00:00Z"), issues: ["freshness_stale"] };
   const state = last => ({ events: [], incident: null, dropped_events: 0, ...(last === "absent" ? {} : { last_observed_ms: last }) });
   const cases = [
-    [state(Date.parse("2026-10-13T00:00:30Z")), "covers_end", /감시 이벤트 없음\(관측한 동안/, false],
+    [state(Date.parse("2026-10-13T00:00:30Z")), "after_window", /집계 기간 뒤다/, "기간 전체의 장애 유무·지속 시간(기록된 관측·이벤트 외의 관측 간격·누락 미확인)"],
     [state(Date.parse("2026-10-12T15:00:00Z")), "stopped_in_window", /감시 마지막 관측 2026-10-12T15:00:00.000Z\(집계 기간 끝 전\)/, "감시 마지막 관측 이후의 장애 유무"],
     [state(Date.parse("2026-10-10T00:00:00Z")), "before_window", /감시가 집계 기간에 관측하지 않았다/, "장애 유무·지속 시간"],
     [state(null), "never", /마지막 관측 없음/, "장애 유무·지속 시간"],
@@ -133,11 +134,95 @@ test("monitor coverage of the window decides whether 'no events' is a measuremen
     assert.equal(r.json.problems.monitor_coverage, coverage);
     assert.match(r.markdown, line, coverage);
     if (unmeasured) assert.ok(r.json.unmeasured.includes(unmeasured), coverage);
-    else assert.equal(r.json.unmeasured.some(u => /장애|감시/.test(u)), false);
   }
   const before = buildReport(base({ monitor_state: { ...state(Date.parse("2026-10-10T00:00:00Z")), events: [ev] } }), { now: NOW });
   assert.doesNotMatch(before.markdown, /감시 이벤트 없음/, "a monitor that did not run cannot report 'no events'");
   assert.throws(() => validateReportInput(base({ monitor_state: { ...state(1), last_observed_ms: -1 } })), /invalid_monitor_state/);
+});
+
+test("WS-review2: partial daily summaries keep observed totals and identify the missing period", () => {
+  for (const telemetry of [true, false]) {
+    const input = base({
+      window: { from: "2026-10-12T00:00:00Z", to: "2026-10-13T23:59:59Z" },
+      collection: { telemetry_enabled: telemetry, feedback_enabled: true, consent_note: "synthetic", retain_days: 30 },
+      usage_summary: summary([{ utc_day: "2026-10-12", game_pk: 123, sessions: 2, active_ms: 90000, mean_active_ms: 45000 }],
+        [{ utc_day: "2026-10-12", game_pk: 123, rating: "helpful", reason: "none", responses: 1 }]),
+    });
+    const result = buildReport(input, { now: NOW });
+    assert.equal(result.json.usage.status, "partial_data");
+    assert.equal(result.json.usage.sessions, telemetry ? 2 : null);
+    assert.equal(result.json.usage.feedback[0].responses, 1);
+    assert.match(result.markdown, /요약 범위 2026-10-12 ~ 2026-10-12/);
+    assert.ok(result.json.unmeasured.some(x => /요약 범위 밖/.test(x)));
+  }
+});
+
+test("WS-review2: an observation after the window cannot establish coverage of that window", () => {
+  // This is also the state produced by a first successful monitor run after the game has ended.
+  const result = buildReport(base({ monitor_state: { events: [], incident: null, dropped_events: 0,
+    last_observed_ms: NOW, successes: 1, failures: 0 } }), { now: NOW });
+  assert.equal(result.json.problems.monitor_coverage, "after_window");
+  assert.ok(result.json.unmeasured.some(x => /기간 전체의 장애/.test(x)));
+  assert.match(result.markdown, /기간 중 관측 여부.*확인할 수 없다/);
+});
+
+test("WS-review2: observed incidents and an in-window last sample stay visible despite unknown gaps", () => {
+  const at = Date.parse("2026-10-12T10:00:00Z");
+  const event = { id: sha("recorded-incident"), kind: "opened", at_ms: at, issues: ["freshness_stale"] };
+  for (const [last, coverage] of [[at, "stopped_in_window"], [Date.parse("2026-10-12T23:59:59Z"), "at_window_end"], [NOW, "after_window"]]) {
+    const result = buildReport(base({ monitor_state: { events: [event], incident: event, dropped_events: 0,
+      last_observed_ms: last } }), { now: NOW });
+    assert.equal(result.json.problems.monitor_coverage, coverage);
+    assert.equal(result.json.problems.monitor_events.length, 1);
+    assert.match(result.markdown, /2026-10-12T10:00:00.000Z 감시 opened .*freshness_stale/);
+    assert.doesNotMatch(result.markdown, /기간 중 관측 여부를 확인할 수 없다|감시가 집계 기간에 관측하지 않았다/);
+  }
+});
+
+test("WS-review2: missing or incomplete notice audit metadata never becomes no notice changes", () => {
+  for (const extra of [{}, { notice_audit_meta: { audit_unavailable: true, audit_truncated: false } },
+    { notice_audit_meta: { audit_unavailable: false, audit_truncated: true } }]) {
+    const result = buildReport(base({ notice_audit: [], ...extra }), { now: NOW });
+    assert.doesNotMatch(result.markdown, /안내 화면 전환 없음/);
+    assert.ok(result.json.unmeasured.some(x => /안내 전환 기록/.test(x)));
+  }
+  const legacy = buildReport(base({ notice_audit: [] }), { now: NOW });
+  assert.equal(legacy.json.problems.notice_audit_coverage, "unknown");
+  const complete = buildReport(base({ notice_audit: [], notice_audit_meta: { audit_unavailable: false, audit_truncated: false } }), { now: NOW });
+  assert.equal(complete.json.problems.notice_audit_coverage, "available");
+  assert.throws(() => buildReport(base({ notice_audit: [], notice_audit_meta: { audit_unavailable: "false", audit_truncated: false } })), /invalid_notice_audit_meta/);
+});
+
+test("WS-review2: alert history coverage distinguishes retained rows from full-window totals", () => {
+  const from = Date.parse("2026-10-12T00:00:00Z"), to = Date.parse("2026-10-12T23:59:59Z");
+  const legacy = { schema: "pitcheezy-host-alert-state-v2", mock_only: true, pending: [], deliveries: {
+    [sha("kept-delivery") + ":opened:song"]: { status: "acknowledged", attempts: 1, last_attempt_ms: from + 60000, acknowledged_by_transport: true },
+  } };
+  const v3 = { ...legacy, schema: "pitcheezy-host-alert-state-v3", history_complete_from_ms: from,
+    history_pruned_through_ms: null, last_dispatch_ms: to };
+  for (const [state, coverage] of [[legacy, "unknown"], [v3, "complete"],
+    [{ ...v3, history_complete_from_ms: from + 1 }, "partial"],
+    [{ ...v3, history_pruned_through_ms: from }, "partial"],
+    [{ ...v3, last_dispatch_ms: to - 1 }, "partial"],
+    [{ ...v3, history_pruned_through_ms: from - 1 }, "complete"]]) {
+    const result = buildReport(base({ alert_state: state }), { now: NOW });
+    assert.equal(result.json.problems.alerts.history_coverage, coverage);
+    assert.equal(result.json.problems.alerts.acknowledged_by_mock, 1, "keep the retained evidence");
+    assert.match(result.markdown, /보존된 최종 시도 행 기준/);
+    assert.equal(result.json.unmeasured.some(x => /알림.*전체합계/.test(x)), coverage !== "complete");
+  }
+  assert.throws(() => buildReport(base({ alert_state: { ...v3, history_pruned_through_ms: "unknown" } })), /invalid_alert_state/);
+});
+
+test("WS-review2: actual v3 dispatcher state is accepted without losing its coverage bounds", async () => {
+  const from = Date.parse("2026-10-12T00:00:00Z"), to = Date.parse("2026-10-12T23:59:59Z");
+  const config = { schema: "pitcheezy-host-alerts-v1", transport: "mock", recipients: [{ id: "song", label: "Song" },
+    { id: "ours", label: "Ours" }], max_attempts: 3, remind_after_minutes: 0 };
+  const monitor = { events: [], incident: null };
+  const first = await dispatchAlerts(initialAlertState(), monitor, config, mockTransport(), { now: from });
+  assert.equal(buildReport(base({ alert_state: first.state })).json.problems.alerts.history_coverage, "partial");
+  const last = await dispatchAlerts(first.state, monitor, config, mockTransport(), { now: to });
+  assert.equal(buildReport(base({ alert_state: last.state })).json.problems.alerts.history_coverage, "complete");
 });
 
 test("CLI writes markdown and JSON once, refuses overwrite and invalid input", async () => {

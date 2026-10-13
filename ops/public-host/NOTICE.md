@@ -62,6 +62,11 @@ revision, etag_before, etag_after}`를 추가한다(덮어쓰기 금지). 운영
 어떤 digest 접두어가 누구인지는 비공개 운영 기록에 둔다. 상태 변경이 이미 저장된 뒤 감사 기록 쓰기가 실패하면 스위치는 그대로 유지되고
 응답에 `audit_recorded:false`·`audit_error:"audit_write_failed"`가 남는다 — 이때는 사람이 사유·시각을 board에 직접 기록한다. 상태 객체도 `revision`·`last_change_id`를 갖고 내용이 매번 달라지므로 옛 ETag가 되살아나지 않는다.
 
+후속 GET에서도 현재 `state.revision`과 ETag에 대응하는 감사 행이 없으면 `audit_unavailable:true`를 반환한다.
+이 플래그는 목록 API 호출 성공만을 뜻하지 않으며 현재 스위치 버전의 감사 증거 누락도 포함한다. 스위치 상태·이전 감사 행은 계속 반환한다.
+상태 저장 직후 감사 저장이 진행 중인 짧은 구간에서도 true일 수 있으므로 운영자는 다시 읽어 확인한다. 과거 모든 버전의 감사 완전성을 보증하지는 않는다.
+[경기별 기록 입력](REPORT.md)에는 `audit` 배열과 `audit_unavailable`·`audit_truncated`를 함께 전달하여, 감사 누락을 "전환 없음"으로 바꾸지 않는다.
+
 내린 뒤에는 규약대로 **사유·시각·영향을 우리 board 또는 관련 mail에 기록**한다(감사 객체는 공개 이슈를 대신하지 않는다).
 
 ## 복구 조건
