@@ -15,7 +15,7 @@
 | `usage_summary` 또는 `null` | `summarizeTelemetry`(D1) 결과 `pitcheezy-usage-summary-v1` | D1 내보내기 CLI는 아직 없다(계정 도구로 실행) |
 | `monitor_state` 또는 `null` | 감시 상태 파일의 `state` | 이벤트·열린 장애·잘린 건수·`last_observed_ms`(마지막 관측) |
 | `notice_audit` 또는 `null` | 안내 스위치 운영자 GET의 `audit` | 전환 시각·사유·조작자 |
-| `alert_state` 또는 `null` | 알림 상태 파일 | 모의 확인/미전달 수 |
+| `alert_state` 또는 `null` | 알림 상태 파일(v1·v2) | 모의 확인/미전달(시도함)/전달 전 정리(장애 종료·재알림 창 경과·새 재분류로 대체)/순서 대기(미시도) 수(재분류·재알림 포함) |
 | `actions[]`, `sources{}`, `commands[]`, `unmeasured[]`, `notes` | 운영자 | 주소·토큰·43자 이상 토큰 모양 문자열이 있으면 거부 |
 
 ## 출력

@@ -37,13 +37,15 @@ async function scenario(name, steps, { failBeforeSuccess = {} } = {}) {
       status: step.issues.length ? "failed" : "available", issues: step.issues, page: {}, health: {} };
     const advanced = advanceState(mstate, report, MCONFIG);
     mstate = advanced.state;
-    const { state, receipt } = await dispatchAlerts(astate, mstate, CONFIG, transport, { now: clock });
+    const { state, receipt } = await dispatchAlerts(astate, mstate, CONFIG, transport, { now: clock, latestReport: report });
     astate = state;
     timeline.push({ t_min: (clock - base) / 60000, issues: step.issues, monitor_event: advanced.event?.kind ?? null,
       category: advanced.event ? classifyEvent(advanced.event) : null, acknowledged: receipt.acknowledged.length,
-      failed: receipt.failed.length, suppressed: receipt.suppressed.length, reminders: receipt.reminders.length, pending: state.pending.length });
+      failed: receipt.failed.length, suppressed: receipt.suppressed.length, reminders: receipt.reminders.length,
+      reclassified: receipt.reclassified.length, pending: state.pending.length });
   }
-  return { name, timeline, messages: transport.sent.map(m => ({ recipient: m.recipient, category: m.category, kind: m.event_kind, reminder: m.reminder, first_responder: m.first_responder })),
+  return { name, timeline, messages: transport.sent.map(m => ({ recipient: m.recipient, category: m.category, kind: m.event_kind, reminder: m.reminder,
+    first_responder: m.first_responder, reclassified_from: m.reclassified_from })),
     final_state: { deliveries: Object.keys(astate.deliveries).length, pending: astate.pending.length } };
 }
 
@@ -77,7 +79,17 @@ export async function runAlertRehearsal() {
     const e = await scenario("permanent_transport_failure_is_recorded_not_hidden", [{ issues: ok }, { issues: stale }, { issues: stale }, { issues: stale }, { issues: stale }, { issues: stale }],
       { failBeforeSuccess: { song: 99, ours: 99 } });
     need(e.messages.length === 0 && e.final_state.pending === 0 && e.timeline.filter(t => t.failed > 0).length === 3, "e_exhausted");
-    report.scenarios = [a, b, c, d, e];
+    // WS-alert2: an incident opened under the operator notice turns into a publishing stall after the notice is lifted.
+    const notice = ["page_notice_active", "health_notice_active"];
+    const f = await scenario("notice_then_stall_is_reclassified_to_song", [
+      { issues: ok }, { issues: notice }, { issues: notice }, { issues: stale }, { issues: stale }, { issues: ok }, { issues: ok }]);
+    const reclassified = f.messages.filter(m => m.reclassified_from === "notice_active");
+    need(reclassified.length === 2 && reclassified.every(m => m.category === "publish_stalled" && m.first_responder === "song"), "f_reclassified");
+    need(f.messages.filter(m => m.category === "recovered").length === 2, "f_recovered");
+    const g = await scenario("login_blip_then_stall_reaches_song", [
+      { issues: ok }, { issues: ["access_login_rate_limited"] }, { issues: ["access_login_rate_limited"] }, { issues: stale }, { issues: stale }]);
+    need(g.messages.filter(m => m.category === "publish_stalled" && m.first_responder === "song").length === 2, "g_reclassified");
+    report.scenarios = [a, b, c, d, e, f, g];
     report.passed = true;
   } catch (error) {
     report.failure = /^[a-z_]+$/.test(error.message) ? error.message : "phase_failed";
