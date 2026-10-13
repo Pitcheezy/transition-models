@@ -113,3 +113,12 @@ def test_blocked_and_external_work_do_not_create_an_actionable_unit():
 - [ ] C-1. teammate work 〔담당: 팀원〕
 """)
     assert mod.next_unit(items) is None
+
+
+def test_opus_5_5_tag_resolves_to_its_model_id():
+    mod = load_module()
+    text = "- [~] WS-access2. session fix 〔모델: Opus 5.5〕\n- [ ] WS-x. other 〔모델: Opus 5〕\n"
+    items = mod.parse_items(text)
+    assert items[0]["model"] == "claude-opus-5-5"
+    assert items[1]["model"] == "claude-opus-5"
+    assert mod.next_unit(items)["id"] == "WS-access2"
