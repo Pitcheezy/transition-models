@@ -1,0 +1,132 @@
+{
+  "schema": "pitcheezy-local-monitor-gate-rehearsal-v1",
+  "target": "ephemeral-loopback-miniflare",
+  "synthetic": true,
+  "real_codes": false,
+  "alerts_transport": "mock (no delivery)",
+  "environment": {
+    "node": "v25.8.2",
+    "platform": "darwin",
+    "arch": "arm64",
+    "miniflare": "4.20260730.0"
+  },
+  "source_sha256": {
+    "worker.mjs": "ba6bb83bbbbd8ba4727feb6b870fbe85c0c8c5c9bc65ef837aa2703235f3f985",
+    "gateway.mjs": "9c6a8d6c7c18792630366af223429385b5b97fd8d8ce06680105607f68d451f7",
+    "access.mjs": "67c3865be7754a9cf172075db67f60a8bc2cd076203799b0bf64a8fe0ef1219a",
+    "notice.mjs": "3f7473bb63aad87bde343cee8de10574219624c496e6f39895a0406642b500bf",
+    "monitor.mjs": "4f79e52493da0ed3a00ecb5082698c2bcd0b2793a1142be2ca5237a2d31f64c6",
+    "monitor-cli.mjs": "a4f452e458f593098aa4800bc6e8d55762f430d532e0a6f9735ad466dfbd11b8",
+    "alerts.mjs": "e9fe8941221601a7b7cbc7429c7bf34d5dbedc2ee2479d1cbbcdb4eec62d62cb",
+    "rehearsal/local-host.mjs": "7fb30f2befcec09a72a2436ccc270008af56777fbd12372fd55ca9dd301e85c8",
+    "rehearse-monitor-gate.mjs": "d26b290367516df47903f41e1343381b285d28bb315e4ffc7b809af378cab6f2",
+    "package-lock.json": "cece953d79da7738410cc570742afaa99282e66543eda69693edafb243371e6b"
+  },
+  "completed_phases": [
+    "gate_without_monitor_code",
+    "gate_with_monitor_code_fresh",
+    "publication_stops",
+    "publication_resumes",
+    "wrong_monitor_code",
+    "notice_with_monitor_session",
+    "secrets_absent"
+  ],
+  "passed": true,
+  "note": "The monitor logs in through the viewer route with a dedicated code from an environment variable; the code and cookie are never recorded.",
+  "gate_without_monitor_code": {
+    "status": "failed",
+    "issues": [
+      "page_access_required",
+      "health_access_required"
+    ],
+    "access_session": "not_configured",
+    "access_gate_active": true,
+    "notice_active": false,
+    "freshness": null,
+    "page": "error",
+    "health": "error",
+    "classification": "access_gate (info): freshness not measurable"
+  },
+  "gate_with_monitor_code_fresh": {
+    "status": "available",
+    "issues": [],
+    "access_session": "established",
+    "access_gate_active": true,
+    "notice_active": false,
+    "freshness": "fresh",
+    "page": "ok",
+    "health": "ok"
+  },
+  "publication_stops": {
+    "probes": [
+      {
+        "status": "failed",
+        "issues": [
+          "freshness_stale"
+        ],
+        "access_session": "established",
+        "access_gate_active": true,
+        "notice_active": false,
+        "freshness": "stale",
+        "page": "ok",
+        "health": "ok"
+      },
+      {
+        "status": "failed",
+        "issues": [
+          "freshness_stale"
+        ],
+        "access_session": "established",
+        "access_gate_active": true,
+        "notice_active": false,
+        "freshness": "stale",
+        "page": "ok",
+        "health": "ok"
+      }
+    ],
+    "incident_opened_after": 2,
+    "incident_issues": [
+      "freshness_stale"
+    ],
+    "alert": {
+      "category": "publish_stalled",
+      "first_responder": "song",
+      "mock_acknowledged": 2,
+      "delivery_confirmed": false
+    }
+  },
+  "publication_resumes": {
+    "recovered_after": 2
+  },
+  "wrong_monitor_code": {
+    "status": "failed",
+    "issues": [
+      "access_login_denied"
+    ],
+    "access_session": "login_failed",
+    "access_gate_active": true,
+    "notice_active": false,
+    "freshness": null,
+    "page": "skipped",
+    "health": "skipped",
+    "classification": "host_error"
+  },
+  "notice_with_monitor_session": {
+    "status": "failed",
+    "issues": [
+      "page_notice_active",
+      "health_notice_active"
+    ],
+    "access_session": "established",
+    "access_gate_active": true,
+    "notice_active": true,
+    "freshness": null,
+    "page": "error",
+    "health": "error",
+    "classification": "notice_active"
+  },
+  "cleanup": {
+    "status": "complete"
+  },
+  "total_ms": 352
+}

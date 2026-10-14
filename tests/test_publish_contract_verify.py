@@ -308,6 +308,49 @@ def test_each_received_file_is_read_once(pack, monkeypatch):
     assert len(reads) == len(files), "hashing and schema checks share one read per file"
 
 
+@pytest.mark.parametrize(
+    "reference", ["https://schemas.example.test/private", "file:///synthetic-secret.json"]
+)
+def test_received_schema_never_retrieves_external_references(pack, monkeypatch, reference):
+    import io
+    import urllib.request
+
+    received, expected, _, _ = pack
+    schema = {"$schema": GAME_SCHEMA["$schema"], "$ref": reference}
+    raw = json.dumps(schema).encode()
+    (received / "schema" / "game.schema.json").write_bytes(raw)
+    for row in expected["files"]:
+        if row["path"] == "schema/game.schema.json":
+            row["sha256"] = sha(raw)
+    fetched = []
+
+    def fake_urlopen(request):
+        fetched.append(request.full_url)
+        return io.BytesIO(b"{}")
+
+    monkeypatch.setattr(urllib.request, "urlopen", fake_urlopen)
+    report = verify(received, expected)
+    assert fetched == [], "offline verification must not read unlisted remote or local resources"
+    row = next(r for r in report["files"] if r["path"] == "examples/game-live.json")
+    assert row["status"] == "schema_unusable"
+    assert report["ok"] is False
+
+
+def test_received_schema_local_definitions_still_validate(pack):
+    received, expected, _, _ = pack
+    schema = {
+        "$schema": GAME_SCHEMA["$schema"],
+        "$defs": {"game": GAME_SCHEMA},
+        "$ref": "#/$defs/game",
+    }
+    raw = json.dumps(schema).encode()
+    (received / "schema" / "game.schema.json").write_bytes(raw)
+    for row in expected["files"]:
+        if row["path"] == "schema/game.schema.json":
+            row["sha256"] = sha(raw)
+    assert verify(received, expected)["ok"] is True
+
+
 def test_symlinked_received_directory_is_refused(pack, tmp_path):
     received, expected, _, _ = pack
     link = tmp_path / "linked-received"

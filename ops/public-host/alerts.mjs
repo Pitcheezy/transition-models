@@ -40,7 +40,7 @@ const HOST_ISSUES = new Set(["page_http_error", "page_network_error", "page_time
 export function classifyEvent(event) {
   if (!exact(event, ["id", "kind", "at_ms", "issues"]) || !["opened", "recovered"].includes(event.kind) ||
       typeof event.id !== "string" || !/^[a-f0-9]{64}$/.test(event.id) || !int(event.at_ms, 0, Number.MAX_SAFE_INTEGER) ||
-      !Array.isArray(event.issues) || !event.issues.every(i => typeof i === "string" && /^[a-z_]{1,80}$/.test(i))) refuse("invalid_event");
+      !Array.isArray(event.issues) || event.issues.length > 8 || !event.issues.every(i => typeof i === "string" && /^[a-z_]{1,80}$/.test(i))) refuse("invalid_event");
   if (event.kind === "recovered") return "recovered";
   const issues = new Set(event.issues);
   if (issues.size === 0) return "unclassified";
@@ -66,44 +66,121 @@ export function validateAlertConfig(config) {
 }
 
 const STATE_V1 = "pitcheezy-host-alert-state-v1";
-export const STATE_SCHEMA = "pitcheezy-host-alert-state-v2";
-const DELIVERY_KEY = /^([a-f0-9]{64}):(opened|recovered|reminder:[0-9]{1,6}|reclassified:[0-9]{1,4}:[a-z_]{1,40}):(song|ours)$/;
+const STATE_V2 = "pitcheezy-host-alert-state-v2";
+export const STATE_SCHEMA = "pitcheezy-host-alert-state-v3";
+export const MAX_DELIVERY_ROWS = 4096;
+export const MAX_ALERT_STATE_BYTES = 8 * 1024 * 1024;
+export const MAX_ALERT_STATE_READ_BYTES = MAX_ALERT_STATE_BYTES;
+export const MAX_V1_STATE_BYTES = 1024 * 1024;
+export const MAX_PENDING_DELIVERIES = 2048;
+const MAX_MONITOR_EVENTS = 100;
+const DELIVERY_KEY = /^([a-f0-9]{64}):(opened|recovered|reminder:[0-9]{1,16}|reclassified:[0-9]{1,16}:[a-z_]{1,40}):(song|ours)$/;
 const CATEGORY_NAMES = new Set(Object.keys(CATEGORIES));
 const ISSUE = i => typeof i === "string" && /^[a-z_]{1,80}$/.test(i);
 const MAX_INCIDENT_MEMORY = 16;
+const MAX_V1_PENDING = 200;
+// The monitor retains 100 events for two recipients; v2 also queues the current
+// re-classification and reminder for both recipients.
+const MAX_V2_PENDING = MAX_V1_PENDING + 2 * RECIPIENTS.length;
 
 export function initialAlertState() {
-  return { schema: STATE_SCHEMA, deliveries: {}, pending: [], mock_only: true, incidents: {} };
+  return { schema: STATE_SCHEMA, deliveries: {}, pending: [], mock_only: true, incidents: {},
+    history_pruned_through_ms: null, history_complete_from_ms: null, last_dispatch_ms: null };
 }
 const incidentValid = v => exact(v, ["opened_category", "announced", "announced_issues", "seq", "candidate", "candidate_runs", "previous", "last_report_ms"]) &&
   (v.previous === null || CATEGORY_NAMES.has(v.previous)) &&
   CATEGORY_NAMES.has(v.opened_category) && CATEGORY_NAMES.has(v.announced) && Array.isArray(v.announced_issues) &&
-  v.announced_issues.length <= 8 && v.announced_issues.every(ISSUE) && int(v.seq, 0, 9999) &&
+  v.announced_issues.length <= 8 && v.announced_issues.every(ISSUE) && int(v.seq, 0, Number.MAX_SAFE_INTEGER) &&
   (v.candidate === null || CATEGORY_NAMES.has(v.candidate)) && int(v.candidate_runs, 0, 2) &&
   (v.last_report_ms === null || int(v.last_report_ms, 0, Number.MAX_SAFE_INTEGER));
 
-/**
- * Accepts the WS-alert1 state (v1) and the WS-alert2 state (v2) and returns a v2 state. v2 adds per-incident
- * announcement memory (`incidents`) and the delivery status "abandoned" (a reminder or re-classification of an
- * incident that closed, or of a reminder window that passed). Older code refuses v2 files: to roll back, start a
- * new state file (open incidents may then be announced once more).
- */
+/** Reads v1/v2 histories without claiming their earlier retention coverage, and returns a v3 state. */
 export function validateAlertState(state) {
-  const v1 = exact(state, ["schema", "deliveries", "pending", "mock_only"]) && state.schema === STATE_V1;
-  const v2 = exact(state, ["schema", "deliveries", "pending", "mock_only", "incidents"]) && state.schema === STATE_SCHEMA;
-  if ((!v1 && !v2) || !object(state.deliveries) || !Array.isArray(state.pending) || state.mock_only !== true) refuse("state_invalid");
-  const statuses = v2 ? ["acknowledged", "undelivered", "abandoned"] : ["acknowledged", "undelivered"];
+  const common = ["schema", "deliveries", "pending", "mock_only"];
+  const v1 = exact(state, common) && state.schema === STATE_V1;
+  const v2 = exact(state, [...common, "incidents"]) && state.schema === STATE_V2;
+  const v3 = exact(state, [...common, "incidents", "history_pruned_through_ms", "history_complete_from_ms", "last_dispatch_ms"]) &&
+    state.schema === STATE_SCHEMA;
+  if ((!v1 && !v2 && !v3) || !object(state.deliveries) || !Array.isArray(state.pending) || state.mock_only !== true) refuse("state_invalid");
+  if (v3 && ![state.history_pruned_through_ms, state.history_complete_from_ms, state.last_dispatch_ms]
+    .every(ms => ms === null || int(ms, 0, Number.MAX_SAFE_INTEGER))) refuse("state_invalid");
+  const statuses = v1 ? ["acknowledged", "undelivered"] : ["acknowledged", "undelivered", "abandoned"];
   for (const [key, row] of Object.entries(state.deliveries)) {
-    if (!DELIVERY_KEY.test(key) || (v1 && key.includes(":reclassified:")) ||
+    const match = DELIVERY_KEY.exec(key), kind = match?.[2];
+    const counterValid = !kind || !/^(reminder|reclassified):/.test(kind) || int(Number(kind.split(":")[1]), 1, Number.MAX_SAFE_INTEGER);
+    if (!match || !counterValid || (v1 && key.includes(":reclassified:")) ||
         !exact(row, ["status", "attempts", "last_attempt_ms", "acknowledged_by_transport"]) ||
         !statuses.includes(row.status) || !int(row.attempts, 0, 100) ||
         !int(row.last_attempt_ms, 0, Number.MAX_SAFE_INTEGER) || typeof row.acknowledged_by_transport !== "boolean") refuse("state_invalid");
   }
-  if (state.pending.length > 200 || !state.pending.every(p => exact(p, ["key", "message"]) && typeof p.key === "string" &&
-      DELIVERY_KEY.test(p.key) && object(p.message))) refuse("state_invalid");
-  if (v2 && (!object(state.incidents) || Object.keys(state.incidents).length > MAX_INCIDENT_MEMORY ||
+  if (state.pending.length > (v1 ? MAX_V1_PENDING : v2 ? MAX_V2_PENDING : MAX_PENDING_DELIVERIES)) refuse("state_invalid");
+  const pending = state.pending.map(canonicalPending);
+  if (new Set(pending.map(p => p.key)).size !== pending.length ||
+      pending.some(p => !state.deliveries[p.key])) refuse("state_invalid");
+  if (!v1 && (!object(state.incidents) || Object.keys(state.incidents).length > MAX_INCIDENT_MEMORY ||
       !Object.entries(state.incidents).every(([id, v]) => /^[a-f0-9]{64}$/.test(id) && incidentValid(v)))) refuse("state_invalid");
-  return v2 ? state : { schema: STATE_SCHEMA, deliveries: state.deliveries, pending: state.pending, mock_only: true, incidents: {} };
+  return v3 ? { ...state, pending } : { schema: STATE_SCHEMA, deliveries: state.deliveries, pending, mock_only: true,
+    incidents: v1 ? {} : state.incidents, history_pruned_through_ms: null, history_complete_from_ms: null, last_dispatch_ms: null };
+}
+
+/** Every persisted output must be readable by the next invocation. */
+export function serializeAlertState(state, { maxBytes = MAX_ALERT_STATE_BYTES } = {}) {
+  const serialized = JSON.stringify(state, null, 2) + "\n";
+  if (new TextEncoder().encode(serialized).byteLength > maxBytes) refuse("state_capacity_exceeded");
+  return serialized;
+}
+
+function compactAlertState(state, { listed, openId, config, now, receipt }) {
+  const protectedKeys = new Set(state.pending.map(p => p.key));
+  // Retain a recovery's opening outcome even after the monitor evicts both events.
+  for (const item of state.pending) {
+    const [, id, kind, recipient] = DELIVERY_KEY.exec(item.key);
+    if (kind === "recovered") protectedKeys.add(`${id}:opened:${recipient}`);
+  }
+  const latestReminders = new Map();
+  for (const [k, row] of Object.entries(state.deliveries)) {
+    // Preserve unresolved delivery evidence even if its monitor event has been
+    // evicted. Legacy rows whose message was already lost cannot be reconstructed.
+    if (row.status === "undelivered" && row.attempts < config.max_attempts) protectedKeys.add(k);
+    const [, id, kind, recipient] = DELIVERY_KEY.exec(k);
+    if (["opened", "recovered"].includes(kind) && listed.has(`${id}:${kind}`)) protectedKeys.add(k);
+    if (id === openId && kind.startsWith(`reclassified:${state.incidents[openId]?.seq}:`)) protectedKeys.add(k);
+    if (id === openId && kind.startsWith("reminder:")) {
+      const slot = Number(kind.slice(9));
+      if (!latestReminders.has(recipient) || slot > latestReminders.get(recipient).slot) latestReminders.set(recipient, { key: k, slot });
+    }
+  }
+  for (const { key } of latestReminders.values()) protectedKeys.add(key);
+  const drop = k => {
+    const row = state.deliveries[k];
+    state.history_pruned_through_ms = Math.max(state.history_pruned_through_ms ?? 0, row.last_attempt_ms);
+    delete state.deliveries[k]; receipt.pruned++;
+  };
+  for (const [k, row] of Object.entries(state.deliveries)) {
+    const settled = row.status === "acknowledged" || row.status === "abandoned" || row.attempts >= config.max_attempts;
+    if (!protectedKeys.has(k) && settled && now - row.last_attempt_ms > PRUNE_AFTER_DAYS * 86400000) drop(k);
+  }
+  const oldest = Object.entries(state.deliveries).filter(([k]) => !protectedKeys.has(k))
+    .sort(([ka, a], [kb, b]) => a.last_attempt_ms - b.last_attempt_ms || ka.localeCompare(kb));
+  let index = 0;
+  const excess = Math.max(0, Object.keys(state.deliveries).length - MAX_DELIVERY_ROWS);
+  for (; index < excess && index < oldest.length; index++) drop(oldest[index][0]);
+  // Normally the row bound is sufficient. Large valid pending messages may
+  // need extra history removed; pending items and deduplication anchors stay.
+  while (true) {
+    try { serializeAlertState(state); break; }
+    catch (error) {
+      if (error.code !== "state_capacity_exceeded" || index >= oldest.length) throw error;
+      const bytes = new TextEncoder().encode(JSON.stringify(state, null, 2) + "\n").byteLength;
+      let removed = 0;
+      while (index < oldest.length && removed < bytes - MAX_ALERT_STATE_BYTES) {
+        const [k, row] = oldest[index++];
+        removed += new TextEncoder().encode(JSON.stringify({ [k]: row }, null, 2)).byteLength;
+        drop(k);
+      }
+    }
+  }
+  if (Object.keys(state.deliveries).length > MAX_DELIVERY_ROWS) refuse("state_capacity_exceeded");
 }
 
 /**
@@ -130,6 +207,33 @@ export function buildMessage(event, category, recipient, { reminder = 0, reclass
   };
 }
 
+/** Validate identity and bounded source fields, then regenerate text instead of trusting stored transport payloads. */
+function canonicalPending(item) {
+  if (!exact(item, ["key", "message"]) || typeof item.key !== "string" || !DELIVERY_KEY.test(item.key) || !object(item.message)) refuse("state_invalid");
+  const [, id, kind, recipient] = DELIVERY_KEY.exec(item.key), m = item.message;
+  const at = typeof m.observed_at === "string" && m.observed_at.length <= 30 ? Date.parse(m.observed_at) : NaN;
+  if (!["pitcheezy-host-alert-message-v1", "pitcheezy-host-alert-message-v2"].includes(m.schema) ||
+      m.incident_id !== id || m.recipient !== recipient || !Number.isSafeInteger(at) || at < 0 ||
+      !Array.isArray(m.issues) || m.issues.length > 8 || !m.issues.every(ISSUE) || !CATEGORY_NAMES.has(m.category)) refuse("state_invalid");
+  const event = { id, kind: kind === "recovered" ? "recovered" : "opened", at_ms: at, issues: [...m.issues] };
+  let options = {};
+  if (["opened", "recovered"].includes(kind)) {
+    if (m.event_kind !== kind || (m.reminder ?? 0) !== 0 || classifyEvent(event) !== m.category) refuse("state_invalid");
+  } else if (kind.startsWith("reminder:")) {
+    const reminder = Number(kind.slice(9));
+    if (m.event_kind !== "opened" || !int(reminder, 1, Number.MAX_SAFE_INTEGER) || m.reminder !== reminder) refuse("state_invalid");
+    options = { reminder, causeIssues: m.issues };
+  } else {
+    const [, number, category] = kind.split(":");
+    const announcement = Number(number), causeAt = typeof m.cause_observed_at === "string" && m.cause_observed_at.length <= 30 ? Date.parse(m.cause_observed_at) : NaN;
+    if (m.event_kind !== "reclassified" || !int(announcement, 1, Number.MAX_SAFE_INTEGER) || m.announcement !== announcement ||
+        m.category !== category || !ACTIONABLE.has(category) || !CATEGORY_NAMES.has(m.reclassified_from) ||
+        !Number.isSafeInteger(causeAt) || causeAt < at) refuse("state_invalid");
+    options = { kind: "reclassified", announcement, reclassifiedFrom: m.reclassified_from, causeIssues: m.issues, causeObservedMs: causeAt };
+  }
+  return { key: item.key, message: buildMessage(event, m.category, recipient, options) };
+}
+
 /** Mock transport: records messages, can be told to fail N times per recipient. Never contacts anything. */
 export function mockTransport({ failBeforeSuccess = {} } = {}) {
   const sent = []; const remaining = { ...failBeforeSuccess };
@@ -143,8 +247,8 @@ export function mockTransport({ failBeforeSuccess = {} } = {}) {
 }
 
 /**
- * Processes monitor events not yet handled and returns a new (v2) alert state plus a receipt.
- * - opened/recovered: deduplicated per (incident id, kind, recipient), retried up to max_attempts across runs.
+ * Processes monitor events not yet handled and returns a bounded v3 alert state plus a receipt.
+ * - opened/recovered: deduplicated per (incident id, kind, recipient), retried from durable pending even after monitor eviction.
  * - WS-alert2 re-classification: the monitor keeps the issues of the run that opened an incident; later runs only
  *   appear in record.report. With `latestReport` (the run the state last recorded) the dispatcher tracks the
  *   cause of the open incident with the monitor's own two-run rule. When a new ACTIONABLE category holds for two
@@ -153,19 +257,28 @@ export function mockTransport({ failBeforeSuccess = {} } = {}) {
  *   (notice, access gate) never replace an announced cause. Re-classifications are retried from the stored
  *   queue regardless of the current cause and are settled as "abandoned" when the incident closes.
  * - reminders: once per window for a still-open incident, naming the last announced cause (never a downgrade).
- * - order: a re-classification or reminder waits for that recipient's "opened" alert while it is still retrying.
+ * - order: recovery, re-classification and reminders wait for that recipient's "opened" alert while it is still retrying.
  * Mock acknowledgement is recorded as such, never as delivery.
  */
 export async function dispatchAlerts(state, monitorState, config, transport, { now = Date.now(), latestReport = null } = {}) {
   const base = validateAlertState(state); validateAlertConfig(config);
-  if (!object(monitorState) || !Array.isArray(monitorState.events)) refuse("invalid_monitor_state");
+  if (!int(now, 0, Number.MAX_SAFE_INTEGER) || (base.last_dispatch_ms !== null && now < base.last_dispatch_ms)) refuse("clock_error");
+  if (!object(monitorState) || !Array.isArray(monitorState.events) || monitorState.events.length > MAX_MONITOR_EVENTS) refuse("invalid_monitor_state");
   if (transport?.name !== config.transport || typeof transport.deliver !== "function") refuse("transport_mismatch");
   const next = structuredClone(base);
+  next.history_complete_from_ms ??= now;
+  next.last_dispatch_ms = now;
   const receipt = { attempted: [], acknowledged: [], failed: [], suppressed: [], reminders: [], reclassified: [],
-    deferred: [], abandoned: [], invalid_events: 0, incident_invalid: false };
-  const queue = [];
+    deferred: [], abandoned: [], invalid_events: 0, incident_invalid: false, unrecoverable_events: [] };
+  const queue = [], queued = new Set();
+  const enqueue = item => { if (!queued.has(item.key)) { queued.add(item.key); queue.push(item); } };
   const key = (id, kind, recipient) => `${id}:${kind}:${recipient}`;
   const settled = row => row.status === "acknowledged" || row.status === "abandoned" || row.attempts >= config.max_attempts;
+  // Previously persisted events are authoritative and remain retryable after monitor eviction.
+  for (const item of base.pending) {
+    const [, , kind] = DELIVERY_KEY.exec(item.key), row = next.deliveries[item.key];
+    if (["opened", "recovered"].includes(kind) && !settled(row)) enqueue(item);
+  }
   for (const event of monitorState.events) {
     let category;
     try { category = classifyEvent(event); } catch { receipt.invalid_events++; continue; } // one bad record never blocks the rest
@@ -173,7 +286,7 @@ export async function dispatchAlerts(state, monitorState, config, transport, { n
       const k = key(event.id, event.kind, recipient);
       const row = next.deliveries[k];
       if (row && settled(row)) { receipt.suppressed.push(k); continue; }
-      queue.push({ key: k, message: buildMessage(event, category, recipient) });
+      enqueue({ key: k, message: buildMessage(event, category, recipient) });
     }
   }
   const open = monitorState.incident ?? null;
@@ -215,6 +328,7 @@ export async function dispatchAlerts(state, monitorState, config, transport, { n
         target = cause === previous ? cause : "unclassified";
       }
       if (target) {
+        if (incident.seq === Number.MAX_SAFE_INTEGER) refuse("reclassification_capacity_exceeded");
         const from = incident.announced;
         incident.seq += 1; incident.announced = target; incident.announced_issues = issues;
         // A newer announcement supersedes every older one still waiting for any recipient, so a late retry can
@@ -225,21 +339,22 @@ export async function dispatchAlerts(state, monitorState, config, transport, { n
         }
         for (const recipient of RECIPIENTS) {
           const k = key(openId, `reclassified:${incident.seq}:${target}`, recipient);
-          queue.push({ key: k, message: buildMessage(open, target, recipient, { reclassifiedFrom: from,
+          enqueue({ key: k, message: buildMessage(open, target, recipient, { reclassifiedFrom: from,
             causeIssues: issues, causeObservedMs: latestReport.observed_at_ms, kind: "reclassified", announcement: incident.seq }) });
           receipt.reclassified.push(k);
         }
       }
     }
     // Earlier re-classifications that have not been acknowledged are retried from the stored queue, whatever the
-    // current cause is (opened/recovered are rebuilt from the monitor events instead).
+    // current cause is (opened/recovered were restored before the monitor snapshot).
     for (const item of base.pending) {
       const [, id, kind] = DELIVERY_KEY.exec(item.key);
       const row = next.deliveries[item.key];
-      if (id === openId && kind.startsWith(`reclassified:${incident.seq}:`) && row && !settled(row) && !queue.some(q => q.key === item.key)) queue.push(item);
+      if (id === openId && kind.startsWith(`reclassified:${incident.seq}:`) && row && !settled(row) && !queued.has(item.key)) enqueue(item);
     }
     if (config.remind_after_minutes > 0) {
       const slot = Math.floor((now - open.at_ms) / (config.remind_after_minutes * 60000));
+      if (!Number.isSafeInteger(slot)) refuse("clock_error");
       for (const [k, row] of Object.entries(next.deliveries)) {
         const [, id, kind] = DELIVERY_KEY.exec(k);
         if (id === openId && kind.startsWith("reminder:") && Number(kind.slice(9)) < slot && !settled(row)) settleAbandoned(k, row);
@@ -249,27 +364,41 @@ export async function dispatchAlerts(state, monitorState, config, transport, { n
           const k = key(openId, `reminder:${slot}`, recipient);
           const row = next.deliveries[k];
           if (row && settled(row)) continue;
-          queue.push({ key: k, message: buildMessage(open, incident.announced, recipient, { reminder: slot,
+          enqueue({ key: k, message: buildMessage(open, incident.announced, recipient, { reminder: slot,
             causeIssues: incident.announced_issues }) });
           receipt.reminders.push(k);
         }
       }
     }
   }
-  // Bounded state: settled rows older than the retention window are dropped, except opened/recovered rows whose
-  // event the monitor still lists (deleting those would make the event look new and re-send it).
   const listed = new Set(monitorState.events.filter(e => object(e) && typeof e.id === "string").map(e => `${e.id}:${e.kind}`));
-  const retainMs = PRUNE_AFTER_DAYS * 86400000;
   receipt.pruned = 0;
-  for (const [k, row] of Object.entries(next.deliveries)) {
-    const [, id, kind] = DELIVERY_KEY.exec(k);
-    if (["opened", "recovered"].includes(kind) && listed.has(`${id}:${kind}`)) continue;
-    if (settled(row) && now - row.last_attempt_ms > retainMs) { delete next.deliveries[k]; receipt.pruned++; }
-  }
-  next.pending = [];
+  const byKey = new Map(queue.map(item => [item.key, item])), ordered = [], orderedKeys = new Set();
+  const append = item => { if (item && !orderedKeys.has(item.key)) { orderedKeys.add(item.key); ordered.push(item); } };
   for (const item of queue) {
     const [, id, kind, recipient] = DELIVERY_KEY.exec(item.key);
-    if (id === openId && /^(reminder|reclassified):/.test(kind)) {
+    if (kind !== "opened") {
+      const openingKey = key(id, "opened", recipient), opening = next.deliveries[openingKey];
+      if (opening && !settled(opening) && !byKey.has(openingKey)) refuse("pending_opening_unavailable");
+      append(byKey.get(openingKey));
+    }
+    append(item);
+  }
+  if (ordered.length > MAX_PENDING_DELIVERIES) refuse("pending_capacity_exceeded");
+  for (const [k, row] of Object.entries(next.deliveries)) {
+    const [, id, kind] = DELIVERY_KEY.exec(k);
+    if (["opened", "recovered"].includes(kind) && !settled(row) && !byKey.has(k) && !listed.has(`${id}:${kind}`)) receipt.unrecoverable_events.push(k);
+  }
+  // Reserve all potentially pending rows and serialized messages before transport calls.
+  // Valid fresh traffic fits: at most 200 new events per invocation, five opening
+  // attempts, then at most five recovery attempts (four intervening waits).
+  next.pending = ordered;
+  for (const item of ordered) next.deliveries[item.key] ??= { status: "undelivered", attempts: 0, last_attempt_ms: now, acknowledged_by_transport: false };
+  compactAlertState(next, { listed, openId, config, now, receipt });
+  next.pending = [];
+  for (const item of ordered) {
+    const [, id, kind, recipient] = DELIVERY_KEY.exec(item.key);
+    if (kind === "recovered" || (id === openId && /^(reminder|reclassified):/.test(kind))) {
       const opened = next.deliveries[key(id, "opened", recipient)];
       if (opened && opened.status !== "acknowledged" && !settled(opened)) {
         // That recipient has not received the opening alert yet; keep the order (it is retried first next run).
@@ -290,13 +419,15 @@ export async function dispatchAlerts(state, monitorState, config, transport, { n
     }
     next.deliveries[item.key] = row;
   }
+  compactAlertState(next, { listed, openId, config, now, receipt });
   validateAlertState(next);
   return { state: next, receipt };
 }
 
 /**
- * Rollback aid: converts a v2 state into a WS-alert1 (v1) state that the previous code accepts WITHOUT re-sending
- * history. Re-classification rows and pending items are dropped (v1 has no such kind) and "abandoned" rows become
+ * Rollback aid: converts a v2/v3 state into a WS-alert1 (v1) state that the previous code accepts WITHOUT re-sending
+ * retained deduplication history. v1 cannot represent retention coverage and must be reported as unknown.
+ * Re-classification rows and pending items are dropped (v1 has no such kind) and "abandoned" rows become
  * undelivered with attempts = maxAttempts, which v1 treats as settled. Starting v1 from an empty file instead would
  * re-send every opened/recovered event the monitor still lists (up to 100 events, both recipients).
  */
@@ -306,9 +437,17 @@ export function toV1State(state, maxAttempts) {
   const deliveries = {};
   for (const [k, row] of Object.entries(v2.deliveries)) {
     if (k.includes(":reclassified:")) continue;
+    const kind = DELIVERY_KEY.exec(k)[2];
+    if (kind.startsWith("reminder:") && (kind.slice(9).length > 6 || Number(kind.slice(9)) > 999999)) refuse("v1_counter_capacity_exceeded");
     deliveries[k] = row.status === "abandoned" ? { ...row, status: "undelivered", attempts: Math.max(row.attempts, maxAttempts) } : { ...row };
   }
+  // Refuse rather than truncate a queue the old state format cannot hold. Even a
+  // small copy cannot make old v1 code retry events after the monitor evicts them;
+  // v1 dispatch reconstructs events from the monitor, not the stored pending payload.
   const pending = v2.pending.filter(p => !p.key.includes(":reclassified:"));
-  return { schema: STATE_V1, deliveries, pending, mock_only: true };
+  if (pending.length > MAX_V1_PENDING) refuse("v1_pending_capacity_exceeded");
+  const legacy = { schema: STATE_V1, deliveries, pending, mock_only: true };
+  serializeAlertState(legacy, { maxBytes: MAX_V1_STATE_BYTES });
+  return legacy;
 }
 

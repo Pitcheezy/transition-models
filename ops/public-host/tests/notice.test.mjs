@@ -346,3 +346,22 @@ test("a failed audit write after a committed switch is reported, not mistaken fo
   assert.doesNotMatch(JSON.stringify(body), /synthetic audit storage failure/);
   assert.equal((await call("/")).status, 503, "the switch itself is on");
 });
+
+test("WS-review2: a later GET still identifies a missing audit for the committed notice revision", async () => {
+  const { env, call, on, off } = await fixture();
+  const first = await on();
+  const before = await (await call(NOTICE_ROUTE, { headers: { Authorization: "Bearer " + OPERATOR_A } })).json();
+  assert.equal(before.audit_unavailable, false);
+  const put = env.PUBLISH_BUCKET.put.bind(env.PUBLISH_BUCKET);
+  env.PUBLISH_BUCKET.put = async (key, bytes, options) => {
+    if (key.startsWith("_notice/audit/")) throw new Error("synthetic failed audit for revision 2");
+    return put(key, bytes, options);
+  };
+  const changed = await off({ "If-Match": first.headers.get("ETag") });
+  assert.equal((await changed.json()).audit_recorded, false);
+  const after = await (await call(NOTICE_ROUTE, { headers: { Authorization: "Bearer " + OPERATOR_A } })).json();
+  assert.equal(after.state.active, false);
+  assert.equal(after.state.revision, 2);
+  assert.equal(after.audit.length, 1, "the earlier successful audit remains available");
+  assert.equal(after.audit_unavailable, true, "the current revision has no audit, despite a working list call");
+});

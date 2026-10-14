@@ -189,8 +189,12 @@ export async function handleNotice(request, env) {
       invalidateNotice(bucket); // Operators read the stored truth, not the memo.
       const state = await currentNotice(env);
       const audit = await listAudit(bucket);
+      // A successful list does not prove the current switch change was audited. The state write precedes
+      // its audit write; keep that missing evidence visible on later reads, including after a process restart.
+      const currentAuditMissing = state.revision > 0 && !audit.entries.some(entry =>
+        entry.revision === state.revision && entry.etag_after === state.etag);
       return reply(request, 200, { state, audit: audit.entries, audit_truncated: audit.truncated,
-        audit_unavailable: audit.unavailable, messages: NOTICE_MESSAGES }, state.etag ? { ETag: state.etag } : {});
+        audit_unavailable: audit.unavailable || currentAuditMissing, messages: NOTICE_MESSAGES }, state.etag ? { ETag: state.etag } : {});
     }
     const onlyIf = precondition(request);
     const change = await readBody(request);
