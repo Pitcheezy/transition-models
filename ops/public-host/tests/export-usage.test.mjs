@@ -20,12 +20,12 @@ const migration = await readFile(new URL("../migrations/0001_telemetry.sql", imp
 const hash = bytes => createHash("sha256").update(bytes).digest("hex");
 const session = (id, game = 123, active = 60000, created = CREATED, expires = CREATED + 30 * DAY) =>
   [id, game, new Date(created).toISOString().slice(0, 10), 1, active, created, created + 120000, expires];
-const feedback = (id, game = 123, expires = CREATED + 30 * DAY) => [id, game, "2026-10-12", "helpful", "none", CREATED, expires];
+const feedback = (id, game = 123, expires = CREATED + 30 * DAY, created = CREATED) => [id, game, new Date(created).toISOString().slice(0, 10), "helpful", "none", created, expires];
 const sessions = [session("private-session-1"), session("private-session-2", 123, 30000),
   session("private-session-other", 456), session("private-session-prior", 123, 60000, CREATED - DAY),
-  session("private-session-expired", 123, 60000, CREATED, NOW)];
+  session("private-session-expired", 123, 60000, NOW - DAY, NOW)];
 const feedbacks = [feedback("private-feedback-1"), feedback("private-feedback-2"), feedback("private-feedback-other", 456),
-  feedback("private-feedback-expired", 123, NOW)];
+  feedback("private-feedback-expired", 123, NOW, NOW - DAY)];
 async function fixture(t, { empty = false, sql = "" } = {}) {
   const dir = await mkdtemp(join(tmpdir(), "pitcheezy-usage-test-")), path = join(dir, "snapshot.sqlite");
   t.after(() => rm(dir, { recursive: true, force: true }));
@@ -80,8 +80,8 @@ test("export has an explicit incomplete-coverage envelope; legacy report cannot 
 });
 
 test("empty and fully expired snapshots retain unknown coverage and cannot become zero viewers in legacy report", async t => {
-  for (const options of [{ empty: true }, { sql: `UPDATE usage_sessions SET expires_ms=${NOW}; UPDATE feedback SET expires_ms=${NOW}` }]) {
-    const { path } = await fixture(t, options), result = await read(path);
+  for (const options of [{ empty: true }, { now: CREATED + 31 * DAY }]) {
+    const { path } = await fixture(t, options), result = await exportUsage(path, "2026-10-12", "2026-10-12", { now: options.now ?? NOW });
     assert.deepEqual(result.usage_summary.sessions, []); assert.deepEqual(result.usage_summary.feedback, []);
     assert.equal(result.coverage, "unverified");
     assert.throws(() => buildReport(reportInput(result)), /invalid_usage_summary/);
@@ -103,6 +103,7 @@ test("missing, invalid format, wrong schema and views are refused without creati
   await assert.rejects(read(join(dir, "text.sqlite")), /snapshot_not_standalone_sqlite/);
   for (const sql of ["DROP TABLE feedback", "ALTER TABLE feedback ADD COLUMN extra TEXT",
     "DROP TABLE feedback; CREATE VIEW feedback AS SELECT 1 AS game_pk",
+    "ALTER TABLE usage_sessions ADD COLUMN extra TEXT GENERATED ALWAYS AS ('x') VIRTUAL",
     "DROP TABLE usage_sessions; CREATE TABLE usage_sessions(session_id TEXT,game_pk INTEGER NOT NULL,utc_day TEXT NOT NULL,sequence INTEGER NOT NULL,active_ms INTEGER NOT NULL,created_ms INTEGER NOT NULL,updated_ms INTEGER NOT NULL,expires_ms INTEGER NOT NULL,PRIMARY KEY(session_id,sequence))"]) {
     const f = await fixture(t, { empty: true, sql });
     await assert.rejects(read(f.path), /snapshot_schema_mismatch/);
@@ -118,6 +119,8 @@ test("malformed and unsafe rows are refused even outside requested dates or alre
     "UPDATE usage_sessions SET game_pk='secret-value'", "UPDATE usage_sessions SET utc_day='2026-02-31'",
     "UPDATE usage_sessions SET utc_day='2026-10-11'", "UPDATE usage_sessions SET sequence=0",
     "UPDATE usage_sessions SET created_ms=9007199254740993", "UPDATE usage_sessions SET updated_ms=created_ms-1",
+    `UPDATE usage_sessions SET expires_ms=created_ms+${91 * DAY}`,
+    `UPDATE feedback SET expires_ms=created_ms+${DAY + 1}`,
     "UPDATE feedback SET reason='private free text'", "UPDATE feedback SET expires_ms=created_ms",
     "UPDATE usage_sessions SET active_ms=-1 WHERE session_id='private-session-expired'",
     "UPDATE usage_sessions SET active_ms=-1 WHERE session_id='private-session-prior'",

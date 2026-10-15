@@ -54,9 +54,9 @@ function validateTables(db) {
   for (const [table, expected] of Object.entries(columns)) {
     const def = db.prepare("SELECT type,sql FROM sqlite_schema WHERE name=?").get(table);
     if (def?.type !== "table" || !/^CREATE TABLE\b/i.test(def.sql || "")) refuse("snapshot_schema_mismatch");
-    const info = db.prepare(`PRAGMA table_info(${table})`).all(); // table is a fixed constant above.
+    const info = db.prepare(`PRAGMA table_xinfo(${table})`).all(); // table is a fixed constant above.
     if (info.length !== Object.keys(expected).length ||
-        !info.every(r => Object.hasOwn(expected, r.name) && r.type.toUpperCase() === expected[r.name])) refuse("snapshot_schema_mismatch");
+        !info.every(r => r.hidden === 0 && Object.hasOwn(expected, r.name) && r.type.toUpperCase() === expected[r.name])) refuse("snapshot_schema_mismatch");
     const id = table === "feedback" ? "feedback_id" : "session_id";
     if (info.filter(r => r.pk > 0).length !== 1 || !info.some(r => r.name === id && r.pk === 1) ||
         !info.every(r => r.name === id || r.notnull === 1)) refuse("snapshot_schema_mismatch");
@@ -70,7 +70,7 @@ function validateRows(db) {
   // Do not load IDs. Scan even expired/out-of-range rows so malformed data cannot disappear in SQL filters.
   const common = r => integer(r.game_pk, 0, 999999999999) && day(r.utc_day) &&
     integer(r.created_ms, 0, 8640000000000000) && integer(r.expires_ms, 0, 8640000000000000) &&
-    r.expires_ms > r.created_ms && new Date(r.created_ms).toISOString().slice(0, 10) === r.utc_day;
+    integer(r.expires_ms - r.created_ms, DAY, 90 * DAY) && (r.expires_ms - r.created_ms) % DAY === 0 && new Date(r.created_ms).toISOString().slice(0, 10) === r.utc_day;
   for (const r of db.prepare("SELECT game_pk,utc_day,sequence,active_ms,created_ms,updated_ms,expires_ms FROM usage_sessions").iterate()) {
     if (!common(r) || !integer(r.sequence, 0, 10000) || !integer(r.active_ms, 0, MAX_ACTIVE_MS) ||
         !integer(r.updated_ms, r.created_ms, r.expires_ms - 1) ||
