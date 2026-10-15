@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "task": "WS-stage2",
+  "recorded_at": "2026-10-15T11:45:32.874835+00:00",
+  "base_commit": "a217a61db449f2b9bb8a33b3145b69bf317b0f6f",
+  "claim_commit": "6daf0d478a47546c53ceedae4ed3b523bdb297d9",
+  "acceptance_url": "https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6191027629",
+  "evidence_kind": [
+    "authenticated_account_ui_read_only",
+    "synthetic_local_cli_dry_run"
+  ],
+  "account_observation": {
+    "source": "Cloudflare authenticated dashboard UI; 2026-10-15",
+    "role": "Super Administrator - All Privileges / Entire account",
+    "workers_plan": "Free",
+    "workers_projects": 0,
+    "workers_requests_today": 0,
+    "workers_cpu_period_ms": 0,
+    "workers_period": "2026-10-01/2026-10-15",
+    "d1_databases": 0,
+    "r2": "signup_required; subscription button not clicked",
+    "project_zone": "Active / Full DNS / Free; no Workers connected",
+    "dns_record_types": {
+      "root_A": 2,
+      "verification_TXT": 2
+    },
+    "private_values_recorded": false
+  },
+  "tool": {
+    "path": "ops/public-host-tooling",
+    "version": "4.151.0",
+    "node": "24.1.0",
+    "npm": "11.3.0",
+    "npm_integrity": "sha512-ra8MpzSR+ClkbGofu9S+AmAKjytS60MqSuayXKpa1CAYIzP+NIc8q6EiF55Gz5PS3lxT4qcvMuPHihCNhTPpDg==",
+    "installed_packages": 91,
+    "audit_known_vulnerabilities": 0,
+    "install_command": "npm install --ignore-scripts --no-fund --no-audit --fetch-retries=0 --fetch-timeout=30000 (cwd ops/public-host-tooling)",
+    "audit_command": "npm audit --json (cwd ops/public-host-tooling)"
+  },
+  "local_validation": {
+    "schema_version": 1,
+    "evidence_kind": "synthetic_local_cli_dry_run",
+    "dry_run_exit_code": 0,
+    "tool_version": "4.151.0",
+    "source_files_sha_unchanged": true,
+    "checked_candidate_valid_before_after": true,
+    "source_files_compared": 16,
+    "added_tool_directories": [
+      "host/.wrangler",
+      "host/.wrangler/tmp"
+    ],
+    "home_isolated": true,
+    "empty_env_file": true,
+    "keyring_disabled": true,
+    "metrics_and_error_reports_disabled": true,
+    "no_credentials_provided": true,
+    "network_isolation_claimed": false,
+    "config_check": {
+      "schema": "pitcheezy-host-config-check-v1",
+      "ok": true,
+      "deployable": false,
+      "mode": "synthetic",
+      "manifest_sha256": "2dd7d3af557c6526da9c83078a925f5b1e9955bf38db9c64b111e4f8cdd0eec2",
+      "host_commit": "c07dc942030e5ec4f100f638d572239524cd327e",
+      "frontend_commit": "1111111111111111111111111111111111111111",
+      "config_sha256": "260245fe6a234c21cc2e11d02f112f5bd39c259985e07d2978e01b46757bca4a",
+      "client_settings_sha256": "0b806aded492aff9dc4e04a4e112da21725d216d00c93feafa958899caaab80b",
+      "checks": [
+        "inventory_bytes",
+        "single_environment_config",
+        "package_paths",
+        "worker_first",
+        "private_endpoint_defaults",
+        "bindings_and_local_namespaces",
+        "collection_settings_match",
+        "cleanup_cron_present"
+      ],
+      "unverified": [
+        "account_and_provider_configuration",
+        "r2_private_access",
+        "d1_migration_and_backups",
+        "secret_installation",
+        "cron_execution",
+        "namespace_isolation_across_account",
+        "frontend_build_provenance_and_settings_consumption",
+        "song_contract",
+        "public_rights",
+        "deployed_bytes_and_routes",
+        "live_browser_and_load"
+      ]
+    },
+    "bundle_files": {
+      "README.md": {
+        "bytes": 123,
+        "sha256": "344e1bbd66bd351ecdf4e4e9215eea996792d8e313d75992874316edb4a3911a"
+      },
+      "worker.js": {
+        "bytes": 52728,
+        "sha256": "baa200eb9303a519f6b377d39fc97a02e07ec5092703163466786b0dfe7308ce"
+      },
+      "worker.js.map": {
+        "bytes": 95959,
+        "sha256": "107c318a405d4009b99abb8069c133529f1c3398d226d110dac0fd46776345e1"
+      }
+    }
+  },
+  "observed_failure_and_resolution": {
+    "initial_tool_copy_recheck": "invalid_path due to host/.wrangler/tmp created by CLI",
+    "resolution": "new checked candidate preserved; run CLI only on identical tool copy; before/after checks and SHA comparison passed"
+  },
+  "checks": {
+    "checklist_model": {
+      "command": "python -B -m pytest tests/test_checklist_model.py -q -p no:cacheprovider",
+      "passed": 8
+    },
+    "links": {
+      "checked": 76,
+      "missing": 0
+    },
+    "artifact_sha_checks": 4,
+    "personal_path_email_pattern_matches": 0,
+    "existing_runtime_dependency_git_diff_empty": true,
+    "diff_check": "passed",
+    "independent_document_review": {
+      "type": "same-model read-only supplementary review; not cross-model operating-code approval",
+      "findings": 2,
+      "fixed": 2
+    },
+    "operating_code_changed": false
+  },
+  "not_performed": [
+    "cloud_signup",
+    "paid_upgrade",
+    "resource_creation",
+    "api_token_creation_or_read",
+    "secret_installation",
+    "dns_or_domain_change",
+    "deployment",
+    "actual_email_send",
+    "teammate_code_process_deployment_access",
+    "real_game_connection"
+  ],
+  "limitations": [
+    "No real account CPU/latency/cost test",
+    "No network-zero claim",
+    "CLI dry-run is not deployable approval",
+    "Other OS CLI execution untested",
+    "Final Song artifacts and whole-release review evidence remain separate"
+  ],
+  "commands": [
+    "python -B -S scripts/build_public_host_release.py build --frontend ops/public-host/examples/synthetic-dist --provenance ops/public-host/examples/synthetic-provenance.json --host-commit c07dc942030e5ec4f100f638d572239524cd327e --mode synthetic --output <new directory>",
+    "python -B -S scripts/build_public_host_release.py check <new directory>/release.zip",
+    "python -B -S scripts/check_public_host_config.py <checked candidate>",
+    "node <pinned wrangler bin> deploy --dry-run --env-file <empty file> --config <tool copy>/host/wrangler.deploy.json --outdir <outside candidate>"
+  ],
+  "artifact_sha256": {
+    "ops/public-host-tooling/package.json": "a70a612adb3cd7cf884af0b623ed83fda760bed3f2e357dfa634c1ab6a3eb61d",
+    "ops/public-host-tooling/package-lock.json": "7f3b42eed900a8e3967631b240a284b99391cce04834502d4b556e97283c1d80",
+    "ops/public-host-tooling/README.md": "5c38e2bd633b7fe2a609e6275c09947beeeb2216c9f70bb23d23194cef96181d",
+    "docs/WS_ACCOUNT_READINESS_20261015.md": "5ac04db1955c81f185d2f1df4bc84eb9e42847c3adf0146f051b371b52c79836"
+  },
+  "synthetic_release_zip_sha256": "ab3386335650ba299d40ff2ac7c9304d7c69a05d3011a925778a570fba0476ff"
+}
