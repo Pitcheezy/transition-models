@@ -35,6 +35,11 @@
 양쪽 수신/응답 시간 합의 여부:
 ```
 
+이메일 후보로 Cloudflare Email Service를 조사했다(10/15 공식 문서). 인증된 수신 주소로 보내는 메일은 모든 플랜에서 무료이며 Worker 실행 요금은 별도다.
+실제 계정 기능·발송 도메인 DNS·수신 주소 인증은 확인하지 않았고 설정하지 않았다. Gmail은 수신 주소로 쓰므로 Gmail 비밀번호를 저장하거나 받지 않는다.
+이 후보 조사만으로 제공자를 최종 선택하거나 도메인 설정·메일 발송을 승인하지 않는다.
+[공식 요금](https://developers.cloudflare.com/email-service/platform/pricing/) · [발송 설정 조건](https://developers.cloudflare.com/email-service/get-started/send-emails/).
+
 ## 공개·수집·실경기 전에 별도로 결정할 것
 
 - **10/20까지 연락과 응답 시간:** 우리/Song 담당자의 비공개 연락 수단과 시간대. 우리 쪽 예약 등록은 Song의 일일 확인 수행 근거가 아니다.
