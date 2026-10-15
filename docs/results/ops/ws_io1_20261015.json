@@ -1,0 +1,66 @@
+{
+  "schema": "pitcheezy-local-verification-v1",
+  "unit": "WS-io1",
+  "date": "2026-10-15",
+  "evidence": "synthetic",
+  "source_commit": "c19e1c5270b7fc1c6ce1cf46dda4970d675089fb",
+  "implementation_commit": "7c81a649358152dc904721f4e92fa6c265af896d",
+  "full_test_commit": "71d0a3d9c31d4f84216b8c7794dfc62081c52e39",
+  "hash_basis": "git blob bytes at source_commit",
+  "files": {
+    "ops/public-host/owned-files.mjs": "859f1d6562e22488ddc60926a56ae8e291248e07ca9165d273013fede8736f67",
+    "ops/public-host/alerts-cli.mjs": "e2b67005132bdb5a3eb4012f91be7f7a03dc84358e7521f7b7ed01a0121b7c9d",
+    "ops/public-host/report-cli.mjs": "6a3cfabd2c877f9cd8a3363a5beacf299c6e6e2e5b7b3e8b828e449d409ef348",
+    "ops/public-host/tests/alerts-write-failure.test.mjs": "2e9896ab6457e1643127d2aab27a68e3abc74df2aabbca57e6778d11c8ba1531",
+    "ops/public-host/tests/report-write-failure.test.mjs": "9e9faea2ab9bcd122f46526a10987f2cb2c8bc1a321e89355c5c3b8e549fab9c",
+    "ops/public-host/ALERTS.md": "720d6f436fe4515c942dc92fd67cbab411c942fb5f37dbc9a32539328473d1c8",
+    "ops/public-host/REPORT.md": "4bba6a260cb824cfa61f262513de39db3da148d418219310869bacefe3cc5a50"
+  },
+  "commands": [
+    {
+      "command": "node --test ops/public-host/tests/alerts-write-failure.test.mjs",
+      "passed": 8
+    },
+    {
+      "command": "node --test ops/public-host/tests/report-write-failure.test.mjs",
+      "passed": 10
+    },
+    {
+      "command": "npm --prefix ops/public-host test",
+      "passed": 243
+    },
+    {
+      "command": "npm --prefix ops/public-host run check",
+      "result": "pass"
+    },
+    {
+      "command": "python -m pytest tests/test_checklist_model.py -q",
+      "passed": 8
+    }
+  ],
+  "review": {
+    "author_model": "GPT-6 family (Codex; exact session model identifier unavailable)",
+    "reviewer_model": "gpt-5.6-sol",
+    "commit": "c19e1c5270b7fc1c6ce1cf46dda4970d675089fb",
+    "result": "PASS within documented single-writer scope",
+    "focused_passed": 18,
+    "final_followup_retest": false,
+    "finding": {
+      "initial_priority": "P2",
+      "issue": "final identity/content check and pathname unlink are not atomic",
+      "reproduction": {
+        "complete": true,
+        "externalExists": false
+      },
+      "resolution": "Unqualified preservation wording corrected; reviewer reclassified as documented unsupported concurrent-writer limit. Race remains; no code fix claimed.",
+      "logic_unchanged_from_implementation_commit": true
+    }
+  },
+  "limits": [
+    "Trusted single-writer directory and cooperating CLI locks required.",
+    "Files detected as changed at inspection are preserved; even one replacement in final check/unlink gap may be deleted.",
+    "No crash atomicity or arbitrary concurrent-writer isolation.",
+    "Mock delivery and synthetic filesystem failures only.",
+    "No live deployment or teammate repository changes."
+  ]
+}
