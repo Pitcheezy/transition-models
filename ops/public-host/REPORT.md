@@ -12,7 +12,7 @@
 |---|---|---|
 | `game_pk`, `window{from,to}`(UTC, ≤14일), `evidence` | 운영자 | `evidence`는 `synthetic`(합성 자료) / `offline_replay`(오프라인 재생) / `live`(실경기) 중 하나 |
 | `collection{telemetry_enabled,feedback_enabled,consent_note,retain_days}` | 배포 설정·운영 기록 | 동의/누락 범위 설명 |
-| `usage_summary` 또는 `null` | `summarizeTelemetry`(D1) 결과 `pitcheezy-usage-summary-v1` | D1 내보내기 CLI는 아직 없다(계정 도구로 실행) |
+| `usage_summary` 또는 `null` | `summarizeTelemetry`(D1) 결과 `pitcheezy-usage-summary-v1` | 기존 요약 또는 [오프라인 스냅샷 내보내기](EXPORT.md)의 전체 포장 객체를 수용. 원격 D1 취득은 별도 |
 | `monitor_state` 또는 `null` | 감시 상태 파일의 `state` | 이벤트·열린 장애·잘린 건수·`last_observed_ms`(마지막 관측) |
 | `notice_audit` 또는 `null` | 안내 스위치 운영자 GET의 `audit` | 전환 시각·사유·조작자 |
 | `notice_audit_meta`(선택) | 같은 운영자 GET의 `audit_unavailable`·`audit_truncated` | 두 boolean을 그대로 보존. 기존 입력에서 생략하면 감사 완전성은 미확인 |
@@ -22,6 +22,22 @@
 집계 행은 요약 범위 안의 실제 UTC 날짜, 정수 경기 번호·건수·0 이상 활성 시간을 요구한다. 활성 시간 합계도 안전한 정수 범위 안이어야 한다.
 피드백 평가·사유는 수집 API의 고정 선택지만 받으며, 같은 날짜·경기의 세션 집계 또는 같은 평가·사유 집계가 중복되면 거부한다.
 잘못된 집계 입력을 0분으로 바꾸거나 음수 시간·임의 평가 문구로 출력하지 않는다.
+
+## 오프라인 스냅샷 입력 (WS-report2)
+
+보고서 입력의 `usage_summary`에는 `pitcheezy-usage-snapshot-v1` 전체 객체도 받을 수 있다:
+`schema`, `source_sha256`(소문자 64자리), `coverage="unverified"`, `aggregation="utc_day"`, `usage_summary`(기존 요약) 다섯 필드다.
+이 포장과 안쪽 요약은 정해진 필드만 허용하며 생성 시각·날짜·중복/음수/0건 그룹 등을 검사한다.
+기존 스냅샷 표시 없는 요약 입력은 이전 동작을 유지한다.
+
+- 관련 날짜·경기의 활성 채널 보존 행이 없으면 `no_data`; 건수·활성 시간·피드백 모두 `null`.
+- 행이 있으면 `partial_data`; 남아 있는 채널별 합계만 표시하며 행이 없거나 OFF인 채널은 `null`.
+- 둘 다 OFF이면 `collection_off`이며 자료가 있어도 해당 수치를 표시하지 않는다.
+- 전체 요약 날짜가 보고 기간을 덮어도 수집/보존 완전성을 입증하지 못하므로 `summary_covers_window=true`가 되지 않는다.
+- 한 시간짜리 보고서에도 **겹치는 UTC 날짜 전체 집계**만 제공한다. 정확한 시각 구간 이용량과 수집·보존 누락은 미측정으로 적는다.
+- 스냅샷 피드백 행에는 `utc_day`를 유지해 여러 날의 같은 평가/사유를 구별한다.
+- 운영자 JSON에만 `usage_snapshot{schema,source_sha256,coverage,aggregation,from_day,to_day,generated_at}`을 보존한다.
+  Markdown에는 DB 해시·경로·ID·입력의 자유문구 `limits`를 옮기지 않는다. SHA 일치는 출처 인증이 아니다.
 
 ## 출력
 
@@ -91,7 +107,7 @@ node ops/public-host/report-cli.mjs --input <입력.json> --output-dir <폴더>
 ## 한계
 
 - 게시·회신·라벨링은 하지 않는다. 사람이 초안을 읽고 발신 승인 범위 안에서 게시한다.
-- D1 요약을 운영 계정에서 내보내는 CLI는 없다. 실제 경기에서는 계정 도구로 `summarizeTelemetry` 결과를 만들어 입력한다.
+- 원격 D1 자료를 취득하는 CLI는 없다. [로컬 SQLite 내보내기](EXPORT.md)의 전체 포장 객체를 연결할 수 있다. 포장 형식을 벗겨 내부 `usage_summary`만 넣으면 수집·보존 범위 미확인이 사라지므로 금지한다.
 - 집계는 opt-in 브라우저 세션이며 사람 수·실제 시청률이 아니다. 실경기 수치는 **미측정**이다.
 - 입력의 사실 관계(조치·명령·커밋)는 운영자가 책임진다. 생성기는 형식과 라벨만 보장한다.
 
