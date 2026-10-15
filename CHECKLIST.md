@@ -1,5 +1,12 @@
 # 남은 작업 체크리스트
 
+## WS-report2 이용 기록 스냅샷 내보내기 — 2026-10-15
+
+- [~] WS-report2. 닫힌 SQLite 스냅샷의 읽기 전용 집계 CLI, 보존/수집 범위 미확인과 UTC 일별 한계를 보존하는 보고서 연결을 구현·검증한다. 실제 계정·발신·Song 변경은 제외한다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-15 · Codex]`
+
+사용자 직접 지시로 Codex가 선점. 기준 `fe61946`, 브랜치 `codex/ws-report-snapshot`; 수정 범위 `ops/public-host`와 현재 체크리스트·인계·검증 기록. 위 모델 태그는 교대용이며 이번 작성자는 Codex GPT-6 계열이다. [착수·합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6185156999).
+
+
 
 ## WS-review2 교차검토·수정 main 반영 — 2026-10-14
 
