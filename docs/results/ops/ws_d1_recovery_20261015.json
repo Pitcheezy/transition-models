@@ -1,0 +1,303 @@
+{
+  "schema": "pitcheezy-local-d1-recovery-v1",
+  "synthetic": true,
+  "passed": true,
+  "target": "new-local-sqlite-fixtures",
+  "synthetic_clock": "2026-10-15T12:00:00.000Z",
+  "collection_resume_authorized": false,
+  "cloud_restore_verified": false,
+  "crash_recovery_verified": false,
+  "rto_ms": null,
+  "rpo_records": null,
+  "original_unchanged": true,
+  "normal_duplicate_insert_rejected": true,
+  "temporary_storage": "removed",
+  "environment": {
+    "node": "v24.1.0",
+    "platform": "win32",
+    "arch": "x64"
+  },
+  "source_sha256": {
+    "rehearse-d1-recovery.mjs": "0352a979a97b1188155c7b38cff6177105dcc649f723d70318bd273c96a93e4a",
+    "rehearse-lifecycle.mjs": "849ba5ef85e4ea9f1b1f26c264736e5fab1b7f8de25e1d072eeede1d45b9ab34",
+    "telemetry.mjs": "545569404a68e8a5159984c3b328e4982c217247d1cd5af01e1831165ebf6739",
+    "migrations/0001_telemetry.sql": "72c1ab1a8cc0512dd8b301749e5161a163b7aeb27262bc302d61132e15cdf0e0",
+    "tests/d1-recovery.test.mjs": "57a133325b586125c2bf77ee27409b2d91e69c4ca61f4909b53b2fa220a94fd1"
+  },
+  "cases": [
+    {
+      "name": "normal",
+      "inspection": {
+        "structure": "ok",
+        "integrity": "ok",
+        "expired": {
+          "sessions": 0,
+          "feedback": 0
+        },
+        "retained": {
+          "sessions": 1,
+          "feedback": 1
+        },
+        "budget": {
+          "state": "not_below_evidence",
+          "observed": {
+            "session": 2,
+            "feedback": 1
+          },
+          "floor": {
+            "session": 2,
+            "feedback": 1
+          }
+        },
+        "findings": [],
+        "collection_resume_authorized": false
+      },
+      "source_unchanged": true,
+      "read_only_enforced": true
+    },
+    {
+      "name": "restored_older",
+      "inspection": {
+        "structure": "ok",
+        "integrity": "ok",
+        "expired": {
+          "sessions": 1,
+          "feedback": 1
+        },
+        "retained": {
+          "sessions": 1,
+          "feedback": 1
+        },
+        "budget": {
+          "state": "rewound",
+          "observed": {
+            "session": 2,
+            "feedback": 1
+          },
+          "floor": {
+            "feedback": 3,
+            "session": 5
+          }
+        },
+        "findings": [
+          "expired_rows_returned",
+          "budget_rewound"
+        ],
+        "collection_resume_authorized": false
+      },
+      "source_unchanged": true,
+      "read_only_enforced": true
+    },
+    {
+      "name": "cleaned_copy",
+      "inspection": {
+        "structure": "ok",
+        "integrity": "ok",
+        "expired": {
+          "sessions": 0,
+          "feedback": 0
+        },
+        "retained": {
+          "sessions": 1,
+          "feedback": 1
+        },
+        "budget": {
+          "state": "rewound",
+          "observed": {
+            "session": 2,
+            "feedback": 1
+          },
+          "floor": {
+            "feedback": 3,
+            "session": 5
+          }
+        },
+        "findings": [
+          "budget_rewound"
+        ],
+        "collection_resume_authorized": false
+      },
+      "source_unchanged": true,
+      "read_only_enforced": true
+    },
+    {
+      "name": "missing_budget_evidence",
+      "inspection": {
+        "structure": "ok",
+        "integrity": "ok",
+        "expired": {
+          "sessions": 1,
+          "feedback": 1
+        },
+        "retained": {
+          "sessions": 1,
+          "feedback": 1
+        },
+        "budget": {
+          "state": "missing_evidence",
+          "observed": {
+            "session": 2,
+            "feedback": 1
+          },
+          "floor": null
+        },
+        "findings": [
+          "expired_rows_returned",
+          "budget_evidence_missing"
+        ],
+        "collection_resume_authorized": false
+      },
+      "source_unchanged": true,
+      "read_only_enforced": true
+    },
+    {
+      "name": "missing_index",
+      "inspection": {
+        "structure": "invalid",
+        "integrity": "not_checked",
+        "expired": null,
+        "retained": null,
+        "budget": {
+          "state": "not_checked",
+          "observed": null,
+          "floor": null
+        },
+        "findings": [
+          "schema_mismatch"
+        ],
+        "collection_resume_authorized": false
+      },
+      "source_unchanged": true,
+      "read_only_enforced": true
+    },
+    {
+      "name": "wrong_index",
+      "inspection": {
+        "structure": "invalid",
+        "integrity": "not_checked",
+        "expired": null,
+        "retained": null,
+        "budget": {
+          "state": "not_checked",
+          "observed": null,
+          "floor": null
+        },
+        "findings": [
+          "schema_mismatch"
+        ],
+        "collection_resume_authorized": false
+      },
+      "source_unchanged": true,
+      "read_only_enforced": true
+    },
+    {
+      "name": "schema_mismatch",
+      "inspection": {
+        "structure": "invalid",
+        "integrity": "not_checked",
+        "expired": null,
+        "retained": null,
+        "budget": {
+          "state": "not_checked",
+          "observed": null,
+          "floor": null
+        },
+        "findings": [
+          "schema_mismatch"
+        ],
+        "collection_resume_authorized": false
+      },
+      "source_unchanged": true,
+      "read_only_enforced": true
+    },
+    {
+      "name": "null_identity",
+      "inspection": {
+        "structure": "ok",
+        "integrity": "invalid",
+        "expired": null,
+        "retained": null,
+        "budget": {
+          "state": "not_checked",
+          "observed": null,
+          "floor": null
+        },
+        "findings": [
+          "invalid_row"
+        ],
+        "collection_resume_authorized": false
+      },
+      "source_unchanged": true,
+      "read_only_enforced": true
+    },
+    {
+      "name": "duplicate_identity",
+      "inspection": {
+        "structure": "invalid",
+        "integrity": "not_checked",
+        "expired": null,
+        "retained": null,
+        "budget": {
+          "state": "not_checked",
+          "observed": null,
+          "floor": null
+        },
+        "findings": [
+          "schema_mismatch"
+        ],
+        "collection_resume_authorized": false
+      },
+      "source_unchanged": true,
+      "read_only_enforced": true
+    },
+    {
+      "name": "invalid_budget",
+      "inspection": {
+        "structure": "ok",
+        "integrity": "invalid",
+        "expired": null,
+        "retained": null,
+        "budget": {
+          "state": "not_checked",
+          "observed": null,
+          "floor": null
+        },
+        "findings": [
+          "invalid_row"
+        ],
+        "collection_resume_authorized": false
+      },
+      "source_unchanged": true,
+      "read_only_enforced": true
+    }
+  ],
+  "code_commit": "4503c2da91c60766b016cf97affe05f494344e82",
+  "base_commit": "d36d0893862c6ce2c5381327ce233cac7029b21e",
+  "author_model": "GPT-6 family (exact product model ID unavailable)",
+  "review": {
+    "model": "gpt-5.6-sol",
+    "commit": "4503c2da91c60766b016cf97affe05f494344e82",
+    "verdict": "PASS",
+    "findings": 0,
+    "independent_command": "node --test ops/public-host/tests/d1-recovery.test.mjs",
+    "independent_passed": 4,
+    "full_213_independently_rerun": false
+  },
+  "checks": [
+    {
+      "command": "node --test ops/public-host/tests/*.test.mjs",
+      "passed": 213,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "command": "npm --prefix ops/public-host run check",
+      "result": "passed"
+    },
+    {
+      "command": "PYTHONUTF8=1 python -m pytest tests/test_checklist_model.py -q",
+      "passed": 8
+    }
+  ],
+  "execution_command": "node ops/public-host/rehearse-d1-recovery.mjs --output <new-receipt.json>"
+}
