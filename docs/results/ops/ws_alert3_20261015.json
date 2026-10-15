@@ -1,0 +1,46 @@
+{
+  "schema": "pitcheezy-local-verification-v1",
+  "unit": "WS-alert3",
+  "date": "2026-10-15",
+  "evidence": "synthetic",
+  "source_commit": "a4932bbe2f152cce15fc7d05c933d792450cfdf2",
+  "files": {
+    "ops\\public-host\\alerts-cli.mjs": "85382b480f4674616e4ba73f5517d32941e8c427cdd1e1297ca21b155a65ff40",
+    "ops\\public-host\\tests\\alerts-input.test.mjs": "aee01b1cf1f21f5061546e8ddc35c22fb36b5be22130cafb1940dc28894703a0",
+    "ops\\public-host\\ALERTS.md": "e5422cd111baad51189aa6390633fb84e897caebb8ba2eb61bbae5270b44f747"
+  },
+  "commands": [
+    {
+      "command": "node --test ops/public-host/tests/alerts-input.test.mjs",
+      "passed": 9
+    },
+    {
+      "command": "node --test ops/public-host/tests/alerts.test.mjs",
+      "passed": 36
+    },
+    {
+      "command": "npm --prefix ops/public-host test",
+      "passed": 232
+    },
+    {
+      "command": "npm --prefix ops/public-host run check",
+      "result": "pass"
+    },
+    {
+      "command": "python -m pytest tests/test_checklist_model.py -q",
+      "passed": 8
+    }
+  ],
+  "review": {
+    "author_model": "GPT-6 family (Codex; exact session model identifier unavailable)",
+    "reviewer_model": "gpt-5.6-sol",
+    "commit": "a4932bbe2f152cce15fc7d05c933d792450cfdf2",
+    "result": "PASS",
+    "focused_passed": 9
+  },
+  "limits": [
+    "required structure guard, not full monitor schema or provenance authentication",
+    "mock delivery only",
+    "no live deployment or teammate repository changes"
+  ]
+}
