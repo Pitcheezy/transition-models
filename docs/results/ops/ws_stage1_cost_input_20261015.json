@@ -1,0 +1,23 @@
+{
+  "schema": "pitcheezy-cost-scenarios-v1",
+  "scenarios": [
+    {
+      "name": "one_viewer_private_test_assumption",
+      "viewer_hours": 21,
+      "peak_viewers": 1,
+      "poll_seconds": 5,
+      "objects_per_poll": 2,
+      "extra_worker_requests": 1000,
+      "publisher_puts": 7560,
+      "publisher_deletes": 10,
+      "publisher_heads": 7570,
+      "extra_r2_reads": 50000,
+      "mean_cpu_ms": 5,
+      "mean_json_bytes": 750000,
+      "r2_storage_gb_month": 0.1,
+      "d1_rows_read": 10000,
+      "d1_rows_written": 1000,
+      "d1_storage_gb_month": 0.01
+    }
+  ]
+}
