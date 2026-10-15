@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url";
 import { parseArgs } from "node:util";
 import { AlertError, classifyEvent, validateAlertConfig, initialAlertState, validateAlertState, mockTransport, dispatchAlerts, toV1State, serializeAlertState, MAX_ALERT_STATE_READ_BYTES, MAX_V1_STATE_BYTES } from "./alerts.mjs";
 import { readJson, plainPath } from "./monitor-cli.mjs";
+import { writeNew, rollback } from "./owned-files.mjs";
 
 // Do not let missing/malformed incident state masquerade as a recovery and erase pending alerts.
 // This is the destructive-state boundary, not authentication of the full monitor schema/config.
@@ -45,12 +46,14 @@ export async function runAlertsOnce(monitorStatePath, configPath, statePath, { n
     const { state: next, receipt } = await dispatchAlerts(state, record.state, config, transport, { now, latestReport });
     const serialized = serializeAlertState(next);
     const tempPath = resolve(dirname(path), "." + basename(path) + "." + randomUUID() + ".tmp");
-    const file = await open(tempPath, "wx", 0o600);
+    const owned = [];
     try {
-      await file.writeFile(serialized, "utf8");
-      await file.sync();
-    } finally { await file.close(); }
-    try { await rename(tempPath, path); } catch (e) { await unlink(tempPath).catch(() => {}); throw e; }
+      await writeNew(tempPath, serialized, owned);
+      await rename(tempPath, path);
+      owned.length = 0; // The committed state is no longer an owned temporary file.
+    } finally {
+      if (!await rollback(owned)) throw new AlertError("alerts_temp_cleanup_incomplete");
+    }
     return { schema: "pitcheezy-host-alerts-run-v1", transport: config.transport, delivery_confirmed: false,
       mock_messages: transport.sent, receipt, pending: next.pending.length };
   } finally {

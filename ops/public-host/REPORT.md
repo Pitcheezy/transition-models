@@ -133,3 +133,5 @@ MD/JSON open·부분 write·sync 중 잡을 수 있는 오류가 나면 이번 �
 두 파일 원자적 저장이나 같은 디렉터리를 계속 교체하는 외부 프로세스와의 완전한 격리를 보장하지 않는다.
 
 검사: `node --test ops/public-host/tests/report-write-failure.test.mjs` (합성 임시 파일의 오류 주입 10건).
+
+소유 파일 생성/롤백은 알림 저장과 함께 내부 `owned-files.mjs`를 사용한다(WS-io1). 위 CLI 동작과 오류 규약은 동일하다.
