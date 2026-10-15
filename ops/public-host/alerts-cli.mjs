@@ -4,13 +4,30 @@ import { resolve, dirname, basename } from "node:path";
 import { randomUUID } from "node:crypto";
 import { fileURLToPath } from "node:url";
 import { parseArgs } from "node:util";
-import { AlertError, validateAlertConfig, initialAlertState, validateAlertState, mockTransport, dispatchAlerts, toV1State, serializeAlertState, MAX_ALERT_STATE_READ_BYTES, MAX_V1_STATE_BYTES } from "./alerts.mjs";
+import { AlertError, classifyEvent, validateAlertConfig, initialAlertState, validateAlertState, mockTransport, dispatchAlerts, toV1State, serializeAlertState, MAX_ALERT_STATE_READ_BYTES, MAX_V1_STATE_BYTES } from "./alerts.mjs";
 import { readJson, plainPath } from "./monitor-cli.mjs";
+
+// Do not let missing/malformed incident state masquerade as a recovery and erase pending alerts.
+// This is the destructive-state boundary, not authentication of the full monitor schema/config.
+function validateMonitorInput(record) {
+  const object = value => value !== null && typeof value === "object" && !Array.isArray(value);
+  const state = record?.state;
+  if (!object(record) || !object(state) || !Object.hasOwn(state, "events") ||
+      !Array.isArray(state.events) || state.events.length > 100 || !Object.hasOwn(state, "incident")) {
+    throw new AlertError("invalid_monitor_state");
+  }
+  if (state.incident !== null) {
+    try {
+      if (state.incident?.kind !== "opened") throw new Error("incident must be opened");
+      classifyEvent(state.incident);
+    } catch { throw new AlertError("invalid_monitor_state"); }
+  }
+}
 
 export async function runAlertsOnce(monitorStatePath, configPath, statePath, { now = Date.now() } = {}) {
   const config = validateAlertConfig(await readJson(configPath, 16384));
   const record = await readJson(monitorStatePath, 131072);
-  if (!record || typeof record !== "object" || !record.state) throw new AlertError("invalid_monitor_state");
+  validateMonitorInput(record);
   const path = await plainPath(statePath);
   // One run at a time per state file: overlapping runs would double-deliver and overwrite each other's attempts.
   const lockPath = path + ".lock";
