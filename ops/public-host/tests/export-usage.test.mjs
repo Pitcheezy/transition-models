@@ -13,6 +13,7 @@ import { exportUsage } from "../export-usage.mjs";
 import { runExport } from "../export-usage-cli.mjs";
 import { summarizeTelemetry } from "../telemetry.mjs";
 import { buildReport } from "../report.mjs";
+import { runReport } from "../report-cli.mjs";
 
 const run = promisify(execFile), NOW = Date.parse("2026-10-13T06:00:00Z"), DAY = 86400000;
 const CREATED = Date.parse("2026-10-12T00:00:00Z");
@@ -68,7 +69,7 @@ test("SQLite snapshot equals real local D1 aggregation and leaves source bytes/d
   assert.doesNotMatch(JSON.stringify(result), /private-session|private-feedback|session_id|feedback_id|snapshot\.sqlite/);
 });
 
-test("export has an explicit incomplete-coverage envelope; legacy report cannot mistake it for complete totals", async t => {
+test("actual SQLite export flows into report files with partial UTC-day totals and source provenance", async t => {
   const { dir, path } = await fixture(t), output = join(dir, "summary.json");
   const receipt = await runExport(path, output, "2026-10-12", "2026-10-12", { now: NOW });
   const bytes = await readFile(output), result = JSON.parse(bytes);
@@ -76,15 +77,35 @@ test("export has an explicit incomplete-coverage envelope; legacy report cannot 
   assert.equal(result.schema, "pitcheezy-usage-snapshot-v1");
   assert.equal(result.aggregation, "utc_day");
   assert.equal(result.usage_summary.sessions[0].sessions, 2);
-  assert.throws(() => buildReport(reportInput(result)), /invalid_usage_summary/);
+  const built = buildReport(reportInput(result), { now: NOW });
+  assert.equal(built.json.usage.status, "partial_data");
+  assert.equal(built.json.usage.sessions, 2);
+  assert.equal(built.json.usage.active_ms, 90000);
+  assert.equal(built.json.usage.summary_covers_window, false);
+  assert.equal(built.json.usage_snapshot.source_sha256, result.source_sha256);
+  assert.equal(built.json.usage_snapshot.generated_at, result.usage_summary.generated_at);
+  const input = join(dir, "report-input.json");
+  await writeFile(input, JSON.stringify(reportInput(result)));
+  const reportReceipt = await runReport(input, dir, { now: NOW });
+  const report = JSON.parse(await readFile(join(dir, reportReceipt.json)));
+  const markdown = await readFile(join(dir, reportReceipt.markdown), "utf8");
+  assert.equal(reportReceipt.usage_status, "partial_data");
+  assert.deepEqual(report, built.json); assert.equal(report.posted, false);
+  assert.match(markdown, /UTC 날짜 전체/); assert.match(markdown, /수집·보존 누락/);
+  assert.doesNotMatch(markdown, /private-session|private-feedback|snapshot\.sqlite/);
+  assert.equal(markdown.includes(result.source_sha256), false);
 });
 
-test("empty and fully expired snapshots retain unknown coverage and cannot become zero viewers in legacy report", async t => {
+test("empty and fully expired snapshots become no_data with null counts in the report", async t => {
   for (const options of [{ empty: true }, { now: CREATED + 31 * DAY }]) {
     const { path } = await fixture(t, options), result = await exportUsage(path, "2026-10-12", "2026-10-12", { now: options.now ?? NOW });
     assert.deepEqual(result.usage_summary.sessions, []); assert.deepEqual(result.usage_summary.feedback, []);
     assert.equal(result.coverage, "unverified");
-    assert.throws(() => buildReport(reportInput(result)), /invalid_usage_summary/);
+    const report = buildReport(reportInput(result), { now: NOW });
+    assert.equal(report.json.usage.status, "no_data");
+    assert.equal(report.json.usage.sessions, null); assert.equal(report.json.usage.active_ms, null);
+    assert.equal(report.json.usage.feedback, null); assert.equal(report.json.usage.summary_covers_window, false);
+    assert.match(report.markdown, /0명이 아님/);
   }
 });
 
@@ -177,4 +198,15 @@ test("CLI emits safe receipt, rejects past-clock override and hides raw SQLite e
       assert.equal(e.code, 2); assert.doesNotMatch(e.stderr, /secret\.sqlite|pitcheezy-usage-test-/); return true;
     });
   }
+});
+
+
+test("report CLI rejects corrupt snapshot metadata before writing either output", async t => {
+  const { dir, path } = await fixture(t), result = await read(path);
+  const input = join(dir, "invalid-report-input.json");
+  result.coverage = "complete";
+  await writeFile(input, JSON.stringify(reportInput(result)));
+  const before = await readdir(dir);
+  await assert.rejects(runReport(input, dir, { now: NOW }), { code: "invalid_usage_snapshot" });
+  assert.deepEqual(await readdir(dir), before);
 });

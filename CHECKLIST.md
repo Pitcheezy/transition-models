@@ -1,9 +1,9 @@
 # 남은 작업 체크리스트
 
-## WS-report2 오프라인 내보내기 완료 · 보고서 연결 대기 — 2026-10-15
+## WS-report2 내보내기·보고서 연결 — 2026-10-15
 
 - [x] WS-report2a. 읽기 전용 SQLite 스냅샷 → UTC 일별 비공개 집계 포장 CLI를 구현했다. 기존 D1 SQL 재사용·원본 SHA 불변·스키마/TTL/경로/덮어쓰기 가드, 전체Node197·체크리스트8 통과. `gpt-5.6-sol`의 지적2건 수정 후 고정 코드 `d60d45b` 재검토 PASS(독립 합성4검사). 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-15 · Codex]`
-- [~] WS-report2. 사용자 “우리 보고서 파일 수정·검증 승인” 수신(2026-10-15). 전체 스냅샷 포장 입력→빈 자료 null/보존 행 partial_data/UTC 날짜 한계·출처 보존을 우리 보고서에 연결·검증한다. 팀원 코드·배포는 제외한다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-15 · Codex]`
+- [~] WS-report2. 사용자 “우리 보고서 파일 수정·검증 승인” 수신(2026-10-15). 전체 스냅샷 포장 입력→빈 자료 null/보존 행 partial_data/UTC 날짜 한계·출처 보존을 우리 보고서에 연결했다. 전체Node209 검사와 실제 합성 내보내기→보고서 파일 연결을 통과했다. 고정 코드의 다른 모델 검토 중이다. 팀원 코드·배포는 제외한다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-15 · Codex]`
 
 [구현·검토·한계](docs/WS_REPORT2_20261015.md) · [커밋/파일 SHA/명령 영수증](docs/results/ops/ws_report2_snapshot_20261015.json) · [남은 우선순위](docs/WS_OPERATIONS_HANDOFF.md).
 **Codex 보고서 연결 선점.** 브랜치 `codex/ws-report-snapshot`, 선점 `6197660`; [PR #30](https://github.com/Pitcheezy/transition-models/pull/30)의 CI/병합 상태를 별도 확인한다.

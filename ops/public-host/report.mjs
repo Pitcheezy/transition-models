@@ -16,21 +16,8 @@ export class ReportError extends Error { constructor(code) { super(code); this.c
 const refuse = code => { throw new ReportError(code); };
 export const EVIDENCE = Object.freeze({ synthetic: "합성 자료", offline_replay: "오프라인 재생", live: "실경기" });
 
-export function validateReportInput(input) {
-  const keys = ["schema", "game_pk", "evidence", "window", "collection", "usage_summary", "monitor_state",
-    "notice_audit", "alert_state", "actions", "sources", "commands", "unmeasured", "notes"];
-  if (object(input) && Object.hasOwn(input, "notice_audit_meta")) keys.push("notice_audit_meta");
-  if (!exact(input, keys) ||
-      input.schema !== "pitcheezy-game-report-input-v1") refuse("invalid_input");
-  if (!int(input.game_pk, 1, 999999999999) || !Object.hasOwn(EVIDENCE, input.evidence)) refuse("invalid_game_or_evidence");
-  if (!exact(input.window, ["from", "to"]) || !iso(input.window.from) || !iso(input.window.to) ||
-      Date.parse(input.window.to) < Date.parse(input.window.from) ||
-      Date.parse(input.window.to) - Date.parse(input.window.from) > 14 * 86400000) refuse("invalid_window");
-  const c = input.collection;
-  if (!exact(c, ["telemetry_enabled", "feedback_enabled", "consent_note", "retain_days"]) ||
-      typeof c.telemetry_enabled !== "boolean" || typeof c.feedback_enabled !== "boolean" ||
-      !text(c.consent_note, 500) || !(c.retain_days === null || int(c.retain_days, 1, 90))) refuse("invalid_collection");
-  const s = input.usage_summary;
+/** Shared row validation; legacy summary semantics remain unchanged. */
+export function validateUsageSummary(s) {
   if (s !== null && (!object(s) || s.schema !== "pitcheezy-usage-summary-v1" || s.timezone !== "UTC" ||
       !Array.isArray(s.sessions) || !Array.isArray(s.feedback) || !day(s.from_day) || !day(s.to_day) ||
       s.from_day > s.to_day)) refuse("invalid_usage_summary");
@@ -57,6 +44,41 @@ export function validateReportInput(input) {
       feedbackGroups.add(key);
     }
   }
+  return s;
+}
+const isSnapshot = value => object(value) && value.schema === "pitcheezy-usage-snapshot-v1";
+const usageSummary = value => isSnapshot(value) ? value.usage_summary : value;
+function validateUsageInput(value) {
+  if (!isSnapshot(value)) return validateUsageSummary(value);
+  if (!exact(value, ["schema", "source_sha256", "coverage", "aggregation", "usage_summary"]) ||
+      typeof value.source_sha256 !== "string" || !HEX64.test(value.source_sha256) ||
+      value.coverage !== "unverified" || value.aggregation !== "utc_day") refuse("invalid_usage_snapshot");
+  const s = value.usage_summary;
+  if (!exact(s, ["schema", "timezone", "from_day", "to_day", "generated_at", "sessions", "feedback", "limits"]) ||
+      s.schema !== "pitcheezy-usage-summary-v1" || !iso(s.generated_at) ||
+      new Date(s.generated_at).toISOString().slice(0, 19) !== s.generated_at.slice(0, 19) ||
+      !text(s.limits, 500)) refuse("invalid_usage_snapshot");
+  validateUsageSummary(s);
+  // Actual GROUP BY output has positive counts. An invented zero-count group is not observed evidence.
+  if (s.sessions.some(r => r.sessions === 0) || s.feedback.some(r => r.responses === 0)) refuse("invalid_usage_summary");
+  return s;
+}
+
+export function validateReportInput(input) {
+  const keys = ["schema", "game_pk", "evidence", "window", "collection", "usage_summary", "monitor_state",
+    "notice_audit", "alert_state", "actions", "sources", "commands", "unmeasured", "notes"];
+  if (object(input) && Object.hasOwn(input, "notice_audit_meta")) keys.push("notice_audit_meta");
+  if (!exact(input, keys) ||
+      input.schema !== "pitcheezy-game-report-input-v1") refuse("invalid_input");
+  if (!int(input.game_pk, 1, 999999999999) || !Object.hasOwn(EVIDENCE, input.evidence)) refuse("invalid_game_or_evidence");
+  if (!exact(input.window, ["from", "to"]) || !iso(input.window.from) || !iso(input.window.to) ||
+      Date.parse(input.window.to) < Date.parse(input.window.from) ||
+      Date.parse(input.window.to) - Date.parse(input.window.from) > 14 * 86400000) refuse("invalid_window");
+  const c = input.collection;
+  if (!exact(c, ["telemetry_enabled", "feedback_enabled", "consent_note", "retain_days"]) ||
+      typeof c.telemetry_enabled !== "boolean" || typeof c.feedback_enabled !== "boolean" ||
+      !text(c.consent_note, 500) || !(c.retain_days === null || int(c.retain_days, 1, 90))) refuse("invalid_collection");
+  validateUsageInput(input.usage_summary);
   const m = input.monitor_state;
   if (m !== null && (!object(m) || !Array.isArray(m.events) || !int(m.dropped_events ?? 0, 0, Number.MAX_SAFE_INTEGER) ||
       !(m.last_observed_ms === undefined || m.last_observed_ms === null || int(m.last_observed_ms, 0, Number.MAX_SAFE_INTEGER)) ||
@@ -90,7 +112,7 @@ export function validateReportInput(input) {
 
 function freeText(input) {
   const audit = input.notice_audit || [];
-  const feedback = input.usage_summary ? input.usage_summary.feedback : [];
+  const feedback = usageSummary(input.usage_summary)?.feedback || [];
   return [input.notes, ...input.commands, ...input.actions.flatMap(x => [x.by, x.what]), input.collection.consent_note,
     ...input.unmeasured, input.sources.contract_version || "", ...audit.flatMap(a => [a.operator || "", a.reason || "", a.message_id]),
     ...feedback.map(r => `${r.rating} ${r.reason}`)].join(" ");
@@ -111,7 +133,8 @@ export function usageSection(input) {
     return { status: "collection_off", sessions: null, active_ms: null, feedback: null, summary_covers_window: null,
       statement: "수집 OFF — 이용자 수·활성 시간·피드백은 **미측정**이다(0명이 아님)." };
   }
-  const s = input.usage_summary;
+  const snapshot = isSnapshot(input.usage_summary);
+  const s = usageSummary(input.usage_summary);
   if (s === null) {
     return { status: "no_data", sessions: null, active_ms: null, feedback: null, summary_covers_window: null,
       statement: "집계 자료 없음(요약 미수신) — 이용자 수는 **미측정**이다(0명이 아님)." };
@@ -122,6 +145,22 @@ export function usageSection(input) {
   const fb = c.feedback_enabled ? s.feedback.filter(r => r.game_pk === input.game_pk && days.has(r.utc_day)) : [];
   const feedback = c.feedback_enabled ? fb.map(r => ({ rating: r.rating, reason: r.reason, responses: r.responses })) : null;
   const responses = fb.reduce((n, r) => n + r.responses, 0);
+  if (snapshot) {
+    const caveat = `요약 범위 ${s.from_day} ~ ${s.to_day}의 보존 행 중 보고 기간과 겹치는 UTC 날짜 전체의 합계다. ` +
+      "보고서의 정확한 시각 구간 집계가 아니며 수집·보존 누락은 미확인이다. ";
+    if (rows.length === 0 && fb.length === 0) {
+      return { status: "no_data", sessions: null, active_ms: null, feedback: null, summary_covers_window: false,
+        statement: caveat + "활성 수집 채널의 해당 경기 보존 행이 없다 — 이용량은 **미측정**이다(0명이 아님)." };
+    }
+    const sessions = rows.length ? rows.reduce((n, r) => n + r.sessions, 0) : null;
+    const active = rows.length ? rows.reduce((n, r) => n + r.active_ms, 0) : null;
+    const keptFeedback = fb.length ? fb.map(r => ({ utc_day: r.utc_day, rating: r.rating, reason: r.reason, responses: r.responses })) : null;
+    const sessionNote = sessions === null ? "세션·활성 시간은 **미측정**이다(수집 OFF 또는 보존 행 없음). " :
+      `보존된 opt-in 브라우저 세션 ${sessions}개, 활성 시간 합계 ${Math.round(active / 60000)}분(전체 이용량·사람 수가 아님). `;
+    const feedbackNote = keptFeedback === null ? "피드백은 **미측정**이다(수집 OFF 또는 보존 행 없음)." : `보존된 피드백 응답 ${responses}건.`;
+    return { status: "partial_data", sessions, active_ms: active, feedback: keptFeedback, summary_covers_window: false,
+      statement: caveat + sessionNote + feedbackNote };
+  }
   if (!covers && rows.length === 0 && fb.length === 0) {
     return { status: "no_data", sessions: null, active_ms: null, feedback: null, summary_covers_window: false,
       statement: "집계 자료가 집계 기간을 덮지 않는다(요약 범위 밖) — 이용자 수는 **미측정**이다(0명이 아님)." };
@@ -197,7 +236,7 @@ export function buildReport(input, { now = Date.now() } = {}) {
     `- 통계 수집 ${input.collection.telemetry_enabled ? "ON" : "OFF"} / 피드백 수집 ${input.collection.feedback_enabled ? "ON" : "OFF"} / 보관일 ${input.collection.retain_days ?? "미설정"}`,
     `- 동의·누락 범위: ${input.collection.consent_note || "(기재 없음)"}`);
   if (usage.feedback && usage.feedback.length) {
-    lines.push("- 피드백:"); for (const f of usage.feedback) lines.push(`  - ${f.rating}/${f.reason}: ${f.responses}건`);
+    lines.push("- 피드백:"); for (const f of usage.feedback) lines.push(`  - ${f.utc_day ? f.utc_day + " UTC " : ""}${f.rating}/${f.reason}: ${f.responses}건`);
   }
   lines.push("- 세션은 opt-in 브라우저 단위이며 사람 수가 아니다. 활성 시간은 브라우저 보고값이다.", "");
   lines.push("## 문제와 조치");
@@ -240,7 +279,10 @@ export function buildReport(input, { now = Date.now() } = {}) {
   const unmeasured = [...input.unmeasured];
   if (usage.sessions === null) unmeasured.unshift("이용자 수·활성 시간");
   if (usage.feedback === null && usage.status !== "collection_off") unmeasured.push("피드백 응답");
-  if (usage.status === "partial_data") unmeasured.push("요약 범위 밖의 이용 기록·피드백(부분 집계)");
+  if (isSnapshot(input.usage_summary)) {
+    unmeasured.push("수집·보존 누락과 기간 전체 이용량(스냅샷의 남아 있는 행만 확인)",
+      "정확한 보고 시각 구간의 이용량(UTC 날짜 전체 합계만 제공)");
+  } else if (usage.status === "partial_data") unmeasured.push("요약 범위 밖의 이용 기록·피드백(부분 집계)");
   if (!problems.monitor_available || ["never", "before_window"].includes(problems.monitor_coverage)) unmeasured.push("장애 유무·지속 시간");
   else {
     unmeasured.push("기간 전체의 장애 유무·지속 시간(기록된 관측·이벤트 외의 관측 간격·누락 미확인)");
@@ -255,5 +297,11 @@ export function buildReport(input, { now = Date.now() } = {}) {
   const json = { schema: "pitcheezy-game-report-v1", generated_at: new Date(now).toISOString(), game_pk: input.game_pk,
     evidence: input.evidence, evidence_label: label, window: input.window, usage, problems, actions: input.actions,
     sources: input.sources, commands: input.commands, unmeasured, posted: false, approval_required: true };
+  if (isSnapshot(input.usage_summary)) {
+    const v = input.usage_summary, s = v.usage_summary;
+    // Explicit allowlist: the operator JSON keeps provenance, not raw input, paths, IDs or free-form limits.
+    json.usage_snapshot = { schema: v.schema, source_sha256: v.source_sha256, coverage: v.coverage,
+      aggregation: v.aggregation, from_day: s.from_day, to_day: s.to_day, generated_at: s.generated_at };
+  }
   return { markdown: lines.join("\n") + "\n", json };
 }

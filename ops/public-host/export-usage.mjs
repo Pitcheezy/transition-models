@@ -4,7 +4,7 @@ import { open, lstat } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import { plainPath } from "./monitor-cli.mjs";
 import { summarizeTelemetry, MAX_ACTIVE_MS } from "./telemetry.mjs";
-import { validateReportInput } from "./report.mjs";
+import { validateUsageSummary } from "./report.mjs";
 
 const MAX_BYTES = 512 * 1024 * 1024, MAX_ROWS = 2_000_000, DAY = 86400000;
 const integer = (v, min, max) => Number.isSafeInteger(v) && v >= min && v <= max;
@@ -104,14 +104,8 @@ export async function exportUsage(snapshotPath, fromDay, toDay, { now = Date.now
     db.close(); db = undefined;
     const after = await fingerprint(path);
     if (JSON.stringify(before) !== JSON.stringify(after)) refuse("snapshot_changed");
-    // Reuse existing aggregate validation without modifying the report builder. This is validation,
-    // not an evidence report; the enclosing snapshot deliberately refuses legacy report consumption.
-    validateReportInput({ schema: "pitcheezy-game-report-input-v1", game_pk: 1, evidence: "synthetic",
-      window: { from: fromDay + "T00:00:00Z", to: fromDay + "T23:59:59Z" },
-      collection: { telemetry_enabled: false, feedback_enabled: false, consent_note: "", retain_days: null },
-      usage_summary: summary, monitor_state: null, notice_audit: null, alert_state: null, actions: [],
-      sources: { host_commit: "0".repeat(40), frontend_commit: null, contract_version: null, release_manifest_sha256: null },
-      commands: [], unmeasured: [], notes: "" });
+    // One shared validator for the report and the exporter; no fabricated report input is needed.
+    validateUsageSummary(summary);
     const result = { schema: "pitcheezy-usage-snapshot-v1", source_sha256: before.sha256,
       coverage: "unverified", aggregation: "utc_day", usage_summary: summary };
     if (Buffer.byteLength(JSON.stringify(result, null, 2)) > 900_000) refuse("summary_too_large");
