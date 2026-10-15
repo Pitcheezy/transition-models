@@ -1,0 +1,43 @@
+{
+  "schema": "pitcheezy-local-verification-v1",
+  "unit": "WS-report3",
+  "date": "2026-10-15",
+  "evidence": "synthetic",
+  "source_commit": "83736786991af0cca8fe942e2d55adf371d3168a",
+  "files": {
+    "ops/public-host/report-cli.mjs": "d3387389d4718d9fe310b21412e33ae0da657a59188c31eb94cc83defd6988bd",
+    "ops/public-host/tests/report-write-failure.test.mjs": "dea965b99ad57405210705e45215ac9a3bfdc0917226c995260af10202c48af0",
+    "ops/public-host/REPORT.md": "e3694e56f8713a59f2a96110eb35bab8dd1f88932c089d91f71197144d54d4da"
+  },
+  "commands": [
+    {
+      "command": "node --test ops/public-host/tests/report-write-failure.test.mjs ops/public-host/tests/report.test.mjs",
+      "passed": 24
+    },
+    {
+      "command": "npm --prefix ops/public-host test",
+      "passed": 223
+    },
+    {
+      "command": "npm --prefix ops/public-host run check",
+      "result": "pass"
+    },
+    {
+      "command": "python -m pytest tests/test_checklist_model.py -q",
+      "passed": 8
+    }
+  ],
+  "review": {
+    "author_model": "GPT-6 family (Codex; exact session model identifier unavailable)",
+    "reviewer_model": "gpt-5.6-sol",
+    "commit": "83736786991af0cca8fe942e2d55adf371d3168a",
+    "result": "PASS",
+    "focused_passed": 24
+  },
+  "limits": [
+    "catchable I/O failures and cooperative CLI writers only",
+    "not crash or power-loss atomicity",
+    "no real cloud deployment or external delivery",
+    "Windows workerd emitted socket-close diagnostics while all tests passed"
+  ]
+}
