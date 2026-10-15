@@ -124,3 +124,16 @@ node ops/public-host/alerts-cli.mjs --monitor-state <감시 상태.json> --confi
 node --test ops/public-host/tests/alerts.test.mjs
 node ops/public-host/rehearse-alerts.mjs --output .cache/alert-rehearsal-new.json
 ~~~
+
+## 잘못된 감시 파일 보호 — WS-alert3
+
+CLI는 알림 상태 잠금·전송·저장보다 먼저 감시 파일의 필수 구조를 검사한다.
+`state.events`는 배열(최대100개), `state.incident`는 반드시 존재하며 null 또는 유효한 opened 이벤트다.
+incident 누락/false/0/빈 문자열/잘못된 객체를 종료된 장애로 해석하지 않고
+`invalid_monitor_state`·종료2로 거부한다. 기존 알림 파일과 대기 재시도는 그대로 남는다.
+
+정상적인 `incident:null`은 복구/대기 정리를 허용하고, 열린 장애는 실패한 알림을 다시 시도한다.
+개별 잘못된 event를 건너뛰고 다른 유효한 event를 처리하는 기존 동작(종료1)은 유지한다.
+최소 `{events, incident}` 입력과 report 미제공은 계속 허용한다. 이 검사는 필수 상태 보호이며,
+전체 감시 스키마·설정 fingerprint·자료 출처·실제 복구 여부를 인증하는 것은 아니다.
+실제 알림 채널은 아직 연결하지 않았고 검사는 모의 transport만 사용한다.
