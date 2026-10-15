@@ -12,7 +12,7 @@
 |---|---|---|
 | `game_pk`, `window{from,to}`(UTC, ≤14일), `evidence` | 운영자 | `evidence`는 `synthetic`(합성 자료) / `offline_replay`(오프라인 재생) / `live`(실경기) 중 하나 |
 | `collection{telemetry_enabled,feedback_enabled,consent_note,retain_days}` | 배포 설정·운영 기록 | 동의/누락 범위 설명 |
-| `usage_summary` 또는 `null` | `summarizeTelemetry`(D1) 결과 `pitcheezy-usage-summary-v1` | D1 내보내기 CLI는 아직 없다(계정 도구로 실행) |
+| `usage_summary` 또는 `null` | `summarizeTelemetry`(D1) 결과 `pitcheezy-usage-summary-v1` | 원격 D1 취득 CLI는 없음. [오프라인 스냅샷 내보내기](EXPORT.md)는 별도 포장 형식이며 현재 이 입력에 직접 넣으면 안 됨 |
 | `monitor_state` 또는 `null` | 감시 상태 파일의 `state` | 이벤트·열린 장애·잘린 건수·`last_observed_ms`(마지막 관측) |
 | `notice_audit` 또는 `null` | 안내 스위치 운영자 GET의 `audit` | 전환 시각·사유·조작자 |
 | `notice_audit_meta`(선택) | 같은 운영자 GET의 `audit_unavailable`·`audit_truncated` | 두 boolean을 그대로 보존. 기존 입력에서 생략하면 감사 완전성은 미확인 |
@@ -91,7 +91,7 @@ node ops/public-host/report-cli.mjs --input <입력.json> --output-dir <폴더>
 ## 한계
 
 - 게시·회신·라벨링은 하지 않는다. 사람이 초안을 읽고 발신 승인 범위 안에서 게시한다.
-- D1 요약을 운영 계정에서 내보내는 CLI는 없다. 실제 경기에서는 계정 도구로 `summarizeTelemetry` 결과를 만들어 입력한다.
+- 원격 D1 자료를 취득하는 CLI는 없다. [로컬 SQLite 내보내기](EXPORT.md)는 구현했으나 보고서 연결 승인은 대기다. 포장 형식을 벗겨 내부 `usage_summary`만 넣으면 수집·보존 범위 미확인이 사라지므로 금지한다.
 - 집계는 opt-in 브라우저 세션이며 사람 수·실제 시청률이 아니다. 실경기 수치는 **미측정**이다.
 - 입력의 사실 관계(조치·명령·커밋)는 운영자가 책임진다. 생성기는 형식과 라벨만 보장한다.
 

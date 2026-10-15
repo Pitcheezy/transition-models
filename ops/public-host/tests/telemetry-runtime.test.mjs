@@ -70,7 +70,10 @@ test("actual D1/Worker: opt-in storage, race-safe budget, idempotency, reporting
     assert.equal((await mf.dispatchFetch(origin+"/_telemetry/session")).status,405);
     const oldReport=await summarizeTelemetry(db,"2026-10-12","2026-10-12",now+31*86400000);
     assert.equal(oldReport.sessions.length,0); assert.equal(oldReport.feedback.length,0);
-    await cleanupTelemetry({TELEMETRY_DB:db,TELEMETRY_ENABLED:"false"},now+32*86400000);
+    // The HTTP row uses the real clock, unlike the fixed-date synthetic rows above.
+    // Advance beyond both clocks so this retention test does not expire as the calendar advances.
+    const cleanupAt=Math.max(now,Date.now())+32*86400000;
+    await cleanupTelemetry({TELEMETRY_DB:db,TELEMETRY_ENABLED:"false"},cleanupAt);
     assert.equal((await db.prepare("SELECT COUNT(*) AS n FROM usage_sessions").first()).n,0);
     assert.equal((await db.prepare("SELECT COUNT(*) AS n FROM feedback").first()).n,0);
     assert.equal((await db.prepare("SELECT COUNT(*) AS n FROM telemetry_budget").first()).n,0);
