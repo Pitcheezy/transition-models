@@ -1,4 +1,8 @@
-/** Track newly created files and remove only matching owned bytes after catchable I/O failure. */
+/** Best-effort cleanup of matching new files after catchable I/O failures.
+ * Requires a trusted, single-writer directory (cooperative CLI locks are separate).
+ * Identity checks and pathname unlink are not atomic: an unmanaged replacement in the
+ * final check/unlink gap can be removed. This is not isolation from arbitrary writers.
+ */
 import { open, lstat, unlink } from "node:fs/promises";
 
 export async function writeNew(path, content, owned) {
