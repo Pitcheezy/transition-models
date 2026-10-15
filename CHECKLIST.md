@@ -1,14 +1,13 @@
 # 남은 작업 체크리스트
 
-## WS-report2 이용 기록 스냅샷 내보내기 — 2026-10-15
+## WS-report2 오프라인 내보내기 완료 · 보고서 연결 대기 — 2026-10-15
 
-- [~] WS-report2. 닫힌 SQLite 스냅샷의 읽기 전용 집계 CLI, 보존/수집 범위 미확인과 UTC 일별 한계를 보존하는 보고서 연결을 구현·검증한다. 실제 계정·발신·Song 변경은 제외한다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-15 · Codex]`
+- [x] WS-report2a. 읽기 전용 SQLite 스냅샷 → UTC 일별 비공개 집계 포장 CLI를 구현했다. 기존 D1 SQL 재사용·원본 SHA 불변·스키마/TTL/경로/덮어쓰기 가드, 전체Node197·체크리스트8 통과. `gpt-5.6-sol`의 지적2건 수정 후 고정 코드 `d60d45b` 재검토 PASS(독립 합성4검사). 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-15 · Codex]`
+- [!] WS-report2. 보고서 연결 미완료. 자동 승인 검토가 우리 `report.mjs` 수정을 거절해 [구체적 변경안](docs/WS_REPORT2_REVIEW_PROPOSAL.md)의 사용자 재승인을 요청했다. 현재 포장 파일은 기존 보고서에서 거부되며, 내부 요약만 꺼내 수집/보존 미확인을 없애면 안 된다. 팀원 답은 불필요하다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-15 · Codex]`
 
-내보내기 11검사 통과. 보고서 코드 연결은 자동 승인 검토 거절로 사용자 재승인 대기이며 적용하지 않았다. 새 포장 형식은 기존 보고서에서 거부된다. 다른 모델(gpt-5.6-sol) 1차 검토 지적 2건(TTL·generated 열)을 수정하고 관련12검사를 통과했다. 수정본 재검토·최종 검사를 진행 중이다.
-
-사용자 직접 지시로 Codex가 선점. 기준 `fe61946`, 브랜치 `codex/ws-report-snapshot`; 수정 범위 `ops/public-host`와 현재 체크리스트·인계·검증 기록. 위 모델 태그는 교대용이며 이번 작성자는 Codex GPT-6 계열이다. [착수·합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6185156999).
-
-
+[구현·검토·한계](docs/WS_REPORT2_20261015.md) · [커밋/파일 SHA/명령 영수증](docs/results/ops/ws_report2_snapshot_20261015.json) · [남은 우선순위](docs/WS_OPERATIONS_HANDOFF.md).
+**우리 수정 권한 반납.** 브랜치 `codex/ws-report-snapshot`, 선점 `6197660`; [PR #30](https://github.com/Pitcheezy/transition-models/pull/30)의 CI/병합 상태를 별도 확인한다.
+공개 계약·Song 코드·실제 DB·프로세스·배포·발신은 변경하지 않았다. A-y/F-4i 보류 유지.
 
 ## WS-review2 교차검토·수정 main 반영 — 2026-10-14
 

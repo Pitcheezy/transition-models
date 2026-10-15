@@ -1,0 +1,73 @@
+{
+  "schema": "pitcheezy-local-verification-v1",
+  "task": "WS-report2a",
+  "date": "2026-10-15",
+  "evidence": "synthetic",
+  "base_commit": "fe6194670ceaa4105d28ec65da97d08730a1078c",
+  "code_commit": "d60d45b67088fee7aec206244559343c8c9233e1",
+  "author_model": "GPT-6 family (exact product model ID unavailable)",
+  "review": {
+    "model": "gpt-5.6-sol",
+    "commit": "d60d45b67088fee7aec206244559343c8c9233e1",
+    "verdict": "PASS",
+    "initial_findings": 2,
+    "resolved_findings": 2,
+    "independent_synthetic_tests_passed": 4,
+    "independent_miniflare_full_suite_run": false
+  },
+  "checks": [
+    {
+      "command": "npm --prefix ops/public-host run check",
+      "result": "passed"
+    },
+    {
+      "command": "node --test ops/public-host/tests/*.test.mjs",
+      "passed": 197,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "command": "PYTHONUTF8=1 python -m pytest tests/test_checklist_model.py -q",
+      "passed": 8,
+      "failed": 0
+    },
+    {
+      "check": "relative documentation links",
+      "checked": 59,
+      "missing": 0
+    }
+  ],
+  "source_files": [
+    {
+      "path": "ops/public-host/export-usage.mjs",
+      "sha256": "e541311cae7fa1510f75a2aa244f37a42b91dfb156ea3c851cabae57267e4449"
+    },
+    {
+      "path": "ops/public-host/export-usage-cli.mjs",
+      "sha256": "2e01c78568575102835d65f7b85c6c1a245ed4779ee76f59cb63259d59cf75d2"
+    },
+    {
+      "path": "ops/public-host/tests/export-usage.test.mjs",
+      "sha256": "8c64c661d5828cb450e5b629b21e257cb3b2f80d22cb21eb0dd4ed22c4ca2d49"
+    },
+    {
+      "path": "ops/public-host/tests/telemetry-runtime.test.mjs",
+      "sha256": "519d713b8d5856bb6e3bf2cbcb66ecb60828980a30e1538c98e6cf2dfff3ce31"
+    },
+    {
+      "path": "ops/public-host/package.json",
+      "sha256": "bc9a9219dbc386f4db9f52ebd4556ee84ab17f409871c36a97103b09ef2cb577"
+    }
+  ],
+  "report_code_modified": false,
+  "report_connection": "awaiting_explicit_approval_after_automatic_review_denial",
+  "remote_d1_access": false,
+  "deployed": false,
+  "teammate_repository_modified": false,
+  "limits": [
+    "No real usage data or remote DB acquisition measured",
+    "Whole UTC-day aggregates, retention/collection completeness unverified",
+    "No adversarial replacement atomicity or large database performance claim",
+    "node:sqlite experimental warning on local Node 24.1.0"
+  ]
+}
