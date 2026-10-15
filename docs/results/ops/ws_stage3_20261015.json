@@ -1,0 +1,200 @@
+{
+  "schema_version": 1,
+  "task": "WS-stage3",
+  "status": "preparation_complete_actual_trial_pending",
+  "recorded_at": "2026-10-15T12:22:09.182031+00:00",
+  "base_commit": "928b2671cf6605dc7f83d2801d56fcf5adc39c7a",
+  "claim_commit": "93d4c7b25528edfee0a02936127e3318d940c84d",
+  "acceptance_url": "https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6191683745",
+  "evidence_kind": [
+    "synthetic_local_build",
+    "different_model_static_and_focused_test_review",
+    "unsubmitted_cloudflare_token_draft"
+  ],
+  "host_commit": "c07dc942030e5ec4f100f638d572239524cd327e",
+  "package_check": {
+    "schema": "pitcheezy-host-release-v1",
+    "mode": "synthetic",
+    "deployable": false,
+    "files": 13,
+    "bytes": 108993,
+    "manifest_sha256": "2dd7d3af557c6526da9c83078a925f5b1e9955bf38db9c64b111e4f8cdd0eec2",
+    "host_commit": "c07dc942030e5ec4f100f638d572239524cd327e",
+    "frontend_commit": "1111111111111111111111111111111111111111",
+    "scope": "Package bytes only; git/build provenance, functionality and rights not verified.",
+    "bundle_sha256": "ab3386335650ba299d40ff2ac7c9304d7c69a05d3011a925778a570fba0476ff"
+  },
+  "config_check": {
+    "schema": "pitcheezy-host-config-check-v1",
+    "ok": true,
+    "deployable": false,
+    "mode": "synthetic",
+    "manifest_sha256": "2dd7d3af557c6526da9c83078a925f5b1e9955bf38db9c64b111e4f8cdd0eec2",
+    "host_commit": "c07dc942030e5ec4f100f638d572239524cd327e",
+    "frontend_commit": "1111111111111111111111111111111111111111",
+    "config_sha256": "b145fb64a7bdb8e049e57096e92da7a33d7cd75e53d69b1513b65fa2cd4f7eaa",
+    "client_settings_sha256": "0b806aded492aff9dc4e04a4e112da21725d216d00c93feafa958899caaab80b",
+    "checks": [
+      "inventory_bytes",
+      "single_environment_config",
+      "package_paths",
+      "worker_first",
+      "private_endpoint_defaults",
+      "bindings_and_local_namespaces",
+      "collection_settings_match",
+      "cleanup_cron_present"
+    ],
+    "unverified": [
+      "account_and_provider_configuration",
+      "r2_private_access",
+      "d1_migration_and_backups",
+      "secret_installation",
+      "cron_execution",
+      "namespace_isolation_across_account",
+      "frontend_build_provenance_and_settings_consumption",
+      "song_contract",
+      "public_rights",
+      "deployed_bytes_and_routes",
+      "live_browser_and_load"
+    ]
+  },
+  "local_dry_run": {
+    "kind": "ws-stage3-auth-free-local-dry-run",
+    "started_at_utc": "2026-10-15T12:18:46.425925+00:00",
+    "source_claim_commit": "93d4c7b",
+    "wrangler_version": "4.151.0",
+    "node_version": "v24.1.0",
+    "command_template": "node <repo>/ops/public-host-tooling/node_modules/wrangler/bin/wrangler.js deploy --dry-run --env-file <fresh-empty-env> --config <tool-copy>/host/wrangler.deploy.json --outdir <private-run>/bundle",
+    "dry_run_count": 1,
+    "dry_run_exit_code": 0,
+    "elapsed_seconds": 2.148,
+    "original_config_before_exit_code": 0,
+    "original_config_after_exit_code": 0,
+    "original_config_before_ok": true,
+    "original_config_after_ok": true,
+    "original_files": 16,
+    "original_bytes": 113578,
+    "original_inventory_sha256": "7d872a100ee398e4aaa07347ee92dd797c65770ecd4101b63c5637087c6cdcdc",
+    "original_files_unchanged": true,
+    "tool_copy_original_files_match": true,
+    "tool_copy_added_files": [],
+    "bundle_files": {
+      "README.md": {
+        "bytes": 119,
+        "sha256": "0cbca2bf46b8718fa9f5c6fb32152aab280e93bef6687b968e8d0f451dbf9ae7"
+      },
+      "worker.js": {
+        "bytes": 52728,
+        "sha256": "baa200eb9303a519f6b377d39fc97a02e07ec5092703163466786b0dfe7308ce"
+      },
+      "worker.js.map": {
+        "bytes": 95990,
+        "sha256": "b4e62eff19f4b460a53232cb31817bb62261dde25970fe4a42f1d9a829b9ce0b"
+      }
+    },
+    "isolation": {
+      "fresh_profile": true,
+      "node_homedir_verified": true,
+      "inherited_environment_allowlist": [
+        "COMSPEC",
+        "NUMBER_OF_PROCESSORS",
+        "PATH",
+        "PATHEXT",
+        "PROCESSOR_ARCHITECTURE",
+        "SYSTEMROOT",
+        "WINDIR"
+      ],
+      "empty_env_file_explicit": true,
+      "keyring_enabled": false,
+      "metrics_enabled": false,
+      "error_reports_enabled": false,
+      "personal_credentials_read_or_copied": false
+    },
+    "limits": [
+      "Local bundling only; no upload, login, resource creation, deployment, or secret command was executed.",
+      "No OS egress isolation or packet capture was performed; zero-network communication is not claimed.",
+      "Actual account authorization, remote bindings, CPU time, request latency, and custom-domain behavior remain unmeasured."
+    ],
+    "ok": true
+  },
+  "review": {
+    "actual_model": "gpt-5.6-sol",
+    "same_as_author_model": false,
+    "scope": "whole fixed host and stage3 checked candidate; no account access",
+    "p1_p2_findings": 0,
+    "host_files_git_manifest_bytes_matched": 12,
+    "javascript_syntax_modules_passed": 7,
+    "focused_node_passed": 79,
+    "python_partial_execution": {
+      "passed": 39,
+      "setup_errors": 95,
+      "reason": "pytest tmp_path numbered-directory creation denied by sandbox",
+      "command": "python -B -m pytest tests/test_public_host_config.py tests/test_public_host_release.py -q -p no:cacheprovider",
+      "full_suite_pass_claimed": false
+    },
+    "required_before_ingress": [
+      "replace D1 placeholder and recheck new candidate",
+      "D1 migration before Worker cron",
+      "real R2 public access OFF",
+      "actual deployed gate=true, vars/bindings/secrets/limiter namespace readback",
+      "hostname connected last"
+    ],
+    "focused_node_total": 82,
+    "focused_node_failed_environment": 3,
+    "focused_node_failure": "connect EACCES to local Miniflare ephemeral port; no remote account test",
+    "focused_node_command": "node --test ops/public-host/tests/access.test.mjs ops/public-host/tests/worker.test.mjs ops/public-host/tests/telemetry.test.mjs ops/public-host/tests/telemetry-runtime.test.mjs ops/public-host/tests/usage-client.test.mjs ops/public-host/tests/notice.test.mjs"
+  },
+  "proposed_access": {
+    "token_issued": false,
+    "scope": "one personal account, product-wide permissions; execution only new named staging resources",
+    "permission_names": [
+      "Account / Workers Scripts / Edit",
+      "Account / Workers R2 Storage / Edit",
+      "Account / D1 / Edit"
+    ],
+    "expiry_input_kst": "2026-10-16 21:00",
+    "summary_end_date": "2026-10-16",
+    "exact_issued_expiry_verified": false,
+    "ip_filter_set": false
+  },
+  "actual_changes_in_this_unit": [],
+  "user_decision_status": "concrete scope requested in chat; pending at record time",
+  "privacy": {
+    "account_identifiers_saved_publicly": false,
+    "hostname_saved_publicly": false,
+    "secret_values_saved_publicly": false,
+    "teammate_access": false
+  },
+  "checks": {
+    "checklist_model": {
+      "command": "python -B -m pytest tests/test_checklist_model.py -q -p no:cacheprovider",
+      "passed": 8
+    },
+    "local_links": {
+      "checked": 44,
+      "missing": 0
+    },
+    "artifact_sha_checks": 1,
+    "private_value_patterns_matched": 0,
+    "diff_check": "passed",
+    "operating_code_changed": false,
+    "independent_document_review": {
+      "type": "same-model supplementary read-only document review, separate from gpt-5.6-sol operating review",
+      "result": "PASS",
+      "confirmed_findings": 0
+    }
+  },
+  "artifact_sha256": {
+    "docs/WS_STAGE3_EXECUTION_PLAN_20261015.md": "520862e50fe6a7f507a495919cbaf56e90ef6e3621223b0cb598dda28dcc0a96"
+  },
+  "not_performed": [
+    "API token issuance",
+    "resource creation",
+    "secret generation or installation",
+    "deployment",
+    "DNS change",
+    "real game connection",
+    "email send",
+    "teammate code/process/deployment access"
+  ]
+}
