@@ -1,0 +1,100 @@
+{
+  "schema": "pitcheezy-document-verification-v1",
+  "unit": "WS-handoff2",
+  "date": "2026-10-15",
+  "implementation_reference_commit": "c07dc942030e5ec4f100f638d572239524cd327e",
+  "claim_commit": "25b3645",
+  "artifact_commit_location": "Final work commit is recorded in the PR and board completion comment; implementation_reference_commit predates these documents.",
+  "hash_basis": "UTF-8 LF document bytes, equivalent to Git normalized blobs",
+  "files": {
+    "docs/WS_HUMAN_DECISIONS.md": "a9d48bb5d894115f864b265f88e9d55d748f60a86491d23f57c40ca7920b6c39",
+    "docs/mail_drafts/COLLAB-001-reply-draft-20261015.md": "8bd604e35b4ca2dfd905f9fd8d3e760b6d7a877fc07f29e4278300ce58ecc79d",
+    "docs/mail_drafts/COLLAB-001-reply-draft-20261013.md": "ad7ebb30401a80470bd310d51477a67f7d41f449c558fff15668f723acf40fb7",
+    "docs/WS_OPERATIONS_HANDOFF.md": "651e8e71a253dd5d4b254047b1776c334b229a624c9b55f1e7315ec85fff6d90"
+  },
+  "checks": {
+    "checklist_pytest_passed": 8,
+    "existing_local_file_and_directory_links": 44,
+    "new_receipt_link_checked_after_creation": true,
+    "personal_email_addresses_in_documents": 0,
+    "whitespace_diff": "pass"
+  },
+  "queries": [
+    {
+      "repository": "Pitcheezy/transition-models",
+      "board": 3,
+      "open_mail": [
+        18
+      ],
+      "main": "c07dc942030e5ec4f100f638d572239524cd327e"
+    },
+    {
+      "repository": "SongRoute/pitcheezy",
+      "board": 35,
+      "board_updated_at": "2026-10-13T13:08:10Z",
+      "open_mail": [],
+      "new_deliverables": false,
+      "independent_daily_check_confirmed": false
+    }
+  ],
+  "commands": [
+    "gh api repos/Pitcheezy/transition-models/commits/main",
+    "gh api repos/Pitcheezy/transition-models/issues/3",
+    "gh api repos/Pitcheezy/transition-models/issues/3/comments --paginate",
+    "gh api repos/SongRoute/pitcheezy/issues/35",
+    "gh api repos/SongRoute/pitcheezy/issues/35/comments --paginate",
+    "gh api repos/Pitcheezy/transition-models/issues?labels=mail&state=open",
+    "gh api repos/SongRoute/pitcheezy/issues?labels=mail&state=open",
+    "gh api repos/Pitcheezy/transition-models/issues/18/comments --paginate",
+    "python -m pytest tests/test_checklist_model.py -q",
+    "python -B -S scripts/estimate_public_host_cost.py ops/public-host/examples/cost-scenarios.json",
+    "git diff --check"
+  ],
+  "pricing_review": {
+    "queried_on": "2026-10-15",
+    "estimator_snapshot": "2026-10-12",
+    "live_account_or_bill_queried": false,
+    "sources": [
+      "https://developers.cloudflare.com/workers/platform/pricing/",
+      "https://developers.cloudflare.com/r2/pricing/",
+      "https://developers.cloudflare.com/d1/platform/pricing/"
+    ],
+    "estimate_measurement": false,
+    "budget_approved": false
+  },
+  "human_decisions": {
+    "hosting_owner_role": "user_cloudflare",
+    "test_audience": "user_only",
+    "budget": "pending",
+    "telemetry_and_feedback": "pending_explanation_given",
+    "alert_channel": "email_requested",
+    "recipient_stored_here": false,
+    "outbound_reply": "pending",
+    "deployment": "not_authorized"
+  },
+  "review": {
+    "reviewer": "independent Codex document auditor (same model family; exact model id unavailable)",
+    "scope": "document consistency and authorization boundaries, not a cross-model operating-code release review",
+    "findings_resolved": [
+      "Replaced all-input prerequisite with task-specific prerequisites.",
+      "Clarified normal-read 404 excludes access/notice gates."
+    ],
+    "result": "PASS"
+  },
+  "scope": {
+    "documentation_only": true,
+    "teammate_code_accessed": false,
+    "process_or_deployment_changed": false,
+    "reply_dispatched": false,
+    "operating_tests_repeated": false,
+    "new_performance_claims": false
+  },
+  "email_feasibility": {
+    "provider_candidate": "Cloudflare Email Service",
+    "selected": false,
+    "source_pricing": "https://developers.cloudflare.com/email-service/platform/pricing/",
+    "source_setup": "https://developers.cloudflare.com/email-service/get-started/send-emails/",
+    "account_eligibility_verified": false,
+    "mail_sent": false
+  }
+}
