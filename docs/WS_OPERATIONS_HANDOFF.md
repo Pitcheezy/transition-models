@@ -5,6 +5,10 @@
 [CHECKLIST](../CHECKLIST.md) 상단과 [우리 board](https://github.com/Pitcheezy/transition-models/issues/3)를 확인한다.
 역사적 “다음 단위” 문구는 현재 지시가 아니다.
 
+## 본인 전용 실자원 실행안 — WS-stage3
+
+[실행안](WS_STAGE3_EXECUTION_PLAN_20261015.md)·[영수증](results/ops/ws_stage3_20261015.json). 전용 자원/경로·계정 한 개의 세 제품 편집권한·짧은 TTL 초안과 세션3600초 후보를 준비했다. 고정 host `c07dc94` 전체를 다른 모델 gpt-5.6-sol이 검토해 P1/P2 없음, 합성 패키지/설정/격리 dry-run 통과·원본16파일 SHA 보존. 토큰은 발급 전 요약까지만 작성했다. 실제 토큰/자원/비밀/배포/DNS는 WS-stage4 구체 승인 대기다. 실제 D1 ID 교체·migration 선적용·배포 gate=true 확인 뒤 hostname을 마지막에 연결한다. 수집/피드백OFF·Free·본인 시험·합성/실운영 구분을 유지한다.
+
 ## 계정 확인·고정 도구 준비 — WS-stage2
 
 [계정 사실과 시험 실행안](WS_ACCOUNT_READINESS_20261015.md)을 확인한다. Workers Free·전체 관리자·zone Active, D1 없음이며 R2는 별도 명시 승인 뒤 활성화·버킷0/사용료0 확인. 분리한 Wrangler4.151.0의 합성 dry-run과 설정 검사·원본16파일 SHA 일치까지 확인했다. R2 가입 외 자원/유료전환/배포/DNS/발송 없음. 검증 원본과 도구 복사본을 분리한다. [영수증](results/ops/ws_stage2_20261015.json).
