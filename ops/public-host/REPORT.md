@@ -123,7 +123,7 @@ node ops/public-host/rehearse-report.mjs --output .cache/report-rehearsal-new.js
 CLI는 같은 경기/날짜 출력쌍에 `.<출력 기본명>.lock`을 독점 생성한다. 같은 도구의 동시 실행은
 `already_running_or_stale_lock`으로 거부한다. 기존 출력은 덮어쓰지 않는다.
 MD/JSON open·부분 write·sync 중 잡을 수 있는 오류가 나면 이번 실행이 생성한 파일만 정리하고 실패한다.
-파일 식별자와 내용이 바뀌면 지우지 않고 `report_rollback_incomplete`로 남긴다.
+검사 시점에 파일 식별자나 내용이 바뀐 것이 확인되면 지우지 않고 `report_rollback_incomplete`로 남긴다.
 잠금 정리 실패는 `report_lock_cleanup_incomplete`다. 입력 원본은 변경하지 않는다.
 
 실패 후에는 오류와 디렉터리를 확인한다. 출력/잠금이 없으면 같은 명령을 재실행할 수 있다.
@@ -133,3 +133,9 @@ MD/JSON open·부분 write·sync 중 잡을 수 있는 오류가 나면 이번 �
 두 파일 원자적 저장이나 같은 디렉터리를 계속 교체하는 외부 프로세스와의 완전한 격리를 보장하지 않는다.
 
 검사: `node --test ops/public-host/tests/report-write-failure.test.mjs` (합성 임시 파일의 오류 주입 10건).
+
+소유 파일 생성/롤백은 알림 저장과 함께 내부 `owned-files.mjs`를 사용한다(WS-io1). 위 CLI 동작과 오류 규약은 동일하다.
+
+출력 디렉터리는 이 CLI의 잠금을 지키는 실행만 쓰는 단일 작성자 범위로 관리한다.
+최종 식별 검사와 경로 unlink 사이에 비협력 프로그램이 파일을 교체하면 해당 교체 파일이 삭제될 수 있다.
+단 한 번의 교체도 이 간격에 발생하면 보호되지 않으며, 완전한 원자적 외부 파일 보존을 보장하지 않는다.
