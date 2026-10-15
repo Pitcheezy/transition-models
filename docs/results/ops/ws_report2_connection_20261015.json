@@ -1,0 +1,95 @@
+{
+  "schema": "pitcheezy-local-verification-v1",
+  "task": "WS-report2",
+  "date": "2026-10-15",
+  "evidence": "synthetic",
+  "base_commit": "62275ed1593eed3b22d56291226dbf5a54502750",
+  "code_commit": "70f62e6508cd43f072def70eec638917cbe591d4",
+  "user_approval": "Explicit approval for our report file modification and verification received 2026-10-15",
+  "author_model": "GPT-6 family (exact product model ID unavailable)",
+  "review": {
+    "model": "gpt-5.6-sol",
+    "commit": "70f62e6508cd43f072def70eec638917cbe591d4",
+    "verdict": "PASS",
+    "findings": 0,
+    "independent_tests": [
+      {
+        "command": "node --test ops/public-host/tests/report.test.mjs ops/public-host/tests/report-snapshot.test.mjs",
+        "passed": 25,
+        "failed": 0
+      },
+      {
+        "command": "node --test --test-name-pattern='actual SQLite export flows|empty and fully expired|report CLI rejects corrupt' ops/public-host/tests/export-usage.test.mjs",
+        "passed": 3,
+        "failed": 0
+      }
+    ],
+    "independent_full_209_suite": false
+  },
+  "checks": [
+    {
+      "command": "npm --prefix ops/public-host run check",
+      "result": "passed"
+    },
+    {
+      "command": "node --test ops/public-host/tests/*.test.mjs",
+      "passed": 209,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "command": "PYTHONUTF8=1 python -m pytest tests/test_checklist_model.py -q",
+      "passed": 8,
+      "failed": 0
+    },
+    {
+      "check": "relative documentation links",
+      "checked": 59,
+      "missing": 0
+    }
+  ],
+  "source_files": [
+    {
+      "path": "ops/public-host/report.mjs",
+      "sha256": "c98bf440fc653d54137e2488207ab5a06518ed3ff100f6ed5d28b385978136f5"
+    },
+    {
+      "path": "ops/public-host/report-cli.mjs",
+      "sha256": "31f3b1891f1688059636924fd288814ddec62b447c2429e4485f1c2a8189d7de"
+    },
+    {
+      "path": "ops/public-host/export-usage.mjs",
+      "sha256": "a477cb8f57690a26d27b7c34924dc60f41a4fef8501aef0926522c5ca5804d65"
+    },
+    {
+      "path": "ops/public-host/export-usage-cli.mjs",
+      "sha256": "2e01c78568575102835d65f7b85c6c1a245ed4779ee76f59cb63259d59cf75d2"
+    },
+    {
+      "path": "ops/public-host/tests/report.test.mjs",
+      "sha256": "703689b2835ae07acb2208888fa4fdc155f0eaa45ea69d84e4d488551b84fb9d"
+    },
+    {
+      "path": "ops/public-host/tests/report-snapshot.test.mjs",
+      "sha256": "5017566f66937fce424fe2985e389f14c6fa5b2e075c34d3587af46c87268e75"
+    },
+    {
+      "path": "ops/public-host/tests/export-usage.test.mjs",
+      "sha256": "77abe0c451b75333c0b74c28efa0db73c8dab268fbe6cf7746521308d2958c16"
+    }
+  ],
+  "report_connection": "complete_for_private_offline_snapshots",
+  "empty_observations": "no_data with null counts",
+  "retained_observations": "partial_data and UTC-day caveats",
+  "reporting_time_window_totals": "unmeasured",
+  "remote_d1_access": false,
+  "deployed": false,
+  "posted": false,
+  "teammate_repository_modified": false,
+  "limits": [
+    "Synthetic and local files only, not real operational evidence",
+    "Does not prove complete collection or retained history",
+    "Source hashes identify input, not authenticity",
+    "Existing plain-summary compatibility does not certify their evidence"
+  ]
+}
