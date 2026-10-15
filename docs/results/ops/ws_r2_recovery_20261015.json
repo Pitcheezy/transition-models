@@ -1,0 +1,100 @@
+{
+  "schema": "pitcheezy-local-r2-recovery-v1",
+  "synthetic": true,
+  "passed": true,
+  "target": "two-ephemeral-miniflare-runtimes",
+  "public_resume_authorized": false,
+  "cloud_restore_verified": false,
+  "whole_bucket_restore_verified": false,
+  "crash_recovery_verified": false,
+  "rto_ms": null,
+  "rpo_records": null,
+  "environment": {
+    "node": "v24.1.0",
+    "platform": "win32",
+    "arch": "x64",
+    "miniflare": "4.20260730.0"
+  },
+  "source_sha256": {
+    "rehearse-r2-recovery.mjs": "780146597cabce67cb3b4958584aa6b87f9bf3d059a2c07bb4edc4b3d1b24349",
+    "worker.mjs": "9f3d818686bc6af847bf4c292658a1c71f22f4dd72f6282c8b00e84e0ca33d1b",
+    "gateway.mjs": "3db66d7e19e4a63ddab51438c1eda5d97ba27476eafc371593ee1b9c9a3705e9",
+    "notice.mjs": "8b8e0928e0bfe2cc86cc0d21f50a4dced31bc1c60eca40aac4a87081573a04f7",
+    "telemetry.mjs": "545569404a68e8a5159984c3b328e4982c217247d1cd5af01e1831165ebf6739",
+    "rehearsal/local-host.mjs": "9cf5b427e38d61f22a542de8a61ba6c601d875de78d2dc95fd79d5053cdaf791",
+    "package-lock.json": "55e30f2a196b6510da56126fb33cb912ab0ebbfe55047f358048027ba5484f91"
+  },
+  "evidence": {
+    "object_restore": "selected-synthetic-bytes-and-metadata",
+    "notice_cache": "admin-get-invalidates-local-memo",
+    "external_recovery_evidence_required": true
+  },
+  "cases": [
+    {
+      "name": "normal_api_restore",
+      "new_etag": true,
+      "stale_delete_status": 412
+    },
+    {
+      "name": "raw_live_rollback",
+      "public_status": 200,
+      "original_etag_returned": true,
+      "old_delete_status": 200,
+      "withdrawn_content_returned": true
+    },
+    {
+      "name": "raw_tombstone_rollback",
+      "public_status": 404,
+      "latest_writer_status": 412
+    },
+    {
+      "name": "missing_metadata",
+      "public_status": 503,
+      "rejected": true
+    },
+    {
+      "name": "raw_notice_off_rollback",
+      "active": false,
+      "audit_unavailable": false,
+      "page_status": 200,
+      "public_status": 200,
+      "newer_audit_retained": true
+    },
+    {
+      "name": "notice_key_absent",
+      "active": false,
+      "revision": 0,
+      "page_status": 200
+    },
+    {
+      "name": "normal_api_notice_reasserted",
+      "active": true,
+      "audit_unavailable": false,
+      "page_status": 503,
+      "public_status": 503,
+      "public_resume_authorized": false
+    },
+    {
+      "name": "external_gates_survive_raw_restore",
+      "public_status": 503,
+      "upload_status": 503,
+      "page_status": 200,
+      "whole_site_blocked": false
+    },
+    {
+      "name": "closed_runtime_notice_reasserted",
+      "active": true,
+      "page_status": 503,
+      "public_status": 503,
+      "public_resume_authorized": false
+    }
+  ],
+  "cleanup": [
+    {
+      "status": "complete"
+    },
+    {
+      "status": "complete"
+    }
+  ]
+}
