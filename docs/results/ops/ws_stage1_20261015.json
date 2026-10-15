@@ -1,0 +1,183 @@
+{
+  "schema_version": 1,
+  "task": "WS-stage1",
+  "recorded_at": "2026-10-15T10:57:59.727129+00:00",
+  "base_commit": "733ae750ff4c6511bf495a9dc6a75021f2c68238",
+  "claim_commit": "11bfa701f58390788e979e1d515145b24beb75f1",
+  "acceptance_url": "https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6190435421",
+  "evidence_kind": "approved_public_reply_and_document_preparation",
+  "reply": {
+    "source_commit": "733ae750ff4c6511bf495a9dc6a75021f2c68238",
+    "source_path": "docs/mail_drafts/COLLAB-001-reply-draft-20261015.md",
+    "source_git_blob_sha256": "8bd604e35b4ca2dfd905f9fd8d3e760b6d7a877fc07f29e4278300ce58ecc79d",
+    "scope": "exact body between delimiters only",
+    "action": "posted_once",
+    "comment_id": 6190443556,
+    "comment_url": "https://github.com/Pitcheezy/transition-models/issues/18#issuecomment-6190443556",
+    "created_at": "2026-10-15T10:57:57Z",
+    "utf8_body_sha256": "1144d32a484058afa35386ca008c37cbcbce4582c979c39c8cc915ec6d580b5f",
+    "remote_exact_body_verified": true,
+    "issue_still_open": true
+  },
+  "decisions": {
+    "account_owner_role": "user",
+    "initial_audience": "user_only",
+    "preparation_budget_usd_per_month": 10,
+    "budget_is_automatic_billing_cap": false,
+    "telemetry_enabled": false,
+    "feedback_enabled": false,
+    "signup_authorized": false,
+    "deployment_authorized": false,
+    "real_email_send_authorized": false
+  },
+  "checks": {
+    "checklist_model": {
+      "command": "python -B -m pytest tests/test_checklist_model.py -q -p no:cacheprovider",
+      "passed": 8
+    },
+    "local_links": {
+      "checked": 59,
+      "missing": 0
+    },
+    "public_document_email_or_personal_path_matches": 0,
+    "approved_reply_body_unchanged_after_status_edit": true,
+    "git_diff_check": "passed",
+    "operating_code_changed": false,
+    "operating_code_tests_repeated": false,
+    "real_candidate_built": false,
+    "actual_cloud_test_executed": false
+  },
+  "limitations": [
+    "No account inspection or activation",
+    "No cloud resources, deployment, DNS change or real email delivery",
+    "No teammate code/process/deployment access",
+    "Actual latency, cost and production capacity unmeasured"
+  ],
+  "cost_assumption": {
+    "input_path": "docs/results/ops/ws_stage1_cost_input_20261015.json",
+    "command": "python -B -S scripts/estimate_public_host_cost.py docs/results/ops/ws_stage1_cost_input_20261015.json",
+    "exit_code": 0,
+    "official_prices_rechecked_on": "2026-10-15",
+    "result": {
+      "schema": "pitcheezy-host-cost-estimate-v1",
+      "pricing_as_of": "2026-10-12",
+      "currency": "USD",
+      "plan": "Workers Paid Standard + R2 Standard + D1 Paid",
+      "measurement": false,
+      "budget_approved": false,
+      "sources": [
+        "https://developers.cloudflare.com/workers/platform/pricing/",
+        "https://developers.cloudflare.com/r2/pricing/",
+        "https://developers.cloudflare.com/d1/platform/pricing/"
+      ],
+      "exclusions": [
+        "taxes_and_exchange_rates",
+        "domain_and_other_products",
+        "logs_and_alerts",
+        "unmodeled_traffic_and_retries",
+        "actual_account_usage_and_contract"
+      ],
+      "scenarios": [
+        {
+          "name": "one_viewer_private_test_assumption",
+          "public_reads": 30240,
+          "peak_public_requests_per_second": "0.400",
+          "public_json_transfer_gb": "22.68",
+          "usage": {
+            "worker_requests": "46380",
+            "worker_cpu_ms": "231900",
+            "r2_class_a": "7570",
+            "r2_class_b": "87810",
+            "r2_storage_gb_month": "0.1",
+            "d1_rows_read": "10000",
+            "d1_rows_written": "1000",
+            "d1_storage_gb_month": "0.01"
+          },
+          "costs": {
+            "allowances_available": {
+              "base_usd": "5.00",
+              "charges_usd": {
+                "worker_requests": "0.000000",
+                "worker_cpu_ms": "0.000000",
+                "r2_class_a": "0.000000",
+                "r2_class_b": "0.000000",
+                "r2_storage_gb_month": "0.000000",
+                "d1_rows_read": "0.000000",
+                "d1_rows_written": "0.000000",
+                "d1_storage_gb_month": "0.000000"
+              },
+              "subtotal_usd": "5.00"
+            },
+            "allowances_exhausted_sensitivity": {
+              "base_usd": "5.00",
+              "charges_usd": {
+                "worker_requests": "0.013914",
+                "worker_cpu_ms": "0.004638",
+                "r2_class_a": "4.500000",
+                "r2_class_b": "0.360000",
+                "r2_storage_gb_month": "0.015000",
+                "d1_rows_read": "0.000010",
+                "d1_rows_written": "0.001000",
+                "d1_storage_gb_month": "0.007500"
+              },
+              "subtotal_usd": "9.90"
+            }
+          }
+        }
+      ]
+    }
+  },
+  "environment_inventory": {
+    "node": "v24.1.0",
+    "python": "3.12.12",
+    "repo_local_wrangler_installed": false,
+    "wrangler_deployment_version_fixed": false,
+    "account_inspected": false
+  },
+  "review": {
+    "kind": "independent_document_review",
+    "reviewer": "ops_independent_audit",
+    "reviewer_model": "inherited parent model; exact ID not established here",
+    "cross_model_operating_code_review_claimed": false,
+    "findings": 2,
+    "resolved": [
+      "Removed obsolete redecision of confirmed budget/audience/collection from handoff next steps",
+      "Marked unposted reference section as outside this reply"
+    ],
+    "outcome": "PASS after two wording corrections; operating code unchanged"
+  },
+  "artifacts": {
+    "CHECKLIST.md": {
+      "sha256": "131a8a38cb74ea161045278c558bf4d0fcc5797fa072c96a0953d9fd5c069d23",
+      "bytes": 201999
+    },
+    "docs/WS_HUMAN_DECISIONS.md": {
+      "sha256": "83f6b32d6b3c714fea92f22ad28d60cfb0d17d3da3e39bd3c1a7889b8952fa20",
+      "bytes": 11286
+    },
+    "docs/WS_OPERATIONS_HANDOFF.md": {
+      "sha256": "5efe3e8bc06b0ff038ef800445e5a744f122a0d72223bfda7056c42df5a32238",
+      "bytes": 18661
+    },
+    "docs/WS_PRIVATE_STAGE_PLAN_20261015.md": {
+      "sha256": "3e945a11395fd1cefcf02c58db20b58dcaef28a4d903033bb051cb24dfef1ce2",
+      "bytes": 10314
+    },
+    "docs/mail_drafts/COLLAB-001-reply-draft-20261013.md": {
+      "sha256": "40192eb5dad057e0082ee6bdc6634dbf0fdeeb9b70973a29b2293dfde5c503a1",
+      "bytes": 4444
+    },
+    "docs/mail_drafts/COLLAB-001-reply-draft-20261015.md": {
+      "sha256": "b14bb401be3892c4ae00a41045109d1c91bb246f7a6d5a5e3ebdde8f4736d530",
+      "bytes": 7211
+    },
+    "ops/public-host/COST_PLAN.md": {
+      "sha256": "ae4d43f7babd86d67ab1fb0a039d3406c4e3473463a264bf319cd10f66a0cbcc",
+      "bytes": 7370
+    },
+    "docs/results/ops/ws_stage1_cost_input_20261015.json": {
+      "sha256": "f6b1199cdf2444a7bf696967b82761e821c98e93eed6590e73efbacd47668ba3",
+      "bytes": 582
+    }
+  }
+}

@@ -1,6 +1,6 @@
-# COLLAB-001 회신 초안 — 2026-10-15 (미발송)
+# COLLAB-001 승인 회신 — 2026-10-15 (1회 게시 완료)
 
-게시 대상: 우리 mail #18의 기존 대화. 아래 구분선 안 본문만 발신 승인 후 게시한다.
+게시 대상: 우리 mail #18의 기존 대화. 사용자 승인으로 아래 구분선 안 본문만 1회 게시했다. 재게시하지 않는다.
 이 초안은 실제 운영·계약 변경·비용·접근 권한 승인이 아니다. 외부 주소·비밀은 포함하지 않는다.
 기준 우리 main: `c07dc942030e5ec4f100f638d572239524cd327e`.
 
@@ -59,11 +59,13 @@ JSON은 `no-store`이며 강한 ETag의 공개 GET/HEAD 조건부 재조회는 3
 
 ---
 
-## 근거 (위 본문과 함께 게시해도 되는 공개 저장소 근거)
+## 참고 근거 (이번 게시 범위 제외)
 
 - [고정 업로드 구현](https://github.com/Pitcheezy/transition-models/blob/c07dc942030e5ec4f100f638d572239524cd327e/ops/public-host/gateway.mjs)
 - [첫 연결 검증 기록](https://github.com/Pitcheezy/transition-models/blob/c07dc942030e5ec4f100f638d572239524cd327e/docs/WS_OPS2_FIRST_CONNECTION_20261013.md)
 - [접근 문](https://github.com/Pitcheezy/transition-models/blob/c07dc942030e5ec4f100f638d572239524cd327e/ops/public-host/ACCESS.md), [긴급 안내](https://github.com/Pitcheezy/transition-models/blob/c07dc942030e5ec4f100f638d572239524cd327e/ops/public-host/NOTICE.md)
 - [현재 인계](https://github.com/Pitcheezy/transition-models/blob/c07dc942030e5ec4f100f638d572239524cd327e/docs/WS_OPERATIONS_HANDOFF.md)
 
-현재 발신 상태: 미승인·미발송. 실제 게시 후 이 상태와 mail 댓글 링크를 별도로 갱신한다.
+현재 발신 상태: 사용자 명시 승인 후 [mail #18 댓글](https://github.com/Pitcheezy/transition-models/issues/18#issuecomment-6190443556)에 2026-10-15 10:57:57 UTC 게시 완료. 원격 본문 바이트를 대조했고 이슈는 OPEN으로 유지했다.
+원본은 `733ae750ff4c6511bf495a9dc6a75021f2c68238`의 이 경로다. 본문 SHA-256: `1144d32a484058afa35386ca008c37cbcbce4582c979c39c8cc915ec6d580b5f`.
+[발신 영수증](../results/ops/ws_stage1_20261015.json). 이 승인은 다른 회신/요청/배포/계약 변경으로 확대하지 않는다.

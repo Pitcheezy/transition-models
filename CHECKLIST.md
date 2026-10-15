@@ -2,11 +2,11 @@
 
 ## 비공개 시험 준비·승인 회신 — 2026-10-15
 
-- [ ] WS-stage1. 승인된 mail #18 회신 한 건 게시·원격 검증, 본인 Cloudflare·본인 시험·월 $10 이내 준비·수집/피드백 OFF 결정 기록과 비공개 시험 준비안. 실제 가입/배포/발송은 제외. Codex 선점, 기준 `733ae750`, 브랜치 `codex/ws-private-stage-plan`. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-15 · Codex]`
+- [x] WS-stage1. 승인된 mail #18 회신 본문 한 건 게시·원격 SHA 대조 완료(댓글6190443556, mail OPEN). 본인 Cloudflare·본인 시험·월 $10 이내 준비·수집/피드백 OFF 결정과 [비공개 시험안](docs/WS_PRIVATE_STAGE_PLAN_20261015.md)을 기록했다. 기존 비용 산정1회(가정 $5/$9.90, 실제 청구 미측정)·체크리스트8·로컬 링크59·독립 문서 검토2건 수정. [영수증](docs/results/ops/ws_stage1_20261015.json). 실제 가입/자원/배포/메일 발송 없음. 선점 `11bfa701`, 수정 권한 반납. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-15 · Codex]`
 
 ## 실제 연결 결정·회신 준비 — 2026-10-15
 
-- [x] WS-handoff2. 최신 업로드/API 회신과 [운영 결정서](docs/WS_HUMAN_DECISIONS.md)를 준비했다. 본인 Cloudflare·본인 시험만 확정, 이메일 희망·예산/수집/발신/배포는 미정. 링크44·체크리스트8·독립 문서 대조 통과. 미발송·미배포. [근거](docs/results/ops/ws_handoff2_20261015.json). 수정 권한 반납. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-15 · Codex]`
+- [x] WS-handoff2. 최신 업로드/API 회신과 [운영 결정서](docs/WS_HUMAN_DECISIONS.md)를 준비했다. 본인 Cloudflare·본인 시험만 확정, 이메일 희망·예산/수집/발신/배포는 미정. 링크44·체크리스트8·독립 문서 대조 통과. 당시 미발송·미배포(후속 사용자 결정·게시 완료는 상단 WS-stage1). [근거](docs/results/ops/ws_handoff2_20261015.json). 수정 권한 반납. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-15 · Codex]`
 
 ## 알림 저장 실패 정리 — 2026-10-15
 
@@ -66,7 +66,7 @@ Claude 작성 코드의 Codex 교차검토와 후속 수정의 독립 검토는 
 - [x] WS-monitor2. 접근 문 ON 상태 발행 감시를 보완했다: 감시 설정 선택 키 `access_code_env`(환경 변수 이름)의 감시 전용 코드로 매 실행 관람자와 같은 로그인 경로에서 세션을 받아 page/health를 읽는다(우회·새 자격 증명 없음). 코드·쿠키는 report·state·출력에 없음; 로그인 실패 `access_login_*`(읽기 skipped)·세션 거부 `*_access_session_rejected`·404 뒤 게이트 `*_access_gate_without_login`은 host_error; `access_gate_active`는 게이트 응답을 본 경우만. 실제 로컬 Worker: 게이트 ON 신선→available, 오래된 health 2회→incident→모의 알림 publish_stalled(Song 우선), 복구, 틀린 코드→host_error, 코드 없음→access_required, 안내 ON에서 notice_active; CLI 환경 변수 경로. [리허설 영수증](docs/results/ops/ws_monitor_gate_rehearsal_20261013.json). 함께 고침: 경기별 기록이 감시 미관측 기간을 "이벤트 없음"으로 쓰던 결함(`monitor_coverage`). [기록](docs/WS_ACCESS2_20261013.md). 작성 `claude-opus-5-5`, **Codex 교차검토·후속 수정은 PR #28/main 반영 완료.** 〔모델: Opus 5.5〕 `[추가되었음 · 2026-10-13 · Claude]`
 - [x] WS-alert2. 열린 장애의 원인 범주가 바뀔 때 재분류 알림을 더했다(main에도 있던 고정 분류 문제; WS-access2 검토에서 재현). 알림 CLI가 감시 최신 report(마지막 기록 실행, 실행당 1회)로 원인을 따라가며 두 번 연속 규칙(감시와 같음), 알린 범주 기억(상태 v2 `incidents`), 번호 붙은 재분류(`reclassified:<n>:<범주>`, 원래 원인 복귀도 알림), 정보성에서 두 번 연속 조치 필요 시 올림, 재알림은 마지막으로 알린 범주(낮추지 않음), 새 재분류가 이전 미전달분 대체, 최신 재분류 재시도·장애 종료 시 `abandoned` 정리, opened 재시도 중 순서 대기, 형식 오류 건너뜀(종료 1). 함께 고침: 30일 정리가 감시 목록의 opened/recovered를 지워 다시 보내던 WS-review1 결함, 경기별 기록 집계 라벨. 상태 v1→v2 자동 올림, 되돌리기는 `--downgrade-to-v1`. 같은 모델 자체 검토 2회(`wf_9fc85390-ca8` 첫 판 결함 → 재설계, `wf_8e661cda-61b` 퍼징 약 1,600 수열·확정 3 수정). 검사 alerts+report 29·ops 163·리허설 7 시나리오 [영수증](docs/results/ops/ws_alert2_rehearsal_20261013.json). [기록](docs/WS_ALERT2_20261013.md). 선점 `f0a2311`; 구현은 완료 커밋(PR). 작성 `claude-opus-5-5`, **Codex 교차검토·후속 수정은 PR #28/main 반영 완료.** 〔모델: Opus 5.5〕 `[추가되었음 · 2026-10-13 · Claude]`
 - [!] WS-review2. 전체 출시 검토의 남은 조건: 이전 Codex 작성 묶음의 정확한 모델 id를 세션 근거로 확인한다. Claude 운영 코드 교차검토와 이번 GPT-6 계열 수정분의 다른 모델 검토는 PR #28에서 완료했다(`2ce3a70`, `gpt-5.6-sol` PASS). 이 결과를 이전 전체 묶음의 출시 검토 완료로 소급하지 않는다. [범위·근거](docs/WS_CODEX_REVIEW2_20261013.md). 〔모델: Fable 5.1〕
-- [!] WS-human1. 10/20까지 양쪽 연락/응답 시간·접근/비용·안내 문구/합의된 긴급 내림의 조작 경로·접근 권한/복구·실경기/발신 범위 확정. 10/21 이후 고장 수리만, 10/23~31 경기별 기록. 〔모델: Fable 5.1〕
+- [!] WS-human1. 본인 Cloudflare·본인 시험·월 $10 이내 준비·수집/피드백 OFF와 지정 회신 1회 게시 완료(WS-stage1). 남은 것은 실계정/배포 승인·양쪽 연락/응답 시간·안내 문구/합의된 긴급 내림의 조작 경로·운영자 권한/복구·실경기/추가 발신 범위다. 10/20 연락 결정. 10/21 이후 고장 수리만, 10/23~31 경기별 기록. 〔모델: Fable 5.1〕
 
 
 ## 월드시리즈 공개 운영 착수 — 2026-10-12
