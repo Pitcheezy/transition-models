@@ -2,7 +2,7 @@
 
 ## 실계정 읽기·시험 실행안 — 2026-10-15
 
-- [x] WS-stage2. 로그인 계정의 Free 플랜·전체 관리자·zone Active·R2 가입 전·D1 DB0개 확인. Wrangler4.151.0 분리 고정·npm audit0·합성 패키지/설정/dry-run 통과·원본16파일 SHA 보존. [실행안](docs/WS_ACCOUNT_READINESS_20261015.md)·[영수증](docs/results/ops/ws_stage2_20261015.json). 실제 자원/결제/배포/발송·팀원 접근 없음. 체크리스트8·문서 링크76·독립 문서 지적2건 수정. 선점 `6daf0d4`; 수정 권한 반납. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-15 · Codex]`
+- [x] WS-stage2. 로그인 계정의 Free 플랜·전체 관리자·zone Active·D1 DB0개 확인. R2만 후속 명시 승인으로 활성화·버킷0/사용료0 확인. Wrangler4.151.0 분리 고정·npm audit0·합성 패키지/설정/dry-run 통과·원본16파일 SHA 보존. [실행안](docs/WS_ACCOUNT_READINESS_20261015.md)·[영수증](docs/results/ops/ws_stage2_20261015.json). R2 가입 외 자원/유료전환/배포/발송·팀원 접근 없음. 체크리스트8·문서 링크76·독립 문서 지적2건 수정. 선점 `6daf0d4`; 수정 권한 반납. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-15 · Codex]`
 
 ## 비공개 시험 준비·승인 회신 — 2026-10-15
 

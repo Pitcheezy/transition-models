@@ -7,7 +7,8 @@
   "acceptance_url": "https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6191027629",
   "evidence_kind": [
     "authenticated_account_ui_read_only",
-    "synthetic_local_cli_dry_run"
+    "synthetic_local_cli_dry_run",
+    "explicitly_authorized_r2_activation"
   ],
   "account_observation": {
     "source": "Cloudflare authenticated dashboard UI; 2026-10-15",
@@ -129,7 +130,6 @@
     "operating_code_changed": false
   },
   "not_performed": [
-    "cloud_signup",
     "paid_upgrade",
     "resource_creation",
     "api_token_creation_or_read",
@@ -157,7 +157,22 @@
     "ops/public-host-tooling/package.json": "a70a612adb3cd7cf884af0b623ed83fda760bed3f2e357dfa634c1ab6a3eb61d",
     "ops/public-host-tooling/package-lock.json": "7f3b42eed900a8e3967631b240a284b99391cce04834502d4b556e97283c1d80",
     "ops/public-host-tooling/README.md": "5c38e2bd633b7fe2a609e6275c09947beeeb2216c9f70bb23d23194cef96181d",
-    "docs/WS_ACCOUNT_READINESS_20261015.md": "5ac04db1955c81f185d2f1df4bc84eb9e42847c3adf0146f051b371b52c79836"
+    "docs/WS_ACCOUNT_READINESS_20261015.md": "7a15782f9005af01c2fc64abe04fca2088af157d2aafbf86299a75038cb5e042"
   },
-  "synthetic_release_zip_sha256": "ab3386335650ba299d40ff2ac7c9304d7c69a05d3011a925778a570fba0476ff"
+  "synthetic_release_zip_sha256": "ab3386335650ba299d40ff2ac7c9304d7c69a05d3011a925778a570fba0476ff",
+  "r2_activation": {
+    "recorded_at": "2026-10-15T11:52:04.648572+00:00",
+    "authorization": "Explicit user approval in current chat for R2 subscription only, including free-tier overage, auto-renewal and terms",
+    "status": "confirmed_active",
+    "confirmation_signal": "Purchase complete; subscription is active",
+    "overview_buckets": 0,
+    "overview_storage_bytes": 0,
+    "overview_class_a": 0,
+    "overview_class_b": 0,
+    "overview_displayed_billable_usage_usd": 0,
+    "billing_period_display": "2026-10-15/2026-11-15",
+    "future_bill_or_hard_cap_verified": false,
+    "other_cloud_changes_authorized": false,
+    "proof_screenshot": "kept privately outside repository; no account identifiers in this record"
+  }
 }
