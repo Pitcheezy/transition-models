@@ -60,7 +60,9 @@ curl -sS -X PUT -H "Authorization: Bearer $NOTICE_TOKEN" -H "Content-Type: appli
 받아들인 변경마다 `_notice/audit/<UTC 시각>-<id>.json`에 `{at, active, operator, reason, message_id, operator_token_prefix(12 hex),
 revision, etag_before, etag_after}`를 추가한다(덮어쓰기 금지). 운영자 GET은 전체 목록을 훑어 가장 최근 20건을 돌려준다(`audit_truncated`).
 어떤 digest 접두어가 누구인지는 비공개 운영 기록에 둔다. 상태 변경이 이미 저장된 뒤 감사 기록 쓰기가 실패하면 스위치는 그대로 유지되고
-응답에 `audit_recorded:false`·`audit_error:"audit_write_failed"`가 남는다 — 이때는 사람이 사유·시각을 board에 직접 기록한다. 상태 객체도 `revision`·`last_change_id`를 갖고 내용이 매번 달라지므로 옛 ETag가 되살아나지 않는다.
+응답에 `audit_recorded:false`·`audit_error:"audit_write_failed"`가 남는다 — 이때는 사람이 사유·시각을 board에 직접 기록한다. 정상 운영자 API 변경에서는 상태 객체의 `revision`·`last_change_id` 때문에 내용이 매번 달라져 옛 ETag가 되살아나지 않는다.
+이 보장은 원시 저장소의 과거 객체 복원에는 적용되지 않는다. 같은 R2의 안내 OFF/키 부재가 복원되면 안내가 해제될 수 있다.
+[R2 원시 복구 절차](RUNBOOK.md#원시-r2-복원은-별도-차단-상태에서-검사한다)를 따른다.
 
 후속 GET에서도 현재 `state.revision`과 ETag에 대응하는 감사 행이 없으면 `audit_unavailable:true`를 반환한다.
 이 플래그는 목록 API 호출 성공만을 뜻하지 않으며 현재 스위치 버전의 감사 증거 누락도 포함한다. 스위치 상태·이전 감사 행은 계속 반환한다.
