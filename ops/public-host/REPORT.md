@@ -117,3 +117,19 @@ node ops/public-host/report-cli.mjs --input <입력.json> --output-dir <폴더>
 node --test ops/public-host/tests/report.test.mjs
 node ops/public-host/rehearse-report.mjs --output .cache/report-rehearsal-new.json
 ~~~
+
+## 저장 중 오류와 재시도 — WS-report3
+
+CLI는 같은 경기/날짜 출력쌍에 `.<출력 기본명>.lock`을 독점 생성한다. 같은 도구의 동시 실행은
+`already_running_or_stale_lock`으로 거부한다. 기존 출력은 덮어쓰지 않는다.
+MD/JSON open·부분 write·sync 중 잡을 수 있는 오류가 나면 이번 실행이 생성한 파일만 정리하고 실패한다.
+파일 식별자와 내용이 바뀌면 지우지 않고 `report_rollback_incomplete`로 남긴다.
+잠금 정리 실패는 `report_lock_cleanup_incomplete`다. 입력 원본은 변경하지 않는다.
+
+실패 후에는 오류와 디렉터리를 확인한다. 출력/잠금이 없으면 같은 명령을 재실행할 수 있다.
+잠금이 남았으면 다른 실행이 없는지 확인하고, 해당 출력쌍과 잠금을 보존해 조사한 뒤 새 빈 폴더에서 재시도한다.
+나이가 오래됐다는 이유로 잠금을 자동 삭제하거나 다른 프로세스를 종료하지 않는다.
+이 보호는 협력하는 CLI 실행과 잡을 수 있는 IO 오류에 관한 것이다. 전원 차단·프로세스 강제 종료의
+두 파일 원자적 저장이나 같은 디렉터리를 계속 교체하는 외부 프로세스와의 완전한 격리를 보장하지 않는다.
+
+검사: `node --test ops/public-host/tests/report-write-failure.test.mjs` (합성 임시 파일의 오류 주입 10건).
