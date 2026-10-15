@@ -25,7 +25,8 @@
       "root_A": 2,
       "verification_TXT": 2
     },
-    "private_values_recorded": false
+    "private_values_recorded": false,
+    "observation_phase": "initial_pre_activation_read_only; current R2 state is r2_activation"
   },
   "tool": {
     "path": "ops/public-host-tooling",
@@ -125,7 +126,9 @@
     "independent_document_review": {
       "type": "same-model read-only supplementary review; not cross-model operating-code approval",
       "findings": 2,
-      "fixed": 2
+      "fixed": 2,
+      "activation_followup_findings": 2,
+      "activation_followup_fixed": 2
     },
     "operating_code_changed": false
   },
