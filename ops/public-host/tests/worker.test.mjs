@@ -58,6 +58,12 @@ async function fixture() {
   return { env, call, put, del };
 }
 
+function assertProtectedEtag(response) {
+  assert.match(response.headers.get("ETag"), /^"[a-f0-9]{32}"$/);
+  assert.equal(response.headers.get("Cache-Control"), "no-store, no-transform");
+  assert.equal(response.headers.get("CDN-Cache-Control"), "no-store");
+}
+
 test("date and file allowlist rejects temporary, private, encoded and impossible paths", () => {
   for (const valid of ["/v1/health.json", "/v1/manifest.json", "/v1/dates.json", path,
     "/v1/setup/123.json", "/v1/games/2024-02-29.json"]) assert.ok(permittedKey(valid), valid);
@@ -105,17 +111,22 @@ test("create, exact-byte read and HEAD provide Date Age and no-store", async () 
   const body = '{ "synthetic": true, "label": "합성", "value": null }\n';
   const saved = await put(body);
   assert.equal(saved.status, 200);
+  assertProtectedEtag(saved);
   assert.equal((await saved.json()).schema_validated, false);
+  const uploadHead = await call("/_publish" + path, { method: "HEAD", headers: { Authorization: "Bearer " + TOKEN } });
+  assert.equal(uploadHead.status, 200);
+  assertProtectedEtag(uploadHead);
   const read = await call(path);
   assert.equal(await read.text(), body);
   assert.equal(read.headers.get("ETag"), saved.headers.get("ETag"));
   assert.equal(read.headers.get("Content-Length"), String(Buffer.byteLength(body)));
   assert.equal(read.headers.get("Age"), "0");
-  assert.equal(read.headers.get("Cache-Control"), "no-store");
+  assertProtectedEtag(read);
   assert.equal(read.headers.get("CDN-Cache-Control"), "no-store");
   assert.ok(Math.abs(Date.parse(read.headers.get("Date")) - Date.now()) < 2000);
   const head = await call(path, { method: "HEAD" });
   assert.equal(head.status, 200);
+  assertProtectedEtag(head);
   assert.equal(await head.text(), "");
   assert.equal(head.headers.get("Content-Length"), String(Buffer.byteLength(body)));
 });
@@ -128,10 +139,12 @@ test("conditional GET answers 304 only for the current strong ETag; changed or d
   assert.equal(fresh.status, 304);
   assert.equal(await fresh.text(), "");
   assert.equal(fresh.headers.get("ETag"), tag);
-  assert.equal(fresh.headers.get("Cache-Control"), "no-store");
+  assertProtectedEtag(fresh);
   assert.equal(fresh.headers.get("Age"), "0");
   assert.equal(fresh.headers.get("Access-Control-Expose-Headers"), "Date, Age, ETag");
-  assert.equal((await call(path, { method: "HEAD", headers: { "If-None-Match": tag } })).status, 304);
+  const conditionalHead = await call(path, { method: "HEAD", headers: { "If-None-Match": tag } });
+  assert.equal(conditionalHead.status, 304);
+  assertProtectedEtag(conditionalHead);
   assert.equal((await call(path, { headers: { "If-None-Match": '"' + "0".repeat(32) + '", ' + tag } })).status, 304);
   for (const header of ["*", "W/" + tag, '"' + "0".repeat(32) + '"', tag.slice(1, -1)]) {
     assert.equal((await call(path, { headers: { "If-None-Match": header } })).status, 200, header);
@@ -239,12 +252,14 @@ test("conditional deletion hides body from GET and HEAD immediately", async () =
   const original = (await put()).headers.get("ETag");
   const removed = await del(original);
   assert.equal(removed.status, 200);
+  assertProtectedEtag(removed);
   assert.equal((await call(path)).status, 404);
   assert.equal((await call(path, { method: "HEAD" })).status, 404);
   assert.equal(env.PUBLISH_BUCKET.objects.get(path.slice(1)).customMetadata.deleted, "true");
   const metadata = await call("/_publish" + path, {
     method: "HEAD", headers: { Authorization: "Bearer " + TOKEN },
   });
+  assertProtectedEtag(metadata);
   assert.equal(metadata.headers.get("X-Publish-Deleted"), "true");
   assert.equal(metadata.headers.get("ETag"), removed.headers.get("ETag"));
   assert.equal(await metadata.text(), "");

@@ -70,6 +70,12 @@ async function fixture({ notice = true } = {}) {
   return { env, call, publish, change, on, off };
 }
 
+function assertProtectedEtag(response) {
+  assert.match(response.headers.get("ETag"), /^"[a-f0-9]{32}"$/);
+  assert.equal(response.headers.get("Cache-Control"), "no-store, no-transform");
+  assert.equal(response.headers.get("CDN-Cache-Control"), "no-store");
+}
+
 test("switch control is closed by default and never reachable from public routes", async () => {
   const { env, call, on } = await fixture({ notice: false });
   assert.equal((await on()).status, 503);
@@ -121,6 +127,7 @@ test("turning the notice on replaces page, asset, data and telemetry answers but
   assert.equal(await (await call("/")).text(), "<!doctype html><html>frontend</html>");
   const turned = await on();
   assert.equal(turned.status, 200, await turned.clone().text());
+  assertProtectedEtag(turned);
   const state = await turned.json();
   assert.equal(state.active, true); assert.equal(state.revision, 1); assert.equal(state.audit_recorded, true);
   const etag = turned.headers.get("ETag");
@@ -165,6 +172,10 @@ test("turning the notice on replaces page, asset, data and telemetry answers but
   assert.equal(head.status, 200);
   const read = await call(NOTICE_ROUTE, { headers: { Authorization: "Bearer " + OPERATOR_A } });
   assert.equal(read.status, 200);
+  assertProtectedEtag(read);
+  const controlHead = await call(NOTICE_ROUTE, { method: "HEAD", headers: { Authorization: "Bearer " + OPERATOR_A } });
+  assert.equal(controlHead.status, 200);
+  assertProtectedEtag(controlHead);
   const view = await read.json();
   assert.equal(view.state.active, true);
   assert.equal(view.audit.length, 1);
@@ -178,6 +189,7 @@ test("turning the notice on replaces page, asset, data and telemetry answers but
   assert.equal((await off({ "If-Match": '"' + "0".repeat(32) + '"' }, OPERATOR_B)).status, 412);
   const recovered = await off({ "If-Match": etag }, OPERATOR_B);
   assert.equal(recovered.status, 200);
+  assertProtectedEtag(recovered);
   assert.equal((await recovered.json()).active, false);
   assert.equal(await (await call("/")).text(), "<!doctype html><html>frontend</html>");
   assert.equal(await (await call(game)).text(), '{"synthetic":true}');
@@ -271,6 +283,7 @@ test("actual local Worker/R2 runtime: notice switch changes every viewer route a
       Authorization: "Bearer " + OPERATOR_A, "Content-Type": "application/json", "If-None-Match": "*" },
       body: JSON.stringify({ active: true, operator: "ops-a", reason: "runtime drill", message_id: "data_hold" }) });
     assert.equal(turned.status, 200, await turned.clone().text());
+    assertProtectedEtag(turned);
     const etag = turned.headers.get("ETag"); await turned.arrayBuffer();
     const bucket = await mf.getR2Bucket("PUBLISH_BUCKET");
     const stored = await bucket.get(NOTICE_STATE_KEY);
@@ -296,6 +309,7 @@ test("actual local Worker/R2 runtime: notice switch changes every viewer route a
     assert.equal(await (await call(game)).text(), body);
     assert.equal((await call("/")).status, 200);
     const view = await call(NOTICE_ROUTE, { headers: { Authorization: "Bearer " + OPERATOR_A } });
+    assertProtectedEtag(view);
     const parsed = await view.json();
     assert.equal(parsed.state.active, false); assert.equal(parsed.audit.length, 2);
   } finally { await mf.dispose(); }

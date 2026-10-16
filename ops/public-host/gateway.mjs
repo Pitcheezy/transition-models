@@ -45,6 +45,8 @@ function response(request, env, status, body = null, extra = {}, publicRead = fa
     "X-Content-Type-Options": "nosniff",
     ...extra,
   });
+  // Preserve strong R2 ETags through edge compression for conditional writes and reads.
+  if (headers.has("ETag")) headers.set("Cache-Control", "no-store, no-transform");
   if (publicRead) {
     headers.set("Vary", "Origin");
     // No wildcard/credential support. Keep same origin unless one exact UI origin is agreed.

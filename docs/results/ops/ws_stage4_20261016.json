@@ -1,0 +1,1001 @@
+{
+  "schema_version": 1,
+  "task": "WS-stage4",
+  "status": "authorized_synthetic_cloud_trial_complete_with_unmeasured_limits",
+  "recorded_at": "2026-10-16T03:41:16.329114+00:00",
+  "base_commit": "0905874d783eb999776c4cbc75a8dd17feb9db32",
+  "claim_commit": "e9a8fa11fbed2e6e951f86f9db5833e827623e9f",
+  "initial_host_commit": "c07dc942030e5ec4f100f638d572239524cd327e",
+  "final_host_commit": "87168d7bc42f11f76886e475f919caff7674b60a",
+  "acceptance_url": "https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6207325376",
+  "evidence_kind": "real_cloud_with_synthetic_data_not_live_game",
+  "authorization": {
+    "source": "explicit user approval in current chat",
+    "new_worker": 1,
+    "private_r2_bucket": 1,
+    "new_d1_database": 1,
+    "dedicated_access_gated_hostname": 1,
+    "workers_paid_upgrade": false,
+    "telemetry": false,
+    "feedback": false,
+    "existing_site_changed": false,
+    "teammate_code_process_deployment_accessed": false,
+    "live_game_connected": false,
+    "email_sent": false,
+    "monthly_preparation_budget_usd": 10,
+    "billing_hard_cap": false
+  },
+  "http_trials": {
+    "baseline-result.json": {
+      "event": "stage4_baseline",
+      "status": "passed",
+      "number": 17,
+      "cumulative_requests": 17,
+      "cumulative_request_body_bytes": 93,
+      "sha256": "0f4f60194bc50d26ea51c4d9dca8f6d3eb6305d152c664d2f97e0258f509e95c",
+      "events": [
+        {
+          "event": "locked_page",
+          "status": 401,
+          "number": 1
+        },
+        {
+          "event": "locked_asset",
+          "status": 401,
+          "number": 2
+        },
+        {
+          "event": "locked_health",
+          "status": 401,
+          "number": 3
+        },
+        {
+          "event": "anonymous_session_state",
+          "status": 200,
+          "number": 4
+        },
+        {
+          "event": "wrong_login_denied",
+          "status": 401,
+          "number": 5
+        },
+        {
+          "event": "login",
+          "status": 200,
+          "number": 6
+        },
+        {
+          "event": "cookie_v3_secure_attributes_and_ttl",
+          "status": "passed",
+          "number": 3600
+        },
+        {
+          "event": "authenticated_session_state",
+          "status": 200,
+          "number": 7
+        },
+        {
+          "event": "authenticated_page",
+          "status": 200,
+          "number": 8
+        },
+        {
+          "event": "authenticated_asset",
+          "status": 200,
+          "number": 9
+        },
+        {
+          "event": "disabled_session",
+          "status": 503,
+          "number": 10
+        },
+        {
+          "event": "disabled_feedback",
+          "status": 503,
+          "number": 11
+        },
+        {
+          "event": "data_read_disabled",
+          "status": 503,
+          "number": 12
+        },
+        {
+          "event": "upload_disabled",
+          "status": 503,
+          "number": 13
+        },
+        {
+          "event": "notice_inactive",
+          "status": 200,
+          "number": 14
+        },
+        {
+          "event": "logout",
+          "status": 204,
+          "number": 15
+        },
+        {
+          "event": "logout_page_locked",
+          "status": 401,
+          "number": 16
+        },
+        {
+          "event": "logout_session_state",
+          "status": 200,
+          "number": 17
+        },
+        {
+          "event": "actual_time_expiry",
+          "status": "not_measured",
+          "number": 3600
+        }
+      ]
+    },
+    "active-result.json": {
+      "event": "stage4_active",
+      "status": "failed",
+      "number": 12,
+      "cumulative_requests": 29,
+      "cumulative_request_body_bytes": 173,
+      "events": [
+        {
+          "event": "locked_page",
+          "status": 401,
+          "number": 18
+        },
+        {
+          "event": "locked_asset",
+          "status": 401,
+          "number": 19
+        },
+        {
+          "event": "locked_health",
+          "status": 401,
+          "number": 20
+        },
+        {
+          "event": "anonymous_session_state",
+          "status": 200,
+          "number": 21
+        },
+        {
+          "event": "login",
+          "status": 200,
+          "number": 22
+        },
+        {
+          "event": "cookie_v3_secure_attributes_and_ttl",
+          "status": "passed",
+          "number": 3600
+        },
+        {
+          "event": "authenticated_session_state",
+          "status": 200,
+          "number": 23
+        },
+        {
+          "event": "authenticated_page",
+          "status": 200,
+          "number": 24
+        },
+        {
+          "event": "authenticated_asset",
+          "status": 200,
+          "number": 25
+        },
+        {
+          "event": "disabled_session",
+          "status": 503,
+          "number": 26
+        },
+        {
+          "event": "disabled_feedback",
+          "status": 503,
+          "number": 27
+        },
+        {
+          "event": "initial_publish_head",
+          "status": "missing",
+          "number": 404
+        },
+        {
+          "event": "create_health",
+          "status": "unknown",
+          "sha256": "fa52b5e39a8aeb5f64d4135140c2a241beee41337e86c4cb6e44c5a4dfd34cda"
+        },
+        {
+          "event": "failure_at_create_health",
+          "status": "create_not_confirmed"
+        }
+      ]
+    },
+    "inspect-result.json": {
+      "event": "stage4_inspect",
+      "status": "passed",
+      "number": 7,
+      "cumulative_requests": 36,
+      "cumulative_request_body_bytes": 227,
+      "sha256": "8656d21b3c1e21e8a0ccfc6c32afa02f74599812241b4cd97734a36cdb11ca1d",
+      "events": [
+        {
+          "event": "login",
+          "status": 200,
+          "number": 30
+        },
+        {
+          "event": "cookie_v3_secure_attributes_and_ttl",
+          "status": "passed",
+          "number": 3600
+        },
+        {
+          "event": "authenticated_session_state",
+          "status": 200,
+          "number": 31
+        },
+        {
+          "event": "inspect_raw_publish_head",
+          "status": 200,
+          "number": 32
+        },
+        {
+          "event": "inspect_raw_publish_head_content_type",
+          "status": "application/json; charset=utf-8",
+          "number": 31
+        },
+        {
+          "event": "inspect_raw_publish_head_content_encoding",
+          "status": "br"
+        },
+        {
+          "event": "inspect_raw_publish_head_etag_format",
+          "status": "weak_lower_md5",
+          "number": 36
+        },
+        {
+          "event": "inspect_raw_publish_head_date",
+          "status": "present_parseable"
+        },
+        {
+          "event": "inspect_raw_publish_head_age",
+          "status": "present_zero"
+        },
+        {
+          "event": "inspect_raw_publish_head_sha",
+          "status": "matches_synthetic"
+        },
+        {
+          "event": "inspect_raw_publish_head_deleted",
+          "status": "false"
+        },
+        {
+          "event": "inspect_viewer_health",
+          "status": 200,
+          "number": 33
+        },
+        {
+          "event": "inspect_viewer_health_sha",
+          "status": "matches_synthetic",
+          "number": 22
+        },
+        {
+          "event": "inspect_viewer_health_content_type",
+          "status": "application/json; charset=utf-8",
+          "number": 31
+        },
+        {
+          "event": "inspect_viewer_health_content_encoding",
+          "status": "missing"
+        },
+        {
+          "event": "inspect_viewer_health_etag_format",
+          "status": "quoted_lower_md5",
+          "number": 34
+        },
+        {
+          "event": "inspect_viewer_health_date",
+          "status": "present_parseable"
+        },
+        {
+          "event": "inspect_viewer_health_age",
+          "status": "present_zero"
+        },
+        {
+          "event": "inspection_only_no_publication_or_notice_mutation",
+          "status": "completed"
+        },
+        {
+          "event": "logout",
+          "status": 204,
+          "number": 34
+        },
+        {
+          "event": "logout_page_locked",
+          "status": 401,
+          "number": 35
+        },
+        {
+          "event": "logout_session_state",
+          "status": 200,
+          "number": 36
+        },
+        {
+          "event": "actual_time_expiry",
+          "status": "not_measured",
+          "number": 3600
+        }
+      ]
+    },
+    "active-resume-result.json": {
+      "event": "stage4_active-resume",
+      "status": "passed",
+      "number": 36,
+      "cumulative_requests": 72,
+      "cumulative_request_body_bytes": 556,
+      "sha256": "c1c31a35c4b5f813a6da90c856ea3c9729b933c9e723c77d8d0c054c14759447",
+      "events": [
+        {
+          "event": "locked_page",
+          "status": 401,
+          "number": 37
+        },
+        {
+          "event": "locked_asset",
+          "status": 401,
+          "number": 38
+        },
+        {
+          "event": "locked_health",
+          "status": 401,
+          "number": 39
+        },
+        {
+          "event": "anonymous_session_state",
+          "status": 200,
+          "number": 40
+        },
+        {
+          "event": "login",
+          "status": 200,
+          "number": 41
+        },
+        {
+          "event": "cookie_v3_secure_attributes_and_ttl",
+          "status": "passed",
+          "number": 3600
+        },
+        {
+          "event": "authenticated_session_state",
+          "status": 200,
+          "number": 42
+        },
+        {
+          "event": "authenticated_page",
+          "status": 200,
+          "number": 43
+        },
+        {
+          "event": "authenticated_asset",
+          "status": 200,
+          "number": 44
+        },
+        {
+          "event": "disabled_session",
+          "status": 503,
+          "number": 45
+        },
+        {
+          "event": "disabled_feedback",
+          "status": 503,
+          "number": 46
+        },
+        {
+          "event": "resume_inspect_existing_health_attempt",
+          "status": 200,
+          "number": 1
+        },
+        {
+          "event": "resume_inspect_existing_health",
+          "status": "observed",
+          "number": 200,
+          "sha256": "fa52b5e39a8aeb5f64d4135140c2a241beee41337e86c4cb6e44c5a4dfd34cda"
+        },
+        {
+          "event": "resume_verify_existing_health",
+          "status": 200,
+          "number": 48
+        },
+        {
+          "event": "resume_verify_existing_health_bytes",
+          "status": "passed",
+          "number": 22,
+          "sha256": "fa52b5e39a8aeb5f64d4135140c2a241beee41337e86c4cb6e44c5a4dfd34cda"
+        },
+        {
+          "event": "resume_conditional_health_put_attempt",
+          "status": 200,
+          "number": 1
+        },
+        {
+          "event": "resume_conditional_health_put",
+          "status": "stored",
+          "number": 200,
+          "sha256": "fa52b5e39a8aeb5f64d4135140c2a241beee41337e86c4cb6e44c5a4dfd34cda"
+        },
+        {
+          "event": "inspect_health_attempt",
+          "status": 200,
+          "number": 1
+        },
+        {
+          "event": "inspect_health",
+          "status": "observed",
+          "number": 200,
+          "sha256": "fa52b5e39a8aeb5f64d4135140c2a241beee41337e86c4cb6e44c5a4dfd34cda"
+        },
+        {
+          "event": "read_health",
+          "status": 200,
+          "number": 51
+        },
+        {
+          "event": "read_health_bytes",
+          "status": "passed",
+          "number": 22,
+          "sha256": "fa52b5e39a8aeb5f64d4135140c2a241beee41337e86c4cb6e44c5a4dfd34cda"
+        },
+        {
+          "event": "conditional_health",
+          "status": 304,
+          "number": 52
+        },
+        {
+          "event": "duplicate_create_conflict_attempt",
+          "status": 412,
+          "number": 1
+        },
+        {
+          "event": "duplicate_create_conflict",
+          "status": "conflict",
+          "number": 412,
+          "sha256": "fa52b5e39a8aeb5f64d4135140c2a241beee41337e86c4cb6e44c5a4dfd34cda"
+        },
+        {
+          "event": "withdraw_health_attempt",
+          "status": 200,
+          "number": 1
+        },
+        {
+          "event": "withdraw_health",
+          "status": "stored",
+          "number": 200,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "event": "withdrawn_health_missing",
+          "status": 404,
+          "number": 55
+        },
+        {
+          "event": "inspect_tombstone_attempt",
+          "status": 200,
+          "number": 1
+        },
+        {
+          "event": "inspect_tombstone",
+          "status": "observed",
+          "number": 200,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "event": "restore_health_attempt",
+          "status": 200,
+          "number": 1
+        },
+        {
+          "event": "restore_health",
+          "status": "stored",
+          "number": 200,
+          "sha256": "fa52b5e39a8aeb5f64d4135140c2a241beee41337e86c4cb6e44c5a4dfd34cda"
+        },
+        {
+          "event": "restored_health",
+          "status": 200,
+          "number": 58
+        },
+        {
+          "event": "restored_health_bytes",
+          "status": "passed",
+          "number": 22,
+          "sha256": "fa52b5e39a8aeb5f64d4135140c2a241beee41337e86c4cb6e44c5a4dfd34cda"
+        },
+        {
+          "event": "stale_delete_conflict_attempt",
+          "status": 412,
+          "number": 1
+        },
+        {
+          "event": "stale_delete_conflict",
+          "status": "conflict",
+          "number": 412,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "event": "health_after_stale_delete",
+          "status": 200,
+          "number": 60
+        },
+        {
+          "event": "health_after_stale_delete_bytes",
+          "status": "passed",
+          "number": 22,
+          "sha256": "fa52b5e39a8aeb5f64d4135140c2a241beee41337e86c4cb6e44c5a4dfd34cda"
+        },
+        {
+          "event": "notice_before",
+          "status": 200,
+          "number": 61
+        },
+        {
+          "event": "notice_on",
+          "status": 200,
+          "number": 62
+        },
+        {
+          "event": "notice_on_poll",
+          "status": 503,
+          "number": 63
+        },
+        {
+          "event": "notice_health",
+          "status": 503,
+          "number": 64
+        },
+        {
+          "event": "notice_anonymous_page",
+          "status": 503,
+          "number": 65
+        },
+        {
+          "event": "notice_off",
+          "status": 200,
+          "number": 66
+        },
+        {
+          "event": "notice_off_poll",
+          "status": 200,
+          "number": 67
+        },
+        {
+          "event": "health_after_notice",
+          "status": 200,
+          "number": 68
+        },
+        {
+          "event": "health_after_notice_bytes",
+          "status": "passed",
+          "number": 22,
+          "sha256": "fa52b5e39a8aeb5f64d4135140c2a241beee41337e86c4cb6e44c5a4dfd34cda"
+        },
+        {
+          "event": "notice_after",
+          "status": 200,
+          "number": 69
+        },
+        {
+          "event": "notice_audit_round_trip",
+          "status": "passed",
+          "number": 2
+        },
+        {
+          "event": "logout",
+          "status": 204,
+          "number": 70
+        },
+        {
+          "event": "logout_page_locked",
+          "status": 401,
+          "number": 71
+        },
+        {
+          "event": "logout_session_state",
+          "status": 200,
+          "number": 72
+        },
+        {
+          "event": "actual_time_expiry",
+          "status": "not_measured",
+          "number": 3600
+        }
+      ]
+    },
+    "finish-result.json": {
+      "event": "stage4_finish",
+      "status": "passed",
+      "number": 16,
+      "cumulative_requests": 88,
+      "cumulative_request_body_bytes": 614,
+      "sha256": "c1c31a35c4b5f813a6da90c856ea3c9729b933c9e723c77d8d0c054c14759447",
+      "events": [
+        {
+          "event": "locked_page",
+          "status": 401,
+          "number": 73
+        },
+        {
+          "event": "locked_asset",
+          "status": 401,
+          "number": 74
+        },
+        {
+          "event": "locked_health",
+          "status": 401,
+          "number": 75
+        },
+        {
+          "event": "anonymous_session_state",
+          "status": 200,
+          "number": 76
+        },
+        {
+          "event": "login",
+          "status": 200,
+          "number": 77
+        },
+        {
+          "event": "cookie_v3_secure_attributes_and_ttl",
+          "status": "passed",
+          "number": 3600
+        },
+        {
+          "event": "authenticated_session_state",
+          "status": 200,
+          "number": 78
+        },
+        {
+          "event": "authenticated_page",
+          "status": 200,
+          "number": 79
+        },
+        {
+          "event": "authenticated_asset",
+          "status": 200,
+          "number": 80
+        },
+        {
+          "event": "disabled_session",
+          "status": 503,
+          "number": 81
+        },
+        {
+          "event": "disabled_feedback",
+          "status": 503,
+          "number": 82
+        },
+        {
+          "event": "data_read_disabled",
+          "status": 503,
+          "number": 83
+        },
+        {
+          "event": "upload_disabled",
+          "status": 503,
+          "number": 84
+        },
+        {
+          "event": "notice_inactive",
+          "status": 200,
+          "number": 85
+        },
+        {
+          "event": "logout",
+          "status": 204,
+          "number": 86
+        },
+        {
+          "event": "logout_page_locked",
+          "status": 401,
+          "number": 87
+        },
+        {
+          "event": "logout_session_state",
+          "status": 200,
+          "number": 88
+        },
+        {
+          "event": "actual_time_expiry",
+          "status": "not_measured",
+          "number": 3600
+        }
+      ]
+    }
+  },
+  "scripted_http_requests": 88,
+  "scripted_request_body_bytes": 614,
+  "browser_and_management_requests_included_in_scripted_counter": false,
+  "total_account_http_requests": "unmeasured",
+  "synthetic_payload_bytes": 22,
+  "synthetic_payload_sha256": "fa52b5e39a8aeb5f64d4135140c2a241beee41337e86c4cb6e44c5a4dfd34cda",
+  "defect": {
+    "initial_put_result": "unknown",
+    "readback": "stored_bytes_match_synthetic_sha",
+    "observed_publish_head_etag": "weak_lower_md5",
+    "observed_publish_head_content_encoding": "br",
+    "fix": "no-transform on ETag-bearing gateway and notice responses; strict validators unchanged",
+    "resume": "verify existing HEAD/SHA and exact GET before conditional same-byte PUT",
+    "fixed_https_result": "passed"
+  },
+  "final_state": {
+    "access_gate": true,
+    "data_read": false,
+    "upload": false,
+    "telemetry": false,
+    "feedback": false,
+    "notice": false,
+    "workers_dev": false,
+    "preview_urls": false,
+    "r2_public_dev_url": false,
+    "r2_custom_domains": 0,
+    "installed_secret_names": [
+      "ACCESS_CODE_SHA256",
+      "ACCESS_SESSION_SECRET",
+      "PUBLISH_TOKEN_SHA256",
+      "NOTICE_TOKEN_SHA256"
+    ],
+    "session_seconds": 3600,
+    "resources_retained": true
+  },
+  "d1_final_query": {
+    "usage_sessions": 0,
+    "feedback": 0,
+    "telemetry_budget": 0,
+    "database_bytes": 65536,
+    "sql_duration_ms": 0.2475,
+    "meaning": "stored rows only, not unique visitors"
+  },
+  "ui": {
+    "actual_browser": "Codex in-app browser on Windows laptop",
+    "login_form_seen": true,
+    "authenticated_synthetic_page_seen": true,
+    "restored_synthetic_json_seen": true,
+    "notice_html_visual_test": false,
+    "mac_or_iphone_test": false
+  },
+  "test_results": {
+    "focused_node": {
+      "passed": 61,
+      "failed": 0
+    },
+    "first_full_node": {
+      "passed": 242,
+      "failed": 1,
+      "reason": "old rehearsal exact no-store assertion"
+    },
+    "final_full_node": {
+      "passed": 243,
+      "failed": 0
+    },
+    "rehearsal_focused": {
+      "passed": 6,
+      "failed": 0
+    },
+    "windows_workerd_shutdown_warnings": true,
+    "final_full_log_retained": false
+  },
+  "different_model_review": {
+    "model": "gpt-5.6-sol",
+    "commit": "87168d7bc42f11f76886e475f919caff7674b60a",
+    "p1_p2_findings": 0,
+    "independent_focused": {
+      "passed": 53,
+      "failed": 8,
+      "failure_scope": "sandbox local server EACCES; not counted passed"
+    },
+    "independent_worker_only": {
+      "passed": 32,
+      "failed": 0
+    },
+    "harness_followup": {
+      "model": "gpt-5.6-sol",
+      "p1_p2_findings": 0,
+      "files": {
+        "ops/public-host/rehearse-local.mjs": "2fb8f9edcc2d0438a31613918931857eb4e3d49c3e195b7793e43ea74d92c5f6",
+        "ops/public-host/rehearse-first-connection.mjs": "93b36315fd4189e8e659581a6a16d7b214ee61b3185fa39d1725535e3e9da5df",
+        "ops/public-host/tests/rehearsal.test.mjs": "7bdc54ee98819d0ee65e0ad6d0c41d215e7d50eb1ac4e9b5d3ee8f3a9290f080"
+      },
+      "execution": "read-only diff review; no duplicate runtime tests"
+    }
+  },
+  "package_checks": {
+    "fixed-package-check.json": {
+      "schema": "pitcheezy-host-release-v1",
+      "mode": "synthetic",
+      "deployable": false,
+      "files": 13,
+      "bytes": 109338,
+      "manifest_sha256": "210b40d4b2981c2a10f38696d3dd6b86d4294aea6e4ca51bc72bc4d6829412a3",
+      "host_commit": "87168d7bc42f11f76886e475f919caff7674b60a",
+      "frontend_commit": "1111111111111111111111111111111111111111",
+      "scope": "Package bytes only; git/build provenance, functionality and rights not verified.",
+      "bundle_sha256": "8adbaca96f91d3f733bd91e8cfc0abf1d1e84f1636fc6a45ef72e6e36868c1ea"
+    },
+    "fixed-active-candidate-check.json": {
+      "schema": "pitcheezy-host-config-check-v1",
+      "ok": true,
+      "deployable": false,
+      "mode": "synthetic",
+      "manifest_sha256": "210b40d4b2981c2a10f38696d3dd6b86d4294aea6e4ca51bc72bc4d6829412a3",
+      "host_commit": "87168d7bc42f11f76886e475f919caff7674b60a",
+      "frontend_commit": "1111111111111111111111111111111111111111",
+      "config_sha256": "0a2d5c38777c0aa58d4720ac41dd81f97c26b0697be68fe4aa51067072fb680c",
+      "client_settings_sha256": "0b806aded492aff9dc4e04a4e112da21725d216d00c93feafa958899caaab80b",
+      "checks": [
+        "inventory_bytes",
+        "single_environment_config",
+        "package_paths",
+        "worker_first",
+        "private_endpoint_defaults",
+        "bindings_and_local_namespaces",
+        "collection_settings_match",
+        "cleanup_cron_present"
+      ],
+      "unverified": [
+        "account_and_provider_configuration",
+        "r2_private_access",
+        "d1_migration_and_backups",
+        "secret_installation",
+        "cron_execution",
+        "namespace_isolation_across_account",
+        "frontend_build_provenance_and_settings_consumption",
+        "song_contract",
+        "public_rights",
+        "deployed_bytes_and_routes",
+        "live_browser_and_load"
+      ]
+    },
+    "fixed-off-candidate-check.json": {
+      "schema": "pitcheezy-host-config-check-v1",
+      "ok": true,
+      "deployable": false,
+      "mode": "synthetic",
+      "manifest_sha256": "210b40d4b2981c2a10f38696d3dd6b86d4294aea6e4ca51bc72bc4d6829412a3",
+      "host_commit": "87168d7bc42f11f76886e475f919caff7674b60a",
+      "frontend_commit": "1111111111111111111111111111111111111111",
+      "config_sha256": "bf216bd4136db5bc186c06232a65d81abb1cfdd3a1d99974bddcbde213cd8770",
+      "client_settings_sha256": "0b806aded492aff9dc4e04a4e112da21725d216d00c93feafa958899caaab80b",
+      "checks": [
+        "inventory_bytes",
+        "single_environment_config",
+        "package_paths",
+        "worker_first",
+        "private_endpoint_defaults",
+        "bindings_and_local_namespaces",
+        "collection_settings_match",
+        "cleanup_cron_present"
+      ],
+      "unverified": [
+        "account_and_provider_configuration",
+        "r2_private_access",
+        "d1_migration_and_backups",
+        "secret_installation",
+        "cron_execution",
+        "namespace_isolation_across_account",
+        "frontend_build_provenance_and_settings_consumption",
+        "song_contract",
+        "public_rights",
+        "deployed_bytes_and_routes",
+        "live_browser_and_load"
+      ]
+    }
+  },
+  "preserved_candidates": {
+    "checked-candidate": {
+      "original_files": 16,
+      "tool_copy_original_files_match": true
+    },
+    "fixed-active-candidate": {
+      "original_files": 16,
+      "tool_copy_original_files_match": true
+    },
+    "fixed-off-candidate": {
+      "original_files": 16,
+      "tool_copy_original_files_match": true
+    }
+  },
+  "private_evidence": {
+    "baseline-result.json": {
+      "sha256": "5344d5dc3532a11732c39876c99d880bf804f6b7f274ad9da0b62081d7facf70",
+      "bytes": 1940
+    },
+    "active-result.json": {
+      "sha256": "1de6d767f8459a1c9898accd69892ead1db30612b63701faacc3546dad2f6fee",
+      "bytes": 1500
+    },
+    "inspect-result.json": {
+      "sha256": "a9c5ea598aefdb6b828b691832b746004bf42545b5614ec45afc4c203b5066c3",
+      "bytes": 2560
+    },
+    "active-resume-result.json": {
+      "sha256": "5d077f6bfa044724ff609ee9a5fdebdcb9ba2e6e4e451b4baa82e0c401271fbb",
+      "bytes": 6230
+    },
+    "finish-result.json": {
+      "sha256": "4ff48f81d4bfc8634ba7965cfa3659528657db521ae2dcc1de806add22859dba",
+      "bytes": 1858
+    },
+    "config-check-before.json": {
+      "sha256": "e468232ef3c1e68da9ef21e2f30dd37f227d38b44c62528ebd919a96c3388b7b",
+      "bytes": 1161
+    },
+    "config-check-active.json": {
+      "sha256": "5420baca8009426fc91b1bc5ca5a28eba3d5a1714219c7f184b31b7f1f22b3d1",
+      "bytes": 1161
+    },
+    "fixed-package-check.json": {
+      "sha256": "a5dbb8849116d5deced7ddd034efc88ef970a9ac214f08d1f070076619a271ca",
+      "bytes": 533
+    },
+    "fixed-active-candidate-check.json": {
+      "sha256": "9c92f393bdc4a974b2cbb83bc8a7e099476767e8b19ea538a58c9fc974a88505",
+      "bytes": 1161
+    },
+    "fixed-off-candidate-check.json": {
+      "sha256": "a53254971bbb000bf7c47cf3abf5ded0b3c94f7b5e819f3037e28e82131e9d81",
+      "bytes": 1161
+    },
+    "final-settings.private.json": {
+      "sha256": "4fc53decfe7de182612794fa063822f7b5df11624e12b1c5c6f0b8967f2b8cfd",
+      "bytes": 2782
+    },
+    "final-subdomain.private.json": {
+      "sha256": "e660796519de8fde50462ce427494584f725a0cac6e591a73bef4af1cc13d1ae",
+      "bytes": 134
+    },
+    "final-deployments.private.json": {
+      "sha256": "802b7b2f29746424ee207c16fa52f802a5747cd4e3a8afd9ff22f47f99e7ef9a",
+      "bytes": 2717
+    },
+    "rehearse-stage4.mjs": {
+      "sha256": "0f4f60194bc50d26ea51c4d9dca8f6d3eb6305d152c664d2f97e0258f509e95c",
+      "bytes": 19351
+    },
+    "rehearse-stage4-v2.mjs": {
+      "sha256": "8656d21b3c1e21e8a0ccfc6c32afa02f74599812241b4cd97734a36cdb11ca1d",
+      "bytes": 22611
+    },
+    "rehearse-stage4-v3.mjs": {
+      "sha256": "c1c31a35c4b5f813a6da90c856ea3c9729b933c9e723c77d8d0c054c14759447",
+      "bytes": 23515
+    },
+    "final-test-execution-receipt.json": {
+      "sha256": "d03ea7af8b59dab62afd22a55dfe17ff13ba6b70904d8dca8e3a3eb269b17956",
+      "bytes": 1940
+    }
+  },
+  "unmeasured": [
+    "elapsed one-hour session expiry",
+    "Cloudflare aggregate requests/CPU/current storage metrics: dashboard No data and bucket aggregate zero despite confirmed object",
+    "future billing",
+    "scheduled cleanup execution",
+    "multi-region propagation and load capacity",
+    "real Song frontend and publisher",
+    "real game latency and availability",
+    "Mac/iPhone browser"
+  ],
+  "next": [
+    "receive fixed Song public frontend and publisher artifacts",
+    "agree two-person alert recipients, response windows and notice copy",
+    "separately approve actual-game/public access connection"
+  ],
+  "record_checks": {
+    "checklist_tests_passed": 8,
+    "selected_local_links": 53,
+    "privacy_scan_files": 10,
+    "git_diff_check": "passed"
+  },
+  "execution_deviation": {
+    "planned": "disconnect trial route before recovering a problem",
+    "actual": "stopped further writes but retained access-gated route during ETag read-only diagnosis and reviewed fix deployment",
+    "gate_failure_observed": false,
+    "route_disconnect_tested": false
+  }
+}

@@ -174,7 +174,7 @@ export async function runFirstConnection({ examples, dist }) {
       const read = await host.get(result.target);
       const body = new Uint8Array(await read.arrayBuffer());
       need(read.status === 200 && hash(body) === host.files[examplePath].sha256, "readback_mismatch:" + result.target);
-      need(read.headers.get("ETag") === result.etag && read.headers.get("Cache-Control") === "no-store" &&
+      need(read.headers.get("ETag") === result.etag && (read.headers.get("Cache-Control") || "").toLowerCase().split(",").map(v => v.trim()).includes("no-store") &&
         read.headers.get("Age") === "0" && Number.isFinite(Date.parse(read.headers.get("Date"))), "readback_headers:" + result.target);
       uploads.push({ example: examplePath, target: result.target, bytes: body.length, etag: result.etag, readback_sha256_matches: true });
     }
