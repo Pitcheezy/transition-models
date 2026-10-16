@@ -1,5 +1,9 @@
 # SmartPitch MDP Transition Probability Models
 
+## 시험 발행 제한 완료 — 2026-10-17
+
+WS-publish2의 정확한 키·절대 만료 제한과 옛 runtime 거부를 로컬 구현했다. Node296·Python209·Git ZIP loopback12요청·다른 모델834f838 검토PASS. [범위·재현·한계](docs/WS_PUBLISH_SCOPE_20261017.md). 실제 배포/접속 확대는 미실행, Song 후속 자료/사람 결정 대기 유지.
+
 ## 최신 운영 도구와 새 요청 — 2026-10-17
 
 WS-notice2·WS-monitor3: 안전한 안내 CLI와 유한 감시 실행기를 구현했다. [근거](docs/WS_OPERATOR_TOOLS_20261017.md), 최종Node284·다른 모델5083b1a 재검토PASS. 실제 배포·상시등록·발송은 미실행이다. WS-partner1은 새#18 요청을 받고 사용자 별도 승인 회신1회 게시/원문검증 완료. [준비안](docs/WS_PARTNER_TRIAL_PREPARATION_20261017.md). Song소스/빌드·비공개전달확정·접속확대는 아직 남는다. 오래된 미발송/독립작업없음 문구를 최신 상태로 읽지 않는다.

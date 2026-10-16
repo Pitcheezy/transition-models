@@ -1,5 +1,9 @@
 # 남은 작업 체크리스트
 
+## 제한된 연결 시험 보호 — 2026-10-17
+
+- [x] WS-publish2. 정확한 발행 키 하나·UTC 만료 제한과 옛 runtime 번들 거부 완료. Node296·Python209·고정 ZIP loopback12요청 통과, 고정834f838 다른 모델 검토PASS. [근거](docs/WS_PUBLISH_SCOPE_20261017.md). 실제 배포/접속 확대/발신 없음, 수정 권한 반납. 〔모델: Fable 5.1〕
+
 ## 운영 도구와 Song 시험 준비 — 2026-10-17
 
 - [x] WS-notice2. 안내 CLI 구현·집중17/전체Node284 통과. 조건부 전환·응답 유실/감사누락 구별·비밀 ENV. 고정5083b1a 다른 모델 재검토PASS. [근거](docs/WS_OPERATOR_TOOLS_20261017.md). 실제 계정 전환/배포 없음. 〔모델: Fable 5.1〕

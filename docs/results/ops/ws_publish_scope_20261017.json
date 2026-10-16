@@ -1,0 +1,124 @@
+{
+  "schema": "pitcheezy-publish-scope-validation-v1",
+  "date_kst": "2026-10-17",
+  "evidence_kind": "synthetic_local_only",
+  "base_commit": "e8d635b4dd49f2b2cdc8876a1584a3fcd8121e60",
+  "claim_commit": "ee721fcb9049acaa835b495a8273fe5179e1ac82",
+  "files": [
+    {
+      "path": "ops/public-host/gateway.mjs",
+      "sha256": "3fd0217beae30ae23ca548c309e2535b66e80024728b10ddb249eec08f2dd2b6"
+    },
+    {
+      "path": "ops/public-host/tests/publish-scope.test.mjs",
+      "sha256": "69c2c5cb89a419631863384b4a714daf2faaaff1e86903ffadff40c51ccb56f4"
+    },
+    {
+      "path": "src/operations/host_config.py",
+      "sha256": "5997e34af37646e0037f1b42b2df4d80ed4f7f7780ef5654b87d2968ad68b312"
+    },
+    {
+      "path": "tests/test_public_host_config.py",
+      "sha256": "fc80dab8ba9e975f5770106c2a7bfd30c9089741d82ad6047f72aff067947c0a"
+    }
+  ],
+  "checks": {
+    "node_focused": 44,
+    "node_all": 296,
+    "node_failed": 0,
+    "node_duration_ms": 17194.2969,
+    "python": {
+      "final_total": 209,
+      "config": 143,
+      "release": 58,
+      "checklist": 8,
+      "duration_seconds": 50.35,
+      "log_sha256": "65c8d0aa68731f905ea3b03ff558cce7d6fa8394e492138ccfa33cffd1bf0146"
+    },
+    "node_log_sha256": "a89be48e56dfd0064b8fbcfb882180b36bea413ed9e686de1aee9538d9cc08d9"
+  },
+  "different_model_review": {
+    "status": "pass",
+    "model": "gpt-5.6-sol",
+    "commit": "834f8387772adae836f5aabf9d0d3c3d7e77caa7",
+    "p1": 0,
+    "p2": 0,
+    "tests_repeated": false
+  },
+  "packed_runtime": {
+    "schema": "pitcheezy-scoped-packed-worker-smoke-v1",
+    "evidence": "synthetic_loopback_packed_git_source",
+    "requests": 12,
+    "cases": [
+      {
+        "mode": "valid",
+        "passed": true
+      },
+      {
+        "mode": "expired",
+        "passed": true
+      }
+    ],
+    "cloud": false,
+    "teammate": false,
+    "bundle": {
+      "bundle_sha256": "126053ebe5546cc804185a6f952866b89c130b0816756d17f944995eada45794",
+      "bytes": 111044,
+      "deployable": false,
+      "files": 13,
+      "frontend_commit": "1111111111111111111111111111111111111111",
+      "host_commit": "834f8387772adae836f5aabf9d0d3c3d7e77caa7",
+      "manifest_sha256": "7aefaa9dff7975583c0013912b9f2e4a7b689cdd06ca49ec90f4dbc03ee44766",
+      "mode": "synthetic",
+      "schema": "pitcheezy-host-release-v1",
+      "scope": "Package bytes only; git/build provenance, functionality and rights not verified."
+    },
+    "config_check": {
+      "schema": "pitcheezy-host-config-check-v1",
+      "ok": true,
+      "deployable": false,
+      "mode": "synthetic",
+      "manifest_sha256": "7aefaa9dff7975583c0013912b9f2e4a7b689cdd06ca49ec90f4dbc03ee44766",
+      "host_commit": "834f8387772adae836f5aabf9d0d3c3d7e77caa7",
+      "frontend_commit": "1111111111111111111111111111111111111111",
+      "config_sha256": "c2465347023353859cc11dcb68ec1af592a3f677b6ab06e1abd58df661cef132",
+      "client_settings_sha256": "db895e8d7a5a5b89b9629a4d6ac50b3376579d96f76a7409959fbbc952866eae",
+      "checks": [
+        "inventory_bytes",
+        "single_environment_config",
+        "package_paths",
+        "worker_first",
+        "private_endpoint_defaults",
+        "bindings_and_local_namespaces",
+        "collection_settings_match",
+        "cleanup_cron_present",
+        "scoped_upload_config",
+        "scoped_upload_runtime_eol_identity"
+      ],
+      "unverified": [
+        "account_and_provider_configuration",
+        "r2_private_access",
+        "d1_migration_and_backups",
+        "secret_installation",
+        "cron_execution",
+        "namespace_isolation_across_account",
+        "frontend_build_provenance_and_settings_consumption",
+        "song_contract",
+        "public_rights",
+        "deployed_bytes_and_routes",
+        "live_browser_and_load"
+      ]
+    },
+    "harness_note": "Initial scratch wrapper assumed an ok field absent from bundle receipt; fixed wrapper only, retained existing ZIP and verified host_commit/deployable before extracting."
+  },
+  "cloud_deployed": false,
+  "access_granted": false,
+  "teammate_access": false,
+  "limitations": [
+    "guard applies only when explicitly configured",
+    "already-dispatched storage may commit after expiry",
+    "removing guard without rotating digest may revive old credential",
+    "2KiB/18 requests/120s runner budget not enforced by this guard",
+    "offline identity is trusted checkout CRLF-to-LF normalized code, not signature or deployed proof"
+  ]
+}

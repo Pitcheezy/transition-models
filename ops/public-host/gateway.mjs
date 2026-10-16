@@ -80,6 +80,26 @@ async function authorize(request, env) {
 }
 
 
+/** Optional deployment-bound publisher restriction, never a viewer or notice policy. */
+function publisherScope(env) {
+  const hasKey = Object.hasOwn(env, "PUBLISH_KEY_SCOPE");
+  const hasExpiry = Object.hasOwn(env, "PUBLISH_EXPIRES_AT");
+  if (!hasKey && !hasExpiry) return null; // Explicit legacy mode; empty values do not opt out.
+  const key = env.PUBLISH_KEY_SCOPE, expiry = env.PUBLISH_EXPIRES_AT;
+  if (!hasKey || !hasExpiry || typeof key !== "string" || permittedKey("/" + key) !== key ||
+      /^v1\/games\/0000-/.test(key) || typeof expiry !== "string" ||
+      !/^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}Z$/.test(expiry) || expiry.startsWith("0000-") ||
+      !Number.isFinite(Date.parse(expiry)) || new Date(expiry).toISOString() !== expiry) {
+    throw new HttpError(503, "upload_scope_not_configured");
+  }
+  return { key, expiresAt: Date.parse(expiry) };
+}
+function enforcePublisherScope(scope, key) {
+  if (!scope) return;
+  if (key !== scope.key) throw new HttpError(403, "upload_scope_forbidden");
+  if (Date.now() >= scope.expiresAt) throw new HttpError(403, "upload_expired");
+}
+
 async function enforceUploadLimit(env) {
   let result;
   try {
@@ -144,7 +164,11 @@ async function upload(request, env, key) {
   if (!["PUT", "DELETE", "HEAD"].includes(request.method)) {
     return json(request, env, 405, { error: "method_not_allowed" }, { Allow: "PUT, DELETE, HEAD" });
   }
+  const scope = publisherScope(env);
+  enforcePublisherScope(scope, key);
   await enforceUploadLimit(env);
+  // A rate-limit lookup can finish after the deadline; do not start body or storage reads then.
+  enforcePublisherScope(scope, key);
   if (!env.PUBLISH_BUCKET) throw new HttpError(503, "storage_not_configured");
   if (request.method === "HEAD") {
     const obj = await env.PUBLISH_BUCKET.head(key);
@@ -186,9 +210,13 @@ async function upload(request, env, key) {
   const header = encoder.encode(RECORD_PREFIX + crypto.randomUUID() + "\n");
   const record = new Uint8Array(header.length + bytes.length);
   record.set(header); record.set(bytes, header.length);
+  const recordDigest = await sha256(record);
+  // No await between this last deadline check and dispatch to R2. Already-dispatched storage
+  // operations cannot be cancelled here if their remote commit happens after the deadline.
+  enforcePublisherScope(scope, key);
   const obj = await env.PUBLISH_BUCKET.put(key, record, {
     onlyIf,
-    sha256: await sha256(record),
+    sha256: recordDigest,
     httpMetadata: { contentType: "application/octet-stream", cacheControl: "no-store" },
     customMetadata: {
       recordFormat: RECORD_FORMAT, payloadBytes: String(bytes.length),

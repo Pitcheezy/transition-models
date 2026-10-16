@@ -13,8 +13,12 @@ COLLAB-001의 파일 전달 경계를 구현한 후보이며, 실제 서비스 �
 - [공개 발행 계약 초안 v0](https://github.com/SongRoute/pitcheezy/blob/ed3a51c60482dbccdb084f437cc3c5e93f2dfc6a/docs/pm/service/public-publish-contract-draft.md)
 - 첫 연결 예제·JSON Schema·공개용 화면 고정 소스는 WS-ops2에서 수신·로컬 검증했다(아래 기록).
   미지원 예제·스키마 보완·실제 발행기 연결은 후속 대기이며 공개 운영 완료와 구별한다.
-- 토큰/버킷/도메인을 만들지 않았고 Cloudflare·Sites·DNS·기존 서버는 변경하지 않았다.
+- 초기 준비 시에는 실자원을 만들지 않았다. 후속 본인 전용 합성 시험은 [WS-stage4](../../docs/WS_STAGE4_CLOUD_TRIAL_20261016.md)에 별도 기록했다. 실제 공개·팀원 연결은 미완료다.
 - 모든 테스트 본문은 `synthetic`으로 표시한 임의 전송 자료다. Song 경기 스키마 예제가 아니다.
+
+## 시험 발행의 키·만료 제한
+
+[WS-publish2](PUBLISH_SCOPE.md): 선택적 정확한 키 하나와 절대 UTC 만료 시각. 기존 인증/조건부 갱신을 유지하며 실제 배포·접속 허용은 별도다.
 
 ## 인증 업로드 요청 제한
 
