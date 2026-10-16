@@ -307,3 +307,217 @@ def test_client_access_gate_must_follow_the_server_gate(candidate):
     write()
     with pytest.raises(ConfigError):
         check_release_config(root)
+
+
+# Optional scoped publisher settings must never be mistaken for support in an old host bundle.
+SCOPED_RUNTIME = ("worker.mjs", "gateway.mjs", "notice.mjs", "access.mjs", "telemetry.mjs")
+
+
+def install_scoped_runtime(candidate, *, mutate=None, eol=None):
+    root, config, _, write = candidate
+    for name in SCOPED_RUNTIME:
+        raw = (ROOT / "ops/public-host" / name).read_bytes()
+        if eol:
+            raw = raw.replace(b"\r\n", b"\n")
+            if eol == "crlf":
+                raw = raw.replace(b"\n", b"\r\n")
+        if mutate == name:
+            raw += b"\n// changed runtime, not the trusted checker source\n"
+        (root / "host" / name).write_bytes(raw)
+    # Rebuild the inventory too: matching an attacker-supplied SHA is not source identity.
+    manifest_path = root / rb.MANIFEST
+    manifest = json.loads(manifest_path.read_bytes())
+    for row in manifest["files"]:
+        raw = (root / row["path"]).read_bytes()
+        row.update(bytes=len(raw), sha256=rb.digest(raw))
+    manifest_path.write_bytes(rb.canonical(manifest))
+    config["vars"].update(
+        PUBLISH_KEY_SCOPE="v1/game/123.json", PUBLISH_EXPIRES_AT="2026-10-17T12:00:00.000Z"
+    )
+    write()
+    return root, config, write
+
+
+def test_scoped_current_runtime_requires_eol_source_identity(candidate):
+    root, _, _ = install_scoped_runtime(candidate)
+    report = check_release_config(root)
+    assert report["ok"] and not report["deployable"]
+    assert "scoped_upload_config" in report["checks"]
+    assert "scoped_upload_runtime_eol_identity" in report["checks"]
+    assert "v1/game/123.json" not in json.dumps(report)
+    assert "2026-10-17T12:00:00.000Z" not in json.dumps(report)
+    assert "deployed_bytes_and_routes" in report["unverified"]
+
+
+def test_legacy_config_does_not_require_current_runtime(candidate):
+    root, _, _, _ = candidate
+    assert (root / "host/gateway.mjs").read_bytes() == b"synthetic fixture\n"
+    assert "scoped_upload_config" not in check_release_config(root)["checks"]
+
+
+def test_scoped_legacy_runtime_is_rejected_even_with_valid_inventory(candidate):
+    root, config, _, write = candidate
+    config["vars"].update(
+        PUBLISH_KEY_SCOPE="v1/game/123.json", PUBLISH_EXPIRES_AT="2026-10-17T12:00:00.000Z"
+    )
+    write()
+    with pytest.raises(ConfigError, match="scoped_upload_runtime_mismatch"):
+        check_release_config(root)
+
+
+@pytest.mark.parametrize("name", SCOPED_RUNTIME)
+def test_scoped_modified_runtime_rejected_after_fresh_inventory(candidate, name):
+    root, _, _ = install_scoped_runtime(candidate, mutate=name)
+    with pytest.raises(ConfigError, match="scoped_upload_runtime_mismatch"):
+        check_release_config(root)
+
+
+@pytest.mark.parametrize("eol", ["lf", "crlf"])
+def test_scoped_runtime_identity_allows_only_crlf_lf_equivalence(candidate, eol):
+    root, _, _ = install_scoped_runtime(candidate, eol=eol)
+    assert check_release_config(root)["ok"]
+
+
+def test_scoped_runtime_inventory_is_verified_before_source_comparison(candidate):
+    root, _, _ = install_scoped_runtime(candidate)
+    target = root / "host/gateway.mjs"
+    raw = target.read_bytes()
+    target.write_bytes(b"X" + raw[1:])
+    with pytest.raises(rb.BundleError, match="inventory_mismatch"):
+        check_release_config(root)
+
+
+@pytest.mark.parametrize("missing", ["PUBLISH_KEY_SCOPE", "PUBLISH_EXPIRES_AT"])
+def test_publish_scope_requires_complete_pair(candidate, missing):
+    root, config, write = install_scoped_runtime(candidate)
+    del config["vars"][missing]
+    write()
+    with pytest.raises(ConfigError, match="incomplete_publish_scope"):
+        check_release_config(root)
+
+
+@pytest.mark.parametrize(
+    "key",
+    [
+        "v1/manifest.json",
+        "v1/health.json",
+        "v1/dates.json",
+        "v1/game/1.json",
+        "v1/setup/999999999999.json",
+        "v1/games/2024-02-29.json",
+        "v1/games/0001-01-01.json",
+    ],
+)
+def test_publish_scope_accepts_exact_existing_key_forms(candidate, key):
+    root, config, write = install_scoped_runtime(candidate)
+    config["vars"]["PUBLISH_KEY_SCOPE"] = key
+    write()
+    assert check_release_config(root)["ok"]
+
+
+@pytest.mark.parametrize(
+    "key",
+    [
+        None,
+        False,
+        123,
+        "",
+        "/v1/game/123.json",
+        "v1/game/0.json",
+        "v1/game/01.json",
+        "v1/game/1234567890123.json",
+        "v1/game/*.json",
+        "v1/game/../health.json",
+        "v1/game/%31.json",
+        "v1/game/123.json?x=1",
+        "v1/game/123.json#x",
+        "v1/game/123.json/extra",
+        "v1//game/123.json",
+        "v1\\game\\123.json",
+        "https://private.example/v1/game/123.json",
+        "v1/health.json\n",
+        "v1/HEALTH.json",
+        "v1/games/0000-01-01.json",
+        "v1/games/2026-02-29.json",
+        "v1/games/2026-04-31.json",
+        "v1/games/2026-13-01.json",
+        "v1/games/2026-00-01.json",
+        "v1/games/2026-01-00.json",
+    ],
+)
+def test_publish_scope_rejects_noncanonical_or_invalid_keys(candidate, key):
+    root, config, write = install_scoped_runtime(candidate)
+    config["vars"]["PUBLISH_KEY_SCOPE"] = key
+    write()
+    with pytest.raises(ConfigError, match="invalid_publish_scope_key"):
+        check_release_config(root)
+
+
+@pytest.mark.parametrize(
+    "expires",
+    [
+        "0001-01-01T00:00:00.000Z",
+        "2024-02-29T23:59:59.999Z",
+        "9999-12-31T23:59:59.999Z",
+    ],
+)
+def test_publish_expiry_is_structural_and_does_not_extend_past_dates(candidate, expires):
+    root, config, write = install_scoped_runtime(candidate)
+    config["vars"]["PUBLISH_EXPIRES_AT"] = expires
+    write()
+    assert check_release_config(root)["ok"]
+
+
+@pytest.mark.parametrize(
+    "expires",
+    [
+        None,
+        False,
+        123,
+        "",
+        "2026-10-17T12:00:00Z",
+        "2026-10-17T12:00:00.00Z",
+        "2026-10-17T12:00:00.0000Z",
+        "2026-10-17T12:00:00.000+00:00",
+        "2026-10-17T12:00:00.000z",
+        "2026-10-17 12:00:00.000Z",
+        "2026-10-17T12:00:00.000Z\n",
+        "0000-01-01T00:00:00.000Z",
+        "2026-02-29T00:00:00.000Z",
+        "2026-04-31T00:00:00.000Z",
+        "2026-01-01T24:00:00.000Z",
+        "2026-01-01T23:60:00.000Z",
+        "2026-01-01T23:59:60.000Z",
+        "2026-13-01T00:00:00.000Z",
+    ],
+)
+def test_publish_expiry_rejects_ambiguous_and_impossible_utc_values(candidate, expires):
+    root, config, write = install_scoped_runtime(candidate)
+    config["vars"]["PUBLISH_EXPIRES_AT"] = expires
+    write()
+    with pytest.raises(ConfigError, match="invalid_publish_expiry"):
+        check_release_config(root)
+
+
+def test_scoped_runtime_comparison_uses_the_inventory_verified_snapshot(candidate, monkeypatch):
+    from src.operations import host_config as hc
+
+    root, config, _, write = candidate
+    config["vars"].update(
+        PUBLISH_KEY_SCOPE="v1/game/123.json", PUBLISH_EXPIRES_AT="2026-10-17T12:00:00.000Z"
+    )
+    write()
+    original = hc.validate_config
+
+    def swap_after_inventory(config, client, release_root):
+        original(config, client, release_root)
+        # Simulate a concurrent replacement after inventory verification. The old, verified
+        # runtime must still be rejected rather than comparing the newly substituted source.
+        for name in SCOPED_RUNTIME:
+            (release_root / "host" / name).write_bytes(
+                (ROOT / "ops/public-host" / name).read_bytes()
+            )
+
+    monkeypatch.setattr(hc, "validate_config", swap_after_inventory)
+    with pytest.raises(ConfigError, match="scoped_upload_runtime_mismatch"):
+        check_release_config(root)

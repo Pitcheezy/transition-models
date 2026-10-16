@@ -5,6 +5,10 @@
 [CHECKLIST](../CHECKLIST.md) 상단과 [우리 board](https://github.com/Pitcheezy/transition-models/issues/3)를 확인한다.
 역사적 “다음 단위” 문구는 현재 지시가 아니다.
 
+## 제한된 시험 발행 보호 — WS-publish2
+
+정확한 발행 키 하나·절대 만료 옵션과 옛 runtime 번들 거부를 준비했다. [구현·검사](WS_PUBLISH_SCOPE_20261017.md). 실제 적용 전 고정 코드의 다른 모델 검토·번들 검사를 확인한다. 현재 실자원에는 미배포이며 Song 자료/접속 승인 대기는 그대로다.
+
 ## 새 연결 요청과 독립 운영 도구 — 2026-10-17
 
 Song의 [새 요청](https://github.com/Pitcheezy/transition-models/issues/18#issuecomment-6212003299)은 로컬 후보 준비·비공개 전달 경로와 한 키/2KiB/18요청/120초 시험 조건 문의다. 실제 소스/빌드는 미수신이며 접속 확대는 미승인이다. 후속 회신 초안 한 건은 사용자 별도 승인으로 [게시](https://github.com/Pitcheezy/transition-models/issues/18#issuecomment-6218521394)·원문 대조했다. [준비안·기존 bearer 범위/자동 만료 부재](WS_PARTNER_TRIAL_PREPARATION_20261017.md)와 회신 원문을 마련했다. Song10/16 상호조회 근거는 확인했지만 오늘 일일조회는 별도다.

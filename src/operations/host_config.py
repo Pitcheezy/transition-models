@@ -4,6 +4,7 @@ import ipaddress
 import os
 import re
 import stat
+from datetime import date, datetime
 from pathlib import Path
 from urllib.parse import urlsplit
 
@@ -28,6 +29,9 @@ VARIABLES = (
     "FEEDBACK_ROWS_PER_DAY",
     "ACCESS_SESSION_SECONDS",
 )
+PUBLISH_SCOPE_VARIABLES = ("PUBLISH_KEY_SCOPE", "PUBLISH_EXPIRES_AT")
+SCOPED_RUNTIME_FILES = ("worker.mjs", "gateway.mjs", "notice.mjs", "access.mjs", "telemetry.mjs")
+TRUSTED_RUNTIME_ROOT = Path(__file__).resolve().parents[2] / "ops/public-host"
 SECRETS = frozenset(
     {
         "PUBLISH_TOKEN_SHA256",
@@ -116,6 +120,56 @@ def positive_setting(value, maximum):
     return int(value)
 
 
+def validate_publish_scope(variables):
+    """Validate optional host authorization settings, without interpreting present time."""
+    present = set(PUBLISH_SCOPE_VARIABLES) & variables.keys()
+    if not present:
+        return False
+    require(present == set(PUBLISH_SCOPE_VARIABLES), "incomplete_publish_scope")
+    key = variables["PUBLISH_KEY_SCOPE"]
+    require(isinstance(key, str), "invalid_publish_scope_key")
+    valid_key = re.fullmatch(r"v1/(?:manifest|health|dates)\.json", key) or re.fullmatch(
+        r"v1/(?:game|setup)/[1-9][0-9]{0,11}\.json", key
+    )
+    dated = re.fullmatch(r"v1/games/([0-9]{4}-[0-9]{2}-[0-9]{2})\.json", key)
+    if dated:
+        try:
+            # Matches the runtime's explicit year-zero exclusion and calendar check.
+            valid_key = date.fromisoformat(dated[1]).isoformat() == dated[1]
+        except ValueError:
+            valid_key = False
+    require(bool(valid_key), "invalid_publish_scope_key")
+    expires = variables["PUBLISH_EXPIRES_AT"]
+    require(
+        isinstance(expires, str)
+        and re.fullmatch(
+            r"[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\.[0-9]{3}Z", expires
+        ),
+        "invalid_publish_expiry",
+    )
+    try:
+        datetime.fromisoformat(expires[:-1] + "+00:00")
+    except ValueError:
+        raise ConfigError("invalid_publish_expiry") from None
+    # Past timestamps remain structurally valid: the runtime must close them, not extend them.
+    return True
+
+
+def _check_scoped_runtime(verified_files):
+    """Compare verified candidate code with this trusted checker checkout (EOL normalization only).
+
+    Run this checker from a reviewed, fixed checkout. This comparison is local source identity,
+    not raw SHA equality, signature verification, deployment proof, or authority to publish.
+    """
+    for name in SCOPED_RUNTIME_FILES:
+        actual = verified_files["host/" + name]
+        trusted = rb._read_regular(TRUSTED_RUNTIME_ROOT / name, rb.MAX_FILE_BYTES)
+        require(
+            actual.replace(b"\r\n", b"\n") == trusted.replace(b"\r\n", b"\n"),
+            "scoped_upload_runtime_mismatch",
+        )
+
+
 def _release_files(root):
     root = rb._plain_path(root)
     require(root.is_dir(), "release_directory_required")
@@ -164,7 +218,7 @@ def _release_files(root):
                     )
                     found.add(name)
     require(found == expected, "release_file_missing")
-    return root, receipt
+    return root, receipt, files
 
 
 def validate_config(config, client, root):
@@ -229,7 +283,8 @@ def validate_config(config, client, root):
         not SECRETS & variables.keys(),
         "inline_secret_not_allowed",
     )
-    fields(variables, VARIABLES)
+    fields(variables, VARIABLES, PUBLISH_SCOPE_VARIABLES)
+    validate_publish_scope(variables)
     for gate in GATES:
         require(variables[gate] in ("true", "false"), "invalid_gate")
     origin(variables["READ_ORIGIN"], allow_empty=True)
@@ -324,12 +379,15 @@ def validate_config(config, client, root):
 
 def check_release_config(release_directory):
     """Check supplied bytes only; do not execute, change files, contact accounts or deploy."""
-    root, package = _release_files(Path(release_directory))
+    root, package, verified_files = _release_files(Path(release_directory))
     config_raw = rb._read_regular(root / CONFIG_PATH, MAX_CONFIG_BYTES)
     client_raw = rb._read_regular(root / CLIENT_PATH, MAX_CONFIG_BYTES)
     config = rb.parse_json(config_raw, MAX_CONFIG_BYTES)
     client = rb.parse_json(client_raw, MAX_CONFIG_BYTES)
     validate_config(config, client, root)
+    scoped = "PUBLISH_KEY_SCOPE" in config["vars"]
+    if scoped:
+        _check_scoped_runtime(verified_files)
     return {
         "schema": "pitcheezy-host-config-check-v1",
         "ok": True,
@@ -349,6 +407,7 @@ def check_release_config(release_directory):
             "bindings_and_local_namespaces",
             "collection_settings_match",
             "cleanup_cron_present",
+            *(["scoped_upload_config", "scoped_upload_runtime_eol_identity"] if scoped else []),
         ],
         "unverified": list(UNVERIFIED),
     }
