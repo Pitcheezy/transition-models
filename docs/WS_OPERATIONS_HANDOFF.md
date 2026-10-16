@@ -9,7 +9,7 @@
 
 Song의 [새 요청](https://github.com/Pitcheezy/transition-models/issues/18#issuecomment-6212003299)은 로컬 후보 준비·비공개 전달 경로와 한 키/2KiB/18요청/120초 시험 조건 문의다. 실제 소스/빌드는 미수신이며 접속 확대는 미승인이다. 후속 회신 초안 한 건은 사용자 별도 승인으로 [게시](https://github.com/Pitcheezy/transition-models/issues/18#issuecomment-6218521394)·원문 대조했다. [준비안·기존 bearer 범위/자동 만료 부재](WS_PARTNER_TRIAL_PREPARATION_20261017.md)와 회신 원문을 마련했다. Song10/16 상호조회 근거는 확인했지만 오늘 일일조회는 별도다.
 
-기존 문서의 독립 작업 없음은10/15 당시 점검 결과다. 이후 실제 클라우드 시험과 새 연결 요청으로 안전한 운영자 CLI(WS-notice2), 유한 감시 반복 실행기(WS-monitor3)의 필요를 확인해 준비 중이다. 이 작업은 실제 접근 허용·배포·상시 설치·메일 발송이 아니다.
+기존 문서의 독립 작업 없음은10/15 당시 점검 결과다. 이후 실제 클라우드 시험과 새 연결 요청으로 안전한 운영자 CLI(WS-notice2), 유한 감시 반복 실행기(WS-monitor3)의 필요를 확인해 구현·검증했다. [운영 도구](WS_OPERATOR_TOOLS_20261017.md): 최종Node284·다른 모델 재검토PASS, 기간/중단 경계와 불가능한 날짜 결함을 고쳤다. 이 작업은 실제 접근 허용·배포·상시 설치·메일 발송이 아니다.
 
 ## 본인 전용 합성 실자원 시험 완료 — WS-stage4
 

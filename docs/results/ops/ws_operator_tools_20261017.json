@@ -4,7 +4,7 @@
   "evidence_kind": "synthetic_and_local_loopback_only",
   "base_commit": "057afea263f8c8381a433038b51df467af421dd8",
   "claim_commit": "47f8805",
-  "fixed_review_commit": null,
+  "fixed_review_commit": "5083b1acf7682a33814be5150e48394117e3acb8",
   "files": [
     {
       "path": "ops/public-host/notice-client.mjs",
@@ -54,8 +54,12 @@
       "strict server UTC calendar round-trip",
       "cancellation and remaining duration rechecked after config IO"
     ],
-    "status": "fixes_applied_pending_fixed_commit_recheck",
-    "reviewer_focused_passed_before_fix": 37
+    "status": "pass_after_fixes",
+    "reviewer_focused_passed_before_fix": 37,
+    "final_commit": "5083b1acf7682a33814be5150e48394117e3acb8",
+    "final_p1": 0,
+    "final_p2": 0,
+    "final_review_test_policy": "read_only_recheck_root_tests_not_repeated"
   },
   "deployed": false,
   "external_notifications_sent": false,
