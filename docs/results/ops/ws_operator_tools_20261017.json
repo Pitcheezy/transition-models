@@ -1,0 +1,60 @@
+{
+  "schema": "pitcheezy-operator-tools-validation-v1",
+  "date_kst": "2026-10-17",
+  "evidence_kind": "synthetic_and_local_loopback_only",
+  "base_commit": "057afea263f8c8381a433038b51df467af421dd8",
+  "claim_commit": "47f8805",
+  "fixed_review_commit": null,
+  "files": [
+    {
+      "path": "ops/public-host/notice-client.mjs",
+      "sha256": "e179f088a5b4f0e706cabf6eb83fe2530c56eab6d921ea53d7fd7c2a482ce66e"
+    },
+    {
+      "path": "ops/public-host/notice-cli.mjs",
+      "sha256": "5d957c794923efee606d993f1d133714f88b15d988ab098e38c6fc08646d7b7f"
+    },
+    {
+      "path": "ops/public-host/tests/notice-client.test.mjs",
+      "sha256": "34675ba0ff7a2271369055c21a02f2f3773bbe65fd1d888202017badbadbd9f8"
+    },
+    {
+      "path": "ops/public-host/tests/notice-cli.test.mjs",
+      "sha256": "dfd8a3725886b429a63d86b95fd9563eb95f6253fe8b41230912d0a1b5834d16"
+    },
+    {
+      "path": "ops/public-host/monitor-runner.mjs",
+      "sha256": "0c20e40bbbeb118996a0ad96a76b39cf4bce6e8e7bf735d30325769de165b30d"
+    },
+    {
+      "path": "ops/public-host/monitor-runner-cli.mjs",
+      "sha256": "a6314dbef284eee755c82ee34b7bd76a05e562b17cf671892f1747576b37d4bd"
+    },
+    {
+      "path": "ops/public-host/tests/monitor-runner.test.mjs",
+      "sha256": "59517703fe07b18ebf0ea16c9cb6622637903f2d95ab1657232235a140b0fc3e"
+    }
+  ],
+  "checks": {
+    "notice_focused_passed": 16,
+    "monitor_focused_passed": 21,
+    "all_node_passed": 280,
+    "all_node_failed": 0,
+    "all_node_duration_ms": 16570.6616,
+    "checklist_passed": 8,
+    "full_log_sha256": "a1788d1d7907fc2e4d4d02fa151cf20a4d6f905e1ed61897885b68f8ee9cbe38"
+  },
+  "different_model_review": {
+    "status": "pending"
+  },
+  "deployed": false,
+  "external_notifications_sent": false,
+  "os_scheduler_installed": false,
+  "limits": [
+    "duration controls probe admission, not OS filesystem hard kill",
+    "mock notification is not actual delivery",
+    "snapshot files contain private origin and ETag; do not publish",
+    "notice mutation requires human authorization independent of --execute",
+    "source wrappers do not grant Song access"
+  ]
+}
