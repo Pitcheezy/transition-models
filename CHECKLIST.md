@@ -1,5 +1,11 @@
 # 남은 작업 체크리스트
 
+## 운영 도구와 Song 시험 준비 — 2026-10-17
+
+- [x] WS-notice2. 안내 CLI 구현·집중17/전체Node284 통과. 조건부 전환·응답 유실/감사누락 구별·비밀 ENV. 고정5083b1a 다른 모델 재검토PASS. [근거](docs/WS_OPERATOR_TOOLS_20261017.md). 실제 계정 전환/배포 없음. 〔모델: Fable 5.1〕
+- [x] WS-monitor3. 유한 감시 실행기 구현·집중24/전체Node284 통과. 중첩/중단/재시작·누적 실패·모의 알림 검증, 고정5083b1a 다른 모델 재검토PASS. [근거](docs/WS_OPERATOR_TOOLS_20261017.md). 실제 스케줄/발송 없음. 〔모델: Fable 5.1〕
+- [x] WS-partner1. 새 요청 수신·기존 토큰 범위/만료 한계·비공개 전달 준비 및 별도 승인 회신1회 게시/원문 SHA대조 완료. [기록](docs/WS_PARTNER_TRIAL_PREPARATION_20261017.md). Song 소스/빌드 미수신·접속 허용 미결정. 〔모델: Fable 5.1〕
+
 ## 본인 전용 실자원 합성 시험 — 2026-10-16
 
 - [x] WS-stage3. 전용 실자원 실행안·최소 제품 권한 초안·합성 후보 준비 완료. 고정 host `c07dc94`의 gpt-5.6-sol 전체 검토 P1/P2 없음, Node79·JS7·패키지/설정·격리 dry-run1회 통과, 원본16파일 SHA 보존. [실행안](docs/WS_STAGE3_EXECUTION_PLAN_20261015.md)·[영수증](docs/results/ops/ws_stage3_20261015.json). API 토큰 발급·자원/비밀/배포/DNS는 미실행이며 아래 WS-stage4로 분리. 선점 `93d4c7b`, 수정 권한 반납. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-15 · Codex]`

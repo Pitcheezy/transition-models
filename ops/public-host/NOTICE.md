@@ -34,22 +34,80 @@
   원문 토큰·digest·접속 주소는 공개 이슈에 적지 않는다. 설정 검사는 `vars`에 이 digest가 들어가면 거부한다(`inline_secret_not_allowed`).
 - 요청 제한은 `PUBLISH_LIMITER`의 별도 키 `notice`를 쓴다(발행기 키 `publisher`와 분리). 잘못된 제한기 응답은 503, 거부는 429다.
 
-### 사용 (토큰은 환경 변수/비밀 저장소에서만 읽는다)
+### 운영자 CLI — 계획 검토와 실제 실행 분리 (WS-notice2)
 
-~~~text
-# 현재 상태와 최근 감사 기록 20건
-curl -sS -H "Authorization: Bearer $NOTICE_TOKEN" https://<호스트>/_notice/v1/state
+`notice-cli.mjs`는 기존 API를 호출하는 우리 운영자 도구다. 기본은 **네트워크 요청이 없는 dry-run**이며
+`--execute`를 붙였을 때만 한 번 요청한다. 가입·배포·상시 실행·자동 복구·자동 재시도를 하지 않는다.
+실제 공개 문구, 운영자 권한 전달, 안내 해제는 승인된 사람 결정 범위를 따른다.
 
-# 켜기 (상태 객체가 아직 없으면 If-None-Match: *, 있으면 현재 ETag로 If-Match)
-curl -sS -X PUT -H "Authorization: Bearer $NOTICE_TOKEN" -H "Content-Type: application/json" \
-  -H 'If-None-Match: *' --data '{"active":true,"operator":"<담당 표시>","reason":"<내부 사유>","message_id":"maintenance"}' \
-  https://<호스트>/_notice/v1/state
+토큰 원문은 **`PITCHEEZY_NOTICE_TOKEN` 환경 변수**에서만 읽는다. 토큰을 명령행 인자·계획 파일·URL에 넣지 않는다.
+계획 파일에는 접속 주소·내부 사유가 있고, 조회 스냅샷에는 접속 주소·현재 ETag가 있으므로 둘 다 비공개 폴더에 보관한다.
+출력은 상태·횟수·변경 의도(active/message_id)만이며 주소·토큰·원문 사유·운영자·ETag·토큰 접두어를 출력하지 않는다.
+`--snapshot`은 새 파일만 허용하고 기존 파일과 원본 계획을 덮어쓰지 않는다.
 
-# 끄기 (복구) — 현재 상태의 ETag가 필요하다
-curl -sS -X PUT -H "Authorization: Bearer $NOTICE_TOKEN" -H "Content-Type: application/json" \
-  -H 'If-Match: "<현재 ETag>"' --data '{"active":false,"operator":"<담당 표시>","reason":"<복구 근거>","message_id":"maintenance"}' \
-  https://<호스트>/_notice/v1/state
-~~~
+먼저 아래 형식의 비공개 조회 계획을 만든다. 예시 주소는 실제 주소가 아니다.
+
+```json
+{
+  "schema": "pitcheezy-notice-plan-v1",
+  "origin": "https://operator.example.test",
+  "allow_loopback_http": false,
+  "method": "GET",
+  "condition": null,
+  "change": null
+}
+```
+
+```text
+node ops/public-host/notice-cli.mjs --plan <비공개-조회계획.json>
+node ops/public-host/notice-cli.mjs --plan <비공개-조회계획.json> --execute --snapshot <새-비공개-현재상태.json>
+```
+
+조회 스냅샷의 `observed`에서 현재 상태·revision·감사 누락을 확인한다. `condition`은 **그때 읽은 버전에만** 적용하는 조건이다.
+이를 새 변경 계획의 `condition`에 그대로 복사하고, `method`를 `PUT`, `change`를 아래 네 필드로 바꾼다.
+현재 객체가 없다는 조회를 받았을 때만 `condition`은 `{"if_none_match":"*"}`이며,
+객체가 있으면 `{"if_match":"현재 strong ETag"}`다. 임의 ETag나 자동 최신 버전 대체는 사용하지 않는다.
+
+```json
+{
+  "active": true,
+  "operator": "ops-a",
+  "reason": "승인된 점검 사유",
+  "message_id": "maintenance"
+}
+```
+
+`active:false`는 복구 요청이다. 현재 GET 스냅샷과 복구 근거를 다시 검토한 별도 계획으로 요청한다.
+조회 계획과 변경 계획은 서로 다른 파일로 보존한다. 변경 계획의 origin도 읽은 대상과 같은지 확인한다.
+
+```text
+node ops/public-host/notice-cli.mjs --plan <비공개-변경계획.json>
+node ops/public-host/notice-cli.mjs --plan <비공개-변경계획.json> --execute
+node ops/public-host/notice-cli.mjs --plan <비공개-조회계획.json> --execute --snapshot <새-비공개-변경후상태.json>
+```
+
+`HEAD`도 같은 조회 계획에서 method만 바꿔 사용할 수 있지만 **ETag 메타데이터만** 확인한다.
+HEAD 성공은 안내 ON/OFF나 감사 완전성 확인이 아니다. 이때 출력 `metadata_only:true`, `audit_status:unmeasured`를 유지한다.
+
+판정과 종료 코드:
+
+- 0: `dry_run`, `observed`, `applied`. `applied`는 API가 그 변경 저장과 감사 저장을 확인했다는 뜻이다.
+  모든 지역의 화면 전파나 이후 다른 운영자의 변경까지 보장하지 않는다.
+- 3: `conflict`(412), `unknown`(쓰기 응답 손실·5xx·잘못된 성공 응답), `deferred`(429), `unavailable`(읽기 불가).
+  **자동 재시도·최신 ETag 재취득 후 덮어쓰기는 없다.** `unknown`은 실패/미저장으로 단정하지 않고 새 GET으로 실제 상태를 확인한다.
+- 3: `applied_audit_missing`은 스위치 변경은 저장됐으나 감사 저장이 확인되지 않은 상태다. 같은 변경을 재전송하지 않는다.
+  `observed_audit_unavailable`은 GET에서 현재 버전의 감사 근거를 확인할 수 없다는 뜻이다. 상태를 유지하고 별도 감사 기록을 확인한다.
+- 1: `rejected`(명확한 거부) 또는 `invalid_response`(읽기 응답 검증 실패).
+- 2: 잘못된 계획·토큰 미설정·파일 오류. 비밀 값이나 서버 원문 오류는 출력하지 않는다.
+
+요청은 고정 `/_notice/v1/state` 경로로 한 번만 보낸다. 리다이렉트는 따라가지 않는다.
+요청/본문 완료까지 기본 5초, 응답 최대64KiB, 변경 본문 최대2048bytes다. 성공 응답은 JSON·필수 필드·strong ETag·no-store를 확인하며
+ETag가 있으면 no-transform도 요구한다(WS-stage4에서 확인된 CDN 변환 방지 계약).
+HTTPS만 허용하고 합성 로컬 검사는 `allow_loopback_http:true`와 `http://127.0.0.1:<port>` 또는 `[::1]`만 허용한다.
+이는 DNS/사설 목적지를 검사하는 SSRF 필터가 아니다. 신뢰하는 운영자가 대상 주소를 검토해야 한다.
+
+CLI 라이브러리 `executeNotice()`의 반환값은 `{receipt, snapshot}`이다. **receipt만 일반 로그용**이며 snapshot은 비공개 저장용이다.
+조회가 실패하면 스냅샷을 만들지 않는다. 조회 성공 후 파일 저장에 실패하면 종료2이며 다시 쓰기 작업을 수행하지 않는다.
 
 본문은 `active`(boolean)·`operator`(`[A-Za-z0-9._-]{1,64}`)·`reason`(1~500자, 제어문자 없음)·`message_id`(목록 값) 네 항목만 받는다.
 조건부 쓰기 하나(If-None-Match:* 또는 현재 ETag의 If-Match)를 요구하므로 두 담당자가 같은 상태를 동시에 바꾸면 한쪽은 412다.
@@ -103,7 +161,7 @@ isolate·colo별로 최대 약 2초 + 전파 지연이 추가될 수 있다. 실
   (설정 검사가 binding을 요구하므로 실제 배포에는 해당하지 않는다).
 - 켜도 요청 과금이 멈추지 않는다. 비용 상한이 아니다.
 - Song 공개 화면이 503 `service_notice`를 "안내/중단" 상태로 표시하는지는 **Song 화면의 변경 사항**이다. 아래 요청 초안으로 분리했고 상대 코드는 고치지 않았다.
-- 실제 운영자 토큰·계정·도메인·배포는 만들지 않았다. 문구는 승인 전 개발용이다.
+- 10/13 초기 구현 때에는 실제 운영자 토큰·계정·배포를 만들지 않았다. 후속 [WS-stage4](../../docs/WS_STAGE4_CLOUD_TRIAL_20261016.md)에서 본인 한정 합성 HTTPS 시험을 완료했다. 양쪽 운영 권한·최종 문구·실경기 운영은 별도다.
 
 ## Song 화면 요청 초안 (미발송 — 발신 승인 후 mail로)
 
@@ -126,3 +184,5 @@ uv run --frozen python -m pytest tests/test_public_host_config.py -q
 검증 결과(2026-10-13, Windows): 신규 Node 7(단위·메모·감시·실제 로컬 Worker/R2 런타임)·전체 Node 102 통과, 브라우저 Chromium 호스트 묶음 11 통과
 (WebKit은 CI), Python 설정 검사 67·관련 132 통과, 리허설 영수증 passed. 작성 모델 Claude Fable 5.1(`claude-fable-5-1`);
 **다른 모델의 출시 검토(WS-review1)는 아직 없다.** 실제 운영 투입 전 조건이다.
+
+WS-notice2 전용 검사: `node --test ops/public-host/tests/notice-client.test.mjs ops/public-host/tests/notice-cli.test.mjs`. 합성 응답과 임시 loopback Worker/R2만 사용하며 실제 운영 토큰·원격 서비스는 사용하지 않는다.

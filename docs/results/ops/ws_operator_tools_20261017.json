@@ -1,0 +1,74 @@
+{
+  "schema": "pitcheezy-operator-tools-validation-v1",
+  "date_kst": "2026-10-17",
+  "evidence_kind": "synthetic_and_local_loopback_only",
+  "base_commit": "057afea263f8c8381a433038b51df467af421dd8",
+  "claim_commit": "47f8805",
+  "fixed_review_commit": "5083b1acf7682a33814be5150e48394117e3acb8",
+  "files": [
+    {
+      "path": "ops/public-host/notice-client.mjs",
+      "sha256": "eea8aedb57f01f15f6a3c06436f41facdedabc09a050548f6a9e2f43e1a8dd8e"
+    },
+    {
+      "path": "ops/public-host/notice-cli.mjs",
+      "sha256": "5d957c794923efee606d993f1d133714f88b15d988ab098e38c6fc08646d7b7f"
+    },
+    {
+      "path": "ops/public-host/tests/notice-client.test.mjs",
+      "sha256": "5b3a94944f93e262c67ac8f93176e0b0e80000c860352aa39e150334c0f0ffd0"
+    },
+    {
+      "path": "ops/public-host/tests/notice-cli.test.mjs",
+      "sha256": "dfd8a3725886b429a63d86b95fd9563eb95f6253fe8b41230912d0a1b5834d16"
+    },
+    {
+      "path": "ops/public-host/monitor-runner.mjs",
+      "sha256": "3ca10ac1cf7f73e69e1ea3c24f2c936d684ca480f2e73432d1202d91f07dfac0"
+    },
+    {
+      "path": "ops/public-host/monitor-runner-cli.mjs",
+      "sha256": "a6314dbef284eee755c82ee34b7bd76a05e562b17cf671892f1747576b37d4bd"
+    },
+    {
+      "path": "ops/public-host/tests/monitor-runner.test.mjs",
+      "sha256": "73c4039a07ceca5e0a6553fc602f3bfcda20ba34e1afb554970de71e5a4a3520"
+    }
+  ],
+  "checks": {
+    "notice_focused_passed": 17,
+    "monitor_focused_passed": 24,
+    "all_node_passed": 284,
+    "all_node_failed": 0,
+    "all_node_duration_ms": 16882.2367,
+    "checklist_passed": 8,
+    "full_log_sha256": "171d6d678a1a0dfbf257b4a6e24df483cf97415bba9eebd64520cbb586f54462",
+    "local_links_checked": 91
+  },
+  "different_model_review": {
+    "model": "gpt-5.6-sol",
+    "initial_commit": "aa61cdeca75dd9115b104635f382fff01cf304fe",
+    "initial_p1": 0,
+    "initial_p2": 2,
+    "fixes": [
+      "strict server UTC calendar round-trip",
+      "cancellation and remaining duration rechecked after config IO"
+    ],
+    "status": "pass_after_fixes",
+    "reviewer_focused_passed_before_fix": 37,
+    "final_commit": "5083b1acf7682a33814be5150e48394117e3acb8",
+    "final_p1": 0,
+    "final_p2": 0,
+    "final_review_test_policy": "read_only_recheck_root_tests_not_repeated"
+  },
+  "deployed": false,
+  "external_notifications_sent": false,
+  "os_scheduler_installed": false,
+  "limits": [
+    "duration controls probe admission, not OS filesystem hard kill",
+    "mock notification is not actual delivery",
+    "snapshot files contain private origin and ETag; do not publish",
+    "notice mutation requires human authorization independent of --execute",
+    "source wrappers do not grant Song access"
+  ]
+}
