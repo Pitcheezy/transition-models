@@ -7,6 +7,12 @@ import { Miniflare } from "miniflare";
 const token = "synthetic-local-runtime-token-not-a-real-account-credential";
 const hash = bytes => createHash("sha256").update(bytes).digest("hex");
 
+function assertProtectedEtag(response) {
+  assert.match(response.headers.get("ETag"), /^"[a-f0-9]{32}"$/);
+  assert.equal(response.headers.get("Cache-Control"), "no-store, no-transform");
+  assert.equal(response.headers.get("CDN-Cache-Control"), "no-store");
+}
+
 test("actual local Worker/R2 runtime: publish, conditional updates, withdrawal and restore", async () => {
   const mf = new Miniflare({
     modules: true, scriptPath: fileURLToPath(new URL("../worker.mjs", import.meta.url)),
@@ -41,6 +47,7 @@ test("actual local Worker/R2 runtime: publish, conditional updates, withdrawal a
     { // R2 checksum and conditional create work with private record
       const saved = await put(body, { "If-None-Match": "*" });
       assert.equal(saved.status, 200, await saved.clone().text());
+      assertProtectedEtag(saved);
       first = saved.headers.get("ETag");
       assert.match(first, /^"[a-f0-9]{32}"$/);
       assert.equal((await put(body, { "If-None-Match": "*" })).status, 412);
@@ -54,18 +61,21 @@ test("actual local Worker/R2 runtime: publish, conditional updates, withdrawal a
       assert.equal(await response.text(), body);
       const conditional = await call(route, { headers: { "If-None-Match": response.headers.get("ETag") } });
       assert.equal(conditional.status, 304);
+      assertProtectedEtag(conditional);
       assert.equal(await conditional.text(), "");
       assert.equal(response.headers.get("Age"), "0");
-      assert.equal(response.headers.get("Cache-Control"), "no-store");
+      assertProtectedEtag(response);
       assert.ok(Number.isFinite(Date.parse(response.headers.get("Date"))));
       assert.equal(response.headers.get("Access-Control-Expose-Headers"), "Date, Age, ETag");
       const head = await call(route, { method: "HEAD" });
+      assertProtectedEtag(head);
       assert.equal(await head.text(), "");
       assert.equal(head.headers.get("Content-Length"), String(Buffer.byteLength(body)));
     }
     { // conditional tombstone withdraws immediately
       const response = await del(first);
       assert.equal(response.status, 200);
+      assertProtectedEtag(response);
       tombstone = response.headers.get("ETag");
       assert.equal((await call(route)).status, 404);
       assert.equal((await call(route, { method: "HEAD" })).status, 404);
@@ -74,6 +84,7 @@ test("actual local Worker/R2 runtime: publish, conditional updates, withdrawal a
     { // identical restore does not revive stale deletion (real R2 ETag)
       const restored = await put(body, { "If-Match": tombstone });
       assert.equal(restored.status, 200);
+      assertProtectedEtag(restored);
       assert.notEqual(restored.headers.get("ETag"), first);
       assert.equal((await del(first)).status, 412);
       assert.equal(await (await call(route)).text(), body);

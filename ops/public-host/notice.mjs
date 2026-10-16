@@ -144,6 +144,8 @@ function reply(request, status, body, extra = {}) {
     "CDN-Cache-Control": "no-store", "Date": new Date().toUTCString(), "Age": "0",
     "X-Content-Type-Options": "nosniff", ...extra,
   });
+  // Operators must receive the unchanged strong ETag used by the next conditional write.
+  if (headers.has("ETag")) headers.set("Cache-Control", "no-store, no-transform");
   return new Response(request.method === "HEAD" ? null : JSON.stringify(body), { status, headers });
 }
 

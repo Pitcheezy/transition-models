@@ -5,6 +5,10 @@
 [CHECKLIST](../CHECKLIST.md) 상단과 [우리 board](https://github.com/Pitcheezy/transition-models/issues/3)를 확인한다.
 역사적 “다음 단위” 문구는 현재 지시가 아니다.
 
+## 승인된 합성 시험 진행 — WS-stage4
+
+2026-10-16 사용자 구체 승인 후 새 private R2/D1/Worker·별도 접근 제한 시험 주소를 만들었다. 초기 HTTPS17검사와 실제 브라우저 로그인은 통과했다. 첫 합성 PUT은 저장되었지만 엣지 압축으로 ETag가 weak로 바뀌어 전송기가 성공을 확정하지 못했다. HEAD/GET와 합성 SHA로 저장을 확인하고 중복 쓰기를 중단했다. ETag 응답만 no-transform으로 보존하도록 수정·집중61검사를 완료했으며 다른 모델 검토·고정 재배포·철회/복구/안내 전환은 진행 중이다. 수집/피드백OFF, 기존 사이트·팀원 코드·실경기 미변경. 최종 완료 기록 전에는 WS-stage4를 합격으로 읽지 않는다.
+
 ## 본인 전용 실자원 실행안 — WS-stage3
 
 [실행안](WS_STAGE3_EXECUTION_PLAN_20261015.md)·[영수증](results/ops/ws_stage3_20261015.json). 전용 자원/경로·계정 한 개의 세 제품 편집권한·짧은 TTL 초안과 세션3600초 후보를 준비했다. 고정 host `c07dc94` 전체를 다른 모델 gpt-5.6-sol이 검토해 P1/P2 없음, 합성 패키지/설정/격리 dry-run 통과·원본16파일 SHA 보존. 토큰은 발급 전 요약까지만 작성했다. 실제 토큰/자원/비밀/배포/DNS는 WS-stage4 구체 승인 대기다. 실제 D1 ID 교체·migration 선적용·배포 gate=true 확인 뒤 hostname을 마지막에 연결한다. 수집/피드백OFF·Free·본인 시험·합성/실운영 구분을 유지한다.

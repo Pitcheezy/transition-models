@@ -3,7 +3,7 @@
 ## 본인 전용 실자원 시험 준비 — 2026-10-15
 
 - [x] WS-stage3. 전용 실자원 실행안·최소 제품 권한 초안·합성 후보 준비 완료. 고정 host `c07dc94`의 gpt-5.6-sol 전체 검토 P1/P2 없음, Node79·JS7·패키지/설정·격리 dry-run1회 통과, 원본16파일 SHA 보존. [실행안](docs/WS_STAGE3_EXECUTION_PLAN_20261015.md)·[영수증](docs/results/ops/ws_stage3_20261015.json). API 토큰 발급·자원/비밀/배포/DNS는 미실행이며 아래 WS-stage4로 분리. 선점 `93d4c7b`, 수정 권한 반납. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-15 · Codex]`
-- [ ] WS-stage4. 구체 시험 범위 승인 후 본인 전용 Cloudflare 자원·접근 제한·합성 발행/철회/복구를 실제 검증한다. 2026-10-16 사용자 구체 승인 후 Codex `codex/ws-stage4-trial` 선점. 기존 사이트·팀원 코드·실경기 연결 제외. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-15 · Codex]`
+- [ ] WS-stage4. 구체 시험 범위 승인 후 본인 전용 Cloudflare 자원·접근 제한·합성 발행/철회/복구를 실제 검증한다. 2026-10-16 사용자 구체 승인 후 Codex `codex/ws-stage4-trial` 선점. 실제 private R2/D1/Worker·접근 문·합성 HTTPS baseline17 통과. CDN 압축이 발행 ETag를 weak로 바꾸는 결함을 재현해 no-transform 수정·집중61검사 통과; 다른 모델 검토와 재배포 검증 진행 중. 기존 사이트·팀원 코드·실경기 연결 제외. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-15 · Codex]`
 
 ## 실계정 읽기·시험 실행안 — 2026-10-15
 
