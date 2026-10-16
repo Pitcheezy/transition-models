@@ -21,7 +21,10 @@ WS-publish2는 새 연결 시험 요청의 단일 키·짧은 시간 범위를 �
 
 - `cd ops/public-host && npm test`: 296/296, 17.194초. 신규12개(기존 worker와 집중44개 포함).
 - `npm run check`, `git diff --check`: 통과.
-- Python 설정/패키지142개 통과. 검증 바이트 재사용 회귀 추가 후 관련12개 통과(현재 수집143개). ruff 통과.
-- 고정 Git ZIP runtime 검사 및 다른 모델 검토는 최종 기록으로 갱신한다.
+- `python -m pytest tests/test_public_host_config.py tests/test_public_host_release.py tests/test_checklist_model.py -q`: 최종209개(설정143·패키지58·체크리스트8), 50.35초. ruff 통과.
+- 고정 소스 `834f8387772adae836f5aabf9d0d3c3d7e77caa7`로 만든 ZIP 111,044바이트/13파일(운영12+합성화면1), 목록·설정 검사 통과. ZIP SHA `126053ebe5546cc804185a6f952866b89c130b0816756d17f944995eada45794`.
+- 그 ZIP에서 꺼낸 runtime을 임시 loopback Worker/R2로 실행해 12요청 통과: 정상 발행/읽기·다른키 거부·중복412·철회404·복구, 만료PUT/DELETE/HEAD거부·공개경로 유지. 원본 Git blob과 체크아웃 줄바꿈 차이도 설정 검사에서 수용했다.
+- 임시 포장 검사 스크립트가 반환값에 없는 `ok`를 요구해 처음 중단됐다. 저장소 코드는 바꾸지 않고 임시 wrapper만 고쳐 기존 ZIP의 고정 커밋·목록을 재검사한 뒤 진행했다.
+- 작성 Codex(GPT-6계열)와 다른 실제 모델 `gpt-5.6-sol`이 위 고정 소스를 검토해 P1/P2 없음. 전체 검사를 반복하지 않은 읽기 검토다.
 
 합성 입력·임시 loopback Worker/R2 검사다. 실제 Cloudflare·팀원 발행기·공동 리허설·메일 발송은 미실행이다.
