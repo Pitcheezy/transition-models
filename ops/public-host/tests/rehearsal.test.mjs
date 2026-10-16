@@ -30,6 +30,12 @@ test("body corruption and wrong cache metadata fail the read verifier", async ()
     Date: new Date().toUTCString(), Age: "0", "Cache-Control": "no-store", ...h,
   } });
   await checkRead(response(), expected, 9);
+  for (const cache of ["no-store, no-transform", "no-transform, NO-STORE"]) {
+    await checkRead(response("synthetic", { "Cache-Control": cache }), expected, 9);
+  }
+  for (const cache of ["no-transform", "max-age=300, no-transform", "x-no-store", "no-store=1"]) {
+    await assert.rejects(checkRead(response("synthetic", { "Cache-Control": cache }), expected, 9), /read_cache/);
+  }
   await assert.rejects(checkRead(response("synthetiC"), expected, 9), /read_integrity/);
   await assert.rejects(checkRead(response("synthetic", { Age: "2" }), expected, 9), /read_age/);
   await assert.rejects(checkRead(response("synthetic", { "Cache-Control": "max-age=300" }), expected, 9), /read_cache/);

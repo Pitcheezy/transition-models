@@ -1,5 +1,9 @@
 # SmartPitch MDP Transition Probability Models
 
+## 최신 실제 시험 — 2026-10-16
+
+사용자 승인 범위의 본인 전용 Cloudflare 합성 시험 WS-stage4를 완료했다. [실제 결과·한계](docs/WS_STAGE4_CLOUD_TRIAL_20261016.md)와 CHECKLIST 상단을 먼저 확인한다. 최종 접근 문ON, 자료읽기/업로드/수집/피드백OFF이며 기존 사이트·팀원·실경기는 미변경이다. 새 일반 공개/실경기/접속 대상 확대는 이 승인에 포함되지 않는다. 아래 계정/배포 대기는 과거 이력이며 같은 시험을 새 근거 없이 반복하지 않는다.
+
 ## 현재 월드시리즈 운영 인계 — 2026-10-14
 
 [구현 범위·재현 명령·다음 입력·한계](docs/WS_OPERATIONS_HANDOFF.md)를 먼저 읽는다.

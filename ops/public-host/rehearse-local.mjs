@@ -40,7 +40,7 @@ export async function checkRead(response, expected, bytes) {
   need(body.byteLength === bytes && hash(body) === expected, "read_integrity");
   need(Number.isFinite(Date.parse(response.headers.get("Date"))), "read_date");
   need(response.headers.get("Age") === "0", "read_age");
-  need(response.headers.get("Cache-Control") === "no-store", "read_cache");
+  need((response.headers.get("Cache-Control") || "").toLowerCase().split(",").map(v => v.trim()).includes("no-store"), "read_cache");
 }
 async function sourceReceipt() {
   const files = ["worker.mjs", "gateway.mjs", "telemetry.mjs", "monitor.mjs",
