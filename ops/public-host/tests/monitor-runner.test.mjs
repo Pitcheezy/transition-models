@@ -251,3 +251,36 @@ test("already-aborted run performs no probe or alert and does not leave locks", 
   assert.equal(r.attempts, 0); assert.equal(r.stop_reason, "interrupted"); assert.equal(r.exit_code, 130);
   await assert.rejects(access(f.options.statePath + ".runner.lock"));
 });
+
+for (const mode of ["abort", "insufficient_probe_budget", "duration_expired"]) {
+  test(`async config reread ${mode} prevents a new probe and state write`, async t => {
+    const f = await fixture(t); await withAlerts(f);
+    const timer = clock(); const controller = new AbortController();
+    let reads = 0; let probes = 0; let alerts = 0;
+    const r = await runBounded({ ...f.options, maxDurationMs: 1000 }, {
+      ...timer, signal: controller.signal,
+      readConfig: async path => {
+        const value = JSON.parse(await readFile(path, "utf8"));
+        if (++reads === 2) {
+          await Promise.resolve();
+          if (mode === "abort") controller.abort();
+          else timer.advance(mode === "duration_expired" ? 1001 : 901);
+        }
+        return value;
+      },
+      monitor: async () => {
+        probes++;
+        await writeFile(f.options.statePath, "unexpected new state");
+        return result(f.c);
+      },
+      alerts: async () => { alerts++; return okAlert(); },
+    });
+    assert.equal(reads, 2); assert.equal(probes, 0); assert.equal(alerts, 0);
+    assert.equal(r.attempts, 0); assert.equal(r.available, 0);
+    assert.equal(r.stop_reason, mode === "abort" ? "interrupted" : "duration_limit");
+    assert.equal(r.exit_code, mode === "abort" ? 130 : 2);
+    await assert.rejects(access(f.options.statePath));
+    await assert.rejects(access(f.options.statePath + ".runner.lock"));
+    await assert.rejects(access(f.options.alertStatePath));
+  });
+}

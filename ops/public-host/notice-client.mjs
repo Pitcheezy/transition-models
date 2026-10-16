@@ -7,8 +7,9 @@ const MAX_RESPONSE_BYTES = 65536;
 const exact = (v, keys) => v !== null && typeof v === "object" && !Array.isArray(v) &&
   Object.keys(v).length === keys.length && keys.every(k => Object.hasOwn(v, k));
 const integer = n => Number.isSafeInteger(n) && n >= 0;
-const timestamp = v => typeof v === "string" && Number.isFinite(Date.parse(v)) &&
-  /^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(?:\.\d+)?(?:Z|[+-]\d\d:\d\d)$/.test(v);
+// The notice server uses Date.toISOString(); reject parsed-but-normalized impossible dates.
+const timestamp = v => typeof v === "string" && /^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}Z$/.test(v) &&
+  Number.isFinite(Date.parse(v)) && new Date(v).toISOString() === v;
 export class NoticeClientError extends Error { constructor(code) { super(code); this.code = code; } }
 const refuse = code => { throw new NoticeClientError(code); };
 

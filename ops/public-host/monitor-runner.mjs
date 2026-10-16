@@ -55,9 +55,9 @@ async function exclusive(path, work, conflictCode) {
 export async function runBounded(options, dependencies = {}) {
   const o = validateRunnerOptions(options);
   const deps = { monotonic: () => performance.now(), sleep: interruptibleSleep, monitor: runOnce,
-    alerts: runAlertsOnce, emit: () => {}, ...dependencies };
+    alerts: runAlertsOnce, readConfig: path => readJson(path, 16384), emit: () => {}, ...dependencies };
   const signal = dependencies.signal;
-  const config = validateConfig(await readJson(o.configPath, 16384));
+  const config = validateConfig(await deps.readConfig(o.configPath));
   const fingerprint = configFingerprint(config);
   const configPath = await plainPath(o.configPath);
   const statePath = await plainPath(o.statePath);
@@ -101,14 +101,18 @@ export async function runBounded(options, dependencies = {}) {
         if (o.maxDurationMs - elapsed() < worstProbeMs) { summary.stop_reason = "duration_limit"; break; }
         let result;
         try {
-          if (configFingerprint(validateConfig(await readJson(configPath, 16384))) !== fingerprint) fail("runner_config_changed");
+          if (configFingerprint(validateConfig(await deps.readConfig(configPath))) !== fingerprint) fail("runner_config_changed");
+          // Config I/O can consume the remaining budget or receive a shutdown signal.
+          // Recheck immediately before starting the next one-shot probe, without another await gap.
+          if (signal?.aborted) { summary.stop_reason = "interrupted"; break; }
+          if (o.maxDurationMs - elapsed() < worstProbeMs) { summary.stop_reason = "duration_limit"; break; }
           summary.attempts += 1;
           result = await deps.monitor(configPath, statePath);
           if (result?.report?.config_sha256 !== fingerprint ||
               !["available", "partial", "failed"].includes(result.report.status)) fail("runner_report_changed");
           summary[result.report.status] += 1;
           if (result.incident_open) summary.incident_open_samples += 1;
-          if (configFingerprint(validateConfig(await readJson(configPath, 16384))) !== fingerprint) fail("runner_config_changed");
+          if (configFingerprint(validateConfig(await deps.readConfig(configPath))) !== fingerprint) fail("runner_config_changed");
         } catch (error) { recordError(error); break; }
         if (alertConfig && !signal?.aborted) {
           try {

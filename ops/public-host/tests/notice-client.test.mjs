@@ -120,6 +120,24 @@ test("read validation refuses inconsistent ETags, unproved audit, wrong MIME, UT
   }
 });
 
+test("GET and PUT require the server's exact UTC ISO timestamp without calendar normalization", async () => {
+  for (const since of ["2026-02-30T00:00:00Z", "2026-02-30T00:00:00.000Z", "2026-02-29T00:00:00.000Z",
+    "2026-04-31T00:00:00.000Z", "2026-10-17T24:00:00.000Z", "2026-10-17T09:00:00.000+09:00"]) {
+    const read = await executeNotice(plan(), TOKEN,
+      { fetchImpl: async () => response(state({ state: { ...state().state, since } })) });
+    assert.equal(read.receipt.outcome, "invalid_response", since); assert.equal(read.snapshot, null);
+    const write = await executeNotice(writePlan(), TOKEN, { fetchImpl: async () => response(ack({ since })) });
+    assert.equal(write.receipt.outcome, "unknown", since); assert.equal(write.receipt.code, "invalid_response");
+  }
+  for (const since of [AT, "2024-02-29T23:59:59.123Z"]) {
+    const read = await executeNotice(plan(), TOKEN,
+      { fetchImpl: async () => response(state({ state: { ...state().state, since } })) });
+    assert.equal(read.receipt.outcome, "observed", since);
+    const write = await executeNotice(writePlan(), TOKEN, { fetchImpl: async () => response(ack({ since })) });
+    assert.equal(write.receipt.outcome, "applied", since);
+  }
+});
+
 test("timeout covers both fetch and a headers-only body, with one request and no secret error output", async () => {
   for (const fetchImpl of [async () => new Promise(() => {}), async () => new Response(new ReadableStream({ start() {} }),
     { headers: { "Content-Type": "application/json", "Cache-Control": "no-store, no-transform", ETag: ETAG } })]) {

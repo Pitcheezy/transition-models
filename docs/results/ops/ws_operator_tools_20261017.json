@@ -8,7 +8,7 @@
   "files": [
     {
       "path": "ops/public-host/notice-client.mjs",
-      "sha256": "e179f088a5b4f0e706cabf6eb83fe2530c56eab6d921ea53d7fd7c2a482ce66e"
+      "sha256": "eea8aedb57f01f15f6a3c06436f41facdedabc09a050548f6a9e2f43e1a8dd8e"
     },
     {
       "path": "ops/public-host/notice-cli.mjs",
@@ -16,7 +16,7 @@
     },
     {
       "path": "ops/public-host/tests/notice-client.test.mjs",
-      "sha256": "34675ba0ff7a2271369055c21a02f2f3773bbe65fd1d888202017badbadbd9f8"
+      "sha256": "5b3a94944f93e262c67ac8f93176e0b0e80000c860352aa39e150334c0f0ffd0"
     },
     {
       "path": "ops/public-host/tests/notice-cli.test.mjs",
@@ -24,7 +24,7 @@
     },
     {
       "path": "ops/public-host/monitor-runner.mjs",
-      "sha256": "0c20e40bbbeb118996a0ad96a76b39cf4bce6e8e7bf735d30325769de165b30d"
+      "sha256": "3ca10ac1cf7f73e69e1ea3c24f2c936d684ca480f2e73432d1202d91f07dfac0"
     },
     {
       "path": "ops/public-host/monitor-runner-cli.mjs",
@@ -32,20 +32,30 @@
     },
     {
       "path": "ops/public-host/tests/monitor-runner.test.mjs",
-      "sha256": "59517703fe07b18ebf0ea16c9cb6622637903f2d95ab1657232235a140b0fc3e"
+      "sha256": "73c4039a07ceca5e0a6553fc602f3bfcda20ba34e1afb554970de71e5a4a3520"
     }
   ],
   "checks": {
-    "notice_focused_passed": 16,
-    "monitor_focused_passed": 21,
-    "all_node_passed": 280,
+    "notice_focused_passed": 17,
+    "monitor_focused_passed": 24,
+    "all_node_passed": 284,
     "all_node_failed": 0,
-    "all_node_duration_ms": 16570.6616,
+    "all_node_duration_ms": 16882.2367,
     "checklist_passed": 8,
-    "full_log_sha256": "a1788d1d7907fc2e4d4d02fa151cf20a4d6f905e1ed61897885b68f8ee9cbe38"
+    "full_log_sha256": "171d6d678a1a0dfbf257b4a6e24df483cf97415bba9eebd64520cbb586f54462",
+    "local_links_checked": 91
   },
   "different_model_review": {
-    "status": "pending"
+    "model": "gpt-5.6-sol",
+    "initial_commit": "aa61cdeca75dd9115b104635f382fff01cf304fe",
+    "initial_p1": 0,
+    "initial_p2": 2,
+    "fixes": [
+      "strict server UTC calendar round-trip",
+      "cancellation and remaining duration rechecked after config IO"
+    ],
+    "status": "fixes_applied_pending_fixed_commit_recheck",
+    "reviewer_focused_passed_before_fix": 37
   },
   "deployed": false,
   "external_notifications_sent": false,
