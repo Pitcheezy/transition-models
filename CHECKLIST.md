@@ -3,7 +3,7 @@
 ## 협업 감사·노트북 운영 리허설 진행 — 2026-10-18
 
 - [x] H-collab3. PR28/40/41/42 협업 근거 감사·현재/이력 인계 정리 완료. 절차 편차1건과 과거 모델/일일조회 미확인을 보존. [감사](docs/COLLABORATION_AUDIT_20261018.md). 상대링크17·체크리스트8 통과, WS-laptop1은 별도 진행. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-18 · Codex]`
-- [~] WS-laptop1. 실제 업로드·안내·유한 감시 CLI와 키/만료 제한 Worker를 노트북 loopback에서 함께 검증한다. 기존 서버·Mac·팀원·배포 변경 없음. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-18 · Codex]`
+- [~] WS-laptop1. 실제 업로드·안내·유한 감시 CLI와 키/만료 제한 Worker의 노트북 loopback 조합 구현, 집중8검사·문법 통과. 고정 코드 다른 모델 검토·전체 회귀·영수증 정리 대기. 기존 서버·Mac·팀원·배포 변경 없음. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-18 · Codex]`
 
 Codex가 수정 권한 선점: `codex/ws-laptop-ops-1018`. [사전 합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6244814626). 사용량 약50% 잔여에서 마무리하며, 외부 입력 대기를 임의로 완료하지 않는다.
 
