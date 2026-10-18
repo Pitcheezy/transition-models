@@ -96,3 +96,8 @@ OS/파일시스템 지연을 포함한 강제 종료 시각 보장은 아니다.
 전체 HTTP 요청 수는 별도 관측하지 않아 null이며 **18요청/120초 공동 시험 예산 통과 증거가 아니다**.
 만료는 과거 만료 설정의 로컬 재시작 검사로, 실제 시계의 만료 경계 통과는 미측정이다. 실제 Ctrl+C·Mac·Cloudflare·Song 발행기·실경기·외부 알림은 검증하지 않는다.
 Windows workerd의 기존 WSARecv/WSASend 연결 종료 진단이 나올 수 있으며 이를 해결했다고 처리하지 않는다.
+## 같은 런타임의 실제 만료 경계
+
+`node ops/public-host/rehearse-live-expiry.mjs --output .cache/new-live-expiry.json`
+
+새 loopback Worker1개·합성키1개에서 실제 만료를 기다리고 PUT/DELETE/HEAD403과 저장값 보존을 확인한다. 전체HTTP18/본문2KiB/부팅·대기·정리포함120초를 계수한다. 외부 대상·자격을 받지 않으며 실제 공동 시험이 아니다. [범위·결과](../../docs/WS_LIVE_EXPIRY_20261018.md).

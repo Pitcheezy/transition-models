@@ -1,0 +1,210 @@
+{
+  "schema": "pitcheezy-live-expiry-rehearsal-v1",
+  "synthetic": true,
+  "passed": true,
+  "target": "new-loopback-miniflare",
+  "runtime_count": 1,
+  "clock_mocked": false,
+  "runtime_restarted": false,
+  "cloud_verified": false,
+  "song_publisher_verified": false,
+  "credential_revocation_verified": false,
+  "delivery_confirmed": false,
+  "single_data_key": true,
+  "access_gate_enabled": true,
+  "telemetry_enabled": false,
+  "feedback_enabled": false,
+  "limits": {
+    "http_requests": 18,
+    "body_bytes": 2048,
+    "request_window_ms": 100000,
+    "total_ms": 120000
+  },
+  "environment": {
+    "node": "v24.1.0",
+    "platform": "win32",
+    "arch": "x64",
+    "miniflare": "4.20260730.0"
+  },
+  "requests": [
+    {
+      "label": "unauthenticated_read",
+      "method": "GET",
+      "sent_ms": 379,
+      "body_bytes": 0,
+      "status": 401,
+      "finished_ms": 426
+    },
+    {
+      "label": "viewer_login",
+      "method": "POST",
+      "sent_ms": 426,
+      "body_bytes": 27,
+      "status": 200,
+      "finished_ms": 438
+    },
+    {
+      "label": "unused_key_head",
+      "method": "HEAD",
+      "sent_ms": 439,
+      "body_bytes": 0,
+      "status": 404,
+      "finished_ms": 452
+    },
+    {
+      "label": "create",
+      "method": "PUT",
+      "sent_ms": 452,
+      "body_bytes": 40,
+      "status": 200,
+      "finished_ms": 527
+    },
+    {
+      "label": "created_head",
+      "method": "HEAD",
+      "sent_ms": 527,
+      "body_bytes": 0,
+      "status": 200,
+      "finished_ms": 532
+    },
+    {
+      "label": "created_read",
+      "method": "GET",
+      "sent_ms": 532,
+      "body_bytes": 0,
+      "status": 200,
+      "finished_ms": 550
+    },
+    {
+      "label": "conditional_update",
+      "method": "PUT",
+      "sent_ms": 550,
+      "body_bytes": 40,
+      "status": 200,
+      "finished_ms": 561
+    },
+    {
+      "label": "updated_read",
+      "method": "GET",
+      "sent_ms": 562,
+      "body_bytes": 0,
+      "status": 200,
+      "finished_ms": 577
+    },
+    {
+      "label": "conditional_withdraw",
+      "method": "DELETE",
+      "sent_ms": 577,
+      "body_bytes": 0,
+      "status": 200,
+      "finished_ms": 597
+    },
+    {
+      "label": "withdrawn_read",
+      "method": "GET",
+      "sent_ms": 597,
+      "body_bytes": 0,
+      "status": 404,
+      "finished_ms": 607
+    },
+    {
+      "label": "tombstone_head",
+      "method": "HEAD",
+      "sent_ms": 607,
+      "body_bytes": 0,
+      "status": 200,
+      "finished_ms": 611
+    },
+    {
+      "label": "conditional_restore",
+      "method": "PUT",
+      "sent_ms": 611,
+      "body_bytes": 40,
+      "status": 200,
+      "finished_ms": 623
+    },
+    {
+      "label": "restored_read",
+      "method": "GET",
+      "sent_ms": 623,
+      "body_bytes": 0,
+      "status": 200,
+      "finished_ms": 631
+    },
+    {
+      "label": "expired_put",
+      "method": "PUT",
+      "sent_ms": 20121,
+      "body_bytes": 40,
+      "status": 403,
+      "finished_ms": 20127
+    },
+    {
+      "label": "expired_delete",
+      "method": "DELETE",
+      "sent_ms": 20127,
+      "body_bytes": 0,
+      "status": 403,
+      "finished_ms": 20139
+    },
+    {
+      "label": "expired_head",
+      "method": "HEAD",
+      "sent_ms": 20139,
+      "body_bytes": 0,
+      "status": 403,
+      "finished_ms": 20153
+    },
+    {
+      "label": "preserved_read",
+      "method": "GET",
+      "sent_ms": 20153,
+      "body_bytes": 0,
+      "status": 200,
+      "finished_ms": 20179
+    },
+    {
+      "label": "preserved_head",
+      "method": "HEAD",
+      "sent_ms": 20179,
+      "body_bytes": 0,
+      "status": 200,
+      "finished_ms": 20182
+    }
+  ],
+  "completed_phases": [
+    "startup",
+    "before_expiry",
+    "real_clock_wait",
+    "after_expiry"
+  ],
+  "cleanup": {
+    "runtime": "complete",
+    "temporary_storage": "removed"
+  },
+  "source_sha256": {
+    "worker.mjs": "9f3d818686bc6af847bf4c292658a1c71f22f4dd72f6282c8b00e84e0ca33d1b",
+    "gateway.mjs": "fbc1f5d652c124f6827d4065caaf62411f3eba0c311da747ad8473c5d71f7ca0",
+    "access.mjs": "2513d96b0950b8917d45a37e6b4c4a7d605df820a8e294e9b30b8a7beb6a4707",
+    "notice.mjs": "20433bdb8723fe5f9073e39d8f466f00a7fc7e95b26fb304903103473b62733a",
+    "telemetry.mjs": "545569404a68e8a5159984c3b328e4982c217247d1cd5af01e1831165ebf6739",
+    "monitor-cli.mjs": "112fa4cacf50a263dab2f28880d726855ae3d8259c6b03b829c3abc4a4f7bcb9",
+    "rehearsal/local-host.mjs": "9cf5b427e38d61f22a542de8a61ba6c601d875de78d2dc95fd79d5053cdaf791",
+    "rehearse-operator-tools.mjs": "d29291f04a6ee76da441abc601fae7e04a47e815f0a30ce09a88d5da3ff18ef5",
+    "rehearse-live-expiry.mjs": "46b06e6962d8dde7cccc09e2760b1135d5fbc5fa0aedb57319cccfb53c18aa33",
+    "package-lock.json": "55e30f2a196b6510da56126fb33cb912ab0ebbfe55047f358048027ba5484f91"
+  },
+  "expiry_utc": "2026-10-18T03:47:01.007Z",
+  "last_pre_expiry_utc": "2026-10-18T03:46:41.630Z",
+  "withdraw_restore_verified": true,
+  "first_post_expiry_utc": "2026-10-18T03:47:01.119Z",
+  "payload_sha256_before": "6515b91f02c6965c7645b8e6681ebc20566fc571009efb2deee2c04deaf9788f",
+  "payload_sha256_after": "6515b91f02c6965c7645b8e6681ebc20566fc571009efb2deee2c04deaf9788f",
+  "bytes_and_etag_preserved": true,
+  "live_deadline_crossing_verified": true,
+  "elapsed_ms": 20261,
+  "http_requests": 18,
+  "maximum_body_bytes": 40,
+  "request_budget_verified": true,
+  "total_budget_verified": true
+}
