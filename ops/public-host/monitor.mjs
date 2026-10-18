@@ -27,7 +27,13 @@ export function validateConfig(config) {
     "page_sha256"];
   // Optional (WS-monitor2): the NAME of an environment variable holding a monitor access code.
   if (object(config) && own(config, "access_code_env")) keys.push("access_code_env");
+  const publisherChecks = object(config) && (own(config, "health_contract") || own(config, "active_game_ids"));
+  if (publisherChecks) keys.push("health_contract", "active_game_ids");
   if (!exact(config, keys) || config.schema !== "pitcheezy-host-monitor-v1") refuse("invalid_config");
+  if (publisherChecks && (config.health_contract !== "pitcheezy-publish-health-v1" ||
+      config.timestamp_pointer !== "/published_at" || !Array.isArray(config.active_game_ids) ||
+      config.active_game_ids.length > 32 || !config.active_game_ids.every(id => int(id, 1, 999999999999)) ||
+      new Set(config.active_game_ids).size !== config.active_game_ids.length)) refuse("invalid_health_contract_config");
   if (own(config, "access_code_env") && !(config.access_code_env === null ||
       (typeof config.access_code_env === "string" && ENV_NAME.test(config.access_code_env)))) refuse("invalid_access_code_env");
   let url;
@@ -87,6 +93,53 @@ export function evaluateFreshness(document, config, nowMs) {
   const age = (nowMs - at) / 1000;
   if (age < -config.clock_skew_seconds) return { status: "future", age_seconds: Math.floor(age) };
   return { status: age > config.max_age_seconds ? "stale" : "fresh", age_seconds: Math.max(0, Math.floor(age)) };
+}
+
+/**
+ * Optional, narrowly scoped checks for the delivered public-health v1 contract.
+ * game_checks is optional: an absent active row means unconfirmed, not a malformed publisher.
+ * Never reads game files or derives active games from historical game_checks entries.
+ */
+export function evaluatePublisherHealth(document, config, nowMs) {
+  if (!own(config, "health_contract")) return null;
+  const issues = new Set(), games = [];
+  const sequenceValid = int(document.sequence, 0, Number.MAX_SAFE_INTEGER);
+  const checksPresent = own(document, "game_checks");
+  const checksValid = checksPresent && object(document.game_checks);
+  if (document.schema !== config.health_contract || !sequenceValid || (checksPresent && !checksValid)) {
+    issues.add("health_contract_invalid");
+  }
+  for (const game of config.active_game_ids) {
+    const entry = { game_pk: game, status: "unconfirmed", code: "game_check_missing" };
+    games.push(entry);
+    if (!checksValid || !own(document.game_checks, String(game))) continue;
+    const row = document.game_checks[String(game)];
+    if (!object(row) || !int(row.sequence_checked, 0, Number.MAX_SAFE_INTEGER) ||
+        !(row.file_sequence === null || int(row.file_sequence, 0, Number.MAX_SAFE_INTEGER)) ||
+        typeof row.feed_ok !== "boolean" || !sequenceValid || row.sequence_checked > document.sequence ||
+        (row.file_sequence !== null && row.file_sequence > row.sequence_checked)) {
+      entry.status = "failed"; entry.code = "game_check_invalid";
+      issues.add("game_check_invalid"); continue;
+    }
+    const freshness = evaluateFreshness(row, { ...config, timestamp_pointer: "/checked_at" }, nowMs);
+    Object.assign(entry, { freshness, sequence_checked: row.sequence_checked,
+      file_sequence: row.file_sequence, feed_ok: row.feed_ok });
+    if (freshness.status !== "fresh") {
+      entry.status = "failed"; entry.code = freshness.status === "stale" ? "game_check_stale" : "game_check_invalid";
+      issues.add(entry.code);
+    }
+    if (!row.feed_ok) {
+      entry.status = "failed"; entry.code = "game_check_feed_failed"; issues.add("game_check_feed_failed");
+    }
+    if (entry.status === "failed") continue;
+    entry.status = row.file_sequence === null ? "unconfirmed" : "confirmed";
+    entry.code = row.file_sequence === null ? "game_file_withdrawn" : null;
+  }
+  const freshness = evaluateFreshness(document, config, nowMs);
+  return { contract: config.health_contract, scope: "configured_active_games_only",
+    status: issues.size || freshness.status !== "fresh" ? "failed" :
+      games.some(g => g.status === "unconfirmed") ? "unconfirmed" : "confirmed",
+    sequence: sequenceValid ? document.sequence : null, issues: [...issues], games };
 }
 
 function timingHeaders(headers, nowMs, skew) {
@@ -244,8 +297,9 @@ export async function probe(config, { fetchImpl = fetch, now = () => Date.now(),
       const end = now();
       const headerStatus = timingHeaders(result.headers, end, config.clock_skew_seconds);
       const freshness = evaluateFreshness(document, config, end);
+      const publisher = evaluatePublisherHealth(document, config, end);
       return { status: "ok", code: null, headers: headerStatus, freshness,
-        elapsed_ms: Math.round(performance.now() - begin) };
+        ...(publisher ? { publisher } : {}), elapsed_ms: Math.round(performance.now() - begin) };
     } catch (error) {
       return { status: "error", code: error instanceof MonitorError ? error.code : "probe_error",
         elapsed_ms: Math.round(performance.now() - begin) };
@@ -261,9 +315,12 @@ export async function probe(config, { fetchImpl = fetch, now = () => Date.now(),
   else if (health.status === "ok") {
     if (health.headers !== "valid") issues.push("health_" + health.headers);
     if (!["fresh", "unmeasured"].includes(health.freshness.status)) issues.push("freshness_" + health.freshness.status);
+    // At most four fixed publisher categories, deduplicated across up to 32 games.
+    // Together with page/header/freshness this stays below the existing eight-issue state bound.
+    if (health.publisher) issues.push(...health.publisher.issues);
   }
   const status = issues.length ? "failed" :
-    health.freshness.status === "unmeasured" ? "partial" : "available";
+    health.freshness.status === "unmeasured" || health.publisher?.status === "unconfirmed" ? "partial" : "available";
   return {
     schema: "pitcheezy-host-probe-v1", config_sha256: configFingerprint(config),
     observed_at_ms: end, status, issues, page, health,
@@ -276,7 +333,10 @@ export async function probe(config, { fetchImpl = fetch, now = () => Date.now(),
       [page.code, health.code].some(code => GATE_READ_ANSWERS.has(code)),
     // not_configured | established | gate_off | login_failed. Never the code or the cookie.
     access_session: access.session,
-    semantic_health: "unmeasured", javascript_execution: "unmeasured",
+    // This is the publisher's reported checks, not independent validation of the MLB feed/model.
+    semantic_health: health.publisher ? ({ confirmed: "publisher_checks_passed",
+      unconfirmed: "publisher_checks_incomplete", failed: "publisher_checks_failed" })[health.publisher.status] : "unmeasured",
+    javascript_execution: "unmeasured",
   };
 }
 
@@ -320,6 +380,10 @@ export function advanceState(state, report, config) {
         at_ms: report.observed_at_ms, issues: [...report.issues] };
       next.incident = event;
     }
+  } else if (report.status === "partial" && report.health?.publisher?.status === "unconfirmed") {
+    // Missing/withdrawn active-game evidence cannot resolve an already recorded incident.
+    // Break consecutive counts but retain the incident; legacy timestamp-only partial is unchanged.
+    next.successes = 0; next.failures = 0;
   } else {
     next.successes = Math.min(2, next.successes + 1); next.failures = 0;
     if (next.incident && next.successes === 2) {

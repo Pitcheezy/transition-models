@@ -9,8 +9,8 @@ Song 모델/수집기/Mac, 외부 알림, 스케줄러에 연결하지 않았다
 - health: /v1/health.json GET200, JSON object, Date/Age 헤더.
 - freshness: 명시 JSON Pointer의 RFC3339 시각. fresh/stale/future/missing/invalid.
   pointer=null이면 unmeasured이며 전체 partial이다. 실제 Song 필드명을 추측하지 않는다.
-- 업무상 health의 의미와 브라우저 JavaScript 실행은 항상 unmeasured다.
-  HTTP200만으로 추천·정책·경기 피드가 정상이라는 뜻이 아니다.
+- 기본 설정에서 업무상 health의 의미는 unmeasured다. 아래 선택 계약 검사는 발행기가 보고한 상태만 확인한다.
+  브라우저 JavaScript 실행은 항상 unmeasured이며, HTTP200이나 발행기 자기 보고만으로 추천·정책·경기 피드의 실제 정확성을 입증하지 않는다.
 - Date+Age는 캐시/응답 시계 검사다. Age=0이어도 본문은 오래될 수 있다.
   로컬 UTC와 큰 차이가 나면 clock_mismatch. 발행 시각으로 현재 시각을 대신하지 않는다.
 - 503에 `X-Pitcheezy-Notice` 헤더가 있으면 [긴급 안내 스위치](NOTICE.md)가 켜진 상태다. 코드 `notice_active`,
@@ -34,6 +34,56 @@ Song 모델/수집기/Mac, 외부 알림, 스케줄러에 연결하지 않았다
   - 코드와 쿠키는 메모리에만 있고 report·state·stdout·stderr에 남지 않는다(검사로 확인). 로그인 1회가 접근 문 요청자 제한 1회를 쓴다.
 - 시각은 초 단위 이상·시간대가 있는 RFC3339 문자열만 받는다. 숫자의 초/밀리초는 추정하지 않는다.
   예제의 지연120초·시계차30초는 합의된 운영값이 아니며 실제 리허설에서 정해야 한다.
+
+## 선택: 공개 발행 v1 경기 확인 상태 — v4.2 수신 반영
+
+기존 설정에 다음 **두 키를 함께** 넣고 `timestamp_pointer`를 `/published_at`으로 지정한다.
+이것은 **우리 감시 설정 확장**이며, 상대 공개 파일 계약을 바꾸지 않는다. 기존 설정에는 기본값을 삽입하지 않아 지문·동작을 유지한다.
+
+~~~json
+{
+  "health_contract": "pitcheezy-publish-health-v1",
+  "active_game_ids": [123],
+  "timestamp_pointer": "/published_at"
+}
+~~~
+
+위는 추가 항목 예시이며 전체 설정은 기존 예제의 나머지 필드가 필요하다. `123`은 합성 경기 번호다.
+`active_game_ids`는 **운영자가 실제 진행 중이라고 정한 경기** 0~32개의 중복 없는 양의 정수다.
+자동 경기 탐색·manifest 조회·경기 파일 추가 GET은 하지 않는다. 종료·일정 변경 시 운영자가 목록을 갱신해야 한다.
+목록이 오래되면 종료 경기를 중단으로 오인할 수 있고, 빠진 진행 경기는 검사하지 못한다.
+목록 변경은 설정 지문을 바꾸므로 기존 상태·장애 기록을 보존한 채 새 상태 파일을 사용한다.
+
+- 발행기 전체 생존: health **맨 위** `published_at`의 시각을 검사한다. `sequence`는 0 이상 안전한 정수여야 한다.
+  `publish.published_at`이나 경기 파일 수정 시각으로 대체하지 않는다. 활성 목록이 비어도 global freshness는 검사한다.
+- 지정 활성 경기: `game_checks.<game_pk>.checked_at`이 같은 freshness 기준 안에 있고 `feed_ok=true`인지 본다.
+  `sequence_checked`와 정수 `file_sequence`는 0 이상 안전한 정수이고 `file_sequence <= sequence_checked <= health.sequence`여야 한다.
+  **`file_sequence < sequence_checked`는 정상**이다. 경기 내용이 안 바뀌면 파일을 다시 쓰지 않기 때문이다.
+  본 검사는 한 스냅샷의 관계와 시각을 확인한다. 실행 간 sequence 증가·재시작을 검증했다고 주장하지 않는다.
+- `game_checks` 자체는 상대 스키마에서 선택 항목이다. 없는 항목/없는 활성 행은 `game_check_missing`으로 **unconfirmed/partial**이다.
+  형식 오류나 장애로 단정하지 않으며 정상으로도 표시하지 않는다. 자동 경기 파일 요청은 추가하지 않는다.
+- `file_sequence=null`은 공개 철회의 합법적 표현이다. 최신 확인·정상 feed여도 `game_file_withdrawn`으로 **unconfirmed/partial**이다.
+  `feed_ok=false`가 함께 있으면 발행기가 보고한 feed 실패로 처리한다.
+- 목록 밖 경기의 행은 오래됐거나 종료됐어도 검사하지 않는다. 모르는 확장 필드와 `receipt.reason`은 제한하지 않는다.
+  `held_last_accepted` 및 미래 reason 문자열 때문에 전송이나 감시를 거부하지 않는다.
+- 타입/순서 오류는 `health_contract_invalid` 또는 `game_check_invalid`, 활성 확인 시각이 오래되면 `game_check_stale`,
+  `feed_ok=false`면 `game_check_feed_failed`로 기록한다. 게임별 중복 원인은 네 고정 범주로 묶어 전체 issue는 최대 7개다.
+  이 원인들은 발행기 원인으로 Song 우선 대응에 분류하며 호스팅 원인도 함께 있으면 양쪽 확인이다.
+
+report의 `health.publisher`에는 검사 범위·global sequence·지정 경기별 상태와 짧은 고정 코드만 남는다.
+원문 reason·미지 필드·주소·토큰은 복사하지 않는다. `semantic_health`는 `publisher_checks_passed`,
+`publisher_checks_incomplete`, `publisher_checks_failed`로만 보고한다. 접근 거절·전송 실패로 본문을 못 읽으면 `unmeasured`다.
+이것은 **발행기 자기 보고의 제한된 정합 검사**이며 실제 MLB feed·추천 품질·관전 화면 동작 판정이 아니다.
+설정을 넣지 않으면 이전의 `semantic_health=unmeasured`와 시각만 검사하는 동작이 그대로다.
+
+미확인 partial은 새 장애를 열지 않고 기존 장애를 자동 복구시키지도 않는다. 연속 횟수를 끊고 기존 incident를 유지한다.
+따라서 한 번 정상 뒤 미확인이 끼면 복구하려면 다시 두 번 확인된 정상 결과가 필요하다.
+실행 결과가 partial이면 기존 CLI 종료 3(기존 장애가 열려 있으면 1)로 남으므로 사람이 누락/철회를 확인할 수 있다.
+이 기능은 실경기 감시를 설치하거나 실제 알림을 발송하지 않는다.
+
+~~~text
+node --test ops/public-host/tests/monitor-health.test.mjs ops/public-host/tests/monitor.test.mjs ops/public-host/tests/alerts.test.mjs
+~~~
 
 ## 실행
 
@@ -68,7 +118,8 @@ GET /와 GET /v1/health.json 각1회. `access_code_env`가 없으면 인증·Coo
 실행 간격을 정하는 기능은 없으며 장애 지속 시간·가동률·실경기 지연률 측정 결과가 아니다.
 열린 장애의 원인이 바뀌어도 opened를 반복하지 않는다. 최신 원인은 report.issues다. 알림 경로는 이 최신 report로 원인 재분류 알림을 보낸다
 ([알림](ALERTS.md) WS-alert2). 감시 상태 기계와 이벤트 형식은 그대로다.
-pointer=null의 partial은 가용성 복구만 나타낸다. 시각 미측정은 계속 남는다.
+pointer=null의 기존 partial은 가용성 복구만 나타낸다. 시각 미측정은 계속 남는다.
+아래 선택 계약 검사의 `unconfirmed` partial은 기존 장애를 닫지 않고 연속 성공·실패 횟수만 0으로 돌린다.
 
 상태 파일 하나에 state와 최신 report를 함께 기록한다. 전체 probe/저장 동안 잠금을 잡고,
 동기화한 임시 파일을 원자적으로 교체한다. 최근 이벤트100개와 버린 수 dropped_events를 보존한다.
@@ -93,7 +144,7 @@ node --test ops/public-host/tests/monitor.test.mjs
 
 합성/로컬 HTTP의 오류·복구·본문 제한·타임아웃·상태 보존·잠금을 확인한다.
 실제 도메인·CDN·알림 수신·실기기·실경기는 미검증이다.
-실제 health 발행 시각 필드, 합의한 지연 기준, 실행 주기/로그 보관/알림 채널을 받아 연결해야 한다.
+v4.2 health 발행 시각은 위 선택 계약의 최상위 published_at으로 확인했다. 운영 지연 기준, 활성 목록 갱신, 실행 주기/로그 보관/알림 채널을 확정해 연결해야 한다.
 별도 브라우저 검사에서 DOM/JS 기능도 확인해야 한다.
 
 ## 횟수·기간을 제한한 반복 실행 — WS-monitor3
@@ -148,4 +199,4 @@ node --test ops/public-host/tests/monitor-runner.test.mjs
 ~~~
 
 합성 단조 시계, 인자/경로 제한, 중복 실행, 중단과 재개, 오류 후 알림 금지, 누적 상태와 로컬 HTTP를 검사한다.
-실제 운영 주기·health 시각 필드·수신 채널·감시 기기의 상시 가동 조건은 별도 결정/리허설 대상이다.
+실제 운영 주기·활성 목록 갱신·수신 채널·감시 기기의 상시 가동 조건은 별도 결정/리허설 대상이다.
