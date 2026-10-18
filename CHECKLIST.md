@@ -2,7 +2,7 @@
 
 ## 상호 전달팩 준비 — 2026-10-18
 
-- [ ] WS-handoff3. 고정 main 소스의 명시 파일 ZIP·안내·해시·합성 검증과 #18 한 건 회신을 준비한다. 새 노트북 폴더에서 압축 해제 후 검사한다. 운영 코드·계약·배포·Mac·팀원 코드 변경 없음. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-18 · Codex]`
+- [ ] WS-handoff3. 고정 소스 ZIP·안내·해시·압축해제 Node304/CLI29회/CRC·SHA 검증 완료. #18 안내 게시와 최종 기록 진행 중. [근거](docs/WS_PEER_HANDOFF_20261018.md). 운영 코드·계약·배포·Mac·팀원 코드 변경 없음. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-18 · Codex]`
 
 수정 권한: Codex / `codex/ws-peer-handoff-1018`. [사전 합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6244974720). 실제 ZIP 송수신과 이슈 안내 게시, 로컬 검사와 실제 공동 연결을 구분한다.
 

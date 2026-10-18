@@ -5,6 +5,14 @@
 [CHECKLIST](../CHECKLIST.md) 상단과 [우리 board](https://github.com/Pitcheezy/transition-models/issues/3)를 확인한다.
 역사적 “다음 단위” 문구는 현재 지시가 아니다.
 
+## 같은 형식의 전달팩 — 2026-10-18
+
+WS-handoff3: 사용자 요청으로 고정 소스 ZIP·안내·파일별 SHA·검증/한계를 준비했다.
+[전달 근거·현재 상태](WS_PEER_HANDOFF_20261018.md). 압축 해제본 Node304·CLI29회 합성 리허설과
+최종 ZIP102항목의 CRC/SHA 대조 통과. 실제 ZIP 수신/공동 연결·배포와 구별한다.
+우리 담당자는 비공개 ZIP을 전달하고 후속 자료를 받으며 #18 한 곳에서 회신을 잇는다.
+운영 코드·Song 코드·Mac mini·기존 서버 변경 없음. 다음은 후속 팩 명시 파일 검증 또는 사람의 실제 시험 조건 결정이다.
+
 ## 이번 노트북 작업과 상태 기준 — 2026-10-18
 
 [선점·합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6244814626)에 따라
