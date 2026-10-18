@@ -61,3 +61,38 @@ node --test ops/public-host/tests/rehearsal.test.mjs
 
 첫 Linux 브라우저 CI에서 `tests/browser` 실행 위치를 기준으로 Worker 모듈 이름에 상위 경로가 생겨 시작이 실패했다.
 Windows에서도 같은 폴더에서 재현했다. Miniflare `modulesRoot`를 호스트 소스 디렉터리에 고정하여 실행 위치 의존을 제거했다. 기존 측정 영수증은 수정 전 소스의 Windows 측정 기록으로 보존한다.
+
+## 운영 CLI 조합 리허설 — WS-laptop1
+
+최근 운영 경로인 `publisher-cli.mjs`, `notice-cli.mjs`, `monitor-runner-cli.mjs`를 **실제 별도 Node 프로세스**로 실행한다.
+기존 API별 리허설을 대신하는 부하 시험이 아니다. 입력은 새 출력 파일 경로 하나뿐이며 대상 주소·포트·토큰·계정은 입력받지 않는다.
+
+~~~text
+node ops/public-host/rehearse-operator-tools.mjs --output .cache/operator-rehearsal-new.json
+node --test ops/public-host/tests/operator-tools-rehearsal.test.mjs
+~~~
+
+Node24와 기존 고정 Miniflare가 필요하다. 설치나 Wrangler 실행을 자동으로 하지 않는다. 출력 파일의 부모 폴더는 있어야 하며,
+기존 출력·없는 부모·외부 대상 인자는 런타임 시작 전에 거부한다. 실행 중 다른 작성자가 출력 파일을 만들면 덮어쓰지 않는다.
+
+새 임시 폴더의 R2와 `127.0.0.1`의 OS 할당 포트만 사용한다. 관람 접근 문 ON, 수집/피드백 OFF,
+정확한 `v1/health.json` 발행 범위와 별도 합성 발행/안내/관람 자격을 만든다. 자식 프로세스에는 OS 필수 환경과
+각 도구의 합성 자격만 전달한다. 기존 계정·프록시·Node preload 환경은 상속하지 않고 부모 환경도 변경하지 않는다.
+
+검사 순서는 다음과 같다.
+
+1. 세 CLI dry-run과 상태·잠금·안내 snapshot 미생성, 쿠키 없는 화면/JSON의401.
+2. 생성·비공개 HEAD·갱신·낡은 조건412, 조건부 철회·tombstone HEAD·공개 GET/HEAD404·현재 tombstone 조건 복원.
+3. 실제 감시 CLI의 코드 로그인, 정상1회·오래된 발행2회·정상2회. 같은 상태 파일을 재사용하고 opened/recovered와 두 담당자의 **모의** 알림을 확인한다. 복구 실행의 첫 표본에는 열린 장애가 있으므로 종료1을 보존한다.
+4. 안내 CLI GET snapshot의 조건으로 ON, 안내 상태 감시, 새 snapshot의 조건으로 OFF, 감시 복구. 2초 안내 memo를 고려한다.
+5. 다른 허용 키의 PUT/DELETE/HEAD403과 원본 바이트/ETag 보존. 그다음 자기 런타임을 정상 종료하고 같은 임시 R2에 만료된 설정으로 새 런타임을 시작하여 같은 키의 세 메서드403·원본 보존·안내OFF를 확인한다.
+6. 계획/본문 원본 SHA 보존, CLI 출력·영수증과 JSON 파일의 토큰/코드/쿠키 미포함, 남은 잠금 없음, 자기 자식 프로세스·런타임·임시 폴더 정리.
+
+전체 요청 작업의 중단 신호는60초, 자식 실행 대기는25초다. 자식 종료 요청 뒤5초 안에 `close`가 없으면 미확인으로 실패한다.
+런타임 정리도 최대5초 판정이며, 종료가 확인되지 않으면 임시 폴더를 보존하고 `passed:false`로 기록한다.
+OS/파일시스템 지연을 포함한 강제 종료 시각 보장은 아니다. 기존 프로세스 검색·종료, 포트 해제, 실제 서비스 변경은 하지 않는다.
+
+영수증에는 소스 SHA·OS/Node/Miniflare·실제 CLI 호출 수/결과·장애 이력·정리 결과가 남고 주소·토큰·쿠키·개인 경로는 남지 않는다.
+전체 HTTP 요청 수는 별도 관측하지 않아 null이며 **18요청/120초 공동 시험 예산 통과 증거가 아니다**.
+만료는 과거 만료 설정의 로컬 재시작 검사로, 실제 시계의 만료 경계 통과는 미측정이다. 실제 Ctrl+C·Mac·Cloudflare·Song 발행기·실경기·외부 알림은 검증하지 않는다.
+Windows workerd의 기존 WSARecv/WSASend 연결 종료 진단이 나올 수 있으며 이를 해결했다고 처리하지 않는다.

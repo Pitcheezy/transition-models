@@ -1,0 +1,254 @@
+{
+  "schema": "pitcheezy-operator-tools-rehearsal-v1",
+  "synthetic": true,
+  "target": "new-loopback-miniflare",
+  "passed": true,
+  "cloud_verified": false,
+  "song_publisher_verified": false,
+  "actual_ctrl_c_verified": false,
+  "delivery_confirmed": false,
+  "http_requests": null,
+  "http_request_budget_verified": false,
+  "expiry_evidence": "past-expiry configuration after local restart; live deadline crossing unmeasured",
+  "limits": {
+    "overall_request_window_ms": 60000,
+    "child_process_ms": 25000,
+    "synthetic_payload_bytes": 2048
+  },
+  "environment": {
+    "node": "v24.1.0",
+    "platform": "win32",
+    "arch": "x64",
+    "miniflare": "4.20260730.0"
+  },
+  "completed_phases": [
+    "startup",
+    "dry_runs",
+    "gate_and_publish",
+    "stale_and_recovery",
+    "notice_on_off",
+    "out_of_scope",
+    "expired_restart",
+    "preservation_and_redaction"
+  ],
+  "cli_invocations": [
+    {
+      "tool": "publisher",
+      "exit_code": 0,
+      "outcome": "dry_run"
+    },
+    {
+      "tool": "notice",
+      "exit_code": 0,
+      "outcome": "dry_run"
+    },
+    {
+      "tool": "monitor",
+      "exit_code": 0,
+      "mode": "dry_run",
+      "attempts": 0,
+      "available": 0,
+      "failed": 0,
+      "mock_messages": 0,
+      "stop_reason": "dry_run"
+    },
+    {
+      "tool": "publisher",
+      "exit_code": 0,
+      "outcome": "stored"
+    },
+    {
+      "tool": "publisher",
+      "exit_code": 0,
+      "outcome": "observed"
+    },
+    {
+      "tool": "publisher",
+      "exit_code": 0,
+      "outcome": "stored"
+    },
+    {
+      "tool": "publisher",
+      "exit_code": 1,
+      "outcome": "conflict"
+    },
+    {
+      "tool": "publisher",
+      "exit_code": 0,
+      "outcome": "stored"
+    },
+    {
+      "tool": "publisher",
+      "exit_code": 0,
+      "outcome": "observed"
+    },
+    {
+      "tool": "publisher",
+      "exit_code": 0,
+      "outcome": "stored"
+    },
+    {
+      "tool": "monitor",
+      "exit_code": 0,
+      "mode": "execute",
+      "attempts": 1,
+      "available": 1,
+      "failed": 0,
+      "mock_messages": 0,
+      "stop_reason": "count_limit"
+    },
+    {
+      "tool": "publisher",
+      "exit_code": 0,
+      "outcome": "stored"
+    },
+    {
+      "tool": "monitor",
+      "exit_code": 1,
+      "mode": "execute",
+      "attempts": 2,
+      "available": 0,
+      "failed": 2,
+      "mock_messages": 2,
+      "stop_reason": "count_limit"
+    },
+    {
+      "tool": "publisher",
+      "exit_code": 0,
+      "outcome": "stored"
+    },
+    {
+      "tool": "monitor",
+      "exit_code": 1,
+      "mode": "execute",
+      "attempts": 2,
+      "available": 2,
+      "failed": 0,
+      "mock_messages": 2,
+      "stop_reason": "count_limit"
+    },
+    {
+      "tool": "notice",
+      "exit_code": 0,
+      "outcome": "observed"
+    },
+    {
+      "tool": "notice",
+      "exit_code": 0,
+      "outcome": "applied"
+    },
+    {
+      "tool": "monitor",
+      "exit_code": 1,
+      "mode": "execute",
+      "attempts": 2,
+      "available": 0,
+      "failed": 2,
+      "mock_messages": 2,
+      "stop_reason": "count_limit"
+    },
+    {
+      "tool": "notice",
+      "exit_code": 0,
+      "outcome": "observed"
+    },
+    {
+      "tool": "notice",
+      "exit_code": 0,
+      "outcome": "applied"
+    },
+    {
+      "tool": "monitor",
+      "exit_code": 1,
+      "mode": "execute",
+      "attempts": 2,
+      "available": 2,
+      "failed": 0,
+      "mock_messages": 2,
+      "stop_reason": "count_limit"
+    },
+    {
+      "tool": "notice",
+      "exit_code": 0,
+      "outcome": "observed"
+    },
+    {
+      "tool": "publisher",
+      "exit_code": 1,
+      "outcome": "rejected"
+    },
+    {
+      "tool": "publisher",
+      "exit_code": 1,
+      "outcome": "rejected"
+    },
+    {
+      "tool": "publisher",
+      "exit_code": 1,
+      "outcome": "rejected"
+    },
+    {
+      "tool": "publisher",
+      "exit_code": 1,
+      "outcome": "rejected"
+    },
+    {
+      "tool": "publisher",
+      "exit_code": 1,
+      "outcome": "rejected"
+    },
+    {
+      "tool": "publisher",
+      "exit_code": 1,
+      "outcome": "rejected"
+    },
+    {
+      "tool": "notice",
+      "exit_code": 0,
+      "outcome": "observed"
+    }
+  ],
+  "cleanup": {
+    "runtimes": [
+      {
+        "status": "complete"
+      },
+      {
+        "status": "complete"
+      }
+    ],
+    "children": "complete",
+    "temporary_storage": "removed"
+  },
+  "source_sha256": {
+    "worker.mjs": "9f3d818686bc6af847bf4c292658a1c71f22f4dd72f6282c8b00e84e0ca33d1b",
+    "gateway.mjs": "fbc1f5d652c124f6827d4065caaf62411f3eba0c311da747ad8473c5d71f7ca0",
+    "access.mjs": "2513d96b0950b8917d45a37e6b4c4a7d605df820a8e294e9b30b8a7beb6a4707",
+    "notice.mjs": "20433bdb8723fe5f9073e39d8f466f00a7fc7e95b26fb304903103473b62733a",
+    "telemetry.mjs": "545569404a68e8a5159984c3b328e4982c217247d1cd5af01e1831165ebf6739",
+    "publisher.mjs": "28f4bacaadaeecb3dfb40f24cf1dbe014d4641cb36c68b0ad9a5e4337d31f893",
+    "publisher-cli.mjs": "835fea7ecb90e1ae5951dc23981a347209b6843c94ce31c534ca9ba9b90d2159",
+    "notice-client.mjs": "a68c9f64fbc74dbddf752efa59ebe5f2a2ae01541cd54094b6936b937067c8da",
+    "notice-cli.mjs": "b850b96e526a61272726f7bfa41e852636f8a5e6ef236dd6d68c4b9e3b59d5e6",
+    "monitor.mjs": "a220dfff82aefce27deb62d7d4b36c8afcc83dd064811b8497e637da4e562325",
+    "monitor-cli.mjs": "112fa4cacf50a263dab2f28880d726855ae3d8259c6b03b829c3abc4a4f7bcb9",
+    "monitor-runner.mjs": "233ae8ee78c56a97dd30a7c83c14703f5299695fad69466a561c558d4521ce06",
+    "monitor-runner-cli.mjs": "e0251aefd53b009ea4921c3dac1606e9bc9217569face8255317511e2c32b91a",
+    "alerts.mjs": "a24060ac1b4321b7434780b129f5db5a6328efef5807a564901f4ad29002cacb",
+    "alerts-cli.mjs": "d13523cf90ed1a9d4821ee65a9817c53833934793fb0edd3aba6b9c3e88713d3",
+    "owned-files.mjs": "521045a82aa8ba409ebef74883e4ee63580dbb6c80a5ec6e25a33f4e963d662b",
+    "rehearsal/local-host.mjs": "9cf5b427e38d61f22a542de8a61ba6c601d875de78d2dc95fd79d5053cdaf791",
+    "rehearse-operator-tools.mjs": "ac40e829aae1a540a8c9f35ea2d9ce48fa5bcb5db13a31b3f301ed004b3fe447",
+    "package-lock.json": "55e30f2a196b6510da56126fb33cb912ab0ebbfe55047f358048027ba5484f91"
+  },
+  "withdraw_restore_verified": true,
+  "monitor_history": [
+    "opened",
+    "recovered"
+  ],
+  "recovery_exit_code": 1,
+  "input_files_preserved": 34,
+  "secrets_absent_from_cli_and_receipt": true,
+  "elapsed_ms": 15801,
+  "cli_invocation_count": 29
+}

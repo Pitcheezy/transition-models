@@ -1,11 +1,15 @@
 # SmartPitch transition-models
 
-## 현재 월드시리즈 운영 인계 — 2026-10-12
+## 현재 월드시리즈 운영 인계 — 2026-10-18
 
-[구현 범위·재현 명령·다음 입력·한계](docs/WS_OPERATIONS_HANDOFF.md)를 먼저 읽는다.
-CHECKLIST 상단과 우리 board가 현재 작업 상태이며, 초기 WS 완료 이력은 인계 문서에서 연결한다.
-우리 main의 운영 기반은 로컬/CI 검증까지 완료했다. Song 첫 연결 자료 안내는 mail #18에 도착했고 실제 파일 검증·계정 결정·배포/실기기는 별도다.
-팀원 저장소·기존 서버/사이트/영상팩 변경 금지, A-y/F-4i 보류를 유지한다. I-run1/A-y를 파일 발행의 새 선행 조건으로 삼지 않는다.
+현재 작업·수정 권한은 [CHECKLIST 상단](CHECKLIST.md), 검증 결과·남은 입력은
+[현재 운영 인계](docs/WS_OPERATIONS_HANDOFF.md)를 먼저 확인한다.
+[협업 감사](docs/COLLABORATION_AUDIT_20261018.md)와 H-collab3·WS-laptop1은 이번 노트북 작업 범위이며,
+두 단위의 완료 여부는 CHECKLIST를 따른다. Mac/Mac mini·팀원 코드/프로세스/배포는 접근하지 않는다.
+Song 첫 연결 자료 19파일과 로컬 화면은 WS-ops2에서 검증했다. 10/16 보고된 새 소스/빌드 팩은 미수신이다.
+본인 전용 합성 클라우드 시험은 WS-stage4에서 완료했지만 실제 상태의 마지막 확인은 10/16이며 오늘은 미확인이다.
+실제 Song 연결·일반 공개·상시 감시/알림·실기기는 별도다. A-y/F-4i 보류와 기존 서버/사이트/영상팩 보존을 유지한다.
+아래 날짜별 기록의 브랜치·서버·다음 단위를 현재 실행 지시로 사용하지 않는다.
 
 ## 협업 v1 세션 규칙 — 2026-10-12
 
@@ -37,8 +41,9 @@ do not access or edit teammate code, processes, or deployments.
 The user's A-y hold and external-input requirements remain in force.
 [Cloud handoff](docs/CODEX_CLOUD_HANDOFF.md) distinguishes deployed Sites from local review tools.
 
-Read [AGENTS.md](AGENTS.md) first. It is the single source of project instructions,
-current verified results, coding conventions, and historical experiment corrections.
+Read [AGENTS.md](AGENTS.md) first for project instructions, coding conventions, and
+historical experiment corrections. Use CHECKLIST's top section and the operations handoff
+for current task ownership and verified operating status.
 
 **[CHECKLIST.md](CHECKLIST.md) is the single list of what is still open.** Start there for
 the next work unit, the current tool holding the edit token, and the handoff protocol.
@@ -51,6 +56,8 @@ mismatch do not start the work: spawn the next-unit task chip titled with the mo
 the user to pick it in the model menu, or (when the user has enabled Workflow/ultracode) run the
 unit's actual work through a Workflow agent with `model` set to the tagged model id while this
 session only verifies, integrates and commits. See CHECKLIST.md "Claude 모델 자동 배정".
+The tag is a Claude assignment, not evidence of who authored completed work. Read the fixed
+work record for actual author/reviewer models; the historical 0/16 attribution remains unknown.
 
 Use [docs/MAINTENANCE.md](docs/MAINTENANCE.md) for supported entry points, checks,
 resume behavior, Windows/Mac path portability, and artifact transfer.
