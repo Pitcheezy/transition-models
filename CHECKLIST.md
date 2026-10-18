@@ -1,5 +1,13 @@
 # 남은 작업 체크리스트
 
+## 비공개 배포 후보·연결 점검 준비 — 2026-10-18
+
+- [x] WS-stage5. 받은 v4.2 화면+고정 우리 호스트의 비공개 후보·설정/dry-run·로컬 합성 연결·중단/회수 실행안을 준비한다. 실제 계정/배포/접속 확대는 별도다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-18 · Codex]`
+
+완료: 후보507,750bytes·설정/dry-run·실제Worker+받은화면22항목/105요청·관련Python209 통과. 원본22/후보19파일 불변. 요청 부분합20회·notice/실패정리 추가원장·두 종류 자격회수 조건을 명시했다. [근거](docs/WS_STAGE5_READINESS_20261018.md). 운영코드/배포/발신/팀원/Mac 변경 없음.
+
+수정 권한 반납 준비: 우리 Codex / `codex/ws-stage5-readiness-1018` / 기준 `9e405aa`, 선점 `03ae493`. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6247513227).
+
 ## 비공개 v4.2 수신·감시 호환 — 2026-10-18
 
 - [x] WS-partner2. 비공개 전달팩 원본/manifest·offline 실행·health/game_checks·reason 호환·우리 runtime/요청 한도와 로컬 화면을 확인하고 필요한 우리 변경 및 회신 자료를 준비한다. 실제 공동 연결/배포는 별도다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-18 · Codex]`
