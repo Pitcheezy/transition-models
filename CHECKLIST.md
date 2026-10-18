@@ -2,11 +2,11 @@
 
 ## 비공개 v4.2 수신·감시 호환 — 2026-10-18
 
-- [ ] WS-partner2. 비공개 전달팩 원본/manifest·offline 실행·health/game_checks·reason 호환·우리 runtime/요청 한도와 로컬 화면을 확인하고 필요한 우리 변경 및 회신 자료를 준비한다. 실제 공동 연결/배포는 별도다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-18 · Codex]`
+- [x] WS-partner2. 비공개 전달팩 원본/manifest·offline 실행·health/game_checks·reason 호환·우리 runtime/요청 한도와 로컬 화면을 확인하고 필요한 우리 변경 및 회신 자료를 준비한다. 실제 공동 연결/배포는 별도다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-18 · Codex]`
 
-진행: 원본21파일·스키마5예제·gateway 원문왕복5예제 확인. Windows offline은 fcntl 제약, WSL은 가상화 비활성으로 미실행. 우리 health 의미검사 관련97·reason왕복1 통과, 고정 다른 모델 검토/화면/최종 회신 준비 중.
+완료: 원본21파일·스키마5예제·원문전송5·static browser15·우리Node322/Python21·고정5effc7a 다른모델검토PASS. 제공runner는 Windows fcntl/WSL 가상화 제약으로 실행불가를 보존. 우리99소스 반환팩·미발신 회신·시험조건 초안 준비. [근거](docs/WS_PARTNER_V42_20261018.md).
 
-수정 권한: 우리 Codex / `codex/ws-partner-v42-1018` / 기준 `ac8b6c7`. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6247213943). Song ZIP·소스·빌드는 비공개 원본으로 보존하며 팀원 레포·Mac·기존 서버는 건드리지 않는다.
+수정 권한 반납 준비: 우리 Codex / `codex/ws-partner-v42-1018` / 기준 `ac8b6c7`. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6247213943). Song ZIP·소스·빌드는 비공개 원본으로 보존하며 팀원 레포·Mac·기존 서버는 건드리지 않는다.
 
 ## 공개 전달·실제 만료 경계 — 2026-10-18
 
