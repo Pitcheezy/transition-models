@@ -3,9 +3,9 @@
 ## 공개 전달·실제 만료 경계 — 2026-10-18
 
 - [x] WS-handoff4. 사용자 요청으로 고정 우리 ZIP을 GitHub 검토용 asset으로 게시·익명 다운로드102항목/SHA 확인·[#18 링크 안내](https://github.com/Pitcheezy/transition-models/issues/18#issuecomment-6245327702) 완료. 팀원 비공개 자료 공개 승인은 아님. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-18 · Codex]`
-- [ ] WS-publish3. 실제 만료 경계 유한 합성 리허설/검사 구현, 고정 코드 실측·다른 모델 검토 진행 중. 한 키/본문2KiB/전체18요청/정리포함120초 이내와 거부·보존·실패를 기록. 운영 runtime 변경 없음. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-18 · Codex]`
+- [x] WS-publish3. 같은 runtime 실제 만료 경계18HTTP/20.261초·거부/보존/정리 확인. 전체Node310·체크리스트8·고정a2bb75b의 gpt-5.6-sol 검토PASS. [근거](docs/WS_LIVE_EXPIRY_20261018.md). 한 키/본문2KiB/전체18요청/정리포함120초 이내와 거부·보존·실패를 기록. 운영 runtime 변경 없음. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-18 · Codex]`
 
-수정 권한: Codex / `codex/ws-public-handoff-expiry-1018`. 우리 board 사전 합격 기준을 따른다. 팀원·Mac·기존 서버·실제 배포 변경 없음.
+수정 권한 반납 준비: `codex/ws-public-handoff-expiry-1018` / 선점 `d0023c6`. [사전 합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6245302206). PR/CI 종료 후 우리 board에 반납한다. 팀원·Mac·기존 서버·실제 배포 변경 없음.
 
 
 ## 상호 전달팩 준비 — 2026-10-18
