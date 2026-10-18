@@ -1,5 +1,11 @@
 # 남은 작업 체크리스트
 
+## 비공개 v4.2 수신·감시 호환 — 2026-10-18
+
+- [ ] WS-partner2. 비공개 전달팩 원본/manifest·offline 실행·health/game_checks·reason 호환·우리 runtime/요청 한도와 로컬 화면을 확인하고 필요한 우리 변경 및 회신 자료를 준비한다. 실제 공동 연결/배포는 별도다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-18 · Codex]`
+
+수정 권한: 우리 Codex / `codex/ws-partner-v42-1018` / 기준 `ac8b6c7`. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6247213943). Song ZIP·소스·빌드는 비공개 원본으로 보존하며 팀원 레포·Mac·기존 서버는 건드리지 않는다.
+
 ## 공개 전달·실제 만료 경계 — 2026-10-18
 
 - [x] WS-handoff4. 사용자 요청으로 고정 우리 ZIP을 GitHub 검토용 asset으로 게시·익명 다운로드102항목/SHA 확인·[#18 링크 안내](https://github.com/Pitcheezy/transition-models/issues/18#issuecomment-6245327702) 완료. 팀원 비공개 자료 공개 승인은 아님. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-18 · Codex]`
