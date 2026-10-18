@@ -8,8 +8,9 @@
 ## 이번 노트북 작업과 상태 기준 — 2026-10-18
 
 [선점·합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6244814626)에 따라
-H-collab3(협업 감사·인계 정리)를 완료했고 WS-laptop1(기존 운영 CLI와 제한 Worker의 loopback 연결 검증)을 진행 중이다.
-아직 WS-laptop1 완료·실제 서비스 연결을 주장하지 않는다. 현재 소유권과 종료 여부는 CHECKLIST 상단을 따른다.
+H-collab3(대표4PR 표본 감사·인계 정리)와 [WS-laptop1 노트북 CLI 연결 검사](WS_LAPTOP_OPS_20261018.md)를 완료했다.
+실제 CLI29회·전체Node304·체크리스트8·고정7deeac5 다른 모델 검토PASS이며, 원격 CI/병합·현재 소유권은 CHECKLIST 상단과 우리 board를 따른다.
+실제 서비스 연결 성공이나 협업 이후 모든 PR의 전수 감사를 뜻하지 않는다.
 이번 작업에서는 Mac/Mac mini·팀원 코드/프로세스/배포에 접근하지 않으며 기존 서버·사이트를 보존한다.
 
 실제 클라우드의 마지막 확인은 **10/16: 접근 문ON, 읽기/업로드/수집/피드백OFF, 안내OFF**다.
