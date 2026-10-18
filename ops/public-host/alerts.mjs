@@ -24,7 +24,8 @@ export const CATEGORIES = Object.freeze({
   recovered: { first_responder: "none", severity: "info" },
 });
 const PUBLISHER_ISSUES = new Set(["freshness_stale", "freshness_future", "freshness_missing", "freshness_invalid",
-  "health_missing", "health_invalid_json", "health_invalid_json_object", "health_invalid_utf8"]);
+  "health_missing", "health_invalid_json", "health_invalid_json_object", "health_invalid_utf8",
+  "health_contract_invalid", "game_check_invalid", "game_check_stale", "game_check_feed_failed"]);
 const HOST_ISSUES = new Set(["page_http_error", "page_network_error", "page_timeout", "page_redirect", "page_missing",
   "page_body_too_large", "page_body_error", "page_empty_body", "page_content_type", "page_not_html_document",
   "page_page_hash_mismatch", "page_invalid_utf8", "page_probe_error", "health_http_error", "health_network_error",
