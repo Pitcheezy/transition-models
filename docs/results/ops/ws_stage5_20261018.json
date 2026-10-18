@@ -1,0 +1,214 @@
+{
+  "schema": "pitcheezy-stage5-preparation-v1",
+  "date": "2026-10-18",
+  "host_commit": "5effc7a4deef21ee37d07f8574b43b23935d2189",
+  "frontend_commit": "57f5d3ff232ea549aa125a58cb46f55e10bffebf",
+  "frontend_provenance": "supplier_reported_not_rebuilt",
+  "contract_note": "v1 file directory and supplied schemas; no new contract negotiation",
+  "zip_bytes": 507750,
+  "zip_sha256": "7792d0ef38876ca2613cb708fd594866516bcba9f87c01c19caa95ef13a0bfc2",
+  "candidate_files": {
+    "release-manifest.json": "6ca7ac7dd94b6b92c8e12dcda1bce48f6d39f4442ae57613e521c7bed0f1bc70",
+    "host/access.mjs": "67c3865be7754a9cf172075db67f60a8bc2cd076203799b0bf64a8fe0ef1219a",
+    "host/gateway.mjs": "3fd0217beae30ae23ca548c309e2535b66e80024728b10ddb249eec08f2dd2b6",
+    "host/notice.mjs": "d94b5c22ef66b38b3bb824e028fcaa92075856014bbc7e2e28bd3a85bdb64247",
+    "host/package-lock.json": "cece953d79da7738410cc570742afaa99282e66543eda69693edafb243371e6b",
+    "host/package.json": "0562260f7b8c41dcb6d2e85360865d1c5d0ea3716131ce0cb9b4677ad8ca271e",
+    "host/telemetry.mjs": "c90d0f23dbf80eb965d343bef8fb75129cf3ce7ee9e64fbe6f683228ad0f646a",
+    "host/worker.mjs": "ba6bb83bbbbd8ba4727feb6b870fbe85c0c8c5c9bc65ef837aa2703235f3f985",
+    "host/wrangler.deploy.json": "a2a68f5892783d75de4888e05c647481fb01fdc97fd184f0495d8b69310d7a09",
+    "host/wrangler.example.jsonc": "86f4ae69e879a612821df4b821d4337b2cdfc368311eb1439da38fe0e8b38379",
+    "public/collection-settings.json": "0b806aded492aff9dc4e04a4e112da21725d216d00c93feafa958899caaab80b",
+    "public/favicon.svg": "bbfd72e5d077bd545b2cf568e5267c6637598d5253746f5b395e0d5f3fb144d9",
+    "public/index.html": "a2a5f61a04ef7affa6ca6b797cffb52b4841e42f5b0e07d205dba30231cb90c3",
+    "host/client/usage-client.mjs": "ae6b401f838b2404b61d2b5c9682dd57760b03e03195e403000458c75c8d9f48",
+    "host/client/widget.css": "197c9fccc82c6b87988d0e44185248da7de3dc020cec4388f53348ca84358742",
+    "host/client/widget.mjs": "0c62b29c4a0e75f060af2fd7b191a82c282bc52860cfa851b553869da1eb5138",
+    "host/migrations/0001_telemetry.sql": "479ded40208b893fe979b40f36db5ee0b55cb6bfa8b83c0e10f0af02fefc28b4",
+    "public/assets/index-CleUiOCQ.css": "ac132bd9d59e0d1b67e686d85c9fb7ce1de07ddbb8f84148791f657a63c405d6",
+    "public/assets/index-Dek3KHAw.js": "9ba206a987592f4b6ae0fb6da0d7a2dfc7714ae471c782d0a383059dc7156dd8"
+  },
+  "input_files_unchanged": 22,
+  "checks": [
+    {
+      "check": "build",
+      "exit_code": 0
+    },
+    {
+      "check": "package-check",
+      "exit_code": 0
+    },
+    {
+      "check": "config-check",
+      "exit_code": 0
+    }
+  ],
+  "deployable": false,
+  "remote_execution": false,
+  "real_identifiers_or_secrets": false,
+  "settings": "all_off_except_access_gate; intentionally expired scope; dummy resources",
+  "tool_source_commit": "9e405aa195dc914f228102e4584ffe85f187c704",
+  "dry_run": {
+    "tool": "wrangler4.151.0",
+    "node": "24.1.0",
+    "exit_code": 0,
+    "seconds": 8.781,
+    "isolated_empty_profile": true,
+    "inherited_credentials": false,
+    "candidate_and_copy_bytes_unchanged": 19,
+    "network_zero_claim": false,
+    "log_sha256": "7487b92cbcee9174209584c2d0c526ac8fed3da245dfc1bbec3d12fd8bec6404",
+    "generated_files": {
+      "README.md": "7711785143a86629e9426810b15b88d4302e8893e00ba0cd1f96dcde6cfcea4e",
+      "worker.js": "3312fbff2dac2a22b32e474392ee7eb107663c79e9749781810a681e5ee07cfd",
+      "worker.js.map": "c7ccef60b8c2e34a99e757e07692c8cff194bbb4555664264e4995929dad300f"
+    }
+  },
+  "combined_local_check": {
+    "outcome": "pass",
+    "checks": [
+      {
+        "name": "unauthenticated_data_denied",
+        "ok": true
+      },
+      {
+        "name": "unauthenticated_screen_is_gate",
+        "ok": true
+      },
+      {
+        "name": "login_and_unchanged_old_example_stale",
+        "ok": true
+      },
+      {
+        "name": "fresh_recommendation_rendered",
+        "ok": true
+      },
+      {
+        "name": "actual_pitch_reveal",
+        "ok": true
+      },
+      {
+        "name": "worker_data_bytes_and_private_read",
+        "ok": true
+      },
+      {
+        "name": "conditional_read_304",
+        "ok": true
+      },
+      {
+        "name": "held_last_accepted_preserves_corrected_result",
+        "ok": true
+      },
+      {
+        "name": "never_accepted_pitch_stays_unconfirmed",
+        "ok": true
+      },
+      {
+        "name": "unsupported_recommendation_displayed",
+        "ok": true
+      },
+      {
+        "name": "feed_disconnect_displayed",
+        "ok": true
+      },
+      {
+        "name": "worker_health_advances_without_game_reget",
+        "ok": true,
+        "game_get_before": 1,
+        "game_get_after": 1,
+        "health_get_before": 1,
+        "health_get_after": 2,
+        "file_sequence": 4,
+        "sequence_checked": 6
+      },
+      {
+        "name": "worker_changed_file_sequence_regets_game",
+        "ok": true,
+        "game_get_before": 1,
+        "game_get_after": 2
+      },
+      {
+        "name": "withdrawn_game_data_is_404",
+        "ok": true
+      },
+      {
+        "name": "withdrawn_screen_has_no_previous_recommendation",
+        "ok": true
+      },
+      {
+        "name": "restored_game_displays_again",
+        "ok": true
+      },
+      {
+        "name": "logout_succeeds",
+        "ok": true
+      },
+      {
+        "name": "logged_out_data_denied",
+        "ok": true
+      },
+      {
+        "name": "logged_out_screen_is_gate",
+        "ok": true
+      },
+      {
+        "name": "no_browser_exceptions",
+        "ok": true
+      },
+      {
+        "name": "no_external_attempts",
+        "ok": true
+      },
+      {
+        "name": "no_legacy_api_calls",
+        "ok": true
+      }
+    ],
+    "request_counts": {
+      "driver_http": 41,
+      "browser_http": 64,
+      "total": 105,
+      "publisher_put": 34,
+      "publisher_delete": 1
+    },
+    "browser_version": "155.0.4283.62",
+    "browser_exceptions": 0,
+    "external_attempts": 0,
+    "original_unchanged": true,
+    "original_file_count": 22,
+    "browser_closed": true,
+    "cleanup": {
+      "status": "complete"
+    },
+    "receipt_sha256": "fbd91e1381034897e109d58c0097439280bef8dce0d3af52650adb68430d7490",
+    "harness_sha256": "72644710029bf41db97f358a0be081a507810b328c989b04a2ace37426d82408",
+    "limitations": [
+      "Local synthetic integration only, not Cloudflare CDN or real publisher execution.",
+      "Multiple publication paths and ~44KB files; not the agreed single-key/2KiB/18-request trial.",
+      "Manifest/dates/games list files are our synthetic scaffolding, not delivered source.",
+      "Fresh-state variants alter timestamps and health sequence fields in separate output files.",
+      "No independent source feed, real video, models, Mac or physical mobile device tested.",
+      "Browser route guards block non-loopback destinations; no real credentials or accounts used.",
+      "Session logout tested; administrator credential revocation/expiry not tested by this harness.",
+      "Withdrawal UI observation follows full page reload and one second; automatic withdrawal in an already-open viewer was not measured.",
+      "HTTP counts are request attempts recorded by the harness and browser routing, not a claim that every request returned 2xx; gate 401/conditional 304/withdrawal 404 are intentional."
+    ],
+    "candidate_runtime_lf_identity": true
+  },
+  "documentation_review": {
+    "reviewer": "separate Codex agent same model",
+    "fixed_points": [
+      "host_pin_not_runner_commit",
+      "expected_412_is_success",
+      "notice_state_preflight_accounting",
+      "secret_operation_evidence_not_secret_value"
+    ],
+    "production_code_changed": false
+  },
+  "regression": {
+    "command": "python -m pytest tests/test_public_host_release.py tests/test_public_host_config.py tests/test_checklist_model.py -q",
+    "passed": 209,
+    "failed": 0,
+    "seconds": 55.57
+  }
+}
