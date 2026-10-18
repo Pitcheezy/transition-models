@@ -1,5 +1,12 @@
 # 남은 작업 체크리스트
 
+## 상호 전달팩 준비 — 2026-10-18
+
+- [x] WS-handoff3. 고정 소스 ZIP·안내·해시·압축해제 Node304/CLI29회/CRC·SHA 검증 완료. #18 안내 1회 게시·원문 SHA 대조 완료. 실제 ZIP 전달/상대 수신·공동 시험은 별도. [근거](docs/WS_PEER_HANDOFF_20261018.md). 운영 코드·계약·배포·Mac·팀원 코드 변경 없음. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-18 · Codex]`
+
+수정 권한 반납 준비: `codex/ws-peer-handoff-1018` / 선점 `2758712`. PR/CI 종료 후 우리 board에 반납한다. [사전 합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6244974720). 실제 ZIP 송수신과 이슈 안내 게시, 로컬 검사와 실제 공동 연결을 구분한다.
+
+
 ## 협업 표본 감사·노트북 운영 리허설 — 2026-10-18
 
 - [x] H-collab3. 대표 PR28/40/41/42 표본 감사·현재/이력 인계 정리 완료(나머지 PR 전수 대조 아님). 절차 편차1건과 과거 모델/일일조회 미확인을 보존. [감사](docs/COLLABORATION_AUDIT_20261018.md). 상대링크17·체크리스트8 통과, WS-laptop1은 아래 별도 기록. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-18 · Codex]`
