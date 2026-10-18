@@ -1,5 +1,12 @@
 # 남은 작업 체크리스트
 
+## 협업 감사·노트북 운영 리허설 진행 — 2026-10-18
+
+- [ ] H-collab3. 최근 협업 작업의 선점/검토/증거/승인 경계를 감사하고 현재/과거 인계를 정리한다. 실제 작성 Codex, Claude 배정 태그와 구별. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-18 · Codex]`
+- [ ] WS-laptop1. 실제 업로드·안내·유한 감시 CLI와 키/만료 제한 Worker를 노트북 loopback에서 함께 검증한다. 기존 서버·Mac·팀원·배포 변경 없음. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-18 · Codex]`
+
+Codex가 수정 권한 선점: `codex/ws-laptop-ops-1018`. [사전 합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6244814626). 사용량 약50% 잔여에서 마무리하며, 외부 입력 대기를 임의로 완료하지 않는다.
+
 ## 제한된 연결 시험 보호 — 2026-10-17
 
 - [x] WS-publish2. 정확한 발행 키 하나·UTC 만료 제한과 옛 runtime 번들 거부 완료. Node296·Python209·고정 ZIP loopback12요청 통과, 고정834f838 다른 모델 검토PASS. [근거](docs/WS_PUBLISH_SCOPE_20261017.md). 실제 배포/접속 확대/발신 없음, 수정 권한 반납. 〔모델: Fable 5.1〕
