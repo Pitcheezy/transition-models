@@ -1,10 +1,16 @@
 # 남은 작업 체크리스트
 
+## 최종 실행본 회신 접수·수신 준비 — 2026-10-19
+
+- [x] WS-partner3. #38 회신·mail 라벨 적용 확인과 최종 실행본 수신 절차 준비 완료. 상대 보고14검사와 우리 검증을 구분하고 N23·검토 모델·날짜/동결 확인 사항 및 미발신 초안을 보존한다. 최종 파일/실제 실행 승인은 대기다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-19 · Codex]`
+
+[근거·수신 절차](docs/WS_FINAL_RUNNER_INTAKE_20261019.md). 체크리스트8·현재 구역 상대 경로26개·원문 해시3개·별도 문서 검토 통과. 수정 권한 반납 준비: 우리 Codex / `codex/collab001-runner-intake-1019` / 기준 `b7feebf6620f279d30803e45a707522005852db0`, 선점 `0dde60a`. CI/병합 뒤 우리 board에 반납한다. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6270197582). 우리 문서만 변경하며 최종 파일 미수신·실제 공동시험/배포 승인 대기를 유지한다.
+
 ## 협업 실행계획 현재 상태 정리 — 2026-10-19
 
 - [x] H-collab4. 협업 실행계획의 현재 상태/다음 입력과 초기 이력을 구분했다. 상대 링크82·과거 본문 보존·체크리스트8·별도 문서 대조 통과. 승인된 범위와 새 사람 결정 대기는 유지한다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-19 · Codex]`
 
-[현재 실행계획](docs/WS_COLLAB_V1_ACTIONS.md). 수정 권한 반납 준비: 우리 Codex / `codex/ws-collab-current-1019` / 기준 `595415270cad6f976043341bccd7cce94b0be37d`, 선점 `d379f8c`. CI/병합 후 우리 board에 반납한다. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6264093517). 문서만 수정하며 팀원·배포·발신·승인 범위를 변경하지 않는다.
+[현재 실행계획](docs/WS_COLLAB_V1_ACTIONS.md). PR #52 CI2 통과·main `b7feebf` 병합·우리 board 수정 권한 반납 완료. 기준 `595415270cad6f976043341bccd7cce94b0be37d`, 선점 `d379f8c`. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6264093517). 문서만 수정하며 팀원·배포·발신·승인 범위를 변경하지 않는다.
 
 ## 현재 운영 소스 검토 근거 — 2026-10-19
 
