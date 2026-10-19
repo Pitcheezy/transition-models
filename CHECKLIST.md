@@ -2,9 +2,9 @@
 
 ## 알림 시각 경계 — 2026-10-19
 
-- [~] WS-alert4. 표현할 수 없는 이벤트 시각이 정상 알림을 중단하지 않도록 하고, 존재하지 않는 저장 날짜를 거부한다. 정상 이전 상태·확장 연도·큰 카운터 호환과 모의 전달·상태쓰기 전 거부를 검증한다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-19 · Codex]`
+- [x] WS-alert4. 표현할 수 없는 이벤트 시각이 정상 알림을 중단하지 않도록 하고, 존재하지 않는 저장 날짜를 거부한다. 정상 이전 상태·확장 연도·큰 카운터 호환과 모의 전달·상태쓰기 전 거부를 검증한다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-19 · Codex]`
 
-수정 권한: 우리 Codex / `codex/ws-alert-timestamps-1019` / 기준 `d2ff7bd`. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6263661558). 노트북 합성 검사만 수행하며 팀원·Mac·실배포·실제 발송·공개 계약은 변경하지 않는다.
+완료: 집중53(새8)·Node346·체크리스트8·문법 통과, 고정 `1b10ed6`의 gpt-5.6-sol 검토PASS/독립53검사. [근거](docs/WS_ALERT_TIME_20261019.md). 수정 권한 반납 준비: 우리 Codex / `codex/ws-alert-timestamps-1019` / 기준 `d2ff7bd`, 선점 `2202675`. 최종 CI/병합 후 board에 반납한다. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6263661558). 노트북 합성 검사만 수행하며 팀원·Mac·실배포·실제 발송·공개 계약은 변경하지 않는다.
 
 ## 운영 보고서 입력 검증 — 2026-10-19
 
