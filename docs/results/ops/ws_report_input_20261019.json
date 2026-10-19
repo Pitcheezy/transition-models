@@ -38,7 +38,14 @@
     "input_and_unrelated_file_unchanged": true
   },
   "writer": "Codex / GPT-6 family; exact session model id not exposed",
-  "different_model_review": "pending",
+  "different_model_review": {
+    "model": "gpt-5.6-sol",
+    "commit": "a4b938496d8f625b19efc7abcec3da46f5439835",
+    "verdict": "PASS; no P1/P2",
+    "focused_passed": 11,
+    "command": "node --test tests/report-input-boundaries.test.mjs (cwd ops/public-host)",
+    "source_hashes_matched": true
+  },
   "hash_basis": "Windows working-tree bytes",
   "files": {
     "ops/public-host/report.mjs": "11802fc6ac86423710f1e0a9f8da3bed76470da87efa9aa12919a4782d4a9ef7",
@@ -56,5 +63,6 @@
     "Only consumed alert fields validated, not full persisted alert-state provenance",
     "Legacy missing/null pending retained as zero; extra fields preserved",
     "No shared contract, teammate code, deployment, or sending changes"
-  ]
+  ],
+  "implementation_commit": "a4b938496d8f625b19efc7abcec3da46f5439835"
 }
