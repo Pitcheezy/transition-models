@@ -1,0 +1,51 @@
+{
+  "unit": "WS-alert4",
+  "baseline_commit": "d2ff7bdf3d74a5a3fa04fc6360cef27f1cc5724b",
+  "claim_commit": "22026750ba2ce624b54a12a6b91695c9ba70f519",
+  "evidence": "synthetic_local",
+  "before": {
+    "out_of_date_range_event": "RangeError; subsequent valid event mock deliveries 0",
+    "impossible_pending_date": "2026-02-30 silently normalized to 2026-03-02",
+    "network_requests": 0
+  },
+  "focused": {
+    "passed": 53,
+    "new_tests": 8,
+    "seconds": 13.386
+  },
+  "full_node": {
+    "passed": 346,
+    "seconds": 22.2880279
+  },
+  "review": {
+    "status": "PASS; no P1/P2",
+    "model": "gpt-5.6-sol",
+    "reviewed_commit": "1b10ed61eb4abeef7ef02c9508f629fa4c2068d4",
+    "focused_passed": 53,
+    "seconds": 13.114,
+    "source_hashes_matched": true,
+    "additional_checks": "expanded observed/cause ISO years and MAX_SAFE_INTEGER arithmetic fields"
+  },
+  "writer": "Codex / GPT-6 family; exact session model id not exposed",
+  "hash_basis": "Windows working-tree bytes",
+  "files": {
+    "ops/public-host/alerts.mjs": "b370b9f871cec33996bee2b895b2702eda2ecf379e14bca741d5c12f38bb28dd",
+    "ops/public-host/tests/alerts-time.test.mjs": "d12fff850ad9b259ce399ae396bd62ef03af80a7d468a4904a845f5658100097"
+  },
+  "commands": [
+    "node --test tests/alerts-time.test.mjs tests/alerts.test.mjs tests/alerts-input.test.mjs (cwd ops/public-host)",
+    "npm --prefix ops/public-host test",
+    "npm --prefix ops/public-host run check",
+    "python -m pytest tests/test_checklist_model.py -q"
+  ],
+  "limits": [
+    "mock transport only; no actual delivery",
+    "invalid current incident rejected before lock; saved-state refusal happens under a transient lock before transport/state rewrite",
+    "normal generated canonical ISO including expanded years retained; manually edited noncanonical strings are refused",
+    "safe integer counters and arithmetic clocks remain unchanged",
+    "no public contract, teammate, cloud or deployment changes"
+  ],
+  "checklist_tests": 8,
+  "syntax": "pass",
+  "diff_check": "pass"
+}
