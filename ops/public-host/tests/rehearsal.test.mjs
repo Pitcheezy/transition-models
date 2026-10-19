@@ -3,9 +3,9 @@ import assert from "node:assert/strict";
 import { runLocalRehearsal, validateWorkload, syntheticBody, summarizeLoad, checkRead } from "../rehearse-local.mjs";
 import { hash, waitForReady, boundedCleanup } from "../rehearsal/local-host.mjs";
 import { main as firstConnectionMain } from "../rehearse-first-connection.mjs";
-import { mkdtemp, writeFile, readFile } from "node:fs/promises";
-import { tmpdir } from "node:os";
+import { writeFile, readFile } from "node:fs/promises";
 import { join } from "node:path";
+import { createTestDirectory } from "./helpers/owned-temp.mjs";
 
 test("workload caps prevent accidental external or unbounded load", () => {
   for (const bad of [
@@ -70,8 +70,8 @@ test("startup abort and cleanup failures are bounded and never reported as succe
   assert.ok(performance.now() - begin < 2000);
 });
 
-test("first-connection rehearsal refuses an existing receipt path before running", async () => {
-  const dir = await mkdtemp(join(tmpdir(), "pitcheezy-first-"));
+test("first-connection rehearsal refuses an existing receipt path before running", async (t) => {
+  const dir = await createTestDirectory(t);
   const receipt = join(dir, "receipt.json");
   await writeFile(receipt, "keep");
   const errors = []; const original = process.stderr.write;

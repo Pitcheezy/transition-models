@@ -1,14 +1,14 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { mkdtemp, readFile, writeFile } from "node:fs/promises";
-import { tmpdir } from "node:os";
+import { readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import { fileURLToPath } from "node:url";
 import { validateReportInput, usageSection, problemsSection, buildReport, EVIDENCE } from "../report.mjs";
 import { initialAlertState, dispatchAlerts, mockTransport } from "../alerts.mjs";
+import { createTestDirectory } from "./helpers/owned-temp.mjs";
 
 const sha = text => createHash("sha256").update(text).digest("hex");
 const NOW = Date.parse("2026-10-13T06:00:00Z");
@@ -241,8 +241,8 @@ test("WS-review2: actual v3 dispatcher state is accepted without losing its cove
   assert.equal(buildReport(base({ alert_state: last.state })).json.problems.alerts.history_coverage, "complete");
 });
 
-test("CLI writes markdown and JSON once, refuses overwrite and invalid input", async () => {
-  const dir = await mkdtemp(join(tmpdir(), "pitcheezy-report-"));
+test("CLI writes markdown and JSON once, refuses overwrite and invalid input", async (t) => {
+  const dir = await createTestDirectory(t);
   const run = promisify(execFile);
   const cli = fileURLToPath(new URL("../report-cli.mjs", import.meta.url));
   await writeFile(join(dir, "input.json"), JSON.stringify(base()));
@@ -252,7 +252,7 @@ test("CLI writes markdown and JSON once, refuses overwrite and invalid input", a
   assert.match(md, /^# \[경기별 운영 기록 초안\] 경기 123/);
   await assert.rejects(run(process.execPath, [cli, "--input", join(dir, "input.json"), "--output-dir", dir]), e => e.code === 2 && /EEXIST/.test(e.stderr));
   // A lone existing .json refuses the run before the .md is written (no orphan draft).
-  const other = await mkdtemp(join(tmpdir(), "pitcheezy-report-"));
+  const other = await createTestDirectory(t);
   await writeFile(join(other, first.json), "{}");
   await assert.rejects(run(process.execPath, [cli, "--input", join(dir, "input.json"), "--output-dir", other]), e => e.code === 2 && /EEXIST/.test(e.stderr));
   await assert.rejects(readFile(join(other, first.markdown)), e => e.code === "ENOENT");

@@ -1,8 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { mkdtemp, readFile, readdir, realpath, writeFile } from "node:fs/promises";
-import { tmpdir } from "node:os";
+import { readFile, readdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
@@ -10,6 +9,7 @@ import { fileURLToPath } from "node:url";
 import { initialAlertState, dispatchAlerts, mockTransport } from "../alerts.mjs";
 import { runAlertsOnce } from "../alerts-cli.mjs";
 import { initialState, advanceState } from "../monitor.mjs";
+import { createTestDirectory } from "./helpers/owned-temp.mjs";
 
 const NOW = Date.parse("2026-10-15T00:00:00Z");
 const RETRY_AT = NOW + 31 * 60000;
@@ -32,9 +32,8 @@ async function pendingReminders() {
   return JSON.stringify(second.state, null, 2) + "\n";
 }
 
-async function files(monitorRecord, stateText = null, cfg = config()) {
-  // Resolve platform temp-directory aliases so the existing no-symlink input rule is respected.
-  const dir = await realpath(await mkdtemp(join(tmpdir(), "pitcheezy-alert-input-")));
+async function files(t, monitorRecord, stateText = null, cfg = config()) {
+  const dir = await createTestDirectory(t);
   const paths = ["monitor.json", "config.json", "state.json"].map(name => join(dir, name));
   await writeFile(paths[0], JSON.stringify(monitorRecord));
   await writeFile(paths[1], JSON.stringify(cfg));
@@ -69,10 +68,10 @@ const invalidEnvelopes = [
   ["oversized events", () => ({ state: { events: Array(101).fill(opened), incident: null } })],
 ];
 
-test("missing or malformed incident input never discards persisted reminder retries", async () => {
+test("missing or malformed incident input never discards persisted reminder retries", async (t) => {
   const original = await pendingReminders();
   for (const [label, make] of invalidIncidents) {
-    const { dir, paths } = await files(make(), original);
+    const { dir, paths } = await files(t, make(), original);
     const before = (await readdir(dir)).sort();
     await assert.rejects(runAlertsOnce(...paths, { now: RETRY_AT + 1 }), invalidInput, label);
     assert.equal(await readFile(paths[2], "utf8"), original, label + ": persisted retries are unchanged");
@@ -80,28 +79,28 @@ test("missing or malformed incident input never discards persisted reminder retr
   }
 });
 
-test("invalid monitor envelopes and event containers preserve the entire existing alert state", async () => {
+test("invalid monitor envelopes and event containers preserve the entire existing alert state", async (t) => {
   const original = await pendingReminders();
   for (const [label, make] of invalidEnvelopes) {
-    const { dir, paths } = await files(make(), original);
+    const { dir, paths } = await files(t, make(), original);
     await assert.rejects(runAlertsOnce(...paths, { now: RETRY_AT + 1 }), invalidInput, label);
     assert.equal(await readFile(paths[2], "utf8"), original, label);
     assert.deepEqual((await readdir(dir)).sort(), ["config.json", "monitor.json", "state.json"], label);
   }
 });
 
-test("invalid monitor inputs cannot initialize a new alert state", async () => {
+test("invalid monitor inputs cannot initialize a new alert state", async (t) => {
   for (const [label, make] of [...invalidIncidents, ...invalidEnvelopes]) {
-    const { dir, paths } = await files(make());
+    const { dir, paths } = await files(t, make());
     await assert.rejects(runAlertsOnce(...paths, { now: RETRY_AT + 1 }), invalidInput, label);
     assert.deepEqual((await readdir(dir)).sort(), ["config.json", "monitor.json"], label);
   }
 });
 
-test("a valid explicit null incident still settles reminders and processes recovery", async () => {
+test("a valid explicit null incident still settles reminders and processes recovery", async (t) => {
   const original = await pendingReminders();
   const recovered = { ...opened, kind: "recovered", at_ms: RETRY_AT + 1, issues: [] };
-  const { paths } = await files({ state: { events: [opened, recovered], incident: null }, report: {} }, original);
+  const { paths } = await files(t, { state: { events: [opened, recovered], incident: null }, report: {} }, original);
   const result = await runAlertsOnce(...paths, { now: RETRY_AT + 2 });
   assert.equal(result.receipt.abandoned.length, 2);
   assert.equal(result.pending, 0);
@@ -113,12 +112,12 @@ test("a valid explicit null incident still settles reminders and processes recov
   assert.equal(saved.pending.length, 0);
 });
 
-test("valid open incident retries both saved reminders with absent or empty report", async () => {
+test("valid open incident retries both saved reminders with absent or empty report", async (t) => {
   const original = await pendingReminders();
   for (const includeReport of [false, true]) {
     const monitor = record();
     if (!includeReport) delete monitor.report;
-    const { paths } = await files(monitor, original);
+    const { paths } = await files(t, monitor, original);
     const result = await runAlertsOnce(...paths, { now: RETRY_AT + 1 });
     assert.equal(result.receipt.abandoned.length, 0);
     assert.equal(result.pending, 0);
@@ -130,7 +129,7 @@ test("valid open incident retries both saved reminders with absent or empty repo
   }
 });
 
-test("full real monitor state-machine records remain accepted", async () => {
+test("full real monitor state-machine records remain accepted", async (t) => {
   const monitorConfig = { schema: "pitcheezy-host-monitor-v1", origin: "https://synthetic.example.invalid",
     allow_loopback_http: false, timeout_ms: 200, max_body_bytes: 4096,
     timestamp_pointer: null, timestamp_format: "rfc3339", max_age_seconds: 120,
@@ -141,17 +140,17 @@ test("full real monitor state-machine records remain accepted", async () => {
       observed_at_ms: at, status: "failed", issues: ["freshness_stale"], page: {}, health: {} };
     state = advanceState(state, report, monitorConfig).state;
   }
-  const { paths } = await files({ state, report });
+  const { paths } = await files(t, { state, report });
   const result = await runAlertsOnce(...paths, { now: NOW + 2 });
   assert.equal(result.mock_messages.length, 2);
   assert.equal(result.receipt.invalid_events, 0);
   assert.equal(result.receipt.incident_invalid, false);
 });
 
-test("individual invalid events still allow good events and return CLI exit one", async () => {
+test("individual invalid events still allow good events and return CLI exit one", async (t) => {
   const bad = { ...opened, id: "bad-event" };
   const cfg = { ...config(), remind_after_minutes: 0 };
-  const { paths } = await files({ state: { events: [bad, opened], incident: opened }, report: {} }, null, cfg);
+  const { paths } = await files(t, { state: { events: [bad, opened], incident: opened }, report: {} }, null, cfg);
   await assert.rejects(run(process.execPath, cliArgs(paths)), error => {
     assert.equal(error.code, 1);
     const result = JSON.parse(error.stdout);
@@ -165,9 +164,9 @@ test("individual invalid events still allow good events and return CLI exit one"
   assert.equal(Object.keys(saved.deliveries).length, 2);
 });
 
-test("actual CLI refuses missing incident with exit two and leaves existing pending bytes intact", async () => {
+test("actual CLI refuses missing incident with exit two and leaves existing pending bytes intact", async (t) => {
   const original = await pendingReminders();
-  const { dir, paths } = await files({ state: { events: [] } }, original);
+  const { dir, paths } = await files(t, { state: { events: [] } }, original);
   await assert.rejects(run(process.execPath, cliArgs(paths)), error => {
     assert.equal(error.code, 2);
     assert.deepEqual(JSON.parse(error.stderr), { ok: false, code: "invalid_monitor_state" });
@@ -178,9 +177,9 @@ test("actual CLI refuses missing incident with exit two and leaves existing pend
   assert.deepEqual((await readdir(dir)).sort(), ["config.json", "monitor.json", "state.json"]);
 });
 
-test("invalid monitor input refuses before touching a lock held by another invocation", async () => {
+test("invalid monitor input refuses before touching a lock held by another invocation", async (t) => {
   const original = await pendingReminders();
-  const { dir, paths } = await files(record(false), original);
+  const { dir, paths } = await files(t, record(false), original);
   await writeFile(paths[2] + ".lock", "synthetic-other-run");
   await assert.rejects(runAlertsOnce(...paths, { now: RETRY_AT + 1 }), invalidInput);
   assert.equal(await readFile(paths[2] + ".lock", "utf8"), "synthetic-other-run");
