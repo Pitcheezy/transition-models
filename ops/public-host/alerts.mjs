@@ -7,6 +7,12 @@
 const object = v => v !== null && typeof v === "object" && !Array.isArray(v);
 const exact = (v, keys) => object(v) && Object.keys(v).sort().join(",") === [...keys].sort().join(",");
 const int = (v, min, max) => Number.isSafeInteger(v) && v >= min && v <= max;
+// Date rendering has a smaller range than safe-integer clocks/counters. Keep those separate.
+const dateMs = v => int(v, 0, 8640000000000000);
+const canonicalTimestamp = value => {
+  const ms = typeof value === "string" && value.length <= 30 ? Date.parse(value) : NaN;
+  return dateMs(ms) && new Date(ms).toISOString() === value ? ms : NaN;
+};
 export class AlertError extends Error { constructor(code) { super(code); this.code = code; } }
 const refuse = code => { throw new AlertError(code); };
 
@@ -40,7 +46,7 @@ const HOST_ISSUES = new Set(["page_http_error", "page_network_error", "page_time
 /** Maps a monitor event (opened/recovered with issues) to an alert category. Pure; no I/O. */
 export function classifyEvent(event) {
   if (!exact(event, ["id", "kind", "at_ms", "issues"]) || !["opened", "recovered"].includes(event.kind) ||
-      typeof event.id !== "string" || !/^[a-f0-9]{64}$/.test(event.id) || !int(event.at_ms, 0, Number.MAX_SAFE_INTEGER) ||
+      typeof event.id !== "string" || !/^[a-f0-9]{64}$/.test(event.id) || !dateMs(event.at_ms) ||
       !Array.isArray(event.issues) || event.issues.length > 8 || !event.issues.every(i => typeof i === "string" && /^[a-z_]{1,80}$/.test(i))) refuse("invalid_event");
   if (event.kind === "recovered") return "recovered";
   const issues = new Set(event.issues);
@@ -190,6 +196,7 @@ function compactAlertState(state, { listed, openId, config, now, receipt }) {
  * (they differ for re-classifications and reminders after a re-classification).
  */
 export function buildMessage(event, category, recipient, { reminder = 0, reclassifiedFrom = null, causeIssues = null, causeObservedMs = null, kind = null, announcement = null } = {}) {
+  if (!dateMs(event?.at_ms) || (causeObservedMs !== null && !dateMs(causeObservedMs))) refuse("invalid_event");
   const meta = CATEGORIES[category];
   const issues = causeIssues ?? event.issues;
   const responsibility = meta.first_responder === "both" ? "양쪽이 함께 조사"
@@ -212,7 +219,7 @@ export function buildMessage(event, category, recipient, { reminder = 0, reclass
 function canonicalPending(item) {
   if (!exact(item, ["key", "message"]) || typeof item.key !== "string" || !DELIVERY_KEY.test(item.key) || !object(item.message)) refuse("state_invalid");
   const [, id, kind, recipient] = DELIVERY_KEY.exec(item.key), m = item.message;
-  const at = typeof m.observed_at === "string" && m.observed_at.length <= 30 ? Date.parse(m.observed_at) : NaN;
+  const at = canonicalTimestamp(m.observed_at);
   if (!["pitcheezy-host-alert-message-v1", "pitcheezy-host-alert-message-v2"].includes(m.schema) ||
       m.incident_id !== id || m.recipient !== recipient || !Number.isSafeInteger(at) || at < 0 ||
       !Array.isArray(m.issues) || m.issues.length > 8 || !m.issues.every(ISSUE) || !CATEGORY_NAMES.has(m.category)) refuse("state_invalid");
@@ -226,7 +233,7 @@ function canonicalPending(item) {
     options = { reminder, causeIssues: m.issues };
   } else {
     const [, number, category] = kind.split(":");
-    const announcement = Number(number), causeAt = typeof m.cause_observed_at === "string" && m.cause_observed_at.length <= 30 ? Date.parse(m.cause_observed_at) : NaN;
+    const announcement = Number(number), causeAt = canonicalTimestamp(m.cause_observed_at);
     if (m.event_kind !== "reclassified" || !int(announcement, 1, Number.MAX_SAFE_INTEGER) || m.announcement !== announcement ||
         m.category !== category || !ACTIONABLE.has(category) || !CATEGORY_NAMES.has(m.reclassified_from) ||
         !Number.isSafeInteger(causeAt) || causeAt < at) refuse("state_invalid");
@@ -305,7 +312,7 @@ export async function dispatchAlerts(state, monitorState, config, transport, { n
   if (openId) {
     incident = next.incidents[openId] ??= { opened_category: openedCategory, announced: openedCategory,
       announced_issues: [...open.issues], seq: 0, candidate: null, candidate_runs: 0, previous: null, last_report_ms: null };
-    const sameRun = object(latestReport) && Number.isSafeInteger(latestReport.observed_at_ms) &&
+    const sameRun = object(latestReport) && dateMs(latestReport.observed_at_ms) &&
       latestReport.observed_at_ms === monitorState.last_observed_ms && latestReport.observed_at_ms >= open.at_ms;
     // Each recorded run is counted once, even if this CLI runs twice on the same monitor record.
     if (sameRun && latestReport.observed_at_ms !== incident.last_report_ms) {
