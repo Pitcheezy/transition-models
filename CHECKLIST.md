@@ -2,15 +2,15 @@
 
 ## 협업 실행계획 현재 상태 정리 — 2026-10-19
 
-- [~] H-collab4. 협업 실행계획의 초기 완료/대기 문구를 이력으로 구분하고 현재 수신·검증·다음 입력을 근거로 연결한다. 승인된 범위와 새 사람 결정 대기는 유지한다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-19 · Codex]`
+- [x] H-collab4. 협업 실행계획의 현재 상태/다음 입력과 초기 이력을 구분했다. 상대 링크82·과거 본문 보존·체크리스트8·별도 문서 대조 통과. 승인된 범위와 새 사람 결정 대기는 유지한다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-19 · Codex]`
 
-수정 권한: 우리 Codex / `codex/ws-collab-current-1019` / 기준 `595415270cad6f976043341bccd7cce94b0be37d`. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6264093517). 문서만 수정하며 팀원·배포·발신·승인 범위를 변경하지 않는다.
+[현재 실행계획](docs/WS_COLLAB_V1_ACTIONS.md). 수정 권한 반납 준비: 우리 Codex / `codex/ws-collab-current-1019` / 기준 `595415270cad6f976043341bccd7cce94b0be37d`, 선점 `d379f8c`. CI/병합 후 우리 board에 반납한다. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6264093517). 문서만 수정하며 팀원·배포·발신·승인 범위를 변경하지 않는다.
 
 ## 현재 운영 소스 검토 근거 — 2026-10-19
 
 - [x] WS-review3. 현재35파일의 검토 근거와 Git blob 일치 확인: 기존32파일 연결·배포묶음2파일/감시CLI1파일 gpt-5.6-sol 집중 검토PASS·관련73검사 통과. 과거 작성 모델 미확인·실제 출시 조건은 유지한다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-19 · Codex]`
 
-[파일별 근거·한계](docs/WS_REVIEW_COVERAGE_20261019.md). 수정 권한 반납 준비: 우리 Codex / `codex/ws-review-coverage-1019` / 기준 `0497b2b862fed7288b803ab14bd4c3de1ed8c6ef`, 선점 `dcf1dc5`. 최종 CI/병합 뒤 우리 board에 반납한다. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6263886050). 합격은 현재 파일의 근거 구분·다른 모델 집중 검토·관련 검사이며, 사람 결정이나 팀원 자료 대기를 임의로 해제하지 않는다.
+[파일별 근거·한계](docs/WS_REVIEW_COVERAGE_20261019.md). PR #51 CI2 통과·`5954152` 병합·우리 board 수정 권한 반납 완료. 검토 기준 `0497b2b862fed7288b803ab14bd4c3de1ed8c6ef`, 선점 `dcf1dc5`. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6263886050). 합격은 현재 파일의 근거 구분·다른 모델 집중 검토·관련 검사이며, 사람 결정이나 팀원 자료 대기를 임의로 해제하지 않는다.
 
 ## 알림 시각 경계 — 2026-10-19
 
