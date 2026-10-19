@@ -1,0 +1,136 @@
+{
+  "schema": "pitcheezy-final-runner-intake-record-v1",
+  "unit": "WS-partner3",
+  "record_date_kst": "2026-10-19",
+  "our_baseline_commit": "b7feebf6620f279d30803e45a707522005852db0",
+  "our_claim_commit": "0dde60a569552842ed9c443ba4c3f8b4accfef5b",
+  "evidence_kind": "read_only_issue_report_and_local_document_review",
+  "sources": [
+    {
+      "kind": "request_issue",
+      "url": "https://github.com/SongRoute/pitcheezy/issues/38",
+      "updated_at": "2026-10-19T12:50:18Z",
+      "body_sha256_utf8": "0832f529d1d07ca71f0a8e10b9b6539c12550d71ceef3d83e39cac01391d676f",
+      "hash_basis": "GitHub API body string encoded as UTF-8, no newline normalization"
+    },
+    {
+      "kind": "latest_reply",
+      "url": "https://github.com/SongRoute/pitcheezy/issues/38#issuecomment-6267615609",
+      "updated_at": "2026-10-19T12:50:18Z",
+      "body_sha256_utf8": "81cdafb6cd63b3cfd5977a8b075bb78ebee883dcc64b26829448b0b583cd588f",
+      "hash_basis": "GitHub API body string encoded as UTF-8, no newline normalization"
+    },
+    {
+      "kind": "earlier_status",
+      "url": "https://github.com/SongRoute/pitcheezy/issues/35#issuecomment-6258507452",
+      "updated_at": "2026-10-19T02:41:54Z",
+      "body_sha256_utf8": "dbefa378038cdcfaf42f97fab4633535f9c640ea93040d4e433728b367172f3e",
+      "hash_basis": "GitHub API body string encoded as UTF-8, no newline normalization"
+    }
+  ],
+  "observed": {
+    "issue_state": "open",
+    "mail_label_applied": true,
+    "our_main_at_start": "b7feebf6620f279d30803e45a707522005852db0",
+    "reply_received": true,
+    "final_package_received_in_this_handoff": false,
+    "final_package_sha256": null,
+    "final_client_commit": null,
+    "final_runner_commit": null,
+    "reported_tests_independently_reproduced": false,
+    "local_final_package_validation": "waiting_for_final_files",
+    "new_joint_execution_authorization": "not_provided"
+  },
+  "partner_report": {
+    "runner_label": "v5",
+    "fixes": [
+      "NaN timestamp validation",
+      "target hash comparison"
+    ],
+    "synthetic_acceptance_tests_passed": 14,
+    "author_model_text": "Claude Opus",
+    "reviewer_model_text": "별도 Claude 에이전트",
+    "different_model_requirement": "unconfirmed_exact_model_ids_missing",
+    "final_repin_and_registration_review": "planned_not_delivered",
+    "n23_current_reply": "fixture length change waiting; may remain a warning; safe failure reported",
+    "delivery_text": "10/22(수) 중",
+    "delivery_channel": "existing private transfer; public issue SHA and summary only"
+  },
+  "open_clarifications": [
+    {
+      "id": "model_identity",
+      "state": "needs_confirmation",
+      "reason": "Separate agent does not establish a different model. Preserve unknowns; do not infer equal models."
+    },
+    {
+      "id": "n23_status",
+      "state": "needs_reconciliation",
+      "earlier_source": "https://github.com/SongRoute/pitcheezy/issues/35#issuecomment-6258507452",
+      "latest_source": "https://github.com/SongRoute/pitcheezy/issues/38#issuecomment-6267615609",
+      "reason": "Earlier report says fixture preparation already complete and hard refusal outstanding; latest reply says fixture waiting. Final artifact/version and refusal stage require evidence."
+    },
+    {
+      "id": "delivery_date",
+      "state": "needs_confirmation",
+      "year_context": 2026,
+      "calendar_date_for_written_month_day": "2026-10-22",
+      "calendar_weekday": "Thursday",
+      "reported_weekday": "Wednesday",
+      "reason": "Do not silently choose date or weekday."
+    },
+    {
+      "id": "freeze_scope",
+      "state": "needs_confirmation",
+      "rule": "10/21 onward bug fixes only",
+      "reason": "10/21 screen work may be fixes or feature changes; no violation or exception inferred."
+    }
+  ],
+  "boundaries": {
+    "teammate_code_accessed_or_modified": false,
+    "teammate_processes_or_mac_accessed": false,
+    "private_package_published": false,
+    "runtime_changed": false,
+    "deployment_changed": false,
+    "credentials_issued": false,
+    "new_reply_sent": false,
+    "issue38_closed": false,
+    "request_budget_changed": false
+  },
+  "commands": [
+    "gh api repos/SongRoute/pitcheezy/issues/38",
+    "gh api repos/SongRoute/pitcheezy/issues/comments/6267615609",
+    "gh api repos/SongRoute/pitcheezy/issues/comments/6258507452",
+    "gh issue list -R Pitcheezy/transition-models -l mail --state open",
+    "gh issue list -R SongRoute/pitcheezy -l mail --state open",
+    "git ls-remote origin refs/heads/main"
+  ],
+  "validation": {
+    "document_review": {
+      "status": "pass",
+      "reviewer": "separate Codex agent; same model family, document review only",
+      "scope": "seven changed/new documentation files",
+      "findings": []
+    },
+    "checklist_tests": {
+      "command": "python -B -m pytest -q tests/test_checklist_model.py",
+      "passed": 8,
+      "seconds": 2.45
+    },
+    "links_and_status_consistency": {
+      "status": "pass",
+      "relative_links_in_current_sections": 26,
+      "source_api_body_sha256_matches": 3,
+      "open_clarifications": 4,
+      "calendar": "2026-10-22 Thursday",
+      "private_path_contact_localhost_scan": "pass for three new documents",
+      "scope_note": "Link checking scoped to changed/current sections; initial whole-CHECKLIST regex treated historical prose ▲ 왼쪽 끝 x264/265 as a path. No repository defect or historical content change inferred."
+    },
+    "runtime_tests": "not_run; documentation only",
+    "final_partner_runner_tests": "not_run; final files not received"
+  },
+  "notes": [
+    "Existing v4.2 receipt and return-pack transmission remain complete; final v5 handoff is separate.",
+    "This receipt is our documentation schema, not a public publishing contract change.",
+    "Local verification cannot substitute for a live trial approval or an independent human review."
+  ]
+}
