@@ -8,7 +8,8 @@ const object = v => v !== null && typeof v === "object" && !Array.isArray(v);
 const exact = (v, keys) => object(v) && Object.keys(v).sort().join(",") === [...keys].sort().join(",");
 const int = (v, min, max) => Number.isSafeInteger(v) && v >= min && v <= max;
 const text = (v, max) => typeof v === "string" && v.length <= max && !/\p{Cc}/u.test(v.replace(/[\n\t]/g, ""));
-const iso = v => typeof v === "string" && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,3})?Z$/.test(v) && Number.isFinite(Date.parse(v));
+const iso = v => typeof v === "string" && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,3})?Z$/.test(v) &&
+  Number.isFinite(Date.parse(v)) && new Date(v).toISOString().slice(0, 19) === v.slice(0, 19);
 const day = v => typeof v === "string" && /^\d{4}-\d{2}-\d{2}$/.test(v) &&
   Number.isFinite(Date.parse(v + "T00:00:00Z")) && new Date(v + "T00:00:00Z").toISOString().slice(0, 10) === v;
 const HEX40 = /^[a-f0-9]{40}$/, HEX64 = /^[a-f0-9]{64}$/;
@@ -92,6 +93,14 @@ export function validateReportInput(input) {
   const a = input.alert_state;
   if (a !== null && (!object(a) || !["pitcheezy-host-alert-state-v1", "pitcheezy-host-alert-state-v2", "pitcheezy-host-alert-state-v3"].includes(a.schema) ||
       !object(a.deliveries) || a.mock_only !== true)) refuse("invalid_alert_state");
+  if (a !== null) {
+    // Validate only the fields this report consumes; minimal legacy states remain supported.
+    const statuses = a.schema === "pitcheezy-host-alert-state-v1" ?
+      ["acknowledged", "undelivered"] : ["acknowledged", "undelivered", "abandoned"];
+    if ((a.pending != null && !Array.isArray(a.pending)) || !Object.values(a.deliveries).every(row =>
+      object(row) && statuses.includes(row.status) && int(row.attempts, 0, 100) &&
+      int(row.last_attempt_ms, 0, Number.MAX_SAFE_INTEGER))) refuse("invalid_alert_state");
+  }
   if (a?.schema === "pitcheezy-host-alert-state-v3" &&
       !["history_pruned_through_ms", "history_complete_from_ms", "last_dispatch_ms"].every(k =>
         a[k] === null || int(a[k], 0, Number.MAX_SAFE_INTEGER))) refuse("invalid_alert_state");
