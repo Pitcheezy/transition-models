@@ -1,10 +1,16 @@
 # 남은 작업 체크리스트
 
+## 현재 운영 소스 검토 근거 — 2026-10-19
+
+- [x] WS-review3. 현재35파일의 검토 근거와 Git blob 일치 확인: 기존32파일 연결·배포묶음2파일/감시CLI1파일 gpt-5.6-sol 집중 검토PASS·관련73검사 통과. 과거 작성 모델 미확인·실제 출시 조건은 유지한다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-19 · Codex]`
+
+[파일별 근거·한계](docs/WS_REVIEW_COVERAGE_20261019.md). 수정 권한 반납 준비: 우리 Codex / `codex/ws-review-coverage-1019` / 기준 `0497b2b862fed7288b803ab14bd4c3de1ed8c6ef`, 선점 `dcf1dc5`. 최종 CI/병합 뒤 우리 board에 반납한다. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6263886050). 합격은 현재 파일의 근거 구분·다른 모델 집중 검토·관련 검사이며, 사람 결정이나 팀원 자료 대기를 임의로 해제하지 않는다.
+
 ## 알림 시각 경계 — 2026-10-19
 
 - [x] WS-alert4. 표현할 수 없는 이벤트 시각이 정상 알림을 중단하지 않도록 하고, 존재하지 않는 저장 날짜를 거부한다. 정상 이전 상태·확장 연도·큰 카운터 호환과 모의 전달·상태쓰기 전 거부를 검증한다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-19 · Codex]`
 
-완료: 집중53(새8)·Node346·체크리스트8·문법 통과, 고정 `1b10ed6`의 gpt-5.6-sol 검토PASS/독립53검사. [근거](docs/WS_ALERT_TIME_20261019.md). 수정 권한 반납 준비: 우리 Codex / `codex/ws-alert-timestamps-1019` / 기준 `d2ff7bd`, 선점 `2202675`. 최종 CI/병합 후 board에 반납한다. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6263661558). 노트북 합성 검사만 수행하며 팀원·Mac·실배포·실제 발송·공개 계약은 변경하지 않는다.
+완료: 집중53(새8)·Node346·체크리스트8·문법 통과, 고정 `1b10ed6`의 gpt-5.6-sol 검토PASS/독립53검사. [근거](docs/WS_ALERT_TIME_20261019.md). PR #50 CI6 통과·`0497b2b`에 병합·우리 board 권한 반납 완료. 작업 기준 `d2ff7bd`, 선점 `2202675`. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6263661558). 노트북 합성 검사만 수행하며 팀원·Mac·실배포·실제 발송·공개 계약은 변경하지 않는다.
 
 ## 운영 보고서 입력 검증 — 2026-10-19
 

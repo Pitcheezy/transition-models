@@ -1,0 +1,843 @@
+{
+  "schema": "pitcheezy-review-coverage-v1",
+  "unit": "WS-review3",
+  "date_kst": "2026-10-19",
+  "baseline_commit": "0497b2b862fed7288b803ab14bd4c3de1ed8c6ef",
+  "claim_commit": "dcf1dc59f74342365a21ec3e642e355d136da4e1",
+  "evidence_kind": "fixed_local_git_review_records_and_focused_different_model_review",
+  "hash_basis": "Exact git blob bytes, obtained with git --no-replace-objects; no working-tree line-ending normalization",
+  "scope": {
+    "packaged_host_files": 12,
+    "additional_operator_node_files": 15,
+    "python_operations_files_including_init": 4,
+    "python_cli_files": 4,
+    "unique_files": 35,
+    "excluded": [
+      "tests and rehearsal-only sources",
+      "third-party dependency source",
+      "Song source and supplied frontend assets",
+      "private deployment settings and credentials",
+      "live cloud state"
+    ]
+  },
+  "summary": {
+    "prior_review_evidence_current_blob_matches": 32,
+    "focused_review_pending": 0,
+    "historical_author_attribution_resolved": false,
+    "launch_review_complete": false,
+    "deployment_authorized": false,
+    "focused_review_completed": 3,
+    "current_files_with_scoped_review_evidence": 35
+  },
+  "commands": [
+    "git --no-replace-objects show <baseline_commit>:<path>",
+    "git --no-replace-objects show <review_commit>:<path>",
+    "git --no-replace-objects cat-file --batch  # stdin: one COMMIT:path per line",
+    "python -c \"import hashlib,sys; print(hashlib.sha256(sys.stdin.buffer.read()).hexdigest())\"  # hash raw Git bytes; do not pass through a text-decoding pipeline"
+  ],
+  "method": [
+    "Read protocol and fixed review records before mapping.",
+    "Match exact current Git blob bytes and OID to a recorded review target. Commit membership alone is not a review claim.",
+    "An incremental or documented scope review is retained as that evidence kind, not relabeled a full fresh audit.",
+    "The six unchanged legacy scope entries retain unknown historical author attribution.",
+    "Two tools changed after their documented review; monitor-cli had only scope-summary evidence. All three current full files received a focused gpt-5.6-sol review with no P1/P2 findings.",
+    "No production execution, credentials, runtime source changes or duplicate full test run. Review evidence uses local synthetic/offline and isolated loopback tests; collaboration board/PR updates are tracked separately."
+  ],
+  "historical_attribution_evidence": "docs/results/ops/ws_review2_model_attribution_20261014.json",
+  "files": [
+    {
+      "path": "ops/public-host/access.mjs",
+      "current_commit": "0497b2b862fed7288b803ab14bd4c3de1ed8c6ef",
+      "current_git_blob_oid": "d4bc6413acd1027ce88a2534a81a0d5f1da94aa3",
+      "current_git_blob_sha256": "67c3865be7754a9cf172075db67f60a8bc2cd076203799b0bf64a8fe0ef1219a",
+      "current_bytes": 14629,
+      "coverage_status": "prior_review_evidence_matched",
+      "prior_review": {
+        "commit": "c07dc942030e5ec4f100f638d572239524cd327e",
+        "model": "gpt-5.6-sol",
+        "evidence_kind": "explicit_package_inventory",
+        "evidence_paths": [
+          "docs/WS_STAGE3_EXECUTION_PLAN_20261015.md",
+          "docs/results/ops/ws_stage3_20261015.json"
+        ],
+        "git_blob_oid": "d4bc6413acd1027ce88a2534a81a0d5f1da94aa3",
+        "git_blob_sha256": "67c3865be7754a9cf172075db67f60a8bc2cd076203799b0bf64a8fe0ef1219a",
+        "same_git_blob_as_current": true
+      },
+      "historical_author_attribution": "not inferred; existing unknowns remain"
+    },
+    {
+      "path": "ops/public-host/alerts-cli.mjs",
+      "current_commit": "0497b2b862fed7288b803ab14bd4c3de1ed8c6ef",
+      "current_git_blob_oid": "62f4eb41fc53365c25e4fe7085044dd882860a73",
+      "current_git_blob_sha256": "e2b67005132bdb5a3eb4012f91be7f7a03dc84358e7521f7b7ed01a0121b7c9d",
+      "current_bytes": 5805,
+      "coverage_status": "prior_review_evidence_matched",
+      "prior_review": {
+        "commit": "c19e1c5270b7fc1c6ce1cf46dda4970d675089fb",
+        "model": "gpt-5.6-sol",
+        "evidence_kind": "explicit_source_receipt_incremental",
+        "evidence_paths": [
+          "docs/WS_IO1_20261015.md",
+          "docs/results/ops/ws_io1_20261015.json"
+        ],
+        "git_blob_oid": "62f4eb41fc53365c25e4fe7085044dd882860a73",
+        "git_blob_sha256": "e2b67005132bdb5a3eb4012f91be7f7a03dc84358e7521f7b7ed01a0121b7c9d",
+        "same_git_blob_as_current": true
+      },
+      "historical_author_attribution": "not inferred; existing unknowns remain"
+    },
+    {
+      "path": "ops/public-host/alerts.mjs",
+      "current_commit": "0497b2b862fed7288b803ab14bd4c3de1ed8c6ef",
+      "current_git_blob_oid": "75a71c34c51cc52fb0885e3b5ba2fec480120d1e",
+      "current_git_blob_sha256": "b370b9f871cec33996bee2b895b2702eda2ecf379e14bca741d5c12f38bb28dd",
+      "current_bytes": 30831,
+      "coverage_status": "prior_review_evidence_matched",
+      "prior_review": {
+        "commit": "1b10ed61eb4abeef7ef02c9508f629fa4c2068d4",
+        "model": "gpt-5.6-sol",
+        "evidence_kind": "explicit_source_receipt_incremental",
+        "evidence_paths": [
+          "docs/WS_ALERT_TIME_20261019.md",
+          "docs/results/ops/ws_alert_time_20261019.json"
+        ],
+        "git_blob_oid": "75a71c34c51cc52fb0885e3b5ba2fec480120d1e",
+        "git_blob_sha256": "b370b9f871cec33996bee2b895b2702eda2ecf379e14bca741d5c12f38bb28dd",
+        "same_git_blob_as_current": true
+      },
+      "historical_author_attribution": "not inferred; existing unknowns remain"
+    },
+    {
+      "path": "ops/public-host/client/usage-client.mjs",
+      "current_commit": "0497b2b862fed7288b803ab14bd4c3de1ed8c6ef",
+      "current_git_blob_oid": "13261de6844bc419f8699a92a09c8c41c58ce54f",
+      "current_git_blob_sha256": "ae6b401f838b2404b61d2b5c9682dd57760b03e03195e403000458c75c8d9f48",
+      "current_bytes": 8914,
+      "coverage_status": "prior_review_evidence_matched",
+      "prior_review": {
+        "commit": "c07dc942030e5ec4f100f638d572239524cd327e",
+        "model": "gpt-5.6-sol",
+        "evidence_kind": "explicit_package_inventory",
+        "evidence_paths": [
+          "docs/WS_STAGE3_EXECUTION_PLAN_20261015.md",
+          "docs/results/ops/ws_stage3_20261015.json"
+        ],
+        "git_blob_oid": "13261de6844bc419f8699a92a09c8c41c58ce54f",
+        "git_blob_sha256": "ae6b401f838b2404b61d2b5c9682dd57760b03e03195e403000458c75c8d9f48",
+        "same_git_blob_as_current": true
+      },
+      "historical_author_attribution": "not inferred; existing unknowns remain"
+    },
+    {
+      "path": "ops/public-host/client/widget.css",
+      "current_commit": "0497b2b862fed7288b803ab14bd4c3de1ed8c6ef",
+      "current_git_blob_oid": "92fa35221d4230be9d2ab4cedc687097a9b7c5d3",
+      "current_git_blob_sha256": "197c9fccc82c6b87988d0e44185248da7de3dc020cec4388f53348ca84358742",
+      "current_bytes": 591,
+      "coverage_status": "prior_review_evidence_matched",
+      "prior_review": {
+        "commit": "c07dc942030e5ec4f100f638d572239524cd327e",
+        "model": "gpt-5.6-sol",
+        "evidence_kind": "explicit_package_inventory",
+        "evidence_paths": [
+          "docs/WS_STAGE3_EXECUTION_PLAN_20261015.md",
+          "docs/results/ops/ws_stage3_20261015.json"
+        ],
+        "git_blob_oid": "92fa35221d4230be9d2ab4cedc687097a9b7c5d3",
+        "git_blob_sha256": "197c9fccc82c6b87988d0e44185248da7de3dc020cec4388f53348ca84358742",
+        "same_git_blob_as_current": true
+      },
+      "historical_author_attribution": "not inferred; existing unknowns remain"
+    },
+    {
+      "path": "ops/public-host/client/widget.mjs",
+      "current_commit": "0497b2b862fed7288b803ab14bd4c3de1ed8c6ef",
+      "current_git_blob_oid": "0825016d2c71cdc8005f8a24ee9052da85597f9b",
+      "current_git_blob_sha256": "0c62b29c4a0e75f060af2fd7b191a82c282bc52860cfa851b553869da1eb5138",
+      "current_bytes": 6167,
+      "coverage_status": "prior_review_evidence_matched",
+      "prior_review": {
+        "commit": "c07dc942030e5ec4f100f638d572239524cd327e",
+        "model": "gpt-5.6-sol",
+        "evidence_kind": "explicit_package_inventory",
+        "evidence_paths": [
+          "docs/WS_STAGE3_EXECUTION_PLAN_20261015.md",
+          "docs/results/ops/ws_stage3_20261015.json"
+        ],
+        "git_blob_oid": "0825016d2c71cdc8005f8a24ee9052da85597f9b",
+        "git_blob_sha256": "0c62b29c4a0e75f060af2fd7b191a82c282bc52860cfa851b553869da1eb5138",
+        "same_git_blob_as_current": true
+      },
+      "historical_author_attribution": "not inferred; existing unknowns remain"
+    },
+    {
+      "path": "ops/public-host/export-usage-cli.mjs",
+      "current_commit": "0497b2b862fed7288b803ab14bd4c3de1ed8c6ef",
+      "current_git_blob_oid": "ac3588738af2e4dd03129e47b0a77ca070cd086c",
+      "current_git_blob_sha256": "d66a8e2b678df04005abc50b3968b50a829dc6c7cd00ea251579a54cd9f0714a",
+      "current_bytes": 2899,
+      "coverage_status": "prior_review_evidence_matched",
+      "prior_review": {
+        "commit": "70f62e6508cd43f072def70eec638917cbe591d4",
+        "model": "gpt-5.6-sol",
+        "evidence_kind": "explicit_source_receipt_incremental",
+        "evidence_paths": [
+          "docs/WS_REPORT2_20261015.md",
+          "docs/results/ops/ws_report2_connection_20261015.json"
+        ],
+        "git_blob_oid": "ac3588738af2e4dd03129e47b0a77ca070cd086c",
+        "git_blob_sha256": "d66a8e2b678df04005abc50b3968b50a829dc6c7cd00ea251579a54cd9f0714a",
+        "same_git_blob_as_current": true
+      },
+      "historical_author_attribution": "not inferred; existing unknowns remain"
+    },
+    {
+      "path": "ops/public-host/export-usage.mjs",
+      "current_commit": "0497b2b862fed7288b803ab14bd4c3de1ed8c6ef",
+      "current_git_blob_oid": "fcd01194b4700d6673367931fd89fd5bbd9559a0",
+      "current_git_blob_sha256": "2d23893eec16eeba0e3592a6112878cae4e8909a6dee163b75a757bda0a90de7",
+      "current_bytes": 7362,
+      "coverage_status": "prior_review_evidence_matched",
+      "prior_review": {
+        "commit": "70f62e6508cd43f072def70eec638917cbe591d4",
+        "model": "gpt-5.6-sol",
+        "evidence_kind": "explicit_source_receipt_incremental",
+        "evidence_paths": [
+          "docs/WS_REPORT2_20261015.md",
+          "docs/results/ops/ws_report2_connection_20261015.json"
+        ],
+        "git_blob_oid": "fcd01194b4700d6673367931fd89fd5bbd9559a0",
+        "git_blob_sha256": "2d23893eec16eeba0e3592a6112878cae4e8909a6dee163b75a757bda0a90de7",
+        "same_git_blob_as_current": true
+      },
+      "historical_author_attribution": "not inferred; existing unknowns remain"
+    },
+    {
+      "path": "ops/public-host/gateway.mjs",
+      "current_commit": "0497b2b862fed7288b803ab14bd4c3de1ed8c6ef",
+      "current_git_blob_oid": "49cb3feac0a74d3e60db8236a1974287f7959a49",
+      "current_git_blob_sha256": "3fd0217beae30ae23ca548c309e2535b66e80024728b10ddb249eec08f2dd2b6",
+      "current_bytes": 18645,
+      "coverage_status": "prior_review_evidence_matched",
+      "prior_review": {
+        "commit": "834f8387772adae836f5aabf9d0d3c3d7e77caa7",
+        "model": "gpt-5.6-sol",
+        "evidence_kind": "explicit_source_receipt_incremental",
+        "evidence_paths": [
+          "docs/WS_PUBLISH_SCOPE_20261017.md",
+          "docs/results/ops/ws_publish_scope_20261017.json"
+        ],
+        "git_blob_oid": "49cb3feac0a74d3e60db8236a1974287f7959a49",
+        "git_blob_sha256": "3fd0217beae30ae23ca548c309e2535b66e80024728b10ddb249eec08f2dd2b6",
+        "same_git_blob_as_current": true
+      },
+      "historical_author_attribution": "not inferred; existing unknowns remain"
+    },
+    {
+      "path": "ops/public-host/migrations/0001_telemetry.sql",
+      "current_commit": "0497b2b862fed7288b803ab14bd4c3de1ed8c6ef",
+      "current_git_blob_oid": "3337a3c2238cd714d994999fd96a1a81a76beecf",
+      "current_git_blob_sha256": "479ded40208b893fe979b40f36db5ee0b55cb6bfa8b83c0e10f0af02fefc28b4",
+      "current_bytes": 978,
+      "coverage_status": "prior_review_evidence_matched",
+      "prior_review": {
+        "commit": "c07dc942030e5ec4f100f638d572239524cd327e",
+        "model": "gpt-5.6-sol",
+        "evidence_kind": "explicit_package_inventory",
+        "evidence_paths": [
+          "docs/WS_STAGE3_EXECUTION_PLAN_20261015.md",
+          "docs/results/ops/ws_stage3_20261015.json"
+        ],
+        "git_blob_oid": "3337a3c2238cd714d994999fd96a1a81a76beecf",
+        "git_blob_sha256": "479ded40208b893fe979b40f36db5ee0b55cb6bfa8b83c0e10f0af02fefc28b4",
+        "same_git_blob_as_current": true
+      },
+      "historical_author_attribution": "not inferred; existing unknowns remain"
+    },
+    {
+      "path": "ops/public-host/monitor-cli.mjs",
+      "current_commit": "0497b2b862fed7288b803ab14bd4c3de1ed8c6ef",
+      "current_git_blob_oid": "b0d2d9781a7bcebac40ebe31866a657aa1fc36ee",
+      "current_git_blob_sha256": "a4f452e458f593098aa4800bc6e8d55762f430d532e0a6f9735ad466dfbd11b8",
+      "current_bytes": 4537,
+      "coverage_status": "focused_review_completed",
+      "prior_review": {
+        "commit": "2ce3a70a142c592d1db06d242616669766e1a6f7",
+        "model": "gpt-5.6-sol",
+        "evidence_kind": "scope_summary_without_explicit_file_receipt",
+        "evidence_paths": [
+          "docs/WS_CODEX_REVIEW2_20261013.md",
+          "docs/results/ops/ws_review2_verification_20261013.json"
+        ],
+        "git_blob_oid": "b0d2d9781a7bcebac40ebe31866a657aa1fc36ee",
+        "git_blob_sha256": "a4f452e458f593098aa4800bc6e8d55762f430d532e0a6f9735ad466dfbd11b8",
+        "same_git_blob_as_current": true
+      },
+      "historical_author_attribution": "not inferred; existing unknowns remain",
+      "gap": "The review2 document includes gated monitoring, but its explicit source receipt does not list this file.",
+      "focused_review": {
+        "status": "pass",
+        "target_commit": "0497b2b862fed7288b803ab14bd4c3de1ed8c6ef",
+        "reviewer_model": "gpt-5.6-sol",
+        "scope": "complete current source file",
+        "findings_p1_p2": [],
+        "git_blob_oid": "b0d2d9781a7bcebac40ebe31866a657aa1fc36ee",
+        "git_blob_sha256": "a4f452e458f593098aa4800bc6e8d55762f430d532e0a6f9735ad466dfbd11b8",
+        "bytes": 4537,
+        "same_git_blob_at_claim_commit": true
+      }
+    },
+    {
+      "path": "ops/public-host/monitor-runner-cli.mjs",
+      "current_commit": "0497b2b862fed7288b803ab14bd4c3de1ed8c6ef",
+      "current_git_blob_oid": "627b4fce15e3f460ca29764d17aaa3c5e65a7340",
+      "current_git_blob_sha256": "b09527ff38a03210b5e01fc375ab6e37fbfc6a814232a28d30cf3b601c9d7df2",
+      "current_bytes": 2568,
+      "coverage_status": "prior_review_evidence_matched",
+      "prior_review": {
+        "commit": "5083b1acf7682a33814be5150e48394117e3acb8",
+        "model": "gpt-5.6-sol",
+        "evidence_kind": "explicit_source_receipt_incremental",
+        "evidence_paths": [
+          "docs/WS_OPERATOR_TOOLS_20261017.md",
+          "docs/results/ops/ws_operator_tools_20261017.json"
+        ],
+        "git_blob_oid": "627b4fce15e3f460ca29764d17aaa3c5e65a7340",
+        "git_blob_sha256": "b09527ff38a03210b5e01fc375ab6e37fbfc6a814232a28d30cf3b601c9d7df2",
+        "same_git_blob_as_current": true
+      },
+      "historical_author_attribution": "not inferred; existing unknowns remain"
+    },
+    {
+      "path": "ops/public-host/monitor-runner.mjs",
+      "current_commit": "0497b2b862fed7288b803ab14bd4c3de1ed8c6ef",
+      "current_git_blob_oid": "5eff4e4be263ff9f8cd308070f6fd17e9ef0e042",
+      "current_git_blob_sha256": "3ca10ac1cf7f73e69e1ea3c24f2c936d684ca480f2e73432d1202d91f07dfac0",
+      "current_bytes": 9312,
+      "coverage_status": "prior_review_evidence_matched",
+      "prior_review": {
+        "commit": "5083b1acf7682a33814be5150e48394117e3acb8",
+        "model": "gpt-5.6-sol",
+        "evidence_kind": "explicit_source_receipt_incremental",
+        "evidence_paths": [
+          "docs/WS_OPERATOR_TOOLS_20261017.md",
+          "docs/results/ops/ws_operator_tools_20261017.json"
+        ],
+        "git_blob_oid": "5eff4e4be263ff9f8cd308070f6fd17e9ef0e042",
+        "git_blob_sha256": "3ca10ac1cf7f73e69e1ea3c24f2c936d684ca480f2e73432d1202d91f07dfac0",
+        "same_git_blob_as_current": true
+      },
+      "historical_author_attribution": "not inferred; existing unknowns remain"
+    },
+    {
+      "path": "ops/public-host/monitor.mjs",
+      "current_commit": "0497b2b862fed7288b803ab14bd4c3de1ed8c6ef",
+      "current_git_blob_oid": "e0bd74fe1964d253cf977ff0b7339b69aa136c6e",
+      "current_git_blob_sha256": "ab6a93e915820b7b1684c8e42266ebbef4ee5886fce37609037e0b3950179680",
+      "current_bytes": 22780,
+      "coverage_status": "prior_review_evidence_matched",
+      "prior_review": {
+        "commit": "5effc7a4deef21ee37d07f8574b43b23935d2189",
+        "model": "gpt-5.6-sol",
+        "evidence_kind": "documented_changed_source_review",
+        "evidence_paths": [
+          "docs/WS_PARTNER_V42_20261018.md",
+          "docs/results/ops/ws_partner_v42_20261018.json"
+        ],
+        "git_blob_oid": "e0bd74fe1964d253cf977ff0b7339b69aa136c6e",
+        "git_blob_sha256": "ab6a93e915820b7b1684c8e42266ebbef4ee5886fce37609037e0b3950179680",
+        "same_git_blob_as_current": true
+      },
+      "historical_author_attribution": "not inferred; existing unknowns remain"
+    },
+    {
+      "path": "ops/public-host/notice-cli.mjs",
+      "current_commit": "0497b2b862fed7288b803ab14bd4c3de1ed8c6ef",
+      "current_git_blob_oid": "2478bf13b0672f0bff28a815fbe8877c2c9feb29",
+      "current_git_blob_sha256": "5d957c794923efee606d993f1d133714f88b15d988ab098e38c6fc08646d7b7f",
+      "current_bytes": 2537,
+      "coverage_status": "prior_review_evidence_matched",
+      "prior_review": {
+        "commit": "5083b1acf7682a33814be5150e48394117e3acb8",
+        "model": "gpt-5.6-sol",
+        "evidence_kind": "explicit_source_receipt_incremental",
+        "evidence_paths": [
+          "docs/WS_OPERATOR_TOOLS_20261017.md",
+          "docs/results/ops/ws_operator_tools_20261017.json"
+        ],
+        "git_blob_oid": "2478bf13b0672f0bff28a815fbe8877c2c9feb29",
+        "git_blob_sha256": "5d957c794923efee606d993f1d133714f88b15d988ab098e38c6fc08646d7b7f",
+        "same_git_blob_as_current": true
+      },
+      "historical_author_attribution": "not inferred; existing unknowns remain"
+    },
+    {
+      "path": "ops/public-host/notice-client.mjs",
+      "current_commit": "0497b2b862fed7288b803ab14bd4c3de1ed8c6ef",
+      "current_git_blob_oid": "97cd7572ebb172af35d012d7ee1336ec7aa01d93",
+      "current_git_blob_sha256": "eea8aedb57f01f15f6a3c06436f41facdedabc09a050548f6a9e2f43e1a8dd8e",
+      "current_bytes": 10173,
+      "coverage_status": "prior_review_evidence_matched",
+      "prior_review": {
+        "commit": "5083b1acf7682a33814be5150e48394117e3acb8",
+        "model": "gpt-5.6-sol",
+        "evidence_kind": "explicit_source_receipt_incremental",
+        "evidence_paths": [
+          "docs/WS_OPERATOR_TOOLS_20261017.md",
+          "docs/results/ops/ws_operator_tools_20261017.json"
+        ],
+        "git_blob_oid": "97cd7572ebb172af35d012d7ee1336ec7aa01d93",
+        "git_blob_sha256": "eea8aedb57f01f15f6a3c06436f41facdedabc09a050548f6a9e2f43e1a8dd8e",
+        "same_git_blob_as_current": true
+      },
+      "historical_author_attribution": "not inferred; existing unknowns remain"
+    },
+    {
+      "path": "ops/public-host/notice.mjs",
+      "current_commit": "0497b2b862fed7288b803ab14bd4c3de1ed8c6ef",
+      "current_git_blob_oid": "7d276ac4e375c1fd479420f5fde8fc0e55a6f010",
+      "current_git_blob_sha256": "d94b5c22ef66b38b3bb824e028fcaa92075856014bbc7e2e28bd3a85bdb64247",
+      "current_bytes": 14390,
+      "coverage_status": "prior_review_evidence_matched",
+      "prior_review": {
+        "commit": "87168d7bc42f11f76886e475f919caff7674b60a",
+        "model": "gpt-5.6-sol",
+        "evidence_kind": "documented_changed_source_review",
+        "evidence_paths": [
+          "docs/WS_STAGE4_CLOUD_TRIAL_20261016.md",
+          "docs/results/ops/ws_stage4_20261016.json"
+        ],
+        "git_blob_oid": "7d276ac4e375c1fd479420f5fde8fc0e55a6f010",
+        "git_blob_sha256": "d94b5c22ef66b38b3bb824e028fcaa92075856014bbc7e2e28bd3a85bdb64247",
+        "same_git_blob_as_current": true
+      },
+      "historical_author_attribution": "not inferred; existing unknowns remain"
+    },
+    {
+      "path": "ops/public-host/owned-files.mjs",
+      "current_commit": "0497b2b862fed7288b803ab14bd4c3de1ed8c6ef",
+      "current_git_blob_oid": "b7b611e4fe39198232407de8e76e6d972ee5b839",
+      "current_git_blob_sha256": "859f1d6562e22488ddc60926a56ae8e291248e07ca9165d273013fede8736f67",
+      "current_bytes": 2932,
+      "coverage_status": "prior_review_evidence_matched",
+      "prior_review": {
+        "commit": "c19e1c5270b7fc1c6ce1cf46dda4970d675089fb",
+        "model": "gpt-5.6-sol",
+        "evidence_kind": "explicit_source_receipt_incremental",
+        "evidence_paths": [
+          "docs/WS_IO1_20261015.md",
+          "docs/results/ops/ws_io1_20261015.json"
+        ],
+        "git_blob_oid": "b7b611e4fe39198232407de8e76e6d972ee5b839",
+        "git_blob_sha256": "859f1d6562e22488ddc60926a56ae8e291248e07ca9165d273013fede8736f67",
+        "same_git_blob_as_current": true
+      },
+      "historical_author_attribution": "not inferred; existing unknowns remain"
+    },
+    {
+      "path": "ops/public-host/package-lock.json",
+      "current_commit": "0497b2b862fed7288b803ab14bd4c3de1ed8c6ef",
+      "current_git_blob_oid": "cb7e72f3a3d51503504fa5aaf595ac69138c152c",
+      "current_git_blob_sha256": "cece953d79da7738410cc570742afaa99282e66543eda69693edafb243371e6b",
+      "current_bytes": 32100,
+      "coverage_status": "prior_review_evidence_matched",
+      "prior_review": {
+        "commit": "c07dc942030e5ec4f100f638d572239524cd327e",
+        "model": "gpt-5.6-sol",
+        "evidence_kind": "explicit_package_inventory",
+        "evidence_paths": [
+          "docs/WS_STAGE3_EXECUTION_PLAN_20261015.md",
+          "docs/results/ops/ws_stage3_20261015.json"
+        ],
+        "git_blob_oid": "cb7e72f3a3d51503504fa5aaf595ac69138c152c",
+        "git_blob_sha256": "cece953d79da7738410cc570742afaa99282e66543eda69693edafb243371e6b",
+        "same_git_blob_as_current": true
+      },
+      "historical_author_attribution": "not inferred; existing unknowns remain"
+    },
+    {
+      "path": "ops/public-host/package.json",
+      "current_commit": "0497b2b862fed7288b803ab14bd4c3de1ed8c6ef",
+      "current_git_blob_oid": "23dd835f3615cd44fa61f67c064a4a9e0533a53a",
+      "current_git_blob_sha256": "0562260f7b8c41dcb6d2e85360865d1c5d0ea3716131ce0cb9b4677ad8ca271e",
+      "current_bytes": 1532,
+      "coverage_status": "prior_review_evidence_matched",
+      "prior_review": {
+        "commit": "a2bb75b674f4bce77315a2c982687abf02ef48f2",
+        "model": "gpt-5.6-sol",
+        "evidence_kind": "documented_changed_source_review",
+        "evidence_paths": [
+          "docs/WS_LIVE_EXPIRY_20261018.md",
+          "docs/results/ops/ws_live_expiry_checks_20261018.json"
+        ],
+        "git_blob_oid": "23dd835f3615cd44fa61f67c064a4a9e0533a53a",
+        "git_blob_sha256": "0562260f7b8c41dcb6d2e85360865d1c5d0ea3716131ce0cb9b4677ad8ca271e",
+        "same_git_blob_as_current": true
+      },
+      "historical_author_attribution": "not inferred; existing unknowns remain"
+    },
+    {
+      "path": "ops/public-host/publisher-cli.mjs",
+      "current_commit": "0497b2b862fed7288b803ab14bd4c3de1ed8c6ef",
+      "current_git_blob_oid": "6ef8d69dcf6165d40e2cebb1bba06e0076e67675",
+      "current_git_blob_sha256": "42cd3808aff1d179d1d7bf1dc46adc529a22724ecd9c69a539a256c8be33627a",
+      "current_bytes": 2839,
+      "coverage_status": "prior_review_evidence_matched",
+      "prior_review": {
+        "commit": "70aa2419c5bfaba751a0b90777262eb5af5f3b24",
+        "model": "claude-fable-5-1",
+        "evidence_kind": "explicit_glob_scope_historical_author_unknown",
+        "evidence_paths": [
+          "docs/WS_REVIEW1_20261013.md",
+          "docs/results/ops/ws_review1_recheck_20261013.json"
+        ],
+        "git_blob_oid": "6ef8d69dcf6165d40e2cebb1bba06e0076e67675",
+        "git_blob_sha256": "42cd3808aff1d179d1d7bf1dc46adc529a22724ecd9c69a539a256c8be33627a",
+        "same_git_blob_as_current": true
+      },
+      "historical_author_attribution": "not inferred; existing unknowns remain"
+    },
+    {
+      "path": "ops/public-host/publisher.mjs",
+      "current_commit": "0497b2b862fed7288b803ab14bd4c3de1ed8c6ef",
+      "current_git_blob_oid": "e0435fa4955f151c6e78780554a2a3eda10b7a7e",
+      "current_git_blob_sha256": "e0bb33599fe1ab93ea9b5b2926dee9c6f92d31a3d9241f8441186e4a609b1203",
+      "current_bytes": 10393,
+      "coverage_status": "prior_review_evidence_matched",
+      "prior_review": {
+        "commit": "70aa2419c5bfaba751a0b90777262eb5af5f3b24",
+        "model": "claude-fable-5-1",
+        "evidence_kind": "explicit_glob_scope_historical_author_unknown",
+        "evidence_paths": [
+          "docs/WS_REVIEW1_20261013.md",
+          "docs/results/ops/ws_review1_recheck_20261013.json"
+        ],
+        "git_blob_oid": "e0435fa4955f151c6e78780554a2a3eda10b7a7e",
+        "git_blob_sha256": "e0bb33599fe1ab93ea9b5b2926dee9c6f92d31a3d9241f8441186e4a609b1203",
+        "same_git_blob_as_current": true
+      },
+      "historical_author_attribution": "not inferred; existing unknowns remain"
+    },
+    {
+      "path": "ops/public-host/report-cli.mjs",
+      "current_commit": "0497b2b862fed7288b803ab14bd4c3de1ed8c6ef",
+      "current_git_blob_oid": "b9c545f1a3babfa592bee2f7342a563b32b9f2cd",
+      "current_git_blob_sha256": "6a3cfabd2c877f9cd8a3363a5beacf299c6e6e2e5b7b3e8b828e449d409ef348",
+      "current_bytes": 3003,
+      "coverage_status": "prior_review_evidence_matched",
+      "prior_review": {
+        "commit": "c19e1c5270b7fc1c6ce1cf46dda4970d675089fb",
+        "model": "gpt-5.6-sol",
+        "evidence_kind": "explicit_source_receipt_incremental",
+        "evidence_paths": [
+          "docs/WS_IO1_20261015.md",
+          "docs/results/ops/ws_io1_20261015.json"
+        ],
+        "git_blob_oid": "b9c545f1a3babfa592bee2f7342a563b32b9f2cd",
+        "git_blob_sha256": "6a3cfabd2c877f9cd8a3363a5beacf299c6e6e2e5b7b3e8b828e449d409ef348",
+        "same_git_blob_as_current": true
+      },
+      "historical_author_attribution": "not inferred; existing unknowns remain"
+    },
+    {
+      "path": "ops/public-host/report.mjs",
+      "current_commit": "0497b2b862fed7288b803ab14bd4c3de1ed8c6ef",
+      "current_git_blob_oid": "cebba09f6dfc160dafeb991889e081e4ffaf5f7b",
+      "current_git_blob_sha256": "d71abed72506a1f31b4539364afb32590626954aeec6d56abad595f1e50204d8",
+      "current_bytes": 27283,
+      "coverage_status": "prior_review_evidence_matched",
+      "prior_review": {
+        "commit": "a4b938496d8f625b19efc7abcec3da46f5439835",
+        "model": "gpt-5.6-sol",
+        "evidence_kind": "explicit_source_receipt_incremental",
+        "evidence_paths": [
+          "docs/WS_REPORT_INPUT_20261019.md",
+          "docs/results/ops/ws_report_input_20261019.json"
+        ],
+        "git_blob_oid": "cebba09f6dfc160dafeb991889e081e4ffaf5f7b",
+        "git_blob_sha256": "d71abed72506a1f31b4539364afb32590626954aeec6d56abad595f1e50204d8",
+        "same_git_blob_as_current": true
+      },
+      "historical_author_attribution": "not inferred; existing unknowns remain"
+    },
+    {
+      "path": "ops/public-host/telemetry.mjs",
+      "current_commit": "0497b2b862fed7288b803ab14bd4c3de1ed8c6ef",
+      "current_git_blob_oid": "26fbd24824b11cff4b6a3f7e3602ec9cc22c9245",
+      "current_git_blob_sha256": "c90d0f23dbf80eb965d343bef8fb75129cf3ce7ee9e64fbe6f683228ad0f646a",
+      "current_bytes": 11231,
+      "coverage_status": "prior_review_evidence_matched",
+      "prior_review": {
+        "commit": "c07dc942030e5ec4f100f638d572239524cd327e",
+        "model": "gpt-5.6-sol",
+        "evidence_kind": "explicit_package_inventory",
+        "evidence_paths": [
+          "docs/WS_STAGE3_EXECUTION_PLAN_20261015.md",
+          "docs/results/ops/ws_stage3_20261015.json"
+        ],
+        "git_blob_oid": "26fbd24824b11cff4b6a3f7e3602ec9cc22c9245",
+        "git_blob_sha256": "c90d0f23dbf80eb965d343bef8fb75129cf3ce7ee9e64fbe6f683228ad0f646a",
+        "same_git_blob_as_current": true
+      },
+      "historical_author_attribution": "not inferred; existing unknowns remain"
+    },
+    {
+      "path": "ops/public-host/worker.mjs",
+      "current_commit": "0497b2b862fed7288b803ab14bd4c3de1ed8c6ef",
+      "current_git_blob_oid": "6bdfece7507b59dfb5145425158e313e12cccf7b",
+      "current_git_blob_sha256": "ba6bb83bbbbd8ba4727feb6b870fbe85c0c8c5c9bc65ef837aa2703235f3f985",
+      "current_bytes": 271,
+      "coverage_status": "prior_review_evidence_matched",
+      "prior_review": {
+        "commit": "c07dc942030e5ec4f100f638d572239524cd327e",
+        "model": "gpt-5.6-sol",
+        "evidence_kind": "explicit_package_inventory",
+        "evidence_paths": [
+          "docs/WS_STAGE3_EXECUTION_PLAN_20261015.md",
+          "docs/results/ops/ws_stage3_20261015.json"
+        ],
+        "git_blob_oid": "6bdfece7507b59dfb5145425158e313e12cccf7b",
+        "git_blob_sha256": "ba6bb83bbbbd8ba4727feb6b870fbe85c0c8c5c9bc65ef837aa2703235f3f985",
+        "same_git_blob_as_current": true
+      },
+      "historical_author_attribution": "not inferred; existing unknowns remain"
+    },
+    {
+      "path": "ops/public-host/wrangler.example.jsonc",
+      "current_commit": "0497b2b862fed7288b803ab14bd4c3de1ed8c6ef",
+      "current_git_blob_oid": "4f6c56b9d913104c5c04790bdf8a501665da01b6",
+      "current_git_blob_sha256": "86f4ae69e879a612821df4b821d4337b2cdfc368311eb1439da38fe0e8b38379",
+      "current_bytes": 1478,
+      "coverage_status": "prior_review_evidence_matched",
+      "prior_review": {
+        "commit": "c07dc942030e5ec4f100f638d572239524cd327e",
+        "model": "gpt-5.6-sol",
+        "evidence_kind": "explicit_package_inventory",
+        "evidence_paths": [
+          "docs/WS_STAGE3_EXECUTION_PLAN_20261015.md",
+          "docs/results/ops/ws_stage3_20261015.json"
+        ],
+        "git_blob_oid": "4f6c56b9d913104c5c04790bdf8a501665da01b6",
+        "git_blob_sha256": "86f4ae69e879a612821df4b821d4337b2cdfc368311eb1439da38fe0e8b38379",
+        "same_git_blob_as_current": true
+      },
+      "historical_author_attribution": "not inferred; existing unknowns remain"
+    },
+    {
+      "path": "scripts/build_public_host_release.py",
+      "current_commit": "0497b2b862fed7288b803ab14bd4c3de1ed8c6ef",
+      "current_git_blob_oid": "45f0fe5ecc12ad6dcac275e638100de5985dba02",
+      "current_git_blob_sha256": "7f621270d085405347703494ec508090930ba1ea01213888fcc8116c50c71070",
+      "current_bytes": 2143,
+      "coverage_status": "focused_review_completed",
+      "prior_review": {
+        "commit": "70aa2419c5bfaba751a0b90777262eb5af5f3b24",
+        "model": "claude-fable-5-1",
+        "evidence_kind": "changed_after_documented_review",
+        "evidence_paths": [
+          "docs/WS_REVIEW1_20261013.md",
+          "docs/results/ops/ws_review1_recheck_20261013.json"
+        ],
+        "git_blob_oid": "ae8d01539cb22c636ddfa56934b1832f4b3c661e",
+        "git_blob_sha256": "7c14db84893966ec4c90e524453303fd50dcc5fc08a54359cc9d4dde6f335562",
+        "same_git_blob_as_current": false
+      },
+      "historical_author_attribution": "not inferred; existing unknowns remain",
+      "gap": "Last changed at 963c8d2 after review1 target 70aa241; later candidate and test evidence does not explicitly identify this tool source as reviewed.",
+      "focused_review": {
+        "status": "pass",
+        "target_commit": "0497b2b862fed7288b803ab14bd4c3de1ed8c6ef",
+        "reviewer_model": "gpt-5.6-sol",
+        "scope": "complete current source file",
+        "findings_p1_p2": [],
+        "git_blob_oid": "45f0fe5ecc12ad6dcac275e638100de5985dba02",
+        "git_blob_sha256": "7f621270d085405347703494ec508090930ba1ea01213888fcc8116c50c71070",
+        "bytes": 2143,
+        "same_git_blob_at_claim_commit": true
+      }
+    },
+    {
+      "path": "scripts/check_public_host_config.py",
+      "current_commit": "0497b2b862fed7288b803ab14bd4c3de1ed8c6ef",
+      "current_git_blob_oid": "019de2debf5eb1b663914451b99c3a665a973401",
+      "current_git_blob_sha256": "79a646831f485f0894d19f26b6f235637ffec4f0c010aa60bff1d523db3a18fc",
+      "current_bytes": 1034,
+      "coverage_status": "prior_review_evidence_matched",
+      "prior_review": {
+        "commit": "70aa2419c5bfaba751a0b90777262eb5af5f3b24",
+        "model": "claude-fable-5-1",
+        "evidence_kind": "explicit_glob_scope_historical_author_unknown",
+        "evidence_paths": [
+          "docs/WS_REVIEW1_20261013.md",
+          "docs/results/ops/ws_review1_recheck_20261013.json"
+        ],
+        "git_blob_oid": "019de2debf5eb1b663914451b99c3a665a973401",
+        "git_blob_sha256": "79a646831f485f0894d19f26b6f235637ffec4f0c010aa60bff1d523db3a18fc",
+        "same_git_blob_as_current": true
+      },
+      "historical_author_attribution": "not inferred; existing unknowns remain"
+    },
+    {
+      "path": "scripts/estimate_public_host_cost.py",
+      "current_commit": "0497b2b862fed7288b803ab14bd4c3de1ed8c6ef",
+      "current_git_blob_oid": "ac24395f833c9d63ee08c465599d1404a1029145",
+      "current_git_blob_sha256": "311e71f943fe61c59fe201b975be245e54314ec903334ff19e47b9b112f053fa",
+      "current_bytes": 1071,
+      "coverage_status": "prior_review_evidence_matched",
+      "prior_review": {
+        "commit": "70aa2419c5bfaba751a0b90777262eb5af5f3b24",
+        "model": "claude-fable-5-1",
+        "evidence_kind": "explicit_glob_scope_historical_author_unknown",
+        "evidence_paths": [
+          "docs/WS_REVIEW1_20261013.md",
+          "docs/results/ops/ws_review1_recheck_20261013.json"
+        ],
+        "git_blob_oid": "ac24395f833c9d63ee08c465599d1404a1029145",
+        "git_blob_sha256": "311e71f943fe61c59fe201b975be245e54314ec903334ff19e47b9b112f053fa",
+        "same_git_blob_as_current": true
+      },
+      "historical_author_attribution": "not inferred; existing unknowns remain"
+    },
+    {
+      "path": "scripts/verify_publish_contract.py",
+      "current_commit": "0497b2b862fed7288b803ab14bd4c3de1ed8c6ef",
+      "current_git_blob_oid": "e8d07d1bd6057552f94075cc1bd1eeea78b5208c",
+      "current_git_blob_sha256": "47f532d0db7d75303ef2ed8470dd9e039184bdb7a3d2d3248824d65e88fb0abf",
+      "current_bytes": 11772,
+      "coverage_status": "prior_review_evidence_matched",
+      "prior_review": {
+        "commit": "2ce3a70a142c592d1db06d242616669766e1a6f7",
+        "model": "gpt-5.6-sol",
+        "evidence_kind": "explicit_source_receipt_incremental",
+        "evidence_paths": [
+          "docs/WS_CODEX_REVIEW2_20261013.md",
+          "docs/results/ops/ws_review2_verification_20261013.json"
+        ],
+        "git_blob_oid": "e8d07d1bd6057552f94075cc1bd1eeea78b5208c",
+        "git_blob_sha256": "47f532d0db7d75303ef2ed8470dd9e039184bdb7a3d2d3248824d65e88fb0abf",
+        "same_git_blob_as_current": true
+      },
+      "historical_author_attribution": "not inferred; existing unknowns remain"
+    },
+    {
+      "path": "src/operations/__init__.py",
+      "current_commit": "0497b2b862fed7288b803ab14bd4c3de1ed8c6ef",
+      "current_git_blob_oid": "6022c87a2748749375d1337b15127df2a42379b7",
+      "current_git_blob_sha256": "70b3934ff17e09973d6ec24a7254796ab2016c501fe820f2f09be340eb2cd52b",
+      "current_bytes": 84,
+      "coverage_status": "prior_review_evidence_matched",
+      "prior_review": {
+        "commit": "70aa2419c5bfaba751a0b90777262eb5af5f3b24",
+        "model": "claude-fable-5-1",
+        "evidence_kind": "explicit_glob_scope_historical_author_unknown",
+        "evidence_paths": [
+          "docs/WS_REVIEW1_20261013.md",
+          "docs/results/ops/ws_review1_recheck_20261013.json"
+        ],
+        "git_blob_oid": "6022c87a2748749375d1337b15127df2a42379b7",
+        "git_blob_sha256": "70b3934ff17e09973d6ec24a7254796ab2016c501fe820f2f09be340eb2cd52b",
+        "same_git_blob_as_current": true
+      },
+      "historical_author_attribution": "not inferred; existing unknowns remain"
+    },
+    {
+      "path": "src/operations/host_config.py",
+      "current_commit": "0497b2b862fed7288b803ab14bd4c3de1ed8c6ef",
+      "current_git_blob_oid": "c4dc5168b8ac48a3826553e2f8089c140d082111",
+      "current_git_blob_sha256": "5997e34af37646e0037f1b42b2df4d80ed4f7f7780ef5654b87d2968ad68b312",
+      "current_bytes": 15738,
+      "coverage_status": "prior_review_evidence_matched",
+      "prior_review": {
+        "commit": "834f8387772adae836f5aabf9d0d3c3d7e77caa7",
+        "model": "gpt-5.6-sol",
+        "evidence_kind": "explicit_source_receipt_incremental",
+        "evidence_paths": [
+          "docs/WS_PUBLISH_SCOPE_20261017.md",
+          "docs/results/ops/ws_publish_scope_20261017.json"
+        ],
+        "git_blob_oid": "c4dc5168b8ac48a3826553e2f8089c140d082111",
+        "git_blob_sha256": "5997e34af37646e0037f1b42b2df4d80ed4f7f7780ef5654b87d2968ad68b312",
+        "same_git_blob_as_current": true
+      },
+      "historical_author_attribution": "not inferred; existing unknowns remain"
+    },
+    {
+      "path": "src/operations/host_cost.py",
+      "current_commit": "0497b2b862fed7288b803ab14bd4c3de1ed8c6ef",
+      "current_git_blob_oid": "e9e8e2bfef6cfd675aaa7a8a847711b46b38ea35",
+      "current_git_blob_sha256": "1818ae7b5f8994097687aee2f72e95ae9a89e8574b98b4b175df52e92b4ae450",
+      "current_bytes": 6399,
+      "coverage_status": "prior_review_evidence_matched",
+      "prior_review": {
+        "commit": "70aa2419c5bfaba751a0b90777262eb5af5f3b24",
+        "model": "claude-fable-5-1",
+        "evidence_kind": "explicit_glob_scope_historical_author_unknown",
+        "evidence_paths": [
+          "docs/WS_REVIEW1_20261013.md",
+          "docs/results/ops/ws_review1_recheck_20261013.json"
+        ],
+        "git_blob_oid": "e9e8e2bfef6cfd675aaa7a8a847711b46b38ea35",
+        "git_blob_sha256": "1818ae7b5f8994097687aee2f72e95ae9a89e8574b98b4b175df52e92b4ae450",
+        "same_git_blob_as_current": true
+      },
+      "historical_author_attribution": "not inferred; existing unknowns remain"
+    },
+    {
+      "path": "src/operations/release_bundle.py",
+      "current_commit": "0497b2b862fed7288b803ab14bd4c3de1ed8c6ef",
+      "current_git_blob_oid": "4341e83df553c5aeb328f5adc2bff88e652d1b32",
+      "current_git_blob_sha256": "e1d5bc2e68f1cf874bb3e1865800380b545b7d53c3d134b0a4b4605122641c6b",
+      "current_bytes": 16397,
+      "coverage_status": "focused_review_completed",
+      "prior_review": {
+        "commit": "70aa2419c5bfaba751a0b90777262eb5af5f3b24",
+        "model": "claude-fable-5-1",
+        "evidence_kind": "changed_after_documented_review",
+        "evidence_paths": [
+          "docs/WS_REVIEW1_20261013.md",
+          "docs/results/ops/ws_review1_recheck_20261013.json"
+        ],
+        "git_blob_oid": "f5a2cc5718ef86a1682958f27e8125695a7bb1b8",
+        "git_blob_sha256": "978b55764cdfca1e30eb9bd477e8bb65b08f3a2d6101ce72529aa9ca84c5df05",
+        "same_git_blob_as_current": false
+      },
+      "historical_author_attribution": "not inferred; existing unknowns remain",
+      "gap": "Last changed at 963c8d2 after review1 target 70aa241; later candidate and test evidence does not explicitly identify this tool source as reviewed.",
+      "focused_review": {
+        "status": "pass",
+        "target_commit": "0497b2b862fed7288b803ab14bd4c3de1ed8c6ef",
+        "reviewer_model": "gpt-5.6-sol",
+        "scope": "complete current source file",
+        "findings_p1_p2": [],
+        "git_blob_oid": "4341e83df553c5aeb328f5adc2bff88e652d1b32",
+        "git_blob_sha256": "e1d5bc2e68f1cf874bb3e1865800380b545b7d53c3d134b0a4b4605122641c6b",
+        "bytes": 16397,
+        "same_git_blob_at_claim_commit": true
+      }
+    }
+  ],
+  "validation": {
+    "raw_git_comparison": "root independently verified all35 current and all35 prior raw Git blobs, OIDs, SHA256, byte counts and evidence paths",
+    "reviewer_model": "gpt-5.6-sol",
+    "review_target_commit": "0497b2b862fed7288b803ab14bd4c3de1ed8c6ef",
+    "same_source_at_claim_commit": true,
+    "findings_p1_p2": [],
+    "tests": [
+      {
+        "command": "PYTHONUTF8=1 PYTHONPATH=. python -B -m pytest -q tests/test_public_host_release.py",
+        "passed": 58,
+        "elapsed_seconds": 11.53
+      },
+      {
+        "command": "node --test ops/public-host/tests/monitor.test.mjs",
+        "passed": 15,
+        "failed": 0,
+        "elapsed_seconds": 1.955
+      }
+    ],
+    "environment_scope": "Windows laptop; local synthetic/offline and isolated loopback only",
+    "hash_measurement_note": "Initial reviewer working-tree hashes reflected Windows CRLF conversion; superseded by Python subprocess stdout raw Git blob SHA256, which root independently matched. No source changes."
+  },
+  "refresh_rule": "Any source change invalidates that file mapping until its new full commit and raw Git blob are compared with a documented review target. Recompute affected entries; do not infer approval from shared commit membership."
+}
