@@ -1,0 +1,56 @@
+{
+  "unit": "WS-test1",
+  "baseline_commit": "724888caaa65414db030260ffdcc0cae2aff2135",
+  "claim_commit": "e89c615",
+  "evidence": "synthetic_local_tests",
+  "writer": "Codex / GPT-6 family; exact session model id not exposed",
+  "runtime_changed": false,
+  "test_fixture_creations_fixed": 60,
+  "new_regression_tests": 5,
+  "targeted_runs": [
+    {
+      "passed": 70,
+      "duration_seconds": 12.8086598,
+      "fixture_residue": 0
+    },
+    {
+      "passed": 70,
+      "duration_seconds": 12.7661756,
+      "fixture_residue": 0
+    }
+  ],
+  "full_node": {
+    "passed": 327,
+    "duration_seconds": 22.4490312,
+    "driver_seconds": 27.815,
+    "fixture_residue": 0,
+    "npm_compile_cache_created": true,
+    "exact_new_parent_removed_after_guard": true,
+    "sibling_preserved": true
+  },
+  "checklist_tests": 8,
+  "syntax_check": "pass",
+  "initial_harness_failure": "67/70: nested Node test context prevented child execution; child environment isolation fixed; final child runner asserts one test ran",
+  "commands": [
+    "npm --prefix ops/public-host test",
+    "npm --prefix ops/public-host run check",
+    "python -m pytest tests/test_checklist_model.py -q"
+  ],
+  "files": {
+    "ops/public-host/tests/alerts-input.test.mjs": "7dd820c8a473ccde439dcada190b82f7f9e5accffa96f264a0cbed30848dccb7",
+    "ops/public-host/tests/alerts.test.mjs": "59c373cf5614cb1931ced0d738e040f4af6fba388360abf0023e6e76ca9c0643",
+    "ops/public-host/tests/report.test.mjs": "99d4c5a0c571dfaa54c2a5715771e6fc463efae7ae16547ba79951aa5b457617",
+    "ops/public-host/tests/rehearsal.test.mjs": "9ce9aa45e1e7621d36b09f10d10622c85340f542203cb2fabe3447ae3077858c",
+    "ops/public-host/tests/helpers/owned-temp.mjs": "2e73b02ce719d64dc64f1a1556776e8ee7b249a2357a639848de2ccb873643e3",
+    "ops/public-host/tests/owned-temp.test.mjs": "af74afb36b7c9d1a936c48609cce6d726f28d66ccaea221141f17c3cf0ecc7ec"
+  },
+  "non_test_host_files_unchanged": 70,
+  "limitations": [
+    "Forced process termination/power loss cleanup not guaranteed",
+    "Flat test-only directories; unexpected entries or root replacement refuse cleanup",
+    "No real Cloudflare, email, teammate code, or device execution",
+    "Previously distributed ZIPs unchanged"
+  ],
+  "hash_basis": "Windows working-tree file bytes",
+  "review": "Separate Codex agent static current-source review: no P1/P2; same-model additional test-only review, not an operational-model review"
+}
