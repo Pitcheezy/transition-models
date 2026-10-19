@@ -5,6 +5,10 @@
 [CHECKLIST](../CHECKLIST.md) 상단과 [우리 board](https://github.com/Pitcheezy/transition-models/issues/3)를 확인한다.
 역사적 “다음 단위” 문구는 현재 지시가 아니다.
 
+## 우리 보고서 입력 보호 — WS-report4
+
+존재하지 않는 UTC 날짜를 다른 날로 계산하거나 잘못된 알림 시각을0건으로 누락하는 결함을 메모리 합성 입력으로 재현했다. [수정 범위·검증](WS_REPORT_INPUT_20261019.md)은 정상 시각 정밀도·이전 알림 버전 호환을 유지하면서 잘못된 입력을 보고서 생성 전에 거부한다. 실제 운영 배포/발송은 별도이며 수집OFF·미측정 규칙을 바꾸지 않는다.
+
 ## 현재 협업 전달 상태 — 2026-10-19
 
 - 우리 반환팩 `pitcheezy-host-v42-compat-20261018.zip`(354,208bytes, SHA-256 `ec24db14ba36610618b307cb2840bf9080c45d94fe6e3a68064878dc74b13164`)은 사용자가 비공개 전달했다고 확인했고, [Song 수신 보고](https://github.com/SongRoute/pitcheezy/issues/35#issuecomment-6257356347)는 manifest103/소스99/runtime5의 정적 대조를 기록했다. 상대의 새 실행 검증이나 공동 시험 성공을 뜻하지 않는다. 아래 초안/미전달 문구는 당시 이력이다.

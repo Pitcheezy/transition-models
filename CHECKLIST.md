@@ -2,9 +2,9 @@
 
 ## 운영 보고서 입력 검증 — 2026-10-19
 
-- [ ] WS-report4. 불가능한 UTC 시각·잘못된 알림 행의 조용한 누락을 거부하고 정상 날짜 정밀도와 기존 버전 입력을 보존한다. 출력 전 거부·집중/전체 검사·다른 모델 검토를 완료한다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-19 · Codex]`
+- [~] WS-report4. 불가능한 UTC 시각·잘못된 알림 행의 조용한 누락을 거부하고 정상 날짜 정밀도와 기존 버전 입력을 보존한다. 출력 전 거부·집중/전체 검사·다른 모델 검토를 완료한다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-19 · Codex]`
 
-수정 권한: 우리 Codex / `codex/ws-report-input-1019` / 기준 `b466fb9`. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6262949761). 공개 계약·팀원 코드·실배포/발송은 변경하지 않는다.
+수정 권한: 우리 Codex / `codex/ws-report-input-1019` / 기준 `b466fb9`, 선점 `769a94d`. 집중46·전체Node338·체크리스트8·문법 통과. 다른 모델 고정 검토·CI 대기. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6262949761). 공개 계약·팀원 코드·실배포/발송은 변경하지 않는다.
 
 ## 테스트 임시 자료 정리 — 2026-10-19
 

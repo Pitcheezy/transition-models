@@ -1,0 +1,60 @@
+{
+  "unit": "WS-report4",
+  "baseline_commit": "b466fb9d49f489bb979669bcdc01b84b8b2d4f7f",
+  "claim_commit": "769a94d",
+  "evidence": "synthetic_local",
+  "before": {
+    "basis": "root in-memory reproduction before WS-report4 patch",
+    "runtime_baseline": "b466fb9d49f489bb979669bcdc01b84b8b2d4f7f",
+    "impossible_date": {
+      "input": "2026-02-30T00:00:00Z",
+      "accepted": true,
+      "calculation_timestamp": "2026-03-02T00:00:00.000Z"
+    },
+    "invalid_alert_timestamp": {
+      "input": "not-a-timestamp",
+      "accepted": true,
+      "acknowledged_by_mock": 0,
+      "history_coverage": "complete"
+    },
+    "network_requests": 0,
+    "report_files_created": 0
+  },
+  "focused": {
+    "passed": 46,
+    "new_tests": 11,
+    "duration_seconds": 0.905
+  },
+  "full_node": {
+    "passed": 338,
+    "duration_seconds": 22.4026027
+  },
+  "checklist_tests": 8,
+  "syntax": "pass",
+  "cli": {
+    "invalid_inputs": 2,
+    "exit": 2,
+    "new_report_or_lock_files": 0,
+    "input_and_unrelated_file_unchanged": true
+  },
+  "writer": "Codex / GPT-6 family; exact session model id not exposed",
+  "different_model_review": "pending",
+  "hash_basis": "Windows working-tree bytes",
+  "files": {
+    "ops/public-host/report.mjs": "11802fc6ac86423710f1e0a9f8da3bed76470da87efa9aa12919a4782d4a9ef7",
+    "ops/public-host/tests/report-input-boundaries.test.mjs": "ddde4c5aef4bcc2280acec940f2f282b8cd53b8621c18106a51e752ac6a0be23",
+    "ops/public-host/REPORT.md": "54ddde2088cad980abecc687843688d2c94e14f2872b17feaaf3234a62783c35"
+  },
+  "commands": [
+    "node --test tests/report-input-boundaries.test.mjs tests/report.test.mjs tests/report-snapshot.test.mjs tests/report-write-failure.test.mjs (cwd ops/public-host)",
+    "npm --prefix ops/public-host test",
+    "npm --prefix ops/public-host run check",
+    "python -m pytest tests/test_checklist_model.py -q"
+  ],
+  "limitations": [
+    "Local draft validation, not live service operation",
+    "Only consumed alert fields validated, not full persisted alert-state provenance",
+    "Legacy missing/null pending retained as zero; extra fields preserved",
+    "No shared contract, teammate code, deployment, or sending changes"
+  ]
+}
