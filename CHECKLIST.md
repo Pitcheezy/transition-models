@@ -2,9 +2,9 @@
 
 ## 배포 자료 JSON 실패 처리 — 2026-10-20
 
-- [ ] WS-release1. 큰 정수 JSON 오류를 안전하게 거부하도록 수정했다. 신규4개 선행실패→수정 후 기존 진단 포함5통과·Ruff 통과. 관련 전체 검사·다른 모델 검토 대기. [근거](docs/WS_RELEASE_JSON_20261020.md). 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-20 · Codex]`
+- [x] WS-release1. 큰 정수 JSON 오류를 안전하게 거부하도록 수정했다. 신규4개 선행실패→집중5·관련238·Ruff 통과. 고정499b185의 gpt-5.6-sol 검토PASS·독립5검사 완료. [근거](docs/WS_RELEASE_JSON_20261020.md). 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-20 · Codex]`
 
-수정 권한: 우리 Codex / `codex/ws-release-json-1020` / 기준 `172d3490722a5edcf9186ce8beb592468b649f59`. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6284264075). 로컬 합성만, 팀원·원본 전달팩·배포·계약·발신 변경 없음.
+수정 권한 반납 준비: 우리 Codex / `codex/ws-release-json-1020` / 기준 `172d3490722a5edcf9186ce8beb592468b649f59`. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6284264075). 로컬 합성만, 팀원·원본 전달팩·배포·계약·발신 변경 없음.
 
 ## 공개 보고서 비공개 정보 보호 — 2026-10-20
 
