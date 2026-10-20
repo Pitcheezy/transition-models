@@ -4,6 +4,8 @@
  * draft plus a JSON record. It never posts anywhere, never counts "no data" as zero viewers, and labels
  * synthetic / offline replay / live evidence separately. Wording is development copy awaiting approval.
  */
+import { isIP } from "node:net";
+
 const object = v => v !== null && typeof v === "object" && !Array.isArray(v);
 const exact = (v, keys) => object(v) && Object.keys(v).sort().join(",") === [...keys].sort().join(",");
 const int = (v, min, max) => Number.isSafeInteger(v) && v >= min && v <= max;
@@ -115,8 +117,24 @@ export function validateReportInput(input) {
   if (!Array.isArray(input.unmeasured) || input.unmeasured.length > 50 || !input.unmeasured.every(x => text(x, 200))) refuse("invalid_unmeasured");
   if (!text(input.notes, 2000)) refuse("invalid_notes");
   // Secrets, addresses and tokens never belong in an issue draft: every free-text field that can reach the draft is scanned.
-  if (/https?:\/\/|Bearer |[A-Za-z0-9_-]{43,}/.test(freeText(input))) refuse("secret_or_address_like_content");
+  if (privateContent(freeText(input))) refuse("secret_or_address_like_content");
   return input;
+}
+
+/** Reject recognizable contact/access details before producing either public draft artifact.
+ * This is a conservative shape check, not complete PII detection or permission to publish.
+ */
+function privateContent(value) {
+  if (/\b[A-Za-z][A-Za-z0-9+.-]*:\/\/|Bearer |[A-Za-z0-9_-]{43,}/.test(value)) return true;
+  if (/[\p{L}\p{N}.!#$%&'*+/=?^_`{|}~-]+@(?:[\p{L}\p{N}](?:[\p{L}\p{N}-]*[\p{L}\p{N}])?\.)+[\p{L}]{2,63}\b/u.test(value)) return true;
+  // Drive-rooted Windows and UNC paths; repo-relative commands stay usable.
+  if (/\b[A-Za-z]:[\\/]|\\\\[^\\\s]+\\[^\\\s]+|(?<![:/])\/\/[^/\s]+\/[^/\s]+/.test(value)) return true;
+  // Known personal home roots, including shell-expanded forms. API paths such as /v1 remain valid.
+  if (/(?:^|[\s"'`(=])(?:\/(?:Users|home|root)(?:\/|(?=$|[\s"'`)]))|~(?:[A-Za-z0-9._-]+)?\/)/.test(value)) return true;
+  // Parse address candidates rather than treating version numbers/times as IP addresses.
+  const ipv4 = value.match(/(?<![A-Za-z0-9_.])(?:[0-9]{1,3}\.){3}[0-9]{1,3}(?![A-Za-z0-9_.])/g) || [];
+  const ipv6 = value.match(/(?<![A-Za-z0-9_.:])(?:[A-Fa-f0-9]{0,4}:){2,}[A-Fa-f0-9:.]*(?:%[A-Za-z0-9_.-]+)?(?![A-Za-z0-9_.:])/g) || [];
+  return ipv4.some(v => isIP(v) === 4) || ipv6.some(v => isIP(v) === 6);
 }
 
 function freeText(input) {
