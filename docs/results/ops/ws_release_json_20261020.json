@@ -1,0 +1,68 @@
+{
+  "unit": "WS-release1",
+  "date": "2026-10-20",
+  "baseline_commit": "172d3490722a5edcf9186ce8beb592468b649f59",
+  "claim_commit": "ffabc175e3531e720c0794087427b62211d28017",
+  "implementation_commit": "499b18537bea3d7d6979e89f7a1d93864ee17d80",
+  "evidence": "synthetic_local",
+  "before": {
+    "new_tests_failed": 4,
+    "parser_exception": "ValueError",
+    "cli_exit_code": 1,
+    "seconds": 2.58
+  },
+  "focused": {
+    "passed": 5,
+    "deselected": 200,
+    "seconds": 1.97
+  },
+  "related_suite": {
+    "passed": 238,
+    "failed": 0,
+    "seconds": 54.32
+  },
+  "cli": {
+    "paths": [
+      "build_provenance",
+      "check_zip_manifest",
+      "config"
+    ],
+    "exit_code": 2,
+    "error": "invalid_json",
+    "input_unchanged": true,
+    "output_created": false,
+    "traceback_or_input_path_disclosed": false
+  },
+  "existing_duplicate_key_error_preserved": true,
+  "lint_and_format": "pass",
+  "writer": "Codex GPT-6 family; exact session model id not exposed",
+  "different_model_review": {
+    "model": "gpt-5.6-sol",
+    "selection_evidence": "successful explicit model spawn_agent with fork_turns=none; same agent follow-up",
+    "independent_runtime_introspection": false,
+    "status": "PASS",
+    "commit": "499b18537bea3d7d6979e89f7a1d93864ee17d80",
+    "p1_p2": 0,
+    "focused_passed": 5,
+    "first_attempt": "2 passed and 3 setup errors from sandbox temporary directory permission; rerun with isolated writable --basetemp passed",
+    "command": "PYTHONUTF8=1 python -B -m pytest -q tests/test_public_host_release.py tests/test_public_host_config.py -k 'large_json_integer or duplicate_json_keys' -p no:cacheprovider --basetemp <isolated-review-temp>"
+  },
+  "files": {
+    "src/operations/release_bundle.py": "a5af40f13e9b8c91f43a6c60f2d4a44c69f0a9c679af451ff7913c38222d5dee",
+    "tests/test_public_host_release.py": "f487a417102719b253444010d2d55df55320484aa1f30952c11ed642fa9d59d3",
+    "tests/test_public_host_config.py": "82a4c9cfc51206cba503551bba462c28ce7ba9352eb602aa410b61ad87efb6e8",
+    "ops/public-host/RELEASE.md": "475223e14769b5a912f1abda164a79d1ff2c79e067a48ed11e87bc2839f064d1"
+  },
+  "hash_basis": "Git blob raw bytes",
+  "commands": [
+    "PYTHONUTF8=1 python -B -m pytest -q tests/test_public_host_release.py tests/test_public_host_config.py -k 'large_json_integer or duplicate_json_keys'",
+    "PYTHONUTF8=1 python -B -m pytest -q tests/test_public_host_release.py tests/test_public_host_config.py tests/test_public_host_cost.py tests/test_checklist_model.py",
+    "python -m ruff check src/operations/release_bundle.py tests/test_public_host_release.py tests/test_public_host_config.py",
+    "python -m ruff format --check src/operations/release_bundle.py tests/test_public_host_release.py tests/test_public_host_config.py"
+  ],
+  "limitations": [
+    "No cloud, teammate repository, private bundle, credential, deployment or contract changes",
+    "Passing offline tests is not approval or evidence of a joint live trial",
+    "Integer conversion and byte limits were not relaxed"
+  ]
+}

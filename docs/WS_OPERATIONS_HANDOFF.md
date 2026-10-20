@@ -5,6 +5,10 @@
 [CHECKLIST](../CHECKLIST.md) 상단과 [우리 board](https://github.com/Pitcheezy/transition-models/issues/3)를 확인한다.
 역사적 “다음 단위” 문구는 현재 지시가 아니다.
 
+## 배포 자료 JSON 실패 처리 — WS-release1
+
+[입력 오류 처리](WS_RELEASE_JSON_20261020.md)를 완료했다. 큰 정수 JSON을 기존 오류 형식으로 거부하고 중복 키 진단·원본 보존을 유지한다. 집중5·관련238·Ruff 통과, 고정499b185의 gpt-5.6-sol 검토PASS·독립5검사 완료. WS-review3의 release_bundle.py 근거를 이 고정 검토로 갱신한다. 실제 배포와 팀원 전달팩은 변경하지 않았다.
+
 ## 공개 보고서 식별정보 보호 — WS-report5
 
 [보고서 입력 보호](WS_REPORT_PRIVACY_20261020.md)는 이메일·접속 주소·개인 경로를 초안 출력 전에 거부한다. 집중36·전체Node368·체크리스트8·문법 통과, 고정61bb00c의 gpt-5.6-sol 검토PASS·독립36검사 완료다. WS-review3의 report.mjs 기준은 이 변경 이전이며 새 검토 근거를 별도로 고정한다. 실제 게시·배포나 계약 변경은 없다.

@@ -521,3 +521,32 @@ def test_scoped_runtime_comparison_uses_the_inventory_verified_snapshot(candidat
     monkeypatch.setattr(hc, "validate_config", swap_after_inventory)
     with pytest.raises(ConfigError, match="scoped_upload_runtime_mismatch"):
         check_release_config(root)
+
+
+def test_large_json_integer_config_cli_rejects_cleanly_without_changing_inputs(candidate):
+    root, _, _, _ = candidate
+    (root / CONFIG_PATH).write_bytes(b'{"number":' + b"1" * 5000 + b"}")
+    before = {p: p.read_bytes() for p in root.rglob("*") if p.is_file()}
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-B",
+            "-S",
+            "-X",
+            "int_max_str_digits=640",
+            str(ROOT / "scripts/check_public_host_config.py"),
+            str(root),
+        ],
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+    )
+    assert result.returncode == 2
+    assert json.loads(result.stdout) == {
+        "ok": False,
+        "deployable": False,
+        "error": "invalid_json",
+    }
+    assert result.stderr == ""
+    assert str(root) not in result.stdout
+    assert {p: p.read_bytes() for p in root.rglob("*") if p.is_file()} == before
