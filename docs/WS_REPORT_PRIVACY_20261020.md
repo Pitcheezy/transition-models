@@ -26,7 +26,10 @@
 - 최초 체크리스트 검사는8통과였으나 Windows 하위 프로세스 인코딩 경고1건이 있었다.
   `PYTHONUTF8=1`로 재실행해8통과·경고0을 확인했다. 이를 코드 결함 수정으로 기록하지 않는다.
 - 작성: Codex / GPT-6 계열(정확한 세션 모델 ID는 노출되지 않음).
-  고정 소스의 다른 모델 검토는 진행 중이며 완료 기록은 검증 JSON에 추가한다.
+  고정 `61bb00c`의 `gpt-5.6-sol` 검토 PASS, P1/P2 없음·독립36검사 통과.
+  모델 근거는 해당 ID를 지정한 성공한 하위 에이전트 호출이다. 공통 Codex 소개 문구를 모델 ID로
+  오해한 검토자의 첫 판단은 철회됐으며, turn 내부 모델 조회로 확인했다고 주장하지 않는다.
+  추가 Claude 검토 시도는 기존 OAuth 만료로 결과가 없었고 합격 근거에 포함하지 않는다.
 
 ```text
 node --test tests/report.test.mjs tests/report-privacy.test.mjs (cwd ops/public-host)

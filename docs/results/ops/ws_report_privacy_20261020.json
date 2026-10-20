@@ -28,11 +28,39 @@
     "input_preserved": true
   },
   "different_model_review": {
-    "status": "pending"
+    "status": "PASS",
+    "model": "gpt-5.6-sol",
+    "model_evidence": "successful spawn_agent with fork_turns=none and explicit model=gpt-5.6-sol",
+    "agent": "report_privacy_other_model",
+    "commit": "61bb00cff9215a79b14f11e178c2232c806fa73c",
+    "focused_passed": 36,
+    "findings_p1_p2": 0,
+    "identity_correction": "Reviewer initially inferred GPT-6 from generic developer identity; explicitly withdrew that inference. Model selection evidence is the successful tool invocation, not self-identification.",
+    "independent_runtime_introspection": false
   },
   "limitations": [
     "Recognizable shapes only, not complete personal information detection",
-    "No teammate code, cloud, private source package or outbound message changes",
-    "Source snapshot hashes and fixed review to be added after commit"
+    "No teammate code, cloud, private source package or outbound message changes"
+  ],
+  "implementation_commit": "61bb00cff9215a79b14f11e178c2232c806fa73c",
+  "writer": "Codex GPT-6 family; exact session model id not exposed",
+  "files": {
+    "ops/public-host/report.mjs": "8be5ffe5e43dc0995c25b8fa56023d90cf4f95817e4357cacde0b9fdd87933cf",
+    "ops/public-host/tests/report-privacy.test.mjs": "a52c7d082151711232cc3d7387ddafccfc652b286a011423aaab5bb44fa7d839",
+    "ops/public-host/REPORT.md": "a54053c6db50591af7b141d9a3d4f5205aae49bdc9b9a63510c6b258479f851c"
+  },
+  "hash_basis": "Git blob raw bytes",
+  "optional_claude_review": {
+    "attempted": true,
+    "completed": false,
+    "reason": "existing OAuth session expired; no review result",
+    "tools_enabled": false
+  },
+  "commands": [
+    "node --test tests/report.test.mjs tests/report-privacy.test.mjs (cwd ops/public-host)",
+    "node --test tests/*.test.mjs (cwd ops/public-host)",
+    "node --check ops/public-host/report.mjs",
+    "node --check ops/public-host/tests/report-privacy.test.mjs",
+    "PYTHONUTF8=1 python -B -m pytest -q tests/test_checklist_model.py"
   ]
 }
