@@ -37,6 +37,8 @@ python -B -S scripts/build_public_host_release.py check .cache/ws-release-exampl
 실제 후보에는 공급받은 고정 메타데이터와 공개 빌드만 넣는다. 브랜치 이름·latest는 받지 않는다.
 
 성공은 종료0, 거부는 종료2이며 JSON 진단을 출력한다. check는 압축을 풀거나 내용을 실행하지 않는다.
+JSON 문법·문자열 인코딩·중첩·정수 변환 제한 실패는 `invalid_json`으로 거부한다.
+중복 키는 별도 `duplicate_json_key` 진단을 유지하며 입력 내용이나 로컬 경로를 오류에 넣지 않는다.
 ZIP 파일을 임의로 다시 압축하면 거부한다. manifest 변경 후 재압축해서 출처를 인증할 수 있는 도구가 아니다.
 
 ## 방어 범위와 한계

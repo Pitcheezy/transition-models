@@ -90,7 +90,11 @@ def parse_json(raw: bytes, limit: int = MAX_MANIFEST_BYTES):
         raise BundleError("json_too_large")
     try:
         return json.loads(raw.decode("utf-8"), object_pairs_hook=_unique_object)
-    except (UnicodeDecodeError, json.JSONDecodeError, RecursionError) as exc:
+    except BundleError:
+        # Preserve diagnostics raised by the object-pairs hook, such as duplicate keys.
+        raise
+    except (ValueError, RecursionError) as exc:
+        # Includes UTF-8/JSON decoding and Python's integer-conversion digit limit.
         raise BundleError("invalid_json") from exc
 
 

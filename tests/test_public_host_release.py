@@ -360,3 +360,58 @@ def test_manifest_wrong_mode_type_rejected_cleanly(files, mode):
     files[rb.MANIFEST] = rb.canonical(manifest)
     with pytest.raises(rb.BundleError, match="invalid_manifest"):
         rb.verify_files(files)
+
+
+def test_large_json_integer_is_rejected_with_a_stable_diagnostic():
+    raw = b'{"number":' + b"1" * 5000 + b"}"
+    previous = sys.get_int_max_str_digits()
+    try:
+        sys.set_int_max_str_digits(640)
+        with pytest.raises(rb.BundleError, match="^invalid_json$"):
+            rb.parse_json(raw)
+    finally:
+        sys.set_int_max_str_digits(previous)
+
+
+@pytest.mark.parametrize("mode", ["build", "check"])
+def test_large_json_integer_cli_preserves_inputs_and_does_not_create_output(tmp_path, files, mode):
+    raw = b'{"number":' + b"1" * 5000 + b"}"
+    private_input = tmp_path / "private-input-location"
+    private_input.mkdir()
+    output = tmp_path / "not-created-release"
+    command = [
+        sys.executable,
+        "-B",
+        "-S",
+        "-X",
+        "int_max_str_digits=640",
+        str(ROOT / "scripts/build_public_host_release.py"),
+        mode,
+    ]
+    if mode == "build":
+        source = private_input / "provenance.json"
+        source.write_bytes(raw)
+        command += [
+            "--frontend",
+            str(tmp_path / "unused-frontend"),
+            "--provenance",
+            str(source),
+            "--output",
+            str(output),
+            "--mode",
+            "synthetic",
+            "--host-commit",
+            "3" * 40,
+        ]
+    else:
+        source = archive_path(private_input, {**files, rb.MANIFEST: raw})
+        command.append(str(source))
+    before = source.read_bytes()
+    result = subprocess.run(command, capture_output=True, text=True, encoding="utf-8")
+    assert result.returncode == 2
+    assert result.stdout == ""
+    assert json.loads(result.stderr) == {"ok": False, "error": "invalid_json"}
+    assert "Traceback" not in result.stderr
+    assert "private-input-location" not in result.stderr
+    assert source.read_bytes() == before
+    assert not output.exists()
