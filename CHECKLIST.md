@@ -1,5 +1,11 @@
 # 남은 작업 체크리스트
 
+## 최종 전달본 수신·공동시험 준비 — 2026-10-21
+
+- [ ] WS-partner4. 최종2종 ZIP의 식별·검토 근거와 오프라인/우리 호스트 합성 호환, 비상 안내·회수 절차 및 남은 사람 결정을 검증한다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-21 · Codex]`
+
+수정 권한 선점: 우리 Codex / `codex/ws-final-delivery-1021` / 기준 `9ed7135`. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6312118763). 팀원 코드·Mac·실제 배포/권한/발신 변경 없음.
+
 ## 배포 자료 JSON 실패 처리 — 2026-10-20
 
 - [x] WS-release1. 큰 정수 JSON 오류를 안전하게 거부하도록 수정했다. 신규4개 선행실패→집중5·관련238·Ruff 통과. 고정499b185의 gpt-5.6-sol 검토PASS·독립5검사 완료. [근거](docs/WS_RELEASE_JSON_20261020.md). 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-20 · Codex]`
