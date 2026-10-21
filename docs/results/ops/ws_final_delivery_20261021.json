@@ -1,0 +1,178 @@
+{
+  "schema": "pitcheezy-final-delivery-receipt-v1",
+  "date": "2026-10-21",
+  "evidence_kind": "synthetic local Windows; no deployment or live trial",
+  "our_base_commit": "9ed7135873a3c0bca2b4ce678f2659ffc0e262e2",
+  "partner_supplied_source_commit": "000e4ba0d83bb81fee8db82539e67c7ab0e7d0b3",
+  "archives": [
+    {
+      "filename": "partner-runnable-review-v4.4-000e4ba.zip",
+      "bytes": 188620,
+      "sha256": "c431b3f737c4d7eaa1e8d8e1e119b2c25dfb32f65588f7c8dcda7c23c1bab18e",
+      "members": 23,
+      "crc": "pass",
+      "path_checks": "pass",
+      "abbreviated_expected_hash_match": true
+    },
+    {
+      "filename": "pitcheezy-onekey-delivery-final2-000e4ba0.zip",
+      "bytes": 47695,
+      "sha256": "f8f1c48a9925913857827144e8fb997016417d4f6cac7b71d333d25a33646796",
+      "members": 7,
+      "crc": "pass",
+      "path_checks": "pass",
+      "abbreviated_expected_hash_match": true
+    }
+  ],
+  "manifest_members_verified": 22,
+  "onekey_sums_verified": 6,
+  "client_build_pins_verified": 8,
+  "runtime_source_pins_verified": 5,
+  "review_target_pins_verified": 2,
+  "runtime_pins": {
+    "worker.mjs": {
+      "source_commit": "9ed7135873a3c0bca2b4ce678f2659ffc0e262e2",
+      "source_raw_sha256": "ba6bb83bbbbd8ba4727feb6b870fbe85c0c8c5c9bc65ef837aa2703235f3f985",
+      "source_cr_removed_sha256": "ba6bb83bbbbd8ba4727feb6b870fbe85c0c8c5c9bc65ef837aa2703235f3f985",
+      "git_blob_lf": "6bdfece7507b59dfb5145425158e313e12cccf7b",
+      "deployed_version_verified": false
+    },
+    "gateway.mjs": {
+      "source_commit": "9ed7135873a3c0bca2b4ce678f2659ffc0e262e2",
+      "source_raw_sha256": "3fd0217beae30ae23ca548c309e2535b66e80024728b10ddb249eec08f2dd2b6",
+      "source_cr_removed_sha256": "3fd0217beae30ae23ca548c309e2535b66e80024728b10ddb249eec08f2dd2b6",
+      "git_blob_lf": "49cb3feac0a74d3e60db8236a1974287f7959a49",
+      "deployed_version_verified": false
+    },
+    "notice.mjs": {
+      "source_commit": "9ed7135873a3c0bca2b4ce678f2659ffc0e262e2",
+      "source_raw_sha256": "d94b5c22ef66b38b3bb824e028fcaa92075856014bbc7e2e28bd3a85bdb64247",
+      "source_cr_removed_sha256": "d94b5c22ef66b38b3bb824e028fcaa92075856014bbc7e2e28bd3a85bdb64247",
+      "git_blob_lf": "7d276ac4e375c1fd479420f5fde8fc0e55a6f010",
+      "deployed_version_verified": false
+    },
+    "access.mjs": {
+      "source_commit": "9ed7135873a3c0bca2b4ce678f2659ffc0e262e2",
+      "source_raw_sha256": "67c3865be7754a9cf172075db67f60a8bc2cd076203799b0bf64a8fe0ef1219a",
+      "source_cr_removed_sha256": "67c3865be7754a9cf172075db67f60a8bc2cd076203799b0bf64a8fe0ef1219a",
+      "git_blob_lf": "d4bc6413acd1027ce88a2534a81a0d5f1da94aa3",
+      "deployed_version_verified": false
+    },
+    "telemetry.mjs": {
+      "source_commit": "9ed7135873a3c0bca2b4ce678f2659ffc0e262e2",
+      "source_raw_sha256": "c90d0f23dbf80eb965d343bef8fb75129cf3ce7ee9e64fbe6f683228ad0f646a",
+      "source_cr_removed_sha256": "c90d0f23dbf80eb965d343bef8fb75129cf3ce7ee9e64fbe6f683228ad0f646a",
+      "git_blob_lf": "26fbd24824b11cff4b6a3f7e3602ec9cc22c9245",
+      "deployed_version_verified": false
+    }
+  },
+  "schema_examples_verified": [
+    "game-disconnected.json",
+    "game-live-unconfirmed.json",
+    "game-live-unsupported-reference.json",
+    "game-live-unsupported.json",
+    "game-live.json",
+    "health-live.json"
+  ],
+  "provided_offline": {
+    "exit_code": 1,
+    "reason": "Windows fcntl unsupported",
+    "substitution_used": false
+  },
+  "partner_tests": {
+    "counts": [
+      21,
+      14,
+      26
+    ],
+    "our_rerun": false,
+    "review_scope": "REVIEW-007 final N23 delta; prior full review raw not included"
+  },
+  "local_integration": {
+    "outcome": "pass_with_open_screen_withdrawal_limit",
+    "functional_checks_passed": 34,
+    "request_counts": {
+      "driver_http": 52,
+      "browser_http": 98,
+      "total": 150,
+      "publisher_put": 43,
+      "publisher_delete": 1
+    },
+    "external_browser_attempts": 0,
+    "original_unchanged": true,
+    "cleanup": {
+      "status": "complete"
+    },
+    "browser": "155.0.4283.62",
+    "mobile": "Chromium viewport only, not physical device",
+    "maintenance_open_page_historical_recommendation_visible": true,
+    "data_hold_open_page_historical_recommendation_visible": true,
+    "fresh_load_notice_status": 503,
+    "full_open_page_withdrawal_accepted": false,
+    "receipt_sha256": "ef25e57c0baf6d6b7115629d8398ba710a777416c360c25a816bd8e82bd10f8b",
+    "harness_sha256": "02b9c4a15208e2d4dd10bb6d8ca2bc00486f8dc4b59c198c2edc0236ca051fbf"
+  },
+  "notice_rehearsal": {
+    "switch_on": {
+      "admin_request_ms": 18.81,
+      "first_notice_response_after_admin_ok_ms": 15.18,
+      "polls_until_notice": 1,
+      "memo_window_ms": 2000
+    },
+    "switch_off": {
+      "admin_request_ms": 19.02,
+      "first_normal_response_after_admin_ok_ms": 22.17,
+      "polls_until_normal": 1
+    },
+    "total_ms": 882,
+    "cleanup": {
+      "status": "complete"
+    },
+    "actual_cloud_duration": "unmeasured",
+    "receipt_sha256": "1828d7a5cdbbfd4d09f82f56eaf03b2503d51ee696fe2ec4a214e84fb86cfe24"
+  },
+  "notice_tests": {
+    "files": [
+      "notice.test.mjs",
+      "notice-client.test.mjs",
+      "notice-cli.test.mjs"
+    ],
+    "exit_code": 0
+  },
+  "candidate": {
+    "bytes": 509591,
+    "sha256": "a969d701d5992558bf94d82d0cbdce7d99166d5e9a2ba746d7fab04145680704",
+    "host_source_commit": "5effc7a4deef21ee37d07f8574b43b23935d2189",
+    "deployable": false,
+    "deployment_approved": false,
+    "build_check": "pass",
+    "config_check": "pass",
+    "wrangler_dry_run": "not_run"
+  },
+  "attempt_history": [
+    {
+      "id": "integration",
+      "outcome": "failed",
+      "reason": "our synthetic notice request incorrectly included extra schema field; server rejected400"
+    },
+    {
+      "id": "integration-v2",
+      "outcome": "functional pass but acceptance wording incorrect",
+      "reason": "our next-label-only check missed historical recommendation; raw record retained"
+    },
+    {
+      "id": "integration-final",
+      "outcome": "timeout",
+      "reason": "post-hold next-recommendation label wait timed out on fixed aged fixture; original receipt retained"
+    },
+    {
+      "id": "integration-accepted",
+      "outcome": "pass_with_open_screen_withdrawal_limit",
+      "reason": "restore measured as HTTP200, open-page retained-history limit explicit"
+    }
+  ],
+  "current_cloud_status": "not queried this task; last evidence2026-10-16",
+  "outbound_message_sent": false,
+  "new_credentials_issued": false,
+  "read_only_wrapper_review_limitation": "isolated dynamic probe rejected by automatic approval review; conditional static finding only"
+}

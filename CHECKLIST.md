@@ -2,9 +2,9 @@
 
 ## 최종 전달본 수신·공동시험 준비 — 2026-10-21
 
-- [ ] WS-partner4. 최종2종 ZIP의 식별·검토 근거와 오프라인/우리 호스트 합성 호환, 비상 안내·회수 절차 및 남은 사람 결정을 검증한다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-21 · Codex]`
+- [x] WS-partner4. 최종2종 ZIP·등록핀 대조/예제6개/로컬34기능 검사·비공개후보 준비 완료. 열린 화면의 과거추천 잔존·Windows 발행기 제약·실제배포/공동시험 대기는 유지한다. [근거](docs/WS_FINAL_DELIVERY_20261021.md). 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-21 · Codex]`
 
-수정 권한 선점: 우리 Codex / `codex/ws-final-delivery-1021` / 기준 `9ed7135`. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6312118763). 팀원 코드·Mac·실제 배포/권한/발신 변경 없음.
+수정 권한 반납 준비: 우리 Codex / `codex/ws-final-delivery-1021` / 기준 `9ed7135`. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6312118763). 팀원 코드·Mac·실제 배포/권한/발신 변경 없음.
 
 ## 배포 자료 JSON 실패 처리 — 2026-10-20
 
