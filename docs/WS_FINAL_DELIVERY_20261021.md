@@ -65,3 +65,5 @@ python -B -S scripts/check_public_host_config.py outputs/partner_final_20261021/
 ```
 
 Python3.12/Node24.1.0, 설치된Miniflare·Edge/Playwright 사용. 원시 영수증/harness SHA는 정형 결과에 고정했다. 내부 경로·토큰 지문·접속 주소를 제거한 결과만 저장소에 기록한다.
+
+별도 문서·증거 검토: 고정 `e8f486e6677a1982a6be6b6e0e84dd0a00870df8`의 gpt-5.6-sol 검토PASS. 새 운영코드 없음. 체크리스트8·신규문서 상대링크·추가본문 개인정보/비공개주소 검사 통과. 현재 계정 조회를 시도하려 했으나 로그인된 in-app 브라우저 조회 도구가 이 세션에 없어 Cloud API/설정 조회는 하지 않았다.
