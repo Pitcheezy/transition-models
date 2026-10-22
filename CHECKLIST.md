@@ -2,9 +2,9 @@
 
 ## 반환팩 수신·공동시험 추가 조건 — 2026-10-22
 
-- [ ] WS-partner5. 반환팩 v2 상대 수신 보고와 세 결함의 미수정/절차 제안을 확인하고, 우리 GATE-06 증거 조건·판정 한계를 정리한다. 실제 Cloudflare 설정은 읽기만 하며 절차 수용·실행 GO로 바꾸지 않는다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-22 · Codex]`
+- [x] WS-partner5. 반환팩 v2 상대 수신 보고와 세 결함의 미수정/절차 제안을 확인하고, 우리 GATE-06 증거 조건·판정 한계를 정리한다. [후속 기록](docs/WS_PARTNER_FOLLOWUP_20261022.md): 상대 무결성검사13파일 확인, 자체요청로그 없음/실제로그 미확인, GATE-06 합의전보완안과 미발신 초안 완료. Cloudflare 탭 연결 대기로 실제설정은 미확인, 절차수용·실행GO는 별도다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-22 · Codex]`
 
-수정 권한: 우리 Codex / `codex/ws-trial-conditions-1022` / 기준 `d9d4864`. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6342964859). 우리 문서만 변경한다.
+검토·반납 준비: 우리 Codex / `codex/ws-trial-conditions-1022` / 기준 `d9d4864`, 선점 `fb410c1`. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6342964859). 우리 문서만 변경한다.
 
 
 ## 최종 전달본 수신·공동시험 준비 — 2026-10-21
