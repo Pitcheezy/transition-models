@@ -1,5 +1,12 @@
 # 남은 작업 체크리스트
 
+## 반환팩 수신·공동시험 추가 조건 — 2026-10-22
+
+- [ ] WS-partner5. 반환팩 v2 상대 수신 보고와 세 결함의 미수정/절차 제안을 확인하고, 우리 GATE-06 증거 조건·판정 한계를 정리한다. 실제 Cloudflare 설정은 읽기만 하며 절차 수용·실행 GO로 바꾸지 않는다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-22 · Codex]`
+
+수정 권한: 우리 Codex / `codex/ws-trial-conditions-1022` / 기준 `d9d4864`. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6342964859). 우리 문서만 변경한다.
+
+
 ## 최종 전달본 수신·공동시험 준비 — 2026-10-21
 
 - [x] WS-partner4. 최종2종 ZIP·등록핀 대조/예제6개/로컬34기능 검사·비공개후보 준비 완료. 열린 화면의 과거추천 잔존·Windows 발행기 제약·실제배포/공동시험 대기는 유지한다. [근거](docs/WS_FINAL_DELIVERY_20261021.md). 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-21 · Codex]`
