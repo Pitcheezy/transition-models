@@ -5,6 +5,12 @@
 [CHECKLIST](../CHECKLIST.md) 상단과 [우리 board](https://github.com/Pitcheezy/transition-models/issues/3)를 확인한다.
 역사적 “다음 단위” 문구는 현재 지시가 아니다.
 
+## 반환팩 수신·3결함 대응 제안 — 2026-10-22
+
+[최신 후속 기록](WS_PARTNER_FOLLOWUP_20261022.md): 사용자 직접 전달과 상대252,996bytes/전체SHA/13파일 무결성검사 보고를 확인했다. #38에는 승인된3결함 요청을 게시했고 새답변은 아직 없다. 상대 내부 TRIAGE는3건 모두미수정·절차대응 제안이며, 우리합의/실제시험GO가 아니다.
+
+[GATE-06](WS_JOINT_TRIAL_GATE06_20261021.md)에 키/scope/expiry 원장고정·변경시회차무효·실제호스트증거 대조를 **합의전보완안**으로 반영했다. 자체요청로그 없음·실제Cloudflare로그 미확인으로 추가조건은미충족이다. 사용자 대시보드와 도구 탭이 달라 현재배포조회는 미완료, 마지막실확인10/16 유지. 기존참석가능시간은지났으므로 새창/GO를확인한다. 코드·배포·권한·팀원변경없음. 아래 미수신/참석미확정은 당시기록이다.
+
 ## 최종 전달본 수신·공동시험 준비 — WS-partner4
 
 [최종본 수신·검증](WS_FINAL_DELIVERY_20261021.md): final2와v4.4를 실제 수신했고 manifest22/해시목록6·client/build8·runtime5·검토대상2를 대조했다. 예제6·노트북 기능34검사와 새비공개후보build/config를 통과했다. Windows fcntl 제약으로 제공offline 실행은 실패했으며, 열린 화면은 noticeON에도 과거추천을 남겨 완전철회 조건은 미충족이다. 새로고침503과OFF복구200은 확인했다. 아래 미수신/미발신 문구는 당시 이력이다.10/21 승인된4질문회신은 이미게시됐고 새[최종회신](mail_drafts/COLLAB-001-final-delivery-reply-20261021.md)은 미발신이다.
