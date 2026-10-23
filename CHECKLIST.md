@@ -1,5 +1,12 @@
 # 남은 작업 체크리스트
 
+## 회신 발신·출시 잔여 상태 정리 — 2026-10-23
+
+- [~] WS-partner7. 승인된 #38 회신 게시 근거·실제 Cloudflare 조회 한계·출시 잔여 작업을 정리한다. 운영 코드·설정·팀원 코드는 변경하지 않는다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-23 · Codex]`
+
+선점: 우리 Codex / `codex/ws-reply-status-1023` / 기준 `aa3dc69`. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6357826887).
+
+
 ## 네 질문 답안·새 최종본 수신 준비 — 2026-10-23
 
 - [x] WS-partner6. #38 네 질문의 고정 소스·기존 합성36검사·미발신 답안과 새 v7/v4.5 수신 절차, GATE-06의 상대 동의/우리 검토안/미승인을 정리했다. [근거](docs/WS_HOST_ANSWERS_20261023.md). 실제 Cloudflare 설정/로그는 보안 선택 안내로 미확인, 새 파일/시험/배포 승인은 대기다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-23 · Codex]`
