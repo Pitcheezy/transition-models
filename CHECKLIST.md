@@ -2,9 +2,9 @@
 
 ## 네 질문 답안·새 최종본 수신 준비 — 2026-10-23
 
-- [ ] WS-partner6. #38 네 질문의 고정 소스·로컬 합성 근거와 미발신 답안을 준비하고 새 v7/v4.5 예정·GATE-06 조건을 반영한다. 실제 Cloudflare 설정/로그는 읽기 확인 전 미확인이다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-23 · Codex]`
+- [x] WS-partner6. #38 네 질문의 고정 소스·기존 합성36검사·미발신 답안과 새 v7/v4.5 수신 절차, GATE-06의 상대 동의/우리 검토안/미승인을 정리했다. [근거](docs/WS_HOST_ANSWERS_20261023.md). 실제 Cloudflare 설정/로그는 보안 선택 안내로 미확인, 새 파일/시험/배포 승인은 대기다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-23 · Codex]`
 
-수정 권한: 우리 Codex / `codex/ws-host-answers-1023` / 기준 `ecc9d7b`. 우리 문서·합성 검증만, 팀원 코드/새 발신/배포/설정 변경 없음.
+검증·반납 준비: 우리 Codex / `codex/ws-host-answers-1023` / 기준 `ecc9d7b`, 선점 `dae4b3d`. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6357395623). 우리 문서·합성 검증만, 팀원 코드/새 발신/배포/설정 변경 없음.
 
 
 ## 반환팩 수신·공동시험 추가 조건 — 2026-10-22

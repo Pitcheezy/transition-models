@@ -1,0 +1,97 @@
+{
+  "schema": "pitcheezy-host-question-evidence-v1",
+  "recorded_at": "2026-10-23T04:32:10.726989+00:00",
+  "source_commit": "ecc9d7bd808e8a6bb8dcb89b1bd62456fd3b7780",
+  "claim_commit": "dae4b3d",
+  "evidence_kind": "local_synthetic_tests_and_static_review",
+  "partner_reply": {
+    "url": "https://github.com/SongRoute/pitcheezy/issues/38#issuecomment-6343676338",
+    "updated_at": "2026-10-22T14:49:04Z",
+    "body_utf8_sha256": "39260d5567b4a9ca23ce834484c8af5ab02e3a746485405261037214132383f0"
+  },
+  "source_files": [
+    {
+      "path": "ops/public-host/gateway.mjs",
+      "sha256_raw": "fbc1f5d652c124f6827d4065caaf62411f3eba0c311da747ad8473c5d71f7ca0",
+      "sha256_without_cr": "3fd0217beae30ae23ca548c309e2535b66e80024728b10ddb249eec08f2dd2b6"
+    },
+    {
+      "path": "ops/public-host/notice.mjs",
+      "sha256_raw": "20433bdb8723fe5f9073e39d8f466f00a7fc7e95b26fb304903103473b62733a",
+      "sha256_without_cr": "d94b5c22ef66b38b3bb824e028fcaa92075856014bbc7e2e28bd3a85bdb64247"
+    },
+    {
+      "path": "ops/public-host/access.mjs",
+      "sha256_raw": "2513d96b0950b8917d45a37e6b4c4a7d605df820a8e294e9b30b8a7beb6a4707",
+      "sha256_without_cr": "67c3865be7754a9cf172075db67f60a8bc2cd076203799b0bf64a8fe0ef1219a"
+    },
+    {
+      "path": "ops/public-host/worker.mjs",
+      "sha256_raw": "9f3d818686bc6af847bf4c292658a1c71f22f4dd72f6282c8b00e84e0ca33d1b",
+      "sha256_without_cr": "ba6bb83bbbbd8ba4727feb6b870fbe85c0c8c5c9bc65ef837aa2703235f3f985"
+    },
+    {
+      "path": "ops/public-host/wrangler.example.jsonc",
+      "sha256_raw": "91ca2916764d3246775c32b642eb47a020c4c2fd075cd7227b88ce223a4d7a1a",
+      "sha256_without_cr": "86f4ae69e879a612821df4b821d4337b2cdfc368311eb1439da38fe0e8b38379"
+    },
+    {
+      "path": "ops/public-host/tests/notice.test.mjs",
+      "sha256_raw": "cd4af5cecb66bfc2459a1bd82470a59da912c518c56b75cdb4ab72d1c98f0a20",
+      "sha256_without_cr": "573739fb381945f14cd26e42c449bb7ff6f68f042fa109189bf89be1af6c7810"
+    },
+    {
+      "path": "ops/public-host/tests/access.test.mjs",
+      "sha256_raw": "6f5fc3a60fce88ea1c9ca8c9b7966cbdae6da0d53ecd264991089cc88f5f8e8b",
+      "sha256_without_cr": "ee36b1e304be17b89f1303c865a331695a5bfee5fc5e0e74d0de20623eb0ea9b"
+    },
+    {
+      "path": "ops/public-host/tests/publish-scope.test.mjs",
+      "sha256_raw": "c76ff629225477daa8635099aa4895d6b29a0194270729ea13fedd4e89be9456",
+      "sha256_without_cr": "69c2c5cb89a419631863384b4a714daf2faaaff1e86903ffadff40c51ccb56f4"
+    }
+  ],
+  "checks": [
+    {
+      "command": "node --test --test-reporter=dot ops/public-host/tests/notice.test.mjs ops/public-host/tests/access.test.mjs",
+      "exit_code": 0,
+      "passed": 24
+    },
+    {
+      "command": "node --test --test-reporter=tap ops/public-host/tests/publish-scope.test.mjs",
+      "exit_code": 0,
+      "passed": 12
+    }
+  ],
+  "answers": {
+    "refresh_instruction_present": false,
+    "limiter_binding_shared": true,
+    "notice_limiter_key": "notice",
+    "publisher_limiter_key": "publisher",
+    "notice_drill_service_requests": 9,
+    "notice_drill_notice_limiter_calls": 5,
+    "notice_drill_publisher_limiter_calls": 0,
+    "drill_counts_evidence": "static_route_mapping_not_new_nine_request_execution",
+    "revoked_viewer_get_root_status": 401,
+    "revoked_viewer_conditions": [
+      "access_gate_on",
+      "notice_off",
+      "at_least_one_other_valid_digest_retained"
+    ],
+    "all_viewer_digests_removed_status": 503,
+    "notice_on_precedes_viewer_check_status": 503,
+    "session_status_route_invalid_cookie_status": 200,
+    "session_status_route_authenticated": false
+  },
+  "cloudflare": {
+    "current_deployment_verified": false,
+    "existing_request_logs_verified": false,
+    "blocker": "controlled_tab_shows_two_factor_choice",
+    "settings_changed": false,
+    "new_requests_sent_to_service": false
+  },
+  "new_partner_bundle_received": false,
+  "runtime_modified": false,
+  "reply_sent": false,
+  "trial_go": false
+}
