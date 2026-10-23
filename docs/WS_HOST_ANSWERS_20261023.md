@@ -75,6 +75,6 @@ node --test --test-reporter=tap ops/public-host/tests/publish-scope.test.mjs
 PYTHONUTF8=1 python -B -m pytest tests/test_checklist_model.py -q -p no:cacheprovider
 ```
 
-Node 기존 검사24+12=36 통과(메모리/loopback 합성, 실제 Cloudflare 요청 아님). 체크리스트8개·상대 링크17개·소스8파일 원본/CR제거 SHA·신규 문서 정보 제외·diff 검사 통과. 전체 모델/운영 검사는 변경과 무관해 반복하지 않았다. 정형 근거는 [JSON 기록](results/ops/ws_host_questions_20261023.json), SHA-256 `4df6590d23a8a802909a8b22079a22b6f0310c7c20b4b32eed8483b252195e47`다. 소스 원본/CR제거 SHA와 조회 본문 SHA도 기록했다. 별도 에이전트의 우리 소스·최종 문서·해시 읽기 대조는 PASS이며, 새 운영코드에 대한 다른 모델 검토를 의미하지 않는다.
+Node 기존 검사24+12=36 통과(메모리/loopback 합성, 실제 Cloudflare 요청 아님). 체크리스트8개·상대 링크17개·소스8파일 원본/CR제거 SHA·신규 문서 정보 제외·diff 검사 통과. 전체 모델/운영 검사는 변경과 무관해 반복하지 않았다. 정형 근거는 [JSON 기록](results/ops/ws_host_questions_20261023.json), SHA-256 `8e16c5370308f5e0943191dc326bcab44c3f4e0925bf10bc632fc3ef30f4749c`다. 소스 원본 SHA는 검사한 Windows 체크아웃 기준이고 CR제거 SHA는 LF 바이트 기준이다. 이 보고서와 JSON의 공유 해시는 Git LF 바이트 기준이며, 조회 본문 UTF-8 SHA도 기록했다. 원격 대조에서 발견한 CRLF/LF 차이를 이 기준으로 정리했다. 별도 에이전트의 우리 소스·최종 문서·해시 읽기 대조는 PASS이며, 새 운영코드에 대한 다른 모델 검토를 의미하지 않는다.
 
 [보낼 회신 초안](mail_drafts/COLLAB-001-host-answers-draft-20261023.md)은 발신 전이다. 실제 Cloudflare 로그·새 파일·새 창/동결 예외/배포·접속/GO 조건은 남아 있다.
