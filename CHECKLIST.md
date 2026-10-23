@@ -2,9 +2,9 @@
 
 ## 회신 발신·출시 잔여 상태 정리 — 2026-10-23
 
-- [~] WS-partner7. 승인된 #38 회신 게시 근거·실제 Cloudflare 조회 한계·출시 잔여 작업을 정리한다. 운영 코드·설정·팀원 코드는 변경하지 않는다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-23 · Codex]`
+- [x] WS-partner7. 사용자 승인 #38 회신 게시·본문 재조회/SHA 대조와 출시 잔여8묶음을 정리했다. [실행 계획](docs/WS_COLLAB_V1_ACTIONS.md)·[발신 기록](docs/results/ops/ws_host_reply_sent_20261023.json). 체크리스트8·상대링크102·본문대조/diff 통과. Cloudflare 보안 선택·실제설정/로그와 새ZIP/시험/배포 승인은 대기다. 운영 코드·설정·팀원 코드 변경 없음. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-23 · Codex]`
 
-선점: 우리 Codex / `codex/ws-reply-status-1023` / 기준 `aa3dc69`. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6357826887).
+검증·반납 준비: 우리 Codex / `codex/ws-reply-status-1023` / 기준 `aa3dc69`, 선점 `18f6c56`. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6357826887).
 
 
 ## 네 질문 답안·새 최종본 수신 준비 — 2026-10-23
