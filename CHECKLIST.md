@@ -1,5 +1,12 @@
 # 남은 작업 체크리스트
 
+## 본인 시험 서버 배포·발행 회수 — 2026-10-25
+
+- [ ] WS-publish4. 검토된 우리 runtime/합성 화면 배포·정확한 키/만료·발행 HEAD404→회수401→업로드OFF503·서버로그 대조. 형 최신본/공동시험/실경기/전시 부하와 구분한다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-25 · Codex]`
+
+진행: 우리 Codex / `codex/ws-publisher-revoke-1025` / 기준 `24fea70`. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6387400853).
+
+
 ## 관람 자격 회수 증거 정리 — 2026-10-25
 
 - [x] WS-access4. 실제 본인 로그인200·홈200→같은 세션 회수401과 최초 실패401을 서버 로그4건에 대조했다. [근거](docs/WS_VIEWER_REVOCATION_20261025.md). 발행 자격·최신본 일치·공동시험은 미완료다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-25 · Codex]`
