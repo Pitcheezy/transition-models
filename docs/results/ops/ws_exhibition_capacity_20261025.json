@@ -1,0 +1,107 @@
+{
+  "schema": "pitcheezy-exhibition-preparation-v1",
+  "evidence_kind": "synthetic local loopback only",
+  "source_commit": "f7e65bb98990feae7d423bbaf9f32855e61db363",
+  "source_hash_scope": "raw executed working-tree files; line endings affect hashes",
+  "source_hashes_unchanged_before_after": true,
+  "actual_cloud_load_requests": 0,
+  "public_capacity_verified": false,
+  "song_ui_verified": false,
+  "runs": [
+    {
+      "viewers": 30,
+      "path": "docs/results/ops/ws_viewers30_local_20261025.json",
+      "sha256": "2e2adb6c67427937d41b11c30f1248bbc2243a075e3e5f9651f4b052ee35b308",
+      "bytes": 67191,
+      "environment": {
+        "node": "v24.1.0",
+        "platform": "win32",
+        "arch": "x64",
+        "miniflare": "4.20260730.0"
+      },
+      "successful_gets": 360,
+      "p50_ms": 105.3,
+      "p95_ms": 121.42,
+      "max_ms": 132.78,
+      "maximum_in_flight": 30,
+      "maximum_start_lateness_ms": 39.49,
+      "load_elapsed_ms": 25219.37,
+      "total_ms": 26297,
+      "accounting": {
+        "preparation_started": 35,
+        "preparation_by_kind": {
+          "access_check": 1,
+          "login": 30,
+          "publish": 2,
+          "warmup": 2
+        },
+        "load_started": 360,
+        "total_runtime_entry_started": 395,
+        "automatic_retries": 0,
+        "redirects_followed": 0,
+        "scope": "script requests to the temporary runtime entry; excludes Miniflare internal operations"
+      },
+      "cleanup": {
+        "status": "complete"
+      },
+      "command": "node ops/public-host/rehearse-local.mjs --mode viewer-polling --viewers 30 --output NEW_RECEIPT.json"
+    },
+    {
+      "viewers": 50,
+      "path": "docs/results/ops/ws_viewers50_local_20261025.json",
+      "sha256": "5aea4141583e5f07c7fc5246f87095a79cd9c6e7790e533d604d5cc42f640c8f",
+      "bytes": 108715,
+      "environment": {
+        "node": "v24.1.0",
+        "platform": "win32",
+        "arch": "x64",
+        "miniflare": "4.20260730.0"
+      },
+      "successful_gets": 600,
+      "p50_ms": 162.37,
+      "p95_ms": 196.77,
+      "max_ms": 205.9,
+      "maximum_in_flight": 50,
+      "maximum_start_lateness_ms": 50.64,
+      "load_elapsed_ms": 25350.75,
+      "total_ms": 26664,
+      "accounting": {
+        "preparation_started": 55,
+        "preparation_by_kind": {
+          "access_check": 1,
+          "login": 50,
+          "publish": 2,
+          "warmup": 2
+        },
+        "load_started": 600,
+        "total_runtime_entry_started": 655,
+        "automatic_retries": 0,
+        "redirects_followed": 0,
+        "scope": "script requests to the temporary runtime entry; excludes Miniflare internal operations"
+      },
+      "cleanup": {
+        "status": "complete"
+      },
+      "command": "node ops/public-host/rehearse-local.mjs --mode viewer-polling --viewers 50 --output NEW_RECEIPT.json"
+    }
+  ],
+  "review": {
+    "author": "Codex GPT-6 family; exact model id unconfirmed",
+    "reviewer": "gpt-5.6-sol",
+    "commit": "f7e65bb98990feae7d423bbaf9f32855e61db363",
+    "result": "PASS; no P1/P2 findings",
+    "independent_checks": {
+      "node_targeted": 15,
+      "python_viewer_budget": 107,
+      "diff_check": "pass"
+    },
+    "actual_load_repeated": false
+  },
+  "not_measured": [
+    "Cloudflare CPU and quota consumption",
+    "public network or multi-device latency",
+    "actual Song UI polling and payload",
+    "long-duration endurance",
+    "real game operations"
+  ]
+}

@@ -28,7 +28,24 @@
 
 ## 실제 결과
 
-구현·검사 후 측정 결과로 갱신한다. 아직 이 문서의 수치는 계획이며 성능 결과가 아니다.
+고정 코드 `f7e65bb98990feae7d423bbaf9f32855e61db363`에서 각 프로필을1회 실행했다. Windows x64·Node24.1.0·Miniflare4.20260730.0, 실행 전후 실제 소스 SHA가 동일하다. [결과 목록](results/ops/ws_exhibition_capacity_20261025.json) SHA-256 `68475e7871b5bcd46e11a1910eb56d64097bd6ff897ae6ddd519aab78440cab4`.
+
+|항목|30 가상 관람|50 가상 관람|
+|---|---:|---:|
+|부하 GET 성공/예정|360/360|600/600|
+|실패·취소·미시작·누락 슬롯|모두0|모두0|
+|준비 요청(401확인+로그인+PUT+워밍업)|35|55|
+|전체 runtime 입구 요청|395|655|
+|실제 최대 동시 GET|30|50|
+|응답 p50 / p95 / 최대|105.30 / 121.42 / 132.78ms|162.37 / 196.77 / 205.90ms|
+|최대 슬롯 시작 지연(기준≤500ms)|39.49ms|50.64ms|
+|폴링 시작~끝|25,219.37ms|25,350.75ms|
+|준비·정리 포함 총 소요|26,297ms|26,664ms|
+|정리|complete|complete|
+
+[30명 원본 영수증](results/ops/ws_viewers30_local_20261025.json) 67,191bytes/SHA `2e2adb6c67427937d41b11c30f1248bbc2243a075e3e5f9651f4b052ee35b308`, [50명 원본 영수증](results/ops/ws_viewers50_local_20261025.json) 108,715bytes/SHA `5aea4141583e5f07c7fc5246f87095a79cd9c6e7790e533d604d5cc42f640c8f`.
+
+고유 nonce 세션30/50개, HTTP200·본문 길이/SHA·헤더 검증, 실제 in-flight 종료0을 확인했다. 자동 재시도/리다이렉트0, stderr 비어 있음. 토큰·쿠키·접속 주소는 영수증에 없다. 로그인은 순차 준비이며 동시에 로그인하는 부하는 미측정이다. 실제 Cloudflare 요청은0건이다. 이 결과는 한 노트북의 짧은 합성 반복이며 실브라우저50명, 큰 실제 응답, 장시간 운영, 여러 회선, Cloudflare CPU/청구 한도를 검증하지 않는다.
 
 ## 무료 요금제 일일 요청 예산
 
@@ -44,6 +61,8 @@
 
 이는 폴링 GET만 계산한다. 로그인·홈/스크립트·다른 화면·발행·감시·재시도·계정의 다른 Worker 사용량은 더해야 한다. 실제 다른 사용량은 미확인이다. 304 또는 Worker를 거친 캐시 응답도 요청 수에서 빼지 않는다.5초/2파일 가정은 폴링만으로 Free 한도를 넘는다.15초/2파일은 그 부분만 한도 안이며 전시 전체의 안전한 운영을 보장하지 않는다.
 
+[예산 계산 결과](results/ops/ws_viewer_budget_20261025.json) SHA-256 `43809b993408ff7a00408f29a464045a51b11a3172ff7802a5a233044b374be7`. `src/operations/viewer_budget.py`는 정수 계산으로 즉시 첫 poll을 포함하고 계정 사용량 `null`을0으로 바꾸지 않는다. 예시에서는 기타 트래픽 미상이라15초 안도 `headroom_unknown`이다. 시작~종료가 UTC 자정을 넘더라도 이 단순 계산기는 초기화 크레딧을 적용하지 않고 하루에 합산한다.
+
 갱신 간격은 아직 Song의 최종 화면 동작으로 확정하지 않았다. 이 계산을 근거로 상대 화면을 수정하지 않는다. 조건부요청/압축은 바이트 절약에 도움이 될 수 있으나 요청 수 절감과 구분한다. 이미 구현된 Paid 월간 계산기 `src/operations/host_cost.py`와 이번 Free 일일 한도 계산은 별개다.
 
 유료 Workers는 월 기본$5와 포함량 이후 사용량 과금 구조다. [공식 가격](https://developers.cloudflare.com/workers/platform/pricing/). 기존 월$10 준비 예산은 자동 청구 상한이나 유료 전환 승인이 아니다. 현재 Free를 유지한다.
@@ -57,4 +76,19 @@
 
 ## 재현·검토
 
-최종 명령·테스트 수·소스 커밋·별도 모델 검토 결과를 완료 시 고정한다.
+저장소 루트, Node24 및 잠긴 `ops/public-host` 의존성이 있는 환경에서 실행한다. 출력 부모 폴더를 먼저 만들고 새 파일명을 사용한다.
+
+~~~text
+node ops/public-host/rehearse-local.mjs --mode viewer-polling --viewers 30 --output .cache/viewers30-new.json
+node ops/public-host/rehearse-local.mjs --mode viewer-polling --viewers 50 --output .cache/viewers50-new.json
+uv run --frozen python scripts/218_estimate_viewer_budget.py --examples
+uv run --frozen python scripts/218_estimate_viewer_budget.py --viewers 50 --duration-seconds 10800 --poll-seconds 15 --objects-per-poll 2
+node --test ops/public-host/tests/viewer-polling.test.mjs ops/public-host/tests/rehearsal.test.mjs
+uv run --frozen python -m pytest tests/test_viewer_budget.py tests/test_public_host_cost.py tests/test_checklist_model.py -q
+~~~
+
+- 작성: Codex GPT-6 계열(정확한 세션 모델 ID는 미확인). 검토: `gpt-5.6-sol`, 고정 `f7e65bb98990feae7d423bbaf9f32855e61db363`, PASS/P1·P2 지적 없음. 같은 모델의 세션 분리가 아니다.
+- 새 폴링9+기존6=Node15검사 통과. 별도 모델도15검사를 다시 통과했다. 가짜 시계 검사는 정상 개수·시간 밀림·첫/둘째 GET 실패·슬롯 초과·외부 취소·출력 선행거부를 검증하며 위 실제 측정과 구분한다.
+- 예산/기존 Paid 계산 Python132검사, 체크리스트8검사, Ruff 통과. 별도 모델의 예산107검사도 통과했다. 수치는 서로 겹치므로 합산하지 않는다.
+- 전체 Node 회귀377/377, `npm run check` 통과(22.60초 테스트). 문서 상대 링크·파일 해시·영수증 계수·비공개값 미포함·diff 검사를 통과했다.
+- 운영 gateway/인증/발행/안내 코드는 바꾸지 않았다. 로컬 도구에는 모드 분기·순수 스케줄러·출력 선행검사와 누락됐던 access/notice 소스 해시를 추가했다. 기존 동시16 제한은 유지한다.
