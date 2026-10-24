@@ -42,3 +42,5 @@
 ## 기록 검사
 
 기존 `python -B -m pytest tests/test_checklist_model.py -q -p no:cacheprovider` 8 passed. 영수증 SHA·4건 상태/서버 대조·허용목록·현재 구역 상대파일 링크·git diff 검사를 통과했다. 운영 소스 변경이 없어 전체 모델 학습/CPU 테스트를 반복하지 않았다.
+
+별도 문서 검토에서 발견한 작업ID 중복을 바로잡았다. 이번 단위는 WS-access4이며, 선점 댓글의 WS-access2는 당시 오기다. 기존10/13 WS-access2/3는 변경하지 않았다.
