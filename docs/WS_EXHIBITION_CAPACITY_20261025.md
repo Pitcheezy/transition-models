@@ -13,7 +13,7 @@
 - 이번에는 서비스 요청·설정 변경·재배포가 각각 0건이다. 안내 OFF 상태 확인·감사 기록은 요청별 invocation 로그의 대체 증거가 아니다.
 - [공개 가능한 재조회 영수증](results/ops/ws_notice_log_recheck_20261025.json)의 SHA-256은 `5e87c7ffcf752f37adc0e9f5e3365d1108b8b9db7385d21e84e0710c32ec10c7`이다.
 - 사용자가 메시지와 ZIP을 직접 보냈다고 보고했다. 상대 수신·검증 확인은 아직 없다. ZIP 21,561 bytes, SHA-256 `e8e4d70f9b844ce31e5a2f3af7ca600030032099624141340e5c33254581867f`는 변경하지 않았다.
-- 기존 [PR64](https://github.com/Pitcheezy/transition-models/pull/64)의 [고정 운영 기록](https://github.com/Pitcheezy/transition-models/blob/abddb240a698e91923d14ef413e36081a4af5315/docs/WS_NOTICE_TRIAL_20261025.md)은 별도 브랜치에 보존한다. 새 최종본 수신·공동시험·공개 GO는 대기다.
+- 기존 [PR64](https://github.com/Pitcheezy/transition-models/pull/64)의 [고정 운영 기록](https://github.com/Pitcheezy/transition-models/blob/abddb240a698e91923d14ef413e36081a4af5315/docs/WS_NOTICE_TRIAL_20261025.md)은 별도 브랜치에 보존한다. PR64는 main 미병합이며 WS-notice3는 로그12/13으로 미완료다. 새 최종본 수신·공동시험·공개 GO는 대기다.
 
 ## 시험 전 고정한 조건
 
@@ -92,3 +92,5 @@ uv run --frozen python -m pytest tests/test_viewer_budget.py tests/test_public_h
 - 예산/기존 Paid 계산 Python132검사, 체크리스트8검사, Ruff 통과. 별도 모델의 예산107검사도 통과했다. 수치는 서로 겹치므로 합산하지 않는다.
 - 전체 Node 회귀377/377, `npm run check` 통과(22.60초 테스트). 문서 상대 링크·파일 해시·영수증 계수·비공개값 미포함·diff 검사를 통과했다.
 - 운영 gateway/인증/발행/안내 코드는 바꾸지 않았다. 로컬 도구에는 모드 분기·순수 스케줄러·출력 선행검사와 누락됐던 access/notice 소스 해시를 추가했다. 기존 동시16 제한은 유지한다.
+
+최종 문서 대조에서도 영수증5개와 소스10파일의 해시·바이트·수치 일치를 확인했다. 최종 원격 CI/병합 상태는 [PR65](https://github.com/Pitcheezy/transition-models/pull/65)와 우리 board 종료 댓글을 따른다.

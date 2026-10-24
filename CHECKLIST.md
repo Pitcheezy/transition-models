@@ -5,7 +5,7 @@
 - [x] WS-capacity1. 접근 문 ON·고유 세션30/50의 유한 loopback GET360/600 전부 성공, p95 121.42/196.77ms·누락0·정리완료. Free 일일 예산·377Node/132Python/8checklist·다른 모델 고정검토 통과. 로그 재조회도12/13으로 OFF PUT1건 미확인 유지. [근거](docs/WS_EXHIBITION_CAPACITY_20261025.md). 실제 서비스50명 검증이 아니다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-25 · Codex]`
 - [!] WS-capacity2. 최종 Song UI/파일·폴링·크기 수신 후 계정 요청 예산/CPU와 제한적 실제30/50명 시험을 준비한다. 외부 부하·시간/요청 상한·접속/비용은 사람 결정 대기. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-25 · Codex]`
 
-수정 권한 반납 준비: 우리 Codex / `codex/ws-exhibition-local-1025` / main `24fea70`, 코드/검토 `f7e65bb98990feae7d423bbaf9f32855e61db363`. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6388196522). 기존 PR64/전달 ZIP 보존, 팀원 코드·프로세스·배포 미접근.
+수정 권한 반납 준비: 우리 Codex / `codex/ws-exhibition-local-1025` / main `24fea70`, 코드/검토 `f7e65bb98990feae7d423bbaf9f32855e61db363`. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6388196522). 기존 PR64 main 미병합·WS-notice3 로그12/13 미완료/전달 ZIP 보존, 팀원 코드·프로세스·배포 미접근.
 
 ## 관람 자격 회수 증거 정리 — 2026-10-25
 
