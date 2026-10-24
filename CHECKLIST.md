@@ -1,5 +1,11 @@
 # 남은 작업 체크리스트
 
+## 전시회 30/50명 로컬 준비 · 로그 재조회 — 2026-10-25
+
+- [ ] WS-capacity1. 30/50 가상 관람의 고정 간격·유한 요청·본문 검증·정리와 Free 일일 요청 예산을 검증한다. 실제 클라우드 부하/최신 Song UI/공개 GO는 포함하지 않는다. 기존 안내 OFF PUT 로그는 새 서비스 요청 없이 재조회한다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-25 · Codex]`
+
+수정 권한: 우리 Codex / `codex/ws-exhibition-local-1025` / main 기준 `24fea70f12ba53d3503823c90b3b06cec045a277`. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6388196522). 기존 PR64/전달 ZIP 보존, 팀원 코드·프로세스·배포 미접근.
+
 ## 관람 자격 회수 증거 정리 — 2026-10-25
 
 - [x] WS-access4. 실제 본인 로그인200·홈200→같은 세션 회수401과 최초 실패401을 서버 로그4건에 대조했다. [근거](docs/WS_VIEWER_REVOCATION_20261025.md). 발행 자격·최신본 일치·공동시험은 미완료다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-25 · Codex]`
