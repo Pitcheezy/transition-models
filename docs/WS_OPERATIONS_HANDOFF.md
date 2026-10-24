@@ -5,6 +5,10 @@
 [CHECKLIST](../CHECKLIST.md) 상단과 [우리 board](https://github.com/Pitcheezy/transition-models/issues/3)를 확인한다.
 역사적 “다음 단위” 문구는 현재 지시가 아니다.
 
+## 전시회 준비·기존 로그 재조회 — 2026-10-25
+
+[WS-capacity1](WS_EXHIBITION_CAPACITY_20261025.md)은 노트북의30/50 가상 관람 유한 시험과 Free 일일 예산 준비다. 실제 부하/요금제/화면/배포 변경은 없다. 기존 비상 안내13요청의 저장 로그는 고정 시간 구간 재조회에서도12/13이며 OFF PUT1건 미확인이다. 사용자 메시지/ZIP 직접 전달 보고와 상대 수신 확인은 구분한다. 우리 실제 배포·발행회수·안내 기능 결과는 [PR64 고정 기록](https://github.com/Pitcheezy/transition-models/blob/abddb240a698e91923d14ef413e36081a4af5315/docs/WS_NOTICE_TRIAL_20261025.md)에 별도로 보존한다. 아래 미완료 표현은 각 기록 당시 상태다.
+
 ## 본인 관람 자격 회수 통과 — 2026-10-25 02:05 KST
 
 [실제 시험 기록](WS_VIEWER_REVOCATION_20261025.md): 사용자 직접 등록/회수 뒤 로그인200·같은 세션 홈200→회수401, 첫 실패401 포함4요청을 서버 저장 로그/version에 대조했다. 서버 시각도 세션 만료 전이다. 접근문ON·자료읽기/업로드/수집/피드백OFF 유지. 관람 회수만 완료이며 발행 회수·scope/expiry·runtime 대응·새v7/v4.5·공동시험은 남는다. 현재 홈은 합성 검사 화면이며 형 최신 UI가 아니다. 아래 관람 회수 미실행 문구는 이번 시험 전 이력이다. 새 회신은 미발신이다.
