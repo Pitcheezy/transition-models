@@ -1,0 +1,140 @@
+{
+  "schema": "pitcheezy-host-viewer-revocation-evidence-v1",
+  "recorded_date_kst": "2026-10-25",
+  "source_commit": "6262afb55cc11975ed9da5a11a77a0fc3c970d63",
+  "evidence_kind": "actual self-only hosted access test; not joint trial or live game",
+  "result": {
+    "viewer_same_session_revocation": "passed",
+    "publisher_revocation": "not_run",
+    "latest_partner_delivery_match": "not_established",
+    "deployed_runtime_source_match": "not_established",
+    "joint_trial": "not_run"
+  },
+  "request_accounting": {
+    "first_failed_login": 1,
+    "baseline_success": 2,
+    "same_session_after_revoke": 1,
+    "total_probe_requests": 4,
+    "automatic_retries": 0,
+    "automatic_redirects": false,
+    "dashboard_preview_and_other_browser_traffic_included": false,
+    "all_account_network_requests": "not_measured"
+  },
+  "events": [
+    {
+      "phase": "initial_failed",
+      "started_at_utc": "2026-10-24T16:58:08.661Z",
+      "server_log_at_utc": "2026-10-24T16:58:09.218Z",
+      "finished_at_utc": "2026-10-24T16:58:09.259Z",
+      "method": "POST",
+      "path": "/_access/v1/session",
+      "status": 401,
+      "script_version": "9b1a5467-869f-4fdd-a8b5-1a10f7aa0762",
+      "private_request_identifier_match": true
+    },
+    {
+      "phase": "baseline",
+      "started_at_utc": "2026-10-24T17:02:42.893Z",
+      "server_log_at_utc": "2026-10-24T17:02:43.310Z",
+      "finished_at_utc": "2026-10-24T17:02:43.336Z",
+      "method": "POST",
+      "path": "/_access/v1/session",
+      "status": 200,
+      "script_version": "2d6eec9d-3c0b-4804-a9b1-2ca4b4a66af1",
+      "private_request_identifier_match": true
+    },
+    {
+      "phase": "baseline",
+      "started_at_utc": "2026-10-24T17:02:43.350Z",
+      "server_log_at_utc": "2026-10-24T17:02:44.838Z",
+      "finished_at_utc": "2026-10-24T17:02:44.855Z",
+      "method": "GET",
+      "path": "/",
+      "status": 200,
+      "script_version": "2d6eec9d-3c0b-4804-a9b1-2ca4b4a66af1",
+      "private_request_identifier_match": true
+    },
+    {
+      "phase": "revoked",
+      "started_at_utc": "2026-10-24T17:05:34.191Z",
+      "server_log_at_utc": "2026-10-24T17:05:35.102Z",
+      "finished_at_utc": "2026-10-24T17:05:35.125Z",
+      "method": "GET",
+      "path": "/",
+      "status": 401,
+      "script_version": "29bc9d09-0e44-4da0-9b13-32d3c6717aa3",
+      "private_request_identifier_match": true,
+      "server_date_before_session_expiry": true,
+      "server_log_before_session_expiry": true,
+      "remaining_lifetime_seconds_at_server_date": 3428
+    }
+  ],
+  "session_evidence": {
+    "same_saved_cookie_reused_by_probe": true,
+    "format_version": 3,
+    "lifetime_seconds": 3600,
+    "secure": true,
+    "http_only": true,
+    "same_site_strict": true,
+    "host_prefix": true,
+    "logout_called": false,
+    "new_login_during_revocation": false,
+    "external_session_file_modification_prevention": "not_enforced"
+  },
+  "artifacts": {
+    "private_server_log": {
+      "file_name": "logs-2026-10-24T17_06_27.601Z.json",
+      "bytes": 20065,
+      "sha256": "a90c1a744b18c09d6c3cf7dab1fcbbce4b8aa686821f87563534706233b95287"
+    },
+    "private_probe": {
+      "file_name": "viewer-probe-attempt2.private.mjs",
+      "sha256": "df7993625c921717e12c783bb787edab1157c51c14a829429f5f360e5abd72f3"
+    },
+    "private_client_receipts": [
+      {
+        "file_name": "baseline-receipt.private.json",
+        "sha256": "5952d966e27d2dc645bd0fa001ed9eef82b7693e2333ec1e9818b9146a9c24b5"
+      },
+      {
+        "file_name": "baseline-attempt2-receipt.private.json",
+        "sha256": "0acda0b103032086eb4bf0571327bd1f4beea583109e1ba2b9bfc47b98c4eadd"
+      },
+      {
+        "file_name": "revoked-attempt2-receipt.private.json",
+        "sha256": "a270b80cc6774a492ae7498483201ade8e7eeb0baa8177adf7db6dcd516144de"
+      }
+    ]
+  },
+  "deployed_home": {
+    "title": "합성 배포 검사",
+    "teammate_game_ui": false,
+    "body_sha256": "713c14124c51f17e1bba09a292087e74d703bd49bb6565e091982ff5bee33794",
+    "javascript_executed_by_probe": false
+  },
+  "end_state": {
+    "ACCESS_GATE_ENABLED": true,
+    "ACCESS_SESSION_SECONDS": 3600,
+    "UPLOAD_ENABLED": false,
+    "DATA_READ_ENABLED": false,
+    "TELEMETRY_ENABLED": false,
+    "FEEDBACK_ENABLED": false,
+    "PUBLISH_KEY_SCOPE": "absent",
+    "PUBLISH_EXPIRES_AT": "absent",
+    "logs_enabled": true,
+    "invocation_logs": true,
+    "persist_logs": true,
+    "logs_sample_percent": 100,
+    "traces_enabled": false,
+    "issues_enabled": false,
+    "backup_credential_login": "not_tested"
+  },
+  "limitations": [
+    "Initial failed login cause unknown; preserved separately.",
+    "Secret-update versions do not prove runtime source correspondence.",
+    "Publisher, backup login, browser rendering, notice, current teammate UI and joint GATE-06 are not tested.",
+    "End-state UI and selected versions are not a complete immutable settings history.",
+    "Raw logs and client/session credentials remain private.",
+    "Old final2/v4.4 hash match is not latest delivery match; v7/v4.5 not received."
+  ]
+}
