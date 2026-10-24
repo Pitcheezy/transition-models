@@ -1,0 +1,153 @@
+{
+  "schema": "pitcheezy-host-publisher-revocation-evidence-v1",
+  "recorded_date_kst": "2026-10-25",
+  "record_base_commit": "24fea70f12ba53d3503823c90b3b06cec045a277",
+  "runtime_source_commit": "e9b362b75d6d4768c552740bfc6e0124872805e1",
+  "evidence_kind": "actual self-only hosted synthetic-key HEAD authentication test; not joint trial or live game",
+  "result": {
+    "runtime_deploy_and_byte_match": "passed",
+    "publisher_bearer_revocation": "passed",
+    "upload_off_cleanup": "passed",
+    "saved_server_log_match": "3_of_3",
+    "viewer_revocation": "passed earlier in separate 4-request trial; not repeated after runtime deploy",
+    "latest_partner_delivery_match": "not_established",
+    "actual_file_publish": "not_run",
+    "joint_trial": "not_run",
+    "public_launch": "not_approved",
+    "exhibition_30_50_concurrency": "not_run"
+  },
+  "request_accounting": {
+    "service_head": 3,
+    "service_put_delete": 0,
+    "automatic_retries": 0,
+    "automatic_redirects": false,
+    "management_api_separate": true,
+    "all_account_traffic": "not_measured",
+    "trial_object_mutation": "none by these three HEAD requests",
+    "scheduled_cleanup_and_log_storage": "separate from service request accounting"
+  },
+  "deployment": {
+    "initial_version": "29bc9d09-0e44-4da0-9b13-32d3c6717aa3",
+    "code_replace_version": "74920817-c2bb-456f-9889-b1871a9e2e82",
+    "final_version": "cd97abb2-96f1-4e21-ba4b-85e641386f97",
+    "final_percentage": 100,
+    "pinned_wrangler": "4.151.0",
+    "bundle_bytes": 54114,
+    "bundle_sha256": "3312fbff2dac2a22b32e474392ee7eb107663c79e9749781810a681e5ee07cfd",
+    "remote_download_exact_match_each_phase": true,
+    "release_zip_sha256": "fd55a869abb21a153d6fb37970b52884cc290eddb4fce5b5d0de09707b30ec8c",
+    "method": "official Worker-only content PUT then binding settings PATCH and publisher digest PUT; API scope not expanded",
+    "wrangler_deploy_attempt": "failed before upload due dashboard routes/domains metadata HTTP403; preserved as failed attempt",
+    "settings_preserved_except": "version annotations; added scope and expiry; temporary upload toggle; publisher digest rotated",
+    "frontend": "existing synthetic assets preserved; Song UI not installed"
+  },
+  "scope": {
+    "key": "v1/game/900000025.json",
+    "expires_at_utc": "2026-10-24T19:19:18.011Z",
+    "same_bearer_key_expiry_all_phases": true,
+    "expiry_boundary_tested": false
+  },
+  "events": [
+    {
+      "phase": "baseline",
+      "started_at_utc": "2026-10-24T17:44:27.304Z",
+      "server_log_at_utc": "2026-10-24T17:44:28.174Z",
+      "finished_at_utc": "2026-10-24T17:44:28.204Z",
+      "method": "HEAD",
+      "path": "/_publish/v1/game/900000025.json",
+      "status": 404,
+      "script_version": "709fc392-c137-4bf0-9b97-682a06b56560",
+      "private_request_identifier_match": true,
+      "time_method_path_status_version_match": true,
+      "server_outcome": "ok"
+    },
+    {
+      "phase": "revoked",
+      "started_at_utc": "2026-10-24T17:45:09.829Z",
+      "server_log_at_utc": "2026-10-24T17:45:10.151Z",
+      "finished_at_utc": "2026-10-24T17:45:10.158Z",
+      "method": "HEAD",
+      "path": "/_publish/v1/game/900000025.json",
+      "status": 401,
+      "script_version": "2ce9cee4-7ad7-4731-9ea1-89994c54173b",
+      "private_request_identifier_match": true,
+      "time_method_path_status_version_match": true,
+      "server_outcome": "ok"
+    },
+    {
+      "phase": "off",
+      "started_at_utc": "2026-10-24T17:45:25.113Z",
+      "server_log_at_utc": "2026-10-24T17:45:25.498Z",
+      "finished_at_utc": "2026-10-24T17:45:25.529Z",
+      "method": "HEAD",
+      "path": "/_publish/v1/game/900000025.json",
+      "status": 503,
+      "script_version": "cd97abb2-96f1-4e21-ba4b-85e641386f97",
+      "private_request_identifier_match": true,
+      "time_method_path_status_version_match": true,
+      "server_outcome": "ok"
+    }
+  ],
+  "server_log_export": {
+    "bytes": 15352,
+    "sha256": "db3a577b96da106f0204dccdfdaf9ee2cd30f1004ddca69fe10dfe218f006d96",
+    "events": 3,
+    "storage": "private local original; not in Git",
+    "redaction": "shared record excludes origin, account, IP, raw headers, token digests, cookie, ray and request IDs"
+  },
+  "final_settings": {
+    "ACCESS_GATE_ENABLED": true,
+    "UPLOAD_ENABLED": false,
+    "DATA_READ_ENABLED": false,
+    "TELEMETRY_ENABLED": false,
+    "FEEDBACK_ENABLED": false,
+    "publisher_test_token": "retired; replacement raw credential not retained",
+    "PUBLISH_KEY_SCOPE_present": true,
+    "PUBLISH_EXPIRES_AT_present": true,
+    "observability": {
+      "enabled": false,
+      "head_sampling_rate": 1,
+      "redact_query_string": false,
+      "logs": {
+        "enabled": true,
+        "head_sampling_rate": 1,
+        "persist": true,
+        "invocation_logs": true
+      },
+      "traces": {
+        "enabled": false,
+        "persist": true,
+        "head_sampling_rate": 1
+      },
+      "issues": {
+        "enabled": false
+      }
+    },
+    "other_secret_names_assets_r2_d1_limiters": "preserved; secret values are not readable"
+  },
+  "review": {
+    "runtime_prior_review": "docs/WS_PUBLISH_SCOPE_20261017.md and docs/results/ops/ws_publish_scope_20261017.json",
+    "local_probe_writer": "Codex (GPT-6 family; exact serving model ID not exposed)",
+    "local_probe_reviewer": "gpt-5.6-sol",
+    "review_result": "PASS; static read-only review, no cloud calls",
+    "helper_sha256": {
+      "worker-admin.private.py": "174d34c84961046ed94b0008ba915630a1ef3e6df8717ca7d5adc6f665b9f260",
+      "publisher-probe.private.mjs": "506bd17122f983ae92d0eedd8e206a17f5aa7022441f3094228010f9ce8cac3d"
+    },
+    "plan_review": "separate agent; supplementary, not substituted for different-model review"
+  },
+  "commands": [
+    "node <private-dir>/publisher-probe.private.mjs baseline",
+    "node <private-dir>/publisher-probe.private.mjs revoked",
+    "node <private-dir>/publisher-probe.private.mjs off",
+    "Python json/hashlib/datetime: join private cf-ray to 3 downloaded server records; verify timestamps/method/path/status/version"
+  ],
+  "remaining": [
+    "new v7/v4.5 fixed ZIP, full SHA and review evidence",
+    "latest Song UI/source compatibility and known defect disposition",
+    "joint writer upload/read/withdraw/restore and emergency notice checks in agreed authorized window",
+    "public launch decision and later 30-50 concurrency test"
+  ],
+  "no_teammate_code_process_or_deployment_access_or_change": true,
+  "external_reply_sent": false
+}

@@ -5,6 +5,10 @@
 [CHECKLIST](../CHECKLIST.md) 상단과 [우리 board](https://github.com/Pitcheezy/transition-models/issues/3)를 확인한다.
 역사적 “다음 단위” 문구는 현재 지시가 아니다.
 
+## 본인 runtime 배포·발행 회수 통과 — 2026-10-25 02:45 KST
+
+[실제 기록](WS_PUBLISHER_REVOCATION_20261025.md): 우리 e9b362b runtime 배포/원격 bundle SHA 일치, 같은 bearer·키·만료의 HEAD404→digest회수401→업로드OFF503, 저장 서버 로그3건/version 대조 완료. 최종cd97abb2·100%, 접근문ON/업로드·자료읽기·수집·피드백OFF/Logs100%저장ON. 기존 합성assets 유지, 형 UI는 설치하지 않았다. Wrangler 배포403은 별도 실패로 보존하고 Worker 한정 공식 API로 진행했다. 기존관람4요청은 아래 별도시험이며 새배포뒤 재시험은 아니다. 새v7/v4.5·최신UI/결함처리·실제writer 발행/철회/복구·안내·공동GO와30~50명부하는 남는다. [회신 초안](mail_drafts/COLLAB-001-host-publisher-result-20261025.md)은미발신이다. 아래 runtime/발행회수미실행 문구는 이번검사 전 이력이다.
+
 ## 본인 관람 자격 회수 통과 — 2026-10-25 02:05 KST
 
 [실제 시험 기록](WS_VIEWER_REVOCATION_20261025.md): 사용자 직접 등록/회수 뒤 로그인200·같은 세션 홈200→회수401, 첫 실패401 포함4요청을 서버 저장 로그/version에 대조했다. 서버 시각도 세션 만료 전이다. 접근문ON·자료읽기/업로드/수집/피드백OFF 유지. 관람 회수만 완료이며 발행 회수·scope/expiry·runtime 대응·새v7/v4.5·공동시험은 남는다. 현재 홈은 합성 검사 화면이며 형 최신 UI가 아니다. 아래 관람 회수 미실행 문구는 이번 시험 전 이력이다. 새 회신은 미발신이다.
