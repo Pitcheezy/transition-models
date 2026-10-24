@@ -2,9 +2,9 @@
 
 ## 본인 비상 안내 실제 전환/복구 — 2026-10-25
 
-- [ ] WS-notice3. 본인시험의 안내ON/OFF·기존접속복구·운영자회수·서버로그/전환시각 대조. 최신Song화면/공동GO와 구분한다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-25 · Codex]`
+- [ ] WS-notice3. 안내ON/OFF·동일세션/본문복구·안내자격회수401 기능13요청 통과. 서버로그12/13 대조, OFF PUT1건 미확인으로 전체합격대기. [근거](docs/WS_NOTICE_TRIAL_20261025.md). 최신Song화면/공동GO와 구분한다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-25 · Codex]`
 
-진행: 우리 Codex / `codex/ws-publisher-revoke-1025` / 기준 `47ac078`. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6387602964).
+검증·반납 준비: 우리 Codex / `codex/ws-publisher-revoke-1025` / 기준 `47ac078`. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6387602964).
 
 ## 본인 시험 서버 배포·발행 회수 — 2026-10-25
 

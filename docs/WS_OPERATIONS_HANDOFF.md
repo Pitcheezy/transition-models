@@ -5,6 +5,10 @@
 [CHECKLIST](../CHECKLIST.md) 상단과 [우리 board](https://github.com/Pitcheezy/transition-models/issues/3)를 확인한다.
 역사적 “다음 단위” 문구는 현재 지시가 아니다.
 
+## 본인 비상 안내 시험 — 2026-10-25 03:02 KST
+
+[실제 기록](WS_NOTICE_TRIAL_20261025.md): 현재 runtime에서 복구 관람 코드 로그인/홈200, 안내ON의 홈·health503과 개발 안내, OFF 뒤 같은 세션·본문SHA 복구, 안내 시험 자격 회수401까지13요청 기능PASS. 감사change_id/ETag chain 확인. 저장로그12/13, **OFF PUT1건 미확인으로 WS-notice3 전체합격대기**. 최종`d714e7fb-20d4-4a80-9f29-695e44130955`·100%, 안내OFF/접근문ON/업로드·자료읽기·수집·피드백OFF/Logs100%저장ON. 형 최신UI·writer·공동GO·30~50명실부하는미완료. [최신 회신 초안](mail_drafts/COLLAB-001-host-publisher-result-20261025.md)은미발신이다. 아래 안내/새배포후로그인미실행과 이전최종버전은 당시이력이다.
+
 ## 본인 runtime 배포·발행 회수 통과 — 2026-10-25 02:45 KST
 
 [실제 기록](WS_PUBLISHER_REVOCATION_20261025.md): 우리 e9b362b runtime 배포/원격 bundle SHA 일치, 같은 bearer·키·만료의 HEAD404→digest회수401→업로드OFF503, 저장 서버 로그3건/version 대조 완료. 최종cd97abb2·100%, 접근문ON/업로드·자료읽기·수집·피드백OFF/Logs100%저장ON. 기존 합성assets 유지, 형 UI는 설치하지 않았다. Wrangler 배포403은 별도 실패로 보존하고 Worker 한정 공식 API로 진행했다. 기존관람4요청은 아래 별도시험이며 새배포뒤 재시험은 아니다. 새v7/v4.5·최신UI/결함처리·실제writer 발행/철회/복구·안내·공동GO와30~50명부하는 남는다. [회신 초안](mail_drafts/COLLAB-001-host-publisher-result-20261025.md)은미발신이다. 아래 runtime/발행회수미실행 문구는 이번검사 전 이력이다.

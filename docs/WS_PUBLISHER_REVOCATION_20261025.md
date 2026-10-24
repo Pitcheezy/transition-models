@@ -30,6 +30,10 @@
 
 재현 기록: `node <private-dir>/publisher-probe.private.mjs baseline|revoked|off`를 각 단계별 한 번 실행했다. 실행기는 phase별 exclusive 시작파일·결과파일, 동일 bearer/key/expiry, 새 관리 조회, maxAttempts1을 요구한다. 비공개 도우미 SHA는 영수증에 있다. **현재 자격은 회수됐으므로 기존 명령을 다시 실행하지 않는다.** 새 실험은 별도 승인 창/자격/원장으로 준비한다.
 
+## 후속 확인
+
+[비상 안내 후속 시험](WS_NOTICE_TRIAL_20261025.md)에서 새runtime의 복구 관람 코드 로그인·안내ON/OFF·같은세션복구·안내자격회수를 확인했다. 아래 새runtime후로그인미실행과 최종cd97abb2는 이 발행 시험 종료 당시 이력이다. 현재 배포 버전과 남은 로그 조건은 후속 기록을 따른다.
+
 ## 종료 상태와 남은 조건
 
 접근문ON, 업로드/자료읽기/이용기록/피드백OFF. 시험 발행 digest는 폐기값으로 교체했고 원래 bearer는401이었다. scope/expiry 유지. Logs/Invocation/저장ON·100%, Traces/IssuesOFF이며 기존 observability 전체를 보존했다. 전역 enabled=false와 별도 logs.enabled=true가 함께 존재하는 기존 응답을 임의로 바꾸지 않았고 실제 저장 로그로 동작을 확인했다.
