@@ -1,5 +1,11 @@
 # 남은 작업 체크리스트
 
+## 관람 자격 회수 증거 정리 — 2026-10-25
+
+- [x] WS-access4. 실제 본인 로그인200·홈200→같은 세션 회수401과 최초 실패401을 서버 로그4건에 대조했다. [근거](docs/WS_VIEWER_REVOCATION_20261025.md). 발행 자격·최신본 일치·공동시험은 미완료다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-25 · Codex]`
+
+검증·반납 준비: 우리 Codex / `codex/ws-viewer-revoke-1025` / 기준 `6262afb`. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6387091829).
+
 ## 저장 로그 원본 확보 — 2026-10-25
 
 - [x] WS-log1. 저장 로그 원본20,587bytes/SHA 확보·4건401/version대조·허용목록 공유 영수증·현재 인계를 갱신했다. [근거](docs/results/ops/ws_host_log_export_20261025.json). 실제 권한 회수·공동시험은 미실행이다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-25 · Codex]`
