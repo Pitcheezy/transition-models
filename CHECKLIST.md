@@ -1,5 +1,11 @@
 # 남은 작업 체크리스트
 
+## 형 요청 우선·Cloudflare 로그 기반 확보 — 2026-10-25
+
+- [x] WS-partner8. Song D181/추가2차단을 상대 보고로 반영하고, 이 채팅의 실제 Cloudflare 조회·사용자 승인 Logs100%저장·무인증홈401과저장4이벤트를 확인했다. [실제근거](docs/WS_HOST_PREFLIGHT_20261025.md). runtime/source·scope/expiry·회수/공동시험은미완료, 팀원코드변경없음. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-25 · Codex]`
+
+검증·반납 준비: 우리 Codex / `codex/ws-readiness-1025` / 기준 `af95d956c13012fa115cdbde51c2b738d083429a`. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6386251355).
+
 ## 회신 발신·출시 잔여 상태 정리 — 2026-10-23
 
 - [x] WS-partner7. 사용자 승인 #38 회신 게시·본문 재조회/SHA 대조와 출시 잔여8묶음을 정리했다. [실행 계획](docs/WS_COLLAB_V1_ACTIONS.md)·[발신 기록](docs/results/ops/ws_host_reply_sent_20261023.json). 체크리스트8·상대링크102·본문대조/diff 통과. Cloudflare 보안 선택·실제설정/로그와 새ZIP/시험/배포 승인은 대기다. 운영 코드·설정·팀원 코드 변경 없음. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-23 · Codex]`

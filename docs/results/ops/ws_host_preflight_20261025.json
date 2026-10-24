@@ -1,0 +1,184 @@
+{
+  "record": "cloudflare-host-preflight-and-logs-20261025",
+  "environment": "Windows laptop; browser UI in this chat",
+  "basis": "live dashboard; one pre-change home navigation, two explicit post-change home reloads, persisted log requery; not a joint trial",
+  "deployment": {
+    "active_version_id": "8e4f50e9-9bf4-4564-977f-86af1b576220",
+    "traffic_percent": 100,
+    "source_label": "Wrangler",
+    "displayed_age": "8d ago",
+    "git_source_match": "not_verified",
+    "rollout_rows_displayed": 5,
+    "post_settings_save_active_version_id": "8e4f50e9-9bf4-4564-977f-86af1b576220",
+    "post_settings_save_traffic_percent": 100
+  },
+  "settings": {
+    "ACCESS_GATE_ENABLED": "true",
+    "ACCESS_SESSION_SECONDS": "3600",
+    "DATA_READ_ENABLED": "false",
+    "UPLOAD_ENABLED": "false",
+    "TELEMETRY_ENABLED": "false",
+    "FEEDBACK_ENABLED": "false",
+    "PUBLISH_KEY_SCOPE": "absent_in_production_variable_list",
+    "PUBLISH_EXPIRES_AT": "absent_in_production_variable_list"
+  },
+  "secret_names_present": [
+    "ACCESS_CODE_SHA256",
+    "ACCESS_SESSION_SECRET",
+    "NOTICE_TOKEN_SHA256",
+    "PUBLISH_TOKEN_SHA256"
+  ],
+  "secret_values_read": false,
+  "routes": {
+    "custom_test_domain_bound": true,
+    "workers_dev_enabled": false,
+    "preview_urls_enabled": false
+  },
+  "access_observation": {
+    "displayed_page": "access-code form",
+    "credentials_submitted": false,
+    "http_status": 401,
+    "total_network_requests": "not_measured",
+    "prechange_home_navigation_count": 1,
+    "postchange_home_navigation_count": 2,
+    "status_basis": "persisted home event at 2026-10-25T01:06:21.595+09:00; not a revoked-credential test"
+  },
+  "audit": {
+    "kind": "account management events, not service requests",
+    "from_kst": "2026-10-16T00:00:00+09:00",
+    "to_kst": "2026-10-25T00:55:00+09:00",
+    "filter": "resource_product=workers; action_type!=view",
+    "displayed_success_count": 25,
+    "displayed_failure_count": 0,
+    "all_displayed_events_on": "2026-10-16",
+    "latest_settings_patch_displayed_kst": "2026-10-16T12:39:13+09:00",
+    "latest_deployment_create_displayed_kst": "2026-10-16T12:39:12+09:00",
+    "historical_setting_values_verified": false,
+    "completeness_asserted": false,
+    "raw_export_obtained": false,
+    "current_change": {
+      "displayed_time_kst": "2026-10-25T01:05:08+09:00",
+      "action": "update Patch Worker Script Settings",
+      "resource": "workers scripts.script-settings",
+      "context": "Dashboard",
+      "full_setting_value_history_verified": false
+    }
+  },
+  "bootstrap_management_token": {
+    "status": "Expired",
+    "displayed_expiry_date": "2026-10-16",
+    "value_read": false,
+    "not_evidence_for": "publisher bearer or viewer session revocation"
+  },
+  "gate06": "PARTIAL evidence now exists: saved unauthenticated GET status/version; HOLD for scoped publisher requests, runtime/source mapping and settings interval linkage",
+  "settings_changed": true,
+  "deployment_performed": false,
+  "revocation_performed": false,
+  "teammate_code_accessed": false,
+  "pending_human_decision": "Joint-trial window, audience and concrete credential plan are still separate; the former read-only/logs approval is resolved.",
+  "prechange_observed_at_utc": "2026-10-24T16:03:04.701916+00:00",
+  "updated_at_utc": "2026-10-24T16:16:14.730459+00:00",
+  "approval": {
+    "source": "human reply in this chat on 2026-10-25 KST",
+    "scope": "Read-only restriction lifted for settings needed for teammate request; proceeded with the concrete Workers Logs plan: 100% and up to 3 unauthenticated home navigations. No new audience or joint-trial GO inferred."
+  },
+  "settings_save_action": "Dashboard Deploy button for observability settings; active script version remained unchanged",
+  "logging_before": {
+    "logs_enabled": false,
+    "traces_enabled": false,
+    "issues_enabled": false,
+    "exports": "no_destinations_available",
+    "workers_request_logs_obtained": false
+  },
+  "logging": {
+    "logs_enabled": true,
+    "invocation_logs": true,
+    "persist": true,
+    "head_sampling_rate": 1,
+    "traces_enabled": false,
+    "issues_enabled": false,
+    "workers_request_logs_obtained": true,
+    "persisted_events_requeried_after_live_stopped": true,
+    "stored_events_seen": 4,
+    "home_navigations_after_enable": 2,
+    "home_navigation_cap": 3,
+    "automatic_favicon_events_seen": 2,
+    "raw_export_obtained": false,
+    "raw_logs_publication": false,
+    "request_metadata_includes_client_network_fields": true,
+    "cookie_displayed_redacted": true,
+    "all_credentials_redaction_verified": false,
+    "evidence_fields_retained": [
+      "time",
+      "method",
+      "path",
+      "status",
+      "script_version"
+    ],
+    "free_plan_visible": true
+  },
+  "events": [
+    {
+      "time_kst": "2026-10-25T01:05:25.810+09:00",
+      "method": "GET",
+      "path": "/",
+      "status": "not_individually_inspected",
+      "script_version": "not_individually_inspected"
+    },
+    {
+      "time_kst": "2026-10-25T01:05:26.054+09:00",
+      "method": "GET",
+      "path": "/favicon.ico",
+      "status": "not_individually_inspected",
+      "script_version": "not_individually_inspected"
+    },
+    {
+      "time_kst": "2026-10-25T01:06:21.595+09:00",
+      "method": "GET",
+      "path": "/",
+      "status": 401,
+      "script_version": "8e4f50e9-9bf4-4564-977f-86af1b576220"
+    },
+    {
+      "time_kst": "2026-10-25T01:06:21.859+09:00",
+      "method": "GET",
+      "path": "/favicon.ico",
+      "status": "not_individually_inspected",
+      "script_version": "not_individually_inspected"
+    }
+  ],
+  "rate_limit_observation": {
+    "binding": "PUBLISH_LIMITER",
+    "limit": 60,
+    "period_seconds": 60,
+    "read_via_edit_dialog_cancelled": true,
+    "changed": false,
+    "is_global_request_budget": false
+  },
+  "credential_search": {
+    "scope": "filenames only in canonical and two known previous project outputs",
+    "matching_old_stage4_credential_or_cookie_files_found": false,
+    "secret_values_read": false,
+    "other_names_or_locations_not_ruled_out": true,
+    "old_cookie_would_not_prove_revocation_after_3600s_expiry": true
+  },
+  "editor_inspection": {
+    "opened_own_current_version_editor_readonly": true,
+    "code_changed": false,
+    "code_export_obtained": false,
+    "source_hash_verified": false,
+    "automatic_preview_get_entries_seen": 2,
+    "preview_console_displayed_time_utc": "2026-10-24T16:13:08Z",
+    "preview_execution_environment": "Cloudflare editor preview; not classified as production request evidence",
+    "total_network_requests": "not_measured"
+  },
+  "validation": {
+    "checklist_tests_passed": 8,
+    "relative_file_links_checked": 439,
+    "json_and_evidence_invariants": "passed",
+    "private_identifier_exclusion": "passed",
+    "additional_agent_document_review": "passed after stale-state and timestamp corrections",
+    "operating_code_review": "not applicable: no runtime source changes",
+    "raw_screenshot_file_saved": false
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "record": "WS-partner8",
+  "observed_at_utc": "2026-10-24T15:52:50.474499+00:00",
+  "our_base_commit": "af95d956c13012fa115cdbde51c2b738d083429a",
+  "claim_commit": "4673468249dec8d8673ce89f680ea1e373f7373d",
+  "evidence_kind": "issue_reports_not_our_runtime_verification",
+  "sources": [
+    {
+      "url": "https://github.com/SongRoute/pitcheezy/issues/35",
+      "updated_at": "2026-10-24T15:36:55Z",
+      "body_utf8_lf_sha256": "83b367485c020a4541d5bb5dcaf8a01689aca8b1a5aad7a09aa015ef73dbed60"
+    },
+    {
+      "url": "https://github.com/SongRoute/pitcheezy/issues/35#issuecomment-6385916517",
+      "updated_at": "2026-10-24T15:18:24Z",
+      "body_utf8_lf_sha256": "b3e189d6c425a353d7abd967b5d00c0ad894f116f62bff6881efd9888122b2b1"
+    },
+    {
+      "url": "https://github.com/SongRoute/pitcheezy/issues/38#issuecomment-6357780762",
+      "updated_at": "2026-10-23T05:01:06Z",
+      "body_utf8_lf_sha256": "850467823f3de9dce61226942e4bb98e392a638fd49e5cef356d793e56bbd523"
+    }
+  ],
+  "query_commands": [
+    "gh api repos/SongRoute/pitcheezy/issues/35",
+    "gh api repos/SongRoute/pitcheezy/issues/comments/6385916517",
+    "gh api repos/SongRoute/pitcheezy/issues/38/comments?per_page=100"
+  ],
+  "reported_decision": "D181: private local live and RS shadow; one joint trial before G3; no public deployment",
+  "reported_review_targets": [
+    "000e4ba0",
+    "e3e3cbe0",
+    "7b88af6d"
+  ],
+  "reported_new_blockers": [
+    "recommendation_reappears_after_notice_then_generic_failure",
+    "disk_write_failure_prevents_supervisor_monitor_exit_escalation"
+  ],
+  "our_reproduction_performed": false,
+  "new_bundle_received": false,
+  "current_cloudflare_verified": false,
+  "deployment_changed": false,
+  "external_reply_sent": false,
+  "human_scope_alignment": "pending; reported Song decision is not our new operational approval",
+  "writer": "Codex; exact runtime model id not independently queried",
+  "review": "separate agent document review pending; not operating-code different-model signoff",
+  "later_host_evidence": "docs/results/ops/ws_host_preflight_20261025.json; partner-query snapshot precedes actual host inspection and approved log activation"
+}
