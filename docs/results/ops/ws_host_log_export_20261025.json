@@ -1,0 +1,93 @@
+{
+  "record": "cloudflare-saved-log-export-20261025",
+  "source_commit": "e9b362b75d6d4768c552740bfc6e0124872805e1",
+  "evidence_kind": "saved Cloudflare request log export; unauthenticated access checks, not a revocation or joint trial",
+  "exported_at_utc": "2026-10-24T16:40:22.896Z",
+  "selection": {
+    "script_version": "8e4f50e9-9bf4-4564-977f-86af1b576220",
+    "ui_range": "Last 1 hour",
+    "download_limit": 1000,
+    "returned_events": 4,
+    "all_account_or_historical_requests": false
+  },
+  "private_original": {
+    "bytes": 20587,
+    "sha256": "6753e5bae2938e256e3067afad60b0cd2967958c9b9f9a86695f316bf99777b5",
+    "storage_kind": "user local Downloads; excluded from Git and partner messages",
+    "published": false
+  },
+  "redaction": {
+    "method": "allowlist extraction from downloaded JSON",
+    "retained_fields": [
+      "time_utc",
+      "method",
+      "path",
+      "status",
+      "script_version"
+    ],
+    "url_query_and_fragment_excluded": true,
+    "host_headers_identifiers_client_metadata_excluded": true,
+    "raw_export_not_safe_to_share": true
+  },
+  "events": [
+    {
+      "time_utc": "2026-10-24T16:05:25.810Z",
+      "method": "GET",
+      "path": "/",
+      "status": 401,
+      "script_version": "8e4f50e9-9bf4-4564-977f-86af1b576220"
+    },
+    {
+      "time_utc": "2026-10-24T16:05:26.054Z",
+      "method": "GET",
+      "path": "/favicon.ico",
+      "status": 401,
+      "script_version": "8e4f50e9-9bf4-4564-977f-86af1b576220"
+    },
+    {
+      "time_utc": "2026-10-24T16:06:21.595Z",
+      "method": "GET",
+      "path": "/",
+      "status": 401,
+      "script_version": "8e4f50e9-9bf4-4564-977f-86af1b576220"
+    },
+    {
+      "time_utc": "2026-10-24T16:06:21.859Z",
+      "method": "GET",
+      "path": "/favicon.ico",
+      "status": 401,
+      "script_version": "8e4f50e9-9bf4-4564-977f-86af1b576220"
+    }
+  ],
+  "fresh_dashboard_recheck": {
+    "active_version_id": "8e4f50e9-9bf4-4564-977f-86af1b576220",
+    "traffic_percent": 100,
+    "logs_enabled": true,
+    "invocation_logs": true,
+    "persist_logs": true,
+    "sampling_percent": 100,
+    "access_gate": true,
+    "upload_enabled": false,
+    "data_read_enabled": false,
+    "telemetry_enabled": false,
+    "feedback_enabled": false,
+    "publish_scope_present": false,
+    "publish_expiry_present": false
+  },
+  "this_followup": {
+    "new_service_test_requests": 0,
+    "settings_changed": false,
+    "new_code_deployed": false,
+    "raw_export_obtained": true,
+    "runtime_source_match": "not_verified",
+    "revocation_test": "not_performed",
+    "joint_trial": "not_performed",
+    "teammate_code_modified": false
+  },
+  "limits": [
+    "Only the selected four saved events; logging enabled earlier the same day.",
+    "Worker outcome ok is execution completion, not successful authorization. All four HTTP statuses are 401.",
+    "Management audit export and setting-value history are not part of this file.",
+    "No credentials were submitted or revoked; these events do not demonstrate revocation."
+  ]
+}

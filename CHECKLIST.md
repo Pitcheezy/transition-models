@@ -2,9 +2,9 @@
 
 ## 저장 로그 원본 확보 — 2026-10-25
 
-- [ ] WS-log1. 실제 저장 로그 원본을 비공개 확보하고, SHA·허용목록 기반 공유 영수증·현재 인계를 갱신한다. 실제 권한 회수·공동시험과 구별한다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-25 · Codex]`
+- [x] WS-log1. 저장 로그 원본20,587bytes/SHA 확보·4건401/version대조·허용목록 공유 영수증·현재 인계를 갱신했다. [근거](docs/results/ops/ws_host_log_export_20261025.json). 실제 권한 회수·공동시험은 미실행이다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-25 · Codex]`
 
-진행 중: 우리 Codex / `codex/ws-log-export-1025` / 기준 `e9b362b75d6d4768c552740bfc6e0124872805e1`. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6386816143).
+검증·반납 준비: 우리 Codex / `codex/ws-log-export-1025` / 기준 `e9b362b75d6d4768c552740bfc6e0124872805e1`. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6386816143).
 
 ## 형 요청 우선·Cloudflare 로그 기반 확보 — 2026-10-25
 
