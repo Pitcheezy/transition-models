@@ -2,7 +2,7 @@
 
 ## 로그 보존 배포 준비와 전시 목표 — 2026-10-25
 
-- [ ] WS-config1. 기존 Logs100%저장 설정을 보존할 검사/후보·dry-run을 준비한다. 실제 배포·발행 회수는 별도다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-25 · Codex]`
+- [ ] WS-config1. 기존 Logs100%저장 보존 검사/후보·dry-run 준비, 관련287검사 통과. 다른 모델 검토 대기. [근거](docs/WS_LOG_CONFIG_20261025.md). 실제 배포·발행 회수는 별도다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-25 · Codex]`
 - [ ] WS-exhibit1. 형 요청 완료 뒤 동시30~50명 기준 실제 화면/자료 갱신·오류율·지연·비용을 검증한다. 목표만 확정, 용량 합격·공개 확대·유료 변경은 미승인/미측정이다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-25 · Codex]`
 
 진행: 우리 Codex / `codex/ws-log-config-1025` / 기준 `6262afb`. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6387190685).

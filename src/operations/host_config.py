@@ -120,6 +120,44 @@ def positive_setting(value, maximum):
     return int(value)
 
 
+def _sampling_rate(value):
+    # The bounded comparison also rejects NaN/infinity without coercing large integers.
+    require(
+        type(value) in (int, float) and 0 <= value <= 1,
+        "invalid_observability_sampling_rate",
+    )
+
+
+def validate_observability(value):
+    """Validate an explicit Wrangler 4.151 subset, not actual log retention or deployment."""
+    fields(
+        value,
+        ("enabled", "logs"),
+        ("head_sampling_rate", "redact_query_string", "traces", "issues"),
+    )
+    for name in ("enabled", "redact_query_string"):
+        if name in value:
+            require(type(value[name]) is bool, "invalid_observability_boolean")
+    if "head_sampling_rate" in value:
+        _sampling_rate(value["head_sampling_rate"])
+    for name, optional in (
+        ("logs", ("head_sampling_rate", "invocation_logs", "persist")),
+        ("traces", ("head_sampling_rate", "persist")),
+        ("issues", ()),
+    ):
+        if name not in value:
+            continue
+        channel = value[name]
+        fields(channel, ("enabled",), optional)
+        for key, setting in channel.items():
+            if key == "head_sampling_rate":
+                _sampling_rate(setting)
+            else:
+                require(type(setting) is bool, "invalid_observability_boolean")
+    # Deliberately exclude conflicting global/per-log overrides from our supported subset.
+    require(value["enabled"] == value["logs"]["enabled"], "conflicting_observability_enabled")
+
+
 def validate_publish_scope(variables):
     """Validate optional host authorization settings, without interpreting present time."""
     present = set(PUBLISH_SCOPE_VARIABLES) & variables.keys()
@@ -239,8 +277,10 @@ def validate_config(config, client, root):
             "ratelimits",
             "triggers",
         ),
-        ("$schema", "account_id", "limits"),
+        ("$schema", "account_id", "limits", "observability"),
     )
+    if "observability" in config:
+        validate_observability(config["observability"])
     require(
         isinstance(config["name"], str) and re.fullmatch(r"[a-z][a-z0-9-]{2,62}", config["name"]),
         "invalid_worker_name",
@@ -407,6 +447,7 @@ def check_release_config(release_directory):
             "bindings_and_local_namespaces",
             "collection_settings_match",
             "cleanup_cron_present",
+            *(["observability_config"] if "observability" in config else []),
             *(["scoped_upload_config", "scoped_upload_runtime_eol_identity"] if scoped else []),
         ],
         "unverified": list(UNVERIFIED),
