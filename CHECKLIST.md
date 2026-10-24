@@ -1,5 +1,11 @@
 # 남은 작업 체크리스트
 
+## 본인 비상 안내 실제 전환/복구 — 2026-10-25
+
+- [ ] WS-notice3. 본인시험의 안내ON/OFF·기존접속복구·운영자회수·서버로그/전환시각 대조. 최신Song화면/공동GO와 구분한다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-25 · Codex]`
+
+진행: 우리 Codex / `codex/ws-publisher-revoke-1025` / 기준 `47ac078`. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6387602964).
+
 ## 본인 시험 서버 배포·발행 회수 — 2026-10-25
 
 - [x] WS-publish4. 우리 runtime 실제 배포/원격바이트 일치·고정 키/만료의 HEAD404→회수401→업로드OFF503·저장로그3건 대조 완료. 기존 합성 assets 보존, 형 UI/공동시험/실경기/부하는 미완료. [근거](docs/WS_PUBLISHER_REVOCATION_20261025.md). 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-25 · Codex]`
