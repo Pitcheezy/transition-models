@@ -28,4 +28,10 @@ node PINNED_WRANGLER deploy --dry-run --config PRIVATE_CANDIDATE/host/wrangler.d
 
 기존 관리 API 토큰은 만료된 상태다. 현재 시험 Worker의 출처를 고정한 배포에는 유효한 최소 범위 관리 자격 또는 검증 가능한 대시보드 배포 경로가 필요하다. 새로운 인증 자격의 입력·저장은 브라우저 규칙에 따라 사용자 본인이 수행한다. 발행 시험은 별도로 baseline HEAD404 → 같은 bearer 회수후401 → 업로드OFF503을 계획한다. 각1회·재시도없음·PUT/DELETE없음이며, 404는 인증/범위 통과 후 객체 부재 근거일 뿐 실제 업로드 성공은 아니다. 서버 로그와 배포 버전의 대조가 필요하다.
 
-관람 회수 실제200→401/서버로그 증거는 별도 PR #62에 있으며, 이 브랜치는 그 이전 main에서 시작했다. 이 준비를 실제 회수로 대체하지 않는다. 다른 모델 고정 커밋 검토는 진행 전이며 결과를 후속 기록한다.
+관람 회수 실제200→401/서버로그 증거는 별도 PR #62에 있으며, 이 브랜치는 그 이전 main에서 시작했다. 이 준비를 실제 회수로 대체하지 않는다. 다른 모델 gpt-5.6-sol이 고정 커밋 e8b015ae97ae56301c9f5f1effdc9319f29f758b을 검토해 중요 결함 없음(PASS)을 보고했다. 독립 재실행287통과(66.48초), Ruff/diff 통과. 체크리스트8통과(Windows UTF-8 명시 후 경고 없음). 원문 Git blob SHA는 영수증에 기록했다. 이는 실제 배포 승인이나 클라우드 검증이 아니다.
+
+## 관리 자격 준비
+
+기존 관리 토큰 만료로 실제 배포를 아직 수행하지 않았다. 대시보드의 해당 Worker 전용 Editor 토큰이 우선 후보이며, 기존 R2/D1 binding을 쓰는 배포에는 별도 제품 전체 편집 권한을 처음부터 요구하지 않는다. [Workers 권한](https://developers.cloudflare.com/workers/authorization/workers/), [인증 방식](https://developers.cloudflare.com/workers/authorization/). 실제 발급 범위·만료와 assets/cron/Logs 갱신 성공은 별도 확인한다. 권한 오류가 나면 계정 전체 권한으로 자동 확대하지 않는다.
+
+고정 Wrangler cli.js:180951–180953의 keepSecrets:true와 :169149–169151의 secret_text/secret_key keep_bindings를 확인했다. 이번 코드 배포에 secret값을 새로 공급하지 않는다. 기존 R2/D1/limiter는 설정에 명시하며 도메인/신규 자원/migration은 변경하지 않는다. [공식 deploy](https://developers.cloudflare.com/workers/wrangler/commands/workers/). 이 로컬 동작 확인도 실제 배포 후 대조를 대신하지 않는다.

@@ -18,9 +18,10 @@
     "related_passed": 287,
     "related_seconds": 64.67,
     "ruff": "pass",
-    "format": "pass"
+    "format": "pass",
+    "checklist_passed": 8
   },
-  "review_status": "pending_fixed_commit_different_model",
+  "review_status": "pass",
   "remaining": [
     "publisher_revocation_live_test",
     "remote_runtime_provenance",
@@ -31,5 +32,30 @@
     30,
     50
   ],
-  "concurrency_test_performed": false
+  "concurrency_test_performed": false,
+  "review": {
+    "model": "gpt-5.6-sol",
+    "target_commit": "e8b015ae97ae56301c9f5f1effdc9319f29f758b",
+    "scope": "fixed source, tests, contract and report; no cloud state",
+    "findings": "no important defects found",
+    "related_tests_passed": 287,
+    "related_test_seconds": 66.48,
+    "source_files": [
+      {
+        "path": "src/operations/host_config.py",
+        "git_blob_sha256": "07d44b715543c6f1ffe6ac8ccd3eeba22575c0eb908525ffef773a01c350ecf7",
+        "bytes": 17407
+      },
+      {
+        "path": "tests/test_public_host_config.py",
+        "git_blob_sha256": "f86d29304cf17e8230b94426a660abcf7d3af6c922dbfd2482140280f3b10e3a",
+        "bytes": 27369
+      },
+      {
+        "path": "ops/public-host/CONFIG_CHECK.md",
+        "git_blob_sha256": "2539858751ede8688ed73ffd058e63f8f33bea0063e21c5608a0fec74c412dc0",
+        "bytes": 8808
+      }
+    ]
+  }
 }
