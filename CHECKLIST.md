@@ -1,5 +1,11 @@
 # 남은 작업 체크리스트
 
+## 협업 현재 상태 정정·11월 우선순위 반영 — 2026-10-25
+
+- [~] H-collab5. 사용자 지시로 전시회 요금제·요청량 결정을11월로 보류하고, 배포/회수/로그·새최종본·사람 결정과 다음 인수 기준을 정합화한다. 기존 증거/ZIP·공동시험 유한 요청 원장은 보존한다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-25 · Codex]`
+
+수정 권한: 우리 Codex / `codex/ws-exhibition-local-1025` / 기준 `757409f`, 최신 main `24fea70`. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6388687726). 문서만 변경, 팀원 코드/프로세스/배포 및 우리 Cloudflare 변경 없음.
+
 ## 전시회 30/50명 로컬 준비 · 로그 재조회 — 2026-10-25
 
 - [x] WS-capacity1. 접근 문 ON·고유 세션30/50의 유한 loopback GET360/600 전부 성공, p95 121.42/196.77ms·누락0·정리완료. Free 일일 예산·377Node/132Python/8checklist·다른 모델 고정검토 통과. 로그 재조회도12/13으로 OFF PUT1건 미확인 유지. [근거](docs/WS_EXHIBITION_CAPACITY_20261025.md). 실제 서비스50명 검증이 아니다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-25 · Codex]`
