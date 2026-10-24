@@ -1,10 +1,10 @@
 # 남은 작업 체크리스트
 
-## 새 협업 보고·노트북 조회 인계 — 2026-10-25
+## 형 요청 우선·Cloudflare 로그 기반 확보 — 2026-10-25
 
-- [~] WS-partner8. Song D181/새 검토 보고를 상대 사실로 기록하고, 추가 인수 조건·Windows Cloudflare 읽기 전용 인계·미발신 회신을 준비한다. 운영 코드/설정/팀원 코드 변경 없음. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-25 · Codex]`
+- [x] WS-partner8. Song D181/추가2차단을 상대 보고로 반영하고, 이 채팅의 실제 Cloudflare 조회·사용자 승인 Logs100%저장·무인증홈401과저장4이벤트를 확인했다. [실제근거](docs/WS_HOST_PREFLIGHT_20261025.md). runtime/source·scope/expiry·회수/공동시험은미완료, 팀원코드변경없음. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-25 · Codex]`
 
-수정 권한: 우리 Codex / `codex/ws-readiness-1025` / 기준 `af95d956c13012fa115cdbde51c2b738d083429a`. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6386251355).
+검증·반납 준비: 우리 Codex / `codex/ws-readiness-1025` / 기준 `af95d956c13012fa115cdbde51c2b738d083429a`. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6386251355).
 
 ## 회신 발신·출시 잔여 상태 정리 — 2026-10-23
 
