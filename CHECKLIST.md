@@ -1,5 +1,11 @@
 # 남은 작업 체크리스트
 
+## 저장 로그 원본 확보 — 2026-10-25
+
+- [x] WS-log1. 저장 로그 원본20,587bytes/SHA 확보·4건401/version대조·허용목록 공유 영수증·현재 인계를 갱신했다. [근거](docs/results/ops/ws_host_log_export_20261025.json). 실제 권한 회수·공동시험은 미실행이다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-25 · Codex]`
+
+검증·반납 준비: 우리 Codex / `codex/ws-log-export-1025` / 기준 `e9b362b75d6d4768c552740bfc6e0124872805e1`. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6386816143).
+
 ## 형 요청 우선·Cloudflare 로그 기반 확보 — 2026-10-25
 
 - [x] WS-partner8. Song D181/추가2차단을 상대 보고로 반영하고, 이 채팅의 실제 Cloudflare 조회·사용자 승인 Logs100%저장·무인증홈401과저장4이벤트를 확인했다. [실제근거](docs/WS_HOST_PREFLIGHT_20261025.md). runtime/source·scope/expiry·회수/공동시험은미완료, 팀원코드변경없음. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-25 · Codex]`
