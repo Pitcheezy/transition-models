@@ -1,5 +1,11 @@
 # 남은 작업 체크리스트
 
+## 관람 자격 회수 증거 정리 — 2026-10-25
+
+- [ ] WS-access2. 실제 본인 관람 로그인·같은 세션 회수와 서버 로그를 대조해 기록한다. 발행 자격·최신본 일치·공동시험은 별도다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-25 · Codex]`
+
+진행: 우리 Codex / `codex/ws-viewer-revoke-1025` / 기준 `6262afb`. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6387091829).
+
 ## 저장 로그 원본 확보 — 2026-10-25
 
 - [x] WS-log1. 저장 로그 원본20,587bytes/SHA 확보·4건401/version대조·허용목록 공유 영수증·현재 인계를 갱신했다. [근거](docs/results/ops/ws_host_log_export_20261025.json). 실제 권한 회수·공동시험은 미실행이다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-25 · Codex]`
