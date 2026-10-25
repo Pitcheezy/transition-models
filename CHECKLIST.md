@@ -1,5 +1,12 @@
 # 남은 작업 체크리스트
 
+## PR64 병합·최종 발표 독립 준비 — 2026-10-25
+
+- [x] H-main4. 사용자 승인으로 PR64 head `2208b4f`의 기존 검토·최종 CI2/2 성공을 확인하고 main `4e6aba71487ffe0c2ce9dd6df658ca9db9da9953`에 병합했다. 실제 배포 변경은 없다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-25 · Codex]`
+- [ ] P-final1. 우리 기여 근거·발표 원고/질의응답·포스터 문안·시연 절차와 실제 로컬 자료 확인을 묶는다. 최종 팀원 수치/화면·공동시험·실기기·학교 발표 규격은 미확정으로 남긴다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-25 · Codex]`
+
+수정 권한 선점: 우리 Codex / `codex/final-presentation-prep-1025` / 기준 main `4e6aba7`. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6395109919). 팀원 코드/프로세스/배포·우리 Cloudflare 미변경, 요금제·동시접속 시험11월 보류. 아래 미병합 문구는 당시 이력이다.
+
 ## PR63 병합·운영 증거 PR64 검토 — 2026-10-25
 
 - [x] H-main3. 사용자 승인으로 PR63 고정 `e09c9d2`의 코드 불변·최종CI8/8을 재확인하고 main `06aa6d0f3ad24a7e9f0649491f9887283d8f77d8`에 병합했다. [PR63](https://github.com/Pitcheezy/transition-models/pull/63). 실제 배포는 변경하지 않았다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-25 · Codex]`
