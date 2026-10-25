@@ -5,7 +5,25 @@
 [수신·검증 근거](WS_FINAL_DELIVERY_20261021.md). 기존 [stage5 실행안](WS_STAGE5_READINESS_20261018.md)은 당시 이력이며, 아래 정상 회수 순서는 양측 동의 전까지 대체하지 않는다.
 
 
-## 2026-10-23 현재 — 공식 회신 반영, 실제 실행은 HOLD
+## 2026-10-25 현재 — 본인 시험과 공동시험을 구별
+
+[현재 협업 순서](WS_COLLAB_V1_ACTIONS.md)와 [운영 인계](WS_OPERATIONS_HANDOFF.md)를 먼저 읽는다.
+본인 runtime 배포/원격 바이트·관람회수·[발행 HEAD 회수/저장3건](https://github.com/Pitcheezy/transition-models/blob/abddb240a698e91923d14ef413e36081a4af5315/docs/WS_PUBLISHER_REVOCATION_20261025.md)은 확인했다.
+[안내 기능](https://github.com/Pitcheezy/transition-models/blob/abddb240a698e91923d14ef413e36081a4af5315/docs/WS_NOTICE_TRIAL_20261025.md)13요청 중 저장 로그12/13, OFF PUT1건은 재조회도 미확인이다.
+마지막 확인 버전 `d714e7fb-20d4-4a80-9f29-695e44130955`는 안내OFF·접근문ON·업로드/자료읽기/수집/피드백OFF다.
+이번 정리는 해당 고정 증거를 인용한 것이며 새 서버 조회/실행은 없다. 현재 형 UI는 설치되지 않았다.
+
+본인 시험에서 키/scope/만료 설정과 로그를 대조했어도 **Song 실행본의 필수 만료403·회수401/동일 대상 증거**는 아직 없다.
+본인 발행 회수 시험에는 실제 파일 PUT/DELETE가 포함되지 않았고 Song 단일 writer 공동시험도 미실행이다.
+Song과의 공동시험에는 새 고정본·새 시험 자격/창·양측GO가 필요하다.
+이전 시험 코드/키를 재사용하지 않고, 로그 없는 항목을 감사 기록·화면 복구로 대신 합격시키지 않는다.
+
+사용자가 전시회 요금제·요청량 결정을11월로 미뤘으므로 현재 가격/부하 후속은 보류한다.
+아래32회 정상 경로 제안과 별도 관리/실패/열린화면 원장은 공동시험 안전 조건으로 유지한다.
+기존 본인 승인·과거 참석 가능 답변을 Song 접속·새 창 GO로 확대하지 않는다.
+PR65는 main `e12ac00`에 병합했고 PR64는 main 미병합이며 아래10/23·10/22의 “현재 미확인”은 당시 이력이다.
+
+## 2026-10-23 당시 — 공식 회신 반영, 실제 실행은 HOLD
 
 [#38 공식 회신](https://github.com/SongRoute/pitcheezy/issues/38#issuecomment-6343676338)과 [우리 네 질문 답안](WS_HOST_ANSWERS_20261023.md)을 따른다. 아래10/22 기록은 당시 이력이다.
 
@@ -68,10 +86,10 @@
 
 ## 비상 안내 스위치 답변
 
-- **배포 여부:** 기능은 구현됐고10/16 본인 전용 실제 합성 HTTPS에서 ON503/OFF200을 확인했다. 현재 원격 배포·설정·토큰 상태는 미확인이다.
+- **배포 여부:** [10/25 본인 시험](https://github.com/Pitcheezy/transition-models/blob/abddb240a698e91923d14ef413e36081a4af5315/docs/WS_NOTICE_TRIAL_20261025.md)에서 고정 runtime·원격 바이트와 안내ON/OFF·동일세션복구를 확인했다. 마지막 상태는 상단을 따른다. 저장 로그1건·최신 Song 화면·양측 권한/공동시험은 미완료다. 시험 안내 자격은 회수했으며 복구 자격은 본인만 비공개 보관한다.
 - **토큰:** 안내 전용 `PITCHEEZY_NOTICE_TOKEN`을 비공개 ENV로 읽고 서버에는 `NOTICE_TOKEN_SHA256`만 둔다. 담당자별 digest1~8개, 자동 만료/자동회전 없음. 회수는 제거/교체 후 적용 확인이다. 양측 운영자 권한 전달은 아직 결정/실행하지 않았다.
 - **켜고 끄기:** 아래 CLI의 dry-run → 현재 GET 스냅샷 → 현재 ETag로 조건부 PUT → GET/감사/화면 확인. `maintenance` 또는 `data_hold`의 고정 문구만 사용한다. OFF는 복구 판단 이후 별도 명령이다.412/unknown은 자동 덮어쓰기하지 않는다.
-- **걸리는 시간:** [수신 기록](WS_FINAL_DELIVERY_20261021.md)의 노트북 loopback 측정만 있다. isolate별2초 캐시가 있고 실제 CDN 전파·운영 RTO는 미측정이다.
+- **걸리는 시간:** [10/25 본인 원격 관측](https://github.com/Pitcheezy/transition-models/blob/abddb240a698e91923d14ef413e36081a4af5315/docs/WS_NOTICE_TRIAL_20261025.md)은 PUT ACK 뒤 홈ON3.430초·OFF3.211초다(의도한2.1초 대기 포함). 최초 전환/전세계 CDN 전파 상한·운영RTO·이미 열린 Song 화면 갱신 지연은 미측정이다. 이전 loopback 수치는 별도 이력이다.
 - **범위:** 안내는 페이지·자료를503으로 막지만 업로드·관리경로는 살아 있다. 기존 final2/v4.4 수신 화면은 이미 열린 경우 안내와 과거 추천이 함께 남는 현상을 확인했다. 새v7/v4.5의 수정 보고는 수신 뒤 별도 검증해야 한다. 새로운 접속/새로고침은503 안내로 막혔다. 완전한 화면 철회가 필요하면 Song 화면 수정/판정이 필요하다.
 
 ```text

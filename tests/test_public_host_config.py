@@ -86,6 +86,174 @@ def set_value(config, keys, value):
     target[keys[-1]] = value
 
 
+def logs_observability():
+    """An explicit pinned-Wrangler configuration, without external log destinations."""
+    return {
+        "enabled": True,
+        "head_sampling_rate": 1,
+        "logs": {
+            "enabled": True,
+            "head_sampling_rate": 1,
+            "invocation_logs": True,
+            "persist": True,
+        },
+        "traces": {"enabled": False},
+        "issues": {"enabled": False},
+    }
+
+
+def test_observability_explicit_logs_survives_offline_config_check(candidate):
+    """Do not force operators to omit the setting that preserves existing hosted logs."""
+    root, config, _, write = candidate
+    config["observability"] = logs_observability()
+    write()
+    before = {p: p.read_bytes() for p in root.rglob("*") if p.is_file()}
+    report = check_release_config(root)
+    assert report["ok"] is True and report["deployable"] is False
+    assert "observability_config" in report["checks"]
+    assert "account_and_provider_configuration" in report["unverified"]
+    assert report["config_sha256"] == rb.digest(before[root / CONFIG_PATH])
+    assert {p: p.read_bytes() for p in before} == before
+
+
+@pytest.mark.parametrize("enabled", [False, True])
+def test_observability_minimal_explicit_policy_and_legacy_omission(candidate, enabled):
+    root, config, _, write = candidate
+    config["observability"] = {"enabled": enabled, "logs": {"enabled": enabled}}
+    write()
+    assert "observability_config" in check_release_config(root)["checks"]
+    del config["observability"]
+    write()
+    before = (root / CONFIG_PATH).read_bytes()
+    assert "observability_config" not in check_release_config(root)["checks"]
+    assert (root / CONFIG_PATH).read_bytes() == before
+
+
+@pytest.mark.parametrize("rate", [0, 0.25, 1.0])
+def test_observability_supports_explicit_bounded_sampling_without_policy_changes(candidate, rate):
+    root, config, _, write = candidate
+    config["observability"] = logs_observability()
+    config["observability"].update(head_sampling_rate=rate, redact_query_string=True)
+    config["observability"]["logs"].update(
+        head_sampling_rate=rate, invocation_logs=False, persist=False
+    )
+    config["observability"]["traces"].update(enabled=True, head_sampling_rate=rate, persist=False)
+    config["observability"]["issues"]["enabled"] = True
+    write()
+    before = (root / CONFIG_PATH).read_bytes()
+    assert check_release_config(root)["ok"] is True
+    assert (root / CONFIG_PATH).read_bytes() == before
+
+
+@pytest.mark.parametrize(
+    ("keys", "value", "code"),
+    [
+        ([], None, "object_required"),
+        ([], [], "object_required"),
+        ([], {}, "unsupported_or_missing_fields"),
+        ([], {"enabled": True}, "unsupported_or_missing_fields"),
+        ([], {"logs": {"enabled": True}}, "unsupported_or_missing_fields"),
+        (["logs"], None, "object_required"),
+        (["logs"], [], "object_required"),
+        (["logs"], {}, "unsupported_or_missing_fields"),
+        (["traces"], True, "object_required"),
+        (["issues"], [], "object_required"),
+        (["traces"], {}, "unsupported_or_missing_fields"),
+        (["issues"], {}, "unsupported_or_missing_fields"),
+        (["unknown"], True, "unsupported_or_missing_fields"),
+        (["logs", "unknown"], True, "unsupported_or_missing_fields"),
+        (["traces", "invocation_logs"], True, "unsupported_or_missing_fields"),
+        (["issues", "head_sampling_rate"], 1, "unsupported_or_missing_fields"),
+        (["logs", "destinations"], [], "unsupported_or_missing_fields"),
+        (["traces", "destinations"], ["private-sink"], "unsupported_or_missing_fields"),
+        (["destinations"], ["private-sink"], "unsupported_or_missing_fields"),
+        (["logs", "enabled"], False, "conflicting_observability_enabled"),
+        (["enabled"], False, "conflicting_observability_enabled"),
+    ],
+)
+def test_observability_rejects_implicit_unknown_and_conflicting_settings(
+    candidate, keys, value, code
+):
+    root, config, _, write = candidate
+    config["observability"] = logs_observability()
+    set_value(config, ["observability", *keys], value)
+    write()
+    with pytest.raises(ConfigError, match=code):
+        check_release_config(root)
+
+
+@pytest.mark.parametrize(
+    "keys",
+    [
+        ["enabled"],
+        ["redact_query_string"],
+        ["logs", "enabled"],
+        ["logs", "invocation_logs"],
+        ["logs", "persist"],
+        ["traces", "enabled"],
+        ["traces", "persist"],
+        ["issues", "enabled"],
+    ],
+)
+@pytest.mark.parametrize("value", [1, "false", None])
+def test_observability_flags_require_actual_booleans(candidate, keys, value):
+    root, config, _, write = candidate
+    config["observability"] = logs_observability()
+    set_value(config["observability"], keys, value)
+    write()
+    with pytest.raises(ConfigError, match="invalid_observability_boolean"):
+        check_release_config(root)
+
+
+@pytest.mark.parametrize("parent", [[], ["logs"], ["traces"]])
+@pytest.mark.parametrize(
+    "value",
+    [True, False, None, "1", -0.01, 1.01, float("nan"), float("inf"), -float("inf"), 10**500],
+)
+def test_observability_sampling_rejects_non_numeric_nonfinite_and_out_of_range(
+    candidate, parent, value
+):
+    root, config, _, write = candidate
+    config["observability"] = logs_observability()
+    set_value(config["observability"], [*parent, "head_sampling_rate"], value)
+    write()
+    with pytest.raises(ConfigError, match="invalid_observability_sampling_rate"):
+        check_release_config(root)
+
+
+def test_observability_cli_checks_exact_config_and_hides_rejected_destinations(candidate):
+    root, config, _, write = candidate
+    config["observability"] = logs_observability()
+    write()
+    command = [
+        sys.executable,
+        "-B",
+        "-S",
+        str(ROOT / "scripts/check_public_host_config.py"),
+        str(root),
+    ]
+    result = subprocess.run(command, capture_output=True, text=True)
+    assert result.returncode == 0, result.stdout + result.stderr
+    report = json.loads(result.stdout)
+    assert report["deployable"] is False
+    assert "observability_config" in report["checks"]
+    assert report["config_sha256"] == rb.digest((root / CONFIG_PATH).read_bytes())
+    config["observability"]["logs"]["destinations"] = ["private-observability-target"]
+    write()
+    before = {p: p.read_bytes() for p in root.rglob("*") if p.is_file()}
+    result = subprocess.run(command, capture_output=True, text=True)
+    assert result.returncode == 2
+    assert json.loads(result.stdout) == {
+        "ok": False,
+        "deployable": False,
+        "error": "unsupported_or_missing_fields",
+    }
+    assert result.stderr == ""
+    assert "private-observability-target" not in result.stdout
+    assert str(root) not in result.stdout
+    assert {p: p.read_bytes() for p in root.rglob("*") if p.is_file()} == before
+
+
 @pytest.mark.parametrize(
     ("keys", "value", "code"),
     [

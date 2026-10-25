@@ -1,0 +1,61 @@
+{
+  "schema": "pitcheezy-log-config-preparation-v1",
+  "date_kst": "2026-10-25",
+  "evidence_kind": "offline_synthetic",
+  "base_commit": "6262afb55cc11975ed9da5a11a77a0fc3c970d63",
+  "host_commit": "e9b362b75d6d4768c552740bfc6e0124872805e1",
+  "release_sha256": "fd55a869abb21a153d6fb37970b52884cc290eddb4fce5b5d0de09707b30ec8c",
+  "config_sha256": "c01b8eaffa1e8bcadc7681ad7edc17fc452190f1c552ad849360e81022612eca",
+  "client_settings_sha256": "0b806aded492aff9dc4e04a4e112da21725d216d00c93feafa958899caaab80b",
+  "dryrun_bundle_sha256": "3312fbff2dac2a22b32e474392ee7eb107663c79e9749781810a681e5ee07cfd",
+  "wrangler_version": "4.151.0",
+  "dryrun_exit_code": 0,
+  "remote_deploy_performed": false,
+  "config_check_ok": true,
+  "deployable": false,
+  "tests": {
+    "focused_passed": 82,
+    "related_passed": 287,
+    "related_seconds": 64.67,
+    "ruff": "pass",
+    "format": "pass",
+    "checklist_passed": 8
+  },
+  "review_status": "pass",
+  "remaining": [
+    "publisher_revocation_live_test",
+    "remote_runtime_provenance",
+    "partner_final_v7_v4_5_intake",
+    "joint_go"
+  ],
+  "exhibition_concurrency_target": [
+    30,
+    50
+  ],
+  "concurrency_test_performed": false,
+  "review": {
+    "model": "gpt-5.6-sol",
+    "target_commit": "e8b015ae97ae56301c9f5f1effdc9319f29f758b",
+    "scope": "fixed source, tests, contract and report; no cloud state",
+    "findings": "no important defects found",
+    "related_tests_passed": 287,
+    "related_test_seconds": 66.48,
+    "source_files": [
+      {
+        "path": "src/operations/host_config.py",
+        "git_blob_sha256": "07d44b715543c6f1ffe6ac8ccd3eeba22575c0eb908525ffef773a01c350ecf7",
+        "bytes": 17407
+      },
+      {
+        "path": "tests/test_public_host_config.py",
+        "git_blob_sha256": "f86d29304cf17e8230b94426a660abcf7d3af6c922dbfd2482140280f3b10e3a",
+        "bytes": 27369
+      },
+      {
+        "path": "ops/public-host/CONFIG_CHECK.md",
+        "git_blob_sha256": "2539858751ede8688ed73ffd058e63f8f33bea0063e21c5608a0fec74c412dc0",
+        "bytes": 8808
+      }
+    ]
+  }
+}

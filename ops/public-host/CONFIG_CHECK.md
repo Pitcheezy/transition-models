@@ -49,6 +49,50 @@ Python3.12 표준 라이브러리만 사용한다. 성공은 종료0, 입력 거
 
 선택적인 `PUBLISH_KEY_SCOPE`·`PUBLISH_EXPIRES_AT`는 동시에 지정해야 한다. [정확한 형식·옛 runtime 거부·한계](PUBLISH_SCOPE.md)를 따른다. 설정이 있으면 runtime 다섯 파일을 신뢰한 현재 체크아웃과 CRLF→LF 정규화 후 대조한다. 오프라인 검사는 실제 현재 시각의 만료 판단이나 배포/접속 승인이 아니다.
 
+## 관측 로그 설정
+
+`observability`는 선택 항목이다. 기존 생략 설정도 통과하지만, **로그 유지 확인을 뜻하지 않는다.**
+고정 Wrangler4.151.0은 배포 설정에서 이 항목을 생략하면 실제 Worker의 observability를
+`enabled:false`로 갱신한다(설치된 `wrangler-dist/cli.js`의 배포 후 설정 PATCH).
+현재 저장 로그를 유지하려면 실제 배포할 설정에 명시하고, 그 파일의 SHA로 검사해야 한다.
+검사 뒤 배포본에만 로그 설정을 덧붙이지 않는다.
+
+지원하는 부분집합은 다음과 같다. 이는 설정의 형식 검사이며 로그 수집 정책을 자동으로 선택하지 않는다.
+
+- 루트 `enabled`와 `logs.enabled`는 실제 JSON 불리언으로 반드시 지정하고 값이 같아야 한다.
+  생략에 따른 기본값이나 서로 충돌하는 override는 받지 않는다.
+- 루트 선택 필드: `head_sampling_rate`, 불리언 `redact_query_string`, `traces`, `issues`.
+- `logs` 선택 필드: `head_sampling_rate`, 불리언 `invocation_logs`·`persist`.
+- `traces`가 있으면 불리언 `enabled`가 필수이고 `head_sampling_rate`·불리언 `persist`는 선택이다.
+- `issues`가 있으면 불리언 `enabled`만 허용한다.
+- 샘플링은 0~1의 유한 JSON 숫자만 받는다. 문자열·불리언·NaN·무한대는 거부한다.
+  알 수 없는 키와 모든 `destinations` 설정은 거부하며 외부 로그 전송을 이 검사에 포함하지 않는다.
+
+Logs100%·호출 기록/저장 ON·Traces/Issues OFF를 명시하려면 다음 항목을 사용한다.
+이는 현재 기본값을 바꾸는 예제가 아니라 운영자가 선택한 후보에 붙일 설정 구조다.
+
+```json
+{
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1,
+    "logs": {
+      "enabled": true,
+      "head_sampling_rate": 1,
+      "invocation_logs": true,
+      "persist": true
+    },
+    "traces": {"enabled": false},
+    "issues": {"enabled": false}
+  }
+}
+```
+
+통과 결과에는 `observability_config`만 추가된다. `deployable:false`는 유지하며,
+실제 배포 후 활성 설정·요청 로그 저장 여부·비용/보관 정책은 따로 확인해야 한다.
+서버 로그는 우리 화면의 이용 기록/피드백 토글과 별도다. 로그 설정이 있더라도
+운영 코드에서 비밀·개인정보를 기록하지 않는지 검토하는 일을 대신하지 않는다.
+
 ## 지원 범위
 
 - JSONC/TOML이 아닌 엄격한 JSON만 지원한다. 중복 키·주석·각64KiB 초과를 거부한다.
