@@ -283,7 +283,15 @@ def evaluate(pilot: Path, out: Path, delivery_path: Path | None = None, params=m
     rows, comparisons = [], []
     for pid in meta["pitches"]:
         seq = sorted(sequences.get(pid, []), key=lambda o: o["frame_seconds"])
-        first_seen = seq[0]["frame_seconds"] if seq else None
+        planned = sorted(
+            float(Fraction(m["index"]) / FPS)
+            for m in meta["mapping"]
+            if m["pitch_id"] == pid and m["kind"] == "sequence"
+        )
+        first_seen = planned[0] if planned else None  # planned window start, not first answer
+        floor = next(
+            (x for x in planned[1:] if x - planned[0] + 1e-9 >= params["min_hold_seconds"]), None
+        )
         t = timing[pid]
         v0_row = v0.get(pid, {})
         d_info = delivery.get(pid) or {}
@@ -307,6 +315,9 @@ def evaluate(pilot: Path, out: Path, delivery_path: Path | None = None, params=m
             "unclear_reasons": summary["unclear_reasons"],
             "candidates": summary["candidates"],
             "decision_seconds": t["decision_seconds"],
+            "earliest_possible_emission_after_decision_s": round(floor - t["decision_seconds"], 3)
+            if floor is not None
+            else None,
             "delivery_start_seconds": summary["delivery_start_seconds"],
             "delivery_start_source": summary["delivery_start_source"],
             "release_seconds": t["release_seconds"],
@@ -349,8 +360,10 @@ def evaluate(pilot: Path, out: Path, delivery_path: Path | None = None, params=m
         "frames_note": "frames read are grid frames with index at or before the release-nearest index "
         "(every 2nd); the release-nearest frame itself is read only when it lies on that grid; the delivery "
         "sheets use every grid frame at or before the same index",
-        "window_note": "frames start at decision - 1.0 s, so the earliest possible emission is about "
-        "decision - 0.6 s; segment_start_after_window_start_s shows how close a hold is to that bound",
+        "window_note": "frames start at decision - 1.0 s; the earliest possible emission per pitch is the "
+        "first planned frame reached min_hold_seconds after the first planned frame "
+        "(earliest_possible_emission_after_decision_s, from params); segment_start_after_window_start_s is "
+        "measured from the first planned frame",
         "params": params,
         "params_sha256": mt.params_sha256(params),
         "delivery_start_annotation": delivery_meta,

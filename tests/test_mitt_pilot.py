@@ -179,6 +179,8 @@ def test_evaluate_end_to_end_on_a_tiny_pilot(tmp_path):
     assert row["frames_observed"] == 8 and row["usable_frames"] == 6
     cand = row["candidate_before_delivery_start"]
     assert cand is not None and cand["left_censored"] is True  # hold starts right after the cut
+    assert cand["segment_start_after_window_start_s"] == 0.4  # third planned frame
+    assert row["earliest_possible_emission_after_decision_s"] == -0.601  # 2 steps of 0.2 s >= 0.3 s
     assert row["conversion_before_delivery_start"] == "front_edge_units"
     assert row["same_frame_reread_status"] == "compared"
     assert out["delivery_start_annotation"]["annotator"] == "test"
