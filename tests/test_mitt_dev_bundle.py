@@ -50,7 +50,7 @@ def test_selection_is_ordered_from_the_first_key_and_keeps_exclusions_in_the_den
 def test_window_keeps_the_grid_plus_the_decision_and_release_frames():
     item = {"decision_seconds": 249.75, "release_seconds": 255.9}
     win = bundle.window(item)
-    assert win["decision_index"] == 14970  # the frame the frozen v0 reader read
+    assert win["decision_index"] == 14970  # the index v0 recorded; v0 read D+1 for this pitch
     assert win["first_index"] == bundle.frame_at(248.75)
     assert win["last_index"] == bundle.frame_at(256.4)
     grid = [i for i, r in win["roles"].items() if "grid" in r]

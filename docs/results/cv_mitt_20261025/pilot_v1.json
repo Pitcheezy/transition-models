@@ -9,6 +9,8 @@
   "reader": "Claude Code agent, model Fable 5.1 (the v0 747139 reader model), same 2x crop",
   "fixed_before_reading": true
  },
+ "frames_note": "frames read are grid frames with index at or before the release-nearest index (every 2nd); the release-nearest frame itself is read only when it lies on that grid; the delivery sheets use every grid frame at or before the same index",
+ "window_note": "frames start at decision - 1.0 s, so the earliest possible emission is about decision - 0.6 s; segment_start_after_window_start_s shows how close a hold is to that bound",
  "params": {
   "version": "dev-v1",
   "hold_radius_px": 8.0,
@@ -162,7 +164,8 @@
     ],
     "frames_in_segment": 3,
     "spread_px": 6.32,
-    "left_censored": false
+    "left_censored": false,
+    "segment_start_after_window_start_s": 4.004
    },
    "candidate_before_release": {
     "segment_start_seconds": 252.752,
@@ -175,7 +178,8 @@
     ],
     "frames_in_segment": 3,
     "spread_px": 6.32,
-    "left_censored": false
+    "left_censored": false,
+    "segment_start_after_window_start_s": 4.004
    },
    "conversion_before_delivery_start": "front_edge_units",
    "undeterminable_before_delivery_start": null,
@@ -231,7 +235,8 @@
     ],
     "frames_in_segment": 3,
     "spread_px": 5.83,
-    "left_censored": false
+    "left_censored": false,
+    "segment_start_after_window_start_s": 4.004
    },
    "candidate_before_release": {
     "segment_start_seconds": 275.509,
@@ -244,7 +249,8 @@
     ],
     "frames_in_segment": 3,
     "spread_px": 5.0,
-    "left_censored": false
+    "left_censored": false,
+    "segment_start_after_window_start_s": 5.005
    },
    "conversion_before_delivery_start": "front_edge_units",
    "undeterminable_before_delivery_start": null,
@@ -300,7 +306,8 @@
     ],
     "frames_in_segment": 3,
     "spread_px": 7.07,
-    "left_censored": false
+    "left_censored": false,
+    "segment_start_after_window_start_s": 4.004
    },
    "candidate_before_release": {
     "segment_start_seconds": 290.507,
@@ -313,7 +320,8 @@
     ],
     "frames_in_segment": 3,
     "spread_px": 7.07,
-    "left_censored": false
+    "left_censored": false,
+    "segment_start_after_window_start_s": 4.004
    },
    "conversion_before_delivery_start": "front_edge_units",
    "undeterminable_before_delivery_start": null,
@@ -369,7 +377,8 @@
     ],
     "frames_in_segment": 3,
     "spread_px": 6.08,
-    "left_censored": false
+    "left_censored": false,
+    "segment_start_after_window_start_s": 0.2
    },
    "candidate_before_release": {
     "segment_start_seconds": 326.943,
@@ -382,7 +391,8 @@
     ],
     "frames_in_segment": 3,
     "spread_px": 6.08,
-    "left_censored": false
+    "left_censored": false,
+    "segment_start_after_window_start_s": 0.2
    },
    "conversion_before_delivery_start": "front_edge_units",
    "undeterminable_before_delivery_start": null,
@@ -438,7 +448,8 @@
     ],
     "frames_in_segment": 3,
     "spread_px": 4.24,
-    "left_censored": false
+    "left_censored": false,
+    "segment_start_after_window_start_s": 4.605
    },
    "candidate_before_release": {
     "segment_start_seconds": 347.314,
@@ -451,7 +462,8 @@
     ],
     "frames_in_segment": 3,
     "spread_px": 8.0,
-    "left_censored": false
+    "left_censored": false,
+    "segment_start_after_window_start_s": 6.807
    },
    "conversion_before_delivery_start": "front_edge_units",
    "undeterminable_before_delivery_start": null,
@@ -508,7 +520,8 @@
     ],
     "frames_in_segment": 3,
     "spread_px": 5.1,
-    "left_censored": false
+    "left_censored": false,
+    "segment_start_after_window_start_s": 2.002
    },
    "conversion_before_delivery_start": "no_candidate",
    "undeterminable_before_delivery_start": "no_held_segment_reached_min_hold",
@@ -564,7 +577,8 @@
     ],
     "frames_in_segment": 3,
     "spread_px": 2.24,
-    "left_censored": true
+    "left_censored": true,
+    "segment_start_after_window_start_s": 1.001
    },
    "candidate_before_release": {
     "segment_start_seconds": 369.002,
@@ -577,7 +591,8 @@
     ],
     "frames_in_segment": 3,
     "spread_px": 2.24,
-    "left_censored": true
+    "left_censored": true,
+    "segment_start_after_window_start_s": 1.001
    },
    "conversion_before_delivery_start": "pixels_only",
    "undeterminable_before_delivery_start": null,
@@ -633,7 +648,8 @@
     ],
     "frames_in_segment": 3,
     "spread_px": 3.0,
-    "left_censored": true
+    "left_censored": true,
+    "segment_start_after_window_start_s": 1.001
    },
    "candidate_before_release": {
     "segment_start_seconds": 387.254,
@@ -646,7 +662,8 @@
     ],
     "frames_in_segment": 3,
     "spread_px": 3.0,
-    "left_censored": true
+    "left_censored": true,
+    "segment_start_after_window_start_s": 1.001
    },
    "conversion_before_delivery_start": "pixels_only",
    "undeterminable_before_delivery_start": null,
@@ -702,7 +719,8 @@
     ],
     "frames_in_segment": 3,
     "spread_px": 5.39,
-    "left_censored": false
+    "left_censored": false,
+    "segment_start_after_window_start_s": 1.802
    },
    "candidate_before_release": {
     "segment_start_seconds": 407.807,
@@ -715,7 +733,8 @@
     ],
     "frames_in_segment": 3,
     "spread_px": 5.39,
-    "left_censored": false
+    "left_censored": false,
+    "segment_start_after_window_start_s": 1.802
    },
    "conversion_before_delivery_start": "front_edge_units",
    "undeterminable_before_delivery_start": null,
@@ -772,7 +791,8 @@
     ],
     "frames_in_segment": 3,
     "spread_px": 6.08,
-    "left_censored": false
+    "left_censored": false,
+    "segment_start_after_window_start_s": 4.404
    },
    "candidate_before_release": {
     "segment_start_seconds": 450.15,
@@ -785,7 +805,8 @@
     ],
     "frames_in_segment": 3,
     "spread_px": 6.08,
-    "left_censored": false
+    "left_censored": false,
+    "segment_start_after_window_start_s": 4.404
    },
    "conversion_before_delivery_start": "front_edge_units",
    "undeterminable_before_delivery_start": null,

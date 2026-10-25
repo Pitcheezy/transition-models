@@ -1,7 +1,7 @@
 """CV-34: offline human review of short pre-pitch sequences (development schema, no AI points).
 
 A reviewer steps or plays one pitch's grid frames (10 fps) from near the window start up to the
-release-nearest frame and records, by hand:
+release-nearest index (grid frames at or before it) and records, by hand:
 
 * delivery start: the first frame where the pitcher's lead leg starts to lift (or none + reason);
 * presentation: ``held_seen`` with the frames where the catcher holds the mitt still in one place,

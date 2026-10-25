@@ -2,7 +2,8 @@
 
 Pre-registered rule (CV-33 acceptance criteria, fixed before any pilot frame was read): the first
 10 extracted pitches of ``bundle_v1`` in pitch order; every second grid frame (about 5 fps) from
-the window start through the release-nearest frame; plus, for the same pitches, the image the
+the window start up to the release-nearest index (grid frames at or before it, so the last read
+frame can be up to about 0.2 s earlier); plus, for the same pitches, the image the
 frozen v0 reader actually read (``v0_read_frames``) for a same-frame re-read.
 
 Stateless reading: a batch never holds two frames of the same pitch, files carry opaque ids, and
@@ -282,6 +283,7 @@ def evaluate(pilot: Path, out: Path, delivery_path: Path | None = None, params=m
     rows, comparisons = [], []
     for pid in meta["pitches"]:
         seq = sorted(sequences.get(pid, []), key=lambda o: o["frame_seconds"])
+        first_seen = seq[0]["frame_seconds"] if seq else None
         t = timing[pid]
         v0_row = v0.get(pid, {})
         d_info = delivery.get(pid) or {}
@@ -308,8 +310,8 @@ def evaluate(pilot: Path, out: Path, delivery_path: Path | None = None, params=m
             "delivery_start_seconds": summary["delivery_start_seconds"],
             "delivery_start_source": summary["delivery_start_source"],
             "release_seconds": t["release_seconds"],
-            "candidate_before_delivery_start": _brief(cand_d, t),
-            "candidate_before_release": _brief(cand_r, t),
+            "candidate_before_delivery_start": _brief(cand_d, t, first_seen),
+            "candidate_before_release": _brief(cand_r, t, first_seen),
             "conversion_before_delivery_start": summary["conversion_before_delivery_start"][
                 "status"
             ],
@@ -344,6 +346,11 @@ def evaluate(pilot: Path, out: Path, delivery_path: Path | None = None, params=m
         "scope": "development pilot on 747139 (development data); AI reader outputs, not human ground truth; "
         "local offline replay, not a live test",
         "rule": RULE,
+        "frames_note": "frames read are grid frames with index at or before the release-nearest index "
+        "(every 2nd); the release-nearest frame itself is read only when it lies on that grid; the delivery "
+        "sheets use every grid frame at or before the same index",
+        "window_note": "frames start at decision - 1.0 s, so the earliest possible emission is about "
+        "decision - 0.6 s; segment_start_after_window_start_s shows how close a hold is to that bound",
         "params": params,
         "params_sha256": mt.params_sha256(params),
         "delivery_start_annotation": delivery_meta,
@@ -562,7 +569,7 @@ def sensitivity(sequences, pitches, timing, delivery):
     return out
 
 
-def _brief(candidate, timing):
+def _brief(candidate, timing, window_start=None):
     if not candidate:
         return None
     return {
@@ -578,6 +585,11 @@ def _brief(candidate, timing):
         "frames_in_segment": candidate["frames_in_segment"],
         "spread_px": candidate["spread_px"],
         "left_censored": candidate.get("left_censored"),
+        "segment_start_after_window_start_s": round(
+            candidate["segment_start_seconds"] - window_start, 3
+        )
+        if window_start is not None
+        else None,
     }
 
 

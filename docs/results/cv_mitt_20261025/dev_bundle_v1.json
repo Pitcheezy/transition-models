@@ -18,7 +18,8 @@
   ],
   "fixed_before_reading": true
  },
- "rule_clarification": "the 'decision' role is the index v0 recorded (round rule); v0 actually read the first frame at or after the decision time, which is one frame later for 19 of 39 pitches (see v0_read_image_check); that image is kept privately in v0_read_frames/",
+ "rule_wording_note": "rule is copied as recorded at extraction; its first always_include item names the frame at the index v0 recorded, not necessarily the image v0 read",
+ "rule_clarification": "the 'decision' role is the index v0 recorded (round rule); v0 read the first frame at or after the decision time, which is one frame later for 19 of 39 checked pitches; for 17 of those that frame is not in the bundle frame list (on the grid only for 747139:6:4, 747139:8:3); the read images are kept privately in v0_read_frames/",
  "source": {
   "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
   "duration_seconds": 9340.748083,

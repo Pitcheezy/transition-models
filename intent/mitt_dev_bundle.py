@@ -496,6 +496,29 @@ def check_v0_frames(bundle: Path, reference_dir: Path, ffmpeg: str):
     return report
 
 
+def rule_clarification(bundle: Path, manifest):
+    """What the 'decision' role holds, derived from the v0 read check when it exists."""
+    check_path = bundle / "v0_read_check.json"
+    if not check_path.is_file():
+        return "the 'decision' role is the index v0 recorded (round rule); which image v0 read is not checked"
+    check = read_json(check_path)
+    frames = {
+        p["pitch_id"]: {f["index"] for f in p["frames"]}
+        for p in manifest["pitches"]
+        if p.get("frames")
+    }
+    later = [r for r in check["rows"] if r.get("pixel_identical_offsets") == [1]]
+    on_grid = sorted(
+        r["pitch_id"] for r in later if r["recorded_index"] + 1 in frames.get(r["pitch_id"], ())
+    )
+    return (
+        f"the 'decision' role is the index v0 recorded (round rule); v0 read the first frame at or after the "
+        f"decision time, which is one frame later for {len(later)} of {check['checked']} checked pitches; for "
+        f"{len(later) - len(on_grid)} of those that frame is not in the bundle frame list (on the grid only for "
+        f"{', '.join(on_grid) or 'none'}); the read images are kept privately in v0_read_frames/"
+    )
+
+
 def summarize(bundle: Path, out: Path):
     manifest_path = bundle / "manifest.json"
     manifest = read_json(manifest_path)
@@ -531,9 +554,9 @@ def summarize(bundle: Path, out: Path):
         "schema": SCHEMA + "-public-summary",
         "scope": "development data (747139 was already development data in M3); not an independent evaluation",
         "rule": manifest["rule"],
-        "rule_clarification": "the 'decision' role is the index v0 recorded (round rule); v0 actually read "
-        "the first frame at or after the decision time, which is one frame later for 19 of 39 pitches "
-        "(see v0_read_image_check); that image is kept privately in v0_read_frames/",
+        "rule_wording_note": "rule is copied as recorded at extraction; its first always_include item "
+        "names the frame at the index v0 recorded, not necessarily the image v0 read",
+        "rule_clarification": rule_clarification(bundle, manifest),
         "source": {k: v for k, v in manifest["source"].items()},
         "ffmpeg_version": manifest["ffmpeg_version"],
         "manifest_sha256": sha256_file(manifest_path),
