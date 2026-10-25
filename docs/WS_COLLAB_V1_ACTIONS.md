@@ -3,10 +3,10 @@
 [규약](COLLABORATION_PROTOCOL.md)은 사용자 채택 완료. 현재 작업·선점·병합 상태는
 [CHECKLIST 상단](../CHECKLIST.md)과 [우리 board](https://github.com/Pitcheezy/transition-models/issues/3),
 운영 조건은 [현재 인계](WS_OPERATIONS_HANDOFF.md)를 따른다.
-현재 정리 기준은 우리 최신 main `24fea70f12ba53d3503823c90b3b06cec045a277`,
+현재 정리 기준은 PR65를 병합한 우리 main `e12ac008bebc55fcfc62dea9fa0b36eddb1571d8`,
 [PR64 고정 기록](https://github.com/Pitcheezy/transition-models/blob/abddb240a698e91923d14ef413e36081a4af5315/docs/WS_NOTICE_TRIAL_20261025.md)(`abddb24`)과
-[PR65 로컬 준비](https://github.com/Pitcheezy/transition-models/pull/65)(`757409f`)다.
-PR63/64/65는 조회 시 모두 draft/open·main 미병합이다. 문서·코드 커밋과 실제 서버 배포 버전은 별개다.
+[PR65 로컬 준비](https://github.com/Pitcheezy/transition-models/pull/65)(최종 head `059c8cc`)다.
+PR65는 사용자 승인·고정 head 검토·CI8/8 성공 뒤 병합했다. PR63/64는 main 미병합이며 PR63은 최신 main 통합·문서 충돌 해소와 관련295검사를 통과했고 새 head CI 확인 대상이다. 문서·코드 커밋과 실제 서버 배포 버전은 별개다.
 아래10/19 및 이전 절은 당시 이력이다.
 
 ## 지금 우선할 협업 작업 — 2026-10-25
