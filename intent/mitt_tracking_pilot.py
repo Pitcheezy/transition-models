@@ -12,6 +12,7 @@ import hashlib
 import io
 import json
 import math
+import os
 import platform
 import re
 import time
@@ -44,6 +45,38 @@ def distribution(values):
 def synchronize(device):
     if device == "cuda":
         torch.cuda.synchronize()
+
+
+def saved_pilot_provenance(pilot, preserved):
+    """Bind the consumed saved answers without publishing machine-local input paths."""
+    answers = {}
+    for path, digest in preserved.items():
+        path = Path(path)
+        if path.parent == pilot / "answers" and path.match("b*.json"):
+            answers[f"answers/{path.name}"] = digest
+    encoded = json.dumps(answers, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    return {
+        "pilot_private_sha256": preserved[str(pilot / "pilot_private.json")],
+        "answer_files": len(answers),
+        "answers_sha256": dict(sorted(answers.items())),
+        "answers_manifest_sha256": hashlib.sha256(encoded).hexdigest(),
+        "answers_manifest_encoding": "UTF-8 sorted-key compact JSON of answers_sha256",
+    }
+
+
+def environment_info(devices):
+    """Describe the actual runtime without hostnames or private filesystem paths."""
+    return {
+        "python": platform.python_version(),
+        "torch": torch.__version__,
+        "cuda_runtime": torch.version.cuda,
+        "cpu_model": platform.processor() or None,
+        "cpu_logical_cores": os.cpu_count(),
+        "cpu_threads": torch.get_num_threads(),
+        "cpu_interop_threads": torch.get_num_interop_threads(),
+        "tf32": False,
+        "gpu": torch.cuda.get_device_name(0) if "cuda" in devices else None,
+    }
 
 
 def benchmark(device):
@@ -155,6 +188,7 @@ def load_inputs(bundle, pilot):
 
 def replay(selected, seeds, observations, device):
     records, times, active, decode_times, init_times = [], [], [], [], []
+    active_total, seed_total, idle_total = [], [], []
     tracker, current_pitch = None, None
     for pitch, frame in selected:
         if pitch != current_pitch:
@@ -182,35 +216,77 @@ def replay(selected, seeds, observations, device):
         synchronize(device)
         ended = time.perf_counter()
         elapsed = (ended - decoded) * 1000
+        total_elapsed = (ended - total_start) * 1000
         decode_times.append((decoded - total_start) * 1000)
-        times.append((ended - total_start) * 1000)
+        times.append(total_elapsed)
         if prior_state == "tracking":
             active.append(elapsed)
-        if seed_point is not None:
+            active_total.append(total_elapsed)
+        elif seed_point is not None:
             init_times.append(elapsed)
+            seed_total.append(total_elapsed)
+        else:
+            idle_total.append(total_elapsed)
         obs = observations.get((pitch, frame["index"]))
         row.update(
+            prior_state=prior_state,
             source_sha256=frame["sha256"],
             source_pts_ticks=frame["index"] * 1001,
             source_time_base="1/60000",
             crop_origin=list(CROP[:2]),
             raw_ai_point_px=obs["mitt_center_px"] if obs else None,
+            ai_unusable_reason=mitt_temporal.unusable_reason(obs)
+            if obs is not None
+            else "no_saved_observation",
             seed_source="saved_AI_first_usable_sequence_point" if seed_point else None,
         )
         records.append(row)
-    distances = [
-        math.dist(r["point_px"], r["raw_ai_point_px"])
+    pairs = [
+        r
         for r in records
         if r["point_px"] is not None and r["raw_ai_point_px"] is not None and not r["seed_source"]
+    ]
+    distances = [math.dist(r["point_px"], r["raw_ai_point_px"]) for r in pairs]
+    usable_distances = [
+        math.dist(r["point_px"], r["raw_ai_point_px"])
+        for r in pairs
+        if r["ai_unusable_reason"] is None
+    ]
+    unusable_distances = [
+        math.dist(r["point_px"], r["raw_ai_point_px"])
+        for r in pairs
+        if r["ai_unusable_reason"] is not None
     ]
     return records, {
         "states": dict(Counter(r["state"] for r in records)),
         "reasons": dict(Counter(r["reason"] for r in records)),
+        "reason_counts_scope": "all rows, including persistent lost state; not failure events",
+        "first_loss_reasons": dict(
+            Counter(
+                r["reason"]
+                for r in records
+                if r["prior_state"] == "tracking" and r["state"] == "lost"
+            )
+        ),
+        "seed_rejection_reasons": dict(
+            Counter(r["reason"] for r in records if r["seed_source"] and r["state"] == "lost")
+        ),
+        "post_loss_rows": sum(r["prior_state"] == "lost" for r in records),
+        "post_loss_matching": False,
         "active_attempt_ms": distribution(active),
         "seed_ms": distribution(init_times),
         "jpeg_read_hash_decode_crop_ms": distribution(decode_times),
         "read_to_host_result_ms": distribution(times),
+        "read_to_host_result_scope": "all rows; active attempts, seeds and idle reported separately",
+        "active_read_to_host_result_ms": distribution(active_total),
+        "seed_read_to_host_result_ms": distribution(seed_total),
+        "idle_read_to_host_result_ms": distribution(idle_total),
         "same_frame_AI_disagreement_px_not_accuracy": distribution(distances),
+        "same_frame_usable_AI_disagreement_px_not_accuracy": distribution(usable_distances),
+        "same_frame_unusable_AI_disagreement_px_not_accuracy": distribution(unusable_distances),
+        "unusable_AI_pair_reasons": dict(
+            Counter(r["ai_unusable_reason"] for r in pairs if r["ai_unusable_reason"] is not None)
+        ),
     }
 
 
@@ -224,29 +300,24 @@ def run(bundle, pilot, out, devices):
     torch.backends.cudnn.deterministic = True
     selected, seeds, observations, preserved, source_sha = load_inputs(bundle, pilot)
     report = {
-        "schema": "pitcheezy-mitt-tracking-pilot-dev-v1",
+        "schema": "pitcheezy-mitt-tracking-pilot-dev-v2",
         "evidence_kind": "offline exposed development; no new model or human calls",
         "params": asdict(TrackParams()),
         "params_sha256": TrackParams().digest(),
         "crop": list(CROP),
         "source_manifest_sha256": source_sha,
+        "saved_pilot_inputs": saved_pilot_provenance(pilot, preserved),
         "pitches": len(seeds),
         "frames": len(selected),
         "sequence_AI_observations": len(observations),
         "seed_rule": "first usable saved sequence AI point per pitch; no retries or automatic reseeding",
-        "environment": {
-            "python": platform.python_version(),
-            "torch": torch.__version__,
-            "cuda_runtime": torch.version.cuda,
-            "cpu_threads": 4,
-            "tf32": False,
-            "gpu": torch.cuda.get_device_name(0) if "cuda" in devices else None,
-        },
+        "environment": environment_info(devices),
         "devices": {},
         "limits": [
             "tracking is patch continuity, not verified mitt identity",
             "no independent accuracy or live latency",
             "no automatic shot classifier; appearance discontinuity heuristic only",
+            "AI usability separates comparison subsets; neither subset is independent truth",
             "JPEG cache/order can affect decode timings; synthetic sustained tracking reported separately",
         ],
     }
