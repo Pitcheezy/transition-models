@@ -60,13 +60,45 @@ test("a slow historical image cannot leak after a backward seek", async () => {
   const earlier = h.controller.show(2);
   h.calls[0].resolve({ id: "lost-current" }); await flush();
   assert.equal(h.calls[1].frame.frame_index, 101);
+  assert.equal(h.last().historyPending, true);
   const later = h.controller.seek(0);
+  assert.equal(h.last().historyPending, false);
   assert.equal(h.last().history, null);
   assert.equal(h.last().image, null);
   h.calls[2].resolve({ id: "before-event" }); await later;
   h.calls[1].resolve({ id: "history" }); await earlier;
   assert.equal(h.last().image.id, "before-event");
   assert.equal(h.last().history, null);
+  assert.equal(h.last().historyPending, false);
+});
+
+test("an existing historical event stays pending until its thumbnail finishes", async () => {
+  const h = harness({ deferred: true });
+  const pending = h.controller.show(2);
+  assert.equal(h.last().historyPending, false);
+  h.calls[0].resolve({ id: "current" }); await flush();
+  const loadedCurrent = h.views.filter(view => view.image);
+  assert.equal(loadedCurrent.length, 1);
+  assert.equal(loadedCurrent[0].historyPending, true);
+  assert.equal(loadedCurrent[0].history, null);
+  h.calls[1].resolve({ id: "history" }); await pending;
+  assert.equal(h.last().historyPending, false);
+  assert.equal(h.last().history.image.id, "history");
+});
+
+test("switching pitch clears a pending thumbnail and ignores its late failure", async () => {
+  const h = harness({ deferred: true });
+  const previous = h.controller.show(2);
+  h.calls[0].resolve({ id: "current" }); await flush();
+  assert.equal(h.last().historyPending, true);
+  const next = h.controller.switchPitch(1);
+  assert.equal(h.last().historyPending, false);
+  h.calls[2].resolve({ id: "next-pitch" }); await next;
+  h.calls[1].reject(new Error("late old history failure")); await previous;
+  assert.equal(h.last().image.id, "next-pitch");
+  assert.equal(h.last().historyPending, false);
+  assert.equal(h.last().history, null);
+  assert.equal(h.last().historyError, undefined);
 });
 
 test("current-image failure clears both panels and stops playback", async () => {
@@ -83,6 +115,7 @@ test("current-image failure clears both panels and stops playback", async () => 
   assert.equal(h.last().playing, false);
   assert.equal(h.last().image, null);
   assert.equal(h.last().history, null);
+  assert.equal(h.last().historyPending, false);
   assert.ok(h.last().error);
 });
 
@@ -90,10 +123,12 @@ test("a failed historical thumbnail cannot keep an older thumbnail", async () =>
   const h = harness({ deferred: true });
   const pending = h.controller.show(2);
   h.calls[0].resolve({ id: "current" }); await flush();
+  assert.equal(h.last().historyPending, true);
   h.calls[1].reject(new Error("missing history")); await pending;
   assert.equal(h.last().image.id, "current");
   assert.equal(h.last().history, null);
   assert.equal(h.last().historyError, true);
+  assert.equal(h.last().historyPending, false);
 });
 
 test("lost rows have no current marker while history stays on its own frame", async () => {

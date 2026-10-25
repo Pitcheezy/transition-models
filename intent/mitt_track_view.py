@@ -170,7 +170,7 @@ def build(
             or track["frame_index"] != index
             or not _finite(seconds)
             or abs(seconds - index * 1001 / 60000) > 1e-9
-            or abs(track["frame_seconds"] - seconds) > 1e-9
+            or track["frame_seconds"] != seconds
             or track["source_pts_ticks"] != index * 1001
             or track["source_time_base"] != "1/60000"
             or track["source_sha256"] != frame["sha256"]
@@ -179,6 +179,15 @@ def build(
         point = track["point_px"]
         if point is not None and not (0 <= point[0] < 1280 and 0 <= point[1] < 720):
             raise ValueError("tracked point outside source image")
+        current = result["current_candidate"]
+        if current is not None and (
+            result["pitch_id"] != pitch_id
+            or result["selection_state"] != "stationary"
+            or current["pitch_id"] != pitch_id
+            or current["frame_index"] != index
+            or current["frame_seconds"] != seconds
+        ):
+            raise ValueError("current candidate does not belong to this exact frame")
         image_path = (bundle / f"pa{pa}_p{pn}" / f"frame_{index:06d}.jpg").resolve()
         if not image_path.is_relative_to(bundle):
             raise ValueError("image escapes bundle")

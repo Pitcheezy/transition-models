@@ -19,7 +19,7 @@
       if (data.schema !== "pitcheezy-track-frame-view-dev-v1" || !data.pitches?.length) throw new Error("지원하지 않는 자료 형식입니다.");
       Object.assign(this, { data, loadImage, onChange, setTimer, clearTimer });
       this.pitchIndex = 0; this.frameIndex = 0; this.generation = 0; this.timer = null;
-      this.playing = false; this.view = { loading: true, image: null, history: null, error: null };
+      this.playing = false; this.view = { loading: true, image: null, history: null, historyPending: false, error: null };
     }
     get pitch() { return this.data.pitches[this.pitchIndex]; }
     get frame() { return this.pitch.frames[this.frameIndex]; }
@@ -33,28 +33,28 @@
       this.cancelTimer();
       this.frameIndex = Math.max(0, Math.min(index, this.pitch.frames.length - 1));
       const generation = ++this.generation, frame = this.frame, pitch = this.pitch;
-      this.view = { loading: true, image: null, history: null, error: null };
+      this.view = { loading: true, image: null, history: null, historyPending: false, error: null };
       this.emit();
       try {
         const image = await this.loadImage(frame);
         if (generation !== this.generation) return;
-        this.view = { loading: false, image, history: null, error: null };
-        this.emit(); this.schedule();
         const history = historyFor(pitch, frame);
+        this.view = { loading: false, image, history: null, historyPending: !!history, error: null };
+        this.emit(); this.schedule();
         if (!history) return;
         try {
           const historicalImage = history.frame === frame ? image : await this.loadImage(history.frame);
           if (generation !== this.generation) return;
-          this.view = { ...this.view, history: { ...history, image: historicalImage } };
+          this.view = { ...this.view, history: { ...history, image: historicalImage }, historyPending: false };
           this.emit();
         } catch (_) {
           if (generation !== this.generation) return;
-          this.view = { ...this.view, history: null, historyError: true }; this.emit();
+          this.view = { ...this.view, history: null, historyPending: false, historyError: true }; this.emit();
         }
       } catch (_) {
         if (generation !== this.generation) return;
         this.playing = false; this.cancelTimer();
-        this.view = { loading: false, image: null, history: null, error: "이미지를 불러오지 못했습니다. 현재·과거 표시를 비웠습니다." };
+        this.view = { loading: false, image: null, history: null, historyPending: false, error: "이미지를 불러오지 못했습니다. 현재·과거 표시를 비웠습니다." };
         this.emit();
       }
     }
@@ -149,7 +149,7 @@
         get("frame-time").textContent = `${frameIndex + 1} / ${pitch.frames.length}장 · 원본 번호 ${frame.frame_index} · 자료 시각 ${frame.frame_seconds.toFixed(3)}초`;
         get("frame-status").textContent = view.loading ? "이미지 준비 중 · 표시 비움" : view.error || "현재 저장 프레임";
         get("track-state").textContent = "—"; get("candidate-state").textContent = "—"; get("reason").textContent = "—";
-        get("history-status").textContent = view.loading ? "현재 이미지 준비 중" : view.error ? "표시 없음" : view.historyError ? "기록 이미지를 불러오지 못했습니다." : "이 시점까지 표시할 발생 기록 없음";
+        get("history-status").textContent = view.loading ? "현재 이미지 준비 중" : view.error ? "표시 없음" : view.historyPending ? "기록 이미지 준비 중" : view.historyError ? "기록 이미지를 불러오지 못했습니다." : "이 시점까지 표시할 발생 기록 없음";
         if (!image) return;
         const points = visiblePoints(frame);
         if (points.track) mark(context, points.track, "#4ee4ef", 5, true);

@@ -341,7 +341,9 @@ def test_incomplete_pa_is_not_presented_as_a_whole_pa(pack_inputs):
     assert_rejected(args)
 
 
-@pytest.mark.parametrize("where", ["manifest_time", "record_time", "ticks", "time_base"])
+@pytest.mark.parametrize(
+    "where", ["manifest_time", "record_time", "record_subnanosecond", "ticks", "time_base"]
+)
 def test_declared_time_mismatch_is_rejected_without_claiming_decoded_pts(pack_inputs, where):
     args = pack_inputs
     if where == "manifest_time":
@@ -352,6 +354,8 @@ def test_declared_time_mismatch_is_rejected_without_claiming_decoded_pts(pack_in
         rows = read(args["tracking_records"])
         if where == "record_time":
             rows[1]["frame_seconds"] += 0.001
+        elif where == "record_subnanosecond":
+            rows[3]["frame_seconds"] += 1e-10
         elif where == "ticks":
             rows[1]["source_pts_ticks"] += 1
         else:
@@ -366,6 +370,29 @@ def test_changed_jpeg_bytes_are_rejected(pack_inputs):
     image = next(args["bundle"].glob("pa3_p1/frame_*.jpg"))
     image.write_bytes(image.read_bytes() + b"changed")
     assert_rejected(args)
+
+
+def test_persisting_current_candidate_matches_exact_display_frame_and_keeps_first_event(
+    pack_inputs,
+):
+    args = pack_inputs
+    rows = read(args["tracking_records"])
+    rows[4].update(state="tracking", reason="patch_continuity", point_px=[600, 300])
+    save(args["tracking_records"], rows)
+    reseal(args)
+    build(**args)
+    frames = read(args["out"] / "payload.json")["pitches"][0]["frames"]
+    assert frames[3]["selection"]["current_candidate"] is not None
+    assert frames[4]["selection"]["current_candidate"] is not None
+    for frame in frames[3:5]:
+        selection = frame["selection"]
+        current = selection["current_candidate"]
+        assert selection["selection_state"] == "stationary"
+        assert current["pitch_id"] == selection["pitch_id"] == "747139:3:1"
+        assert current["frame_index"] == frame["frame_index"]
+        assert current["frame_seconds"] == frame["frame_seconds"]
+    assert frames[3]["selection"]["event"] == frames[4]["selection"]["last_historical_candidate"]
+    assert frames[4]["selection"]["event"] is None
 
 
 def test_rebound_wrong_resolution_is_still_rejected(pack_inputs):
