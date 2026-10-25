@@ -1,5 +1,7 @@
 # CV-37 — 시간순 국소 추적 개발 (2026-10-26)
 
+최신 교차 검토·수리·분모 분리 결과는 [후속 기록](CV_TRACKING_CROSS_REVIEW_20261026.md)을 따른다. 아래401/400/429와 v1 측정은 당시 이력이다. v3는 활성 읽기→결과12.82ms(CPU)·11.23ms(CUDA)를 별도로 기록하며, 전체625행 중앙값을 활성 추적 비용으로 해석하지 않는다.
+
 사용자는 CV 고도화의 즉시 착수와 내부 일정 단축을 요청했다. [착수 전 합격 기준·고정 후보](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6401534435). 기준 PR69 `c41eb74782d585cce47d2f1d99b4417ea2f4623e`, 작업 `codex/cv-track-pilot-1026`. PR67/69 연구에 의존하며 main 병합·운영 배포·Song 코드 변경은 포함하지 않는다. 원래 Claude 폴더/자료는 읽기만 한다.
 
 ## 목표와 한계

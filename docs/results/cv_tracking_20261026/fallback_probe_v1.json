@@ -1,0 +1,23 @@
+{
+  "schema": "pitcheezy-cv37-fallback-probe-v1",
+  "source_commit": "611d0c669e7529a5fec688f222408d2ab399a5de",
+  "executed_by": "Codex delegated local verification agent; not Claude",
+  "torch": "2.6.0+cu124",
+  "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU",
+  "exit_code": 0,
+  "finding": "Fable residual P2: cuDNN-disabled convolution may inherit matmul TF32",
+  "result": "not reproduced in this fixed fixture and runtime; no speculative code change",
+  "combinations": [
+    {"cudnn_enabled": false, "matmul_tf32": false, "autocast": false, "state": "tracking", "reason": "patch_continuity", "ncc": 0.9999945163726807, "point": [60, 60]},
+    {"cudnn_enabled": false, "matmul_tf32": false, "autocast": true, "state": "tracking", "reason": "patch_continuity", "ncc": 0.9999945163726807, "point": [60, 60]},
+    {"cudnn_enabled": false, "matmul_tf32": true, "autocast": false, "state": "tracking", "reason": "patch_continuity", "ncc": 0.9999945163726807, "point": [60, 60]},
+    {"cudnn_enabled": false, "matmul_tf32": true, "autocast": true, "state": "tracking", "reason": "patch_continuity", "ncc": 0.9999945163726807, "point": [60, 60]}
+  ],
+  "reproduction_command": "python -B - (feed reproduction_python on stdin from repository root)",
+  "reproduction_python": "import json, numpy as np, torch\nfrom intent.mitt_tracking import PatchTracker, TrackParams\nrng=np.random.default_rng(17)\npatch=rng.integers(40,200,(21,21),dtype=np.uint8)\nimage=np.full((140,160),30,np.uint8)\nimage[50:71,50:71]=patch\nold_cudnn=torch.backends.cudnn.enabled\nold_tf32=torch.backends.cuda.matmul.allow_tf32\nout=[]\ntry:\n torch.backends.cudnn.enabled=False\n for allow in (False,True):\n  torch.backends.cuda.matmul.allow_tf32=allow\n  for autocast in (False,True):\n   tracker=PatchTracker(device='cuda',params=TrackParams(min_ncc=0.999985))\n   with torch.autocast('cuda',enabled=autocast):\n    tracker.step(image,pitch_id='p',frame_index=0,frame_seconds=0.,seed=[60,60])\n    row=tracker.step(image,pitch_id='p',frame_index=1,frame_seconds=.1)\n   out.append({'cudnn_enabled':False,'matmul_tf32':allow,'autocast':autocast,'state':row['state'],'reason':row['reason'],'ncc':row['quality'].get('ncc'),'point':row['point_px']})\nfinally:\n torch.backends.cudnn.enabled=old_cudnn\n torch.backends.cuda.matmul.allow_tf32=old_tf32\nprint(json.dumps({'torch':torch.__version__,'gpu':torch.cuda.get_device_name(0),'combinations':out},indent=2))\n",
+  "limits": [
+    "one fixture and one pinned runtime; not a general CUDA fallback safety proof",
+    "Fable residual retained as unconfirmed, not declared fixed",
+    "no new source media, human labels, deployment or teammate changes"
+  ]
+}

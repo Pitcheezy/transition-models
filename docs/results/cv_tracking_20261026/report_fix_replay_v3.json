@@ -1,0 +1,32 @@
+{
+  "schema": "pitcheezy-cv37-report-fix-replay-v3",
+  "source_commit": "611d0c669e7529a5fec688f222408d2ab399a5de",
+  "source_sha256": {
+    "intent/mitt_tracking.py": "3b2fe1a0e9040287394f200c58224297767bf0fbc6d1012c68faebea5ecaeeda",
+    "intent/mitt_tracking_pilot.py": "70149ce818b1281320daf8467724d0cee02011d4ca552c074807f1a11177c241",
+    "tests/test_mitt_tracking.py": "6f3e4d384f9ab4893e5915f2a21a862b4f52aba5345f0aabde19e736805e1fa2",
+    "tests/test_mitt_tracking_pilot.py": "8172d1b7cea7bcd401633cb0fd1f68098f24da991c0a046eabd64da09fcd3f6e"
+  },
+  "report_sha256": "6979e4b921afe2f978fd83e89755ec65fea9e74db6a1c794606fa942e80002b3",
+  "old_columns_equal_to_v2_by_device": {
+    "cpu": true,
+    "cuda": true
+  },
+  "original_input_sha_preserved": 667,
+  "frames_per_device": 625,
+  "params_sha256": "106fa8bb51b83f89c3c7c54f84342cae9e4bf4f08e1fe846389e316b831c4c7b",
+  "work_partition": {
+    "active": 123,
+    "seed": 10,
+    "idle": 492
+  },
+  "first_loss_events": 10,
+  "persistent_post_loss_rows": 410,
+  "command": "python -B -m intent.mitt_tracking_pilot --bundle <saved-bundle> --pilot <saved-pilot> --out outputs/cv_mitt_tracking_20261026_v3 --devices cpu cuda",
+  "limits": [
+    "exposed development only; no new vision or human labels",
+    "raw AI distances are not accuracy",
+    "CPU then CUDA with cache/order effects; no live latency measurement",
+    "record schema added prior_state and ai_unusable_reason; old fields preserved"
+  ]
+}
