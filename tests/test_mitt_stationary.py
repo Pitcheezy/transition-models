@@ -289,3 +289,11 @@ def test_parameters_are_immutable():
     params = StationaryParams()
     with pytest.raises(FrozenInstanceError):
         params.min_hold_seconds = 0.01
+
+
+def test_selector_parameters_cannot_be_rebound_with_an_old_digest():
+    selector = StationarySelector()
+    digest = selector.params.digest()
+    with pytest.raises(AttributeError):
+        selector.params = StationaryParams(max_diameter_px=999)
+    assert selector.params.digest() == digest

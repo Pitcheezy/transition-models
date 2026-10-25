@@ -56,13 +56,18 @@ class StationarySelector:
     """
 
     def __init__(self, params=None):
-        self.params = StationaryParams() if params is None else params
+        self._params = StationaryParams() if params is None else params
         if not isinstance(self.params, StationaryParams):
             raise ValueError("params must be StationaryParams")
         self._digest = self.params.digest()
         self._pitch = self._index = self._time = None
         self._tracker_state = "unseeded"
         self._segment = self._history = None
+
+    @property
+    def params(self):
+        """The parameter object cannot be rebound while its evidence digest stays fixed."""
+        return self._params
 
     def _validate(self, row, usable):
         if not isinstance(row, dict) or type(usable) is not bool:
