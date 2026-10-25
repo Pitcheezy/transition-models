@@ -88,6 +88,13 @@ def _reading(value, role):
 
 
 def _inputs(pack, receipt_sha256, pitch_id):
+    try:
+        return _validated_inputs(pack, receipt_sha256, pitch_id)
+    except (ValueError, KeyError, TypeError, OSError, AttributeError, OverflowError):
+        raise ValueError("malformed pack") from None
+
+
+def _validated_inputs(pack, receipt_sha256, pitch_id):
     if not isinstance(pitch_id, str) or not re.fullmatch(r"747139:[1-9]\d*:[1-9]\d*", pitch_id):
         raise ValueError("invalid requested pitch key")
     receipt_path = pack / "receipt.json"
@@ -169,6 +176,36 @@ def _inputs(pack, receipt_sha256, pitch_id):
     return selected, bindings, _sha(payload_raw)
 
 
+def _summarize(rows):
+    """Describe execution and comparable reads without changing saved row semantics."""
+    if not rows:
+        raise ValueError("observations required")
+    comparison = {
+        role: {
+            "read": {key: 0 for key in ("not_compared", "literal_same", "literal_changed")},
+            "non_read_count": 0,
+        }
+        for role in ROLES
+    }
+    errors = 0
+    for row in rows:
+        for role in ROLES:
+            reading = row["roles"][role]
+            errors += reading["status"] == "error"
+            if reading["status"] == "read":
+                comparison[role]["read"][reading["temporal_relation"]] += 1
+            else:
+                comparison[role]["non_read_count"] += 1
+    status = (
+        "no_usable_observations"
+        if errors == len(rows) * len(ROLES)
+        else "completed_with_errors"
+        if errors
+        else "completed"
+    )
+    return status, comparison
+
+
 def run(pack, receipt_sha256, out, pitch_id="747139:3:1", reader=None):
     """Validate every selected frame before initializing or invoking the image-only reader."""
     pack, out = Path(pack).resolve(), Path(out).resolve()
@@ -198,7 +235,7 @@ def run(pack, receipt_sha256, out, pitch_id="747139:3:1", reader=None):
         value = metadata["engine"].get(key)
         if isinstance(value, str):
             engine[key] = "redacted" if re.search(r"[\\/]|[A-Za-z]:", value) else value
-    if not engine.get("engine"):
+    if not engine.get("engine") or engine["engine"] == "redacted":
         raise ValueError("engine identity required")
     rows, previous = [], {}
     counts = {role: Counter() for role in ROLES}
@@ -253,6 +290,7 @@ def run(pack, receipt_sha256, out, pitch_id="747139:3:1", reader=None):
         "rows": rows,
     }
     observations_raw = _encoded(observations)
+    execution_status, comparison_summary = _summarize(rows)
     report = {
         "schema": "pitcheezy-frame-name-ocr-report-dev-v1",
         "evidence_kind": "injected reader test"
@@ -260,7 +298,15 @@ def run(pack, receipt_sha256, out, pitch_id="747139:3:1", reader=None):
         else "local Windows OCR exposed development",
         "pitch_id": pitch_id,
         "frames": len(rows),
+        "execution_status": execution_status,
         "roles": {role: dict(counts[role]) for role in ROLES},
+        "comparison_summary": comparison_summary,
+        "comparison_definition": {
+            "read": "Current read rows only, partitioned by their temporal_relation.",
+            "non_read_count": "All abstain and error rows; excluded from read comparisons.",
+            "legacy_roles_not_compared": "Includes both reads without a prior comparison and non-read rows.",
+            "execution_status": "Abstain is a usable observation of abstention, not a name or accuracy claim; only all-error runs have no_usable_observations.",
+        },
         "receipt_sha256": receipt_sha256,
         "payload_sha256": payload_sha,
         "reader_metadata": {"engine": engine, "config": copy.deepcopy(CONFIG_V2)},
@@ -286,8 +332,18 @@ def main():
         parser.add_argument("--" + field, required=True)
     parser.add_argument("--pitch-id", default="747139:3:1")
     report = run(**vars(parser.parse_args()))
-    print(json.dumps({"frames": report["frames"], "roles": report["roles"]}))
+    print(
+        json.dumps(
+            {
+                "frames": report["frames"],
+                "roles": report["roles"],
+                "execution_status": report["execution_status"],
+                "comparison_summary": report["comparison_summary"],
+            }
+        )
+    )
+    return 2 if report["execution_status"] == "no_usable_observations" else 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

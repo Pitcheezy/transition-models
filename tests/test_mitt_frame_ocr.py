@@ -7,7 +7,8 @@ import json
 import pytest
 from PIL import Image
 
-from intent.mitt_frame_ocr import run
+from intent import mitt_frame_ocr
+from intent.mitt_frame_ocr import _summarize, run
 from src.vision.sny_player_names import CONFIG_V2
 
 
@@ -291,3 +292,145 @@ def test_malformed_one_role_is_an_error_without_discarding_valid_other_role(tmp_
     )
     assert report["roles"]["pitcher"]["error"] == 1
     assert rows(args)[0]["roles"]["batter"]["name_text"] == "OZUNA"
+
+
+def test_constructor_failure_is_sanitized_and_creates_no_output(tmp_path, monkeypatch):
+    args = fixture_pack(tmp_path, count=1)
+
+    def fail(**kwargs):
+        raise RuntimeError(r"C:\private\TOKEN_VALUE")
+
+    monkeypatch.setattr("src.vision.sny_player_names.SNYPlayerNameReader", fail)
+    with pytest.raises(
+        RuntimeError, match="OCR reader initialization failed: RuntimeError"
+    ) as error:
+        run(**args)
+    assert "TOKEN_VALUE" not in str(error.value)
+    assert not args["out"].exists()
+
+
+def test_abstaining_batter_keeps_valid_lineup_slot_without_inventing_name(tmp_path):
+    args = fixture_pack(tmp_path, count=1)
+    batter = {**reading(None), "lineup_order": 4}
+    report = run(**args, reader=Reader([{"pitcher": reading(), "batter": batter}]))
+    observed = rows(args)[0]["roles"]["batter"]
+    assert observed["status"] == "abstain"
+    assert observed["lineup_order"] == 4 and observed["name_text"] is None
+    assert report["execution_status"] == "completed"
+
+
+@pytest.mark.parametrize(
+    ("statuses", "expected"),
+    [
+        (("error", "error"), "no_usable_observations"),
+        (("error", "abstain"), "completed_with_errors"),
+        (("abstain", "abstain"), "completed"),
+    ],
+)
+def test_execution_summary_distinguishes_all_errors_from_observed_abstentions(statuses, expected):
+    observed = [
+        {
+            "roles": {
+                role: {"status": status, "temporal_relation": "not_compared"}
+                for role, status in zip(("pitcher", "batter"), statuses, strict=True)
+            }
+        }
+    ]
+    status, summary = _summarize(observed)
+    assert status == expected
+    assert summary["pitcher"] == {
+        "read": {"not_compared": 0, "literal_same": 0, "literal_changed": 0},
+        "non_read_count": 1,
+    }
+
+
+def test_comparison_summary_separates_first_reads_from_non_reads(tmp_path):
+    args = fixture_pack(tmp_path)
+    outputs = [
+        {"pitcher": reading(name), "batter": reading(None)}
+        for name in ("MEGILL", "MEGILL", None, "MEGILL", "OTHER")
+    ]
+    report = run(**args, reader=Reader(outputs))
+    assert report["roles"]["pitcher"]["not_compared"] == 3
+    assert report["comparison_summary"]["pitcher"] == {
+        "read": {"not_compared": 2, "literal_same": 1, "literal_changed": 1},
+        "non_read_count": 1,
+    }
+    assert report["comparison_summary"]["batter"]["non_read_count"] == 5
+
+
+def test_all_error_cli_preserves_error_rows_and_returns_failure(tmp_path, monkeypatch, capsys):
+    args = fixture_pack(tmp_path, count=2)
+    real_run = run
+    monkeypatch.setattr(
+        mitt_frame_ocr,
+        "run",
+        lambda **kwargs: real_run(
+            **kwargs,
+            reader=Reader([RuntimeError("private detail"), RuntimeError("private detail")]),
+        ),
+    )
+    monkeypatch.setattr(
+        "sys.argv",
+        [
+            "mitt_frame_ocr",
+            "--pack",
+            str(args["pack"]),
+            "--out",
+            str(args["out"]),
+            "--receipt-sha256",
+            args["receipt_sha256"],
+        ],
+    )
+    assert mitt_frame_ocr.main() == 2
+    printed = json.loads(capsys.readouterr().out)
+    assert printed["execution_status"] == "no_usable_observations"
+    assert len(rows(args)) == 2
+    assert read(args["out"] / "report.json")["execution_status"] == "no_usable_observations"
+    assert all(role["status"] == "error" for row in rows(args) for role in row["roles"].values())
+
+
+def test_redacted_engine_identity_is_not_accepted(tmp_path):
+    args = fixture_pack(tmp_path, count=1)
+
+    class PathEngine(Reader):
+        def metadata(self):
+            data = super().metadata()
+            data["engine"]["engine"] = r"C:\private\engine.exe"
+            return data
+
+    reader = PathEngine()
+    with pytest.raises(ValueError, match="engine identity required"):
+        run(**args, reader=reader)
+    assert reader.calls == 0 and not args["out"].exists()
+
+
+@pytest.mark.parametrize("change", ["missing_binding", "wrong_type", "undecodable", "invalid_json"])
+def test_malformed_pack_errors_are_generic_before_reader_calls(tmp_path, change):
+    args = fixture_pack(tmp_path, count=1)
+    payload_path = args["pack"] / "payload.json"
+    payload = read(payload_path)
+    frame = payload["pitches"][0]["frames"][0]
+    if change == "missing_binding":
+        receipt = read(args["pack"] / "receipt.json")
+        del receipt["files"][frame["image"]]
+        save(args["pack"] / "receipt.json", receipt)
+        args["receipt_sha256"] = sha(args["pack"] / "receipt.json")
+    else:
+        if change == "wrong_type":
+            payload["pitches"][0]["frames"][0] = None
+            save(payload_path, payload)
+        elif change == "undecodable":
+            image = args["pack"] / frame["image"]
+            image.write_bytes(b"C:\\private\\TOKEN_VALUE not an image")
+            frame["sha256"] = sha(image)
+            save(payload_path, payload)
+        else:
+            payload_path.write_bytes(b'{"private_path": "invalid')
+        seal(args)
+    reader = Reader()
+    with pytest.raises(ValueError, match="^malformed pack$") as error:
+        run(**args, reader=reader)
+    assert error.value.__suppress_context__ is True
+    assert reader.calls == reader.metadata_calls == 0
+    assert not args["out"].exists()
