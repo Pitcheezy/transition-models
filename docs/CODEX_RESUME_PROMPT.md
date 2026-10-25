@@ -1,5 +1,13 @@
 # Codex 재개 프롬프트
 
+## CV38·CV39a/b·CV41a 종료 — 2026-10-26
+
+현재 연구 폴더는 `C:/Users/zpfh1/.codex/worktrees/cv-frame-view-1026/transition-models`, 브랜치는 `codex/cv-frame-view-1026`, 초안 PR72다. CV38 완료 기록c3f226f를 병합했고 화면 수리b7568d3·OCR 수리50d7e9b를 포함한다. 작성 Codex·실제 Claude Fable 정적 검토와 수정 재검토를 기록했다. CV39a builder28/UI15·OCR29/체크리스트8·린트180 및50d7e9b Ubuntu/macOS CI 성공. CHECKLIST/우리board 선점은 반납했다. 아래 진행 중 문구는 당시 이력이다.
+
+[프레임 재생](CV_TRACK_FRAME_VIEW_20261026.md), [OCR 관측](CV_OCR_FRAME_OBSERVATIONS_20261026.md), [연구 ZIP](CV_RESEARCH_REPLAY_KIT_20261026.md)을 먼저 읽는다. `outputs/cv_research_kit_20261026_v1.zip`은218파일·32,119,144bytes, SHA256 `e6b4aabd47bb61ae0aa9201022334b404b0f6d0ab2d75f89901048d3ba50eb15`다. 이미지 포함 비공개/Git제외·자동 발신 없음. 저장 결과 재생은 Python stdlib만 필요하고 실제 OCR 재실행은 Windows en-US OCR이 필요하다.
+
+다음 독립 후보는 기존74장 OCR을 키/프레임/SHA로 화면에 연결하는 일이다. 원영상 디코딩 PTS 대조는 해당 구간 원영상/시간 보존 자료가 필요하며 지금 manifest 시각을 독립 검증했다고 쓰지 않는다. CV39 전체·CV41 전체·의미상 미트/목표 식별·새 경기 독립 정확도·CV35/36·A-y는 미완료/보류다. 초안 PR67→69→70→71→72 의존 관계를 유지하며 main/운영으로 자동 병합하지 않는다. 삭제·옛 질문 발신·팀원 코드·Cloudflare·요금제/실부하 변경 금지를 유지한다.
+
 ## CV38 완료 · CV39a 화면 진행 — 2026-10-26
 
 CV38은 `codex/cv-stationary-candidate-1026` PR71의 연구 범위로 완료했다. [현재/과거 후보 계약·검토·재생](CV_STATIONARY_CANDIDATE_20261026.md)을 읽는다. 소스5547aad의 실제 Fable 수정 재검토PASS, 과거625행 출력·입력 보존, 5구6사건은 기하학적 패치 후보다. 새 미트/사람 정확도 검증은 아니다. 기존 PR67→69→70 의존 관계를 유지하며 main/운영으로 자동 병합하지 않는다.

@@ -1,0 +1,40 @@
+{
+  "schema": "pitcheezy-cv-frame-view-verification-v2",
+  "source_commit": "b7568d35",
+  "pack_generation": "v3",
+  "receipt_sha256": "80c6b107c67dd0169a881aa3e60e8ba86048cf85d87d6dd423bb8874927dd14e",
+  "validated_frames": 625,
+  "displayed_frames": 203,
+  "displayed_pitches": 3,
+  "verified_files_excluding_receipt": 207,
+  "input_unchanged": true,
+  "independent_decoded_pts_verified": false,
+  "builder_tests": 28,
+  "ui_tests": 15,
+  "combined_cv39_including_checklist": 53,
+  "combined_seconds": 19.53,
+  "browser": {
+    "platform": "Windows laptop",
+    "surface": "Codex in-app browser",
+    "checked": [
+      "v3 real playback advancement",
+      "manual pause",
+      "pitch switch resets first frame",
+      "current event on17251",
+      "lost17563 clears current while original history remains",
+      "no new origin warning/error"
+    ],
+    "pending_history_label": "synthetic deferred-load regression; not timed in browser"
+  },
+  "review": {
+    "model": "claude-fable-5-1",
+    "fixed_source_recheck": "pass",
+    "source": "b7568d35"
+  },
+  "limits": [
+    "build-time hashes, no in-browser cryptographic validation",
+    "JPEG playback, not full video",
+    "manifest time, not independently decoded PTS",
+    "not semantic mitt or independent accuracy evaluation"
+  ]
+}

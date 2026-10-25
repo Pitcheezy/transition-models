@@ -1,0 +1,55 @@
+{
+  "schema": "pitcheezy-cv-frame-view-verification-v1",
+  "source_commit": "e251f2926267d7fca88b35f374abcb59adbfed8f",
+  "pack": "outputs/cv_track_frame_view_20261026_v2",
+  "receipt_sha256": "7ea09fefd83016bf0d5e28711f43442efa4c6056b82dc162d52eeed401f5fd39",
+  "file_count_excluding_receipt": 207,
+  "validated_frames": 625,
+  "validated_pitches": 10,
+  "displayed_frames": 203,
+  "displayed_pitches": 3,
+  "input_sha256": {
+    "bundle_manifest": "58cb57c9dbd542ca60db84f8f1e2242867e4680c15e1914a5ca1352ec1bcf87a",
+    "timing": "9781a52527f5a91069548b5017cd927c94d4959df944a93cd54ec5be6c9760b7",
+    "tracking_report": "6979e4b921afe2f978fd83e89755ec65fea9e74db6a1c794606fa942e80002b3",
+    "tracking_records": "4097f61449487f074fdd965ee1823f3fabdc2c06b901f76b7dc5e9ff0d395a4b",
+    "selection_report": "7ef62e8329a46654b232a5aa05d6295d22f0d2112ea0cef761db0886f6222b2e",
+    "selection_records": "ed34d37d43b2ea167c4933e2352aa62ac5342490cbc7f10f56c703f38710df93"
+  },
+  "input_unchanged": true,
+  "validation_scope": "build-time SHA binding and generated pack file verification; not in-browser crypto verification",
+  "tests": {
+    "python_including_checklist": 34,
+    "python_seconds": 15.32,
+    "node": 13
+  },
+  "browser": {
+    "platform": "Windows laptop",
+    "engine": "Codex in-app browser",
+    "checked": [
+      "initial frame without point/history",
+      "current candidate on PA3 pitch3 frame17251",
+      "lost frame17563 clears current point/candidate, historical event keeps original frame17251",
+      "seek before event clears history",
+      "pitch switch resets first frame and history",
+      "playback advances from first through74th frame and automatically stops",
+      "no new warning/error observed for v2 origin; prior v1 illegal-invocation log preserved"
+    ],
+    "defect_found": "v1 default setTimeout called with Controller receiver caused Illegal invocation",
+    "fix_commit": "e251f29",
+    "synthetic_regression": "default native timer receiver"
+  },
+  "private_screenshots": {
+    "cv39_v2_current.jpg": "def5430c376e61560d67b56ba300fa1df1dd8aeb471aa3f65e161e0a7956c5b0",
+    "cv39_v2_history_only.jpg": "ea69b246f95f92c428b609ff3246343a0f334726d29a11cc59df332fcc3f0ca3"
+  },
+  "limits": [
+    "exposed development images only",
+    "all three pitch keys, not full entry-to-exit video",
+    "manifest-derived time, no independent decoded PTS",
+    "no OCR yet",
+    "no new semantic mitt validation",
+    "no Mac/iPhone check",
+    "no partner or public service deployment"
+  ]
+}

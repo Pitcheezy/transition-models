@@ -1,0 +1,55 @@
+{
+  "schema": "pitcheezy-frame-name-ocr-observation-summary-v1",
+  "source_commit": "b1944f218432a752fc2874fde0ec7ea1f7515f11",
+  "report_sha256": "6d2ac945a8609fc5c3e4e4b3dd93eff19c0e744cf70411401427161472a6a931",
+  "observations_sha256": "cea324701e48ba9c27d7260818f146d84ad8b79a6f19b537bd1b85f1c306c4b9",
+  "frames": 74,
+  "role_observations": 148,
+  "output_counts": {
+    "pitcher": [
+      {
+        "status": "abstain",
+        "reason": "possible_truncated_name",
+        "text": null,
+        "count": 74
+      }
+    ],
+    "batter": [
+      {
+        "status": "abstain",
+        "reason": "name_panel_absent",
+        "text": null,
+        "count": 32
+      },
+      {
+        "status": "read",
+        "reason": "literal_name",
+        "text": "VLTNLUS",
+        "count": 1
+      },
+      {
+        "status": "read",
+        "reason": "literal_name",
+        "text": "VIENTOS",
+        "count": 41
+      }
+    ]
+  },
+  "literal_changes": [
+    {
+      "frame_index": 15108,
+      "frame_seconds": 252.0518,
+      "role": "batter",
+      "name_text": "VIENTOS",
+      "compared_to_frame": 15102
+    }
+  ],
+  "correctness_measured": false,
+  "runtime_latency_measured": false,
+  "limits": [
+    "No expected player name or roster supplied to OCR.",
+    "Possible truncation is the stored reader reason, not a new visual ground-truth judgment.",
+    "Different consecutive strings are not evidence of a player replacement.",
+    "Outputs use existing v2; v4 and independent evaluation remain unchanged."
+  ]
+}

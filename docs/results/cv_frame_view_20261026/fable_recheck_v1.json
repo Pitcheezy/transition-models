@@ -1,0 +1,43 @@
+{
+  "schema": "pitcheezy-fixed-source-cross-review-v1",
+  "review_kind": "static code review only",
+  "cli_version": "2.1.310",
+  "requested_model": "claude-fable-5-1",
+  "reported_models": [
+    "claude-fable-5-1"
+  ],
+  "effort": "max",
+  "snapshot": {
+    "commit": "b7568d35e64a0d705af89a7a8e2f2dfc72a5fd66",
+    "files": {
+      "intent/mitt_track_view.py": "1d16a51a611a2da20cd1378135b56bdb541bde1692b4de851c443a134ba81907",
+      "tests/test_mitt_track_view.py": "4fef70d689549fdf27e46b9fcdcc762a56118636db9a0a318fe9f6b47f64f5c7",
+      "web/track-review/review.js": "b7cbaf18132fe97865c1263b08f0e1d65fc71447c089bd8b09e93425c3f0e431",
+      "tests/test_track_frame_view_ui.cjs": "9a08ae88c95c5fdd2d95d719c0aeb04d8f4438c3a803addce79bfa8979a5ea8c"
+    },
+    "prompt_sha256": "bdc29b1b06fd31540f4cc6bdb2cfbbec257ea09562f1bbae2a50564cdbceb63f",
+    "scope": "four fixed CV39a findings only"
+  },
+  "raw_stdout_sha256": "044fa2d2fa54db324cdc35f3689eb843833c43b0177ca6d6ee35c91ef19e9dc5",
+  "returned_verdict": {
+    "verdict": "pass. All four findings are resolved at b7568d35. No blocking issues, one optional nit.",
+    "resolved": [
+      "1 (P1) timer receiver: the constructor defaults are now arrow closures that call global setTimeout/clearTimeout with no receiver, so this.setTimer can no longer hand the Controller to a native window function. The vm test is a faithful guard: its strict-mode stubs throw unless this is undefined or globalThis, which is exactly what the old `setTimer = setTimeout` default would hit when invoked as a method. It also checks that the returned id 7 is stored, passed to clear, and that playing resets.",
+      "2 (P2) record time: track frame_seconds must now equal manifest seconds exactly. Only the manifest-vs-index formula keeps 1e-9. The new record_subnanosecond case adds 1e-10, well above float resolution and below the old tolerance, so it passed before and is rejected now. Side benefit: a NaN record time no longer slips through this clause (abs(NaN) > 1e-9 was False).",
+      "3 current-candidate stamping (verification gap closed, not a prior wrong display): the builder rejects a non-null current candidate whose pitch_id, frame_index or frame_seconds differ from the row being emitted, or whose selection_state is not stationary. The two-consecutive-qualified-rows test is the right shape. A stale previous-row result would fail frame 4's frame_index check, and the test pins the first event (frame 3 event equals frame 4 last_historical_candidate, frame 4 event is None).",
+      "4 history pending: historyFor runs before the first post-load emit, historyPending is derived from it, and the UI shows '기록 이미지 준비 중' ahead of historyError, so the first emit no longer claims no history. It is cleared on history success, history failure, current-image failure and every show() reset (covers seek and switchPitch). Late results are dropped by the generation check. Tests cover deferred completion, late failure after a pitch switch, backward seek and both failure paths."
+    ],
+    "findings": [
+      "Nit, optional: when history.frame === frame the code emits a transient view with historyPending true and history null, then the resolved view in the same tick. Harmless for the DOM. Setting history directly in that branch would avoid the misleading intermediate emit for consumers that record every emit."
+    ],
+    "limits": [
+      "Read-only diff review, no execution. The Node 15 / Python 28 pass counts are the user's report.",
+      "Not visible: replay module, the loop code that defines result, fixture/harness helpers, assert_rejected, reseal, schedule and cancelTimer. That result is the current row's replay output, that cancelTimer is guarded (so timerCalls[0] is 'set'), and that the fixture interval is 100 ms are inferred from the reported passing tests.",
+      "The new assertion assumes a current candidate exists only in selection_state stationary. If the replay can carry one in another state the build fails closed, which is a rejection rather than a wrong display. The unchanged real 625-row build supports the assumption.",
+      "Real-browser behavior (74 frames advance, end stop) is user-confirmed. The vm test is a proxy for Illegal invocation.",
+      "Exact record-equals-manifest equality is fail-closed for any producer that computes frame_seconds with a different float expression. Acceptable for current inputs.",
+      "OCR code, hash chain and files outside this diff were not reviewed."
+    ]
+  },
+  "executed_by_reviewer": false
+}

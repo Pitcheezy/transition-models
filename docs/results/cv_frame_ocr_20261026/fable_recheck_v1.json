@@ -1,0 +1,55 @@
+{
+  "schema": "pitcheezy-fixed-source-cross-review-v1",
+  "review_kind": "static code review only",
+  "cli_version": "2.1.310",
+  "requested_model": "claude-fable-5-1",
+  "reported_models": [
+    "claude-fable-5-1"
+  ],
+  "effort": "max",
+  "snapshot": {
+    "commit": "50d7e9ba9cc0329f48b372423d968f1d6f0bd0fe",
+    "files": {
+      "intent/mitt_frame_ocr.py": "93f1c5d70b80ca7478bcef16695bf81de3f56fd926f284182191fe59b9209cb8",
+      "tests/test_mitt_frame_ocr.py": "d2aafc309236fa36dc96a4963ceed30d7dd9aa2a0a3da01724747b1ceb309b63"
+    },
+    "prompt_sha256": "a21223c1259d9c86681cc640db108a47358922f56b6b710f2023d74f5f450572",
+    "scope": "five CV39b findings only"
+  },
+  "raw_stdout_sha256": "c3a7a88c44703c524f040dbd5fb473769979903615ff516dc33fee14633e7cf2",
+  "returned_verdict": {
+    "verdict": "all five prior findings addressed in this diff; three low-severity test/coverage gaps remain",
+    "resolved": [
+      "1: constructor-failure test (sanitized RuntimeError, no output dir) and abstain-with-lineup_order-4 test added; abstain yields execution_status completed.",
+      "2: _summarize derives execution_status per role-reading; main() returns 2 only for no_usable_observations and __main__ now raises SystemExit(main()); CLI test verifies exit 2 while both error rows and report.json are preserved.",
+      "3: additive comparison_summary partitions read rows by temporal_relation and counts non-read rows separately; legacy roles.*.not_compared retained and its mixed meaning documented in comparison_definition. Test arithmetic (legacy 3 vs read 2/1/1 + non_read 1 over 5 frames) is internally consistent with per-row previous-reset semantics.",
+      "4: engine identity equal to 'redacted' now rejected with the generic message before any frame read or output write; test asserts calls == 0 and no out dir.",
+      "5: _inputs wraps _validated_inputs, mapping ValueError/KeyError/TypeError/OSError/AttributeError/OverflowError (covers JSONDecodeError, UnicodeDecodeError, FileNotFoundError, UnidentifiedImageError) to ValueError('malformed pack') from None; test asserts exact message, __suppress_context__ True, zero reader and metadata calls, no output."
+    ],
+    "findings": [
+      {
+        "id": "F1a",
+        "severity": "low",
+        "detail": "test_constructor_failure_is_sanitized_and_creates_no_output never asserts the fake constructor was invoked. If run() bound SNYPlayerNameReader at import time, the monkeypatch on src.vision.sny_player_names is inert and the test passes only when the real constructor happens to raise RuntimeError on the host. Add a call flag."
+      },
+      {
+        "id": "F1b",
+        "severity": "low",
+        "detail": "Unlike the malformed-pack test, the init-failure test checks only str(error.value), not __cause__/__suppress_context__. If the production wrapper chains implicitly, the CLI traceback still prints the original path-bearing message."
+      },
+      {
+        "id": "F5a",
+        "severity": "low",
+        "detail": "IndexError (empty pitches/frames lists indexed) and PIL DecompressionBombError are outside the caught tuple; reachability depends on the unchanged _validated_inputs body, not visible here."
+      }
+    ],
+    "limits": [
+      "Static read of the diff only; _validated_inputs body, reader construction site, ROLES, write ordering, and test helpers (Reader, reading, fixture_pack, seal) were not visible.",
+      "completed_with_errors exits 0 by stated design; exit code alone does not signal partial failure, callers must parse execution_status.",
+      "_summarize raises bare ValueError('observations required') on zero rows; if zero-frame packs were previously reportable this is a behavior change, otherwise unreachable.",
+      "The generic wrapper also collapses previously specific, non-leaking messages (invalid pitch key, receipt/sha mismatch) into 'malformed pack', reducing diagnosability.",
+      "No tests were executed; the 29-pass claim is not independently verified."
+    ]
+  },
+  "executed_by_reviewer": false
+}
