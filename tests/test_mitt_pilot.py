@@ -70,6 +70,31 @@ def test_reader_answers_outside_layer_a_are_rejected_not_repaired():
         {**good, "view": "centre"},
         {**good, "mitt_visibility": "hidden"},
         {**good, "pitcher_phase": "windup"},
+        *[
+            {**good, "mitt_center_px": value}
+            for value in (
+                [None, 250],
+                ["610", 250],
+                [True, 250],
+                [float("inf"), 250],
+                [float("nan"), 250],
+                [610],
+                [],
+                610,
+                "610,250",
+                {},
+            )
+        ],
+        *[
+            {**good, "plate_front": value}
+            for value in (
+                [],
+                {},
+                {"left_end": [None, 320], "right_end": [660, 320]},
+                {"left_end": [600, 320], "right_end": [600, 320]},
+            )
+        ],
+        [],
     ):
         obs, error = pilot.to_observation(mapping, bad)
         assert obs is None and error.startswith("schema:")
@@ -193,3 +218,11 @@ def test_evaluate_end_to_end_on_a_tiny_pilot(tmp_path):
         out["pitches"][0]["undeterminable_before_delivery_start"]
         == "no_usable_frame:view_not_live_centre_field"
     )
+    # A malformed answer is counted and skipped, not allowed to abort the entire pilot.
+    frames[-1]["mitt_center_px"] = [None, 240]
+    (tmp_path / "answers" / "b01.json").write_text(json.dumps({"batch": "b01", "frames": frames}))
+    out = pilot.evaluate(tmp_path, tmp_path / "rejected.json", delivery)
+    assert sum(out["reader_answers"]["schema_rejected"].values()) == 1
+    assert out["pitches"][0]["frames_observed"] == 7
+    assert out["pitches"][0]["usable_frames"] == 5
+    assert out["pitches"][0]["same_frame_reread_status"] == "compared"

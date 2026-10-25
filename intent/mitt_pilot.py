@@ -211,27 +211,51 @@ def load_answers(pilot: Path):
     return meta, answers, problems, missing
 
 
+def _reader_point(value, field):
+    """Reject malformed coordinates instead of coercing reader mistakes into pixels."""
+    if (
+        not isinstance(value, list)
+        or len(value) != 2
+        or not all(
+            isinstance(v, (int, float)) and not isinstance(v, bool) and math.isfinite(v)
+            for v in value
+        )
+    ):
+        raise ValueError(f"{field} must be two finite numbers")
+    return [float(v) for v in value]
+
+
 def to_observation(mapping, answer):
     """Reader answer -> layer-A record, or (None, reason) when a field is outside the schema."""
-    centre = answer.get("mitt_center_px")
-    plate = answer.get("plate_front")
-    obs = {
-        "pitch_id": mapping["pitch_id"],
-        "frame_index": mapping["index"],
-        "frame_seconds": float(Fraction(mapping["index"]) / FPS),
-        "view": answer.get("view"),
-        "catcher": answer.get("catcher"),
-        "mitt_visibility": answer.get("mitt_visibility"),
-        "occluder": answer.get("occluder"),
-        "mitt_center_px": [float(v) for v in centre] if isinstance(centre, list) else None,
-        "pitcher_phase": answer.get("pitcher_phase"),
-        "uncertainty_px": answer.get("uncertainty_px"),
-    }
-    if isinstance(plate, dict) and plate.get("left_end") and plate.get("right_end"):
-        obs["plate_front"] = {"left_end": plate["left_end"], "right_end": plate["right_end"]}
     try:
+        if not isinstance(answer, dict):
+            raise ValueError("reader answer must be an object")
+        centre = answer.get("mitt_center_px")
+        plate = answer.get("plate_front")
+        obs = {
+            "pitch_id": mapping["pitch_id"],
+            "frame_index": mapping["index"],
+            "frame_seconds": float(Fraction(mapping["index"]) / FPS),
+            "view": answer.get("view"),
+            "catcher": answer.get("catcher"),
+            "mitt_visibility": answer.get("mitt_visibility"),
+            "occluder": answer.get("occluder"),
+            "mitt_center_px": _reader_point(centre, "mitt_center_px")
+            if centre is not None
+            else None,
+            "pitcher_phase": answer.get("pitcher_phase"),
+            "uncertainty_px": answer.get("uncertainty_px"),
+        }
+        if plate is not None:
+            if not isinstance(plate, dict):
+                raise ValueError("plate_front must be an object or null")
+            left = _reader_point(plate.get("left_end"), "plate_front.left_end")
+            right = _reader_point(plate.get("right_end"), "plate_front.right_end")
+            if left == right:
+                raise ValueError("plate_front endpoints must differ")
+            obs["plate_front"] = {"left_end": left, "right_end": right}
         mt.validate_observation(obs)
-    except (ValueError, TypeError) as error:
+    except (ValueError, TypeError, OverflowError) as error:
         return None, f"schema:{error}"
     return obs, None
 
