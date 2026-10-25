@@ -1,0 +1,82 @@
+{
+  "schema": "pitcheezy-frame-name-ocr-report-dev-v1",
+  "evidence_kind": "local Windows OCR exposed development",
+  "pitch_id": "747139:3:1",
+  "frames": 74,
+  "roles": {
+    "pitcher": {
+      "abstain": 74,
+      "not_compared": 74
+    },
+    "batter": {
+      "abstain": 32,
+      "not_compared": 33,
+      "read": 42,
+      "literal_changed": 1,
+      "literal_same": 40
+    }
+  },
+  "receipt_sha256": "7ea09fefd83016bf0d5e28711f43442efa4c6056b82dc162d52eeed401f5fd39",
+  "payload_sha256": "00c2ff234f5dc7c9ad112568d1153091b3eacec147aedc0a708adb8b7e5dc223",
+  "reader_metadata": {
+    "engine": {
+      "engine": "windows_ocr",
+      "language": "en-US",
+      "os_version": "10.0.26200.0",
+      "dll_version": "10.0.26100.9278 (WinBuild.160101.0800)"
+    },
+    "config": {
+      "schema": "sny_player_names_v2",
+      "frame_size": [
+        1280,
+        720
+      ],
+      "crops": {
+        "pitcher": [
+          64,
+          111,
+          168,
+          129
+        ],
+        "batter": [
+          64,
+          133,
+          252,
+          151
+        ]
+      },
+      "presence": {
+        "count_bug": "sny_scoreboard_v2_default_gate",
+        "min_neutral_bright_fraction": 0.5,
+        "min_channel": 160,
+        "max_channel_spread": 50
+      },
+      "preprocessing": {
+        "scale": 4,
+        "resampling": "LANCZOS",
+        "border": 16,
+        "grayscale": true
+      },
+      "parser": "v1_parser_plus_uppercase_context_l_to_I_and_decoupled_batter_slot",
+      "state": "current_frame_only_no_hold",
+      "options": {
+        "uppercase_context_l_to_I": true,
+        "decoupled_unreadable_batter_slot": true
+      }
+    }
+  },
+  "source_sha256": {
+    "intent/mitt_frame_ocr.py": "6393c85c82a60a84e504cbf4d10607bb37655e03eb5ea4860b4be416985e03db",
+    "src/vision/sny_player_names.py": "ee3578bc43e86a8651d9333f737ee5bbb291bb39501d79cae559a68047f5df14",
+    "src/vision/sny_scoreboard.py": "7c1455000d698d0257812487af2465045b0a018205787b1faa04e2434a493e6c",
+    "src/vision/windows_ocr.ps1": "c9d7bd191a03dfca931774ee9b1ede23ddada949e403c2422ad97e1513c69ee6"
+  },
+  "observations_sha256": "cea324701e48ba9c27d7260818f146d84ad8b79a6f19b537bd1b85f1c306c4b9",
+  "input_unchanged": true,
+  "independent_decoded_pts_verified": false,
+  "limits": [
+    "Current literal readings only; no identity, backfill or confirmed continuity.",
+    "Same/changed compares adjacent current reads within 0.25 seconds, not accuracy.",
+    "Manifest-derived timestamps; no new decoded PTS, video or human evaluation."
+  ]
+}

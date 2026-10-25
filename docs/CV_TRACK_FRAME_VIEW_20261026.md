@@ -16,4 +16,18 @@
 
 ## 결과
 
-미실행. 소스·검사·화면 확인·남은 조건은 완료 시 기록한다.
+고정 CV38 완료본 `c3f226f`를 연구 브랜치에 병합했다. 모든625행·10구를 결속하고 PA3의3구203장으로 v1/v2 팩을 생성했다. 당시 팩은 Git 제외 `outputs/cv_track_frame_view_20261026_v2/`이며207파일+영수증이다. 영수증 SHA256 `7ea09fefd83016bf0d5e28711f43442efa4c6056b82dc162d52eeed401f5fd39`. [실제 검증 기록](results/cv_frame_view_20261026/verification_v1.json). 원본·기존팩은 보존했다.
+
+Windows 실제 브라우저에서 처음 프레임, 현재 후보, 소실 후 현재 표시 제거/과거 별도 프레임, 과거로 탐색 시 미래 기록 제거, 투구 변경 초기화를 확인했다. 재생 버튼은 최초 v1에서 `Illegal invocation`으로 멈췄다. 네이티브 타이머를 Controller 메서드처럼 호출한 문제를 `e251f29`에서 전역 호출 래퍼로 고쳤고, VM 회귀 검사와 실제 v2 재생74장→끝 자동정지를 확인했다. 이전 v1 오류 로그는 보존했고 v2 주소의 새 오류는 관측되지 않았다.
+
+관련 Python26+체크리스트8=34 passed(15.32초), Node13 passed, 필수 린트180경로 통과다. Node는 타이머·지연 응답 등 합성 검사이며 실제 브라우저와 구분한다. 해시 검사는 생성 시점과 완성 팩 대조이며 브라우저가 매 프레임 암호학적으로 검증한다는 뜻이 아니다. 실제 Mac/아이폰 검사는 하지 않았다. 아래 후속 수정으로 검사 수가 늘었다.
+
+## 실제 Fable 검토와 최종 v3
+
+[최초 검토](results/cv_frame_view_20261026/fable_review_v1.json)는8097992의4건을 지적했다. 실제 재생 오류는 먼저 발견해e251f29에서 고쳤다. b7568d3에서는 기록/manifest 시각의 미세 허용오차와 화면의 정확 비교를 일치시켰고, 과거 이미지 로딩 중에는 '기록 이미지 준비 중'을 표시한다. 현재 후보의 프레임 일치도 명시적으로 단언했다. 이 마지막 항목은 당시 잘못 표시된 실제 사례가 아니라 검증 빈틈이었다. 두 연속 후보 프레임과 1e-10 시각 차이, 지연 썸네일의 완료/실패 회귀를 추가했다.
+
+[수정 재검토](results/cv_frame_view_20261026/fable_recheck_v1.json)는 실제 `claude-fable-5-1`의 PASS·차단 지적 없음이다. 동일 프레임 기록의 순간적인 pending emit은 선택적 낮은 심각도 제안으로 남겼다. 검토 모델이 실행한 검사가 아니라 고정 코드 정적 검토이며, 브라우저 검증은 Codex 도구로 별도 수행했다.
+
+최종 builder28·UI15검사 통과, OCR17+체크리스트8을 함께 실행한 당시53검사는19.53초에 통과했다. [v3 검증](results/cv_frame_view_20261026/verification_v2.json). 최신 `outputs/cv_track_frame_view_20261026_v3/receipt.json` SHA256 `80c6b107c67dd0169a881aa3e60e8ba86048cf85d87d6dd423bb8874927dd14e`. v2와 payload/203 JPEG 바이트는 동일하고 JS/HTML 표시만 갱신했다. v3 실제 재생·정지·투구 변경·현재/과거 표시도 확인했다. 전체625행 결속은 유지하며 독립 PTS·OCR 화면 통합·전체CV39 완료는 아니다.
+
+재현은 `python -m intent.mitt_track_view --help`의 명시 입력을 사용한다. 입력은 CV32 원본 bundle, timing JSON, CV37 v3 tracking 보고/CPU행, CV38 v3 selection 보고/CPU행이다. CV38 보고 SHA는 `7ef62e8329a46654b232a5aa05d6295d22f0d2112ea0cef761db0886f6222b2e`이며 새 출력 폴더만 허용한다. 시연은 `python -m http.server 0 --bind 127.0.0.1 --directory outputs/cv_track_frame_view_20261026_v3`로 실행한 현재 컴퓨터의 주소를 연다. 이미지/캡처는 공개 PR에 올리지 않는다.

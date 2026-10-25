@@ -1,0 +1,67 @@
+{
+  "schema": "pitcheezy-fixed-source-cross-review-v1",
+  "review_kind": "static code review only",
+  "cli_version": "2.1.310",
+  "requested_model": "claude-fable-5-1",
+  "reported_models": [
+    "claude-fable-5-1"
+  ],
+  "effort": "max",
+  "snapshot": {
+    "commit": "8097992a41f9658aed9bc0135d6d05559a8ca50d",
+    "files": {
+      "intent/mitt_track_view.py": "b3fa207db0b7e2055d95f585553e8d0a7705bab6e56e94ed559c5f647cf77bbe",
+      "web/track-review/index.html": "7a18ffce549d8e7be674686a3c3a999ad71fb792b0c1239eec45f7901f9b96f4",
+      "web/track-review/review.js": "2444775f5e5e74c3ec6e2ce2da226237a9c0adf07d9a41308a378be6fe2d129b",
+      "tests/test_mitt_track_view.py": "f285b3e5e697f7184da796720ff11340eb9187bed2f47d135b90275cf4313fce",
+      "tests/test_track_frame_view_ui.cjs": "83aaa365ec9539e212d2f096257dde5f91a418f38d6b81dfba347befb8986475"
+    },
+    "prompt_sha256": "0c9e9c943eaeed8f8915e09176d00d6afb33798e1cfc5fd836f86102f5c60a0b"
+  },
+  "raw_stdout_sha256": "d2de9f7765fa48308d677ffddc9a88da4363b171e37f3f1bb4c582f62c0c6898",
+  "returned_verdict": {
+    "verdict": "Not ready. One P1 makes playback non-functional in every real browser and can paint a false image-load error; the builder's hash/alignment chain is sound, but two consistency gaps let the UI silently hide markers for records the builder accepted, and one status line misstates history while pending. Fix the P1 and add the two missing tests before relying on the viewer.",
+    "findings": [
+      {
+        "priority": "P1",
+        "file": "web/track-review/review.js",
+        "line": 16,
+        "trigger": "Open the generated index.html in Chrome, Firefox or Safari and press 재생 (or Space) on any non-final frame.",
+        "impact": "Constructor defaults setTimer/clearTimer to the native setTimeout/clearTimeout, and schedule()/cancelTimer() invoke them as this.setTimer(...) with the Controller as receiver. Window operations throw TypeError 'Illegal invocation' for a non-Window receiver, so schedule() (line 76) throws after toggle() has already set playing=true and emitted the 정지 label: the button toggles but no frame ever advances. If 재생 is pressed while a frame is still loading, the throw happens inside show()'s try block and is caught as an image failure: both canvases are blanked and the false error '이미지를 불러오지 못했습니다' is shown for a frame that loaded. Via Space the throw precedes preventDefault, so the page scrolls. The 12 Node tests cannot observe this: the harness always injects fake timers and Node's setTimeout has no receiver check. The manual Chrome check covered markers, not playback.",
+        "fix": "setTimer = (cb, ms) => setTimeout(cb, ms), clearTimer = id => clearTimeout(id) (or .bind(globalThis)). Add a Node test that constructs a Controller without timer injection while globalThis.setTimeout is a stub throwing when this !== globalThis, then calls toggle()."
+      },
+      {
+        "priority": "P2",
+        "file": "intent/mitt_track_view.py",
+        "line": 173,
+        "trigger": "Tracker frame_seconds differs from manifest pts_time by up to 1e-9 (e.g. index*(1001/60000) vs index*1001/60000) on a frame carrying a current_candidate or last_historical_candidate.",
+        "impact": "Builder accepts the drift (1e-9 tolerances, lines 172-173) but review.js compares seconds exactly: historyFor returns null when source.frame_seconds !== event.frame_seconds or event.frame_seconds > frame.frame_seconds (lines 8-11), and visiblePoints requires current.frame_seconds === frame.frame_seconds (line 102). Green ring and orange thumbnail vanish and history-status reports no record, although the chain validated. Contradicts 'frame/time strict'. Undetectable by the suite because the fixture computes both sides with the same expression.",
+        "fix": "Compare record to manifest exactly (track['frame_seconds'] != seconds), keeping the 1e-9 check only against the index formula. Add a Python test injecting a 1e-10 drift that must be rejected."
+      },
+      {
+        "priority": "P2",
+        "file": "intent/mitt_track_view.py",
+        "line": 218,
+        "trigger": "Any displayed record whose current_candidate is not None but whose pitch_id/frame_index/frame_seconds are not those of that record (e.g. replay keeps the first-qualification stamp while the candidate persists), or whose selection_state is not literally 'stationary'.",
+        "impact": "visiblePoints hides the candidate unless all three stamps equal the current frame and the state string is 'stationary'. The builder verifies the history contract (event lives on its own past frame) but asserts nothing about the current-candidate contract it ships. A replay/UI mismatch passes all 26 Python tests (none check real replay output against the UI rule) and all 12 Node tests (fixture records are hand-written to satisfy it). Symptom: candidate visible only on its first frame, missing on later still frames. The Chrome check confirms one sighting, not persistence.",
+        "fix": "In the visible_pitches loop, for frames with current_candidate not None require its pitch_id/frame_index/frame_seconds == the record's, result['pitch_id'] == pitch_id, and selection_state == 'stationary', else raise. Add a Python test on the fixture (rows[3] carries a candidate) asserting built payload frames satisfy this."
+      },
+      {
+        "priority": "P2",
+        "file": "web/track-review/review.js",
+        "line": 150,
+        "trigger": "Seek to a frame with a valid last_historical_candidate whose source is a different frame; observe between current-image load and history-image load.",
+        "impact": "show() emits {history:null} right after the current image loads (line 39-40) and only then begins loading the history image, so onChange prints '이 시점까지 표시할 발생 기록 없음' while a record exists and is pending. A false causal statement in the one panel the design relies on for history; indefinite if the thumbnail load stalls.",
+        "fix": "Compute historyFor(pitch, frame) before the first post-load emit and include historyPending: !!history in that view; render '기록 이미지 준비 중' when pending."
+      }
+    ],
+    "limits": [
+      "No execution or repository access; line numbers hand-counted from the pasted files, expect ±2.",
+      "intent.mitt_stationary_pilot.replay, its record schema (selection_state vocabulary, how current_candidate is stamped) and the real 625-row corpus were not visible; finding 3 is a verification gap, not an observed misdisplay.",
+      "Finding 1 rests on WebIDL receiver checks as implemented by Blink, Gecko and WebKit, not on a run performed here.",
+      "style.css and canvas CSS scaling were not provided. EXIF orientation (fails closed via the naturalWidth check) and PIL raising OSError rather than ValueError on corrupt JPEGs (still fails before any write) were judged non-functional and omitted.",
+      "A NaN frame_seconds in tracker JSON would pass the abs()>1e-9 checks but is blocked by allow_nan=False at payload serialization; not listed as a defect."
+    ]
+  },
+  "executed_by_reviewer": false
+}

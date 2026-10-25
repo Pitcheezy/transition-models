@@ -296,8 +296,10 @@ def test_malformed_one_role_is_an_error_without_discarding_valid_other_role(tmp_
 
 def test_constructor_failure_is_sanitized_and_creates_no_output(tmp_path, monkeypatch):
     args = fixture_pack(tmp_path, count=1)
+    calls = []
 
     def fail(**kwargs):
+        calls.append(kwargs)
         raise RuntimeError(r"C:\private\TOKEN_VALUE")
 
     monkeypatch.setattr("src.vision.sny_player_names.SNYPlayerNameReader", fail)
@@ -306,6 +308,8 @@ def test_constructor_failure_is_sanitized_and_creates_no_output(tmp_path, monkey
     ) as error:
         run(**args)
     assert "TOKEN_VALUE" not in str(error.value)
+    assert len(calls) == 1 and calls[0]["config"] == CONFIG_V2
+    assert error.value.__cause__ is None and error.value.__suppress_context__ is True
     assert not args["out"].exists()
 
 

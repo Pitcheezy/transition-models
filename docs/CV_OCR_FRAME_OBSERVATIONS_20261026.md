@@ -12,4 +12,25 @@
 
 ## 결과
 
-미실행. 이 단위는 관측 연결이며 미트 추적/선수 식별의 정확도 평가는 아니다.
+구현 `b1944f2`를 고정하고 실제 노트북 Windows OCR(en-US, DLL10.0.26100.9278)로74장을 읽었다. [보고](results/cv_frame_ocr_20261026/report_v1.json), [관측 집계](results/cv_frame_ocr_20261026/observations_summary_v1.json). 투수74기권은 저장 이유 `possible_truncated_name`이며 새 사람이 잘림을 확정한 결과가 아니다. 타자42읽음/32기권(`name_panel_absent`), 읽힌 문자열은 `VLTNLUS`1회와 `VIENTOS`41회다. 인접 비교는 같음40·변화1이며, 기권 후 첫 읽음에는 비교값을 넣지 않았다. 이름을 정답으로 보정하거나 변화1회를 교체로 해석하지 않았다.
+
+모든74프레임·148역할을 분모에 남겼고 이번 실행의 엔진 오류는0이다. 관측 원문 SHA256 `cea324701e48ba9c27d7260818f146d84ad8b79a6f19b537bd1b85f1c306c4b9`, 원문은 Git 제외 `outputs/cv_frame_ocr_20261026_v1/observations.json`에 있다. 정확도·사람 일치·처리 지연은 미측정이다. 패널 문자열의 반복은 동일 선수의 증거가 아니다.
+
+최초 합성17+체크리스트8=25 passed(5.47초), 필수 린트180경로 통과. 원본 팩 바이트 불변, 외부 API·이미지/명단 전송·원래 OCR 코드 변경 없음. 이 단위는 관측 연결이며 미트 추적/선수 식별의 정확도 평가는 아니다.
+
+## 실제 Fable 검토 후 오류·집계 보강
+
+[최초 검토](results/cv_frame_ocr_20261026/fable_review_v1.json)의5건을50d7e9b에서 처리했다. 초기화 실패/타순만 있는 기권 검사, 식별 불가 엔진 거부, 잘못된 팩 오류의 경로 비노출을 보강했다. 모든 역할이 오류면 원문과 보고를 보존하되 `execution_status=no_usable_observations`, CLI 종료2로 실패를 표시한다. 기권은 이름 성공이 아니라 기권을 관측한 기록이며, 전부 기권과 전부 오류를 구분한다. 기존 행/roles 집계는 유지하고 읽음의 비교3종과 non_read_count를 별도 추가했다.
+
+최종 합성29+체크리스트8=37 passed(6.33초). 실제74장 OCR을 다시 실행하지 않았고, 원 실행b1944f2의 관측/보고 SHA는 고정했다. 새 분리 집계를 기존 원문에서만 [파생 집계](results/cv_frame_ocr_20261026/derived_summary_v2.json)로 계산했다. 타자 read42=첫비교없음1+같음40+변화1, non-read32; 투수 read0/non-read74다. 파생 집계는 새 OCR 실행이나 정확도 측정이 아니다. 실제 Fable 수정 재검토는 종료 기록을 따른다.
+
+[실제 Fable 수정 재검토](results/cv_frame_ocr_20261026/fable_recheck_v1.json)는 고정50d7e9b의 이전5건이 모두 처리됐다고 확인했다. 낮은 심각도 제안 중 생성자 호출 여부·예외 원인 숨김 단언을 기존 검사에 추가했고 해당1검사 통과(3.44초,28 deselected). 빈 목록은 기존 입력 검증으로 거부된다. 별도로 언급한 거대 이미지 예외는 이번 고정1280×720 자료에서 재현하지 않았으며 모든 악성 입력 예외를 검증했다고 주장하지 않는다. 실제74장 판독은 반복하지 않았다. 코드50d7e9b의 Ubuntu/macOS CI도 성공했다.
+
+재현:
+
+```sh
+python -m intent.mitt_frame_ocr --pack outputs/cv_track_frame_view_20261026_v2 --receipt-sha256 7ea09fefd83016bf0d5e28711f43442efa4c6056b82dc162d52eeed401f5fd39 --out <새 폴더>
+python -m pytest -q tests/test_mitt_frame_ocr.py
+```
+
+실제 읽기는 설치된 Windows en-US OCR이 필요하며, 저장 집계와 합성 검사는 이 엔진 없이도 읽거나 실행할 수 있다. v4 독립 평가·새 영상·CV35/36·A-y는 별개다.

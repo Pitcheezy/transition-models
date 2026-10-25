@@ -1,0 +1,76 @@
+{
+  "schema": "pitcheezy-fixed-source-cross-review-v1",
+  "review_kind": "static code review only",
+  "cli_version": "2.1.310",
+  "requested_model": "claude-fable-5-1",
+  "reported_models": [
+    "claude-fable-5-1"
+  ],
+  "effort": "max",
+  "snapshot": {
+    "commit": "b1944f218432a752fc2874fde0ec7ea1f7515f11",
+    "files": {
+      "intent/mitt_frame_ocr.py": "6393c85c82a60a84e504cbf4d10607bb37655e03eb5ea4860b4be416985e03db",
+      "tests/test_mitt_frame_ocr.py": "e30622472d0041c853a1a3fcbfdba251567ede2a2bfac6c074b6fdbc371567d6",
+      "web/track-review/review.js": "794cc7328372ca14dc896a45033da15a6a4128b19dfd5ebef7ef407af4549bf5",
+      "tests/test_track_frame_view_ui.cjs": "07bb2fe9dd2ccfb0a35db0fc81f207d2ae12f7b3e2e85f92c041f3a71bbbaea8"
+    },
+    "prompt_sha256": "47547b7ab7317ce4c7557b7105d9f625aba2d0cd249fd033ddea4cc33ceed13b"
+  },
+  "raw_stdout_sha256": "36daa1ceb924fe0e0e31fad6480dd540be48885573bb2be67dffe477a5266149",
+  "returned_verdict": {
+    "verdict": "No P1 found. As read, the CV39b wrapper holds its stated invariants: every selected frame is receipt/payload SHA, size, dimension, path and manifest-time checked before the reader is constructed or metadata() is called; output must be fresh and outside the pack; no name is filled forward; abstain, error, or gap >0.25s resets comparison per role; error reasons and engine metadata are allowlisted so paths and exception text never reach observations.json or report.json; inputs are re-hashed after OCR. Five P2 items, mostly regression-coverage gaps and output-labeling ambiguity. The CV39a timer fix is correct.",
+    "findings": [
+      {
+        "priority": "P2",
+        "file": "tests (synthetic reader module, name not shown)",
+        "line": 0,
+        "trigger": "reader=None with SNYPlayerNameReader.__init__ raising; batter output {status:'abstain', name_text:null, lineup_order:4}",
+        "impact": "Two stated requirements have no test: honest init error with no output directory, and batter abstain with a valid lineup_order being accepted. The reading() helper never sets lineup_order, so the 'don't misflag' path is unexercised; a future tightening of _reading would pass CI while breaking it.",
+        "fix": "Add a monkeypatched-constructor test asserting RuntimeError and out absent; add a batter abstain+lineup_order case asserting status abstain and lineup_order preserved."
+      },
+      {
+        "priority": "P2",
+        "file": "intent/mitt_frame_ocr.py",
+        "line": 208,
+        "trigger": "reader.read raises the same exception on every frame (engine loaded lazily, or Recognize fails after a successful constructor)",
+        "impact": "Run exits 0 and writes a complete observations/report pair labeled 'local Windows OCR exposed development' with every role reader_exception. Honest per row, but the stop-on-init-failure guarantee covers only constructor-time failures; a zero-evidence run is indistinguishable from a completed one by exit status.",
+        "fix": "After the loop, if no read() call returned at all, raise RuntimeError('reader produced no output: ' + exception name) instead of writing."
+      },
+      {
+        "priority": "P2",
+        "file": "intent/mitt_frame_ocr.py",
+        "line": 218,
+        "trigger": "pitcher abstains on frame 3 of 5",
+        "impact": "temporal_relation 'not_compared' is emitted both for rows with no read (abstain/error) and for reads lacking a comparable prior (first frame, gap, reset). report.roles merges status keys and relation keys in one Counter, so the not_compared count has no single meaning.",
+        "fix": "Emit null (or 'no_read') for non-read rows and report relations under a separate key."
+      },
+      {
+        "priority": "P2",
+        "file": "intent/mitt_frame_ocr.py",
+        "line": 200,
+        "trigger": "metadata.engine.engine contains a slash or a drive letter followed by ':'",
+        "impact": "Value becomes the string 'redacted', which is truthy and satisfies the 'engine identity required' check; report pins engine='redacted'.",
+        "fix": "Raise if engine['engine'] == 'redacted'."
+      },
+      {
+        "priority": "P2",
+        "file": "intent/mitt_frame_ocr.py",
+        "line": 109,
+        "trigger": "payload references frames/747139_3_1/600.jpg but receipt.files lacks that key; or a frame file is not decodable",
+        "impact": "KeyError / TypeError / UnidentifiedImageError propagate instead of ValueError. Still fails closed before metadata() and before any output, but callers and the parametrized test pin ValueError only, and the traceback names the relative path on stderr.",
+        "fix": "Wrap the _inputs body in try/except (KeyError, TypeError, OSError) and re-raise ValueError('malformed pack') from None."
+      }
+    ],
+    "timer_fix": "Correct and minimal. The old default stored the native setTimeout and invoked it as this.setTimer(...) with the Controller as receiver, which browser WebIDL brand checks reject. The arrow defaults call the globals as plain calls (receiver undefined in strict code, globalThis otherwise), both accepted. The return value is forwarded, so pause() clears the real id (test asserts id 7). Defaults are evaluated per constructor call, so explicitly injected timers are untouched and the existing harness tests stay valid. The VM test is a faithful regression: its stubs throw exactly when this is neither undefined nor the context global, so the pre-fix code fails at toggle(). Nits only: setTimer forwards just (callback, delay), fine for the current usage; fixture objects cross realms, safe because the constructor uses data.pitches?.length rather than instanceof. No defect.",
+    "limits": [
+      "No execution, repository, or network access; the reported test and checklist results were not reproduced here. Line numbers are counted from the pasted source and may be off by a few.",
+      "SNYPlayerNameReader, CONFIG_V2, and the review.js body were not visible. The wrapper assumes the reader returns exactly the five fields, null (not '') name_text on abstain, null pitcher lineup_order, error reasons shaped prefix:Category:detail, and lowercase snake_case read/abstain reasons. Deviations become invalid_reader_output or reader_reason_redacted (fail-closed but uninformative), and an identifier-shaped second segment of an unexpected error format would pass through.",
+      "Whether Windows OCR initializes eagerly in __init__ is unverified; finding 2 only matters if it does not.",
+      "raw_text and name_text are emitted unsanitized on read/abstain; acceptable only if they are pure OCR text from the frame.",
+      "The 1001/60000 timebase is hard-coded; the pilot payload is assumed to match since the 74-frame run completed.",
+      "Only the timer diff was reviewed, not the rest of review.js or its harness."
+    ]
+  },
+  "executed_by_reviewer": false
+}
