@@ -2,6 +2,8 @@
 
 ## 전시 CV 집중 개발 — 2026-10-26
 
+교차 검토 후속 선점: 우리 Codex / `codex/cv-track-pilot-1026` / 검토 고정 `933772e`. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6401721869). 사용자 재로그인으로401 해소, 구버전 CLI400 이후 별도 공식2.1.251의 Fable 검토 진행 중. 실제 결과 확인 전 완료로 처리하지 않는다.
+
 사용자 요청으로 일정을 앞당긴 우리 연구 계획이다. Song 마감·계약·운영 동결은 변경하지 않는다. [합격 기준·일정](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6401534435). CV37 개발 시험 완료·수정 권한 반납: 우리 Codex / `codex/cv-track-pilot-1026` / PR69 고정 `c41eb74782d585cce47d2f1d99b4417ea2f4623e`. 원래 Claude 작업 폴더와 자료는 보존한다. [실제 결과·한계](docs/CV_TRACKING_PILOT_20261026.md), [고정 소스·해시](docs/results/cv_tracking_20261026/audit_v1.json). Claude 교차 검토는 인증 만료401로 미실행이며 연구 PR 검토 조건으로 남긴다.
 
 - [x] CV-37. 초기 AI 점 기반 시간순 국소 추적·실패 감지와 고정 개발 시험 완료(10/26, 목표10/28). 원본 첫10구625프레임·기존 sequence315판독, tracking123행(초기10+연속113)·미초기82·lost420, 최초 중단10구(유사도5/모호3/왕복2), 유지 중앙값0.551초. CPU/CUDA 상태·좌표 일치625/625·원본667 SHA 불변. 활성 계산 중앙값4.85→2.29ms, 전체 읽기→결과 속도 향상은 미확인. 관련48검사·Ruff 통과. 구현 `cd23d78`, 안정적 미트 식별/사람 정확도/실시간/배포 완료가 아니다. Claude 실제 검토는 로그인 만료로 미완료. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-26 · Codex]`
