@@ -141,3 +141,11 @@ def test_extra_future_labels_do_not_affect_selection():
         {**r, "raw_ai_point_px": [123, 456], "release": 99, "outcome": "single"} for r in rows
     ]
     assert replay(rows) == replay(changed)
+
+
+def test_reason_histogram_does_not_count_gap_before_initialization():
+    rows = stream()
+    rows[0].update(state="unseeded", reason="no_seed", point_px=None)
+    rows = [rows[0], {**rows[1], "frame_seconds": 1, "reason": "external_seed"}]
+    _, summary = replay(rows)
+    assert summary["reasons"] == {"no_seed": 1, "collecting_support": 1}

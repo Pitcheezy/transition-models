@@ -128,23 +128,26 @@ def test_cumulative_drift_and_opposite_side_oscillation_cannot_pass_as_stationar
 @pytest.mark.parametrize(
     "dx,dy,qualifies", [(8.0, 0.0, True), (8.0001, 0.0, False), (6.0, 6.0, False)]
 )
-def test_entire_bounding_box_diagonal_not_axis_wise_or_anchor_radius(dx, dy, qualifies):
+@pytest.mark.parametrize("offset", [0.0, 3600.4])
+def test_entire_bounding_box_diagonal_not_axis_wise_or_anchor_radius(dx, dy, qualifies, offset):
     points = [(600, 300), (600 + dx, 300), (600, 300 + dy), (600 + dx, 300 + dy)]
-    result = run([row(i, point=point) for i, point in enumerate(points)])
+    result = run([row(i, point=point, t=offset + i / 10) for i, point in enumerate(points)])
     assert (result[-1]["event"] is not None) is qualifies
     if qualifies:
         assert result[-1]["event"]["diameter_px"] == pytest.approx(8.0)
 
 
 @pytest.mark.parametrize("last,qualifies", [(0.2999, False), (0.30, True), (0.3001, True)])
-def test_hold_duration_boundary(last, qualifies):
-    result = run([row(i, t=t) for i, t in enumerate([0.0, 0.1, 0.2, last])])
+@pytest.mark.parametrize("offset", [0.0, 1800.4, 3600.4, 10000.4])
+def test_hold_duration_boundary(last, qualifies, offset):
+    result = run([row(i, t=offset + t) for i, t in enumerate([0.0, 0.1, 0.2, last])])
     assert (result[-1]["event"] is not None) is qualifies
 
 
 @pytest.mark.parametrize("last,qualifies", [(0.45, True), (0.4501, False)])
-def test_time_gap_boundary(last, qualifies):
-    result = run([row(i, t=t) for i, t in enumerate([0.0, 0.1, 0.2, last])])
+@pytest.mark.parametrize("offset", [0.0, 3600.4])
+def test_time_gap_boundary(last, qualifies, offset):
+    result = run([row(i, t=offset + t) for i, t in enumerate([0.0, 0.1, 0.2, last])])
     assert (result[-1]["event"] is not None) is qualifies
 
 
@@ -178,6 +181,8 @@ def test_prefix_invariance_across_all_segment_boundaries_and_no_outcome_argument
         {"frame_seconds": True},
         {"frame_seconds": float("nan")},
         {"frame_seconds": float("inf")},
+        {"frame_seconds": 10**400},
+        {"point_px": [600, 10**400]},
         {"point_px": None},
         {"point_px": [600, float("nan")]},
         {"point_px": [600, float("inf")]},
@@ -266,6 +271,7 @@ def test_input_and_output_mutations_cannot_rewrite_selector_history():
     [
         {"max_diameter_px": 0},
         {"max_diameter_px": float("inf")},
+        {"max_diameter_px": 10**400},
         {"max_diameter_px": True},
         {"min_hold_seconds": -1},
         {"min_hold_seconds": float("nan")},
@@ -297,3 +303,27 @@ def test_selector_parameters_cannot_be_rebound_with_an_old_digest():
     with pytest.raises(AttributeError):
         selector.params = StationaryParams(max_diameter_px=999)
     assert selector.params.digest() == digest
+
+
+def test_sparse_initialization_does_not_report_a_nonexistent_segment_restart():
+    s = StationarySelector()
+    s.step(row(0, state="unseeded", point=None))
+    assert s.step(row(1, t=0.5, reason="external_seed"))["reason"] == "collecting_support"
+    s.step(row(2, t=0.6), usable=False)
+    assert s.step(row(3, t=1))["reason"] == "collecting_support"
+
+
+def test_continuity_support_is_implied_by_seed_plus_remaining_observations():
+    outputs = run([row(i, point=(600 if i < 4 else 620, 300)) for i in range(8)])
+    first, second = outputs[3]["event"], outputs[7]["event"]
+    assert first["continuity_observations"] == first["observations"] - 1
+    assert second["continuity_observations"] == second["observations"]
+
+
+@pytest.mark.parametrize("reason", ["seed_border", "seed_low_texture"])
+def test_failed_seed_can_transition_directly_to_terminal_loss(reason):
+    s = StationarySelector()
+    r = s.step(row(0, state="lost", reason=reason, point=None))
+    assert r["current_candidate"] is None and r["last_historical_candidate"] is None
+    with pytest.raises(ValueError):
+        s.step(row(1, reason="external_seed"))

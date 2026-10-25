@@ -16,7 +16,12 @@ from dataclasses import asdict, dataclass
 
 
 def _number(value):
-    return isinstance(value, (int, float)) and not isinstance(value, bool) and math.isfinite(value)
+    if not isinstance(value, (int, float)) or isinstance(value, bool):
+        return False
+    try:
+        return math.isfinite(value)
+    except OverflowError:
+        return False
 
 
 @dataclass(frozen=True)
@@ -26,6 +31,8 @@ class StationaryParams:
     max_diameter_px: float = 8.0
     min_hold_seconds: float = 0.30
     min_observations: int = 4
+    # Implied by min_observations for this tracker (one seed, then continuity only).
+    # Retained as the preregistered evidence assertion, not an independently binding gate.
     min_continuity: int = 2
     max_gap_seconds: float = 0.25
 
@@ -124,7 +131,7 @@ class StationarySelector:
         """Validate fully before mutation; return an independent JSON-safe snapshot."""
         self._validate(row, usable)
         t, index, point = row["frame_seconds"], row["frame_index"], row["point_px"]
-        gap = self._time is not None and t - self._time > self.params.max_gap_seconds
+        gap = self._segment is not None and t - self._time > self.params.max_gap_seconds
         self._pitch, self._index, self._time = row["pitch_id"], index, t
         self._tracker_state = row["state"]
         current = event = None
