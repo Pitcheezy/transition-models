@@ -3,9 +3,9 @@
 ## PR64 병합·최종 발표 독립 준비 — 2026-10-25
 
 - [x] H-main4. 사용자 승인으로 PR64 head `2208b4f`의 기존 검토·최종 CI2/2 성공을 확인하고 main `4e6aba71487ffe0c2ce9dd6df658ca9db9da9953`에 병합했다. 실제 배포 변경은 없다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-25 · Codex]`
-- [x] P-final1. [발표 준비팩](docs/presentation/README.md)에 원고8장·포스터 문안·질의응답12개·기여8범주·실행/대체 동선·검증 기록을 묶었다. 기존 사이트/스냅샷·체크리스트8 검사 및 앱 브라우저3구 재생/결과공개/미트 정지장면/숨김/수동공개 확인. 최종 PPTX/인쇄포스터·새 팀원본/공동시험·최종기기/낭독·학교규격은 미완료다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-25 · Codex]`
+- [x] P-final1. [발표 준비팩](docs/presentation/README.md)에 설명8주제·기존 포스터 참고 문안·질의응답12개·기여8범주·실행/대체 동선·검증 기록을 묶었다. 기존 사이트/스냅샷·체크리스트8 검사 및 앱 브라우저3구 재생/결과공개/미트 정지장면/숨김/수동공개 확인. 사용자 확인: 기존 포스터 있음·발표 제한시간 없음·PPT 불필요. 새 제작/학교 규격은 잔여 조건에서 제외한다. 새 팀원본/공동시험·최종기기/현장 설명은 미완료이며 최신 포스터 내용은 미검토다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-25 · Codex]`
 
-검증 후 수정 권한 반납 준비: 우리 Codex / `codex/final-presentation-prep-1025` / 기준 main `4e6aba7`. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6395109919). 팀원 코드/프로세스/배포·우리 Cloudflare 미변경, 요금제·동시접속 시험11월 보류. 아래 미병합 문구는 당시 이력이다.
+사용자 형식 확정 반영·검증 완료·수정 권한 반납: 우리 Codex / `codex/final-presentation-prep-1025` / 기준 main `4e6aba7`. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6395109919). 팀원 코드/프로세스/배포·우리 Cloudflare 미변경, 요금제·동시접속 시험11월 보류. 아래 미병합 문구는 당시 이력이다.
 
 ## PR63 병합·운영 증거 PR64 검토 — 2026-10-25
 
