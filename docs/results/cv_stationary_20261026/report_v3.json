@@ -1,0 +1,378 @@
+{
+  "schema": "pitcheezy-stationary-pilot-dev-v1",
+  "evidence_kind": "offline exposed development replay; no new vision/human labels",
+  "params": {
+    "max_diameter_px": 8.0,
+    "min_hold_seconds": 0.3,
+    "min_observations": 4,
+    "min_continuity": 2,
+    "max_gap_seconds": 0.25
+  },
+  "params_sha256": "6699bbf80518742143af1ffbdabec2e804070bae170bfb571cfd010d41f1f1fc",
+  "source_files_sha256": {
+    "mitt_stationary.py": "d78998c6f3ec65d12f0d7684bd993df019e76e236b724b26fb73e91d054617f8",
+    "mitt_stationary_pilot.py": "889db5f3db0d5ad9ed175719ffb893a94447b812055de2c268d9b52c3f057388"
+  },
+  "input_sha256": {
+    "tracking_report": "6979e4b921afe2f978fd83e89755ec65fea9e74db6a1c794606fa942e80002b3",
+    "cpu": "4097f61449487f074fdd965ee1823f3fabdc2c06b901f76b7dc5e9ff0d395a4b",
+    "cuda": "4ec0ec87f45b3a002a9ffa469dbd4770d86e826eb82a34498b3ed90bb2136e6a"
+  },
+  "input_unchanged": true,
+  "cpu_cuda_selection_equal": true,
+  "devices": {
+    "cpu": {
+      "frames": 625,
+      "pitches": 10,
+      "events": 6,
+      "pitches_with_event": 5,
+      "current_candidate_frames": 92,
+      "history_only_frames": 197,
+      "selection_states": {
+        "unavailable": 502,
+        "warming": 31,
+        "stationary": 92
+      },
+      "reasons": {
+        "no_seed": 82,
+        "collecting_support": 27,
+        "low_similarity": 229,
+        "motion_restart": 4,
+        "geometric_stationary_patch": 92,
+        "ambiguous_peak": 110,
+        "forward_backward_mismatch": 81
+      },
+      "pitch_summaries": [
+        {
+          "pitch_id": "747139:3:1",
+          "frames": 74,
+          "events": 0,
+          "current_candidate_frames": 0,
+          "current_intervals": [],
+          "final_tracker_state": "lost",
+          "final_current_candidate_present": false,
+          "final_history_present": false
+        },
+        {
+          "pitch_id": "747139:3:2",
+          "frames": 63,
+          "events": 0,
+          "current_candidate_frames": 0,
+          "current_intervals": [],
+          "final_tracker_state": "lost",
+          "final_current_candidate_present": false,
+          "final_history_present": false
+        },
+        {
+          "pitch_id": "747139:3:3",
+          "frames": 66,
+          "events": 1,
+          "current_candidate_frames": 27,
+          "current_intervals": [
+            {
+              "candidate_id": "747139:3:3:17251",
+              "first_seconds": 287.80418333333336,
+              "last_seconds": 290.40678333333335,
+              "frames": 27,
+              "observed_span_seconds": 2.6025999999999954
+            }
+          ],
+          "final_tracker_state": "lost",
+          "final_current_candidate_present": false,
+          "final_history_present": true
+        },
+        {
+          "pitch_id": "747139:4:1",
+          "frames": 47,
+          "events": 0,
+          "current_candidate_frames": 0,
+          "current_intervals": [],
+          "final_tracker_state": "lost",
+          "final_current_candidate_present": false,
+          "final_history_present": false
+        },
+        {
+          "pitch_id": "747139:4:2",
+          "frames": 77,
+          "events": 2,
+          "current_candidate_frames": 33,
+          "current_intervals": [
+            {
+              "candidate_id": "747139:4:2:20488",
+              "first_seconds": 341.80813333333333,
+              "last_seconds": 344.11043333333333,
+              "frames": 24,
+              "observed_span_seconds": 2.3023000000000025
+            },
+            {
+              "candidate_id": "747139:4:2:20650",
+              "first_seconds": 344.5108333333333,
+              "last_seconds": 345.31163333333336,
+              "frames": 9,
+              "observed_span_seconds": 0.8008000000000379
+            }
+          ],
+          "final_tracker_state": "lost",
+          "final_current_candidate_present": false,
+          "final_history_present": true
+        },
+        {
+          "pitch_id": "747139:5:1",
+          "frames": 34,
+          "events": 0,
+          "current_candidate_frames": 0,
+          "current_intervals": [],
+          "final_tracker_state": "lost",
+          "final_current_candidate_present": false,
+          "final_history_present": false
+        },
+        {
+          "pitch_id": "747139:5:2",
+          "frames": 53,
+          "events": 0,
+          "current_candidate_frames": 0,
+          "current_intervals": [],
+          "final_tracker_state": "lost",
+          "final_current_candidate_present": false,
+          "final_history_present": false
+        },
+        {
+          "pitch_id": "747139:5:3",
+          "frames": 68,
+          "events": 1,
+          "current_candidate_frames": 12,
+          "current_intervals": [
+            {
+              "candidate_id": "747139:5:3:23230",
+              "first_seconds": 387.55383333333333,
+              "last_seconds": 388.65493333333336,
+              "frames": 12,
+              "observed_span_seconds": 1.1011000000000308
+            }
+          ],
+          "final_tracker_state": "lost",
+          "final_current_candidate_present": false,
+          "final_history_present": true
+        },
+        {
+          "pitch_id": "747139:5:4",
+          "frames": 70,
+          "events": 1,
+          "current_candidate_frames": 14,
+          "current_intervals": [
+            {
+              "candidate_id": "747139:5:4:24414",
+              "first_seconds": 407.3069,
+              "last_seconds": 408.6082,
+              "frames": 14,
+              "observed_span_seconds": 1.301300000000026
+            }
+          ],
+          "final_tracker_state": "lost",
+          "final_current_candidate_present": false,
+          "final_history_present": true
+        },
+        {
+          "pitch_id": "747139:5:6",
+          "frames": 73,
+          "events": 1,
+          "current_candidate_frames": 6,
+          "current_intervals": [
+            {
+              "candidate_id": "747139:5:6:26796",
+              "first_seconds": 447.0466,
+              "last_seconds": 447.5471,
+              "frames": 6,
+              "observed_span_seconds": 0.5004999999999882
+            }
+          ],
+          "final_tracker_state": "lost",
+          "final_current_candidate_present": false,
+          "final_history_present": true
+        }
+      ],
+      "output_sha256": "ed34d37d43b2ea167c4933e2352aa62ac5342490cbc7f10f56c703f38710df93"
+    },
+    "cuda": {
+      "frames": 625,
+      "pitches": 10,
+      "events": 6,
+      "pitches_with_event": 5,
+      "current_candidate_frames": 92,
+      "history_only_frames": 197,
+      "selection_states": {
+        "unavailable": 502,
+        "warming": 31,
+        "stationary": 92
+      },
+      "reasons": {
+        "no_seed": 82,
+        "collecting_support": 27,
+        "low_similarity": 229,
+        "motion_restart": 4,
+        "geometric_stationary_patch": 92,
+        "ambiguous_peak": 110,
+        "forward_backward_mismatch": 81
+      },
+      "pitch_summaries": [
+        {
+          "pitch_id": "747139:3:1",
+          "frames": 74,
+          "events": 0,
+          "current_candidate_frames": 0,
+          "current_intervals": [],
+          "final_tracker_state": "lost",
+          "final_current_candidate_present": false,
+          "final_history_present": false
+        },
+        {
+          "pitch_id": "747139:3:2",
+          "frames": 63,
+          "events": 0,
+          "current_candidate_frames": 0,
+          "current_intervals": [],
+          "final_tracker_state": "lost",
+          "final_current_candidate_present": false,
+          "final_history_present": false
+        },
+        {
+          "pitch_id": "747139:3:3",
+          "frames": 66,
+          "events": 1,
+          "current_candidate_frames": 27,
+          "current_intervals": [
+            {
+              "candidate_id": "747139:3:3:17251",
+              "first_seconds": 287.80418333333336,
+              "last_seconds": 290.40678333333335,
+              "frames": 27,
+              "observed_span_seconds": 2.6025999999999954
+            }
+          ],
+          "final_tracker_state": "lost",
+          "final_current_candidate_present": false,
+          "final_history_present": true
+        },
+        {
+          "pitch_id": "747139:4:1",
+          "frames": 47,
+          "events": 0,
+          "current_candidate_frames": 0,
+          "current_intervals": [],
+          "final_tracker_state": "lost",
+          "final_current_candidate_present": false,
+          "final_history_present": false
+        },
+        {
+          "pitch_id": "747139:4:2",
+          "frames": 77,
+          "events": 2,
+          "current_candidate_frames": 33,
+          "current_intervals": [
+            {
+              "candidate_id": "747139:4:2:20488",
+              "first_seconds": 341.80813333333333,
+              "last_seconds": 344.11043333333333,
+              "frames": 24,
+              "observed_span_seconds": 2.3023000000000025
+            },
+            {
+              "candidate_id": "747139:4:2:20650",
+              "first_seconds": 344.5108333333333,
+              "last_seconds": 345.31163333333336,
+              "frames": 9,
+              "observed_span_seconds": 0.8008000000000379
+            }
+          ],
+          "final_tracker_state": "lost",
+          "final_current_candidate_present": false,
+          "final_history_present": true
+        },
+        {
+          "pitch_id": "747139:5:1",
+          "frames": 34,
+          "events": 0,
+          "current_candidate_frames": 0,
+          "current_intervals": [],
+          "final_tracker_state": "lost",
+          "final_current_candidate_present": false,
+          "final_history_present": false
+        },
+        {
+          "pitch_id": "747139:5:2",
+          "frames": 53,
+          "events": 0,
+          "current_candidate_frames": 0,
+          "current_intervals": [],
+          "final_tracker_state": "lost",
+          "final_current_candidate_present": false,
+          "final_history_present": false
+        },
+        {
+          "pitch_id": "747139:5:3",
+          "frames": 68,
+          "events": 1,
+          "current_candidate_frames": 12,
+          "current_intervals": [
+            {
+              "candidate_id": "747139:5:3:23230",
+              "first_seconds": 387.55383333333333,
+              "last_seconds": 388.65493333333336,
+              "frames": 12,
+              "observed_span_seconds": 1.1011000000000308
+            }
+          ],
+          "final_tracker_state": "lost",
+          "final_current_candidate_present": false,
+          "final_history_present": true
+        },
+        {
+          "pitch_id": "747139:5:4",
+          "frames": 70,
+          "events": 1,
+          "current_candidate_frames": 14,
+          "current_intervals": [
+            {
+              "candidate_id": "747139:5:4:24414",
+              "first_seconds": 407.3069,
+              "last_seconds": 408.6082,
+              "frames": 14,
+              "observed_span_seconds": 1.301300000000026
+            }
+          ],
+          "final_tracker_state": "lost",
+          "final_current_candidate_present": false,
+          "final_history_present": true
+        },
+        {
+          "pitch_id": "747139:5:6",
+          "frames": 73,
+          "events": 1,
+          "current_candidate_frames": 6,
+          "current_intervals": [
+            {
+              "candidate_id": "747139:5:6:26796",
+              "first_seconds": 447.0466,
+              "last_seconds": 447.5471,
+              "frames": 6,
+              "observed_span_seconds": 0.5004999999999882
+            }
+          ],
+          "final_tracker_state": "lost",
+          "final_current_candidate_present": false,
+          "final_history_present": true
+        }
+      ],
+      "output_sha256": "ed34d37d43b2ea167c4933e2352aa62ac5342490cbc7f10f56c703f38710df93"
+    }
+  },
+  "limits": [
+    "Geometric patch stationarity only; a stable wrong seed can qualify.",
+    "No new semantic/view gate was inferred or applied in this saved replay.",
+    "720p development thresholds, not calibrated for other resolutions.",
+    "Observed interval spans stop at the last qualifying sampled frame; no interpolation.",
+    "No release/outcome/future annotation, physical accuracy or independent evaluation.",
+    "Timing inherits CV37 manifest-derived assumptions, not independently verified PTS.",
+    "CPU/CUDA here identifies saved input streams; selector itself uses standard Python."
+  ]
+}
