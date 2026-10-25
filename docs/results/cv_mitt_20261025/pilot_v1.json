@@ -1,0 +1,772 @@
+{
+ "schema": "pitcheezy-mitt-pilot-dev-v1-public-summary",
+ "scope": "development pilot on 747139 (development data); AI reader outputs, not human ground truth; local offline replay, not a live test",
+ "rule": {
+  "pitches": "first 10 extracted pitches of bundle_v1 in pitch order",
+  "frames": "every 2nd grid frame (step 12 source frames, about 5 fps) from window start through the release-nearest frame",
+  "same_frame_reread": "the image the frozen v0 reader actually read, one per pitch",
+  "batching": "at most one frame per pitch per batch; opaque ids; batch order by id",
+  "reader": "Claude Code agent, model Fable 5.1 (the v0 747139 reader model), same 2x crop",
+  "fixed_before_reading": true
+ },
+ "params": {
+  "version": "dev-v1",
+  "hold_radius_px": 8.0,
+  "min_hold_seconds": 0.3,
+  "move_px": 10.0,
+  "max_gap_seconds": 0.25
+ },
+ "params_sha256": "01c82c45a1cca9735a34c47cdcc46898d1b0379232cdf4b500a282f553e5eac5",
+ "reader_answers": {
+  "frames_planned": 325,
+  "answered": 325,
+  "missing": 0,
+  "answer_file_problems": {},
+  "schema_rejected": {}
+ },
+ "denominator_pitches": 10,
+ "old_vs_new_common_task": {
+  "task": "one mitt pixel point per pitch, available before delivery start, from frames up to that time",
+  "v0_decision_frame": {
+   "pixel_output": 10,
+   "output_time": "decision frame (start of the set window)",
+   "temporal_evidence": "none (one frame)"
+  },
+  "temporal_rule": {
+   "candidate_before_delivery_start": 9,
+   "candidate_before_release": 10,
+   "delivery_start_unknown": 0,
+   "undeterminable": {},
+   "front_edge_units_before_delivery": 7
+  },
+  "candidate_vs_v0_point_px": {
+   "n": 9,
+   "median": 11.18,
+   "p90": 34.66,
+   "max": 34.66
+  },
+  "candidate_vs_v0_note": "distance between two AI readings at different moments; not an error"
+ },
+ "same_frame_reread_vs_v0_px": {
+  "n": 10,
+  "median": 3.8,
+  "p90": 21.93,
+  "max": 48.26,
+  "statuses": {
+   "compared": 10
+  },
+  "note": "same image, v0 reader vs pilot reader (same model family); repeatability, not accuracy"
+ },
+ "reader_instability": {
+  "consecutive_usable_pairs": 256,
+  "pairs_over_30px": 56,
+  "pairs_over_50px": 25,
+  "note": "jumps between consecutive usable frames 0.2 s apart; real motion and reader identity switches are not separable without human review"
+ },
+ "sensitivity": [
+  {
+   "hold_radius_px": 8.0,
+   "min_hold_seconds": 0.3,
+   "candidate_before_delivery_start": 9,
+   "emitted_after_decision_s_median": 3.403
+  },
+  {
+   "hold_radius_px": 8.0,
+   "min_hold_seconds": 0.5,
+   "candidate_before_delivery_start": 6,
+   "emitted_after_decision_s_median": 1.707
+  },
+  {
+   "hold_radius_px": 12.0,
+   "min_hold_seconds": 0.3,
+   "candidate_before_delivery_start": 9,
+   "emitted_after_decision_s_median": 3.21
+  },
+  {
+   "hold_radius_px": 12.0,
+   "min_hold_seconds": 0.5,
+   "candidate_before_delivery_start": 9,
+   "emitted_after_decision_s_median": 0.607
+  },
+  {
+   "hold_radius_px": 16.0,
+   "min_hold_seconds": 0.3,
+   "candidate_before_delivery_start": 9,
+   "emitted_after_decision_s_median": 3.207
+  },
+  {
+   "hold_radius_px": 16.0,
+   "min_hold_seconds": 0.5,
+   "candidate_before_delivery_start": 9,
+   "emitted_after_decision_s_median": 2.007
+  }
+ ],
+ "reader_calls": {
+  "basis": "harness task-notification usage per reader call: subagent_tokens, tool_uses, duration_ms; model Fable 5.1 via Agent tool; not a money figure",
+  "calls": 40,
+  "tokens_total": 3202799,
+  "tokens_per_call_median": 77167.5,
+  "tokens_per_call_range": [
+   62015,
+   123506
+  ],
+  "seconds_per_call_median": 196.3,
+  "seconds_per_call_range": [
+   66.3,
+   834.1
+  ],
+  "money": "not measured"
+ },
+ "pitches": [
+  {
+   "pitch_id": "747139:3:1",
+   "frames_planned": 37,
+   "frames_observed": 37,
+   "usable_frames": 34,
+   "state_counts": {
+    "unclear": 4,
+    "moving": 20,
+    "still": 8,
+    "lowering": 2,
+    "raising": 2,
+    "held": 1
+   },
+   "unclear_reasons": {
+    "view_not_live_centre_field": 3,
+    "segment_start": 1
+   },
+   "candidates": 1,
+   "decision_seconds": 249.75,
+   "delivery_start_seconds": 254.5543,
+   "delivery_start_source": "posthoc_annotation",
+   "release_seconds": 256.1,
+   "candidate_before_delivery_start": {
+    "segment_start_seconds": 252.752,
+    "emitted_seconds": 253.153,
+    "emitted_after_decision_s": 3.403,
+    "emitted_before_release_s": 2.947,
+    "point_px": [
+     670.0,
+     265.0
+    ],
+    "frames_in_segment": 3,
+    "spread_px": 6.32
+   },
+   "candidate_before_release": {
+    "segment_start_seconds": 252.752,
+    "emitted_seconds": 253.153,
+    "emitted_after_decision_s": 3.403,
+    "emitted_before_release_s": 2.947,
+    "point_px": [
+     670.0,
+     265.0
+    ],
+    "frames_in_segment": 3,
+    "spread_px": 6.32
+   },
+   "conversion_before_delivery_start": "front_edge_units",
+   "undeterminable_reason": null,
+   "v0": {
+    "status": "estimated",
+    "point_px": [
+     645.0,
+     241.0
+    ],
+    "frame_seconds": 249.75
+   },
+   "candidate_vs_v0_px": 34.66,
+   "same_frame_reread_px": 3.61,
+   "same_frame_reread_status": "compared",
+   "reader_jumps": {
+    "pairs": 33,
+    "over_30px": 12,
+    "over_50px": 6,
+    "median_px": 16.03
+   }
+  },
+  {
+   "pitch_id": "747139:3:2",
+   "frames_planned": 32,
+   "frames_observed": 32,
+   "usable_frames": 28,
+   "state_counts": {
+    "unclear": 5,
+    "still": 7,
+    "moving": 10,
+    "lowering": 3,
+    "raising": 2,
+    "held": 5
+   },
+   "unclear_reasons": {
+    "view_not_live_centre_field": 4,
+    "segment_start": 1
+   },
+   "candidates": 3,
+   "decision_seconds": 271.5,
+   "delivery_start_seconds": 275.40846666666664,
+   "delivery_start_source": "posthoc_annotation",
+   "release_seconds": 276.8,
+   "candidate_before_delivery_start": {
+    "segment_start_seconds": 274.508,
+    "emitted_seconds": 274.908,
+    "emitted_after_decision_s": 3.408,
+    "emitted_before_release_s": 1.892,
+    "point_px": [
+     667.0,
+     257.0
+    ],
+    "frames_in_segment": 3,
+    "spread_px": 5.83
+   },
+   "candidate_before_release": {
+    "segment_start_seconds": 275.509,
+    "emitted_seconds": 275.909,
+    "emitted_after_decision_s": 4.409,
+    "emitted_before_release_s": 0.891,
+    "point_px": [
+     620.0,
+     246.0
+    ],
+    "frames_in_segment": 3,
+    "spread_px": 5.0
+   },
+   "conversion_before_delivery_start": "front_edge_units",
+   "undeterminable_reason": null,
+   "v0": {
+    "status": "estimated",
+    "point_px": [
+     660.0,
+     236.0
+    ],
+    "frame_seconds": 271.5
+   },
+   "candidate_vs_v0_px": 22.14,
+   "same_frame_reread_px": 2.0,
+   "same_frame_reread_status": "compared",
+   "reader_jumps": {
+    "pairs": 27,
+    "over_30px": 7,
+    "over_50px": 3,
+    "median_px": 22.2
+   }
+  },
+  {
+   "pitch_id": "747139:3:3",
+   "frames_planned": 33,
+   "frames_observed": 33,
+   "usable_frames": 28,
+   "state_counts": {
+    "unclear": 6,
+    "still": 8,
+    "moving": 10,
+    "lowering": 2,
+    "raising": 2,
+    "held": 5
+   },
+   "unclear_reasons": {
+    "view_not_live_centre_field": 5,
+    "segment_start": 1
+   },
+   "candidates": 2,
+   "decision_seconds": 287.5,
+   "delivery_start_seconds": 291.7080833333333,
+   "delivery_start_source": "posthoc_annotation",
+   "release_seconds": 293.1,
+   "candidate_before_delivery_start": {
+    "segment_start_seconds": 290.507,
+    "emitted_seconds": 290.907,
+    "emitted_after_decision_s": 3.407,
+    "emitted_before_release_s": 2.193,
+    "point_px": [
+     670.0,
+     262.0
+    ],
+    "frames_in_segment": 3,
+    "spread_px": 7.07
+   },
+   "candidate_before_release": {
+    "segment_start_seconds": 290.507,
+    "emitted_seconds": 290.907,
+    "emitted_after_decision_s": 3.407,
+    "emitted_before_release_s": 2.193,
+    "point_px": [
+     670.0,
+     262.0
+    ],
+    "frames_in_segment": 3,
+    "spread_px": 7.07
+   },
+   "conversion_before_delivery_start": "front_edge_units",
+   "undeterminable_reason": null,
+   "v0": {
+    "status": "estimated",
+    "point_px": [
+     684.0,
+     270.0
+    ],
+    "frame_seconds": 287.5
+   },
+   "candidate_vs_v0_px": 16.12,
+   "same_frame_reread_px": 21.93,
+   "same_frame_reread_status": "compared",
+   "reader_jumps": {
+    "pairs": 27,
+    "over_30px": 8,
+    "over_50px": 4,
+    "median_px": 11.18
+   }
+  },
+  {
+   "pitch_id": "747139:4:1",
+   "frames_planned": 24,
+   "frames_observed": 24,
+   "usable_frames": 23,
+   "state_counts": {
+    "unclear": 3,
+    "still": 9,
+    "held": 1,
+    "moving": 6,
+    "lowering": 4,
+    "raising": 1
+   },
+   "unclear_reasons": {
+    "segment_start": 2,
+    "catcher_not_set": 1
+   },
+   "candidates": 1,
+   "decision_seconds": 327.75,
+   "delivery_start_seconds": 330.1464833333333,
+   "delivery_start_source": "posthoc_annotation",
+   "release_seconds": 331.4,
+   "candidate_before_delivery_start": {
+    "segment_start_seconds": 326.943,
+    "emitted_seconds": 327.344,
+    "emitted_after_decision_s": -0.406,
+    "emitted_before_release_s": 4.056,
+    "point_px": [
+     645.0,
+     205.0
+    ],
+    "frames_in_segment": 3,
+    "spread_px": 6.08
+   },
+   "candidate_before_release": {
+    "segment_start_seconds": 326.943,
+    "emitted_seconds": 327.344,
+    "emitted_after_decision_s": -0.406,
+    "emitted_before_release_s": 4.056,
+    "point_px": [
+     645.0,
+     205.0
+    ],
+    "frames_in_segment": 3,
+    "spread_px": 6.08
+   },
+   "conversion_before_delivery_start": "front_edge_units",
+   "undeterminable_reason": null,
+   "v0": {
+    "status": "estimated",
+    "point_px": [
+     663.0,
+     214.0
+    ],
+    "frame_seconds": 327.75
+   },
+   "candidate_vs_v0_px": 20.12,
+   "same_frame_reread_px": 6.08,
+   "same_frame_reread_status": "compared",
+   "reader_jumps": {
+    "pairs": 21,
+    "over_30px": 6,
+    "over_50px": 1,
+    "median_px": 11.0
+   }
+  },
+  {
+   "pitch_id": "747139:4:2",
+   "frames_planned": 39,
+   "frames_observed": 39,
+   "usable_frames": 34,
+   "state_counts": {
+    "unclear": 6,
+    "still": 8,
+    "held": 16,
+    "moving": 7,
+    "raising": 1,
+    "lowering": 1
+   },
+   "unclear_reasons": {
+    "view_not_live_centre_field": 5,
+    "segment_start": 1
+   },
+   "candidates": 4,
+   "decision_seconds": 341.5,
+   "delivery_start_seconds": 346.7130333333333,
+   "delivery_start_source": "posthoc_annotation",
+   "release_seconds": 348.2,
+   "candidate_before_delivery_start": {
+    "segment_start_seconds": 345.111,
+    "emitted_seconds": 345.512,
+    "emitted_after_decision_s": 4.012,
+    "emitted_before_release_s": 2.688,
+    "point_px": [
+     663.0,
+     226.0
+    ],
+    "frames_in_segment": 3,
+    "spread_px": 4.24
+   },
+   "candidate_before_release": {
+    "segment_start_seconds": 347.314,
+    "emitted_seconds": 347.714,
+    "emitted_after_decision_s": 6.214,
+    "emitted_before_release_s": 0.486,
+    "point_px": [
+     740.0,
+     259.0
+    ],
+    "frames_in_segment": 3,
+    "spread_px": 8.0
+   },
+   "conversion_before_delivery_start": "front_edge_units",
+   "undeterminable_reason": null,
+   "v0": {
+    "status": "estimated",
+    "point_px": [
+     664.0,
+     226.0
+    ],
+    "frame_seconds": 341.5
+   },
+   "candidate_vs_v0_px": 1.0,
+   "same_frame_reread_px": 3.0,
+   "same_frame_reread_status": "compared",
+   "reader_jumps": {
+    "pairs": 33,
+    "over_30px": 1,
+    "over_50px": 1,
+    "median_px": 7.0
+   }
+  },
+  {
+   "pitch_id": "747139:5:1",
+   "frames_planned": 17,
+   "frames_observed": 17,
+   "usable_frames": 13,
+   "state_counts": {
+    "unclear": 5,
+    "raising": 2,
+    "still": 6,
+    "moving": 1,
+    "held": 1,
+    "lowering": 2
+   },
+   "unclear_reasons": {
+    "view_not_live_centre_field": 4,
+    "segment_start": 1
+   },
+   "candidates": 1,
+   "decision_seconds": 356.25,
+   "delivery_start_seconds": 357.2569,
+   "delivery_start_source": "posthoc_annotation",
+   "release_seconds": 358.6,
+   "candidate_before_delivery_start": null,
+   "candidate_before_release": {
+    "segment_start_seconds": 357.257,
+    "emitted_seconds": 357.657,
+    "emitted_after_decision_s": 1.407,
+    "emitted_before_release_s": 0.943,
+    "point_px": [
+     654.0,
+     211.0
+    ],
+    "frames_in_segment": 3,
+    "spread_px": 5.1
+   },
+   "conversion_before_delivery_start": "no_candidate",
+   "undeterminable_reason": null,
+   "v0": {
+    "status": "estimated",
+    "point_px": [
+     621.0,
+     205.0
+    ],
+    "frame_seconds": 356.25
+   },
+   "same_frame_reread_px": 48.26,
+   "same_frame_reread_status": "compared",
+   "reader_jumps": {
+    "pairs": 12,
+    "over_30px": 3,
+    "over_50px": 0,
+    "median_px": 6.99
+   }
+  },
+  {
+   "pitch_id": "747139:5:2",
+   "frames_planned": 27,
+   "frames_observed": 27,
+   "usable_frames": 21,
+   "state_counts": {
+    "unclear": 8,
+    "still": 5,
+    "held": 3,
+    "lowering": 4,
+    "moving": 5,
+    "raising": 2
+   },
+   "unclear_reasons": {
+    "view_not_live_centre_field": 5,
+    "segment_start": 2,
+    "catcher_not_set": 1
+   },
+   "candidates": 1,
+   "decision_seconds": 369.0,
+   "delivery_start_seconds": 371.70466666666664,
+   "delivery_start_source": "posthoc_annotation",
+   "release_seconds": 373.2,
+   "candidate_before_delivery_start": {
+    "segment_start_seconds": 369.002,
+    "emitted_seconds": 369.402,
+    "emitted_after_decision_s": 0.402,
+    "emitted_before_release_s": 3.798,
+    "point_px": [
+     675.0,
+     215.0
+    ],
+    "frames_in_segment": 3,
+    "spread_px": 2.24
+   },
+   "candidate_before_release": {
+    "segment_start_seconds": 369.002,
+    "emitted_seconds": 369.402,
+    "emitted_after_decision_s": 0.402,
+    "emitted_before_release_s": 3.798,
+    "point_px": [
+     675.0,
+     215.0
+    ],
+    "frames_in_segment": 3,
+    "spread_px": 2.24
+   },
+   "conversion_before_delivery_start": "pixels_only",
+   "undeterminable_reason": null,
+   "v0": {
+    "status": "estimated",
+    "point_px": [
+     672.0,
+     213.0
+    ],
+    "frame_seconds": 369.0
+   },
+   "candidate_vs_v0_px": 3.61,
+   "same_frame_reread_px": 4.0,
+   "same_frame_reread_status": "compared",
+   "reader_jumps": {
+    "pairs": 19,
+    "over_30px": 5,
+    "over_50px": 1,
+    "median_px": 13.6
+   }
+  },
+  {
+   "pitch_id": "747139:5:3",
+   "frames_planned": 34,
+   "frames_observed": 34,
+   "usable_frames": 29,
+   "state_counts": {
+    "unclear": 6,
+    "still": 6,
+    "held": 8,
+    "moving": 8,
+    "lowering": 3,
+    "raising": 3
+   },
+   "unclear_reasons": {
+    "view_not_live_centre_field": 5,
+    "segment_start": 1
+   },
+   "candidates": 1,
+   "decision_seconds": 387.25,
+   "delivery_start_seconds": 391.85813333333334,
+   "delivery_start_source": "posthoc_annotation",
+   "release_seconds": 393,
+   "candidate_before_delivery_start": {
+    "segment_start_seconds": 387.254,
+    "emitted_seconds": 387.654,
+    "emitted_after_decision_s": 0.404,
+    "emitted_before_release_s": 5.346,
+    "point_px": [
+     676.0,
+     228.0
+    ],
+    "frames_in_segment": 3,
+    "spread_px": 3.0
+   },
+   "candidate_before_release": {
+    "segment_start_seconds": 387.254,
+    "emitted_seconds": 387.654,
+    "emitted_after_decision_s": 0.404,
+    "emitted_before_release_s": 5.346,
+    "point_px": [
+     676.0,
+     228.0
+    ],
+    "frames_in_segment": 3,
+    "spread_px": 3.0
+   },
+   "conversion_before_delivery_start": "pixels_only",
+   "undeterminable_reason": null,
+   "v0": {
+    "status": "estimated",
+    "point_px": [
+     676.0,
+     230.0
+    ],
+    "frame_seconds": 387.25
+   },
+   "candidate_vs_v0_px": 2.0,
+   "same_frame_reread_px": 3.16,
+   "same_frame_reread_status": "compared",
+   "reader_jumps": {
+    "pairs": 28,
+    "over_30px": 7,
+    "over_50px": 3,
+    "median_px": 11.11
+   }
+  },
+  {
+   "pitch_id": "747139:5:4",
+   "frames_planned": 35,
+   "frames_observed": 35,
+   "usable_frames": 30,
+   "state_counts": {
+    "unclear": 6,
+    "still": 11,
+    "held": 4,
+    "raising": 4,
+    "moving": 8,
+    "lowering": 2
+   },
+   "unclear_reasons": {
+    "view_not_live_centre_field": 5,
+    "segment_start": 1
+   },
+   "candidates": 2,
+   "decision_seconds": 407.0,
+   "delivery_start_seconds": 411.8114,
+   "delivery_start_source": "posthoc_annotation",
+   "release_seconds": 413,
+   "candidate_before_delivery_start": {
+    "segment_start_seconds": 407.807,
+    "emitted_seconds": 408.208,
+    "emitted_after_decision_s": 1.208,
+    "emitted_before_release_s": 4.792,
+    "point_px": [
+     678.0,
+     230.0
+    ],
+    "frames_in_segment": 3,
+    "spread_px": 5.39
+   },
+   "candidate_before_release": {
+    "segment_start_seconds": 407.807,
+    "emitted_seconds": 408.208,
+    "emitted_after_decision_s": 1.208,
+    "emitted_before_release_s": 4.792,
+    "point_px": [
+     678.0,
+     230.0
+    ],
+    "frames_in_segment": 3,
+    "spread_px": 5.39
+   },
+   "conversion_before_delivery_start": "front_edge_units",
+   "undeterminable_reason": null,
+   "v0": {
+    "status": "estimated",
+    "point_px": [
+     676.0,
+     226.0
+    ],
+    "frame_seconds": 407.0
+   },
+   "candidate_vs_v0_px": 4.47,
+   "same_frame_reread_px": 1.0,
+   "same_frame_reread_status": "compared",
+   "reader_jumps": {
+    "pairs": 29,
+    "over_30px": 3,
+    "over_50px": 3,
+    "median_px": 9.85
+   }
+  },
+  {
+   "pitch_id": "747139:5:6",
+   "frames_planned": 37,
+   "frames_observed": 37,
+   "usable_frames": 30,
+   "state_counts": {
+    "unclear": 10,
+    "still": 9,
+    "held": 2,
+    "moving": 10,
+    "raising": 3,
+    "lowering": 3
+   },
+   "unclear_reasons": {
+    "view_not_live_centre_field": 5,
+    "segment_start": 3,
+    "catcher_not_set": 2
+   },
+   "candidates": 2,
+   "decision_seconds": 446.75,
+   "delivery_start_seconds": 451.7513,
+   "delivery_start_source": "posthoc_annotation",
+   "release_seconds": 453,
+   "candidate_before_delivery_start": {
+    "segment_start_seconds": 450.15,
+    "emitted_seconds": 450.55,
+    "emitted_after_decision_s": 3.8,
+    "emitted_before_release_s": 2.45,
+    "point_px": [
+     688.0,
+     217.0
+    ],
+    "frames_in_segment": 3,
+    "spread_px": 6.08
+   },
+   "candidate_before_release": {
+    "segment_start_seconds": 450.15,
+    "emitted_seconds": 450.55,
+    "emitted_after_decision_s": 3.8,
+    "emitted_before_release_s": 2.45,
+    "point_px": [
+     688.0,
+     217.0
+    ],
+    "frames_in_segment": 3,
+    "spread_px": 6.08
+   },
+   "conversion_before_delivery_start": "front_edge_units",
+   "undeterminable_reason": null,
+   "v0": {
+    "status": "estimated",
+    "point_px": [
+     693.0,
+     227.0
+    ],
+    "frame_seconds": 446.75
+   },
+   "candidate_vs_v0_px": 11.18,
+   "same_frame_reread_px": 16.0,
+   "same_frame_reread_status": "compared",
+   "reader_jumps": {
+    "pairs": 27,
+    "over_30px": 4,
+    "over_50px": 3,
+    "median_px": 11.05
+   }
+  }
+ ]
+}
