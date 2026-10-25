@@ -2,6 +2,8 @@
 
 ## 전시 CV 집중 개발 — 2026-10-26
 
+CV38 선점: 우리 Codex / `codex/cv-stationary-candidate-1026` / 기준 `73bbce7` / 2026-10-26. [합격 기준·고정 파라미터](docs/CV_STATIONARY_CANDIDATE_20261026.md). 기존 CV37 저장 행을 사용해 현재/과거 후보를 분리하고 실제 Claude Fable 교차 검토를 받는다. 삭제·옛 질문 발신은 보류, 다른 작업 폴더·팀원·운영은 변경하지 않는다.
+
 CV37r 검토 수신·수리 기록 완료·수정 권한 반납: 우리 Codex / `codex/cv-track-pilot-1026` / 수정 소스 `938145f`·`611d0c6`. 사용자 업데이트의 CLI2.1.310에서 실제 `claude-fable-5-1` 분할 검토·수정 재검토 최종 답변을 수신했다. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6401853278), [최종 기록](docs/CV_TRACKING_CROSS_REVIEW_20261026.md). 확인된 추적2건·측정4건 수리, 관련55검사·625행 기존 필드 동일·원본667 SHA 불변. 추가 fallback TF32 지적은 고정 노트북4조합에서 미재현이며 모든 런타임 PASS는 선언하지 않는다. 현재 PR70 연구만 변경했고 운영·상대·원본 Claude 폴더는 그대로다.
 
 노트북/외장 SSD를 유지하는 [실측 근거·협업 고지 초안](docs/CV_COMPUTE_PLAN_20261026.md)을 정리했다. 상세 연구 계획은 우리 board에 이미 기록했으며 Song에게 새 메시지는 미발신이다. 이전401/400/429는 [과거 시도 영수증](docs/results/cv_tracking_20261026/review_attempts_v2.json)으로 보존하며 재로그인/한도 대기를 현재 차단으로 쓰지 않는다.
