@@ -15,11 +15,13 @@ measures, and their limits:
 * sequence ids are opaque, the id-to-pitch map stays outside the pack, frames are written in id
   order with one fixed modification time and content-addressed names;
 * an optional crop (``--crop``) removes the score bug, which shows inning, count and pitch count;
-* a seeded number of leading (0-9) and trailing (0-2) grid frames is dropped per sequence, so the
-  frame count and the position of the AI decision frame do not line up with the public timing file.
+* every source grid frame at or before the release-nearest index is retained. No model output
+  chooses the review window; cropping removes pixels, not time. Random temporal trimming could
+  hide the very hold interval being evaluated and is no longer used.
 
 The pack is blind only for a reviewer who does not consult the repository's public 747139 timing,
-points or result files; name graphics in close-up frames can still reveal the batter. A held
+points or result files: frame counts can be matched to public timing, and name graphics in
+close-up frames can still reveal the batter. A held
 interval that starts at frame 1 is left-censored and must be reported as such.
 
 A seeded, pre-registered 25 percent of sequences is assigned to two reviewers for independent
@@ -224,12 +226,6 @@ def render_page(manifest, response, script_version="dev"):
 FIXED_MTIME = 1_700_000_000  # one constant modification time for every frame file and folder
 
 
-def trims(sid: str, seed: str):
-    """Seeded leading (0-9) and trailing (0-2) grid frames to drop for one sequence."""
-    digest = hashlib.sha256(f"{seed}|trim|{sid}".encode()).digest()
-    return digest[0] % 10, digest[1] % 3
-
-
 def to_source_pixels(point, crop_box):
     """A point clicked on a cropped review frame, back in source-frame pixels."""
     if crop_box is None:
@@ -266,15 +262,13 @@ def build(
     for p in chosen:
         sid = sequence_id(p["pitch_id"], salt)
         _, ab, pn = p["pitch_id"].split(":")
-        grid = [
+        frames = [
             f
             for f in p["frames"]
             if "grid" in f["roles"] and f["index"] <= p["window"]["release_index"]
         ]
-        lead, tail = trims(sid, seed)
-        frames = grid[lead : len(grid) - tail]
         if len(frames) < 10:
-            raise SystemExit(f"sequence {sid} too short after trimming")
+            raise SystemExit(f"sequence {sid} has fewer than 10 pre-release grid frames")
         folder = pack / "frames" / sid
         folder.mkdir(parents=True)
         out_frames = []
@@ -311,8 +305,8 @@ def build(
                 "sequence_id": sid,
                 "pitch_id": p["pitch_id"],
                 "frame_indices": [f["index"] for f in frames],
-                "dropped_leading_grid_frames": lead,
-                "dropped_trailing_grid_frames": tail,
+                "dropped_leading_grid_frames": 0,
+                "dropped_trailing_grid_frames": 0,
             }
         )
     manifest = {
@@ -347,7 +341,10 @@ def build(
                 "double_review_sequences": double,
                 "source_crop_box": list(crop_box) if crop_box else None,
                 "mapping": mapping,
-                "rule": "assignment and trims fixed before any review; double-review agreement is reported "
+                "rule": "all source grid frames at or before release-nearest are retained; "
+                "no temporal trimming or candidate-based selection; double-review assignment is seeded; "
+                "frame counts can identify pitches when combined with public timing; "
+                "double-review agreement is reported "
                 "apart from disagreement follow-ups; with one reviewer only, inter-human agreement is "
                 "incomplete; a held interval starting at frame 1 is left-censored",
             },

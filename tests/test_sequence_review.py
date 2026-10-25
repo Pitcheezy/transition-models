@@ -160,7 +160,7 @@ def _fake_bundle(root, pitch_ids, frames=25):
     (root / "manifest.json").write_text(json.dumps({"pitches": pitches}), encoding="utf-8")
 
 
-def test_build_blinds_order_times_counts_and_keeps_the_map_private(tmp_path):
+def test_build_preserves_the_full_window_and_keeps_order_times_and_map_private(tmp_path):
     ids = ["747139:3:1", "747139:3:2", "747139:3:3", "747139:4:1"]
     _fake_bundle(tmp_path / "bundle", ids)
     pack, private = tmp_path / "out" / "pack", tmp_path / "out" / "private"
@@ -175,13 +175,9 @@ def test_build_blinds_order_times_counts_and_keeps_the_map_private(tmp_path):
     assert not any(p.name == "private_map.json" for p in pack.rglob("*"))
     for m in secret["mapping"]:
         seq = next(s for s in manifest["sequences"] if s["sequence_id"] == m["sequence_id"])
-        assert (
-            len(seq["frames"])
-            == 25 - m["dropped_leading_grid_frames"] - m["dropped_trailing_grid_frames"]
-        )
-        assert (m["dropped_leading_grid_frames"], m["dropped_trailing_grid_frames"]) == sr.trims(
-            m["sequence_id"], "cv34-double-v1"
-        )
+        assert len(seq["frames"]) == 25
+        assert (m["dropped_leading_grid_frames"], m["dropped_trailing_grid_frames"]) == (0, 0)
+        assert m["frame_indices"] == [1000 + 6 * k for k in range(25)]
         assert seq["frames"][0]["width"] == 32 and seq["frames"][0]["height"] == 24
     frame_files = list((pack / "frames").rglob("*"))
     assert {int(p.stat().st_mtime) for p in frame_files} == {sr.FIXED_MTIME}
@@ -201,6 +197,27 @@ def test_build_blinds_order_times_counts_and_keeps_the_map_private(tmp_path):
 def test_build_keeps_the_pitch_map_outside_the_reviewer_pack(tmp_path):
     with pytest.raises(SystemExit):
         sr.build(tmp_path / "bundle", tmp_path / "pack", tmp_path / "pack" / "private")
+
+
+@pytest.mark.parametrize("seed", ["cv34-double-v1", "another-review-seed"])
+def test_early_hold_and_last_pre_release_frame_survive_blinding(tmp_path, seed):
+    bundle = tmp_path / "bundle"
+    _fake_bundle(bundle, ["747139:4:1"])
+    source = json.loads((bundle / "manifest.json").read_text())
+    source["pitches"][0]["window"]["release_index"] = 1121  # exclude grid frames 1126..1144
+    (bundle / "manifest.json").write_text(json.dumps(source))
+    pack, private = tmp_path / "pack", tmp_path / "private"
+    m, digest, _ = sr.build(bundle, pack, private, seed=seed)
+    indices = json.loads((private / "private_map.json").read_text())["mapping"][0]["frame_indices"]
+    assert indices == list(range(1000, 1122, 6))
+    # An early held interval and its emission stay reviewable regardless of the sampling seed.
+    assert 1006 in indices and 1030 in indices and indices[-1] == 1120
+    assert len(m["sequences"][0]["frames"]) == 21
+    old = copy.deepcopy(m)
+    old["sequences"][0]["frames"] = old["sequences"][0]["frames"][8:]
+    old_digest = sr.hashlib.sha256(json.dumps(old).encode()).hexdigest()
+    with pytest.raises(ValueError):
+        sr.validate_response(m, digest, sr.blank_response(old, old_digest))
 
 
 def _node(source):

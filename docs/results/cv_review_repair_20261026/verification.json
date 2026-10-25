@@ -1,0 +1,62 @@
+{
+  "schema": "pitcheezy-cv-review-repair-v1",
+  "date": "2026-10-26",
+  "base_commit": "5e90c19343785cea917c94bc5aaf9374406f1581",
+  "evidence_kind": "saved development replay and artifact integrity; no model calls or human review",
+  "pilot_replay": {
+    "byte_identical": true,
+    "sha256": "de3aaf6c96f180eaf587e3b321c44ba4c3c3bcedf3e662d59178fa3210274b0e",
+    "planned": 325,
+    "answered": 325,
+    "schema_rejected": {}
+  },
+  "preserved_source_files": 46,
+  "old_pack_response_rejected": true,
+  "packs": [
+    {
+      "name": "pilot10",
+      "path": "outputs/cv_review_repair_20261026_v2/pilot10_pack",
+      "sequences": 10,
+      "frames": 625,
+      "manifest_sha256": "f461e9c23bc9538c9633bbabce0994913f6b05c0611c068dc607ef41e4b6561d",
+      "private_map_sha256": "06df35f4437d2a50ee80f5ac94c8090371dacc55eab5a05ee9d0d3a289043fe4",
+      "double_review_sequences": 2,
+      "full_source_grid_preserved": true,
+      "frame_sha256_all_match": true,
+      "early_candidate_and_segment_start_preserved": true
+    },
+    {
+      "name": "all39",
+      "path": "outputs/cv_review_repair_20261026_v2/all39_pack",
+      "sequences": 39,
+      "frames": 2366,
+      "manifest_sha256": "e95c2ad97b3b934574a0dcaa1fd756b1b4d4fdecc30d6af3135b02ffbaf98ebd",
+      "private_map_sha256": "6a3c623e4bb0ceab2c44b0da08560d8f1b1bbf502b66f1d63da70c1151434fe5",
+      "double_review_sequences": 10,
+      "full_source_grid_preserved": true,
+      "frame_sha256_all_match": true,
+      "early_candidate_and_segment_start_preserved": true
+    }
+  ],
+  "limits": [
+    "same exposed development game; no new accuracy measurement",
+    "reviewer must not consult public timing; preserved counts can reveal identity",
+    "original crop and release-nearest boundary retained",
+    "new response uses new manifest; no automatic response migration"
+  ],
+  "source_sha256": {
+    "intent\\mitt_pilot.py": "fb6855876117de889173db78be85100440a2105359a04b12c81190f8399b0c7b",
+    "intent\\sequence_review.py": "f288e1d358f64984c5def4ed1a21c779f08a9d47661a591f820ab6d43cc66bb8",
+    "tests\\test_mitt_pilot.py": "ae36c330488fb87b53ad9183674cb63560ec6c79edf8b64c5ae2a60f21e4ae4c",
+    "tests\\test_sequence_review.py": "0a89bfd6c23c78342ee320d0645d0369a338ce12066f6768d242ff2bdce6c3fc"
+  },
+  "validation": {
+    "related_tests_passed": 51,
+    "initial_windows_subprocess_encoding_warnings": 1,
+    "utf8_checklist_recheck_passed": 8,
+    "utf8_checklist_recheck_warnings": 0,
+    "ruff_check": "passed",
+    "ruff_format": "passed",
+    "additional_same_model_read_review": "no P1/P2 found; not operational cross-model approval"
+  }
+}
