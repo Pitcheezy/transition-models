@@ -101,3 +101,17 @@ Windows workerd의 기존 WSARecv/WSASend 연결 종료 진단이 나올 수 있
 `node ops/public-host/rehearse-live-expiry.mjs --output .cache/new-live-expiry.json`
 
 새 loopback Worker1개·합성키1개에서 실제 만료를 기다리고 PUT/DELETE/HEAD403과 저장값 보존을 확인한다. 전체HTTP18/본문2KiB/부팅·대기·정리포함120초를 계수한다. 외부 대상·자격을 받지 않으며 실제 공동 시험이 아니다. [범위·결과](../../docs/WS_LIVE_EXPIRY_20261018.md).
+
+## 전시회 고정 간격 폴링 — WS-capacity1
+
+기존 폐쇄루프 모드와 별도의 `viewer-polling` 프로필이다.
+
+~~~text
+node ops/public-host/rehearse-local.mjs --mode viewer-polling --viewers 30 --output .cache/viewers30-new.json
+node ops/public-host/rehearse-local.mjs --mode viewer-polling --viewers 50 --output .cache/viewers50-new.json
+python scripts/218_estimate_viewer_budget.py --examples
+~~~
+
+30/50 가상 세션, 접근 문 ON, 임시 loopback Worker/R2만 사용한다. 5초 간격6슬롯·슬롯당2파일·각32KiB로 부하GET360/600건이며 준비 요청은 별도다. 마지막 예정 시작은25초다. 실제 사용자 브라우저·공용 CDN 용량 검사가 아니다. 지연500ms 초과/슬롯경계 초과/요청 실패는 중단하며 늦은 poll을 몰아 실행하지 않는다. 기존 closed-loop의 `--requests`/`--concurrency`/`--bytes`와 섞을 수 없다. 출력 경로는 실행 전에 확인하고 기존 파일을 덮어쓰지 않는다.
+
+[합격 조건·실측·예산·한계](../../docs/WS_EXHIBITION_CAPACITY_20261025.md)를 함께 읽는다. Free 일일 예산 계산은 Paid 월간 비용 추정과 별개이며 계정 잔량을 API로 읽거나 설정/요금제를 바꾸지 않는다.
