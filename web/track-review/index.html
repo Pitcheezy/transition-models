@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>저장 프레임 재생 · 개발용</title>
+  <link rel="stylesheet" href="style.css">
+  <script defer src="review.js"></script>
+</head>
+<body>
+  <main>
+    <header>
+      <p class="eyebrow">PITCHEEZY · CV DEVELOPMENT</p>
+      <h1>저장 프레임 재생 · 개발용</h1>
+      <p>추적한 패치와 멈춤 후보를 시간순으로 확인합니다. 미트 식별·포수 목표·투수 의도는 검증되지 않았습니다.</p>
+      <p class="notice">저장 이미지의 재생입니다. 시각은 manifest의 프레임 번호·시간 단위에서 계산했으며, 실제 디코딩 PTS를 독립 검증한 값이 아닙니다.</p>
+    </header>
+    <section class="controls" aria-label="투구와 프레임 탐색">
+      <button id="previous-pitch" type="button">이전 투구</button>
+      <label for="pitch-select">투구 선택</label>
+      <select id="pitch-select"></select>
+      <button id="next-pitch" type="button">다음 투구</button>
+      <span id="pitch-key" class="key"></span>
+    </section>
+    <div class="panels">
+      <section class="panel" aria-label="현재 프레임">
+        <h2>현재 프레임</h2>
+        <div class="canvas-wrap"><canvas id="current-canvas" width="1280" height="720" aria-label="현재 프레임과 현재 추적 표시"></canvas></div>
+        <p id="frame-status" role="status" aria-live="polite"></p>
+        <p class="legend"><span class="cyan">● 현재 추적 패치</span><span class="green">○ 현재 멈춤 후보</span></p>
+        <div class="transport">
+          <button id="previous-frame" type="button">이전 장</button>
+          <button id="play" type="button">재생</button>
+          <button id="next-frame" type="button">다음 장</button>
+          <label for="frame-slider" class="sr-only">현재 투구의 프레임</label>
+          <input id="frame-slider" type="range" min="0" max="0" value="0" step="1">
+        </div>
+        <p id="frame-time" class="key"></p>
+        <p class="help">← → 한 장 이동 · Space 재생/정지. 투구 사이를 자동으로 이어 붙이지 않습니다.</p>
+      </section>
+      <aside class="panel history-panel" aria-label="최근 후보의 최초 발생 기록">
+        <h2>최근 후보의 최초 발생 기록</h2>
+        <p>주황 점은 아래 기록 프레임의 위치입니다. 현재 프레임 위에 옮겨 표시하지 않습니다.</p>
+        <div class="canvas-wrap"><canvas id="history-canvas" width="1280" height="720" aria-label="후보가 처음 발생했던 기록 프레임"></canvas></div>
+        <p id="history-status" role="status"></p>
+        <dl>
+          <dt>현재 추적</dt><dd id="track-state">—</dd>
+          <dt>현재 멈춤 후보</dt><dd id="candidate-state">—</dd>
+          <dt>처리 이유</dt><dd id="reason">—</dd>
+        </dl>
+      </aside>
+    </div>
+    <footer>비공개 개발 자료 · 확률·정확도·사람 평가를 나타내는 화면이 아닙니다.</footer>
+  </main>
+  <script id="track-data" type="application/json">__TRACK_VIEW_DATA__</script>
+</body>
+</html>
