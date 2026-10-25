@@ -13,7 +13,9 @@
   }
 
   class Controller {
-    constructor(data, { loadImage, onChange, setTimer = setTimeout, clearTimer = clearTimeout }) {
+    constructor(data, { loadImage, onChange,
+      setTimer = (callback, delay) => setTimeout(callback, delay),
+      clearTimer = id => clearTimeout(id) }) {
       if (data.schema !== "pitcheezy-track-frame-view-dev-v1" || !data.pitches?.length) throw new Error("지원하지 않는 자료 형식입니다.");
       Object.assign(this, { data, loadImage, onChange, setTimer, clearTimer });
       this.pitchIndex = 0; this.frameIndex = 0; this.generation = 0; this.timer = null;

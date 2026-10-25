@@ -1,6 +1,8 @@
 "use strict";
 const test = require("node:test");
 const assert = require("node:assert/strict");
+const fs = require("node:fs");
+const vm = require("node:vm");
 const { Controller, historyFor, visiblePoints, handleKey } = require("../web/track-review/review.js");
 
 function fixture() {
@@ -155,6 +157,38 @@ test("playback uses stored intervals then stops at the final frame without chang
   assert.equal(h.controller.pitchIndex, 0);
   assert.equal(h.last().playing, false);
   assert.equal(h.timers.length, 2);
+});
+
+test("default browser timers never receive a Controller as their native receiver", async () => {
+  const context = vm.createContext({ module: { exports: {} } });
+  vm.runInContext(`
+    globalThis.timerCalls = [];
+    globalThis.setTimeout = function (callback, delay) {
+      "use strict";
+      if (this !== undefined && this !== globalThis) throw new TypeError("Illegal invocation");
+      timerCalls.push({ kind: "set", delay });
+      return 7;
+    };
+    globalThis.clearTimeout = function (id) {
+      "use strict";
+      if (this !== undefined && this !== globalThis) throw new TypeError("Illegal invocation");
+      timerCalls.push({ kind: "clear", id });
+    };
+  `, context);
+  vm.runInContext(fs.readFileSync(require.resolve("../web/track-review/review.js"), "utf8"), context);
+  const BrowserController = context.module.exports.Controller;
+  const controller = new BrowserController(fixture(), {
+    loadImage: frame => Promise.resolve({ imageIndex: frame.frame_index }),
+    onChange: () => {}
+  });
+  await controller.show(0);
+  controller.toggle();
+  assert.equal(context.timerCalls[0].kind, "set");
+  assert.ok(Math.abs(context.timerCalls[0].delay - 100) < 1e-8);
+  controller.pause();
+  assert.equal(context.timerCalls[1].kind, "clear");
+  assert.equal(context.timerCalls[1].id, 7);
+  assert.equal(controller.playing, false);
 });
 
 test("pitch changes stop playback, cancel timers, reset the frame and clear history", async () => {
