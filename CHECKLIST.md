@@ -2,6 +2,8 @@
 
 ## 전시 CV 집중 개발 — 2026-10-26
 
+CV39b 관측 연결 선점: 우리 Codex / `codex/cv-frame-view-1026` / 기준 `f30af92` / 2026-10-26. [합격 기준](docs/CV_OCR_FRAME_OBSERVATIONS_20261026.md). CV39a와 별도 파일에서 첫 투구74장 기존 v2 OCR 관측과 인접 문자열 비교를 연결한다. 선수ID·이름 채우기·정확도 평가·F-4i 재개는 하지 않는다.
+
 CV39a 화면 선점: 우리 Codex / `codex/cv-frame-view-1026` / 기준 `a42c044` / 2026-10-26. 별도 폴더에서 프레임 결속·PA3 비공개 재생 화면을 진행한다. [합격 기준](docs/CV_TRACK_FRAME_VIEW_20261026.md). 소스8097992의 실제Fable 검토 중이며 CV38 완료본c3f226f를 병합했다. OCR·전체CV39·운영은 미완료다.
 
 CV38 완료·수정 권한 반납: 우리 Codex / `codex/cv-stationary-candidate-1026` / 소스 `5547aad` / 2026-10-26. [결과·실제 Fable 검토](docs/CV_STATIONARY_CANDIDATE_20261026.md), [PR71](https://github.com/Pitcheezy/transition-models/pull/71). 고정625행 중5구6사건·현재92행/과거만197행, 마지막lost10구 모두현재null. 문턱/원본/기존출력 불변, 지적4건+자체파라미터재할당 수정. 다른 모델 수정 재검토PASS. 삭제·옛 질문 발신 보류, 팀원/운영 미변경. CV39a는 별도 연구 폴더에서 화면 연결 진행 중이다.
