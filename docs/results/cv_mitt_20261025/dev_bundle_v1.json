@@ -1,0 +1,728 @@
+{
+ "schema": "pitcheezy-mitt-dev-bundle-v1-public-summary",
+ "scope": "development data (747139 was already development data in M3); not an independent evaluation",
+ "rule": {
+  "game_pk": 747139,
+  "order": "at_bat_number, pitch_number",
+  "first_key": [
+   3,
+   1
+  ],
+  "count": 40,
+  "before_decision_seconds": 1.0,
+  "after_release_seconds": 0.5,
+  "step_source_frames": 6,
+  "always_include": [
+   "decision frame read by the frozen v0 reader",
+   "release-nearest frame"
+  ],
+  "fixed_before_reading": true
+ },
+ "rule_wording_note": "rule is copied as recorded at extraction; its first always_include item names the frame at the index v0 recorded, not necessarily the image v0 read",
+ "rule_clarification": "the 'decision' role is the index v0 recorded (round rule); v0 read the first frame at or after the decision time, which is one frame later for 19 of 39 checked pitches; for 17 of those that frame is not in the bundle frame list (on the grid only for 747139:6:4, 747139:8:3); the read images are kept privately in v0_read_frames/",
+ "source": {
+  "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+  "duration_seconds": 9340.748083,
+  "time_base": "1/60000",
+  "ticks_per_frame": 1001,
+  "timing_file_sha256": "9781a52527f5a91069548b5017cd927c94d4959df944a93cd54ec5be6c9760b7"
+ },
+ "ffmpeg_version": "ffmpeg version 8.0-essentials_build-www.gyan.dev Copyright (c) 2000-2025 the FFmpeg developers",
+ "manifest_sha256": "58cb57c9dbd542ca60db84f8f1e2242867e4680c15e1914a5ca1352ec1bcf87a",
+ "frames_digest_sha256": "ba489d0c18730805bfc811f06363d2614afb8e3b635798fb66dd5588a9aaefca",
+ "counts": {
+  "planned_pitch_keys": 40,
+  "extracted": 39,
+  "excluded": 1,
+  "failed": 0,
+  "frames": 2596,
+  "frames_per_pitch_range": [
+   30,
+   117
+  ],
+  "seconds_covered": 254.421,
+  "windows_with_index_gap": 0,
+  "retried_pitches": 3,
+  "attempt_seconds_range": [
+   3.86,
+   14.97
+  ]
+ },
+ "decision_to_release_seconds": {
+  "n": 39,
+  "median": 5.3,
+  "p10": 2.1,
+  "p90": 8.38,
+  "min": 1.4,
+  "max": 10.05,
+  "percentile_rule": "nearest rank (ceil(q*n)-th value)"
+ },
+ "timing_basis": "decision/release seconds are AI visual annotations (Codex/Claude agents), not human ground truth",
+ "pitches": [
+  {
+   "pitch_id": "747139:3:1",
+   "status": "extracted",
+   "attempts": 1,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:3:2",
+   "status": "extracted",
+   "attempts": 1,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:3:3",
+   "status": "extracted",
+   "attempts": 1,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:4:1",
+   "status": "extracted",
+   "attempts": 2,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:4:2",
+   "status": "extracted",
+   "attempts": 1,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:5:1",
+   "status": "extracted",
+   "attempts": 1,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:5:2",
+   "status": "extracted",
+   "attempts": 1,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:5:3",
+   "status": "extracted",
+   "attempts": 1,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:5:4",
+   "status": "extracted",
+   "attempts": 1,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:5:5",
+   "status": "excluded",
+   "reason": "timing_unavailable_in_annotations"
+  },
+  {
+   "pitch_id": "747139:5:6",
+   "status": "extracted",
+   "attempts": 1,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:6:1",
+   "status": "extracted",
+   "attempts": 1,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:6:2",
+   "status": "extracted",
+   "attempts": 1,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:6:3",
+   "status": "extracted",
+   "attempts": 1,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:6:4",
+   "status": "extracted",
+   "attempts": 1,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:6:5",
+   "status": "extracted",
+   "attempts": 1,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:6:6",
+   "status": "extracted",
+   "attempts": 1,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:7:1",
+   "status": "extracted",
+   "attempts": 1,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:7:2",
+   "status": "extracted",
+   "attempts": 2,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:7:3",
+   "status": "extracted",
+   "attempts": 1,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:7:4",
+   "status": "extracted",
+   "attempts": 1,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:8:1",
+   "status": "extracted",
+   "attempts": 1,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:8:2",
+   "status": "extracted",
+   "attempts": 1,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:8:3",
+   "status": "extracted",
+   "attempts": 1,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:8:4",
+   "status": "extracted",
+   "attempts": 1,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:9:1",
+   "status": "extracted",
+   "attempts": 1,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:9:2",
+   "status": "extracted",
+   "attempts": 1,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:10:1",
+   "status": "extracted",
+   "attempts": 1,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:10:2",
+   "status": "extracted",
+   "attempts": 1,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:10:3",
+   "status": "extracted",
+   "attempts": 1,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:10:4",
+   "status": "extracted",
+   "attempts": 1,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:10:5",
+   "status": "extracted",
+   "attempts": 1,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:10:6",
+   "status": "extracted",
+   "attempts": 2,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:11:1",
+   "status": "extracted",
+   "attempts": 1,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:11:2",
+   "status": "extracted",
+   "attempts": 1,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:11:3",
+   "status": "extracted",
+   "attempts": 1,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:11:4",
+   "status": "extracted",
+   "attempts": 1,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:11:5",
+   "status": "extracted",
+   "attempts": 1,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:12:1",
+   "status": "extracted",
+   "attempts": 1,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:12:2",
+   "status": "extracted",
+   "attempts": 1,
+   "index_gaps_in_window": 0
+  }
+ ],
+ "existing_method_on_same_keys": {
+  "frames_read_per_pitch": 1,
+  "frame_rule": "decision frame (start of the set window) only",
+  "status_counts": {
+   "estimated": 38,
+   "no_output_row": 1,
+   "unavailable": 1
+  },
+  "unavailable_categories": {
+   "C2_target_not_presented_or_undeterminable": 1
+  },
+  "deepest_frame_counts": {
+   "plate_feet|no_batter_zone_bounds": 36,
+   "image_pixels|no_image_plane_calibration": 2
+  },
+  "rows": [
+   {
+    "pitch_id": "747139:3:1",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "plate_feet",
+    "v0_blocked_by": "no_batter_zone_bounds",
+    "v0_frame_index": 14970,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:3:2",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "plate_feet",
+    "v0_blocked_by": "no_batter_zone_bounds",
+    "v0_frame_index": 16274,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:3:3",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "plate_feet",
+    "v0_blocked_by": "no_batter_zone_bounds",
+    "v0_frame_index": 17233,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:4:1",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "plate_feet",
+    "v0_blocked_by": "no_batter_zone_bounds",
+    "v0_frame_index": 19645,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:4:2",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "plate_feet",
+    "v0_blocked_by": "no_batter_zone_bounds",
+    "v0_frame_index": 20470,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:5:1",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "plate_feet",
+    "v0_blocked_by": "no_batter_zone_bounds",
+    "v0_frame_index": 21354,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:5:2",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "plate_feet",
+    "v0_blocked_by": "no_batter_zone_bounds",
+    "v0_frame_index": 22118,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:5:3",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "plate_feet",
+    "v0_blocked_by": "no_batter_zone_bounds",
+    "v0_frame_index": 23212,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:5:4",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "plate_feet",
+    "v0_blocked_by": "no_batter_zone_bounds",
+    "v0_frame_index": 24396,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:5:5",
+    "v0": "no_output_row"
+   },
+   {
+    "pitch_id": "747139:5:6",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "plate_feet",
+    "v0_blocked_by": "no_batter_zone_bounds",
+    "v0_frame_index": 26778,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:6:1",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "image_pixels",
+    "v0_blocked_by": "no_image_plane_calibration",
+    "v0_frame_index": 28831,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:6:2",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "plate_feet",
+    "v0_blocked_by": "no_batter_zone_bounds",
+    "v0_frame_index": 31499,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:6:3",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "plate_feet",
+    "v0_blocked_by": "no_batter_zone_bounds",
+    "v0_frame_index": 32904,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:6:4",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "plate_feet",
+    "v0_blocked_by": "no_batter_zone_bounds",
+    "v0_frame_index": 34555,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:6:5",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "plate_feet",
+    "v0_blocked_by": "no_batter_zone_bounds",
+    "v0_frame_index": 36650,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:6:6",
+    "v0_status": "unavailable",
+    "v0_reason": "catcher_not_in_setup",
+    "v0_category": "C2_target_not_presented_or_undeterminable",
+    "v0_deepest_frame": null,
+    "v0_blocked_by": null,
+    "v0_frame_index": 39770,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:7:1",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "plate_feet",
+    "v0_blocked_by": "no_batter_zone_bounds",
+    "v0_frame_index": 41850,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:7:2",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "plate_feet",
+    "v0_blocked_by": "no_batter_zone_bounds",
+    "v0_frame_index": 42782,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:7:3",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "plate_feet",
+    "v0_blocked_by": "no_batter_zone_bounds",
+    "v0_frame_index": 44251,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:7:4",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "plate_feet",
+    "v0_blocked_by": "no_batter_zone_bounds",
+    "v0_frame_index": 45345,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:8:1",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "plate_feet",
+    "v0_blocked_by": "no_batter_zone_bounds",
+    "v0_frame_index": 46603,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:8:2",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "plate_feet",
+    "v0_blocked_by": "no_batter_zone_bounds",
+    "v0_frame_index": 47473,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:8:3",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "plate_feet",
+    "v0_blocked_by": "no_batter_zone_bounds",
+    "v0_frame_index": 48521,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:8:4",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "plate_feet",
+    "v0_blocked_by": "no_batter_zone_bounds",
+    "v0_frame_index": 49406,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:9:1",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "plate_feet",
+    "v0_blocked_by": "no_batter_zone_bounds",
+    "v0_frame_index": 50898,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:9:2",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "plate_feet",
+    "v0_blocked_by": "no_batter_zone_bounds",
+    "v0_frame_index": 51866,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:10:1",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "plate_feet",
+    "v0_blocked_by": "no_batter_zone_bounds",
+    "v0_frame_index": 53742,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:10:2",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "plate_feet",
+    "v0_blocked_by": "no_batter_zone_bounds",
+    "v0_frame_index": 54776,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:10:3",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "plate_feet",
+    "v0_blocked_by": "no_batter_zone_bounds",
+    "v0_frame_index": 55927,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:10:4",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "plate_feet",
+    "v0_blocked_by": "no_batter_zone_bounds",
+    "v0_frame_index": 57081,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:10:5",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "plate_feet",
+    "v0_blocked_by": "no_batter_zone_bounds",
+    "v0_frame_index": 58295,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:10:6",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "plate_feet",
+    "v0_blocked_by": "no_batter_zone_bounds",
+    "v0_frame_index": 59601,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:11:1",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "plate_feet",
+    "v0_blocked_by": "no_batter_zone_bounds",
+    "v0_frame_index": 62218,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:11:2",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "plate_feet",
+    "v0_blocked_by": "no_batter_zone_bounds",
+    "v0_frame_index": 63072,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:11:3",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "plate_feet",
+    "v0_blocked_by": "no_batter_zone_bounds",
+    "v0_frame_index": 64361,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:11:4",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "plate_feet",
+    "v0_blocked_by": "no_batter_zone_bounds",
+    "v0_frame_index": 65500,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:11:5",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "image_pixels",
+    "v0_blocked_by": "no_image_plane_calibration",
+    "v0_frame_index": 66773,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:12:1",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "plate_feet",
+    "v0_blocked_by": "no_batter_zone_bounds",
+    "v0_frame_index": 69411,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:12:2",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "plate_feet",
+    "v0_blocked_by": "no_batter_zone_bounds",
+    "v0_frame_index": 70295,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   }
+  ]
+ },
+ "v0_read_image_check": {
+  "checked": 39,
+  "not_checked": 0,
+  "identical_at_recorded_index": 20,
+  "identical_at_recorded_plus_one": 19,
+  "other": 0,
+  "explained_by_first_frame_at_or_after_time": 39,
+  "recorded_frame_in_a_different_shot": [
+   "747139:10:3",
+   "747139:10:6"
+  ],
+  "shot_change_threshold": "mean absolute grey difference between frames D and D+1 above 10"
+ },
+ "private_location": "outputs/ (git-ignored); frames and crops are not published"
+}
