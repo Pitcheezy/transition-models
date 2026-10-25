@@ -1,5 +1,12 @@
 # 남은 작업 체크리스트
 
+## 공동시험 경로·호스트 현재 조회 — 2026-10-26
+
+- [!] WS-ready1. 관리 API2회 현재 조회·GATE-06 PR64 병합 오기 정정·미발신 시험 경로 요청 초안·체크리스트8검사 완료. 사용자 승인 Claude 문서 검토1회는 OAuth만료401로 미완료이며, 새 공동시험 경로/창/양측GO도 대기. [근거](docs/WS_TRIAL_READINESS_20261026.md). 새 공동시험/접속/배포/발신 없음, 요금제·부하11월 보류. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-26 · Codex]`
+
+문서 작성·동일 모델 대조 완료·수정 권한 반납: 우리 Codex / `codex/ws-trial-readiness-1026` / 기준 main `4e6aba7`. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6400618334). 실제 작성·검토 모델은 검토 기록에 따로 남긴다.
+
+
 ## PR63 병합·운영 증거 PR64 검토 — 2026-10-25
 
 - [x] H-main3. 사용자 승인으로 PR63 고정 `e09c9d2`의 코드 불변·최종CI8/8을 재확인하고 main `06aa6d0f3ad24a7e9f0649491f9887283d8f77d8`에 병합했다. [PR63](https://github.com/Pitcheezy/transition-models/pull/63). 실제 배포는 변경하지 않았다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-25 · Codex]`
