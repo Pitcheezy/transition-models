@@ -1,0 +1,357 @@
+{
+  "schema": "pitcheezy-owner-notice-trial-v1",
+  "recorded_at_utc": "2026-10-24T18:07:14.047171+00:00",
+  "evidence_kind": "owner-only synthetic hosted trial",
+  "source_commit": "47ac078e8523877008d8bafe8295a94881a3df49",
+  "runtime_source_commit": "e9b362b75d6d4768c552740bfc6e0124872805e1",
+  "runtime_sha256": "3312fbff2dac2a22b32e474392ee7eb107663c79e9749781810a681e5ee07cfd",
+  "installed_version": "9e6a750a-6cea-43b6-b29e-11e0a17f9449",
+  "final_version": "d714e7fb-20d4-4a80-9f29-695e44130955",
+  "deployed_percentage": 100,
+  "functional_pass": true,
+  "server_log_matches": 12,
+  "expected_server_logs": 13,
+  "complete": false,
+  "requests": 13,
+  "retries": 0,
+  "redirects": 0,
+  "service_requests": [
+    {
+      "phase": "baseline",
+      "index": 0,
+      "method": "GET",
+      "path": "/_notice/v1/state",
+      "status": 200,
+      "version_id": "9e6a750a-6cea-43b6-b29e-11e0a17f9449",
+      "client_started_utc": "2026-10-24T18:01:47.188Z",
+      "client_headers_utc": "2026-10-24T18:01:48.680Z",
+      "server_log_matched": true,
+      "client_body_finished_utc": "2026-10-24T18:01:48.688Z",
+      "server_timestamp_utc": "2026-10-24T18:01:48.671Z",
+      "server_outcome": "ok"
+    },
+    {
+      "phase": "baseline",
+      "index": 1,
+      "method": "POST",
+      "path": "/_access/v1/session",
+      "status": 200,
+      "version_id": "9e6a750a-6cea-43b6-b29e-11e0a17f9449",
+      "client_started_utc": "2026-10-24T18:01:48.695Z",
+      "client_headers_utc": "2026-10-24T18:01:48.972Z",
+      "server_log_matched": true,
+      "server_timestamp_utc": "2026-10-24T18:01:48.952Z",
+      "server_outcome": "ok"
+    },
+    {
+      "phase": "baseline",
+      "index": 2,
+      "method": "GET",
+      "path": "/",
+      "status": 200,
+      "version_id": "9e6a750a-6cea-43b6-b29e-11e0a17f9449",
+      "client_started_utc": "2026-10-24T18:01:48.980Z",
+      "client_headers_utc": "2026-10-24T18:01:49.092Z",
+      "server_log_matched": true,
+      "client_body_finished_utc": "2026-10-24T18:01:49.096Z",
+      "server_timestamp_utc": "2026-10-24T18:01:49.088Z",
+      "server_outcome": "ok"
+    },
+    {
+      "phase": "baseline",
+      "index": 3,
+      "method": "GET",
+      "path": "/v1/health.json",
+      "status": 503,
+      "version_id": "9e6a750a-6cea-43b6-b29e-11e0a17f9449",
+      "client_started_utc": "2026-10-24T18:01:49.100Z",
+      "client_headers_utc": "2026-10-24T18:01:49.209Z",
+      "server_log_matched": true,
+      "client_body_finished_utc": "2026-10-24T18:01:49.211Z",
+      "server_timestamp_utc": "2026-10-24T18:01:49.210Z",
+      "server_outcome": "ok"
+    },
+    {
+      "phase": "on",
+      "index": 0,
+      "method": "PUT",
+      "path": "/_notice/v1/state",
+      "status": 200,
+      "version_id": "9e6a750a-6cea-43b6-b29e-11e0a17f9449",
+      "client_started_utc": "2026-10-24T18:01:54.408Z",
+      "client_headers_utc": "2026-10-24T18:01:55.744Z",
+      "server_log_matched": true,
+      "client_body_finished_utc": "2026-10-24T18:01:55.750Z",
+      "server_timestamp_utc": "2026-10-24T18:01:55.744Z",
+      "server_outcome": "ok"
+    },
+    {
+      "phase": "on",
+      "index": 1,
+      "method": "GET",
+      "path": "/_notice/v1/state",
+      "status": 200,
+      "version_id": "9e6a750a-6cea-43b6-b29e-11e0a17f9449",
+      "client_started_utc": "2026-10-24T18:01:55.767Z",
+      "client_headers_utc": "2026-10-24T18:01:56.852Z",
+      "server_log_matched": true,
+      "client_body_finished_utc": "2026-10-24T18:01:56.855Z",
+      "server_timestamp_utc": "2026-10-24T18:01:56.855Z",
+      "server_outcome": "ok"
+    },
+    {
+      "phase": "on",
+      "index": 2,
+      "method": "GET",
+      "path": "/",
+      "status": 503,
+      "version_id": "9e6a750a-6cea-43b6-b29e-11e0a17f9449",
+      "client_started_utc": "2026-10-24T18:01:58.975Z",
+      "client_headers_utc": "2026-10-24T18:01:59.180Z",
+      "server_log_matched": true,
+      "client_body_finished_utc": "2026-10-24T18:01:59.184Z",
+      "server_timestamp_utc": "2026-10-24T18:01:59.189Z",
+      "server_outcome": "ok"
+    },
+    {
+      "phase": "on",
+      "index": 3,
+      "method": "GET",
+      "path": "/v1/health.json",
+      "status": 503,
+      "version_id": "9e6a750a-6cea-43b6-b29e-11e0a17f9449",
+      "client_started_utc": "2026-10-24T18:01:59.189Z",
+      "client_headers_utc": "2026-10-24T18:01:59.281Z",
+      "server_log_matched": true,
+      "client_body_finished_utc": "2026-10-24T18:01:59.284Z",
+      "server_timestamp_utc": "2026-10-24T18:01:59.285Z",
+      "server_outcome": "ok"
+    },
+    {
+      "phase": "off",
+      "index": 0,
+      "method": "PUT",
+      "path": "/_notice/v1/state",
+      "status": 200,
+      "version_id": "9e6a750a-6cea-43b6-b29e-11e0a17f9449",
+      "client_started_utc": "2026-10-24T18:02:04.527Z",
+      "client_headers_utc": "2026-10-24T18:02:05.474Z",
+      "server_log_matched": false,
+      "client_body_finished_utc": "2026-10-24T18:02:05.479Z"
+    },
+    {
+      "phase": "off",
+      "index": 1,
+      "method": "GET",
+      "path": "/_notice/v1/state",
+      "status": 200,
+      "version_id": "9e6a750a-6cea-43b6-b29e-11e0a17f9449",
+      "client_started_utc": "2026-10-24T18:02:05.485Z",
+      "client_headers_utc": "2026-10-24T18:02:06.116Z",
+      "server_log_matched": true,
+      "client_body_finished_utc": "2026-10-24T18:02:06.120Z",
+      "server_timestamp_utc": "2026-10-24T18:02:06.115Z",
+      "server_outcome": "ok"
+    },
+    {
+      "phase": "off",
+      "index": 2,
+      "method": "GET",
+      "path": "/",
+      "status": 200,
+      "version_id": "9e6a750a-6cea-43b6-b29e-11e0a17f9449",
+      "client_started_utc": "2026-10-24T18:02:08.238Z",
+      "client_headers_utc": "2026-10-24T18:02:08.690Z",
+      "server_log_matched": true,
+      "client_body_finished_utc": "2026-10-24T18:02:08.694Z",
+      "server_timestamp_utc": "2026-10-24T18:02:08.663Z",
+      "server_outcome": "ok"
+    },
+    {
+      "phase": "off",
+      "index": 3,
+      "method": "GET",
+      "path": "/v1/health.json",
+      "status": 503,
+      "version_id": "9e6a750a-6cea-43b6-b29e-11e0a17f9449",
+      "client_started_utc": "2026-10-24T18:02:08.699Z",
+      "client_headers_utc": "2026-10-24T18:02:08.792Z",
+      "server_log_matched": true,
+      "client_body_finished_utc": "2026-10-24T18:02:08.795Z",
+      "server_timestamp_utc": "2026-10-24T18:02:08.774Z",
+      "server_outcome": "ok"
+    },
+    {
+      "phase": "retired",
+      "index": 0,
+      "method": "GET",
+      "path": "/_notice/v1/state",
+      "status": 401,
+      "version_id": "d714e7fb-20d4-4a80-9f29-695e44130955",
+      "client_started_utc": "2026-10-24T18:02:23.898Z",
+      "client_headers_utc": "2026-10-24T18:02:24.244Z",
+      "server_log_matched": true,
+      "client_body_finished_utc": "2026-10-24T18:02:24.250Z",
+      "server_timestamp_utc": "2026-10-24T18:02:24.234Z",
+      "server_outcome": "ok"
+    }
+  ],
+  "management_requests": [
+    {
+      "method": "GET",
+      "suffix": "/content/v2"
+    },
+    {
+      "method": "GET",
+      "suffix": "/deployments"
+    },
+    {
+      "method": "GET",
+      "suffix": "/settings"
+    },
+    {
+      "method": "GET",
+      "suffix": "/versions"
+    },
+    {
+      "method": "GET",
+      "suffix": "/content/v2"
+    },
+    {
+      "method": "GET",
+      "suffix": "/deployments"
+    },
+    {
+      "method": "GET",
+      "suffix": "/settings"
+    },
+    {
+      "method": "GET",
+      "suffix": "/versions"
+    },
+    {
+      "method": "PUT",
+      "suffix": "/secrets"
+    },
+    {
+      "method": "GET",
+      "suffix": "/content/v2"
+    },
+    {
+      "method": "GET",
+      "suffix": "/deployments"
+    },
+    {
+      "method": "GET",
+      "suffix": "/settings"
+    },
+    {
+      "method": "GET",
+      "suffix": "/versions"
+    },
+    {
+      "method": "GET",
+      "suffix": "/content/v2"
+    },
+    {
+      "method": "GET",
+      "suffix": "/deployments"
+    },
+    {
+      "method": "GET",
+      "suffix": "/settings"
+    },
+    {
+      "method": "GET",
+      "suffix": "/versions"
+    },
+    {
+      "method": "PUT",
+      "suffix": "/secrets"
+    }
+  ],
+  "management_request_count": 18,
+  "audit": [
+    {
+      "phase": "on",
+      "revision": 3,
+      "active": true,
+      "message_id": "maintenance",
+      "audit_recorded": true,
+      "audit_unavailable": false,
+      "change_id_and_etag_chain_match": true
+    },
+    {
+      "phase": "off",
+      "revision": 4,
+      "active": false,
+      "message_id": "maintenance",
+      "audit_recorded": true,
+      "audit_unavailable": false,
+      "change_id_and_etag_chain_match": true
+    }
+  ],
+  "same_viewer_session_restored": true,
+  "home_and_health_body_sha_restored": true,
+  "latency": {
+    "measurement": "client observed after acknowledged PUT, state/audit GET and deliberate wait; not first-transition or global bound",
+    "deliberate_wait_ms": 2100,
+    "on_home_ms": 3430,
+    "on_health_ms": 3531,
+    "off_home_ms": 3211,
+    "off_health_ms": 3313
+  },
+  "end_state": {
+    "notice_active": false,
+    "notice_test_token_revoked": true,
+    "owner_backup_notice_credential_retained_private": true,
+    "access_gate_enabled": true,
+    "upload_enabled": false,
+    "data_read_enabled": false,
+    "telemetry_enabled": false,
+    "feedback_enabled": false,
+    "logs_persist": true,
+    "logs_sample_rate": 1,
+    "settings_preserved": true,
+    "runtime_bytes_match": true
+  },
+  "raw_logs": {
+    "bytes": 60360,
+    "sha256": "c43bd46748c1e03b17a392e45421bbe2dc8bcebf59d4846163f78c023497b0b4",
+    "rows": 12,
+    "location_kind": "owner-private local download"
+  },
+  "helper_review": {
+    "author": "Codex GPT-6 family; exact model id unconfirmed",
+    "reviewer": "gpt-5.6-sol",
+    "result": "PASS; static read-only, no credentials or network",
+    "files": {
+      "notice-probe.private.mjs": "bf396ec6c9edae1c1065fd519cecf7eb575086b79a67e89b5ddf6826da5ca4d1",
+      "notice-admin.private.py": "de750935a57c3cd21734085ac9741ea8f9755c9513a436cd169a3965c9380fc7",
+      "worker-admin.private.py": "174d34c84961046ed94b0008ba915630a1ef3e6df8717ca7d5adc6f665b9f260"
+    }
+  },
+  "pinned_clients": {
+    "notice-client.mjs": "eea8aedb57f01f15f6a3c06436f41facdedabc09a050548f6a9e2f43e1a8dd8e",
+    "notice.mjs": "d94b5c22ef66b38b3bb824e028fcaa92075856014bbc7e2e28bd3a85bdb64247",
+    "monitor.mjs": "ab6a93e915820b7b1684c8e42266ebbef4ee5886fce37609037e0b3950179680"
+  },
+  "not_verified": [
+    "latest Song UI",
+    "already-open recommendation hiding",
+    "Song writer joint trial",
+    "real game publication",
+    "public launch approval",
+    "30-50 concurrent user capacity",
+    "global notice propagation SLA"
+  ],
+  "commands": [
+    "python <private-dir>/notice-admin.private.py install",
+    "node <private-dir>/notice-probe.private.mjs baseline",
+    "node <private-dir>/notice-probe.private.mjs on",
+    "node <private-dir>/notice-probe.private.mjs off",
+    "python <private-dir>/notice-admin.private.py retire",
+    "node <private-dir>/notice-probe.private.mjs retired"
+  ],
+  "replay_warning": "Single-use trial, credentials retired; do not rerun these phases."
+}

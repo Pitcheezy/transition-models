@@ -1,5 +1,12 @@
 # 남은 작업 체크리스트
 
+## PR63 병합·운영 증거 PR64 검토 — 2026-10-25
+
+- [x] H-main3. 사용자 승인으로 PR63 고정 `e09c9d2`의 코드 불변·최종CI8/8을 재확인하고 main `06aa6d0f3ad24a7e9f0649491f9887283d8f77d8`에 병합했다. [PR63](https://github.com/Pitcheezy/transition-models/pull/63). 실제 배포는 변경하지 않았다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-25 · Codex]`
+- [x] WS-evidence1. PR64 고정 `abddb24`의 다른 모델 검토에서 P1/P2 없음. 발행3요청/로그3건·안내13요청/로그12건·지연4값·고정client SHA3개·영수증2개 불변·현재 상대링크128·이력3구역·체크리스트8을 검증하고 최신 main 문서3곳 충돌을 해소했다. 새 head CI는 PR64에서 별도 확인한다. PR64 병합·실제 재시험은 포함하지 않는다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-25 · Codex]`
+
+검증 완료·수정 권한 반납 준비: 우리 Codex / `codex/ws-publisher-revoke-1025` / 기존 PR64 `abddb24`, 통합 main `06aa6d0`. [사전 합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6393493153). 요금제·요청량은11월 보류, 팀원 코드·Cloudflare 변경 없음.
+
 ## PR65 병합·설정 검사 PR63 충돌 해소 — 2026-10-25
 
 - [x] H-main2. 사용자 승인으로 PR65 고정 `059c8cc`를 다른 모델 재검토·CI8/8 성공 뒤 main `e12ac008bebc55fcfc62dea9fa0b36eddb1571d8`에 병합했다. [검토 기록](https://github.com/Pitcheezy/transition-models/pull/65#issuecomment-6393306159). 독립 Node9/Python107 통과, 새 부하·배포 없음. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-25 · Codex]`
@@ -12,7 +19,7 @@
 - [x] WS-config1. 기존 Logs100%저장 보존 검사/후보·dry-run 준비, 관련287검사 통과. gpt-5.6-sol 고정 e8b015a 검토·독립287검사 통과. [근거](docs/WS_LOG_CONFIG_20261025.md). 실제 배포·발행 회수는 별도 WS-publish4다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-25 · Codex]`
 - [!] WS-exhibit1. 동시30~50명 목표는 WS-capacity1의 로컬 결과로 준비했고, 전시회 요금제·요청량/추가 부하 준비는 사용자 지시로11월 보류(WS-capacity2)다. 실제 서비스 용량 합격·공개 확대·유료 변경은 미승인/미측정이다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-25 · Codex]`
 
-기존 검사 기준 `6262afb`, [WS-config1 합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6387190685). 당시 관리 자격 대기는 PR64의 본인 시험으로 후속 해소되었으며 새 공동시험 자격/GO와 구별한다. PR63은 main 미병합이다.
+기존 검사 기준 `6262afb`, [WS-config1 합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6387190685). 당시 관리 자격 대기는 PR64의 본인 시험으로 후속 해소되었으며 새 공동시험 자격/GO와 구별한다. PR63은 main `06aa6d0`에 후속 병합됐다.
 
 ## 협업 현재 상태 정정·11월 우선순위 반영 — 2026-10-25
 
@@ -26,7 +33,9 @@
 - [x] WS-publish4. 고정 runtime 배포·원격 바이트 일치·동일 발행 bearer HEAD404→회수401→업로드OFF503과 저장 로그3건을 대조했다. [PR64 고정 근거](https://github.com/Pitcheezy/transition-models/blob/abddb240a698e91923d14ef413e36081a4af5315/docs/WS_PUBLISHER_REVOCATION_20261025.md). 실제 파일 PUT/DELETE·만료 경계·Song 공동시험은 포함하지 않는다. PR64는 main 미병합이다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-25 · Codex]`
 - [!] WS-notice3. 본인 안내ON/OFF·같은세션/본문복구·안내시험자격 회수 기능13요청 통과, 저장 로그12/13. OFF PUT1건은 재조회도 미확인으로 전체 증거 합격 대기다. [고정 기록](https://github.com/Pitcheezy/transition-models/blob/abddb240a698e91923d14ef413e36081a4af5315/docs/WS_NOTICE_TRIAL_20261025.md)·[재조회](docs/results/ops/ws_notice_log_recheck_20261025.json). 원래 요청 재실행으로 대체하지 않는다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-25 · Codex]`
 
-아래 날짜별 미완료·다음 작업 문구는 당시 이력이다. PR65는 main `e12ac00`에 병합했고 PR63/64는 main 미병합이며, 증거 링크의 고정 커밋과 실제 배포 소스를 구별한다.
+PR64 기존 착수 근거: [발행 시험](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6387400853), [안내 시험](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6387602964). 중복 태스크를 새로 만들지 않고 위 WS-publish4·WS-notice3가 현재 상태를 유지한다.
+
+아래 날짜별 미완료·다음 작업 문구는 당시 이력이다. PR65는 main `e12ac00`, PR63은 main `06aa6d0`에 병합했고 PR64는 main 미병합이며, 증거 링크의 고정 커밋과 실제 배포 소스를 구별한다.
 
 ## 전시회 30/50명 로컬 준비 · 로그 재조회 — 2026-10-25
 
