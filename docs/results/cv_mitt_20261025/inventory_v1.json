@@ -1,0 +1,574 @@
+{
+ "schema": "pitcheezy-mitt-inventory-v1",
+ "scope": {
+  "evidence": "saved reader outputs and saved human marks; no image viewing or model call in this report",
+  "not_claims": [
+   "categories describe saved processing routes, not verified visual causes",
+   "a human mark on the same frame does not make an AI abstention an error",
+   "AI-reader timing annotations of 747139 are not independent human ground truth",
+   "no accuracy, agreement or real-time claim"
+  ]
+ },
+ "inventory": {
+  "games": {
+   "747139": {
+    "broadcast": "SNY",
+    "form": "full_game_remote_mp4",
+    "m3_role": "development",
+    "pitch_keys": 322,
+    "timing_status": {
+     "annotated": 297,
+     "unavailable": 25
+    },
+    "remote_source": {
+     "page_url": "https://www.mlb.com/video/9-30-24-mets-win-epic-game-in-playoff-clincher",
+     "media_url_recorded": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+     "duration_seconds": 9340.748083,
+     "full_video_downloaded": false
+    },
+    "local_continuous_clips": [
+     {
+      "path": "outputs/cv_local_pa_interval_v1/broadcast_context.mp4",
+      "bytes": 51044446,
+      "sha256": "75fd139c9ad8e88bbcca3020a65926b6c9873a2037ad6de3a664ea98705386b0",
+      "covers": "PA2 broadcast interval only (CV23)"
+     }
+    ],
+    "timing_annotator": "AI visual annotation (Codex/Claude agents); not independent human ground truth"
+   },
+   "849843": {
+    "broadcast": "NBC",
+    "form": "condensed_game_windows",
+    "m3_role": "development",
+    "pitch_keys_in_output": 39,
+    "windows": {
+     "present": true,
+     "frame_digest": "54e9755ea6ecdc03b2a33b2670115e67d5110b74bbe760eca21003bd92e3344c",
+     "frames_total": 2375
+    },
+    "window_count": 39,
+    "release_time_source": null,
+    "windows_with_release_time": 0,
+    "seconds_after_release": {
+     "n": 0
+    },
+    "seconds_before_release": {
+     "n": 0
+    },
+    "window_start_before_reader_release_seconds": {
+     "n": 0
+    },
+    "release_time_note": "seconds_before/after_release use the scan release_t (0.25 s grid) that centred the window; the reader release frame can differ (up to about 0.6 s here)",
+    "step_counts": {
+     "3": 2336
+    },
+    "live_view": null,
+    "label_pack_page_local": false
+   },
+   "849845": {
+    "broadcast": "NBC/Peacock",
+    "form": "condensed_game_windows",
+    "m3_role": "evaluation E1",
+    "pitch_keys_in_output": 57,
+    "windows": {
+     "present": true,
+     "frame_digest": "d91be2ea5c5f79dd8e41e1d5ac56726fb755ff60f471298d6b9ae2eb4b25824a",
+     "frames_total": 3467
+    },
+    "window_count": 57,
+    "release_time_source": "849845_pitches.json",
+    "windows_with_release_time": 57,
+    "seconds_after_release": {
+     "n": 57,
+     "median": 1.498,
+     "min": 1.459,
+     "max": 1.508
+    },
+    "seconds_before_release": {
+     "n": 57,
+     "median": 1.502,
+     "min": 1.493,
+     "max": 1.508
+    },
+    "window_start_before_reader_release_seconds": {
+     "n": 57,
+     "median": 1.852,
+     "min": 1.401,
+     "max": 2.202
+    },
+    "release_time_note": "seconds_before/after_release use the scan release_t (0.25 s grid) that centred the window; the reader release frame can differ (up to about 0.6 s here)",
+    "step_counts": {
+     "3": 3410
+    },
+    "live_view": {
+     "live_centre_view_before_release_seconds": {
+      "n": 113,
+      "median": 0.651,
+      "p10": 0.3,
+      "p90": 1.502,
+      "min": 0.15,
+      "max": 1.952
+     },
+     "chosen_setup_frame_before_release_seconds": {
+      "n": 105,
+      "median": 0.05,
+      "p10": 0.05,
+      "p90": 0.05,
+      "min": 0.05,
+      "max": 0.5
+     },
+     "unit": "reader rows (A and B counted separately)",
+     "inconsistent_rows_excluded": [
+      "66:1:B"
+     ]
+    },
+    "label_pack_page_local": true
+   },
+   "823407": {
+    "broadcast": "FOX",
+    "form": "condensed_game_windows",
+    "m3_role": "evaluation E2",
+    "pitch_keys_in_output": 29,
+    "windows": {
+     "present": true,
+     "frame_digest": "1240b2f2b6282700155d42b618802e289e7ca2af5377d1b01da5b9efd235f1dc",
+     "frames_total": 1762
+    },
+    "window_count": 29,
+    "release_time_source": "823407_pitches.json",
+    "windows_with_release_time": 29,
+    "seconds_after_release": {
+     "n": 29,
+     "median": 1.501,
+     "min": 1.459,
+     "max": 1.508
+    },
+    "seconds_before_release": {
+     "n": 29,
+     "median": 1.499,
+     "min": 1.492,
+     "max": 1.508
+    },
+    "window_start_before_reader_release_seconds": {
+     "n": 28,
+     "median": 1.777,
+     "min": 1.351,
+     "max": 2.052
+    },
+    "release_time_note": "seconds_before/after_release use the scan release_t (0.25 s grid) that centred the window; the reader release frame can differ (up to about 0.6 s here)",
+    "step_counts": {
+     "3": 1733
+    },
+    "live_view": {
+     "live_centre_view_before_release_seconds": {
+      "n": 49,
+      "median": 0.551,
+      "p10": 0.15,
+      "p90": 1.351,
+      "min": 0.05,
+      "max": 1.802
+     },
+     "chosen_setup_frame_before_release_seconds": {
+      "n": 49,
+      "median": 0.05,
+      "p10": 0.05,
+      "p90": 0.05,
+      "min": 0.05,
+      "max": 0.05
+     },
+     "unit": "reader rows (A and B counted separately)",
+     "inconsistent_rows_excluded": []
+    },
+    "label_pack_page_local": true
+   },
+   "849849": {
+    "broadcast": "NBC",
+    "form": "condensed_game_windows",
+    "m3_role": "prepared fallback, unused",
+    "pitch_keys_in_output": 53,
+    "windows": {
+     "present": true,
+     "frame_digest": "c382c6b93fba614cce49d04b413f1d04c5a7d616d213f8b02ebd8d28b41445b2",
+     "frames_total": 3228
+    },
+    "window_count": 53,
+    "release_time_source": "849849_pitches.json",
+    "windows_with_release_time": 53,
+    "seconds_after_release": {
+     "n": 53,
+     "median": 1.5,
+     "min": 1.459,
+     "max": 1.508
+    },
+    "seconds_before_release": {
+     "n": 53,
+     "median": 1.501,
+     "min": 1.492,
+     "max": 1.508
+    },
+    "window_start_before_reader_release_seconds": {
+     "n": 53,
+     "median": 1.852,
+     "min": 1.451,
+     "max": 2.202
+    },
+    "release_time_note": "seconds_before/after_release use the scan release_t (0.25 s grid) that centred the window; the reader release frame can differ (up to about 0.6 s here)",
+    "step_counts": {
+     "3": 3175
+    },
+    "live_view": {
+     "live_centre_view_before_release_seconds": {
+      "n": 105,
+      "median": 0.801,
+      "p10": 0.35,
+      "p90": 1.802,
+      "min": 0.05,
+      "max": 2.202
+     },
+     "chosen_setup_frame_before_release_seconds": {
+      "n": 99,
+      "median": 0.05,
+      "p10": 0.05,
+      "p90": 0.05,
+      "min": 0.05,
+      "max": 0.1
+     },
+     "unit": "reader rows (A and B counted separately)",
+     "inconsistent_rows_excluded": [
+      "36:6:B"
+     ]
+    },
+    "label_pack_page_local": true
+   }
+  },
+  "sources_sha256": {
+   "747139_timing": "9781a52527f5a91069548b5017cd927c94d4959df944a93cd54ec5be6c9760b7"
+  }
+ },
+ "rereview_26": {
+  "present": true,
+  "frames": 26,
+  "files_present": 26,
+  "sha_matches": 26,
+  "games": {
+   "823407": 13,
+   "849845": 13
+  },
+  "frames_before_in_window": [
+   26,
+   30,
+   30,
+   31,
+   31,
+   32,
+   32,
+   33,
+   33,
+   34,
+   34,
+   34,
+   35,
+   35,
+   35,
+   36,
+   36,
+   36,
+   36,
+   37,
+   37,
+   37,
+   37,
+   37,
+   38,
+   42
+  ],
+  "frames_after_in_window": [
+   18,
+   21,
+   22,
+   23,
+   23,
+   23,
+   23,
+   24,
+   24,
+   24,
+   24,
+   24,
+   25,
+   25,
+   25,
+   25,
+   26,
+   27,
+   27,
+   27,
+   28,
+   29,
+   29,
+   30,
+   30,
+   34
+  ],
+  "seconds_before_reader_release": [
+   0.0,
+   0.05,
+   0.05,
+   0.05,
+   0.05,
+   0.05,
+   0.05,
+   0.05,
+   0.05,
+   0.05,
+   0.05,
+   0.05,
+   0.05,
+   0.05,
+   0.05,
+   0.05,
+   0.05,
+   0.05,
+   0.05,
+   0.05,
+   0.05,
+   0.05,
+   0.05,
+   0.1,
+   0.1,
+   0.35
+  ],
+  "note": "each reviewed frame is one frame of a saved ~3 s window (about 20 fps); the window gives the short continuous context"
+ },
+ "bottleneck": {
+  "games": {
+   "849845": {
+    "rows": 57,
+    "estimated": 43,
+    "unavailable": 14,
+    "category_counts": {
+     "C1_mitt_not_visible": 0,
+     "C2_visible_target_undeterminable": 8,
+     "C3_reader_disagreement": 6,
+     "C4_no_transform_reference": 0,
+     "C5_no_pitch_link_or_time_evidence": 0,
+     "C6_execution_or_format_error": 0
+    },
+    "multi_category_rows": 0,
+    "unclassified": 0,
+    "unclassified_reasons": [],
+    "routes": {
+     "different_frame_mitt_disagreement": 6,
+     "reported_not_presented_or_lowered": 8
+    },
+    "human_join": {
+     "C2_visible_target_undeterminable|human_marked": 7,
+     "C2_visible_target_undeterminable|human_not_in_setup": 1,
+     "C3_reader_disagreement|human_marked": 6
+    },
+    "estimated_conversion_stage": {
+     "plate_feet|no_batter_zone_bounds": 43
+    },
+    "reader_rows_saved": true
+   },
+   "823407": {
+    "rows": 29,
+    "estimated": 15,
+    "unavailable": 14,
+    "category_counts": {
+     "C1_mitt_not_visible": 0,
+     "C2_visible_target_undeterminable": 0,
+     "C3_reader_disagreement": 3,
+     "C4_no_transform_reference": 6,
+     "C5_no_pitch_link_or_time_evidence": 8,
+     "C6_execution_or_format_error": 0
+    },
+    "multi_category_rows": 3,
+    "unclassified": 0,
+    "unclassified_reasons": [],
+    "routes": {
+     "both_no_setup:cut_after_release": 1,
+     "camera_rejection_and_plate_missing": 3,
+     "camera_rejection_one_candidate": 2,
+     "plate_missing_with_two_mitt_readings": 3,
+     "replay_rejection_one_candidate": 2,
+     "same_frame_mitt_disagreement": 3
+    },
+    "human_join": {
+     "C3_reader_disagreement|human_marked": 3,
+     "C4_no_transform_reference|human_marked": 3,
+     "C5_no_pitch_link_or_time_evidence|human_marked": 7,
+     "C5_no_pitch_link_or_time_evidence|human_not_centre_field": 1
+    },
+    "estimated_conversion_stage": {
+     "plate_feet|no_batter_zone_bounds": 15
+    },
+    "reader_rows_saved": true
+   },
+   "849849": {
+    "rows": 53,
+    "estimated": 43,
+    "unavailable": 10,
+    "category_counts": {
+     "C1_mitt_not_visible": 3,
+     "C2_visible_target_undeterminable": 2,
+     "C3_reader_disagreement": 4,
+     "C4_no_transform_reference": 0,
+     "C5_no_pitch_link_or_time_evidence": 1,
+     "C6_execution_or_format_error": 0
+    },
+    "multi_category_rows": 0,
+    "unclassified": 0,
+    "unclassified_reasons": [],
+    "routes": {
+     "different_frame_mitt_disagreement": 1,
+     "one_candidate_other_reason:cut_after_release": 1,
+     "one_candidate_other_reason:glove_hidden_by_batter": 1,
+     "one_candidate_other_reason:glove_not_identifiable_blur_and_batter_leg_overlap": 1,
+     "one_candidate_other_reason:glove_not_identifiable_held_low_behind_leg": 1,
+     "reported_not_presented_or_lowered": 2,
+     "same_frame_mitt_disagreement": 3
+    },
+    "human_join": null,
+    "estimated_conversion_stage": {
+     "plate_feet|no_batter_zone_bounds": 43
+    },
+    "reader_rows_saved": true
+   },
+   "849843": {
+    "rows": 39,
+    "estimated": 27,
+    "unavailable": 12,
+    "category_counts": {
+     "C1_mitt_not_visible": 4,
+     "C2_visible_target_undeterminable": 0,
+     "C3_reader_disagreement": 4,
+     "C4_no_transform_reference": 0,
+     "C5_no_pitch_link_or_time_evidence": 0,
+     "C6_execution_or_format_error": 0
+    },
+    "multi_category_rows": 0,
+    "unclassified": 4,
+    "unclassified_reasons": [
+     "reason_without_reader_rows:only_one_reader_found_a_setup_frame"
+    ],
+    "routes": {
+     "reason:glove_hidden_by_catcher_body": 1,
+     "reason:glove_not_distinguishable": 3,
+     "reason:readers_disagree_on_mitt": 4,
+     "reason_without_reader_rows:only_one_reader_found_a_setup_frame": 4
+    },
+    "human_join": null,
+    "estimated_conversion_stage": {
+     "plate_feet|no_batter_zone_bounds": 27
+    },
+    "reader_rows_saved": false
+   },
+   "747139": {
+    "rows": 297,
+    "estimated": 233,
+    "unavailable": 64,
+    "category_counts": {
+     "C1_mitt_not_visible": 2,
+     "C2_visible_target_undeterminable": 26,
+     "C3_reader_disagreement": 0,
+     "C4_no_transform_reference": 0,
+     "C5_no_pitch_link_or_time_evidence": 36,
+     "C6_execution_or_format_error": 0
+    },
+    "multi_category_rows": 0,
+    "unclassified": 0,
+    "unclassified_reasons": [],
+    "routes": {
+     "reason:camera_not_centre_field": 36,
+     "reason:catcher_not_in_setup": 26,
+     "reason:glove_hidden_by_umpire": 1,
+     "reason:glove_not_visible": 1
+    },
+    "human_join": null,
+    "estimated_conversion_stage": {
+     "image_pixels|no_image_plane_calibration": 80,
+     "plate_feet|no_batter_zone_bounds": 153
+    },
+    "reader_rows_saved": false
+   }
+  },
+  "category_labels": {
+   "C1_mitt_not_visible": "미트 자체가 안 보임(저장된 판독 주장)",
+   "C2_visible_target_undeterminable": "미트는 보이나 목표 제시 여부 판단 불가 또는 미제시 주장",
+   "C3_reader_disagreement": "판독자 간 불일치",
+   "C4_no_transform_reference": "좌표 변환에 필요한 기준점 없음",
+   "C5_no_pitch_link_or_time_evidence": "투구 연결·관측 장면·시각 근거 없음(중앙 카메라 아님·리플레이·컷 포함)",
+   "C6_execution_or_format_error": "실행·형식 오류"
+  },
+  "reason_table": {
+   "glove_hidden_by_umpire": "C1_mitt_not_visible",
+   "glove_not_visible": "C1_mitt_not_visible",
+   "glove_hidden_by_catcher_body": "C1_mitt_not_visible",
+   "glove_not_distinguishable": "C1_mitt_not_visible",
+   "glove_hidden_by_batter": "C1_mitt_not_visible",
+   "glove_not_identifiable_blur_and_batter_leg_overlap": "C1_mitt_not_visible",
+   "glove_not_identifiable_held_low_behind_leg": "C1_mitt_not_visible",
+   "catcher_not_in_setup": "C2_visible_target_undeterminable",
+   "glove_not_presented: catcher drops glove to rest on the ground before release": "C2_visible_target_undeterminable",
+   "glove_not_presented_resting_on_ground": "C2_visible_target_undeterminable",
+   "glove_resting_on_dirt_not_presented": "C2_visible_target_undeterminable",
+   "glove_already_lowered_at_cut": "C2_visible_target_undeterminable",
+   "readers_disagree_on_mitt": "C3_reader_disagreement",
+   "camera_not_centre_field": "C5_no_pitch_link_or_time_evidence",
+   "not_centre_field": "C5_no_pitch_link_or_time_evidence",
+   "slow_motion_replay_not_live": "C5_no_pitch_link_or_time_evidence",
+   "cut_after_release": "C5_no_pitch_link_or_time_evidence"
+  },
+  "route_categories": {
+   "reported_not_presented_or_lowered": [
+    "C2_visible_target_undeterminable"
+   ],
+   "camera_rejection_one_candidate": [
+    "C5_no_pitch_link_or_time_evidence"
+   ],
+   "replay_rejection_one_candidate": [
+    "C5_no_pitch_link_or_time_evidence"
+   ],
+   "plate_missing_with_two_mitt_readings": [
+    "C4_no_transform_reference"
+   ],
+   "different_frame_mitt_disagreement": [
+    "C3_reader_disagreement"
+   ],
+   "same_frame_mitt_disagreement": [
+    "C3_reader_disagreement"
+   ],
+   "camera_rejection_and_plate_missing": [
+    "C5_no_pitch_link_or_time_evidence",
+    "C4_no_transform_reference"
+   ]
+  },
+  "sources_sha256": {
+   "849845_jsonl": "6d3a01d7aa0002e2b8c6bcb62e44d0b9723df969d0b8e017210c2863edddf4bc",
+   "849845_reads": "f42f838b5749264c04516c474f8d4118774213238b447a9b3e3b356d06f30dd5",
+   "849845_human_labels": "b1c9b97068ef6e6d8456cd834351cb24c3d82da15e7113ff5a75a80ecace96eb",
+   "823407_jsonl": "2ab78c0096fcf14c6120558c363aa00ba89f98935aae386cc72e2a7bd4358e0c",
+   "823407_reads": "009cdf6864a20ab37dc8f69e5d2df52f6e90868856054c227c73d9023083e75d",
+   "823407_human_labels": "bce2a324c1cd4c8af1301e79ac6ec8a65137c2170c77236ee102ca80fb0585d1",
+   "849849_jsonl": "f24c18bbbb9acc834d3371a3d2396ef14ed8776103d3cdfef09adbfcae25d9e5",
+   "849849_reads": "649960ab4f650df2b6b8d2051478b0befd727e61ec6db5fceb36544dca61f234",
+   "849843_jsonl": "5ad0c28847c12dcea3d6c8589e966553a44d1d8f5829381b87ec6d0b7e2d27dc",
+   "747139_jsonl": "355a2dd9e0906d5acfbb2c172118a41cc54591f04bbe40f8d3f2e7ab73483840"
+  }
+ },
+ "local_loop_cv24": {
+  "counts": {
+   "planned_observations": 14,
+   "reference_pitches": 3,
+   "unmeasured_reference_pitches": 0,
+   "nominal_start_temporal_ready_pitches": 1,
+   "conservative_temporal_ready_pitches": 0,
+   "usable_mitt_pitches": 0,
+   "observation_status": {
+    "accepted": 14
+   }
+  },
+  "interpretation": "the local loop used an unadopted generic detector whose responses never confirm a mitt; 0 usable mitts is a design limit, not a finding that mitts were absent"
+ }
+}

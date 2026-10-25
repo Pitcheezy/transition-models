@@ -1,0 +1,1059 @@
+{
+ "schema": "pitcheezy-mitt-dev-bundle-v1-public-summary",
+ "scope": "development data (747139 was already development data in M3); not an independent evaluation",
+ "rule": {
+  "game_pk": 747139,
+  "order": "at_bat_number, pitch_number",
+  "first_key": [
+   3,
+   1
+  ],
+  "count": 40,
+  "before_decision_seconds": 1.0,
+  "after_release_seconds": 0.5,
+  "step_source_frames": 6,
+  "always_include": [
+   "decision frame read by the frozen v0 reader",
+   "release-nearest frame"
+  ],
+  "fixed_before_reading": true
+ },
+ "source": {
+  "media_url": "https://mlb-cuts-diamond.mlb.com/FORGE/2024/2024-09/30/0371d6a1-835956e4-13ff0140-csvm-diamondgcp-asset_1280x720_59_4000K.mp4",
+  "duration_seconds": 9340.748083,
+  "time_base": "1/60000",
+  "ticks_per_frame": 1001,
+  "timing_file_sha256": "9781a52527f5a91069548b5017cd927c94d4959df944a93cd54ec5be6c9760b7"
+ },
+ "ffmpeg_version": "ffmpeg version 8.0-essentials_build-www.gyan.dev Copyright (c) 2000-2025 the FFmpeg developers",
+ "manifest_sha256": "58cb57c9dbd542ca60db84f8f1e2242867e4680c15e1914a5ca1352ec1bcf87a",
+ "frames_digest_sha256": "ba489d0c18730805bfc811f06363d2614afb8e3b635798fb66dd5588a9aaefca",
+ "counts": {
+  "planned_pitch_keys": 40,
+  "extracted": 39,
+  "excluded": 1,
+  "failed": 0,
+  "frames": 2596,
+  "seconds_covered": 254.423,
+  "windows_with_index_gap": 0
+ },
+ "timing_basis": "decision/release seconds are AI visual annotations (Codex/Claude agents), not human ground truth",
+ "pitches": [
+  {
+   "pitch_id": "747139:3:1",
+   "status": "extracted",
+   "frames": 80,
+   "grid_frames": 79,
+   "window": {
+    "first_index": 14910,
+    "last_index": 15381,
+    "decision_index": 14970,
+    "release_index": 15351
+   },
+   "seconds_covered": 7.858,
+   "attempts": 1,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:3:2",
+   "status": "extracted",
+   "frames": 69,
+   "grid_frames": 68,
+   "window": {
+    "first_index": 16214,
+    "last_index": 16621,
+    "decision_index": 16274,
+    "release_index": 16591
+   },
+   "seconds_covered": 6.79,
+   "attempts": 1,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:3:3",
+   "status": "extracted",
+   "frames": 72,
+   "grid_frames": 71,
+   "window": {
+    "first_index": 17173,
+    "last_index": 17598,
+    "decision_index": 17233,
+    "release_index": 17568
+   },
+   "seconds_covered": 7.09,
+   "attempts": 1,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:4:1",
+   "status": "extracted",
+   "frames": 53,
+   "grid_frames": 52,
+   "window": {
+    "first_index": 19585,
+    "last_index": 19894,
+    "decision_index": 19645,
+    "release_index": 19864
+   },
+   "seconds_covered": 5.155,
+   "attempts": 2,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:4:2",
+   "status": "extracted",
+   "frames": 83,
+   "grid_frames": 82,
+   "window": {
+    "first_index": 20410,
+    "last_index": 20901,
+    "decision_index": 20470,
+    "release_index": 20871
+   },
+   "seconds_covered": 8.192,
+   "attempts": 1,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:5:1",
+   "status": "extracted",
+   "frames": 40,
+   "grid_frames": 39,
+   "window": {
+    "first_index": 21294,
+    "last_index": 21524,
+    "decision_index": 21354,
+    "release_index": 21495
+   },
+   "seconds_covered": 3.837,
+   "attempts": 1,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:5:2",
+   "status": "extracted",
+   "frames": 58,
+   "grid_frames": 58,
+   "window": {
+    "first_index": 22058,
+    "last_index": 22400,
+    "decision_index": 22118,
+    "release_index": 22370
+   },
+   "seconds_covered": 5.706,
+   "attempts": 1,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:5:3",
+   "status": "extracted",
+   "frames": 74,
+   "grid_frames": 73,
+   "window": {
+    "first_index": 23152,
+    "last_index": 23586,
+    "decision_index": 23212,
+    "release_index": 23556
+   },
+   "seconds_covered": 7.241,
+   "attempts": 1,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:5:4",
+   "status": "extracted",
+   "frames": 76,
+   "grid_frames": 75,
+   "window": {
+    "first_index": 24336,
+    "last_index": 24785,
+    "decision_index": 24396,
+    "release_index": 24755
+   },
+   "seconds_covered": 7.491,
+   "attempts": 1,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:5:5",
+   "status": "excluded",
+   "reason": "timing_unavailable_in_annotations"
+  },
+  {
+   "pitch_id": "747139:5:6",
+   "status": "extracted",
+   "frames": 79,
+   "grid_frames": 78,
+   "window": {
+    "first_index": 26718,
+    "last_index": 27183,
+    "decision_index": 26778,
+    "release_index": 27153
+   },
+   "seconds_covered": 7.758,
+   "attempts": 1,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:6:1",
+   "status": "extracted",
+   "frames": 44,
+   "grid_frames": 43,
+   "window": {
+    "first_index": 28771,
+    "last_index": 29028,
+    "decision_index": 28831,
+    "release_index": 28998
+   },
+   "seconds_covered": 4.288,
+   "attempts": 1,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:6:2",
+   "status": "extracted",
+   "frames": 117,
+   "grid_frames": 116,
+   "window": {
+    "first_index": 31439,
+    "last_index": 32131,
+    "decision_index": 31499,
+    "release_index": 32101
+   },
+   "seconds_covered": 11.545,
+   "attempts": 1,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:6:3",
+   "status": "extracted",
+   "frames": 100,
+   "grid_frames": 99,
+   "window": {
+    "first_index": 32844,
+    "last_index": 33436,
+    "decision_index": 32904,
+    "release_index": 33406
+   },
+   "seconds_covered": 9.877,
+   "attempts": 1,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:6:4",
+   "status": "extracted",
+   "frames": 36,
+   "grid_frames": 34,
+   "window": {
+    "first_index": 34496,
+    "last_index": 34696,
+    "decision_index": 34555,
+    "release_index": 34666
+   },
+   "seconds_covered": 3.337,
+   "attempts": 1,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:6:5",
+   "status": "extracted",
+   "frames": 74,
+   "grid_frames": 74,
+   "window": {
+    "first_index": 36590,
+    "last_index": 37028,
+    "decision_index": 36650,
+    "release_index": 36998
+   },
+   "seconds_covered": 7.307,
+   "attempts": 1,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:6:6",
+   "status": "extracted",
+   "frames": 104,
+   "grid_frames": 103,
+   "window": {
+    "first_index": 39710,
+    "last_index": 40326,
+    "decision_index": 39770,
+    "release_index": 40297
+   },
+   "seconds_covered": 10.277,
+   "attempts": 1,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:7:1",
+   "status": "extracted",
+   "frames": 47,
+   "grid_frames": 46,
+   "window": {
+    "first_index": 41790,
+    "last_index": 42062,
+    "decision_index": 41850,
+    "release_index": 42032
+   },
+   "seconds_covered": 4.538,
+   "attempts": 1,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:7:2",
+   "status": "extracted",
+   "frames": 75,
+   "grid_frames": 74,
+   "window": {
+    "first_index": 42722,
+    "last_index": 43165,
+    "decision_index": 42782,
+    "release_index": 43135
+   },
+   "seconds_covered": 7.391,
+   "attempts": 2,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:7:3",
+   "status": "extracted",
+   "frames": 42,
+   "grid_frames": 41,
+   "window": {
+    "first_index": 44191,
+    "last_index": 44435,
+    "decision_index": 44251,
+    "release_index": 44405
+   },
+   "seconds_covered": 4.071,
+   "attempts": 1,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:7:4",
+   "status": "extracted",
+   "frames": 84,
+   "grid_frames": 84,
+   "window": {
+    "first_index": 45285,
+    "last_index": 45783,
+    "decision_index": 45345,
+    "release_index": 45753
+   },
+   "seconds_covered": 8.308,
+   "attempts": 1,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:8:1",
+   "status": "extracted",
+   "frames": 46,
+   "grid_frames": 45,
+   "window": {
+    "first_index": 46543,
+    "last_index": 46810,
+    "decision_index": 46603,
+    "release_index": 46780
+   },
+   "seconds_covered": 4.454,
+   "attempts": 1,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:8:2",
+   "status": "extracted",
+   "frames": 50,
+   "grid_frames": 49,
+   "window": {
+    "first_index": 47413,
+    "last_index": 47706,
+    "decision_index": 47473,
+    "release_index": 47676
+   },
+   "seconds_covered": 4.888,
+   "attempts": 1,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:8:3",
+   "status": "extracted",
+   "frames": 35,
+   "grid_frames": 33,
+   "window": {
+    "first_index": 48462,
+    "last_index": 48656,
+    "decision_index": 48521,
+    "release_index": 48626
+   },
+   "seconds_covered": 3.237,
+   "attempts": 1,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:8:4",
+   "status": "extracted",
+   "frames": 60,
+   "grid_frames": 59,
+   "window": {
+    "first_index": 49346,
+    "last_index": 49699,
+    "decision_index": 49406,
+    "release_index": 49669
+   },
+   "seconds_covered": 5.889,
+   "attempts": 1,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:9:1",
+   "status": "extracted",
+   "frames": 82,
+   "grid_frames": 81,
+   "window": {
+    "first_index": 50838,
+    "last_index": 51319,
+    "decision_index": 50898,
+    "release_index": 51290
+   },
+   "seconds_covered": 8.025,
+   "attempts": 1,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:9:2",
+   "status": "extracted",
+   "frames": 54,
+   "grid_frames": 53,
+   "window": {
+    "first_index": 51806,
+    "last_index": 52120,
+    "decision_index": 51866,
+    "release_index": 52090
+   },
+   "seconds_covered": 5.239,
+   "attempts": 1,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:10:1",
+   "status": "extracted",
+   "frames": 77,
+   "grid_frames": 76,
+   "window": {
+    "first_index": 53682,
+    "last_index": 54133,
+    "decision_index": 53742,
+    "release_index": 54103
+   },
+   "seconds_covered": 7.524,
+   "attempts": 1,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:10:2",
+   "status": "extracted",
+   "frames": 51,
+   "grid_frames": 51,
+   "window": {
+    "first_index": 54716,
+    "last_index": 55016,
+    "decision_index": 54776,
+    "release_index": 54986
+   },
+   "seconds_covered": 5.005,
+   "attempts": 1,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:10:3",
+   "status": "extracted",
+   "frames": 68,
+   "grid_frames": 67,
+   "window": {
+    "first_index": 55867,
+    "last_index": 56265,
+    "decision_index": 55927,
+    "release_index": 56235
+   },
+   "seconds_covered": 6.64,
+   "attempts": 1,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:10:4",
+   "status": "extracted",
+   "frames": 75,
+   "grid_frames": 74,
+   "window": {
+    "first_index": 57021,
+    "last_index": 57460,
+    "decision_index": 57081,
+    "release_index": 57430
+   },
+   "seconds_covered": 7.324,
+   "attempts": 1,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:10:5",
+   "status": "extracted",
+   "frames": 30,
+   "grid_frames": 30,
+   "window": {
+    "first_index": 58235,
+    "last_index": 58409,
+    "decision_index": 58295,
+    "release_index": 58379
+   },
+   "seconds_covered": 2.903,
+   "attempts": 1,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:10:6",
+   "status": "extracted",
+   "frames": 37,
+   "grid_frames": 37,
+   "window": {
+    "first_index": 59541,
+    "last_index": 59757,
+    "decision_index": 59601,
+    "release_index": 59727
+   },
+   "seconds_covered": 3.604,
+   "attempts": 2,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:11:1",
+   "status": "extracted",
+   "frames": 69,
+   "grid_frames": 68,
+   "window": {
+    "first_index": 62158,
+    "last_index": 62565,
+    "decision_index": 62218,
+    "release_index": 62535
+   },
+   "seconds_covered": 6.79,
+   "attempts": 1,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:11:2",
+   "status": "extracted",
+   "frames": 102,
+   "grid_frames": 101,
+   "window": {
+    "first_index": 63012,
+    "last_index": 63617,
+    "decision_index": 63072,
+    "release_index": 63587
+   },
+   "seconds_covered": 10.093,
+   "attempts": 1,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:11:3",
+   "status": "extracted",
+   "frames": 62,
+   "grid_frames": 61,
+   "window": {
+    "first_index": 64301,
+    "last_index": 64666,
+    "decision_index": 64361,
+    "release_index": 64636
+   },
+   "seconds_covered": 6.089,
+   "attempts": 1,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:11:4",
+   "status": "extracted",
+   "frames": 74,
+   "grid_frames": 73,
+   "window": {
+    "first_index": 65440,
+    "last_index": 65877,
+    "decision_index": 65500,
+    "release_index": 65847
+   },
+   "seconds_covered": 7.291,
+   "attempts": 1,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:11:5",
+   "status": "extracted",
+   "frames": 92,
+   "grid_frames": 91,
+   "window": {
+    "first_index": 66713,
+    "last_index": 67258,
+    "decision_index": 66773,
+    "release_index": 67228
+   },
+   "seconds_covered": 9.092,
+   "attempts": 1,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:12:1",
+   "status": "extracted",
+   "frames": 61,
+   "grid_frames": 60,
+   "window": {
+    "first_index": 69351,
+    "last_index": 69710,
+    "decision_index": 69411,
+    "release_index": 69680
+   },
+   "seconds_covered": 5.989,
+   "attempts": 1,
+   "index_gaps_in_window": 0
+  },
+  {
+   "pitch_id": "747139:12:2",
+   "status": "extracted",
+   "frames": 64,
+   "grid_frames": 63,
+   "window": {
+    "first_index": 70235,
+    "last_index": 70612,
+    "decision_index": 70295,
+    "release_index": 70582
+   },
+   "seconds_covered": 6.29,
+   "attempts": 1,
+   "index_gaps_in_window": 0
+  }
+ ],
+ "existing_method_on_same_keys": {
+  "frames_read_per_pitch": 1,
+  "frame_rule": "decision frame (start of the set window) only",
+  "status_counts": {
+   "estimated": 38,
+   "no_output_row": 1,
+   "unavailable": 1
+  },
+  "unavailable_categories": {
+   "C2_visible_target_undeterminable": 1
+  },
+  "deepest_frame_counts": {
+   "plate_feet|no_batter_zone_bounds": 36,
+   "image_pixels|no_image_plane_calibration": 2
+  },
+  "rows": [
+   {
+    "pitch_id": "747139:3:1",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "plate_feet",
+    "v0_blocked_by": "no_batter_zone_bounds",
+    "v0_frame_index": 14970,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:3:2",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "plate_feet",
+    "v0_blocked_by": "no_batter_zone_bounds",
+    "v0_frame_index": 16274,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:3:3",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "plate_feet",
+    "v0_blocked_by": "no_batter_zone_bounds",
+    "v0_frame_index": 17233,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:4:1",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "plate_feet",
+    "v0_blocked_by": "no_batter_zone_bounds",
+    "v0_frame_index": 19645,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:4:2",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "plate_feet",
+    "v0_blocked_by": "no_batter_zone_bounds",
+    "v0_frame_index": 20470,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:5:1",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "plate_feet",
+    "v0_blocked_by": "no_batter_zone_bounds",
+    "v0_frame_index": 21354,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:5:2",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "plate_feet",
+    "v0_blocked_by": "no_batter_zone_bounds",
+    "v0_frame_index": 22118,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:5:3",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "plate_feet",
+    "v0_blocked_by": "no_batter_zone_bounds",
+    "v0_frame_index": 23212,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:5:4",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "plate_feet",
+    "v0_blocked_by": "no_batter_zone_bounds",
+    "v0_frame_index": 24396,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:5:5",
+    "v0": "no_output_row"
+   },
+   {
+    "pitch_id": "747139:5:6",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "plate_feet",
+    "v0_blocked_by": "no_batter_zone_bounds",
+    "v0_frame_index": 26778,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:6:1",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "image_pixels",
+    "v0_blocked_by": "no_image_plane_calibration",
+    "v0_frame_index": 28831,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:6:2",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "plate_feet",
+    "v0_blocked_by": "no_batter_zone_bounds",
+    "v0_frame_index": 31499,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:6:3",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "plate_feet",
+    "v0_blocked_by": "no_batter_zone_bounds",
+    "v0_frame_index": 32904,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:6:4",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "plate_feet",
+    "v0_blocked_by": "no_batter_zone_bounds",
+    "v0_frame_index": 34555,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:6:5",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "plate_feet",
+    "v0_blocked_by": "no_batter_zone_bounds",
+    "v0_frame_index": 36650,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:6:6",
+    "v0_status": "unavailable",
+    "v0_reason": "catcher_not_in_setup",
+    "v0_category": "C2_visible_target_undeterminable",
+    "v0_deepest_frame": null,
+    "v0_blocked_by": null,
+    "v0_frame_index": 39770,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:7:1",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "plate_feet",
+    "v0_blocked_by": "no_batter_zone_bounds",
+    "v0_frame_index": 41850,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:7:2",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "plate_feet",
+    "v0_blocked_by": "no_batter_zone_bounds",
+    "v0_frame_index": 42782,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:7:3",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "plate_feet",
+    "v0_blocked_by": "no_batter_zone_bounds",
+    "v0_frame_index": 44251,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:7:4",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "plate_feet",
+    "v0_blocked_by": "no_batter_zone_bounds",
+    "v0_frame_index": 45345,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:8:1",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "plate_feet",
+    "v0_blocked_by": "no_batter_zone_bounds",
+    "v0_frame_index": 46603,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:8:2",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "plate_feet",
+    "v0_blocked_by": "no_batter_zone_bounds",
+    "v0_frame_index": 47473,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:8:3",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "plate_feet",
+    "v0_blocked_by": "no_batter_zone_bounds",
+    "v0_frame_index": 48521,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:8:4",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "plate_feet",
+    "v0_blocked_by": "no_batter_zone_bounds",
+    "v0_frame_index": 49406,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:9:1",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "plate_feet",
+    "v0_blocked_by": "no_batter_zone_bounds",
+    "v0_frame_index": 50898,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:9:2",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "plate_feet",
+    "v0_blocked_by": "no_batter_zone_bounds",
+    "v0_frame_index": 51866,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:10:1",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "plate_feet",
+    "v0_blocked_by": "no_batter_zone_bounds",
+    "v0_frame_index": 53742,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:10:2",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "plate_feet",
+    "v0_blocked_by": "no_batter_zone_bounds",
+    "v0_frame_index": 54776,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:10:3",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "plate_feet",
+    "v0_blocked_by": "no_batter_zone_bounds",
+    "v0_frame_index": 55927,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:10:4",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "plate_feet",
+    "v0_blocked_by": "no_batter_zone_bounds",
+    "v0_frame_index": 57081,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:10:5",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "plate_feet",
+    "v0_blocked_by": "no_batter_zone_bounds",
+    "v0_frame_index": 58295,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:10:6",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "plate_feet",
+    "v0_blocked_by": "no_batter_zone_bounds",
+    "v0_frame_index": 59601,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:11:1",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "plate_feet",
+    "v0_blocked_by": "no_batter_zone_bounds",
+    "v0_frame_index": 62218,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:11:2",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "plate_feet",
+    "v0_blocked_by": "no_batter_zone_bounds",
+    "v0_frame_index": 63072,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:11:3",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "plate_feet",
+    "v0_blocked_by": "no_batter_zone_bounds",
+    "v0_frame_index": 64361,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:11:4",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "plate_feet",
+    "v0_blocked_by": "no_batter_zone_bounds",
+    "v0_frame_index": 65500,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:11:5",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "image_pixels",
+    "v0_blocked_by": "no_image_plane_calibration",
+    "v0_frame_index": 66773,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:12:1",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "plate_feet",
+    "v0_blocked_by": "no_batter_zone_bounds",
+    "v0_frame_index": 69411,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   },
+   {
+    "pitch_id": "747139:12:2",
+    "v0_status": "estimated",
+    "v0_reason": null,
+    "v0_category": null,
+    "v0_deepest_frame": "plate_feet",
+    "v0_blocked_by": "no_batter_zone_bounds",
+    "v0_frame_index": 70295,
+    "v0_recorded_index_equals_bundle_decision_index": true
+   }
+  ]
+ },
+ "v0_read_image_check": {
+  "checked": 39,
+  "not_checked": 0,
+  "identical_at_recorded_index": 20,
+  "identical_at_recorded_plus_one": 19,
+  "other": 0,
+  "explained_by_first_frame_at_or_after_time": 39,
+  "recorded_frame_in_a_different_shot": [
+   "747139:10:3",
+   "747139:10:6"
+  ],
+  "shot_change_threshold": "mean absolute grey difference between frames D and D+1 above 10"
+ },
+ "private_location": "outputs/ (git-ignored); frames and crops are not published"
+}
