@@ -130,3 +130,30 @@ def test_params_are_hashed_for_freezing():
     assert mt.params_sha256(dict(reversed(list(mt.PARAMS_DEV_V1.items())))) == mt.params_sha256(
         mt.PARAMS_DEV_V1
     )
+
+
+def test_abstention_reason_uses_only_frames_before_each_cutoff():
+    not_set = [obs(i, None, catcher="not_set", vis="unknown") for i in range(5)]
+    alone = mt.summarize_pitch(not_set, release_seconds=10.45)
+    assert alone["undeterminable_before_release"] == "no_usable_frame:catcher_not_set"
+    later = not_set + [obs(i, (600, 300)) for i in range(5, 9)]
+    extended = mt.summarize_pitch(later, release_seconds=10.45)
+    assert extended["undeterminable_before_release"] == "no_usable_frame:catcher_not_set"
+    # a candidate exists before release but not before an earlier delivery start
+    split = mt.summarize_pitch(sequence(), release_seconds=11.25, delivery_start_seconds=10.55)
+    assert split["candidate_before_release"] is not None
+    assert split["candidate_before_delivery_start"] is None
+    assert split["undeterminable_before_delivery_start"] == "no_held_segment_reached_min_hold"
+    assert split["undeterminable_before_release"] is None
+    assert mt.why_none_before([], None) == "no_cutoff"
+
+
+def test_holds_that_start_after_an_unusable_frame_or_at_the_first_frame_are_left_censored():
+    first = mt.run([obs(i, (600, 300)) for i in range(4)])
+    assert [r["event"]["left_censored"] for r in first if r["event"]] == [True]
+    moved = mt.run([obs(0, (560, 300))] + [obs(i, (600, 300 + i % 2)) for i in range(1, 5)])
+    assert [r["event"]["left_censored"] for r in moved if r["event"]] == [False]
+    hidden = mt.run(
+        [obs(0, (560, 300)), obs(1, None, vis="hidden")] + [obs(i, (600, 300)) for i in range(2, 6)]
+    )
+    assert [r["event"]["left_censored"] for r in hidden if r["event"]] == [True]

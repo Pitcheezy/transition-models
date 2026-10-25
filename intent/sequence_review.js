@@ -17,6 +17,7 @@
     if (!exact(response, ["schema", "manifest_sha256", "reviewer_id", "rows"])) fail("응답 문서 필드가 다릅니다.");
     if (response.schema !== RESPONSE || response.manifest_sha256 !== hash || !/^[a-f0-9]{64}$/.test(hash))
       fail("응답 버전 또는 manifest SHA256이 다릅니다.");
+    if (typeof response.reviewer_id !== "string") fail("검토자 ID는 문자열이어야 합니다.");
     const sequences = new Map(manifest.sequences.map(s => [s.sequence_id, s]));
     if (!Array.isArray(response.rows) || response.rows.length !== sequences.size) fail("행 수가 다릅니다.");
     const seen = new Set();
@@ -74,6 +75,9 @@
     const next = clone(row);
     if (next.presentation !== "held_seen") next.presentation = "held_seen";
     next[which === "start" ? "hold_start_n" : "hold_end_n"] = n;
+    // a new bound on the wrong side of the other one clears the other bound
+    if (next.hold_start_n !== null && next.hold_end_n !== null && next.hold_start_n > next.hold_end_n)
+      next[which === "start" ? "hold_end_n" : "hold_start_n"] = null;
     if (next.point_n !== null && ((next.hold_start_n !== null && next.point_n < next.hold_start_n)
       || (next.hold_end_n !== null && next.point_n > next.hold_end_n))) { next.point_n = null; next.mitt = null; }
     return next;
@@ -191,6 +195,7 @@
       };
       document.addEventListener("keydown", event => {
         if (["INPUT", "TEXTAREA", "SELECT"].includes(event.target.tagName)) return;
+        if (event.ctrlKey || event.metaKey || event.altKey) return;
         const key = event.key.toLowerCase();
         if (key === "arrowleft") { stop(); step(-1); } else if (key === "arrowright") { stop(); step(1); }
         else if (key === " ") { event.preventDefault(); $("play").click(); }
@@ -204,8 +209,7 @@
         link.href = url; link.download = filename;
         document.body.appendChild(link); link.click(); link.remove();
         setTimeout(() => URL.revokeObjectURL(url), 1000);
-        dirty = false;
-        say(`${note} 다운로드를 요청했습니다. 파일 저장을 확인한 뒤 닫으세요.`);
+        say(`${note} 다운로드를 요청했습니다. 파일 저장을 확인한 뒤 닫으세요. 저장을 취소했다면 다시 저장하세요.`);
       }
       $("export").onclick = () => {
         try { download(exportResponse(state, manifest, hash), "sequence_review_response.json", "제출용 응답"); }

@@ -36,7 +36,7 @@ def test_tables_name_only_the_six_categories_and_cover_the_cv6b_routes():
     assert {c for cats in inv.ROUTE_CATEGORIES.values() for c in cats} <= set(inv.CATEGORIES)
     assert set(inv.ROUTE_CATEGORIES) == set(cv6b.PREDICATES)
     for reason in cv6b.REPORTED_SETUP_REASONS:
-        assert inv.REASON_TABLE[reason] == "C2_visible_target_undeterminable"
+        assert inv.REASON_TABLE[reason] == "C2_target_not_presented_or_undeterminable"
 
 
 def test_cv6b_routes_are_reused_and_extensions_use_exact_reason_strings():
@@ -100,7 +100,7 @@ def test_saved_m3_abstentions_reproduce_and_split_without_unclassified():
     assert sum(g["estimated"] for g in games.values()) == 58
     assert sum(g["unavailable"] for g in games.values()) == 28
     assert all(g["unclassified"] == 0 for g in games.values())
-    assert games["849845"]["category_counts"]["C2_visible_target_undeterminable"] == 8
+    assert games["849845"]["category_counts"]["C2_target_not_presented_or_undeterminable"] == 8
     assert games["849845"]["category_counts"]["C3_reader_disagreement"] == 6
     c823 = games["823407"]["category_counts"]
     assert (
@@ -109,3 +109,24 @@ def test_saved_m3_abstentions_reproduce_and_split_without_unclassified():
         c823["C5_no_pitch_link_or_time_evidence"],
     ) == (3, 6, 8)
     assert len(rows) == 28 and all(r["categories"] for r in rows)
+
+
+def test_reader_release_drops_inconsistent_rows_and_flags_disagreement():
+    a = reading(frame=59856, release=59859, live=59700)
+    b = reading(
+        frame=59835, release=56856, live=59799
+    )  # setup and view start after its own release
+    assert inv.inconsistent_row(b) and not inv.inconsistent_row(a)
+    assert inv.reader_release({"A": a, "B": b}) == (59859, "ok_inconsistent_row_dropped")
+    c = reading(frame=100, release=103, live=40)
+    d = reading(frame=100, release=120, live=40)
+    assert inv.reader_release({"A": c, "B": d}) == (None, "readers_disagree_on_release")
+    e = reading(frame=100, release=106, live=40)
+    assert inv.reader_release({"A": c, "B": e}) == (103, "ok")
+    assert inv.reader_release({}) == (None, "no_release")
+
+
+def test_nearest_rank_percentile():
+    values = list(range(1, 11))
+    assert inv.nearest_rank(values, 0.9) == 9 and inv.nearest_rank(values, 0.1) == 1
+    assert inv.nearest_rank([5], 0.9) == 5

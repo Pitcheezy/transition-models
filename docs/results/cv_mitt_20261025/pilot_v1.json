@@ -17,6 +17,13 @@
   "max_gap_seconds": 0.25
  },
  "params_sha256": "01c82c45a1cca9735a34c47cdcc46898d1b0379232cdf4b500a282f553e5eac5",
+ "delivery_start_annotation": {
+  "definition": "first 10 fps grid frame (window start through release-nearest) in which the pitcher's lead leg visibly starts to lift for the delivery",
+  "uncertainty_seconds": 0.1,
+  "annotator": "post-hoc AI visual annotation by the authoring session (Claude Opus 5.5) on pitcher-region contact sheets; evaluation cut-off only, not human ground truth, not an input to the selector"
+ },
+ "release_basis": "AI visual annotation in game_747139_timing.json (evaluation cut-off only)",
+ "candidate_at_cutoff": "the most recent candidate emitted strictly before the cut-off",
  "reader_answers": {
   "frames_planned": 325,
   "answered": 325,
@@ -36,7 +43,11 @@
    "candidate_before_delivery_start": 9,
    "candidate_before_release": 10,
    "delivery_start_unknown": 0,
-   "undeterminable": {},
+   "undeterminable_before_delivery_start": {
+    "no_held_segment_reached_min_hold": 1
+   },
+   "undeterminable_before_release": {},
+   "left_censored_candidates_before_delivery": 2,
    "front_edge_units_before_delivery": 7
   },
   "candidate_vs_v0_point_px": {
@@ -150,7 +161,8 @@
      265.0
     ],
     "frames_in_segment": 3,
-    "spread_px": 6.32
+    "spread_px": 6.32,
+    "left_censored": false
    },
    "candidate_before_release": {
     "segment_start_seconds": 252.752,
@@ -162,10 +174,12 @@
      265.0
     ],
     "frames_in_segment": 3,
-    "spread_px": 6.32
+    "spread_px": 6.32,
+    "left_censored": false
    },
    "conversion_before_delivery_start": "front_edge_units",
-   "undeterminable_reason": null,
+   "undeterminable_before_delivery_start": null,
+   "undeterminable_before_release": null,
    "v0": {
     "status": "estimated",
     "point_px": [
@@ -216,7 +230,8 @@
      257.0
     ],
     "frames_in_segment": 3,
-    "spread_px": 5.83
+    "spread_px": 5.83,
+    "left_censored": false
    },
    "candidate_before_release": {
     "segment_start_seconds": 275.509,
@@ -228,10 +243,12 @@
      246.0
     ],
     "frames_in_segment": 3,
-    "spread_px": 5.0
+    "spread_px": 5.0,
+    "left_censored": false
    },
    "conversion_before_delivery_start": "front_edge_units",
-   "undeterminable_reason": null,
+   "undeterminable_before_delivery_start": null,
+   "undeterminable_before_release": null,
    "v0": {
     "status": "estimated",
     "point_px": [
@@ -282,7 +299,8 @@
      262.0
     ],
     "frames_in_segment": 3,
-    "spread_px": 7.07
+    "spread_px": 7.07,
+    "left_censored": false
    },
    "candidate_before_release": {
     "segment_start_seconds": 290.507,
@@ -294,10 +312,12 @@
      262.0
     ],
     "frames_in_segment": 3,
-    "spread_px": 7.07
+    "spread_px": 7.07,
+    "left_censored": false
    },
    "conversion_before_delivery_start": "front_edge_units",
-   "undeterminable_reason": null,
+   "undeterminable_before_delivery_start": null,
+   "undeterminable_before_release": null,
    "v0": {
     "status": "estimated",
     "point_px": [
@@ -348,7 +368,8 @@
      205.0
     ],
     "frames_in_segment": 3,
-    "spread_px": 6.08
+    "spread_px": 6.08,
+    "left_censored": false
    },
    "candidate_before_release": {
     "segment_start_seconds": 326.943,
@@ -360,10 +381,12 @@
      205.0
     ],
     "frames_in_segment": 3,
-    "spread_px": 6.08
+    "spread_px": 6.08,
+    "left_censored": false
    },
    "conversion_before_delivery_start": "front_edge_units",
-   "undeterminable_reason": null,
+   "undeterminable_before_delivery_start": null,
+   "undeterminable_before_release": null,
    "v0": {
     "status": "estimated",
     "point_px": [
@@ -414,7 +437,8 @@
      226.0
     ],
     "frames_in_segment": 3,
-    "spread_px": 4.24
+    "spread_px": 4.24,
+    "left_censored": false
    },
    "candidate_before_release": {
     "segment_start_seconds": 347.314,
@@ -426,10 +450,12 @@
      259.0
     ],
     "frames_in_segment": 3,
-    "spread_px": 8.0
+    "spread_px": 8.0,
+    "left_censored": false
    },
    "conversion_before_delivery_start": "front_edge_units",
-   "undeterminable_reason": null,
+   "undeterminable_before_delivery_start": null,
+   "undeterminable_before_release": null,
    "v0": {
     "status": "estimated",
     "point_px": [
@@ -481,10 +507,12 @@
      211.0
     ],
     "frames_in_segment": 3,
-    "spread_px": 5.1
+    "spread_px": 5.1,
+    "left_censored": false
    },
    "conversion_before_delivery_start": "no_candidate",
-   "undeterminable_reason": null,
+   "undeterminable_before_delivery_start": "no_held_segment_reached_min_hold",
+   "undeterminable_before_release": null,
    "v0": {
     "status": "estimated",
     "point_px": [
@@ -535,7 +563,8 @@
      215.0
     ],
     "frames_in_segment": 3,
-    "spread_px": 2.24
+    "spread_px": 2.24,
+    "left_censored": true
    },
    "candidate_before_release": {
     "segment_start_seconds": 369.002,
@@ -547,10 +576,12 @@
      215.0
     ],
     "frames_in_segment": 3,
-    "spread_px": 2.24
+    "spread_px": 2.24,
+    "left_censored": true
    },
    "conversion_before_delivery_start": "pixels_only",
-   "undeterminable_reason": null,
+   "undeterminable_before_delivery_start": null,
+   "undeterminable_before_release": null,
    "v0": {
     "status": "estimated",
     "point_px": [
@@ -601,7 +632,8 @@
      228.0
     ],
     "frames_in_segment": 3,
-    "spread_px": 3.0
+    "spread_px": 3.0,
+    "left_censored": true
    },
    "candidate_before_release": {
     "segment_start_seconds": 387.254,
@@ -613,10 +645,12 @@
      228.0
     ],
     "frames_in_segment": 3,
-    "spread_px": 3.0
+    "spread_px": 3.0,
+    "left_censored": true
    },
    "conversion_before_delivery_start": "pixels_only",
-   "undeterminable_reason": null,
+   "undeterminable_before_delivery_start": null,
+   "undeterminable_before_release": null,
    "v0": {
     "status": "estimated",
     "point_px": [
@@ -667,7 +701,8 @@
      230.0
     ],
     "frames_in_segment": 3,
-    "spread_px": 5.39
+    "spread_px": 5.39,
+    "left_censored": false
    },
    "candidate_before_release": {
     "segment_start_seconds": 407.807,
@@ -679,10 +714,12 @@
      230.0
     ],
     "frames_in_segment": 3,
-    "spread_px": 5.39
+    "spread_px": 5.39,
+    "left_censored": false
    },
    "conversion_before_delivery_start": "front_edge_units",
-   "undeterminable_reason": null,
+   "undeterminable_before_delivery_start": null,
+   "undeterminable_before_release": null,
    "v0": {
     "status": "estimated",
     "point_px": [
@@ -734,7 +771,8 @@
      217.0
     ],
     "frames_in_segment": 3,
-    "spread_px": 6.08
+    "spread_px": 6.08,
+    "left_censored": false
    },
    "candidate_before_release": {
     "segment_start_seconds": 450.15,
@@ -746,10 +784,12 @@
      217.0
     ],
     "frames_in_segment": 3,
-    "spread_px": 6.08
+    "spread_px": 6.08,
+    "left_censored": false
    },
    "conversion_before_delivery_start": "front_edge_units",
-   "undeterminable_reason": null,
+   "undeterminable_before_delivery_start": null,
+   "undeterminable_before_release": null,
    "v0": {
     "status": "estimated",
     "point_px": [

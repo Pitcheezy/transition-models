@@ -1,5 +1,7 @@
 """CV-33 pilot harness: stateless batching, opaque ids and strict layer-A intake."""
 
+import json
+
 from intent import mitt_pilot as pilot
 
 
@@ -95,3 +97,97 @@ def test_sensitivity_grid_is_fixed_and_centred_on_dev_v1():
 
     assert (mt.PARAMS_DEV_V1["hold_radius_px"], mt.PARAMS_DEV_V1["min_hold_seconds"]) in cells
     assert len(cells) == 6
+
+
+def test_evaluate_end_to_end_on_a_tiny_pilot(tmp_path):
+    pid, first = "747139:3:1", 14910  # real key: timing and v0 points come from the saved files
+    mapping, frames = [], []
+    for k in range(8):
+        mapping.append(
+            {
+                "batch": "b01",
+                "id": f"s{k}",
+                "pitch_id": pid,
+                "index": first + 12 * k,
+                "kind": "sequence",
+                "image_sha256": "0" * 64,
+            }
+        )
+        centre = [640.0, 240.0] if k >= 2 else None
+        frames.append(
+            {
+                "id": f"s{k}",
+                "view": "live_centre_field" if k >= 2 else "other_view",
+                "catcher": "set" if k >= 2 else "not_visible",
+                "mitt_visibility": "full" if k >= 2 else "out_of_view",
+                "occluder": None,
+                "mitt_center_px": centre,
+                "uncertainty_px": 8 if centre else None,
+                "plate_front": {"left_end": [610, 320], "right_end": [690, 320]}
+                if k == 3
+                else None,
+                "pitcher_phase": "before_delivery",
+                "note": "",
+            }
+        )
+    mapping.append(
+        {
+            "batch": "b02",
+            "id": "r0",
+            "pitch_id": pid,
+            "index": 14970,
+            "kind": "v0_reread",
+            "image_sha256": "0" * 64,
+        }
+    )
+    frames2 = [
+        {
+            "id": "r0",
+            "view": "live_centre_field",
+            "catcher": "set",
+            "mitt_visibility": "full",
+            "occluder": None,
+            "mitt_center_px": [646.0, 241.0],
+            "uncertainty_px": 6,
+            "plate_front": None,
+            "pitcher_phase": "before_delivery",
+            "note": "",
+        }
+    ]
+    (tmp_path / "answers").mkdir()
+    (tmp_path / "pilot_private.json").write_text(json.dumps({"pitches": [pid], "mapping": mapping}))
+    (tmp_path / "answers" / "b01.json").write_text(json.dumps({"batch": "b01", "frames": frames}))
+    (tmp_path / "answers" / "b02.json").write_text(
+        json.dumps({"batch": "b02", "frames": frames2 + [{"id": "zz"}]})
+    )
+    delivery = tmp_path / "delivery.json"
+    delivery.write_text(
+        json.dumps(
+            {
+                "definition": "d",
+                "uncertainty_seconds": 0.1,
+                "annotator": "test",
+                "pitches": {pid: {"delivery_start_seconds": 250.0}},
+            }
+        )
+    )
+    out = pilot.evaluate(tmp_path, tmp_path / "out.json", delivery)
+    assert out["reader_answers"]["answered"] == 9 and out["reader_answers"][
+        "answer_file_problems"
+    ] == {"unknown_id": 1}
+    row = out["pitches"][0]
+    assert row["frames_observed"] == 8 and row["usable_frames"] == 6
+    cand = row["candidate_before_delivery_start"]
+    assert cand is not None and cand["left_censored"] is True  # hold starts right after the cut
+    assert row["conversion_before_delivery_start"] == "front_edge_units"
+    assert row["same_frame_reread_status"] == "compared"
+    assert out["delivery_start_annotation"]["annotator"] == "test"
+    assert out["reader_calls"] == {"status": "unmeasured"}
+    early = json.loads(delivery.read_text())
+    early["pitches"][pid]["delivery_start_seconds"] = 248.9
+    delivery.write_text(json.dumps(early))
+    out = pilot.evaluate(tmp_path, tmp_path / "out.json", delivery)
+    assert (
+        out["pitches"][0]["undeterminable_before_delivery_start"]
+        == "no_usable_frame:view_not_live_centre_field"
+    )

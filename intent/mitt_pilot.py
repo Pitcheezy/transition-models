@@ -258,8 +258,12 @@ def evaluate(pilot: Path, out: Path, delivery_path: Path | None = None, params=m
         f"747139:{f['at_bat_number']}:{f['pitch_number']}": f
         for f in read_json(RESULTS / "game_747139_intent_points_v0.json")["frames"]
     }
-    delivery = (
-        read_json(delivery_path)["pitches"] if delivery_path and delivery_path.is_file() else {}
+    delivery_doc = read_json(delivery_path) if delivery_path and delivery_path.is_file() else None
+    delivery = delivery_doc["pitches"] if delivery_doc else {}
+    delivery_meta = (
+        {k: delivery_doc[k] for k in ("definition", "uncertainty_seconds", "annotator")}
+        if delivery_doc
+        else {"status": "none; layer-A pitcher phase used if present"}
     )
     sequences, schema_errors = {}, Counter()
     reread = {}
@@ -309,7 +313,8 @@ def evaluate(pilot: Path, out: Path, delivery_path: Path | None = None, params=m
             "conversion_before_delivery_start": summary["conversion_before_delivery_start"][
                 "status"
             ],
-            "undeterminable_reason": summary["undeterminable_reason"],
+            "undeterminable_before_delivery_start": summary["undeterminable_before_delivery_start"],
+            "undeterminable_before_release": summary["undeterminable_before_release"],
             "v0": {
                 "status": v0_row.get("status"),
                 "point_px": v0_point,
@@ -341,6 +346,9 @@ def evaluate(pilot: Path, out: Path, delivery_path: Path | None = None, params=m
         "rule": RULE,
         "params": params,
         "params_sha256": mt.params_sha256(params),
+        "delivery_start_annotation": delivery_meta,
+        "release_basis": "AI visual annotation in game_747139_timing.json (evaluation cut-off only)",
+        "candidate_at_cutoff": "the most recent candidate emitted strictly before the cut-off",
         "reader_answers": {
             "frames_planned": len(meta["mapping"]),
             "answered": len(answers),
@@ -364,8 +372,25 @@ def evaluate(pilot: Path, out: Path, delivery_path: Path | None = None, params=m
                 "delivery_start_unknown": sum(
                     1 for r in rows if r["delivery_start_seconds"] is None
                 ),
-                "undeterminable": dict(
-                    Counter(r["undeterminable_reason"] for r in rows if r["undeterminable_reason"])
+                "undeterminable_before_delivery_start": dict(
+                    Counter(
+                        r["undeterminable_before_delivery_start"]
+                        for r in rows
+                        if r["undeterminable_before_delivery_start"]
+                    )
+                ),
+                "undeterminable_before_release": dict(
+                    Counter(
+                        r["undeterminable_before_release"]
+                        for r in rows
+                        if r["undeterminable_before_release"]
+                    )
+                ),
+                "left_censored_candidates_before_delivery": sum(
+                    1
+                    for r in rows
+                    if r["candidate_before_delivery_start"]
+                    and r["candidate_before_delivery_start"]["left_censored"]
                 ),
                 "front_edge_units_before_delivery": sum(
                     1 for r in rows if r["conversion_before_delivery_start"] == "front_edge_units"
@@ -415,6 +440,76 @@ def reader_jumps(seq):
         "over_50px": sum(1 for d in pairs if d > 50),
         "median_px": round(statistics.median(pairs), 2) if pairs else None,
     }
+
+
+PITCHER_BOX = (470, 250, 720, 590)  # 747139 centre-field view: the pitcher on the mound
+DELIVERY_DEFINITION = (
+    "first 10 fps grid frame (window start through release-nearest) in which the pitcher's lead leg "
+    "visibly starts to lift for the delivery"
+)
+
+
+def _sheet_frames(manifest, pitch_id):
+    p = next(x for x in manifest["pitches"] if x["pitch_id"] == pitch_id)
+    release = p["window"]["release_index"]
+    return [f for f in p["frames"] if "grid" in f["roles"] and f["index"] <= release]
+
+
+def delivery_sheets(bundle: Path, pilot: Path, cols=12, scale=0.5):
+    """Pitcher-region contact sheets (10 fps, labelled by position and seconds from decision)."""
+    from PIL import Image, ImageDraw
+
+    manifest = read_json(bundle / "manifest.json")
+    out = pilot / "delivery_sheets"
+    out.mkdir(exist_ok=True)
+    tw = int((PITCHER_BOX[2] - PITCHER_BOX[0]) * scale)
+    th = int((PITCHER_BOX[3] - PITCHER_BOX[1]) * scale) + 12
+    made = {}
+    for pid in read_json(pilot / "pilot_private.json")["pitches"]:
+        frames = _sheet_frames(manifest, pid)
+        _, ab, pn = pid.split(":")
+        rows = (len(frames) + cols - 1) // cols
+        sheet = Image.new("RGB", (cols * tw, rows * th))
+        draw = ImageDraw.Draw(sheet)
+        for k, f in enumerate(frames):
+            with Image.open(bundle / f"pa{ab}_p{pn}" / f"frame_{f['index']:06d}.jpg") as image:
+                tile = image.crop(PITCHER_BOX).resize((tw, th - 12))
+            x, y = (k % cols) * tw, (k // cols) * th
+            sheet.paste(tile, (x, y + 12))
+            draw.text((x + 2, y), f"{k:02d} {f['seconds_from_decision']:+.2f}", fill=(255, 255, 0))
+        sheet.save(out / f"pa{ab}_p{pn}.jpg", quality=85)
+        made[pid] = len(frames)
+    return made
+
+
+def delivery_annotation(bundle: Path, pilot: Path, marks, annotator):
+    """Turn sheet positions read by an annotator into the delivery-start cut-off file."""
+    manifest = read_json(bundle / "manifest.json")
+    timing = {
+        f"747139:{a['at_bat_number']}:{a['pitch_number']}": a
+        for a in read_json(RESULTS / "game_747139_timing.json")["annotations"]
+    }
+    doc = {
+        "schema": "pitcheezy-mitt-delivery-start-dev-v1",
+        "definition": DELIVERY_DEFINITION,
+        "uncertainty_seconds": 0.1,
+        "annotator": annotator,
+        "pitches": {},
+    }
+    for pid, position in sorted(marks.items()):
+        f = _sheet_frames(manifest, pid)[position]
+        seconds = float(Fraction(f["index"]) / FPS)
+        doc["pitches"][pid] = {
+            "sheet_position": position,
+            "frame_index": f["index"],
+            "delivery_start_seconds": seconds,
+            "after_decision_s": round(seconds - timing[pid]["decision_seconds"], 3),
+            "before_release_s": round(timing[pid]["release_seconds"] - seconds, 3),
+        }
+    (pilot / "delivery_start_v1.json").write_text(
+        json.dumps(doc, indent=1) + "\n", encoding="utf-8"
+    )
+    return doc
 
 
 def usage_summary(path: Path):
@@ -482,6 +577,7 @@ def _brief(candidate, timing):
         "point_px": candidate["point_px"],
         "frames_in_segment": candidate["frames_in_segment"],
         "spread_px": candidate["spread_px"],
+        "left_censored": candidate.get("left_censored"),
     }
 
 
@@ -495,7 +591,27 @@ def main(argv=None):
     ev.add_argument("--pilot", type=Path, required=True)
     ev.add_argument("--out", type=Path, required=True)
     ev.add_argument("--delivery", type=Path)
+    sh = sub.add_parser("delivery-sheets")
+    sh.add_argument("--bundle", type=Path, required=True)
+    sh.add_argument("--pilot", type=Path, required=True)
+    an = sub.add_parser("delivery-annotation")
+    an.add_argument("--bundle", type=Path, required=True)
+    an.add_argument("--pilot", type=Path, required=True)
+    an.add_argument(
+        "--marks", required=True, help="pitch_id=sheet_position,... read off the sheets"
+    )
+    an.add_argument("--annotator", required=True)
     args = parser.parse_args(argv)
+    if args.cmd == "delivery-sheets":
+        print(json.dumps(delivery_sheets(args.bundle, args.pilot)))
+        return
+    if args.cmd == "delivery-annotation":
+        marks = dict(item.split("=") for item in args.marks.split(","))
+        doc = delivery_annotation(
+            args.bundle, args.pilot, {k: int(v) for k, v in marks.items()}, args.annotator
+        )
+        print(json.dumps({k: v["delivery_start_seconds"] for k, v in doc["pitches"].items()}))
+        return
     if args.cmd == "prepare":
         meta = prepare(args.bundle, args.out)
         print(

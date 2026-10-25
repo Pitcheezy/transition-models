@@ -1,7 +1,7 @@
 """CV-34: offline human review of short pre-pitch sequences (development schema, no AI points).
 
-A reviewer steps or plays one pitch's frames from the window start through the release-nearest
-frame (10 fps) and records, by hand:
+A reviewer steps or plays one pitch's grid frames (10 fps) from near the window start up to the
+release-nearest frame and records, by hand:
 
 * delivery start: the first frame where the pitcher's lead leg starts to lift (or none + reason);
 * presentation: ``held_seen`` with the frames where the catcher holds the mitt still in one place,
@@ -9,14 +9,25 @@ frame (10 fps) and records, by hand:
 * for ``held_seen``, the mitt-body centre clicked on one frame inside that interval.
 
 Centre reading (a point on one frame) and the temporal judgment (interval, state) are separate
-fields and are scored separately. The page never shows AI points, AI states, release time,
-pitch identity or the outcome. Sequence ids are opaque; the id-to-pitch map stays outside the pack.
+fields and are scored separately. The page shows no AI points, AI states or outcome. Blinding
+measures, and their limits:
+
+* sequence ids are opaque, the id-to-pitch map stays outside the pack, frames are written in id
+  order with one fixed modification time and content-addressed names;
+* an optional crop (``--crop``) removes the score bug, which shows inning, count and pitch count;
+* a seeded number of leading (0-9) and trailing (0-2) grid frames is dropped per sequence, so the
+  frame count and the position of the AI decision frame do not line up with the public timing file.
+
+The pack is blind only for a reviewer who does not consult the repository's public 747139 timing,
+points or result files; name graphics in close-up frames can still reveal the batter. A held
+interval that starts at frame 1 is left-censored and must be reported as such.
 
 A seeded, pre-registered 25 percent of sequences is assigned to two reviewers for independent
 agreement; it is reported apart from any disagreement follow-up. An AI never fills a response.
 
     python -m intent.sequence_review build --bundle outputs/cv_mitt_dev_20261025/bundle_v1 \
-        --pack outputs/cv_mitt_review_seq_20261025/pack --private outputs/cv_mitt_review_seq_20261025/private
+        --pack outputs/cv_mitt_review_seq_20261025/pack --private outputs/cv_mitt_review_seq_20261025/private \
+        --crop 330,100,950,600
     python -m intent.sequence_review check --pack <pack> --response <response.json>
 """
 
@@ -128,6 +139,8 @@ def validate_response(manifest, manifest_sha256, response, *, draft=False):
         fail("response fields differ")
     if response["schema"] != RESPONSE_SCHEMA or response["manifest_sha256"] != manifest_sha256:
         fail("response schema or manifest hash differs")
+    if not isinstance(response["reviewer_id"], str):
+        fail("reviewer id must be text")
     sequences = {s["sequence_id"]: s for s in manifest["sequences"]}
     rows = response["rows"]
     if not isinstance(rows, list) or len(rows) != len(sequences):
@@ -169,7 +182,10 @@ def validate_response(manifest, manifest_sha256, response, *, draft=False):
                 if (
                     not isinstance(mitt, list)
                     or len(mitt) != 2
-                    or not all(isinstance(v, (int, float)) and math.isfinite(v) for v in mitt)
+                    or not all(
+                        isinstance(v, (int, float)) and not isinstance(v, bool) and math.isfinite(v)
+                        for v in mitt
+                    )
                     or not (0 <= mitt[0] < frame["width"] and 0 <= mitt[1] < frame["height"])
                 ):
                     fail(f"{row['sequence_id']}: mitt point must lie inside the frame")
@@ -194,14 +210,31 @@ def validate_response(manifest, manifest_sha256, response, *, draft=False):
     return response
 
 
-def render_page(manifest, response):
+def render_page(manifest, response, script_version="dev"):
     data = json.dumps(
         {"manifest": manifest, "response": response}, ensure_ascii=False, allow_nan=False
     )
     data = data.replace("<", "\\u003c")
-    page = PAGE.replace("__COUNT__", str(len(manifest["sequences"])))
+    page = PAGE.replace("__SCRIPT_VERSION__", html.escape(script_version))
+    page = page.replace("__COUNT__", str(len(manifest["sequences"])))
     page = page.replace("__INSTRUCTIONS__", html.escape(INSTRUCTIONS))
     return page.replace("__DATA__", data)
+
+
+FIXED_MTIME = 1_700_000_000  # one constant modification time for every frame file and folder
+
+
+def trims(sid: str, seed: str):
+    """Seeded leading (0-9) and trailing (0-2) grid frames to drop for one sequence."""
+    digest = hashlib.sha256(f"{seed}|trim|{sid}".encode()).digest()
+    return digest[0] % 10, digest[1] % 3
+
+
+def to_source_pixels(point, crop_box):
+    """A point clicked on a cropped review frame, back in source-frame pixels."""
+    if crop_box is None:
+        return list(point)
+    return [point[0] + crop_box[0], point[1] + crop_box[1]]
 
 
 def build(
@@ -211,7 +244,12 @@ def build(
     pitch_ids=None,
     salt="cv34-seq-v1",
     seed="cv34-double-v1",
+    crop_box=None,
 ):
+    import os
+
+    from PIL import Image
+
     from intent.mitt_dev_bundle import read_json
 
     if pack.exists() or private.exists():
@@ -222,23 +260,36 @@ def build(
     chosen = [p for p in manifest_in["pitches"] if p["status"] == "extracted"]
     if pitch_ids:
         chosen = [p for p in chosen if p["pitch_id"] in set(pitch_ids)]
-    from PIL import Image
-
+    # write in opaque-id order so file creation order says nothing about pitch order
+    chosen.sort(key=lambda p: sequence_id(p["pitch_id"], salt))
     sequences, mapping = [], []
     for p in chosen:
         sid = sequence_id(p["pitch_id"], salt)
         _, ab, pn = p["pitch_id"].split(":")
-        frames = [
+        grid = [
             f
             for f in p["frames"]
             if "grid" in f["roles"] and f["index"] <= p["window"]["release_index"]
         ]
+        lead, tail = trims(sid, seed)
+        frames = grid[lead : len(grid) - tail]
+        if len(frames) < 10:
+            raise SystemExit(f"sequence {sid} too short after trimming")
+        folder = pack / "frames" / sid
+        folder.mkdir(parents=True)
         out_frames = []
         for n, f in enumerate(frames, start=1):
             src = bundle / f"pa{ab}_p{pn}" / f"frame_{f['index']:06d}.jpg"
-            rel = f"frames/{sid}/{n:03d}.jpg"
-            (pack / rel).parent.mkdir(parents=True, exist_ok=True)
-            shutil.copy2(src, pack / rel)
+            staging = folder / f"{n:03d}.tmp"
+            if crop_box is None:
+                shutil.copyfile(src, staging)
+            else:
+                with Image.open(src) as image:
+                    image.crop(tuple(crop_box)).save(staging, format="JPEG", quality=92)
+            # content-addressed name: a rebuilt frame never reuses a cached URL
+            rel = f"frames/{sid}/{n:03d}_{sha256_file(staging)[:8]}.jpg"
+            staging.replace(pack / rel)
+            os.utime(pack / rel, (FIXED_MTIME, FIXED_MTIME))
             with Image.open(pack / rel) as image:
                 width, height = image.size
             out_frames.append(
@@ -253,19 +304,22 @@ def build(
                     ),
                 }
             )
+        os.utime(folder, (FIXED_MTIME, FIXED_MTIME))
         sequences.append({"sequence_id": sid, "fps_nominal": 10, "frames": out_frames})
         mapping.append(
             {
                 "sequence_id": sid,
                 "pitch_id": p["pitch_id"],
                 "frame_indices": [f["index"] for f in frames],
+                "dropped_leading_grid_frames": lead,
+                "dropped_trailing_grid_frames": tail,
             }
         )
-    sequences.sort(key=lambda s: s["sequence_id"])
     manifest = {
         "schema": PACK_SCHEMA,
         "scope": "development review of pre-pitch sequences; not an independent evaluation",
         "instructions": INSTRUCTIONS,
+        "source_crop_box": list(crop_box) if crop_box else None,
         "sequences": sequences,
     }
     (pack / "manifest.json").write_text(
@@ -274,8 +328,14 @@ def build(
     digest = sha256_file(pack / "manifest.json")
     double = double_assignment([s["sequence_id"] for s in sequences], seed)
     response = blank_response(manifest, digest)
-    (pack / "index.html").write_text(render_page(manifest, response), encoding="utf-8")
-    shutil.copy2(ROOT / "intent/sequence_review.js", pack / "sequence_review.js")
+    script_version = sha256_file(ROOT / "intent/sequence_review.js")[:12]
+    (pack / "index.html").write_text(
+        render_page(manifest, response, script_version), encoding="utf-8"
+    )
+    shutil.copyfile(ROOT / "intent/sequence_review.js", pack / "sequence_review.js")
+    # frame files and folders share one time so they reveal no order; the page, script and
+    # manifest keep real times so a browser never serves a stale copy of a rebuilt pack
+    os.utime(pack / "frames", (FIXED_MTIME, FIXED_MTIME))
     private.mkdir(parents=True)
     (private / "private_map.json").write_text(
         json.dumps(
@@ -285,9 +345,11 @@ def build(
                 "double_review_seed": seed,
                 "double_review_fraction": DOUBLE_FRACTION,
                 "double_review_sequences": double,
+                "source_crop_box": list(crop_box) if crop_box else None,
                 "mapping": mapping,
-                "rule": "assignment fixed before any review; double-review agreement is reported apart from "
-                "disagreement follow-ups; with one reviewer only, inter-human agreement is incomplete",
+                "rule": "assignment and trims fixed before any review; double-review agreement is reported "
+                "apart from disagreement follow-ups; with one reviewer only, inter-human agreement is "
+                "incomplete; a held interval starting at frame 1 is left-censored",
             },
             indent=1,
         )
@@ -305,6 +367,7 @@ def main(argv=None):
     b.add_argument("--pack", type=Path, required=True)
     b.add_argument("--private", type=Path, required=True)
     b.add_argument("--pitch", action="append")
+    b.add_argument("--crop", help="x0,y0,x1,y1 source-pixel box shown to the reviewer")
     c = sub.add_parser("check")
     c.add_argument("--pack", type=Path, required=True)
     c.add_argument("--response", type=Path, required=True)
@@ -313,7 +376,10 @@ def main(argv=None):
         for path in (args.pack, args.private):
             if "outputs" not in path.resolve().parts:
                 parser.error("review packs embed broadcast frames; keep them under outputs/")
-        manifest, digest, double = build(args.bundle, args.pack, args.private, args.pitch)
+        crop = [int(v) for v in args.crop.split(",")] if args.crop else None
+        manifest, digest, double = build(
+            args.bundle, args.pack, args.private, args.pitch, crop_box=crop
+        )
         print(
             json.dumps(
                 {
@@ -350,7 +416,7 @@ fieldset{padding:12px;position:sticky;top:12px;min-width:0}fieldset label{displa
 #strip span.cur{background:#333}#strip span.hold{background:#7bc47f}#strip span.del{background:#e3a03b}
 #warning{background:#fff5cc;padding:10px}.hint{font-size:14px;color:#445}
 @media(max-width:900px){.workspace{grid-template-columns:1fr}fieldset{position:static}}
-</style><script src="sequence_review.js" defer></script></head><body>
+</style><script src="sequence_review.js?v=__SCRIPT_VERSION__" defer></script></head><body>
 <h1>투구 전 미트 연속 검토 (__COUNT__구)</h1>
 <details open><summary>검토 방법</summary><p>__INSTRUCTIONS__</p>
 <p class="hint">키보드: ←/→ 한 프레임, 스페이스 재생/정지, D 투구 동작 시작, S 멈춘 구간 시작, E 멈춘 구간 끝.</p></details>

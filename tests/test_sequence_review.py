@@ -126,7 +126,7 @@ def test_page_embeds_inert_data_and_no_ai_fields():
     response["reviewer_id"] = "</script><script src=x.js>"
     page = sr.render_page(m, response)
     assert "<script src=x.js>" not in page and "\\u003c/script>" in page
-    assert "default-src 'none'" in page and '<script src="sequence_review.js" defer>' in page
+    assert "default-src 'none'" in page and '<script src="sequence_review.js?v=dev" defer>' in page
     embedded = json.loads(page.split('id="review-data">')[1].split("</script>")[0])
     assert embedded["response"] == response
     lowered = page.lower()
@@ -134,12 +134,68 @@ def test_page_embeds_inert_data_and_no_ai_fields():
         assert leaked not in lowered
 
 
-def test_built_manifest_names_no_game_pitch_or_timing(tmp_path):
-    import inspect
+def _fake_bundle(root, pitch_ids, frames=25):
+    from PIL import Image
 
-    source = inspect.getsource(sr.build)
-    scope = source.split('"scope": ')[1].split(",")[0]
-    assert not any(token in scope for token in ("747139", "pitch_id", "release", "at_bat"))
+    pitches = []
+    for pid in pitch_ids:
+        _, ab, pn = pid.split(":")
+        folder = root / f"pa{ab}_p{pn}"
+        folder.mkdir(parents=True)
+        rows = []
+        for k in range(frames):
+            index = 1000 + 6 * k
+            Image.new("RGB", (64, 48), (k * 9 % 255, 40, 90)).save(
+                folder / f"frame_{index:06d}.jpg"
+            )
+            rows.append({"index": index, "roles": ["grid"]})
+        pitches.append(
+            {
+                "pitch_id": pid,
+                "status": "extracted",
+                "window": {"release_index": 1000 + 6 * (frames - 1)},
+                "frames": rows,
+            }
+        )
+    (root / "manifest.json").write_text(json.dumps({"pitches": pitches}), encoding="utf-8")
+
+
+def test_build_blinds_order_times_counts_and_keeps_the_map_private(tmp_path):
+    ids = ["747139:3:1", "747139:3:2", "747139:3:3", "747139:4:1"]
+    _fake_bundle(tmp_path / "bundle", ids)
+    pack, private = tmp_path / "out" / "pack", tmp_path / "out" / "private"
+    manifest, digest, double = sr.build(tmp_path / "bundle", pack, private, crop_box=[8, 4, 40, 28])
+    text = (pack / "manifest.json").read_text(encoding="utf-8") + (pack / "index.html").read_text(
+        encoding="utf-8"
+    )
+    for leaked in ("747139", "pitch_id", "release", "at_bat"):
+        assert leaked not in text
+    secret = json.loads((private / "private_map.json").read_text(encoding="utf-8"))
+    assert {m["pitch_id"] for m in secret["mapping"]} == set(ids)
+    assert not any(p.name == "private_map.json" for p in pack.rglob("*"))
+    for m in secret["mapping"]:
+        seq = next(s for s in manifest["sequences"] if s["sequence_id"] == m["sequence_id"])
+        assert (
+            len(seq["frames"])
+            == 25 - m["dropped_leading_grid_frames"] - m["dropped_trailing_grid_frames"]
+        )
+        assert (m["dropped_leading_grid_frames"], m["dropped_trailing_grid_frames"]) == sr.trims(
+            m["sequence_id"], "cv34-double-v1"
+        )
+        assert seq["frames"][0]["width"] == 32 and seq["frames"][0]["height"] == 24
+    frame_files = list((pack / "frames").rglob("*"))
+    assert {int(p.stat().st_mtime) for p in frame_files} == {sr.FIXED_MTIME}
+    assert int((pack / "index.html").stat().st_mtime) != sr.FIXED_MTIME
+    for seq in manifest["sequences"]:
+        for frame in seq["frames"]:
+            assert frame["path"].endswith(f"_{frame['sha256'][:8]}.jpg")
+            assert sr.sha256_file(pack / frame["path"]) == frame["sha256"]
+    assert [m["sequence_id"] for m in secret["mapping"]] == sorted(
+        m["sequence_id"] for m in secret["mapping"]
+    )
+    assert manifest["source_crop_box"] == [8, 4, 40, 28]
+    assert sr.to_source_pixels([10, 5], [8, 4, 40, 28]) == [18, 9]
+    assert len(double) == 1
 
 
 def test_build_keeps_the_pitch_map_outside_the_reviewer_pack(tmp_path):
@@ -193,12 +249,32 @@ assert.deepEqual(ui.imagePoint(340, 200, {left: 20, top: 20, width: 640, height:
 def test_page_and_python_validators_agree_on_the_same_cases():
     m = manifest()
     good = held(sr.blank_response(m, HASH))
-    bad = copy.deepcopy(good)
-    bad["rows"][0]["point_n"] = 12
-    _node(f"""
-ui.validate(manifest, hash, {json.dumps(good)});
-assert.throws(() => ui.validate(manifest, hash, {json.dumps(bad)}));
-""")
+    bads = []
+    for change in ({"point_n": 12}, {"mitt": [True, 5]}):
+        bad = copy.deepcopy(good)
+        bad["rows"][0].update(change)
+        bads.append(bad)
+    for reviewer in (None, 3):
+        for base in (good, sr.blank_response(m, HASH)):
+            bad = copy.deepcopy(base)
+            bad["reviewer_id"] = reviewer
+            bads.append(bad)
+    checks = "".join(
+        f"assert.throws(() => ui.validate(manifest, hash, {json.dumps(b)}));\n" for b in bads
+    )
+    _node(f"ui.validate(manifest, hash, {json.dumps(good)});\n" + checks)
     sr.validate_response(m, HASH, good)
-    with pytest.raises(ValueError):
-        sr.validate_response(m, HASH, bad)
+    for bad in bads:
+        with pytest.raises(ValueError):
+            sr.validate_response(m, HASH, bad)
+
+
+def test_a_hold_bound_on_the_wrong_side_clears_the_other_bound():
+    _node("""
+let row = ui.markHold(copy(response.rows[0]), "end", 5);
+row = ui.markHold(row, "start", 9);
+assert.equal(row.hold_start_n, 9); assert.equal(row.hold_end_n, null);
+row = ui.markHold(row, "end", 12);
+row = ui.markHold(row, "end", 4);
+assert.equal(row.hold_start_n, null); assert.equal(row.hold_end_n, 4);
+""")

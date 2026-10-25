@@ -101,7 +101,7 @@ def unusable_reason(obs):
 def run(observations, params=PARAMS_DEV_V1):
     """Per-frame causal records. ``observations`` must be one pitch in increasing frame time."""
     records, segment, previous, candidates = [], [], None, []
-    last_time = None
+    last_time, censored = None, False
     for obs in observations:
         validate_observation(obs)
         t = obs["frame_seconds"]
@@ -138,6 +138,8 @@ def run(observations, params=PARAMS_DEV_V1):
                     step = "still"
             anchor = segment[0]["mitt_center_px"] if segment else None
             if anchor is None or math.dist(anchor, (x, y)) > params["hold_radius_px"]:
+                # a segment that starts with no usable frame before it may have begun earlier
+                censored = previous is None
                 segment = [obs]
             else:
                 segment.append(obs)
@@ -165,6 +167,7 @@ def run(observations, params=PARAMS_DEV_V1):
                             2,
                         ),
                         "reason": "held_within_radius_for_min_seconds",
+                        "left_censored": censored,
                     }
                     candidates.append(event)
             else:
@@ -250,6 +253,8 @@ def summarize_pitch(
         delivery_source = "layer_a_pitcher_phase" if delivery is not None else None
     before_delivery = candidate_before(records, delivery)
     before_release = candidate_before(records, release_seconds)
+    why_delivery = None if before_delivery else why_none_before(records, delivery)
+    why_release = None if before_release else why_none_before(records, release_seconds)
     states = {}
     for r in records:
         key = r["state"].split("|")[0].split(":")[0]
@@ -274,13 +279,24 @@ def summarize_pitch(
         "candidate_before_release": before_release,
         "conversion_before_delivery_start": convert(before_delivery, observations),
         "release_seconds_posthoc": release_seconds,
-        "undeterminable_reason": None if before_release else _why_none(records, unclear),
+        "undeterminable_before_delivery_start": why_delivery,
+        "undeterminable_before_release": why_release,
+        "undeterminable_reason": why_release,
     }
 
 
-def _why_none(records, unclear):
-    if not records:
-        return "no_observations"
-    if unclear and sum(unclear.values()) == len(records):
+def why_none_before(records, cutoff_seconds):
+    """Why no candidate exists before a cut-off, from the records before that cut-off only."""
+    if cutoff_seconds is None:
+        return "no_cutoff"
+    prefix = [r for r in records if r["frame_seconds"] < cutoff_seconds]
+    if not prefix:
+        return "no_observations_before_cutoff"
+    unclear = {}
+    for r in prefix:
+        if r["state"].startswith("unclear:"):
+            reason = r["state"].split("|")[0].split(":", 1)[1]
+            unclear[reason] = unclear.get(reason, 0) + 1
+    if unclear and sum(unclear.values()) == len(prefix):
         return "no_usable_frame:" + max(unclear, key=unclear.get)
     return "no_held_segment_reached_min_hold"

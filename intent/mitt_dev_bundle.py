@@ -3,7 +3,9 @@
 Rule (written before any frame of the bundle was read): game 747139, pitch order
 (at_bat_number, pitch_number) starting at PA3 pitch 1, the next 40 pitch keys. Each pitch with
 annotated timing gets the window [decision - 1.0 s, release + 0.5 s] at every 6th source frame
-(about 10 fps), plus the exact decision frame the frozen reader used and the release-nearest frame.
+(about 10 fps), plus the frame at the decision index v0 recorded (round rule) and the
+release-nearest frame. The image v0 actually read is the first frame at or after the decision
+time, one frame later for about half the pitches; ``check-v0-frames`` keeps it separately.
 A key without annotated timing stays in the denominator as excluded, with its reason.
 
 Frames are selected by decoded presentation time, never by output order: the stream time base is
@@ -28,6 +30,7 @@ import json
 import math
 import re
 import shutil
+import statistics
 import subprocess
 import time
 from collections import Counter
@@ -47,7 +50,10 @@ RULE = {
     "before_decision_seconds": 1.0,
     "after_release_seconds": 0.5,
     "step_source_frames": 6,
-    "always_include": ["decision frame read by the frozen v0 reader", "release-nearest frame"],
+    "always_include": [
+        "frame at the decision index recorded by v0 (round(seconds * fps))",
+        "release-nearest frame",
+    ],
     "fixed_before_reading": True,
 }
 MAIN_BOX = (440, 120, 840, 400)  # the frozen 747139 reader crop (intent points v0)
@@ -493,35 +499,41 @@ def check_v0_frames(bundle: Path, reference_dir: Path, ffmpeg: str):
 def summarize(bundle: Path, out: Path):
     manifest_path = bundle / "manifest.json"
     manifest = read_json(manifest_path)
-    frame_lines = []
-    pitches = []
+    from intent.mitt_inventory import nearest_rank
+
+    frame_lines, pitches, per_pitch_frames, attempt_seconds = [], [], [], []
+    frames_total, seconds_total = 0, 0.0
     for rec in manifest["pitches"]:
         entry = {"pitch_id": rec["pitch_id"], "status": rec["status"]}
         if rec["status"] == "excluded":
             entry["reason"] = rec["reason"]
         if rec["status"] == "extracted":
             last = rec["attempts"][-1]
+            # per-pitch windows and frame counts stay in the private manifest: with them a blind
+            # review sequence could be joined back to its pitch
             entry.update(
-                frames=len(rec["frames"]),
-                grid_frames=sum(1 for f in rec["frames"] if "grid" in f["roles"]),
-                window=rec["window"],
-                seconds_covered=round(
-                    float(
-                        Fraction(rec["window"]["last_index"] - rec["window"]["first_index"]) / FPS
-                    ),
-                    3,
-                ),
                 attempts=len(rec["attempts"]),
                 index_gaps_in_window=last["index_gaps_in_window"],
             )
+            frames_total += len(rec["frames"])
+            seconds_total += float(
+                Fraction(rec["window"]["last_index"] - rec["window"]["first_index"]) / FPS
+            )
+            per_pitch_frames.append(len(rec["frames"]))
+            attempt_seconds.extend(a["elapsed_seconds"] for a in rec["attempts"])
             for f in rec["frames"]:
                 frame_lines.append(f"{rec['pitch_id']}\t{f['index']}\t{f['sha256']}")
         pitches.append(entry)
     extracted = [p for p in pitches if p["status"] == "extracted"]
+    selection = [s for s in manifest["selection"] if s["included"]]
+    lead = sorted(s["release_seconds"] - s["decision_seconds"] for s in selection)
     summary = {
         "schema": SCHEMA + "-public-summary",
         "scope": "development data (747139 was already development data in M3); not an independent evaluation",
         "rule": manifest["rule"],
+        "rule_clarification": "the 'decision' role is the index v0 recorded (round rule); v0 actually read "
+        "the first frame at or after the decision time, which is one frame later for 19 of 39 pitches "
+        "(see v0_read_image_check); that image is kept privately in v0_read_frames/",
         "source": {k: v for k, v in manifest["source"].items()},
         "ffmpeg_version": manifest["ffmpeg_version"],
         "manifest_sha256": sha256_file(manifest_path),
@@ -533,10 +545,28 @@ def summarize(bundle: Path, out: Path):
             "extracted": len(extracted),
             "excluded": sum(1 for p in pitches if p["status"] == "excluded"),
             "failed": sum(1 for p in pitches if p["status"] == "extraction_failed"),
-            "frames": sum(p["frames"] for p in extracted),
-            "seconds_covered": round(sum(p["seconds_covered"] for p in extracted), 3),
+            "frames": frames_total,
+            "frames_per_pitch_range": [min(per_pitch_frames), max(per_pitch_frames)]
+            if per_pitch_frames
+            else None,
+            "seconds_covered": round(seconds_total, 3),
             "windows_with_index_gap": sum(1 for p in extracted if p["index_gaps_in_window"]),
+            "retried_pitches": sum(1 for p in extracted if p["attempts"] > 1),
+            "attempt_seconds_range": [min(attempt_seconds), max(attempt_seconds)]
+            if attempt_seconds
+            else None,
         },
+        "decision_to_release_seconds": {
+            "n": len(lead),
+            "median": round(statistics.median(lead), 3),
+            "p10": round(nearest_rank(lead, 0.1), 3),
+            "p90": round(nearest_rank(lead, 0.9), 3),
+            "min": round(lead[0], 3),
+            "max": round(lead[-1], 3),
+            "percentile_rule": "nearest rank (ceil(q*n)-th value)",
+        }
+        if lead
+        else None,
         "timing_basis": "decision/release seconds are AI visual annotations (Codex/Claude agents), not human ground truth",
         "pitches": pitches,
         "existing_method_on_same_keys": existing_method(manifest["selection"]),

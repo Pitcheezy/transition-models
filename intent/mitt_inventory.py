@@ -24,6 +24,7 @@ import argparse
 import hashlib
 import importlib.util
 import json
+import math
 import statistics
 import sys
 from collections import Counter
@@ -53,7 +54,7 @@ GAMES = {
 
 CATEGORIES = {
     "C1_mitt_not_visible": "미트 자체가 안 보임(저장된 판독 주장)",
-    "C2_visible_target_undeterminable": "미트는 보이나 목표 제시 여부 판단 불가 또는 미제시 주장",
+    "C2_target_not_presented_or_undeterminable": "목표 미제시 주장 또는 제시 여부 판단 불가(포수 미착석 포함; 미트 보임 여부는 주장하지 않음)",
     "C3_reader_disagreement": "판독자 간 불일치",
     "C4_no_transform_reference": "좌표 변환에 필요한 기준점 없음",
     "C5_no_pitch_link_or_time_evidence": "투구 연결·관측 장면·시각 근거 없음(중앙 카메라 아님·리플레이·컷 포함)",
@@ -69,11 +70,11 @@ REASON_TABLE = {
     "glove_hidden_by_batter": "C1_mitt_not_visible",
     "glove_not_identifiable_blur_and_batter_leg_overlap": "C1_mitt_not_visible",
     "glove_not_identifiable_held_low_behind_leg": "C1_mitt_not_visible",
-    "catcher_not_in_setup": "C2_visible_target_undeterminable",
-    "glove_not_presented: catcher drops glove to rest on the ground before release": "C2_visible_target_undeterminable",
-    "glove_not_presented_resting_on_ground": "C2_visible_target_undeterminable",
-    "glove_resting_on_dirt_not_presented": "C2_visible_target_undeterminable",
-    "glove_already_lowered_at_cut": "C2_visible_target_undeterminable",
+    "catcher_not_in_setup": "C2_target_not_presented_or_undeterminable",
+    "glove_not_presented: catcher drops glove to rest on the ground before release": "C2_target_not_presented_or_undeterminable",
+    "glove_not_presented_resting_on_ground": "C2_target_not_presented_or_undeterminable",
+    "glove_resting_on_dirt_not_presented": "C2_target_not_presented_or_undeterminable",
+    "glove_already_lowered_at_cut": "C2_target_not_presented_or_undeterminable",
     "readers_disagree_on_mitt": "C3_reader_disagreement",
     "camera_not_centre_field": "C5_no_pitch_link_or_time_evidence",
     "not_centre_field": "C5_no_pitch_link_or_time_evidence",
@@ -83,7 +84,7 @@ REASON_TABLE = {
 
 # Structural routes of the CV6b audit (reused as is) and the extensions added here.
 ROUTE_CATEGORIES = {
-    "reported_not_presented_or_lowered": ["C2_visible_target_undeterminable"],
+    "reported_not_presented_or_lowered": ["C2_target_not_presented_or_undeterminable"],
     "camera_rejection_one_candidate": ["C5_no_pitch_link_or_time_evidence"],
     "replay_rejection_one_candidate": ["C5_no_pitch_link_or_time_evidence"],
     "plate_missing_with_two_mitt_readings": ["C4_no_transform_reference"],
@@ -201,6 +202,36 @@ def reader_pairs(game: int):
     return condensed.collect_reads(condensed.load_reader_results(path)), sha256_file(path)
 
 
+def nearest_rank(ordered, q):
+    """Nearest-rank percentile of an ascending list: the ceil(q*n)-th value (1-indexed)."""
+    return ordered[max(0, math.ceil(q * len(ordered)) - 1)]
+
+
+def inconsistent_row(row) -> bool:
+    """A saved reader row whose live-view start or setup frame lies after its own release."""
+    rel, cf, st = row.get("release_frame"), row.get("live_cf_first_frame"), row.get("setup_frame")
+    return rel is not None and ((cf is not None and cf > rel) or (st is not None and st > rel))
+
+
+RELEASE_TOLERANCE_FRAMES = 6
+
+
+def reader_release(pair):
+    """(release frame, status) for one pitch from its consistent reader rows.
+
+    Inconsistent rows are dropped. When the remaining readers differ by more than
+    RELEASE_TOLERANCE_FRAMES the pitch has no release here; otherwise the earliest is used so a
+    lead before release is never overstated.
+    """
+    rows = [r for r in (pair or {}).values() if r.get("release_frame") is not None]
+    consistent = [r["release_frame"] for r in rows if not inconsistent_row(r)]
+    if not consistent:
+        return None, "no_consistent_release" if rows else "no_release"
+    if max(consistent) - min(consistent) > RELEASE_TOLERANCE_FRAMES:
+        return None, "readers_disagree_on_release"
+    return min(consistent), "ok" if len(consistent) == len(rows) else "ok_inconsistent_row_dropped"
+
+
 def live_view_lead(pairs) -> dict:
     """Seconds of live centre-field view before release, and how early the chosen setup frame is.
 
@@ -215,7 +246,7 @@ def live_view_lead(pairs) -> dict:
                 row.get("live_cf_first_frame"),
                 row.get("setup_frame"),
             )
-            if rel is not None and ((cf is not None and cf > rel) or (st is not None and st > rel)):
+            if inconsistent_row(row):
                 inconsistent.append(f"{key}:{reader}")
                 continue
             if rel is not None and cf is not None:
@@ -230,8 +261,8 @@ def live_view_lead(pairs) -> dict:
         return {
             "n": len(values),
             "median": round(statistics.median(ordered), 3),
-            "p10": round(ordered[int(0.1 * (len(ordered) - 1))], 3),
-            "p90": round(ordered[int(0.9 * (len(ordered) - 1))], 3),
+            "p10": round(nearest_rank(ordered, 0.1), 3),
+            "p90": round(nearest_rank(ordered, 0.9), 3),
             "min": round(ordered[0], 3),
             "max": round(ordered[-1], 3),
         }
@@ -340,10 +371,10 @@ def bottleneck(games=(849845, 823407, 849849, 849843, 747139)):
                 unclassified.append(row["pitch_id"])
             for c in cats:
                 categories[c] += 1
-            primary = cats[0] if cats else "unclassified"
             hm = humans.get(row["pitch_id"])
             if hm is not None:
-                human_marked[f"{primary}|human_{hm}"] += 1
+                for c in cats or ["unclassified"]:
+                    human_marked[f"{c}|human_{hm}"] += 1
             private_rows.append(
                 {
                     "pitch_id": row["pitch_id"],
@@ -371,6 +402,7 @@ def bottleneck(games=(849845, 823407, 849849, 849843, 747139)):
             ),
             "routes": dict(sorted(routes.items())),
             "human_join": dict(sorted(human_marked.items())) or None,
+            "human_join_note": "a row with two categories is counted under each of them",
             "estimated_conversion_stage": dict(sorted(conversion.items())),
             "reader_rows_saved": pairs is not None,
         }
@@ -404,12 +436,10 @@ def rereview_links(selection_path: Path):
             record["window_frames_before"] = sum(1 for i in indices if i < me)
             record["window_frames_after"] = sum(1 for i in indices if i > me)
             record["window_seconds_before"] = round(float(Fraction(me - indices[0]) / FPS), 3)
-            pair = readers[game].get(item["pitch_id"].split(":", 1)[1], {})
-            releases = sorted(
-                r["release_frame"] for r in pair.values() if r.get("release_frame") is not None
-            )
-            if releases:
-                lead = Fraction(releases[len(releases) // 2] - me) / FPS
+            release, status = reader_release(readers[game].get(item["pitch_id"].split(":", 1)[1]))
+            record["reader_release_status"] = status
+            if release is not None:
+                lead = Fraction(release - me) / FPS
                 record["seconds_before_reader_release"] = round(float(lead), 3)
         private.append(
             {**record, "observation_id": item["observation_id"], "source_path": item["source_path"]}
@@ -429,6 +459,9 @@ def rereview_links(selection_path: Path):
             for r in exists
             if r.get("seconds_before_reader_release") is not None
         ),
+        "reader_release_status": dict(Counter(r.get("reader_release_status") for r in exists)),
+        "release_rule": "earliest release among consistent reader rows; none when they differ by "
+        f"more than {RELEASE_TOLERANCE_FRAMES} frames",
         "note": "each reviewed frame is one frame of a saved ~3 s window (about 20 fps); the window gives the short continuous context",
     }, private
 
@@ -475,15 +508,14 @@ def inventory(hash_frames: bool = True):
             }
         win = window_inventory(ROOT / f"outputs/frames/{game}_windows", release, game, hash_frames)
         pairs, _ = reader_pairs(game)
-        reader_lead = []
+        reader_lead, release_status = [], Counter()
         for w in win.get("windows", []):
-            rows = (pairs or {}).get(w["pitch"].split(":", 1)[1], {})
-            releases = sorted(
-                r["release_frame"] for r in rows.values() if r.get("release_frame") is not None
-            )
-            if releases and w.get("first_index") is not None:
-                lead = Fraction(releases[len(releases) // 2] - w["first_index"]) / FPS
-                reader_lead.append(float(lead))
+            if pairs is None:
+                continue
+            release, status = reader_release(pairs.get(w["pitch"].split(":", 1)[1]))
+            release_status[status] += 1
+            if release is not None and w.get("first_index") is not None:
+                reader_lead.append(float(Fraction(release - w["first_index"]) / FPS))
         pack = ROOT / f"outputs/intent_label/game_{game}_pack.html"
         games[str(game)] = {
             **GAMES[game],
@@ -509,6 +541,7 @@ def inventory(hash_frames: bool = True):
                 ]
             ),
             "window_start_before_reader_release_seconds": _summary(reader_lead),
+            "reader_release_status": dict(release_status) or None,
             "release_time_note": "seconds_before/after_release use the scan release_t (0.25 s grid) "
             "that centred the window; the reader release frame can differ (up to about 0.6 s here)",
             "step_counts": dict(
@@ -527,8 +560,32 @@ def _summary(values):
     return {
         "n": len(ordered),
         "median": round(statistics.median(ordered), 3),
+        "p10": round(nearest_rank(ordered, 0.1), 3),
+        "p90": round(nearest_rank(ordered, 0.9), 3),
         "min": round(ordered[0], 3),
         "max": round(ordered[-1], 3),
+    }
+
+
+def v0_reference_frames(reference_dir: Path | None):
+    """Read-only check that the 747139 v0 decision images in another checkout match the JSONL SHAs."""
+    if reference_dir is None:
+        return {"status": "not_checked"}
+    rows = read_jsonl(RESULTS / "game_747139_intent_v0.jsonl")
+    counts = Counter()
+    for row in rows:
+        path = reference_dir / row["clip_id"].rsplit(":", 1)[1]
+        if not path.is_file():
+            counts["missing"] += 1
+        elif sha256_file(path) == row["clip_sha256"]:
+            counts["sha_match"] += 1
+        else:
+            counts["sha_mismatch"] += 1
+    return {
+        "status": "checked",
+        "rows": len(rows),
+        **{k: counts.get(k, 0) for k in ("sha_match", "sha_mismatch", "missing")},
+        "location": "a separate local checkout (not this worktree); path not published",
     }
 
 
@@ -537,6 +594,9 @@ def main(argv=None):
     parser.add_argument("--out-private", type=Path, required=True)
     parser.add_argument("--out-public", type=Path, required=True)
     parser.add_argument("--skip-frame-hash", action="store_true")
+    parser.add_argument(
+        "--v0-reference-dir", type=Path, help="read-only folder holding evalset_*.jpg"
+    )
     args = parser.parse_args(argv)
     if "outputs" not in args.out_private.resolve().parts:
         parser.error("private rows go under outputs/ (git-ignored)")
@@ -551,6 +611,9 @@ def main(argv=None):
     cv24 = read_json(ROOT / "docs/results/cv_independent_20261008/cv24_pitch_deadlines_v1.json")[
         "counts"
     ]
+    inv["games"]["747139"]["v0_decision_frames_reference"] = v0_reference_frames(
+        args.v0_reference_dir
+    )
     public = {
         "schema": "pitcheezy-mitt-inventory-v1",
         "scope": SCOPE,

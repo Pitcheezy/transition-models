@@ -34,7 +34,15 @@
       "covers": "PA2 broadcast interval only (CV23)"
      }
     ],
-    "timing_annotator": "AI visual annotation (Codex/Claude agents); not independent human ground truth"
+    "timing_annotator": "AI visual annotation (Codex/Claude agents); not independent human ground truth",
+    "v0_decision_frames_reference": {
+     "status": "checked",
+     "rows": 297,
+     "sha_match": 297,
+     "sha_mismatch": 0,
+     "missing": 0,
+     "location": "a separate local checkout (not this worktree); path not published"
+    }
    },
    "849843": {
     "broadcast": "NBC",
@@ -58,6 +66,7 @@
     "window_start_before_reader_release_seconds": {
      "n": 0
     },
+    "reader_release_status": null,
     "release_time_note": "seconds_before/after_release use the scan release_t (0.25 s grid) that centred the window; the reader release frame can differ (up to about 0.6 s here)",
     "step_counts": {
      "3": 2336
@@ -81,20 +90,30 @@
     "seconds_after_release": {
      "n": 57,
      "median": 1.498,
+     "p10": 1.459,
+     "p90": 1.505,
      "min": 1.459,
      "max": 1.508
     },
     "seconds_before_release": {
      "n": 57,
      "median": 1.502,
+     "p10": 1.493,
+     "p90": 1.508,
      "min": 1.493,
      "max": 1.508
     },
     "window_start_before_reader_release_seconds": {
      "n": 57,
      "median": 1.852,
+     "p10": 1.552,
+     "p90": 2.052,
      "min": 1.401,
      "max": 2.202
+    },
+    "reader_release_status": {
+     "ok": 56,
+     "ok_inconsistent_row_dropped": 1
     },
     "release_time_note": "seconds_before/after_release use the scan release_t (0.25 s grid) that centred the window; the reader release frame can differ (up to about 0.6 s here)",
     "step_counts": {
@@ -105,7 +124,7 @@
       "n": 113,
       "median": 0.651,
       "p10": 0.3,
-      "p90": 1.502,
+      "p90": 1.552,
       "min": 0.15,
       "max": 1.952
      },
@@ -140,20 +159,30 @@
     "seconds_after_release": {
      "n": 29,
      "median": 1.501,
+     "p10": 1.46,
+     "p90": 1.506,
      "min": 1.459,
      "max": 1.508
     },
     "seconds_before_release": {
      "n": 29,
      "median": 1.499,
+     "p10": 1.493,
+     "p90": 1.507,
      "min": 1.492,
      "max": 1.508
     },
     "window_start_before_reader_release_seconds": {
      "n": 28,
      "median": 1.777,
+     "p10": 1.552,
+     "p90": 1.902,
      "min": 1.351,
      "max": 2.052
+    },
+    "reader_release_status": {
+     "ok": 28,
+     "no_release": 1
     },
     "release_time_note": "seconds_before/after_release use the scan release_t (0.25 s grid) that centred the window; the reader release frame can differ (up to about 0.6 s here)",
     "step_counts": {
@@ -197,20 +226,30 @@
     "seconds_after_release": {
      "n": 53,
      "median": 1.5,
+     "p10": 1.495,
+     "p90": 1.506,
      "min": 1.459,
      "max": 1.508
     },
     "seconds_before_release": {
      "n": 53,
      "median": 1.501,
+     "p10": 1.495,
+     "p90": 1.507,
      "min": 1.492,
      "max": 1.508
     },
     "window_start_before_reader_release_seconds": {
      "n": 53,
      "median": 1.852,
-     "min": 1.451,
+     "p10": 1.602,
+     "p90": 2.102,
+     "min": 1.401,
      "max": 2.202
+    },
+    "reader_release_status": {
+     "ok": 52,
+     "ok_inconsistent_row_dropped": 1
     },
     "release_time_note": "seconds_before/after_release use the scan release_t (0.25 s grid) that centred the window; the reader release frame can differ (up to about 0.6 s here)",
     "step_counts": {
@@ -312,6 +351,9 @@
   ],
   "seconds_before_reader_release": [
    0.0,
+   0.0,
+   0.0,
+   0.0,
    0.05,
    0.05,
    0.05,
@@ -333,11 +375,13 @@
    0.05,
    0.05,
    0.05,
-   0.05,
-   0.1,
-   0.1,
-   0.35
+   0.3
   ],
+  "reader_release_status": {
+   "ok": 25,
+   "ok_inconsistent_row_dropped": 1
+  },
+  "release_rule": "earliest release among consistent reader rows; none when they differ by more than 6 frames",
   "note": "each reviewed frame is one frame of a saved ~3 s window (about 20 fps); the window gives the short continuous context"
  },
  "bottleneck": {
@@ -348,7 +392,7 @@
     "unavailable": 14,
     "category_counts": {
      "C1_mitt_not_visible": 0,
-     "C2_visible_target_undeterminable": 8,
+     "C2_target_not_presented_or_undeterminable": 8,
      "C3_reader_disagreement": 6,
      "C4_no_transform_reference": 0,
      "C5_no_pitch_link_or_time_evidence": 0,
@@ -362,10 +406,11 @@
      "reported_not_presented_or_lowered": 8
     },
     "human_join": {
-     "C2_visible_target_undeterminable|human_marked": 7,
-     "C2_visible_target_undeterminable|human_not_in_setup": 1,
+     "C2_target_not_presented_or_undeterminable|human_marked": 7,
+     "C2_target_not_presented_or_undeterminable|human_not_in_setup": 1,
      "C3_reader_disagreement|human_marked": 6
     },
+    "human_join_note": "a row with two categories is counted under each of them",
     "estimated_conversion_stage": {
      "plate_feet|no_batter_zone_bounds": 43
     },
@@ -377,7 +422,7 @@
     "unavailable": 14,
     "category_counts": {
      "C1_mitt_not_visible": 0,
-     "C2_visible_target_undeterminable": 0,
+     "C2_target_not_presented_or_undeterminable": 0,
      "C3_reader_disagreement": 3,
      "C4_no_transform_reference": 6,
      "C5_no_pitch_link_or_time_evidence": 8,
@@ -396,10 +441,11 @@
     },
     "human_join": {
      "C3_reader_disagreement|human_marked": 3,
-     "C4_no_transform_reference|human_marked": 3,
+     "C4_no_transform_reference|human_marked": 6,
      "C5_no_pitch_link_or_time_evidence|human_marked": 7,
      "C5_no_pitch_link_or_time_evidence|human_not_centre_field": 1
     },
+    "human_join_note": "a row with two categories is counted under each of them",
     "estimated_conversion_stage": {
      "plate_feet|no_batter_zone_bounds": 15
     },
@@ -411,7 +457,7 @@
     "unavailable": 10,
     "category_counts": {
      "C1_mitt_not_visible": 3,
-     "C2_visible_target_undeterminable": 2,
+     "C2_target_not_presented_or_undeterminable": 2,
      "C3_reader_disagreement": 4,
      "C4_no_transform_reference": 0,
      "C5_no_pitch_link_or_time_evidence": 1,
@@ -430,6 +476,7 @@
      "same_frame_mitt_disagreement": 3
     },
     "human_join": null,
+    "human_join_note": "a row with two categories is counted under each of them",
     "estimated_conversion_stage": {
      "plate_feet|no_batter_zone_bounds": 43
     },
@@ -441,7 +488,7 @@
     "unavailable": 12,
     "category_counts": {
      "C1_mitt_not_visible": 4,
-     "C2_visible_target_undeterminable": 0,
+     "C2_target_not_presented_or_undeterminable": 0,
      "C3_reader_disagreement": 4,
      "C4_no_transform_reference": 0,
      "C5_no_pitch_link_or_time_evidence": 0,
@@ -459,6 +506,7 @@
      "reason_without_reader_rows:only_one_reader_found_a_setup_frame": 4
     },
     "human_join": null,
+    "human_join_note": "a row with two categories is counted under each of them",
     "estimated_conversion_stage": {
      "plate_feet|no_batter_zone_bounds": 27
     },
@@ -470,7 +518,7 @@
     "unavailable": 64,
     "category_counts": {
      "C1_mitt_not_visible": 2,
-     "C2_visible_target_undeterminable": 26,
+     "C2_target_not_presented_or_undeterminable": 26,
      "C3_reader_disagreement": 0,
      "C4_no_transform_reference": 0,
      "C5_no_pitch_link_or_time_evidence": 36,
@@ -486,6 +534,7 @@
      "reason:glove_not_visible": 1
     },
     "human_join": null,
+    "human_join_note": "a row with two categories is counted under each of them",
     "estimated_conversion_stage": {
      "image_pixels|no_image_plane_calibration": 80,
      "plate_feet|no_batter_zone_bounds": 153
@@ -495,7 +544,7 @@
   },
   "category_labels": {
    "C1_mitt_not_visible": "미트 자체가 안 보임(저장된 판독 주장)",
-   "C2_visible_target_undeterminable": "미트는 보이나 목표 제시 여부 판단 불가 또는 미제시 주장",
+   "C2_target_not_presented_or_undeterminable": "목표 미제시 주장 또는 제시 여부 판단 불가(포수 미착석 포함; 미트 보임 여부는 주장하지 않음)",
    "C3_reader_disagreement": "판독자 간 불일치",
    "C4_no_transform_reference": "좌표 변환에 필요한 기준점 없음",
    "C5_no_pitch_link_or_time_evidence": "투구 연결·관측 장면·시각 근거 없음(중앙 카메라 아님·리플레이·컷 포함)",
@@ -509,11 +558,11 @@
    "glove_hidden_by_batter": "C1_mitt_not_visible",
    "glove_not_identifiable_blur_and_batter_leg_overlap": "C1_mitt_not_visible",
    "glove_not_identifiable_held_low_behind_leg": "C1_mitt_not_visible",
-   "catcher_not_in_setup": "C2_visible_target_undeterminable",
-   "glove_not_presented: catcher drops glove to rest on the ground before release": "C2_visible_target_undeterminable",
-   "glove_not_presented_resting_on_ground": "C2_visible_target_undeterminable",
-   "glove_resting_on_dirt_not_presented": "C2_visible_target_undeterminable",
-   "glove_already_lowered_at_cut": "C2_visible_target_undeterminable",
+   "catcher_not_in_setup": "C2_target_not_presented_or_undeterminable",
+   "glove_not_presented: catcher drops glove to rest on the ground before release": "C2_target_not_presented_or_undeterminable",
+   "glove_not_presented_resting_on_ground": "C2_target_not_presented_or_undeterminable",
+   "glove_resting_on_dirt_not_presented": "C2_target_not_presented_or_undeterminable",
+   "glove_already_lowered_at_cut": "C2_target_not_presented_or_undeterminable",
    "readers_disagree_on_mitt": "C3_reader_disagreement",
    "camera_not_centre_field": "C5_no_pitch_link_or_time_evidence",
    "not_centre_field": "C5_no_pitch_link_or_time_evidence",
@@ -522,7 +571,7 @@
   },
   "route_categories": {
    "reported_not_presented_or_lowered": [
-    "C2_visible_target_undeterminable"
+    "C2_target_not_presented_or_undeterminable"
    ],
    "camera_rejection_one_candidate": [
     "C5_no_pitch_link_or_time_evidence"
