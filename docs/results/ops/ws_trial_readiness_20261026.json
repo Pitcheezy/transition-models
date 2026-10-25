@@ -1,0 +1,250 @@
+{
+  "schema": "pitcheezy-host-readonly-readiness-v1",
+  "date_kst": "2026-10-26",
+  "base_commit": "4e6aba71487ffe0c2ce9dd6df658ca9db9da9953",
+  "query_time": "This session, before 2026-10-25T17:09:43Z; exact individual request times not retained",
+  "queries": [
+    {
+      "method": "GET",
+      "path": "/accounts/{account}/workers/scripts/{worker}/deployments",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/accounts/{account}/workers/scripts/{worker}/settings",
+      "status": 200
+    }
+  ],
+  "projection": [
+    {
+      "endpoint": "deployments",
+      "success": true,
+      "deployments": [
+        {
+          "id": "5b98bfd6-b2a0-4367-8ce9-c96ea39c3190",
+          "created_on": "2026-10-24T18:02:16.126944Z",
+          "source": "api",
+          "strategy": "percentage",
+          "versions": [
+            {
+              "version_id": "d714e7fb-20d4-4a80-9f29-695e44130955",
+              "percentage": 100
+            }
+          ]
+        },
+        {
+          "id": "e33b66b2-caa2-4478-aa24-4bcc75850a3f",
+          "created_on": "2026-10-24T18:01:39.053225Z",
+          "source": "api",
+          "strategy": "percentage",
+          "versions": [
+            {
+              "version_id": "9e6a750a-6cea-43b6-b29e-11e0a17f9449",
+              "percentage": 100
+            }
+          ]
+        },
+        {
+          "id": "40850bb9-47dd-4910-92ad-e6d4fa778302",
+          "created_on": "2026-10-24T17:45:23.174903Z",
+          "source": "api",
+          "strategy": "percentage",
+          "versions": [
+            {
+              "version_id": "cd97abb2-96f1-4e21-ba4b-85e641386f97",
+              "percentage": 100
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "endpoint": "settings",
+      "success": true,
+      "compatibility_date": "2026-07-30",
+      "observability": {
+        "enabled": false,
+        "head_sampling_rate": 1,
+        "redact_query_string": false,
+        "logs": {
+          "enabled": true,
+          "head_sampling_rate": 1,
+          "persist": true,
+          "invocation_logs": true
+        },
+        "traces": {
+          "enabled": false,
+          "persist": true,
+          "head_sampling_rate": 1
+        },
+        "issues": {
+          "enabled": false
+        }
+      },
+      "bindings": [
+        {
+          "name": "ACCESS_CODE_SHA256",
+          "type": "secret_text"
+        },
+        {
+          "name": "ACCESS_GATE_ENABLED",
+          "type": "plain_text",
+          "value": "true"
+        },
+        {
+          "name": "ACCESS_SESSION_SECONDS",
+          "type": "plain_text"
+        },
+        {
+          "name": "ACCESS_SESSION_SECRET",
+          "type": "secret_text"
+        },
+        {
+          "name": "ASSETS",
+          "type": "assets"
+        },
+        {
+          "name": "COLLECTION_ORIGIN",
+          "type": "plain_text"
+        },
+        {
+          "name": "DATA_READ_ENABLED",
+          "type": "plain_text",
+          "value": "false"
+        },
+        {
+          "name": "FEEDBACK_ENABLED",
+          "type": "plain_text",
+          "value": "false"
+        },
+        {
+          "name": "FEEDBACK_ROWS_PER_DAY",
+          "type": "plain_text"
+        },
+        {
+          "name": "NOTICE_TOKEN_SHA256",
+          "type": "secret_text"
+        },
+        {
+          "name": "PUBLISH_BUCKET",
+          "type": "r2_bucket"
+        },
+        {
+          "name": "PUBLISH_EXPIRES_AT",
+          "type": "plain_text",
+          "nonempty": true
+        },
+        {
+          "name": "PUBLISH_KEY_SCOPE",
+          "type": "plain_text",
+          "nonempty": true
+        },
+        {
+          "name": "PUBLISH_LIMITER",
+          "type": "ratelimit"
+        },
+        {
+          "name": "PUBLISH_TOKEN_SHA256",
+          "type": "secret_text"
+        },
+        {
+          "name": "READ_ORIGIN",
+          "type": "plain_text"
+        },
+        {
+          "name": "SESSION_WRITES_PER_DAY",
+          "type": "plain_text"
+        },
+        {
+          "name": "TELEMETRY_DB",
+          "type": "d1"
+        },
+        {
+          "name": "TELEMETRY_ENABLED",
+          "type": "plain_text",
+          "value": "false"
+        },
+        {
+          "name": "TELEMETRY_LIMITER",
+          "type": "ratelimit"
+        },
+        {
+          "name": "TELEMETRY_RETAIN_DAYS",
+          "type": "plain_text"
+        },
+        {
+          "name": "UPLOAD_ENABLED",
+          "type": "plain_text",
+          "value": "false"
+        }
+      ]
+    }
+  ],
+  "projection_policy": "Allowlisted response projection; credential values, account ID, service URLs, scope and expiry values omitted. This is not the full provider response.",
+  "provider_request_count": 2,
+  "service_trial_request_count": 0,
+  "mutations": 0,
+  "checks": {
+    "deployment_version_matches_prior": true,
+    "access_gate": true,
+    "upload": false,
+    "data_read": false,
+    "telemetry": false,
+    "feedback": false,
+    "notice_current": "not_queried",
+    "effective_log_ingestion_current": "not_measured"
+  },
+  "log_interpretation": "observability.enabled=false; logs.enabled=true, sampling=1, persist=true, invocation_logs=true. Fields are recorded separately; fresh stored-event ingestion is not proven by this settings read.",
+  "collaboration": {
+    "official_mail_updated_at": "2026-10-23T05:01:06Z",
+    "official_mail": "https://github.com/SongRoute/pitcheezy/issues/38",
+    "alternative_plan": "https://github.com/SongRoute/pitcheezy/issues/37#issuecomment-6386661249",
+    "alternative_plan_is_approved": false,
+    "joint_trial": "HOLD",
+    "sent_21561_byte_pack_receipt": "unconfirmed"
+  },
+  "preserved_holds": [
+    "notice stored logs 12/13",
+    "actual joint PUT/DELETE and expiry boundary",
+    "new fixed procedure/artifact acceptance",
+    "new trial window and both GO",
+    "new credentials; no reuse of prior test credentials",
+    "November capacity/billing deferral"
+  ],
+  "claude_handoff_attempt": {
+    "status": "blocked_authentication",
+    "requested_model": "claude-fable-5-1",
+    "executed_model": "unconfirmed",
+    "cli_version": "2.1.168",
+    "auth_method_reported": "claude.ai",
+    "subscription_reported": "max",
+    "user_approved_payload": "Three public-safe documents: readiness report, projected receipt, unsent draft",
+    "exit_code": 1,
+    "is_error": true,
+    "error": "401 OAuth access token expired",
+    "input_sha256": "320ced279d7cf3dd73e071519e4c45318b5c61dd8bfb85d627a9a9b8a8003e4d",
+    "response_sha256": "cadcc6a05e7a5f1cbccffc75c5e3fe0bfc1463c7c8cc78f27b320bf7bf41e4d9",
+    "input_files": {
+      "docs/WS_TRIAL_READINESS_20261026.md": "dd6ad137111659af48564a77fe5423ebc757ea70dca21d1f9f01a25188ad1bdc",
+      "docs/results/ops/ws_trial_readiness_20261026.json": "af3ca913239063526cf2a0cce53781c5b61a1a52e7b9ae0a282df59ffdafd9f7",
+      "docs/mail_drafts/COLLAB-001-trial-route-20261026.md": "5483ccb20c5c0d32df0f7739c7dcd3cb6eec3ad97d5d1b36af9d771fd88666f8"
+    },
+    "started_at_utc": "2026-10-25T17:13:20.014564+00:00",
+    "ended_at_utc": "2026-10-25T17:13:24.424615+00:00",
+    "tools_enabled": false,
+    "mcp_enabled": false,
+    "permission_bypass": false,
+    "review_completed": false,
+    "cost": "not_measured",
+    "command_template": "claude -p --model claude-fable-5-1 --output-format json --tools \"\" --strict-mcp-config --mcp-config '{\"mcpServers\":{}}' --setting-sources \"\" --settings '{\"disableAllHooks\":true}' --permission-mode plan --disable-slash-commands --no-chrome --no-session-persistence < approved-input.txt",
+    "next": "User re-authentication before a future retry; no automatic retry or API billing fallback"
+  },
+  "local_validation": {
+    "checklist_tests": "8 passed; first sandbox temp-directory failure resolved with fresh allowed basetemp",
+    "provider_settings_mutations": 0,
+    "external_issue_messages": 0,
+    "same_model_additional_review": "completed_no_p1p2",
+    "relative_links_checked": 345,
+    "unchanged_coordinate_notation_excluded": 1
+  }
+}
