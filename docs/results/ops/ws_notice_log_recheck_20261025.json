@@ -1,0 +1,161 @@
+{
+  "schema": "pitcheezy-notice-log-recheck-v1",
+  "recorded_at_utc": "2026-10-24T18:55:05.542252+00:00",
+  "query_start_utc": "2026-10-24T18:00:00.000Z",
+  "query_end_utc": "2026-10-24T18:05:00.000Z",
+  "export_at_utc": "2026-10-24T18:54:20.810Z",
+  "read_only": true,
+  "new_service_requests": 0,
+  "configuration_changes": 0,
+  "original_evidence_commit": "abddb240a698e91923d14ef413e36081a4af5315",
+  "original_receipt_sha256": "8a9e8d826db10450748f38867b719c46f0c20e6c0304f56c2fee4b90a9c0c10c",
+  "raw_export": {
+    "bytes": 60360,
+    "sha256": "c43bd46748c1e03b17a392e45421bbe2dc8bcebf59d4846163f78c023497b0b4",
+    "rows": 12,
+    "location_kind": "owner-private local download"
+  },
+  "match_method": "private request ray ID plus method/path/status/version; timestamp within client interval +/-2 seconds",
+  "matched": 12,
+  "expected": 13,
+  "evidence_complete": false,
+  "events": [
+    {
+      "phase": "baseline",
+      "index": 0,
+      "method": "GET",
+      "path": "/_notice/v1/state",
+      "status": 200,
+      "version_id": "9e6a750a-6cea-43b6-b29e-11e0a17f9449",
+      "matched": true,
+      "server_timestamp_utc": "2026-10-24T18:01:48.671Z"
+    },
+    {
+      "phase": "baseline",
+      "index": 1,
+      "method": "POST",
+      "path": "/_access/v1/session",
+      "status": 200,
+      "version_id": "9e6a750a-6cea-43b6-b29e-11e0a17f9449",
+      "matched": true,
+      "server_timestamp_utc": "2026-10-24T18:01:48.952Z"
+    },
+    {
+      "phase": "baseline",
+      "index": 2,
+      "method": "GET",
+      "path": "/",
+      "status": 200,
+      "version_id": "9e6a750a-6cea-43b6-b29e-11e0a17f9449",
+      "matched": true,
+      "server_timestamp_utc": "2026-10-24T18:01:49.088Z"
+    },
+    {
+      "phase": "baseline",
+      "index": 3,
+      "method": "GET",
+      "path": "/v1/health.json",
+      "status": 503,
+      "version_id": "9e6a750a-6cea-43b6-b29e-11e0a17f9449",
+      "matched": true,
+      "server_timestamp_utc": "2026-10-24T18:01:49.210Z"
+    },
+    {
+      "phase": "on",
+      "index": 0,
+      "method": "PUT",
+      "path": "/_notice/v1/state",
+      "status": 200,
+      "version_id": "9e6a750a-6cea-43b6-b29e-11e0a17f9449",
+      "matched": true,
+      "server_timestamp_utc": "2026-10-24T18:01:55.744Z"
+    },
+    {
+      "phase": "on",
+      "index": 1,
+      "method": "GET",
+      "path": "/_notice/v1/state",
+      "status": 200,
+      "version_id": "9e6a750a-6cea-43b6-b29e-11e0a17f9449",
+      "matched": true,
+      "server_timestamp_utc": "2026-10-24T18:01:56.855Z"
+    },
+    {
+      "phase": "on",
+      "index": 2,
+      "method": "GET",
+      "path": "/",
+      "status": 503,
+      "version_id": "9e6a750a-6cea-43b6-b29e-11e0a17f9449",
+      "matched": true,
+      "server_timestamp_utc": "2026-10-24T18:01:59.189Z"
+    },
+    {
+      "phase": "on",
+      "index": 3,
+      "method": "GET",
+      "path": "/v1/health.json",
+      "status": 503,
+      "version_id": "9e6a750a-6cea-43b6-b29e-11e0a17f9449",
+      "matched": true,
+      "server_timestamp_utc": "2026-10-24T18:01:59.285Z"
+    },
+    {
+      "phase": "off",
+      "index": 0,
+      "method": "PUT",
+      "path": "/_notice/v1/state",
+      "status": 200,
+      "version_id": "9e6a750a-6cea-43b6-b29e-11e0a17f9449",
+      "matched": false
+    },
+    {
+      "phase": "off",
+      "index": 1,
+      "method": "GET",
+      "path": "/_notice/v1/state",
+      "status": 200,
+      "version_id": "9e6a750a-6cea-43b6-b29e-11e0a17f9449",
+      "matched": true,
+      "server_timestamp_utc": "2026-10-24T18:02:06.115Z"
+    },
+    {
+      "phase": "off",
+      "index": 2,
+      "method": "GET",
+      "path": "/",
+      "status": 200,
+      "version_id": "9e6a750a-6cea-43b6-b29e-11e0a17f9449",
+      "matched": true,
+      "server_timestamp_utc": "2026-10-24T18:02:08.663Z"
+    },
+    {
+      "phase": "off",
+      "index": 3,
+      "method": "GET",
+      "path": "/v1/health.json",
+      "status": 503,
+      "version_id": "9e6a750a-6cea-43b6-b29e-11e0a17f9449",
+      "matched": true,
+      "server_timestamp_utc": "2026-10-24T18:02:08.774Z"
+    },
+    {
+      "phase": "retired",
+      "index": 0,
+      "method": "GET",
+      "path": "/_notice/v1/state",
+      "status": 401,
+      "version_id": "d714e7fb-20d4-4a80-9f29-695e44130955",
+      "matched": true,
+      "server_timestamp_utc": "2026-10-24T18:02:24.234Z"
+    }
+  ],
+  "conclusion": "functional result unchanged; missing invocation log remains unverified; cause unknown",
+  "sent_pack": {
+    "user_reports_sent": true,
+    "partner_receipt_verified": false,
+    "sha256": "e8e4d70f9b844ce31e5a2f3af7ca600030032099624141340e5c33254581867f",
+    "bytes": 21561,
+    "unchanged": true
+  }
+}

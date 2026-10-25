@@ -37,6 +37,8 @@ test("body corruption and wrong cache metadata fail the read verifier", async ()
     await assert.rejects(checkRead(response("synthetic", { "Cache-Control": cache }), expected, 9), /read_cache/);
   }
   await assert.rejects(checkRead(response("synthetiC"), expected, 9), /read_integrity/);
+  await assert.rejects(checkRead(new Response("synthetic", { status: 503 }), expected, 9), /read_status/);
+  await assert.rejects(checkRead(response("synthetic", { Date: "not-a-date" }), expected, 9), /read_date/);
   await assert.rejects(checkRead(response("synthetic", { Age: "2" }), expected, 9), /read_age/);
   await assert.rejects(checkRead(response("synthetic", { "Cache-Control": "max-age=300" }), expected, 9), /read_cache/);
 });
@@ -53,6 +55,9 @@ test("actual isolated Worker/R2: bounded reads, conflicting writes, withdrawal a
   assert.deepEqual(report.completed_phases, ["warmup", "read_load", "concurrent_conflict", "withdraw_restore", "freshness_incident"]);
   assert.deepEqual(report.monitor_observations.map(x => x.event), [null, null, "opened", null, "recovered"]);
   assert.match(report.source_sha256["package-lock.json"], /^[a-f0-9]{64}$/);
+  for (const file of ["notice.mjs", "access.mjs", "rehearsal/viewer-polling.mjs"]) {
+    assert.equal(report.source_sha256[file], hash(await readFile(new URL("../" + file, import.meta.url))));
+  }
   assert.doesNotMatch(JSON.stringify(report), /127\.0\.0\.1|Bearer |PUBLISH_TOKEN/);
 });
 

@@ -1,11 +1,12 @@
-/** Bounded, closed-loop local rehearsal. Not a public CDN capacity measurement. */
-import { readFile, writeFile } from "node:fs/promises";
+/** Bounded closed-loop and fixed viewer-polling rehearsals. Not a public CDN capacity measurement. */
+import { readFile, writeFile, lstat, stat } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
-import { resolve } from "node:path";
+import { resolve, dirname } from "node:path";
 import { parseArgs } from "node:util";
 import { createRequire } from "node:module";
 import { startLocalHost, fixtureHtml, hash, boundedCleanup } from "./rehearsal/local-host.mjs";
 import { probe, initialState, advanceState } from "./monitor.mjs";
+import { validateViewerWorkload, runViewerSchedule } from "./rehearsal/viewer-polling.mjs";
 const require = createRequire(import.meta.url);
 const int = (v, a, b) => Number.isInteger(v) && v >= a && v <= b;
 function need(value, code) { if (!value) throw new Error(code); }
@@ -43,8 +44,8 @@ export async function checkRead(response, expected, bytes) {
   need((response.headers.get("Cache-Control") || "").toLowerCase().split(",").map(v => v.trim()).includes("no-store"), "read_cache");
 }
 async function sourceReceipt() {
-  const files = ["worker.mjs", "gateway.mjs", "telemetry.mjs", "monitor.mjs",
-    "rehearsal/local-host.mjs", "rehearse-local.mjs", "package-lock.json"];
+  const files = ["worker.mjs", "gateway.mjs", "telemetry.mjs", "notice.mjs", "access.mjs", "monitor.mjs",
+    "rehearsal/local-host.mjs", "rehearsal/viewer-polling.mjs", "rehearse-local.mjs", "package-lock.json"];
   const values = {};
   for (const name of files) values[name] = hash(await readFile(new URL(name, import.meta.url)));
   return values;
@@ -172,17 +173,162 @@ export async function runLocalRehearsal(input = {}) {
   report.total_ms = Math.round(performance.now() - start);
   return report;
 }
+
+/** Authenticated, fixed-schedule synthetic viewers on a new local R2 only. */
+export async function runViewerPollingRehearsal(input) {
+  const options = validateViewerWorkload(input);
+  const controller = new AbortController();
+  const deadline = setTimeout(() => controller.abort(), 90000);
+  const begin = performance.now();
+  const cookies = [], nonces = new Set();
+  let host, report, phase = "start";
+  const preparation = [];
+  try {
+    report = { schema: "pitcheezy-local-viewer-polling-v1", target: "ephemeral-loopback-miniflare",
+      synthetic: true, public_capacity_verified: false, song_contract_verified: false,
+      real_health_contract_verified: false, browser_rendering_verified: false,
+      environment: { node: process.version, platform: process.platform, arch: process.arch,
+        miniflare: require("miniflare/package.json").version },
+      source_sha256: await sourceReceipt(), options, preparation_requests: preparation,
+      sessions: { created: 0, unique_random_nonces: false, minimum_remaining_ms: null },
+      access_gate_enabled: true, load: null, schedule: null, passed: false };
+    host = await startLocalHost({ signal: controller.signal, access: {} });
+    report.startup_ms = Math.round(performance.now() - begin);
+    const get = (path, init = {}, signal = controller.signal) => fetch(host.origin + path, {
+      ...init, redirect: "error", cache: "no-store",
+      signal: AbortSignal.any([controller.signal, signal, AbortSignal.timeout(5000)]),
+    });
+    const prepare = async (kind, method, path, action) => {
+      controller.signal.throwIfAborted();
+      const row = { kind, method, path, status: null };
+      preparation.push(row);
+      const response = await action();
+      row.status = response.status;
+      return response;
+    };
+    phase = "access_check";
+    const denied = await prepare("access_check", "GET", "/v1/game/123.json",
+      () => get("/v1/game/123.json"));
+    need(denied.status === 401 && denied.headers.get("X-Pitcheezy-Access") === "required", "access_not_gated");
+    await denied.arrayBuffer();
+
+    phase = "viewer_login";
+    let minimumRemaining = Infinity;
+    for (let viewer = 0; viewer < options.viewers; viewer++) {
+      const response = await prepare("login", "POST", "/_access/v1/session",
+        () => get("/_access/v1/session", { method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ code: host.accessCodes[0] }) }));
+      need(response.status === 200, "viewer_login_failed");
+      const cookie = (response.headers.get("Set-Cookie") || "").split(";")[0];
+      const parts = cookie.slice(cookie.indexOf("=") + 1).split(".");
+      need(cookie.startsWith("pz_viewer=v3.") && parts.length === 6 &&
+        /^[a-f0-9]{16}$/.test(parts[4]) && !nonces.has(parts[4]), "viewer_session_not_unique");
+      const body = await response.json();
+      const remaining = Date.parse(body.expires_at) - Date.now();
+      need(body.authenticated === true && remaining > 90000, "viewer_session_too_short");
+      cookies.push(cookie); nonces.add(parts[4]); minimumRemaining = Math.min(minimumRemaining, remaining);
+    }
+    report.sessions = { created: cookies.length, unique_random_nonces: nonces.size === options.viewers,
+      minimum_remaining_ms: Math.floor(minimumRemaining) };
+
+    phase = "publish_fixtures";
+    const fixtures = [
+      { path: "/v1/game/123.json", body: syntheticBody(options.payload_bytes, 1) },
+      { path: "/v1/health.json", body: syntheticBody(options.payload_bytes, 2) },
+    ].map(item => ({ ...item, bytes: Buffer.byteLength(item.body), sha256: hash(item.body) }));
+    report.fixtures = fixtures.map(({ path, bytes, sha256 }) => ({ path, bytes, sha256 }));
+    for (const fixture of fixtures) {
+      const response = await prepare("publish", "PUT", "/_publish" + fixture.path,
+        () => host.publish(fixture.path, fixture.body));
+      need(response.status === 200 && /^"[a-f0-9]{32}"$/.test(response.headers.get("ETag") || ""), "fixture_publish_failed");
+      await response.arrayBuffer();
+    }
+    phase = "warmup";
+    for (const fixture of fixtures) {
+      const response = await prepare("warmup", "GET", fixture.path,
+        () => get(fixture.path, { headers: { Cookie: cookies[0] } }));
+      await checkRead(response, fixture.sha256, fixture.bytes);
+    }
+
+    phase = "viewer_polling";
+    const schedule = await runViewerSchedule(input, async (viewer, object, signal) => {
+      const fixture = fixtures[object];
+      await checkRead(await get(fixture.path, { headers: { Cookie: cookies[viewer] } }, signal),
+        fixture.sha256, fixture.bytes);
+    }, { signal: controller.signal });
+    const { samples_ms, failure_codes, ...safeSchedule } = schedule;
+    report.schedule = safeSchedule;
+    report.load = { ...summarizeLoad(samples_ms, failure_codes, schedule.elapsed_ms,
+      schedule.maximum_in_flight, options),
+      workload: "fixed 5-second slots; two sequential reads per authenticated synthetic viewer",
+      latency_scope: "loopback GET start through full body receipt and SHA/header verification",
+      expected_load_requests: options.expected_load_requests };
+    report.passed = schedule.passed;
+    if (!schedule.passed) report.failure = { phase,
+      code: controller.signal.aborted ? "deadline" : schedule.failure || "polling_failed" };
+  } catch (error) {
+    report ??= { schema: "pitcheezy-local-viewer-polling-v1", synthetic: true, passed: false,
+      preparation_requests: preparation };
+    if (error.cleanup) report.cleanup = error.cleanup;
+    report.failure = { phase, code: controller.signal.aborted ? "deadline" : "phase_failed" };
+  } finally {
+    controller.abort(); clearTimeout(deadline);
+    cookies.fill(""); nonces.clear();
+    if (host) report.cleanup = await boundedCleanup(() => host.dispose());
+    if (report.cleanup && report.cleanup.status !== "complete") {
+      report.passed = false; report.failure = { phase: "cleanup", code: report.cleanup.code };
+    }
+  }
+  report.request_accounting = {
+    preparation_started: preparation.length,
+    preparation_by_kind: Object.fromEntries(["access_check", "login", "publish", "warmup"].map(kind =>
+      [kind, preparation.filter(row => row.kind === kind).length])),
+    load_started: report.schedule?.request_counts.started ?? 0,
+    total_runtime_entry_started: preparation.length + (report.schedule?.request_counts.started ?? 0),
+    automatic_retries: 0, redirects_followed: 0,
+    scope: "script requests to the temporary runtime entry; excludes Miniflare internal operations",
+  };
+  report.total_ms = Math.round(performance.now() - begin);
+  return report;
+}
+
+async function preflightOutput(path) {
+  if (!path) return;
+  const exists = await lstat(path).then(() => true, error => {
+    if (error.code === "ENOENT") return false;
+    throw error;
+  });
+  need(!exists, "output_exists");
+  need((await stat(dirname(resolve(path)))).isDirectory(), "output_parent_required");
+}
 export async function main(args) {
   try {
     const { values } = parseArgs({ args, options: {
+      mode: { type: "string" }, viewers: { type: "string" },
       requests: { type: "string" }, concurrency: { type: "string" }, bytes: { type: "string" },
       output: { type: "string" },
     } });
-    const input = {};
-    for (const [flag, key] of [["requests", "requests"], ["concurrency", "concurrency"], ["bytes", "payload_bytes"]]) {
-      if (values[flag] !== undefined) { need(/^[1-9][0-9]*$/.test(values[flag]), "invalid_workload"); input[key] = Number(values[flag]); }
+    const mode = values.mode ?? "closed-loop";
+    let input;
+    if (mode === "viewer-polling") {
+      need(values.requests === undefined && values.concurrency === undefined && values.bytes === undefined &&
+        /^(30|50)$/.test(values.viewers || ""), "invalid_viewer_workload");
+      input = { viewers: Number(values.viewers) };
+      validateViewerWorkload(input);
+    } else {
+      need(mode === "closed-loop" && values.viewers === undefined, "invalid_workload");
+      input = {};
+      for (const [flag, key] of [["requests", "requests"], ["concurrency", "concurrency"], ["bytes", "payload_bytes"]]) {
+        if (values[flag] !== undefined) {
+          need(/^[1-9][0-9]*$/.test(values[flag]), "invalid_workload");
+          input[key] = Number(values[flag]);
+        }
+      }
+      validateWorkload(input);
     }
-    const report = await runLocalRehearsal(input);
+    await preflightOutput(values.output);
+    const report = mode === "viewer-polling" ? await runViewerPollingRehearsal(input) : await runLocalRehearsal(input);
     const text = JSON.stringify(report, null, 2) + "\n";
     if (values.output) await writeFile(values.output, text, { flag: "wx", mode: 0o600 });
     process.stdout.write(text);
