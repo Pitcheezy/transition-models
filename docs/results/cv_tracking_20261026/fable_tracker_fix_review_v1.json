@@ -1,0 +1,43 @@
+{
+  "schema": "pitcheezy-fixed-source-cross-review-v1",
+  "review_kind": "static code review only",
+  "cli_version": "2.1.310",
+  "requested_model": "claude-fable-5-1",
+  "reported_models": [
+    "claude-fable-5-1"
+  ],
+  "effort": "max",
+  "snapshot": {
+    "commit": "938145f0c23559ea0f3b473cbe1b52df70079be9",
+    "files": {
+      "intent/mitt_tracking.py": "3b2fe1a0e9040287394f200c58224297767bf0fbc6d1012c68faebea5ecaeeda",
+      "tests/test_mitt_tracking.py": "6f3e4d384f9ab4893e5915f2a21a862b4f52aba5345f0aabde19e736805e1fa2"
+    },
+    "prompt_sha256": "378d978577d80a1c2c010829e6b60cce475690081237b89972e2d030fb67fedd"
+  },
+  "raw_stdout_sha256": "d19704ce9ae504f7a52fdfbe000e322266cc28e9bba996adce5ba88e8bd3eaf5",
+  "returned_verdict": {
+    "verdict": "finding1 resolved; finding2 resolved on the cuDNN path with one residual P2 on the cuBLAS fallback path; no new P1",
+    "resolved": [
+      {
+        "finding": 1,
+        "status": "resolved",
+        "basis": "The usable=False check raises after seed bounds validation and before old_time and the pitch_id/last_index/last_time/shape assignment, so no metadata advances and the tracker keeps its prior state. The new test asserts last_index is None and state == 'unseeded' after the raise, then re-steps the same index with the same seed and gets 'tracking', which proves the frame is retryable. Behavior changes from silent discard to ValueError; your fixed625 replay being byte-identical shows no corpus frame hits this path."
+      },
+      {
+        "finding": 2,
+        "status": "resolved for cuDNN convolutions; residual below",
+        "basis": "torch.autocast(device_type=image.device.type, enabled=False) wraps the only autocast-lowered op in the score (conv2d). avg_pool2d, square, sqrt, clamp and division are not autocast cast-list ops and keep fp32, consistent with the passing CPU bf16 test. cudnn.flags pins allow_tf32=False while forwarding enabled/benchmark/benchmark_limit/deterministic and restores the entry values in finally; the CUDA test checks restoration. Process-global flag caveat is documented in the class docstring."
+      }
+    ],
+    "findings": [
+      {
+        "severity": "P2",
+        "title": "cuBLAS TF32 is still inherited when conv2d falls back to the im2col+GEMM path",
+        "detail": "flags(enabled=torch.backends.cudnn.enabled, ...) deliberately forwards a caller's cudnn.enabled=False; builds without usable cuDNN behave the same. ATen then routes conv2d to slow_conv2d (im2col + cuBLAS gemm), whose fp32 math mode follows torch.backends.cuda.matmul.allow_tf32 (set by torch.set_float32_matmul_precision('high'|'medium'), common in pipelines). The fix never pins that flag, so on this path the numerator is TF32 and threshold decisions can differ, contradicting the new comment. Repro: torch.backends.cudnn.enabled=False; torch.backends.cuda.matmul.allow_tf32=True; rerun test_caller_tf32_and_autocast_do_not_change_threshold_decisions. Fix: inside the is_cuda branch save torch.backends.cuda.matmul.allow_tf32, set False, restore in finally (torch.backends.cuda.matmul.fp32_precision='ieee' on torch>=2.7), and add the cudnn.enabled=False x matmul TF32 cell to the test matrix. Lower likelihood than the original default-on hazard, same impact class; downgrade to P3 only if cuDNN-disabled callers are documented as unsupported."
+      }
+    ],
+    "limits": "Diff-only static read; no repository, tool, or execution access, and your execution evidence is taken as given. Not visible: lines of the step function before the seed hunk (any state mutation preceding the new raise), the step test helper and production driver, and the pinned torch version. The finding1 test covers a fresh tracker only; a mid-track reseed on a gated frame leaving template and last_index intact is not asserted. Adjacent and not rated: cudnn.benchmark is intentionally forwarded, so autotuned algorithm selection can still change fp32 rounding across callers or runs; pin benchmark=False in the same flags() call if byte-identical records across callers are required. torch.autocast(device_type=...) is applied unconditionally and would raise on devices without autocast support on older torch (e.g. mps/xpu); only relevant if non cpu/cuda devices are supported."
+  },
+  "executed_by_reviewer": false
+}

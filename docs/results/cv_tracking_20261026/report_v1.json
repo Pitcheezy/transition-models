@@ -1,0 +1,163 @@
+{
+  "schema": "pitcheezy-mitt-tracking-pilot-dev-v1",
+  "evidence_kind": "offline exposed development; no new model or human calls",
+  "params": {
+    "patch_size": 21,
+    "search_radius": 24,
+    "min_ncc": 0.65,
+    "min_peak_margin": 0.05,
+    "peak_exclusion": 4,
+    "max_fb_error": 3.0,
+    "min_texture": 0.03,
+    "max_appearance_change": 0.22,
+    "max_gap_seconds": 0.25
+  },
+  "params_sha256": "106fa8bb51b83f89c3c7c54f84342cae9e4bf4f08e1fe846389e316b831c4c7b",
+  "crop": [
+    330,
+    100,
+    950,
+    600
+  ],
+  "source_manifest_sha256": "58cb57c9dbd542ca60db84f8f1e2242867e4680c15e1914a5ca1352ec1bcf87a",
+  "pitches": 10,
+  "frames": 625,
+  "sequence_AI_observations": 315,
+  "seed_rule": "first usable saved sequence AI point per pitch; no retries or automatic reseeding",
+  "environment": {
+    "python": "3.12.12",
+    "torch": "2.6.0+cu124",
+    "cuda_runtime": "12.4",
+    "cpu_threads": 4,
+    "tf32": false,
+    "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU"
+  },
+  "devices": {
+    "cpu": {
+      "states": {
+        "unseeded": 82,
+        "tracking": 123,
+        "lost": 420
+      },
+      "reasons": {
+        "no_seed": 82,
+        "external_seed": 10,
+        "patch_continuity": 113,
+        "low_similarity": 229,
+        "ambiguous_peak": 110,
+        "forward_backward_mismatch": 81
+      },
+      "active_attempt_ms": {
+        "n": 123,
+        "median": 4.852800047956407,
+        "p95": 7.0082799647934735
+      },
+      "seed_ms": {
+        "n": 10,
+        "median": 0.685499981045723,
+        "p95": 0.8614199410658329
+      },
+      "jpeg_read_hash_decode_crop_ms": {
+        "n": 625,
+        "median": 8.06450005620718,
+        "p95": 9.26069999113679
+      },
+      "read_to_host_result_ms": {
+        "n": 625,
+        "median": 8.124400046654046,
+        "p95": 14.416380017064508
+      },
+      "same_frame_AI_disagreement_px_not_accuracy": {
+        "n": 54,
+        "median": 5.521009528313442,
+        "p95": 47.75224079388581
+      },
+      "synthetic_sustained": {
+        "active_tracking_ms": {
+          "n": 45,
+          "median": 3.799599944613874,
+          "p95": 6.0993799241259685
+        },
+        "seed_ms": {
+          "n": 3,
+          "median": 0.5067999009042978,
+          "p95": 0.651610060594976
+        },
+        "states": {
+          "tracking": 48
+        },
+        "warmup_sequences": 1,
+        "measured_repetitions": 3,
+        "scope": "synthetic pixels already decoded; includes host/device transfer and result retrieval"
+      },
+      "records_sha256": "31a698c3dbe59a240d3eada60287247be27024dd8d5f5b19b1022fbd7feb01a3"
+    },
+    "cuda": {
+      "states": {
+        "unseeded": 82,
+        "tracking": 123,
+        "lost": 420
+      },
+      "reasons": {
+        "no_seed": 82,
+        "external_seed": 10,
+        "patch_continuity": 113,
+        "low_similarity": 229,
+        "ambiguous_peak": 110,
+        "forward_backward_mismatch": 81
+      },
+      "active_attempt_ms": {
+        "n": 123,
+        "median": 2.2879999596625566,
+        "p95": 2.865459991153329
+      },
+      "seed_ms": {
+        "n": 10,
+        "median": 0.7265500025823712,
+        "p95": 0.8620050386525688
+      },
+      "jpeg_read_hash_decode_crop_ms": {
+        "n": 625,
+        "median": 8.22740001603961,
+        "p95": 9.024739963933824
+      },
+      "read_to_host_result_ms": {
+        "n": 625,
+        "median": 8.361599990166724,
+        "p95": 11.209799931384623
+      },
+      "same_frame_AI_disagreement_px_not_accuracy": {
+        "n": 54,
+        "median": 5.521009528313442,
+        "p95": 47.75224079388581
+      },
+      "synthetic_sustained": {
+        "active_tracking_ms": {
+          "n": 45,
+          "median": 1.6629999736323953,
+          "p95": 1.979720056988299
+        },
+        "seed_ms": {
+          "n": 3,
+          "median": 0.2973000518977642,
+          "p95": 0.3098100423812866
+        },
+        "states": {
+          "tracking": 48
+        },
+        "warmup_sequences": 1,
+        "measured_repetitions": 3,
+        "scope": "synthetic pixels already decoded; includes host/device transfer and result retrieval"
+      },
+      "records_sha256": "93e58ff82e32f7f4dfba16b6210e24a9983c6b680feee436217b17abc462ad44"
+    }
+  },
+  "limits": [
+    "tracking is patch continuity, not verified mitt identity",
+    "no independent accuracy or live latency",
+    "no automatic shot classifier; appearance discontinuity heuristic only",
+    "JPEG cache/order can affect decode timings; synthetic sustained tracking reported separately"
+  ],
+  "cpu_cuda_state_point_equal": true,
+  "preserved_input_files": 667
+}

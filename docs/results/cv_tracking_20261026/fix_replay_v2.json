@@ -1,0 +1,25 @@
+{
+  "schema": "pitcheezy-cv37-review-fix-replay-v2",
+  "source_commit": "938145f0c23559ea0f3b473cbe1b52df70079be9",
+  "before_source_commit": "cd23d7875c4f526cf3579053baa606ed19641e69",
+  "changes": [
+    "reject seed on usable=False before advancing frame metadata",
+    "disable surrounding autocast and cuDNN TF32 during correlation; preserve caller flags"
+  ],
+  "regressions": {
+    "before": "3 failed: gated seed, CPU autocast, CUDA TF32/autocast",
+    "after": "51 related tests passed, including physical CUDA; Ruff passed"
+  },
+  "per_device_records_byte_identical": {
+    "cpu": true,
+    "cuda": true
+  },
+  "original_input_sha_preserved": 667,
+  "parameter_sha256": "106fa8bb51b83f89c3c7c54f84342cae9e4bf4f08e1fe846389e316b831c4c7b",
+  "report_sha256": "2dfd51a0d30cd8842df4b7c22951f59a51568d46c83052c4444be3e68ed7cece",
+  "limitations": [
+    "single compute worker per process; cuDNN flags are process-global",
+    "FP32 CPU/CUDA exact parity is evidenced only for these fixtures and exposed development data",
+    "no new accuracy measurement or human labels"
+  ]
+}

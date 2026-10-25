@@ -1,0 +1,43 @@
+{
+  "schema": "pitcheezy-fixed-source-cross-review-v1",
+  "review_kind": "static code review only",
+  "cli_version": "2.1.310",
+  "requested_model": "claude-fable-5-1",
+  "reported_models": [
+    "claude-fable-5-1"
+  ],
+  "effort": "max",
+  "snapshot": {
+    "commit": "437821db517351aa965c6b12d2953898bebbed7d",
+    "part": "tracker",
+    "files": {
+      "intent/mitt_tracking.py": "bf2afecd8693781a57784472b8f0f68844bf06183d9342862fc3fd2224767bcd",
+      "tests/test_mitt_tracking.py": "968913cafda99cb858a524cdd26c3e491bf8615e4e237e74ba49b00a0294c1ef"
+    },
+    "prompt_sha256": "811edeb13a8a579754f2f759f028189ca53a92a54046d7e4f9445235b4ef9501"
+  },
+  "raw_stdout_sha256": "d58573ac4a23b04ccf26e62a107890f1384ea1c7e70ef303db9b2593f298d549",
+  "returned_verdict": {
+    "verdict": "No P1. Two P2 issues. ZNCC numerator/denominator, window geometry and index mapping, crop-to-source coordinate binding, input validation ordering (all checks precede state mutation), and terminal lost semantics (no stale point is ever republished, seed after loss raises) are correct on CPU as written.",
+    "findings": [
+      {
+        "severity": "P2",
+        "file": "intent/mitt_tracking.py",
+        "line": "~174-177 (the `if not usable:` block in PatchTracker.step)",
+        "trigger": "Call step(..., seed=[x, y], usable=False) on an unseeded tracker. The seed is fully validated first (lines ~143-154, including raising 'seed outside image'), then the gate branch returns {state: 'unseeded', reason: 'external_view_gate'} without applying it. No seed_requested_px is written, self.reason stays 'no_seed', and last_time/last_index/shape are still advanced.",
+        "impact": "A validated external seed is dropped silently. If the caller supplies the seed only on its annotated frame, the tracker never leaves 'unseeded' and every later row reads reason 'no_seed', misattributing the cause. Behaviour is also asymmetric with the tracking state, where the same gate is terminal (lost). Neither docstring nor tests define the seed+gate contract.",
+        "fix": "Make the contract explicit with a one-line change: either raise ValueError('seed cannot be applied on a gated frame'), or record seed_requested_px and return a distinct reason such as 'seed_gated' (optionally via _lost to match the tracking-state gate). Add a test for seed with usable=False."
+      },
+      {
+        "severity": "P2",
+        "file": "intent/mitt_tracking.py",
+        "line": "~97 (F.conv2d(region, zero) in PatchTracker._match)",
+        "trigger": "PatchTracker(device='cuda') on an Ampere-or-newer GPU with PyTorch defaults. torch.backends.cudnn.allow_tf32 defaults to True, so the ZNCC numerator is computed with TF32 operands (10-bit mantissa) while the avg_pool2d denominator stays full FP32.",
+        "impact": "Peak ncc values deviate from CPU by roughly 1e-4 to 1e-3, enough to flip near-threshold low_similarity (0.65) and ambiguous_peak (0.05) decisions and to move argmax by one pixel on flat peaks. State and point_px records therefore depend on the device beyond float32 rounding, and the CPU/CUDA parity test tolerance of 0.001 is not guaranteed. CPU runs are unaffected; if the saved pilot ran on CPU its records stand.",
+        "fix": "Run the correlation under torch.backends.cudnn.flags(allow_tf32=False) (or set the flag in __init__ and record it next to params.digest()), and state the device used for the pilot in the saved metadata."
+      }
+    ],
+    "limits": "Static read of the two pasted files only; nothing executed, tests not run, commits not inspected. Line numbers are counted from the paste and may be off by one or two. CPU multi-thread conv reductions can perturb ncc at the 1e-7 level, which matters only for exact ties and is not a defect. Thresholds, tracking accuracy and the choice to centre the backward search on the previous position rather than the forward point are design, not reviewed. Items noted but below P2 and omitted: non-numeric TrackParams values raise TypeError instead of ValueError; search_boundary also fires when the peak lands on an image-edge-clipped window (a 1 px band, conservative); a torch exception after the metadata update at ~line 156 would make that frame unrepeatable, but no reachable CPU trigger was found."
+  },
+  "executed_by_reviewer": false
+}

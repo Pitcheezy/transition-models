@@ -1,0 +1,157 @@
+{
+  "schema": "pitcheezy-cv37-fixed-pilot-audit-v1",
+  "source_commit": "cd23d7875c4f526cf3579053baa606ed19641e69",
+  "evidence_kind": "exposed offline development, not independent accuracy",
+  "report_sha256": "c34a0242f4b00af317d03fb20aac63b40f5c1cd66467602475ce7ae0377f8252",
+  "source_sha256": {
+    "intent/mitt_tracking.py": "bf2afecd8693781a57784472b8f0f68844bf06183d9342862fc3fd2224767bcd",
+    "intent/mitt_tracking_pilot.py": "295f795b9fab1efa196ab6e87e9d2cfc19bb40ff0268e204dc73076a80c62931",
+    "tests/test_mitt_tracking.py": "968913cafda99cb858a524cdd26c3e491bf8615e4e237e74ba49b00a0294c1ef",
+    "tests/test_mitt_tracking_pilot.py": "d8763b3eeadfcb1cefb09343d4a8b40c3942d7a9dd4aacc45a2c8c6b67ad603d"
+  },
+  "raw_records_sha256": {
+    "cpu": "31a698c3dbe59a240d3eada60287247be27024dd8d5f5b19b1022fbd7feb01a3",
+    "cuda": "93e58ff82e32f7f4dfba16b6210e24a9983c6b680feee436217b17abc462ad44"
+  },
+  "per_pitch": [
+    {
+      "pitch_id": "747139:3:1",
+      "frames": 74,
+      "seed_index": 14946,
+      "last_tracking_index": 14952,
+      "first_loss_index": 14958,
+      "first_loss_reason": "low_similarity",
+      "tracking_frames_including_seed": 2,
+      "tracking_span_seconds": 0.1001,
+      "seed_to_first_loss_seconds": 0.2002
+    },
+    {
+      "pitch_id": "747139:3:2",
+      "frames": 63,
+      "seed_index": 16262,
+      "last_tracking_index": 16280,
+      "first_loss_index": 16286,
+      "first_loss_reason": "low_similarity",
+      "tracking_frames_including_seed": 4,
+      "tracking_span_seconds": 0.3003,
+      "seed_to_first_loss_seconds": 0.4004
+    },
+    {
+      "pitch_id": "747139:3:3",
+      "frames": 66,
+      "seed_index": 17233,
+      "last_tracking_index": 17419,
+      "first_loss_index": 17425,
+      "first_loss_reason": "ambiguous_peak",
+      "tracking_frames_including_seed": 32,
+      "tracking_span_seconds": 3.1031,
+      "seed_to_first_loss_seconds": 3.2032
+    },
+    {
+      "pitch_id": "747139:4:1",
+      "frames": 47,
+      "seed_index": 19585,
+      "last_tracking_index": 19585,
+      "first_loss_index": 19591,
+      "first_loss_reason": "low_similarity",
+      "tracking_frames_including_seed": 1,
+      "tracking_span_seconds": 0.0,
+      "seed_to_first_loss_seconds": 0.1001
+    },
+    {
+      "pitch_id": "747139:4:2",
+      "frames": 77,
+      "seed_index": 20470,
+      "last_tracking_index": 20704,
+      "first_loss_index": 20710,
+      "first_loss_reason": "forward_backward_mismatch",
+      "tracking_frames_including_seed": 40,
+      "tracking_span_seconds": 3.9039,
+      "seed_to_first_loss_seconds": 4.004
+    },
+    {
+      "pitch_id": "747139:5:1",
+      "frames": 34,
+      "seed_index": 21342,
+      "last_tracking_index": 21342,
+      "first_loss_index": 21348,
+      "first_loss_reason": "low_similarity",
+      "tracking_frames_including_seed": 1,
+      "tracking_span_seconds": 0.0,
+      "seed_to_first_loss_seconds": 0.1001
+    },
+    {
+      "pitch_id": "747139:5:2",
+      "frames": 53,
+      "seed_index": 22118,
+      "last_tracking_index": 22124,
+      "first_loss_index": 22130,
+      "first_loss_reason": "low_similarity",
+      "tracking_frames_including_seed": 2,
+      "tracking_span_seconds": 0.1001,
+      "seed_to_first_loss_seconds": 0.2002
+    },
+    {
+      "pitch_id": "747139:5:3",
+      "frames": 68,
+      "seed_index": 23212,
+      "last_tracking_index": 23296,
+      "first_loss_index": 23302,
+      "first_loss_reason": "ambiguous_peak",
+      "tracking_frames_including_seed": 15,
+      "tracking_span_seconds": 1.4014,
+      "seed_to_first_loss_seconds": 1.5015
+    },
+    {
+      "pitch_id": "747139:5:4",
+      "frames": 70,
+      "seed_index": 24396,
+      "last_tracking_index": 24492,
+      "first_loss_index": 24498,
+      "first_loss_reason": "ambiguous_peak",
+      "tracking_frames_including_seed": 17,
+      "tracking_span_seconds": 1.6016,
+      "seed_to_first_loss_seconds": 1.7017
+    },
+    {
+      "pitch_id": "747139:5:6",
+      "frames": 73,
+      "seed_index": 26778,
+      "last_tracking_index": 26826,
+      "first_loss_index": 26832,
+      "first_loss_reason": "forward_backward_mismatch",
+      "tracking_frames_including_seed": 9,
+      "tracking_span_seconds": 0.8008,
+      "seed_to_first_loss_seconds": 0.9009
+    }
+  ],
+  "first_loss_by_pitch": {
+    "low_similarity": 5,
+    "ambiguous_peak": 3,
+    "forward_backward_mismatch": 2
+  },
+  "tracking_span_median_seconds": 0.55055,
+  "tracking_span_min_seconds": 0.0,
+  "tracking_span_max_seconds": 3.9039,
+  "cpu_to_cuda_active_median_ratio": 2.1209790793318533,
+  "related_tests": {
+    "passed": 48,
+    "cuda_test": "passed on physical RTX4070 Laptop",
+    "scope": "four new/related mitt files plus checklist; not full suite"
+  },
+  "review": {
+    "author": "Codex current session",
+    "same_model_read_only_review": "separate Codex code-review agent: no P1/P2 findings; not Claude cross-model evidence",
+    "requested_cross_model": "claude-fable-5-1",
+    "cross_model_status": "not_executed",
+    "reason": "Claude Code returned 401 OAuth access token expired; zero input/output tokens reported",
+    "design_review_requested_model": "gpt-6-astra / ultra (tool request)"
+  },
+  "limits": [
+    "tracking measures patch continuity, not verified mitt identity",
+    "123 tracking rows include 10 seeds; 420 lost rows are persistent states after 10 first losses",
+    "no threshold tuning or rerun after seeing results",
+    "no new vision-model calls, human labels, public deployment or partner code changes",
+    "cache and CPU-first execution order limit end-to-end speed comparisons"
+  ]
+}

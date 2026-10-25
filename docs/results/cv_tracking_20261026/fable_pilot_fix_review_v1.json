@@ -1,0 +1,48 @@
+{
+  "schema": "pitcheezy-fixed-source-cross-review-v1",
+  "review_kind": "static code review only",
+  "cli_version": "2.1.310",
+  "requested_model": "claude-fable-5-1",
+  "reported_models": [
+    "claude-fable-5-1"
+  ],
+  "effort": "max",
+  "snapshot": {
+    "commit": "611d0c669e7529a5fec688f222408d2ab399a5de",
+    "files": {
+      "intent/mitt_tracking_pilot.py": "70149ce818b1281320daf8467724d0cee02011d4ca552c074807f1a11177c241",
+      "tests/test_mitt_tracking_pilot.py": "8172d1b7cea7bcd401633cb0fd1f68098f24da991c0a046eabd64da09fcd3f6e",
+      "report_v3.json": "6979e4b921afe2f978fd83e89755ec65fea9e74db6a1c794606fa942e80002b3"
+    },
+    "prompt_sha256": "a1865d0ffbe17cc3f1807d1aa262c26af3606cacf956f74bd0f037b295920eb0"
+  },
+  "raw_stdout_sha256": "545458d725906ce76b1a7b8f2732915cbbb5c55eb108fc6d391d5998ad0d7041",
+  "returned_verdict": {
+    "verdict": "pass: all four prior findings are addressed at 611d0c669e7529a5fec688f222408d2ab399a5de; no concrete P1/P2 introduced by the patch",
+    "resolved": [
+      {
+        "finding": 1,
+        "status": "resolved",
+        "evidence": "replay() classifies each row exactly once by prior_state captured before step(): prior 'tracking' -> active (active_attempt_ms, active_read_to_host_result_ms); else seed_point -> seed; else idle. Disjoint and exhaustive: 123 + 10 + 492 = 625, with active = 113 patch_continuity + 10 first losses. All-row read_to_host_result_ms is kept but carries an explicit scope string. Test forces distinct per-row totals and checks the 4/1/2 split (medians 45/20/40 ms)."
+      },
+      {
+        "finding": 2,
+        "status": "resolved",
+        "evidence": "first_loss_reasons counts only prior_state 'tracking' and state 'lost' (10 in report, one per pitch); seed_rejection_reasons counts seed rows ending 'lost'; post_loss_rows counts prior_state 'lost' (410); reasons keeps all-row scope with a label. 420 lost = 10 first + 410 post-loss is arithmetically consistent. Tests cover tracking->lost (reasons low_texture 2 vs first_loss 1) and a rejected seed that is not counted as an active loss."
+      },
+      {
+        "finding": 3,
+        "status": "resolved",
+        "evidence": "Rows keep raw_ai_point_px unfiltered and add ai_unusable_reason (None, a mitt_temporal reason, or no_saved_observation). Pairs exclude seed rows; raw, usable and unusable distributions plus unusable_AI_pair_reasons are all reported. Report shows 54 usable / 0 unusable pairs; the split is exercised in test (catcher_not_set lands only in the unusable subset)."
+      },
+      {
+        "finding": 4,
+        "status": "resolved",
+        "evidence": "saved_pilot_provenance publishes pilot_private_sha256, per-file answers_sha256 keyed 'answers/<name>' with no local paths, and answers_manifest_sha256 over sorted compact JSON; every preserved file is re-hashed after replay. environment_info records observed cpu_model, cpu_logical_cores, torch intra/interop threads and is called after torch.set_num_threads(4) (report: 4 / 24). Tests assert path-free output, change visibility, and CPU/thread capture."
+      }
+    ],
+    "findings": [],
+    "limits": "Static read of the pasted module, tests and one report only; mitt_pilot.load_answers, mitt_temporal.unusable_reason and PatchTracker are not shown, so two things rest on the stated tracker/loader contract rather than inspection: that the answers/b*.json glob equals the file set load_answers actually opened, and that lost is terminal and a seed row only ends 'tracking' or 'lost'. Answer hashes are taken after load_answers consumed the files (no hash-at-consumption as frames have); tf32 and post_loss_matching are literals, not observed; platform.processor() yields a CPUID family string on Windows and is often empty on Linux. Test results and report numbers are the user's execution evidence; I checked only their internal arithmetic. Hashes and AI disagreement are not accuracy or provenance authentication; timestamps remain manifest-derived assumptions."
+  },
+  "executed_by_reviewer": false
+}

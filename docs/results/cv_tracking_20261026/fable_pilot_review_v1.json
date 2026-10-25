@@ -1,0 +1,60 @@
+{
+  "schema": "pitcheezy-fixed-source-cross-review-v1",
+  "review_kind": "static code review only",
+  "cli_version": "2.1.310",
+  "requested_model": "claude-fable-5-1",
+  "reported_models": [
+    "claude-fable-5-1"
+  ],
+  "effort": "max",
+  "snapshot": {
+    "commit": "437821db517351aa965c6b12d2953898bebbed7d",
+    "part": "pilot",
+    "files": {
+      "intent/mitt_tracking_pilot.py": "295f795b9fab1efa196ab6e87e9d2cfc19bb40ff0268e204dc73076a80c62931",
+      "tests/test_mitt_tracking_pilot.py": "d8763b3eeadfcb1cefb09343d4a8b40c3942d7a9dd4aacc45a2c8c6b67ad603d",
+      "docs/results/cv_tracking_20261026/report_v1.json": "e95da39ea62846359b17c8e0d8e463781ddfbf04b02d3d3bff727255de79de0d"
+    },
+    "prompt_sha256": "ebb69d970b901a8ee96902e21d5318a5a340a8fa0c395c616c588fad948e74a0"
+  },
+  "raw_stdout_sha256": "13b5dcc7fba8bfe1937d083e8a0fb2ae50e8645e217eb35921dc6063ed44de54",
+  "returned_verdict": {
+    "verdict": "No P1. Within the stated scope the replay is correctly bound to the original frame_*.jpg bytes (manifest SHA bound to pilot_private.json, per-frame size and SHA checked at load and again inside the timed read), the time base is frozen and re-checked per frame, each seed is the first usable in-window saved point and nothing from later frames reaches tracker.step, CPU and CUDA timings are bracketed by explicit synchronizes with host result retrieval inside the timed region, and the 123/10/45/3 denominators reproduce from the code (54 pairs is consistent with lost rows carrying no point). Four P2 denominator/provenance issues remain in the shipped report.",
+    "findings": [
+      {
+        "severity": "P2",
+        "file": "intent/mitt_tracking_pilot.py",
+        "line": "186, 212",
+        "trigger": "read_to_host_result_ms accumulates all 625 rows, but 502 of them (82 unseeded + 420 post-loss) run no matching, so its median (8.12 ms CPU / 8.36 ms CUDA) equals the decode-only cost and the 123 active rows sit only in the tail (p95 CPU 14.4 vs CUDA 11.2).",
+        "impact": "The only end-to-end per-frame figure in report_v1.json describes no frame on which tracking ran (active end-to-end is roughly 13 ms CPU / 10.5 ms CUDA), and its CPU-vs-CUDA p95 compares a mixture rather than tracking cost.",
+        "fix": "Also emit the `times` distribution restricted to prior_state == 'tracking' (seed rows separately), or rename the metric to make clear it includes 502 idle rows and state that count in the summary."
+      },
+      {
+        "severity": "P2",
+        "file": "intent/mitt_tracking_pilot.py",
+        "line": "208",
+        "trigger": "`reasons` counts every row. With no reseeding there are exactly 10 loss events but 420 lost rows, so low_similarity 229 / ambiguous_peak 110 / forward_backward_mismatch 81 are weighted by how many window frames remained after each loss (or are post-loss recomputations that active_attempt_ms excludes).",
+        "impact": "The report reads as 420 failure diagnoses; the cause split for the 10 actual loss events is absent, and prior_state is not written into the records.",
+        "fix": "Add `first_loss_reasons` (prior_state == 'tracking' and state == 'lost', n=10) to the summary, persist prior_state per row, and document whether post-loss rows perform matching work."
+      },
+      {
+        "severity": "P2",
+        "file": "intent/mitt_tracking_pilot.py",
+        "line": "197, 201-205",
+        "trigger": "Seeding filters saved points with mitt_temporal.unusable_reason (line 149), but raw_ai_point_px and the 54 disagreement pairs take mitt_center_px from every observation regardless of that rule, and the row does not record usability.",
+        "impact": "The 47.8 px p95 cannot be attributed to tracker drift versus occluded or uncertain AI points, and the pairing denominator follows a different rule than the seeds.",
+        "fix": "Store `ai_unusable_reason` per row and report the disagreement distribution separately for usable (reason None) and unusable observations; keep the raw one if desired."
+      },
+      {
+        "severity": "P2",
+        "file": "intent/mitt_tracking_pilot.py",
+        "line": "237-244, 276",
+        "trigger": "report.json records the manifest SHA and the count 667 but not the SHA-256 of pilot_private.json or the answers/b*.json files that produced the 10 seeds, although `preserved` already holds them; `environment` names the GPU but not the CPU model or core count behind the hard-coded 4-thread cap.",
+        "impact": "The seeds in docs/results/cv_tracking_20261026/report_v1.json cannot be tied to a specific saved-answers version without rerunning, and the CPU timings (4.85 ms active at 4 threads) cannot be interpreted or reproduced against a known processor.",
+        "fix": "Write the `preserved` digest map (or its sorted-JSON SHA plus the pilot_private.json SHA) into the report, and add platform.processor(), os.cpu_count() and torch.get_num_threads() to `environment`."
+      }
+    ],
+    "limits": "Only the three supplied files were reviewed. PatchTracker internals (state names, whether post-loss rows compute, point_px coordinate frame) and mitt_pilot.plan/load_answers/to_observation and mitt_temporal.unusable_reason were not visible; their behaviour is inferred from the report numbers (full-frame point_px from the 5.5 px median, no point on lost rows from n=54). The PTS check at line 139 proves the manifest is internally consistent with index*1001; if pts_time was itself derived from index at extraction, source_pts_ticks is an assumption rather than a measured stream timestamp. Line 122 reselects the ten pitches independently of the plan checked at line 100 without asserting equality; this held in the reported run (10 external_seed). The tests do not exercise replay, benchmark, or summary denominators. Decode-order and cache effects between the CPU and CUDA passes were not visible in this run (decode medians within 0.2 ms)."
+  },
+  "executed_by_reviewer": false
+}
