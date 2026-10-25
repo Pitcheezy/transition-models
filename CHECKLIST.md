@@ -4,6 +4,8 @@
 
 CV37r 재개 선점: 우리 Codex / `codex/cv-track-pilot-1026` / 고정437821d. 사용자 CLI업데이트·한도 초기화 확인 후 실제2.1.310으로 추적/측정 분할 검토 진행. [이번 합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6401853278). 최종 답변 전 완료 처리하지 않으며 아래429는 이전 시도 기록이다.
 
+CV37r 진행 근거: 실제Fable 추적 코드 검토에서P2 2건(가림 seed 묵살, 외부TF32영향)을 받았다. 추가CPU/GPU autocast까지 합성3실패를 재현하고 수정 후 관련51검사 통과. 동일625프레임 보존 확인·측정 코드 검토·수정 재검토는 진행 중이며 아직 전체 교차 검토 완료가 아니다.
+
 교차 검토 후속 기록 완료·수정 권한 반납: 우리 Codex / `codex/cv-track-pilot-1026` / 검토 고정 `933772e`. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6401721869). 사용자 재로그인으로401·별도 공식2.1.251로 버전400 해소. 실제 Fable 호출은 최종 답변 전 세션 한도429로 종료, 교차 검토는 미완료다. [영수증](docs/results/cv_tracking_20261026/review_attempts_v2.json). 전역 CLI·연구 코드·측정 결과는 유지했고 CI2781passed/9skipped/2deselected가 Ubuntu/macOS에서 성공했다.
 
 사용자 요청으로 일정을 앞당긴 우리 연구 계획이다. Song 마감·계약·운영 동결은 변경하지 않는다. [합격 기준·일정](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6401534435). CV37 개발 시험 완료·수정 권한 반납: 우리 Codex / `codex/cv-track-pilot-1026` / PR69 고정 `c41eb74782d585cce47d2f1d99b4417ea2f4623e`. 원래 Claude 작업 폴더와 자료는 보존한다. [실제 결과·한계](docs/CV_TRACKING_PILOT_20261026.md), [고정 소스·해시](docs/results/cv_tracking_20261026/audit_v1.json). Claude 교차 검토는 아래CV37r 상태를 따른다.

@@ -60,6 +60,8 @@ class PatchTracker:
 
     Images are plain crops without scaling. ``origin`` is their x/y offset in source pixels.
     All public points use source pixels, with rounding half-up recorded on initialization.
+    Use one compute worker per process: cuDNN precision flags are process-global, so other
+    threads must not change them concurrently. Their prior values are restored after matching.
     """
 
     def __init__(self, *, origin=(0, 0), device="cpu", params=None):
@@ -94,9 +96,20 @@ class PatchTracker:
         variances = (
             F.avg_pool2d(region.square(), p.patch_size, stride=1) - means.square()
         ).clamp_min(0)
-        score = F.conv2d(region, zero) / (energy * variances * p.patch_size**2).sqrt().clamp_min(
-            1e-12
-        )
+        # Do not inherit lower precision from a caller's autocast/TF32 settings.
+        with torch.autocast(device_type=image.device.type, enabled=False):
+            if image.is_cuda:
+                with torch.backends.cudnn.flags(
+                    enabled=torch.backends.cudnn.enabled,
+                    benchmark=torch.backends.cudnn.benchmark,
+                    benchmark_limit=torch.backends.cudnn.benchmark_limit,
+                    deterministic=torch.backends.cudnn.deterministic,
+                    allow_tf32=False,
+                ):
+                    numerator = F.conv2d(region, zero)
+            else:
+                numerator = F.conv2d(region, zero)
+        score = numerator / (energy * variances * p.patch_size**2).sqrt().clamp_min(1e-12)
         score = score[0, 0].clamp(-1, 1)
         score = score.masked_fill(variances[0, 0] < p.min_texture**2, -torch.inf)
         flat = int(score.argmax().item())
@@ -152,6 +165,8 @@ class PatchTracker:
             local = [seed[i] - self.origin[i] for i in range(2)]
             if not (0 <= local[0] < image.shape[1] and 0 <= local[1] < image.shape[0]):
                 raise ValueError("seed outside image")
+            if not usable:
+                raise ValueError("seed cannot be applied on a gated frame")
         old_time = self.last_time
         self.pitch_id, self.last_index, self.last_time, self.shape = (
             pitch_id,

@@ -86,6 +86,46 @@ def test_seed_quality_border_and_no_seed_are_distinct():
     assert step(PatchTracker(), scene(), 0, seed=[1, 1])["reason"] == "seed_border"
 
 
+def test_seed_on_gated_frame_is_rejected_without_consuming_the_frame():
+    tracker = PatchTracker()
+    with pytest.raises(ValueError, match="seed cannot be applied on a gated frame"):
+        step(tracker, scene(), 0, seed=[60, 60], usable=False)
+    assert tracker.last_index is None and tracker.state == "unseeded"
+    assert step(tracker, scene(), 0, seed=[60, 60])["state"] == "tracking"
+
+
+def test_outer_cpu_autocast_does_not_change_tracking_precision():
+    def run():
+        tracker = PatchTracker()
+        return [
+            step(tracker, scene(60 + i, 60), i, seed=[60, 60] if i == 0 else None) for i in range(3)
+        ]
+
+    expected = run()
+    with torch.autocast("cpu", dtype=torch.bfloat16):
+        assert run() == expected
+
+
+@pytest.mark.skipif(not torch.cuda.is_available(), reason="physical CUDA device required")
+def test_caller_tf32_and_autocast_do_not_change_threshold_decisions():
+    previous = torch.backends.cudnn.allow_tf32
+    rows = []
+    try:
+        for allow in (False, True):
+            torch.backends.cudnn.allow_tf32 = allow
+            for autocast in (False, True):
+                tracker = PatchTracker(device="cuda", params=TrackParams(min_ncc=0.999985))
+                with torch.autocast("cuda", enabled=autocast):
+                    step(tracker, scene(), 0, seed=[60, 60])
+                    row = step(tracker, scene(), 1)
+                assert torch.backends.cudnn.allow_tf32 is allow
+                rows.append(row)
+        assert rows[0]["state"] == "tracking"
+        assert all(row == rows[0] for row in rows[1:])
+    finally:
+        torch.backends.cudnn.allow_tf32 = previous
+
+
 def test_future_frames_do_not_change_any_prefix_or_seed_in_the_past():
     frames = [scene(60 + i, 60) for i in range(5)] + [np.full((140, 160), 30, np.uint8)]
 
