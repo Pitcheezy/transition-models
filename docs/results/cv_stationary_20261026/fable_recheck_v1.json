@@ -1,0 +1,57 @@
+{
+  "schema": "pitcheezy-fixed-source-cross-review-v1",
+  "review_kind": "static code review only",
+  "cli_version": "2.1.310",
+  "requested_model": "claude-fable-5-1",
+  "reported_models": [
+    "claude-fable-5-1"
+  ],
+  "effort": "max",
+  "snapshot": {
+    "commit": "5547aad232c6c9a6211b846af1173389abac698f",
+    "files": {
+      "intent/mitt_stationary.py": "d78998c6f3ec65d12f0d7684bd993df019e76e236b724b26fb73e91d054617f8",
+      "tests/test_mitt_stationary.py": "ea6ddebf0a7d67e6e3e6cc43cf632cfe264bed9f8b8f6414265fdf97d8dfc52a",
+      "tests/test_mitt_stationary_pilot.py": "60d7fefc40cab8164169c1ec3f11a5594d16253f21798485831ed0b2d02bfc83",
+      "scripts/check_project.py": "16d90235da123e9c4a6c7c029ead281a87870a1d9d1dd5bee3a7e074ee0d13f4"
+    },
+    "prompt_sha256": "5a96a267bc82f0e70fdab45235e6bba67d781384d22fe91a98e6c4ce95e69f31",
+    "review_scope": "full selector + changes since first fixed review"
+  },
+  "raw_stdout_sha256": "23a70bc32130ae4d835715baaecdbe35f4986cb51ca46997c917277d12d0b760",
+  "returned_verdict": {
+    "verdict": "PASS. All four prior findings and the adjacent params-rebinding fix are resolved in the shown diff. Two low-severity test-strength notes and one info note, nothing blocking, no threshold or digest change.",
+    "resolved": [
+      "F1 gap_restart: gap now requires an existing segment. _segment is non-None only when the previous step was tracking and usable, so _time is set and the gap is measured from the last segment frame. Only the reason string changes versus the old code; candidate/event timing is unchanged. Covered by the sparse-initialization test and the pilot histogram test.",
+      "F2 min_continuity: retention with rationale is sound. _validate accepts external_seed only from unseeded, forbids unseeded after tracking and makes lost terminal, so a stream has at most one seed and it is always the first observation of its segment: continuity >= observations-1. __post_init__ enforces min_continuity < min_observations, so the gate is implied for every constructible params object. The new test checks the identity for a seed segment (3 of 4) and a motion-restarted segment (4 of 4).",
+      "F3 long timestamps: hold, gap and diameter boundary tests now run at offsets 0.0 and 3600.4 as claimed (strength caveat in findings).",
+      "F4 OverflowError: _number returns False when math.isfinite raises on an oversized int, so frame_seconds, point_px entries and the three float params reject 10**400 with ValueError; atomic-rejection and params-invalid lists were extended.",
+      "Params rebinding: params is a read-only property over _params; assignment raises AttributeError and _digest stays tied to the constructed object. The regression test asserts both.",
+      "check_project.py adds exactly four paths (two modules, two tests). StationaryParams defaults are unchanged, so the preregistered digest is unchanged."
+    ],
+    "findings": [
+      {
+        "severity": "low",
+        "title": "Offset 3600.4 tests cannot detect rounding regressions",
+        "detail": "In the binade [2048,4096) the ulp is 2^-41 and fl(0.3)/ulp has fractional part ~0.5999, so fl(a+0.3)-a rounds up to 0.3+1.8e-13 for every offset there; the hold test passes even if the 1e-9 tolerance is deleted. fl(0.45)-fl(0.2) is exactly 0.25, so a+0.45 and a+0.2 always round identically and the gap test yields exactly 0.25 at any offset. Add an offset in a round-down binade (1800.4 or 10000.4) for hold, and a gap pair whose difference is not exactly representable (0.1 to 0.35) for gap."
+      },
+      {
+        "severity": "low",
+        "title": "Gap comparison has no tolerance, unlike hold (pre-existing, inside F3 scope)",
+        "detail": "t - self._time > max_gap_seconds uses raw subtraction while the hold check applies +1e-9 for the same stated reason. At large absolute times a nominal 0.25 s gap can round to 0.25 plus one ulp and spuriously reset the segment. Author's call whether to mirror the tolerance; preregistered values would be unchanged."
+      },
+      {
+        "severity": "info",
+        "title": "Continuity test proves accounting, not invariance",
+        "detail": "Parametrizing min_continuity over 1..min_observations-1 and asserting identical selection outputs (ignoring params_sha256) would show the gate never binds."
+      }
+    ],
+    "limits": [
+      "Static read of the pasted file and diff; nothing executed. Cannot confirm the tests pass, that the paste matches the tree at 5547aad, or that the commit contains nothing beyond the diff.",
+      "The row/run/stream/replay helpers, the pilot module, PatchTracker and report code are not shown. Unseeded-to-lost transitions, per-device frame reporting, integer pitch counts and the replay's label isolation are consistent with the selector's validation but unverified here.",
+      "Rounding statements are hand IEEE-754 arithmetic; verify by running the suite with the suggested offsets.",
+      "_params remains rebindable via its underscore name and object.__setattr__ bypasses the frozen dataclass; conventional Python, not treated as a defect."
+    ]
+  },
+  "executed_by_reviewer": false
+}

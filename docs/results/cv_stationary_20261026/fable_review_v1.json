@@ -1,0 +1,66 @@
+{
+  "schema": "pitcheezy-fixed-source-cross-review-v1",
+  "review_kind": "static code review only",
+  "cli_version": "2.1.310",
+  "requested_model": "claude-fable-5-1",
+  "reported_models": [
+    "claude-fable-5-1"
+  ],
+  "effort": "max",
+  "snapshot": {
+    "commit": "1f2da4c446730e5a8400ffb8443f481f99b63f64",
+    "files": {
+      "intent/mitt_stationary.py": "45a29ed8d592144ba3633e87bbfe8e4a9b997b1a5f0021fa01120689a5ec0c72",
+      "intent/mitt_stationary_pilot.py": "889db5f3db0d5ad9ed175719ffb893a94447b812055de2c268d9b52c3f057388",
+      "tests/test_mitt_stationary.py": "c9d957a1440ea2c5f72afeb5d5bc66c67834ba8cc4224c0a3746a809fb573026",
+      "tests/test_mitt_stationary_pilot.py": "5c09bf3177a07b8b0570016e3ce99c15d43101afee6804af1effc64194528cb2"
+    },
+    "prompt_sha256": "7dc0677527cdbb73cc1ee66cb74598dc7bd99909d264fe3e7bcc0a64fc5174fe"
+  },
+  "raw_stdout_sha256": "e94d63122d254546ef9c8b0990841df350530383449c54cda3f8d5fdae5cf606",
+  "returned_verdict": {
+    "verdict": "No P1. On static reading the contracts hold: _validate completes before any mutation; current_candidate is derived only from the live segment and is null on loss/gate/gap/motion while last_historical_candidate is a deep-copied first snapshot; segments restart at the current point on diameter or gap breach; prefix invariance and input/output isolation hold; the replay binds report and record bytes before writing, checks frames/pitches denominators per device, and re-reads inputs after. Four low-severity P2s: one reason mislabel that leaks into the report histogram, one vacuous frozen threshold, one untested tolerance regime, one exception-type hole.",
+    "findings": [
+      {
+        "priority": "P2",
+        "file": "intent/mitt_stationary.py",
+        "line": 122,
+        "trigger": "s = StationarySelector(); s.step(row(0, state='unseeded', point=None)); r = s.step(row(1, t=0.5, reason='external_seed')) -> r['reason'] == 'gap_restart' although no segment existed (expected 'collecting_support'). Same after a gated tracking row followed by a sparse tracking row.",
+        "impact": "gap is measured against the previous row of any state, not against an existing segment. Selection is unaffected (segment was already None), but the first tracking row after a sparse unseeded or gated stretch is labeled as a restart, and aggregate['reasons']['gap_restart'] in mitt_stationary_pilot.py:87 over-counts, so the report's reason denominators are not what they claim.",
+        "fix": "gap = self._segment is not None and t - self._time > self.params.max_gap_seconds (segment implies _time is set). Add the trigger as a test asserting 'collecting_support' and that replay's reasons histogram has no gap_restart for it."
+      },
+      {
+        "priority": "P2",
+        "file": "intent/mitt_stationary.py",
+        "line": 162,
+        "trigger": "Any valid StationaryParams. Exactly one external_seed row can exist per stream and every other tracking row is patch_continuity (enforced at lines 105-107, 111), so every segment has continuity >= observations - 1. With the enforced min_continuity < min_observations (line 41), observations >= min_observations already implies continuity >= min_continuity.",
+        "impact": "The frozen '>=2 continuity' threshold can never be the binding criterion and no test can exercise it binding; it is dead logic presented in params/params_sha256 and the pilot report as a gate. Not a behavioral bug, but the predeclared-threshold claim is misleading.",
+        "fix": "Either drop min_continuity from StationaryParams and the report, or document it as implied by min_observations and add a test asserting continuity_observations == observations - (1 if the segment contains the seed row else 0)."
+      },
+      {
+        "priority": "P2",
+        "file": "tests/test_mitt_stationary.py",
+        "line": 140,
+        "trigger": "run([row(i, t=t) for i, t in enumerate([3600.4, 3600.5, 3600.6, 3600.7])]) must emit an event at index 3: the double subtraction gives 0.3 - 2.7e-13, so qualification depends on the 1e-9 tolerance. Note the author's own motion test already relies on it (0.7 - 0.4 == 0.29999999999999993 < 0.3) without saying so.",
+        "impact": "The tolerance is justified in the code comment (line 157) by long absolute timestamps, yet every test uses t < 1 s; the boundary behavior in the regime it exists for is unverified, and the no-tolerance gap check (line 122) and diameter check (line 139) are likewise untested at large offsets.",
+        "fix": "Parametrize the hold, gap and motion boundary tests with a large absolute offset (for example +3600 s), keeping a negative case such as [3600.4, 3600.5, 3600.6, 3600.6999]."
+      },
+      {
+        "priority": "P2",
+        "file": "intent/mitt_stationary.py",
+        "line": 19,
+        "trigger": "StationarySelector().step({**row(0), 'frame_seconds': 10**400}) or 'point_px': [600, 10**400]. JSON carries such ints; math.isfinite raises OverflowError (int too large to convert to float). Same for StationaryParams(max_diameter_px=10**400).",
+        "impact": "Rejection raises OverflowError instead of the ValueError contract asserted by test_bad_record_is_rejected_atomically. State is still untouched because it happens inside _validate, and build() aborts either way, so impact is limited to callers that catch ValueError.",
+        "fix": "In _number: try: return math.isfinite(value) except OverflowError: return False. Add the case to the bad-record and bad-parameter parametrizations."
+      }
+    ],
+    "limits": [
+      "Static read of the supplied text only; no execution. The author's 117 passing tests, 625 frames / 10 pitches, 6 events in 5 pitches, 92 current and 197 history-only frames, and CPU/CUDA equality are unverified, and I cannot confirm the text matches commit 1f2da4c.",
+      "PatchTracker's real state machine was not available. The selector accepts unseeded -> lost directly and any loss reason outside {external_seed, patch_continuity, no_seed}, including 'external_view_gate' (line 113). Whether those are legal tracker outputs is untested and unverified; no test covers either.",
+      "CV37 report fields beyond frames, pitches and devices.*.records_sha256 were not seen; the denominator check assumes 'frames' is a per-device row count. Missing device keys raise KeyError rather than ValueError.",
+      "'cpu_cuda_selection_equal' compares whole output rows including raw current_track_point_px, so it is stricter than selection equality; the test named 'semantic disagreement' actually exercises a raw point change. Acceptable, but the report label slightly overstates what was compared.",
+      "Thresholds (8 px diagonal, 0.30 s, 4 observations, 0.25 s gap, 720p) and the claim they were not tuned against the replay are taken as stated; not calibrated or checked here."
+    ]
+  },
+  "executed_by_reviewer": false
+}

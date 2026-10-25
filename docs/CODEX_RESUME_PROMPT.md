@@ -1,5 +1,11 @@
 # Codex 재개 프롬프트
 
+## CV38 완료 · CV39a 화면 진행 — 2026-10-26
+
+CV38은 `codex/cv-stationary-candidate-1026` PR71의 연구 범위로 완료했다. [현재/과거 후보 계약·검토·재생](CV_STATIONARY_CANDIDATE_20261026.md)을 읽는다. 소스5547aad의 실제 Fable 수정 재검토PASS, 과거625행 출력·입력 보존, 5구6사건은 기하학적 패치 후보다. 새 미트/사람 정확도 검증은 아니다. 기존 PR67→69→70 의존 관계를 유지하며 main/운영으로 자동 병합하지 않는다.
+
+사용자는 독립 CV 단위를 사용량10% 근처까지 계속 요청했다. 별도 `cv-frame-view-1026` 작업 폴더의 `codex/cv-frame-view-1026`에서 CV39a(전체625행 결속→첫PA3 203장 비공개 프레임 재생)를 진행 중이다. 현재 선점은 우리board를 확인한다. OCR은CV39b로 분리, 전체CV39·실제디코딩PTS·CV35/36·A-y·독립평가는 여전히 미완료다. 삭제/옛질문발신/팀원코드/운영/요금제·실부하는 보류를 유지한다.
+
 ## CV 집중 연구 — 2026-10-26
 
 `codex/cv-track-pilot-1026`의 CV37 개발 시험과 CV37r 실제Fable 검토/수리를 완료하고 수정 권한을 반납했다. [추적 범위](CV_TRACKING_PILOT_20261026.md), [최종 교차 검토](CV_TRACKING_CROSS_REVIEW_20261026.md), CHECKLIST와 우리 board를 먼저 읽는다. PR70은 PR69/67에 의존하는 연구이며 main/운영/Song 코드·원래 Claude 폴더를 바꾸지 않는다.

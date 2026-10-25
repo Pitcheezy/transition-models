@@ -138,7 +138,7 @@ def test_entire_bounding_box_diagonal_not_axis_wise_or_anchor_radius(dx, dy, qua
 
 
 @pytest.mark.parametrize("last,qualifies", [(0.2999, False), (0.30, True), (0.3001, True)])
-@pytest.mark.parametrize("offset", [0.0, 3600.4])
+@pytest.mark.parametrize("offset", [0.0, 1800.4, 3600.4, 10000.4])
 def test_hold_duration_boundary(last, qualifies, offset):
     result = run([row(i, t=offset + t) for i, t in enumerate([0.0, 0.1, 0.2, last])])
     assert (result[-1]["event"] is not None) is qualifies
