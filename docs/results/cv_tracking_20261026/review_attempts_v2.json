@@ -1,0 +1,95 @@
+{
+  "schema": "pitcheezy-cv37-review-attempts-v2",
+  "reviewed_material_commit": "933772ea834a38043317b6f1fe549b194377a5a1",
+  "source_sha256": {
+    "intent/mitt_tracking.py": "bf2afecd8693781a57784472b8f0f68844bf06183d9342862fc3fd2224767bcd",
+    "intent/mitt_tracking_pilot.py": "295f795b9fab1efa196ab6e87e9d2cfc19bb40ff0268e204dc73076a80c62931",
+    "tests/test_mitt_tracking.py": "968913cafda99cb858a524cdd26c3e491bf8615e4e237e74ba49b00a0294c1ef",
+    "tests/test_mitt_tracking_pilot.py": "d8763b3eeadfcb1cefb09343d4a8b40c3942d7a9dd4aacc45a2c8c6b67ad603d",
+    "docs/CV_TRACKING_PILOT_20261026.md": "65482185d375d3e9ee02a945e225e80f2b442b4a891a1c5eb6edfb69a814396a",
+    "docs/results/cv_tracking_20261026/report_v1.json": "e95da39ea62846359b17c8e0d8e463781ddfbf04b02d3d3bff727255de79de0d",
+    "docs/results/cv_tracking_20261026/audit_v1.json": "1c51de56f360b275eb884a9e00d6e730d0cae5da83916d7385ab2765dd5cc8e7"
+  },
+  "prompt_sha256": "3281c64945f4db85cfdbb71915a381e548e3832216c834938e52812f1b5c614a",
+  "status": "blocked_by_Claude_session_usage_limit",
+  "attempts": [
+    {
+      "attempt": 1,
+      "cli_version": "2.1.168",
+      "api_error_status": 401,
+      "reason": "OAuth token expired",
+      "stdout_sha256": "09d937bba2bab47fbd0cf3a9ac8263036370cc1d47df922fc643f10a69bf2d0a",
+      "requested_model": "claude-fable-5-1",
+      "reported_model_usage_keys": [],
+      "final_review_received": false
+    },
+    {
+      "attempt": 2,
+      "cli_version": "2.1.168",
+      "api_error_status": 400,
+      "reason": "minimum CLI 2.1.251 required",
+      "stdout_sha256": "db172ace5c75711697ee2d2f83e55e0f2c9d03e1f13b12025c0c840c395e24a1",
+      "requested_model": "claude-fable-5-1",
+      "reported_model_usage_keys": [],
+      "final_review_received": false
+    },
+    {
+      "attempt": 3,
+      "cli_version": "2.1.251",
+      "api_error_status": 429,
+      "reason": "session usage limit before final review response",
+      "stdout_sha256": "ee51522104710bebb218b49403b7ac6f0c4209b1ea09e5d0a8b520b692560f6a",
+      "requested_model": "claude-fable-5-1",
+      "reported_model_usage_keys": [
+        "claude-haiku-4-5-20251001",
+        "claude-fable-5-1"
+      ],
+      "final_review_received": false
+    }
+  ],
+  "final_findings_received": false,
+  "actual_review_verdict": null,
+  "third_attempt_usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 26067,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 32000,
+    "output_tokens_details": {
+      "thinking_tokens": 32000
+    }
+  },
+  "tool_policy": {
+    "tools": [],
+    "safe_mode": true,
+    "mcp_servers": {},
+    "permission_mode": "plan",
+    "session_persistence": false,
+    "effort": "max",
+    "official_cli_isolated_install": true,
+    "global_install_unchanged": true
+  },
+  "ci": {
+    "commit": "933772ea834a38043317b6f1fe549b194377a5a1",
+    "run": "https://github.com/Pitcheezy/transition-models/actions/runs/40222670634",
+    "ubuntu": {
+      "passed": 2781,
+      "skipped": 9,
+      "deselected": 2,
+      "warnings": 4,
+      "seconds": 85.74
+    },
+    "macos": {
+      "passed": 2781,
+      "skipped": 9,
+      "deselected": 2,
+      "warnings": 2,
+      "seconds": 171.77
+    }
+  },
+  "next": "wait for legitimate usage reset; split fixed-source code and report review, no automatic retry or account switching",
+  "limitations": [
+    "reported thinking output and modelUsage are not a returned review verdict",
+    "Haiku auxiliary model use was reported by CLI; not the requested reviewer verdict",
+    "no new code/model/vision/human/deployment changes"
+  ]
+}

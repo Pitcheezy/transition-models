@@ -2,11 +2,12 @@
 
 ## 전시 CV 집중 개발 — 2026-10-26
 
-교차 검토 후속 선점: 우리 Codex / `codex/cv-track-pilot-1026` / 검토 고정 `933772e`. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6401721869). 사용자 재로그인으로401 해소, 구버전 CLI400 이후 별도 공식2.1.251의 Fable 검토 진행 중. 실제 결과 확인 전 완료로 처리하지 않는다.
+교차 검토 후속 기록 완료·수정 권한 반납: 우리 Codex / `codex/cv-track-pilot-1026` / 검토 고정 `933772e`. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6401721869). 사용자 재로그인으로401·별도 공식2.1.251로 버전400 해소. 실제 Fable 호출은 최종 답변 전 세션 한도429로 종료, 교차 검토는 미완료다. [영수증](docs/results/cv_tracking_20261026/review_attempts_v2.json). 전역 CLI·연구 코드·측정 결과는 유지했고 CI2781passed/9skipped/2deselected가 Ubuntu/macOS에서 성공했다.
 
-사용자 요청으로 일정을 앞당긴 우리 연구 계획이다. Song 마감·계약·운영 동결은 변경하지 않는다. [합격 기준·일정](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6401534435). CV37 개발 시험 완료·수정 권한 반납: 우리 Codex / `codex/cv-track-pilot-1026` / PR69 고정 `c41eb74782d585cce47d2f1d99b4417ea2f4623e`. 원래 Claude 작업 폴더와 자료는 보존한다. [실제 결과·한계](docs/CV_TRACKING_PILOT_20261026.md), [고정 소스·해시](docs/results/cv_tracking_20261026/audit_v1.json). Claude 교차 검토는 인증 만료401로 미실행이며 연구 PR 검토 조건으로 남긴다.
+사용자 요청으로 일정을 앞당긴 우리 연구 계획이다. Song 마감·계약·운영 동결은 변경하지 않는다. [합격 기준·일정](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6401534435). CV37 개발 시험 완료·수정 권한 반납: 우리 Codex / `codex/cv-track-pilot-1026` / PR69 고정 `c41eb74782d585cce47d2f1d99b4417ea2f4623e`. 원래 Claude 작업 폴더와 자료는 보존한다. [실제 결과·한계](docs/CV_TRACKING_PILOT_20261026.md), [고정 소스·해시](docs/results/cv_tracking_20261026/audit_v1.json). Claude 교차 검토는 아래CV37r 상태를 따른다.
 
-- [x] CV-37. 초기 AI 점 기반 시간순 국소 추적·실패 감지와 고정 개발 시험 완료(10/26, 목표10/28). 원본 첫10구625프레임·기존 sequence315판독, tracking123행(초기10+연속113)·미초기82·lost420, 최초 중단10구(유사도5/모호3/왕복2), 유지 중앙값0.551초. CPU/CUDA 상태·좌표 일치625/625·원본667 SHA 불변. 활성 계산 중앙값4.85→2.29ms, 전체 읽기→결과 속도 향상은 미확인. 관련48검사·Ruff 통과. 구현 `cd23d78`, 안정적 미트 식별/사람 정확도/실시간/배포 완료가 아니다. Claude 실제 검토는 로그인 만료로 미완료. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-26 · Codex]`
+- [x] CV-37. 초기 AI 점 기반 시간순 국소 추적·실패 감지와 고정 개발 시험 완료(10/26, 목표10/28). 원본 첫10구625프레임·기존 sequence315판독, tracking123행(초기10+연속113)·미초기82·lost420, 최초 중단10구(유사도5/모호3/왕복2), 유지 중앙값0.551초. CPU/CUDA 상태·좌표 일치625/625·원본667 SHA 불변. 활성 계산 중앙값4.85→2.29ms, 전체 읽기→결과 속도 향상은 미확인. 관련48검사·Ruff 통과. 구현 `cd23d78`, 안정적 미트 식별/사람 정확도/실시간/배포 완료가 아니다. Claude 검토는CV37r 미완료. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-26 · Codex]`
+- [!] CV-37r. 고정 소스 Fable 교차 검토: 재로그인·호환 CLI 준비 완료, 실제 모델 호출 후 세션 한도429로 최종 답변 미수신. 정상 한도 갱신 후 추적 코드와 측정 보고를 나눠 검토, 실제 모델·지적·소스 SHA 확인 후 완료한다. 재로그인 반복/자동 재시도/계정 우회 없음. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-26 · Codex]`
 - [ ] CV-38. 유효 추적 구간에서만 멈춤 후보 선택, 현재 추적과 과거 후보 분리, 원관측 보존. CV37 결과 후 목표11/1. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-26 · Codex]`
 - [ ] CV-39. 프레임 PTS/투구 키 근거 통합·OCR 시간 연속성·로컬 한 타석 연결. 기존 F-4i 독립 평가 보류는 유지. 목표11/5. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-26 · Codex]`
 - [!] CV-40. 고정 버전 새 경기 평가, 목표11/9~12. 새 영상·기준 검토·판독 비용 조건 필요. CV35/36을 대체하거나 AI 합의를 사람 정답으로 쓰지 않는다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-26 · Codex]`
