@@ -30,3 +30,25 @@
 정책 고정 시점에는 후보를 실행하지 않았다. 아래 결과는 실행 후 고정 소스·명령·해시와 함께 추가한다.
 
 구현 전 정책 커밋은 `2bbbaad`다. 초기 구현의 합성 게이트/실제 국소 추적기를 사용하는 소형 통합 검사57개가14.83초에 통과했다. 실제 개발10구 재생과 Fable 검토는 다음 단계이며 이 검사와 구별한다.
+
+
+## 최종 개발 결과와 해석
+
+수리 소스 `353ace2`(최초 구현 `5df160a`)에서 같은10구625프레임·저장 관측315행을 재생했다. [보고](results/cv_seed_gate_20261027/report_v2.json)·[검증](results/cv_seed_gate_20261027/verification_v2.json)·[실제 Fable 검토](results/cv_seed_gate_20261027/cross_review_v1.json).
+
+- 기존 첫 적격 점 시드는10구, 게이트는4구(4:2·5:3·5:4·5:6) 채택·6구 보류. 채택4구 모두 시작이0.4004초 늦어졌다. 미채택 투구도 분모625행에 포함했다.
+- 추적 상태178→77행, 재획득16→4, 정지 사건13→5. 출력이 줄어든 보수적 후보이며 정확도 개선을 뜻하지 않는다.
+- 원본667파일과 기존 기준선 파일1개 SHA 불변, 기준선625행 **전체 필드** 재현. 수정 전후 새 기록/게이트 결정 바이트 동일. 모든 게이트 접두20,691행·선택한 추적 접두1,061행 비교에서 미래 의존 없음, 일관성 위반7종 모두0. 접두 행 수는 중복 검사 수이며 새 데이터 수가 아니다.
+- 게이트41·실행기19·체크리스트8 =68검사 통과(18.09초), 린트190경로 통과. 실제 `claude-fable-5-1` 최초 검토109.17초·수정 재검토59.69초 수신, 최종 APPROVE_WITH_NOTES. 입력키/정책 고정/원본 수 집계 방어와 문구를 수리했다. 재검토의 해시변경 보호 누락 의견은 diff 밖 기존 생성자 검사와 정책변조 회귀검사로 확인해 해당하지 않음을 기록했다. 빈 프레임 투구의 포괄적 오류 문구는 낮은 우선순위로 남긴다.
+
+기존 AI 사후 검토에서 시드 오식별이 의심됐던3:1·3:3·5:1도 보류됐다. 그 사례를 이미 보았으므로 이를 독립 성공률이나 잘못된 미트 제거 정확도로 계산하지 않는다. 채택4구의 미트 식별·목표 제시·물리 좌표 정확도도 미확인이다. 안정된 잘못된 물체가 통과하는 한계는 합성 검사에 명시했다.
+
+## 재현과 다음
+
+```sh
+python -m intent.mitt_seed_pilot --bundle <bundle_v1> --pilot <pilot_v1> --baseline <CV37b records_candidate_cpu.json> --manifest-sha256 <보고 source_hashes.manifest> --pilot-sha256 <보고 source_hashes.pilot> --answers-sha256 <보고 source_hashes.answers> --baseline-sha256 <보고 source_hashes.baseline> --out <새 비공개 폴더>
+python -m pytest -q tests/test_mitt_seed_gate.py tests/test_mitt_seed_pilot.py tests/test_checklist_model.py
+python scripts/check_project.py --lint-only
+```
+
+원문 좌표·프레임별 기록은 Git 제외 `outputs/cv_seed_gate_20261027_v2/`에 있고 기존v1은 보존한다. 공개 요약에서는 시드 원좌표를 제거했다. CPU4스레드 재생이며 새 모델 호출은 없다. 다음은 채택4구/보류6구의 지지·거부 시점을 재생 화면에서 확인하는 일이다. 현재 PA3 비교 팩은 CV37b 재탐색 결과이며 **CV42 화면으로 갱신된 것은 아니다.** 사람 검토/독립 영상 평가 조건과 운영 동결은 유지한다.

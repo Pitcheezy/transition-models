@@ -1,0 +1,66 @@
+{
+  "schema": "pitcheezy-cv-fixed-review-v1",
+  "author": "Codex",
+  "reviewer_actual": "claude-fable-5-1",
+  "attempts": [
+    {
+      "actual_models": [
+        "claude-fable-5-1"
+      ],
+      "elapsed_seconds": 109.17,
+      "returncode": 0,
+      "final_result": {
+        "subtype": "success",
+        "is_error": false,
+        "result": "```json\n{\n  \"verdict\": \"no reproducible correctness or causality bug found in the supplied gate/pilot code; minor robustness and reporting gaps only\",\n  \"findings\": [\n    {\n      \"priority\": \"medium\",\n      \"file\": \"intent/mitt_seed_pilot.py\",\n      \"trigger\": \"choose() looks up observations by (pitch, frame['index']); if load_inputs keys them differently (e.g. str index, frame_index name) every lookup is None\",\n      \"impact\": \"silent zero seeds, all reasons no_saved_observation, prefix_check passes vacuously; report still looks valid\",\n      \"fix\": \"count matched observation keys vs len(observations) in run(), record in report, raise if any saved observation key for a selected pitch has no matching selected frame\"\n    },\n    {\n      \"priority\": \"low\",\n      \"file\": \"intent/mitt_seed_gate.py\",\n      \"trigger\": \"POLICY_SHA256 is computed from POLICY at import, then SeedGate.__init__ recomputes and compares\",\n      \"impact\": \"check is tautological; a policy edit passes and only the emitted digest changes; doc lists no policy digest to compare against\",\n      \"fix\": \"hardcode the frozen digest literal in the module and in docs/CV_SEED_GATE_20261027.md, compare import-time digest to the literal\"\n    },\n    {\n      \"priority\": \"low\",\n      \"file\": \"intent/mitt_seed_pilot.py\",\n      \"trigger\": \"preserved[str(baseline)] = ... then original_input_files_excluding_baseline = len(preserved) - 1\",\n      \"impact\": \"wrong count if load_inputs already preserved the baseline or uses a differently normalized path\",\n      \"fix\": \"capture len(preserved) before insertion, resolve path, assert key absent\"\n    },\n    {\n      \"priority\": \"low\",\n      \"file\": \"intent/mitt_seed_pilot.py\",\n      \"trigger\": \"per_pitch first = next(...) without default when old_seeds[p][0] is not an index in selected\",\n      \"impact\": \"StopIteration after all outputs computed but before files written; relies on unseen load_inputs validation\",\n      \"fix\": \"use next(..., None) and raise a named ValueError\"\n    },\n    {\n      \"priority\": \"low\",\n      \"file\": \"intent/mitt_seed_pilot.py\",\n      \"trigger\": \"prefix_check tracker cuts replay a single pitch and compare to full_rows[:count]; summarize reads group[-1]['reacquisitions'] and ['stationary']['events_total']\",\n      \"impact\": \"correct only if replay_candidate is per-pitch independent, uses no future observation keys internally, and emits cumulative per-pitch counters; none supplied\",\n      \"fix\": \"state these three backend assumptions explicitly in report limits\"\n    },\n    {\n      \"priority\": \"low\",\n      \"file\": \"docs/CV_SEED_GATE_20261027.md\",\n      \"trigger\": \"policy text says 연속 적격 관측3개, code allows unobserved frames between support observations when the time gap is <=0.25s\",\n      \"impact\": \"wording ambiguity between doc and frozen code; not a behavior bug\",\n      \"fix\": \"say 'consecutive eligible observations with inter-observation gap <=0.25s; unobserved frames do not break support'\"\n    }\n  ],\n  \"verified_ok\": [\n    \"gate uses only current frame observation; seed frame/point are current; no averaging or retroactive seeding\",\n    \"missing observation never adds support or seeds; only expires gap\",\n    \"ineligible, gap, and >8px full-window diagonal all clear support; strict/inclusive comparisons match policy (<=10px, <=0.25s, >=0.30s, <=8px) with 1e-9 roundoff only\",\n    \"validation raises before any state mutation; pitch re-entry and non-monotonic frames rejected\",\n    \"seed support_keys deep-copied in snapshot; later mutation impossible since support is never touched after seeding\",\n    \"prefix_check truncates observations and recomputes seeds for every gate prefix; tracker prefixes recompute seeds, never reuse full-run seeds\",\n    \"baseline rows compared to full saved records; all 10 pitches kept in seeds/summarize denominator; inputs deep-copied and re-hashed\",\n    \"report makes no accuracy, identity, or realtime claim; seed_source relabeled only where backend set it\"\n  ],\n  \"limits\": [\n    \"static read only; nothing executed, hashes and 57 integration tests unverified\",\n    \"load_inputs, saved_pilot_provenance, sha, replay_candidate, _consistency, and mitt_temporal enums not supplied; key types, row fields, and backend causality assumed\",\n    \"cannot confirm observations contain exact pts_time floats equal to frame_seconds; mismatch would raise, not silently pass\",\n    \"docs result section is an unexecuted placeholder, consistent with frozen-before-result policy\"\n  ]\n}\n```",
+        "duration_ms": 106633,
+        "num_turns": 1
+      },
+      "source_snapshot": {
+        "commit": "5df160a0dd422ac6b7d87a1485519d8cd5cbad17",
+        "files": {
+          "intent/mitt_seed_gate.py": "2c7c21ec3e0487d2f05308b86f7ff1cd1eb793f32be1437a25f39d7a05964233",
+          "intent/mitt_seed_pilot.py": "c4e91f8306f7a45a81e3f9feca8e25304ddf4329c5fae64f7bc041236ea0f61e",
+          "docs/CV_SEED_GATE_20261027.md": "c724741aa49c6ceac7502cb0fb51f5c236748d6da54a039d17883e6ede2e8391"
+        },
+        "prompt_sha256": "86060379a372e46bb67af9ce51ebe7f10a3c97203648b4dadc866df79b35e8a0",
+        "prompt_bytes": 22740
+      }
+    },
+    {
+      "actual_models": [
+        "claude-fable-5-1"
+      ],
+      "elapsed_seconds": 59.69,
+      "returncode": 0,
+      "final_result": {
+        "subtype": "success",
+        "is_error": false,
+        "result": "```json\n{\n  \"verdict\": \"APPROVE_WITH_NOTES\",\n  \"scope\": \"Repair diff only (docs/CV_SEED_GATE_20261027.md, intent/mitt_seed_gate.py, intent/mitt_seed_pilot.py, tests/test_mitt_seed_pilot.py) against the frozen backend context. No tools run; literal hash value not independently recomputed.\",\n  \"repairs_assessed\": [\n    {\n      \"item\": \"miskeyed saved observations\",\n      \"status\": \"fixed\",\n      \"note\": \"Preflight requires observation keys to be a subset of selected (pitch, index) keys and rejects duplicate frame keys; raised before replay_candidate and before output dir creation. Test pins both ordering and no-output. Backend load_inputs already enforces set(observations)==plan frames, so pilot check is a belt-and-braces guard that also protects test fixtures bypassing load_inputs. Frames with no observation remain allowed, consistent with policy.\"\n    },\n    {\n      \"item\": \"policy digest literal\",\n      \"status\": \"fixed, one gap\",\n      \"note\": \"Constant now frozen and documented with the exact serialization (sorted keys, default separators, UTF-8). No drift guard visible: nothing asserts the literal equals sha256(json.dumps(POLICY, sort_keys=True)). A silent POLICY edit would now ship with a stale digest. Add a test or module-level assert.\"\n    },\n    {\n      \"item\": \"baseline preservation count alias\",\n      \"status\": \"fixed\",\n      \"note\": \"original_file_count captured from load_inputs output before baseline is added; explicit rejection if baseline resolves to any preserved source path. Reported counts become unambiguous. Path.resolve covers symlinks and case on Windows; hardlinks are not detected (acceptable).\"\n    },\n    {\n      \"item\": \"old seed frame not in selected (StopIteration)\",\n      \"status\": \"fixed\",\n      \"note\": \"Named ValueError raised preflight; test checks ordering before replay. Check also requires old_seeds keys == selected pitch set, which matches backend behaviour (tracking_seed always set, possibly None, for the first ten extracted pitches).\"\n    },\n    {\n      \"item\": \"backend assumptions / consecutive-observation wording\",\n      \"status\": \"fixed\",\n      \"note\": \"Doc now states that frames without AI observation add no support but do not break support within the gap limit; matches existing gate text and backend seed_point semantics (seed consumed only on the matching frame). New limits entry correctly describes per-pitch reset and current-frame-only consumption.\"\n    }\n  ],\n  \"regression_risks\": [\n    {\n      \"severity\": \"low\",\n      \"risk\": \"A selected pitch whose grid-role frames up to release_index are empty would be present in old_seeds but absent from pitch_keys, triggering the 'baseline seed frame' error with a misleading message. Fail-closed, so not a correctness regression; message could be split.\"\n    },\n    {\n      \"severity\": \"low\",\n      \"risk\": \"hashlib/json imports in mitt_seed_gate.py may now be unused if the computed form was the only use; lint-only.\"\n    }\n  ],\n  \"consistency_with_reported_run\": \"Report fields (625 baseline rows reproduced, 315 saved_observation_keys_matched, 4/10 seeded, six unseeded kept, 667 preserved originals, no accuracy/online claims, policy unchanged, 68 tests green) are consistent with the diff; the new keys-matched field equals len(observations), which under the subset check is the number of saved observations consumed.\",\n  \"limits\": [\n    \"Literal POLICY_SHA256 not recomputed here; correctness of the constant rests on the user's run and the absence of a drift test.\",\n    \"Tests mutate fixture dicts rather than exercising backend load_inputs, so backend key enforcement is covered only by the frozen context, not by the new tests.\",\n    \"No review of unrelated files or of policy thresholds; prior CV42 finding of no reproducible correctness/causality bugs stands unchanged.\"\n  ]\n}\n```",
+        "duration_ms": 57424,
+        "num_turns": 1
+      },
+      "source_snapshot": {
+        "commit": "353ace2e71bccc2a7ab1faf4c21f31d7d57076fe",
+        "files": {
+          "intent/mitt_seed_gate.py": "e2c5404fded5cdfc678d96c8fab7574515534b188cdef99001b10226bad13879",
+          "intent/mitt_seed_pilot.py": "98cf37c874d983d63fcb9fc71d44e7c0d991a0d609bb8b9d08bb060c44e04599",
+          "tests/test_mitt_seed_pilot.py": "8ab0485adf1b51e5934df71e46c575417dc062c0a6b0e959b9f9c3bb68a467aa"
+        },
+        "prompt_sha256": "56d964442728994637d553c64dabbc405ac4affcd5aa8177e1222a3b53fb3cb5",
+        "prompt_bytes": 14979
+      }
+    }
+  ],
+  "final_verdict": "APPROVE_WITH_NOTES",
+  "disposition": {
+    "input_key_mismatch": "guard + new regression",
+    "policy_digest": "fixed literal; existing SeedGate.__init__ recomputes/checks and existing test_policy_digest_and_fixed_instance_do_not_follow_mutated_module_constants passes; final review gap note omitted these unchanged lines",
+    "baseline_count_alias": "original count preserved, resolved path collision refused",
+    "missing_baseline_seed": "named preflight failure, regression",
+    "backend_assumptions": "fixed backend source supplied for repair review and limits documented",
+    "wording": "clarified unobserved frames do not break support within allowed gap"
+  },
+  "remaining": "empty-frame pitch can have broad error message; fail-closed, no accepted wrong result",
+  "scope": "static review; model did not run tests or inspect video"
+}

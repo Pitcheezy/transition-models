@@ -1,0 +1,74 @@
+{
+  "schema": "pitcheezy-seed-gate-verification-v1",
+  "implementation_commit": "353ace2e71bccc2a7ab1faf4c21f31d7d57076fe",
+  "policy_freeze_commit": "2bbbaad",
+  "source_raw_sha256": {
+    "intent/mitt_seed_gate.py": "e2c5404fded5cdfc678d96c8fab7574515534b188cdef99001b10226bad13879",
+    "intent/mitt_seed_pilot.py": "98cf37c874d983d63fcb9fc71d44e7c0d991a0d609bb8b9d08bb060c44e04599",
+    "intent/mitt_reacquire_pilot.py": "448e0cdecba4463e5506620d6d0947711f708dbea48f1bcaf0d837d21d21f597",
+    "intent/mitt_reacquire.py": "06d2c487c03c4c4a77dc205007906d3e125daa90591cda5f88aa06583a5ee89d",
+    "intent/mitt_tracking.py": "3f6953a3590797d5ffb0b70e1fd2800e93816061ff8a8c1da6d0c42c5349726c",
+    "intent/mitt_stationary.py": "9cd3bfecd8d39f081ea82c3cf34982c9531beb862c565f9609dce0c831da8c3e",
+    "tests/test_mitt_seed_gate.py": "214ff4fb92c5bc41a1243dc14d271b7fd17f9c6ace499850e7664515ba538d98",
+    "tests/test_mitt_seed_pilot.py": "8ab0485adf1b51e5934df71e46c575417dc062c0a6b0e959b9f9c3bb68a467aa"
+  },
+  "policy_sha256": "a6a1022497f31bf80251fe240a07bc4d80d26b81b0500f0cda3c7622eee90581",
+  "execution": "python -m intent.mitt_seed_pilot --bundle <private bundle_v1> --pilot <private pilot_v1> --baseline <CV37b records_candidate_cpu.json> --manifest-sha256 <source_hashes.manifest> --pilot-sha256 <source_hashes.pilot> --answers-sha256 <source_hashes.answers> --baseline-sha256 <source_hashes.baseline> --out <new private folder>",
+  "private_outputs": {
+    "gate_decisions.json": "841feb1b8e2a9bbaf4a561447de0dab0f3be4c88c551caf58908a20bddf00db0",
+    "records_seed_gate.json": "c5d087f4ee91e89690dfda51d3439cd4565a6a4ea21ba5c609eca0fdda05632a",
+    "report.json": "cfa70cad0b2c67b53c3702057513ba08a9a34957a36a843d52a7bdd727c434cb"
+  },
+  "tests": [
+    {
+      "command": "python -m pytest -q tests/test_mitt_seed_gate.py tests/test_mitt_seed_pilot.py tests/test_checklist_model.py",
+      "passed": 68,
+      "seconds": 18.09
+    },
+    {
+      "command": "python scripts/check_project.py --lint-only",
+      "paths": 190,
+      "result": "pass"
+    }
+  ],
+  "offline_replay": {
+    "baseline_all_fields_equal": true,
+    "frames": 625,
+    "pitches": 10,
+    "seeded": 4,
+    "unseeded_pitches": 6,
+    "delay_seconds_all_adopted": 0.4004,
+    "original_files_unchanged": 667,
+    "baseline_file_unchanged": true,
+    "prefix_rows": {
+      "gate_prefix_rows": 20691,
+      "tracker_prefix_rows": 1061
+    },
+    "invariant_violations": {
+      "candidate_point_outside_candidate_state": 0,
+      "current_candidate_outside_stationary_tracking": 0,
+      "events_total_decreased": 0,
+      "historical_candidate_from_the_future": 0,
+      "point_shown_outside_confirmed_tracking": 0,
+      "segment_id_not_increasing": 0,
+      "selector_point_outside_tracking": 0
+    }
+  },
+  "runtime": {
+    "python": "3.12.12",
+    "torch": "2.6.0+cu124",
+    "execution_device": "cpu",
+    "cpu_threads_set_by_runner": 4,
+    "cuda_used": false,
+    "live_latency": "unmeasured"
+  },
+  "actual_fable_review": "cross_review_v1.json / APPROVE_WITH_NOTES; unchanged digest guard confirmed locally",
+  "bounds": [
+    "exposed development only",
+    "no new AI observation or human labels",
+    "no teammate code or Cloudflare",
+    "no main merge or deployment"
+  ],
+  "repair_did_not_change_records_or_decisions": true,
+  "observations_matched": 315
+}
