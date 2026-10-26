@@ -2,13 +2,11 @@
 
 ## CV-41b 재탐색 비교 화면 — 2026-10-27
 
-구현·로컬 검증은 완료, **다른 모델 검토 미완료**다. [PR77](https://github.com/Pitcheezy/transition-models/pull/77) 초안에서 코드 `fcde5d2`를 먼저 검토한다. 실제 Claude CLI에 두 차례 요청했으나600초/300초 모두 무응답 시간 초과했다. [시도 영수증](results/cv_reacquire_view_20261027/review_attempts_v1.json)에 고정 소스/해시·요청 범위가 있다. 통과로 읽지 않는다. 기존 화면·팩·원문을 재생성하거나 판독을 반복할 필요 없이, 검토 재개→필요한 수정/회귀→완료 기록 순서로 진행한다. 수정 권한은 반납했다.
+CV-41b 다른 모델 검토·수리·수정 재검토 완료. 실제 `claude-fable-5-1` 최종 PASS, 수리 `0f29502`. [진단·검토](results/cv_reacquire_view_20261027/cross_review_v2.json)·[수리 후 검증](results/cv_reacquire_view_20261027/verification_v2.json). CLI 전역 설정을 바꾸지 않고 native 실행·소스 분할·medium effort·진행 로그로 재시도했다. 과거 시간 초과를 현재 인증 실패로 취급하지 않는다. 같은 전체 코드 검토를 반복하지 않는다.
 
-현재 연구 브랜치는 `codex/cv-reacquire-view-1027`, 기준은 PR74 `0112f018e7485a0fc35c12575b990345f3239c4b`다. [비교 화면 기록](CV_REACQUIRE_FRAME_VIEW_20261027.md)과 CHECKLIST 상단을 먼저 읽는다. CV37b 재탐색이나 CV39c OCR을 다시 구현하지 않는다. 저장625행을 대조해 PA3 203 JPEG와 OCR74행에 연결하며 같은 프레임에서 기존/재탐색을 전환한다. 현재 점·미확정 후보·과거 사건·구간을 구별한다. 기존 원본 팩은 보존하고 새 `outputs/cv_mitt_reacquire_view_20261027_v1/`만 만들었다. 검증과 다른 모델 검토의 완료 여부는 [영수증](results/cv_reacquire_view_20261027/verification_v1.json)을 따른다.
+현재 브랜치 `codex/cv-reacquire-view-1027`, PR77은 PR74에 의존하는 연구 PR이다. Python37·Node40·린트186·실제203장/OCR74행·Windows smoke 통과. 새 비공개 v2 팩의 payload/OCR/203JPEG는 v1과 동일하다. 반복 외부 렌더 예외와 과대 이미지 사전 거부 최적화는 낮은 우선순위 참고다. 다음 독립 단위는 CV42 저장 관측 기반 시드 자격 게이트이며 정책을 결과 전에 고정하고 새 후보만 만든다. 기존 팩/Claude 폴더/원본/사람 응답/M3 보존, 팀원·Cloudflare·공개 계약·main 변경 없음.
 
-운영 준비·인계 오류 정정은 별도 [PR76](https://github.com/Pitcheezy/transition-models/pull/76) `cfbea2c`다. 회수 순서와 후속3요청 슬롯, 준비 시점/실제 시험 결과를 정리했고 CI6건 통과했다. 그 PR의 문서를 이 연구 브랜치의 오래된 운영 이력보다 우선 조회한다. 공동시험 STOPPED·누락로그2건·해당 회차401/503 미측정은 유지한다. 새 창 활성화·자격 생성·Cloudflare 변경은 이번 CV 단위에서 하지 않았다.
-
-다음 독립 기술 과제: 저장 AI 관측의 시드 품질 규칙을 결과 전에 정하고, 미트가 아닌 시드와 짧은 재획득 구간을 분리해 평가하는 설계. 독립 PTS는 원영상 시간 자료가 있어야 한다. CV35/36 사람 조건·A-y/F-4i 보류 유지. 원래 Claude/Codex 폴더·Song 코드·공개 계약·IntentEstimate·M3·운영 배포·main 병합·11월 요금제/실부하는 변경하지 않는다.
+운영 인계 정정은 별도 PR76이다. 공동시험 STOPPED·누락로그2건·해당 회차401/503 미측정은 유지한다. CV35/36 사람 조건·A-y/F-4i 보류·11월 요금제/실부하 보류도 그대로다.
 
 ## CV-37b 추적 중단 원인·제한된 재탐색 기준선 — 2026-10-26
 

@@ -1,0 +1,63 @@
+{
+  "schema": "pitcheezy-reacquire-frame-view-validation-v2",
+  "source_commit": "0f295026b3fb34e17e865678ef9bba914b51434d",
+  "pack": "outputs/cv_mitt_reacquire_view_20261027_v2",
+  "receipt_sha256": "41d2a3d8c9fbbe4b99a1616f96e9e29a894f600c450e30ccf629f75a39a31a61",
+  "files_checked": 208,
+  "unchanged_payload_ocr_images": 205,
+  "binding": {
+    "all_record_keys_checked": 625,
+    "all_record_pitches": 10,
+    "baseline_fields_preserved": true,
+    "baseline_selections_checked": 625,
+    "candidate_selections_checked": 625,
+    "comparison_schema": "pitcheezy-reacquire-frame-comparison-dev-v1",
+    "displayed_frames": 203,
+    "displayed_pitches": 3,
+    "evidence_kind": "saved development record join; not mitt identity or accuracy",
+    "frame_images_unchanged": true,
+    "independent_decoded_pts_verified": false,
+    "input_sha256": {
+      "baseline_records": "4097f61449487f074fdd965ee1823f3fabdc2c06b901f76b7dc5e9ff0d395a4b",
+      "candidate_records": "9b564920883be8fbacd5e621713ece66b968dd311d1538d04dfabdff6088898c",
+      "candidate_report": "677154686a59602c6394c556860d983cdfbd861795084e54e2c3afa09fa269d0",
+      "ocr_observations": "cea324701e48ba9c27d7260818f146d84ad8b79a6f19b537bd1b85f1c306c4b9",
+      "ocr_pack_observations": "f573366eb8e08698e54d02c7b7c616397edabda8b87c23aa5387ffb66083927a",
+      "ocr_pack_payload": "00c2ff234f5dc7c9ad112568d1153091b3eacec147aedc0a708adb8b7e5dc223",
+      "ocr_pack_receipt": "d281de8ece3d80a4c7f0e541400f627c1895db0c2965622e575b1a186685b1c0"
+    },
+    "input_unchanged": true,
+    "no_new_ocr_calls": true,
+    "no_new_tracking_or_model_calls": true,
+    "observation_rows_bound": 74,
+    "ocr_bytes_preserved": true,
+    "schema": "pitcheezy-reacquire-frame-view-receipt-v1"
+  },
+  "tests": {
+    "builder_pytest": {
+      "passed": 37,
+      "seconds": 72.97
+    },
+    "node_three_suites": {
+      "passed": 40,
+      "seconds": 0.22915
+    },
+    "lint_paths": 186,
+    "actual_js_ocr_rows": 74,
+    "actual_js_ocr_none": 129,
+    "actual_js_ocr_mismatch": 0
+  },
+  "browser": {
+    "platform": "Windows notebook IAB Chromium loopback",
+    "smoke": [
+      "pack loaded",
+      "reacquire frame15000 segment3 and historical source",
+      "baseline switch same frame15000",
+      "next pitch16214 clears prior OCR and history"
+    ],
+    "console_errors_warnings": 0,
+    "full_scenarios_prior_v1": 10
+  },
+  "cross_review": "cross_review_v2.json",
+  "new_accuracy_claim": false
+}
