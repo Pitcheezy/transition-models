@@ -2,7 +2,9 @@
 
 ## 재탐색 결과와 OCR의 같은 프레임 비교 — 2026-10-27
 
-**CV-41b 진행: Codex / `codex/cv-reacquire-view-1027` / 기준 PR74 `0112f018e7485a0fc35c12575b990345f3239c4b`.** 완료된 Claude 연구 브랜치에서 별도 작업트리를 만들었다. 운영 인계 정정은 별도 PR76이며, 운영·Cloudflare·팀원 코드와 이 연구 작업은 분리한다.
+**CV-41b 구현·로컬 검증 완료 / 다른 모델 검토 대기 / 수정 권한 반납: Codex / `codex/cv-reacquire-view-1027` / 기준 PR74 `0112f018e7485a0fc35c12575b990345f3239c4b` / [PR77](https://github.com/Pitcheezy/transition-models/pull/77) 초안.** 구현 `fcde5d2`, 기록 `620673f`. 완료된 Claude 연구 브랜치에서 별도 작업트리를 만들었다. 운영 인계 정정은 별도 PR76이며, 운영·Cloudflare·팀원 코드와 이 연구 작업은 분리한다.
+
+실제 625행 대조→203장/OCR74행 연결, Python33+74·Node32·린트186경로·Windows 실제 재생/전환/과거사건/OCR 확인을 완료했다. [기록](docs/CV_REACQUIRE_FRAME_VIEW_20261027.md)·[영수증](docs/results/cv_reacquire_view_20261027/verification_v1.json). Claude Fable CLI2.1.310에 고정 코드 읽기 검토를 두 번 요청했으나 600초/300초 모두 결과 없이 시간 초과해 **합격 처리하지 않았다**. [시도 기록](docs/results/cv_reacquire_view_20261027/review_attempts_v1.json). 다음 세션은 재구현·같은 자료의 새 판독을 반복하지 말고 고정 코드 다른 모델 검토부터 재개한다. UI 보조검토의 판정 이유 누락은 수정/회귀 완료이나 다른 모델 검토를 대체하지 않는다. main 병합·운영 배포 없음.
 
 - [ ] CV-41b. 저장된 기준선/재탐색 625행의 출처·프레임 키를 검사하고 PA3 203장과 OCR74행을 같은 프레임 비교 화면에 연결한다. 합격: 탐색/미확정/확정 구간/종료 구별, 구간 번호 표시, 비추적·로딩·실패 중 현재 점 없음, 과거 사건은 발생 이미지에서만 표시, 뒤로 탐색·모드/투구 전환·늦은 이미지 응답 검사, 입력 보존·새 비공개 팩·Python/JS/Windows 브라우저·다른 모델 검토. 알고리즘 재실행·새 판독·사람 정답·독립 PTS·실시간 정확도를 만들지 않는다. A-y/F-4i 및 CV35/36 조건 유지. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-27 · Codex]`
 

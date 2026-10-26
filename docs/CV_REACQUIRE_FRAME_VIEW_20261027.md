@@ -41,8 +41,16 @@ python -m http.server 8768 --bind 127.0.0.1 --directory <새 비공개 폴더>
 
 ## 검증과 한계
 
+**구현·로컬 검증 완료, 다른 모델 검토는 대기다.** 코드 `fcde5d2`를 Claude Code2.1.310의
+`claude-fable-5-1`로 검토 요청했으나 전체 소스(max,600초)·변경 파일만(high,300초) 모두
+답변 없이 시간 초과했다. 요청 모델과 실제 응답 모델을 혼동하지 않으며 검토 합격은 아니다.
+[검토 시도·고정 SHA](results/cv_reacquire_view_20261027/review_attempts_v1.json)를 보존한다.
+별도 Codex 보조검토에서 찾은 멈춤 판정 이유 누락은 수정·회귀 검사했으나 다른 모델 조건을 대체하지 않는다.
+따라서 [PR77](https://github.com/Pitcheezy/transition-models/pull/77)은 초안을 유지하고 main/운영에 병합하지 않았다.
+
 실행 결과·입력/산출물 SHA는 [검증 영수증](results/cv_reacquire_view_20261027/verification_v1.json)에 기록한다.
 새 Python33·기존 뷰어/OCR/체크리스트74, Node32 검사와 린트186경로를 통과했다.
+기록 커밋 `620673f`의 Ubuntu/macOS CI 두 작업도 성공했다(실행40368090669). 이후 검토 시간 초과 기록만 추가했으며, CI 통과를 다른 모델 검토로 취급하지 않는다.
 실제 203장·3구에서 화면 전환, 미확정/확정/소실, 과거 사건 분리, OCR 문자열과 관측 없음,
 마지막 장 자동 정지, 재생 중 모드 전환을 Windows 인앱 브라우저로 확인했다. 콘솔 오류·경고0.
 새 비공개 팩은 `outputs/cv_mitt_reacquire_view_20261027_v1/`이며 영수증 제외208파일을

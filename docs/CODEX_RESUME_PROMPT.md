@@ -2,6 +2,8 @@
 
 ## CV-41b 재탐색 비교 화면 — 2026-10-27
 
+구현·로컬 검증은 완료, **다른 모델 검토 미완료**다. [PR77](https://github.com/Pitcheezy/transition-models/pull/77) 초안에서 코드 `fcde5d2`를 먼저 검토한다. 실제 Claude CLI에 두 차례 요청했으나600초/300초 모두 무응답 시간 초과했다. [시도 영수증](results/cv_reacquire_view_20261027/review_attempts_v1.json)에 고정 소스/해시·요청 범위가 있다. 통과로 읽지 않는다. 기존 화면·팩·원문을 재생성하거나 판독을 반복할 필요 없이, 검토 재개→필요한 수정/회귀→완료 기록 순서로 진행한다. 수정 권한은 반납했다.
+
 현재 연구 브랜치는 `codex/cv-reacquire-view-1027`, 기준은 PR74 `0112f018e7485a0fc35c12575b990345f3239c4b`다. [비교 화면 기록](CV_REACQUIRE_FRAME_VIEW_20261027.md)과 CHECKLIST 상단을 먼저 읽는다. CV37b 재탐색이나 CV39c OCR을 다시 구현하지 않는다. 저장625행을 대조해 PA3 203 JPEG와 OCR74행에 연결하며 같은 프레임에서 기존/재탐색을 전환한다. 현재 점·미확정 후보·과거 사건·구간을 구별한다. 기존 원본 팩은 보존하고 새 `outputs/cv_mitt_reacquire_view_20261027_v1/`만 만들었다. 검증과 다른 모델 검토의 완료 여부는 [영수증](results/cv_reacquire_view_20261027/verification_v1.json)을 따른다.
 
 운영 준비·인계 오류 정정은 별도 [PR76](https://github.com/Pitcheezy/transition-models/pull/76) `cfbea2c`다. 회수 순서와 후속3요청 슬롯, 준비 시점/실제 시험 결과를 정리했고 CI6건 통과했다. 그 PR의 문서를 이 연구 브랜치의 오래된 운영 이력보다 우선 조회한다. 공동시험 STOPPED·누락로그2건·해당 회차401/503 미측정은 유지한다. 새 창 활성화·자격 생성·Cloudflare 변경은 이번 CV 단위에서 하지 않았다.

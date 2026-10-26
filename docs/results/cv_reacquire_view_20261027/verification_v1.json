@@ -83,7 +83,11 @@
     "independent_human_review": false
   },
   "cross_review": {
-    "status": "pending"
+    "status": "waiting_after_two_timeouts",
+    "requested_model": "claude-fable-5-1",
+    "actual_model_unconfirmed": true,
+    "receipt": "review_attempts_v1.json",
+    "not_passed": true
   },
   "limits": [
     "Mitt identity/accuracy unmeasured",
@@ -104,5 +108,14 @@
     "old_bearer_401_measured_this_trial": false,
     "off_503_measured_this_trial": false,
     "pr_checks_passed": 6
+  },
+  "remote_ci": {
+    "head": "620673f",
+    "run_id": 40368090669,
+    "last_observed": "Ubuntu/macOS both success; applies to 620673f, before final review-attempt documentation",
+    "jobs": {
+      "ubuntu_24_04": 121731138978,
+      "macos_15": 121731139434
+    }
   }
 }
