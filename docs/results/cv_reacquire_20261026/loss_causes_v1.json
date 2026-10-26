@@ -1,0 +1,1264 @@
+{
+  "schema": "pitcheezy-tracking-loss-causes-dev-v1",
+  "unit": "CV-37b",
+  "evidence_kinds": {
+    "a": "saved algorithmic reason from CV37 v3 (unchanged records)",
+    "b": "offline deterministic replay diagnostics on the same saved frames",
+    "c": "AI development observation of contact sheets (Claude observers + one skeptical cross-check); not human truth"
+  },
+  "method": {
+    "frames": "625 saved frames / 10 pitches, 6-frame stride (0.1001 s); each pitch's first loss and the tiles around it",
+    "contact_sheets": "seed tile plus loss-6..loss+3 tiles; cyan box = tracker 21 px template, orange circle = saved AI point; 4x zoom of 160 px around the last tracked point",
+    "cross_check": "one skeptical agent re-read the loss and pre-loss tiles at 3x and could correct the primary category; corrections are recorded, not hidden",
+    "no_new_calls": "no new video, paid service, mass AI reading or model training; the saved 325 readings were not re-called"
+  },
+  "categories_after_cross_check": {
+    "fixed_template_appearance_drift": 6,
+    "similar_patch_ambiguity": 1,
+    "threshold_borderline": 2,
+    "seed_identity_uncertain": 1
+  },
+  "seed_on_mitt_ai_reading": {
+    "not_mitt": 3,
+    "likely_mitt": 7
+  },
+  "skeptic_corrections": [
+    {
+      "pitch_id": "747139:3:3",
+      "from": "seed_identity_uncertain",
+      "to": "similar_patch_ambiguity"
+    },
+    {
+      "pitch_id": "747139:5:3",
+      "from": "similar_patch_ambiguity",
+      "to": "threshold_borderline"
+    }
+  ],
+  "skeptic_coverage_notes": [
+    "None: every observer's frames_inspected includes both the FIRST LOSS tile and the tile before it (3:1 14952/14958; 3:2 16280/16286; 3:3 17419/17425; 4:1 19585/19591; 4:2 20704/20710; 5:1 21342/21348; 5:2 22124/22130; 5:3 23296/23302; 5:4 24492/24498; 5:6 26826/26832).",
+    "Minor, not a criterion gap: 5:6 states 26802 was seen on the overview only; 3:3 states 17395/17407/17443 were seen on the full sheet only. Neither is the loss or pre-loss tile.",
+    "Skeptic frames inspected at 3x from the compact sheets (crops in <local path removed> 3:1 14946/14952/14958/14964; 3:2 16262/16274/16280/16286/16292; 3:3 17233/17413/17419/17425/17431; 4:1 19585/19591/19597; 4:2 20470/20704/20710/20716; 5:1 21342/21348/21354; 5:2 22118/22124/22130/22136; 5:3 23212/23296/23302/23308; 5:4 24396/24492/24498/24504; 5:6 26778/26826/26832/26838; all other tiles viewed on the full compact sheets only.",
+    "Category-consistency note for the record: the same 'tracker was on the bare hand' situation was labelled by loss mechanism in 3:1 (drift primary, seed identity secondary) and by root cause in 3:3 (seed identity primary); the 3:3 verdict above applies the mechanism rule. 5:1 is kept as seed_identity_uncertain because the seeded object is genuinely unidentifiable (dissolve-blended)."
+  ],
+  "pitches": [
+    {
+      "pitch_id": "747139:3:1",
+      "seed_frame_index": 14946,
+      "seed_source_sha256": "ba6daae20a21ae5c5b50a59896ce3892b88a224d3d2b6a2f6ceb0e3c901d6ef0",
+      "seed_px": [
+        622,
+        248
+      ],
+      "tracked_frames_before_loss": 2,
+      "tracked_span_seconds": 0.1001,
+      "first_loss_frame_index": 14958,
+      "first_loss_source_sha256": "6b71b9534e5328881efcb37a9507177771f9731ea386005d366a75e30b714c3d",
+      "seconds_after_seed": 0.2002,
+      "last_tracked_px": [
+        624,
+        249
+      ],
+      "a_saved_algorithmic_reason": {
+        "reason": "low_similarity",
+        "quality": {
+          "appearance_change": 0.003,
+          "ncc": 0.611,
+          "peak_margin": 0.103
+        },
+        "source": "CV37 v3 records_cpu.json (unchanged)"
+      },
+      "b_offline_replay_diagnostics": {
+        "seed_template_best_r24": {
+          "ncc": 0.611,
+          "source_px": [
+            624,
+            249
+          ],
+          "dist_from_last_px": 0.0,
+          "margin_to_second": 0.102
+        },
+        "seed_template_best_r40": {
+          "ncc": 0.611,
+          "dist_from_last_px": 0.0
+        },
+        "last_confirmed_patch_best_r24": {
+          "ncc": 0.759,
+          "source_px": [
+            625,
+            248
+          ],
+          "dist_from_last_px": 1.4,
+          "margin_to_second": 0.227
+        },
+        "last_patch_vs_seed_template_ncc": 0.819,
+        "seed_template_std": 0.179,
+        "seed_template_ncc_near_next_saved_ai_point": {
+          "ai_px": [
+            642.0,
+            242.0
+          ],
+          "best_ncc_within_6px": 0.333,
+          "ai_dist_from_last_px": 19.3
+        },
+        "note": "deterministic CPU replay of the same crop/template; the last-patch match is a diagnostic, not a tracker output"
+      },
+      "c_ai_development_observation": {
+        "kind": "AI development observation (Claude, contact sheets of saved frames); not human truth, not an independent evaluation",
+        "frames_inspected": [
+          14946,
+          14952,
+          14958,
+          14964,
+          14970,
+          14976
+        ],
+        "observed_range": [
+          14946,
+          14976
+        ],
+        "observed_frame_sha256": {
+          "14946": "ba6daae20a21ae5c5b50a59896ce3892b88a224d3d2b6a2f6ceb0e3c901d6ef0",
+          "14952": "9df5eacf5f37b299a5990060202913c749f71e18ac476858af9051b0ca7b4050",
+          "14958": "6b71b9534e5328881efcb37a9507177771f9731ea386005d366a75e30b714c3d",
+          "14964": "cbf6bda198aa3cdd5e62b80ab375d0e8efd4bdca72738ce1f74f5eda2f70d193",
+          "14970": "cefb9831d201d9d4e180ae663b3fc9744dd513eaeaef233fcef2c7d5227872b7",
+          "14976": "68d28c40a990e5e6f0b60c463d9d3919b752d41c450423fa8bf515a5cb4f3bfe"
+        },
+        "zoom_centre_source_px": [
+          624,
+          249
+        ],
+        "zoom_half_px": 80,
+        "scene_change": "none",
+        "occlusion_at_loss": "none",
+        "motion_at_loss": "slow",
+        "similar_patches_nearby": "no",
+        "similar_patch_description": "No competitor close in score. Seed-template secondary peaks at the loss frame are 0.509 at (600,241) and 0.493 at (609,225), i.e. 25-28 px up/left of the tracked point (toward the catcher's right forearm / grey leg-guard area), ~0.10 below the 0.611 primary. For the last confirmed patch the secondary is 0.532 at (609,225) vs 0.759 primary (margin 0.23). Visually the neighbourhood is a dark navy rounded object to the viewer's right, grey leg guards below, navy sleeve/chest protector above; none resemble the small warm-toned tracked blob.",
+        "tracked_patch_appears_to_be": "A small (~10-12 px) warm pinkish-beige rounded blob with a dark shadow crescent on its right side, sitting between the catcher's knees slightly to the viewer's LEFT of the catcher's midline (the catcher's right-hand / bare-hand side). It changes shape frame to frame (rounded at 14946, elongated with a lighter tip at 14952, fingers pointing up-left at 14970/14976) while staying in place, which is most consistent with the catcher's bare right hand giving signs. Not a mitt pocket; not glove lacing; not shin guard, uniform or dirt. Identity not verified (a tan-leather portion of a glove cannot be fully excluded from the sheet).",
+        "seed_on_mitt": "not_mitt",
+        "mitt_at_loss_relative_to_tracked_point": "Saved AI mitt reading at the loss frame is (642,242): ~18 px to the viewer's right and ~7 px above the tracked point (624,249), 19.3 px away. On the sheet it lands on the dark navy rounded object immediately to the viewer's right of the tracked tan blob (the catcher's left-hand side); that dark object, with a white patch at its right edge, is the visible candidate mitt. It is adjacent to, not covering, the tracked patch. By 14970 the AI reading has moved further right to (656,239), ~32 px from the tracked point, onto a white round patch on that object, while the tan blob stays where it was.",
+        "observer_primary_cause": "fixed_template_appearance_drift",
+        "observer_secondary_cause": "seed_identity_uncertain",
+        "observer_confidence": "medium",
+        "observer_evidence": "Saved algorithmic reason: low_similarity at 14958, ncc 0.611 (< 0.65), peak_margin 0.103, appearance_change 0.003; previous confirmed step 14952 had ncc 0.819, margin 0.30, fb 0.0 at (624,249). Diagnostics at the loss frame: seed template best 0.611 at exactly the last tracked point (dist 0.0) at both r24 and r40, so the patch was not out of range and did not move; last confirmed patch matches 0.759 at (625,248), dist 1.4, margin 0.23; last_patch_vs_seed_template_ncc 0.819. The object is still in place and still matches its most recent appearance well, but its match to the fixed seed template fell from 0.82 to 0.61 in six frames: appearance drift against a fixed template. Visually the tracked blob is a small warm-toned hand-like object that is articulating in place (sign-giving), which explains the drift; no cut, no zoom/pan, no occluder over it at 14958, and the same camera framing in all six tiles. Secondary: the seed sits on this warm-toned blob on the catcher's bare-hand side, while the AI mitt readings at 14958 (642,242) and 14970 (656,239) are 19-32 px to the viewer's right on a distinct dark navy object with a white patch; seed-template NCC near the 14958 AI point is only 0.333, so the tracked patch and the AI-reported mitt are different-looking things. Tertiary note: 0.611 is only 0.039 under the 0.65 gate with a clear 0.10 margin, so threshold_borderline also applies. Mitt identity of either object is not verified; colour sampling of the un-annotated 14964 tile gives the blob a mean RGB of about (188,152,144) (warm, R>G>B) versus (84,81,96) for the adjacent dark object.",
+        "skeptic_cross_check": {
+          "primary_cause_supported": true,
+          "seed_on_mitt_supported": true,
+          "corrected_primary_cause": "fixed_template_appearance_drift",
+          "reason": "Re-read 14946/14952/14958/14964 at 3x: the cyan patch is a flesh-toned rounded object that shows fingers at 14952 and 14964 (bare-hand-like), with a dark object bearing a white patch immediately to the viewer's right where the 14958 and 14970 AI circles land, so not_mitt is what the sheet shows. Replay has the drift signature (seed 0.611 at dist 0.0 vs last-patch 0.759 at 1.4 px, last_patch_vs_seed 0.819), no cut, no occluder; 0.611 is 0.039 under the gate so borderline stays tertiary as stated."
+        }
+      },
+      "category_after_cross_check": "fixed_template_appearance_drift",
+      "category_ko": "고정 시드 템플릿 대비 외형 변화(알고리즘 원인; 사용자 범주 외 추가)",
+      "secondary_category": "seed_identity_uncertain",
+      "unverified": [
+        "mitt identity of the seeded/tracked patch (AI observation only; 'likely_mitt' and 'not_mitt' are AI readings of a contact sheet)",
+        "which hand holds the object",
+        "any frame outside observed_range"
+      ]
+    },
+    {
+      "pitch_id": "747139:3:2",
+      "seed_frame_index": 16262,
+      "seed_source_sha256": "e21cdc0ce9042338476697bbc5aacfd80fb227a56c719065308e7c86acfaefb5",
+      "seed_px": [
+        660,
+        242
+      ],
+      "tracked_frames_before_loss": 4,
+      "tracked_span_seconds": 0.3003,
+      "first_loss_frame_index": 16286,
+      "first_loss_source_sha256": "373a4b08ba52fcbcb29865195759dd9bf49f90e6c0d52c79e0fdf519d366d2b0",
+      "seconds_after_seed": 0.4004,
+      "last_tracked_px": [
+        670,
+        239
+      ],
+      "a_saved_algorithmic_reason": {
+        "reason": "low_similarity",
+        "quality": {
+          "appearance_change": 0.002,
+          "ncc": 0.395,
+          "peak_margin": 0.028
+        },
+        "source": "CV37 v3 records_cpu.json (unchanged)"
+      },
+      "b_offline_replay_diagnostics": {
+        "seed_template_best_r24": {
+          "ncc": 0.395,
+          "source_px": [
+            689,
+            252
+          ],
+          "dist_from_last_px": 23.0,
+          "margin_to_second": 0.028
+        },
+        "seed_template_best_r40": {
+          "ncc": 0.41,
+          "dist_from_last_px": 29.7
+        },
+        "last_confirmed_patch_best_r24": {
+          "ncc": 0.551,
+          "source_px": [
+            675,
+            243
+          ],
+          "dist_from_last_px": 6.4,
+          "margin_to_second": 0.061
+        },
+        "last_patch_vs_seed_template_ncc": 0.696,
+        "seed_template_std": 0.166,
+        "seed_template_ncc_near_next_saved_ai_point": {
+          "ai_px": [
+            640.0,
+            251.0
+          ],
+          "best_ncc_within_6px": 0.41,
+          "ai_dist_from_last_px": 32.3
+        },
+        "note": "deterministic CPU replay of the same crop/template; the last-patch match is a diagnostic, not a tracker output"
+      },
+      "c_ai_development_observation": {
+        "kind": "AI development observation (Claude, contact sheets of saved frames); not human truth, not an independent evaluation",
+        "frames_inspected": [
+          16262,
+          16268,
+          16274,
+          16280,
+          16286,
+          16292,
+          16298,
+          16304
+        ],
+        "observed_range": [
+          16262,
+          16304
+        ],
+        "observed_frame_sha256": {
+          "16262": "e21cdc0ce9042338476697bbc5aacfd80fb227a56c719065308e7c86acfaefb5",
+          "16268": "5fc22a0851747bae925b3c7ed7e9181d0ae2426e7bdbec419adae65c471608d4",
+          "16274": "592dc0fd443c36e199c0326c24d987d659118990f7a40c9e3dd8a2ffa602f050",
+          "16280": "43205df397115e7e79bf752b4c7e3680edaac3f501cf537995b75cafda6acd1c",
+          "16286": "373a4b08ba52fcbcb29865195759dd9bf49f90e6c0d52c79e0fdf519d366d2b0",
+          "16292": "a1fe896c913bd0e4f5b7031720522fc8790c8f86f31ec61087ec1b1dc8c95654",
+          "16298": "42c08c3a77d9f04b731ae4f7d787c2733ffa5cd5ebac8b586278858293c9298e",
+          "16304": "ec6dfc928e151983133a876401c5db76d8ac2fbee0d5881973a3949a3e4c8111"
+        },
+        "zoom_centre_source_px": [
+          670,
+          239
+        ],
+        "zoom_half_px": 80,
+        "scene_change": "none",
+        "occlusion_at_loss": "none",
+        "motion_at_loss": "fast",
+        "similar_patches_nearby": "yes",
+        "similar_patch_description": "Several dark rounded masses with small white marks cluster within 25 px of the last point once the catcher drops into the crouch: the dark mitt body itself (now lower and turned), the dark shin/thigh guard on the viewer's right (which shows a white spot below the cyan box at 16280), the dark chest-protector bottom, plus the white pant edges. The seed template's top three peaks at the loss frame are scattered ([689,252] 0.395, [646,256] 0.367, [675,242] 0.344) at near-equal low scores, i.e. no discriminating match among these dark/white-flecked patches.",
+        "tracked_patch_appears_to_be": "At the seed (16262) and through 16274 the cyan box is centred on a dark rounded object with a bright white mark (logo or lacing) held out in front of the catcher on the viewer's right, i.e. the mitt face/pocket region with its white marking; the saved AI reading coincides with it at the seed. By 16280 the box holds that white mark in its upper-left with dark around it (mitt edge/lacing as the mitt starts to drop). At the loss frame 16286 the last tracked point [670,239] falls on dark, low-texture gear just above the dropped mitt (chest-protector bottom / thigh area), not on the white mark.",
+        "seed_on_mitt": "likely_mitt",
+        "mitt_at_loss_relative_to_tracked_point": "Saved AI reading at 16286 is [640,251]: 30 px left and 12 px below the last tracked point [670,239] (32.3 px). On the sheet, however, that orange circle sits on a light tan rounded object at the viewer's left between the catcher's knees (looks like the bare right hand, not verified). The dark rounded object with the white mark that the tracker had been following (catcher's left-hand side, viewer's right) appears roughly 10-15 px below and slightly left of the last tracked point at 16286, now lowered and turned compared with 16280; at 16292-16298 that same dark object sits near [676-680, 250-259] and the 16298 AI reading [680,259] is on it. So the dark object stayed within the 24 px radius but changed appearance; the AI point jumped out of range onto a different-looking object.",
+        "observer_primary_cause": "fixed_template_appearance_drift",
+        "observer_secondary_cause": "fast_motion_out_of_range",
+        "observer_confidence": "medium",
+        "observer_evidence": "Saved algorithmic reason: low_similarity, ncc 0.395, margin 0.028. Visual: same centre-field framing on every tile (Truist Park sign, batter and pitcher unchanged) so no cut/zoom; nothing covers the tracked point (umpire's leg stays to the right). Between 16280 and 16286 the catcher drops from a high set-up (mitt presented as a target, white mark facing camera) into the low receiving crouch; torso bottom moves ~16 px down and the dark mitt-like object drops ~10-15 px and rotates. Quality trend while tracking: ncc 0.92 (16268) -> 0.81 (16274) -> 0.70 (16280) -> 0.39 (16286), a steady decay as the object turned, and last_patch_vs_seed_template_ncc is already 0.696 at the last confirmed frame. Diagnostics at the loss frame: seed template best 0.395 at r24 (23 px away) and only 0.41 at r40 (at [645,255], 6 px from the AI point), so widening the radius does not recover a seed match; the last confirmed patch matches better (0.551 at [675,243], 6.4 px) but still below 0.65, so the one-step appearance change was large even for an adaptive template. Second peak (0.367) is close in score but both are noise-level, so ambiguity is a symptom not a cause. AI displacement 32.3 px exceeds the 24 px radius, supporting fast motion, but that AI reading appears to sit on a tan object different from the seeded dark object, so it is weak evidence; the seed AI point coincided exactly with the tracked object and the 16274 AI point was 6 px away, so seed identity is not the issue. Threshold is not borderline (0.395 vs 0.65).",
+        "skeptic_cross_check": {
+          "primary_cause_supported": true,
+          "seed_on_mitt_supported": true,
+          "corrected_primary_cause": "fixed_template_appearance_drift",
+          "reason": "Seed 16262: dark round object with a white mark on the viewer's-right (catcher's left) side, AI coincident, tan bare hand visible at the viewer's left; at 16286 the catcher has dropped into the crouch, the dark object sits ~10-15 px below the last point and rotated, and the AI jumps 32 px onto the tan hand. Seed template finds nothing within r40 (0.41) and the last patch only 0.551, so this is an abrupt pose/appearance change rather than gradual drift, but appearance change is the category the numbers support; not out-of-range (object within ~15 px) and nothing covers the point. Supported with that qualification."
+        }
+      },
+      "category_after_cross_check": "fixed_template_appearance_drift",
+      "category_ko": "고정 시드 템플릿 대비 외형 변화(알고리즘 원인; 사용자 범주 외 추가)",
+      "secondary_category": "fast_motion_out_of_range",
+      "unverified": [
+        "mitt identity of the seeded/tracked patch (AI observation only; 'likely_mitt' and 'not_mitt' are AI readings of a contact sheet)",
+        "which hand holds the object",
+        "any frame outside observed_range"
+      ]
+    },
+    {
+      "pitch_id": "747139:3:3",
+      "seed_frame_index": 17233,
+      "seed_source_sha256": "366be15bee1fd32a966f0e0ec886e6fad5bb20ff696ac059eec2daac63bcd1ec",
+      "seed_px": [
+        640,
+        250
+      ],
+      "tracked_frames_before_loss": 32,
+      "tracked_span_seconds": 3.1031,
+      "first_loss_frame_index": 17425,
+      "first_loss_source_sha256": "e21831266804f3fc087dc35cac56f541f553719593554f643ac505021f40e0ad",
+      "seconds_after_seed": 3.2032,
+      "last_tracked_px": [
+        629,
+        243
+      ],
+      "a_saved_algorithmic_reason": {
+        "reason": "ambiguous_peak",
+        "quality": {
+          "appearance_change": 0.003,
+          "ncc": 0.759,
+          "peak_margin": 0.035
+        },
+        "source": "CV37 v3 records_cpu.json (unchanged)"
+      },
+      "b_offline_replay_diagnostics": {
+        "seed_template_best_r24": {
+          "ncc": 0.759,
+          "source_px": [
+            630,
+            242
+          ],
+          "dist_from_last_px": 1.4,
+          "margin_to_second": 0.035
+        },
+        "seed_template_best_r40": {
+          "ncc": 0.759,
+          "dist_from_last_px": 1.4
+        },
+        "last_confirmed_patch_best_r24": {
+          "ncc": 0.835,
+          "source_px": [
+            630,
+            241
+          ],
+          "dist_from_last_px": 2.2,
+          "margin_to_second": 0.092
+        },
+        "last_patch_vs_seed_template_ncc": 0.738,
+        "seed_template_std": 0.264,
+        "seed_template_ncc_near_next_saved_ai_point": {
+          "ai_px": [
+            670.0,
+            265.0
+          ],
+          "best_ncc_within_6px": 0.456,
+          "ai_dist_from_last_px": 46.5
+        },
+        "note": "deterministic CPU replay of the same crop/template; the last-patch match is a diagnostic, not a tracker output"
+      },
+      "c_ai_development_observation": {
+        "kind": "AI development observation (Claude, contact sheets of saved frames); not human truth, not an independent evaluation",
+        "frames_inspected": [
+          17233,
+          17389,
+          17395,
+          17401,
+          17407,
+          17413,
+          17419,
+          17425,
+          17431,
+          17437,
+          17443
+        ],
+        "observed_range": [
+          17233,
+          17443
+        ],
+        "observed_frame_sha256": {
+          "17233": "366be15bee1fd32a966f0e0ec886e6fad5bb20ff696ac059eec2daac63bcd1ec",
+          "17389": "5e8eacefb37558709ce3ad752a2ec5e101741c9f37c511253182fea948a50619",
+          "17395": "683f16fe595ef0262d5a750a6d8d6bab8d4c374376c9fd587218f27d1ff7872b",
+          "17401": "583058b069fec850d608f8f4e968c97bf80272b9111811ced08c9302ebd4b357",
+          "17407": "cb02c530a77acddf48e5d1d11cd8f505a94d942d78c27b87afc6e75b398fa1a2",
+          "17413": "1a6a44db0cf1e05243af51b5c54257745f758930e439af0cb903ee6b344b8493",
+          "17419": "f3646a1c58ea56f2b3119c89f9b5d16b911acaae956da3307e485af6696c37b1",
+          "17425": "e21831266804f3fc087dc35cac56f541f553719593554f643ac505021f40e0ad",
+          "17431": "d44a60806f33c196f19a0cf04de881db40b9af5292ae980888618a8a7251dfe6",
+          "17437": "305f236e0c058c076716dc0a2c8b1ed647f08be32b73189158ea8ed7d54b886f",
+          "17443": "7951335448014ef75eaf972a3726ff3f4f0eacf00930d97d53fcfb59fb23fa04"
+        },
+        "zoom_centre_source_px": [
+          629,
+          243
+        ],
+        "zoom_half_px": 80,
+        "scene_change": "none",
+        "occlusion_at_loss": "none",
+        "motion_at_loss": "slow",
+        "similar_patches_nearby": "yes",
+        "similar_patch_description": "Seed-template second peak ncc 0.724 at [652,245], 23.1 px right of the last point (best 0.759 at [630,242]); on the loss tile that location is on the catcher's white pants/thigh right at the upper edge of the dark mitt, i.e. a light patch bordered by dark gear, similar in layout to the seed patch (light hand between dark shin guards). Last-confirmed patch also has a second peak 0.743 at [618,246] (11 px left, white pants/wrist beside the hand), but with a 0.092 margin.",
+        "tracked_patch_appears_to_be": "Catcher's bare (throwing) hand: a round flesh-toned patch between the knees at the seed frame, then the same flesh patch rising with a white wristband visible by 17419-17425. Not a mitt pocket, mitt edge, lacing, shin guard, or dirt; closest listed category would be 'uniform' but the patch is skin, not fabric.",
+        "seed_on_mitt": "not_mitt",
+        "mitt_at_loss_relative_to_tracked_point": "The saved AI mitt reading at 17425 is [670,265], i.e. 41 px right and 22 px below the last tracked point [629,243] (46.5 px). Visually the dark mitt sits at the catcher's viewer's-right knee, lower-right of the tracked hand; the mitt is fully visible and the seed template matches only 0.456 within 6 px of it.",
+        "observer_primary_cause": "seed_identity_uncertain",
+        "observer_secondary_cause": "similar_patch_ambiguity",
+        "observer_confidence": "high",
+        "observer_evidence": "Saved algorithmic reason: ambiguous_peak (ncc 0.759 >= 0.65 passes, peak_margin 0.035 < 0.05 fails; no fb computed). Visual observation (tiles enlarged for 17233, 17389, 17401, 17413, 17419, 17425, 17431, 17437; others viewed on the full sheet): at the seed frame 17233 the cyan box and orange AI circle both sit on a round flesh-toned object between the catcher's knees, while a separate dark glove is visible at the viewer's-right knee. From 17389 on, every saved AI reading ([677,256], [662,260], [671,258], [670,265], [667,262]) lands on that dark glove, 24-46 px from the cyan patch, which stays on the flesh patch (bare hand). So the tracker followed the hand for the whole stretch, which is why seed_identity_uncertain is primary. The proximate trigger at 17425 is a near-equal second seed-template peak: 0.759 at [630,242] (1.4 px away, the hand still there) vs 0.724 at [652,245] (23 px right, white pants next to the mitt edge), margin 0.035. The last confirmed patch still matches the hand well (0.835 at [630,241], margin 0.092) and last_patch_vs_seed ncc is 0.738, so appearance drift from the fixed template is modest and not the gate that failed. Motion is slow (track moved [631,246]->[629,243] over 6 frames; best peaks within 2 px of last point). Same camera, no cut, no zoom, no occlusion of the tracked hand or of the mitt at the loss frame. Mitt identity not verified; this is an observation from the sheet and the replay numbers.",
+        "skeptic_cross_check": {
+          "primary_cause_supported": false,
+          "seed_on_mitt_supported": true,
+          "corrected_primary_cause": "similar_patch_ambiguity",
+          "reason": "Seed-not-on-mitt is visible (flesh patch with white wristband at 17419; dark glove with the AI circles 24-46 px away at the viewer's-right thigh at 17413/17425), so not_mitt is supported. But it is not what lost the patch: at 17425 the hand is still at the last point matching 0.759 (seed) / 0.835 (last patch) within 2 px, and the only failed gate is margin 0.035 from a distinct 0.724 peak 23 px away on white pants beside the mitt. That mechanism is similar_patch_ambiguity; 'seed identity uncertain' is also a misnomer here because the identity (bare hand) is clear, and the same hand-tracking situation in 3:1 was labelled by mechanism. Overclaimed as primary."
+        }
+      },
+      "category_after_cross_check": "similar_patch_ambiguity",
+      "category_ko": "유사 패치 복수(봉우리 차 부족)",
+      "secondary_category": "similar_patch_ambiguity",
+      "unverified": [
+        "mitt identity of the seeded/tracked patch (AI observation only; 'likely_mitt' and 'not_mitt' are AI readings of a contact sheet)",
+        "which hand holds the object",
+        "any frame outside observed_range"
+      ]
+    },
+    {
+      "pitch_id": "747139:4:1",
+      "seed_frame_index": 19585,
+      "seed_source_sha256": "e7a5c708c5d1c62c56573f312c0df8f0f34fc66ca1dace38a7ddd9dc0a6a2233",
+      "seed_px": [
+        645,
+        212
+      ],
+      "tracked_frames_before_loss": 1,
+      "tracked_span_seconds": 0.0,
+      "first_loss_frame_index": 19591,
+      "first_loss_source_sha256": "93879fbc010ea4e57838f1badaf410cc49879c14a1a29f53e82a77bade2cbb77",
+      "seconds_after_seed": 0.1001,
+      "last_tracked_px": [
+        645,
+        212
+      ],
+      "a_saved_algorithmic_reason": {
+        "reason": "low_similarity",
+        "quality": {
+          "appearance_change": 0.002,
+          "ncc": 0.649,
+          "peak_margin": 0.222
+        },
+        "source": "CV37 v3 records_cpu.json (unchanged)"
+      },
+      "b_offline_replay_diagnostics": {
+        "seed_template_best_r24": {
+          "ncc": 0.649,
+          "source_px": [
+            642,
+            212
+          ],
+          "dist_from_last_px": 3.0,
+          "margin_to_second": 0.222
+        },
+        "seed_template_best_r40": {
+          "ncc": 0.649,
+          "dist_from_last_px": 3.0
+        },
+        "last_confirmed_patch_best_r24": {
+          "ncc": 0.649,
+          "source_px": [
+            642,
+            212
+          ],
+          "dist_from_last_px": 3.0,
+          "margin_to_second": 0.222
+        },
+        "last_patch_vs_seed_template_ncc": 1.0,
+        "seed_template_std": 0.096,
+        "seed_template_ncc_near_next_saved_ai_point": {
+          "ai_px": [
+            640.0,
+            205.0
+          ],
+          "best_ncc_within_6px": 0.558,
+          "ai_dist_from_last_px": 8.6
+        },
+        "note": "deterministic CPU replay of the same crop/template; the last-patch match is a diagnostic, not a tracker output"
+      },
+      "c_ai_development_observation": {
+        "kind": "AI development observation (Claude, contact sheets of saved frames); not human truth, not an independent evaluation",
+        "frames_inspected": [
+          19585,
+          19591,
+          19597,
+          19603,
+          19609
+        ],
+        "observed_range": [
+          19585,
+          19609
+        ],
+        "observed_frame_sha256": {
+          "19585": "e7a5c708c5d1c62c56573f312c0df8f0f34fc66ca1dace38a7ddd9dc0a6a2233",
+          "19591": "93879fbc010ea4e57838f1badaf410cc49879c14a1a29f53e82a77bade2cbb77",
+          "19597": "4d4c7f334d94a987728ee51f0569b3c3705117db26b641b8148e64b4da08ddbf",
+          "19603": "a02cf289642e494c2677dd90340dd2470e965e500440208d01c5b1d569635c9d",
+          "19609": "cb7b98d4c2083bea4e67a3c69acc55d9b2d5c2fd31a0cd5d694984fbdab38675"
+        },
+        "zoom_centre_source_px": [
+          645,
+          212
+        ],
+        "zoom_half_px": 80,
+        "scene_change": "none",
+        "occlusion_at_loss": "none",
+        "motion_at_loss": "slow",
+        "similar_patches_nearby": "no",
+        "similar_patch_description": "Second NCC peak is only 0.427 at (636,188), 25.6 px above the last tracked point (on the catcher's chest protector / between the hands), far below the 0.649 best peak; margin 0.222 shows a single clear peak, no competing look-alike.",
+        "tracked_patch_appears_to_be": "Seed frame 19585: a compact dark round glove face with a lighter rim and a small reddish mark (logo/lacing), held at the catcher's chest on the hand with the orange forearm guard (viewer's right); the bare throwing-hand fist is just to its viewer's left, outside the cyan box. Appears to be the mitt pocket/face seen nearly closed/edge-on.",
+        "seed_on_mitt": "likely_mitt",
+        "mitt_at_loss_relative_to_tracked_point": "At 19591 the dark glove still covers the last tracked point (645,212); the glove has rotated/opened so it now shows a much larger flat dark face with a grey marking, extending up and to the viewer's left of the point. Offline best match is 3 px away at (642,212); the next AI readings are 8.6 px away at (640,205) (19597) and (645,203) (19609), both on that same glove.",
+        "observer_primary_cause": "threshold_borderline",
+        "observer_secondary_cause": "fixed_template_appearance_drift",
+        "observer_confidence": "high",
+        "observer_evidence": "Saved algorithmic reason: low_similarity with ncc 0.6492 (threshold 0.65, miss by ~0.001), peak_margin 0.222, appearance_change 0.002. Offline replay at 19591: seed-template best peak 0.649 at (642,212), 3.0 px from last point; second peak 0.427 at 25.6 px; r40 adds nothing above 0.404. last_patch_vs_seed_template_ncc = 1.0 (loss on first step after the external seed at 19585, so last patch == seed; the last-patch replay cannot discriminate drift). seed_template_std 0.096 (low-contrast patch). Seed NCC near next AI point (640,205): 0.558, AI dist 8.6 px. Visual: right panels show the same centre-field framing across all five tiles (no cut, no zoom/pan); no batter or umpire in front of the glove at 19591; between 19585 and 19591 the glove changes from a compact dark round shape with a light rim to a wide, flat dark face with a grey marking (rotation/opening), while moving only a few px. The clear single peak just under 0.65 supports threshold_borderline; the visible pose change of a fixed, low-contrast template supports appearance drift as secondary. Mitt identity not verified; the seed point coincides with the AI point and later AI readings fall on the same dark glove.",
+        "skeptic_cross_check": {
+          "primary_cause_supported": true,
+          "seed_on_mitt_supported": true,
+          "corrected_primary_cause": "threshold_borderline",
+          "reason": "19585 to 19591: the same dark glove at the chest (on the arm with the orange forearm guard, bare fist to the viewer's left) opens from a compact round face into a broad flat face while moving ~3 px; a single clear peak 0.649 (margin 0.222, second 0.427 at 25.6 px) misses the 0.65 gate by 0.001; next AI readings 8.6 px away on the same glove; no cut or occluder. Borderline primary with drift secondary is exactly what the sheet and numbers show."
+        }
+      },
+      "category_after_cross_check": "threshold_borderline",
+      "category_ko": "임계값 경계(기존 임계값 바로 아래)",
+      "secondary_category": "fixed_template_appearance_drift",
+      "unverified": [
+        "mitt identity of the seeded/tracked patch (AI observation only; 'likely_mitt' and 'not_mitt' are AI readings of a contact sheet)",
+        "which hand holds the object",
+        "any frame outside observed_range"
+      ]
+    },
+    {
+      "pitch_id": "747139:4:2",
+      "seed_frame_index": 20470,
+      "seed_source_sha256": "bff0b93363e7e9627deb0ab9d142c5539d35546bbe3bebc48a9461dac4d4a588",
+      "seed_px": [
+        665,
+        226
+      ],
+      "tracked_frames_before_loss": 40,
+      "tracked_span_seconds": 3.9039,
+      "first_loss_frame_index": 20710,
+      "first_loss_source_sha256": "7eda6228a64c4f5e779c7ed29bf4e04ebb18967cb66ecea87a07b6fd4b26b9a8",
+      "seconds_after_seed": 4.004,
+      "last_tracked_px": [
+        669,
+        232
+      ],
+      "a_saved_algorithmic_reason": {
+        "reason": "forward_backward_mismatch",
+        "quality": {
+          "appearance_change": 0.003,
+          "ncc": 0.674,
+          "peak_margin": 0.22,
+          "backward_ncc": 0.681,
+          "fb_error_px": 3.162
+        },
+        "source": "CV37 v3 records_cpu.json (unchanged)"
+      },
+      "b_offline_replay_diagnostics": {
+        "seed_template_best_r24": {
+          "ncc": 0.674,
+          "source_px": [
+            664,
+            232
+          ],
+          "dist_from_last_px": 5.0,
+          "margin_to_second": 0.219
+        },
+        "seed_template_best_r40": {
+          "ncc": 0.674,
+          "dist_from_last_px": 5.0
+        },
+        "last_confirmed_patch_best_r24": {
+          "ncc": 0.537,
+          "source_px": [
+            664,
+            233
+          ],
+          "dist_from_last_px": 5.1,
+          "margin_to_second": 0.147
+        },
+        "last_patch_vs_seed_template_ncc": 0.71,
+        "seed_template_std": 0.078,
+        "seed_template_ncc_near_next_saved_ai_point": {
+          "ai_px": [
+            665.0,
+            223.0
+          ],
+          "best_ncc_within_6px": 0.406,
+          "ai_dist_from_last_px": 9.8
+        },
+        "note": "deterministic CPU replay of the same crop/template; the last-patch match is a diagnostic, not a tracker output"
+      },
+      "c_ai_development_observation": {
+        "kind": "AI development observation (Claude, contact sheets of saved frames); not human truth, not an independent evaluation",
+        "frames_inspected": [
+          20470,
+          20674,
+          20680,
+          20686,
+          20692,
+          20698,
+          20704,
+          20710,
+          20716,
+          20722,
+          20728
+        ],
+        "observed_range": [
+          20470,
+          20728
+        ],
+        "observed_frame_sha256": {
+          "20470": "bff0b93363e7e9627deb0ab9d142c5539d35546bbe3bebc48a9461dac4d4a588",
+          "20674": "c2566b38ede0f803e1a2571faa1aaeafd1d176803fe3922df6d2492aa0ad0de5",
+          "20680": "b61b54bf7eed7927e9c15dd7f462a224612b037f3463feb90d550b8315a343aa",
+          "20686": "2cb07aa8f778184a9cef31c5683e049a3fc2b1820bb16f5642e2e9eecdbc9e4a",
+          "20692": "e698da115f33d9a2c3d3976712e31606f40cde2dd7347dac42eeb4967a3c6cbc",
+          "20698": "a388c11a5b96b46c1009f779183c17159cebf86692590e03f0652b6cfd33a94d",
+          "20704": "138736e9e8ccba24b94e1feb7d88332eebd646f932e56a1584d38837f175c707",
+          "20710": "7eda6228a64c4f5e779c7ed29bf4e04ebb18967cb66ecea87a07b6fd4b26b9a8",
+          "20716": "f8827ea360f739373ac3af6ecae1c2d9a74fecc2e161ec3e3c9d25b694f4d9a3",
+          "20722": "a12d8fcc94b95e557238e48715bf4c1127fa4d197941480051947e6855aa0d4c",
+          "20728": "77cdab20be6ce2c67b402c90c6f50cd5ede9f1d5e8a0ae625909c7ca67d448dc"
+        },
+        "zoom_centre_source_px": [
+          669,
+          232
+        ],
+        "zoom_half_px": 80,
+        "scene_change": "none",
+        "occlusion_at_loss": "none",
+        "motion_at_loss": "slow",
+        "similar_patches_nearby": "yes",
+        "similar_patch_description": "The tracked patch sits inside a large, nearly uniform dark region: the mitt face plus the dark wrist/forearm area immediately below-right of it and the shadowed area between the catcher's legs. Seed template std is only 0.078 (very low contrast), so neighbouring dark areas look alike visually. However, the offline replay shows no competing peak: seed-template second peak 0.455 at [676,254] vs best 0.674 (margin 0.22), and last-patch second peak 0.39, so ambiguity between distinct candidates is not what the numbers show at the loss frame.",
+        "tracked_patch_appears_to_be": "Dark, low-texture lower-right portion of the mitt body near its lower edge/wrist, not the pocket centre. From 20674 onward the cyan box drifted from the mitt centre toward the lower-right of the dark glove blob (tracked x 677->669, y 226->232) while the AI readings moved to the upper-left of the same blob (680,228 -> 662,226 -> 665,223).",
+        "seed_on_mitt": "likely_mitt",
+        "mitt_at_loss_relative_to_tracked_point": "The saved AI mitt reading at the loss frame is [665,223], 9.8 px up (and 4 px left) of the last tracked point [669,232]; the loss-frame best seed match [664,232] is ~9 px directly below the AI point. Both lie within the same dark glove blob: the AI circle is on the mitt face (with a small bright speck inside), the tracked point on the mitt's lower part near the wrist. Six frames later (20716) the glove is visibly turned, and at 20722 the AI reading has moved to [647,212] as the catcher lifts/rotates the mitt toward the chest.",
+        "observer_primary_cause": "fixed_template_appearance_drift",
+        "observer_secondary_cause": "threshold_borderline",
+        "observer_confidence": "medium",
+        "observer_evidence": "Visual: single CF camera framing throughout (pitcher on mound, catcher crouched behind plate, same crop) so no cut/zoom. At seed 20470 the cyan box and orange circle coincide on a dark round glove held face-on in front of the catcher's chest. From 20674 to 20722 the catcher's bare right hand is on top of the mitt and the mitt is slowly handled/rotated: face-on at seed, tilted with fingers spread over it at 20686-20710, turned at 20716, lifted to chest with AI at [647,212] by 20722. The bare hand covers the upper-left of the mitt but not the tracked lower-right patch at 20710, so no direct occlusion. Motion is slow (~5 px between 20704 and 20710). Numbers: saved ncc declines monotonically 0.90 (20674), 0.89, 0.82, 0.79, 0.75, 0.71 (20704), 0.67 (20710) against the fixed seed template while frame-to-frame appearance_change stays ~0.003, i.e. a cumulative drift of the mitt's appearance away from the seed as it is rotated/handled; last_patch_vs_seed_template_ncc = 0.71 confirms the last confirmed patch had already diverged from the seed. Replay at 20710: seed template best 0.674 at [664,232] (5 px from last point, margin 0.22, clear), last confirmed patch best only 0.537 at [664,233], so the loss-frame region matches neither template well (the 'last patch high / seed low' signature is absent; the local appearance changed within those 6 frames). Seed-template ncc near the AI point [665,223] is 0.406. Saved algorithmic reason is forward_backward_mismatch with fb_error 3.16 px vs the 3.0 px gate, backward_ncc 0.681, ncc 0.674 vs the 0.65 gate: both gates were tripped/near-tripped by very small margins on a very low-contrast patch (seed std 0.078), which is why threshold_borderline is listed as secondary. Tracked-to-AI distance stayed <14 px throughout, so seed identity drift is not indicated. Mitt identity is not verified; it is inferred from the dark glove-shaped object between the catcher's hands.",
+        "skeptic_cross_check": {
+          "primary_cause_supported": true,
+          "seed_on_mitt_supported": true,
+          "corrected_primary_cause": "fixed_template_appearance_drift",
+          "reason": "Seed 20470 on a dark round glove face held at the chest, AI coincident; by 20704/20710 the glove is being handled with the bare hand over its upper-left and the cyan box has slid to its lower-right edge, visibly turned by 20716; seed ncc decays monotonically 0.90 to 0.67 (last_patch_vs_seed 0.71) and the fb gate trips at 3.16 px. Supported, with the caveat the observer itself notes: the last-patch replay is only 0.537 (no 'last patch high / seed low' signature) and both gates missed by hairs (fb +0.16 px, ncc 0.024 above floor), so threshold_borderline is nearly co-primary rather than clearly secondary."
+        }
+      },
+      "category_after_cross_check": "fixed_template_appearance_drift",
+      "category_ko": "고정 시드 템플릿 대비 외형 변화(알고리즘 원인; 사용자 범주 외 추가)",
+      "secondary_category": "threshold_borderline",
+      "unverified": [
+        "mitt identity of the seeded/tracked patch (AI observation only; 'likely_mitt' and 'not_mitt' are AI readings of a contact sheet)",
+        "which hand holds the object",
+        "any frame outside observed_range"
+      ]
+    },
+    {
+      "pitch_id": "747139:5:1",
+      "seed_frame_index": 21342,
+      "seed_source_sha256": "d0f2bcc3ca0ed7bd330a33880562af013054f79ac14cc42bc189a02e5dc25e6c",
+      "seed_px": [
+        618,
+        250
+      ],
+      "tracked_frames_before_loss": 1,
+      "tracked_span_seconds": 0.0,
+      "first_loss_frame_index": 21348,
+      "first_loss_source_sha256": "3a8bac958a5ac18a9e40dd26330aa05b3d5deaa5a9596bf195f9844a6c309587",
+      "seconds_after_seed": 0.1001,
+      "last_tracked_px": [
+        618,
+        250
+      ],
+      "a_saved_algorithmic_reason": {
+        "reason": "low_similarity",
+        "quality": {
+          "appearance_change": 0.021,
+          "ncc": 0.647,
+          "peak_margin": 0.047
+        },
+        "source": "CV37 v3 records_cpu.json (unchanged)"
+      },
+      "b_offline_replay_diagnostics": {
+        "seed_template_best_r24": {
+          "ncc": 0.647,
+          "source_px": [
+            614,
+            250
+          ],
+          "dist_from_last_px": 4.0,
+          "margin_to_second": 0.047
+        },
+        "seed_template_best_r40": {
+          "ncc": 0.647,
+          "dist_from_last_px": 4.0
+        },
+        "last_confirmed_patch_best_r24": {
+          "ncc": 0.647,
+          "source_px": [
+            614,
+            250
+          ],
+          "dist_from_last_px": 4.0,
+          "margin_to_second": 0.047
+        },
+        "last_patch_vs_seed_template_ncc": 1.0,
+        "seed_template_std": 0.099,
+        "seed_template_ncc_near_next_saved_ai_point": {
+          "ai_px": [
+            625.0,
+            206.0
+          ],
+          "best_ncc_within_6px": 0.383,
+          "ai_dist_from_last_px": 44.6
+        },
+        "note": "deterministic CPU replay of the same crop/template; the last-patch match is a diagnostic, not a tracker output"
+      },
+      "c_ai_development_observation": {
+        "kind": "AI development observation (Claude, contact sheets of saved frames); not human truth, not an independent evaluation",
+        "frames_inspected": [
+          21342,
+          21348,
+          21354,
+          21360,
+          21366
+        ],
+        "observed_range": [
+          21342,
+          21366
+        ],
+        "observed_frame_sha256": {
+          "21342": "d0f2bcc3ca0ed7bd330a33880562af013054f79ac14cc42bc189a02e5dc25e6c",
+          "21348": "3a8bac958a5ac18a9e40dd26330aa05b3d5deaa5a9596bf195f9844a6c309587",
+          "21354": "088b19dc1bc21e7ee399dd108af452d4aeb24c1693e5442dafb46b4a276c1961",
+          "21360": "7d3dbeaef5253a209885c74a945dd3741dda43345c5cf5accf5f3c77af06c8a8",
+          "21366": "d3d48f70d56e1605e084e1e3a12041dec81eadcbd7e76f06eebfe16c35e98ee8"
+        },
+        "zoom_centre_source_px": [
+          618,
+          250
+        ],
+        "zoom_half_px": 80,
+        "scene_change": "cut",
+        "occlusion_at_loss": "none",
+        "motion_at_loss": "slow",
+        "similar_patches_nearby": "yes",
+        "similar_patch_description": "Low-contrast gray catcher pants and the hanging bare throwing hand just left of the tracked point: replay peaks 0.600 at (611,245) 8.6 px away and 0.584 at (604,230) 24.4 px away, within 0.05-0.06 of the best 0.647 at (614,250). Seed template std is only 0.099, so several pants/hand shading spots score nearly alike.",
+        "tracked_patch_appears_to_be": "A small dark, roundish brown-gray blob on the catcher's gray pants between his hanging bare hand and the right shin guard, seen in a frame that is mid cross-dissolve (ghost overlay visible). It is not the dark glove at the catcher's chest. It may be the bare throwing hand/fist or a ghost element of the fading shot; by 21348 that spot is plain gray pants beside the open bare hand and the blob is gone.",
+        "seed_on_mitt": "not_mitt",
+        "mitt_at_loss_relative_to_tracked_point": "No AI reading is saved at 21348. Visually at 21348 the dark glove sits at the centre of the catcher's chest protector, roughly 40-45 px above and slightly right of the tracked point (618,250). The next AI readings put the mitt at (625,206) on 21354 and (630,207) on 21366, i.e. 44.6 px from the tracked point; seed-template NCC near that AI point is only 0.383.",
+        "observer_primary_cause": "seed_identity_uncertain",
+        "observer_secondary_cause": "scene_change_or_cut",
+        "observer_confidence": "medium",
+        "observer_evidence": "Saved algorithmic reason: low_similarity at 21348 with ncc 0.647 (<0.65), peak_margin 0.047 (<0.05), appearance_change 0.021, fb none. Visual: the seed tile 21342 is a cross-dissolve (translucent second figure left of the pitcher, doubled pitcher, ghosted catcher); the cyan 21px box and orange AI circle sit on a dark round blob on the catcher's gray pants near his hanging bare hand, while a separate dark glove is visible at the catcher's chest in the same frame. At 21348 the dissolve has resolved to the clean centre-field shot, the catcher's pose is essentially unchanged (crouched, arms hanging, shin guard right), the blob is gone and the tracked spot is plain gray pants; nothing occludes it. Diagnostics: last_patch_vs_seed_template_ncc 1.0 (only the seed frame was tracked, so appearance drift cannot be separated); seed/last-patch r24 and r40 peaks are identical: 0.647 at (614,250) 4 px away, 0.600 at (611,245) 8.6 px, 0.584 at (604,230) 24.4 px; seed_template_std 0.099 (low texture). AI mitt readings on 21354 (625,206) and 21366 (630,207) are 44.6 px from the tracked point and the seed template scores only 0.383 near them, supporting a seed that was not on the mitt. Both ncc and margin are marginally under threshold, but the margin is not clear, so threshold_borderline is weaker than the seed-identity and dissolve evidence. Mitt identity is not verified; this is an observation from the sheet and replay numbers only.",
+        "skeptic_cross_check": {
+          "primary_cause_supported": true,
+          "seed_on_mitt_supported": true,
+          "corrected_primary_cause": "seed_identity_uncertain",
+          "reason": "Seed tile 21342 is visibly mid-dissolve (ghosted pitcher and a translucent second figure); the cyan/orange patch is a dark blob on gray pants at the end of the hanging bare arm, 40+ px below the dark glove at the chest; at 21348 the dissolve has resolved, the blob is gone (plain pants, open bare hand ~10-15 px to the left) and the next AI readings are 44.6 px away with seed ncc 0.383 there. What was seeded (dissolve-blended hand or a ghost element) genuinely cannot be identified from the sheet, so seed_identity_uncertain / not_mitt is supported; the dissolve is an equally supported co-primary and both gates missed by 0.003, which the observer states."
+        }
+      },
+      "category_after_cross_check": "seed_identity_uncertain",
+      "category_ko": "시드·추적 패치의 미트 식별 불확실",
+      "secondary_category": "scene_change_or_cut",
+      "unverified": [
+        "mitt identity of the seeded/tracked patch (AI observation only; 'likely_mitt' and 'not_mitt' are AI readings of a contact sheet)",
+        "which hand holds the object",
+        "any frame outside observed_range"
+      ]
+    },
+    {
+      "pitch_id": "747139:5:2",
+      "seed_frame_index": 22118,
+      "seed_source_sha256": "d81269b3aa6548bd253c1c8af97cb2c5abc8c2a3ad65a98d71d6d4f98558839a",
+      "seed_px": [
+        677,
+        216
+      ],
+      "tracked_frames_before_loss": 2,
+      "tracked_span_seconds": 0.1001,
+      "first_loss_frame_index": 22130,
+      "first_loss_source_sha256": "6bdcd8e5f54785ca49da3b48064c98cc25ad02816167bbe8e176c632d096baa4",
+      "seconds_after_seed": 0.2002,
+      "last_tracked_px": [
+        679,
+        215
+      ],
+      "a_saved_algorithmic_reason": {
+        "reason": "low_similarity",
+        "quality": {
+          "appearance_change": 0.002,
+          "ncc": 0.5,
+          "peak_margin": 0.117
+        },
+        "source": "CV37 v3 records_cpu.json (unchanged)"
+      },
+      "b_offline_replay_diagnostics": {
+        "seed_template_best_r24": {
+          "ncc": 0.5,
+          "source_px": [
+            680,
+            214
+          ],
+          "dist_from_last_px": 1.4,
+          "margin_to_second": 0.117
+        },
+        "seed_template_best_r40": {
+          "ncc": 0.5,
+          "dist_from_last_px": 1.4
+        },
+        "last_confirmed_patch_best_r24": {
+          "ncc": 0.75,
+          "source_px": [
+            680,
+            214
+          ],
+          "dist_from_last_px": 1.4,
+          "margin_to_second": 0.361
+        },
+        "last_patch_vs_seed_template_ncc": 0.811,
+        "seed_template_std": 0.056,
+        "seed_template_ncc_near_next_saved_ai_point": {
+          "ai_px": [
+            675.0,
+            215.0
+          ],
+          "best_ncc_within_6px": 0.5,
+          "ai_dist_from_last_px": 4.0
+        },
+        "note": "deterministic CPU replay of the same crop/template; the last-patch match is a diagnostic, not a tracker output"
+      },
+      "c_ai_development_observation": {
+        "kind": "AI development observation (Claude, contact sheets of saved frames); not human truth, not an independent evaluation",
+        "frames_inspected": [
+          22118,
+          22124,
+          22130,
+          22136,
+          22142,
+          22148
+        ],
+        "observed_range": [
+          22118,
+          22148
+        ],
+        "observed_frame_sha256": {
+          "22118": "d81269b3aa6548bd253c1c8af97cb2c5abc8c2a3ad65a98d71d6d4f98558839a",
+          "22124": "cf5bad796ac746b38744259784d460d236bc8b2498cdafdbee379278d07c45e0",
+          "22130": "6bdcd8e5f54785ca49da3b48064c98cc25ad02816167bbe8e176c632d096baa4",
+          "22136": "a8dae1ea6cb70b0bcfdc2e153757ca7bcbae6445c74edafbf7e4d2cf44e22597",
+          "22142": "dac573cdb69451c52c565498dcb104181b8df9805c6cd500a0efa8f96487dc2b",
+          "22148": "70bf139576768aec1f0cec8fc74531b4f0c38d900adcf2b2c211b218e63f5d94"
+        },
+        "zoom_centre_source_px": [
+          679,
+          215
+        ],
+        "zoom_half_px": 80,
+        "scene_change": "none",
+        "occlusion_at_loss": "none",
+        "motion_at_loss": "slow",
+        "similar_patches_nearby": "no",
+        "similar_patch_description": "The umpire's dark trousers are directly to the right of the mitt in every tile, and the mitt pocket itself is a near-uniform dark blob, but the replay shows no competing peak: second-best NCC is 0.383 (seed) / 0.389 (last patch) at [668,197], 21 px away, far below the 0.50 / 0.75 best at the tracked spot.",
+        "tracked_patch_appears_to_be": "mitt pocket - the dark, low-texture leather face of the catcher's mitt held in front of the chest protector (viewer's right of the torso, next to the umpire's dark trousers); at 22124 the box had shifted 2 px right onto the upper-right part of the pocket where a lighter streak (interior/lacing) is visible",
+        "seed_on_mitt": "likely_mitt",
+        "mitt_at_loss_relative_to_tracked_point": "At 22130 the dark mitt face is still centred on/just left-below the last tracked point [679,215]; the saved AI reading is [675,215], 4 px to the left, and the best NCC peaks for both templates sit at [680,214], 1.4 px away. The mitt has not moved away from the tracked point; it only re-angled slightly.",
+        "observer_primary_cause": "fixed_template_appearance_drift",
+        "observer_secondary_cause": "unclear",
+        "observer_confidence": "high",
+        "observer_evidence": "Saved reason: low_similarity, ncc 0.50 < 0.65 with peak_margin 0.117 (above 0.05). Replay at 22130: last confirmed patch (from 22124) matches 0.75 at [680,214], 1.4 px from the last tracked point, while the fixed seed template reaches only 0.50 at the same location (and 0.50 best within 6 px of the AI point [675,215]); r40 gives the same peaks, so nothing better exists further out. Second peaks 0.38-0.39 at 21 px rule out ambiguity; AI point only 4 px from the tracked point and 2 px from the seed rule out identity drift and fast motion; tiles 22118-22148 show the same camera, framing, and an unoccluded mitt. Seed template std is 0.056 (very low contrast dark pocket), and last_patch_vs_seed NCC was already 0.811 at 22124, so small shading/angle changes of the mitt face as the catcher sets his target drop the fixed-template NCC below threshold while a frame-adjacent patch still matches well. Visually the mitt is in place and the pose is near-static. The low template contrast is a contributing factor without a matching category, hence secondary 'unclear'. Mitt identity is not verified; the seed only appears to sit on the dark mitt face.",
+        "skeptic_cross_check": {
+          "primary_cause_supported": true,
+          "seed_on_mitt_supported": true,
+          "corrected_primary_cause": "fixed_template_appearance_drift",
+          "reason": "Seed 22118 on the dark glove face at the chest on the viewer's-right side beside the umpire's trousers, bare hand visible at the viewer's left, AI coincident; at 22130 the glove is still at the last point (AI 4 px away, best peaks at 1.4 px), only slightly re-angled; last patch 0.75 vs seed 0.50 at the same spot (last_patch_vs_seed 0.811), second peaks 0.38-0.39 at 21 px. Clean fixed-template drift signature on a std-0.056 template; no cut, occlusion or displacement visible."
+        }
+      },
+      "category_after_cross_check": "fixed_template_appearance_drift",
+      "category_ko": "고정 시드 템플릿 대비 외형 변화(알고리즘 원인; 사용자 범주 외 추가)",
+      "secondary_category": "unclear",
+      "unverified": [
+        "mitt identity of the seeded/tracked patch (AI observation only; 'likely_mitt' and 'not_mitt' are AI readings of a contact sheet)",
+        "which hand holds the object",
+        "any frame outside observed_range"
+      ]
+    },
+    {
+      "pitch_id": "747139:5:3",
+      "seed_frame_index": 23212,
+      "seed_source_sha256": "cca445e4b03dae16b07df7f8a2a3738fba8a02cec54fec236b7dcd17bef6ee4f",
+      "seed_px": [
+        675,
+        228
+      ],
+      "tracked_frames_before_loss": 15,
+      "tracked_span_seconds": 1.4014,
+      "first_loss_frame_index": 23302,
+      "first_loss_source_sha256": "61087eecfd337666b33924f6f6ff23de4f427d5a5f7eecbb6d1ce6af3e978982",
+      "seconds_after_seed": 1.5015,
+      "last_tracked_px": [
+        675,
+        229
+      ],
+      "a_saved_algorithmic_reason": {
+        "reason": "ambiguous_peak",
+        "quality": {
+          "appearance_change": 0.002,
+          "ncc": 0.822,
+          "peak_margin": 0.044
+        },
+        "source": "CV37 v3 records_cpu.json (unchanged)"
+      },
+      "b_offline_replay_diagnostics": {
+        "seed_template_best_r24": {
+          "ncc": 0.822,
+          "source_px": [
+            673,
+            230
+          ],
+          "dist_from_last_px": 2.2,
+          "margin_to_second": 0.043
+        },
+        "seed_template_best_r40": {
+          "ncc": 0.822,
+          "dist_from_last_px": 2.2
+        },
+        "last_confirmed_patch_best_r24": {
+          "ncc": 0.902,
+          "source_px": [
+            673,
+            230
+          ],
+          "dist_from_last_px": 2.2,
+          "margin_to_second": 0.138
+        },
+        "last_patch_vs_seed_template_ncc": 0.849,
+        "seed_template_std": 0.06,
+        "seed_template_ncc_near_next_saved_ai_point": {
+          "ai_px": [
+            679.0,
+            229.0
+          ],
+          "best_ncc_within_6px": 0.822,
+          "ai_dist_from_last_px": 4.0
+        },
+        "note": "deterministic CPU replay of the same crop/template; the last-patch match is a diagnostic, not a tracker output"
+      },
+      "c_ai_development_observation": {
+        "kind": "AI development observation (Claude, contact sheets of saved frames); not human truth, not an independent evaluation",
+        "frames_inspected": [
+          23212,
+          23266,
+          23272,
+          23278,
+          23284,
+          23290,
+          23296,
+          23302,
+          23308,
+          23314,
+          23320
+        ],
+        "observed_range": [
+          23212,
+          23320
+        ],
+        "observed_frame_sha256": {
+          "23212": "cca445e4b03dae16b07df7f8a2a3738fba8a02cec54fec236b7dcd17bef6ee4f",
+          "23266": "3614a98a9abac2fc7bcbb997025ef23947c688981c435a27ff73e6473e09ead4",
+          "23272": "48dc73354fb451aeb9b3b70dddaeccf39ff915354fe827039350f3db86444667",
+          "23278": "06543c9349e1325efa5f03d74b4859765afd3a944fb6f9be0b47814b7f692fe3",
+          "23284": "f37b1181e57b8e48985510bc2ba375ee05d0a96783d57e73ecb7e921c777576c",
+          "23290": "ff91878ab240aa9e826407abacec6694800105efa10a52c0658ec4a31e34646f",
+          "23296": "535e279bab952e870c9700943f2772d719963151a355cb716972ae692ca8527e",
+          "23302": "61087eecfd337666b33924f6f6ff23de4f427d5a5f7eecbb6d1ce6af3e978982",
+          "23308": "358b462d9da90368f7e815155e154e0dca82c32352c3fd19a4e14528d19d78d1",
+          "23314": "5080f189b1f55a580f8168446b79b91fb0431818a38288f52ee11238abbdc086",
+          "23320": "0088630918e3f40318641625aadccca92c81a86b73abb6aa09d5f74134be5ebf"
+        },
+        "zoom_centre_source_px": [
+          675,
+          229
+        ],
+        "zoom_half_px": 80,
+        "scene_change": "none",
+        "occlusion_at_loss": "none",
+        "motion_at_loss": "slow",
+        "similar_patches_nearby": "yes",
+        "similar_patch_description": "The 'second peak' is not a distinct look-alike object: it is an adjacent position on the same dark, near-uniform mitt surface. Seed-template peaks 0.822 @ (673,230) and 0.779 @ (678,229) are 5 px apart, both 2-3 px from the last tracked point (675,229); the third peak 0.576 @ (668,230) is also on the mitt. The template is very low contrast (seed_template_std 0.06), so the NCC surface across the dark glove is a flat ridge. Other dark regions on the sheet (black undershirt/chest-protector shadow above, umpire's dark trousers to the viewer's right) are well beyond these peaks and did not score as competitors.",
+        "tracked_patch_appears_to_be": "mitt pocket: a dark, almost featureless black round region between the catcher's knees (glove interior/pocket facing the camera), with the orange-wristband forearm running from it toward the viewer's right; consistent with the mitt on the catcher's left hand. Low-texture patch.",
+        "seed_on_mitt": "likely_mitt",
+        "mitt_at_loss_relative_to_tracked_point": "At 23302 the dark mitt still covers the last tracked point (675,229); the best seed and last-patch peaks are 2-3 px from it. The mitt's shape has changed from a round pocket (23296) to a broader dark blob extending slightly lower-left, i.e. it is rotating/closing to receive the pitch (batter starting to swing in the right panel). The next AI readings are 4 px away at 23308 (679,229) and 9 px at 23320 (675,220), both on the dark mitt. No gross displacement.",
+        "observer_primary_cause": "similar_patch_ambiguity",
+        "observer_secondary_cause": "threshold_borderline",
+        "observer_confidence": "medium",
+        "observer_evidence": "Saved algorithmic reason: ambiguous_peak, ncc 0.822, peak_margin 0.044 (threshold 0.05), appearance_change 0.002. Offline replay at 23302: seed-template peaks 0.822 @ (673,230) d=2.2 and 0.779 @ (678,229) d=3.0 (margin 0.043, identical at r24 and r40); last-confirmed-patch peaks 0.902 and 0.764 at the same two positions (margin 0.138, which would have passed both tests); seed ncc near the next AI point (679,229) is 0.822 with ai_dist 4.0 px; last_patch_vs_seed 0.849; seed_template_std 0.06. Visual: no cut, zoom or pan (same centre-field shot on every tile); nothing occludes the mitt at 23302 (umpire behind-right, batter far right); the mitt stays within a few px of the tracked point but is changing shape as the catcher receives the pitch, and the quality trend (ncc 0.93 -> 0.85 -> 0.82, margin 0.23 -> 0.09 -> 0.044 over 23290 -> 23296 -> 23302) tracks that shape change. The loss is a flat-peak margin failure on a low-contrast dark template, with two maxima 5 px apart on the same mitt; it missed the margin threshold by 0.006 while ncc was far above 0.65. The sharper peak with the last confirmed patch (0.138 margin vs 0.044) also indicates some fixed-template drift, but the best seed-template match itself remained strong. Not fast motion (peaks at 2-3 px), not seed identity (AI readings 1-9 px from the tracked point throughout). Mitt identity is inferred from appearance, not verified.",
+        "skeptic_cross_check": {
+          "primary_cause_supported": false,
+          "seed_on_mitt_supported": true,
+          "corrected_primary_cause": "threshold_borderline",
+          "reason": "The observer's own description concedes there is no distinct look-alike: the two seed peaks 0.822/0.779 are 5 px apart on the same dark mitt surface, nothing else scores (third 0.576), ncc is far above the floor and the margin missed by 0.006. That is a flat-ridge gate miss on a std-0.06 template, i.e. threshold_borderline, with fixed-template drift as the structural factor (seed margin 0.044 vs last-patch margin 0.138, ncc 0.93 to 0.82, mitt visibly rotating at 23302); labelling it similar_patch_ambiguity asserts a competing patch that is not there. Seed on the dark round pocket between the knees on the orange-guarded forearm with AI 1-9 px away throughout: likely_mitt supported (hand assignment not verifiable on the sheet)."
+        }
+      },
+      "category_after_cross_check": "threshold_borderline",
+      "category_ko": "임계값 경계(기존 임계값 바로 아래)",
+      "secondary_category": "threshold_borderline",
+      "unverified": [
+        "mitt identity of the seeded/tracked patch (AI observation only; 'likely_mitt' and 'not_mitt' are AI readings of a contact sheet)",
+        "which hand holds the object",
+        "any frame outside observed_range"
+      ]
+    },
+    {
+      "pitch_id": "747139:5:4",
+      "seed_frame_index": 24396,
+      "seed_source_sha256": "5fdd5ff463a61e3ca0e9228ad90ca455eae5cffe53e526191e8cb0a764ac2536",
+      "seed_px": [
+        676,
+        227
+      ],
+      "tracked_frames_before_loss": 17,
+      "tracked_span_seconds": 1.6016,
+      "first_loss_frame_index": 24498,
+      "first_loss_source_sha256": "ca8521e16c86793e8cb49515533e70599e57797079036e018046d72451ee563d",
+      "seconds_after_seed": 1.7017,
+      "last_tracked_px": [
+        674,
+        229
+      ],
+      "a_saved_algorithmic_reason": {
+        "reason": "ambiguous_peak",
+        "quality": {
+          "appearance_change": 0.002,
+          "ncc": 0.682,
+          "peak_margin": 0.037
+        },
+        "source": "CV37 v3 records_cpu.json (unchanged)"
+      },
+      "b_offline_replay_diagnostics": {
+        "seed_template_best_r24": {
+          "ncc": 0.682,
+          "source_px": [
+            672,
+            231
+          ],
+          "dist_from_last_px": 2.8,
+          "margin_to_second": 0.037
+        },
+        "seed_template_best_r40": {
+          "ncc": 0.682,
+          "dist_from_last_px": 2.8
+        },
+        "last_confirmed_patch_best_r24": {
+          "ncc": 0.855,
+          "source_px": [
+            672,
+            230
+          ],
+          "dist_from_last_px": 2.2,
+          "margin_to_second": 0.378
+        },
+        "last_patch_vs_seed_template_ncc": 0.716,
+        "seed_template_std": 0.045,
+        "seed_template_ncc_near_next_saved_ai_point": {
+          "ai_px": [
+            685.0,
+            229.0
+          ],
+          "best_ncc_within_6px": 0.36,
+          "ai_dist_from_last_px": 11.0
+        },
+        "note": "deterministic CPU replay of the same crop/template; the last-patch match is a diagnostic, not a tracker output"
+      },
+      "c_ai_development_observation": {
+        "kind": "AI development observation (Claude, contact sheets of saved frames); not human truth, not an independent evaluation",
+        "frames_inspected": [
+          24396,
+          24462,
+          24468,
+          24474,
+          24480,
+          24486,
+          24492,
+          24498,
+          24504,
+          24510,
+          24516
+        ],
+        "observed_range": [
+          24396,
+          24516
+        ],
+        "observed_frame_sha256": {
+          "24396": "5fdd5ff463a61e3ca0e9228ad90ca455eae5cffe53e526191e8cb0a764ac2536",
+          "24462": "a58fd8334224dd299aebd4df5d91d1c57a6c1e2b384b4714f19accd972dde508",
+          "24468": "810596bc295f6b343d5d4a0e29991ea373723f067b641f0db5d55e708b2edfbb",
+          "24474": "c7f1f35798a5857f929e296b9903c3b43df4720ae3d304ec3d0a306cb3164a46",
+          "24480": "614ea64338e33abd7fa84cb4e6b197949c87cdbf344d002e39f3b0d91c89d33c",
+          "24486": "ecee03d0ef0a7db5134b854567c598a7b9b665d6d42a00dfdecaab66ed8e5179",
+          "24492": "71637aa08f1cbfd7eae7495d842c41c1822634a11d53e5d0908a8c246dccb5a6",
+          "24498": "ca8521e16c86793e8cb49515533e70599e57797079036e018046d72451ee563d",
+          "24504": "b60d72e33c7942a1eae53e11729715d085d0233fcb6815bf597d22fe209f8895",
+          "24510": "28509f8c096dc0c9f53851af403403e228c0871c3e8b5d9b9c191de53184fc5d",
+          "24516": "e308c8e4b11938717e0c4eb3c8c324ae4e9ab6f2fa034707649532b076333723"
+        },
+        "zoom_centre_source_px": [
+          674,
+          229
+        ],
+        "zoom_half_px": 80,
+        "scene_change": "none",
+        "occlusion_at_loss": "none",
+        "motion_at_loss": "slow",
+        "similar_patches_nearby": "yes",
+        "similar_patch_description": "Seed-template second peak ncc 0.645 at (665,253), 25.6 px below-left of the last tracked point; on the sheet that location is the dark lower edge of the mitt / shadow over the catcher's gray thigh, just below the mitt body. A third seed peak 0.543 at (667,232) is 7.6 px left, still inside the dark glove. The seed template is nearly textureless (seed_template_std 0.045, a uniform dark pocket), so any dark patch scores similarly against it. The last-confirmed-patch template does not show this ambiguity (0.855 vs second 0.477).",
+        "tracked_patch_appears_to_be": "mitt pocket: the dark, nearly uniform face of the large glove held between the catcher's two orange forearm guards; the cyan box is fully inside the dark glove body in every tracked tile (24396-24492) and at the loss frame location.",
+        "seed_on_mitt": "likely_mitt",
+        "mitt_at_loss_relative_to_tracked_point": "At 24498 the dark glove body still covers the last tracked point (674,229); the mitt is in the process of tilting/shifting down and to the viewer's left (visible between 24492, 24498 and 24504) while the catcher's orange throwing hand comes up on the mitt's right side, adjacent to but not covering the cyan box. Offline best matches sit 2-3 px from the last point (seed 0.682 at (672,231); last patch 0.855 at (672,230)). The next AI reading at 24504 is (685,229), 11 px to the right, on the right portion of the glove next to the throwing hand; at 24516 the AI reading (680,217) is on the upper part of the glove.",
+        "observer_primary_cause": "fixed_template_appearance_drift",
+        "observer_secondary_cause": "similar_patch_ambiguity",
+        "observer_confidence": "medium",
+        "observer_evidence": "Saved algorithmic reason: ambiguous_peak at 24498 (ncc 0.682 >= 0.65 but peak_margin 0.037 < 0.05). Diagnostics at the loss frame: seed template best 0.682 at (672,231) with second peak 0.645 at (665,253) (margin 0.037); the last confirmed patch matches 0.855 at (672,230), 2.2 px from the last point, with second peak 0.477 (margin 0.378); last_patch_vs_seed_template_ncc 0.716; seed_template_std 0.045 (very low contrast). Trend in saved rows: ncc against the fixed seed template decayed 0.92 (24468) -> 0.88 (24480) -> 0.88 (24486) -> 0.72 / margin 0.07 (24492) -> 0.68 / margin 0.04 (24498) while the point moved only (676,227)->(674,229), i.e. appearance change, not displacement. Visual: same broadcast camera and framing throughout; no cut; mitt still present and unoccluded at the tracked point at 24498 but visibly changing pose (tilting down-left, throwing hand moving in beside it); the sheet shows no fast motion. AI readings at 24468/24480/24492/24504/24516 are all within 2-11 px of the tracked point, so the seed identity is consistent with the mitt (not independently verified). Seed-template NCC near the next AI point (685,229) is only 0.36, consistent with the stale template no longer describing the glove surface. Conclusion: the fixed seed template stopped discriminating as the mitt pose drifted; the near-tie second peak on a neighbouring dark patch (bottom edge of the mitt / thigh shadow) is what tripped the margin test, so similar_patch_ambiguity is secondary and threshold_borderline is not supported (ncc above 0.65, margin not clear).",
+        "skeptic_cross_check": {
+          "primary_cause_supported": true,
+          "seed_on_mitt_supported": true,
+          "corrected_primary_cause": "fixed_template_appearance_drift",
+          "reason": "Seed 24396 on the dark glove face between the two orange forearm guards, AI coincident; at 24498 the glove is visibly tilted down-left with the throwing hand rising on its right and the last point still inside the dark body; seed best 0.682 at 2.8 px with a genuine second peak 0.645 at 25.6 px on the dark lower edge of the mitt, while the last patch matches 0.855 with margin 0.378 and last_patch_vs_seed is 0.716; ncc trend 0.92 to 0.68 with ~2 px of motion. The fixed template lost discrimination and let a neighbouring dark patch tie: drift primary, ambiguity secondary is supported; AI readings 2-11 px away support likely_mitt."
+        }
+      },
+      "category_after_cross_check": "fixed_template_appearance_drift",
+      "category_ko": "고정 시드 템플릿 대비 외형 변화(알고리즘 원인; 사용자 범주 외 추가)",
+      "secondary_category": "similar_patch_ambiguity",
+      "unverified": [
+        "mitt identity of the seeded/tracked patch (AI observation only; 'likely_mitt' and 'not_mitt' are AI readings of a contact sheet)",
+        "which hand holds the object",
+        "any frame outside observed_range"
+      ]
+    },
+    {
+      "pitch_id": "747139:5:6",
+      "seed_frame_index": 26778,
+      "seed_source_sha256": "bf85d7f7fda6e8f65731e61930da7219579b74cd90c0c10ffa995b130b3fa810",
+      "seed_px": [
+        677,
+        228
+      ],
+      "tracked_frames_before_loss": 9,
+      "tracked_span_seconds": 0.8008,
+      "first_loss_frame_index": 26832,
+      "first_loss_source_sha256": "3bfcb992ff4d2f257bdc53d2dae31c8c11088713c0bce1347ac7d788bffd48e6",
+      "seconds_after_seed": 0.9009,
+      "last_tracked_px": [
+        672,
+        230
+      ],
+      "a_saved_algorithmic_reason": {
+        "reason": "forward_backward_mismatch",
+        "quality": {
+          "appearance_change": 0.001,
+          "ncc": 0.673,
+          "peak_margin": 0.11,
+          "backward_ncc": 0.812,
+          "fb_error_px": 3.606
+        },
+        "source": "CV37 v3 records_cpu.json (unchanged)"
+      },
+      "b_offline_replay_diagnostics": {
+        "seed_template_best_r24": {
+          "ncc": 0.673,
+          "source_px": [
+            670,
+            232
+          ],
+          "dist_from_last_px": 2.8,
+          "margin_to_second": 0.11
+        },
+        "seed_template_best_r40": {
+          "ncc": 0.673,
+          "dist_from_last_px": 2.8
+        },
+        "last_confirmed_patch_best_r24": {
+          "ncc": 0.822,
+          "source_px": [
+            668,
+            229
+          ],
+          "dist_from_last_px": 4.1,
+          "margin_to_second": 0.198
+        },
+        "last_patch_vs_seed_template_ncc": 0.738,
+        "seed_template_std": 0.094,
+        "seed_template_ncc_near_next_saved_ai_point": {
+          "ai_px": [
+            677.0,
+            228.0
+          ],
+          "best_ncc_within_6px": 0.656,
+          "ai_dist_from_last_px": 5.4
+        },
+        "note": "deterministic CPU replay of the same crop/template; the last-patch match is a diagnostic, not a tracker output"
+      },
+      "c_ai_development_observation": {
+        "kind": "AI development observation (Claude, contact sheets of saved frames); not human truth, not an independent evaluation",
+        "frames_inspected": [
+          26778,
+          26796,
+          26802,
+          26808,
+          26814,
+          26820,
+          26826,
+          26832,
+          26838,
+          26844,
+          26850
+        ],
+        "observed_range": [
+          26778,
+          26850
+        ],
+        "observed_frame_sha256": {
+          "26778": "bf85d7f7fda6e8f65731e61930da7219579b74cd90c0c10ffa995b130b3fa810",
+          "26796": "cff12749faf9df952358202b828d5c544512bde1deb6f307eb2ce1f4f37cf916",
+          "26802": "5c5dc6f37fe47869a47de1b284f638e0189ead4713d8e38e8a4e5b429a882397",
+          "26808": "c7d53bcb5f6c3bfa309c3b22b5345910a6da7ec7507139aff8a74d60473cff9d",
+          "26814": "18333b93df89f3141d9ba4ed2394db197a42109c94451dc8b4bee33b955e009b",
+          "26820": "9855712bf517170b28a01c6b7ccd4a607b973489aee178b6e3d1d480c6478553",
+          "26826": "240c1093d62804801cb188cede1955b6b59be8ecb5d5101e7a14a7f2dc3b645a",
+          "26832": "3bfcb992ff4d2f257bdc53d2dae31c8c11088713c0bce1347ac7d788bffd48e6",
+          "26838": "0f69a2b3f18c8e92e7e63da8d158527e8d009205d55f9b4cd44bbf5ca8d0ba94",
+          "26844": "e62e9c83f20c3932e4e6718626d0fcfa166c08a01e8f58f4f92356eb9fd23862",
+          "26850": "b105f257b6c6452ff1dbdef51ef6ad5c8d0bc5284369f4e7fc4c0fa2bab830c1"
+        },
+        "zoom_centre_source_px": [
+          672,
+          230
+        ],
+        "zoom_half_px": 80,
+        "scene_change": "none",
+        "occlusion_at_loss": "none",
+        "motion_at_loss": "slow",
+        "similar_patches_nearby": "yes",
+        "similar_patch_description": "Within the search radius the only competing dark textures are (a) the broad, low-contrast interior of the same dark mitt-like object (replay second peaks sit only 1-3 px from the first peaks: seed 0.563 at (675,230), last patch 0.624 at (673,230)), and (b) the catcher's dark-gloved throwing hand roughly 15-20 source px to the viewer's right of the tracked object, visible with knuckles in the 26820-26838 zooms. Neither produces a close second peak at the loss frame (seed margin 0.11, last-patch margin ~0.20); the issue is a broad/flat correlation surface on a low-contrast template (seed_template_std 0.094) rather than a distinct look-alike patch. A 0.50 peak at (710,190), 55 px away (r40), is outside the operating radius.",
+        "tracked_patch_appears_to_be": "At the seed (26778) the cyan 21px box sits on a small dark, round object with a lighter curved rim, held low between the catcher's knees, which reads as a mitt pocket facing the camera (not verified). Through 26796-26808 the same dark patch is tracked with essentially unchanged appearance (ncc 0.97-0.98). From 26814 the dark object visibly changes shape (looks like it is being turned/raised), the cyan box drifts to the viewer's left edge of it (677->676->675->672), and by 26826/26832 the box covers the left part of a larger dark shape with a bright top-left edge; visual read: mitt edge/back of the mitt during a re-orientation, with the mitt pocket no longer facing the camera as it did at the seed.",
+        "seed_on_mitt": "likely_mitt",
+        "mitt_at_loss_relative_to_tracked_point": "At the loss frame (26832) the dark mitt-like object still overlaps the last tracked point (672,230); the object's visible centre is a few px to the viewer's right of that point. The next saved AI reading (26838) is (677,228), 5.4 px right/up of the last tracked point, and the replay last-patch peak is 4.1 px away at (668,229). Earlier AI readings (26814: 686,228; 26826: 685,230) were 10-13 px right of the tracked point, i.e. the tracker had drifted toward the left edge of the object while the AI readings sat nearer its centre/right. By 26850 the AI reading is (687,228), 15 px right, as the catcher shifts posture and brings the throwing hand over the object (26844).",
+        "observer_primary_cause": "fixed_template_appearance_drift",
+        "observer_secondary_cause": "threshold_borderline",
+        "observer_confidence": "medium",
+        "observer_evidence": "Saved algorithmic reason: forward_backward_mismatch at 26832 (ncc 0.673 >= 0.65 and margin 0.11 >= 0.05 both passed; fb_error 3.606 px > 3 px limit tripped; backward_ncc 0.812). Visual observation: no cut, zoom or pan across tiles (same CF camera, umpire/batter/pitcher positions stable); nothing covers the tracked object at the loss frame; the object translates only ~2-4 px per 6-frame step but visibly re-orients between 26814 and 26832 (small round pocket-like shape with lighter rim at seed -> larger dark shape with a bright top-left edge at loss). Numbers that support appearance drift: seed-template ncc decays monotonically 0.981 (26796) -> 0.970 -> 0.975 -> 0.942 -> 0.879 -> 0.738 -> 0.673 (26832) while the tracked point creeps left 677->672; at the loss frame the last confirmed patch matches 0.822 (r24 and r40, at (668,229), 4.1 px away) versus the seed template's best 0.673, and last_patch_vs_seed_template_ncc is only 0.738, so the current appearance has departed from the fixed seed template. The fb mismatch is consistent with an unstable peak position on a low-contrast (std 0.094) template whose response surface has flattened; second peaks are not close in score (seed margin 0.11, last-patch ~0.20), which argues against similar_patch_ambiguity. Threshold borderline as secondary: ncc 0.673 is 0.02 above the 0.65 floor and fb 3.6 px is 0.6 px over the 3 px limit, so the loss was decided at the margins. Seed identity: the seed point coincides with the saved AI reading (677,228) on a mitt-pocket-like dark object; later AI readings differ from the tracked point by 5-13 px, within the ~24 px object width, so not a large discrepancy. Zoom panels inspected closely: 26778, 26796, 26808, 26814, 26820, 26826, 26832, 26838, 26844, 26850; 26802 seen on the overview sheet only.",
+        "skeptic_cross_check": {
+          "primary_cause_supported": true,
+          "seed_on_mitt_supported": true,
+          "corrected_primary_cause": "fixed_template_appearance_drift",
+          "reason": "Seed 26778 on a small dark round object with a lighter rim low between the knees, AI coincident; through 26826/26832 it becomes a larger dark glove-like shape with a bright top-left edge and the cyan box slides to its left edge (677 to 672); seed ncc 0.98 to 0.67 monotone, last patch 0.822 at 4.1 px vs seed 0.673, last_patch_vs_seed 0.738, fb 3.6 px on a std-0.094 template; no cut or occluder. Drift primary with borderline fb secondary is supported. likely_mitt holds only as 'likely': the sheet also shows a second dark object with knuckle-like bumps attached to the viewer's-right orange forearm guard, so which hand holds the tracked object is not verifiable from the sheet."
+        }
+      },
+      "category_after_cross_check": "fixed_template_appearance_drift",
+      "category_ko": "고정 시드 템플릿 대비 외형 변화(알고리즘 원인; 사용자 범주 외 추가)",
+      "secondary_category": "threshold_borderline",
+      "unverified": [
+        "mitt identity of the seeded/tracked patch (AI observation only; 'likely_mitt' and 'not_mitt' are AI readings of a contact sheet)",
+        "which hand holds the object",
+        "any frame outside observed_range"
+      ]
+    }
+  ],
+  "limits": [
+    "AI observations are development observations, not human truth or an independent evaluation",
+    "categories are per first loss only; later losses are not analysed here",
+    "replay diagnostics describe the fixed-template matcher on a 21 px grayscale patch; they do not identify objects"
+  ]
+}

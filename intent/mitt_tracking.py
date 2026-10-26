@@ -55,6 +55,62 @@ def _number(value):
     return isinstance(value, (int, float)) and not isinstance(value, bool) and math.isfinite(value)
 
 
+def match_template(image, template, around, params):
+    """ZNCC of one fixed template around a point; each candidate patch's own variance.
+
+    Shared by PatchTracker and the research re-search module so one implementation decides
+    similarity, peak margin and search-boundary abstention. Returns ``(point, evidence)``;
+    ``point`` is None when the match abstains and ``evidence["reason"]`` says why.
+    """
+    p = params
+    half = p.patch_size // 2
+    height, width = image.shape[-2:]
+    x, y = around
+    x0, x1 = max(half, x - p.search_radius), min(width - half - 1, x + p.search_radius)
+    y0, y1 = max(half, y - p.search_radius), min(height - half - 1, y + p.search_radius)
+    region = image[..., y0 - half : y1 + half + 1, x0 - half : x1 + half + 1]
+    zero = template - template.mean()
+    energy = (zero * zero).sum()
+    means = F.avg_pool2d(region, p.patch_size, stride=1)
+    variances = (F.avg_pool2d(region.square(), p.patch_size, stride=1) - means.square()).clamp_min(
+        0
+    )
+    # Do not inherit lower precision from a caller's autocast/TF32 settings.
+    with torch.autocast(device_type=image.device.type, enabled=False):
+        if image.is_cuda:
+            with torch.backends.cudnn.flags(
+                enabled=torch.backends.cudnn.enabled,
+                benchmark=torch.backends.cudnn.benchmark,
+                benchmark_limit=torch.backends.cudnn.benchmark_limit,
+                deterministic=torch.backends.cudnn.deterministic,
+                allow_tf32=False,
+            ):
+                numerator = F.conv2d(region, zero)
+        else:
+            numerator = F.conv2d(region, zero)
+    score = numerator / (energy * variances * p.patch_size**2).sqrt().clamp_min(1e-12)
+    score = score[0, 0].clamp(-1, 1)
+    score = score.masked_fill(variances[0, 0] < p.min_texture**2, -torch.inf)
+    flat = int(score.argmax().item())
+    row, col = divmod(flat, score.shape[1])
+    best = float(score[row, col].item())
+    if not math.isfinite(best):
+        return None, {"reason": "low_texture"}
+    alternatives = score.clone()
+    e = p.peak_exclusion
+    alternatives[max(0, row - e) : row + e + 1, max(0, col - e) : col + e + 1] = -torch.inf
+    second = float(alternatives.max().item())
+    margin = best - second if math.isfinite(second) else None
+    evidence = {"ncc": best, "peak_margin": margin}
+    if best < p.min_ncc:
+        return None, {**evidence, "reason": "low_similarity"}
+    if margin is not None and margin < p.min_peak_margin:
+        return None, {**evidence, "reason": "ambiguous_peak"}
+    if row in (0, score.shape[0] - 1) or col in (0, score.shape[1] - 1):
+        return None, {**evidence, "reason": "search_boundary"}
+    return (x0 + col, y0 + row), evidence
+
+
 class PatchTracker:
     """Single pitch/shot tracker: unseeded -> tracking -> lost; use a new instance to reseed.
 
@@ -82,54 +138,7 @@ class PatchTracker:
         return image[..., y - half : y + half + 1, x - half : x + half + 1].clone()
 
     def _match(self, image, template, around):
-        """ZNCC using each candidate patch's variance, not search-region variance."""
-        p = self.params
-        half = p.patch_size // 2
-        height, width = image.shape[-2:]
-        x, y = around
-        x0, x1 = max(half, x - p.search_radius), min(width - half - 1, x + p.search_radius)
-        y0, y1 = max(half, y - p.search_radius), min(height - half - 1, y + p.search_radius)
-        region = image[..., y0 - half : y1 + half + 1, x0 - half : x1 + half + 1]
-        zero = template - template.mean()
-        energy = (zero * zero).sum()
-        means = F.avg_pool2d(region, p.patch_size, stride=1)
-        variances = (
-            F.avg_pool2d(region.square(), p.patch_size, stride=1) - means.square()
-        ).clamp_min(0)
-        # Do not inherit lower precision from a caller's autocast/TF32 settings.
-        with torch.autocast(device_type=image.device.type, enabled=False):
-            if image.is_cuda:
-                with torch.backends.cudnn.flags(
-                    enabled=torch.backends.cudnn.enabled,
-                    benchmark=torch.backends.cudnn.benchmark,
-                    benchmark_limit=torch.backends.cudnn.benchmark_limit,
-                    deterministic=torch.backends.cudnn.deterministic,
-                    allow_tf32=False,
-                ):
-                    numerator = F.conv2d(region, zero)
-            else:
-                numerator = F.conv2d(region, zero)
-        score = numerator / (energy * variances * p.patch_size**2).sqrt().clamp_min(1e-12)
-        score = score[0, 0].clamp(-1, 1)
-        score = score.masked_fill(variances[0, 0] < p.min_texture**2, -torch.inf)
-        flat = int(score.argmax().item())
-        row, col = divmod(flat, score.shape[1])
-        best = float(score[row, col].item())
-        if not math.isfinite(best):
-            return None, {"reason": "low_texture"}
-        alternatives = score.clone()
-        e = p.peak_exclusion
-        alternatives[max(0, row - e) : row + e + 1, max(0, col - e) : col + e + 1] = -torch.inf
-        second = float(alternatives.max().item())
-        margin = best - second if math.isfinite(second) else None
-        evidence = {"ncc": best, "peak_margin": margin}
-        if best < p.min_ncc:
-            return None, {**evidence, "reason": "low_similarity"}
-        if margin is not None and margin < p.min_peak_margin:
-            return None, {**evidence, "reason": "ambiguous_peak"}
-        if row in (0, score.shape[0] - 1) or col in (0, score.shape[1] - 1):
-            return None, {**evidence, "reason": "search_boundary"}
-        return (x0 + col, y0 + row), evidence
+        return match_template(image, template, around, self.params)
 
     def step(self, image, *, pitch_id, frame_index, frame_seconds, seed=None, usable=True):
         """Process one current frame. ``usable`` is an optional current external view gate."""
