@@ -13,12 +13,13 @@ import argparse
 import copy
 import hashlib
 import json
+import math
 import re
 from collections import Counter
 from pathlib import Path
 
 from intent.mitt_frame_ocr import FIELDS, ROLES, _validated_inputs
-from intent.mitt_track_view import ASSETS
+from intent.mitt_track_view import ASSETS, fill_template
 
 SCHEMA = "pitcheezy-ocr-frame-view-dev-v1"
 RECEIPT_SCHEMA = "pitcheezy-ocr-frame-view-receipt-v1"
@@ -78,6 +79,14 @@ def _check_rows(rows, frames, pitch_id):
             "roles",
         }:
             raise ValueError("observation row fields differ")
+        if (
+            not isinstance(row["pitch_id"], str)
+            or type(row["frame_index"]) is not int
+            or type(row["frame_seconds"]) not in (int, float)
+            or not math.isfinite(row["frame_seconds"])
+            or not isinstance(row["image_sha256"], str)
+        ):
+            raise ValueError("observation key types are invalid")
         if (
             row["pitch_id"] != pitch_id
             or row["frame_index"] != frame["frame_index"]
@@ -260,11 +269,12 @@ def build(*, pack, pack_receipt_sha256, ocr_dir, ocr_report_sha256, out, ocr_sou
         raise ValueError("input changed during build")
     track_text = payload_raw.decode("utf-8").rstrip("\n")
     ocr_text = json.dumps(ocr_data, ensure_ascii=False, allow_nan=False)
-    template = (ASSETS / "index.html").read_text(encoding="utf-8")
-    if template.count("__TRACK_VIEW_DATA__") != 1 or template.count("__OCR_VIEW_DATA__") != 1:
-        raise ValueError("invalid viewer template")
-    page = template.replace("__TRACK_VIEW_DATA__", track_text.replace("<", "\\u003c")).replace(
-        "__OCR_VIEW_DATA__", ocr_text.replace("<", "\\u003c")
+    page = fill_template(
+        (ASSETS / "index.html").read_text(encoding="utf-8"),
+        {
+            "__TRACK_VIEW_DATA__": track_text.replace("<", "\\u003c"),
+            "__OCR_VIEW_DATA__": ocr_text.replace("<", "\\u003c"),
+        },
     )
     files = {
         "index.html": page.encode(),

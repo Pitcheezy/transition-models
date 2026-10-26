@@ -4,8 +4,8 @@
   "evidence_kind": "offline replay of saved development artifacts; no new OCR, AI reading, video or human evaluation",
   "base_commit": "360d3c480ce31dda4379c84059e107dbfc6feaab",
   "source_sha256": {
-    "intent/mitt_ocr_view.py": "dd79cc86b350caa7bd968fba2e3bf616c0910f067171a207ce1d8ce523efacdb",
-    "intent/mitt_track_view.py": "41a4f82de053913bebea68d49b21825474425d27d1483eba27e85b60915306b8",
+    "intent/mitt_ocr_view.py": "ada1caa450c206cf2c6a00f98fdd4bcaeb005d88430e2544dd97189336a518bf",
+    "intent/mitt_track_view.py": "36be7ce58af3ebed83fb2a7a9f632dce03f26f563e311b31f9d2b603078e4837",
     "web/track-review/index.html": "455414d0c8f137e704027bd25f65f4b2253d898fadff9c49b7af3190da21b93b",
     "web/track-review/review.js": "26dafa90850d33df70a2df12ab3d1958d06ffc8946033c965567b384a52f7612",
     "web/track-review/style.css": "0ca0957e087cc9a45ad15ccd985393b677f2226405b1536731cb972573a43f67"
@@ -68,11 +68,11 @@
   "checks": {
     "python_new": {
       "command": "python -m pytest -q tests/test_mitt_ocr_view.py",
-      "result": "31 passed in 13.28s"
+      "result": "see python_related (31 before review fixes; 6 regression tests added after the Codex review)"
     },
     "python_related": {
       "command": "python -m pytest -q tests/test_mitt_ocr_view.py tests/test_mitt_track_view.py tests/test_mitt_frame_ocr.py",
-      "result": "88 passed in 31.50s"
+      "result": "88 passed in 31.50s before the review fixes; 94 passed in 35.37s after"
     },
     "node_new": {
       "command": "node --test tests/test_ocr_frame_view_ui.cjs",
@@ -141,5 +141,13 @@
     "VLTNLUS and VIENTOS are shown as saved; no correction, no identity, no substitution claim.",
     "Timestamps are manifest-derived; decoded PTS is not independently verified.",
     "The OCR run used the v2 pack receipt; the display pack is v3 with identical payload and 203 JPEG entries (checked)."
-  ]
+  ],
+  "rebuild_after_review_fixes": {
+    "output": "outputs/cv_ocr_frame_view_20261026_v2 (private)",
+    "receipt_sha256": "d281de8ece3d80a4c7f0e541400f627c1895db0c2965622e575b1a186685b1c0",
+    "identical_to_v1_receipt": true,
+    "differing_files": [],
+    "note": "the fixed single-pass template filling and stricter key checks produce byte-identical files for the real inputs; v1 stays the pack checked in the browser"
+  },
+  "other_model_review": "docs/results/cv_ocr_frame_view_20261026/codex_review_v1.json"
 }

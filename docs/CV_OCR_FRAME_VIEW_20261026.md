@@ -22,7 +22,7 @@
 
 실제 Windows 브라우저(loopback) 확인: 1장 기권/기권 → 33장 `VLTNLUS` 읽음·비교 없음 → 34장 `VIENTOS` 읽음·직전과 문자열 다름(비교 원본 번호 15102)·선수 교체 근거 아님 → 2구 전환 시 "관측 자료 없음"과 빈 역할 → 1구 복귀 시 1장 기권 → 슬라이더 34장 → 두 장 뒤 32장 기권(이전 이름 잔존 없음) → 74장 읽음·같음(비교 15342)·다음 장 비활성. 콘솔 오류 0. Mac/아이폰·원영상 PTS·이름 정확도는 확인하지 않았다.
 
-검사(각 실행 별도): `tests/test_mitt_ocr_view.py` 31 passed(13.28초); `tests/test_mitt_ocr_view.py`+`test_mitt_track_view.py`+`test_mitt_frame_ocr.py` 88 passed(31.50초); `tests/test_ocr_frame_view_ui.cjs` 6 pass; 두 Node 파일 21 pass. CI에 새 Node 검사를 추가했다. 린트는 종료 기록을 따른다.
+검사(각 실행 별도, 검토 전): `tests/test_mitt_ocr_view.py` 31 passed(13.28초); `tests/test_mitt_ocr_view.py`+`test_mitt_track_view.py`+`test_mitt_frame_ocr.py` 88 passed(31.50초); `tests/test_ocr_frame_view_ui.cjs` 6 pass; 두 Node 파일 21 pass. 검토 반영 후 같은 3파일 94 passed(35.37초). `scripts/check_project.py --lint-only` 통과(180경로), 체크리스트/인계 검사 26 passed. CI에 새 Node 검사를 추가했다.
 
 ## 한계
 
@@ -44,4 +44,10 @@ python -m http.server 0 --bind 127.0.0.1 --directory <새 폴더>
 
 ## 다른 모델 검토
 
-종료 기록을 따른다.
+작성 모델은 Claude Fable 5.1이고, 검토는 이 노트북의 로컬 OpenAI Codex CLI 0.162.0-alpha.2(`claude`가 아닌 `gpt-6-astra`, 읽기 전용 sandbox, 고정 커밋 `e74e187f967ef694939c109500f663580195b18a`)로 받았다. [영수증](results/cv_ocr_frame_view_20261026/codex_review_v1.json)에 시도·명령·결과·원문 SHA를 남겼다.
+
+- 시도 a `exec review --commit`: 명령 실행 호스트가 없어 JS REPL로 읽기 검사만 수행. Node 21검사·산출물 208파일·74행 결합을 확인하고 "actionable 결함 없음". Python 검사는 미실행.
+- 시도 b: 명령 실행 불가로 소스를 읽지 못해 검토 차단(미검증으로 기록).
+- 시도 c: 커밋 diff와 기존 `mitt_frame_ocr.py`를 stdin으로 제공한 정적 검토. P2 2건을 지적했다. ① `False == 0`이라 프레임 0에서 불리언 키가 결합될 수 있음 → 키 형식(정수·유한 실수·문자열, 불리언 제외) 검사와 프레임 0 회귀 검사 4개 추가. ② 템플릿 자리 순차 치환이 삽입된 JSON 안의 토큰을 다시 치환할 수 있음(`mitt_track_view`도 동일) → 두 빌더가 원본 템플릿을 한 번에 치환하는 `fill_template`로 통일, 데이터 안 토큰 회귀 검사 2개 추가. 검사가 실제 DOM을 mount하지 않는다는 지적은 한계로 남기며 실제 브라우저 확인 기록으로 보완한다.
+- 수리 후: 관련 3파일 94 passed, Node 21 pass, 린트 통과. 수정 빌더로 실제 자료를 다시 생성한 `v2` 팩의 영수증은 `v1`과 바이트 동일하다. 수정 커밋과 Codex 재검토 여부는 board 종료 기록을 따른다.
+- 이 검토는 연구 범위의 정적·읽기 검토이며 사람 검토·정확도 측정·운영 준비 PASS가 아니다.

@@ -43,7 +43,7 @@ def seal_pack(pack):
     return sha(pack / "receipt.json")
 
 
-def make_pack(root, *, color_seed=0):
+def make_pack(root, *, color_seed=0, base=600):
     pack = root / "frame-view"
     pitches = []
     for p, pitch_id in enumerate(PITCHES):
@@ -51,7 +51,7 @@ def make_pack(root, *, color_seed=0):
         folder.mkdir(parents=True)
         frames = []
         for i in range(FRAMES_PER_PITCH):
-            index = 600 + 120 * p + 6 * i
+            index = base + 120 * p + 6 * i
             path = folder / f"{index}.jpg"
             Image.new("RGB", (1280, 720), (color_seed + p * 40, i * 30, 60)).save(path)
             seconds = index * 1001 / 60000
@@ -459,3 +459,48 @@ def test_report_without_input_unchanged_or_wrong_schema_is_rejected(inputs):
         save(inputs["ocr_dir"] / "report.json", altered)
         inputs["ocr_report_sha256"] = sha(inputs["ocr_dir"] / "report.json")
         assert_rejected(inputs)
+
+
+@pytest.mark.parametrize("change", ["index_false", "seconds_false", "seconds_text", "index_float"])
+def test_boolean_or_non_numeric_keys_never_equal_frame_zero(tmp_path, change):
+    # Codex review finding: False == 0 in Python, so a frame at index/time zero must not join.
+    pack, receipt_sha = make_pack(tmp_path, base=0)
+    ocr, report_sha = make_ocr(tmp_path, pack, receipt_sha)
+    args = {
+        "pack": pack,
+        "pack_receipt_sha256": receipt_sha,
+        "ocr_dir": ocr,
+        "ocr_report_sha256": report_sha,
+        "out": tmp_path / "new-ocr-view",
+    }
+    observations = read(ocr / "observations.json")
+    first = observations["rows"][0]
+    assert first["frame_index"] == 0 and first["frame_seconds"] == 0
+    if change == "index_false":
+        first["frame_index"] = False
+    elif change == "seconds_false":
+        first["frame_seconds"] = False
+    elif change == "seconds_text":
+        first["frame_seconds"] = "0"
+    else:
+        first["frame_index"] = 0.0
+    save(ocr / "observations.json", observations)
+    reseal_ocr(args)
+    assert_rejected(args, match="key types")
+
+
+def test_placeholder_tokens_inside_data_are_not_substituted_again(inputs):
+    # Codex review finding: sequential replace() could re-scan inserted JSON for placeholders.
+    path = inputs["ocr_dir"] / "observations.json"
+    observations = read(path)
+    token = "__TRACK_VIEW_DATA__ and __OCR_VIEW_DATA__"
+    observations["rows"][0]["roles"]["batter"]["raw_text"] = token
+    save(path, observations)
+    reseal_ocr(inputs)
+    build(**inputs)
+    page = (inputs["out"] / "index.html").read_text(encoding="utf-8")
+    track = json.loads(embedded(page, "track-data"))
+    ocr = json.loads(embedded(page, "ocr-data"))
+    assert track == read(inputs["out"] / "payload.json")
+    assert ocr == read(inputs["out"] / "ocr.json")
+    assert ocr["pitches"][0]["rows"][0]["roles"]["batter"]["raw_text"] == token

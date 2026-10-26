@@ -1,0 +1,82 @@
+{
+  "schema": "pitcheezy-other-model-review-receipt-v1",
+  "unit": "CV-39c",
+  "author_model": "claude-fable-5-1 (Claude Fable 5.1)",
+  "reviewer": {
+    "product": "OpenAI Codex CLI 0.162.0-alpha.2 (local .codex/.sandbox-bin/codex.exe)",
+    "model_reported_by_cli": "gpt-6-astra",
+    "model_self_description": "Codex, based on GPT-6",
+    "reasoning_effort": "ultra",
+    "sandbox": "read-only",
+    "approval": "never",
+    "login": "ChatGPT account on this laptop"
+  },
+  "reviewed_commit": "e74e187f967ef694939c109500f663580195b18a",
+  "attempts": [
+    {
+      "attempt": "a",
+      "command": "codex exec review --commit e74e187f967ef694939c109500f663580195b18a -c sandbox_mode=\"read-only\"",
+      "started_utc": "2026-10-26T05:07:54Z",
+      "finished_utc": "2026-10-26T05:09:58Z",
+      "tool_access": "command tool unavailable (code-mode host missing); model used a JS REPL to run read-only checks",
+      "reported": "No actionable defects; 21 Node tests passed; 208 artifact files and 74 exact-frame OCR joins verified; Python tests not run (pytest unavailable to the reviewer)",
+      "raw_output_sha256": "1eec62b171fa3ebb29d422d87594341b68fa6ef610718aa21d05c3b9967a59ef",
+      "tokens_used": null
+    },
+    {
+      "attempt": "b",
+      "command": "codex exec -c sandbox_mode=\"read-only\" <targeted prompt, no stdin>",
+      "started_utc": "2026-10-26T05:07:54Z",
+      "finished_utc": "2026-10-26T05:09:06Z",
+      "tool_access": "blocked: command tool could not start, UI fallback denied",
+      "reported": "Review blocked before source inspection; all categories unverified",
+      "raw_output_sha256": "0908fce4e38fffefc181c0c5bbeac5e0fefd606c2526fb7ff38980f3e457bb59",
+      "tokens_used": 23467
+    },
+    {
+      "attempt": "c",
+      "command": "codex exec -c sandbox_mode=\"read-only\" <targeted prompt> < diff_e74e187.txt (git show of the commit for intent/web/tests/.github plus unchanged intent/mitt_frame_ocr.py)",
+      "started_utc": "2026-10-26T05:09:45Z",
+      "finished_utc": "2026-10-26T05:12:17Z",
+      "tool_access": "text-only review of the supplied diff; no commands or tests run by the reviewer",
+      "diff_sha256": "c8a5a32ebc8147cfa10c0efe7ad45d7f90a09ca7da3d42bac324f9456d12284c",
+      "findings": [
+        {
+          "severity": "P2",
+          "file": "intent/mitt_ocr_view.py",
+          "area": "_check_rows key comparison",
+          "claim": "False == 0 in Python, so a row with frame_index or frame_seconds false could join a frame at index/time zero while the browser's strict equality would not",
+          "disposition": "accepted; builder now requires int frame_index (no bool), finite int/float frame_seconds (no bool), str pitch_id/image_sha256; regression tests at frame zero"
+        },
+        {
+          "severity": "P2",
+          "file": "intent/mitt_ocr_view.py and intent/mitt_track_view.py",
+          "area": "template placeholder substitution",
+          "claim": "sequential str.replace re-scans inserted JSON, so a placeholder token inside data (e.g. play_id) would be substituted again and corrupt the embedded JSON",
+          "disposition": "accepted; both builders fill both placeholders in one regex pass over the original template (fill_template); regression tests embed placeholder tokens inside data"
+        },
+        {
+          "severity": "note",
+          "area": "tests",
+          "claim": "tests exercise view functions and stale-response sequences but do not mount the real DOM",
+          "disposition": "acknowledged; real DOM behaviour was checked in the Windows browser session and recorded; no DOM-mount test added"
+        }
+      ],
+      "no_defect_categories": [
+        "display semantics",
+        "resets (Controller unchanged, not fully supplied)",
+        "security/privacy",
+        "markers/controls beyond finding 2",
+        "OCR calls/input preservation/new output"
+      ],
+      "raw_output_sha256": "cca4a6ecd25ed781db150452c914a3cb43807302d6f972e53e42b2e266590218",
+      "tokens_used": 38896
+    }
+  ],
+  "fix": "applied on this branch in the commit that adds this file; see board closing record and PR #73 for the SHA",
+  "limits": [
+    "attempt c is a static read of the diff; attempt a ran Node tests and artifact checks through a JS REPL but not pytest",
+    "neither attempt is a human review, an accuracy measurement or a production-readiness pass",
+    "raw reviewer transcripts stay in the private session scratchpad; only their SHA-256 is recorded here"
+  ]
+}
