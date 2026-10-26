@@ -1,0 +1,65 @@
+{
+  "schema": "pitcheezy-cv-seed-view-verification-v1",
+  "source_commit": "e99e311e1c5d54006675c851e6390bea64ab6f7e",
+  "pack": "outputs/cv_mitt_seed_view_20261027_v3",
+  "receipt_sha256": "b6a8e6954dd9d1b0877dff9cb4f68e3155c235b8e71ac75909bf37865b81cab1",
+  "counts": {
+    "displayed_frames": 625,
+    "displayed_pitches": 10,
+    "seeded_pitches": 4,
+    "pitches_without_seed": 6,
+    "observation_rows_bound": 74,
+    "frames_without_ocr": 551,
+    "gate_decisions_reproduced": 625,
+    "baseline_selections_checked": 625,
+    "candidate_selections_checked": 625,
+    "preserved_input_files": 881
+  },
+  "input_sha256": {
+    "answers": "395679bfa6c5fb9efcc069bd8482ab6cdd6cde1049cc52e81d18f6c070d095ba",
+    "baseline": "9b564920883be8fbacd5e621713ece66b968dd311d1538d04dfabdff6088898c",
+    "baseline_records": "9b564920883be8fbacd5e621713ece66b968dd311d1538d04dfabdff6088898c",
+    "gate_decisions": "841feb1b8e2a9bbaf4a561447de0dab0f3be4c88c551caf58908a20bddf00db0",
+    "manifest": "58cb57c9dbd542ca60db84f8f1e2242867e4680c15e1914a5ca1352ec1bcf87a",
+    "ocr_observations": "cea324701e48ba9c27d7260818f146d84ad8b79a6f19b537bd1b85f1c306c4b9",
+    "ocr_pack_observations": "f573366eb8e08698e54d02c7b7c616397edabda8b87c23aa5387ffb66083927a",
+    "ocr_pack_payload": "00c2ff234f5dc7c9ad112568d1153091b3eacec147aedc0a708adb8b7e5dc223",
+    "ocr_pack_receipt": "d281de8ece3d80a4c7f0e541400f627c1895db0c2965622e575b1a186685b1c0",
+    "pilot": "6e95c402504bd613c474f16cb7356c6f320a16177dd5831b9378972b3b002594",
+    "seed_records": "c5d087f4ee91e89690dfda51d3439cd4565a6a4ea21ba5c609eca0fdda05632a",
+    "seed_report": "cfa70cad0b2c67b53c3702057513ba08a9a34957a36a843d52a7bdd727c434cb"
+  },
+  "source_data_unchanged": true,
+  "v2_v3_identical_data_files": 627,
+  "final_output_files_checked": 630,
+  "new_tracking_or_ocr_calls": 0,
+  "tests": {
+    "pre_repair_related_python": 109,
+    "post_repair_changed_python": 30,
+    "post_repair_node": 56,
+    "lint_paths": 192
+  },
+  "windows_browser": {
+    "v2_cases": [
+      "PA4:2 frame20488 collecting; no current point",
+      "frame20494 current adoption",
+      "frame20512 geometric stationary event",
+      "frame20734 lost; history on20650 source only",
+      "backseek and same-frame mode switch",
+      "PA3:1 frame15000 held; same-frame OCR"
+    ],
+    "v3_cases": [
+      "load10pitches",
+      "PA4:2 frame20494 adoption after strict prefix/coordinate checks",
+      "gate-specific heading",
+      "missing OCR remains empty"
+    ],
+    "console_errors": 0
+  },
+  "limits": [
+    "Exposed development data; no independent accuracy/identity evaluation",
+    "Manifest time basis; independent decoded PTS not verified",
+    "Not a live service, device portability or human evaluation",
+    "No team repository, Cloudflare or existing original data modified"
+  ]
+}
