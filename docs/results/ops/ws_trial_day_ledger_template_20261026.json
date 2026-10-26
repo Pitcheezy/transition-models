@@ -1,0 +1,56 @@
+{
+  "schema": "pitcheezy-joint-trial-ledger-template-v1",
+  "status": "template; no request has been sent. Fill one private copy per window. No secrets, no addresses.",
+  "window": {
+    "planned_start_utc": "YYYY-MM-DDTHH:mm:ss.sssZ",
+    "planned_end_utc": "YYYY-MM-DDTHH:mm:ss.sssZ",
+    "publish_expires_at_utc": "YYYY-MM-DDTHH:mm:ss.sssZ (planned start + ~5 min; HOLD if start later than expiry - 180 s)",
+    "publish_key_scope": "v1/game/<agreed key>.json (exact key, no leading slash)",
+    "single_writer": "Song runner",
+    "our_role": "host settings, observation, revocation",
+    "both_go_confirmed_at": null,
+    "stop_contact_confirmed": false
+  },
+  "fixed_inputs": {
+    "runner_procedure": "new ZIP | e53b89a7-based procedure | not confirmed",
+    "runner_files_sha256": {},
+    "host_runtime_commit": "e9b362b75d6d4768c552740bfc6e0124872805e1",
+    "worker_version_before": "d714e7fb-20d4-4a80-9f29-695e44130955 (Codex session observation 2026-10-26 19:59 KST)",
+    "worker_version_after": null,
+    "settings_snapshot_before_sha256": null,
+    "settings_snapshot_after_sha256": null
+  },
+  "service_requests": [
+    {"seq": 1, "owner": "us", "method": "HEAD", "path_template": "/_publish/<key outside scope>", "expected": 403, "purpose": "scope negative check", "actual": null, "client_request_id": null, "server_event_time": null, "version": null},
+    {"seq": 2, "owner": "us", "method": "HEAD", "path_template": "/_publish/<agreed key>", "expected": 404, "purpose": "unused key", "actual": null, "client_request_id": null, "server_event_time": null, "version": null},
+    {"seq": "3..N", "owner": "Song", "method": "HEAD/PUT/DELETE", "path_template": "/_publish/<agreed key>", "expected": "per confirmed procedure (final2 reference: HEAD1 + runner17 = 18)", "purpose": "main trial", "actual": null, "client_request_id": null, "server_event_time": null, "version": null},
+    {"seq": "N+1", "owner": "us", "method": "HEAD", "path_template": "/_publish/<agreed key>", "expected": 403, "purpose": "after expiry", "actual": null},
+    {"seq": "N+2", "owner": "us", "method": "HEAD", "path_template": "/_publish/<agreed key>", "expected": 401, "purpose": "old bearer after digest replacement", "actual": null},
+    {"seq": "N+3", "owner": "us", "method": "HEAD", "path_template": "/_publish/<agreed key>", "expected": 503, "purpose": "upload OFF", "actual": null}
+  ],
+  "optional_viewer_requests": [
+    {"owner": "us or Song", "method": "POST", "path_template": "/_access/v1/session", "expected": 200, "purpose": "viewer login (B only)"},
+    {"owner": "Song", "method": "GET", "path_template": "/", "expected": 401, "purpose": "old session after viewer digest removal (B only)"}
+  ],
+  "optional_notice_requests": "9 (GET state, PUT ON, GET state/audit, GET /, GET health, PUT OFF with latest ETag, GET state/audit, GET /, GET health) only if the notice drill is in scope; limiter key notice, not publisher",
+  "management_requests": [
+    {"seq": 1, "kind": "settings GET", "time_utc": null},
+    {"seq": 2, "kind": "secret/vars PATCH (scope, expiry, upload, publish digest)", "time_utc": null},
+    {"seq": 3, "kind": "deployments GET", "time_utc": null},
+    {"seq": 4, "kind": "logs query", "time_utc": null}
+  ],
+  "failures_and_cleanup": [],
+  "totals": {
+    "service_planned": null,
+    "service_actual": null,
+    "management_actual": null,
+    "note": "planned totals are a window cap, not a cost agreement; browser polling and periodic monitoring are excluded from the main run"
+  },
+  "reconciliation": {
+    "server_log_rows_matched": null,
+    "server_log_rows_missing": null,
+    "version_unchanged_during_window": null,
+    "settings_unchanged_during_window": null
+  },
+  "outcome": "not run"
+}
