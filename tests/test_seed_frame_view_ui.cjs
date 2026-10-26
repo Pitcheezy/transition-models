@@ -32,7 +32,8 @@ function fixture() {
           point_px: [620, 300], support_keys: structuredClone(support) } : null };
       return { ...frameKey, width: 1280, height: 720, sha256: SHA, image: `${pitch_id}/${i}.jpg`, selection, tracking,
         seed_gate: { decision, tracking: { ...tracking, state, segment_id: state === "tracking" ? 0 : null,
-          point_px: state === "tracking" ? [620, 300] : null, reacquire_candidate_px: [619, 299] },
+          point_px: state === "tracking" ? [620, 300] : null, reacquire_candidate_px: [619, 299],
+          ...(decision.seed ? { seed_requested_px: [...decision.seed.point_px] } : {}) },
         selection: { ...selection, tracker_state: state, selection_state: i === 3 && p === 0 ? "stationary" : "unavailable",
           current_track_point_px: state === "tracking" ? [620, 300] : null,
           current_candidate: i === 3 && p === 0 ? { ...event } : null,
@@ -240,4 +241,61 @@ test("all saved gate reasons keep their code with a Korean explanation and unkno
   for (const reason of ["future_reason", "constructor", "__proto__", "<img src=x onerror=alert(1)>"]) {
     assert.equal(seedReasonText(reason), reason);
   }
+});
+
+test("seeded state begins with exactly one current seed event and cannot revert or skip the event", () => {
+  const missing = fixture();
+  Object.assign(missing.pitches[0].frames[3].seed_gate.decision, { seed: null, reason: "already_seeded" });
+  assert.throws(() => new Controller(missing, callbacks));
+
+  const repeated = fixture(); const frame = repeated.pitches[0].frames[4];
+  Object.assign(frame.seed_gate.decision, { reason: "seed_qualified", seed: {
+    frame_index: frame.frame_index, frame_seconds: frame.frame_seconds, point_px: [620, 300],
+    support_keys: structuredClone(frame.seed_gate.decision.support_keys) } });
+  assert.throws(() => new Controller(repeated, callbacks));
+
+  const reverted = fixture();
+  Object.assign(reverted.pitches[0].frames[4].seed_gate.decision, { state: "collecting", reason: "collecting_support" });
+  reverted.pitches[0].frames[4].seed_gate.tracking.state = "unseeded";
+  reverted.pitches[0].frames[4].seed_gate.selection.tracker_state = "unseeded";
+  assert.throws(() => new Controller(reverted, callbacks));
+
+  const unseeded = fixture();
+  unseeded.pitches[0].frames[4].seed_gate.tracking.state = "unseeded";
+  unseeded.pitches[0].frames[4].seed_gate.selection.tracker_state = "unseeded";
+  assert.throws(() => new Controller(unseeded, callbacks));
+  const reordered = fixture();
+  [reordered.pitches[0].frames[0], reordered.pitches[0].frames[1]] =
+    [reordered.pitches[0].frames[1], reordered.pitches[0].frames[0]];
+  assert.throws(() => new Controller(reordered, callbacks));
+});
+
+test("seed initialization binds original request to half-up rounded tracking and current points", () => {
+  const data = fixture(); const candidate = data.pitches[0].frames[3].seed_gate;
+  candidate.decision.seed.point_px = [619.5, 300.49];
+  candidate.tracking.seed_requested_px = [619.5, 300.49];
+  assert.doesNotThrow(() => new Controller(data, callbacks));
+  for (const [field, point] of [["seed_requested_px", [620, 300]], ["seed_requested_px", undefined],
+    ["point_px", [619.5, 300.49]], ["point_px", [619, 300]], ["point_px", null]]) {
+    const malformed = structuredClone(data); malformed.pitches[0].frames[3].seed_gate.tracking[field] = point;
+    assert.throws(() => new Controller(malformed, callbacks));
+  }
+  const stale = structuredClone(data);
+  stale.pitches[0].frames[3].seed_gate.selection.current_track_point_px = [619.5, 300.49];
+  assert.throws(() => new Controller(stale, callbacks));
+});
+
+test("a gate seed rejected by the tracker can remain lost without displaying its requested point", async () => {
+  const data = fixture();
+  for (const frame of data.pitches[0].frames.slice(3)) {
+    Object.assign(frame.seed_gate.tracking, { state: "lost", point_px: null });
+    Object.assign(frame.seed_gate.selection, { tracker_state: "lost", selection_state: "unavailable",
+      current_track_point_px: null, current_candidate: null, last_historical_candidate: null });
+  }
+  const h = harness({ data }); await h.controller.switchMode("seed_gate"); await h.controller.seek(3);
+  assert.match(gate(h).state, /이 프레임에서 초기점 채택/);
+  assert.deepEqual(visiblePoints(h.last().frame), { track: null, candidate: null });
+  const malformed = structuredClone(data);
+  malformed.pitches[0].frames[3].seed_gate.tracking.point_px = [620, 300];
+  assert.throws(() => new Controller(malformed, callbacks));
 });

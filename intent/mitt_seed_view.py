@@ -50,12 +50,17 @@ def _rows(rows, keys, seeds, *, gated):
         if (row["reason"] == "external_seed") != is_seed:
             raise ValueError("saved external seed differs from the current seed decision")
         if is_seed:
+            expected_source = (
+                "saved_AI_seed_gate_dev_v1_current_observation"
+                if gated
+                else "saved_AI_first_usable_sequence_point"
+            )
             if (
                 row["state"] != "tracking"
                 or prior != "unseeded"
                 or not _same(row["seed_requested_px"], seed[1])
                 or not _same(row["point_px"], [math.floor(v + 0.5) for v in seed[1]])
-                or (gated and row["seed_source"] != "saved_AI_seed_gate_dev_v1_current_observation")
+                or row["seed_source"] != expected_source
             ):
                 raise ValueError("saved seed point or provenance differs")
             segment = 1

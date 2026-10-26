@@ -166,7 +166,9 @@ def fixture(tmp_path, monkeypatch):
                 "mitt_identity": "unverified",
                 "seed_requested_px": [600, 300] if first else None,
                 "seed_source": (
-                    "saved_AI_seed_gate_dev_v1_current_observation" if gated else "saved_AI"
+                    "saved_AI_seed_gate_dev_v1_current_observation"
+                    if gated
+                    else "saved_AI_first_usable_sequence_point"
                 )
                 if first
                 else None,
@@ -403,6 +405,20 @@ def test_resealed_gate_corruption_rejected(fixture, mutation):
     save(fixture["gate_decisions"], decisions)
     seal_report(fixture)
     with pytest.raises(ValueError, match="gate decisions"):
+        view.build(**fixture)
+    assert not fixture["out"].exists()
+
+
+@pytest.mark.parametrize(
+    "source", [None, "manual_label", "saved_AI_seed_gate_dev_v1_current_observation"]
+)
+def test_resealed_baseline_seed_provenance_must_match_cv37b(fixture, source):
+    rows = read(fixture["baseline_records"])
+    assert rows[0]["reason"] == "external_seed"
+    rows[0]["seed_source"] = source
+    save(fixture["baseline_records"], rows)
+    seal_report(fixture)
+    with pytest.raises(ValueError, match="seed point or provenance"):
         view.build(**fixture)
     assert not fixture["out"].exists()
 

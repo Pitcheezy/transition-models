@@ -48,6 +48,30 @@
       (candidate.decision.state === "seeded" || candidate.tracking.state === "unseeded");
   }
 
+  function samePoint(actual, expected) {
+    return Array.isArray(actual) && actual.length === 2 &&
+      actual.every((value, i) => Number.isFinite(value) && value === expected[i]);
+  }
+
+  function validSeedSequence(pitch) {
+    let seeded = false;
+    return pitch.frames.every((frame, i) => {
+      if (i > 0 && (frame.frame_index <= pitch.frames[i - 1].frame_index ||
+          frame.frame_seconds <= pitch.frames[i - 1].frame_seconds)) return false;
+      const { decision, tracking, selection } = frame.seed_gate;
+      if (decision.state !== "seeded") return !seeded;
+      if (tracking.state === "unseeded") return false;
+      if (seeded) return decision.reason === "already_seeded" && decision.seed === null;
+      if (decision.reason !== "seed_qualified" || decision.seed === null ||
+          !samePoint(tracking.seed_requested_px, decision.seed.point_px)) return false;
+      seeded = true;
+      if (tracking.state === "lost") return tracking.point_px === null && selection.current_track_point_px === null;
+      const rounded = decision.seed.point_px.map(value => Math.floor(value + 0.5));
+      return tracking.state === "tracking" && validPoint(rounded, frame) &&
+        samePoint(tracking.point_px, rounded) && samePoint(selection.current_track_point_px, rounded);
+    });
+  }
+
   function selectedFrame(frame, mode) {
     if (mode === "baseline") return frame;
     const candidate = ["reacquire", "seed_gate"].includes(mode) ? frame[mode] : null;
@@ -145,6 +169,9 @@
       this.comparisonMode = this.hasComparison ? this.modes[1].value : null;
       if (this.hasComparison && !data.pitches.every(pitch => pitch.frames.every(frame => validComparisonFrame(pitch, frame, this.comparisonMode)))) {
         throw new Error("비교 자료의 프레임·이미지·판단 연결이 유효하지 않습니다.");
+      }
+      if (this.comparisonMode === "seed_gate" && !data.pitches.every(validSeedSequence)) {
+        throw new Error("초기점 채택 순서 또는 초기 추적 좌표가 유효하지 않습니다.");
       }
       this.mode = "baseline";
       this.pitchIndex = 0; this.frameIndex = 0; this.generation = 0; this.timer = null;
