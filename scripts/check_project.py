@@ -8,6 +8,10 @@ from uuid import uuid4
 
 ROOT = Path(__file__).resolve().parents[1]
 QUALITY_PATHS = [
+    "intent/mitt_seed_gate.py",
+    "intent/mitt_seed_pilot.py",
+    "tests/test_mitt_seed_gate.py",
+    "tests/test_mitt_seed_pilot.py",
     "intent/mitt_reacquire_view.py",
     "tests/test_mitt_reacquire_view.py",
     "intent/mitt_frame_ocr.py",
