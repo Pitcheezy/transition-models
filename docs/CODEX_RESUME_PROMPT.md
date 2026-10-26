@@ -2,6 +2,12 @@
 
 현재 실행 상태는 첫 절을 따른다. 아래 완료 이력의 “다음”은 당시 기록이며 새 실행 지시가 아니다.
 
+## CV45 새 추출 시각 근거 보존 진행 — 2026-10-27
+
+**선점: 우리 Codex / `codex/cv-decode-evidence-1027` / 기준ee4cfb1.** [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6424552029). 기존추출기에선택적증거저장을추가하고로컬합성영상/회귀/다른모델검토로확인한다. 기존자료·기본동작·팀원·Cloudflare·main/운영불변.
+
+- [ ] CV-45. 실제timebase/PTS·선택JPEG SHA·필터된로그·버전·코드SHA·시도상태·재시도/timeout근거보존, 비밀/경로비노출. 새추출에만적용하며기존625장과독립PTS검증을소급완료하지않는다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-27 · Codex]`
+
 ## CV44 완료 — 2026-10-27
 
 **완료·수정 권한 반납: 우리 Codex / `codex/cv-replay-kit-1027` / 구현04fa744·수리f2366d6.** [범위·검증](CV_REPLAY_PACKAGE_20261027.md). 비공개v2 ZIP635파일·98,730,334bytes·원본631불변·압축해제 바이트 일치. 새56/관련94 Python·Ruff194·Windows 실제 재생·HTTP6검사, 실제 Claude Fable 분할 및 수정 재검토 완료. ZIP SHA `09fca482d86a442990df86fa63bc7f4fe9e61c8c0981363a2b1c102ef7f2a514`.
