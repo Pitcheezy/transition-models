@@ -1,5 +1,11 @@
 # 남은 작업 체크리스트
 
+## CV43 시드 게이트 재생 연결 — 2026-10-27
+
+**선점: 우리 Codex / `codex/cv-seed-view-1027` / 기준 PR78 `7d49f82` / 2026-10-27.** [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6423682631). 기존10구625장에CV37b/42저장결과·현재게이트근거·OCR74를연결한다. 기존팩/원본/다른채팅작업·팀원·Cloudflare·main/운영변경없음.
+
+- [ ] CV-43. 채택4/보류6 전체625프레임 비교, 같은프레임모드전환·게이트근거현재/과거만·미확정점미표시·현재/과거별도이미지·없는OCR명시. 저장SHA/키/시각/이미지결속·기존바이트보존·새비공개팩·Python/Node/실제Windows·다른모델고정검토. 추적/OCR새실행·사람정답·정확도주장없음. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-27 · Codex]`
+
 ## CV42 초기점 자격 게이트 — 2026-10-27
 
 **CV42 완료·수정 권한 반납: 우리 Codex / `codex/cv-seed-gate-1027` / 정책 `2bbbaad`·구현 `5df160a`·수리 `353ace2` / 2026-10-27.** [정책·결과](docs/CV_SEED_GATE_20261027.md), [Fable 검토](docs/results/cv_seed_gate_20261027/cross_review_v1.json), [검증](docs/results/cv_seed_gate_20261027/verification_v2.json). 기존10구625행·관측315행에서4구채택/6구보류, 채택 지연0.4004초, 추적178→77·정지13→5. 원본667+기준선1파일 불변·기준선전체필드재현·수리전후새결과동일·접두검사통과. 68검사·린트190·실제 Fable 수정 재검토 APPROVE_WITH_NOTES. 알려진 자료에서 만든 개발 후보이며 미트 식별/정확도 개선 아님. 팀원·Cloudflare·main/운영 미변경.
