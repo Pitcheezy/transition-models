@@ -25,9 +25,9 @@
     <section id="comparison-controls" class="comparison" aria-label="같은 프레임에서 추적 결과 비교" hidden>
       <label for="mode-select">같은 프레임 비교</label>
       <select id="mode-select"><option value="baseline">기존 추적</option><option value="reacquire">제한된 재탐색</option></select>
-      <p>방식을 바꾸면 재생을 멈추고 같은 프레임을 유지합니다. 재탐색 후보는 다음 프레임에서 확인되기 전까지 점으로 표시하지 않습니다.</p>
+      <p id="comparison-help">방식을 바꾸면 재생을 멈추고 같은 프레임을 유지합니다. 재탐색 후보는 다음 프레임에서 확인되기 전까지 점으로 표시하지 않습니다.</p>
       <p id="comparison-status" role="status"></p>
-      <p class="help">더 오래 추적해도 미트를 제대로 찾았다는 뜻은 아닙니다. 이 화면은 잘못 잡은 시드와 재탐색의 실패 사례를 확인하는 개발 도구입니다.</p>
+      <p id="comparison-limit" class="help">더 오래 추적해도 미트를 제대로 찾았다는 뜻은 아닙니다. 이 화면은 잘못 잡은 시드와 재탐색의 실패 사례를 확인하는 개발 도구입니다.</p>
     </section>
     <div class="panels">
       <section class="panel" aria-label="현재 프레임">
@@ -55,6 +55,15 @@
           <dt>현재 멈춤 후보</dt><dd id="candidate-state">—</dd>
           <dt>처리 이유</dt><dd id="reason">—</dd>
           <dt>현재 추적 구간</dt><dd id="segment-state">—</dd>
+        </dl>
+      </aside>
+      <aside id="seed-gate-panel" class="panel seed-gate-panel" aria-label="현재 프레임까지의 초기점 게이트 판단" hidden>
+        <h2>현재 프레임까지의 초기점 판단</h2>
+        <p>현재·과거의 저장 AI 관측만 표시합니다. 아래 지원 관측은 학습 정답이나 사람 검증이 아니며, 초기점 좌표를 별도 점으로 그리지 않습니다.</p>
+        <dl>
+          <dt>현재 판단</dt><dd id="seed-gate-state" role="status">—</dd>
+          <dt>저장된 처리 이유</dt><dd id="seed-gate-reason">—</dd>
+          <dt>지원 관측</dt><dd id="seed-gate-support">—</dd>
         </dl>
       </aside>
       <aside class="panel ocr-panel" aria-label="현재 프레임의 이름 OCR 관측">
