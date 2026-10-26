@@ -10,7 +10,19 @@ CV43 v3의630파일과 영수증을 viewer/에 담고, 루트에 실행기·기�
 
 ## 실제 결과
 
-구현 후 고정 소스·검사·ZIP SHA·압축 해제본 실행·다른 모델 검토를 기록한다. `python -B -S run_replay.py --check`, `python -B -S run_replay.py --open`이 목표 실행 명령이다.
+구현 `04fa744`, 수리 `f2366d60c23a40644c9d4de86607cc2594544e43`. 최종 [검증 영수증](results/cv_replay_package_20261027/verification_v2.json)과 [고정 소스 검토](results/cv_replay_package_20261027/cross_review_v1.json)에 수리 전후를 구분했다.
+
+- 최종 비공개 ZIP: `outputs/cv_research_kit_20261027_v2.zip`, 98,730,334 bytes, 635파일. SHA-256 `09fca482d86a442990df86fa63bc7f4fe9e61c8c0981363a2b1c102ef7f2a514`.
+- 압축 해제본: `outputs/cv_research_kit_20261027_v2_unpacked`. 원본631파일 불변, 압축해제635파일 바이트 일치. HTTP 허용목록630파일은 모든 파일에 HTTP 요청했다는 뜻이 아니다.
+- 새 Python56·관련94검사 통과, Ruff194경로 통과. 실제 Windows에서 표준 라이브러리 전용 검사·실행, 10구 선택·PA4:2 프레임20512·초기점 게이트 표시 확인, 콘솔 오류0. HTTP6건에서 UI2개200·내부파일3개404·다른 Host421 확인.
+- 수리 전v1은 같은 자료로 끝까지 재생·마지막정지·소실 시 현재점 없음/과거점 분리를 확인했다. 최종v2와 viewer631파일 동일이며, v2는 시작·탐색과 변경한 접속제한을 확인했다. Mac/iPhone 실기기는 미확인이다.
+- 제작→압축해제→전체 바이트/허용목록 검사37.83초는 묶음 작업 시간이며 모델 추론 지연이 아니다.
+
+`python -B -S run_replay.py --check`와 `python -B -S run_replay.py --open`으로 실행한다. Python3.10 이상과 표준 lzma 모듈이 필요하다. 이번 확인은 노트북의 Python 환경이며 lzma를 뺀 특수 빌드는 미검증이다.
+
+Claude Code2.1.310의 실제 `claude-fable-5-1` 검토를 완료했다. 전체29.7KB 검토는 응답 스트림에서 분석 중인 채 로컬240초 제한에 걸렸다. 인증 실패로 볼 근거는 없었다. 포장/추출 범위를11.0KB·7.2KB로 나눠136.09초·103.58초에 최종 답변을 받았고, 수정 diff 재검토는57.41초에 `PASS_WITH_MINOR_FINDINGS`였다. 손상 deflate/LZMA, Host, 점 경로, helper 정규파일·용량, 접두 포함 경로 길이를 수리했다. 검사기·lowercase핀 관련 누락 지적은 기존 코드로 반증했다. bz2 오류는 CLI의 OSError 처리 범위이며 출력 전 실패한다. 검토는 정적 코드 검토, 위 실제 검사는 별도 실행 증거다.
+
+제약: ZIP 압축 바이트의 재현성은 같은 Python/zlib 환경 기준이다. ZIP 저장 실패 뒤 새 출력폴더가 남을 수 있으나 기존 경로는 덮어쓰지 않는다. 동시 악성 파일 변경까지 보장하는 공개 배포 도구가 아니며, 약1GiB 입력 상한과 메모리 사용 한계가 있다.
 
 ## 범위의 한계
 
