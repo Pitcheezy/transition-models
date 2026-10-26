@@ -2,6 +2,8 @@
 
 ## 재탐색 결과와 OCR의 같은 프레임 비교 — 2026-10-27
 
+**검토 재개 선점: 우리 Codex / `codex/cv-reacquire-view-1027` / 기준 `958e7de` / 2026-10-27.** 사용자 요청으로 시간 초과를 진단하고 실제 Fable 고정 소스 검토를 재개한다. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6423014071). 아래 종료 기록은 이전 시도 이력이며 완료 판정은 새 검토 결과를 따른다. 다른 Claude 폴더·팀원·Cloudflare는 변경하지 않는다.
+
 **CV-41b 구현·로컬 검증 완료 / 다른 모델 검토 대기 / 수정 권한 반납: Codex / `codex/cv-reacquire-view-1027` / 기준 PR74 `0112f018e7485a0fc35c12575b990345f3239c4b` / [PR77](https://github.com/Pitcheezy/transition-models/pull/77) 초안.** 구현 `fcde5d2`, 기록 `620673f`. 완료된 Claude 연구 브랜치에서 별도 작업트리를 만들었다. 운영 인계 정정은 별도 PR76이며, 운영·Cloudflare·팀원 코드와 이 연구 작업은 분리한다.
 
 실제 625행 대조→203장/OCR74행 연결, Python33+74·Node32·린트186경로·Windows 실제 재생/전환/과거사건/OCR 확인을 완료했다. [기록](docs/CV_REACQUIRE_FRAME_VIEW_20261027.md)·[영수증](docs/results/cv_reacquire_view_20261027/verification_v1.json). Claude Fable CLI2.1.310에 고정 코드 읽기 검토를 두 번 요청했으나 600초/300초 모두 결과 없이 시간 초과해 **합격 처리하지 않았다**. [시도 기록](docs/results/cv_reacquire_view_20261027/review_attempts_v1.json). 다음 세션은 재구현·같은 자료의 새 판독을 반복하지 말고 고정 코드 다른 모델 검토부터 재개한다. UI 보조검토의 판정 이유 누락은 수정/회귀 완료이나 다른 모델 검토를 대체하지 않는다. main 병합·운영 배포 없음.
