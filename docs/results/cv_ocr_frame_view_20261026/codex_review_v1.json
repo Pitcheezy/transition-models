@@ -71,9 +71,30 @@
       ],
       "raw_output_sha256": "cca4a6ecd25ed781db150452c914a3cb43807302d6f972e53e42b2e266590218",
       "tokens_used": 38896
+    },
+    {
+      "attempt": "d",
+      "reviewed_commit": "f9326831a163197b778effd39edd0cfbcf6154db",
+      "command": "codex exec -c sandbox_mode=\"read-only\" <re-check prompt> < diff_f932683.txt (git show of the fix commit plus the full current intent/mitt_ocr_view.py)",
+      "started_utc": "2026-10-26T05:18:33Z",
+      "finished_utc": "2026-10-26T05:19:34Z",
+      "tool_access": "text-only review of the supplied diff; no commands or tests run by the reviewer",
+      "diff_sha256": "4f24d1235852b1410fce70b53db1161880aac438b64dac8fc00eb9823b1d1417",
+      "reported": "finding 1 resolved (strict key types); finding 2 resolved in both builders (single-pass re.sub)",
+      "findings": [
+        {
+          "severity": "P3",
+          "file": "intent/mitt_ocr_view.py",
+          "area": "_check_rows key type check",
+          "claim": "a JSON integer timestamp such as 10**400 passes the type check but math.isfinite raises OverflowError instead of the ValueError callers expect",
+          "disposition": "accepted; finiteness is now checked for floats only, so an oversized integer falls through to the key mismatch ValueError; regression case seconds_huge_int added"
+        }
+      ],
+      "raw_output_sha256": "0168d7c555d67806d7be921a38b316f75bc731cad3813b2fa2b82de3c8250afe",
+      "tokens_used": 17992
     }
   ],
-  "fix": "applied on this branch in the commit that adds this file; see board closing record and PR #73 for the SHA",
+  "fix": "P2 x2 fixed in f9326831a163197b778effd39edd0cfbcf6154db; the P3 from the re-check is fixed in the commit that adds this attempt (recorded on the board and in PR #73)",
   "limits": [
     "attempt c is a static read of the diff; attempt a ran Node tests and artifact checks through a JS REPL but not pytest",
     "neither attempt is a human review, an accuracy measurement or a production-readiness pass",

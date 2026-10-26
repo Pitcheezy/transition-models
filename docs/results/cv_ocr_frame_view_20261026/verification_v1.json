@@ -4,7 +4,7 @@
   "evidence_kind": "offline replay of saved development artifacts; no new OCR, AI reading, video or human evaluation",
   "base_commit": "360d3c480ce31dda4379c84059e107dbfc6feaab",
   "source_sha256": {
-    "intent/mitt_ocr_view.py": "ada1caa450c206cf2c6a00f98fdd4bcaeb005d88430e2544dd97189336a518bf",
+    "intent/mitt_ocr_view.py": "c3a9afb344d56f1e7b1e0e14e44bd705fd633f084e223e1474990d4864c1a325",
     "intent/mitt_track_view.py": "36be7ce58af3ebed83fb2a7a9f632dce03f26f563e311b31f9d2b603078e4837",
     "web/track-review/index.html": "455414d0c8f137e704027bd25f65f4b2253d898fadff9c49b7af3190da21b93b",
     "web/track-review/review.js": "26dafa90850d33df70a2df12ab3d1958d06ffc8946033c965567b384a52f7612",
@@ -72,7 +72,7 @@
     },
     "python_related": {
       "command": "python -m pytest -q tests/test_mitt_ocr_view.py tests/test_mitt_track_view.py tests/test_mitt_frame_ocr.py",
-      "result": "88 passed in 31.50s before the review fixes; 94 passed in 35.37s after"
+      "result": "88 passed in 31.50s before the review fixes; 94 passed after the P2 fixes; 95 passed after the P3 fix"
     },
     "node_new": {
       "command": "node --test tests/test_ocr_frame_view_ui.cjs",

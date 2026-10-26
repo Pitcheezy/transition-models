@@ -83,7 +83,7 @@ def _check_rows(rows, frames, pitch_id):
             not isinstance(row["pitch_id"], str)
             or type(row["frame_index"]) is not int
             or type(row["frame_seconds"]) not in (int, float)
-            or not math.isfinite(row["frame_seconds"])
+            or (type(row["frame_seconds"]) is float and not math.isfinite(row["frame_seconds"]))
             or not isinstance(row["image_sha256"], str)
         ):
             raise ValueError("observation key types are invalid")

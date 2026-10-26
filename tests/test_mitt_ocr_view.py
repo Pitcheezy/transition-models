@@ -461,7 +461,9 @@ def test_report_without_input_unchanged_or_wrong_schema_is_rejected(inputs):
         assert_rejected(inputs)
 
 
-@pytest.mark.parametrize("change", ["index_false", "seconds_false", "seconds_text", "index_float"])
+@pytest.mark.parametrize(
+    "change", ["index_false", "seconds_false", "seconds_text", "index_float", "seconds_huge_int"]
+)
 def test_boolean_or_non_numeric_keys_never_equal_frame_zero(tmp_path, change):
     # Codex review finding: False == 0 in Python, so a frame at index/time zero must not join.
     pack, receipt_sha = make_pack(tmp_path, base=0)
@@ -482,11 +484,13 @@ def test_boolean_or_non_numeric_keys_never_equal_frame_zero(tmp_path, change):
         first["frame_seconds"] = False
     elif change == "seconds_text":
         first["frame_seconds"] = "0"
+    elif change == "seconds_huge_int":
+        first["frame_seconds"] = 10**400  # Codex re-check: must be a ValueError, not OverflowError
     else:
         first["frame_index"] = 0.0
     save(ocr / "observations.json", observations)
     reseal_ocr(args)
-    assert_rejected(args, match="key types")
+    assert_rejected(args, match="key")
 
 
 def test_placeholder_tokens_inside_data_are_not_substituted_again(inputs):
