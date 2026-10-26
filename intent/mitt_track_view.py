@@ -248,12 +248,13 @@ def build(
     }
     payload_text = json.dumps(payload, ensure_ascii=False, allow_nan=False)
     template = (ASSETS / "index.html").read_text(encoding="utf-8")
-    if template.count("__TRACK_VIEW_DATA__") != 1:
+    if template.count("__TRACK_VIEW_DATA__") != 1 or template.count("__OCR_VIEW_DATA__") != 1:
         raise ValueError("invalid viewer template")
     files = {
-        "index.html": template.replace(
-            "__TRACK_VIEW_DATA__", payload_text.replace("<", "\\u003c")
-        ).encode(),
+        # This builder carries no OCR observations; the page shows that explicitly.
+        "index.html": template.replace("__TRACK_VIEW_DATA__", payload_text.replace("<", "\\u003c"))
+        .replace("__OCR_VIEW_DATA__", "null")
+        .encode(),
         "review.js": (ASSETS / "review.js").read_bytes(),
         "style.css": (ASSETS / "style.css").read_bytes(),
         "payload.json": (payload_text + "\n").encode(),
