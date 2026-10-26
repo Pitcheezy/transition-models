@@ -2,7 +2,7 @@
 
 ## CV-39c OCR 관측 화면 연결 — 2026-10-26
 
-Claude Fable 5.1이 별도 worktree `claude/cv-ocr-view-1026`(PR72 `360d3c4` 기반)에서 저장 OCR74장을 프레임 재생 화면에 정확 결합했다. [기록](CV_OCR_FRAME_VIEW_20261026.md)을 먼저 읽는다. 새 빌더 `intent/mitt_ocr_view.py`, 화면 `web/track-review/*`에 OCR 패널, 검사 `tests/test_mitt_ocr_view.py`·`tests/test_ocr_frame_view_ui.cjs`. 비공개 출력 `outputs/cv_ocr_frame_view_20261026_v1/`(Git 제외). 원 OCR은 v2 팩 실행이며 v3와 payload/203 JPEG가 같음을 영수증으로 확인했다. OCR 재호출·새 판독·학습 없음, 기존 팩/원문 보존. PR67→69→70→71→72→이 브랜치 의존 관계를 유지하며 main/운영에 자동 병합하지 않는다. 로컬 Codex CLI(`gpt-6-astra`, 읽기 전용) 정적 검토의 P2 2건(불리언 키 결합·템플릿 재치환)과 재검토 P3 1건(거대 정수 시각 OverflowError)을 수리하고 회귀 검사를 추가했다; 수정 빌더로 재생성한 팩은 v1과 바이트 동일하다. 초안 PR73(PR72 기반)이며 수정 권한은 반납했다. 다음 독립 후보는 CV39의 독립 디코딩 PTS 대조(해당 구간 원영상/시간 보존 자료 필요)와 CV41 전시 팩 정리다. CV35/36·A-y·새 경기 평가는 사람 조건 그대로다.
+Claude Fable 5.1이 별도 worktree `claude/cv-ocr-view-1026`(PR72 `360d3c4` 기반)에서 저장 OCR74장을 프레임 재생 화면에 정확 결합했다. [기록](CV_OCR_FRAME_VIEW_20261026.md)을 먼저 읽는다. 새 빌더 `intent/mitt_ocr_view.py`, 화면 `web/track-review/*`에 OCR 패널, 검사 `tests/test_mitt_ocr_view.py`·`tests/test_ocr_frame_view_ui.cjs`. 비공개 출력 `outputs/cv_ocr_frame_view_20261026_v1/`(Git 제외). 원 OCR은 v2 팩 실행이며 v3와 payload/203 JPEG가 같음을 영수증으로 확인했다. OCR 재호출·새 판독·학습 없음, 기존 팩/원문 보존. PR67→69→70→71→72→이 브랜치 의존 관계를 유지하며 main/운영에 자동 병합하지 않는다. 로컬 Codex CLI(`gpt-6-astra`, 읽기 전용) 정적 검토의 P2 2건(불리언 키 결합·템플릿 재치환)과 재검토 P3 1건(거대 정수 시각 OverflowError)을 수리하고 회귀 검사를 추가했으며 P3 수정도 단일 범위 재검토로 해결을 확인했다; 수정 빌더로 재생성한 팩은 v1과 바이트 동일하다. 초안 PR73(PR72 기반)이며 수정 권한은 반납했다. 다음 독립 후보는 CV39의 독립 디코딩 PTS 대조(해당 구간 원영상/시간 보존 자료 필요)와 CV41 전시 팩 정리다. CV35/36·A-y·새 경기 평가는 사람 조건 그대로다.
 
 ## CV38·CV39a/b·CV41a 종료 — 2026-10-26
 
