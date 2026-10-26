@@ -3,6 +3,18 @@
   "use strict";
 
   const COMPARISON_SCHEMA = "pitcheezy-reacquire-frame-comparison-dev-v1";
+  function validComparisonFrame(pitch, frame) {
+    if (!frame || frame.width !== 1280 || frame.height !== 720 ||
+        typeof pitch.pitch_id !== "string" || pitch.pitch_id.trim() === "" ||
+        !Number.isInteger(frame.frame_index) || frame.frame_index < 0 ||
+        !Number.isFinite(frame.frame_seconds) || frame.frame_seconds < 0 ||
+        typeof frame.sha256 !== "string" || !/^[a-f0-9]{64}$/i.test(frame.sha256)) return false;
+    const candidate = frame.reacquire;
+    return !!candidate && [candidate.selection, candidate.tracking].every(row => row &&
+      row.pitch_id === pitch.pitch_id && row.frame_index === frame.frame_index &&
+      row.frame_seconds === frame.frame_seconds) && candidate.tracking.source_sha256 === frame.sha256;
+  }
+
   function selectedFrame(frame, mode) {
     if (mode === "baseline") return frame;
     if (!frame.reacquire?.selection || !frame.reacquire?.tracking) throw new Error("재탐색 행이 없습니다.");
@@ -43,10 +55,16 @@
     constructor(data, { loadImage, onChange,
       setTimer = (callback, delay) => setTimeout(callback, delay),
       clearTimer = id => clearTimeout(id) }) {
-      if (data.schema !== "pitcheezy-track-frame-view-dev-v1" || !data.pitches?.length) throw new Error("지원하지 않는 자료 형식입니다.");
+      if (data?.schema !== "pitcheezy-track-frame-view-dev-v1" ||
+          !Array.isArray(data.pitches) || !data.pitches.length ||
+          !data.pitches.every(pitch => pitch && Array.isArray(pitch.frames) && pitch.frames.length)) {
+        throw new Error("지원하지 않는 자료 형식입니다.");
+      }
       Object.assign(this, { data, loadImage, onChange, setTimer, clearTimer });
       this.hasComparison = data.comparison_schema === COMPARISON_SCHEMA;
-      if (this.hasComparison && !data.pitches.every(p => p.frames.every(f => f.reacquire?.selection && f.reacquire?.tracking))) throw new Error("재탐색 자료가 불완전합니다.");
+      if (this.hasComparison && !data.pitches.every(pitch => pitch.frames.every(frame => validComparisonFrame(pitch, frame)))) {
+        throw new Error("재탐색 자료의 프레임·이미지 연결이 유효하지 않습니다.");
+      }
       this.mode = "baseline";
       this.pitchIndex = 0; this.frameIndex = 0; this.generation = 0; this.timer = null;
       this.playing = false; this.view = { loading: true, image: null, history: null, historyPending: false, error: null };
@@ -87,7 +105,7 @@
       } catch (_) {
         if (generation !== this.generation) return;
         this.playing = false; this.cancelTimer();
-        this.view = { loading: false, image: null, history: null, historyPending: false, error: "이미지를 불러오지 못했습니다. 현재·과거 표시를 비웠습니다." };
+        this.view = { loading: false, image: null, history: null, historyPending: false, error: "이미지 또는 화면 처리에 실패했습니다. 현재·과거 표시를 비웠습니다." };
         this.emit();
       }
     }
@@ -132,12 +150,24 @@
       point[0] >= 0 && point[0] < frame.width && point[1] >= 0 && point[1] < frame.height;
   }
 
+  function historyStatus(view) {
+    if (view.loading) return "현재 이미지 준비 중";
+    if (view.error) return "표시 없음";
+    if (view.historyPending) return "기록 이미지 준비 중";
+    if (view.historyError) return "기록 이미지 또는 화면 처리에 실패했습니다.";
+    if (view.history && !validPoint(view.history.event.point_px, view.history.frame)) {
+      return "기록 좌표가 유효하지 않아 표시하지 않습니다.";
+    }
+    return "이 시점까지 표시할 발생 기록 없음";
+  }
+
   function visiblePoints(frame) {
     const selection = frame.selection;
     const track = selection.tracker_state === "tracking" && validPoint(selection.current_track_point_px, frame)
       ? selection.current_track_point_px : null;
     const current = selection.current_candidate;
     const candidate = track && selection.selection_state === "stationary" && current &&
+      typeof current.pitch_id === "string" && current.pitch_id.trim() !== "" &&
       current.pitch_id === selection.pitch_id && current.frame_index === frame.frame_index &&
       (selection.segment_id === undefined || current.segment_id === selection.segment_id) &&
       current.frame_seconds === frame.frame_seconds && validPoint(current.point_px, frame)
@@ -156,7 +186,9 @@
       typeof value.reason === "string" && OCR_STATUSES.has(value.status) &&
       OCR_RELATIONS.has(value.temporal_relation) &&
       (value.status === "read" ? typeof value.name_text === "string" && value.name_text.trim() !== "" : value.name_text === null) &&
-      (value.compared_to_frame === null || Number.isInteger(value.compared_to_frame));
+      (value.status === "read" || value.temporal_relation === "not_compared") &&
+      ((value.temporal_relation === "not_compared") === (value.compared_to_frame === null)) &&
+      (value.compared_to_frame === null || (Number.isInteger(value.compared_to_frame) && value.compared_to_frame >= 0));
   }
 
   function ocrFor(ocr, pitch, frame) {
@@ -256,7 +288,7 @@
         get("frame-time").textContent = `${frameIndex + 1} / ${pitch.frames.length}장 · 원본 번호 ${frame.frame_index} · 자료 시각 ${frame.frame_seconds.toFixed(3)}초`;
         get("frame-status").textContent = view.loading ? "이미지 준비 중 · 표시 비움" : view.error || "현재 저장 프레임";
         get("track-state").textContent = "—"; get("candidate-state").textContent = "—"; get("reason").textContent = "—";
-        get("history-status").textContent = view.loading ? "현재 이미지 준비 중" : view.error ? "표시 없음" : view.historyPending ? "기록 이미지 준비 중" : view.historyError ? "기록 이미지를 불러오지 못했습니다." : "이 시점까지 표시할 발생 기록 없음";
+        get("history-status").textContent = historyStatus(view);
         renderOcr(ocrView(ocr, pitch, frame, view));
         get("comparison-controls").hidden = !view.hasComparison;
         get("mode-select").value = view.mode;
@@ -294,7 +326,7 @@
     return controller;
   }
 
-  if (typeof module !== "undefined" && module.exports) module.exports = { Controller, historyFor, visiblePoints, handleKey, ocrFor, ocrView, selectedFrame, trackingText, comparisonText, reasonText };
+  if (typeof module !== "undefined" && module.exports) module.exports = { Controller, historyFor, historyStatus, visiblePoints, handleKey, ocrFor, ocrView, selectedFrame, trackingText, comparisonText, reasonText };
   if (typeof document !== "undefined") {
     try { mount(document); }
     catch (_) { const status = document.getElementById("frame-status"); if (status) status.textContent = "자료를 열지 못했습니다. 팩 무결성을 다시 확인해 주세요."; }

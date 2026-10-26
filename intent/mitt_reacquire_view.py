@@ -2,6 +2,7 @@
 
 This is a saved-record join, not an image tracker or a new OCR/model invocation. Existing
 selectors validate the stored snapshots; no pixels are used to infer new coordinates.
+Saved-record source_sha256 is the source frame JPEG byte hash, the same value as frame.sha256.
 """
 
 from __future__ import annotations
@@ -67,6 +68,8 @@ def _json(raw):
         raise ValueError("nonfinite JSON constant")
 
     try:
+        if isinstance(raw, bytes):
+            raw = raw.decode("utf-8")
         return json.loads(
             raw,
             parse_int=integer,
@@ -319,10 +322,13 @@ def _build(**args):
             image = files[frame["image"]]
             if _sha(image) != frame["sha256"] or frame["image"] in images:
                 raise ValueError("displayed image binding differs or is reused")
-            with Image.open(io.BytesIO(image)) as decoded:
-                decoded.load()
-                if decoded.format != "JPEG" or decoded.size != (1280, 720):
-                    raise ValueError("displayed image must be a 1280x720 JPEG")
+            try:
+                with Image.open(io.BytesIO(image)) as decoded:
+                    decoded.load()
+                    if decoded.format != "JPEG" or decoded.size != (1280, 720):
+                        raise ValueError("displayed image must be a 1280x720 JPEG")
+            except (OSError, Image.DecompressionBombError):
+                raise ValueError("displayed image cannot be safely decoded") from None
             row = rows[key]
             frame["reacquire"] = {
                 "tracking": {k: copy.deepcopy(v) for k, v in row.items() if k != "stationary"},
@@ -349,6 +355,13 @@ def _build(**args):
         raise ValueError("displayed OCR differs from the original observations")
     _check_rows(observations["rows"], visible[observed_pitch], observed_pitch)
     payload["comparison_schema"] = COMPARISON_SCHEMA
+    baseline_check = copy.deepcopy(payload)
+    del baseline_check["comparison_schema"]
+    for pitch in baseline_check["pitches"]:
+        for frame in pitch["frames"]:
+            del frame["reacquire"]
+    if not _same(baseline_check, original_payload):
+        raise ValueError("baseline payload changed during the join")
     payload_text = json.dumps(payload, ensure_ascii=False, allow_nan=False)
     page = fill_template(
         (ASSETS / "index.html").read_text(encoding="utf-8"),

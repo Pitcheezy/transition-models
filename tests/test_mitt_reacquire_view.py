@@ -399,3 +399,20 @@ def test_strict_json_rejects_duplicate_keys_and_nonfinite_values():
     for raw in (b'{"key":1,"key":2}', b'{"key":Infinity}', b'{"key":1e999}'):
         with pytest.raises(ValueError):
             view._json(raw)
+
+
+@pytest.mark.parametrize("encoding", ["utf-16", "utf-32"])
+def test_json_rejects_non_utf8_before_template_embedding(encoding):
+    with pytest.raises(ValueError, match="invalid JSON"):
+        view._json('{"valid":true}'.encode(encoding))
+
+
+@pytest.mark.parametrize("error", [OSError, Image.DecompressionBombError])
+def test_decoder_failure_is_reported_without_partial_output(inputs, monkeypatch, error):
+    def fail_decode(*_args, **_kwargs):
+        raise error("invalid image")
+
+    monkeypatch.setattr(view.Image, "open", fail_decode)
+    with pytest.raises(ValueError, match="safely decoded"):
+        view.build(**inputs)
+    assert not inputs["out"].exists()

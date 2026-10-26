@@ -1,7 +1,7 @@
 "use strict";
 const test = require("node:test");
 const assert = require("node:assert/strict");
-const { Controller, visiblePoints, historyFor, ocrView, trackingText, comparisonText, reasonText } = require("../web/track-review/review.js");
+const { Controller, visiblePoints, historyFor, historyStatus, ocrView, trackingText, comparisonText, reasonText } = require("../web/track-review/review.js");
 
 function fixture() {
   const pitch_id = "747139:3:1";
@@ -14,7 +14,7 @@ function fixture() {
       selection_state: i === 0 ? "warming" : "unavailable", reason: "baseline",
       current_track_point_px: i === 0 ? [600, 300] : null,
       current_candidate: null, last_historical_candidate: null };
-    const track = { ...key, state, segment_id: state === "tracking" ? (i === 0 ? 0 : 1) : null,
+    const track = { ...key, source_sha256: "a".repeat(64), state, segment_id: state === "tracking" ? (i === 0 ? 0 : 1) : null,
       point_px: state === "tracking" ? [620, 300] : null,
       reacquire_candidate_px: state === "reacquire_candidate" ? [619, 299] : null, reason: state };
     return { ...key, width: 1280, height: 720, sha256: "a".repeat(64), image: `${i}.jpg`, selection,
@@ -27,12 +27,12 @@ function fixture() {
   });
   return { schema: "pitcheezy-track-frame-view-dev-v1",
     comparison_schema: "pitcheezy-reacquire-frame-comparison-dev-v1",
-    pitches: [{ pitch_id, frames }, { pitch_id: "747139:3:2", frames: frames.map((f, i) => ({
-      ...f, frame_index: 200 + i, frame_seconds: 20 + i / 10,
-      selection: { ...f.selection, pitch_id: "747139:3:2" },
-      reacquire: { tracking: { ...f.reacquire.tracking, pitch_id: "747139:3:2" },
-        selection: { ...f.reacquire.selection, pitch_id: "747139:3:2", current_candidate: null, last_historical_candidate: null } }
-    })) }] };
+    pitches: [{ pitch_id, frames }, { pitch_id: "747139:3:2", frames: frames.map((f, i) => {
+      const key = { pitch_id: "747139:3:2", frame_index: 200 + i, frame_seconds: 20 + i / 10 };
+      return { ...f, ...key, selection: { ...f.selection, ...key },
+        reacquire: { tracking: { ...f.reacquire.tracking, ...key },
+          selection: { ...f.reacquire.selection, ...key, current_candidate: null, last_historical_candidate: null } } };
+    }) }] };
 }
 function harness(deferred = false) {
   const calls = [], views = [], timers = [];
@@ -165,4 +165,73 @@ test("tracking continuity cannot hide why a stationary candidate stopped", () =>
   assert.equal(reasonText({ tracking: { reason: "patch_continuity" }, selection: { reason: "motion_restart" } }),
     "추적: patch_continuity / 멈춤 판정: motion_restart");
   assert.equal(reasonText({ selection: { reason: "tracker_lost" } }), "tracker_lost");
+});
+
+test("constructor rejects missing or non-array pitch and frame collections", () => {
+  const callbacks = { loadImage: async () => ({}), onChange: () => {} };
+  for (const pitches of [null, {}, { length: 1 }, []]) {
+    assert.throws(() => new Controller({ ...fixture(), pitches }, callbacks));
+  }
+  for (const frames of [null, {}, { length: 1 }, []]) {
+    const data = fixture(); delete data.comparison_schema; data.pitches[0].frames = frames;
+    assert.throws(() => new Controller(data, callbacks));
+  }
+});
+
+test("comparison consumer rejects unsupported image sizes while preserving legacy behavior", () => {
+  const callbacks = { loadImage: async () => ({}), onChange: () => {} };
+  for (const dimensions of [{ width: 640 }, { height: 360 }]) {
+    const data = fixture(); Object.assign(data.pitches[0].frames[0], dimensions);
+    assert.throws(() => new Controller(data, callbacks));
+    delete data.comparison_schema;
+    assert.doesNotThrow(() => new Controller(data, callbacks));
+  }
+});
+
+test("comparison rows must bind to the displayed pitch, frame, time and image", () => {
+  const callbacks = { loadImage: async () => ({}), onChange: () => {} };
+  for (const row of ["selection", "tracking"]) {
+    for (const change of [{ pitch_id: "747139:9:9" }, { pitch_id: undefined },
+      { frame_index: 999 }, { frame_index: true }, { frame_seconds: 99 }, { frame_seconds: undefined }]) {
+      const data = fixture(); Object.assign(data.pitches[0].frames[0].reacquire[row], change);
+      assert.throws(() => new Controller(data, callbacks), `${row}: ${JSON.stringify(change)}`);
+    }
+  }
+  for (const source_sha256 of [undefined, "b".repeat(64)]) {
+    const data = fixture(); data.pitches[0].frames[0].reacquire.tracking.source_sha256 = source_sha256;
+    assert.throws(() => new Controller(data, callbacks));
+  }
+});
+
+test("a current candidate with missing pitch identity cannot pass undefined equality", () => {
+  const frame = structuredClone(fixture().pitches[0].frames[2]);
+  frame.selection = frame.reacquire.selection;
+  delete frame.selection.pitch_id;
+  delete frame.selection.current_candidate.pitch_id;
+  assert.equal(visiblePoints(frame).candidate, null);
+});
+
+test("invalid historical coordinates are distinct from absent history", async () => {
+  const h = harness();
+  h.controller.data.pitches[0].frames[4].reacquire.selection.last_historical_candidate.point_px = [-1, 300];
+  await h.controller.switchMode("reacquire"); await h.controller.seek(4);
+  assert.ok(h.last().history);
+  assert.match(historyStatus(h.last()), /기록 좌표.*유효하지/);
+  await h.controller.seek(0);
+  assert.match(historyStatus(h.last()), /발생 기록 없음/);
+});
+
+test("renderer errors are not reported solely as image download failures", async () => {
+  const views = []; let failOnce = true;
+  const controller = new Controller(fixture(), {
+    loadImage: async () => ({ id: "loaded" }),
+    onChange: view => {
+      if (view.image && failOnce) { failOnce = false; throw new Error("render failed"); }
+      views.push(view);
+    }
+  });
+  await controller.show(0);
+  assert.match(views.at(-1).error, /이미지.*화면 처리/);
+  assert.equal(views.at(-1).image, null);
+  assert.equal(views.at(-1).history, null);
 });
