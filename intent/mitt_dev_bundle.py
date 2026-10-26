@@ -251,6 +251,16 @@ def _decode_evidence(log, outputs, win, target, returncode, timed_out):
     if [p.name for p in outputs] != [f"out_{i:05d}.jpg" for i in range(1, len(outputs) + 1)]:
         errors.append("jpeg_sequence_mismatch")
     ok = returncode == 0 and not timed_out and not errors
+    hints = ["timeout"] if timed_out else []
+    for label, pattern in (
+        ("http_403", r"\b(?:HTTP(?:\s+error)?|Server returned)\s+403\b"),
+        ("http_404", r"\b(?:HTTP(?:\s+error)?|Server returned)\s+404\b"),
+        ("decode_error", r"error while decoding|invalid data found"),
+        ("permission_denied", r"permission denied"),
+        ("input_unavailable", r"no such file or directory|connection refused"),
+    ):
+        if (returncode != 0 or timed_out) and re.search(pattern, log, re.IGNORECASE):
+            hints.append(label)
     return {
         "status": "timeout"
         if timed_out
@@ -262,8 +272,14 @@ def _decode_evidence(log, outputs, win, target, returncode, timed_out):
         "input_time_base_config": config,
         "decoded": rows,
         "filtered_decoder_log": filtered,
+        "diagnostic_hints": hints,  # Allowlisted keyword hints, not verified root causes.
+        "non_showinfo_line_count": sum(
+            bool(line.strip()) and "[showinfo@" not in line for line in log.splitlines()
+        ),
         "validation_errors": sorted(set(errors)),
         "independent_decoded_pts_verified": False,
+        "jpeg_binding_stage": "decoded_staging_before_publish",
+        "relative_path_role": "intended_output; confirm with extracted record",
         "kept_jpegs": [
             {
                 "relative_path": f"{target.name}/frame_{row['pts'] // TICKS_PER_FRAME:06d}.jpg",

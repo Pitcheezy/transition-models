@@ -187,6 +187,8 @@ def test_optional_evidence_binds_actual_pts_jpegs_and_redacts_commands(decoding)
     assert evidence["decoded"]["kept"][0]["pts_time_rational"] == "1001/6000"
     assert evidence["ffmpeg_version"] == "8.0"
     assert evidence["independent_decoded_pts_verified"] is False
+    assert evidence["jpeg_binding_stage"] == "decoded_staging_before_publish"
+    assert evidence["relative_path_role"].startswith("intended_output")
     for image in evidence["kept_jpegs"]:
         jpeg = args["out_dir"] / image["relative_path"]
         assert bundle.sha256_file(jpeg) == image["sha256"] and jpeg.stat().st_size == image["bytes"]
@@ -207,7 +209,21 @@ def test_timeout_and_failed_retries_retain_each_attempt_outside_staging(decoding
     ]
     assert [a["status"] for a in saved] == ["timeout", "ffmpeg_failed", "saved_decode_evidence"]
     assert saved[0]["decoded"]["all"] and not saved[0]["kept_jpegs"]
+    assert saved[0]["diagnostic_hints"] == ["timeout"]
     assert not (args["out_dir"] / ".staging_pa3_p1").exists()
+
+
+def test_failure_hints_keep_allowlisted_categories_without_raw_private_text(decoding):
+    args, state = decoding
+    state["steps"] = ["failed"]
+    state["log"] += "\nHTTP error 403 from https://secret.invalid/token C:/private/data"
+    result = bundle.extract_one(**args)
+    evidence = json.loads(
+        (args["out_dir"] / result["attempts"][0]["decode_evidence"]["relative_path"]).read_bytes()
+    )
+    assert evidence["diagnostic_hints"] == ["http_403"]
+    assert evidence["non_showinfo_line_count"] == 3
+    assert "secret.invalid" not in json.dumps(evidence) and "C:/private" not in json.dumps(evidence)
 
 
 @pytest.mark.parametrize("bad", ["config", "missing", "nonfinite", "order", "count", "ticks"])
