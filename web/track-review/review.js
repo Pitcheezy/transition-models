@@ -1,4 +1,4 @@
-/* Saved-frame consumer only: never infer a missing point or a future event. */
+/* Saved-frame consumer only: never infer a missing point, a future event or a missing name. */
 (function () {
   "use strict";
 
@@ -106,9 +106,71 @@
     return { track, candidate };
   }
 
+  /* OCR rows are joined to the displayed frame on all four keys; one exact row or nothing. */
+  const OCR_SCHEMA = "pitcheezy-ocr-frame-view-dev-v1";
+  const OCR_ROLES = ["pitcher", "batter"];
+  const OCR_STATUSES = new Set(["read", "abstain", "error"]);
+  const OCR_RELATIONS = new Set(["not_compared", "literal_same", "literal_changed"]);
+
+  function validOcrRole(value) {
+    return !!value && typeof value === "object" && typeof value.raw_text === "string" &&
+      typeof value.reason === "string" && OCR_STATUSES.has(value.status) &&
+      OCR_RELATIONS.has(value.temporal_relation) &&
+      (value.status === "read" ? typeof value.name_text === "string" && value.name_text.trim() !== "" : value.name_text === null) &&
+      (value.compared_to_frame === null || Number.isInteger(value.compared_to_frame));
+  }
+
+  function ocrFor(ocr, pitch, frame) {
+    if (ocr === null || ocr === undefined) return { kind: "unavailable" };
+    if (ocr.schema !== OCR_SCHEMA || !Array.isArray(ocr.pitches)) return { kind: "unsupported" };
+    const entries = ocr.pitches.filter(entry => entry && entry.pitch_id === pitch.pitch_id);
+    if (entries.length === 0) return { kind: "none" };
+    if (entries.length !== 1 || !Array.isArray(entries[0].rows)) return { kind: "mismatch" };
+    const rows = entries[0].rows.filter(row => row && row.pitch_id === pitch.pitch_id &&
+      row.frame_index === frame.frame_index && row.frame_seconds === frame.frame_seconds &&
+      row.image_sha256 === frame.sha256);
+    if (rows.length !== 1 || !rows[0].roles || !OCR_ROLES.every(role => validOcrRole(rows[0].roles[role]))) return { kind: "mismatch" };
+    return { kind: "row", row: rows[0] };
+  }
+
+  const BLANK = "—";
+  function blankRoles() {
+    const texts = {};
+    for (const role of OCR_ROLES) texts[role] = { raw: BLANK, name: BLANK, state: BLANK, relation: BLANK };
+    return texts;
+  }
+
+  function ocrRoleText(value) {
+    const state = value.status === "read" ? "읽음" : value.status === "abstain" ? "기권" : "엔진 오류";
+    const relation = value.temporal_relation === "not_compared" ? "비교 없음"
+      : value.temporal_relation === "literal_same" ? `직전 읽음과 문자열 같음 · 비교 원본 번호 ${value.compared_to_frame}`
+      : `직전 읽음과 문자열 다름 · 비교 원본 번호 ${value.compared_to_frame} · 선수 교체 근거 아님`;
+    return {
+      raw: value.raw_text === "" ? "(빈 문자열)" : value.raw_text,
+      name: value.status === "read" ? value.name_text : BLANK,
+      state: `${state} · ${value.reason}`,
+      relation: value.status === "read" ? relation : "비교 없음"
+    };
+  }
+
+  /* Pure view model: strings only, computed from the current frame and the current image state. */
+  function ocrView(ocr, pitch, frame, view) {
+    const roles = blankRoles();
+    if (view.loading) return { status: "이미지 준비 중 · 표시 비움", roles };
+    if (view.error) return { status: "표시 없음", roles };
+    const match = ocrFor(ocr, pitch, frame);
+    if (match.kind === "unavailable") return { status: "이 팩에는 OCR 관측 자료가 없습니다", roles };
+    if (match.kind === "unsupported") return { status: "지원하지 않는 OCR 자료 형식 · 표시하지 않습니다", roles };
+    if (match.kind === "none") return { status: "관측 자료 없음 · 이 투구는 OCR을 실행하지 않았습니다", roles };
+    if (match.kind === "mismatch") return { status: "관측 불일치 · 이 프레임에 맞는 저장 관측이 없어 표시하지 않습니다", roles };
+    for (const role of OCR_ROLES) roles[role] = ocrRoleText(match.row.roles[role]);
+    return { status: `저장 관측 · 원본 번호 ${match.row.frame_index} · 자료 시각 ${match.row.frame_seconds.toFixed(3)}초`, roles };
+  }
+
   function mount(document) {
     const get = id => document.getElementById(id);
     const data = JSON.parse(get("track-data").textContent);
+    const ocr = JSON.parse(get("ocr-data").textContent);
     const currentCanvas = get("current-canvas"), historicalCanvas = get("history-canvas");
     function draw(canvas, image) {
       const context = canvas.getContext("2d");
@@ -121,6 +183,12 @@
       context.lineWidth = 4; context.strokeStyle = "#07111d"; context.stroke();
       context.lineWidth = 2; context.strokeStyle = color; context.stroke();
       if (fill) { context.fillStyle = color; context.fill(); }
+    }
+    function renderOcr(texts) {
+      get("ocr-status").textContent = texts.status;
+      for (const role of OCR_ROLES) {
+        for (const field of ["raw", "name", "state", "relation"]) get(`ocr-${role}-${field}`).textContent = texts.roles[role][field];
+      }
     }
     data.pitches.forEach(pitch => {
       const [, pa, number] = pitch.pitch_id.split(":");
@@ -150,6 +218,7 @@
         get("frame-status").textContent = view.loading ? "이미지 준비 중 · 표시 비움" : view.error || "현재 저장 프레임";
         get("track-state").textContent = "—"; get("candidate-state").textContent = "—"; get("reason").textContent = "—";
         get("history-status").textContent = view.loading ? "현재 이미지 준비 중" : view.error ? "표시 없음" : view.historyPending ? "기록 이미지 준비 중" : view.historyError ? "기록 이미지를 불러오지 못했습니다." : "이 시점까지 표시할 발생 기록 없음";
+        renderOcr(ocrView(ocr, pitch, frame, view));
         if (!image) return;
         const points = visiblePoints(frame);
         if (points.track) mark(context, points.track, "#4ee4ef", 5, true);
@@ -176,7 +245,7 @@
     return controller;
   }
 
-  if (typeof module !== "undefined" && module.exports) module.exports = { Controller, historyFor, visiblePoints, handleKey };
+  if (typeof module !== "undefined" && module.exports) module.exports = { Controller, historyFor, visiblePoints, handleKey, ocrFor, ocrView };
   if (typeof document !== "undefined") {
     try { mount(document); }
     catch (_) { const status = document.getElementById("frame-status"); if (status) status.textContent = "자료를 열지 못했습니다. 팩 무결성을 다시 확인해 주세요."; }

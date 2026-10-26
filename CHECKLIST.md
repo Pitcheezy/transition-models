@@ -1,5 +1,11 @@
 # 남은 작업 체크리스트
 
+## OCR 관측의 재생 화면 연결 — 2026-10-26
+
+**CV-39c 완료·수정 권한 반납: Claude Fable 5.1(`claude-fable-5-1`), 연구 브랜치 `claude/cv-ocr-view-1026`, 기준 PR72 `360d3c480ce31dda4379c84059e107dbfc6feaab`, [PR73](https://github.com/Pitcheezy/transition-models/pull/73) 초안(병합·배포 없음). 다른 모델 검토: 로컬 Codex CLI `gpt-6-astra` 읽기 전용, P2 2건 수리·회귀 검사 추가, 재검토에서 해결 확인·새 P3 1건(거대 정수 시각 OverflowError) 수리·P3 수정 단일 범위 재검토 해결 확인([영수증](docs/results/cv_ocr_frame_view_20261026/codex_review_v1.json)).** 의존 관계 PR67→69→70→71→72→이 브랜치. main 병합·운영 배포·Song 코드·Cloudflare·공개 계약·IntentEstimate·기존 팩/원문/사람 응답/M3는 바꾸지 않는다. 기준 폴더 `cv-frame-view-1026`은 읽기 전용 입력이다. 삭제·옛 질문 발신 보류, A-y/F-4i·CV35/36 조건 유지.
+
+- [x] CV-39c. 저장 OCR 관측(첫 투구74장)을 프레임 재생 화면의 현재 이미지에 정확히 연결 완료(10/26). [기록](docs/CV_OCR_FRAME_VIEW_20261026.md)·[검증](docs/results/cv_ocr_frame_view_20261026/verification_v1.json). `intent/mitt_ocr_view.py`가 v3 팩 영수증·OCR 보고/관측 SHA→payload SHA→203 JPEG SHA를 묶고 네 키 정확 결합·인접 비교 규칙·집계를 재계산해 대조한다(v2 원 영수증과 데이터204항목 일치). 화면은 현재 프레임 행만 textContent로 표시하고 OCR 없는 2·3구는 "관측 자료 없음"으로 구별하며 이름 채움·교정·교체 표시 없음. Python31(13.28초)·관련3파일88·Node6/두 파일21 통과, 실제 Windows 브라우저 74장 탐색→2구 전환→뒤로 이동 확인, 콘솔 오류0. 새 비공개 팩 영수증 `d281de8e…b1c0`, 기존 팩/원문 보존, OCR 재호출 없음. Codex(`gpt-6-astra`) 정적 검토 P2 2건(불리언 키 결합·템플릿 재치환) 수리·재검토 해결 확인, 재검토 P3 1건(거대 정수 시각 OverflowError) 수리·P3 수정 재검토 해결 확인(시도 e, 새 결함 없음), 관련3파일95·Node21 통과, 수정 빌더 재생성 팩 영수증 v1과 동일. 정확도·선수 식별·독립PTS·Mac은 미검증. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-26 · Claude]`
+
 ## 전시 CV 집중 개발 — 2026-10-26
 
 CV39a·CV39b·CV41a 완료·수정 권한 반납: 우리 Codex / `codex/cv-frame-view-1026` / 화면 소스 `b7568d3`, OCR 수리 `50d7e9b` / 2026-10-26. [프레임 화면](docs/CV_TRACK_FRAME_VIEW_20261026.md)·[OCR 관측](docs/CV_OCR_FRAME_OBSERVATIONS_20261026.md)·[비공개 재생 ZIP](docs/CV_RESEARCH_REPLAY_KIT_20261026.md). 실제 Fable 고정 소스 검토와 수정 재검토를 반영했다. 화면28 Python·15 Node, OCR29+체크리스트8, 필수린트180경로 통과. `50d7e9b` Ubuntu/macOS CI 성공. main/운영 병합·배포는 하지 않는다.
@@ -856,9 +862,9 @@ S 선택 비중은 사건확률이 아니며 S 위치는 과거 투구 분포의
 
 | 항목 | 값 | 갱신 |
 |---|---|---|
-| 브랜치 | 정본 main. 현재 연구 단위 `claude/cv-mitt-temporal-1025`(CV-32~34 완료); 다른 단위의 브랜치·선점은 상단과 우리 board 참조; 기존 작업 폴더·원본 브랜치 보존 | 2026-10-25 |
+| 브랜치 | 정본 main. 최근 연구 단위 `claude/cv-ocr-view-1026`(CV-39c 완료, PR73 초안, PR72 `360d3c4` 기반); 다른 단위의 브랜치·선점은 상단과 우리 board 참조; 기존 작업 폴더·원본 브랜치 보존 | 2026-10-26 |
 | 검토 시작 기준 | PR #42 병합 main `48ec406`; 이후 완료 단위는 상단과 우리 board의 고정 커밋 참조 | 2026-10-18 |
-| 파일 수정 권한 | 반납 — Claude Opus 5.5 CV-32~34 완료(`claude/cv-mitt-temporal-1025`, PR #67 초안). CV-35 사용자 응답·CV-36 사람 결정 대기. 과거 모델 근거 미확인·WS-human1·공동 시험·Song 후속 입력 조건 유지 | 2026-10-25 |
+| 파일 수정 권한 | 반납 — Claude Fable 5.1 CV-39c 완료(`claude/cv-ocr-view-1026`, PR73 초안). CV-35 사용자 응답·CV-36 사람 결정 대기. 과거 모델 근거 미확인·WS-human1·공동 시험·Song 후속 입력 조건 유지 | 2026-10-25 |
 | Mac 실기기 I-device2 | 환경 확인 완료·v5 영상 ZIP 전송 대기. 재생/결과 공개/투구 전환/타석 전환/미트 가로 표시 모두 미실행 | 2026-10-11 |
 | 저장 공간 운영 | 내부 용량 부족 시 연결된 외장 SSD의 실제 경로·여유를 확인해 사용. 확인 장치 `D:` T7 Shield (exFAT), 여유 3,723.1 GiB; 재확인·이관 원칙은 [MAINTENANCE](docs/MAINTENANCE.md). 기존 데이터 이동 없음 | 2026-10-04 |
 | 중계 시각 주석 | **297 확인 / 25 확인 불가 / 0 미검토** — 전 경기 322구 검토 완료. 완전 타석 2~4·6~15·18~19·21·23~28·30~32·34·36~38·40~46·49~51·53~55·57~63·65~69·71·74~79·81. 불가 목록·반이닝 집계·리드 분포는 [전 경기 요약](docs/MLB_BROADCAST_TIMING.md). 규약 v2, 수동 시각 | 2026-09-27 |

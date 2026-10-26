@@ -23,6 +23,17 @@ SCHEMA = "pitcheezy-track-frame-view-dev-v1"
 ASSETS = Path(__file__).resolve().parents[1] / "web" / "track-review"
 
 
+PLACEHOLDERS = ("__TRACK_VIEW_DATA__", "__OCR_VIEW_DATA__")
+
+
+def fill_template(template, values):
+    """Fill every placeholder in one pass, so inserted data is never scanned for placeholders."""
+    if set(values) != set(PLACEHOLDERS) or any(template.count(p) != 1 for p in PLACEHOLDERS):
+        raise ValueError("invalid viewer template")
+    pattern = "|".join(re.escape(p) for p in PLACEHOLDERS)
+    return re.sub(pattern, lambda match: values[match.group(0)], template)
+
+
 def sha(raw):
     return hashlib.sha256(raw).hexdigest()
 
@@ -248,11 +259,14 @@ def build(
     }
     payload_text = json.dumps(payload, ensure_ascii=False, allow_nan=False)
     template = (ASSETS / "index.html").read_text(encoding="utf-8")
-    if template.count("__TRACK_VIEW_DATA__") != 1:
-        raise ValueError("invalid viewer template")
     files = {
-        "index.html": template.replace(
-            "__TRACK_VIEW_DATA__", payload_text.replace("<", "\\u003c")
+        # This builder carries no OCR observations; the page shows that explicitly.
+        "index.html": fill_template(
+            template,
+            {
+                "__TRACK_VIEW_DATA__": payload_text.replace("<", "\\u003c"),
+                "__OCR_VIEW_DATA__": "null",
+            },
         ).encode(),
         "review.js": (ASSETS / "review.js").read_bytes(),
         "style.css": (ASSETS / "style.css").read_bytes(),

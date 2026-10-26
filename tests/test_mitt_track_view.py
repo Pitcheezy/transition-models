@@ -433,3 +433,21 @@ def test_modified_selection_must_match_replay_not_only_its_resealed_hash(pack_in
     save(args["selection_records"], rows)
     reseal(args, regenerate_selection=False)
     assert_rejected(args)
+
+
+def test_placeholder_token_inside_play_id_is_embedded_verbatim(pack_inputs):
+    # Codex review finding: the OCR slot must not be re-filled inside already inserted data.
+    args = pack_inputs
+    timing = read(args["timing"])
+    timing["annotations"][0]["play_id"] = "__OCR_VIEW_DATA__"
+    save(args["timing"], timing)
+    manifest = read(args["bundle"] / "manifest.json")
+    manifest["selection"][0]["play_id"] = "__OCR_VIEW_DATA__"
+    save(args["bundle"] / "manifest.json", manifest)
+    reseal(args)
+    build(**args)
+    page = (args["out"] / "index.html").read_text(encoding="utf-8")
+    track = re.search(r'<script[^>]*id="track-data"[^>]*>(.*?)</script>', page, re.S).group(1)
+    ocr = re.search(r'<script[^>]*id="ocr-data"[^>]*>(.*?)</script>', page, re.S).group(1)
+    assert json.loads(track)["pitches"][0]["play_id"] == "__OCR_VIEW_DATA__"
+    assert json.loads(ocr) is None
