@@ -1,5 +1,13 @@
 # Codex 재개 프롬프트
 
+## CV-41b 재탐색 비교 화면 — 2026-10-27
+
+현재 연구 브랜치는 `codex/cv-reacquire-view-1027`, 기준은 PR74 `0112f018e7485a0fc35c12575b990345f3239c4b`다. [비교 화면 기록](CV_REACQUIRE_FRAME_VIEW_20261027.md)과 CHECKLIST 상단을 먼저 읽는다. CV37b 재탐색이나 CV39c OCR을 다시 구현하지 않는다. 저장625행을 대조해 PA3 203 JPEG와 OCR74행에 연결하며 같은 프레임에서 기존/재탐색을 전환한다. 현재 점·미확정 후보·과거 사건·구간을 구별한다. 기존 원본 팩은 보존하고 새 `outputs/cv_mitt_reacquire_view_20261027_v1/`만 만들었다. 검증과 다른 모델 검토의 완료 여부는 [영수증](results/cv_reacquire_view_20261027/verification_v1.json)을 따른다.
+
+운영 준비·인계 오류 정정은 별도 [PR76](https://github.com/Pitcheezy/transition-models/pull/76) `cfbea2c`다. 회수 순서와 후속3요청 슬롯, 준비 시점/실제 시험 결과를 정리했고 CI6건 통과했다. 그 PR의 문서를 이 연구 브랜치의 오래된 운영 이력보다 우선 조회한다. 공동시험 STOPPED·누락로그2건·해당 회차401/503 미측정은 유지한다. 새 창 활성화·자격 생성·Cloudflare 변경은 이번 CV 단위에서 하지 않았다.
+
+다음 독립 기술 과제: 저장 AI 관측의 시드 품질 규칙을 결과 전에 정하고, 미트가 아닌 시드와 짧은 재획득 구간을 분리해 평가하는 설계. 독립 PTS는 원영상 시간 자료가 있어야 한다. CV35/36 사람 조건·A-y/F-4i 보류 유지. 원래 Claude/Codex 폴더·Song 코드·공개 계약·IntentEstimate·M3·운영 배포·main 병합·11월 요금제/실부하는 변경하지 않는다.
+
 ## CV-37b 추적 중단 원인·제한된 재탐색 기준선 — 2026-10-26
 
 Claude Fable 5.1이 별도 worktree `claude/cv-track-reacquire-1026`(PR73 `f15d314` 기반)에서 CV37 최초 중단 10구의 원인을 저장 사유/오프라인 재생 진단/AI 개발 관찰로 구분하고, 재탐색 기준선 하나(최초 lost 뒤 최대 5프레임·반경 32px·직전 확인 패치 템플릿·기존 임계값 재사용·후보는 다음 프레임 연속 확인 뒤에만 새 구간·투구당 ≤3회)를 별도 모듈로 구현해 같은 625프레임에서 기존 방식과 비교했다. [기록](CV_REACQUIRE_20261026.md)을 먼저 읽는다. 새 모듈 `intent/mitt_reacquire.py`(`ReacquiringTracker`·`SegmentedStationarySelector`), 비교 파일럿 `intent/mitt_reacquire_pilot.py`, 검사 `tests/test_mitt_reacquire.py`·`tests/test_mitt_reacquire_pilot.py`; `intent/mitt_tracking.py`는 `_match`를 모듈 함수 `match_template`로 추출만 했고(동작 동일, 저장 625행 재생 일치) PatchTracker/StationarySelector 기본 동작은 그대로다. 비공개 출력 `outputs/cv_mitt_reacquire_20261026_v1/`(Git 제외), 공개 결과 `docs/results/cv_reacquire_20261026/`. 결과: 추적 상태 프레임 123→178, 재탐색 창 22·시도 53·후보 21·수용 16·소진 6, lost 뒤 과거 점 잔존 0, 정지 후보 사건은 구간별 재충족(6→13). 최초 중단 원인(AI 관찰, 교차 검토 후): 고정 템플릿 외형 변화 6·임계값 경계 2·유사 패치 1·시드 식별 불확실 1; 시드가 미트가 아닌 것으로 관찰된 3구(3:1·3:3·5:1)도 그대로 재획득돼 재획득 구간의 AI 점 차이는 중앙값 26px(첫 구간 5.5px)다. 재획득은 패치 연속이지 미트 재식별이 아니며 정확도 개선 결론이 아니다. 다른 모델 검토 결과와 수정 권한 반납은 CHECKLIST 상단을 따른다. 새 영상·유료 서비스·대규모 AI 판독·학습·배포 없음, 기존 625행/AI 관측/원본 프레임/사람 응답/M3 불변. PR67→69→70→71→72→73→이 브랜치 의존 관계를 유지하며 main/운영에 자동 병합하지 않는다. 다음 독립 후보: 시드 식별(미트/맨손) 구분이 없는 한 재탐색은 시드 오류를 연장하므로 CV35/36 사람 조건 또는 저장 AI 관측의 시드 품질 규칙(새 판독 없이) 검토, CV39 독립 PTS 대조(원영상 필요), CV41 전시 팩 정리.

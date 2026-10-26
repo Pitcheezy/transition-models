@@ -1,0 +1,108 @@
+{
+  "schema": "pitcheezy-reacquire-frame-view-validation-v1",
+  "unit": "CV-41b",
+  "base_commit": "0112f018e7485a0fc35c12575b990345f3239c4b",
+  "implementation_commit": "fcde5d2fa645d9ce88680a21ed8a56e57ff80889",
+  "source_sha256": {
+    "intent/mitt_reacquire_view.py": "f00dfa6acb9f45c359811609c27bc3a94b7be9283ec4c055546c9088db83d7b0",
+    "web/track-review/review.js": "eda30deb8fbdd0b01fef8d32000ebaac3b2328a3cae8a5b1482157f6ed125f9f",
+    "web/track-review/index.html": "e4a95dfd033e7259c987432571f5346249556ca786b559c65c9e7da15cba9eb5",
+    "web/track-review/style.css": "0c36d8285d50162bf861863871c6b39a86002852c396390fa1144c511ad8d982",
+    "tests/test_mitt_reacquire_view.py": "e39ece5834aacf38ab520098695eabe9d49461db7eed23f7b4c0912bcb7b3cb4",
+    "tests/test_reacquire_frame_view_ui.cjs": "4b8c8ecf8bf634636281d811889e23aa1830005756c71a6bfff4117cc033a1e8"
+  },
+  "evidence_kind": "saved development records and Windows local browser; no new OCR, tracking model or human labels",
+  "pack": {
+    "relative_dir": "outputs/cv_mitt_reacquire_view_20261027_v1",
+    "receipt_sha256": "3914d1f12fb2143b3a89adcec927d0aacc75dc7283cc22cdcd8c7554d246dfd1",
+    "files_excluding_receipt": 208,
+    "file_hashes_verified": true
+  },
+  "binding": {
+    "all_record_keys_checked": 625,
+    "all_record_pitches": 10,
+    "baseline_fields_preserved": true,
+    "baseline_selections_checked": 625,
+    "candidate_selections_checked": 625,
+    "comparison_schema": "pitcheezy-reacquire-frame-comparison-dev-v1",
+    "displayed_frames": 203,
+    "displayed_pitches": 3,
+    "evidence_kind": "saved development record join; not mitt identity or accuracy",
+    "frame_images_unchanged": true,
+    "independent_decoded_pts_verified": false,
+    "input_sha256": {
+      "baseline_records": "4097f61449487f074fdd965ee1823f3fabdc2c06b901f76b7dc5e9ff0d395a4b",
+      "candidate_records": "9b564920883be8fbacd5e621713ece66b968dd311d1538d04dfabdff6088898c",
+      "candidate_report": "677154686a59602c6394c556860d983cdfbd861795084e54e2c3afa09fa269d0",
+      "ocr_observations": "cea324701e48ba9c27d7260818f146d84ad8b79a6f19b537bd1b85f1c306c4b9",
+      "ocr_pack_observations": "f573366eb8e08698e54d02c7b7c616397edabda8b87c23aa5387ffb66083927a",
+      "ocr_pack_payload": "00c2ff234f5dc7c9ad112568d1153091b3eacec147aedc0a708adb8b7e5dc223",
+      "ocr_pack_receipt": "d281de8ece3d80a4c7f0e541400f627c1895db0c2965622e575b1a186685b1c0"
+    },
+    "input_unchanged": true,
+    "no_new_ocr_calls": true,
+    "no_new_tracking_or_model_calls": true,
+    "observation_rows_bound": 74,
+    "ocr_bytes_preserved": true
+  },
+  "tests": [
+    {
+      "command": "python -m pytest -q tests/test_mitt_reacquire_view.py",
+      "passed": 33,
+      "seconds": 70.45
+    },
+    {
+      "command": "python -m pytest -q tests/test_mitt_track_view.py tests/test_mitt_ocr_view.py tests/test_checklist_model.py",
+      "passed": 74,
+      "seconds": 34.22
+    },
+    {
+      "command": "node --test tests/test_reacquire_frame_view_ui.cjs tests/test_track_frame_view_ui.cjs tests/test_ocr_frame_view_ui.cjs",
+      "passed": 32
+    },
+    {
+      "command": "python scripts/check_project.py --lint-only",
+      "paths": 186,
+      "result": "pass"
+    }
+  ],
+  "browser": {
+    "environment": "Windows notebook, ChatGPT in-app Chromium, local loopback only",
+    "cases": [
+      "Initial frame loaded; baseline default; comparison controls visible",
+      "PA3 pitch1 frame14958: tentative candidate; no current point/segment",
+      "14964: confirmed segment2, warming; baseline switch same frame shows lost; OCR frame remains14964",
+      "15030: exhausted; current points absent; historical event15000 on separate image, segment3",
+      "15102 VLTNLUS -> 15108 VIENTOS literal changed; no correction/substitution claim",
+      "pitch2 switch resets frame/history and shows no OCR observations",
+      "pitch3 frame17413: patch_continuity and motion_restart both visible; stationary absent",
+      "actual playback reaches final66/66 and stops without advancing pitch",
+      "switch mode during play stops playback; prior history cleared",
+      "browser console warnings/errors query empty"
+    ],
+    "independent_human_review": false
+  },
+  "cross_review": {
+    "status": "pending"
+  },
+  "limits": [
+    "Mitt identity/accuracy unmeasured",
+    "Independent decoding PTS unverified",
+    "New-game generalization unmeasured",
+    "Real-time end-to-end latency unmeasured",
+    "Mac/iPhone not tested",
+    "No changes to Song, Cloudflare, public contracts, IntentEstimate or M3"
+  ],
+  "ops_handoff": {
+    "pr": 76,
+    "commit": "cfbea2c047aff048e11d18421e9fbabf37d3e62d",
+    "webkit_retry_run": 40334498060,
+    "webkit_retry_job": 121715058189,
+    "webkit_result": "success",
+    "joint_trial_result": "STOPPED/incomplete",
+    "missing_request_logs": 2,
+    "old_bearer_401_measured_this_trial": false,
+    "off_503_measured_this_trial": false,
+    "pr_checks_passed": 6
+  }
+}
