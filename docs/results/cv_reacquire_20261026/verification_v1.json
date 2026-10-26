@@ -1,0 +1,112 @@
+{
+  "schema": "pitcheezy-reacquire-verification-v1",
+  "unit": "CV-37b",
+  "evidence_kind": "offline replay of saved development frames and records; synthetic unit tests; AI development observation of contact sheets; no new video, paid service, mass AI reading, training or deployment",
+  "base_commit": "f15d3146121c3bf52f33e4f97f1e40f7a0cf66a5",
+  "source_sha256": {
+    "intent/mitt_tracking.py": "3f6953a3590797d5ffb0b70e1fd2800e93816061ff8a8c1da6d0c42c5349726c",
+    "intent/mitt_reacquire.py": "06d2c487c03c4c4a77dc205007906d3e125daa90591cda5f88aa06583a5ee89d",
+    "intent/mitt_reacquire_pilot.py": "448e0cdecba4463e5506620d6d0947711f708dbea48f1bcaf0d837d21d21f597",
+    "tests/test_mitt_reacquire.py": "68e0671f801ee7483390137cd2408c0ee45c630f75866013d8c83310f88a044b",
+    "tests/test_mitt_reacquire_pilot.py": "10ba7e375e803f90cf286d38b717fb2445b9a08b1f14ead1a7503d639a4f938c",
+    "scripts/check_project.py": "61a49b24d8af6baa98bef6c1005b5e97e4db5d2fe803e1d39e8a1ecb968f0657"
+  },
+  "params_sha256": {
+    "track": "106fa8bb51b83f89c3c7c54f84342cae9e4bf4f08e1fe846389e316b831c4c7b",
+    "reacquire": "7b5d9ac7dd3963b364e9563ff19f5af3641ef42107f2020b5e9594283ba518f1",
+    "stationary": "6699bbf80518742143af1ffbdabec2e804070bae170bfb571cfd010d41f1f1fc"
+  },
+  "inputs_sha256": {
+    "source_manifest": "58cb57c9dbd542ca60db84f8f1e2242867e4680c15e1914a5ca1352ec1bcf87a",
+    "saved_tracking_records_cpu": "4097f61449487f074fdd965ee1823f3fabdc2c06b901f76b7dc5e9ff0d395a4b",
+    "pilot_private": "6e95c402504bd613c474f16cb7356c6f320a16177dd5831b9378972b3b002594",
+    "answers_manifest": "395679bfa6c5fb9efcc069bd8482ab6cdd6cde1049cc52e81d18f6c070d095ba",
+    "preserved_input_files": 668
+  },
+  "output": {
+    "relative_dir": "outputs/cv_mitt_reacquire_20261026_v2 (private, git-ignored; v1 was the pre-review replay with identical rows)",
+    "candidate_records_sha256": "9b564920883be8fbacd5e621713ece66b968dd311d1538d04dfabdff6088898c",
+    "report_public_copy": "docs/results/cv_reacquire_20261026/report_v1.json",
+    "report_public_copy_sha256": "677154686a59602c6394c556860d983cdfbd861795084e54e2c3afa09fa269d0",
+    "loss_causes_sha256": "c2d0a8cf0019f2125da15de2e1eac1adc03e8cafc9de90aaacf235fb5bf1545b",
+    "v1_candidate_records_sha256": "729bd54898838f91b1c7cb6115069e88ae09283e74a7b862e07d9b51067d1b47",
+    "v1_v2_rows_equal": "state, reason, point_px, reacquire_candidate_px, segment_id, segment_end_reason, reacquisitions, source_sha256 and the stationary snapshot are equal for all 625 rows"
+  },
+  "base_regression": {
+    "equal_to_saved_records": true,
+    "compared_fields": [
+      "pitch_id",
+      "frame_index",
+      "source_sha256",
+      "state",
+      "reason",
+      "point_px"
+    ],
+    "rows": 625
+  },
+  "prefix_invariance_rows_checked": 310,
+  "consistency_violations": {
+    "point_shown_outside_confirmed_tracking": 0,
+    "candidate_point_outside_candidate_state": 0,
+    "current_candidate_outside_stationary_tracking": 0,
+    "historical_candidate_from_the_future": 0,
+    "events_total_decreased": 0,
+    "segment_id_not_increasing": 0,
+    "selector_point_outside_tracking": 0
+  },
+  "pilot_run": {
+    "v1": {
+      "started_utc": "2026-10-26T06:48:24Z",
+      "finished_utc": "2026-10-26T06:48:47Z",
+      "code": "before the Codex review fixes"
+    },
+    "v2": {
+      "started_utc": "2026-10-26T07:01:01Z",
+      "finished_utc": "2026-10-26T07:01:25Z",
+      "code": "after the Codex review fixes (committed content)"
+    },
+    "command": "python -m intent.mitt_reacquire_pilot --bundle <bundle_v1> --pilot <pilot_v1> --saved-records <cv_mitt_tracking_20261026_v3/records_cpu.json> --out <new folder>",
+    "note": "a first attempt run as a script resolved another worktree's installed package and was discarded; the module form was used"
+  },
+  "checks": {
+    "python_related": {
+      "command": "python -m pytest -q tests/test_mitt_reacquire.py tests/test_mitt_reacquire_pilot.py tests/test_mitt_tracking.py tests/test_mitt_tracking_pilot.py tests/test_mitt_stationary.py tests/test_mitt_stationary_pilot.py",
+      "result": "159 passed in 23.93s (after the review fixes; 154 passed before)"
+    },
+    "python_new_only": {
+      "command": "python -m pytest -q tests/test_mitt_reacquire.py tests/test_mitt_reacquire_pilot.py",
+      "result": "27 passed in 17.26s (22 passed before the review fixes)"
+    },
+    "docs_checklist": {
+      "command": "python -m pytest -q tests/test_checklist_model.py tests/test_integration_handoff.py tests/test_maintenance.py",
+      "result": "39 passed, 1 warning in 29.15s"
+    },
+    "lint": {
+      "command": "python scripts/check_project.py --lint-only",
+      "result": "All checks passed! 184 files already formatted (new files added to QUALITY_PATHS)"
+    },
+    "full_project_check": {
+      "command": "python scripts/check_project.py --cpu-only --test-timeout 600",
+      "result": "pending at the time this receipt was written; the result is recorded on the board closing record"
+    }
+  },
+  "environment": {
+    "python": "3.12.12",
+    "torch": "2.6.0+cu124",
+    "cuda_runtime": "12.4",
+    "cpu_model": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel",
+    "cpu_logical_cores": 32,
+    "cpu_threads": 4,
+    "cpu_interop_threads": 24,
+    "tf32": false,
+    "gpu": null
+  },
+  "ai_observation": {
+    "kind": "Claude development observation of contact sheets; not human truth",
+    "observers": 10,
+    "skeptic_cross_check": 1,
+    "corrections": 2,
+    "workflow_tokens_approx": 1091385
+  },
+  "other_model_review": "docs/results/cv_reacquire_20261026/codex_review_v1.json (attempt a: 5 findings fixed; attempt b: resolved, no new defect)"
+}

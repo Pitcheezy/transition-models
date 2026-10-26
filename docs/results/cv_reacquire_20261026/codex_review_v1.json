@@ -1,0 +1,82 @@
+{
+  "schema": "pitcheezy-other-model-review-receipt-v1",
+  "unit": "CV-37b",
+  "reviewer": {
+    "tool": "local Codex CLI 0.162.0-alpha.2",
+    "model": "gpt-6-astra",
+    "auth": "ChatGPT login (not re-verified for this unit beyond the successful run)",
+    "mode": "codex exec -c sandbox_mode=\"read-only\" with the diff supplied on stdin; the command host is not installed, so the reviewer could not run commands or tests"
+  },
+  "author_model": "claude-fable-5-1",
+  "base_commit": "f15d3146121c3bf52f33e4f97f1e40f7a0cf66a5",
+  "attempts": [
+    {
+      "attempt": "a",
+      "scope": "working-tree diff of intent/mitt_tracking.py (match_template extraction), new intent/mitt_reacquire.py, new intent/mitt_reacquire_pilot.py, new tests/test_mitt_reacquire.py, new tests/test_mitt_reacquire_pilot.py, scripts/check_project.py lint list; not the docs or results",
+      "diff_sha256": "64973625de506298dd90e7c5b2e7dd45ffc19e9d7472a9bf1eece0bae69c1578",
+      "prompt_sha256": "850556f1c49b8f7e1768556fbadc022c9c6e36b61463b3a54fb87fc4ea3044c9",
+      "started_utc": "2026-10-26T06:50:36Z",
+      "finished_utc": "2026-10-26T06:56:44Z",
+      "tests_run_by_reviewer": false,
+      "raw_output_sha256": "cc632b3430f3f305a43bf331cd2280bb949b08a9ddc93670888932ce7a240dfa",
+      "tokens_used": 45578,
+      "findings": [
+        {
+          "severity": "P2",
+          "file": "intent/mitt_reacquire.py",
+          "area": "ReacquiringTracker._search",
+          "claim": "appearance cut between two consecutive search frames is missed when both frames stay within the threshold of the frozen anchor",
+          "disposition": "accepted; the consecutive-frame check (same threshold as PatchTracker) is applied in addition to the anchor check; regression test with the reviewer's opposing-brightness sequence"
+        },
+        {
+          "severity": "P2",
+          "file": "intent/mitt_reacquire.py",
+          "area": "SegmentedStationarySelector._validate",
+          "claim": "malformed reacquire_candidate_px ([-1,160], [], NaN) passes outside the candidate state because both sides of the equivalence are False",
+          "disposition": "accepted; candidate state requires a finite point and every other state requires None; regression test over four malformed values in both states"
+        },
+        {
+          "severity": "P2",
+          "file": "intent/mitt_reacquire_pilot.py",
+          "area": "_segments_and_windows",
+          "claim": "a candidate rejection on the exhausting frame is counted as an abstention",
+          "disposition": "accepted; classified by reason prefix; synthetic row test. No such case occurred in the real 625-frame replay (candidates 21 = accepted 16 + rejected 5 before and after the fix)"
+        },
+        {
+          "severity": "P2",
+          "file": "intent/mitt_reacquire_pilot.py",
+          "area": "prefix_invariance",
+          "claim": "only part of each row (state keys and current_candidate) is compared, so a changed history or event count passes",
+          "disposition": "accepted; whole rows including the stationary snapshot are compared; test tampers events_total and last_historical_candidate"
+        },
+        {
+          "severity": "P3",
+          "file": "intent/mitt_reacquire.py",
+          "area": "ReacquiringTracker.step (candidate rejection)",
+          "claim": "a rejection on the confirmation frame after the last search frame raises the window count beyond max_attempt_frames and the pilot reports it as an attempt",
+          "disposition": "accepted; the count no longer exceeds the budget, a reacquire_searched flag marks real match calls and the pilot reports window_frames and search_frames separately (real replay: 53 window frames, 48 searches)"
+        }
+      ],
+      "no_defect_areas": [
+        "match_template extraction",
+        "segment isolation / candidate clearing / frozen events / segment id order",
+        "base-regression projection, denominators, visible report paths (provenance helpers not in scope)"
+      ]
+    },
+    {
+      "attempt": "b",
+      "scope": "fix-only diff of intent/mitt_reacquire.py, intent/mitt_reacquire_pilot.py, tests/test_mitt_reacquire.py, tests/test_mitt_reacquire_pilot.py between the attempt-a state and the working tree",
+      "diff_sha256": "ec036c7234614972da5bf05878b983c8abc0d9959a2a43ed84fa3bdabb32a404",
+      "prompt_sha256": "2fdf3416f76383546c684533ed86e9fdb65c2e19d1a9016ce86604ef9f6f1f9c",
+      "started_utc": "2026-10-26T07:01:56Z",
+      "finished_utc": "2026-10-26T07:03:06Z",
+      "tests_run_by_reviewer": false,
+      "raw_output_sha256": "0b28673757e7d5fbc69ce97bb497b88edd6acc1af8d5af505c13a1eeef984488",
+      "tokens_used": 15553,
+      "reported": "all five findings resolved; no new concrete defect identified in the supplied diff",
+      "findings": []
+    }
+  ],
+  "fix": "all five findings fixed in the working tree before the first commit of this unit; the real-data replay was rerun after the fixes (v2) and its 625 rows equal the pre-fix replay (v1) in state, reason, points, segments and stationary outputs",
+  "review_status": "closed: attempt a findings fixed, attempt b confirmed resolution with no new defect; the reviewed working tree is the content of this unit's first commit (SHA on the board closing record)"
+}
