@@ -1,5 +1,11 @@
 # 남은 작업 체크리스트
 
+## CV44 휴대용 재생팩 진행 — 2026-10-27
+
+**선점: 우리 Codex / `codex/cv-replay-kit-1027` / 기준 PR79 `073ca21`.** [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6424041496). CV43고정팩을 검사하고 같은 바이트만 loopback에 제공하는 표준라이브러리 실행팩을 만든다. 기존팩·팀원·Cloudflare·main/운영 불변.
+
+- [ ] CV-44. 영수증/파일SHA·허용경로 검사, 재사용 stdlib실행기·비공개ZIP·압축해제검증·실제Windows·다른모델검토. 변조/누락/추가/경로이탈/덮어쓰기 거부, PyTorch/OCR재실행없이625장 재생. 독립평가·다른기기 실행으로 승격하지 않는다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-27 · Codex]`
+
 ## CV43 완료 — 2026-10-27
 
 **완료·수정권한 반납: 우리 Codex / `codex/cv-seed-view-1027` / 구현3e17f97·수리e99e311.** [범위·검증](docs/CV_SEED_FRAME_VIEW_20261027.md). 625장/10구·채택4보류6·OCR74를 현재/과거 근거와 연결. 입력881파일·627데이터 바이트불변, 관련Python109·수리30·Node56·린트192·실제Windows·Fable수정재검토PASS_WITH_NOTES.
