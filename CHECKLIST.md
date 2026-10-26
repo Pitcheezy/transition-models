@@ -2,9 +2,9 @@
 
 ## 공동시험 종료 기록·절차 수리 — 2026-10-26
 
-**WS-trial3 진행 중: 우리 Codex / `codex/ws-trial-closeout-1026` / PR75 완료 문서 `5ad28ed` 기반.** [착수·합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6417471854). 운영 코드·Cloudflare·Song 코드/프로세스/배포·CV 작업은 변경하지 않는다. 새 자격 발급과 서비스 요청도 하지 않는다.
+**WS-trial3 완료·수정 권한 반납: 우리 Codex / `codex/ws-trial-closeout-1026` / PR75 완료 문서 `5ad28ed` 기반.** [착수·합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6417471854). 운영 코드·Cloudflare·Song 코드/프로세스/배포·CV 작업은 변경하지 않았다. 새 자격 발급과 서비스 요청도 없다.
 
-- [ ] WS-trial3. STOPPED 실제 결과와 관리 API 종료를 고정하고, 정상/긴급 회수 순서·단계별 요청 예산·버전 기록을 정정한다. 발행 HEAD/삭제표식의 로컬 회귀만 보완한다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-26 · Codex]`
+- [x] WS-trial3. [실제 종료 기록](docs/WS_JOINT_TRIAL_CLOSEOUT_20261026.md)과 [다음 원장v2](docs/results/ops/ws_trial_day_ledger_template_20261026_v2.json)를 작성했다. 정상/긴급 회수·관람자격·요청예산·버전 전환을 정정하고 옛 미발신 초안을 재사용 금지로 표시했다. Node65·체크리스트8 통과, 추가 같은모델 검토의 문서4건 정정·테스트 검토PASS. [검증 영수증](docs/results/ops/ws_trial3_validation_20261026.json). 운영5파일·과거 영수증2개 불변. 공동시험 합격·캐시 원인 확정은 아니다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-26 · Codex]`
 - 현재 공동시험은 **STOPPED/미완**. 최종 적용 `207c638d-5040-4ec3-ad92-0e2525f0272c`, 접근문 ON·업로드/읽기 OFF·시험 자격 회수·scope/expiry 제거. 오늘401/503은 미측정이다. 아래20:35 HOLD는 실행 전 이력이다.
 - 다음 창은 내일 협의하며 시각은 미확정이다. 새 키·쿠키·발행 토큰은 다음 창 확정 뒤 준비한다. 지금 활성화하지 않는다. 비공개 요청 원장·전체 PRECONDITIONS SHA 수신 후 누락2건을 대조한다. 전시회 부하·요금제는11월 보류다.
 

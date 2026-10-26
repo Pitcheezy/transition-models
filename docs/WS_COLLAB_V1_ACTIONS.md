@@ -1,5 +1,7 @@
 # 협업 v1 실행 계획 — 2026-10-25 갱신
 
+**10/26 종료 후 현재 기준:** [공동시험 종료 기록](WS_JOINT_TRIAL_CLOSEOUT_20261026.md)을 우선한다. 기존 final2/v4.4를 명시적으로 선택해 A를 실행했고 STOPPED/미완으로 끝났다. 서버는 최종207c638d에서 업로드/읽기OFF·시험자격회수·scope/expiry제거 상태다. 오늘HTTP401/503은 미측정, 미대조2건의 캐시 원인은 미확정이다. 다음 창은 원장 대조·고정 실행절차·요청별 예산·시각·양측GO 확인 후 새 자격으로 준비한다. 새v7 ZIP이 모든 A시험의 필수조건인 것은 아니다. 아래10/25 이후 본문은 당시 계획으로,현재 상태는 종료 기록과 인계를 따른다.
+
 [규약](COLLABORATION_PROTOCOL.md)은 사용자 채택 완료. 현재 작업·선점·병합 상태는
 [CHECKLIST 상단](../CHECKLIST.md)과 [우리 board](https://github.com/Pitcheezy/transition-models/issues/3),
 운영 조건은 [현재 인계](WS_OPERATIONS_HANDOFF.md)를 따른다.
