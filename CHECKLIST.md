@@ -1,5 +1,11 @@
 # 남은 작업 체크리스트
 
+## CV43 완료 — 2026-10-27
+
+**완료·수정권한 반납: 우리 Codex / `codex/cv-seed-view-1027` / 구현3e17f97·수리e99e311.** [범위·검증](docs/CV_SEED_FRAME_VIEW_20261027.md). 625장/10구·채택4보류6·OCR74를 현재/과거 근거와 연결. 입력881파일·627데이터 바이트불변, 관련Python109·수리30·Node56·린트192·실제Windows·Fable수정재검토PASS_WITH_NOTES.
+
+- [x] CV-43. 저장자료결속·시드출처·프레임별선후/반올림좌표검사·기권이유한글·비공개v3팩 완료. 기존팩/원본/다른채팅·팀원·Cloudflare·main/운영불변. 미트정확도/사람/독립평가아님. 다음독립단위는표준라이브러리검사/실행휴대팩. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-27 · Codex]`
+
 ## CV42 초기점 자격 게이트 — 2026-10-27
 
 **CV42 완료·수정 권한 반납: 우리 Codex / `codex/cv-seed-gate-1027` / 정책 `2bbbaad`·구현 `5df160a`·수리 `353ace2` / 2026-10-27.** [정책·결과](docs/CV_SEED_GATE_20261027.md), [Fable 검토](docs/results/cv_seed_gate_20261027/cross_review_v1.json), [검증](docs/results/cv_seed_gate_20261027/verification_v2.json). 기존10구625행·관측315행에서4구채택/6구보류, 채택 지연0.4004초, 추적178→77·정지13→5. 원본667+기준선1파일 불변·기준선전체필드재현·수리전후새결과동일·접두검사통과. 68검사·린트190·실제 Fable 수정 재검토 APPROVE_WITH_NOTES. 알려진 자료에서 만든 개발 후보이며 미트 식별/정확도 개선 아님. 팀원·Cloudflare·main/운영 미변경.

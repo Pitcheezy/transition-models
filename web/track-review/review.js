@@ -3,22 +3,90 @@
   "use strict";
 
   const COMPARISON_SCHEMA = "pitcheezy-reacquire-frame-comparison-dev-v1";
-  function validComparisonFrame(pitch, frame) {
+  const SEED_COMPARISON_SCHEMA = "pitcheezy-seed-gate-frame-comparison-dev-v1";
+  function sameKey(row, pitch, frame) {
+    return !!row && row.pitch_id === pitch.pitch_id && row.frame_index === frame.frame_index &&
+      row.frame_seconds === frame.frame_seconds;
+  }
+
+  function validSeedDecision(pitch, frame, decision) {
+    if (!sameKey(decision, pitch, frame) || decision.schema !== "pitcheezy-mitt-seed-gate-dev-v1" ||
+        !["waiting", "collecting", "seeded"].includes(decision.state) ||
+        typeof decision.reason !== "string" || !decision.reason || decision.mitt_identity !== "unverified" ||
+        typeof decision.policy_sha256 !== "string" || !/^[a-f0-9]{64}$/i.test(decision.policy_sha256) ||
+        !Array.isArray(decision.support_keys)) return false;
+    const support = decision.support_keys;
+    if (!support.every((key, i) => key && key.pitch_id === pitch.pitch_id &&
+      Number.isInteger(key.frame_index) && Number.isFinite(key.frame_seconds) &&
+      key.frame_index <= frame.frame_index && key.frame_seconds <= frame.frame_seconds &&
+      pitch.frames.some(source => sameKey(key, pitch, source)) &&
+      (i === 0 || (key.frame_index > support[i - 1].frame_index && key.frame_seconds > support[i - 1].frame_seconds)))) return false;
+    if ((decision.state === "waiting") !== (support.length === 0) ||
+        (decision.seed !== null) !== (decision.reason === "seed_qualified")) return false;
+    if (decision.seed === null) return decision.state === "seeded" ? decision.reason === "already_seeded" : decision.reason !== "already_seeded";
+    const seed = decision.seed;
+    return decision.state === "seeded" && seed && seed.frame_index === frame.frame_index &&
+      seed.frame_seconds === frame.frame_seconds && validPoint(seed.point_px, frame) &&
+      Array.isArray(seed.support_keys) && seed.support_keys.length === support.length &&
+      seed.support_keys.every((key, i) => sameKey(key, pitch, support[i]));
+  }
+
+  function validComparisonFrame(pitch, frame, mode) {
     if (!frame || frame.width !== 1280 || frame.height !== 720 ||
         typeof pitch.pitch_id !== "string" || pitch.pitch_id.trim() === "" ||
         !Number.isInteger(frame.frame_index) || frame.frame_index < 0 ||
         !Number.isFinite(frame.frame_seconds) || frame.frame_seconds < 0 ||
         typeof frame.sha256 !== "string" || !/^[a-f0-9]{64}$/i.test(frame.sha256)) return false;
-    const candidate = frame.reacquire;
-    return !!candidate && [candidate.selection, candidate.tracking].every(row => row &&
-      row.pitch_id === pitch.pitch_id && row.frame_index === frame.frame_index &&
-      row.frame_seconds === frame.frame_seconds) && candidate.tracking.source_sha256 === frame.sha256;
+    const candidate = frame[mode];
+    if (!candidate || ![candidate.selection, candidate.tracking].every(row => sameKey(row, pitch, frame)) ||
+        candidate.tracking.source_sha256 !== frame.sha256) return false;
+    if (mode !== "seed_gate") return true;
+    return [frame.selection, frame.tracking].every(row => sameKey(row, pitch, frame)) &&
+      frame.tracking.source_sha256 === frame.sha256 &&
+      validSeedDecision(pitch, frame, candidate.decision) &&
+      candidate.tracking.state === candidate.selection.tracker_state &&
+      (candidate.decision.state === "seeded" || candidate.tracking.state === "unseeded");
+  }
+
+  function samePoint(actual, expected) {
+    return Array.isArray(actual) && actual.length === 2 &&
+      actual.every((value, i) => Number.isFinite(value) && value === expected[i]);
+  }
+
+  function validSeedSequence(pitch) {
+    let seeded = false;
+    return pitch.frames.every((frame, i) => {
+      if (i > 0 && (frame.frame_index <= pitch.frames[i - 1].frame_index ||
+          frame.frame_seconds <= pitch.frames[i - 1].frame_seconds)) return false;
+      const { decision, tracking, selection } = frame.seed_gate;
+      if (decision.state !== "seeded") return !seeded;
+      if (tracking.state === "unseeded") return false;
+      if (seeded) return decision.reason === "already_seeded" && decision.seed === null;
+      if (decision.reason !== "seed_qualified" || decision.seed === null ||
+          !samePoint(tracking.seed_requested_px, decision.seed.point_px)) return false;
+      seeded = true;
+      if (tracking.state === "lost") return tracking.point_px === null && selection.current_track_point_px === null;
+      const rounded = decision.seed.point_px.map(value => Math.floor(value + 0.5));
+      return tracking.state === "tracking" && validPoint(rounded, frame) &&
+        samePoint(tracking.point_px, rounded) && samePoint(selection.current_track_point_px, rounded);
+    });
   }
 
   function selectedFrame(frame, mode) {
     if (mode === "baseline") return frame;
-    if (!frame.reacquire?.selection || !frame.reacquire?.tracking) throw new Error("재탐색 행이 없습니다.");
-    return { ...frame, selection: frame.reacquire.selection, tracking: frame.reacquire.tracking };
+    const candidate = ["reacquire", "seed_gate"].includes(mode) ? frame[mode] : null;
+    if (!candidate?.selection || !candidate?.tracking) throw new Error("비교할 추적 행이 없습니다.");
+    return { ...frame, selection: candidate.selection, tracking: candidate.tracking };
+  }
+
+  function modeOptions(comparisonSchema) {
+    if (comparisonSchema === SEED_COMPARISON_SCHEMA) return [
+      { value: "baseline", label: "기존 재탐색" }, { value: "seed_gate", label: "초기점 게이트" }
+    ];
+    if (comparisonSchema === COMPARISON_SCHEMA) return [
+      { value: "baseline", label: "기존 추적" }, { value: "reacquire", label: "제한된 재탐색" }
+    ];
+    return [{ value: "baseline", label: "기존 추적" }];
   }
 
   function trackingText(state, segment) {
@@ -32,9 +100,44 @@
 
   function comparisonText(frame, view) {
     if (view.loading || view.error || !view.image) return "이미지 준비 전에는 비교 표시를 비웁니다.";
-    const candidate = frame.reacquire;
+    const candidate = view.comparisonMode === "seed_gate" ? frame.seed_gate : frame.reacquire;
     if (!candidate) return "";
+    if (view.comparisonMode === "seed_gate") return `기존 재탐색: ${trackingText(frame.selection.tracker_state, frame.selection.segment_id)} / 초기점 게이트: ${trackingText(candidate.tracking.state, candidate.tracking.segment_id)}`;
     return `기존: ${trackingText(frame.selection.tracker_state)} / 재탐색: ${trackingText(candidate.tracking.state, candidate.tracking.segment_id)}`;
+  }
+
+  function seedReasonText(reason) {
+    const descriptions = {
+      already_seeded: "앞선 프레임에서 이미 초기점을 채택했습니다",
+      gap_expired: "관측 사이 시간이 벌어져 모은 지원 관측을 비웠습니다",
+      no_saved_observation: "이 프레임에는 저장된 AI 관측이 없습니다",
+      view_not_live_centre_field: "투구를 보는 중앙 카메라 화면 조건이 아닙니다",
+      catcher_not_set: "포수가 준비 자세라는 관측 조건을 충족하지 못했습니다",
+      mitt_not_full: "미트 전체가 보인다는 관측 조건을 충족하지 못했습니다",
+      occluded: "미트가 가려졌다는 관측이 있습니다",
+      pitcher_not_before_delivery: "투구 동작 시작 전이라는 관측 조건을 충족하지 못했습니다",
+      no_centre: "저장된 미트 중심 좌표가 없습니다",
+      uncertainty_unavailable: "좌표의 불확실도 값이 없어 보류했습니다",
+      uncertainty_exceeds_limit: "좌표의 불확실도가 허용 범위를 넘었습니다",
+      gap_restart: "관측 사이 시간이 벌어져 현재 관측부터 다시 모읍니다",
+      collecting_support: "시간·개수 조건을 채우도록 지원 관측을 모으고 있습니다",
+      movement_restart: "관측 위치가 많이 움직여 현재 관측부터 다시 모읍니다",
+      seed_qualified: "지원 관측 조건을 충족해 현재 프레임을 초기점으로 채택했습니다"
+    };
+    return Object.hasOwn(descriptions, reason) ? `${descriptions[reason]} (${reason})` : reason;
+  }
+
+  function seedGateView(frame, view) {
+    const empty = { state: "—", reason: "—", support: "—" };
+    if (view.comparisonMode !== "seed_gate") return { visible: false, ...empty };
+    if (view.loading || view.error || !view.image) return { visible: true, ...empty };
+    const decision = frame.seed_gate.decision;
+    const state = decision.state === "waiting" ? "보류 · 유효한 지원 관측 없음"
+      : decision.state === "collecting" ? "지원 관측 수집 중 · 아직 초기점 없음"
+      : decision.seed ? "이 프레임에서 초기점 채택 · 미트 식별 검증 아님"
+      : "이 시점 이전에 초기점 채택 · 현재 추적 성공을 뜻하지 않음";
+    return { visible: true, state, reason: seedReasonText(decision.reason),
+      support: decision.support_keys.length ? `${decision.support_keys.length}개 · 원본 번호 ${decision.support_keys.map(key => key.frame_index).join(", ")} · 현재 또는 과거 관측만` : "0개 · 지원 관측 없음" };
   }
 
   function reasonText(frame) {
@@ -61,9 +164,14 @@
         throw new Error("지원하지 않는 자료 형식입니다.");
       }
       Object.assign(this, { data, loadImage, onChange, setTimer, clearTimer });
-      this.hasComparison = data.comparison_schema === COMPARISON_SCHEMA;
-      if (this.hasComparison && !data.pitches.every(pitch => pitch.frames.every(frame => validComparisonFrame(pitch, frame)))) {
-        throw new Error("재탐색 자료의 프레임·이미지 연결이 유효하지 않습니다.");
+      this.modes = modeOptions(data.comparison_schema);
+      this.hasComparison = this.modes.length > 1;
+      this.comparisonMode = this.hasComparison ? this.modes[1].value : null;
+      if (this.hasComparison && !data.pitches.every(pitch => pitch.frames.every(frame => validComparisonFrame(pitch, frame, this.comparisonMode)))) {
+        throw new Error("비교 자료의 프레임·이미지·판단 연결이 유효하지 않습니다.");
+      }
+      if (this.comparisonMode === "seed_gate" && !data.pitches.every(validSeedSequence)) {
+        throw new Error("초기점 채택 순서 또는 초기 추적 좌표가 유효하지 않습니다.");
       }
       this.mode = "baseline";
       this.pitchIndex = 0; this.frameIndex = 0; this.generation = 0; this.timer = null;
@@ -75,6 +183,7 @@
     emit() {
       this.onChange({ ...this.view, pitch: this.pitch, frame: this.frame,
         rawFrame: this.rawFrame, mode: this.mode, hasComparison: this.hasComparison,
+        comparisonMode: this.comparisonMode,
         pitchIndex: this.pitchIndex, frameIndex: this.frameIndex, playing: this.playing });
     }
     cancelTimer() { if (this.timer !== null) this.clearTimer(this.timer); this.timer = null; }
@@ -111,7 +220,7 @@
     }
     seek(index) { this.playing = false; return this.show(index); }
     switchMode(mode) {
-      if (!["baseline", "reacquire"].includes(mode) || (mode === "reacquire" && !this.hasComparison)) throw new Error("지원하지 않는 비교 방식입니다.");
+      if (!this.modes.some(item => item.value === mode)) throw new Error("지원하지 않는 비교 방식입니다.");
       this.playing = false; this.mode = mode;
       return this.show(this.frameIndex);
     }
@@ -261,6 +370,17 @@
         for (const field of ["raw", "name", "state", "relation"]) get(`ocr-${role}-${field}`).textContent = texts.roles[role][field];
       }
     }
+    const modes = modeOptions(data.comparison_schema);
+    get("mode-select").replaceChildren();
+    modes.forEach(mode => {
+      const option = document.createElement("option");
+      option.value = mode.value; option.textContent = mode.label;
+      get("mode-select").append(option);
+    });
+    if (data.comparison_schema === SEED_COMPARISON_SCHEMA) {
+      get("comparison-help").textContent = "초기점 채택 전에는 점을 표시하지 않습니다. 채택 후에도 확인된 현재 추적만 표시하며, 모드를 바꾸면 재생을 멈추고 같은 프레임을 유지합니다.";
+      get("comparison-limit").textContent = "채택·보류는 저장 AI 관측의 조건 검사입니다. 미트 식별이나 정확도를 검증하지 않으며, 채택하지 못한 투구도 그대로 보여 줍니다.";
+    }
     data.pitches.forEach(pitch => {
       const [, pa, number] = pitch.pitch_id.split(":");
       const option = document.createElement("option");
@@ -293,14 +413,19 @@
         get("comparison-controls").hidden = !view.hasComparison;
         get("mode-select").value = view.mode;
         get("comparison-status").textContent = comparisonText(view.rawFrame, view);
-        get("current-title").textContent = view.hasComparison ? `현재 프레임 · ${view.mode === "baseline" ? "기존 추적" : "제한된 재탐색"}` : "현재 프레임";
+        get("current-title").textContent = view.hasComparison ? `현재 프레임 · ${modes.find(item => item.value === view.mode).label}` : "현재 프레임";
+        const gate = seedGateView(view.rawFrame, view);
+        get("seed-gate-panel").hidden = !gate.visible;
+        get("seed-gate-state").textContent = gate.state;
+        get("seed-gate-reason").textContent = gate.reason;
+        get("seed-gate-support").textContent = gate.support;
         get("segment-state").textContent = "—";
         if (!image) return;
         const points = visiblePoints(frame);
         if (points.track) mark(context, points.track, "#4ee4ef", 5, true);
         if (points.candidate) mark(context, points.candidate, "#7bff8d", 13, false);
         get("track-state").textContent = trackingText(frame.selection.tracker_state, frame.selection.segment_id);
-        get("segment-state").textContent = view.mode === "reacquire"
+        get("segment-state").textContent = view.mode === "reacquire" || view.comparisonMode === "seed_gate"
           ? (Number.isInteger(frame.selection.segment_id) ? `구간 ${frame.selection.segment_id} · 멈춤 조건은 구간마다 새로 충족` : "확정된 현재 구간 없음")
           : "기존 추적 · 재탐색 없음";
         get("candidate-state").textContent = points.candidate ? "현재 구간에서 조건 충족" : "현재 후보 없음";
@@ -326,7 +451,7 @@
     return controller;
   }
 
-  if (typeof module !== "undefined" && module.exports) module.exports = { Controller, historyFor, historyStatus, visiblePoints, handleKey, ocrFor, ocrView, selectedFrame, trackingText, comparisonText, reasonText };
+  if (typeof module !== "undefined" && module.exports) module.exports = { Controller, historyFor, historyStatus, visiblePoints, handleKey, ocrFor, ocrView, selectedFrame, trackingText, comparisonText, reasonText, modeOptions, seedGateView, seedReasonText };
   if (typeof document !== "undefined") {
     try { mount(document); }
     catch (_) { const status = document.getElementById("frame-status"); if (status) status.textContent = "자료를 열지 못했습니다. 팩 무결성을 다시 확인해 주세요."; }

@@ -1,5 +1,9 @@
 # Codex 재개 프롬프트
 
+## CV43 완료 — 2026-10-27
+
+우리CV43 구현3e17f97·수리e99e311, [검증](CV_SEED_FRAME_VIEW_20261027.md). 625장10구/채택4보류6/OCR74, 입력881보존·실제Windows·Fable수정재검토PASS_WITH_NOTES. 현재팩 outputs/cv_mitt_seed_view_20261027_v3, 기존팩보존. 다음은새팩의stdlib검사/실행/휴대성정리. 사람/독립영상/PTS조건·A-y보류유지. 팀원·Cloudflare·운영·main변경없음.
+
 ## CV42 초기점 게이트 완료 — 2026-10-27
 
 우리 `codex/cv-seed-gate-1027`, PR77후속 연구. 정책2bbbaad·구현5df160a·수리353ace2. [결과](CV_SEED_GATE_20261027.md)·[검증](results/cv_seed_gate_20261027/verification_v2.json)·[실제 Fable 검토](results/cv_seed_gate_20261027/cross_review_v1.json). 10구625행/관측315행에서4구채택6구보류, 채택지연0.4004초. 기준선전체행재현·원본667불변·68검사·린트190·Fable재검토APPROVE_WITH_NOTES. 기존guard를 누락으로 본 검토의견은 생성자/정책변조검사로 확인해 기각했다. 새로운 정확도 증거는 아니다.
