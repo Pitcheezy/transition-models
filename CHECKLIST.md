@@ -1,5 +1,11 @@
 # 남은 작업 체크리스트
 
+## CV42 초기점 자격 게이트 — 2026-10-27
+
+**CV42 완료·수정 권한 반납: 우리 Codex / `codex/cv-seed-gate-1027` / 정책 `2bbbaad`·구현 `5df160a`·수리 `353ace2` / 2026-10-27.** [정책·결과](docs/CV_SEED_GATE_20261027.md), [Fable 검토](docs/results/cv_seed_gate_20261027/cross_review_v1.json), [검증](docs/results/cv_seed_gate_20261027/verification_v2.json). 기존10구625행·관측315행에서4구채택/6구보류, 채택 지연0.4004초, 추적178→77·정지13→5. 원본667+기준선1파일 불변·기준선전체필드재현·수리전후새결과동일·접두검사통과. 68검사·린트190·실제 Fable 수정 재검토 APPROVE_WITH_NOTES. 알려진 자료에서 만든 개발 후보이며 미트 식별/정확도 개선 아님. 팀원·Cloudflare·main/운영 미변경.
+
+- [x] CV-42. 현재/과거 적격 저장 관측의 시간·불확실도·안정 조건으로 현재 프레임만 시드하는 별도 개발 후보 구현·고정 비교·다른 모델 검토 완료. [보고](docs/results/cv_seed_gate_20261027/report_v2.json). 다음은4구채택/6구보류의 근거를 재생 화면에 연결하는 일. 사람/독립영상 검증 조건은 유지한다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-27 · Codex]`
+
 ## 재탐색 결과와 OCR의 같은 프레임 비교 — 2026-10-27
 
 **CV-41b 검토·수리 완료, 수정 권한 반납: 우리 Codex / `codex/cv-reacquire-view-1027` / 수리 `0f29502` / 2026-10-27.** 실제 Fable 분할 검토·수정 재검토 PASS 수신. [진단·검토](docs/results/cv_reacquire_view_20261027/cross_review_v2.json)·[수리 검증](docs/results/cv_reacquire_view_20261027/verification_v2.json). 과거600/300초 실패는 보존하며 현재 인증 실패로 단정하지 않는다. Python37·Node40·린트186·실제625행→203장/OCR74행 연결·Windows 재확인 완료. 새v2팩은 기존 payload/OCR/203JPEG를 보존한다. main 병합·운영 배포 없음, [PR77](https://github.com/Pitcheezy/transition-models/pull/77) 연구 의존 관계 유지.

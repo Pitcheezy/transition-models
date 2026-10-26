@@ -1,5 +1,11 @@
 # Codex 재개 프롬프트
 
+## CV42 초기점 게이트 완료 — 2026-10-27
+
+우리 `codex/cv-seed-gate-1027`, PR77후속 연구. 정책2bbbaad·구현5df160a·수리353ace2. [결과](CV_SEED_GATE_20261027.md)·[검증](results/cv_seed_gate_20261027/verification_v2.json)·[실제 Fable 검토](results/cv_seed_gate_20261027/cross_review_v1.json). 10구625행/관측315행에서4구채택6구보류, 채택지연0.4004초. 기준선전체행재현·원본667불변·68검사·린트190·Fable재검토APPROVE_WITH_NOTES. 기존guard를 누락으로 본 검토의견은 생성자/정책변조검사로 확인해 기각했다. 새로운 정확도 증거는 아니다.
+
+다음 독립 단위는 채택4구/보류6구의 지지·거부 시점 재생 연결이다. CV42 private output은 outputs/cv_seed_gate_20261027_v2이고v1보존. 현재 PA3 비교 화면은CV37b결과라 CV42완료화면으로 혼동하지 않는다. 임계값을 같은 자료에 맞춰 반복 조정하거나 새AI판독으로 사람 조건을 대체하지 않는다. 수정 권한반납, 원본/다른Claude폴더/M3보존. 팀원·Cloudflare·main·공개계약·운영 변경 없음. A-y/F-4i/CV35/36·11월부하조건 유지.
+
 ## CV-41b 재탐색 비교 화면 — 2026-10-27
 
 CV-41b 다른 모델 검토·수리·수정 재검토 완료. 실제 `claude-fable-5-1` 최종 PASS, 수리 `0f29502`. [진단·검토](results/cv_reacquire_view_20261027/cross_review_v2.json)·[수리 후 검증](results/cv_reacquire_view_20261027/verification_v2.json). CLI 전역 설정을 바꾸지 않고 native 실행·소스 분할·medium effort·진행 로그로 재시도했다. 과거 시간 초과를 현재 인증 실패로 취급하지 않는다. 같은 전체 코드 검토를 반복하지 않는다.
