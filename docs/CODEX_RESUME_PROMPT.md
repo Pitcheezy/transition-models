@@ -1,5 +1,9 @@
 # Codex 재개 프롬프트
 
+## CV42 시드 자격 게이트 진행 — 2026-10-27
+
+우리 `codex/cv-seed-gate-1027`, 기준 PR77 `15fca3c`. [고정 정책](CV_SEED_GATE_20261027.md)을 먼저 읽는다. 새 판독 없이 기존10구625프레임의 저장 관측에서 시간순 자격 게이트를 비교한다. 원본·기존 결과·다른 Claude 폴더 보존. 팀원·Cloudflare·공개 계약·main/운영 변경 금지. CV41b 검토는 아래처럼 완료했으며 재시도하지 않는다.
+
 ## CV-41b 재탐색 비교 화면 — 2026-10-27
 
 CV-41b 다른 모델 검토·수리·수정 재검토 완료. 실제 `claude-fable-5-1` 최종 PASS, 수리 `0f29502`. [진단·검토](results/cv_reacquire_view_20261027/cross_review_v2.json)·[수리 후 검증](results/cv_reacquire_view_20261027/verification_v2.json). CLI 전역 설정을 바꾸지 않고 native 실행·소스 분할·medium effort·진행 로그로 재시도했다. 과거 시간 초과를 현재 인증 실패로 취급하지 않는다. 같은 전체 코드 검토를 반복하지 않는다.

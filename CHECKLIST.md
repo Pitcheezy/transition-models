@@ -1,5 +1,11 @@
 # 남은 작업 체크리스트
 
+## CV42 초기점 자격 게이트 — 2026-10-27
+
+**선점: 우리 Codex / `codex/cv-seed-gate-1027` / 기준 PR77 `15fca3c` / 2026-10-27.** [정책·합격 기준](docs/CV_SEED_GATE_20261027.md)을 결과 실행 전에 고정한다. 기존10구 저장 관측만 사용하며 추적기 기본값·원본·운영·팀원·Cloudflare는 변경하지 않는다.
+
+- [ ] CV-42. 현재/과거의 적격 저장 관측3개·시간/불확실도/안정 조건을 만족한 현재 점만 시드로 선택하는 별도 개발 후보. 기존625행 재현·입력667파일 보존·전체10구 분모·접두 불변·거부사유/지연/추적 비교·다른 모델 고정 검토 후 완료. 이미 본 개발 자료이며 미트 식별/사람 정확도/온라인 성능 아님. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-27 · Codex]`
+
 ## 재탐색 결과와 OCR의 같은 프레임 비교 — 2026-10-27
 
 **CV-41b 검토·수리 완료, 수정 권한 반납: 우리 Codex / `codex/cv-reacquire-view-1027` / 수리 `0f29502` / 2026-10-27.** 실제 Fable 분할 검토·수정 재검토 PASS 수신. [진단·검토](docs/results/cv_reacquire_view_20261027/cross_review_v2.json)·[수리 검증](docs/results/cv_reacquire_view_20261027/verification_v2.json). 과거600/300초 실패는 보존하며 현재 인증 실패로 단정하지 않는다. Python37·Node40·린트186·실제625행→203장/OCR74행 연결·Windows 재확인 완료. 새v2팩은 기존 payload/OCR/203JPEG를 보존한다. main 병합·운영 배포 없음, [PR77](https://github.com/Pitcheezy/transition-models/pull/77) 연구 의존 관계 유지.
