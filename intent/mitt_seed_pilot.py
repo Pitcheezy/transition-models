@@ -105,6 +105,17 @@ def run(bundle, pilot, baseline, out, expected):
     torch.backends.cudnn.benchmark = False
     torch.backends.cudnn.deterministic = True
     selected, old_seeds, observations, preserved, manifest_sha = inputs.load_inputs(bundle, pilot)
+    frame_keys = {(pitch, frame["index"]) for pitch, frame in selected}
+    if len(frame_keys) != len(selected) or not observations.keys() <= frame_keys:
+        raise ValueError("saved observation keys do not match selected frames")
+    pitch_keys = {pitch for pitch, _ in frame_keys}
+    if old_seeds.keys() != pitch_keys or any(
+        seed is not None and (pitch, seed[0]) not in frame_keys for pitch, seed in old_seeds.items()
+    ):
+        raise ValueError("baseline seed frame is not in selected frames")
+    original_file_count = len(preserved)
+    if baseline.resolve() in {Path(p).resolve() for p in preserved}:
+        raise ValueError("baseline must be separate from source inputs")
     provenance = inputs.saved_pilot_provenance(pilot, preserved)
     actual = {
         "manifest": manifest_sha,
@@ -162,7 +173,8 @@ def run(bundle, pilot, baseline, out, expected):
         "baseline_every_field_reproduced": True,
         "baseline_rows": len(saved),
         "preserved_input_files": len(preserved),
-        "original_input_files_excluding_baseline": len(preserved) - 1,
+        "original_input_files_excluding_baseline": original_file_count,
+        "saved_observation_keys_matched": len(observations),
         "all_input_bytes_unchanged": True,
         "prefix_invariance": prefix,
         "consistency_violations": violations,
@@ -189,6 +201,7 @@ def run(bundle, pilot, baseline, out, expected):
             "thresholds were proposed after seeing these development pitches",
             "AI response arrival times unavailable",
             "no new model calls or human labels",
+            "fixed backend resets per pitch, consumes current frame observations only, and reports cumulative per-pitch counters",
         ],
     }
     out.mkdir(parents=True)

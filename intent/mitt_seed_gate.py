@@ -29,7 +29,7 @@ POLICY = {
     "source_width": 1280,
     "source_height": 720,
 }
-POLICY_SHA256 = hashlib.sha256(json.dumps(POLICY, sort_keys=True).encode()).hexdigest()
+POLICY_SHA256 = "a6a1022497f31bf80251fe240a07bc4d80d26b81b0500f0cda3c7622eee90581"
 SCHEMA = "pitcheezy-mitt-seed-gate-dev-v1"
 MAX_SAFE_INTEGER = 2**53 - 1
 # Roundoff tolerance for subtracting saved floating-point timestamps, not a policy margin.

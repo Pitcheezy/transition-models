@@ -250,3 +250,27 @@ def test_existing_output_directory_is_preserved(inputs):
     with pytest.raises(ValueError, match="output must be new"):
         run_inputs(inputs)
     assert sentinel.read_text(encoding="utf-8") == "existing result"
+
+
+def test_miskeyed_observation_cannot_silently_become_no_seed(inputs, monkeypatch):
+    obs = inputs["observations"].pop(("747139:1:1", 0))
+    inputs["observations"][("747139:1:1", "0")] = obs
+    monkeypatch.setattr(pilot.replay, "replay_candidate", lambda *_: pytest.fail("too late"))
+    with pytest.raises(ValueError, match="observation keys"):
+        run_inputs(inputs)
+    assert not inputs["out"].exists()
+
+
+def test_missing_baseline_seed_frame_has_named_preflight_failure(inputs, monkeypatch):
+    inputs["old_seeds"]["747139:1:1"] = (999, [600, 300])
+    monkeypatch.setattr(pilot.replay, "replay_candidate", lambda *_: pytest.fail("too late"))
+    with pytest.raises(ValueError, match="baseline seed frame"):
+        run_inputs(inputs)
+    assert not inputs["out"].exists()
+
+
+def test_baseline_aliasing_source_input_is_rejected(inputs):
+    inputs["preserved"][str(inputs["baseline"])] = pilot.inputs.sha(inputs["baseline"])
+    with pytest.raises(ValueError, match="separate from source inputs"):
+        run_inputs(inputs)
+    assert not inputs["out"].exists()

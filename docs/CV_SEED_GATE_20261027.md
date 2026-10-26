@@ -6,9 +6,11 @@
 
 고정 정책 `seed-gate-dev-v1`:
 
+정책 SHA256(JSON sorted keys, 기본 구분자, UTF8): `a6a1022497f31bf80251fe240a07bc4d80d26b81b0500f0cda3c7622eee90581`. 코드에도 상수로 고정한다.
+
 - live_centre_field, catcher=set, mitt_visibility=full, occluder=null, pitcher_phase=before_delivery, 유한한 현재 좌표.
 - 유한 비음수 uncertainty_px≤10(21px 템플릿 반경). AI 자기보고 입력 제한이며 실제 오차 보증이 아니다.
-- 연속 적격 관측3개 이상, 관측 간격≤0.25초, 지지 구간≥0.30초, 전체 점범위 bounding-box 대각선≤8px.
+- 연속 적격 **관측**3개 이상, 관측 간격≤0.25초, 지지 구간≥0.30초, 전체 점범위 bounding-box 대각선≤8px. 중간에 AI 관측이 없는 프레임은 새 지지가 아니지만, 간격이 한도 안이면 기존 지지를 끊지는 않는다.
 - 최초 충족한 현재 관측의 현재 프레임·현재 점에서만 초기화한다. 과거 시점으로 소급하거나 평균점으로 바꾸지 않는다.
 - 부적격·시간 공백·누적 이동 초과 시 지지를 초기화한다. AI 관측 없는 JPEG는 지지를 추가하거나 시드를 내지 않으며 시간 공백 만료만 처리한다. 투구당 초기화1회.
 - 미트 식별은 항상 unverified. 안정적으로 잘못 읽은 물체도 통과할 수 있다.
