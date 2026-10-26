@@ -1,0 +1,127 @@
+{
+  "build": {
+    "schema": "pitcheezy-private-replay-package-v1",
+    "source_commit": "f2366d60c23a40644c9d4de86607cc2594544e43",
+    "source_receipt_sha256": "b6a8e6954dd9d1b0877dff9cb4f68e3155c235b8e71ac75909bf37865b81cab1",
+    "source_files": 631,
+    "package_files": 635,
+    "manifest_sha256": "0958030ebc706e4dd160ce43805fe8852f62fcc9cf655c53da1c67dc568f2405",
+    "archive_sha256": "09fca482d86a442990df86fa63bc7f4fe9e61c8c0981363a2b1c102ef7f2a514",
+    "archive_bytes": 98730334,
+    "input_unchanged": true
+  },
+  "extract": {
+    "archive_sha256": "09fca482d86a442990df86fa63bc7f4fe9e61c8c0981363a2b1c102ef7f2a514",
+    "package_files": 635,
+    "manifest_sha256": "0958030ebc706e4dd160ce43805fe8852f62fcc9cf655c53da1c67dc568f2405"
+  },
+  "all_extracted_bytes_match": true,
+  "served_files": 630,
+  "elapsed_seconds": 37.83,
+  "schema": "pitcheezy-cv-replay-package-verification-v2",
+  "tests": {
+    "new_python": 56,
+    "related_python": 94,
+    "related_seconds": 60.36,
+    "lint_paths": 194,
+    "commands": [
+      "python -m pytest tests/test_mitt_replay_package.py tests/test_mitt_seed_view.py tests/test_checklist_model.py -q",
+      "python scripts/check_project.py --lint-only"
+    ],
+    "restricted_initial_attempt": "81passed;2loopback sockets denied. Initial83passed with permitted localhost; final94passed with permitted localhost."
+  },
+  "stdlib_check": {
+    "command": "python -B -S run_replay.py --check",
+    "served_files": 630,
+    "passed": true
+  },
+  "http": [
+    {
+      "file": "index.html",
+      "status": 200,
+      "cache_control": "no-store",
+      "nosniff": "nosniff",
+      "sha_matches": true
+    },
+    {
+      "file": "review.js",
+      "status": 200,
+      "cache_control": "no-store",
+      "nosniff": "nosniff",
+      "sha_matches": true
+    },
+    {
+      "file": "manifest.json",
+      "status": 404
+    },
+    {
+      "file": "run_replay.py",
+      "status": 404
+    },
+    {
+      "file": "receipt.json",
+      "status": 404
+    },
+    {
+      "case": "wrong Host payload rejected",
+      "status": 421,
+      "private_payload_exposed": false
+    }
+  ],
+  "limits": [
+    "Same exposed development records, not accuracy/identity evidence",
+    "Not Mac/iPhone real-device test",
+    "No independent decoded PTS validation",
+    "Private images not for Git/public distribution",
+    "No team repository/Cloudflare/main/deployment touched"
+  ],
+  "earlier_v1_package": {
+    "build": {
+      "schema": "pitcheezy-private-replay-package-v1",
+      "source_commit": "04fa7442cb3f693e810147d2fb63cc7a79bcd654",
+      "source_receipt_sha256": "b6a8e6954dd9d1b0877dff9cb4f68e3155c235b8e71ac75909bf37865b81cab1",
+      "source_files": 631,
+      "package_files": 635,
+      "manifest_sha256": "edd45936fc6835a5b7c982cc75e744ab953c48430cca9a184a631ddff90b0877",
+      "archive_sha256": "18329393e26edde1ead72474570a74a6f338402c9e3fa26fb21ce4ffeeb173ba",
+      "archive_bytes": 98729999,
+      "input_unchanged": true
+    },
+    "extract": {
+      "archive_sha256": "18329393e26edde1ead72474570a74a6f338402c9e3fa26fb21ce4ffeeb173ba",
+      "package_files": 635,
+      "manifest_sha256": "edd45936fc6835a5b7c982cc75e744ab953c48430cca9a184a631ddff90b0877"
+    },
+    "tests": {
+      "new_python": 45,
+      "related_python": 83,
+      "lint_paths": 194,
+      "restricted_attempt": "81 passed;2loopback sockets denied;related83passed with allowedlocalhost"
+    },
+    "elapsed_seconds": 43.12
+  },
+  "earlier_v1_browser": {
+    "environment": "Windows notebook, extracted archive, stdlib server",
+    "cases": [
+      "10pitch selector loaded",
+      "PA4:2 current gate and stationary event20512",
+      "play from20512 through last20866 and auto-stop",
+      "lost current point absent; historical20650 remains separate",
+      "unobserved OCR empty"
+    ],
+    "console_errors": 0,
+    "real_other_device": false
+  },
+  "actual_browser": {
+    "environment": "Windows notebook, final extracted v2, stdlib server",
+    "cases": [
+      "10pitch selector loaded",
+      "PA4:2 gate mode stationary frame20512 visible",
+      "no console errors"
+    ],
+    "real_other_device": false
+  },
+  "source_data_unchanged_from_v1": 631,
+  "served_files_meaning": "HTTP memory allowlist size, not count of individually queried files",
+  "elapsed_seconds_meaning": "build, ZIP extraction, all-file byte comparison and memory allowlist verification; not inference latency"
+}

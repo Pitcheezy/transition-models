@@ -1,8 +1,16 @@
 # Codex 재개 프롬프트
 
+현재 실행 상태는 첫 절을 따른다. 아래 완료 이력의 “다음”은 당시 기록이며 새 실행 지시가 아니다.
+
+## CV44 완료 — 2026-10-27
+
+**완료·수정 권한 반납: 우리 Codex / `codex/cv-replay-kit-1027` / 구현04fa744·수리f2366d6.** [범위·검증](CV_REPLAY_PACKAGE_20261027.md). 비공개v2 ZIP635파일·98,730,334bytes·원본631불변·압축해제 바이트 일치. 새56/관련94 Python·Ruff194·Windows 실제 재생·HTTP6검사, 실제 Claude Fable 분할 및 수정 재검토 완료. ZIP SHA `09fca482d86a442990df86fa63bc7f4fe9e61c8c0981363a2b1c102ef7f2a514`.
+
+- [x] CV-44. 고정 영수증·파일SHA·경로·CRC 검증→새 ZIP→표준라이브러리 검사/재생 완료. 손상압축·잘못된Host·내부파일 제공 거부. 기존팩/원본/팀원/Cloudflare/main/운영 불변. Mac/iPhone·독립PTS·미트정확도 증거는 아니다. 다음 후보는 새 추출에서 실제 디코더 시각 근거 보존(CV45), 기존625장은 소급 검증하지 않는다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-27 · Codex]`
+
 ## CV43 완료 — 2026-10-27
 
-우리CV43 구현3e17f97·수리e99e311, [검증](CV_SEED_FRAME_VIEW_20261027.md). 625장10구/채택4보류6/OCR74, 입력881보존·실제Windows·Fable수정재검토PASS_WITH_NOTES. 현재팩 outputs/cv_mitt_seed_view_20261027_v3, 기존팩보존. 다음은새팩의stdlib검사/실행/휴대성정리. 사람/독립영상/PTS조건·A-y보류유지. 팀원·Cloudflare·운영·main변경없음.
+우리CV43 구현3e17f97·수리e99e311, [검증](CV_SEED_FRAME_VIEW_20261027.md). 625장10구/채택4보류6/OCR74, 입력881보존·실제Windows·Fable수정재검토PASS_WITH_NOTES. 현재팩 outputs/cv_mitt_seed_view_20261027_v3, 기존팩보존. 새팩의stdlib검사/실행/휴대성정리는CV44로완료. 사람/독립영상/PTS조건·A-y보류유지. 팀원·Cloudflare·운영·main변경없음.
 
 ## CV42 초기점 게이트 완료 — 2026-10-27
 
