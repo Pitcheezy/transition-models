@@ -1,0 +1,62 @@
+{
+  "schema": "pitcheezy-fixed-source-review-attempts-v1",
+  "unit": "CV-41b",
+  "author": "Codex",
+  "requested_reviewer": "claude-fable-5-1",
+  "reported_models": [],
+  "review_complete": false,
+  "verdict": "unavailable",
+  "attempts": [
+    {
+      "name": "full",
+      "snapshot": {
+        "commit": "fcde5d2fa645d9ce88680a21ed8a56e57ff80889",
+        "files": {
+          "intent/mitt_reacquire_view.py": "f00dfa6acb9f45c359811609c27bc3a94b7be9283ec4c055546c9088db83d7b0",
+          "web/track-review/review.js": "eda30deb8fbdd0b01fef8d32000ebaac3b2328a3cae8a5b1482157f6ed125f9f",
+          "web/track-review/index.html": "e4a95dfd033e7259c987432571f5346249556ca786b559c65c9e7da15cba9eb5",
+          "web/track-review/style.css": "0c36d8285d50162bf861863871c6b39a86002852c396390fa1144c511ad8d982",
+          "tests/test_mitt_reacquire_view.py": "e39ece5834aacf38ab520098695eabe9d49461db7eed23f7b4c0912bcb7b3cb4",
+          "tests/test_reacquire_frame_view_ui.cjs": "4b8c8ecf8bf634636281d811889e23aa1830005756c71a6bfff4117cc033a1e8",
+          "intent/mitt_reacquire.py": "06d2c487c03c4c4a77dc205007906d3e125daa90591cda5f88aa06583a5ee89d",
+          "intent/mitt_stationary.py": "9cd3bfecd8d39f081ea82c3cf34982c9531beb862c565f9609dce0c831da8c3e",
+          "intent/mitt_ocr_view.py": "c3a9afb344d56f1e7b1e0e14e44bd705fd633f084e223e1474990d4864c1a325"
+        },
+        "prompt_sha256": "0e78439ab0006cfd3dd58da0b553e8c5eb4b621a123dad72f4c7ed8a22132059"
+      },
+      "effort": "max",
+      "timeout_seconds": 600,
+      "result": "timeout; no verdict received",
+      "stdout_bytes": 0,
+      "stderr_bytes": 0,
+      "tools_enabled": false,
+      "reviewer_executed_tests": false
+    },
+    {
+      "name": "compact",
+      "snapshot": {
+        "commit": "fcde5d2fa645d9ce88680a21ed8a56e57ff80889",
+        "files": {
+          "intent/mitt_reacquire_view.py": "f00dfa6acb9f45c359811609c27bc3a94b7be9283ec4c055546c9088db83d7b0",
+          "web/track-review/review.js": "eda30deb8fbdd0b01fef8d32000ebaac3b2328a3cae8a5b1482157f6ed125f9f",
+          "web/track-review/index.html": "e4a95dfd033e7259c987432571f5346249556ca786b559c65c9e7da15cba9eb5"
+        },
+        "prompt_sha256": "90c1a412ca2db52a3e3c74600511d421a2f297f5a7cbd48fe4f3910f1cf27a2c"
+      },
+      "effort": "high",
+      "timeout_seconds": 300,
+      "result": "timeout; no verdict received",
+      "stdout_bytes": 0,
+      "stderr_bytes": 0,
+      "tools_enabled": false,
+      "reviewer_executed_tests": false
+    }
+  ],
+  "shutdown": "Both review attempts ended; no matching review process remained at final check.",
+  "same_model_auxiliary_review": {
+    "scope": "UI diff only",
+    "finding": "tracking reason masked stationary selection reason",
+    "resolution": "both reasons now displayed; regression added",
+    "satisfies_other_model_requirement": false
+  }
+}

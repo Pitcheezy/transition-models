@@ -156,3 +156,25 @@ test("hostile saved strings pass through as plain text values only", () => {
   assert.ok(!/innerHTML|outerHTML|insertAdjacentHTML|document\.write|\beval\(|new Function/.test(source));
   assert.ok(/get\(`ocr-\$\{role\}-\$\{field\}`\)\.textContent/.test(source));
 });
+
+test("OCR comparison relation and referenced frame must agree", () => {
+  const data = trackData(), pitch = data.pitches[0], frame = pitch.frames[1];
+  for (const change of [
+    { temporal_relation: "literal_same", compared_to_frame: null },
+    { temporal_relation: "literal_changed", compared_to_frame: null },
+    { temporal_relation: "not_compared", compared_to_frame: 600 }
+  ]) {
+    const ocr = ocrData(data); Object.assign(ocr.pitches[0].rows[1].roles.batter, change);
+    assert.equal(ocrFor(ocr, pitch, frame).kind, "mismatch");
+    assert.deepEqual(ocrView(ocr, pitch, frame, loaded).roles, { pitcher: blank, batter: blank });
+  }
+});
+
+test("abstained and errored OCR roles cannot claim a temporal comparison", () => {
+  const data = trackData(), pitch = data.pitches[0];
+  for (const [index, relation] of [[2, "literal_same"], [3, "literal_changed"]]) {
+    const ocr = ocrData(data);
+    Object.assign(ocr.pitches[0].rows[index].roles.batter, { temporal_relation: relation, compared_to_frame: 600 });
+    assert.equal(ocrFor(ocr, pitch, pitch.frames[index]).kind, "mismatch");
+  }
+});

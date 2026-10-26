@@ -2,6 +2,45 @@
 (function () {
   "use strict";
 
+  const COMPARISON_SCHEMA = "pitcheezy-reacquire-frame-comparison-dev-v1";
+  function validComparisonFrame(pitch, frame) {
+    if (!frame || frame.width !== 1280 || frame.height !== 720 ||
+        typeof pitch.pitch_id !== "string" || pitch.pitch_id.trim() === "" ||
+        !Number.isInteger(frame.frame_index) || frame.frame_index < 0 ||
+        !Number.isFinite(frame.frame_seconds) || frame.frame_seconds < 0 ||
+        typeof frame.sha256 !== "string" || !/^[a-f0-9]{64}$/i.test(frame.sha256)) return false;
+    const candidate = frame.reacquire;
+    return !!candidate && [candidate.selection, candidate.tracking].every(row => row &&
+      row.pitch_id === pitch.pitch_id && row.frame_index === frame.frame_index &&
+      row.frame_seconds === frame.frame_seconds) && candidate.tracking.source_sha256 === frame.sha256;
+  }
+
+  function selectedFrame(frame, mode) {
+    if (mode === "baseline") return frame;
+    if (!frame.reacquire?.selection || !frame.reacquire?.tracking) throw new Error("재탐색 행이 없습니다.");
+    return { ...frame, selection: frame.reacquire.selection, tracking: frame.reacquire.tracking };
+  }
+
+  function trackingText(state, segment) {
+    if (state === "tracking") return `확인된 패치 추적${Number.isInteger(segment) ? ` · 구간 ${segment}` : ""} · 미트 식별 아님`;
+    if (state === "reacquire_search") return "재탐색 중 · 현재 점 없음";
+    if (state === "reacquire_candidate") return "미확정 재탐색 후보 · 다음 프레임 확인 전 · 현재 점 없음";
+    if (state === "lost") return "추적 종료 · 현재 점 없음";
+    if (state === "unseeded") return "시드 없음 · 현재 점 없음";
+    return "지원하지 않는 상태 · 현재 점 없음";
+  }
+
+  function comparisonText(frame, view) {
+    if (view.loading || view.error || !view.image) return "이미지 준비 전에는 비교 표시를 비웁니다.";
+    const candidate = frame.reacquire;
+    if (!candidate) return "";
+    return `기존: ${trackingText(frame.selection.tracker_state)} / 재탐색: ${trackingText(candidate.tracking.state, candidate.tracking.segment_id)}`;
+  }
+
+  function reasonText(frame) {
+    return frame.tracking ? `추적: ${frame.tracking.reason} / 멈춤 판정: ${frame.selection.reason}` : frame.selection.reason;
+  }
+
   function historyFor(pitch, frame) {
     const event = frame.selection.last_historical_candidate;
     if (!event || event.pitch_id !== pitch.pitch_id ||
@@ -16,15 +55,26 @@
     constructor(data, { loadImage, onChange,
       setTimer = (callback, delay) => setTimeout(callback, delay),
       clearTimer = id => clearTimeout(id) }) {
-      if (data.schema !== "pitcheezy-track-frame-view-dev-v1" || !data.pitches?.length) throw new Error("지원하지 않는 자료 형식입니다.");
+      if (data?.schema !== "pitcheezy-track-frame-view-dev-v1" ||
+          !Array.isArray(data.pitches) || !data.pitches.length ||
+          !data.pitches.every(pitch => pitch && Array.isArray(pitch.frames) && pitch.frames.length)) {
+        throw new Error("지원하지 않는 자료 형식입니다.");
+      }
       Object.assign(this, { data, loadImage, onChange, setTimer, clearTimer });
+      this.hasComparison = data.comparison_schema === COMPARISON_SCHEMA;
+      if (this.hasComparison && !data.pitches.every(pitch => pitch.frames.every(frame => validComparisonFrame(pitch, frame)))) {
+        throw new Error("재탐색 자료의 프레임·이미지 연결이 유효하지 않습니다.");
+      }
+      this.mode = "baseline";
       this.pitchIndex = 0; this.frameIndex = 0; this.generation = 0; this.timer = null;
       this.playing = false; this.view = { loading: true, image: null, history: null, historyPending: false, error: null };
     }
     get pitch() { return this.data.pitches[this.pitchIndex]; }
-    get frame() { return this.pitch.frames[this.frameIndex]; }
+    get rawFrame() { return this.pitch.frames[this.frameIndex]; }
+    get frame() { return selectedFrame(this.rawFrame, this.mode); }
     emit() {
       this.onChange({ ...this.view, pitch: this.pitch, frame: this.frame,
+        rawFrame: this.rawFrame, mode: this.mode, hasComparison: this.hasComparison,
         pitchIndex: this.pitchIndex, frameIndex: this.frameIndex, playing: this.playing });
     }
     cancelTimer() { if (this.timer !== null) this.clearTimer(this.timer); this.timer = null; }
@@ -43,7 +93,8 @@
         this.emit(); this.schedule();
         if (!history) return;
         try {
-          const historicalImage = history.frame === frame ? image : await this.loadImage(history.frame);
+          const sameImage = history.frame.frame_index === frame.frame_index && history.frame.sha256 === frame.sha256;
+          const historicalImage = sameImage ? image : await this.loadImage(history.frame);
           if (generation !== this.generation) return;
           this.view = { ...this.view, history: { ...history, image: historicalImage }, historyPending: false };
           this.emit();
@@ -54,11 +105,16 @@
       } catch (_) {
         if (generation !== this.generation) return;
         this.playing = false; this.cancelTimer();
-        this.view = { loading: false, image: null, history: null, historyPending: false, error: "이미지를 불러오지 못했습니다. 현재·과거 표시를 비웠습니다." };
+        this.view = { loading: false, image: null, history: null, historyPending: false, error: "이미지 또는 화면 처리에 실패했습니다. 현재·과거 표시를 비웠습니다." };
         this.emit();
       }
     }
     seek(index) { this.playing = false; return this.show(index); }
+    switchMode(mode) {
+      if (!["baseline", "reacquire"].includes(mode) || (mode === "reacquire" && !this.hasComparison)) throw new Error("지원하지 않는 비교 방식입니다.");
+      this.playing = false; this.mode = mode;
+      return this.show(this.frameIndex);
+    }
     switchPitch(index) {
       this.playing = false;
       this.pitchIndex = Math.max(0, Math.min(index, this.data.pitches.length - 1));
@@ -94,13 +150,26 @@
       point[0] >= 0 && point[0] < frame.width && point[1] >= 0 && point[1] < frame.height;
   }
 
+  function historyStatus(view) {
+    if (view.loading) return "현재 이미지 준비 중";
+    if (view.error) return "표시 없음";
+    if (view.historyPending) return "기록 이미지 준비 중";
+    if (view.historyError) return "기록 이미지 또는 화면 처리에 실패했습니다.";
+    if (view.history && !validPoint(view.history.event.point_px, view.history.frame)) {
+      return "기록 좌표가 유효하지 않아 표시하지 않습니다.";
+    }
+    return "이 시점까지 표시할 발생 기록 없음";
+  }
+
   function visiblePoints(frame) {
     const selection = frame.selection;
     const track = selection.tracker_state === "tracking" && validPoint(selection.current_track_point_px, frame)
       ? selection.current_track_point_px : null;
     const current = selection.current_candidate;
     const candidate = track && selection.selection_state === "stationary" && current &&
+      typeof current.pitch_id === "string" && current.pitch_id.trim() !== "" &&
       current.pitch_id === selection.pitch_id && current.frame_index === frame.frame_index &&
+      (selection.segment_id === undefined || current.segment_id === selection.segment_id) &&
       current.frame_seconds === frame.frame_seconds && validPoint(current.point_px, frame)
       ? current.point_px : null;
     return { track, candidate };
@@ -117,7 +186,9 @@
       typeof value.reason === "string" && OCR_STATUSES.has(value.status) &&
       OCR_RELATIONS.has(value.temporal_relation) &&
       (value.status === "read" ? typeof value.name_text === "string" && value.name_text.trim() !== "" : value.name_text === null) &&
-      (value.compared_to_frame === null || Number.isInteger(value.compared_to_frame));
+      (value.status === "read" || value.temporal_relation === "not_compared") &&
+      ((value.temporal_relation === "not_compared") === (value.compared_to_frame === null)) &&
+      (value.compared_to_frame === null || (Number.isInteger(value.compared_to_frame) && value.compared_to_frame >= 0));
   }
 
   function ocrFor(ocr, pitch, frame) {
@@ -217,23 +288,33 @@
         get("frame-time").textContent = `${frameIndex + 1} / ${pitch.frames.length}장 · 원본 번호 ${frame.frame_index} · 자료 시각 ${frame.frame_seconds.toFixed(3)}초`;
         get("frame-status").textContent = view.loading ? "이미지 준비 중 · 표시 비움" : view.error || "현재 저장 프레임";
         get("track-state").textContent = "—"; get("candidate-state").textContent = "—"; get("reason").textContent = "—";
-        get("history-status").textContent = view.loading ? "현재 이미지 준비 중" : view.error ? "표시 없음" : view.historyPending ? "기록 이미지 준비 중" : view.historyError ? "기록 이미지를 불러오지 못했습니다." : "이 시점까지 표시할 발생 기록 없음";
+        get("history-status").textContent = historyStatus(view);
         renderOcr(ocrView(ocr, pitch, frame, view));
+        get("comparison-controls").hidden = !view.hasComparison;
+        get("mode-select").value = view.mode;
+        get("comparison-status").textContent = comparisonText(view.rawFrame, view);
+        get("current-title").textContent = view.hasComparison ? `현재 프레임 · ${view.mode === "baseline" ? "기존 추적" : "제한된 재탐색"}` : "현재 프레임";
+        get("segment-state").textContent = "—";
         if (!image) return;
         const points = visiblePoints(frame);
         if (points.track) mark(context, points.track, "#4ee4ef", 5, true);
         if (points.candidate) mark(context, points.candidate, "#7bff8d", 13, false);
-        get("track-state").textContent = points.track ? "현재 패치 있음 · 미트 식별 미검증" : "현재 추적 점 없음";
+        get("track-state").textContent = trackingText(frame.selection.tracker_state, frame.selection.segment_id);
+        get("segment-state").textContent = view.mode === "reacquire"
+          ? (Number.isInteger(frame.selection.segment_id) ? `구간 ${frame.selection.segment_id} · 멈춤 조건은 구간마다 새로 충족` : "확정된 현재 구간 없음")
+          : "기존 추적 · 재탐색 없음";
         get("candidate-state").textContent = points.candidate ? "현재 구간에서 조건 충족" : "현재 후보 없음";
-        get("reason").textContent = frame.selection.reason;
+        get("reason").textContent = reasonText(frame);
         if (view.history && validPoint(view.history.event.point_px, view.history.frame)) {
           draw(historicalCanvas, view.history.image);
           mark(historyContext, view.history.event.point_px, "#ffb454", 9, false);
-          get("history-status").textContent = `최초 발생 기록 · ${view.history.event.frame_seconds.toFixed(3)}초 · 원본 번호 ${view.history.event.frame_index} · 현재 위치로 사용하지 않음`;
+          const segment = view.history.event.segment_id;
+          get("history-status").textContent = `최초 발생 기록${Number.isInteger(segment) ? ` · 구간 ${segment}` : ""} · ${view.history.event.frame_seconds.toFixed(3)}초 · 원본 번호 ${view.history.event.frame_index} · 현재 위치로 사용하지 않음`;
         }
       }
     });
     get("pitch-select").addEventListener("change", event => void controller.switchPitch(Number(event.target.value)));
+    get("mode-select").addEventListener("change", event => void controller.switchMode(event.target.value));
     get("frame-slider").addEventListener("input", event => void controller.seek(Number(event.target.value)));
     get("previous-frame").addEventListener("click", () => void controller.seek(controller.frameIndex - 1));
     get("next-frame").addEventListener("click", () => void controller.seek(controller.frameIndex + 1));
@@ -245,7 +326,7 @@
     return controller;
   }
 
-  if (typeof module !== "undefined" && module.exports) module.exports = { Controller, historyFor, visiblePoints, handleKey, ocrFor, ocrView };
+  if (typeof module !== "undefined" && module.exports) module.exports = { Controller, historyFor, historyStatus, visiblePoints, handleKey, ocrFor, ocrView, selectedFrame, trackingText, comparisonText, reasonText };
   if (typeof document !== "undefined") {
     try { mount(document); }
     catch (_) { const status = document.getElementById("frame-status"); if (status) status.textContent = "자료를 열지 못했습니다. 팩 무결성을 다시 확인해 주세요."; }

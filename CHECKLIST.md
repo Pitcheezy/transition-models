@@ -1,5 +1,11 @@
 # 남은 작업 체크리스트
 
+## 재탐색 결과와 OCR의 같은 프레임 비교 — 2026-10-27
+
+**CV-41b 검토·수리 완료, 수정 권한 반납: 우리 Codex / `codex/cv-reacquire-view-1027` / 수리 `0f29502` / 2026-10-27.** 실제 Fable 분할 검토·수정 재검토 PASS 수신. [진단·검토](docs/results/cv_reacquire_view_20261027/cross_review_v2.json)·[수리 검증](docs/results/cv_reacquire_view_20261027/verification_v2.json). 과거600/300초 실패는 보존하며 현재 인증 실패로 단정하지 않는다. Python37·Node40·린트186·실제625행→203장/OCR74행 연결·Windows 재확인 완료. 새v2팩은 기존 payload/OCR/203JPEG를 보존한다. main 병합·운영 배포 없음, [PR77](https://github.com/Pitcheezy/transition-models/pull/77) 연구 의존 관계 유지.
+
+- [x] CV-41b. 저장 기준선/재탐색 625행의 출처·프레임 키 대조, PA3 203장/OCR74행 같은 프레임 비교, 미확정/소실 시 현재 점 없음, 과거 사건은 발생 이미지에만 표시. 입력 결속·빈 자료·OCR 관계 수리와 다른 모델 재검토 완료. 반복 외부 렌더 예외/과대 이미지 사전 거부 최적화는 낮은 우선순위 참고로 남긴다. 새 판독·사람 정답·독립PTS·실시간 정확도 아님. A-y/F-4i·CV35/36 조건 유지. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-27 · Codex]`
+
 ## 추적 중단 원인·제한된 재탐색 기준선 — 2026-10-26
 
 **CV-37b 완료·수정 권한 반납: Claude Fable 5.1(`claude-fable-5-1`), 연구 브랜치 `claude/cv-track-reacquire-1026`, 기준 PR73 `f15d3146121c3bf52f33e4f97f1e40f7a0cf66a5`, 초안 PR(병합·배포 없음)은 board 종료 기록 참조. 다른 모델 검토: 로컬 Codex CLI `gpt-6-astra` 읽기 전용, P2 4건·P3 1건 수리·회귀 검사 추가, 수정 diff 재검토 해결 확인([영수증](docs/results/cv_reacquire_20261026/codex_review_v1.json)).** 의존 관계 PR67→69→70→71→72→73→이 브랜치. main 병합·운영 배포·Song 코드·Cloudflare·공개 계약·IntentEstimate·기존 625행/AI 관측/원본 프레임·사람 응답·M3는 바꾸지 않는다. 기존 Claude 폴더·Codex 폴더는 읽기 전용 입력이다. 새 영상·유료 서비스·대규모 AI 판독·모델 학습·공개 배포 없음. 삭제·옛 질문 발신 보류, A-y/F-4i·CV35/36 조건 유지.

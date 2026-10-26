@@ -1,0 +1,149 @@
+{
+  "schema": "pitcheezy-cv-fixed-review-v2",
+  "unit": "CV-41b",
+  "cli_version": "2.1.310",
+  "repair_commit": "0f295026b3fb34e17e865678ef9bba914b51434d",
+  "diagnosis": {
+    "historical_exact_root_cause": "unconfirmed: final-only attempts retained no progress stream",
+    "current_authentication": "logged in; tiny requests succeeded",
+    "reproduced_timeout": "high-effort larger source run still emitted progress before local240s timeout",
+    "successful_strategy": "native executable, split source, medium effort, stream output, no tools, safe-mode for invocation only",
+    "original_flags_stdin_ping": "success4.70seconds",
+    "first_cmd_shim_cleanup": "prior timeout left owned native child; native retry avoided shell-only termination",
+    "quota": "accepted requests reported allowed_warning; not evidence of unlimited allowance"
+  },
+  "attempts": [
+    {
+      "name": "old_flags_ping",
+      "elapsed_seconds": 4.7,
+      "returncode": 0,
+      "actual_models": [
+        "claude-fable-5-1"
+      ],
+      "event_count": 12,
+      "final_result": {
+        "subtype": "success",
+        "is_error": false,
+        "result": "CV_REVIEW_READY",
+        "duration_ms": 1925,
+        "num_turns": 1
+      },
+      "source_snapshot": {
+        "commit": "958e7de83d39490eb1a88a7b6f8f4ea7ee67fe3b",
+        "files": {},
+        "prompt_sha256": "770dde1a93d574b0eebafacc02c5fd5c8be9378c8b9e5c22ecabfd8d372fe8ef",
+        "prompt_bytes": 48
+      }
+    },
+    {
+      "name": "builder",
+      "elapsed_seconds": 240.12,
+      "returncode": "timeout",
+      "actual_models": [],
+      "event_count": 386,
+      "final_result": null,
+      "source_snapshot": {
+        "commit": "958e7de83d39490eb1a88a7b6f8f4ea7ee67fe3b",
+        "files": {
+          "intent/mitt_reacquire_view.py": "f00dfa6acb9f45c359811609c27bc3a94b7be9283ec4c055546c9088db83d7b0",
+          "tests/test_mitt_reacquire_view.py": "e39ece5834aacf38ab520098695eabe9d49461db7eed23f7b4c0912bcb7b3cb4",
+          "intent/mitt_ocr_view.py": "c3a9afb344d56f1e7b1e0e14e44bd705fd633f084e223e1474990d4864c1a325"
+        },
+        "prompt_sha256": "dd7f9f74b58664151c7a0c0545a202c97ac74db79b57718993d31dd2405e7dc6",
+        "prompt_bytes": 48240
+      }
+    },
+    {
+      "name": "ui",
+      "elapsed_seconds": 128.52,
+      "returncode": 0,
+      "actual_models": [
+        "claude-fable-5-1"
+      ],
+      "event_count": 554,
+      "final_result": {
+        "subtype": "success",
+        "is_error": false,
+        "result": "```json\n{\n  \"verdict\": \"PASS_WITH_FINDINGS — no reproducible violation of the stated invariants found in the supplied files (no inference, no points in search/candidate/lost/loading/error, history only on its own source image, mode switch stays on frame and stops playback, async results gated by generation). Two medium-severity robustness defects and a few low ones below.\",\n  \"findings\": [\n    {\n      \"priority\": \"medium\",\n      \"file\": \"web/track-review/review.js\",\n      \"line\": \"~208-218, ~265-273 (draw/mark in mount) + index.html canvas width=1280 height=720\",\n      \"trigger\": \"drawImage scales the image to the fixed 1280x720 canvas, but mark() draws point_px in raw frame pixels; validPoint() only bounds against frame.width/height.\",\n      \"impact\": \"Any frame (or history source frame) whose manifest/natural size is not exactly 1280x720 renders the image scaled but the track/candidate/history marker unscaled, i.e. at the wrong pixel location, silently. Not triggered if every frame in the 203-frame pack is 1280x720 (cannot verify from supplied code).\",\n      \"fix\": \"In draw(), set canvas.width = frame.width and canvas.height = frame.height (pass the frame) before drawing, so image and marker share one coordinate space; or scale the point by canvas/frame ratio. Use history.frame dims for the history canvas.\"\n    },\n    {\n      \"priority\": \"medium\",\n      \"file\": \"web/track-review/review.js\",\n      \"line\": \"~6-10 (selectedFrame), ~49 (constructor check), ~134-144 (visiblePoints)\",\n      \"trigger\": \"selectedFrame substitutes frame.reacquire.selection/tracking after only a presence check; visiblePoints compares current_candidate keys against selection.pitch_id, not against the frame/pitch keys, and never checks selection.frame_index/frame_seconds against the displayed frame.\",\n      \"impact\": \"The 'strict pitch/frame/time key' invariant is not enforced at the consumer for reacquire rows (unlike OCR rows, which are joined on all four keys). A builder off-by-one or swapped row would be rendered self-consistently on the wrong image. Also, undefined === undefined lets a candidate with missing pitch_id/segment_id pass if the selection row also lacks it.\",\n      \"fix\": \"In the constructor (or selectedFrame) require reacquire.selection and reacquire.tracking to carry pitch_id === pitch.pitch_id, frame_index === frame.frame_index, frame_seconds === frame.frame_seconds, otherwise throw as for incomplete packs. In visiblePoints, require typeof current.pitch_id === 'string' and compare to the selection key explicitly.\"\n    },\n    {\n      \"priority\": \"low\",\n      \"file\": \"web/track-review/review.js\",\n      \"line\": \"~46-49 (constructor), ~63-66 (show)\",\n      \"trigger\": \"Constructor does not require each pitch.frames to be a non-empty array; show() derives frame = this.frame outside the try block.\",\n      \"impact\": \"A pitch with zero frames makes show(0) throw a TypeError as an unhandled rejection (also from the timer callback), leaving the view stuck on 'loading' with no error status.\",\n      \"fix\": \"Validate Array.isArray(p.frames) && p.frames.length > 0 in the constructor; move the frame derivation inside the try or guard in show().\"\n    },\n    {\n      \"priority\": \"low\",\n      \"file\": \"web/track-review/review.js\",\n      \"line\": \"~146-152 (validOcrRole), ~168-172 (ocrRoleText)\",\n      \"trigger\": \"compared_to_frame is not cross-validated with temporal_relation.\",\n      \"impact\": \"A read row with literal_same/literal_changed and compared_to_frame === null renders the string '비교 원본 번호 null'; not_compared with an integer is silently ignored. Display-only, no inference.\",\n      \"fix\": \"In validOcrRole require (temporal_relation === 'not_compared') === (compared_to_frame === null); treat violations as mismatch.\"\n    },\n    {\n      \"priority\": \"low\",\n      \"file\": \"web/track-review/review.js\",\n      \"line\": \"~250 (history-status default) and ~270 (history draw guard)\",\n      \"trigger\": \"If view.history exists but event.point_px fails validPoint, the history canvas stays blank and the status reads '이 시점까지 표시할 발생 기록 없음'.\",\n      \"impact\": \"A record that exists but has an invalid saved coordinate is labelled as 'no record', hiding a data problem. Fail-closed on the drawing side is correct; only the label is misleading.\",\n      \"fix\": \"Emit a distinct status such as '기록 좌표가 유효하지 않아 표시하지 않음' when history is present but the point is invalid.\"\n    },\n    {\n      \"priority\": \"low\",\n      \"file\": \"web/track-review/review.js\",\n      \"line\": \"~69-91 (show outer try/catch)\",\n      \"trigger\": \"onChange/emit() is called inside the image try block; a renderer exception is caught and reported as an image load failure. Likewise an emit() exception inside the history try is reported as historyError.\",\n      \"impact\": \"Misattributed error text during debugging; no invariant violation (output is still cleared).\",\n      \"fix\": \"Narrow the try to the await loadImage call, or distinguish the two failure messages.\"\n    }\n  ],\n  \"limits\": [\n    \"Static review only; nothing was executed and the supplied tests were not run.\",\n    \"Pack builder, manifest validator, style.css, and the actual track/OCR JSON were not supplied; whether all frames are 1280x720, whether reacquire rows are key-aligned by construction, and whether JSON embedded in <script type=application/json> is escaped for '</script>' could not be verified.\",\n    \"Semantics of baseline selection_state/tracker_state values beyond those shown in the fixture were not available; trackingText falls through to '지원하지 않는 상태' for unknown states, which is fail-closed.\",\n    \"Playback timing uses wall-clock setTimeout deltas from frame_seconds; drift/accuracy was not assessed as it is outside the stated invariants.\"\n  ]\n}\n```",
+        "duration_ms": 126036,
+        "num_turns": 1
+      },
+      "source_snapshot": {
+        "commit": "0373c00ad1e74c5acc05b1ce79ef6e59a843b8da",
+        "files": {
+          "web/track-review/review.js": "eda30deb8fbdd0b01fef8d32000ebaac3b2328a3cae8a5b1482157f6ed125f9f",
+          "web/track-review/index.html": "e4a95dfd033e7259c987432571f5346249556ca786b559c65c9e7da15cba9eb5",
+          "tests/test_reacquire_frame_view_ui.cjs": "4b8c8ecf8bf634636281d811889e23aa1830005756c71a6bfff4117cc033a1e8"
+        },
+        "prompt_sha256": "9a241e06c5fc75118e1f745adf552df588b93678fc0b1016cb92d43a3eb08669",
+        "prompt_bytes": 34607
+      }
+    },
+    {
+      "name": "builder_medium",
+      "elapsed_seconds": 77.02,
+      "returncode": 0,
+      "actual_models": [
+        "claude-fable-5-1"
+      ],
+      "event_count": 355,
+      "final_result": {
+        "subtype": "success",
+        "is_error": false,
+        "result": "```json\n{\n  \"verdict\": \"PASS_WITH_NOTES — no reproducible correctness defect found in the supplied file; the join, hash pinning, path containment, key validation, and re-read-before-write checks are internally consistent. Remaining items are low-priority robustness notes and unverifiable cross-module assumptions.\",\n  \"findings\": [\n    {\n      \"priority\": \"low\",\n      \"file\": \"intent/mitt_reacquire_view.py\",\n      \"line\": 334,\n      \"trigger\": \"Pack image bytes that are not a decodable image (e.g. a .jpg entry that is actually JSON/text) reach Image.open().\",\n      \"impact\": \"PIL raises UnidentifiedImageError (OSError) or DecompressionBombError, which build() does not translate; the caller sees a non-ValueError instead of the documented 'malformed comparison input'. No incorrect output is produced because the exception aborts before any write.\",\n      \"fix\": \"Add OSError (and PIL.Image.DecompressionBombError) to the except tuple in build(), or wrap the Image.open block and re-raise ValueError.\"\n    },\n    {\n      \"priority\": \"low\",\n      \"file\": \"intent/mitt_reacquire_view.py\",\n      \"line\": 366,\n      \"trigger\": \"files['ocr.json'] is parsed with json.loads on bytes (accepts UTF-16/32 with BOM) but later .decode('utf-8') is applied for template embedding.\",\n      \"impact\": \"A non-UTF-8 ocr.json passes _json but fails at decode with UnicodeDecodeError (a ValueError subclass, so it aborts safely). Output remains correct; message is just unclear.\",\n      \"fix\": \"Decode once up front with a strict 'utf-8' decode and parse the decoded text, so the error is explicit.\"\n    },\n    {\n      \"priority\": \"low\",\n      \"file\": \"intent/mitt_reacquire_view.py\",\n      \"line\": 276,\n      \"trigger\": \"original_payload is only used as the deepcopy source and never compared afterward.\",\n      \"impact\": \"Dead reference; no behavioral effect. 'baseline_fields_preserved' in the receipt is asserted rather than checked against original_payload.\",\n      \"fix\": \"Either drop the variable or, after injection, assert that stripping 'reacquire' and 'comparison_schema' from payload reproduces original_payload via _same().\"\n    },\n    {\n      \"priority\": \"info\",\n      \"file\": \"intent/mitt_reacquire_view.py\",\n      \"line\": 311,\n      \"trigger\": \"Displayed frame keys use frame['sha256'] (the JPEG hash) while saved-record keys use source_sha256.\",\n      \"impact\": \"The join only succeeds if candidate/baseline records store the frame JPEG hash in source_sha256. This matches the stated 'image key' contract and is intentional strictness, not a defect, but it is the single assumption the whole binding rests on.\",\n      \"fix\": \"No change required; document the field equivalence in the module docstring.\"\n    }\n  ],\n  \"limits\": [\n    \"Only intent/mitt_reacquire_view.py was supplied. Behavior of StationarySelector.step, SegmentedStationarySelector(params) constructor signature (it is built with StationaryParams only, not ReacquireParams), _check_rows argument shape ((frame, image) tuples), fill_template escaping, and ReacquireParams.max_reacquisitions could not be verified.\",\n    \"Frontend rules (search/tentative/lost/loading/error hiding current points, past stationary event only on its own source image, mode switch stays on frame and stops playback, no stale image/point/OCR on async failure or seek) live in review.js/index.html/style.css, which were not supplied; nothing in this file can enforce or violate them.\",\n    \"The 625-record vs 203-displayed-frame counts, OCR74 row binding, and the exact candidate-record schema were not provided, so the per-row validation path was reviewed for internal consistency only, not against real data.\",\n    \"No code was executed; this is a static read of the supplied text.\"\n  ]\n}\n```",
+        "duration_ms": 74809,
+        "num_turns": 1
+      },
+      "source_snapshot": {
+        "commit": "0373c00ad1e74c5acc05b1ce79ef6e59a843b8da",
+        "files": {
+          "intent/mitt_reacquire_view.py": "f00dfa6acb9f45c359811609c27bc3a94b7be9283ec4c055546c9088db83d7b0"
+        },
+        "prompt_sha256": "681dbecf6d812bacf52f533cd84adcc25bfdd5d403e5407417c8dae3e5988e3a",
+        "prompt_bytes": 18605
+      }
+    },
+    {
+      "name": "repair",
+      "elapsed_seconds": 112.86,
+      "returncode": 0,
+      "actual_models": [
+        "claude-fable-5-1"
+      ],
+      "event_count": 505,
+      "final_result": {
+        "subtype": "success",
+        "is_error": false,
+        "result": "```json\n{\n  \"verdict\": \"PASS — the listed repairs are implemented correctly and no new correctness regression is visible in the supplied diff; two low-priority robustness notes and one producer/consumer invariant to confirm against the real pack.\",\n  \"findings\": [\n    {\n      \"priority\": \"P3\",\n      \"file\": \"web/track-review/review.js\",\n      \"line\": 181,\n      \"trigger\": \"validOcrRole now requires status==='read' for any literal_same/literal_changed relation and ties compared_to_frame===null exactly to not_compared. The Python _check_rows and the real OCR74 rows are not in the diff.\",\n      \"impact\": \"If the producer emits e.g. an abstain/error row with relation literal_changed, or a read row with not_compared plus a non-null compared_to_frame, the viewer now blanks both OCR roles as kind 'mismatch' on those frames. Fail-safe direction, but a silent display regression on real data; the 40 Node tests only use synthetic fixtures.\",\n      \"fix\": \"Assert the same three invariants in Python _check_rows (or confirm they already hold) so a pack that builds is guaranteed to render; add one Node test loading the actual built ocr.json rows, or a Python test that every row of the real pack satisfies the JS predicate.\"\n    },\n    {\n      \"priority\": \"P3\",\n      \"file\": \"web/track-review/review.js\",\n      \"line\": 109,\n      \"trigger\": \"Both catch blocks end with an unguarded this.emit(). A renderer that throws deterministically for a given view throws again from the catch handler (inner catch → outer catch → unhandled rejection).\",\n      \"impact\": \"The new error message is only reached when the renderer fails once. On a repeated throw the DOM is left in whatever partial state the last render reached (status text set before points are drawn), so a stale point can remain with a non-error status. Pre-existing structure, only the label changed in this diff.\",\n      \"fix\": \"Wrap the final emit in the outer catch in its own try; on failure clear both canvases and set frame-status directly via the DOM-level fallback, as mount's catch already does.\"\n    },\n    {\n      \"priority\": \"P3\",\n      \"file\": \"intent/mitt_reacquire_view.py\",\n      \"line\": 327,\n      \"trigger\": \"decoded.load() runs before the (1280, 720) size check; size is available from the header after Image.open.\",\n      \"impact\": \"An oversized but sub-bomb-threshold JPEG is fully decoded before being rejected. Resource only, not a correctness issue. Also DecompressionBombWarning (between MAX and 2*MAX pixels) is a warning, not caught; if warnings are escalated to errors it surfaces as a non-ValueError.\",\n      \"fix\": \"Check decoded.format and decoded.size before decoded.load(), or add warnings.simplefilter('error', Image.DecompressionBombWarning) and include it in the except tuple.\"\n    }\n  ],\n  \"verified_repairs\": [\n    \"_json: bytes are decoded as strict UTF-8 before json.loads, so UTF-16/32 input can no longer be parsed and then re-embedded as mis-encoded template text; UnicodeDecodeError maps to ValueError. Behavior change: a UTF-8 BOM prefix is now rejected (json.loads(bytes) previously accepted utf-8-sig); stricter, acceptable.\",\n    \"Pillow: OSError (incl. UnidentifiedImageError, truncated-file) and DecompressionBombError map to ValueError with no partial output; the 1280x720/JPEG ValueError inside the with-block is not swallowed by the new except.\",\n    \"Baseline restoration: deepcopy of the joined payload minus comparison_schema and per-frame reacquire must _same() the original snapshot; correct given original_payload is an independent copy (implied by the passing real-pack build).\",\n    \"Controller: data?.schema, Array.isArray on pitches/frames, non-empty both levels; validComparisonFrame enforces 1280x720, non-negative integer frame_index, finite non-negative frame_seconds, 64-hex sha256, selection+tracking rows bound on pitch_id/frame_index/frame_seconds, and tracking.source_sha256 === frame.sha256. Legacy (non-comparison) packs keep prior leniency by design.\",\n    \"visiblePoints: candidate requires a non-empty string pitch_id, closing the undefined===undefined hole.\",\n    \"historyStatus: invalid stored history coordinates get a distinct label from absent history; validity is checked against the event's own source frame dimensions.\",\n    \"Error label now covers renderer failure, with the test exercising a single throw from onChange.\",\n    \"Node fixture: second pitch keys are now consistently rewritten across frame/selection/tracking/selection rows, so the fixture itself passes the new binding check.\"\n  ],\n  \"limits\": [\n    \"No execution; the 37 Python / 40 Node results and the 203-frame build are taken as reported.\",\n    \"original_payload definition, the outer pitch loop, rows[key] source_sha256 validation, _same, _check_rows and _sha are outside the diff; the Python-side guarantee that every emitted frame carries a tracking.source_sha256 equal to frame.sha256 (required by the new JS check) is assumed from the task statement, not seen.\",\n    \"The render() history-drawing branch after `if (!image) return` is not shown, so whether historyStatus text is later overwritten when a valid history point is drawn cannot be confirmed.\",\n    \"index.html, style.css, fill_template and any test fixtures beyond the shown hunks were not supplied.\"\n  ]\n}\n```",
+        "duration_ms": 110362,
+        "num_turns": 1
+      },
+      "source_snapshot": {
+        "commit": "0f295026b3fb34e17e865678ef9bba914b51434d",
+        "files": {
+          "intent/mitt_reacquire_view.py": "066a20eb791853354f4b195e43057af8a43602d195243ae341b643de40924c4e",
+          "web/track-review/review.js": "0fcc07b7f49cfd945985ad0e21008dc7e44c8e814c06f0c1ccce797ce895cead"
+        },
+        "prompt_sha256": "e10a82afda7c34afcdd2a96e94a068e949929f6798a89c3d96bb503fb0287b89",
+        "prompt_bytes": 32423
+      }
+    }
+  ],
+  "disposition": {
+    "builder_notes": "strict UTF8, safe decode errors and restored-baseline equality implemented",
+    "ui_findings": "binding/dimensions/empty data/OCR logical pairing/history label/error label implemented",
+    "repair_verdict": "PASS with P3 notes",
+    "real_ocr_invariant": "all74 saved OCR rows accepted by actual JS consumer;129frames explicitly none; mismatch0",
+    "remaining_nonblocking_notes": [
+      "Repeated deterministic external onChange exception is not fully isolated; private built-in renderer smoke passed, generic renderer hardening not claimed.",
+      "Large wrong-size image is decoded before size rejection; input byte limits and Pillow bomb errors remain, resource optimization deferred."
+    ]
+  },
+  "boundaries": {
+    "new_model_inference": false,
+    "human_labels": false,
+    "cloudflare": false,
+    "teammate_code": false,
+    "main_merge": false
+  }
+}

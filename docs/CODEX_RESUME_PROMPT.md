@@ -1,5 +1,13 @@
 # Codex 재개 프롬프트
 
+## CV-41b 재탐색 비교 화면 — 2026-10-27
+
+CV-41b 다른 모델 검토·수리·수정 재검토 완료. 실제 `claude-fable-5-1` 최종 PASS, 수리 `0f29502`. [진단·검토](results/cv_reacquire_view_20261027/cross_review_v2.json)·[수리 후 검증](results/cv_reacquire_view_20261027/verification_v2.json). CLI 전역 설정을 바꾸지 않고 native 실행·소스 분할·medium effort·진행 로그로 재시도했다. 과거 시간 초과를 현재 인증 실패로 취급하지 않는다. 같은 전체 코드 검토를 반복하지 않는다.
+
+현재 브랜치 `codex/cv-reacquire-view-1027`, PR77은 PR74에 의존하는 연구 PR이다. Python37·Node40·린트186·실제203장/OCR74행·Windows smoke 통과. 새 비공개 v2 팩의 payload/OCR/203JPEG는 v1과 동일하다. 반복 외부 렌더 예외와 과대 이미지 사전 거부 최적화는 낮은 우선순위 참고다. 다음 독립 단위는 CV42 저장 관측 기반 시드 자격 게이트이며 정책을 결과 전에 고정하고 새 후보만 만든다. 기존 팩/Claude 폴더/원본/사람 응답/M3 보존, 팀원·Cloudflare·공개 계약·main 변경 없음.
+
+운영 인계 정정은 별도 PR76이다. 공동시험 STOPPED·누락로그2건·해당 회차401/503 미측정은 유지한다. CV35/36 사람 조건·A-y/F-4i 보류·11월 요금제/실부하 보류도 그대로다.
+
 ## CV-37b 추적 중단 원인·제한된 재탐색 기준선 — 2026-10-26
 
 Claude Fable 5.1이 별도 worktree `claude/cv-track-reacquire-1026`(PR73 `f15d314` 기반)에서 CV37 최초 중단 10구의 원인을 저장 사유/오프라인 재생 진단/AI 개발 관찰로 구분하고, 재탐색 기준선 하나(최초 lost 뒤 최대 5프레임·반경 32px·직전 확인 패치 템플릿·기존 임계값 재사용·후보는 다음 프레임 연속 확인 뒤에만 새 구간·투구당 ≤3회)를 별도 모듈로 구현해 같은 625프레임에서 기존 방식과 비교했다. [기록](CV_REACQUIRE_20261026.md)을 먼저 읽는다. 새 모듈 `intent/mitt_reacquire.py`(`ReacquiringTracker`·`SegmentedStationarySelector`), 비교 파일럿 `intent/mitt_reacquire_pilot.py`, 검사 `tests/test_mitt_reacquire.py`·`tests/test_mitt_reacquire_pilot.py`; `intent/mitt_tracking.py`는 `_match`를 모듈 함수 `match_template`로 추출만 했고(동작 동일, 저장 625행 재생 일치) PatchTracker/StationarySelector 기본 동작은 그대로다. 비공개 출력 `outputs/cv_mitt_reacquire_20261026_v1/`(Git 제외), 공개 결과 `docs/results/cv_reacquire_20261026/`. 결과: 추적 상태 프레임 123→178, 재탐색 창 22·시도 53·후보 21·수용 16·소진 6, lost 뒤 과거 점 잔존 0, 정지 후보 사건은 구간별 재충족(6→13). 최초 중단 원인(AI 관찰, 교차 검토 후): 고정 템플릿 외형 변화 6·임계값 경계 2·유사 패치 1·시드 식별 불확실 1; 시드가 미트가 아닌 것으로 관찰된 3구(3:1·3:3·5:1)도 그대로 재획득돼 재획득 구간의 AI 점 차이는 중앙값 26px(첫 구간 5.5px)다. 재획득은 패치 연속이지 미트 재식별이 아니며 정확도 개선 결론이 아니다. 다른 모델 검토 결과와 수정 권한 반납은 CHECKLIST 상단을 따른다. 새 영상·유료 서비스·대규모 AI 판독·학습·배포 없음, 기존 625행/AI 관측/원본 프레임/사람 응답/M3 불변. PR67→69→70→71→72→73→이 브랜치 의존 관계를 유지하며 main/운영에 자동 병합하지 않는다. 다음 독립 후보: 시드 식별(미트/맨손) 구분이 없는 한 재탐색은 시드 오류를 연장하므로 CV35/36 사람 조건 또는 저장 AI 관측의 시드 품질 규칙(새 판독 없이) 검토, CV39 독립 PTS 대조(원영상 필요), CV41 전시 팩 정리.
