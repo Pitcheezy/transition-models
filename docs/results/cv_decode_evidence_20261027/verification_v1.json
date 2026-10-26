@@ -1,0 +1,47 @@
+{
+  "schema": "pitcheezy-decode-evidence-synthetic-verification-v1",
+  "source_commit": "a669e482e59246e84e3e2813ee6be4b03a95563c",
+  "files_sha256": {
+    "intent/mitt_dev_bundle.py": "d91ac3c8efb918b6f6ecc457df589aa42f31fa1af91e884d57ea29562fb041b1",
+    "tests/test_mitt_dev_bundle.py": "0458b785a93805cfc8075579a9be95b74fae2e8d342e3602137675d93fc2efc8"
+  },
+  "scope": "locally generated synthetic video only; not MLB or independent accuracy",
+  "input": {
+    "bytes": 58143,
+    "sha256": "bb3fefc4d368164c3fdfd43a29c8e0af285026bc4f66f801be29cb34aa7c8aba",
+    "duration_requested_seconds": 3,
+    "size": "128x96",
+    "time_base": "1/60000",
+    "r_frame_rate": "60000/1001",
+    "frames": 180
+  },
+  "generation_command": "ffmpeg -f lavfi -i testsrc2=size=128x96:rate=60000/1001 -t 3 -c:v libx264 -pix_fmt yuv420p -video_track_timescale 60000 -an <synthetic.mp4>",
+  "extraction": {
+    "attempts": 1,
+    "elapsed_seconds": 0.23,
+    "kept_frames": 9,
+    "decoded_count": 138,
+    "decoded_first_index": 18,
+    "decoded_last_index": 155,
+    "all_kept_hashes_sizes_rational_pts_match": true,
+    "evidence_sha256": "58cd0a3e686e9c49d066e00ddbd354c003303b1c7cc7aa65069d6a1ce11fac34",
+    "ffmpeg_version": "8.0-essentials_build-www.gyan.dev",
+    "validation_errors": [],
+    "independent_decoded_pts_verified": false,
+    "jpeg_binding_stage": "decoded_staging_before_publish",
+    "relative_path_role": "intended_output; confirm with extracted record"
+  },
+  "tests": {
+    "module": 17,
+    "with_checklist": 25,
+    "lint_paths": 194,
+    "command": "python -m pytest tests/test_mitt_dev_bundle.py tests/test_checklist_model.py -q"
+  },
+  "existing_data": "old625frames/OCR/AI/human/M3 not altered or retroactively verified",
+  "limits": [
+    "same extraction decoder evidence, no independent replay verification",
+    "actualMLB source interval not available locally",
+    "synthetic extraction duration is not real game throughput",
+    "private manifest retains existing media source; evidence log excludes URL/absolute paths"
+  ]
+}

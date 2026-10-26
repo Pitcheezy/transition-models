@@ -2,6 +2,14 @@
 
 현재 실행 상태는 첫 절을 따른다. 아래 완료 이력의 “다음”은 당시 기록이며 새 실행 지시가 아니다.
 
+## CV45 완료·사용량 기준 인계 — 2026-10-27
+
+**완료·수정 권한 반납: 우리 Codex / `codex/cv-decode-evidence-1027` / 구현5e10e9e·수리a669e48.** [근거](CV_DECODE_EVIDENCE_20261027.md). 새추출의timebase/PTS·JPEG결속·시도별실패근거선택저장. 합성3초영상180프레임→실제138디코딩/9장추출,9개SHA·유리수시각일치. 관련25·Ruff194·실제Fable검토/수정재검토approve_with_nits.
+
+- [x] CV-45. 새추출 --save-decode-evidence 구현·합성검사·다른모델검토 완료. 원래기본동작/기존625장/OCR/사람/M3불변. 별도원본PTS·미트식별/정확도·Mac/iPhone·CV35/36은미완료. A-y/F-4i보류유지. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-27 · Codex]`
+
+**다음 재개:** 현재연구PR스택의CI/검토상태부터확인한다. 실제625장구간248.7485~452.9525초의원영상/시간보존자료를확보해야직접디코딩대조가능(알려진로컬클립은구간밖). 같은AI자료만으로독립정확도완료를만들지않는다. CV44최종비공개팩은 outputs/cv_research_kit_20261027_v2.zip. 팀원·Cloudflare·main/운영은손대지않는다. 새단위는선점후진행한다.
+
 ## CV44 완료 — 2026-10-27
 
 **완료·수정 권한 반납: 우리 Codex / `codex/cv-replay-kit-1027` / 구현04fa744·수리f2366d6.** [범위·검증](CV_REPLAY_PACKAGE_20261027.md). 비공개v2 ZIP635파일·98,730,334bytes·원본631불변·압축해제 바이트 일치. 새56/관련94 Python·Ruff194·Windows 실제 재생·HTTP6검사, 실제 Claude Fable 분할 및 수정 재검토 완료. ZIP SHA `09fca482d86a442990df86fa63bc7f4fe9e61c8c0981363a2b1c102ef7f2a514`.

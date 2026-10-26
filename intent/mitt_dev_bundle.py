@@ -194,7 +194,118 @@ def verify_decode(indices, win):
     }
 
 
-def extract_one(item, out_dir: Path, ffmpeg: str, url: str, rule=RULE, retries=3, crop=True):
+def _decode_evidence(log, outputs, win, target, returncode, timed_out):
+    """Retain only decoder scalars; derive rational time from the reported input time base."""
+    config, rows, filtered, errors = {"all": [], "kept": []}, {"all": [], "kept": []}, [], []
+    for line in log.splitlines():
+        prefix = re.search(r"\[showinfo@(all|kept) @ [^]]+\]\s*(.*)", line)
+        if not prefix:
+            continue
+        name, body = prefix.groups()
+        if body.startswith("config in time_base:"):
+            match = re.match(r"config in time_base:\s*(\d+)/(\d+)", body)
+            if not match:
+                errors.append("malformed_time_base")
+                continue
+            value = "/".join(match.groups())
+            config[name].append(value)
+            filtered.append(f"showinfo@{name} config in time_base: {value}")
+        elif body.startswith("n:"):
+            match = re.match(r"n:\s*(\S+)\s+pts:\s*(\S+)\s+pts_time:(\S+)", body)
+            try:
+                n, pts, text = match.groups() if match else (None, None, None)
+                n, pts = int(n), int(pts)
+                if not (
+                    0 <= n <= 2**53 - 1
+                    and 0 <= pts <= 2**53 - 1
+                    and pts % TICKS_PER_FRAME == 0
+                    and math.isfinite(float(text))
+                ):
+                    raise ValueError
+                # Store the printed decimal only after numeric parsing, never arbitrary log text.
+                printed = str(Fraction(text))
+                rows[name].append({"n": n, "pts": pts, "printed_pts_time_rational": printed})
+                filtered.append(f"showinfo@{name} n:{n} pts:{pts} pts_time_rational:{printed}")
+            except (ValueError, TypeError, OverflowError):
+                errors.append("invalid_showinfo_frame")
+    for name in rows:
+        if not config[name] or any(value != "1/60000" for value in config[name]):
+            errors.append(f"{name}_time_base_missing_or_mismatch")
+        if not rows[name] or [r["n"] for r in rows[name]] != list(range(len(rows[name]))):
+            errors.append(f"{name}_count_or_order")
+        for row in rows[name]:
+            if config[name] and len(set(config[name])) == 1:
+                try:
+                    row["pts_time_rational"] = str(row["pts"] * Fraction(config[name][0]))
+                except (ValueError, ZeroDivisionError):
+                    errors.append("invalid_time_base")
+        indices = [r["pts"] // TICKS_PER_FRAME for r in rows[name]]
+        if name == "all" and any(b != a + 1 for a, b in zip(indices, indices[1:], strict=False)):
+            errors.append("decoded_pts_gap_or_order")
+    indices = {name: [r["pts"] // TICKS_PER_FRAME for r in values] for name, values in rows.items()}
+    check = verify_decode(indices, win)
+    if not check["window_covered"] or not check["kept_equals_expected"]:
+        errors.append("window_or_kept_order_mismatch")
+    if len(outputs) != len(rows["kept"]):
+        errors.append("jpeg_count_mismatch")
+    if [p.name for p in outputs] != [f"out_{i:05d}.jpg" for i in range(1, len(outputs) + 1)]:
+        errors.append("jpeg_sequence_mismatch")
+    ok = returncode == 0 and not timed_out and not errors
+    hints = ["timeout"] if timed_out else []
+    for label, pattern in (
+        ("http_403", r"\b(?:HTTP(?:\s+error)?|Server returned)\s+403\b"),
+        ("http_404", r"\b(?:HTTP(?:\s+error)?|Server returned)\s+404\b"),
+        ("decode_error", r"error while decoding|invalid data found"),
+        ("permission_denied", r"permission denied"),
+        ("input_unavailable", r"no such file or directory|connection refused"),
+    ):
+        if (returncode != 0 or timed_out) and re.search(pattern, log, re.IGNORECASE):
+            hints.append(label)
+    return {
+        "status": "timeout"
+        if timed_out
+        else "ffmpeg_failed"
+        if returncode != 0
+        else "validation_failed"
+        if errors
+        else "saved_decode_evidence",
+        "input_time_base_config": config,
+        "decoded": rows,
+        "filtered_decoder_log": filtered,
+        "diagnostic_hints": hints,  # Allowlisted keyword hints, not verified root causes.
+        "non_showinfo_line_count": sum(
+            bool(line.strip()) and "[showinfo@" not in line for line in log.splitlines()
+        ),
+        "validation_errors": sorted(set(errors)),
+        "independent_decoded_pts_verified": False,
+        "jpeg_binding_stage": "decoded_staging_before_publish",
+        "relative_path_role": "intended_output; confirm with extracted record",
+        "kept_jpegs": [
+            {
+                "relative_path": f"{target.name}/frame_{row['pts'] // TICKS_PER_FRAME:06d}.jpg",
+                "pts": row["pts"],
+                "pts_time_rational": row["pts_time_rational"],
+                "sha256": sha256_file(path),
+                "bytes": path.stat().st_size,
+            }
+            for row, path in zip(rows["kept"], outputs, strict=True)
+        ]
+        if ok
+        else [],
+    }
+
+
+def extract_one(
+    item,
+    out_dir: Path,
+    ffmpeg: str,
+    url: str,
+    rule=RULE,
+    retries=3,
+    crop=True,
+    save_decode_evidence=False,
+    ffmpeg_version=None,
+):
     win = window(item, rule)
     _, ab, pn = item["pitch_id"].split(":")
     target = out_dir / f"pa{ab}_p{pn}"
@@ -206,14 +317,52 @@ def extract_one(item, out_dir: Path, ffmpeg: str, url: str, rule=RULE, retries=3
     }
     command = ffmpeg_command(ffmpeg, url, win, rule["step_source_frames"], staging / "out_%05d.jpg")
     record["command"] = [c if c != url else "<media_url>" for c in command[1:]]
+    if save_decode_evidence:
+        evidence_dir = out_dir / "decode_evidence" / target.name
+        if evidence_dir.exists() or target.exists():
+            raise FileExistsError("decode evidence and target must be new")
+        evidence_dir.mkdir(parents=True)
+        if ffmpeg_version is None:
+            try:
+                ffmpeg_version = subprocess.run(
+                    [ffmpeg, "-version"], capture_output=True, text=True, timeout=10
+                ).stdout
+            except (OSError, subprocess.TimeoutExpired):
+                ffmpeg_version = "unavailable"
+        version = re.match(r"ffmpeg version ([A-Za-z0-9._+~-]+)", ffmpeg_version)
+        evidence_base = {
+            "schema": "pitcheezy-decode-evidence-dev-v1",
+            "pitch_id": item["pitch_id"],
+            "ffmpeg_version": version[1] if version else "unavailable",
+            "source_code_sha256": sha256_file(Path(__file__)),
+            "command": ["ffmpeg", *record["command"][:-1], "<staging>/out_%05d.jpg"],
+            "ticks_per_frame": TICKS_PER_FRAME,
+        }
+        record["command"] = evidence_base["command"][1:]
+        record["independent_decoded_pts_verified"] = False
     for attempt in range(1, retries + 1):
         if staging.exists():
             shutil.rmtree(staging)
         staging.mkdir(parents=True)
         started = time.monotonic()
-        proc = subprocess.run(
-            command, capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=600
-        )
+        timed_out = False
+        try:
+            proc = subprocess.run(
+                command,
+                capture_output=True,
+                text=True,
+                encoding="utf-8",
+                errors="replace",
+                timeout=600,
+            )
+        except subprocess.TimeoutExpired as error:
+            if not save_decode_evidence:
+                raise
+            timed_out = True
+            stderr = error.stderr or ""
+            if isinstance(stderr, bytes):
+                stderr = stderr.decode("utf-8", errors="replace")
+            proc = subprocess.CompletedProcess(command, None, "", stderr)
         elapsed = round(time.monotonic() - started, 2)
         try:
             indices = parse_showinfo(proc.stderr)
@@ -228,6 +377,27 @@ def extract_one(item, out_dir: Path, ffmpeg: str, url: str, rule=RULE, retries=3
             and check.get("kept_equals_expected")
             and len(outputs) == len(indices["kept"])
         )
+        if save_decode_evidence:
+            evidence = {
+                **evidence_base,
+                "attempt": attempt,
+                "returncode": proc.returncode,
+                "elapsed_seconds": elapsed,
+                **_decode_evidence(proc.stderr, outputs, win, target, proc.returncode, timed_out),
+            }
+            if evidence["ffmpeg_version"] == "unavailable":
+                evidence["validation_errors"].append("ffmpeg_version_unavailable")
+                if evidence["status"] == "saved_decode_evidence":
+                    evidence["status"], evidence["kept_jpegs"] = "validation_failed", []
+            ok = ok and evidence["status"] == "saved_decode_evidence"
+            evidence_path = evidence_dir / f"attempt_{attempt:02d}.json"
+            with evidence_path.open("x", encoding="utf-8") as stream:
+                stream.write(json.dumps(evidence, indent=2, allow_nan=False) + "\n")
+            check["decode_evidence"] = {
+                "relative_path": evidence_path.relative_to(out_dir).as_posix(),
+                "sha256": sha256_file(evidence_path),
+                "status": evidence["status"],
+            }
         record["attempts"].append(
             {
                 "attempt": attempt,
@@ -239,9 +409,11 @@ def extract_one(item, out_dir: Path, ffmpeg: str, url: str, rule=RULE, retries=3
         )
         if ok:
             break
-        record["attempts"][-1]["stderr_tail"] = [
-            line.replace(url, "<media_url>") for line in proc.stderr.splitlines()[-4:]
-        ]
+        record["attempts"][-1]["stderr_tail"] = (
+            evidence["filtered_decoder_log"][-4:]
+            if save_decode_evidence
+            else [line.replace(url, "<media_url>") for line in proc.stderr.splitlines()[-4:]]
+        )
         time.sleep(2 * attempt)
     else:
         shutil.rmtree(staging, ignore_errors=True)
@@ -278,7 +450,7 @@ def extract_one(item, out_dir: Path, ffmpeg: str, url: str, rule=RULE, retries=3
     return record
 
 
-def extract(out_dir: Path, ffmpeg: str, limit=None):
+def extract(out_dir: Path, ffmpeg: str, limit=None, save_decode_evidence=False):
     timing_path = RESULTS / "game_747139_timing.json"
     timing = read_json(timing_path)
     url = timing["source"]["media_url"]
@@ -300,7 +472,12 @@ def extract(out_dir: Path, ffmpeg: str, limit=None):
                 }
             )
             continue
-        rec = extract_one(item, out_dir, ffmpeg, url)
+        extra = (
+            {"save_decode_evidence": True, "ffmpeg_version": version}
+            if save_decode_evidence
+            else {}
+        )
+        rec = extract_one(item, out_dir, ffmpeg, url, **extra)
         records.append(rec)
         print(item["pitch_id"], rec["status"], len(rec.get("frames", [])), flush=True)
     manifest = {
@@ -612,6 +789,7 @@ def main(argv=None):
     ext.add_argument("--out", type=Path, required=True)
     ext.add_argument("--ffmpeg", default=shutil.which("ffmpeg") or "ffmpeg")
     ext.add_argument("--limit", type=int)
+    ext.add_argument("--save-decode-evidence", action="store_true")
     chk = sub.add_parser("check-v0-frames")
     chk.add_argument("--bundle", type=Path, required=True)
     chk.add_argument("--reference-dir", type=Path, required=True)
@@ -627,7 +805,7 @@ def main(argv=None):
     if args.cmd == "extract":
         if "outputs" not in args.out.resolve().parts:
             parser.error("frames go under outputs/ (git-ignored)")
-        manifest = extract(args.out, args.ffmpeg, args.limit)
+        manifest = extract(args.out, args.ffmpeg, args.limit, args.save_decode_evidence)
         print(json.dumps(Counter(p["status"] for p in manifest["pitches"])))
     else:
         s = summarize(args.bundle, args.out)
