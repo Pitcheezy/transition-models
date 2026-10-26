@@ -11,6 +11,7 @@ import argparse
 import hashlib
 import io
 import json
+import lzma
 import math
 import os
 import re
@@ -18,6 +19,7 @@ import stat
 import sys
 import webbrowser
 import zipfile
+import zlib
 from pathlib import Path, PurePosixPath
 from types import MappingProxyType, ModuleType
 
@@ -29,6 +31,7 @@ ROOT_FILES = {"run_replay.py", "review_server.py", "README.txt", "manifest.json"
 MAX_FILE_BYTES = 128 * 1024 * 1024
 MAX_TOTAL_BYTES = 1024 * 1024 * 1024
 MAX_FILES = 10000
+MAX_RELATIVE_PATH = 240
 TRUST = "Manifest consistency is not authentication; verify a separately trusted ZIP SHA-256."
 README = """저장된 CV43 개발 자료 재생팩
 
@@ -110,7 +113,10 @@ def _encoded(value):
 
 
 def _safe_name(name):
-    _require(isinstance(name, str) and name and len(name) <= 240, "invalid relative path")
+    _require(
+        isinstance(name, str) and name not in ("", ".") and len(name) <= MAX_RELATIVE_PATH,
+        "invalid relative path",
+    )
     path = PurePosixPath(name)
     _require(not path.is_absolute() and path.as_posix() == name, "noncanonical relative path")
     for part in path.parts:
@@ -242,11 +248,15 @@ def _source(files, pin):
     )
     viewer = {name: raw for name, raw in files.items() if name != "receipt.json"}
     _bindings(viewer, receipt.get("files"))
+    _require(
+        all(len("viewer/" + name) <= MAX_RELATIVE_PATH for name in files),
+        "source path exceeds viewer-prefixed package limit",
+    )
     _require(VIEW_ASSETS <= viewer.keys(), "missing viewer assets")
     frame_names = set(viewer) - VIEW_ASSETS
     _require(
         all(
-            re.fullmatch(r"frames/[1-9]\d{0,9}_[1-9]\d{0,6}_[1-9]\d{0,6}/\d+\.jpg", n)
+            re.fullmatch(r"frames/[1-9]\d{0,9}_[1-9]\d{0,6}_[1-9]\d{0,6}/\d+\.jpg", n, re.ASCII)
             for n in frame_names
         ),
         "unexpected CV43 viewer path",
@@ -332,6 +342,17 @@ def _zip_bytes(files):
     return buffer.getvalue()
 
 
+def _runtime_file(path):
+    _require(path.exists() and not _linked(path), "runtime file is missing or linked")
+    info = path.stat()
+    _require(stat.S_ISREG(info.st_mode), "runtime file must be regular")
+    _require(info.st_size <= MAX_FILE_BYTES, "runtime file exceeds size limit")
+    with path.open("rb") as stream:
+        raw = stream.read(MAX_FILE_BYTES + 1)
+    _require(len(raw) == info.st_size, "runtime file changed or exceeds size limit")
+    return raw
+
+
 def build(*, pack, receipt_sha256, source_commit, out, archive):
     """Copy the pinned CV43 bytes into a new folder and ZIP; never overwrite sources."""
     _pin(receipt_sha256)
@@ -345,12 +366,11 @@ def build(*, pack, receipt_sha256, source_commit, out, archive):
     _require(not out.is_relative_to(archive), "package and ZIP paths overlap")
     source = Path(__file__).resolve()
     helper = source.with_name("review_server.py")
-    _require(not _linked(helper), "server helper must not be linked")
     files = {"viewer/" + name: raw for name, raw in original.items()}
     files.update(
         {
-            "run_replay.py": source.read_bytes(),
-            "review_server.py": helper.read_bytes(),
+            "run_replay.py": _runtime_file(source),
+            "review_server.py": _runtime_file(helper),
             "README.txt": README.encode("utf-8"),
         }
     )
@@ -414,7 +434,13 @@ def extract(*, archive, archive_sha256, out):
                 value = zipped.read(entry)  # Also verifies each member CRC before any output write.
                 _require(len(value) == entry.file_size, "ZIP member length differs")
                 files[entry.filename] = value
-    except (zipfile.BadZipFile, RuntimeError, NotImplementedError) as exc:
+    except (
+        zipfile.BadZipFile,
+        RuntimeError,
+        NotImplementedError,
+        zlib.error,
+        lzma.LZMAError,
+    ) as exc:
         raise ValueError("invalid or unsupported ZIP") from exc
     _validate(files)
     _new(out, [archive.resolve()])
@@ -433,7 +459,17 @@ def open_server(package):
     # Do not import an on-disk helper before verification or reread it after verification.
     helper = ModuleType("verified_review_server")
     exec(compile(files["review_server.py"], "verified_review_server.py", "exec"), helper.__dict__)
-    return helper.ReviewServer(("127.0.0.1", 0), helper.make_handler(snapshot))
+
+    class LocalHostHandler(helper.make_handler(snapshot)):
+        def _send(self, body):
+            hosts = self.headers.get_all("Host", [])
+            port = self.server.server_address[1]
+            if len(hosts) != 1 or hosts[0] not in {f"127.0.0.1:{port}", f"localhost:{port}"}:
+                self.send_error(421, "Unapproved local host")
+                return
+            super()._send(body)
+
+    return helper.ReviewServer(("127.0.0.1", 0), LocalHostHandler)
 
 
 def main(argv=None):

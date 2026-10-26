@@ -1,15 +1,19 @@
 """Portable replay validation refuses changed files and unsafe archives before use."""
 
 import hashlib
+import http.client
 import json
+import lzma
 import os
 import stat
+import struct
 import subprocess
 import sys
 import threading
 import urllib.error
 import urllib.request
 import zipfile
+import zlib
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -182,6 +186,46 @@ def test_verified_helper_bytes_are_used_even_if_disk_changes_after_check(built, 
         assert server.server_address[0] == "127.0.0.1"
 
 
+def test_server_requires_exact_single_local_host_for_get_and_head(built):
+    args, _ = built
+    expected = (args["out"] / "viewer" / "index.html").read_bytes()
+    with kit.open_server(args["out"]) as server:
+        thread = threading.Thread(target=server.serve_forever, daemon=True)
+        thread.start()
+        port = server.server_address[1]
+        allowed = f"127.0.0.1:{port}"
+        cases = [
+            ([allowed], 200),
+            ([f"localhost:{port}"], 200),
+            ([], 421),
+            ([f"rebound.example:{port}"], 421),
+            (["127.0.0.1:1"], 421),
+            ([allowed, allowed], 421),
+            ([allowed, f"rebound.example:{port}"], 421),
+        ]
+        try:
+            for method in ("GET", "HEAD"):
+                for hosts, status in cases:
+                    connection = http.client.HTTPConnection("127.0.0.1", port, timeout=5)
+                    try:
+                        connection.putrequest(method, "/index.html", skip_host=True)
+                        for host in hosts:
+                            connection.putheader("Host", host)
+                        connection.endheaders()
+                        response = connection.getresponse()
+                        body = response.read()
+                        assert response.status == status
+                        if method == "GET" and status == 200:
+                            assert body == expected
+                        else:
+                            assert expected not in body
+                    finally:
+                        connection.close()
+        finally:
+            server.shutdown()
+            thread.join(timeout=5)
+
+
 @pytest.mark.parametrize("target", ["out", "archive"])
 def test_build_does_not_overwrite_existing_outputs(source, target):
     if target == "out":
@@ -215,6 +259,7 @@ def test_build_refuses_unbound_source_before_output(source, mutation):
 @pytest.mark.parametrize(
     "names",
     [
+        ["."],
         ["../outside"],
         ["/absolute"],
         ["C:/outside"],
@@ -233,6 +278,66 @@ def test_build_refuses_unbound_source_before_output(source, mutation):
 def test_paths_are_portable_and_unambiguous(names):
     with pytest.raises(ValueError):
         kit._names(names)
+
+
+@pytest.mark.parametrize("length,accepted", [(233, True), (234, False)])
+def test_viewer_prefix_path_budget_is_checked_at_source_boundary(source, length, accepted):
+    files = kit._tree(source["pack"])
+    for name in list(files):
+        if name.startswith("frames/"):
+            del files[name]
+    prefix = "frames/747139_3_1/"
+    name = prefix + "1" * (length - len(prefix) - len(".jpg")) + ".jpg"
+    files[name] = b"saved JPEG"
+    receipt = kit._json(files["receipt.json"])
+    receipt["displayed_frames"] = 1
+    receipt["files"] = {
+        n: {"sha256": sha(raw), "bytes": len(raw)}
+        for n, raw in files.items()
+        if n != "receipt.json"
+    }
+    files["receipt.json"] = kit._encoded(receipt)
+    if accepted:
+        assert name in kit._source(files, sha(files["receipt.json"]))
+        assert kit._safe_name("viewer/" + name) == "viewer/" + name
+    else:
+        with pytest.raises(ValueError, match="viewer-prefixed"):
+            kit._source(files, sha(files["receipt.json"]))
+
+
+@pytest.mark.parametrize("kind", ["missing", "directory", "linked", "oversized", "special"])
+def test_runtime_helper_is_checked_before_read(source, tmp_path, monkeypatch, kind):
+    runtime = tmp_path / "runtime"
+    runtime.mkdir()
+    script, helper = runtime / "run_replay.py", runtime / "review_server.py"
+    script.write_bytes(Path(kit.__file__).read_bytes())
+    if kind == "directory":
+        helper.mkdir()
+    elif kind != "missing":
+        helper.write_bytes(b"must not be read")
+    monkeypatch.setattr(kit, "__file__", str(script))
+    original_linked, original_stat, original_open = kit._linked, Path.stat, Path.open
+    if kind == "linked":
+        monkeypatch.setattr(kit, "_linked", lambda path: path == helper or original_linked(path))
+
+    def helper_stat(path, *args, **kwargs):
+        if path == helper and kind in ("oversized", "special"):
+            return SimpleNamespace(
+                st_mode=stat.S_IFIFO if kind == "special" else stat.S_IFREG,
+                st_size=kit.MAX_FILE_BYTES + 1 if kind == "oversized" else 0,
+            )
+        return original_stat(path, *args, **kwargs)
+
+    def forbid_helper_read(path, *args, **kwargs):
+        if path == helper:
+            pytest.fail("invalid runtime helper must be rejected before reading")
+        return original_open(path, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "stat", helper_stat)
+    monkeypatch.setattr(Path, "open", forbid_helper_read)
+    with pytest.raises(ValueError, match="runtime file"):
+        kit.build(**source)
+    assert not source["out"].exists() and not source["archive"].exists()
 
 
 def rewrite_zip(path, files, extra=None):
@@ -292,6 +397,37 @@ def test_zip_requires_external_hash_and_new_destination(built, tmp_path):
     out.mkdir()
     with pytest.raises(ValueError, match="already exists"):
         kit.extract(archive=args["archive"], archive_sha256=result["archive_sha256"], out=out)
+
+
+@pytest.mark.parametrize(
+    "compression,error", [(zipfile.ZIP_DEFLATED, zlib.error), (zipfile.ZIP_LZMA, lzma.LZMAError)]
+)
+def test_corrupt_compressed_stream_reports_failure_without_output(
+    tmp_path, compression, error, capsys
+):
+    archive, out = tmp_path / "corrupt.zip", tmp_path / "not_created"
+    with zipfile.ZipFile(archive, "w", compression=compression) as zipped:
+        zipped.writestr("data.txt", b"repeated saved bytes" * 100)
+    raw = bytearray(archive.read_bytes())
+    filename_length, extra_length = struct.unpack_from("<HH", raw, 26)
+    start = 30 + filename_length + extra_length
+    if compression == zipfile.ZIP_DEFLATED:
+        raw[start] = 7  # Reserved deflate block type, before any CRC comparison.
+    else:
+        raw[start + 4] = 255  # Invalid LZMA filter property byte.
+    archive.write_bytes(raw)
+    with zipfile.ZipFile(archive) as zipped, pytest.raises(error):
+        zipped.read("data.txt")
+    with pytest.raises(ValueError, match="invalid or unsupported ZIP"):
+        kit.extract(archive=archive, archive_sha256=sha(raw), out=out)
+    assert (
+        kit.main(
+            ["extract", "--archive", str(archive), "--archive-sha256", sha(raw), "--out", str(out)]
+        )
+        == 1
+    )
+    assert "검사 실패" in capsys.readouterr().err
+    assert not out.exists()
 
 
 def test_receipt_pin_survives_resealed_outer_manifest(built):
