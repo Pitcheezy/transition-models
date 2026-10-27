@@ -27,5 +27,10 @@ def test_media_extraction_is_deduplicated_and_ignores_unrelated_hosts():
     assert media_urls(page) == ["https://sporty-clips.mlb.com/a.mp4"]
 
 
+def test_single_quoted_attribute_does_not_leak_into_the_url():
+    page = "<video src='https://sporty-clips.mlb.com/a.mp4?t=1'></video>"
+    assert media_urls(page) == ["https://sporty-clips.mlb.com/a.mp4?t=1"]
+
+
 def test_no_invented_media_url():
     assert media_urls('<video src="blob:1234">') == []

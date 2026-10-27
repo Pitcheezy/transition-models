@@ -11,12 +11,14 @@ from __future__ import annotations
 import hashlib
 import io
 import json
+import math
+import shutil
 import sqlite3
 import subprocess
 import time
 from datetime import UTC, datetime
 from pathlib import Path
-from urllib.request import Request, urlopen
+from urllib.request import HTTPRedirectHandler, Request, build_opener
 
 import pandas as pd
 
@@ -95,8 +97,23 @@ def connect(db_path):
     return conn
 
 
-def fetch(url, limit, opener=urlopen, timeout=60):
-    """Read at most ``limit`` bytes from an HTTPS mlb.com URL; redirects must stay on mlb.com."""
+class MlbOnlyRedirect(HTTPRedirectHandler):
+    """Refuse a redirect before it is followed unless the next hop is HTTPS on mlb.com."""
+
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        validate_mlb_url(newurl)
+        return super().redirect_request(req, fp, code, msg, headers, newurl)
+
+
+_OPENER = build_opener(MlbOnlyRedirect)
+
+
+def safe_open(request, timeout):
+    return _OPENER.open(request, timeout=timeout)
+
+
+def fetch(url, limit, opener=safe_open, timeout=60):
+    """Read at most ``limit`` bytes from an HTTPS mlb.com URL; every redirect hop stays on mlb.com."""
     validate_mlb_url(url)
     with opener(Request(url, headers={"User-Agent": USER_AGENT}), timeout=timeout) as response:
         validate_mlb_url(response.url)
@@ -175,13 +192,14 @@ def register_game(conn, root, game_pk, split, feed_bytes, statcast, statcast_sha
         json.dumps(manifest, ensure_ascii=False, indent=2, allow_nan=False) + "\n"
     ).encode()
     root = Path(root)
-    write_once(root / "manifests" / f"{game_pk}.json", manifest_bytes)
     existing = conn.execute(
         "SELECT manifest_sha256, split FROM games WHERE game_pk = ?", (game_pk,)
     ).fetchone()
+    # Check the registry before touching disk, so a refused call leaves no file behind.
+    if existing and existing != (sha256(manifest_bytes), split):
+        raise ValueError("game already registered with a different manifest or split")
+    write_once(root / "manifests" / f"{game_pk}.json", manifest_bytes)
     if existing:
-        if existing != (sha256(manifest_bytes), split):
-            raise ValueError("game already registered with a different manifest or split")
         return manifest["counts"]
     names = player_names(feed)
     keyed = statcast.loc[statcast.game_pk == int(game_pk)].set_index(PITCH_KEYS)
@@ -314,20 +332,23 @@ def clip_name(game_pk, at_bat_number, pitch_number, play_id):
     return f"clips/{game_pk}/{at_bat_number:03d}_{pitch_number:02d}_{play_id}.mp4"
 
 
-def fetch_clip(conn, root, play_id, *, opener=urlopen, probe=probe_file):
-    """Fetch one official page and the mp4 it shows; record success or the reason it failed."""
+def fetch_clip(conn, root, play_id, *, opener=safe_open, probe=probe_file, pause=lambda: None):
+    """Fetch one official page and the mp4 it shows; record success or the reason it failed.
+
+    ``pause`` runs between the page request and the media request so each request is paced.
+    """
     root = Path(root)
     game_pk, ab, pn = conn.execute(
         "SELECT game_pk, at_bat_number, pitch_number FROM pitches WHERE play_id = ?", (play_id,)
     ).fetchone()
     conn.execute("UPDATE clips SET attempts = attempts + 1 WHERE play_id = ?", (play_id,))
     conn.commit()
-    attempt = conn.execute("SELECT attempts FROM clips WHERE play_id = ?", (play_id,)).fetchone()[0]
+    fields = {}
     try:
         page = fetch(PAGE_URL.format(play_id=play_id), PAGE_LIMIT, opener)
-        # Pages change between visits, so every attempt keeps its own snapshot.
-        suffix = "" if attempt == 1 else f".a{attempt}"
-        page_path = f"pages/{game_pk}/{play_id}{suffix}.html"
+        # Pages change between visits; a content-addressed name never collides, even after the
+        # registry file is rebuilt over an existing root.
+        page_path = f"pages/{game_pk}/{play_id}.{sha256(page)[:12]}.html"
         write_once(root / page_path, page)
         candidates = media_urls(page.decode("utf-8", errors="replace"))
         fields = {
@@ -341,16 +362,40 @@ def fetch_clip(conn, root, play_id, *, opener=urlopen, probe=probe_file):
                 conn, play_id, status="no_media", last_error="no official mp4 on page", **fields
             )
             return "no_media"
+        if len(set(candidates)) > 1:
+            _update(
+                conn,
+                play_id,
+                status="ambiguous_media",
+                last_error=f"{len(set(candidates))} different mp4 URLs on page",
+                **fields,
+            )
+            return "ambiguous_media"
+        fields["media_url"] = candidates[0]
+        pause()
         media = fetch(candidates[0], CLIP_LIMIT, opener, timeout=120)
         name = clip_name(game_pk, ab, pn, play_id)
-        write_once(root / name, media)
-        info = probe(root / name)
+        final = root / name
+        if final.exists():
+            if final.read_bytes() != media:
+                raise ValueError(f"refusing to overwrite different bytes at {final.name}")
+            info = probe(final)
+        else:
+            # Probe before the file takes its final name, so a broken body never blocks a retry.
+            final.parent.mkdir(parents=True, exist_ok=True)
+            tmp = final.with_suffix(".mp4.part")
+            tmp.write_bytes(media)
+            try:
+                info = probe(tmp)
+            except BaseException:
+                tmp.unlink(missing_ok=True)
+                raise
+            tmp.replace(final)
         _update(
             conn,
             play_id,
             status="downloaded",
             last_error=None,
-            media_url=candidates[0],
             file_path=name,
             file_sha256=sha256(media),
             bytes=len(media),
@@ -360,8 +405,23 @@ def fetch_clip(conn, root, play_id, *, opener=urlopen, probe=probe_file):
         )
         return "downloaded"
     except Exception as exc:  # recorded per clip; the run decides whether to stop
-        _update(conn, play_id, status="failed", last_error=f"{type(exc).__name__}: {exc}"[:500])
+        _update(
+            conn,
+            play_id,
+            status="failed",
+            last_error=f"{type(exc).__name__}: {exc}"[:500],
+            **fields,
+        )
         return "failed"
+    except BaseException:
+        # An interrupt is not an attempt: give it back and keep the row retryable.
+        conn.execute(
+            "UPDATE clips SET attempts = attempts - 1, last_error = 'interrupted' "
+            "WHERE play_id = ?",
+            (play_id,),
+        )
+        conn.commit()
+        raise
 
 
 def _update(conn, play_id, **fields):
@@ -391,16 +451,27 @@ def run_clips(
     delay=1.0,
     max_attempts=2,
     max_consecutive_failures=8,
-    opener=urlopen,
+    max_consecutive_no_media=8,
+    retry_no_media=False,
+    opener=safe_open,
     probe=probe_file,
     sleep=time.sleep,
 ):
-    """Sequential, rate-limited fetch of pending clips; stops on repeated failures."""
+    """Sequential fetch with ``delay`` before every request; stops on repeated bad results.
+
+    A run of pages without a video is treated like a run of failures (a block or interstitial
+    page also has no video), and ``retry_no_media`` re-selects those rows in a later run.
+    """
+    if not isinstance(delay, (int, float)) or not math.isfinite(delay) or delay < 0:
+        raise ValueError("delay must be a finite, non-negative number of seconds")
+    if probe is probe_file and shutil.which("ffprobe") is None:
+        raise RuntimeError("ffprobe is required before any clip is downloaded")
+    states = ("pending", "failed", "no_media") if retry_no_media else ("pending", "failed")
     query = (
         "SELECT p.play_id FROM pitches p JOIN clips c USING (play_id) "
-        "WHERE c.status IN ('pending', 'failed') AND c.attempts < ?"
+        f"WHERE c.status IN ({','.join('?' * len(states))}) AND c.attempts < ?"
     )
-    args = [max_attempts]
+    args = [*states, max_attempts]
     if games:
         query += f" AND p.game_pk IN ({','.join('?' * len(games))})"
         args += [int(g) for g in games]
@@ -408,28 +479,35 @@ def run_clips(
     todo = [r[0] for r in conn.execute(query, args)]
     if limit is not None:
         todo = todo[:limit]
-    counts, streak = {}, 0
+    counts, failures, empties = {}, 0, 0
     for i, play_id in enumerate(todo):
         if i:
             sleep(delay)
-        result = fetch_clip(conn, root, play_id, opener=opener, probe=probe)
+        result = fetch_clip(
+            conn, root, play_id, opener=opener, probe=probe, pause=lambda: sleep(delay)
+        )
         counts[result] = counts.get(result, 0) + 1
-        streak = streak + 1 if result == "failed" else 0
-        if streak >= max_consecutive_failures:
-            counts["stopped_after_consecutive_failures"] = streak
+        failures = failures + 1 if result == "failed" else 0
+        empties = empties + 1 if result == "no_media" else 0
+        if failures >= max_consecutive_failures:
+            counts["stopped_after_consecutive_failures"] = failures
+            break
+        if empties >= max_consecutive_no_media:
+            counts["stopped_after_consecutive_no_media"] = empties
             break
     return counts
 
 
-def status(conn):
+def status(conn, root=None):
+    """Counts per game; with ``root`` a downloaded row counts only if its file still verifies."""
     rows = conn.execute(
         "SELECT g.game_pk, g.split, g.official_date, g.away_abbr, g.home_abbr, g.verified, "
-        "g.issues, c.status, COUNT(c.play_id), COALESCE(SUM(c.bytes), 0) "
+        "g.issues, c.status, c.play_id, COALESCE(c.bytes, 0) "
         "FROM games g LEFT JOIN pitches p USING (game_pk) LEFT JOIN clips c USING (play_id) "
-        "GROUP BY g.game_pk, c.status ORDER BY g.game_pk"
+        "ORDER BY g.game_pk"
     ).fetchall()
     games = {}
-    for pk, split, date, away, home, verified, issues, state, n, size in rows:
+    for pk, split, date, away, home, verified, issues, state, play_id, size in rows:
         entry = games.setdefault(
             pk,
             {
@@ -440,9 +518,18 @@ def status(conn):
                 "identity_issues": issues,
                 "clips": {},
                 "bytes": 0,
+                "files_checked": root is not None,
             },
         )
-        if state:
-            entry["clips"][state] = n
+        if not state:
+            continue
+        if (
+            state == "downloaded"
+            and root is not None
+            and not verify_downloaded(conn, root, play_id)
+        ):
+            state = "downloaded_missing_or_changed"
+        entry["clips"][state] = entry["clips"].get(state, 0) + 1
+        if state == "downloaded":
             entry["bytes"] += size
     return {"schema": SCHEMA, "games": games}

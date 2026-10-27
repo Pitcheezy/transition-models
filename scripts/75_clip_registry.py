@@ -12,7 +12,9 @@ hashes only.
 
 import argparse
 import json
+import math
 import sys
+import time
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
@@ -22,6 +24,8 @@ import pandas as pd
 from src.data import clip_registry as reg
 from src.data.mlb_video import PITCH_KEYS, PREPITCH_COLUMNS, TRUTH_COLUMNS
 
+SOURCE_PAUSE_SECONDS = 1.0
+
 
 def pairs(values, sep):
     result = {}
@@ -29,30 +33,41 @@ def pairs(values, sep):
         key, _, rest = value.partition(sep)
         if not rest:
             raise SystemExit(f"expected KEY{sep}VALUE, got {value!r}")
+        if int(key) in result:
+            raise SystemExit(f"game {key} given more than once")
         result[int(key)] = rest
     return result
 
 
-def statcast_source(root, game_pk, parquet):
+def statcast_source(root, game_pk, parquet, sleep=time.sleep):
+    """Validate the rows for this game before the bytes are kept."""
     folder = Path(root) / "sources" / str(game_pk)
     if parquet:
         columns = PITCH_KEYS + PREPITCH_COLUMNS + TRUTH_COLUMNS + reg.OUTCOME_EXTRA
         frame = pd.read_parquet(parquet, columns=columns, filters=[("game_pk", "==", game_pk)])
         data = frame.sort_values(PITCH_KEYS).to_csv(index=False).encode("utf-8")
-        reg.write_once(folder / "statcast_rows.csv", data)
+        name = "statcast_rows.csv"
     else:
+        sleep(SOURCE_PAUSE_SECONDS)
         data = reg.fetch(reg.STATCAST_URL.format(game_pk=game_pk), reg.SOURCE_LIMIT)
-        reg.write_once(folder / "statcast.csv", data)
-    return reg.read_statcast_csv(data), reg.sha256(data)
+        name = "statcast.csv"
+    frame = reg.read_statcast_csv(data)
+    if not (frame.game_pk == game_pk).any():
+        raise SystemExit(f"no Statcast rows for game {game_pk}; nothing was saved")
+    reg.write_once(folder / name, data)
+    return frame, reg.sha256(data)
 
 
-def feed_source(root, game_pk, feed_file):
+def feed_source(root, game_pk, feed_file, sleep=time.sleep):
+    """Validate the gamePk before the bytes are kept."""
     folder = Path(root) / "sources" / str(game_pk)
-    data = (
-        Path(feed_file).read_bytes()
-        if feed_file
-        else reg.fetch(reg.FEED_URL.format(game_pk=game_pk), reg.SOURCE_LIMIT)
-    )
+    if feed_file:
+        data = Path(feed_file).read_bytes()
+    else:
+        sleep(SOURCE_PAUSE_SECONDS)
+        data = reg.fetch(reg.FEED_URL.format(game_pk=game_pk), reg.SOURCE_LIMIT)
+    if int(json.loads(data)["gamePk"]) != game_pk:
+        raise SystemExit(f"feed is not game {game_pk}; nothing was saved")
     reg.write_once(folder / "feed.json", data)
     return data
 
@@ -73,9 +88,15 @@ def main():
     clips.add_argument("--limit", type=int)
     clips.add_argument("--delay", type=float, default=1.0)
     clips.add_argument("--max-attempts", type=int, default=2)
+    clips.add_argument(
+        "--retry-no-media", action="store_true", help="also retry pages that showed no video"
+    )
     report = sub.add_parser("status")
     report.add_argument("--root", type=Path, required=True)
     report.add_argument("--out", type=Path)
+    report.add_argument(
+        "--no-file-check", action="store_true", help="skip re-hashing downloaded files"
+    )
     args = parser.parse_args()
 
     conn = reg.connect(args.root / "registry.sqlite")
@@ -88,8 +109,8 @@ def main():
             counts = reg.register_game(conn, args.root, game_pk, split, feed, frame, statcast_sha)
             print(json.dumps({"game_pk": game_pk, "split": split, "counts": counts}))
     elif args.command == "clips":
-        if args.delay < 1.0:
-            raise SystemExit("delay below 1 second is not allowed")
+        if not math.isfinite(args.delay) or not 1.0 <= args.delay <= 60.0:
+            raise SystemExit("delay must be between 1 and 60 seconds")
         counts = reg.run_clips(
             conn,
             args.root,
@@ -97,10 +118,11 @@ def main():
             limit=args.limit,
             delay=args.delay,
             max_attempts=args.max_attempts,
+            retry_no_media=args.retry_no_media,
         )
         print(json.dumps(counts))
     else:
-        summary = reg.status(conn)
+        summary = reg.status(conn, None if args.no_file_check else args.root)
         text = json.dumps(summary, ensure_ascii=False, indent=2) + "\n"
         if args.out:
             args.out.parent.mkdir(parents=True, exist_ok=True)

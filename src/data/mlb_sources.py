@@ -41,7 +41,7 @@ def fetch_source(url, destination, limit_bytes=20_000_000):
 
 def media_urls(page):
     """Extract observed public MP4 URLs; no inferred URL patterns or stream bypasses."""
-    values = re.findall(r'https://[^\s<>"\\]+\.mp4(?:\?[^\s<>"\\]*)?', page)
+    values = re.findall(r"""https://[^\s<>"'\\]+\.mp4(?:\?[^\s<>"'\\]*)?""", page)
     result = []
     for value in values:
         value = html.unescape(value)
