@@ -2,6 +2,12 @@
 
 현재 실행 상태는 첫 절을 따른다. 아래 완료 이력의 “다음”은 당시 기록이며 새 실행 지시가 아니다.
 
+## CV46 초기점 미트/맨손/불명 구별 검증과 기권 — 2026-10-27
+
+**CV46 완료·수정 권한 반납: Claude Fable 5.1(`claude-fable-5-1`), 연구 브랜치 `claude/cv-seed-identity-1027`, 기준 PR81 `691ac0847ac4fae88c5ed88f31619c10f6615d8c`, 초안 PR(PR81 기반, main 미병합)은 board 종료 기록 참조.** 사용자 우선순위 변경(디코딩 캐시보다 초기점 오식별 우선). PR67→…→81 의존, main 병합·배포·팀원 코드·Cloudflare·공개 계약·기존 625장/관측/결과/사람 응답/M3 불변. 새 영상·유료·대규모 AI 판독·학습 없음. 원본 시각 대조는 로컬 원본 부재로 B 기록(제한 검색 완료, 반복하지 않음).
+
+- [x] CV-46. 초기점 미트/맨손/불명 구별 검증과 기권 완료(10/27). [기록](docs/CV_SEED_IDENTITY_20261027.md)·[공개 보고](docs/results/cv_seed_identity_20261027/report_public_v1.json)·[검증](docs/results/cv_seed_identity_20261027/verification_v1.json)·[교차검토](docs/results/cv_seed_identity_20261027/cross_review_v1.json). 결과 전 고정한 단서(공개 피부 규칙·휘도≤110·질감≥0.03)를 시드 프레임 RGB 21×21 패치에만 적용: 첫 적격 시드10구 mitt_like5·unclear5·hand_like0 — 의심3사례(3:1·3:3·5:1)는 모두 unclear로 기권(피부비율0.20~0.39, 맨손 판정 아님), AI 관찰상 미트인 4:1·5:6도 unclear 기권(보수적 오기권). CV42 게이트 시드4구 중 mitt_like3·unclear1(5:6) → CV46 후보 시드3구, 추적 77→71행·재획득4·정지4. 기준선625행 전 필드 재현·입력668파일 불변·접두 불변310행·일관성 위반0. 14개 시드 crop을 Claude·Codex(`gpt-6-astra`, 이미지 입력)가 각각 읽어 단서와 셋 일치만 AI 합의로 기록(사람 정답 아님; 결과는 기록 문서). 새 검사13·관련8파일129 통과·린트 통과. Codex diff 검토 P2 2·P3 1 수리 + 실제 재생에서 발견한 접두 검사 라벨 결함 수리, 재검토 b/c에서 미적용 발견 후 d에서 해결 확인. 원본 시각 대조는 로컬 원본 부재로 B 기록. 기존 PatchTracker/SeedGate/기준선/CV42 출력 불변. 정확도·미트 식별 성공은 미측정. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-27 · Claude]`
+
 ## CV45 완료·사용량 기준 인계 — 2026-10-27
 
 **완료·수정 권한 반납: 우리 Codex / `codex/cv-decode-evidence-1027` / 구현5e10e9e·수리a669e48.** [근거](docs/CV_DECODE_EVIDENCE_20261027.md). 새추출의timebase/PTS·JPEG결속·시도별실패근거선택저장. 합성3초영상180프레임→실제138디코딩/9장추출,9개SHA·유리수시각일치. 관련25·Ruff194·실제Fable검토/수정재검토approve_with_nits.
