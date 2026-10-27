@@ -343,7 +343,10 @@ def fetch_clip(conn, root, play_id, *, opener=safe_open, probe=probe_file, pause
     ).fetchone()
     conn.execute("UPDATE clips SET attempts = attempts + 1 WHERE play_id = ?", (play_id,))
     conn.commit()
-    fields = {}
+    # Every terminal write describes this attempt only, so nothing from an earlier attempt lingers.
+    fields = dict.fromkeys(
+        ("page_path", "page_sha256", "page_retrieved_utc", "media_candidates", "media_url")
+    )
     try:
         page = fetch(PAGE_URL.format(play_id=play_id), PAGE_LIMIT, opener)
         # Pages change between visits; a content-addressed name never collides, even after the
@@ -351,12 +354,12 @@ def fetch_clip(conn, root, play_id, *, opener=safe_open, probe=probe_file, pause
         page_path = f"pages/{game_pk}/{play_id}.{sha256(page)[:12]}.html"
         write_once(root / page_path, page)
         candidates = media_urls(page.decode("utf-8", errors="replace"))
-        fields = {
-            "page_path": page_path,
-            "page_sha256": sha256(page),
-            "page_retrieved_utc": now(),
-            "media_candidates": json.dumps(candidates),
-        }
+        fields.update(
+            page_path=page_path,
+            page_sha256=sha256(page),
+            page_retrieved_utc=now(),
+            media_candidates=json.dumps(candidates),
+        )
         if not candidates:
             _update(
                 conn, play_id, status="no_media", last_error="no official mp4 on page", **fields
@@ -414,10 +417,12 @@ def fetch_clip(conn, root, play_id, *, opener=safe_open, probe=probe_file, pause
         )
         return "failed"
     except BaseException:
-        # An interrupt is not an attempt: give it back and keep the row retryable.
+        # An interrupt is not an attempt: drop any half-written result, give the attempt back,
+        # and keep the reason of an earlier failure; only a never-finished row says 'interrupted'.
+        conn.rollback()
         conn.execute(
-            "UPDATE clips SET attempts = attempts - 1, last_error = 'interrupted' "
-            "WHERE play_id = ?",
+            "UPDATE clips SET attempts = attempts - 1, last_error = CASE WHEN status = 'pending' "
+            "THEN 'interrupted' ELSE last_error END WHERE play_id = ?",
             (play_id,),
         )
         conn.commit()

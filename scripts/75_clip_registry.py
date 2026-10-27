@@ -39,9 +39,8 @@ def pairs(values, sep):
     return result
 
 
-def statcast_source(root, game_pk, parquet, sleep=time.sleep):
-    """Validate the rows for this game before the bytes are kept."""
-    folder = Path(root) / "sources" / str(game_pk)
+def statcast_source(game_pk, parquet, sleep=time.sleep):
+    """Read and validate this game's Statcast rows; nothing is written here."""
     if parquet:
         columns = PITCH_KEYS + PREPITCH_COLUMNS + TRUTH_COLUMNS + reg.OUTCOME_EXTRA
         frame = pd.read_parquet(parquet, columns=columns, filters=[("game_pk", "==", game_pk)])
@@ -54,13 +53,11 @@ def statcast_source(root, game_pk, parquet, sleep=time.sleep):
     frame = reg.read_statcast_csv(data)
     if not (frame.game_pk == game_pk).any():
         raise SystemExit(f"no Statcast rows for game {game_pk}; nothing was saved")
-    reg.write_once(folder / name, data)
-    return frame, reg.sha256(data)
+    return frame, data, name
 
 
-def feed_source(root, game_pk, feed_file, sleep=time.sleep):
-    """Validate the gamePk before the bytes are kept."""
-    folder = Path(root) / "sources" / str(game_pk)
+def feed_source(game_pk, feed_file, sleep=time.sleep):
+    """Read and validate this game's feed; nothing is written here."""
     if feed_file:
         data = Path(feed_file).read_bytes()
     else:
@@ -68,8 +65,14 @@ def feed_source(root, game_pk, feed_file, sleep=time.sleep):
         data = reg.fetch(reg.FEED_URL.format(game_pk=game_pk), reg.SOURCE_LIMIT)
     if int(json.loads(data)["gamePk"]) != game_pk:
         raise SystemExit(f"feed is not game {game_pk}; nothing was saved")
-    reg.write_once(folder / "feed.json", data)
     return data
+
+
+def keep_sources(root, game_pk, files):
+    """Write the validated source bytes only after every source of the game passed."""
+    folder = Path(root) / "sources" / str(game_pk)
+    for name, data in files.items():
+        reg.write_once(folder / name, data)
 
 
 def main():
@@ -104,9 +107,12 @@ def main():
         games = pairs(args.game, ":")
         feeds, parquets = pairs(args.feed_file, "="), pairs(args.statcast_parquet, "=")
         for game_pk, split in games.items():
-            feed = feed_source(args.root, game_pk, feeds.get(game_pk))
-            frame, statcast_sha = statcast_source(args.root, game_pk, parquets.get(game_pk))
-            counts = reg.register_game(conn, args.root, game_pk, split, feed, frame, statcast_sha)
+            feed = feed_source(game_pk, feeds.get(game_pk))
+            frame, statcast, name = statcast_source(game_pk, parquets.get(game_pk))
+            keep_sources(args.root, game_pk, {"feed.json": feed, name: statcast})
+            counts = reg.register_game(
+                conn, args.root, game_pk, split, feed, frame, reg.sha256(statcast)
+            )
             print(json.dumps({"game_pk": game_pk, "split": split, "counts": counts}))
     elif args.command == "clips":
         if not math.isfinite(args.delay) or not 1.0 <= args.delay <= 60.0:

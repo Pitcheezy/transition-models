@@ -545,19 +545,143 @@ def load_cli():
     return module
 
 
-def test_cli_refuses_a_game_given_twice_and_saves_no_source_that_fails_validation(tmp_path):
+def test_cli_validates_every_source_before_saving_any(tmp_path, monkeypatch):
     cli = load_cli()
     with pytest.raises(SystemExit, match="more than once"):
         cli.pairs(["900001:dev", "900001:eval_locked"], ":")
+    root = tmp_path / "root"
     feed_file = tmp_path / "feed.json"
     feed_file.write_text(json.dumps(feed(game_pk=900001)))
     with pytest.raises(SystemExit, match="not game 900002"):
-        cli.feed_source(tmp_path / "root", 900002, feed_file)
+        cli.feed_source(900002, feed_file)
     parquet = tmp_path / "rows.parquet"
     statcast().to_parquet(parquet)
     with pytest.raises(SystemExit, match="no Statcast rows"):
-        cli.statcast_source(tmp_path / "root", 900002, parquet)
-    assert not (tmp_path / "root" / "sources").exists()
-    frame, _ = cli.statcast_source(tmp_path / "root", 900001, parquet)
-    assert len(frame) == 2
-    assert (tmp_path / "root" / "sources" / "900001" / "statcast_rows.csv").is_file()
+        cli.statcast_source(900002, parquet)
+    # A valid feed with a game that has no Statcast rows: the whole register call saves nothing.
+    other = tmp_path / "feed2.json"
+    other.write_text(json.dumps(feed(game_pk=900002)))
+    argv = [
+        "75",
+        "register",
+        "--root",
+        str(root),
+        "--game",
+        "900002:dev",
+        "--feed-file",
+        f"900002={other}",
+        "--statcast-parquet",
+        f"900002={parquet}",
+    ]
+    monkeypatch.setattr("sys.argv", argv)
+    with pytest.raises(SystemExit, match="nothing was saved"):
+        cli.main()
+    assert not (root / "sources").exists()
+    frame, data, name = cli.statcast_source(900001, parquet)
+    assert len(frame) == 2 and name == "statcast_rows.csv"
+    cli.keep_sources(root, 900001, {"feed.json": feed_file.read_bytes(), name: data})
+    assert (root / "sources" / "900001" / "statcast_rows.csv").read_bytes() == data
+
+
+class InterruptOnCommit:
+    """Real connection whose n-th commit raises, to land an interrupt inside a terminal write."""
+
+    def __init__(self, conn, n):
+        self.conn, self.n, self.commits = conn, n, 0
+
+    def execute(self, *args):
+        return self.conn.execute(*args)
+
+    def rollback(self):
+        return self.conn.rollback()
+
+    def commit(self):
+        self.commits += 1
+        if self.commits == self.n:
+            raise KeyboardInterrupt
+        return self.conn.commit()
+
+
+@pytest.mark.parametrize("page_kind", ["video", "no_video"])
+def test_an_interrupt_inside_the_final_write_leaves_no_half_result(tmp_path, page_kind):
+    conn, _, _ = register(tmp_path)
+    url0 = f"https://sporty-clips.mlb.com/{PLAY_IDS[0]}.mp4"
+    page = f'<video src="{url0}"></video>' if page_kind == "video" else "<p>consent</p>"
+    pages = {PLAY_IDS[0]: page}
+    run = dict(games=[900001], limit=1, probe=fake_probe, sleep=lambda _: None)
+    with pytest.raises(KeyboardInterrupt):
+        # commit 1 counts the attempt, commit 2 is the terminal result
+        reg.run_clips(
+            InterruptOnCommit(conn, 2),
+            tmp_path,
+            opener=opener_for(pages, {url0: b"mp4"}, []),
+            **run,
+        )
+    assert clip_row(
+        conn, PLAY_IDS[0], "status, attempts, last_error, file_path, media_candidates"
+    ) == (
+        "pending",
+        0,
+        "interrupted",
+        None,
+        None,
+    )
+    counts = reg.run_clips(conn, tmp_path, opener=opener_for(pages, {url0: b"mp4"}, []), **run)
+    assert counts == ({"downloaded": 1} if page_kind == "video" else {"no_media": 1})
+    assert clip_row(
+        conn, PLAY_IDS[0], "attempts, last_error IS NULL OR last_error != 'interrupted'"
+    ) == (1, 1)
+
+
+def test_an_interrupt_keeps_an_earlier_failure_reason(tmp_path):
+    conn, _, _ = register(tmp_path)
+    url0 = f"https://sporty-clips.mlb.com/{PLAY_IDS[0]}.mp4"
+    pages = {PLAY_IDS[0]: f'<video src="{url0}"></video>'}
+    run = dict(games=[900001], limit=1, probe=fake_probe)
+    reg.run_clips(
+        conn,
+        tmp_path,
+        opener=opener_for(pages, {url0: OSError("reset")}, []),
+        sleep=lambda _: None,
+        **run,
+    )
+
+    def interrupt(_):
+        raise KeyboardInterrupt
+
+    with pytest.raises(KeyboardInterrupt):
+        reg.run_clips(
+            conn, tmp_path, opener=opener_for(pages, {url0: b"mp4"}, []), sleep=interrupt, **run
+        )
+    assert clip_row(conn, PLAY_IDS[0], "status, attempts, last_error") == (
+        "failed",
+        1,
+        "OSError: reset",
+    )
+
+
+def test_each_attempt_reports_only_its_own_page_fields(tmp_path):
+    conn, _, _ = register(tmp_path)
+    url0 = f"https://sporty-clips.mlb.com/{PLAY_IDS[0]}.mp4"
+    run = dict(games=[900001], limit=1, probe=fake_probe, sleep=lambda _: None, max_attempts=5)
+    video = {PLAY_IDS[0]: f'<video src="{url0}"></video>'}
+    reg.run_clips(conn, tmp_path, opener=opener_for(video, {url0: OSError("reset")}, []), **run)
+    assert clip_row(conn, PLAY_IDS[0], "media_url") == (url0,)
+    reg.run_clips(
+        conn,
+        tmp_path,
+        opener=opener_for({PLAY_IDS[0]: "<p></p>"}, {}, []),
+        retry_no_media=True,
+        **run,
+    )
+    assert clip_row(conn, PLAY_IDS[0], "status, media_candidates, media_url") == (
+        "no_media",
+        "[]",
+        None,
+    )
+    down = {PLAY_IDS[0]: OSError("page down")}
+    reg.run_clips(conn, tmp_path, opener=opener_for(down, {}, []), retry_no_media=True, **run)
+    row = clip_row(
+        conn, PLAY_IDS[0], "status, last_error, page_path, page_sha256, media_candidates, media_url"
+    )
+    assert row == ("failed", "OSError: page down", None, None, None, None)
