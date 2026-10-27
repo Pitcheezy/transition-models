@@ -412,7 +412,7 @@ p {
   background: #e6edde;
   color: #152d1f;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 60px;
   padding: 65px 4vw;
 }
@@ -432,37 +432,6 @@ p {
   margin-top: 23px;
   font-size: 14px;
   font-weight: 650;
-}
-.evidence-stats {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-  align-content: center;
-}
-.evidence-stats strong {
-  font:
-    700 80px Impact,
-    "Arial Black",
-    sans-serif;
-  letter-spacing: -3px;
-}
-.evidence-stats em {
-  font:
-    500 25px "Segoe UI",
-    sans-serif;
-  letter-spacing: -1px;
-  margin-left: 5px;
-}
-.evidence-stats p {
-  margin-top: 3px;
-  font-size: 14px;
-}
-.evidence-stats small {
-  grid-column: 1/-1;
-  border-top: 1px solid #bacbb1;
-  padding-top: 18px;
-  font-size: 13px;
-  color: #4d664f;
 }
 .closing {
   padding: 78px 20px;
@@ -548,9 +517,6 @@ p {
   }
   .evidence-preview {
     gap: 25px;
-  }
-  .evidence-stats strong {
-    font-size: 60px;
   }
   .product-footer {
     flex-wrap: wrap;

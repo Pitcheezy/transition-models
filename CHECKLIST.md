@@ -1,5 +1,9 @@
 # 남은 작업 체크리스트
 
+## 홈 화면 수치 패널 제거 — 2026-10-27
+
+- [~] E-site6. 사용자 지시(2026-10-27): pitcheezy.com 메인 화면의 오른쪽 수치 패널(2.5px·58/86·주석)과 표본 수가 드러나는 문구(평가 경기 57장·29장, 기권 공개 문구)를 제거하고 근거 단락을 한 열로 바꿨다. 소스 `web/pitch-studio/index.html`·`product.css`만 변경, 사이트 검사 4항목 통과, 1440px 헤드리스 화면과 로컬 미리보기로 확인. 리포트(`report.html`)의 상세 수치와 하단 콘셉트 안내는 그대로 둔다. **실제 배포는 미실행**: pitcheezy.com은 Codex의 ChatGPT Sites 배포 도구(`appgprj_6ac3665aa5048191ac2b5a012b2c7010`, 배포 checkout은 Codex 폴더)로만 갱신되며 이 Claude 세션에는 그 도구가 없다. Codex 사용 한도 초기화(11/2) 뒤 배포하거나 사용자가 같은 Sites 프로젝트에서 반영한다. 〔모델: Opus 5.5〕 `[추가되었음 · 2026-10-27 · Claude]`
+
 ## PR63 병합·운영 증거 PR64 검토 — 2026-10-25
 
 - [x] H-main3. 사용자 승인으로 PR63 고정 `e09c9d2`의 코드 불변·최종CI8/8을 재확인하고 main `06aa6d0f3ad24a7e9f0649491f9887283d8f77d8`에 병합했다. [PR63](https://github.com/Pitcheezy/transition-models/pull/63). 실제 배포는 변경하지 않았다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-25 · Codex]`
