@@ -196,6 +196,36 @@ test("a correct code opens a strict, private session that unlocks screen, data a
   assert.equal(env.PUBLISH_BUCKET.objects.has("_notice/state.json"), false);
 });
 
+test("asset HIT metadata does not bypass missing or revoked viewer cookies", async () => {
+  const { env, call, login, cookieOf } = fixture();
+  let assets = 0;
+  env.ASSETS.fetch = async request => {
+    assets++;
+    return new Response(request.method === "HEAD" ? null : "synthetic-cached-asset", { headers: {
+      "Content-Type": "text/html", "Cache-Control": "public, max-age=300", "CF-Cache-Status": "HIT", ETag: '"asset"',
+    } });
+  };
+  const cookie = cookieOf(await login(CODE_A));
+  const withoutCookie = await call("/", { method: "HEAD" });
+  assert.equal(withoutCookie.status, 401);
+  assert.equal(withoutCookie.headers.get("CF-Cache-Status"), null);
+  assert.equal(assets, 0);
+  const allowed = await call("/", { method: "HEAD", headers: { Cookie: cookie } });
+  assert.equal(allowed.status, 200);
+  assert.equal(allowed.headers.get("CF-Cache-Status"), "HIT");
+  assert.equal(allowed.headers.get("Cache-Control"), "private, max-age=300");
+  assert.equal(allowed.headers.get("Vary"), "Cookie");
+  assert.equal(await allowed.text(), "");
+  assert.equal(assets, 1);
+  env.ACCESS_CODE_SHA256 = digest(CODE_B);
+  const revoked = await call("/", { method: "HEAD", headers: { Cookie: cookie } });
+  assert.equal(revoked.status, 401);
+  assert.equal(revoked.headers.get("Cache-Control"), "no-store");
+  assert.equal(revoked.headers.get("CF-Cache-Status"), null);
+  assert.equal(await revoked.text(), "");
+  assert.equal(assets, 1);
+});
+
 test("expiry, tampering, code removal, secret rotation and logout all end the session", async () => {
   const { env, call, login, cookieOf } = fixture();
   const cookie = cookieOf(await login(CODE_A));

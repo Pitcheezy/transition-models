@@ -1,0 +1,146 @@
+{
+  "schema": "pitcheezy-joint-trial-closeout-v1",
+  "unit": "WS-trial3",
+  "trial_date_kst": "2026-10-26",
+  "outcome": "STOPPED_INCOMPLETE",
+  "evidence_kind": "synthetic HTTPS joint trial; not real-game or public-launch acceptance",
+  "provenance": {
+    "preparation_commit": "5ad28ed6556629ceee22991c9692b5369010cbfc",
+    "private_closure_sha256": "b9e80c2efd9e34802f6ac06a19060f750811155fedd03ecef69ffc6cd53f798a",
+    "private_evidence_hashes": {
+      "cleanup-steps.private.json": "af0d4ba2a7f022120fbf4e4321cd57d8edbf4cbfdf4872110e21f4c80732a6f7",
+      "credential-disposal-receipt.private.json": "be406a320ac9e277f7daa5a68122d3bd1c7412f8c9367e0efb9ab0884b9bf63e",
+      "cache-rules-readonly-20261026.private.json": "03c811176e63a7b7a6e4f7022ef9333216a93491ecdfb53063e7b2ed02058dad",
+      "server-events-stopped-trial-20261026.private.json": "1d37ad3f86f86ac1c03a00bc61f089eefb4115aa89270da7f43ed02cfb509719",
+      "joint1026-cleanup-final-settings.private.bin": "4507607ebca339adfe2b2392f3387d3a8e13a0959ed7735230f0e3e1d34eda97",
+      "joint1026-cleanup-viewer-deployments.private.bin": "cee9ef426147898184e6a57f667c8733b1851ad8f4b31fb20883164210dd4ee0",
+      "joint1026-cleanup-final-content.private.bin": "60ae04ef6e51cb7749f634ebfb70f80216d2f42b33f4add86a1f610c44f50fef"
+    },
+    "method": "Allowlisted projection of preserved host receipt plus user-relayed Song reports; no new cloud/service requests",
+    "client_ledger_received": false,
+    "full_preconditions_sha256_received": false,
+    "private_paths_credentials_origin_and_ray_ids_excluded": true
+  },
+  "fixed_sources": {
+    "host_runtime_commit": "e9b362b75d6d4768c552740bfc6e0124872805e1",
+    "remote_worker_js_bytes": 54114,
+    "remote_worker_js_sha256": "3312fbff2dac2a22b32e474392ee7eb107663c79e9749781810a681e5ee07cfd",
+    "partner_received_ui_commit": "000e4ba0d83bb81fee8db82539e67c7ab0e7d0b3",
+    "index_sha256": "0caf5b837ef2dfb5c6890d17e01ccf8761dd034949ee1e3e6bb3070a7f511428",
+    "procedure_selection": "Song explicitly selected previously received final2/v4.4; no new ZIP"
+  },
+  "main_phase": {
+    "version": "44d6204b-e3e9-4b5a-aaf1-c831acf6de58",
+    "reported_start_kst": "2026-10-26T21:40:12+09:00",
+    "reported_start_correction": "Replaces initially reported21:40:50; original evidence preserved",
+    "duration_seconds_song_report": 5.7,
+    "counts": {
+      "main": 9,
+      "scope_negative": 1,
+      "expiry_followup": 3,
+      "preflight_root_HEAD": 1,
+      "trial_worker_events_including_scope_negative": 8,
+      "uncorrelated_requests_across_trial_and_scope_negative": 2
+    },
+    "scope": "one exact synthetic game key; key omitted from public record",
+    "expiry_utc": "2026-10-26T12:50:00.000Z",
+    "observed_events_include": [
+      "scope-negative HEAD403",
+      "missing private HEAD404",
+      "PUT200",
+      "public GET200",
+      "DELETE200",
+      "private HEAD200"
+    ],
+    "last_client_head_correlated": false
+  },
+  "expiry_server_events": [
+    {
+      "time_utc": "2026-10-26T12:50:21.470Z",
+      "method": "HEAD",
+      "status": 403,
+      "version": "44d6204b-e3e9-4b5a-aaf1-c831acf6de58"
+    },
+    {
+      "time_utc": "2026-10-26T12:50:32.693Z",
+      "method": "HEAD",
+      "status": 403,
+      "version": "44d6204b-e3e9-4b5a-aaf1-c831acf6de58"
+    },
+    {
+      "time_utc": "2026-10-26T12:50:47.914Z",
+      "method": "HEAD",
+      "status": 403,
+      "version": "44d6204b-e3e9-4b5a-aaf1-c831acf6de58"
+    }
+  ],
+  "cleanup": {
+    "confirmation": "CLEANUP_CONFIGURATION_CONFIRMED",
+    "finished_utc": "2026-10-26T12:57:52.691191+00:00",
+    "final_version": "207c638d-5040-4ec3-ad92-0e2525f0272c",
+    "steps": [
+      {
+        "step": "publisher_digest_rotated",
+        "utc": "2026-10-26T12:57:46.192925+00:00",
+        "version": "1bb72964-442c-4509-9e60-2a57bf3c615d",
+        "new_bearer_created_or_shared": false,
+        "old_bearer_http401": "NOT_TESTED_REQUEST_BUDGET_EXHAUSTED"
+      },
+      {
+        "step": "upload_and_data_read_off",
+        "utc": "2026-10-26T12:57:48.466222+00:00",
+        "version": "7da114b9-780c-481c-b6a6-6e80786d4466",
+        "bindings_verified": true,
+        "http503": "NOT_TESTED_REQUEST_BUDGET_EXHAUSTED"
+      },
+      {
+        "step": "scope_and_expiry_removed",
+        "utc": "2026-10-26T12:57:50.906827+00:00",
+        "version": "6bae37b3-c562-432d-8175-7ee8c827f21e",
+        "bindings_absent_verified": true,
+        "upload_and_read_remain_off": true
+      },
+      {
+        "step": "trial_viewer_removed_owner_recovery_preserved",
+        "utc": "2026-10-26T12:57:51.629551+00:00",
+        "version": "207c638d-5040-4ec3-ad92-0e2525f0272c",
+        "session_signing_secret_unchanged": true,
+        "http401": "NOT_TESTED_REQUEST_BUDGET_EXHAUSTED"
+      }
+    ],
+    "service_requests": 0,
+    "upload_enabled": false,
+    "data_read_enabled": false,
+    "access_gate_enabled": true,
+    "telemetry_feedback_off": true,
+    "scope_and_expiry_absent": true,
+    "runtime_bytes_unchanged": true,
+    "owner_recovery_preserved": true,
+    "http401": "NOT_MEASURED; follow-up budget exhausted",
+    "http503": "NOT_MEASURED; follow-up budget exhausted",
+    "disposed_local_credential_copies": 7,
+    "not_claimed": [
+      "secure-media-erasure",
+      "partner-copy-disposal",
+      "HTTP-revocation-pass"
+    ]
+  },
+  "interpretation": {
+    "cache_cause": "UNCONFIRMED",
+    "private_deleted_head_contract": "200 with X-Publish-Deleted:true and deletion ETag",
+    "public_deleted_head_contract": "404",
+    "root_cache_hit_does_not_prove_worker_bypass": true,
+    "two_uncorrelated_requests_do_not_prove_worker_not_reached": true
+  },
+  "handoff": {
+    "closure_message_sent_by_user": false,
+    "user_report": "Agreed to resume tomorrow, exact time not fixed",
+    "new_window_started": false,
+    "new_credentials_issued_in_this_closeout_work": false,
+    "next_inputs": [
+      "private client ledger and full PRECONDITIONS SHA",
+      "fixed next runner procedure and per-request budget",
+      "agreed window and GO"
+    ]
+  }
+}
