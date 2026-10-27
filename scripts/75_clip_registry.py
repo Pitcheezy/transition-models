@@ -1,10 +1,10 @@
 """Build the private per-pitch clip registry and fetch official clips for chosen games.
 
-    python scripts/75_clip_registry.py register --root D:/pitcheezy_clips --game 849843:dev \
+    python scripts/75_clip_registry.py register --root <CLIP_ROOT> --game 849843:dev \
         --game 849844:eval_locked --feed-file 747139=data/raw/mlb_video/747139/feed.json \
         --statcast-parquet 747139=data/raw/2024/statcast_2024.parquet --game 747139:dev
-    python scripts/75_clip_registry.py clips --root D:/pitcheezy_clips --delay 1.0
-    python scripts/75_clip_registry.py status --root D:/pitcheezy_clips [--out SUMMARY.json]
+    python scripts/75_clip_registry.py clips --root <CLIP_ROOT> --delay 1.0
+    python scripts/75_clip_registry.py status --root <CLIP_ROOT> [--out SUMMARY.json]
 
 Video, page and feed bytes stay under --root (outside Git). The summary holds counts and
 hashes only.
