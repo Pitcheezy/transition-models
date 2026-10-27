@@ -1,0 +1,93 @@
+{
+  "schema": "pitcheezy-other-model-review-receipt-v1",
+  "unit": "CV-46",
+  "reviewer": {
+    "tool": "local Codex CLI 0.162.0-alpha.2",
+    "model": "gpt-6-astra (config model; reasoning effort ultra)",
+    "auth": "ChatGPT login",
+    "mode": "codex exec -c sandbox_mode=read-only with the diff on stdin; text-only, the reviewer ran no commands or tests"
+  },
+  "author_model": "claude-fable-5-1",
+  "base_commit": "691ac0847ac4fae88c5ed88f31619c10f6615d8c",
+  "attempts": [
+    {
+      "attempt": "a",
+      "scope": "working-tree diff: new intent/mitt_seed_identity.py, intent/mitt_seed_identity_pilot.py, tests/test_mitt_seed_identity.py, tests/test_mitt_seed_identity_pilot.py, scripts/check_project.py lint list",
+      "diff_sha256": "845a541d129b78866d42c822c897fd16f3849ae6556bffb9c7ef297bb84dfeb4",
+      "prompt_sha256": "d042065cf9be2c52ec6aba3ef7172e9e8c635160ec04c64f3e6f85c47372b27e",
+      "started_utc": "2026-10-27T05:43:48Z",
+      "finished_utc": "2026-10-27T05:46:37Z",
+      "tests_run_by_reviewer": false,
+      "raw_output_sha256": "34e149396e211fdfd2be1c9ccefa924fe9377d9a23cd80494f42ba6759ca2403",
+      "tokens_used": 28666,
+      "findings": [
+        {
+          "severity": "P2",
+          "file": "intent/mitt_seed_identity_pilot.py",
+          "area": "merge_readings / public_copy",
+          "claim": "reader entries with extra fields (coordinates, private paths) survive public redaction",
+          "disposition": "accepted; reader entries are allowlisted to reading/evidence/model and evidence/model reject path separators; regression test"
+        },
+        {
+          "severity": "P2",
+          "file": "intent/mitt_seed_identity_pilot.py",
+          "area": "merge_readings",
+          "claim": "a second merge recounts only the new table and replaces model metadata while keeping old records",
+          "disposition": "accepted; merging into a report that already carries readings is refused; regression test"
+        },
+        {
+          "severity": "P3",
+          "file": "intent/mitt_seed_identity_pilot.py",
+          "area": "agreement",
+          "claim": "a malformed reader object is silently treated as missing",
+          "disposition": "accepted; non-dict entries, unknown keys and unknown reader names raise; regression test"
+        }
+      ],
+      "no_defect_areas": [
+        "cue decision logic, rounding, bounds, arithmetic, patch isolation",
+        "frozen-hash checks, seed-frame selection, hold accounting, CLI wiring"
+      ],
+      "author_found_separately": "the real 625-frame run failed the prefix check because relabelled seed_source rows were compared with unlabelled prefix rows; fixed by checking unlabelled rows before relabelling, writing crops only after all checks, and lengthening the fixture so a gate seed falls inside the half prefix"
+    },
+    {
+      "attempt": "b",
+      "scope": "fix-only diff of the four files against the attempt-a state",
+      "diff_sha256": "d5f796ffe3639655d1fbb78b5745612732bfc8822595d9d3f273fef3586cda38",
+      "prompt_sha256": "d38d2c1da37b64eab6b5148fd4625aefc532d05f5fba8d97fa3660b444f1b055",
+      "started_utc": "2026-10-27T05:49:36Z",
+      "finished_utc": "2026-10-27T05:50:39Z",
+      "tests_run_by_reviewer": false,
+      "raw_output_sha256": "f17165ba9ed283404d076319ce1cebd9b53cdb5eb075e662bb19af66b70ce461",
+      "tokens_used": 18100,
+      "reported": "items 2 and 4 resolved; items 1 and 3 not resolved because explicit null evidence/model and a null reader entry were still accepted; no new defect",
+      "disposition": "accepted; a present reader key must be a dict, evidence/model keys when present must be short strings; regression tests"
+    },
+    {
+      "attempt": "c",
+      "scope": "narrow: current text of the reader-entry/agreement/merge functions — but the author's strictness patch had NOT applied (anchor mismatch), so the pasted text was stale",
+      "diff_sha256": "a951677e4c1be1ed5e94f52c26aa5f171208cd34e00b4abf7a8baee015255131",
+      "prompt_sha256": "1c9b5b1700dba4dfad8a00fbeb2ac48f71155abbb1dae39f36797873005b113f",
+      "started_utc": "2026-10-27T05:52:25Z",
+      "finished_utc": "2026-10-27T05:52:58Z",
+      "tests_run_by_reviewer": false,
+      "raw_output_sha256": "63675a1f3b9c1f57719ac6336eff3230a7c3992bfac5082ee388861a47f27918",
+      "tokens_used": 15622,
+      "reported": "neither item resolved (correct for the stale text); no new defect",
+      "disposition": "author re-applied the fix with exact edits and added regression tests (null reader entry, null evidence, non-string model)"
+    },
+    {
+      "attempt": "d",
+      "scope": "narrow: current text of the same functions after the strictness fix actually applied",
+      "diff_sha256": "d243420fbfbc48fbaeb8a42fae82b7061d4f60ba3021793529d2f84e819a1ea3",
+      "prompt_sha256": "1c9b5b1700dba4dfad8a00fbeb2ac48f71155abbb1dae39f36797873005b113f",
+      "started_utc": "2026-10-27T05:55:23Z",
+      "finished_utc": "2026-10-27T05:55:43Z",
+      "tests_run_by_reviewer": false,
+      "raw_output_sha256": "1ab4899cf130dec811b9f3239ade3e3ba3fcbfcef02aae89fe524fa60c8afbae",
+      "tokens_used": 15051,
+      "reported": "both items resolved; absent readers remain missing; no new concrete defect"
+    }
+  ],
+  "review_status": "closed: attempt a findings fixed (plus one author-found prefix-check bug), attempts b/c found the strictness fix unapplied, attempt d confirmed the applied fix; the reviewed working tree is the content of this unit's implementation commit",
+  "usage_note": "after attempt d the Codex image-reading batches 2-3 returned 'You've hit your usage limit' (reset 2026-11-02 15:16); no further Codex calls were made"
+}

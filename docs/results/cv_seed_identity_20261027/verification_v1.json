@@ -1,0 +1,162 @@
+{
+  "schema": "pitcheezy-seed-identity-verification-v1",
+  "unit": "CV-46",
+  "evidence_kind": "exposed development replay on saved frames; synthetic unit tests; AI development readings of private crops; no new video, paid service, mass AI reading, training or deployment",
+  "base_commit": "691ac0847ac4fae88c5ed88f31619c10f6615d8c",
+  "source_sha256": {
+    "intent/mitt_seed_identity.py": "dbdd8827e8f3c3f395ec5ae45e38592b950083493034ce016eeae2c8197cfa6d",
+    "intent/mitt_seed_identity_pilot.py": "582ecff82ea8bab0cd00cbab8a516aca39ece061df675fb5f6f9b142b8e3ce19",
+    "tests/test_mitt_seed_identity.py": "133dcb98f71117693be5b70b2205aca4e57d0a4e69cae2a29abfb88747f34aa6",
+    "tests/test_mitt_seed_identity_pilot.py": "acc7531814e3933aabd59b6055b66a064316818723f3e1b1916ba9fd0dc4e2c1",
+    "scripts/check_project.py": "a19c45f5d1c902bc71a8d3166f56943aa92adf80fc7034f88fa38533e036be03"
+  },
+  "params_sha256": {
+    "identity_cue": "cdd2839f0fd42efc3f28a04e9cc625e1aa4866dfa37b307d12ddba388bcf9354",
+    "seed_gate_policy": "a6a1022497f31bf80251fe240a07bc4d80d26b81b0500f0cda3c7622eee90581"
+  },
+  "inputs_sha256": {
+    "answers": "395679bfa6c5fb9efcc069bd8482ab6cdd6cde1049cc52e81d18f6c070d095ba",
+    "baseline": "9b564920883be8fbacd5e621713ece66b968dd311d1538d04dfabdff6088898c",
+    "manifest": "58cb57c9dbd542ca60db84f8f1e2242867e4680c15e1914a5ca1352ec1bcf87a",
+    "pilot": "6e95c402504bd613c474f16cb7356c6f320a16177dd5831b9378972b3b002594"
+  },
+  "preserved_input_files": 668,
+  "baseline_every_field_reproduced": true,
+  "prefix_invariance_rows_checked": 310,
+  "consistency_violations": {
+    "candidate_point_outside_candidate_state": 0,
+    "current_candidate_outside_stationary_tracking": 0,
+    "events_total_decreased": 0,
+    "historical_candidate_from_the_future": 0,
+    "point_shown_outside_confirmed_tracking": 0,
+    "segment_id_not_increasing": 0,
+    "selector_point_outside_tracking": 0
+  },
+  "results": {
+    "baseline_seed_verdicts": {
+      "mitt_like": 5,
+      "unclear": 5
+    },
+    "baseline_seed_reasons": {
+      "dark_low_skin_textured": 5,
+      "mixed": 5
+    },
+    "gate_seed_verdicts": {
+      "mitt_like": 3,
+      "unclear": 1
+    },
+    "gate_seed_reasons": {
+      "dark_low_skin_textured": 3,
+      "mixed": 1
+    },
+    "gate_seeded_pitches": 4,
+    "cv46_seeded_pitches": 3,
+    "cv46_hold_reasons": {
+      "no_seed": 6,
+      "unclear:mixed": 1
+    },
+    "cued_baseline_seeded_pitches": 5,
+    "cued_baseline_hold_reasons": {
+      "unclear:mixed": 5
+    }
+  },
+  "summaries": {
+    "baseline_first_usable": {
+      "states": {
+        "lost": 318,
+        "reacquire_candidate": 21,
+        "reacquire_search": 26,
+        "tracking": 178,
+        "unseeded": 82
+      },
+      "reacquisitions": 16,
+      "stationary_events": 13
+    },
+    "cv46_gate_plus_cue": {
+      "states": {
+        "lost": 90,
+        "reacquire_candidate": 4,
+        "reacquire_search": 8,
+        "tracking": 71,
+        "unseeded": 452
+      },
+      "reacquisitions": 4,
+      "stationary_events": 4
+    },
+    "first_usable_plus_cue": {
+      "states": {
+        "lost": 158,
+        "reacquire_candidate": 11,
+        "reacquire_search": 14,
+        "tracking": 100,
+        "unseeded": 342
+      },
+      "reacquisitions": 8,
+      "stationary_events": 6
+    },
+    "gate_cv42": {
+      "states": {
+        "lost": 139,
+        "reacquire_candidate": 4,
+        "reacquire_search": 12,
+        "tracking": 77,
+        "unseeded": 393
+      },
+      "reacquisitions": 4,
+      "stationary_events": 5
+    }
+  },
+  "output": {
+    "relative_dir": "outputs/cv_mitt_seed_identity_20261027_v2 (private, git-ignored; v1 run aborted at the prefix check before the label fix and wrote only crops)",
+    "report_sha256": "c4cdb6de2c2de41024408bdd5d0020d4eea0c8837e1f0295d3c6a95553c1280f",
+    "records_cv46_sha256": "d6d02c304ff6e74fe0a3b8f268ac5fed5090df4e62d4a88738d7fb90ce8e9196",
+    "records_first_usable_plus_cue_sha256": "62b85f6892c7466786c08c40320893e7a5b70465d102f4a06ff405df3affac67",
+    "report_public_copy": "docs/results/cv_seed_identity_20261027/report_public_v1.json",
+    "report_public_copy_sha256": "d691ce80ccff48cd7ade4a599b1b725b250042ea76d27d5300ba7fc6c46d3d36",
+    "crops": 14
+  },
+  "pilot_runs": {
+    "v1": {
+      "started_utc": "2026-10-27T05:42:57Z",
+      "finished_utc": "2026-10-27T05:43:42Z",
+      "result": "failed at prefix_invariance (relabelled seed_source vs unlabelled prefix rows); no report written"
+    },
+    "v2": {
+      "started_utc": "2026-10-27T05:47:05Z",
+      "finished_utc": "2026-10-27T05:47:51Z",
+      "result": "exit 0"
+    },
+    "command": "python -m intent.mitt_seed_identity_pilot run --bundle <bundle_v1> --pilot <pilot_v1> --baseline <CV37b records_candidate_cpu.json> --manifest-sha256 … --pilot-sha256 … --answers-sha256 … --baseline-sha256 … --out <new folder>"
+  },
+  "checks": {
+    "python_new": {
+      "command": "python -m pytest -q tests/test_mitt_seed_identity.py tests/test_mitt_seed_identity_pilot.py",
+      "result": "13 passed in 10.69s"
+    },
+    "python_related": {
+      "command": "python -m pytest -q tests/test_mitt_seed_identity.py tests/test_mitt_seed_identity_pilot.py tests/test_mitt_seed_pilot.py tests/test_mitt_seed_gate.py tests/test_mitt_reacquire.py tests/test_mitt_reacquire_pilot.py tests/test_mitt_tracking.py tests/test_checklist_model.py",
+      "result": "129 passed, 1 warning in 39.90s"
+    },
+    "lint": {
+      "command": "python scripts/check_project.py --lint-only",
+      "result": "All checks passed! 198 files already formatted (four new files added to QUALITY_PATHS)"
+    },
+    "full_project_check": {
+      "command": "python scripts/check_project.py --cpu-only --test-timeout 600",
+      "result": "pending; recorded on the board closing record"
+    }
+  },
+  "ai_readings": {
+    "claude": "claude-fable-5-1, this session, labelled contact sheet of the 14 private crops (14 readings)",
+    "codex": "gpt-6-astra via local Codex CLI, image input with the prompt on stdin: batch 1 (5 seeds) answered; batches 2-3 (9 seeds) hit the ChatGPT usage limit (reset 2026-11-02 15:16) and were left pending without retry",
+    "merged": "outputs/cv_mitt_seed_identity_20261027_v2/readings_merged.json (private); public copy docs/results/cv_seed_identity_20261027/readings_merged_public_v1.json",
+    "agreement_summary": {
+      "ai_agreement": 2,
+      "note": "ai_agreement means cue, Claude and Codex coincide; it is not mitt identification",
+      "seeds_with_readings": 14,
+      "undetermined": 12
+    },
+    "note": "development observations, not human labels; agreement requires cue == claude == codex"
+  },
+  "other_model_review": "docs/results/cv_seed_identity_20261027/cross_review_v1.json"
+}
