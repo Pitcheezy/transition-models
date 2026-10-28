@@ -197,6 +197,8 @@ def build_review(
     evidence_dir: Path | None = None,
 ) -> dict:
     """Validate inputs before making a fresh portable package; preserve old packages."""
+    if evidence_dir is not None and not include_video:
+        raise AuditInputError("Evidence requires --include-first-pa-video and its matching clips.")
     _destination(output_dir)
     if zip_path is not None:
         _destination(zip_path)

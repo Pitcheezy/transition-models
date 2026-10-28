@@ -289,3 +289,119 @@ test("320px viewport has no horizontal document overflow before or after reveal"
       `${stage}: horizontal overflow ${JSON.stringify(widths)}`);
   }
 });
+
+function syntheticEvidence() {
+  const pitches = report.pitches.slice(0, 2);
+  const clips = pitches.map((pitch, index) => ({
+    pitch_key: pitch.key, play_id: "00000000-0000-0000-0000-00000000000" + (index + 1),
+    video: "media/synthetic-" + (index + 1) + ".mp4", poster: "media/synthetic-" + (index + 1) + ".jpg",
+    video_sha256: String(index + 1).repeat(64), poster_sha256: "c".repeat(64), duration_seconds: 5
+  }));
+  return {
+    media: { schema: "pitcheezy-service-review-media-v1", game_pk: report.game.game_pk,
+      source_sha256: report.source.sha256, clips },
+    evidence: { schema: "pitcheezy-service-review-evidence-v1", game_pk: report.game.game_pk,
+      source_sha256: report.source.sha256, entries: clips.map((clip, index) => ({
+        pitch_key: clip.pitch_key, play_id: clip.play_id, clip_sha256: clip.video_sha256,
+        image: "evidence/synthetic-" + (index + 1) + ".png", image_sha256: "e".repeat(64),
+        frame_pts: 138000, clip_first_pts: 3000, release_lower_bound_pts: 228000,
+        time_base: "1/90000", clip_seconds: 1.5, status: index ? "abstained" : "candidate",
+        reason: index ? "Synthetic occlusion; no accepted point." : "Synthetic candidate; no confirmed point."
+      })) }
+  };
+}
+
+async function evidencePage(t, mutate, brokenImage = false) {
+  const page = await withPage(t), data = syntheticEvidence(), requests = [];
+  if (mutate) mutate(data.evidence);
+  await page.route("**/review-media.json", route =>
+    route.fulfill({ json: data.media }));
+  await page.route("**/review-evidence.json", route =>
+    route.fulfill({ json: data.evidence }));
+  await page.route("**/media/synthetic-*", route =>
+    route.fulfill({ status: 404, body: "Synthetic test: playback is not under test." }));
+  await page.route("**/evidence/*.png", route => {
+    requests.push(new URL(route.request().url()).pathname);
+    return brokenImage ? route.fulfill({ status: 404, body: "Synthetic missing image." }) :
+      route.fulfill({ contentType: "image/png", body: Buffer.from(
+        "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+j5RkAAAAASUVORK5CYII=", "base64") });
+  });
+  await page.goto(origin, { waitUntil: "networkidle" });
+  await loaded(page);
+  return { page, requests };
+}
+
+async function evidenceHidden(page) {
+  assert.equal(await page.locator("#evidence-panel").isVisible(), false);
+  assert.equal(await page.locator("#evidence-content").textContent(), "");
+  assert.equal(await page.locator("#evidence-content img").count(), 0);
+}
+
+async function evidenceImageLoaded(page) {
+  await page.waitForFunction(() => {
+    const image = document.querySelector("#evidence-content img");
+    return image && image.complete && image.naturalWidth > 0;
+  });
+}
+
+test("optional synthetic evidence reveals after results; next pitch, stale image errors and PA changes stay isolated", async t => {
+  const { page, requests } = await evidencePage(t);
+  await evidenceHidden(page);
+  assert.deepEqual(requests, []);
+  await page.locator("#reveal-button").click();
+  await evidenceImageLoaded(page);
+  assert.match(await page.locator("#evidence-content").textContent(), /Synthetic candidate/);
+  const oldImage = await page.locator("#evidence-content img").elementHandle();
+  await page.locator("#next-pitch").click();
+  await evidenceHidden(page);
+  await hiddenResult(page);
+  await page.locator("#reveal-button").click();
+  await evidenceImageLoaded(page);
+  assert.match(await page.locator("#evidence-content").textContent(), /Synthetic occlusion/);
+  await oldImage.evaluate(image => image.dispatchEvent(new Event("error")));
+  assert.match(await page.locator("#evidence-content").textContent(), /Synthetic occlusion/);
+  assert.equal(await page.locator("#evidence-content img").getAttribute("src"), "evidence/synthetic-2.png");
+  const anotherPA = report.pitches.find(pitch => pitch.pa_key !== report.pitches[0].pa_key).pa_key;
+  await page.locator("#pa-select").selectOption(anotherPA);
+  await evidenceHidden(page);
+  await page.locator("#reveal-button").click();
+  assert.equal(await page.locator("#evidence-content img").count(), 0);
+});
+
+test("invalid synthetic sidecars fail closed without blocking report reveal", async t => {
+  for (const mutate of [
+    evidence => { evidence.entries[0].frame_pts = evidence.entries[0].release_lower_bound_pts; evidence.entries[0].clip_seconds = 2.5; },
+    evidence => { evidence.entries[0].image = "evidence/../unexpected.png"; },
+    evidence => { evidence.source_sha256 = "f".repeat(64); }
+  ]) {
+    const { page, requests } = await evidencePage(t, mutate);
+    await evidenceHidden(page);
+    await page.locator("#reveal-button").click();
+    assert.notEqual(await page.locator("#actual-content").textContent(), "");
+    assert.equal(await page.locator("#evidence-content img").count(), 0);
+    assert.deepEqual(requests, []);
+  }
+});
+
+test("failed report replacement clears displayed synthetic evidence and valid recovery starts hidden", async t => {
+  const { page } = await evidencePage(t);
+  await page.locator("#reveal-button").click();
+  await evidenceImageLoaded(page);
+  await upload(page, Buffer.from("not-json"));
+  await page.waitForFunction(() => document.getElementById("load-status").classList.contains("error"));
+  await evidenceHidden(page);
+  assert.equal(await page.locator("#actual-content").textContent(), "");
+  await upload(page, report);
+  await loaded(page);
+  await evidenceHidden(page);
+  await hiddenResult(page);
+});
+
+test("unreadable synthetic evidence image removes the image and keeps the result available", async t => {
+  const { page } = await evidencePage(t, null, true);
+  await page.locator("#reveal-button").click();
+  await page.waitForFunction(() => document.getElementById("evidence-content").textContent.includes("읽지 못했습니다"));
+  assert.equal(await page.locator("#evidence-content img").count(), 0);
+  assert.notEqual(await page.locator("#actual-content").textContent(), "");
+  assert.equal(await page.locator("#next-pitch").isDisabled(), false);
+});

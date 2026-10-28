@@ -49,14 +49,22 @@ def read_candidates(root, through_pa=1):
 
 
 def decode_index(probe):
+    if not isinstance(probe, dict):
+        raise ValueError("invalid_probe_structure")
     streams = probe.get("streams", [])
-    if len(streams) != 1:
+    if not isinstance(streams, list) or len(streams) != 1 or not isinstance(streams[0], dict):
         raise ValueError("expected one selected video stream")
-    time_base = Fraction(streams[0]["time_base"])
+    try:
+        time_base = Fraction(streams[0]["time_base"])
+    except (KeyError, TypeError, ValueError, ZeroDivisionError):
+        raise ValueError("invalid_time_base") from None
     if time_base <= 0:
         raise ValueError("invalid time base")
     rows = []
-    for ordinal, frame in enumerate(probe.get("frames", [])):
+    decoded = probe.get("frames", [])
+    if not isinstance(decoded, list) or any(not isinstance(frame, dict) for frame in decoded):
+        raise ValueError("invalid_frame_list")
+    for ordinal, frame in enumerate(decoded):
         pts = frame.get("pts")
         if type(pts) is not int:
             raise ValueError("frame lacks an integer decoded PTS")
@@ -144,7 +152,7 @@ def inspect_clip(root, row, destination, ffprobe, ffmpeg):
         capture_output=True,
         timeout=90,
     )
-    images = sorted(folder.glob("frame_*.png"))
+    images = sorted(folder.glob("frame_*.png"), key=lambda p: int(p.stem.split("_")[-1]))
     if len(images) != len(selected):
         raise ValueError("decoded_image_count_mismatch")
     sheet = Image.new("RGB", (1440, ((len(images) + 2) // 3) * 300), "#14202c")
@@ -186,6 +194,8 @@ def inspect_clip(root, row, destination, ffprobe, ffmpeg):
 
 
 def build_audit(root, destination, ffprobe, ffmpeg, through_pa=1):
+    from PIL import Image  # noqa: F401 -- fail before creating output if dependency is missing
+
     destination = Path(destination)
     repo = Path(__file__).resolve().parents[2]
     if any(destination.resolve().is_relative_to(repo / name) for name in ("docs", "web")):
@@ -199,14 +209,34 @@ def build_audit(root, destination, ffprobe, ffmpeg, through_pa=1):
         try:
             records.append(inspect_clip(root, row, destination, ffprobe, ffmpeg))
         except (ValueError, OSError, subprocess.SubprocessError) as exc:
-            # Include every attempted pitch. Do not print local paths or tool stderr.
+            # Keep known, path-free failure codes; do not publish OS paths or tool stderr.
+            known = {
+                "clip_not_downloaded",
+                "clip_path_outside_registry",
+                "clip_bytes_mismatch",
+                "decoder_reported_error",
+                "decoded_image_count_mismatch",
+                "invalid_probe_structure",
+                "expected one selected video stream",
+                "invalid_time_base",
+                "invalid time base",
+                "invalid_frame_list",
+                "frame lacks an integer decoded PTS",
+                "decoded PTS must increase strictly",
+                "no decoded frames",
+            }
+            reason = (
+                str(exc)
+                if isinstance(exc, ValueError) and str(exc) in known
+                else type(exc).__name__
+            )
             records.append(
                 {
                     "pitch_key": row["pitch_key"],
                     "play_id": row["play_id"],
                     "clip_sha256": row["file_sha256"],
                     "decode_status": "failed",
-                    "reason": type(exc).__name__,
+                    "reason": reason,
                     "semantic_review": {"status": "unreviewed"},
                 }
             )

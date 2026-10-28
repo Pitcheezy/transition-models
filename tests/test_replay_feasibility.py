@@ -28,6 +28,21 @@ def test_sample_includes_last_and_uses_pts():
     assert [r["ordinal"] for r in f.sample_frames(rows)] == [0, 2, 4, 5]
 
 
+@pytest.mark.parametrize(
+    "data",
+    [
+        None,
+        {"streams": [None]},
+        {"streams": [{}]},
+        {"streams": [{"time_base": "1/0"}]},
+        {"streams": [{"time_base": "1/90000"}], "frames": [None]},
+    ],
+)
+def test_malformed_decoder_output_is_classified_not_uncaught(data):
+    with pytest.raises(ValueError):
+        f.decode_index(data)
+
+
 @pytest.mark.parametrize("n", [0, 6, True])
 def test_investigation_bound_precedes_database_open(n):
     with pytest.raises(ValueError, match="limited"):

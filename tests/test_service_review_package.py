@@ -67,6 +67,13 @@ def test_existing_output_is_untouched(source, tmp_path):
     assert marker.read_text() == "KEEP"
 
 
+def test_evidence_without_video_is_rejected_before_output(source, tmp_path):
+    target = tmp_path / "not-created"
+    with pytest.raises(AuditInputError, match="include-first-pa-video"):
+        build_review(source, target, input_kind="synthetic", evidence_dir=tmp_path)
+    assert not target.exists()
+
+
 def test_invalid_input_creates_no_package(source, tmp_path):
     source.write_text('{"schema":"wrong"}', encoding="utf-8")
     target = tmp_path / "not-created"
