@@ -23,6 +23,7 @@ from urllib.parse import unquote, urlsplit
 PACKAGE_SCHEMA = "pitcheezy-private-service-review-package-v2"
 REPORT_SCHEMA = "pitcheezy-service-review-v1"
 MEDIA_SCHEMA = "pitcheezy-service-review-media-v1"
+EVIDENCE_SCHEMA = "pitcheezy-service-review-evidence-v1"
 PROFILE = "teammate_export_20261009_v1"
 MAX_JSON_BYTES = 5 * 1024 * 1024
 MAX_RECEIPT_BYTES = 1024 * 1024
@@ -44,6 +45,7 @@ CONTENT_TYPES = {
     "style.css": "text/css; charset=utf-8",
     "review-data.json": "application/json; charset=utf-8",
     "review-media.json": "application/json; charset=utf-8",
+    "review-evidence.json": "application/json; charset=utf-8",
 }
 
 
@@ -261,6 +263,86 @@ def _media_files(media, game_pk, keys, receipt):
     return files
 
 
+def _evidence_files(evidence, media, game_pk, keys, receipt):
+    """Optional internal sidecar; no change to the provided model/IntentEstimate contract."""
+    _require(
+        isinstance(evidence, dict)
+        and set(evidence) == {"schema", "game_pk", "source_sha256", "entries"}
+        and evidence.get("schema") == EVIDENCE_SCHEMA
+        and type(evidence.get("game_pk")) is int
+        and evidence["game_pk"] == game_pk
+        and evidence.get("source_sha256") == receipt["source_sha256"],
+        "Evidence source or game mismatch.",
+    )
+    entries = evidence.get("entries")
+    _require(isinstance(entries, list) and len(entries) <= len(keys), "Invalid evidence list.")
+    clips = {row["pitch_key"]: row for row in media["clips"]}
+    files, seen = {}, set()
+    for row in entries:
+        _require(isinstance(row, dict), "Invalid evidence row.")
+        _require(
+            set(row)
+            == {
+                "pitch_key",
+                "play_id",
+                "clip_sha256",
+                "image",
+                "image_sha256",
+                "frame_pts",
+                "clip_first_pts",
+                "release_lower_bound_pts",
+                "time_base",
+                "clip_seconds",
+                "status",
+                "reason",
+            },
+            "Unexpected evidence fields.",
+        )
+        key = row.get("pitch_key")
+        _require(
+            isinstance(key, str) and key in keys and key in clips and key not in seen,
+            "Evidence pitch is duplicate or lacks a matching clip.",
+        )
+        seen.add(key)
+        clip = clips[key]
+        _require(
+            row.get("play_id") == clip["play_id"]
+            and row.get("clip_sha256") == clip["video_sha256"],
+            "Evidence clip mismatch.",
+        )
+        pts, first, release, seconds = (
+            row.get(k)
+            for k in ("frame_pts", "clip_first_pts", "release_lower_bound_pts", "clip_seconds")
+        )
+        _require(
+            all(type(x) is int and 0 <= x <= 2**53 - 1 for x in (pts, first, release))
+            and first <= pts < release
+            and row.get("time_base") == "1/90000"
+            and type(seconds) in (int, float)
+            and math.isfinite(seconds)
+            and 0 <= seconds <= clip["duration_seconds"]
+            and release / 90000 - first / 90000 <= clip["duration_seconds"]
+            and abs(seconds - (pts - first) / 90000) <= 1e-6,
+            "Evidence PTS or pre-release bound is invalid.",
+        )
+        _require(
+            row.get("status") in ("candidate", "abstained")
+            and isinstance(row.get("reason"), str)
+            and 0 < len(row["reason"]) <= 1000,
+            "Evidence must state its provisional status and reason.",
+        )
+        name = _relative_name(row.get("image"))
+        _require(
+            re.fullmatch(r"evidence/[A-Za-z0-9_-]+\.png", name)
+            and name not in files
+            and _digest(row.get("image_sha256"))
+            and receipt["assets_sha256"].get(name) == row["image_sha256"],
+            "Evidence image path or SHA mismatch.",
+        )
+        files[name] = "image/png"
+    return files
+
+
 def load_snapshot(directory):
     """Validate the complete package and freeze only the bytes served to browsers."""
     reader = _Reader(directory)
@@ -291,18 +373,30 @@ def load_snapshot(directory):
     game_pk, keys = _report_keys(_json(raw_report), receipt)
     raw_media = reader.read("review-media.json", MAX_JSON_BYTES)
     _require(_sha(raw_media) == assets["review-media.json"], "Media manifest SHA256 mismatch.")
-    media_files = _media_files(_json(raw_media), game_pk, keys, receipt)
-    _require(set(assets) == STATIC_ASSETS | media_files.keys(), "Unexpected package asset path.")
+    media = _json(raw_media)
+    media_files = _media_files(media, game_pk, keys, receipt)
+    evidence_files, optional, raw_evidence = {}, set(), None
+    if "review-evidence.json" in assets:
+        raw_evidence = reader.read("review-evidence.json", MAX_JSON_BYTES)
+        _require(_sha(raw_evidence) == assets["review-evidence.json"], "Evidence SHA mismatch.")
+        evidence_files = _evidence_files(_json(raw_evidence), media, game_pk, keys, receipt)
+        optional.add("review-evidence.json")
+    _require(
+        set(assets) == STATIC_ASSETS | media_files.keys() | evidence_files.keys() | optional,
+        "Unexpected package asset path.",
+    )
     files = {
         "/review-data.json": (raw_report, CONTENT_TYPES["review-data.json"]),
         "/review-media.json": (raw_media, CONTENT_TYPES["review-media.json"]),
     }
+    if raw_evidence is not None:
+        files["/review-evidence.json"] = (raw_evidence, CONTENT_TYPES["review-evidence.json"])
     for name, digest in assets.items():
-        if name == "review-media.json":
+        if name in ("review-media.json", "review-evidence.json"):
             continue
         raw = reader.read(name, MAX_FILE_BYTES if name in media_files else MAX_JSON_BYTES)
         _require(bool(raw) and _sha(raw) == digest, "Package asset is empty or its SHA256 differs.")
-        content_type = CONTENT_TYPES.get(name) or media_files.get(name)
+        content_type = CONTENT_TYPES.get(name) or media_files.get(name) or evidence_files.get(name)
         if content_type is not None:
             files["/" + name] = (raw, content_type)
     return MappingProxyType(files)

@@ -22,7 +22,12 @@ from src.integration.service_game import (  # noqa: E402
     ServiceGameError,
     normalize_service_game,
 )
-from src.integration.service_review_server import load_snapshot  # noqa: E402
+from src.integration.service_review_server import (  # noqa: E402
+    _evidence_files,
+    _json,
+    _Reader,
+    load_snapshot,
+)
 
 ASSETS = ("index.html", "review.js", "style.css")
 MEDIA_SOURCE = ROOT / "web/pitch-studio"
@@ -98,7 +103,7 @@ def _destination(path):
             raise AuditInputError("Private review data must stay outside web and docs.")
 
 
-def _media(report, enabled):
+def _media(report, enabled, source_dir=None):
     manifest = {
         "schema": "pitcheezy-service-review-media-v1",
         "game_pk": report["game"]["game_pk"],
@@ -108,6 +113,7 @@ def _media(report, enabled):
     files = {}
     if not enabled:
         return manifest, files
+    source_dir = Path(source_dir) if source_dir is not None else MEDIA_SOURCE
     curated = json.loads(MEDIA_MANIFEST.read_text(encoding="utf-8"))
     if any(curated[k] != manifest[k] for k in ("schema", "game_pk", "source_sha256")):
         raise AuditInputError("The existing clips are bound to a different source snapshot.")
@@ -129,11 +135,11 @@ def _media(report, enabled):
                 or any(part in (".", "..") for part in name.split("/"))
             ):
                 raise AuditInputError("Unsafe local media path.")
-            path = MEDIA_SOURCE / name
-            if not path.resolve().is_relative_to(MEDIA_SOURCE.resolve()):
+            path = source_dir / name
+            if not path.resolve().is_relative_to(source_dir.resolve()):
                 raise AuditInputError("Media path escapes its source directory.")
             for item in (path, *path.parents):
-                if item == MEDIA_SOURCE:
+                if item == source_dir:
                     break
                 if item.is_symlink() or (hasattr(item, "is_junction") and item.is_junction()):
                     raise AuditInputError("Linked media files are not supported.")
@@ -145,6 +151,41 @@ def _media(report, enabled):
     return manifest, files
 
 
+def _evidence(directory, report, media):
+    if directory is None:
+        return {}
+    reader = _Reader(directory)
+    raw = reader.read("review-evidence.json", MAX_INPUT_BYTES)
+    payload = _json(raw)
+    if not isinstance(payload, dict) or not isinstance(payload.get("entries"), list):
+        raise AuditInputError("Evidence must contain an entry list.")
+    if any(
+        not isinstance(row, dict) or not isinstance(row.get("image"), str)
+        for row in payload["entries"]
+    ):
+        raise AuditInputError("Evidence image names must be strings.")
+    claimed = {
+        row.get("image"): row.get("image_sha256")
+        for row in payload.get("entries", [])
+        if isinstance(row, dict)
+    }
+    receipt = {"source_sha256": report["source"]["sha256"], "assets_sha256": claimed}
+    names = _evidence_files(
+        payload,
+        media,
+        report["game"]["game_pk"],
+        {row["key"] for row in report["pitches"]},
+        receipt,
+    )
+    result = {"review-evidence.json": raw}
+    for name in names:
+        data = reader.read(name, MAX_INPUT_BYTES)
+        if _sha(data) != claimed[name]:
+            raise AuditInputError("Evidence image bytes differ from the sidecar SHA.")
+        result[name] = data
+    return result
+
+
 def build_review(
     input_path: Path,
     output_dir: Path,
@@ -152,6 +193,8 @@ def build_review(
     input_kind: str,
     include_video=False,
     zip_path: Path | None = None,
+    media_dir: Path | None = None,
+    evidence_dir: Path | None = None,
 ) -> dict:
     """Validate inputs before making a fresh portable package; preserve old packages."""
     _destination(output_dir)
@@ -168,9 +211,11 @@ def build_review(
     report_bytes = _json_bytes(report)
     if len(report_bytes) > MAX_INPUT_BYTES:
         raise AuditInputError("Normalized report exceeds the local viewer 5 MiB limit.")
-    media, media_files = _media(report, include_video)
+    media, media_files = _media(report, include_video, media_dir)
+    evidence_files = _evidence(evidence_dir, report, media)
     assets = {name: (ROOT / "web/service-review" / name).read_bytes() for name in ASSETS}
     assets.update(media_files)
+    assets.update(evidence_files)
     assets.update(
         {
             "review-media.json": _json_bytes(media),
@@ -227,6 +272,12 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--zip", dest="zip_path", help="Optional new private ZIP beside, not inside, the package."
     )
+    parser.add_argument(
+        "--media-dir", help="Existing verified first-PA media root; SHA binding stays fixed."
+    )
+    parser.add_argument(
+        "--evidence-dir", help="Private directory containing review-evidence.json and PNGs."
+    )
     args = parser.parse_args(argv)
     try:
         receipt = build_review(
@@ -235,6 +286,8 @@ def main(argv: list[str] | None = None) -> int:
             input_kind=args.source_kind,
             include_video=args.include_first_pa_video,
             zip_path=_local_path(args.zip_path) if args.zip_path else None,
+            media_dir=_local_path(args.media_dir) if args.media_dir else None,
+            evidence_dir=_local_path(args.evidence_dir) if args.evidence_dir else None,
         )
     except (AuditInputError, ServiceGameError, ValueError) as exc:
         print(f"error: {exc}", file=sys.stderr)

@@ -117,6 +117,94 @@ def test_snapshot_verifies_and_exposes_only_browser_files(package):
         snapshot["/receipt.json"] = (b"unsafe", "text/plain")
 
 
+def add_evidence(package, mutate=None):
+    image = b"synthetic PNG fixture; not a real observation"
+    (package / "evidence").mkdir()
+    (package / "evidence/frame.png").write_bytes(image)
+    clip = json.loads((package / "review-media.json").read_bytes())["clips"][0]
+    entry = {
+        "pitch_key": clip["pitch_key"],
+        "play_id": clip["play_id"],
+        "clip_sha256": clip["video_sha256"],
+        "image": "evidence/frame.png",
+        "image_sha256": sha(image),
+        "frame_pts": 15000,
+        "clip_first_pts": 0,
+        "release_lower_bound_pts": 90000,
+        "time_base": "1/90000",
+        "clip_seconds": 1 / 6,
+        "status": "abstained",
+        "reason": "synthetic: ambiguous hand",
+    }
+    evidence = {
+        "schema": server_module.EVIDENCE_SCHEMA,
+        "game_pk": 900001,
+        "source_sha256": "a" * 64,
+        "entries": [entry],
+    }
+    if mutate:
+        mutate(evidence)
+    write_json(package / "review-evidence.json", evidence)
+    receipt = json.loads((package / "receipt.json").read_bytes())
+    receipt["assets_sha256"].update(
+        {
+            "review-evidence.json": sha((package / "review-evidence.json").read_bytes()),
+            "evidence/frame.png": sha(image),
+        }
+    )
+    write_json(package / "receipt.json", receipt)
+
+
+def test_optional_evidence_is_bound_and_servable(package):
+    add_evidence(package)
+    snapshot = server_module.load_snapshot(package)
+    assert snapshot["/evidence/frame.png"][1] == "image/png"
+    assert "/review-evidence.json" in snapshot
+
+
+@pytest.mark.parametrize(
+    "field,value",
+    [
+        ("pitch_key", "900001:2:1"),
+        ("play_id", "wrong-play"),
+        ("clip_sha256", "b" * 64),
+        ("frame_pts", 90000),
+        ("frame_pts", True),
+        ("clip_seconds", 1.0),
+        ("release_lower_bound_pts", 900000),
+        ("time_base", "1/60"),
+        ("image", "../frame.png"),
+        ("image_sha256", "b" * 64),
+        ("reason", ""),
+        ("status", "verified"),
+        ("actual_result", "strike"),
+    ],
+)
+def test_evidence_bad_binding_and_future_frame_rejected(package, field, value):
+    add_evidence(package, lambda e: e["entries"][0].update({field: value}))
+    with pytest.raises(ValueError):
+        server_module.load_snapshot(package)
+
+
+def test_evidence_duplicate_rejected(package):
+    add_evidence(package, lambda e: e["entries"].append(dict(e["entries"][0])))
+    with pytest.raises(ValueError):
+        server_module.load_snapshot(package)
+
+
+def test_evidence_wrong_source_rejected(package):
+    add_evidence(package, lambda e: e.update(source_sha256="b" * 64))
+    with pytest.raises(ValueError):
+        server_module.load_snapshot(package)
+
+
+def test_evidence_image_tamper_rejected(package):
+    add_evidence(package)
+    (package / "evidence/frame.png").write_bytes(b"replaced")
+    with pytest.raises(ValueError):
+        server_module.load_snapshot(package)
+
+
 @pytest.mark.parametrize(
     "name",
     [

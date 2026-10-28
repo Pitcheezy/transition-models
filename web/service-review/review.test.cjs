@@ -347,3 +347,166 @@ test("partial shares and null remain unchanged, matching Python's mass tolerance
   candidates[1].selection_probability = .400002;
   assert.throws(() => api.validateReport(report));
 });
+
+function evidenceFixture() {
+  const media = mediaFixture();
+  return { schema: api.EVIDENCE_SCHEMA, game_pk: 123, source_sha256: "a".repeat(64),
+    entries: media.clips.map((clip, index) => ({
+      pitch_key: clip.pitch_key, play_id: clip.play_id, clip_sha256: clip.video_sha256,
+      image: "evidence/frame-" + (index + 1) + ".png", image_sha256: "f".repeat(64),
+      frame_pts: 138000, clip_first_pts: 3000, release_lower_bound_pts: 228000,
+      time_base: "1/90000", clip_seconds: 1.5, status: index ? "abstained" : "candidate",
+      reason: index ? "Synthetic occlusion; no point accepted." : "Synthetic candidate; no confirmed mitt point."
+    })) };
+}
+
+test("evidence reveal gate hides image, timestamps and reasons even for malformed future metadata", () => {
+  const manifest = evidenceFixture();
+  manifest.entries[0].reason = "SECRET_OBSERVATION";
+  manifest.entries[0].future_result = "SECRET_FUTURE";
+  const hidden = api.evidenceFor(fixture(), "123:1:1", false, manifest, mediaFixture());
+  assert.deepEqual(hidden, { status: "hidden", entry: null, message: "" });
+  assert.equal(JSON.stringify(hidden).includes("SECRET"), false);
+  assert.throws(() => api.evidenceFor(fixture(), "123:1:1", "true", manifest, mediaFixture()));
+});
+
+test("evidence projects only an exact source, pitch, play and clip hash after reveal", () => {
+  const report = fixture(), manifest = evidenceFixture(), media = mediaFixture();
+  for (const [key, expected] of [["123:1:1", "candidate"], ["123:1:2", "abstained"]]) {
+    const shown = api.evidenceFor(report, key, true, manifest, media);
+    assert.equal(shown.status, expected);
+    assert.equal(shown.entry.pitch_key, key);
+    assert.equal(Object.hasOwn(shown.entry, "x"), false);
+    shown.entry.reason = "changed";
+    assert.notEqual(manifest.entries.find(entry => entry.pitch_key === key).reason, "changed");
+  }
+  for (const mutate of [
+    m => { m.source_sha256 = "b".repeat(64); },
+    m => { m.entries[0].play_id = "00000000-0000-0000-0000-000000000009"; },
+    m => { m.entries[0].clip_sha256 = "c".repeat(64); },
+    m => { m.entries[0].pitch_key = "123:9:1"; },
+    m => { m.game_pk = 456; }
+  ]) {
+    const invalid = evidenceFixture(); mutate(invalid);
+    assert.equal(api.evidenceFor(report, "123:1:1", true, invalid, media).entry, null);
+  }
+  assert.equal(api.evidenceFor(report, "123:2:1", true, manifest, media).entry, null);
+  const changedMedia = mediaFixture(); changedMedia.source_sha256 = "d".repeat(64);
+  assert.equal(api.evidenceFor(report, "123:1:1", true, manifest, changedMedia).entry, null);
+});
+
+test("optional missing or malformed evidence keeps recommendation, video and manual reveal available", () => {
+  const report = fixture(), media = mediaFixture();
+  for (const manifest of [null, {}, { ...evidenceFixture(), schema: "future-evidence" }]) {
+    assert.equal(api.evidenceFor(report, "123:1:1", true, manifest, media).entry, null);
+    assert.equal(api.mediaBinding(report, "123:1:1", media).clip.pitch_key, "123:1:1");
+    const shown = api.reveal(api.initialState(report));
+    assert.equal(api.viewFor(shown.report, shown.key, shown.revealed).actual.pitch_type, "SECRET_ACTUAL");
+  }
+  assert.equal(api.evidenceFor(report, "123:1:1", true, evidenceFixture(), null).entry, null);
+});
+
+test("evidence rejects duplicate pitch, play and case-folded image identities", () => {
+  for (const mutate of [
+    m => { m.entries.push({ ...m.entries[0] }); },
+    m => { m.entries[1].play_id = m.entries[0].play_id; },
+    m => { m.entries[0].image = "evidence/FRAME.png"; m.entries[1].image = "evidence/frame.png"; }
+  ]) {
+    const manifest = evidenceFixture(); mutate(manifest);
+    assert.throws(() => api.validateEvidenceManifest(manifest));
+    assert.equal(api.evidenceFor(fixture(), "123:1:1", true, manifest, mediaFixture()).entry, null);
+  }
+});
+
+test("evidence image paths reject remote, traversal, encoded, query and alternate extensions", () => {
+  for (const path of ["https://example.com/frame.png", "//example.com/frame.png", "/evidence/frame.png",
+    "evidence/../frame.png", "evidence/%2e%2e.png", "evidence/sub/frame.png", "evidence/frame.png?q=1",
+    "evidence/frame.png#one", "evidence/frame.jpg", "evidence/.png", "evidence/a b.png",
+    "evidence" + String.fromCharCode(92) + "frame.png", "data:image/png;base64,AA"]) {
+    const manifest = evidenceFixture(); manifest.entries[0].image = path;
+    assert.throws(() => api.validateEvidenceManifest(manifest), path);
+  }
+});
+
+test("evidence rejects missing fields, unrecognized coordinates and future result semantics", () => {
+  for (const field of Object.keys(evidenceFixture().entries[0])) {
+    const manifest = evidenceFixture(); delete manifest.entries[0][field];
+    assert.throws(() => api.validateEvidenceManifest(manifest), field);
+  }
+  for (const field of ["x", "z", "actual", "post", "result", "expected_value", "event_probability"]) {
+    const manifest = evidenceFixture(); manifest.entries[0][field] = "SECRET";
+    assert.throws(() => api.validateEvidenceManifest(manifest), field);
+    assert.equal(api.evidenceFor(fixture(), "123:1:1", true, manifest, mediaFixture()).entry, null);
+  }
+});
+
+test("evidence rejects frames before clip start or at and after release lower bound", () => {
+  for (const mutate of [
+    e => { e.frame_pts = e.clip_first_pts - 1; },
+    e => { e.frame_pts = e.release_lower_bound_pts; e.clip_seconds = 2.5; },
+    e => { e.frame_pts = e.release_lower_bound_pts + 1; e.clip_seconds = 2.5 + 1 / 90000; },
+    e => { e.frame_pts = Number.MAX_SAFE_INTEGER + 1; },
+    e => { e.frame_pts = 138000.5; }, e => { e.clip_first_pts = -1; },
+    e => { e.release_lower_bound_pts = Infinity; }, e => { e.time_base = "1/60"; },
+    e => { e.clip_seconds = NaN; }, e => { e.clip_seconds = -1; },
+    e => { e.clip_seconds += 1e-4; }
+  ]) {
+    const manifest = evidenceFixture(); mutate(manifest.entries[0]);
+    assert.throws(() => api.validateEvidenceManifest(manifest));
+    assert.equal(api.evidenceFor(fixture(), "123:1:1", true, manifest, mediaFixture()).entry, null);
+  }
+  const near = evidenceFixture(); near.entries[0].clip_seconds += 1e-7;
+  assert.doesNotThrow(() => api.validateEvidenceManifest(near));
+  const beyond = evidenceFixture();
+  beyond.entries[0].frame_pts = 723000; beyond.entries[0].release_lower_bound_pts = 813000;
+  beyond.entries[0].clip_seconds = 8;
+  assert.equal(api.evidenceFor(fixture(), "123:1:1", true, beyond, mediaFixture()).entry, null);
+});
+
+test("evidence validates statuses, hashes and bounded nonempty reasons", () => {
+  for (const mutate of [
+    e => { e.status = "confirmed"; }, e => { e.reason = ""; }, e => { e.reason = "   "; },
+    e => { e.reason = "x".repeat(1001); }, e => { e.reason = {}; },
+    e => { e.clip_sha256 = "short"; }, e => { e.image_sha256 = "F".repeat(64); }
+  ]) {
+    const manifest = evidenceFixture(); mutate(manifest.entries[0]);
+    assert.throws(() => api.validateEvidenceManifest(manifest));
+  }
+});
+
+test("pitch and PA selection immediately remove projected evidence until a new reveal", () => {
+  const report = fixture(), manifest = evidenceFixture(), media = mediaFixture();
+  const state = api.reveal(api.initialState(report));
+  assert.equal(api.evidenceFor(report, state.key, state.revealed, manifest, media).entry.pitch_key, "123:1:1");
+  for (const next of [api.selectPitch(state, "123:1:2"), api.selectPitch(state, "123:1:1"), api.selectPA(state, "123:2")]) {
+    assert.deepEqual(api.evidenceFor(next.report, next.key, next.revealed, manifest, media),
+      { status: "hidden", entry: null, message: "" });
+  }
+});
+
+test("shared load lifecycle clears projected evidence before pending or failed report replacement", async () => {
+  const manifest = evidenceFixture(), media = mediaFixture();
+  let visible = api.evidenceFor(fixture(), "123:1:1", true, manifest, media), finishOld;
+  const load = api.createLoadCoordinator({
+    clear: () => { visible = null; },
+    commit: report => { const state = api.initialState(report); visible = api.evidenceFor(report, state.key, state.revealed, manifest, media); },
+    fail: () => {}
+  });
+  const pending = load(() => new Promise(resolve => { finishOld = resolve; }));
+  assert.equal(visible, null);
+  await load(async () => { throw new Error("bad report"); });
+  finishOld(fixture()); await pending;
+  assert.equal(visible, null);
+  await load(async () => fixture());
+  assert.deepEqual(visible, { status: "hidden", entry: null, message: "" });
+});
+
+test("explicit next pitch advances by pitch identity within the current PA and resets reveal", () => {
+  const report = fixture(); report.pitches.reverse();
+  assert.equal(api.nextPitchKey(report, "123:1:1"), "123:1:2");
+  assert.equal(api.nextPitchKey(report, "123:1:2"), null);
+  assert.equal(api.nextPitchKey(report, "missing"), null);
+  const state = api.reveal(api.selectPitch(api.initialState(report), "123:1:1"));
+  const next = api.selectPitch(state, api.nextPitchKey(report, state.key));
+  assert.equal(next.key, "123:1:2"); assert.equal(next.revealed, false);
+});

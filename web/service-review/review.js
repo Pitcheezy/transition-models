@@ -8,6 +8,7 @@
   const SCHEMA = "pitcheezy-service-review-v1";
   const PROFILE = "teammate_export_20261009_v1";
   const MEDIA_SCHEMA = "pitcheezy-service-review-media-v1";
+  const EVIDENCE_SCHEMA = "pitcheezy-service-review-evidence-v1";
   const MAX_BYTES = 5 * 1024 * 1024;
   // Supplied S contract geometry; this is not a measurement of the physical plate.
   const SERVICE_ZONE_HALF_WIDTH = .83;
@@ -125,6 +126,14 @@
     assert(pitch, "선택한 타석이 없습니다.");
     return selectPitch(state, pitch.key);
   }
+  function nextPitchKey(report, key) {
+    const current = report.pitches.find(pitch => pitch.key === key);
+    if (!current) return null;
+    const next = report.pitches.filter(pitch => pitch.pa_key === current.pa_key &&
+      pitch.pitch_number > current.pitch_number).sort((a, b) => a.pitch_number - b.pitch_number)[0];
+    return next ? next.key : null;
+  }
+
   function reveal(state) {
     assert(state.key !== null, "공개할 투구가 없습니다.");
     return { report: state.report, key: state.key, revealed: true };
@@ -214,6 +223,60 @@
     return { clip: clip ? clone(clip) : null, reason: clip ? "" : "이 투구에 연결된 공식 클립이 없습니다. 결과는 직접 공개할 수 있습니다." };
   }
 
+  function validateEvidenceManifest(manifest) {
+    const exactKeys = (value, names) => object(value) && Object.keys(value).length === names.length &&
+      names.every(name => Object.hasOwn(value, name));
+    assert(exactKeys(manifest, ["schema", "game_pk", "source_sha256", "entries"]) &&
+      manifest.schema === EVIDENCE_SCHEMA && integer(manifest.game_pk, 1, 2147483647) &&
+      /^[a-f0-9]{64}$/.test(manifest.source_sha256) && Array.isArray(manifest.entries) &&
+      manifest.entries.length <= 2000, "근거 프레임 명세의 형식 또는 출처가 올바르지 않습니다.");
+    const keys = new Set(), plays = new Set(), images = new Set();
+    for (const entry of manifest.entries) {
+      assert(exactKeys(entry, ["pitch_key", "play_id", "clip_sha256", "image", "image_sha256",
+        "frame_pts", "clip_first_pts", "release_lower_bound_pts", "time_base", "clip_seconds", "status", "reason"]),
+      "근거 프레임에 누락되거나 지원하지 않는 필드가 있습니다.");
+      assert(typeof entry.pitch_key === "string" &&
+        new RegExp("^" + manifest.game_pk + ":[1-9][0-9]{0,2}:[1-9][0-9]{0,2}$").test(entry.pitch_key) &&
+        !keys.has(entry.pitch_key), "근거 프레임 투구 식별자가 올바르지 않거나 중복되었습니다.");
+      assert(typeof entry.play_id === "string" &&
+        /^[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$/i.test(entry.play_id) &&
+        !plays.has(entry.play_id.toLowerCase()), "근거 프레임 play_id가 올바르지 않거나 중복되었습니다.");
+      assert(typeof entry.image === "string" && /^evidence\/[A-Za-z0-9_-]+\.png$/.test(entry.image) &&
+        !images.has(entry.image.toLowerCase()) && /^[a-f0-9]{64}$/.test(entry.image_sha256) &&
+        /^[a-f0-9]{64}$/.test(entry.clip_sha256), "근거 이미지 경로 또는 해시가 올바르지 않습니다.");
+      assert(["frame_pts", "clip_first_pts", "release_lower_bound_pts"].every(name =>
+        Number.isSafeInteger(entry[name]) && entry[name] >= 0) &&
+        entry.frame_pts >= entry.clip_first_pts && entry.frame_pts < entry.release_lower_bound_pts &&
+        entry.time_base === "1/90000" && numeric(entry.clip_seconds, 0, 3600) &&
+        Math.abs(entry.clip_seconds - (entry.frame_pts - entry.clip_first_pts) / 90000) <= 1e-6,
+      "근거 프레임 시각이 클립 시작 또는 릴리스 하한과 일치하지 않습니다.");
+      assert(["candidate", "abstained"].includes(entry.status) &&
+        typeof entry.reason === "string" && entry.reason.trim().length > 0 && entry.reason.length <= 1000,
+      "근거 프레임 판독 상태 또는 이유가 올바르지 않습니다.");
+      keys.add(entry.pitch_key); plays.add(entry.play_id.toLowerCase()); images.add(entry.image.toLowerCase());
+    }
+    return manifest;
+  }
+
+  function evidenceFor(report, key, revealed, manifest, media) {
+    assert(typeof revealed === "boolean", "공개 여부는 명시적인 참/거짓 값이어야 합니다.");
+    // Do not return a path, reason, timestamp, or any observation before result reveal.
+    if (!revealed) return { status: "hidden", entry: null, message: "" };
+    if (manifest === null) return { status: "unavailable", entry: null, message: "이 투구의 근거 프레임은 미제공입니다." };
+    try {
+      validateEvidenceManifest(manifest);
+      const binding = mediaBinding(report, key, media);
+      const entry = manifest.entries.find(item => item.pitch_key === key);
+      if (manifest.game_pk !== report.game.game_pk || manifest.source_sha256 !== report.source.sha256 ||
+        !entry || !binding.clip || entry.play_id !== binding.clip.play_id ||
+        entry.clip_sha256 !== binding.clip.video_sha256 || entry.clip_seconds > binding.clip.duration_seconds)
+        return { status: "unavailable", entry: null, message: "현재 투구·원문·클립과 일치하는 근거 프레임이 없습니다." };
+      return { status: entry.status, entry: clone(entry), message: "" };
+    } catch (_error) {
+      return { status: "unavailable", entry: null, message: "근거 프레임을 검증하지 못했습니다. 추천과 영상 검토는 계속할 수 있습니다." };
+    }
+  }
+
   function createMediaController({ clear, status, reveal: revealResult }) {
     let sequence = 0, current = null;
     const active = token => current !== null && token === current.token;
@@ -268,6 +331,8 @@
     if (!$("report-file")) return;
     let state = null, currentVideo = null, currentMediaToken = null;
     let mediaManifest = null, mediaManifestLoaded = false, mediaManifestError = "";
+    let evidenceManifest = null, evidenceLoaded = false, evidenceError = "";
+    let evidenceRenderToken = 0;
     const make = (tag, className, value) => {
       const el = doc.createElement(tag);
       if (className) el.className = className;
@@ -356,6 +421,39 @@
       state = nextState;
       prepareMedia();
       render();
+    }
+
+    function clearEvidence() {
+      evidenceRenderToken++;
+      replace("evidence-content");
+      $("evidence-panel").hidden = true;
+    }
+
+    function renderEvidence(view) {
+      clearEvidence();
+      if (!view.revealed) return;
+      $("evidence-panel").hidden = false;
+      const result = evidenceFor(state.report, view.key, view.revealed, evidenceManifest, mediaManifest);
+      if (!result.entry) {
+        replace("evidence-content", make("p", "subtle", evidenceError ||
+          (!evidenceLoaded ? "근거 프레임을 확인하고 있습니다." : result.message)));
+        return;
+      }
+      const entry = result.entry, token = evidenceRenderToken;
+      const label = entry.status === "candidate" ? "AI 개발 관측 · 미트 위치 확정 아님" : "판독 기권 · 미트 위치 확정 불가";
+      const picture = make("img", "evidence-image");
+      picture.alt = view.key + "의 투구 전 근거 프레임 · " + label;
+      picture.addEventListener("error", () => {
+        if (token !== evidenceRenderToken) return;
+        replace("evidence-content", make("p", "subtle", "근거 이미지를 읽지 못했습니다. 추천과 영상 검토는 계속할 수 있습니다."));
+      });
+      picture.src = entry.image;
+      const detail = make("div", "evidence-detail");
+      detail.append(make("strong", "evidence-status", label), make("p", "", entry.reason),
+        make("p", "evidence-timing", "클립 " + entry.clip_seconds.toFixed(3) + "초 · 프레임 PTS " + entry.frame_pts + " · time base " + entry.time_base),
+        make("p", "footnote", "릴리스 하한 PTS " + entry.release_lower_bound_pts + ": AI가 공이 손에 남아 있다고 관측한 구간 하한이며, 정밀 릴리스 측정값이 아닙니다."),
+        make("p", "footnote", "이 이미지는 좌표나 투수 의도의 정답이 아닙니다. 기존 미트 가로 추정은 별도 원자료이며 이 사진에서 산출한 값이 아닙니다."));
+      replace("evidence-content", picture, detail);
     }
 
     function renderPlot(view) {
@@ -492,6 +590,10 @@
         card.append(make("span", "rank", c.rank), detail, probability); return card;
       }));
       renderPlot(view);
+      renderEvidence(view);
+      const nextKey = nextPitchKey(report, view.key);
+      $("next-pitch").disabled = !view.revealed || nextKey === null;
+      say("next-pitch", nextKey === null ? "이 타석의 마지막 투구" : "다음 투구");
       replace("actual-content");
       $("reveal-button").disabled = view.revealed;
       say("reveal-button", view.revealed ? "공개됨" : "영상 없이 결과 공개");
@@ -529,6 +631,8 @@
       clear() {
         state = null;
         mediaController.reset();
+        clearEvidence();
+        $("next-pitch").disabled = true;
         $("report-content").hidden = true;
         $("empty-state").hidden = true;
         // Remove already revealed content immediately, including pending/failed replacements.
@@ -543,6 +647,11 @@
     });
     $("pa-select").addEventListener("change", event => { if (state) changeSelection(selectPA(state, event.target.value)); });
     $("reveal-button").addEventListener("click", () => { if (state) { state = reveal(state); render(); } });
+    $("next-pitch").addEventListener("click", () => {
+      if (!state || !state.revealed) return;
+      const key = nextPitchKey(state.report, state.key);
+      if (key !== null) changeSelection(selectPitch(state, key));
+    });
     $("media-play").addEventListener("click", () => {
       const video = currentVideo, token = currentMediaToken;
       if (video && token !== null) mediaController.requestPlay(token, () => video.play());
@@ -571,13 +680,27 @@
         mediaManifestError = "영상 연결 정보를 사용할 수 없습니다. 추천 검토와 직접 공개는 계속할 수 있습니다.";
       }
       mediaManifestLoaded = true;
-      if (state) prepareMedia();
+      if (state) { prepareMedia(); render(); }
+    })();
+    (async () => {
+      try {
+        const response = await fetch("./review-evidence.json", { cache: "no-store" });
+        if (response.status !== 404) {
+          assert(response.ok, "근거 프레임 명세를 읽지 못했습니다.");
+          evidenceManifest = validateEvidenceManifest(parseBytes(await response.arrayBuffer()));
+        }
+      } catch (_error) {
+        evidenceManifest = null;
+        evidenceError = "근거 프레임을 검증하지 못했습니다. 추천과 영상 검토는 계속할 수 있습니다.";
+      }
+      evidenceLoaded = true;
+      if (state) render();
     })();
   }
   function pointsForCoordinate(points, x, z) {
     return points.find(p => p.kind === "candidate" && p.x === x && p.z === z);
   }
-  return { SCHEMA, PROFILE, MAX_BYTES, MEDIA_SCHEMA, SERVICE_ZONE_HALF_WIDTH, validateReport, viewFor, initialState, selectPitch, selectPA,
+  return { SCHEMA, PROFILE, MAX_BYTES, MEDIA_SCHEMA, EVIDENCE_SCHEMA, SERVICE_ZONE_HALF_WIDTH, validateReport, viewFor, initialState, selectPitch, selectPA, nextPitchKey, validateEvidenceManifest, evidenceFor,
     reveal, groupsFor, plotModel, setupSummary, createLoadCoordinator, validateMediaManifest, mediaBinding,
     createMediaController, parseBytes, mount };
 });
