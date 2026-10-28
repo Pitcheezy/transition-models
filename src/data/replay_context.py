@@ -134,7 +134,7 @@ def contact_sheets(folder, destination, pitch_key, frames, kind):
     return pages
 
 
-def extract_context(root, row, destination, ffprobe, ffmpeg):
+def extract_context(root, row, destination, ffprobe, ffmpeg, *, frame_selector=None):
     from PIL import Image
 
     path = clip_file(root, row)
@@ -165,7 +165,7 @@ def extract_context(root, row, destination, ffprobe, ffmpeg):
     if any(type(value) is not int for value in size) or size != FRAME_SIZE:
         raise ValueError("the fixed context crop requires 1280x720 video")
     crop_size = validate_crop(CROP, size)
-    frames = select_frames(time_base, index)
+    frames = (select_frames if frame_selector is None else frame_selector)(time_base, index)
     folder = destination / row["pitch_key"].replace(":", "_")
     folder.mkdir()
     probe_path = folder / "ffprobe.json"
