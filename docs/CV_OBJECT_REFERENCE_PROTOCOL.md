@@ -53,3 +53,24 @@ Codex는 과거 개발 내용을 이미 알며, Claude는 새 호출의 사진�
 
 검사는 합성 입력으로 결속/기하 계산을 확인하고, 실제3장 결과는 AI 개발 진단으로 따로 기록한다.
 이 단위는 새 검출기·연속 추적·물리 거리·의도 정확도의 완성이 아니다.
+
+## 재현과 실행 범위
+
+비공개 입력 디렉터리에 `input.json`과 그 상대 경로 PNG, 두 최초 판독 응답을 둔다.
+입력 작성은 기존 CV48c audit의 고정 대표 PTS·영상/이미지 SHA를 대조한 뒤 수행한다.
+`source_commit`과 `source_review_sha256_lf`는 출처 식별 정보이며 이 비교 CLI가 그 Git 커밋이나
+전체 과거 판독을 다시 인증하는 것은 아니다. 실제3장 수신 경로와 해시는 결과 영수증에 별도 기록한다.
+
+```sh
+python scripts/79_compare_object_references.py --input <PRIVATE_INPUT>/input.json --reading-a <PRIVATE_INPUT>/codex_reading.json --reading-b <PRIVATE_INPUT>/claude_reading.json --out outputs/<NEW_PRIVATE_COMPARISON>
+python -m pytest tests/test_object_reference.py tests/test_object_reference_cli.py tests/test_checklist_model.py -q
+python scripts/check_project.py --lint-only
+```
+
+출력은 새 비공개 폴더의 `comparison.json`과 원본 PNG 바이트를 포함한 SVG다. 기존 폴더를
+덮어쓰지 않는다. SVG의 A는 첫 판독(하늘색), B는 둘째 판독(분홍색), M/H/G는 미트/맨손/보호대다.
+필요 환경은 기존 Pillow와 Python이며, Windows junction까지 명시적으로 거부하는 실행 기준은
+Python3.12 이상이다. 이전 Python에서는 resolved-path containment가 유지돼도 junction 자체의
+전면 거부를 주장하지 않는다. 이것은 기존 재생 실행팩의 Python 요구 버전을 바꾸지 않는다.
+모든 입력 검사는 쓰기 전에 완료하지만 디스크 고장·용량 부족까지 원자적 복구하는 도구는 아니다.
+판독자 이름과 모델 문자열은 자가 보고이며 서로 다른 사람/모델이라는 인증 수단이 아니다.
