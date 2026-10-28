@@ -117,5 +117,38 @@
     "static model review is not independent runtime execution",
     "private showinfo logs include local paths and nondeterministic pointer/progress text",
     "not human accuracy, not a production approval"
-  ]
+  ],
+  "ci_followup": {
+    "commit": "021514b94bb0db459bc5c2a1682cd826f13a98a8",
+    "actual_models": [
+      "claude-fable-5-1"
+    ],
+    "raw_response_sha256": "7378b8e3e2fad78b321521176c144171fbce0fbf75e3236fe36689e3312e0282",
+    "review": {
+      "verdict": "APPROVE",
+      "blockers": [],
+      "notes": [
+        "Expression `${{ runner.os == 'macOS' && 300 || 180 }}` is valid. The `runner` context is available inside `run` steps, `runner.os` reports `macOS` on macos-15, and the `&& ||` ternary idiom is safe here because 300 is truthy, so the fallback 180 only applies to non-macOS.",
+        "It matches the existing `if: runner.os == 'macOS'` check on the libomp step, so both branches use the same condition.",
+        "Ubuntu keeps the prior 180s value. Only macOS is widened to 300s, consistent with the stated scope.",
+        "No safety or test bypass: `permissions: contents: read`, `timeout-minutes: 25`, concurrency, matrix, `--cpu-only`, `uv sync --frozen`, the brew install, and the node syntax checks are all unchanged. No tests are skipped, deselected, or marked xfail by this diff.",
+        "300s gives roughly 120s of headroom over the observed 177s run, which covers the shutdown kill without approaching the 25-minute job timeout.",
+        "Unverified from the workflow alone: `scripts/check_project.py` must accept `--test-timeout` as a wrapper-level wall-clock limit that includes process shutdown, not a per-test pytest timeout. If it is per-test, the fix will not address the shutdown kill. Confirm with a quick read of that script before merging.",
+        "Minor: the macOS test wrapper will now also hide a genuine regression that pushes the suite from 177s toward 300s. Acceptable for a cleanup margin, but worth a follow-up to measure where the 177s is spent if it keeps growing."
+      ]
+    },
+    "wrapper_semantics_confirmed": "check_project.py process.wait(timeout=args.test_timeout), includes shutdown",
+    "prior_attempts": [
+      {
+        "run_id": 40651751620,
+        "attempt": 1,
+        "result": "timeout180 before full summary"
+      },
+      {
+        "run_id": 40651751620,
+        "attempt": 2,
+        "result": "2850passed/8skipped/2deselected/177.46sec printed, then process timeout180"
+      }
+    ]
+  }
 }

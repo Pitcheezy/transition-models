@@ -36,6 +36,12 @@ CRC·폴더와ZIP 전바이트·동봉런타임·표준라이브러리 `--check`
 `outputs/exhibition_replay_pack_20261028_v2.zip`이며 이전v1팩은 보존했다.
 [브라우저·실행팩 영수증](results/exhibition_replay_20261028/checks_v2.json).
 
+원격CI 후속: fa2794d는 Linux·Chromium·WebKit 통과, macOS는180초 제한으로2회 종료됐다.
+2회차는2850 passed/8 skipped/2 deselected/177.46초를 출력한 뒤 프로세스 종료 정리에서 제한에 걸렸다.
+021514b는 macOS만300초로 보강하며 Ubuntu180초·전체job25분·테스트 선택은 그대로다.
+Fable 고정021514b 검토APPROVE. 새 head 실제 종료 결과는 PR84 checks와 board 종료 댓글로 확인한다.
+시간 제한 실패를 테스트 성공/실제 Mac 사용 확인으로 바꾸지 않는다.
+
 재현: `77_build_replay_context.py --root <CLIP_ROOT> --out <NEW_PRIVATE_DIR> --ffprobe <FFPROBE> --ffmpeg <FFMPEG>`.
 이번 고정 audit는 `outputs/exhibition_replay_context_20261028_pts_v2`에 있고, 아래 prepare 명령의
 decisions를 `context_review_v1.json`으로 바꾼다. 나머지 빌드/실행 명령은 동일하다.
