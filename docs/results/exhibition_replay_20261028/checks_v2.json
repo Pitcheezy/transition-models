@@ -1,0 +1,180 @@
+{
+  "schema": "pitcheezy-exhibition-replay-check-v2",
+  "runtime_source_commit": "92a703e27e94f7f655d6d7a5125e9cc4f6515bd3",
+  "extraction_followup_commit": "041f8542945410a433b5dac9ee4bc0c814980cfb",
+  "python_checks": {
+    "before_extraction_fix": 189,
+    "extraction_after_fix": 24,
+    "new_adversarial_cases": 5
+  },
+  "synthetic_browser_checks": 19,
+  "node_ui_checks": 59,
+  "actual_browser": {
+    "schema": "pitcheezy-private-exhibition-browser-check-v1",
+    "scope": "offline local replay, no new model inference",
+    "browser": "155.0.8059.86",
+    "checks": [
+      {
+        "name": "initial_no_result_or_evidence_or_image_request",
+        "passed": true
+      },
+      {
+        "name": "same_source_raster_points_and_crop",
+        "pitch_key": "849843:1:1",
+        "point": {
+          "x": 566,
+          "y": 317
+        },
+        "passed": true
+      },
+      {
+        "name": "actual_pitch_playback_end_and_bound_image",
+        "pitch_key": "849843:1:1",
+        "passed": true,
+        "play_id": "f6d7a0f3-d111-3c6d-92cd-2b5a867ac931",
+        "status": "candidate",
+        "frame_pts": 191959,
+        "image": {
+          "src": "evidence/849843_1_1.png",
+          "width": 1280,
+          "height": 720
+        },
+        "playback": {
+          "current_time": 6.999,
+          "duration": 6.999,
+          "ended": true,
+          "video_width": 1280,
+          "played_start": 0,
+          "played_end": 6.999
+        }
+      },
+      {
+        "name": "next_pitch_resets_evidence_and_result",
+        "from_pitch": "849843:1:1",
+        "passed": true
+      },
+      {
+        "name": "same_source_raster_points_and_crop",
+        "pitch_key": "849843:1:2",
+        "point": {
+          "x": 566,
+          "y": 333
+        },
+        "passed": true
+      },
+      {
+        "name": "actual_pitch_playback_end_and_bound_image",
+        "pitch_key": "849843:1:2",
+        "passed": true,
+        "play_id": "aa3ecf43-5435-3238-aac7-5bfeef1cabe2",
+        "status": "candidate",
+        "frame_pts": 191908,
+        "image": {
+          "src": "evidence/849843_1_2.png",
+          "width": 1280,
+          "height": 720
+        },
+        "playback": {
+          "current_time": 6.829,
+          "duration": 6.829,
+          "ended": true,
+          "video_width": 1280,
+          "played_start": 0,
+          "played_end": 6.829
+        }
+      },
+      {
+        "name": "next_pitch_resets_evidence_and_result",
+        "from_pitch": "849843:1:2",
+        "passed": true
+      },
+      {
+        "name": "same_source_raster_points_and_crop",
+        "pitch_key": "849843:1:3",
+        "point": {
+          "x": 558,
+          "y": 325
+        },
+        "passed": true
+      },
+      {
+        "name": "actual_pitch_playback_end_and_bound_image",
+        "pitch_key": "849843:1:3",
+        "passed": true,
+        "play_id": "f29b740f-f187-3089-b57a-3b55e8370c19",
+        "status": "candidate",
+        "frame_pts": 190465,
+        "image": {
+          "src": "evidence/849843_1_3.png",
+          "width": 1280,
+          "height": 720
+        },
+        "playback": {
+          "current_time": 6.929,
+          "duration": 6.929,
+          "ended": true,
+          "video_width": 1280,
+          "played_start": 0,
+          "played_end": 6.929
+        }
+      },
+      {
+        "name": "pa2_missing_evidence_and_video_clears_old_image",
+        "passed": true
+      },
+      {
+        "name": "failed_report_replacement_removes_evidence",
+        "passed": true
+      },
+      {
+        "name": "valid_report_recovery_starts_hidden",
+        "passed": true
+      },
+      {
+        "name": "no_unhandled_browser_errors_or_nonlocal_requests",
+        "passed": true
+      },
+      {
+        "name": "mobile_evidence_no_horizontal_overflow",
+        "passed": true
+      }
+    ],
+    "screenshots": [
+      "pitch-1-revealed.png",
+      "pitch-2-revealed.png",
+      "pitch-3-revealed.png",
+      "pa2-missing-evidence.png",
+      "mobile-evidence.png"
+    ],
+    "page_errors": [],
+    "nonlocal_requests": [],
+    "image_request_count": 3,
+    "success": true,
+    "screenshot_sha256": {
+      "pitch-1-revealed.png": "16f17a4b26fbbdb26a34eba87d42b5112febb4fe538150d6e0d2e344ccec5ac1",
+      "pitch-2-revealed.png": "ce1d2dfec26e46e987c0cea88ff04c7a781236112bed458977d65d40ac7ac402",
+      "pitch-3-revealed.png": "2bf7e50b1ef2c37efe5ecfe58f772f0754b9511ead7419a9cec944fbcf09de2b",
+      "pa2-missing-evidence.png": "750636a6458813c72b2209d7ce8d328e687b2d40e340e0b35b1b5d40daa2e99d",
+      "mobile-evidence.png": "d56c0755c1f137938c14d59d7f07936a3fd53b262e934c7c39c7553ddbb47b09"
+    }
+  },
+  "package": {
+    "filename": "exhibition_replay_pack_20261028_v2.zip",
+    "bytes": 16945651,
+    "sha256": "f269ac511491ddd948d8e6872ebb57bf39348e1d885538f65db33e1cbe6b7b08",
+    "files": 20,
+    "crc": "passed",
+    "archive_vs_directory_bytes": "all_equal",
+    "packaged_runtime_matches_current_source": true,
+    "public_distribution": false
+  },
+  "report_sha256": "154d9cd1cb166552db5975137e2ba431b9ab48f94fcfa6bdd05304f645427c80",
+  "evidence_sidecar_sha256": "47ef017162d34a67bbef0674dbcde05e991609f62cf7455c96d78f5f868db3ea",
+  "limits": [
+    "offline replay only",
+    "AI candidate points, independent human accuracy unmeasured",
+    "no physical/plate coordinate transform",
+    "no production rollout",
+    "no teammate or Cloudflare mutation"
+  ]
+}
