@@ -118,9 +118,9 @@ def overlay_svg(frame, comparison, image_bytes, reviewers):
     parts = [
         f'<svg xmlns="http://www.w3.org/2000/svg" width="{canvas_width}" height="{canvas_height}" viewBox="0 0 {canvas_width} {canvas_height}">',
         '<rect width="100%" height="100%" fill="#111827"/>',
-        "<style>text{font-family:Arial,sans-serif;fill:#fff} .boxlabel{font-size:12px;paint-order:stroke;stroke:#111;stroke-width:3px}</style>",
+        "<style>text{font-family:Arial,sans-serif;fill:#fff} .boxlabel{font-size:10px;paint-order:stroke;stroke:#111;stroke-width:2px}</style>",
         f'<text x="12" y="25" font-size="20">{_xml(frame["pitch_key"])} | PTS {_xml(frame["frame_pts"])} | source raster {_xml(width)} x {_xml(height)}</text>',
-        '<text x="12" y="50" font-size="16">A = cyan solid; B = magenta dashed. Boxes are approximate object references.</text>',
+        '<text x="12" y="50" font-size="16">A cyan solid / B magenta dashed; M=mitt, H=bare hand, G=protective gear. Approximate boxes.</text>',
         '<defs><g id="scene">',
         f'<image width="{width}" height="{height}" href="data:image/png;base64,{raster}"/>',
     ]
@@ -131,9 +131,13 @@ def overlay_svg(frame, comparison, image_bytes, reviewers):
                 parts.append(
                     f'<rect x="{x1}" y="{y1}" width="{x2 - x1}" height="{y2 - y1}" fill="none" stroke="{color}" stroke-width="2"{dash}/>'
                 )
-                label = f"{side.upper()} {obj['kind']} {index}"
+                symbol = {"mitt": "M", "bare_hand": "H", "protective_gear": "G"}[obj["kind"]]
+                suffix = str(index) if len(obj["boxes_" + side]) > 1 else ""
+                label = f"{side.upper()} {symbol}{suffix}"
                 label_y = max(12, y1 - 3) if side == "a" else min(height - 2, y2 + 13)
-                parts.append(f'<text class="boxlabel" x="{x1}" y="{label_y}">{_xml(label)}</text>')
+                parts.append(
+                    f'<text class="boxlabel" x="{x1}" y="{label_y}" style="fill:{color}">{_xml(label)}</text>'
+                )
     parts.extend(
         [
             "</g></defs>",

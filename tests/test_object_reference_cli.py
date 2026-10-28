@@ -258,6 +258,25 @@ def test_no_point_is_invented_for_unresolved_object(bundle):
     assert all("point" not in obj for obj in row["objects"])
 
 
+def test_overlay_uses_short_color_coded_labels_and_explicit_legend(bundle):
+    reading = json.loads(bundle[1].read_bytes())
+    objects = reading["frames"][0]["objects"]
+    objects[1].update(status="located", boxes=[[25, 10, 30, 20]])
+    objects[2].update(status="located", boxes=[[10, 25, 20, 35], [25, 25, 35, 40]])
+    save(bundle[1], reading)
+    run(bundle)
+    svg = ElementTree.fromstring((bundle[3] / "849843_1_1.svg").read_bytes())
+    texts = svg.findall(".//{http://www.w3.org/2000/svg}text")
+    labels = [node for node in texts if node.attrib.get("class") == "boxlabel"]
+    assert [node.text for node in labels] == ["A M", "A H", "A G1", "A G2", "B M"]
+    assert [node.attrib["style"] for node in labels] == ["fill:#00e5ff"] * 4 + ["fill:#ff5de4"]
+    assert any("M=mitt, H=bare hand, G=protective gear" in (node.text or "") for node in texts)
+    assert not any(
+        "protective_gear" in (node.text or "") or "bare_hand" in (node.text or "")
+        for node in labels
+    )
+
+
 def test_invalid_png_rejected_even_with_updated_hash(bundle):
     manifest = json.loads(bundle[0].read_bytes())
     path = bundle[0].parent / "frame3.png"
