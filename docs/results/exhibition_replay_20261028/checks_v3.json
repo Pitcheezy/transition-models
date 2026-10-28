@@ -1,0 +1,335 @@
+{
+  "schema": "pitcheezy-exhibition-replay-check-v3",
+  "code_commit": "979403c88a8bd06ec8aada03045de818a5d05f33",
+  "evidence_kind": "offline_local_replay_checks_not_model_or_human_accuracy",
+  "python_checks": {
+    "backend_related": 190,
+    "package_and_checklist": 21,
+    "unique_initial_total": 211,
+    "counts_additive": true,
+    "backend_files": [
+      "tests/test_prepare_replay_evidence.py",
+      "tests/test_service_review_server.py"
+    ],
+    "other_files": [
+      "tests/test_service_review_package.py",
+      "tests/test_checklist_model.py"
+    ],
+    "followup_preparation_tests": 50,
+    "new_followup_cases": 22,
+    "unique_final_total": 233
+  },
+  "node_ui_checks": 64,
+  "synthetic_browser_checks": 22,
+  "synthetic_browser_final_wording_v3_recheck": 3,
+  "quality_paths": 182,
+  "actual_browser_record_sha256": "e2a37178455b283277b330c802d15fec20692b08dbf2cde7c19c6c52bff5c176",
+  "actual_browser": {
+    "schema": "pitcheezy-private-exhibition-browser-check-v1",
+    "scope": "offline local replay, no new model inference",
+    "browser": "155.0.8059.86",
+    "checks": [
+      {
+        "name": "initial_no_result_or_evidence_or_image_request",
+        "passed": true
+      },
+      {
+        "name": "interval_counts_and_uncertainty",
+        "pitch_key": "849843:1:1",
+        "counts": [
+          24,
+          24,
+          0,
+          0
+        ],
+        "representative_decision": "supported_development_candidate",
+        "summary": "준비 구간의 AI 개발 검토 · 정확도·연속 추적 결과 아님조사 구간: 클립 1.919–2.320초 · 양끝 PTS 173842–209977 포함전체 24프레임 · 개발 후보 24 · 객체 식별 미해결 0 · 자세 판단 미해결 0개발 후보는 AI 검토에서 준비 모습으로 남긴 상태입니다. 미트와 다른 물체를 구별하지 못한 경우는 객체 식별 미해결, 준비 자세 판단이 남은 경우는 자세 판단 미해결입니다.릴리스 전 구간도 투수 동작이 이미 시작된 뒤일 수 있습니다. 추천 시점에 확보된 자료임을 검증하지 않았습니다.같은 투구의 인접 프레임 조사이며 독립 평가 표본이나 정확도 수치가 아닙니다. 새 좌표 산출·보간·사람 검증·물리 거리 측정은 하지 않았습니다.",
+        "passed": true
+      },
+      {
+        "name": "same_source_raster_points_and_crop",
+        "pitch_key": "849843:1:1",
+        "point": {
+          "x": 566,
+          "y": 317
+        },
+        "passed": true
+      },
+      {
+        "name": "actual_pitch_playback_end_and_bound_image",
+        "pitch_key": "849843:1:1",
+        "passed": true,
+        "play_id": "f6d7a0f3-d111-3c6d-92cd-2b5a867ac931",
+        "status": "candidate",
+        "frame_pts": 191959,
+        "image": {
+          "src": "evidence/849843_1_1.png",
+          "width": 1280,
+          "height": 720
+        },
+        "playback": {
+          "current_time": 6.999,
+          "duration": 6.999,
+          "ended": true,
+          "video_width": 1280,
+          "played_start": 0,
+          "played_end": 6.999
+        }
+      },
+      {
+        "name": "next_pitch_resets_evidence_and_result",
+        "from_pitch": "849843:1:1",
+        "passed": true
+      },
+      {
+        "name": "interval_counts_and_uncertainty",
+        "pitch_key": "849843:1:2",
+        "counts": [
+          25,
+          0,
+          25,
+          0
+        ],
+        "representative_decision": "identity_unresolved",
+        "summary": "준비 구간의 AI 개발 검토 · 정확도·연속 추적 결과 아님조사 구간: 클립 1.921–2.322초 · 양끝 PTS 173890–209926 포함전체 25프레임 · 개발 후보 0 · 객체 식별 미해결 25 · 자세 판단 미해결 0개발 후보는 AI 검토에서 준비 모습으로 남긴 상태입니다. 미트와 다른 물체를 구별하지 못한 경우는 객체 식별 미해결, 준비 자세 판단이 남은 경우는 자세 판단 미해결입니다.릴리스 전 구간도 투수 동작이 이미 시작된 뒤일 수 있습니다. 추천 시점에 확보된 자료임을 검증하지 않았습니다.같은 투구의 인접 프레임 조사이며 독립 평가 표본이나 정확도 수치가 아닙니다. 새 좌표 산출·보간·사람 검증·물리 거리 측정은 하지 않았습니다.대표 프레임의 판독도 미해결이므로 기존 후보점은 이 화면에서 숨겼습니다.",
+        "passed": true
+      },
+      {
+        "name": "same_source_raster_points_and_crop",
+        "pitch_key": "849843:1:2",
+        "point": null,
+        "passed": true
+      },
+      {
+        "name": "actual_pitch_playback_end_and_bound_image",
+        "pitch_key": "849843:1:2",
+        "passed": true,
+        "play_id": "aa3ecf43-5435-3238-aac7-5bfeef1cabe2",
+        "status": "abstained",
+        "frame_pts": 191908,
+        "image": {
+          "src": "evidence/849843_1_2.png",
+          "width": 1280,
+          "height": 720
+        },
+        "playback": {
+          "current_time": 6.829,
+          "duration": 6.829,
+          "ended": true,
+          "video_width": 1280,
+          "played_start": 0,
+          "played_end": 6.829
+        }
+      },
+      {
+        "name": "next_pitch_resets_evidence_and_result",
+        "from_pitch": "849843:1:2",
+        "passed": true
+      },
+      {
+        "name": "interval_counts_and_uncertainty",
+        "pitch_key": "849843:1:3",
+        "counts": [
+          31,
+          28,
+          0,
+          3
+        ],
+        "representative_decision": "supported_development_candidate",
+        "summary": "준비 구간의 AI 개발 검토 · 정확도·연속 추적 결과 아님조사 구간: 클립 1.816–2.316초 · 양끝 PTS 163438–208483 포함전체 31프레임 · 개발 후보 28 · 객체 식별 미해결 0 · 자세 판단 미해결 3개발 후보는 AI 검토에서 준비 모습으로 남긴 상태입니다. 미트와 다른 물체를 구별하지 못한 경우는 객체 식별 미해결, 준비 자세 판단이 남은 경우는 자세 판단 미해결입니다.릴리스 전 구간도 투수 동작이 이미 시작된 뒤일 수 있습니다. 추천 시점에 확보된 자료임을 검증하지 않았습니다.같은 투구의 인접 프레임 조사이며 독립 평가 표본이나 정확도 수치가 아닙니다. 새 좌표 산출·보간·사람 검증·물리 거리 측정은 하지 않았습니다.대표 이미지의 기존 후보점만 표시합니다. 구간 안의 미해결 프레임까지 확인된 것으로 해석하지 마세요.",
+        "passed": true
+      },
+      {
+        "name": "same_source_raster_points_and_crop",
+        "pitch_key": "849843:1:3",
+        "point": {
+          "x": 558,
+          "y": 325
+        },
+        "passed": true
+      },
+      {
+        "name": "actual_pitch_playback_end_and_bound_image",
+        "pitch_key": "849843:1:3",
+        "passed": true,
+        "play_id": "f29b740f-f187-3089-b57a-3b55e8370c19",
+        "status": "candidate",
+        "frame_pts": 190465,
+        "image": {
+          "src": "evidence/849843_1_3.png",
+          "width": 1280,
+          "height": 720
+        },
+        "playback": {
+          "current_time": 6.929,
+          "duration": 6.929,
+          "ended": true,
+          "video_width": 1280,
+          "played_start": 0,
+          "played_end": 6.929
+        }
+      },
+      {
+        "name": "pa2_missing_evidence_and_video_clears_old_image",
+        "passed": true
+      },
+      {
+        "name": "failed_report_replacement_removes_evidence",
+        "passed": true
+      },
+      {
+        "name": "valid_report_recovery_starts_hidden",
+        "passed": true
+      },
+      {
+        "name": "no_unhandled_browser_errors_or_nonlocal_requests",
+        "passed": true
+      },
+      {
+        "name": "mobile_evidence_no_horizontal_overflow",
+        "passed": true
+      },
+      {
+        "name": "mobile_p2_unresolved_has_no_point_or_horizontal_overflow",
+        "passed": true
+      }
+    ],
+    "screenshots": [
+      "pitch-1-revealed.png",
+      "pitch-2-revealed.png",
+      "pitch-3-revealed.png",
+      "pa2-missing-evidence.png",
+      "mobile-evidence.png",
+      "mobile-p2-unresolved.png"
+    ],
+    "page_errors": [],
+    "nonlocal_requests": [],
+    "image_request_count": 3,
+    "success": true,
+    "screenshot_sha256": {
+      "pitch-1-revealed.png": "b03800d97cfb7da4aa7343f8fd6d0f40d3055c762e75e31f5b4ddea9a1d1291e",
+      "pitch-2-revealed.png": "19840ec1b3f23ae071b88a0eef9c6715ad37ca3d3d098ac651ddbe4f44960571",
+      "pitch-3-revealed.png": "91bc420308d6005219d4a103e69687d779b4f7d4560a227ccf48beb7e62375d8",
+      "pa2-missing-evidence.png": "750636a6458813c72b2209d7ce8d328e687b2d40e340e0b35b1b5d40daa2e99d",
+      "mobile-evidence.png": "65d4d72a888b878a61fc8f279415195a1d5eecb2c40ec69c992f71132b95b562",
+      "mobile-p2-unresolved.png": "fcb871c304ba30fe48e65a7f2437776783cb3a8c588b2a17df9e949538d584a0"
+    }
+  },
+  "package": {
+    "schema": "pitcheezy-private-cv48d-package-check-v1",
+    "code_commit": "979403c88a8bd06ec8aada03045de818a5d05f33",
+    "zip_path": "outputs/exhibition_replay_pack_20261028_v3.zip",
+    "zip_bytes": 16947853,
+    "zip_sha256": "b1ecf94b97788192aec396eacac8e18bf243df548f76dc33a34525dd84919671",
+    "file_count": 20,
+    "crc": "pass",
+    "all_folder_zip_bytes": "pass",
+    "isolated_stdlib_launcher": "pass",
+    "copied_runtime_bytes": "pass",
+    "previous_v2_zip_unchanged": true,
+    "source_sha256_lf": "a5018dd22b8a0cbd2ac055671f010b053449ec9755af18037d5d6cf176cf6066",
+    "review_evidence_sha256": "85482d6e4c4aef0d9d27428452e574826d6e683474b895648a8d3d6f835746be",
+    "report_sha256": "154d9cd1cb166552db5975137e2ba431b9ab48f94fcfa6bdd05304f645427c80",
+    "pitch_summaries": [
+      {
+        "pitch_key": "849843:1:1",
+        "frame_pts": 191959,
+        "status": "candidate",
+        "point": {
+          "x": 566,
+          "y": 317
+        },
+        "interval_review": {
+          "source_sha256_lf": "a5018dd22b8a0cbd2ac055671f010b053449ec9755af18037d5d6cf176cf6066",
+          "lower_pts_inclusive": 173842,
+          "upper_pts_inclusive": 209977,
+          "decoded_frames": 24,
+          "supported_development_candidate": 24,
+          "identity_unresolved": 0,
+          "posture_unresolved": 0,
+          "representative_decision": "supported_development_candidate"
+        }
+      },
+      {
+        "pitch_key": "849843:1:2",
+        "frame_pts": 191908,
+        "status": "abstained",
+        "point": null,
+        "interval_review": {
+          "source_sha256_lf": "a5018dd22b8a0cbd2ac055671f010b053449ec9755af18037d5d6cf176cf6066",
+          "lower_pts_inclusive": 173890,
+          "upper_pts_inclusive": 209926,
+          "decoded_frames": 25,
+          "supported_development_candidate": 0,
+          "identity_unresolved": 25,
+          "posture_unresolved": 0,
+          "representative_decision": "identity_unresolved"
+        }
+      },
+      {
+        "pitch_key": "849843:1:3",
+        "frame_pts": 190465,
+        "status": "candidate",
+        "point": {
+          "x": 558,
+          "y": 325
+        },
+        "interval_review": {
+          "source_sha256_lf": "a5018dd22b8a0cbd2ac055671f010b053449ec9755af18037d5d6cf176cf6066",
+          "lower_pts_inclusive": 163438,
+          "upper_pts_inclusive": 208483,
+          "decoded_frames": 31,
+          "supported_development_candidate": 28,
+          "identity_unresolved": 0,
+          "posture_unresolved": 3,
+          "representative_decision": "supported_development_candidate"
+        }
+      }
+    ],
+    "new_point_outputs": 0,
+    "independent_human_reviews": 0,
+    "limits": [
+      "local Windows only",
+      "not physical accuracy or continuous tracking",
+      "private pack not publicly distributed"
+    ]
+  },
+  "observed_screenshots": [
+    "mobile-p2-unresolved.png",
+    "pitch-3-revealed.png"
+  ],
+  "independent_human_reviews": 0,
+  "new_point_outputs": 0,
+  "displayed_static_candidate_points": 2,
+  "withheld_representative_points": 1,
+  "limitations": [
+    "3pitches from1PA;80adjacentframes not80independentpitches",
+    "new summary does not resolve P2objectidentity or P3last3postures",
+    "no physical distance, intent, independent accuracy or fresh recommendation inference",
+    "Windows Chrome and mobile-sized viewport are not actual Mac/iPhone tests",
+    "localprivate only; mainmerge and Cloudflare unchanged"
+  ],
+  "test_harness_notes": [
+    "First isolated launch check used -I and ignored PYTHONUTF8; child output wascp949 while capture expectedutf8. Corrected harness with -I -X utf8, not productcode, and portablecheckpassed. Failedtemp extraction preserved.",
+    "First sandboxed backendtest attempt could notwrite pytesttemp; escalated owned-workspace runpassed."
+  ],
+  "reproduction": [
+    "python scripts/prepare_replay_evidence.py --audit-dir <CV48B_FIXED_AUDIT> --decisions docs/results/exhibition_replay_20261028/context_review_v1.json --interval-review docs/results/exhibition_replay_20261028/interval_review_v1.json --interval-audit-dir <CV48C_FIXED_AUDIT> --out-dir <NEW_PRIVATE_EVIDENCE>",
+    "python scripts/build_service_review.py --input <PROVIDED_S_RAW> --source-kind provided_export --include-first-pa-video --media-dir <V5_MEDIA> --evidence-dir <NEW_PRIVATE_EVIDENCE> --out-dir <NEW_PRIVATE_PACK> --zip <NEW_PRIVATE_ZIP>",
+    "python -I -X utf8 <EXTRACTED_PACK>/launch_review.py --check",
+    "node --test web/service-review/review.test.cjs",
+    "node --test --test-concurrency=1 tests/browser/service-review.test.cjs"
+  ],
+  "preparation_followup_commit": "bc47867346e4b7766f04e1b3cf2b9a23e5dec445",
+  "preparation_followup_actual_data_unchanged": true,
+  "code_review_record": "interval_display_code_review_v1.json",
+  "initial_runtime_ci": {
+    "commit": "979403c88a8bd06ec8aada03045de818a5d05f33",
+    "checks_passed": 4,
+    "linux_and_macos_tests_each": 2918,
+    "skipped_each": 8,
+    "deselected_each": 2,
+    "ci_url": "https://github.com/Pitcheezy/transition-models/actions/runs/40670655737",
+    "browser_ci_url": "https://github.com/Pitcheezy/transition-models/actions/runs/40670655859"
+  }
+}

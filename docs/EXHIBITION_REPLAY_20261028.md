@@ -3,6 +3,58 @@
 목표·일정은 [PLAN](../PLAN.md), 현재 담당·다음 단위는 [CHECKLIST](../CHECKLIST.md)를 따른다.
 이 문서는 이번 고정 구현의 근거다. 팀원 코드·Cloudflare·공개 사이트는 변경하지 않았다.
 
+## CV48d — 구간 판독을 재생 화면에 연결
+
+기존 첫 타석 재생 화면에서 결과 공개 뒤 **조사 프레임 수·개발 후보·객체 식별 미해결·자세 판단 미해결**을
+함께 보여준다. 1구는24장 모두 개발 후보, 2구는25장 모두 객체 식별 미해결, 3구는28장 후보와3장 자세
+미해결이다. 이것은 같은 투구의 인접 프레임에 대한 AI 개발 검토이며 정확도·독립 평가·연속 추적이 아니다.
+
+2구는 대표 프레임도 미해결이므로 **새 v3팩에서는 기존 후보점을 숨긴다.** 근거 이미지와 이유는 남긴다.
+1·3구의 점은 CV48b에서 저장한 정지 이미지 후보이며 이번 구간 조사로 새로 산출한 점이 아니다.
+특히3구의 대표점이 마지막3프레임의 자세까지 확인했다는 뜻은 아니다. 미해결 판독을 맞을 때까지
+다시 실행하지 않았으며 기존 v2팩·판독 원본·미트 가로 추정 자료를 보존했다.
+
+내부 sidecar `pitcheezy-service-review-evidence-v3`는 v2의 이미지/좌표 필드에 `interval_review`를 추가한다.
+준비 도구가 원본 판독·추출 audit·80개 실제 이미지의 SHA, 투구 ID/play_id/영상 SHA, 정수 PTS와
+프레임 분모·분류 합·대표 프레임 판정을 대조한다. v3의 모든 행에는 해당 구간 판독이 필요하며 일부만
+맞춰 섞지 않는다. 표시기는 요약의 형식을 검증하지만 원판독 전체를 다시 읽지 않는다.
+`source_sha256_lf`는 판독 JSON의 UTF-8 원본 바이트에서 CRLF만 LF로 바꾼 SHA다. 의미 기준 JSON
+정규화나 출처 인증이 아니다. 고정 원본 값은 `a5018dd22b8a0cbd2ac055671f010b053449ec9755af18037d5d6cf176cf6066`이다.
+
+v1/v2 호환과 PNG 크기·헤더 검사를 유지했다. 투구/타석/보고서 변경, 이미지 실패, 늦은 이미지 응답에서
+이전 구간 요약과 점이 남지 않는다. 투구 전에는 이 패널을 숨기지만 이는 접근 통제가 아니다. 조사
+구간은 투수 동작이 시작된 뒤일 수 있으며, 추천 시점에 확보한 정보임을 검증한 것이 아니다.
+
+로컬 검증: Python 초기211개(서로 다른4파일), Node64, Chrome 합성22 및 최종 문구3항목 재확인,
+실제3클립 원속도 순차 재생·초기화·파일 오류 복구·모바일 폭18항목 통과. 캡처2장을 직접 확인했다.
+새팩20파일·16,947,853bytes, SHA `b1ecf94b97788192aec396eacac8e18bf243df548f76dc33a34525dd84919671`.
+CRC/전체 바이트/저장소 밖 `python -I -X utf8 launch_review.py --check` 통과. 기존 v2 ZIP SHA는 불변이다.
+정규화 보고서와3클립·3근거 PNG도 이전과 동일하다. 실제 Mac·아이폰 사용 검사는 아니다.
+[검증 영수증](results/exhibition_replay_20261028/checks_v3.json).
+
+구현979403c를 실제 Claude Code의 `claude-fable-5-1`이 읽기 검토해 승인했다. 등록부 해시가 양쪽에서
+모두 누락된 경우와 잘못된 JSON 구조의 오류 처리를 bc47867에서 보완했고, 최종 재검토도 승인이다.
+준비 도구50검사(새22 포함), 전체 고유 관련 Python233개이며 정상80프레임의 생성 자료는 불변이다.
+선택적 CSS 지적은 기존 스타일 상속·실제 캡처로 확인해 변경하지 않았다. 일부 오래된 기본 입력의
+필수 키 누락/잘못된 시각 타입은 여전히 KeyError/TypeError로 거부될 수 있으나 출력 전에 중단한다.
+이를 모든 오류 메시지의 표준화 완료로 쓰지 않는다. 검토자는 검사를 직접 실행하지 않았다.
+[두 고정 검토·지적 처리](results/exhibition_replay_20261028/interval_display_code_review_v1.json).
+979403c의 원격CI4/4는 Linux/macOS각2918 passed·8 skipped·2 deselected, Chromium/WebKit 통과다.
+이후 준비 도구 보완·최종 문서 head의 원격CI는 PR84 checks에서 별도로 확인한다.
+
+새 비공개팩은 `outputs/exhibition_replay_pack_20261028_v3.zip`이며 같은 이름의 폴더에 실행기가 있다.
+추가 재현 옵션은 아래와 같다. `<CV48B_FIXED_AUDIT>`는 기존 `exhibition_replay_context_20261028_pts_v2`,
+`<CV48C_FIXED_AUDIT>`는 기존 `exhibition_replay_interval_20261028_v1`이다. 새 추출로 해시를 바꾸지 않는다.
+
+```sh
+python scripts/prepare_replay_evidence.py --audit-dir <CV48B_FIXED_AUDIT> --decisions docs/results/exhibition_replay_20261028/context_review_v1.json --interval-review docs/results/exhibition_replay_20261028/interval_review_v1.json --interval-audit-dir <CV48C_FIXED_AUDIT> --out-dir <NEW_PRIVATE_EVIDENCE>
+```
+
+시연 설명: 먼저 추천을 보고 클립을 재생한다. 결과가 공개되면 실제 구종·위치·결과와 근거 프레임을
+비교한다. 2구에서는 “이 영상에서는 두 AI가 같은 물체를 지목했다고 확정하지 못해 점을 표시하지
+않았습니다”라고 설명한다. 3구에서는 정지 이미지의 후보와 구간 끝 자세의 불확실성을 구분한다.
+이는 오류를 감춘 시연이 아니라 판단 가능한 범위를 보여주는 재생이다.
+
 ## CV48c — 고정 구간 80프레임 조사와 객체 지목 불일치
 
 CV48b에서 정한 같은3구의 짧은 후보 구간을 **24+25+31=80개 실제 디코딩 프레임**으로 확인했다.

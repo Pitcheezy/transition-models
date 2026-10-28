@@ -1,0 +1,148 @@
+{
+  "schema": "pitcheezy-exhibition-interval-display-code-review-v1",
+  "author": "Codex GPT-6 family; exact runtime model identifier not exposed",
+  "review_kind": "different_model_read_only_fixed_commit_code_review_not_vision_or_human_evaluation",
+  "reviews": [
+    {
+      "actual_model": "claude-fable-5-1",
+      "raw_sha256": "f112929b3899673f2a9cef7f69727e58cb89d8367bdf620a27a31f940f7beaf9",
+      "process_exit_code": 0,
+      "tests_executed_by_reviewer": false,
+      "verdict": "approve",
+      "findings": [
+        {
+          "severity": "low",
+          "file": "scripts/prepare_replay_evidence.py",
+          "line": 82,
+          "problem": "Registry binding is an equality check between two optional values. If both the interval audit.json and the interval review omit source_registry_sha256, None == None passes and the interval pack is accepted with no registry binding at all. The value is also never checked to be a 64-hex digest.",
+          "reproduction": "Remove the source_registry_sha256 key from both the interval audit.json and the interval review JSON (keeping audit_sha256 updated); prepare(..., interval_review=..., interval_audit_dir=...) succeeds and emits a v3 sidecar. The existing test only covers the case where the two values differ.",
+          "fix": "Add a digest predicate (e.g. isinstance(x, str) and re.fullmatch(r'[a-f0-9]{64}', x)) and require it for review['source_registry_sha256'] before comparing it to the audit value. Add a parametrized test that deletes the key from both files and expects ValueError."
+        },
+        {
+          "severity": "low",
+          "file": "scripts/prepare_replay_evidence.py",
+          "line": 74,
+          "problem": "Structurally wrong interval inputs raise AttributeError/TypeError instead of the documented ValueError. review.get(...) at line 74 assumes the parsed interval review is a dict; frame.get(...) at lines 145 and 162 assume each decoded/reviewed frame is a dict; audit_dir / frame['image'] at line 179 assumes a string. All occur before out_dir.mkdir, so the fail-closed guarantee holds, but the error contract differs from _require and the tests only assert ValueError.",
+          "reproduction": "Write the interval review file as a JSON array ('[]') or make one element of audit.json records[0].sampled_frames a string; run prepare with interval args. A Python AttributeError traceback is raised rather than a ValueError message; no output directory is created.",
+          "fix": "Add _require(isinstance(review, dict), ...) and _require(isinstance(audit, dict), ...) after parsing, _require(isinstance(frame, dict), ...) at the top of both frame loops, and isinstance(frame.get('image'), str) before building the image path. Extend the malformed-source parametrize with a top-level-array case."
+        },
+        {
+          "severity": "low",
+          "file": "web/service-review/review.js",
+          "line": 538,
+          "problem": "The diff introduces five new DOM classes (evidence-interval-summary, evidence-interval-timing, evidence-interval-counts, evidence-interval-abstention, evidence-interval-caution) but contains no stylesheet change. Unless style.css already defines these, the summary and its abstention/caution notes render unstyled inside evidence-detail. Functional behavior and the text assertions in the browser tests are unaffected.",
+          "reproduction": "Build a v3 pack, reveal a pitch, and inspect the section.evidence-interval-summary element; compare its computed style with neighbouring .evidence-detail paragraphs.",
+          "fix": "Add rules for the new classes to web/service-review/style.css (and confirm the builder copies the updated stylesheet into the standalone pack), or reuse existing footnote/subtle classes and drop the unused new class names."
+        },
+        {
+          "severity": "info",
+          "file": "scripts/prepare_replay_evidence.py",
+          "line": 88,
+          "problem": "Supported limitation, not a defect: interval review is all-or-nothing. set(records) == set(decoded) == set(entries) means every sidecar entry must have an interval record; a pack cannot mix v3 entries with entries lacking interval review. This matches the server/JS rule that every v3 entry carries interval_review, and matches the actual 3-pitch data, but is not stated in the CLI help or build_service_review.py user text.",
+          "reproduction": "Supply an interval review covering only two of three sidecar pitches; prepare raises 'interval pitch sets differ'.",
+          "fix": "Document the all-or-nothing requirement in the --interval-review argument help string. No code change required."
+        }
+      ],
+      "verified": [
+        "Preparation binds interval records to decoded audit by pitch_key, play_id, clip_sha256, time_base, first_pts, interval bounds (exact dict equality), per-frame pts/ordinal/image/image_sha256/clip_seconds, image bytes on disk via sha256, and representative image sha256 against the base sidecar entry (lines 93-205).",
+        "Representative frame must equal entry.frame_pts and lie within [lower, upper] with upper < release_lower_bound_pts; representative_decision is None if the representative pts is not among reviewed frames, which is rejected at the counts check (lines 124-135, 198-213).",
+        "Per-record counts and overall totals (pitches, frames, three decisions, new_point_outputs=0, independent_human_reviews=0, validated_targets=0) are recomputed from frame decisions and compared by exact dict equality plus integer type checks (lines 206-213, 226-242). Bools are rejected by _integer and by type(...) is int.",
+        "published_new_point_xy must be explicitly present and null for every reviewed frame; no new coordinates, trajectories, or model/vision outputs are produced (line 176). Only the three pre-existing representative images are copied; interval images are read for hashing only.",
+        "All interval validation runs before out_dir.mkdir (prepare line ordering: copies loop, then _interval_sidecar, then mkdir), so malformed, duplicate, missing or mismatched inputs leave no output. sidecar is deepcopied so the decisions file is never mutated.",
+        "source_sha256_lf is sha256 of the raw interval review bytes after only b'\\r\\n' -> b'\\n' replacement, no semantic canonicalization; CRLF test writes CRLF bytes and expects the LF digest.",
+        "Unresolved representative (identity_unresolved or posture_unresolved) forces point=None, status='abstained', and a Korean reason under 1000 chars; supported representative leaves the OLD static candidate untouched (lines 214-225). Schema is set to v3 only after all checks pass; interval requires a v2 base (line 80), so v1 packs cannot gain interval_review without geometry.",
+        "Server _evidence_interval enforces exact key set, 64-hex source SHA, safe nonnegative ints, clip_first_pts <= lower <= frame_pts <= upper < release_lower_bound_pts, 1 <= decoded_frames <= upper-lower+1, decision sum == decoded_frames, representative decision in the enum with count >= 1, and unresolved => abstained with null point (lines 322-363). Short-circuit order prevents KeyError on unknown decision strings.",
+        "Server field whitelist adds interval_review only for v3 and geometry fields for v2/v3; v1/v2 packs with interval_review fail 'Unexpected evidence fields.' and v3 packs without it fail the same check. PNG IHDR/CRC/dimension validation applies to v3 identically to v2 (_check_evidence_image).",
+        "review.js validateEvidenceManifest mirrors server rules including exactKeys on interval_review (rejects null/missing/extra keys), Number.isSafeInteger, decision sum, representative count >= 1, and unresolved => abstained+null point. evidenceFor returns a clone, so mutating the returned entry does not touch the manifest. interval_review never enters viewFor, mediaBinding or plotModel.",
+        "Rendering: evidenceFor returns hidden before reveal, so no interval DOM exists pre-reveal; clearEvidence increments evidenceRenderToken and empties evidence-content on every render/selection/load-clear, so pitch/PA/file/error changes remove the summary; load/error handlers check the token, so a delayed image event from a prior pitch cannot re-add a point. Raster size mismatch or image error calls failed(), which replaces the whole evidence-content including the summary.",
+        "Server file remains stdlib-only with no new imports, so the byte-copied launch_review.py stays self-contained. check_project.py adds the preparation script and its tests to quality paths. No teammate/cloud contract, IntentEstimate, or model code is touched.",
+        "Display hiding of the representative point is client/package-level presentation, not access control; source_sha256_lf is a file-identity digest the runtime cannot re-derive and is not an authenticity or freshness claim; existing saved base evidence is not re-authenticated. These match the stated scope."
+      ],
+      "reviewed_commit": "979403c88a8bd06ec8aada03045de818a5d05f33"
+    },
+    {
+      "actual_model": "claude-fable-5-1",
+      "raw_sha256": "f45ac59d4e69f9acc64646b61b37b64cac54693ddc0ce6172f350567746c3961",
+      "process_exit_code": 0,
+      "tests_executed_by_reviewer": false,
+      "verdict": "approve",
+      "findings": [
+        {
+          "severity": "low",
+          "area": "scripts/prepare_replay_evidence.py",
+          "finding": "Missing required keys still surface as KeyError rather than ValueError: review['game_pk'], review['audit_sha256'], review['package_sidecar'], review['image_bindings'], binding['sha256'], entry fields (pitch_key, play_id, clip_sha256, clip_first_pts, time_base, frame_pts, release_lower_bound_pts, image_sha256), and frames[source_name] / entries[name] when a binding names an image absent from the audit or sidecar. Outcome remains safe because out_dir.mkdir runs only after all validation, so no partial output is produced. Same class as the fixed AttributeError finding but out of the stated bounded scope; optional follow-up."
+        },
+        {
+          "severity": "low",
+          "area": "scripts/prepare_replay_evidence.py:_interval_sidecar",
+          "finding": "entry['clip_first_pts'], entry['frame_pts'], entry['release_lower_bound_pts'] are compared with <= against validated integers but are themselves only equality-checked against base audit row fields in prepare(), which are not type-checked. A non-numeric value in both base audit and sidecar would raise TypeError instead of ValueError. No output is written in that case. Optional hardening."
+        },
+        {
+          "severity": "info",
+          "area": "tests/test_prepare_replay_evidence.py",
+          "finding": "The diff sets base['source_registry_sha256'] = 'c'*64 in interval_fixture; correctness of the new registry tests depends on the (unshown) fixture also setting the interval audit and interval review digests to the same value. Consistent with the reported 50 passing tests, but not independently verifiable from the diff."
+        },
+        {
+          "severity": "info",
+          "area": "CSS",
+          "finding": "Prior optional CSS note accepted as closed per stated disposition: new classes are test selectors inheriting existing evidence-detail/footnote styles; screenshot checks reported readable with no overflow. No style change requested."
+        }
+      ],
+      "verified": [
+        "Registry bypass closed: _interval_sidecar now requires source_registry_sha256 to be a str matching ^[a-f0-9]{64}$ and equal across interval audit, interval review, and base review; None/''/'bad'/uppercase/int all fail with 'registry SHA' message, and base-vs-interval mismatch ('d'*64 vs 'c'*64) also fails.",
+        "Registry check is placed after audit_sha256 verification of the interval audit, so the compared audit digest is bound to the reviewed file.",
+        "Array-instead-of-object now yields ValueError 'must be an object' for interval review, interval audit, base review, and base audit; for base audit the check runs after the audit_sha256 match, consistent with the test which rewrites audit_sha256.",
+        "Non-dict frames in interval review ('review interval frame must be an object') and interval audit ('decoded interval frame must be an object') raise ValueError before any attribute access; both messages match 'frame must be an object'.",
+        "Review interval frame image is required to be a nonempty str before Path join (short-circuit `and` ensures bool(frame['image']) is only evaluated on a str); None/[]/10/'' fail under 'metadata differs' as the test expects.",
+        "Base audit records/sampled_frames/image validated as list/dict/nonempty-str before building the frames dict; sidecar validated as dict and entries via _keyed; image_bindings validated as list of dicts with nonempty str image and source_image before any path operation.",
+        "All new _require checks precede out_dir.mkdir, so every new rejection path leaves no output directory, matching the `assert not args[2].exists()` assertions.",
+        "CLI change limited to help text on --interval-review stating partial v3 is unsupported; no behavioral change, no '%' characters that would break argparse formatting.",
+        "Diff touches only scripts/prepare_replay_evidence.py and tests/test_prepare_replay_evidence.py; no runtime, JS, or pack changes. Sidecar output content for valid inputs is unchanged by the diff, consistent with the reported identical v3 sidecar on 80 images / 3 pitches.",
+        "Old combined error message 'interval game, registry or base evidence version mismatch' was split; a dedicated 'registry SHA' message and a narrowed 'interval game or base evidence version mismatch' remain."
+      ],
+      "reviewed_commit": "bc47867346e4b7766f04e1b3cf2b9a23e5dec445"
+    }
+  ],
+  "dispositions": [
+    {
+      "finding": "missing_or_malformed_registry_digest",
+      "status": "fixed",
+      "commit": "bc47867346e4b7766f04e1b3cf2b9a23e5dec445"
+    },
+    {
+      "finding": "nonobject_documents_frames_and_invalid_image_type",
+      "status": "fixed",
+      "commit": "bc47867346e4b7766f04e1b3cf2b9a23e5dec445"
+    },
+    {
+      "finding": "partial_v3_all_entries_required",
+      "status": "documented_in_CLI_and_exhibition_note"
+    },
+    {
+      "finding": "new_CSS_class_names_without_specific_style_rules",
+      "status": "no_change_needed",
+      "evidence": "Classes are selectors; existing detail/footnote styles inherited. Actual desktop/mobile screenshots inspected; nooverflow. Reviewer accepted disposition."
+    },
+    {
+      "finding": "some_missing_base_keys_or_nonnumeric_base_PTS_raise_KeyError_or_TypeError",
+      "status": "nonblocking_optional_followup",
+      "evidence": "Input still rejected before output. Existing fixed base inputs pass. No partial output or changed valid result. Do not claim every malformed base input produces ValueError."
+    }
+  ],
+  "local_validation": {
+    "initial_python_unique": 211,
+    "followup_preparation_tests": 50,
+    "new_followup_cases": 22,
+    "unique_python_total": 233,
+    "actual80frames_revalidated": true,
+    "v3_data_unchanged": true,
+    "runtime_and_pack_unchanged_by_followup": true
+  },
+  "remaining_p1_p2": [],
+  "limits": [
+    "AI code review not independent human vision evaluation",
+    "reviewer did not execute tests",
+    "P2 identity/P3 late posture remain unresolved",
+    "main/production/teammate/Cloudflare unchanged"
+  ]
+}
