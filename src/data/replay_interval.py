@@ -62,6 +62,11 @@ def select_interval(pitch_key, time_base, rows):
 
 
 def build_intervals(root, destination, ffprobe, ffmpeg):
+    """Write an audit only after every extraction succeeds.
+
+    A mid-extraction failure preserves the incomplete private folder without an
+    audit; retry with a new output directory. Never delete or overwrite evidence.
+    """
     destination = context.private_destination(destination)
     context.validate_crop(context.CROP, context.FRAME_SIZE)
     root = Path(root).resolve(strict=True)

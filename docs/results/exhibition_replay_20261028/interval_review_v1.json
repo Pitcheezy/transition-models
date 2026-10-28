@@ -1,0 +1,2270 @@
+{
+  "schema": "pitcheezy-exhibition-interval-review-v1",
+  "extraction_code_commit": "4b4147054bf751d9af7d1f1e87fc08cc15dcd0e2",
+  "source_pin_fix_commit": "2536ee951746b0f2f9c53f7d69e1cde55e452f8c",
+  "source_pin_revalidation": "passed after fix against actual3sourcefiles and unchangedregistry; extraction not repeated because selection/image generation unchanged",
+  "audit_sha256": "9865c81128ed8114b051b2650505ac326492bbca7460c57faaea9eaa35820d96",
+  "source_registry_sha256": "9555b95171a6232b849b74e4784edf62c210b7a64c72e8b84b5cf5ec48ead3b6",
+  "codex_initial_raw_sha256": "24240104f3ad7dba05e3eb0f7439083b65d2003bf219339ff2188b79f36e2830",
+  "evidence_kind": "offline_AI_development_qualitative_interval_audit_not_independent_truth",
+  "counts": {
+    "pitches": 3,
+    "frames": 80,
+    "supported_development_candidate": 52,
+    "identity_unresolved": 25,
+    "posture_unresolved": 3,
+    "new_point_outputs": 0,
+    "independent_human_reviews": 0,
+    "validated_targets": 0
+  },
+  "limitations": [
+    "Intervals chosen using prior CV48b development review; not independent evaluation, not80independentpitches.",
+    "Codex knew prior representative points. Fable initial did not receive Codex labels; informed followup received initial response and dispute description.",
+    "All points deliberately null in this qualitative pass; 0points is not an invisible-mitt abstention rate.",
+    "52supported candidates are an adjudicated development status, not detector accuracy or blind AIagreement.",
+    "P1/P2 initial Fable descriptions confused other objects despite same visible label. P2 followup spatial reference remains unresolved.",
+    "P1 complete followup content arrived before240sdeadline but process timed out; P3 followup produced no result. Neither is clean process success.",
+    "No pixel displacement, physical command error, stillness threshold, pre-decision availability or pitcher intent measured.",
+    "All actual decoded frames in fixed intervals retained, including nonuniform P1 gap. No proof of complete broadcast capture.",
+    "Existing CV48b3points, sourceclips, packv2 and humanresponses preserved; no new UI/production publication."
+  ],
+  "records": [
+    {
+      "pitch_key": "849843:1:1",
+      "play_id": "f6d7a0f3-d111-3c6d-92cd-2b5a867ac931",
+      "clip_sha256": "78c7325e6d79afc13f2c1990262e2872483db907283c7571a6a2c468d0a7ca42",
+      "time_base": "1/90000",
+      "first_pts": 1170,
+      "interval": {
+        "lower_pts_inclusive": 173842,
+        "upper_pts_inclusive": 209977,
+        "expected_decoded_frames": 24,
+        "representative_pts": 191959
+      },
+      "decoded_frames_in_interval": 24,
+      "duration_between_endpoints_seconds": 0.4015,
+      "distinct_pts_gaps_ticks": [
+        1501,
+        1502,
+        3102
+      ],
+      "max_pts_gap_seconds": 0.034466666666666666,
+      "counts": {
+        "supported_development_candidate": 24
+      },
+      "codex_observation": "Brown mitt face in front of upper chest/face remains identifiable in all 24 inspected tiles. Minor shape/angle changes; no clear large reposition. Thin broadcast-zone line crosses it. Pitcher already leg-lifting; no pre-decision claim.",
+      "fable_initial_receipt": {
+        "raw_events_sha256": "90d8f1a88c5ce6d32085a82bcbcb668c24d2ef761ba362fc6b057821169fda89",
+        "read_image_names": [
+          "full_frame_sheet_00.png",
+          "full_frame_sheet_01.png",
+          "crop_nearest_2x_sheet_00.png",
+          "crop_nearest_2x_sheet_01.png"
+        ],
+        "complete_result_received": true,
+        "model": "claude-fable-5-1",
+        "duration_ms": 52299,
+        "markdown_fence_removed": false
+      },
+      "fable_initial_interval_observation": "Centerfield broadcast camera, static framing, pitcher is in leg lift for the entire interval (ordinals 114-137, ~1.92s-2.32s clip time), so every frame is mid-delivery rather than pre-decision. Catcher is in a low crouch with the mitt extended on the glove side and held in a visually similar posture across all 24 frames; no clear repositioning was observed, though small jitter is present. The batter's gray uniform leg partially overlaps the mitt's outer edge throughout. The crop framing differs slightly between sheet 00 and sheet 01, which changes apparent on-sheet position but not catcher posture.",
+      "fable_initial_schema_omissions": [],
+      "fable_followup_receipt": {
+        "raw_events_sha256": "310539c6d4092372c3c4499146f0781669c02150ee77da29ddba4cb64a8fcda8",
+        "read_image_names": [
+          "frame_011.png",
+          "crop_011.png",
+          "crop_nearest_2x_sheet_00.png",
+          "crop_nearest_2x_sheet_01.png"
+        ],
+        "complete_result_received": true,
+        "model": "claude-fable-5-1",
+        "duration_ms": 239239,
+        "markdown_fence_removed": true,
+        "process_outcome": "240_second_process_deadline_interrupted",
+        "content_status": "complete result received at239.239s before process deadline; content usable as informed qualitative followup, not clean CLI completion"
+      },
+      "fable_followup_summary": {
+        "pitch_key": "849843:1:1",
+        "representative_ordinal": 125,
+        "mitt_reference_bbox_crop_xyxy": [
+          94,
+          46,
+          164,
+          92
+        ],
+        "object_cues": "In the native 210x230 crop the catcher faces the camera in a low crouch. Top-down: tan helmet with brown cage at about x85-125,y0-40 (mask); directly beneath it a large, warm-brown, dome-shaped mass with a clearly curved upper outline at about x94-152,y46-92, which is the mitt pocket presented toward the camera (it is roughly 1.3x the mask width, the expected ratio for a catcher's mitt, and it sits in front of the torso). Flanking that dome on the camera-left side (x80-94,y45-80) is a darker, flatter, less saturated region that reads as the shadowed chest protector/shoulder, visually distinct from the dome by tone and lack of a rounded edge. On the dome's camera-right edge (about x145-164,y66-90) is a small tan oval with a lighter rim and dark center; because it is on the catcher's left (mitt-hand) side I read it as the mitt's thumb/heel edge or lighter welting, though a bare hand cannot be fully excluded at this resolution. Below the dome the white pants/thighs appear, and the two dark vertical lobes inside the drawn white overlay square (square at about x92-152,y77-145) are shadowed thigh/knee-guard regions, not the mitt: they are tall and narrow, not round. Knee caps (white/tan rounded pads) are at about x70-95,y120-150 (camera-left, raised knee) and x145-175,y165-195 (camera-right); the dark-brown shin guards run below those to the cleats at the bottom edge. The batter's gray leg occupies x<65 and never reaches the dome. The white square is a drawn overlay present at the same pixel location in every tile; the mitt dome sits mostly above it, overlapping only its top band.",
+        "corrections": [
+          "Initial claim that the mitt is 'low in crop box area beside catcher's shin guard' is wrong-object reasoning: the mitt is upper-center, directly under the mask (native y~46-92); shin guards are at the crop bottom (y>145) and the dark lobes inside the overlay square are thigh/knee-guard shadow, not mitt.",
+          "Initial claim that the batter's leg overlaps the mitt's outer edge in every frame is unsupported: the batter's leg stays at native x<65 and touches only the catcher's camera-left shoulder/umpire region; the mitt dome (x>=94) is unoccluded in all 24 frames.",
+          "Initial claim that the crop framing shifts between sheet 00 and sheet 01 is wrong: the static signage letters ('CO rk'), the umpire's blue shirt and the overlay square occupy identical tile positions on both sheets, consistent with the fixed crop [450,240,660,470]; the apparent difference is the batter's stride and nothing else.",
+          "Initial frame-127 note that the mitt 'merges with shin guard shadow' is wrong object: the adjacent dark area is the chest protector/torso shadow.",
+          "Initial reason text for 114 says the mitt is 'beside' a shin guard; the mitt is above the knee caps and shin guards with white pants between them.",
+          "P2 omitted point_xy; it is returned here explicitly as null for every frame rather than assumed.",
+          "P3's late-frame posture uncertainty was checked, not inherited: no clear repositioning of mask, dome or tan edge was seen in 132-137, but sub-few-pixel motion is below what the 2x nearest-neighbor sheet can show, so late frames carry lower confidence (noted in reasons)."
+        ],
+        "interval_observation": "Static centerfield broadcast view, fixed crop. The ordinal-125 full frame shows the pitcher in leg lift, and the batter progresses from load into stride across 126-137, so the whole interval is mid-delivery. Within the crop the only clear motion is the batter's front leg; the catcher's mask, mitt dome and tan mitt edge hold the same relative layout across all 24 frames. The drawn white overlay square is fixed and sits mostly below the mitt, so it should not be read as the mitt's location.",
+        "limitations": [
+          "2x nearest-neighbor upscale cannot resolve movements of a few native pixels; 'presented_candidate' means no visible change, not stillness.",
+          "Mitt, chest protector and shin guards are all dark brown; the mitt identification rests on the rounded dome outline, its size relative to the mask, and its position in front of the torso.",
+          "The small tan oval on the dome's camera-right edge is most likely the mitt's thumb/heel edge but could be a bare hand; the bbox includes it with that caveat.",
+          "Bbox is a rough object-reference box, not a measured center or target.",
+          "No claims about intended target, distance, or human-label accuracy."
+        ]
+      },
+      "adjudication": "Initial Fable shin-guard/crop-shift explanations rejected. Informed bbox [94,46,164,92] broadly covers the visible upper mitt; its right appendage remains ambiguous. Accept qualitative visible/preparation candidate only, not precise bbox/center or verified target.",
+      "frames": [
+        {
+          "ordinal": 114,
+          "pts": 173842,
+          "clip_seconds": 1.9185777777777777,
+          "image_sha256": "95ff919a530026cf3dc8b4596fe8a1cc27e166a61932e8f9e44f00a9b4c8ad4f",
+          "image": "849843_1_1/frame_000.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Dark brown mitt with tan trim at catcher's glove-side, low in crop box area, batter's gray leg overlaps its left edge; pitcher already in leg lift."
+          },
+          "fable_informed_followup": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Dome-shaped brown mitt directly under mask, tan edge on camera-right; unoccluded; batter leg far left."
+          },
+          "review_decision": "supported_development_candidate",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 115,
+          "pts": 176944,
+          "clip_seconds": 1.9530444444444444,
+          "image_sha256": "efaf2339e6ea58efa804360586f12c41fbf3217756e71b4eecbb42cc8d4c2c8e",
+          "image": "849843_1_1/frame_001.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt shape unchanged from 114, same low placement beside catcher's shin guard; blocky nearest-neighbor edges."
+          },
+          "fable_informed_followup": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Same dome and tan edge placement relative to mask and overlay square as 114."
+          },
+          "review_decision": "supported_development_candidate",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 116,
+          "pts": 178445,
+          "clip_seconds": 1.9697222222222222,
+          "image_sha256": "222b06f3823e467ac33708171661df43b9f3c06f689ae7844b0cf610475f8096",
+          "image": "849843_1_1/frame_002.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt identifiable in same region; no apparent displacement vs 115."
+          },
+          "fable_informed_followup": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt dome unchanged; chest protector shadow to its camera-left, pants below."
+          },
+          "review_decision": "supported_development_candidate",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 117,
+          "pts": 179947,
+          "clip_seconds": 1.9864111111111111,
+          "image_sha256": "73b98478de96e45384c9229f9436892404ed4f01a6cd255f857c1d6a4d68390b",
+          "image": "849843_1_1/frame_003.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt still low and extended; batter stance occludes outer edge only."
+          },
+          "fable_informed_followup": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Dome outline readable at same height under mask; no displacement seen."
+          },
+          "review_decision": "supported_development_candidate",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 118,
+          "pts": 181448,
+          "clip_seconds": 2.0030888888888887,
+          "image_sha256": "78dd896827e65a44c29768559a1d62f87926ab9b568099c4c8a2348b269d1356",
+          "image": "849843_1_1/frame_004.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Same posture as 117; dark mitt blends partly with chest protector shadow but outline remains readable."
+          },
+          "fable_informed_followup": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt and tan edge in same spot; batter still in load, leg not touching mitt."
+          },
+          "review_decision": "supported_development_candidate",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 119,
+          "pts": 182950,
+          "clip_seconds": 2.0197777777777777,
+          "image_sha256": "6d4d7825239567595ba02c1d7fc3d7616d2511ac5decd4b6e4965c4eb5eab401",
+          "image": "849843_1_1/frame_005.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt visible, consistent placement; no clear motion between 118 and 119."
+          },
+          "fable_informed_followup": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "No visible change versus 118 in dome position or orientation."
+          },
+          "review_decision": "supported_development_candidate",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 120,
+          "pts": 184451,
+          "clip_seconds": 2.0364555555555555,
+          "image_sha256": "fa186f8dc1549d32b15178464ca12af77fdc45a4c4217a2496f1c1ce6062b4ce",
+          "image": "849843_1_1/frame_006.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt outline readable at same low position; slight pixel jitter attributable to compression, not repositioning."
+          },
+          "fable_informed_followup": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Dome and tan edge consistent; overlay square overlaps only its bottom band."
+          },
+          "review_decision": "supported_development_candidate",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 121,
+          "pts": 185953,
+          "clip_seconds": 2.0531444444444444,
+          "image_sha256": "6628ca436e7beab3763297d1ef8f4cf322013f4d519f9b61305237966b65d636",
+          "image": "849843_1_1/frame_007.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt identifiable, posture unchanged; pitcher leg still raised in full frame."
+          },
+          "fable_informed_followup": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt unchanged; blocky upscale but curved top edge still distinct from protector."
+          },
+          "review_decision": "supported_development_candidate",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 122,
+          "pts": 187454,
+          "clip_seconds": 2.0698222222222222,
+          "image_sha256": "63a0e9f903d3523af9042769c29c239185785548f97e553b2432fdb91a9e2244",
+          "image": "849843_1_1/frame_008.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt held in same held-out posture; batter's leg overlap unchanged."
+          },
+          "fable_informed_followup": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Same presentation; no shift relative to mask or signage."
+          },
+          "review_decision": "supported_development_candidate",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 123,
+          "pts": 188956,
+          "clip_seconds": 2.086511111111111,
+          "image_sha256": "360f1e046e55f4393f43a0350e83550d3a3663a65e0c21e46ddb3b12277cc90d",
+          "image": "849843_1_1/frame_009.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt visible, same region; outline marginally softer (blur)."
+          },
+          "fable_informed_followup": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt visible, same placement; slight blur only."
+          },
+          "review_decision": "supported_development_candidate",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 124,
+          "pts": 190457,
+          "clip_seconds": 2.103188888888889,
+          "image_sha256": "ac16ac1ef8c352e56b1a3b75a22db4a9a723bcfae61fdf8f12244e225afa03cf",
+          "image": "849843_1_1/frame_010.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt remains identifiable and in same apparent pose."
+          },
+          "fable_informed_followup": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Dome and tan edge unchanged versus 123."
+          },
+          "review_decision": "supported_development_candidate",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 125,
+          "pts": 191959,
+          "clip_seconds": 2.119877777777778,
+          "image_sha256": "aa9ec740c1b77b4f37bfc9d199e38e69ec9e44ccd50e34a7766ce4838e7c004e",
+          "image": "849843_1_1/frame_011.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "End of first sheet; mitt still low and extended, no obvious shift from 124."
+          },
+          "fable_informed_followup": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Representative frame; matches native crop description; mitt under mask, above overlay square center."
+          },
+          "review_decision": "supported_development_candidate",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 126,
+          "pts": 193460,
+          "clip_seconds": 2.1365555555555558,
+          "image_sha256": "0b1ef7f412180b1da20c5bf159e4f196c1038d353e589bea9bbbaad4b2255335",
+          "image": "849843_1_1/frame_012.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Second sheet crop is framed slightly differently (catcher appears shifted); mitt still readable with tan trim at same side of catcher."
+          },
+          "fable_informed_followup": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Same crop framing as sheet 00 (signage and umpire unmoved); mitt dome in same place."
+          },
+          "review_decision": "supported_development_candidate",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 127,
+          "pts": 194962,
+          "clip_seconds": 2.1532444444444443,
+          "image_sha256": "c94c4b7552ce21125c3602b54fd424e9ec7ef83d24cad54add9d1b1e7466a0cd",
+          "image": "849843_1_1/frame_013.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt visible, posture similar to 126; dark mitt partly merges with shin guard shadow."
+          },
+          "fable_informed_followup": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt readable; adjacent dark area is torso shadow, not shin guard."
+          },
+          "review_decision": "supported_development_candidate",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 128,
+          "pts": 196463,
+          "clip_seconds": 2.169922222222222,
+          "image_sha256": "14c8182902541df366724afc6312341c26a1393ba477825db3f443496b081983",
+          "image": "849843_1_1/frame_014.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt identifiable; no clear repositioning versus 127."
+          },
+          "fable_informed_followup": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "No change in dome or tan edge versus 127."
+          },
+          "review_decision": "supported_development_candidate",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 129,
+          "pts": 197965,
+          "clip_seconds": 2.186611111111111,
+          "image_sha256": "0bee24fce879252f29593e90e4d7276b19c4a828a468cc87ea40481f17b41e7f",
+          "image": "849843_1_1/frame_015.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt extended low; batter's front leg edge overlaps mitt heel region."
+          },
+          "fable_informed_followup": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Tan edge on dome's right is at its clearest here; mitt still under mask; batter begins stride."
+          },
+          "review_decision": "supported_development_candidate",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 130,
+          "pts": 199466,
+          "clip_seconds": 2.203288888888889,
+          "image_sha256": "48f930b437e85ed48c04075128b156c1d8985c6d4d3d6496d69cb382e29b9ab2",
+          "image": "849843_1_1/frame_016.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt still readable in same area; pixel-level drift within blur tolerance."
+          },
+          "fable_informed_followup": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt unchanged; batter leg shifts right but stays well left of dome."
+          },
+          "review_decision": "supported_development_candidate",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 131,
+          "pts": 200968,
+          "clip_seconds": 2.219977777777778,
+          "image_sha256": "3927351e7c322817f7d5b43f0a7cb7de2d13e35a089f84e4ffa7fa76bac382c9",
+          "image": "849843_1_1/frame_017.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt visible and apparently held; pitcher leg lift continues."
+          },
+          "fable_informed_followup": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Same presentation; no repositioning seen."
+          },
+          "review_decision": "supported_development_candidate",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 132,
+          "pts": 202469,
+          "clip_seconds": 2.2366555555555556,
+          "image_sha256": "3e42f1db0d0af250a006ff6f3cea8e11236b266e09154436af1668458a3dbd62",
+          "image": "849843_1_1/frame_018.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt identifiable, same low glove-side placement."
+          },
+          "fable_informed_followup": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Dome in same place; batter front leg now planted further toward camera-left edge."
+          },
+          "review_decision": "supported_development_candidate",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 133,
+          "pts": 203971,
+          "clip_seconds": 2.2533444444444446,
+          "image_sha256": "eb690e28f9376f4c514460ca3050b97a0b5865a4fb9fe6b0bb33ad92898ef8cc",
+          "image": "849843_1_1/frame_019.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt outline readable; slight softening but no distinct direction of travel."
+          },
+          "fable_informed_followup": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt readable with curved top edge; no clear movement."
+          },
+          "review_decision": "supported_development_candidate",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 134,
+          "pts": 205472,
+          "clip_seconds": 2.2700222222222224,
+          "image_sha256": "7a742e53df4b159d80538125565d7a37b3d982cb4706e73e415a1c8c074c5c80",
+          "image": "849843_1_1/frame_020.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt still visible with tan trim; no obvious change vs 133."
+          },
+          "fable_informed_followup": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "No visible shift versus 133; lower confidence because small motion is below sheet resolution."
+          },
+          "review_decision": "supported_development_candidate",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 135,
+          "pts": 206974,
+          "clip_seconds": 2.286711111111111,
+          "image_sha256": "41ed18baff21393befe376856737a0f280d7d6b43ec1d5621fa2c9311f0f5070",
+          "image": "849843_1_1/frame_021.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt identifiable in same region; batter stance unchanged."
+          },
+          "fable_informed_followup": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mask, dome and tan edge in same relative positions; tan edge slightly less distinct."
+          },
+          "review_decision": "supported_development_candidate",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 136,
+          "pts": 208475,
+          "clip_seconds": 2.3033888888888887,
+          "image_sha256": "e6780836a7edaa2534ee57d6f6e1424e6feac099826d963db76d6c54bf1bc311",
+          "image": "849843_1_1/frame_022.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt visible, held low; blur from nearest-neighbor upscale limits fine detail."
+          },
+          "fable_informed_followup": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt still identifiable under mask; no directional travel seen; late-frame confidence reduced."
+          },
+          "review_decision": "supported_development_candidate",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 137,
+          "pts": 209977,
+          "clip_seconds": 2.3200777777777777,
+          "image_sha256": "41005a844c4ed26b7b1d384cf6e47c125282703250077867cdeb706b52f052b6",
+          "image": "849843_1_1/frame_023.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Last frame; mitt still readable in same posture, pitcher leg remains raised so delivery is underway."
+          },
+          "fable_informed_followup": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Last frame; dome and tan edge match 126 layout; no clear change, but sub-few-pixel drift not resolvable."
+          },
+          "review_decision": "supported_development_candidate",
+          "published_new_point_xy": null
+        }
+      ]
+    },
+    {
+      "pitch_key": "849843:1:2",
+      "play_id": "aa3ecf43-5435-3238-aac7-5bfeef1cabe2",
+      "clip_sha256": "989cdc26ebe9c86d59720519827d3290cbc82984758cb180793e7c3e3353c4b2",
+      "time_base": "1/90000",
+      "first_pts": 990,
+      "interval": {
+        "lower_pts_inclusive": 173890,
+        "upper_pts_inclusive": 209926,
+        "expected_decoded_frames": 25,
+        "representative_pts": 191908
+      },
+      "decoded_frames_in_interval": 25,
+      "duration_between_endpoints_seconds": 0.4004,
+      "distinct_pts_gaps_ticks": [
+        1501,
+        1502
+      ],
+      "max_pts_gap_seconds": 0.01668888888888889,
+      "counts": {
+        "identity_unresolved": 25
+      },
+      "codex_observation": "Brown oval mitt face with yellow edge remains identifiable in all 25 inspected tiles. Catcher holds preparation-like posture while batter/pitcher move. Knee approaches on image left but mitt is not hidden. No quantitative stillness claim.",
+      "fable_initial_receipt": {
+        "raw_events_sha256": "f77cc655ff90ea9fb64e9ca72708bdcfd49eebff1ca318719fed7374c423a9f3",
+        "read_image_names": [
+          "full_frame_sheet_00.png",
+          "full_frame_sheet_01.png",
+          "full_frame_sheet_02.png",
+          "crop_nearest_2x_sheet_00.png",
+          "crop_nearest_2x_sheet_01.png",
+          "crop_nearest_2x_sheet_02.png"
+        ],
+        "complete_result_received": true,
+        "model": "claude-fable-5-1",
+        "duration_ms": 74065,
+        "markdown_fence_removed": false
+      },
+      "fable_initial_interval_observation": "Across 113-130 the mitt sits low beside the catcher's left shin guard with no clear repositioning visible, while the pitcher is already in leg lift and then driving toward the plate, so no pre-decision availability is claimed. From 131 onward the batter's leg kick and stride sweep across the mitt region, leaving only partial fragments visible, and the catcher may be subtly shifting as the pitcher approaches release.",
+      "fable_initial_schema_omissions": [
+        113,
+        114,
+        115,
+        116,
+        117,
+        118,
+        119,
+        120,
+        121,
+        122,
+        123,
+        124,
+        125,
+        126,
+        127,
+        128,
+        129,
+        130,
+        131,
+        132,
+        133,
+        134,
+        135,
+        136,
+        137
+      ],
+      "fable_followup_receipt": {
+        "raw_events_sha256": "ae28e85af3c38a3deb7b214d3cf0fd7398503fe248df117aa9553c8b10e44e74",
+        "read_image_names": [
+          "frame_012.png",
+          "crop_012.png",
+          "crop_nearest_2x_sheet_00.png",
+          "crop_nearest_2x_sheet_01.png",
+          "crop_nearest_2x_sheet_02.png"
+        ],
+        "complete_result_received": true,
+        "model": "claude-fable-5-1",
+        "duration_ms": 154635,
+        "markdown_fence_removed": true,
+        "process_outcome": "normal_exit_0"
+      },
+      "fable_followup_summary": {
+        "pitch_key": "849843:1:2",
+        "representative_ordinal": 125,
+        "mitt_reference_bbox_crop_xyxy": [
+          138,
+          86,
+          170,
+          126
+        ],
+        "object_cues": "In the native 210x230 crop at ordinal 125 the catcher is crouched facing the camera: mask at roughly x100-140,y50-85; dark chest protector with logo directly below it inside the white overlay box; white pants below the protector; left shin guard (image-right) extended toward the lower-right corner with a cream knee pad and dark lower shell; right shin guard (image-left) folded under the body at roughly x65-100,y125-165, showing a cream knee cap on top of a dark shell. The mitt is the dark, rounded, pocket-on shape immediately to the image-right of the chest protector at roughly x138-170,y86-126, overlapping the left edge of the 'co/rk' signage text. Cues: round silhouette larger than a hand, thin tan/gold rim along its outer edge (lacing/piping), continuous with the catcher's left arm coming off the right shoulder of the protector, and it sits at chest-to-knee height in front of the body, where a right-handed catcher's left-hand mitt would be presented. The bare (right) hand is not distinctly visible; it is presumably tucked behind the right thigh/shin on image-left. Nothing mitt-like sits beside the left shin; the dark-with-tan-patch object on image-left is the right shin guard's knee cap.",
+        "corrections": [
+          "Initial reasoning identified the mitt as a 'dark mitt with tan pocket low at the catcher's left shin, right of the batter's back leg.' That object is the catcher's right shin guard/knee cap (image-left, folded under the body), not the mitt. Its cream pad matches the cream knee pad on the image-right (left) shin guard. The actual mitt is on the image-right side beside the chest protector.",
+          "Initial claim that 'the crop window shifted downward between rows (116-118 vs 119-121)' is unsupported. The Petco signage text, the white overlay box, and the plate chalk line occupy the same cell-relative position in every cell of all three sheets, consistent with the fixed crop [450,240,660,470] used for every frame. Apparent change in the initial rows came from batter motion, not from a moving crop.",
+          "Initial 'partial occlusion of the mitt by the batter's leg kick/stride from 128 onward' is wrong-object. The batter's lifted front leg sweeps across the image-left region (over the right shin guard), never across the mitt on image-right. The mitt is unoccluded in all 25 frames.",
+          "Initial 'unclear' posture for 131-137 was driven by that shin-guard overlap; with the mitt correctly located, those frames show the same presented silhouette as earlier frames.",
+          "The point field omitted in the earlier P2 pass is returned explicitly as null for every row below."
+        ],
+        "interval_observation": "With the mitt correctly identified as the round dark object with a tan rim on the image-right side of the chest protector, it is visible and uncovered in all 25 frames (113-137) and presents the same pocket-on silhouette in the same crop region throughout. The only motion in the crop comes from the batter (weight shift, leg kick, stride and plant) on the image-left side, which overlaps the catcher's right shin guard but never the mitt. The fixed crop is confirmed by the identical placement of the signage text, white overlay box, and plate chalk line in every cell. The pitcher is at the top of leg lift at 125 and progresses through delivery afterward; no claim is made about when the ball is released, exact stillness of the mitt, or intended target.",
+        "limitations": [
+          "Nearest-neighbor 2x upscale and broadcast compression blur the mitt rim; sub-frame shifts of a few native pixels would not be resolvable.",
+          "The mitt overlaps the Petco signage text on the backstop, which slightly complicates edge reading but does not hide the silhouette.",
+          "The catcher's bare hand is not distinctly visible in any frame and is assumed tucked behind the right thigh/shin.",
+          "Single center-field camera; depth and lateral offset of the mitt cannot be separated.",
+          "Only one full frame (ordinal 125) was provided, so pitcher phase for other ordinals is inferred from timing, not seen.",
+          "Bounding box is a rough object-reference estimate from the native crop, not a measured center."
+        ]
+      },
+      "adjudication": "Informed bbox [138,86,170,126] points predominantly to image-right sleeve/torso/signage and excludes the central mitt face. Codex re-viewed native representative crop. Labels agree but object-reference does not; all25 interval rows remain cross-review identity unresolved. Old CV48b candidate preserved, no new continuous points published.",
+      "frames": [
+        {
+          "ordinal": 113,
+          "pts": 173890,
+          "clip_seconds": 1.9211111111111112,
+          "image_sha256": "8d918c95ecd2671a526095fa249e382f51fc56acf5dccca467d16b992e753e90",
+          "image": "849843_1_2/frame_000.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "reason": "Dark mitt with tan pocket low at catcher's left shin, right of batter's back leg; pitcher at top of leg lift."
+          },
+          "fable_informed_followup": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Round dark mitt with tan rim beside image-right edge of chest protector, overlapping 'co' text; pocket faces camera; batter static on image-left."
+          },
+          "review_decision": "identity_unresolved",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 114,
+          "pts": 175391,
+          "clip_seconds": 1.9377888888888888,
+          "image_sha256": "33c95618cb34471ce23c3b9b862b431f57ccc2b9901c520285f46becd8f62c88",
+          "image": "849843_1_2/frame_001.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "reason": "Same low mitt shape and placement as 113; no obvious change."
+          },
+          "fable_informed_followup": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Same mitt silhouette and location beside protector; no visible change from 113."
+          },
+          "review_decision": "identity_unresolved",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 115,
+          "pts": 176893,
+          "clip_seconds": 1.9544777777777778,
+          "image_sha256": "56f0300491a3aa2a934a687440fb9bdc42243505f8e991de3b01f8466bef56b8",
+          "image": "849843_1_2/frame_002.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "reason": "Low mitt still identifiable beside left shin guard; batter static."
+          },
+          "fable_informed_followup": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt pocket-on beside protector, overlapping signage text; batter still static."
+          },
+          "review_decision": "identity_unresolved",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 116,
+          "pts": 178394,
+          "clip_seconds": 1.9711555555555555,
+          "image_sha256": "05f4b4d24f4567392856963f4500771116fc349bd06f023cd63fcca4cca5566d",
+          "image": "849843_1_2/frame_003.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "reason": "Mitt low-left, pocket face partly toward camera; appearance consistent with 115."
+          },
+          "fable_informed_followup": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt in same image-right position; tan rim visible; no repositioning seen."
+          },
+          "review_decision": "identity_unresolved",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 117,
+          "pts": 179896,
+          "clip_seconds": 1.9878444444444445,
+          "image_sha256": "f5e14de16900b98fea59e090da3e33a3c7d04fad5ea7f9ae921f68066f307f52",
+          "image": "849843_1_2/frame_004.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "reason": "Low mitt unchanged in apparent shape; slight blur on edges."
+          },
+          "fable_informed_followup": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Unchanged mitt shape and placement; crop background identical to earlier cells."
+          },
+          "review_decision": "identity_unresolved",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 118,
+          "pts": 181397,
+          "clip_seconds": 2.004522222222222,
+          "image_sha256": "d70d9d26d3ff7d251cdd63ec9fc1d37354cc443b2a79c60efd26ec20cb11ab23",
+          "image": "849843_1_2/frame_005.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "reason": "Mitt still low beside shin guard; batter's back leg close but not covering it."
+          },
+          "fable_informed_followup": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt still beside protector on image-right; batter's legs remain on image-left, far from mitt."
+          },
+          "review_decision": "identity_unresolved",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 119,
+          "pts": 182899,
+          "clip_seconds": 2.021211111111111,
+          "image_sha256": "5f94cf28e0c821d74f71e459e5d67b7cfa53f24776e40ccdb8bd87478fb875b6",
+          "image": "849843_1_2/frame_006.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "reason": "Crop window shifted downward versus prior row, but mitt still low-left and identifiable."
+          },
+          "fable_informed_followup": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt same place; signage and overlay box at identical cell position, confirming no crop shift."
+          },
+          "review_decision": "identity_unresolved",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 120,
+          "pts": 184400,
+          "clip_seconds": 2.037888888888889,
+          "image_sha256": "6c62402448e6d0cc7faa03f93875ee693a1df0c59323ab11f67b7705e61c32e3",
+          "image": "849843_1_2/frame_007.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "reason": "Mitt low, same apparent shape; pitcher still in leg lift."
+          },
+          "fable_informed_followup": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt pocket-on beside protector; batter beginning slight weight shift on image-left."
+          },
+          "review_decision": "identity_unresolved",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 121,
+          "pts": 185902,
+          "clip_seconds": 2.054577777777778,
+          "image_sha256": "026b66e27c830489ba710d8d2686cd91f1359770bafb734b0a7d72b64fd301d7",
+          "image": "849843_1_2/frame_008.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "reason": "Low mitt visible; no clear repositioning seen."
+          },
+          "fable_informed_followup": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt unchanged; nothing overlaps it."
+          },
+          "review_decision": "identity_unresolved",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 122,
+          "pts": 187403,
+          "clip_seconds": 2.0712555555555556,
+          "image_sha256": "d5c11ae6ffe98de8e5c3f0b998bfbc4853e7c99c245243e40ab4fd0c22347d31",
+          "image": "849843_1_2/frame_009.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "reason": "Mitt low beside left shin; batter beginning slight weight shift."
+          },
+          "fable_informed_followup": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt in same image-right location; batter's front heel starting to lift on image-left."
+          },
+          "review_decision": "identity_unresolved",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 123,
+          "pts": 188905,
+          "clip_seconds": 2.0879444444444446,
+          "image_sha256": "b963b100327cd6501bac7f6c93a60289b114606c7d6b3e33018ba4a63e56189b",
+          "image": "849843_1_2/frame_010.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "reason": "Mitt still low and identifiable; batter's front heel starting to rise."
+          },
+          "fable_informed_followup": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt silhouette consistent; batter's front leg beginning to rise."
+          },
+          "review_decision": "identity_unresolved",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 124,
+          "pts": 190406,
+          "clip_seconds": 2.1046222222222224,
+          "image_sha256": "a3e60a6e3d4cf98956e1ed1044673904e5059ae26d154d455a9195ea09e40571",
+          "image": "849843_1_2/frame_011.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "reason": "Low mitt unchanged; pitcher starting to drop from leg lift."
+          },
+          "fable_informed_followup": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt unchanged beside protector; batter's front foot off the ground."
+          },
+          "review_decision": "identity_unresolved",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 125,
+          "pts": 191908,
+          "clip_seconds": 2.121311111111111,
+          "image_sha256": "2b28164e50a2912ff229e406cc314a2dedc36e50c961599b48b197d513d28f58",
+          "image": "849843_1_2/frame_012.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "reason": "Batter's front foot lifts; mitt remains low-left and clearly identifiable."
+          },
+          "fable_informed_followup": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Representative frame: mitt at approx native [138,86,170,126], pocket-on, tan rim, overlapping 'co' text; full frame shows pitcher at top of leg lift."
+          },
+          "review_decision": "identity_unresolved",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 126,
+          "pts": 193409,
+          "clip_seconds": 2.1379888888888887,
+          "image_sha256": "7bb773266fdf0d63c5a47e4d2c45bc05be1ed3896a76ba7e9d90246028f62eb4",
+          "image": "849843_1_2/frame_013.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "reason": "Mitt low beside shin guard; batter leg kick underway near but not over the mitt."
+          },
+          "fable_informed_followup": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt same place; batter's leg kick developing on image-left, not near mitt."
+          },
+          "review_decision": "identity_unresolved",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 127,
+          "pts": 194911,
+          "clip_seconds": 2.1546777777777777,
+          "image_sha256": "81ed86289632afbafb25fee0106eb27c872f839aae98252e10dcba83e650809c",
+          "image": "849843_1_2/frame_014.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "reason": "Mitt still identifiable low; pitcher driving toward plate."
+          },
+          "fable_informed_followup": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt unchanged; batter's knee rising toward right shin guard region, mitt unaffected."
+          },
+          "review_decision": "identity_unresolved",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 128,
+          "pts": 196412,
+          "clip_seconds": 2.1713555555555555,
+          "image_sha256": "d5fbeea6ae83fd7f1796ae6dd5d30f3868715cd299c4dc175c544af2aee707c7",
+          "image": "849843_1_2/frame_015.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "reason": "Batter's raised front shin now adjacent to mitt region; dark mitt with tan patch still visible."
+          },
+          "fable_informed_followup": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt beside protector, fully visible; batter's lifted leg overlaps catcher's right shin guard on image-left only."
+          },
+          "review_decision": "identity_unresolved",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 129,
+          "pts": 197914,
+          "clip_seconds": 2.1880444444444445,
+          "image_sha256": "0bd2991550d09161d4a4e30d9f7da922fb81eb32abdbf2dc1ec5cbc9886b8683",
+          "image": "849843_1_2/frame_016.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "reason": "Mitt visible low-left behind batter's raised leg edge; shape partly clipped."
+          },
+          "fable_informed_followup": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt still pocket-on on image-right; batter's knee high on image-left."
+          },
+          "review_decision": "identity_unresolved",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 130,
+          "pts": 199415,
+          "clip_seconds": 2.2047222222222222,
+          "image_sha256": "b76f4a55db90119bbe02765721ec7450d1ad65b3ca3cc2c5d95a775fd6ca9702",
+          "image": "849843_1_2/frame_017.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "reason": "Mitt still identifiable low; batter's knee high, foot near mitt area."
+          },
+          "fable_informed_followup": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt unchanged; batter's foot near right shin guard, no overlap with mitt."
+          },
+          "review_decision": "identity_unresolved",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 131,
+          "pts": 200917,
+          "clip_seconds": 2.2214111111111112,
+          "image_sha256": "367a709ff958b97cf2f01f6066518b5995ae67fc1e6c2ca3593dbb5dcc89b6b2",
+          "image": "849843_1_2/frame_018.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "unclear",
+            "reason": "Batter's front leg lowering across mitt region; mitt fragment visible but pocket orientation not readable."
+          },
+          "fable_informed_followup": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt same image-right location, uncovered; batter's leg lowering across the shin-guard region on image-left."
+          },
+          "review_decision": "identity_unresolved",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 132,
+          "pts": 202418,
+          "clip_seconds": 2.238088888888889,
+          "image_sha256": "03e0c1f8a18065ac3cd190287048337b181a7cd5c870cb5515ed49f907b5358c",
+          "image": "849843_1_2/frame_019.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "unclear",
+            "reason": "Dark mitt fragment visible beside batter's shin; partial overlap, catcher may be shifting with pitcher's drive."
+          },
+          "fable_informed_followup": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt silhouette consistent with earlier frames; slight compression blur on rim."
+          },
+          "review_decision": "identity_unresolved",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 133,
+          "pts": 203920,
+          "clip_seconds": 2.254777777777778,
+          "image_sha256": "2007566f9d8e75edadb04f8da288655eafde452b753b62d7d7c5af0177b2589c",
+          "image": "849843_1_2/frame_020.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "unclear",
+            "reason": "Mitt visible low-left beneath batter's calf; partly hidden, posture not confirmable."
+          },
+          "fable_informed_followup": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt pocket-on beside protector; batter striding on image-left."
+          },
+          "review_decision": "identity_unresolved",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 134,
+          "pts": 205421,
+          "clip_seconds": 2.2714555555555553,
+          "image_sha256": "676b8cb2b5be931ace1e16e893d527decee01c7d9dd0b57f916c801a03242aaf",
+          "image": "849843_1_2/frame_021.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "unclear",
+            "reason": "Batter striding; mitt partially behind front leg, only outer dark portion seen."
+          },
+          "fable_informed_followup": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt unchanged; batter's front foot nearing ground on image-left."
+          },
+          "review_decision": "identity_unresolved",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 135,
+          "pts": 206923,
+          "clip_seconds": 2.2881444444444443,
+          "image_sha256": "cb01c54c742f7dfa186a51da59f97f1dd9733142827319dd0aae4d49bd4ecf49",
+          "image": "849843_1_2/frame_022.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "unclear",
+            "reason": "Mitt fragment visible below batter's calf; blur and overlap prevent posture read."
+          },
+          "fable_informed_followup": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt still in same region, no overlap; batter's foot planting."
+          },
+          "review_decision": "identity_unresolved",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 136,
+          "pts": 208424,
+          "clip_seconds": 2.304822222222222,
+          "image_sha256": "8d6d5789991e5845c66d34db89623fc829c6f8d76abfcd37d702797e8e09f4f0",
+          "image": "849843_1_2/frame_023.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "unclear",
+            "reason": "Mitt low beneath batter's planted-leg calf; shape partially clipped by leg."
+          },
+          "fable_informed_followup": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt pocket-on beside protector; batter planted on image-left."
+          },
+          "review_decision": "identity_unresolved",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 137,
+          "pts": 209926,
+          "clip_seconds": 2.321511111111111,
+          "image_sha256": "ccbb01dcad23544b5d355f2909119bd80d1e262906f9c800248512219f47d983",
+          "image": "849843_1_2/frame_024.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "unclear",
+            "reason": "Dark mitt visible below batter's calf as pitcher nears release; partial occlusion, posture not confirmable."
+          },
+          "fable_informed_followup": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt visible in same image-right location with tan rim; slight motion blur but silhouette intact."
+          },
+          "review_decision": "identity_unresolved",
+          "published_new_point_xy": null
+        }
+      ]
+    },
+    {
+      "pitch_key": "849843:1:3",
+      "play_id": "f29b740f-f187-3089-b57a-3b55e8370c19",
+      "clip_sha256": "8e5fbfdd9172eadfb69e3316fbe97d592e7201e3d4ebac4fd1d6e17403420ce5",
+      "time_base": "1/90000",
+      "first_pts": 0,
+      "interval": {
+        "lower_pts_inclusive": 163438,
+        "upper_pts_inclusive": 208483,
+        "expected_decoded_frames": 31,
+        "representative_pts": 190465
+      },
+      "decoded_frames_in_interval": 31,
+      "duration_between_endpoints_seconds": 0.5005,
+      "distinct_pts_gaps_ticks": [
+        1501,
+        1502
+      ],
+      "max_pts_gap_seconds": 0.01668888888888889,
+      "counts": {
+        "supported_development_candidate": 28,
+        "posture_unresolved": 3
+      },
+      "codex_observation": "Brown mitt face remains identifiable in all 31 inspected tiles, distinguishable from yellow/white uniform edges. Minor orientation changes; no clear large reposition. Batter leg rises near interval end without hiding mitt. No quantitative stillness claim.",
+      "fable_initial_receipt": {
+        "raw_events_sha256": "7286550552f0fd76436a4d431901801ddac93dac3ab9d939a6da49301a8a94a2",
+        "read_image_names": [
+          "full_frame_sheet_00.png",
+          "full_frame_sheet_01.png",
+          "full_frame_sheet_02.png",
+          "crop_nearest_2x_sheet_00.png",
+          "crop_nearest_2x_sheet_01.png",
+          "crop_nearest_2x_sheet_02.png"
+        ],
+        "complete_result_received": true,
+        "model": "claude-fable-5-1",
+        "duration_ms": 51307,
+        "markdown_fence_removed": false
+      },
+      "fable_initial_interval_observation": "Across all 31 frames the catcher is crouched with the dark mitt on the left hand held in a preparation-like position and identifiable in every crop; the batter's leg stays left of the mitt and never covers it. The pitcher is already in leg lift at ordinal 106 and lowering by about 130, so this entire interval is post-decision and in-delivery. From about 134 to 136 the mitt outline appears to tilt or drop slightly; this is a subtle change at 2x nearest-neighbor resolution and is marked unclear rather than moving. Camera is static broadcast center-field view with no visible pan; motion blur is low.",
+      "fable_initial_schema_omissions": [],
+      "fable_followup_receipt": {
+        "raw_events_sha256": "90e36beca0b5fba30756de72035e5f3ca328584a407f0ef4ec6e03a8ae4a36c3",
+        "read_image_names": [
+          "frame_018.png",
+          "crop_018.png",
+          "crop_nearest_2x_sheet_00.png",
+          "crop_nearest_2x_sheet_01.png",
+          "crop_nearest_2x_sheet_02.png"
+        ],
+        "complete_result_received": false,
+        "process_outcome": "240_second_process_deadline_interrupted",
+        "content_status": "no completed result; no followup observations accepted"
+      },
+      "fable_followup_summary": null,
+      "adjudication": "Initial visibility agrees; Fable marks134-136 posture unclear, Codex initial says preparation candidate. Followup timed out without result. Preserve those3 as unresolved; earlier28 remain qualitative development candidates only.",
+      "frames": [
+        {
+          "ordinal": 106,
+          "pts": 163438,
+          "clip_seconds": 1.8159777777777777,
+          "image_sha256": "87614b95ce148b8277e2e1f31d044d922770aae1b075852516b5a28422563cac",
+          "image": "849843_1_3/frame_000.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Dark catcher mitt identifiable on catcher's left hand, pocket toward pitcher, crouched; pitcher already in leg lift in full frame."
+          },
+          "fable_informed_followup": null,
+          "review_decision": "supported_development_candidate",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 107,
+          "pts": 164940,
+          "clip_seconds": 1.8326666666666667,
+          "image_sha256": "ce4f3f0202bfdfea69f55ceb9f5149f904ee86082688b54719a034acb0d6ede0",
+          "image": "849843_1_3/frame_001.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt identifiable, same crouch posture as 106; no visible repositioning."
+          },
+          "fable_informed_followup": null,
+          "review_decision": "supported_development_candidate",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 108,
+          "pts": 166441,
+          "clip_seconds": 1.8493444444444445,
+          "image_sha256": "51fc54c856c6edbed7c3b26635c7c8ac1ce5e253ff5ddd5fbf855e8d2a365990",
+          "image": "849843_1_3/frame_002.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt identifiable, posture consistent with 107; mild softness from 2x nearest-neighbor upscale."
+          },
+          "fable_informed_followup": null,
+          "review_decision": "supported_development_candidate",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 109,
+          "pts": 167943,
+          "clip_seconds": 1.8660333333333334,
+          "image_sha256": "a21090bc773a3658f760caea2aba0c2ecd1fdbe5913107378c1d66dd8d808ee2",
+          "image": "849843_1_3/frame_003.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt identifiable in front of catcher chest/knee zone; no clear motion versus 108."
+          },
+          "fable_informed_followup": null,
+          "review_decision": "supported_development_candidate",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 110,
+          "pts": 169444,
+          "clip_seconds": 1.882711111111111,
+          "image_sha256": "70508967a610bd19336f9021ba7359b3f0a2f1c89d0a5731e6a15fe81dafea4e",
+          "image": "849843_1_3/frame_004.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt identifiable; batter's rear leg left of mitt, not covering it."
+          },
+          "fable_informed_followup": null,
+          "review_decision": "supported_development_candidate",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 111,
+          "pts": 170946,
+          "clip_seconds": 1.8994,
+          "image_sha256": "d1abfedc1bf9d0ffdfdb285b3c8aa3730ac8567b1044125ca1183659b59e74c5",
+          "image": "849843_1_3/frame_005.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt identifiable, same held posture; pitcher leg lift continues."
+          },
+          "fable_informed_followup": null,
+          "review_decision": "supported_development_candidate",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 112,
+          "pts": 172447,
+          "clip_seconds": 1.9160777777777778,
+          "image_sha256": "39f17f9c08cc2aa6bead0630d03860f0212d335cbfb6a227af901bde9a7af700",
+          "image": "849843_1_3/frame_006.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt identifiable; no obvious change versus 111."
+          },
+          "fable_informed_followup": null,
+          "review_decision": "supported_development_candidate",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 113,
+          "pts": 173949,
+          "clip_seconds": 1.9327666666666667,
+          "image_sha256": "81abbde19fa843f4716022699323a91d1a68a33b154bbc19c0aefa82434ff25a",
+          "image": "849843_1_3/frame_007.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt identifiable; posture consistent with neighbors."
+          },
+          "fable_informed_followup": null,
+          "review_decision": "supported_development_candidate",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 114,
+          "pts": 175450,
+          "clip_seconds": 1.9494444444444445,
+          "image_sha256": "becacaa7c7044a0cf9d5d5cbed97ac67f77b92b85ca11d4c166576cad3134e27",
+          "image": "849843_1_3/frame_008.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt identifiable, held in preparation-like position."
+          },
+          "fable_informed_followup": null,
+          "review_decision": "supported_development_candidate",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 115,
+          "pts": 176952,
+          "clip_seconds": 1.9661333333333333,
+          "image_sha256": "f89c93b268442fe39089fdff4f31545fea739d5453649afc2444bfd72705612f",
+          "image": "849843_1_3/frame_009.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt identifiable; no clear repositioning."
+          },
+          "fable_informed_followup": null,
+          "review_decision": "supported_development_candidate",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 116,
+          "pts": 178453,
+          "clip_seconds": 1.982811111111111,
+          "image_sha256": "fa56b14d7392292245d83668b8863114c11954b48e703a3592bb1caafc72e7e3",
+          "image": "849843_1_3/frame_010.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt identifiable; same posture as 115."
+          },
+          "fable_informed_followup": null,
+          "review_decision": "supported_development_candidate",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 117,
+          "pts": 179955,
+          "clip_seconds": 1.9995,
+          "image_sha256": "6e3dc0c7140f3675edab55d199cb7bba1fa37b6018ad630e07ab8323c013ae8f",
+          "image": "849843_1_3/frame_011.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt identifiable; posture consistent."
+          },
+          "fable_informed_followup": null,
+          "review_decision": "supported_development_candidate",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 118,
+          "pts": 181456,
+          "clip_seconds": 2.0161777777777776,
+          "image_sha256": "9ad3d3868b95d1cb63830fe2fa284809917514799099cb8729b99fb76097782e",
+          "image": "849843_1_3/frame_012.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt identifiable; pitcher at or near peak leg lift in full frame."
+          },
+          "fable_informed_followup": null,
+          "review_decision": "supported_development_candidate",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 119,
+          "pts": 182958,
+          "clip_seconds": 2.0328666666666666,
+          "image_sha256": "ed9bbd9d4fc4461c92eff06fde4c5c53a6cd50f9027d4766cd894067ed6772a2",
+          "image": "849843_1_3/frame_013.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt identifiable; no visible change."
+          },
+          "fable_informed_followup": null,
+          "review_decision": "supported_development_candidate",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 120,
+          "pts": 184459,
+          "clip_seconds": 2.0495444444444444,
+          "image_sha256": "702847de95f274e961f18b32cf87fa77da32867a1323399aa9eac8211709622f",
+          "image": "849843_1_3/frame_014.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt identifiable; held posture continues."
+          },
+          "fable_informed_followup": null,
+          "review_decision": "supported_development_candidate",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 121,
+          "pts": 185961,
+          "clip_seconds": 2.0662333333333334,
+          "image_sha256": "9de10a83bac6d71f53d1e13dd266775417846a1521368d382a5df76fc49d8560",
+          "image": "849843_1_3/frame_015.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt identifiable; consistent with 120."
+          },
+          "fable_informed_followup": null,
+          "review_decision": "supported_development_candidate",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 122,
+          "pts": 187462,
+          "clip_seconds": 2.082911111111111,
+          "image_sha256": "7f592541ed0e1f3dcf6a0213256214fcef9c437cf77eceb040dc0e9e0eb06b9f",
+          "image": "849843_1_3/frame_016.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt identifiable; no clear repositioning."
+          },
+          "fable_informed_followup": null,
+          "review_decision": "supported_development_candidate",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 123,
+          "pts": 188964,
+          "clip_seconds": 2.0996,
+          "image_sha256": "8ba5b56c32249fbbb29c1b73cca0106ed4fb5b546f6e0687e35ec524eebf7639",
+          "image": "849843_1_3/frame_017.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt identifiable; posture consistent."
+          },
+          "fable_informed_followup": null,
+          "review_decision": "supported_development_candidate",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 124,
+          "pts": 190465,
+          "clip_seconds": 2.116277777777778,
+          "image_sha256": "fe8e984bf7163dfe6579263bde865fddd5fc0650f9a32d2215bb66b56ffc1a81",
+          "image": "849843_1_3/frame_018.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt identifiable; batter begins slight load, mitt uncovered."
+          },
+          "fable_informed_followup": null,
+          "review_decision": "supported_development_candidate",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 125,
+          "pts": 191967,
+          "clip_seconds": 2.1329666666666665,
+          "image_sha256": "6865560a5f849229d91d4025cca1eb9766cc43f944b65d3860204f8c4624e4aa",
+          "image": "849843_1_3/frame_019.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt identifiable; held posture."
+          },
+          "fable_informed_followup": null,
+          "review_decision": "supported_development_candidate",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 126,
+          "pts": 193468,
+          "clip_seconds": 2.1496444444444442,
+          "image_sha256": "f95953eeff9b6a2881b2930f397a8bae2efc6019915fe3a226a92b995cf6b9aa",
+          "image": "849843_1_3/frame_020.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt identifiable; consistent with neighbors."
+          },
+          "fable_informed_followup": null,
+          "review_decision": "supported_development_candidate",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 127,
+          "pts": 194970,
+          "clip_seconds": 2.166333333333333,
+          "image_sha256": "580580bd666f12de28d2dacca5a498bf48d02dc3a9d688185a5748250906f9d3",
+          "image": "849843_1_3/frame_021.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt identifiable; batter front foot starting to lift at left of crop."
+          },
+          "fable_informed_followup": null,
+          "review_decision": "supported_development_candidate",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 128,
+          "pts": 196471,
+          "clip_seconds": 2.183011111111111,
+          "image_sha256": "c51654ff8907e439e61d840ae1a83a619b7df42de7b98eaf923cfbd800cf660b",
+          "image": "849843_1_3/frame_022.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt identifiable; no clear mitt motion though batter moving."
+          },
+          "fable_informed_followup": null,
+          "review_decision": "supported_development_candidate",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 129,
+          "pts": 197973,
+          "clip_seconds": 2.1997,
+          "image_sha256": "b1f4f3933d9010d911672b76062c534ccd46f079c0c00ad47023e4631bb0bb84",
+          "image": "849843_1_3/frame_023.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt identifiable; held posture continues."
+          },
+          "fable_informed_followup": null,
+          "review_decision": "supported_development_candidate",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 130,
+          "pts": 199474,
+          "clip_seconds": 2.216377777777778,
+          "image_sha256": "f481f9b4f9cba9fc2a764d0163aae74acd319f47232dc0f6f98a978e18e9b55b",
+          "image": "849843_1_3/frame_024.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt identifiable; pitcher leg now descending in full frame, batter stride underway."
+          },
+          "fable_informed_followup": null,
+          "review_decision": "supported_development_candidate",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 131,
+          "pts": 200976,
+          "clip_seconds": 2.2330666666666668,
+          "image_sha256": "f5a260b5094be1126ddada20fafc35186f43431053ace3f14def22319402d7e0",
+          "image": "849843_1_3/frame_025.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt identifiable; subtle possible shift but not clearly repositioning."
+          },
+          "fable_informed_followup": null,
+          "review_decision": "supported_development_candidate",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 132,
+          "pts": 202477,
+          "clip_seconds": 2.2497444444444445,
+          "image_sha256": "33db790f313cbb5ed8db018dee52ab539203f012cd391d80870e0c889a6ac330",
+          "image": "849843_1_3/frame_026.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt identifiable; posture appears similar to 131."
+          },
+          "fable_informed_followup": null,
+          "review_decision": "supported_development_candidate",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 133,
+          "pts": 203979,
+          "clip_seconds": 2.2664333333333335,
+          "image_sha256": "ad7ac74b45570077999ca9c2170357c7f94257eca9752e0886bffe6f5c06fc9c",
+          "image": "849843_1_3/frame_027.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Mitt identifiable; batter leg lift fully visible left of mitt, no occlusion."
+          },
+          "fable_informed_followup": null,
+          "review_decision": "supported_development_candidate",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 134,
+          "pts": 205480,
+          "clip_seconds": 2.2831111111111113,
+          "image_sha256": "e02f796853b40d4950be5144f5192d75297edae538f58430e9b8bfb9f7df9727",
+          "image": "849843_1_3/frame_028.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "unclear",
+            "point_xy": null,
+            "reason": "Mitt identifiable but outline looks slightly more side-on than 130; possible small tilt, not conclusive."
+          },
+          "fable_informed_followup": null,
+          "review_decision": "posture_unresolved",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 135,
+          "pts": 206982,
+          "clip_seconds": 2.2998,
+          "image_sha256": "211c3f011fe35580911130b25be4529d5992b86ceb6fabd34cf25b96fc82405f",
+          "image": "849843_1_3/frame_029.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "unclear",
+            "point_xy": null,
+            "reason": "Mitt identifiable; apparent slight rotation/drop versus 133, below confident moving threshold."
+          },
+          "fable_informed_followup": null,
+          "review_decision": "posture_unresolved",
+          "published_new_point_xy": null
+        },
+        {
+          "ordinal": 136,
+          "pts": 208483,
+          "clip_seconds": 2.3164777777777776,
+          "image_sha256": "e62233fef21962927ef6367f58d8566d0e42e976d968b78725ce489c8ac1b8a4",
+          "image": "849843_1_3/frame_030.png",
+          "codex_initial": {
+            "visibility": "visible",
+            "posture": "presented_candidate",
+            "point_xy": null,
+            "reason": "Identifiable brown mitt face in preparation-like posture; exact center not measured."
+          },
+          "fable_initial": {
+            "visibility": "visible",
+            "posture": "unclear",
+            "point_xy": null,
+            "reason": "Mitt identifiable; subtle orientation change continues; pitcher well into delivery."
+          },
+          "fable_informed_followup": null,
+          "review_decision": "posture_unresolved",
+          "published_new_point_xy": null
+        }
+      ]
+    }
+  ]
+}

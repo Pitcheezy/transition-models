@@ -142,6 +142,27 @@ def test_fixed_source_pins_match_cv48b_review_metadata():
     assert interval.SOURCE_PINS == {
         row["pitch_key"]: (row["play_id"], row["clip_sha256"]) for row in review["records"]
     }
+    for row in review["records"]:
+        lower, upper, _, representative = interval.INTERVALS[row["pitch_key"]]
+        assert [lower, upper] == row["overlap_candidate_interval_pts"]
+        assert representative == row["selected_frame"]["pts"]
+
+
+def test_fixed_counts_match_recorded_actual_interval_frames():
+    review = json.loads(
+        (
+            Path(__file__).resolve().parents[1]
+            / "docs/results/exhibition_replay_20261028/interval_review_v1.json"
+        ).read_text(encoding="utf-8")
+    )
+    assert {row["pitch_key"] for row in review["records"]} == set(interval.INTERVALS)
+    assert sum(len(row["frames"]) for row in review["records"]) == 80
+    for row in review["records"]:
+        lower, upper, count, representative = interval.INTERVALS[row["pitch_key"]]
+        pts = [frame["pts"] for frame in row["frames"]]
+        assert len(pts) == count
+        assert (pts[0], pts[-1]) == (lower, upper)
+        assert representative in pts
 
 
 @pytest.mark.parametrize("replacement", ["clip_and_registry", "play_id"])
@@ -187,7 +208,12 @@ def test_build_rejects_wrong_game_and_eval_split_before_decoding(
     root = make_registry(tmp_path, game=game, split=split)
     before = (root / "registry.sqlite").read_bytes()
     target = tmp_path / "outputs" / "interval"
-    with pytest.raises(ValueError, match="development"):
+
+    def forbidden_decoder(*args, **kwargs):
+        pytest.fail("wrong game or evaluation split must be rejected before any decoder call")
+
+    monkeypatch.setattr(context.subprocess, "run", forbidden_decoder)
+    with pytest.raises(ValueError, match="849843 must be a registered development game"):
         interval.build_intervals(root, target, "unused", "unused")
     assert not target.exists()
     assert (root / "registry.sqlite").read_bytes() == before
@@ -204,6 +230,38 @@ def test_build_rejects_nonprivate_or_existing_output_before_reading_source(tmp_p
     with pytest.raises(ValueError, match="fresh"):
         interval.build_intervals("missing", target, "unused", "unused")
     assert marker.read_text() == "preserve"
+
+
+def test_mid_extraction_failure_preserves_incomplete_private_output_without_audit(
+    tmp_path, monkeypatch
+):
+    monkeypatch.setattr(context, "OUTPUT_ROOT", tmp_path / "outputs")
+    root = make_registry(tmp_path)
+    pin_synthetic_sources(monkeypatch, root)
+    before = {p.name: p.read_bytes() for p in root.iterdir()}
+    calls = []
+
+    def partial_extract(root, row, destination, *args, **kwargs):
+        calls.append(row["pitch_key"])
+        marker = destination / f"{row['pitch_key'].replace(':', '_')}.partial.txt"
+        marker.write_text("synthetic partial extraction evidence", encoding="utf-8")
+        if row["pitch_number"] == 2:
+            raise ValueError("synthetic decoder failure on second clip")
+        return {"pitch_key": row["pitch_key"]}
+
+    monkeypatch.setattr(context, "extract_context", partial_extract)
+    target = tmp_path / "outputs" / "interval"
+    with pytest.raises(ValueError, match="synthetic decoder failure on second clip"):
+        interval.build_intervals(root, target, "unused", "unused")
+    assert calls == ["849843:1:1", "849843:1:2"]
+    assert not (target / "audit.json").exists()
+    partial = {p.name: p.read_bytes() for p in target.iterdir()}
+    assert set(partial) == {"849843_1_1.partial.txt", "849843_1_2.partial.txt"}
+    with pytest.raises(ValueError, match="fresh output directory"):
+        interval.build_intervals(root, target, "unused", "unused")
+    assert calls == ["849843:1:1", "849843:1:2"]
+    assert {p.name: p.read_bytes() for p in target.iterdir()} == partial
+    assert {p.name: p.read_bytes() for p in root.iterdir()} == before
 
 
 def test_synthetic_build_extracts_exact_eighty_frames_with_reused_pts_and_sha_checks(
