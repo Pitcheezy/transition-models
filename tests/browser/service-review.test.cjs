@@ -405,3 +405,42 @@ test("unreadable synthetic evidence image removes the image and keeps the result
   assert.notEqual(await page.locator("#actual-content").textContent(), "");
   assert.equal(await page.locator("#next-pitch").isDisabled(), false);
 });
+
+function asV2(evidence) {
+  evidence.schema = "pitcheezy-service-review-evidence-v2";
+  evidence.entries.forEach(entry => Object.assign(entry, {
+    image_width: 1, image_height: 1, context_crop: [0, 0, 1, 1],
+    point: entry.status === "candidate" ? { x: 0.5, y: 0.5 } : null
+  }));
+}
+
+test("v2 exact-image point and crop reveal together then disappear on next pitch", async t => {
+  const { page, requests } = await evidencePage(t, asV2);
+  await evidenceHidden(page); assert.deepEqual(requests, []);
+  await page.locator("#reveal-button").click();
+  await page.waitForSelector(".evidence-zoom .evidence-point");
+  assert.equal(await page.locator(".evidence-point").count(), 2);
+  assert.equal(await page.locator(".evidence-overlay").getAttribute("viewBox"), "0 0 1 1");
+  assert.equal(await page.locator(".evidence-zoom image").getAttribute("href"), "evidence/synthetic-1.png");
+  assert.match(await page.locator("#evidence-content").textContent(), /사람 검증 없음/);
+  const old = await page.locator("#evidence-content img").elementHandle();
+  await page.locator("#next-pitch").click();
+  await evidenceHidden(page); assert.equal(await page.locator(".evidence-point").count(), 0);
+  await page.locator("#reveal-button").click();
+  await page.waitForSelector(".evidence-zoom");
+  assert.equal(await page.locator(".evidence-point").count(), 0);
+  await old.evaluate(image => image.dispatchEvent(new Event("load")));
+  assert.equal(await page.locator(".evidence-point").count(), 0);
+  assert.match(await page.locator("#evidence-content").textContent(), /표시할 미트 후보점 없음/);
+  await upload(page, Buffer.from("not-json"));
+  await page.waitForFunction(() => document.getElementById("load-status").classList.contains("error"));
+  await evidenceHidden(page); assert.equal(await page.locator(".evidence-zoom").count(), 0);
+});
+
+test("v2 raster-size mismatch removes point and crop while keeping actual results", async t => {
+  const { page } = await evidencePage(t, evidence => { asV2(evidence); evidence.entries[0].image_width = 2; });
+  await page.locator("#reveal-button").click();
+  await page.waitForFunction(() => document.getElementById("evidence-content").textContent.includes("크기가 명세와 달라"));
+  assert.equal(await page.locator(".evidence-point, .evidence-zoom, #evidence-content img").count(), 0);
+  assert.notEqual(await page.locator("#actual-content").textContent(), "");
+});

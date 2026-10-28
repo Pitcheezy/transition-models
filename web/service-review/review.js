@@ -9,6 +9,7 @@
   const PROFILE = "teammate_export_20261009_v1";
   const MEDIA_SCHEMA = "pitcheezy-service-review-media-v1";
   const EVIDENCE_SCHEMA = "pitcheezy-service-review-evidence-v1";
+  const EVIDENCE_SCHEMA_V2 = "pitcheezy-service-review-evidence-v2";
   const MAX_BYTES = 5 * 1024 * 1024;
   // Supplied S contract geometry; this is not a measurement of the physical plate.
   const SERVICE_ZONE_HALF_WIDTH = .83;
@@ -223,17 +224,34 @@
     return { clip: clip ? clone(clip) : null, reason: clip ? "" : "이 투구에 연결된 공식 클립이 없습니다. 결과는 직접 공개할 수 있습니다." };
   }
 
+  function validateEvidenceGeometry(entry) {
+    const width = entry.image_width, height = entry.image_height, crop = entry.context_crop;
+    assert(integer(width, 1, 8192) && integer(height, 1, 8192) && width * height <= 16777216,
+      "근거 이미지 크기가 올바르지 않습니다.");
+    assert(Array.isArray(crop) && crop.length === 4 && crop.every(Number.isInteger) &&
+      0 <= crop[0] && crop[0] < crop[2] && crop[2] <= width &&
+      0 <= crop[1] && crop[1] < crop[3] && crop[3] <= height, "문맥 확대 범위가 원본 이미지 밖입니다.");
+    const point = entry.point;
+    assert(point === null || (entry.status === "candidate" && object(point) &&
+      Object.keys(point).length === 2 && Object.hasOwn(point, "x") && Object.hasOwn(point, "y") &&
+      finite(point.x) && finite(point.y) && point.x >= 0 && point.x < width && point.y >= 0 && point.y < height &&
+      point.x >= crop[0] && point.x < crop[2] && point.y >= crop[1] && point.y < crop[3]),
+    "미트 후보점은 candidate 상태의 원본 이미지·문맥 범위 안 픽셀이어야 합니다.");
+  }
+
   function validateEvidenceManifest(manifest) {
     const exactKeys = (value, names) => object(value) && Object.keys(value).length === names.length &&
       names.every(name => Object.hasOwn(value, name));
     assert(exactKeys(manifest, ["schema", "game_pk", "source_sha256", "entries"]) &&
-      manifest.schema === EVIDENCE_SCHEMA && integer(manifest.game_pk, 1, 2147483647) &&
+      [EVIDENCE_SCHEMA, EVIDENCE_SCHEMA_V2].includes(manifest.schema) && integer(manifest.game_pk, 1, 2147483647) &&
       /^[a-f0-9]{64}$/.test(manifest.source_sha256) && Array.isArray(manifest.entries) &&
       manifest.entries.length <= 2000, "근거 프레임 명세의 형식 또는 출처가 올바르지 않습니다.");
+    const versionTwo = manifest.schema === EVIDENCE_SCHEMA_V2;
     const keys = new Set(), plays = new Set(), images = new Set();
     for (const entry of manifest.entries) {
       assert(exactKeys(entry, ["pitch_key", "play_id", "clip_sha256", "image", "image_sha256",
-        "frame_pts", "clip_first_pts", "release_lower_bound_pts", "time_base", "clip_seconds", "status", "reason"]),
+        "frame_pts", "clip_first_pts", "release_lower_bound_pts", "time_base", "clip_seconds", "status", "reason"]
+        .concat(versionTwo ? ["image_width", "image_height", "point", "context_crop"] : [])),
       "근거 프레임에 누락되거나 지원하지 않는 필드가 있습니다.");
       assert(typeof entry.pitch_key === "string" &&
         new RegExp("^" + manifest.game_pk + ":[1-9][0-9]{0,2}:[1-9][0-9]{0,2}$").test(entry.pitch_key) &&
@@ -253,6 +271,7 @@
       assert(["candidate", "abstained"].includes(entry.status) &&
         typeof entry.reason === "string" && entry.reason.trim().length > 0 && entry.reason.length <= 1000,
       "근거 프레임 판독 상태 또는 이유가 올바르지 않습니다.");
+      if (versionTwo) validateEvidenceGeometry(entry);
       keys.add(entry.pitch_key); plays.add(entry.play_id.toLowerCase()); images.add(entry.image.toLowerCase());
     }
     return manifest;
@@ -440,20 +459,58 @@
         return;
       }
       const entry = result.entry, token = evidenceRenderToken;
-      const label = entry.status === "candidate" ? "AI 개발 관측 · 미트 위치 확정 아님" : "판독 기권 · 미트 위치 확정 불가";
+      const versionTwo = evidenceManifest.schema === EVIDENCE_SCHEMA_V2;
+      const label = versionTwo ?
+        (entry.status === "candidate" ? "AI 교차판독 후보 · 사람 검증 없음" : "판독 기권 · 사람 검증 없음") :
+        (entry.status === "candidate" ? "AI 개발 관측 · 미트 위치 확정 아님" : "판독 기권 · 미트 위치 확정 불가");
       const picture = make("img", "evidence-image");
       picture.alt = view.key + "의 투구 전 근거 프레임 · " + label;
-      picture.addEventListener("error", () => {
+      const failed = message => {
         if (token !== evidenceRenderToken) return;
-        replace("evidence-content", make("p", "subtle", "근거 이미지를 읽지 못했습니다. 추천과 영상 검토는 계속할 수 있습니다."));
-      });
+        replace("evidence-content", make("p", "subtle", message));
+      };
+      picture.addEventListener("error", () =>
+        failed("근거 이미지를 읽지 못했습니다. 추천과 영상 검토는 계속할 수 있습니다."));
+      const visual = make("div", "evidence-visual"), source = make("div", "evidence-source");
+      source.append(picture); visual.append(source);
+      if (versionTwo) {
+        visual.prepend(make("p", "evidence-caption", "원본 전체 프레임"));
+        picture.addEventListener("load", () => {
+          if (token !== evidenceRenderToken) return;
+          if (picture.naturalWidth !== entry.image_width || picture.naturalHeight !== entry.image_height) {
+            failed("근거 이미지의 실제 크기가 명세와 달라 후보점과 문맥 확대를 표시하지 않았습니다.");
+            return;
+          }
+          const marker = () => {
+            const group = svg("g", { class: "evidence-point", "aria-label": "선택한 근거 프레임의 미트 후보" });
+            group.append(svg("circle", { cx: entry.point.x, cy: entry.point.y, r: 9,
+              fill: "none", stroke: "#ffd166", "stroke-width": 3 }),
+              svg("circle", { cx: entry.point.x, cy: entry.point.y, r: 2, fill: "#ffd166", stroke: "#172a36", "stroke-width": 1 }));
+            return group;
+          };
+          if (entry.point !== null) {
+            const overlay = svg("svg", { viewBox: "0 0 " + entry.image_width + " " + entry.image_height,
+              class: "evidence-overlay", "aria-hidden": "true" });
+            overlay.append(marker()); source.append(overlay);
+          }
+          const crop = entry.context_crop;
+          const zoom = svg("svg", { viewBox: crop[0] + " " + crop[1] + " " + (crop[2] - crop[0]) + " " + (crop[3] - crop[1]),
+            class: "evidence-zoom", role: "img", "aria-label": "같은 근거 이미지의 포수 문맥 확대" });
+          zoom.append(svg("image", { href: entry.image, x: 0, y: 0,
+            width: entry.image_width, height: entry.image_height }));
+          if (entry.point !== null) zoom.append(marker());
+          visual.append(make("p", "evidence-caption", "포수 문맥 확대 · 같은 근거 이미지"), zoom,
+            make("p", "footnote", entry.point === null ? "표시할 미트 후보점 없음" :
+              "선택한 근거 프레임의 미트 후보, 투수 의도 아님"));
+        }, { once: true });
+      }
       picture.src = entry.image;
       const detail = make("div", "evidence-detail");
       detail.append(make("strong", "evidence-status", label), make("p", "", entry.reason),
         make("p", "evidence-timing", "클립 " + entry.clip_seconds.toFixed(3) + "초 · 프레임 PTS " + entry.frame_pts + " · time base " + entry.time_base),
         make("p", "footnote", "릴리스 하한 PTS " + entry.release_lower_bound_pts + ": AI가 공이 손에 남아 있다고 관측한 구간 하한이며, 정밀 릴리스 측정값이 아닙니다."),
         make("p", "footnote", "이 이미지는 좌표나 투수 의도의 정답이 아닙니다. 기존 미트 가로 추정은 별도 원자료이며 이 사진에서 산출한 값이 아닙니다."));
-      replace("evidence-content", picture, detail);
+      replace("evidence-content", versionTwo ? visual : picture, detail);
     }
 
     function renderPlot(view) {
@@ -700,7 +757,7 @@
   function pointsForCoordinate(points, x, z) {
     return points.find(p => p.kind === "candidate" && p.x === x && p.z === z);
   }
-  return { SCHEMA, PROFILE, MAX_BYTES, MEDIA_SCHEMA, EVIDENCE_SCHEMA, SERVICE_ZONE_HALF_WIDTH, validateReport, viewFor, initialState, selectPitch, selectPA, nextPitchKey, validateEvidenceManifest, evidenceFor,
+  return { SCHEMA, PROFILE, MAX_BYTES, MEDIA_SCHEMA, EVIDENCE_SCHEMA, EVIDENCE_SCHEMA_V2, SERVICE_ZONE_HALF_WIDTH, validateReport, viewFor, initialState, selectPitch, selectPA, nextPitchKey, validateEvidenceManifest, evidenceFor,
     reveal, groupsFor, plotModel, setupSummary, createLoadCoordinator, validateMediaManifest, mediaBinding,
     createMediaController, parseBytes, mount };
 });

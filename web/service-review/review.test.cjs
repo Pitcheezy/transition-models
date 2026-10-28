@@ -510,3 +510,71 @@ test("explicit next pitch advances by pitch identity within the current PA and r
   const next = api.selectPitch(state, api.nextPitchKey(report, state.key));
   assert.equal(next.key, "123:1:2"); assert.equal(next.revealed, false);
 });
+
+function evidenceV2Fixture() {
+  const manifest = evidenceFixture();
+  manifest.schema = api.EVIDENCE_SCHEMA_V2;
+  for (const entry of manifest.entries) Object.assign(entry, {
+    image_width: 1280, image_height: 720, context_crop: [500, 200, 1000, 700],
+    point: entry.status === "candidate" ? { x: 810.5, y: 420.25 } : null
+  });
+  return manifest;
+}
+
+test("v2 keeps provisional source-image points and crops hidden until reveal", () => {
+  const report = fixture(), manifest = evidenceV2Fixture(), media = mediaFixture();
+  assert.deepEqual(api.evidenceFor(report, "123:1:1", false, manifest, media),
+    { status: "hidden", entry: null, message: "" });
+  const shown = api.evidenceFor(report, "123:1:1", true, manifest, media);
+  assert.equal(shown.status, "candidate");
+  assert.deepEqual(shown.entry.point, { x: 810.5, y: 420.25 });
+  assert.deepEqual(shown.entry.context_crop, [500, 200, 1000, 700]);
+  assert.equal(api.evidenceFor(report, "123:1:2", true, manifest, media).entry.point, null);
+  shown.entry.point.x = 0;
+  assert.equal(manifest.entries[0].point.x, 810.5);
+});
+
+test("v2 rejects malformed points, legacy inferred coordinates and non-null abstentions", () => {
+  for (const mutate of [
+    e => { e.status = "abstained"; },
+    e => { delete e.point; },
+    e => { e.point = { x: NaN, y: 420 }; }, e => { e.point = { x: 810, y: Infinity }; },
+    e => { e.point = { x: true, y: 420 }; }, e => { e.point = { x: -1, y: 420 }; },
+    e => { e.point = { x: 1280, y: 420 }; }, e => { e.point = { x: 810, y: 720 }; },
+    e => { e.point = { x: 810, y: 420, z: 2 }; },
+    e => { e.point = { setup_x_ft: 0, setup_z_ft: 2 }; },
+    e => { e.setup_x_ft = 0; }
+  ]) {
+    const manifest = evidenceV2Fixture(); mutate(manifest.entries[0]);
+    assert.throws(() => api.validateEvidenceManifest(manifest));
+    assert.equal(api.evidenceFor(fixture(), "123:1:1", true, manifest, mediaFixture()).entry, null);
+  }
+});
+
+test("v2 validates bounded raster dimensions and context crop containing the point", () => {
+  for (const mutate of [
+    e => { e.image_width = 0; }, e => { e.image_width = true; }, e => { e.image_width = 8193; },
+    e => { e.image_height = 720.5; }, e => { e.image_width = e.image_height = 8192; },
+    e => { e.context_crop = [0, 0, 1281, 720]; },
+    e => { e.context_crop = [0, 0, 1280, 721]; },
+    e => { e.context_crop = [0, 0, 0, 720]; },
+    e => { e.context_crop = [-1, 0, 1280, 720]; },
+    e => { e.context_crop = [0, 0, 1280.5, 720]; },
+    e => { e.context_crop = [0, 0, 800, 400]; },
+    e => { e.context_crop = [0, 0, 1280]; }
+  ]) {
+    const manifest = evidenceV2Fixture(); mutate(manifest.entries[0]);
+    assert.throws(() => api.validateEvidenceManifest(manifest));
+  }
+});
+
+test("v2 point never enters video binding or plate-coordinate plot and selection clears it", () => {
+  const report = fixture(), manifest = evidenceV2Fixture(), media = mediaFixture();
+  const state = api.reveal(api.initialState(report));
+  assert.equal(Object.hasOwn(api.mediaBinding(report, state.key, media).clip, "point"), false);
+  assert.equal(JSON.stringify(api.plotModel(report, api.viewFor(report, state.key, true))).includes("810.5"), false);
+  const next = api.selectPitch(state, "123:1:2");
+  assert.deepEqual(api.evidenceFor(report, next.key, next.revealed, manifest, media),
+    { status: "hidden", entry: null, message: "" });
+  assert.doesNotThrow(() => api.validateEvidenceManifest(evidenceFixture()));
+});

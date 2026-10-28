@@ -2,7 +2,7 @@
 
 ## 전시 정본 계획 실행 — 2026-10-28
 
-목표·우선순위는 [PLAN.md](PLAN.md)를 먼저 읽는다. 현재 단위 검증 완료·수정 권한 반납: Codex, `codex/exhibition-replay-1028`, 기준 PR83 `2774cd7` (main `4e6aba7` 위). 기존 Claude worktree는 보존한다. 팀원 코드·Cloudflare·평가 잠금849844 변경/개발 열람 없음.
+목표·우선순위는 [PLAN.md](PLAN.md)를 먼저 읽는다. 현재 CV48b 수정 권한 선점: Codex, `codex/exhibition-replay-1028`, 기준 `a4f55e4`·PR84 (PR83 위). 기존 Claude worktree는 보존한다. 팀원 코드·Cloudflare·평가 잠금849844 변경/개발 열람 없음. 이전 단위 원격CI4/4 통과.
 
 - [x] EX-plan1. 승인된 전시 목표를 PLAN.md에 고정하고 AGENTS/CLAUDE 공통 진입을 연결한다. 합격: 목표·완료 기준·첫5타석 제한·누출/좌표 경계·단일 수정자·검증 상태가 일치하며 기존 이력 보존. 완료: 지속 목표 등록·PLAN/공통 진입 연결. 근거는 [전시 기록](docs/EXHIBITION_REPLAY_20261028.md). 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-28 · Codex]`
 - [x] CV-48a. CV48 최초 조사: 849843 첫 타석3구의 실제 디코딩 PTS·SHA와 준비/릴리스/장면 근거를 확인한다. 부족하면 첫5타석까지만 순차 조사하고 제외 이유를 보존한다. 결과: 첫3구1,234프레임 디코딩·45장 시각표본·준비장면후보3. 확정미트점0/기권3/사람검토0. PA1 유지, 추가타석영상 미열람. [기록](docs/results/exhibition_replay_20261028/feasibility_v1.json). 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-28 · Codex]`

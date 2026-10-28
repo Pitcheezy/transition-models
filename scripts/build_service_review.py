@@ -23,6 +23,7 @@ from src.integration.service_game import (  # noqa: E402
     normalize_service_game,
 )
 from src.integration.service_review_server import (  # noqa: E402
+    _check_evidence_image,
     _evidence_files,
     _json,
     _Reader,
@@ -75,7 +76,10 @@ Windows 터미널 대안: py -3 launch_review.py --open
 추천 → 공식 투구 클립 → 실제 결과·미트 가로 위치 순서로 봅니다.
 클립이 없거나 재생에 실패해도 수동 결과 공개를 사용할 수 있습니다.
 타석·투구·보고서를 바꾸면 결과를 숨기고 이전 영상은 중단합니다.
-연속 중계가 아니며 별도 미트 프레임의 시각을 공식 클립에 대응하지 않습니다.
+연속 중계가 아닙니다. 선택적 근거 패널은 같은 공식 클립에서 디코딩한 정지 이미지이며,
+표시한 점은 그 이미지에만 속합니다. 현재 재생 영상 위의 추적점이 아닙니다.
+AI 교차판독 후보는 사람 검증·투수 의도·물리적 제구 오차를 뜻하지 않습니다.
+기존 미트 가로 추정 자료는 별도 출처이며 새 근거 이미지에서 계산한 값이 아닙니다.
 
 현재 자료는 경기 후 as-of 재생입니다. 구종 비중은 사건확률이 아니며 미트는
 미검토 가로 추정입니다. 표시 숨김은 접근 통제나 투구 전 추론의 증명이 아닙니다.
@@ -178,10 +182,12 @@ def _evidence(directory, report, media):
         receipt,
     )
     result = {"review-evidence.json": raw}
+    rows_by_image = {row["image"]: row for row in payload["entries"]}
     for name in names:
         data = reader.read(name, MAX_INPUT_BYTES)
         if _sha(data) != claimed[name]:
             raise AuditInputError("Evidence image bytes differ from the sidecar SHA.")
+        _check_evidence_image(data, rows_by_image[name], payload["schema"])
         result[name] = data
     return result
 

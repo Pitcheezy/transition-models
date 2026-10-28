@@ -13,8 +13,10 @@ import math
 import os
 import re
 import stat
+import struct
 import sys
 import webbrowser
+import zlib
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from types import MappingProxyType
@@ -24,6 +26,7 @@ PACKAGE_SCHEMA = "pitcheezy-private-service-review-package-v2"
 REPORT_SCHEMA = "pitcheezy-service-review-v1"
 MEDIA_SCHEMA = "pitcheezy-service-review-media-v1"
 EVIDENCE_SCHEMA = "pitcheezy-service-review-evidence-v1"
+EVIDENCE_SCHEMA_V2 = "pitcheezy-service-review-evidence-v2"
 PROFILE = "teammate_export_20261009_v1"
 MAX_JSON_BYTES = 5 * 1024 * 1024
 MAX_RECEIPT_BYTES = 1024 * 1024
@@ -263,17 +266,70 @@ def _media_files(media, game_pk, keys, receipt):
     return files
 
 
+def _evidence_geometry(row):
+    """V2 coordinates belong only to the full source raster, never the video or plate."""
+    width, height = row.get("image_width"), row.get("image_height")
+    _require(
+        all(type(value) is int and 1 <= value <= 8192 for value in (width, height))
+        and width * height <= 16777216,
+        "Evidence image dimensions are invalid.",
+    )
+    crop = row.get("context_crop")
+    _require(
+        isinstance(crop, list)
+        and len(crop) == 4
+        and all(type(value) is int for value in crop)
+        and 0 <= crop[0] < crop[2] <= width
+        and 0 <= crop[1] < crop[3] <= height,
+        "Evidence context crop must stay inside the source image.",
+    )
+    point = row.get("point")
+    _require("point" in row, "Evidence point must be explicit, including null.")
+    if point is not None:
+        _require(
+            row.get("status") == "candidate"
+            and isinstance(point, dict)
+            and set(point) == {"x", "y"}
+            and all(type(point[k]) in (int, float) and math.isfinite(point[k]) for k in ("x", "y"))
+            and 0 <= point["x"] < width
+            and 0 <= point["y"] < height
+            and crop[0] <= point["x"] < crop[2]
+            and crop[1] <= point["y"] < crop[3],
+            "Only a candidate may carry a finite source-image point inside its context crop.",
+        )
+
+
+def _check_evidence_image(raw, row, schema):
+    """V1 stays byte-compatible; V2 verifies PNG IHDR dimensions and header integrity."""
+    if schema != EVIDENCE_SCHEMA_V2:
+        return
+    _evidence_geometry(row)
+    _require(
+        len(raw) >= 33
+        and raw[:8] == b"\x89PNG\r\n\x1a\n"
+        and raw[8:12] == b"\x00\x00\x00\r"
+        and raw[12:16] == b"IHDR"
+        and struct.unpack(">I", raw[29:33])[0] == zlib.crc32(raw[12:29]) & 0xFFFFFFFF,
+        "Evidence image must have a valid PNG IHDR.",
+    )
+    _require(
+        struct.unpack(">II", raw[16:24]) == (row["image_width"], row["image_height"]),
+        "Evidence PNG dimensions differ from the sidecar.",
+    )
+
+
 def _evidence_files(evidence, media, game_pk, keys, receipt):
     """Optional internal sidecar; no change to the provided model/IntentEstimate contract."""
     _require(
         isinstance(evidence, dict)
         and set(evidence) == {"schema", "game_pk", "source_sha256", "entries"}
-        and evidence.get("schema") == EVIDENCE_SCHEMA
+        and evidence.get("schema") in (EVIDENCE_SCHEMA, EVIDENCE_SCHEMA_V2)
         and type(evidence.get("game_pk")) is int
         and evidence["game_pk"] == game_pk
         and evidence.get("source_sha256") == receipt["source_sha256"],
         "Evidence source or game mismatch.",
     )
+    version_two = evidence["schema"] == EVIDENCE_SCHEMA_V2
     entries = evidence.get("entries")
     _require(isinstance(entries, list) and len(entries) <= len(keys), "Invalid evidence list.")
     clips = {row["pitch_key"]: row for row in media["clips"]}
@@ -295,7 +351,8 @@ def _evidence_files(evidence, media, game_pk, keys, receipt):
                 "clip_seconds",
                 "status",
                 "reason",
-            },
+            }
+            | ({"image_width", "image_height", "point", "context_crop"} if version_two else set()),
             "Unexpected evidence fields.",
         )
         key = row.get("pitch_key")
@@ -331,6 +388,8 @@ def _evidence_files(evidence, media, game_pk, keys, receipt):
             and 0 < len(row["reason"]) <= 1000,
             "Evidence must state its provisional status and reason.",
         )
+        if version_two:
+            _evidence_geometry(row)
         name = _relative_name(row.get("image"))
         _require(
             re.fullmatch(r"evidence/[A-Za-z0-9_-]+\.png", name)
@@ -376,10 +435,14 @@ def load_snapshot(directory):
     media = _json(raw_media)
     media_files = _media_files(media, game_pk, keys, receipt)
     evidence_files, optional, raw_evidence = {}, set(), None
+    evidence_rows, evidence_schema = {}, None
     if "review-evidence.json" in assets:
         raw_evidence = reader.read("review-evidence.json", MAX_JSON_BYTES)
         _require(_sha(raw_evidence) == assets["review-evidence.json"], "Evidence SHA mismatch.")
-        evidence_files = _evidence_files(_json(raw_evidence), media, game_pk, keys, receipt)
+        evidence = _json(raw_evidence)
+        evidence_files = _evidence_files(evidence, media, game_pk, keys, receipt)
+        evidence_schema = evidence["schema"]
+        evidence_rows = {row["image"]: row for row in evidence["entries"]}
         optional.add("review-evidence.json")
     _require(
         set(assets) == STATIC_ASSETS | media_files.keys() | evidence_files.keys() | optional,
@@ -396,6 +459,8 @@ def load_snapshot(directory):
             continue
         raw = reader.read(name, MAX_FILE_BYTES if name in media_files else MAX_JSON_BYTES)
         _require(bool(raw) and _sha(raw) == digest, "Package asset is empty or its SHA256 differs.")
+        if name in evidence_rows:
+            _check_evidence_image(raw, evidence_rows[name], evidence_schema)
         content_type = CONTENT_TYPES.get(name) or media_files.get(name) or evidence_files.get(name)
         if content_type is not None:
             files["/" + name] = (raw, content_type)

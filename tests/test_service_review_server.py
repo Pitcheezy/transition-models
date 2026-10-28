@@ -5,9 +5,11 @@ import http.client
 import importlib.util
 import io
 import json
+import struct
 import subprocess
 import sys
 import threading
+import zlib
 from copy import deepcopy
 from pathlib import Path
 
@@ -593,3 +595,131 @@ def test_unexpected_write_errors_are_not_silenced(package, fail_write):
     client = InterruptedClient("GET", "/media/synthetic.mp4", {}, fail_write, PermissionError)
     with pytest.raises(PermissionError, match="simulated client cancellation"):
         handler(client, ("127.0.0.1", 10000), None)
+
+
+def synthetic_png(width=32, height=24):
+    def chunk(kind, data):
+        return (
+            struct.pack(">I", len(data)) + kind + data + struct.pack(">I", zlib.crc32(kind + data))
+        )
+
+    header = struct.pack(">IIBBBBB", width, height, 8, 2, 0, 0, 0)
+    pixels = (b"\0" + b"\x80\x80\x80" * width) * height
+    return (
+        b"\x89PNG\r\n\x1a\n"
+        + chunk(b"IHDR", header)
+        + chunk(b"IDAT", zlib.compress(pixels))
+        + chunk(b"IEND", b"")
+    )
+
+
+def add_evidence_v2(package, mutate=None, image=None):
+    add_evidence(package)
+    image = synthetic_png() if image is None else image
+    (package / "evidence/frame.png").write_bytes(image)
+    path = package / "review-evidence.json"
+    evidence = json.loads(path.read_bytes())
+    evidence["schema"] = server_module.EVIDENCE_SCHEMA_V2
+    row = evidence["entries"][0]
+    row.update(
+        image_sha256=sha(image),
+        image_width=32,
+        image_height=24,
+        point={"x": 12.5, "y": 7.5},
+        context_crop=[4, 3, 28, 22],
+        status="candidate",
+    )
+    if mutate:
+        mutate(row)
+    write_json(path, evidence)
+    refresh_receipt(package)
+    return evidence
+
+
+def test_v2_candidate_and_abstained_geometry_preserve_exact_source_bytes(package):
+    evidence = add_evidence_v2(package)
+    snapshot = server_module.load_snapshot(package)
+    assert snapshot["/evidence/frame.png"][0] == synthetic_png()
+    row = evidence["entries"][0]
+    row.update(status="abstained", point=None)
+    write_json(package / "review-evidence.json", evidence)
+    refresh_receipt(package)
+    assert "/evidence/frame.png" in server_module.load_snapshot(package)
+
+
+@pytest.mark.parametrize(
+    "field,value",
+    [
+        ("image_width", 0),
+        ("image_width", True),
+        ("image_width", 8193),
+        ("image_height", 0.5),
+        ("image_height", 8193),
+        ("point", {"x": -1, "y": 7}),
+        ("point", {"x": 32, "y": 7}),
+        ("point", {"x": 12, "y": 24}),
+        ("point", {"x": True, "y": 7}),
+        ("point", {"x": float("nan"), "y": 7}),
+        ("point", {"x": 12, "y": float("inf")}),
+        ("point", {"x": 12, "y": 7, "setup_x_ft": 0}),
+        ("point", {"setup_x_ft": 0, "setup_z_ft": 2}),
+        ("point", [12, 7]),
+        ("context_crop", [0, 0, 33, 24]),
+        ("context_crop", [0, 0, 32, 25]),
+        ("context_crop", [10, 10, 9, 20]),
+        ("context_crop", [0, 0, 0, 20]),
+        ("context_crop", [-1, 0, 32, 24]),
+        ("context_crop", [0, 0, 32.0, 24]),
+        ("context_crop", [0, 0, 10, 5]),
+        ("context_crop", [0, 0, 32]),
+        ("status", "abstained"),
+    ],
+)
+def test_v2_bad_points_dimensions_and_crops_fail_closed(package, field, value):
+    add_evidence_v2(package, lambda row: row.update({field: value}))
+    with pytest.raises(ValueError):
+        server_module.load_snapshot(package)
+
+
+def test_v2_rejects_missing_geometry_and_legacy_inferred_coordinate_fields(package):
+    evidence = add_evidence_v2(package)
+    row = evidence["entries"][0]
+    del row["point"]
+    write_json(package / "review-evidence.json", evidence)
+    refresh_receipt(package)
+    with pytest.raises(ValueError, match="fields"):
+        server_module.load_snapshot(package)
+    row["point"] = None
+    row["setup_x_ft"] = 0
+    write_json(package / "review-evidence.json", evidence)
+    refresh_receipt(package)
+    with pytest.raises(ValueError, match="fields"):
+        server_module.load_snapshot(package)
+
+
+@pytest.mark.parametrize(
+    "image",
+    [
+        b"not a png",
+        synthetic_png(31, 24),
+        synthetic_png()[:29] + b"BAD!" + synthetic_png()[33:],
+    ],
+)
+def test_v2_png_header_and_declared_dimensions_must_match_even_with_fresh_hash(package, image):
+    add_evidence_v2(package, image=image)
+    with pytest.raises(ValueError, match="PNG"):
+        server_module.load_snapshot(package)
+
+
+def test_v2_image_byte_tamper_is_rejected_before_geometry(package):
+    add_evidence_v2(package)
+    (package / "evidence/frame.png").write_bytes(synthetic_png(31, 24))
+    with pytest.raises(ValueError, match="SHA"):
+        server_module.load_snapshot(package)
+
+
+def test_v1_remains_compatible_without_png_header_or_geometry(package):
+    add_evidence(package)
+    assert server_module.load_snapshot(package)["/evidence/frame.png"][0].startswith(
+        b"synthetic PNG"
+    )
