@@ -33,15 +33,29 @@
     },
     {
       "round": 3,
-      "reviewer_model": null,
+      "reviewer_model": "Codex GPT-6 family; exact runtime ID not exposed",
       "commit": "c99166c",
-      "status": "pending",
-      "reason": "Fable 5.1 usage limit; Codex usage limit until 2026-11-02"
+      "status": "reviewed_changes_required",
+      "reason": "2026-10-28 fixed review reproduced P2 source freeze before manifest validation and P3 adjacent quoted URL joining",
+      "previous_pending_reason": "Fable 5.1 usage limit; Codex usage limit until 2026-11-02",
+      "fixed_in": "a1b70e3267d7c0c17a76746f0536be6ed74f1261"
+    },
+    {
+      "round": 4,
+      "reviewer_model": "claude-fable-5-1",
+      "commit": "a1b70e3267d7c0c17a76746f0536be6ed74f1261",
+      "status": "approve",
+      "receipt": "docs/results/exhibition_replay_20261028/cv47r_review_v1.json",
+      "tests_by_reviewer": false
     }
   ],
   "tests": {
     "command": "python -m pytest -q tests/test_clip_registry.py tests/test_mlb_sources.py tests/test_mlb_video.py",
     "passed": 39
   },
-  "lint": "python scripts/check_project.py --lint-only: passed"
+  "lint": "python scripts/check_project.py --lint-only: passed",
+  "followup_tests": {
+    "passed": 49,
+    "command": "python -m pytest -q tests/test_clip_registry.py tests/test_mlb_sources.py tests/test_mlb_video.py"
+  }
 }
