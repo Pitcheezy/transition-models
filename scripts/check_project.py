@@ -8,6 +8,10 @@ from uuid import uuid4
 
 ROOT = Path(__file__).resolve().parents[1]
 QUALITY_PATHS = [
+    "src/data/object_reference.py",
+    "scripts/79_compare_object_references.py",
+    "tests/test_object_reference.py",
+    "tests/test_object_reference_cli.py",
     "intent/observation_playback_server.py",
     "tests/test_observation_playback_server.py",
     "intent/observation_playback.py",
