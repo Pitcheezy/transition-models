@@ -2,6 +2,8 @@
 
 ## 전시 정본 계획 실행 — 2026-10-28
 
+**CV49a 진행·수정 권한 선점:** Codex / `codex/exhibition-replay-1028` / 기준`9e0bbfb` / 초안PR84. 대표3장의 미트·맨손·보호대를 원본 좌표 상자로 교차 지목한다. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6468006377)·[판독 전 규칙](docs/CV_OBJECT_REFERENCE_PROTOCOL.md). 기존v3/2구 기권·평가잠금·팀원·Cloudflare는 고정한다. 아래 CV48d는 직전 완료 기록이다.
+
 목표·우선순위는 [PLAN.md](PLAN.md)를 먼저 읽는다. CV48d 완료·수정 권한 반납: Codex, `codex/exhibition-replay-1028`, 표시코드979403c·입력검사bc47867·PR84 (PR83 위, main 미통합). 기존 화면에 구간 요약·기권을 연결하고2구 대표점을 숨겼다. Python고유233·Node64·Chrome합성22/실제18·Fable고정검토2회승인. 새v3팩20파일, 기존v2불변. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6466133324)·[검사](docs/results/exhibition_replay_20261028/checks_v3.json). 최종head 원격CI는 PR84에서 확인한다. 다음CV49a 미트/맨손/보호대 식별 진단. 팀원 코드·Cloudflare·평가 잠금849844·사람검토 변경 없음.
 
 - [x] EX-plan1. 승인된 전시 목표를 PLAN.md에 고정하고 AGENTS/CLAUDE 공통 진입을 연결한다. 합격: 목표·완료 기준·첫5타석 제한·누출/좌표 경계·단일 수정자·검증 상태가 일치하며 기존 이력 보존. 완료: 지속 목표 등록·PLAN/공통 진입 연결. 근거는 [전시 기록](docs/EXHIBITION_REPLAY_20261028.md). 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-28 · Codex]`
