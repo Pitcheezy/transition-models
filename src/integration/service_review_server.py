@@ -27,6 +27,7 @@ REPORT_SCHEMA = "pitcheezy-service-review-v1"
 MEDIA_SCHEMA = "pitcheezy-service-review-media-v1"
 EVIDENCE_SCHEMA = "pitcheezy-service-review-evidence-v1"
 EVIDENCE_SCHEMA_V2 = "pitcheezy-service-review-evidence-v2"
+EVIDENCE_SCHEMA_V3 = "pitcheezy-service-review-evidence-v3"
 PROFILE = "teammate_export_20261009_v1"
 MAX_JSON_BYTES = 5 * 1024 * 1024
 MAX_RECEIPT_BYTES = 1024 * 1024
@@ -300,8 +301,8 @@ def _evidence_geometry(row):
 
 
 def _check_evidence_image(raw, row, schema):
-    """V1 stays byte-compatible; V2 verifies PNG IHDR dimensions and header integrity."""
-    if schema != EVIDENCE_SCHEMA_V2:
+    """V1 stays byte-compatible; V2/V3 verify PNG IHDR size and header integrity."""
+    if schema not in (EVIDENCE_SCHEMA_V2, EVIDENCE_SCHEMA_V3):
         return
     _evidence_geometry(row)
     _require(
@@ -318,18 +319,62 @@ def _check_evidence_image(raw, row, schema):
     )
 
 
+def _evidence_interval(row):
+    """Validate a qualitative summary, not a new trajectory or independent truth."""
+    review = row.get("interval_review")
+    decisions = ("supported_development_candidate", "identity_unresolved", "posture_unresolved")
+    _require(
+        isinstance(review, dict)
+        and set(review)
+        == {
+            "source_sha256_lf",
+            "lower_pts_inclusive",
+            "upper_pts_inclusive",
+            "decoded_frames",
+            "representative_decision",
+            *decisions,
+        }
+        and _digest(review.get("source_sha256_lf")),
+        "Invalid interval review fields or source SHA.",
+    )
+    number_fields = ("lower_pts_inclusive", "upper_pts_inclusive", "decoded_frames", *decisions)
+    _require(
+        all(type(review[k]) is int and 0 <= review[k] <= 2**53 - 1 for k in number_fields),
+        "Interval counts and PTS must be nonnegative safe integers.",
+    )
+    lower, upper, count = (
+        review[k] for k in ("lower_pts_inclusive", "upper_pts_inclusive", "decoded_frames")
+    )
+    decision = review["representative_decision"]
+    _require(
+        row["clip_first_pts"] <= lower <= row["frame_pts"] <= upper < row["release_lower_bound_pts"]
+        and 1 <= count <= upper - lower + 1
+        and sum(review[k] for k in decisions) == count
+        and isinstance(decision, str)
+        and decision in decisions
+        and review[decision] >= 1,
+        "Interval bounds, totals or representative decision do not agree.",
+    )
+    _require(
+        decision == "supported_development_candidate"
+        or (row["status"] == "abstained" and row["point"] is None),
+        "An unresolved representative must abstain without a point.",
+    )
+
+
 def _evidence_files(evidence, media, game_pk, keys, receipt):
     """Optional internal sidecar; no change to the provided model/IntentEstimate contract."""
     _require(
         isinstance(evidence, dict)
         and set(evidence) == {"schema", "game_pk", "source_sha256", "entries"}
-        and evidence.get("schema") in (EVIDENCE_SCHEMA, EVIDENCE_SCHEMA_V2)
+        and evidence.get("schema") in (EVIDENCE_SCHEMA, EVIDENCE_SCHEMA_V2, EVIDENCE_SCHEMA_V3)
         and type(evidence.get("game_pk")) is int
         and evidence["game_pk"] == game_pk
         and evidence.get("source_sha256") == receipt["source_sha256"],
         "Evidence source or game mismatch.",
     )
-    version_two = evidence["schema"] == EVIDENCE_SCHEMA_V2
+    geometry = evidence["schema"] in (EVIDENCE_SCHEMA_V2, EVIDENCE_SCHEMA_V3)
+    interval = evidence["schema"] == EVIDENCE_SCHEMA_V3
     entries = evidence.get("entries")
     _require(isinstance(entries, list) and len(entries) <= len(keys), "Invalid evidence list.")
     clips = {row["pitch_key"]: row for row in media["clips"]}
@@ -352,7 +397,8 @@ def _evidence_files(evidence, media, game_pk, keys, receipt):
                 "status",
                 "reason",
             }
-            | ({"image_width", "image_height", "point", "context_crop"} if version_two else set()),
+            | ({"image_width", "image_height", "point", "context_crop"} if geometry else set())
+            | ({"interval_review"} if interval else set()),
             "Unexpected evidence fields.",
         )
         key = row.get("pitch_key")
@@ -388,8 +434,10 @@ def _evidence_files(evidence, media, game_pk, keys, receipt):
             and 0 < len(row["reason"]) <= 1000,
             "Evidence must state its provisional status and reason.",
         )
-        if version_two:
+        if geometry:
             _evidence_geometry(row)
+        if interval:
+            _evidence_interval(row)
         name = _relative_name(row.get("image"))
         _require(
             re.fullmatch(r"evidence/[A-Za-z0-9_-]+\.png", name)

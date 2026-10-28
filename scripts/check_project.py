@@ -15,6 +15,8 @@ QUALITY_PATHS = [
     "tests/test_observation_playback_ui.py",
     "tests/test_service_review_server.py",
     "scripts/build_service_review.py",
+    "scripts/prepare_replay_evidence.py",
+    "tests/test_prepare_replay_evidence.py",
     "tests/test_service_review_package.py",
     "scripts/audit_cv6b_saved_reasons.py",
     "tests/test_cv6b_audit.py",

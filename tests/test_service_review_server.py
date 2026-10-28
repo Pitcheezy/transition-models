@@ -723,3 +723,96 @@ def test_v1_remains_compatible_without_png_header_or_geometry(package):
     assert server_module.load_snapshot(package)["/evidence/frame.png"][0].startswith(
         b"synthetic PNG"
     )
+
+
+def add_evidence_v3(package, mutate=None, image=None):
+    evidence = add_evidence_v2(package, image=image)
+    evidence["schema"] = server_module.EVIDENCE_SCHEMA_V3
+    row = evidence["entries"][0]
+    row["interval_review"] = {
+        "source_sha256_lf": "e" * 64,
+        "lower_pts_inclusive": 14000,
+        "upper_pts_inclusive": 16000,
+        "decoded_frames": 3,
+        "supported_development_candidate": 2,
+        "identity_unresolved": 0,
+        "posture_unresolved": 1,
+        "representative_decision": "supported_development_candidate",
+    }
+    if mutate:
+        mutate(row)
+    write_json(package / "review-evidence.json", evidence)
+    refresh_receipt(package)
+    return evidence
+
+
+def test_v3_summary_and_static_candidate_are_served_with_original_png(package):
+    add_evidence_v3(package)
+    snapshot = server_module.load_snapshot(package)
+    assert snapshot["/evidence/frame.png"][0] == synthetic_png()
+    row = json.loads(snapshot["/review-evidence.json"][0])["entries"][0]
+    assert row["interval_review"]["decoded_frames"] == 3
+    assert row["point"] is not None
+
+
+@pytest.mark.parametrize(
+    "field,value",
+    [
+        ("source_sha256_lf", "not a hash"),
+        ("lower_pts_inclusive", 15001),
+        ("upper_pts_inclusive", 90000),
+        ("upper_pts_inclusive", 14999),
+        ("decoded_frames", 0),
+        ("decoded_frames", True),
+        ("decoded_frames", 4),
+        ("identity_unresolved", -1),
+        ("posture_unresolved", 0.5),
+        ("supported_development_candidate", 9007199254740992),
+        ("representative_decision", "verified"),
+        ("representative_decision", "identity_unresolved"),
+        ("unknown", 0),
+    ],
+)
+def test_v3_invalid_summary_is_rejected(package, field, value):
+    add_evidence_v3(package, lambda row: row["interval_review"].update({field: value}))
+    with pytest.raises(ValueError):
+        server_module.load_snapshot(package)
+
+
+@pytest.mark.parametrize("decision", ["identity_unresolved", "posture_unresolved"])
+def test_v3_unresolved_representative_cannot_retain_candidate_point(package, decision):
+    evidence = add_evidence_v3(package)
+    row = evidence["entries"][0]
+    summary = row["interval_review"]
+    summary.update(supported_development_candidate=0, identity_unresolved=0, posture_unresolved=0)
+    summary.update({decision: 3, "representative_decision": decision})
+    write_json(package / "review-evidence.json", evidence)
+    refresh_receipt(package)
+    with pytest.raises(ValueError, match="unresolved"):
+        server_module.load_snapshot(package)
+    row.update(status="abstained", point=None)
+    write_json(package / "review-evidence.json", evidence)
+    refresh_receipt(package)
+    assert "/review-evidence.json" in server_module.load_snapshot(package)
+
+
+@pytest.mark.parametrize("image", [b"not PNG", synthetic_png(31, 24)])
+def test_v3_keeps_png_integrity_checks(package, image):
+    add_evidence_v3(package, image=image)
+    with pytest.raises(ValueError, match="PNG"):
+        server_module.load_snapshot(package)
+
+
+def test_v3_summary_is_required_and_v2_cannot_silently_accept_it(package):
+    evidence = add_evidence_v3(package)
+    summary = evidence["entries"][0].pop("interval_review")
+    write_json(package / "review-evidence.json", evidence)
+    refresh_receipt(package)
+    with pytest.raises(ValueError, match="fields"):
+        server_module.load_snapshot(package)
+    evidence["entries"][0]["interval_review"] = summary
+    evidence["schema"] = server_module.EVIDENCE_SCHEMA_V2
+    write_json(package / "review-evidence.json", evidence)
+    refresh_receipt(package)
+    with pytest.raises(ValueError, match="fields"):
+        server_module.load_snapshot(package)

@@ -10,6 +10,7 @@
   const MEDIA_SCHEMA = "pitcheezy-service-review-media-v1";
   const EVIDENCE_SCHEMA = "pitcheezy-service-review-evidence-v1";
   const EVIDENCE_SCHEMA_V2 = "pitcheezy-service-review-evidence-v2";
+  const EVIDENCE_SCHEMA_V3 = "pitcheezy-service-review-evidence-v3";
   const MAX_BYTES = 5 * 1024 * 1024;
   // Supplied S contract geometry; this is not a measurement of the physical plate.
   const SERVICE_ZONE_HALF_WIDTH = .83;
@@ -243,15 +244,17 @@
     const exactKeys = (value, names) => object(value) && Object.keys(value).length === names.length &&
       names.every(name => Object.hasOwn(value, name));
     assert(exactKeys(manifest, ["schema", "game_pk", "source_sha256", "entries"]) &&
-      [EVIDENCE_SCHEMA, EVIDENCE_SCHEMA_V2].includes(manifest.schema) && integer(manifest.game_pk, 1, 2147483647) &&
+      [EVIDENCE_SCHEMA, EVIDENCE_SCHEMA_V2, EVIDENCE_SCHEMA_V3].includes(manifest.schema) && integer(manifest.game_pk, 1, 2147483647) &&
       /^[a-f0-9]{64}$/.test(manifest.source_sha256) && Array.isArray(manifest.entries) &&
       manifest.entries.length <= 2000, "근거 프레임 명세의 형식 또는 출처가 올바르지 않습니다.");
-    const versionTwo = manifest.schema === EVIDENCE_SCHEMA_V2;
+    const versionThree = manifest.schema === EVIDENCE_SCHEMA_V3;
+    const geometry = manifest.schema === EVIDENCE_SCHEMA_V2 || versionThree;
     const keys = new Set(), plays = new Set(), images = new Set();
     for (const entry of manifest.entries) {
       assert(exactKeys(entry, ["pitch_key", "play_id", "clip_sha256", "image", "image_sha256",
         "frame_pts", "clip_first_pts", "release_lower_bound_pts", "time_base", "clip_seconds", "status", "reason"]
-        .concat(versionTwo ? ["image_width", "image_height", "point", "context_crop"] : [])),
+        .concat(geometry ? ["image_width", "image_height", "point", "context_crop"] : [])
+        .concat(versionThree ? ["interval_review"] : [])),
       "근거 프레임에 누락되거나 지원하지 않는 필드가 있습니다.");
       assert(typeof entry.pitch_key === "string" &&
         new RegExp("^" + manifest.game_pk + ":[1-9][0-9]{0,2}:[1-9][0-9]{0,2}$").test(entry.pitch_key) &&
@@ -271,7 +274,26 @@
       assert(["candidate", "abstained"].includes(entry.status) &&
         typeof entry.reason === "string" && entry.reason.trim().length > 0 && entry.reason.length <= 1000,
       "근거 프레임 판독 상태 또는 이유가 올바르지 않습니다.");
-      if (versionTwo) validateEvidenceGeometry(entry);
+      if (geometry) validateEvidenceGeometry(entry);
+      if (versionThree) {
+        const interval = entry.interval_review;
+        const decisions = ["supported_development_candidate", "identity_unresolved", "posture_unresolved"];
+        assert(exactKeys(interval, ["source_sha256_lf", "lower_pts_inclusive", "upper_pts_inclusive",
+          "decoded_frames", ...decisions, "representative_decision"]) &&
+          typeof interval.source_sha256_lf === "string" && /^[a-f0-9]{64}$/.test(interval.source_sha256_lf),
+        "구간 판독의 필드 또는 원본 해시가 올바르지 않습니다.");
+        assert(["lower_pts_inclusive", "upper_pts_inclusive", "decoded_frames", ...decisions].every(name =>
+          Number.isSafeInteger(interval[name]) && interval[name] >= 0) && interval.decoded_frames >= 1 &&
+          interval.lower_pts_inclusive >= entry.clip_first_pts && interval.lower_pts_inclusive <= entry.frame_pts &&
+          entry.frame_pts <= interval.upper_pts_inclusive && interval.upper_pts_inclusive < entry.release_lower_bound_pts &&
+          interval.decoded_frames <= interval.upper_pts_inclusive - interval.lower_pts_inclusive + 1 &&
+          decisions.reduce((sum, name) => sum + interval[name], 0) === interval.decoded_frames &&
+          decisions.includes(interval.representative_decision) && interval[interval.representative_decision] >= 1,
+        "구간 판독의 시각·분모·분류 수 또는 대표 프레임 상태가 일치하지 않습니다.");
+        assert(interval.representative_decision === "supported_development_candidate" ||
+          (entry.status === "abstained" && entry.point === null),
+        "대표 프레임 판독이 미해결이면 후보점을 표시할 수 없습니다.");
+      }
       keys.add(entry.pitch_key); plays.add(entry.play_id.toLowerCase()); images.add(entry.image.toLowerCase());
     }
     return manifest;
@@ -459,8 +481,9 @@
         return;
       }
       const entry = result.entry, token = evidenceRenderToken;
-      const versionTwo = evidenceManifest.schema === EVIDENCE_SCHEMA_V2;
-      const label = versionTwo ?
+      const versionThree = evidenceManifest.schema === EVIDENCE_SCHEMA_V3;
+      const geometry = evidenceManifest.schema === EVIDENCE_SCHEMA_V2 || versionThree;
+      const label = geometry ?
         (entry.status === "candidate" ? "AI 교차판독 후보 · 사람 검증 없음" : "판독 기권 · 사람 검증 없음") :
         (entry.status === "candidate" ? "AI 개발 관측 · 미트 위치 확정 아님" : "판독 기권 · 미트 위치 확정 불가");
       const picture = make("img", "evidence-image");
@@ -473,7 +496,7 @@
         failed("근거 이미지를 읽지 못했습니다. 추천과 영상 검토는 계속할 수 있습니다."));
       const visual = make("div", "evidence-visual"), source = make("div", "evidence-source");
       source.append(picture); visual.append(source);
-      if (versionTwo) {
+      if (geometry) {
         visual.prepend(make("p", "evidence-caption", "원본 전체 프레임"));
         picture.addEventListener("load", () => {
           if (token !== evidenceRenderToken) return;
@@ -501,7 +524,8 @@
           if (entry.point !== null) zoom.append(marker());
           visual.append(make("p", "evidence-caption", "포수 문맥 확대 · 같은 근거 이미지"), zoom,
             make("p", "footnote", entry.point === null ? "표시할 미트 후보점 없음" :
-              "선택한 근거 프레임의 미트 후보, 투수 의도 아님"));
+              (versionThree ? "이전 정지 이미지의 후보점 · 구간 전체의 추적점이나 투수 의도 아님" :
+                "선택한 근거 프레임의 미트 후보, 투수 의도 아님")));
         }, { once: true });
       }
       picture.src = entry.image;
@@ -510,7 +534,26 @@
         make("p", "evidence-timing", "클립 " + entry.clip_seconds.toFixed(3) + "초 · 프레임 PTS " + entry.frame_pts + " · time base " + entry.time_base),
         make("p", "footnote", "릴리스 하한 PTS " + entry.release_lower_bound_pts + ": AI가 공이 손에 남아 있다고 관측한 구간 하한이며, 정밀 릴리스 측정값이 아닙니다."),
         make("p", "footnote", "이 이미지는 좌표나 투수 의도의 정답이 아닙니다. 기존 미트 가로 추정은 별도 원자료이며 이 사진에서 산출한 값이 아닙니다."));
-      replace("evidence-content", versionTwo ? visual : picture, detail);
+      if (versionThree) {
+        const interval = entry.interval_review, summary = make("section", "evidence-interval-summary");
+        const seconds = pts => ((pts - entry.clip_first_pts) / 90000).toFixed(3);
+        summary.append(make("strong", "", "준비 구간의 AI 개발 검토 · 정확도·연속 추적 결과 아님"),
+          make("p", "evidence-interval-timing", "조사 구간: 클립 " + seconds(interval.lower_pts_inclusive) +
+            "–" + seconds(interval.upper_pts_inclusive) + "초 · 양끝 PTS " + interval.lower_pts_inclusive +
+            "–" + interval.upper_pts_inclusive + " 포함"),
+          make("p", "evidence-interval-counts", "전체 " + interval.decoded_frames + "프레임 · 개발 후보 " +
+            interval.supported_development_candidate + " · 객체 식별 미해결 " + interval.identity_unresolved +
+            " · 자세 판단 미해결 " + interval.posture_unresolved),
+          make("p", "footnote", "개발 후보는 AI 검토에서 준비 모습으로 남긴 상태입니다. 미트와 다른 물체를 구별하지 못한 경우는 객체 식별 미해결, 준비 자세 판단이 남은 경우는 자세 판단 미해결입니다."),
+          make("p", "footnote", "릴리스 전 구간도 투수 동작이 이미 시작된 뒤일 수 있습니다. 추천 시점에 확보된 자료임을 검증하지 않았습니다."),
+          make("p", "footnote", "같은 투구의 인접 프레임 조사이며 독립 평가 표본이나 정확도 수치가 아닙니다. 새 좌표 산출·보간·사람 검증·물리 거리 측정은 하지 않았습니다."));
+        if (interval.representative_decision !== "supported_development_candidate")
+          summary.append(make("p", "evidence-interval-abstention", "대표 프레임의 판독도 미해결이므로 기존 후보점은 이 화면에서 숨겼습니다."));
+        else if (interval.identity_unresolved || interval.posture_unresolved)
+          summary.append(make("p", "evidence-interval-caution", "대표 이미지의 기존 후보점만 표시합니다. 구간 안의 미해결 프레임까지 확인된 것으로 해석하지 마세요."));
+        detail.append(summary);
+      }
+      replace("evidence-content", geometry ? visual : picture, detail);
     }
 
     function renderPlot(view) {
@@ -757,7 +800,7 @@
   function pointsForCoordinate(points, x, z) {
     return points.find(p => p.kind === "candidate" && p.x === x && p.z === z);
   }
-  return { SCHEMA, PROFILE, MAX_BYTES, MEDIA_SCHEMA, EVIDENCE_SCHEMA, EVIDENCE_SCHEMA_V2, SERVICE_ZONE_HALF_WIDTH, validateReport, viewFor, initialState, selectPitch, selectPA, nextPitchKey, validateEvidenceManifest, evidenceFor,
+  return { SCHEMA, PROFILE, MAX_BYTES, MEDIA_SCHEMA, EVIDENCE_SCHEMA, EVIDENCE_SCHEMA_V2, EVIDENCE_SCHEMA_V3, SERVICE_ZONE_HALF_WIDTH, validateReport, viewFor, initialState, selectPitch, selectPA, nextPitchKey, validateEvidenceManifest, evidenceFor,
     reveal, groupsFor, plotModel, setupSummary, createLoadCoordinator, validateMediaManifest, mediaBinding,
     createMediaController, parseBytes, mount };
 });

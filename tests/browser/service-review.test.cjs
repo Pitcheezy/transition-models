@@ -444,3 +444,92 @@ test("v2 raster-size mismatch removes point and crop while keeping actual result
   assert.equal(await page.locator(".evidence-point, .evidence-zoom, #evidence-content img").count(), 0);
   assert.notEqual(await page.locator("#actual-content").textContent(), "");
 });
+
+function asV3(evidence) {
+  asV2(evidence);
+  evidence.schema = "pitcheezy-service-review-evidence-v3";
+  evidence.entries.forEach((entry, index) => {
+    entry.interval_review = {
+      source_sha256_lf: "d".repeat(64), lower_pts_inclusive: 120000, upper_pts_inclusive: 156000,
+      decoded_frames: index ? 25 : 24, supported_development_candidate: index ? 0 : 24,
+      identity_unresolved: index ? 25 : 0, posture_unresolved: 0,
+      representative_decision: index ? "identity_unresolved" : "supported_development_candidate"
+    };
+  });
+}
+
+test("v3 interval summary reveals with results and an unresolved representative has no point", async t => {
+  const { page, requests } = await evidencePage(t, asV3);
+  await evidenceHidden(page);
+  assert.deepEqual(requests, []);
+  assert.equal(await page.locator(".evidence-interval-summary").count(), 0);
+  await page.locator("#reveal-button").click();
+  await page.waitForSelector(".evidence-zoom .evidence-point");
+  const summary = page.locator(".evidence-interval-summary");
+  assert.match(await summary.textContent(), /전체 24프레임 · 개발 후보 24 · 객체 식별 미해결 0 · 자세 판단 미해결 0/);
+  assert.match(await summary.textContent(), /정확도·연속 추적 결과 아님/);
+  assert.match(await summary.textContent(), /양끝 PTS 120000–156000 포함/);
+  assert.match(await page.locator("#evidence-content").textContent(), /이전 정지 이미지의 후보점/);
+  assert.match(await summary.textContent(), /추천 시점에 확보된 자료임을 검증하지 않았습니다/);
+  const old = await page.locator("#evidence-content img").elementHandle();
+  await page.locator("#next-pitch").click();
+  await evidenceHidden(page);
+  assert.equal(await page.locator(".evidence-interval-summary, .evidence-point").count(), 0);
+  await page.locator("#reveal-button").click();
+  await page.waitForSelector(".evidence-zoom");
+  assert.match(await summary.textContent(), /전체 25프레임 · 개발 후보 0 · 객체 식별 미해결 25 · 자세 판단 미해결 0/);
+  assert.match(await summary.textContent(), /기존 후보점은 이 화면에서 숨겼습니다/);
+  assert.equal(await page.locator(".evidence-point").count(), 0);
+  await old.evaluate(image => { image.dispatchEvent(new Event("load")); image.dispatchEvent(new Event("error")); });
+  assert.equal(await page.locator(".evidence-point").count(), 0);
+  assert.match(await summary.textContent(), /객체 식별 미해결 25/);
+  const anotherPA = report.pitches.find(pitch => pitch.pa_key !== report.pitches[0].pa_key).pa_key;
+  await page.locator("#pa-select").selectOption(anotherPA);
+  await evidenceHidden(page);
+  await page.locator("#reveal-button").click();
+  assert.equal(await page.locator(".evidence-interval-summary").count(), 0);
+});
+
+test("v3 mixed interval distinguishes representative point from unresolved frames and file failure clears both", async t => {
+  const { page } = await evidencePage(t, evidence => {
+    asV3(evidence);
+    Object.assign(evidence.entries[0].interval_review, {
+      decoded_frames: 31, supported_development_candidate: 28, posture_unresolved: 3
+    });
+  });
+  await page.locator("#reveal-button").click();
+  await page.waitForSelector(".evidence-zoom .evidence-point");
+  assert.match(await page.locator(".evidence-interval-summary").textContent(),
+    /전체 31프레임 · 개발 후보 28 · 객체 식별 미해결 0 · 자세 판단 미해결 3/);
+  assert.match(await page.locator(".evidence-interval-summary").textContent(), /미해결 프레임까지 확인된 것으로 해석하지 마세요/);
+  await upload(page, Buffer.from("not-json"));
+  await page.waitForFunction(() => document.getElementById("load-status").classList.contains("error"));
+  await evidenceHidden(page);
+  assert.equal(await page.locator(".evidence-interval-summary, .evidence-point").count(), 0);
+  await upload(page, report); await loaded(page); await evidenceHidden(page);
+  await hiddenResult(page);
+});
+
+test("v3 invalid summary fails closed and raster errors remove the whole interval summary", async t => {
+  for (const mutate of [
+    evidence => { asV3(evidence); evidence.entries[0].interval_review.identity_unresolved = 1; },
+    evidence => { asV3(evidence); evidence.entries[0].interval_review.upper_pts_inclusive = 228000; },
+    evidence => {
+      asV3(evidence);
+      Object.assign(evidence.entries[0].interval_review, {
+        supported_development_candidate: 0, identity_unresolved: 24, representative_decision: "identity_unresolved"
+      });
+    }
+  ]) {
+    const { page, requests } = await evidencePage(t, mutate);
+    await page.locator("#reveal-button").click();
+    assert.equal(await page.locator(".evidence-interval-summary, .evidence-point, #evidence-content img").count(), 0);
+    assert.deepEqual(requests, []);
+    assert.notEqual(await page.locator("#actual-content").textContent(), "");
+  }
+  const { page } = await evidencePage(t, evidence => { asV3(evidence); evidence.entries[0].image_width = 2; });
+  await page.locator("#reveal-button").click();
+  await page.waitForFunction(() => document.getElementById("evidence-content").textContent.includes("크기가 명세와 달라"));
+  assert.equal(await page.locator(".evidence-interval-summary, .evidence-point, .evidence-zoom").count(), 0);
+  assert.notEqual(await page.locator("#actual-content").textContent(), "");
+});
