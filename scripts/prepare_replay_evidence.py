@@ -7,6 +7,7 @@ import argparse
 import hashlib
 import json
 import math
+import re
 import shutil
 from collections import Counter
 from copy import deepcopy
@@ -64,10 +65,11 @@ def _integer(value):
     return type(value) is int and 0 <= value <= 2**53 - 1
 
 
-def _interval_sidecar(sidecar, interval_review, interval_audit_dir):
+def _interval_sidecar(sidecar, interval_review, interval_audit_dir, source_registry_sha256):
     """Bind the saved qualitative decisions to exact decoded frames before copying anything."""
     raw = Path(interval_review).read_bytes()
     review = _json(raw.decode("utf-8"))
+    _require(isinstance(review, dict), "interval review must be an object")
     audit_dir = Path(interval_audit_dir).resolve()
     audit_path = audit_dir / "audit.json"
     _require(
@@ -76,11 +78,19 @@ def _interval_sidecar(sidecar, interval_review, interval_audit_dir):
         "interval review does not match its extraction audit",
     )
     audit = _json(audit_path.read_text(encoding="utf-8"))
+    _require(isinstance(audit, dict), "interval audit must be an object")
+    _require(
+        isinstance(source_registry_sha256, str)
+        and re.fullmatch(r"[a-f0-9]{64}", source_registry_sha256) is not None
+        and audit.get("source_registry_sha256")
+        == review.get("source_registry_sha256")
+        == source_registry_sha256,
+        "interval and base review must name the same valid registry SHA",
+    )
     _require(
         sidecar.get("schema") == "pitcheezy-service-review-evidence-v2"
-        and audit.get("game_pk") == sidecar.get("game_pk") == 849843
-        and audit.get("source_registry_sha256") == review.get("source_registry_sha256"),
-        "interval game, registry or base evidence version mismatch",
+        and audit.get("game_pk") == sidecar.get("game_pk") == 849843,
+        "interval game or base evidence version mismatch",
     )
     records = _keyed(review.get("records"), "pitch_key")
     decoded = _keyed(audit.get("records"), "pitch_key")
@@ -142,6 +152,7 @@ def _interval_sidecar(sidecar, interval_review, interval_audit_dir):
         )
         actual_by_pts, previous_pts, previous_ordinal = {}, -1, -1
         for frame in actual_frames:
+            _require(isinstance(frame, dict), "decoded interval frame must be an object")
             pts, ordinal = frame.get("pts"), frame.get("ordinal")
             _require(
                 _integer(pts)
@@ -159,6 +170,7 @@ def _interval_sidecar(sidecar, interval_review, interval_audit_dir):
         )
         decisions, representative_decision, seen, previous = Counter(), None, set(), -1
         for frame in frames:
+            _require(isinstance(frame, dict), "review interval frame must be an object")
             pts = frame.get("pts")
             _require(
                 _integer(pts) and pts in actual_by_pts and pts not in seen and pts > previous,
@@ -172,6 +184,8 @@ def _interval_sidecar(sidecar, interval_review, interval_audit_dir):
                 )
                 and type(frame.get("ordinal")) is int
                 and type(frame.get("clip_seconds")) in (int, float)
+                and isinstance(frame.get("image"), str)
+                and bool(frame["image"])
                 and abs(frame["clip_seconds"] - (pts - entry["clip_first_pts"]) / 90000) <= 1e-6
                 and frame.get("published_new_point_xy", "missing") is None,
                 "review frame metadata differs from decode evidence or contains a new point",
@@ -247,19 +261,43 @@ def prepare(audit_dir, decisions, out_dir, *, interval_review=None, interval_aud
         "interval review and audit must be supplied together",
     )
     review = _json(decisions.read_text(encoding="utf-8"))
+    _require(isinstance(review, dict), "base review must be an object")
     if review["game_pk"] != 849843 or sha(audit_dir / "audit.json") != review["audit_sha256"]:
         raise ValueError("decisions do not match this development audit")
     audit = _json((audit_dir / "audit.json").read_text(encoding="utf-8"))
+    _require(isinstance(audit, dict), "base audit must be an object")
+    _require(isinstance(audit.get("records"), list), "base audit records must be a list")
+    for row in audit["records"]:
+        _require(
+            isinstance(row, dict) and isinstance(row.get("sampled_frames"), list),
+            "base decoded record must contain a frame list",
+        )
+        for frame in row["sampled_frames"]:
+            _require(
+                isinstance(frame, dict)
+                and isinstance(frame.get("image"), str)
+                and bool(frame["image"]),
+                "base decoded frame must be an object with an image name",
+            )
     frames = {f["image"]: (r, f) for r in audit["records"] for f in r.get("sampled_frames", [])}
     if len(frames) != sum(len(r.get("sampled_frames", [])) for r in audit["records"]):
         raise ValueError("duplicate decoded image identities")
     sidecar = deepcopy(review["package_sidecar"])
-    entries = {e["image"]: e for e in sidecar["entries"]}
+    _require(isinstance(sidecar, dict), "base sidecar must be an object")
+    entries = _keyed(sidecar.get("entries"), "image")
     bindings = review["image_bindings"]
+    _require(isinstance(bindings, list), "image bindings must be a list")
     if len(entries) != len(sidecar["entries"]) or len(bindings) != len(entries):
         raise ValueError("evidence image bindings must be one to one")
     seen, copies = set(), []
     for binding in bindings:
+        _require(
+            isinstance(binding, dict)
+            and all(
+                isinstance(binding.get(k), str) and binding[k] for k in ("image", "source_image")
+            ),
+            "image binding must contain nonempty image names",
+        )
         name, source_name = binding["image"], binding["source_image"]
         if name in seen:
             raise ValueError("duplicate evidence image")
@@ -285,7 +323,9 @@ def prepare(audit_dir, decisions, out_dir, *, interval_review=None, interval_aud
             raise ValueError("evidence frame identity or bytes mismatch")
         copies.append((source, target))
     if interval_review is not None:
-        _interval_sidecar(sidecar, interval_review, interval_audit_dir)
+        _interval_sidecar(
+            sidecar, interval_review, interval_audit_dir, review.get("source_registry_sha256")
+        )
     out_dir.mkdir(parents=True)
     for source, target in copies:
         target.parent.mkdir(parents=True, exist_ok=True)
@@ -301,7 +341,11 @@ def main():
     parser.add_argument("--audit-dir", type=Path, required=True)
     parser.add_argument("--decisions", type=Path, required=True)
     parser.add_argument("--out-dir", type=Path, required=True)
-    parser.add_argument("--interval-review", type=Path)
+    parser.add_argument(
+        "--interval-review",
+        type=Path,
+        help="Build v3 only when every evidence entry has a matching interval record; partial v3 is not supported.",
+    )
     parser.add_argument("--interval-audit-dir", type=Path)
     args = parser.parse_args()
     print(

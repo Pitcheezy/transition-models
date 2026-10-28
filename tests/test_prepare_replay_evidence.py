@@ -93,6 +93,7 @@ def test_changed_audit_rejected(fixture):
 def interval_fixture(fixture, tmp_path):
     audit_dir, decisions, out = fixture
     base = json.loads(decisions.read_text())
+    base["source_registry_sha256"] = "c" * 64
     sidecar = base["package_sidecar"]
     sidecar.update(schema="pitcheezy-service-review-evidence-v2", game_pk=849843)
     entry = sidecar["entries"][0]
@@ -242,3 +243,99 @@ def test_interval_canonical_lf_sha_independent_of_checkout_newlines(interval_fix
     prepare(*args, **kwargs)
     row = json.loads((args[2] / "review-evidence.json").read_bytes())["entries"][0]
     assert row["interval_review"]["source_sha256_lf"] == expected
+
+
+@pytest.mark.parametrize("digest", [None, "", "bad", "A" * 64, 3])
+def test_matching_missing_or_invalid_registry_digests_do_not_bypass_binding(
+    interval_fixture, digest
+):
+    args, kwargs = interval_fixture
+    audit_path = kwargs["interval_audit_dir"] / "audit.json"
+    audit = json.loads(audit_path.read_bytes())
+    review = json.loads(kwargs["interval_review"].read_bytes())
+    base = json.loads(args[1].read_bytes())
+    for record in (audit, review, base):
+        if digest is None:
+            record.pop("source_registry_sha256")
+        else:
+            record["source_registry_sha256"] = digest
+    audit_path.write_text(json.dumps(audit))
+    review["audit_sha256"] = sha(audit_path)
+    kwargs["interval_review"].write_text(json.dumps(review))
+    args[1].write_text(json.dumps(base))
+    with pytest.raises(ValueError, match="registry SHA"):
+        prepare(*args, **kwargs)
+    assert not args[2].exists()
+
+
+def test_interval_registry_is_also_bound_to_original_context_review(interval_fixture):
+    args, kwargs = interval_fixture
+    base = json.loads(args[1].read_bytes())
+    base["source_registry_sha256"] = "d" * 64
+    args[1].write_text(json.dumps(base))
+    with pytest.raises(ValueError, match="registry SHA"):
+        prepare(*args, **kwargs)
+    assert not args[2].exists()
+
+
+@pytest.mark.parametrize(
+    "document", ["interval_review", "interval_audit", "base_review", "base_audit"]
+)
+def test_array_instead_of_document_is_clear_error_without_output(interval_fixture, document):
+    args, kwargs = interval_fixture
+    if document == "interval_review":
+        kwargs["interval_review"].write_text("[]")
+    elif document == "interval_audit":
+        path = kwargs["interval_audit_dir"] / "audit.json"
+        path.write_text("[]")
+        review = json.loads(kwargs["interval_review"].read_bytes())
+        review["audit_sha256"] = sha(path)
+        kwargs["interval_review"].write_text(json.dumps(review))
+    elif document == "base_review":
+        args[1].write_text("[]")
+    else:
+        path = args[0] / "audit.json"
+        path.write_text("[]")
+        review = json.loads(args[1].read_bytes())
+        review["audit_sha256"] = sha(path)
+        args[1].write_text(json.dumps(review))
+    with pytest.raises(ValueError, match="must be an object"):
+        prepare(*args, **kwargs)
+    assert not args[2].exists()
+
+
+@pytest.mark.parametrize("value", [None, [], 1, "bad frame"])
+@pytest.mark.parametrize("side", ["review", "audit"])
+def test_nonobject_interval_frame_is_clear_error(interval_fixture, value, side):
+    args, kwargs = interval_fixture
+    path = kwargs["interval_review"]
+    review = json.loads(path.read_bytes())
+    if side == "review":
+        review["records"][0]["frames"][0] = value
+    else:
+        audit_path = kwargs["interval_audit_dir"] / "audit.json"
+        audit = json.loads(audit_path.read_bytes())
+        audit["records"][0]["sampled_frames"][0] = value
+        audit_path.write_text(json.dumps(audit))
+        review["audit_sha256"] = sha(audit_path)
+    path.write_text(json.dumps(review))
+    with pytest.raises(ValueError, match="frame must be an object"):
+        prepare(*args, **kwargs)
+    assert not args[2].exists()
+
+
+@pytest.mark.parametrize("name", [None, [], 10, ""])
+def test_matching_invalid_image_names_fail_before_path_operations(interval_fixture, name):
+    args, kwargs = interval_fixture
+    path = kwargs["interval_review"]
+    review = json.loads(path.read_bytes())
+    audit_path = kwargs["interval_audit_dir"] / "audit.json"
+    audit = json.loads(audit_path.read_bytes())
+    review["records"][0]["frames"][0]["image"] = name
+    audit["records"][0]["sampled_frames"][0]["image"] = name
+    audit_path.write_text(json.dumps(audit))
+    review["audit_sha256"] = sha(audit_path)
+    path.write_text(json.dumps(review))
+    with pytest.raises(ValueError, match="metadata differs"):
+        prepare(*args, **kwargs)
+    assert not args[2].exists()
