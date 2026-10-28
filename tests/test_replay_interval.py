@@ -120,6 +120,65 @@ def make_registry(tmp_path, *, game=849843, split="dev"):
     return root
 
 
+def pin_synthetic_sources(monkeypatch, root):
+    monkeypatch.setattr(
+        interval,
+        "SOURCE_PINS",
+        {
+            row["pitch_key"]: (row["play_id"], row["file_sha256"])
+            for row in context.first_three(root)
+        },
+    )
+
+
+def test_fixed_source_pins_match_cv48b_review_metadata():
+    review = json.loads(
+        (
+            Path(__file__).resolve().parents[1]
+            / "docs/results/exhibition_replay_20261028/context_review_v1.json"
+        ).read_text(encoding="utf-8")
+    )
+    assert set(interval.SOURCE_PINS) == set(interval.INTERVALS)
+    assert interval.SOURCE_PINS == {
+        row["pitch_key"]: (row["play_id"], row["clip_sha256"]) for row in review["records"]
+    }
+
+
+@pytest.mark.parametrize("replacement", ["clip_and_registry", "play_id"])
+def test_changed_source_requires_review_before_output_or_decoding(
+    tmp_path, monkeypatch, replacement
+):
+    monkeypatch.setattr(context, "OUTPUT_ROOT", tmp_path / "outputs")
+    root = make_registry(tmp_path)
+    pin_synthetic_sources(monkeypatch, root)
+    # Change the last source, so a premature decoder call for either earlier clip fails.
+    with closing(sqlite3.connect(root / "registry.sqlite")) as conn, conn:
+        if replacement == "clip_and_registry":
+            clip = root / "clip_3.mp4"
+            clip.write_bytes(b"replacement registered clip with a different timeline")
+            conn.execute(
+                "UPDATE clips SET file_sha256 = ?, bytes = ? WHERE play_id = '3'",
+                (digest(clip), clip.stat().st_size),
+            )
+        else:
+            conn.execute("UPDATE pitches SET play_id = 'new-play' WHERE play_id = '3'")
+            conn.execute("UPDATE clips SET play_id = 'new-play' WHERE play_id = '3'")
+    # The modified registry still agrees with its local file: that alone is insufficient.
+    for row in context.first_three(root):
+        context.clip_file(root, row)
+    before = {p.name: p.read_bytes() for p in root.iterdir()}
+
+    def forbidden_decoder(*args, **kwargs):
+        pytest.fail("changed reviewed source must be rejected before any decoder call")
+
+    monkeypatch.setattr(context.subprocess, "run", forbidden_decoder)
+    target = tmp_path / "outputs" / "interval"
+    with pytest.raises(ValueError, match="fixed CV48b review; re-review required"):
+        interval.build_intervals(root, target, "ffprobe", "ffmpeg")
+    assert not target.exists()
+    assert {p.name: p.read_bytes() for p in root.iterdir()} == before
+
+
 @pytest.mark.parametrize("game,split", [(849844, "dev"), (849843, "eval_locked")])
 def test_build_rejects_wrong_game_and_eval_split_before_decoding(
     tmp_path, monkeypatch, game, split
@@ -152,6 +211,7 @@ def test_synthetic_build_extracts_exact_eighty_frames_with_reused_pts_and_sha_ch
 ):
     monkeypatch.setattr(context, "OUTPUT_ROOT", tmp_path / "outputs")
     root = make_registry(tmp_path)
+    pin_synthetic_sources(monkeypatch, root)
     before = {p.name: p.read_bytes() for p in root.iterdir()}
     calls = []
 

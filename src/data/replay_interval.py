@@ -15,6 +15,22 @@ INTERVALS = {
     "849843:1:2": (173890, 209926, 25, 191908),
     "849843:1:3": (163438, 208483, 31, 190465),
 }
+# PTS bounds are meaningful only for the exact clips reviewed in CV48b.
+# Source: docs/results/exhibition_replay_20261028/context_review_v1.json.
+SOURCE_PINS = {
+    "849843:1:1": (
+        "f6d7a0f3-d111-3c6d-92cd-2b5a867ac931",
+        "78c7325e6d79afc13f2c1990262e2872483db907283c7571a6a2c468d0a7ca42",
+    ),
+    "849843:1:2": (
+        "aa3ecf43-5435-3238-aac7-5bfeef1cabe2",
+        "989cdc26ebe9c86d59720519827d3290cbc82984758cb180793e7c3e3353c4b2",
+    ),
+    "849843:1:3": (
+        "f29b740f-f187-3089-b57a-3b55e8370c19",
+        "8e5fbfdd9172eadfb69e3316fbe97d592e7201e3d4ebac4fd1d6e17403420ce5",
+    ),
+}
 
 
 def select_interval(pitch_key, time_base, rows):
@@ -53,6 +69,8 @@ def build_intervals(root, destination, ffprobe, ffmpeg):
     registry_sha = context.digest(registry)
     rows = context.first_three(root)
     for row in rows:
+        if (row["play_id"], row["file_sha256"]) != SOURCE_PINS[row["pitch_key"]]:
+            raise ValueError("source differs from the fixed CV48b review; re-review required")
         context.clip_file(root, row)
     destination.mkdir(parents=True)
     records = []
