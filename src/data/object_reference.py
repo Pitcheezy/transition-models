@@ -81,6 +81,8 @@ def loads_json(raw):
         )
     except UnicodeDecodeError as exc:
         raise ValueError("JSON must be UTF-8") from exc
+    except RecursionError as exc:
+        raise ValueError("JSON nesting too deep") from exc
     if type(value) is not dict:
         raise ValueError("JSON root must be an object")
     return value

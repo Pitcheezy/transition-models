@@ -81,6 +81,13 @@ def test_utf8_json_file_snapshot(tmp_path):
     assert o.load_json(path) == {"reason": "미트"}
 
 
+def test_deep_json_is_reported_as_bounded_validation_failure():
+    raw = b'{"nested":' + b"[" * 100_000 + b"]" * 100_000 + b"}"
+    with pytest.raises(ValueError, match="^JSON nesting too deep$") as failure:
+        o.loads_json(raw)
+    assert isinstance(failure.value.__cause__, RecursionError)
+
+
 def test_validated_objects_and_comparison_do_not_mutate_inputs():
     source = manifest()
     a, b = reading(source), reading(source, "b")
