@@ -579,8 +579,113 @@ def test_cli_validates_every_source_before_saving_any(tmp_path, monkeypatch):
     assert not (root / "sources").exists()
     frame, data, name = cli.statcast_source(900001, parquet)
     assert len(frame) == 2 and name == "statcast_rows.csv"
-    cli.keep_sources(root, 900001, {"feed.json": feed_file.read_bytes(), name: data})
+    conn = reg.connect(root / "registry.sqlite")
+    reg.register_game(
+        conn,
+        root,
+        900001,
+        "dev",
+        feed_file.read_bytes(),
+        frame,
+        reg.sha256(data),
+        source_files={"feed.json": feed_file.read_bytes(), name: data},
+    )
     assert (root / "sources" / "900001" / "statcast_rows.csv").read_bytes() == data
+
+
+@pytest.mark.parametrize("invalid", ["duplicate_pitch", "play_id", "team", "runner"])
+def test_rejected_sources_can_be_corrected_and_registered(tmp_path, monkeypatch, invalid):
+    cli = load_cli()
+    root = tmp_path / "root"
+    feed_file, parquet = tmp_path / "feed.json", tmp_path / "rows.parquet"
+    data, frame = feed(), statcast()
+    if invalid == "duplicate_pitch":
+        frame = pd.concat([frame, frame.iloc[:1]], ignore_index=True)
+    elif invalid == "play_id":
+        data["liveData"]["plays"]["allPlays"][0]["playEvents"][0]["playId"] = "bad-id"
+    elif invalid == "team":
+        del data["gameData"]["teams"]["home"]
+    else:
+        # This fails during the second row's SQLite insertion, after earlier rows were accepted.
+        frame["on_3b"] = ["30", "invalid-runner"]
+    feed_file.write_text(json.dumps(data), encoding="utf-8")
+    frame.to_parquet(parquet)
+    monkeypatch.setattr(
+        "sys.argv",
+        [
+            "75",
+            "register",
+            "--root",
+            str(root),
+            "--game",
+            "900001:dev",
+            "--feed-file",
+            f"900001={feed_file}",
+            "--statcast-parquet",
+            f"900001={parquet}",
+        ],
+    )
+    with pytest.raises((ValueError, KeyError)):
+        cli.main()
+    assert not (root / "sources").exists()
+    assert not (root / "manifests").exists()
+    conn = reg.connect(root / "registry.sqlite")
+    assert conn.execute("SELECT COUNT(*) FROM games").fetchone() == (0,)
+    assert conn.execute("SELECT COUNT(*) FROM pitches").fetchone() == (0,)
+
+    feed_file.write_text(json.dumps(feed()), encoding="utf-8")
+    statcast().to_parquet(parquet)
+    cli.main()
+    assert conn.execute("SELECT COUNT(*) FROM games").fetchone() == (1,)
+    assert conn.execute("SELECT COUNT(*) FROM pitches").fetchone() == (2,)
+    assert (root / "sources" / "900001" / "feed.json").read_bytes() == feed_file.read_bytes()
+    assert (root / "manifests" / "900001.json").is_file()
+    conn.close()
+
+
+def test_a_conflicting_source_writes_no_other_registration_files(tmp_path):
+    conn = reg.connect(tmp_path / "registry.sqlite")
+    feed_bytes, frame = json.dumps(feed()).encode(), statcast()
+    statcast_bytes = frame.to_csv(index=False).encode()
+    saved = tmp_path / "sources" / "900001" / "statcast_rows.csv"
+    saved.parent.mkdir(parents=True)
+    saved.write_bytes(b"existing source")
+    with pytest.raises(ValueError, match="refusing to overwrite"):
+        reg.register_game(
+            conn,
+            tmp_path,
+            900001,
+            "dev",
+            feed_bytes,
+            frame,
+            reg.sha256(statcast_bytes),
+            source_files={"feed.json": feed_bytes, "statcast_rows.csv": statcast_bytes},
+        )
+    assert saved.read_bytes() == b"existing source"
+    assert not saved.with_name("feed.json").exists()
+    assert not (tmp_path / "manifests").exists()
+    assert conn.execute("SELECT COUNT(*) FROM games").fetchone() == (0,)
+
+
+def test_adjacent_quoted_media_stays_ambiguous_without_a_media_request(tmp_path):
+    conn, _, _ = register(tmp_path)
+    a, b = "https://sporty-clips.mlb.com/a.mp4", "https://sporty-clips.mlb.com/b.mp4"
+    pages = {PLAY_IDS[0]: f"<script>var clips=['{a}','{b}'];</script>"}
+    calls = []
+    counts = reg.run_clips(
+        conn,
+        tmp_path,
+        limit=1,
+        opener=opener_for(pages, {}, calls),
+        probe=fake_probe,
+        sleep=lambda _: None,
+    )
+    assert counts == {"ambiguous_media": 1}
+    assert clip_row(conn, PLAY_IDS[0], "media_candidates, media_url") == (
+        json.dumps([a, b]),
+        None,
+    )
+    assert calls == [reg.PAGE_URL.format(play_id=PLAY_IDS[0])]
 
 
 class InterruptOnCommit:

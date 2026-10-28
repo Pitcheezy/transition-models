@@ -178,8 +178,24 @@ def _occupied(value):
     return None if value is None else int(value)
 
 
-def register_game(conn, root, game_pk, split, feed_bytes, statcast, statcast_sha):
-    """Store one identity-checked game; re-registering must reproduce the same manifest."""
+def _keep_registration_files(files):
+    """Reject any conflicting destination before saving any of this game's files."""
+    for path, data in files.items():
+        if path.exists() and path.read_bytes() != data:
+            raise ValueError(f"refusing to overwrite different bytes at {path.name}")
+    for path, data in files.items():
+        write_once(path, data)
+
+
+def register_game(
+    conn, root, game_pk, split, feed_bytes, statcast, statcast_sha, *, source_files=None
+):
+    """Store one identity-checked game after all row and destination checks pass.
+
+    Source files, when supplied, are saved with the manifest only after SQLite has accepted
+    every row inside the uncommitted transaction. Invalid input therefore leaves no frozen
+    source or manifest behind. This does not make filesystem writes crash-atomic with SQLite.
+    """
     if split not in SPLITS:
         raise ValueError(f"split must be one of {SPLITS}")
     feed = json.loads(feed_bytes)
@@ -198,8 +214,16 @@ def register_game(conn, root, game_pk, split, feed_bytes, statcast, statcast_sha
     # Check the registry before touching disk, so a refused call leaves no file behind.
     if existing and existing != (sha256(manifest_bytes), split):
         raise ValueError("game already registered with a different manifest or split")
-    write_once(root / "manifests" / f"{game_pk}.json", manifest_bytes)
+    files = {root / "manifests" / f"{game_pk}.json": manifest_bytes}
+    for name, data in (source_files or {}).items():
+        if name not in ("feed.json", "statcast.csv", "statcast_rows.csv"):
+            raise ValueError(f"unexpected source filename: {name}")
+        expected_sha = manifest["feed_sha256"] if name == "feed.json" else statcast_sha
+        if sha256(data) != expected_sha:
+            raise ValueError(f"source bytes do not match the registered hash: {name}")
+        files[root / "sources" / str(game_pk) / name] = data
     if existing:
+        _keep_registration_files(files)
         return manifest["counts"]
     names = player_names(feed)
     keyed = statcast.loc[statcast.game_pk == int(game_pk)].set_index(PITCH_KEYS)
@@ -288,6 +312,8 @@ def register_game(conn, root, game_pk, split, feed_bytes, statcast, statcast_sha
                     r["video"]["play_id"],
                 ),
             )
+        # Finish all parsing, scalar conversion, and SQLite constraint checks before writing.
+        _keep_registration_files(files)
     return manifest["counts"]
 
 
