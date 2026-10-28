@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import re
 import subprocess
 from fractions import Fraction
 from pathlib import Path
@@ -73,6 +74,24 @@ def image_record(path, destination, size):
         "sha256": digest(path),
         "size": list(size),
     }
+
+
+def verify_extracted_pts(stderr, frames, time_base):
+    """Bind the selected rasters to the filter's actual input clock, not ordinal alone."""
+    log = stderr.decode("utf-8", errors="replace")
+    if re.search(r"\[(?:warning|error|fatal|panic)\]", log):
+        raise ValueError("ffmpeg reported a decoder warning or error")
+    clock = re.findall(r"Parsed_showinfo[^\n]*config in time_base:\s*(\d+/\d+)", log)
+    observations = re.findall(
+        r"Parsed_showinfo[^\n]*\bn:\s*(\d+)\s+pts:\s*(-?\d+)\s+pts_time:", log
+    )
+    if clock != [time_base]:
+        raise ValueError("extraction time base differs from the probed stream")
+    actual = [(int(n), int(pts)) for n, pts in observations]
+    expected = [(n, row["pts"]) for n, row in enumerate(frames)]
+    if actual != expected:
+        raise ValueError("extracted frame PTS differs from the probed selection")
+    return {"time_base": clock[0], "selected_pts": [pts for _, pts in actual]}
 
 
 def contact_sheets(folder, destination, pitch_key, frames, kind):
@@ -157,10 +176,11 @@ def extract_context(root, row, destination, ffprobe, ffmpeg):
             str(ffmpeg),
             "-nostdin",
             "-n",
-            "-v",
-            "error",
+            "-loglevel",
+            "level+info",
             "-xerror",
             "-noautorotate",
+            "-copyts",
             "-i",
             str(path),
             "-map",
@@ -169,7 +189,7 @@ def extract_context(root, row, destination, ffprobe, ffmpeg):
             "-sn",
             "-dn",
             "-vf",
-            f"select={expression}",
+            f"select={expression},showinfo",
             "-fps_mode",
             "vfr",
             "-frames:v",
@@ -182,8 +202,9 @@ def extract_context(root, row, destination, ffprobe, ffmpeg):
         check=True,
         timeout=90,
     )
-    if process.stderr.strip():
-        raise ValueError("ffmpeg reported a decoder error")
+    extraction = verify_extracted_pts(process.stderr, frames, time_base)
+    extraction_log = folder / "ffmpeg_showinfo.log"
+    extraction_log.write_bytes(process.stderr)
     images = sorted(folder.glob("frame_*.png"))
     if [path.name for path in images] != [f"frame_{i:03d}.png" for i in range(len(frames))]:
         raise ValueError("decoded image count or sequence mismatch")
@@ -217,6 +238,11 @@ def extract_context(root, row, destination, ffprobe, ffmpeg):
         "probe": {
             "path": probe_path.relative_to(destination).as_posix(),
             "sha256": digest(probe_path),
+        },
+        "extraction": {
+            **extraction,
+            "log_path": extraction_log.relative_to(destination).as_posix(),
+            "log_sha256": digest(extraction_log),
         },
         "sampled_frames": frames,
         "sheets": sheets,

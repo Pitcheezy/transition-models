@@ -163,7 +163,13 @@ def test_synthetic_extraction_preserves_full_frame_crop_identity_and_pts(tmp_pat
             image.putpixel((450, 240), (255, 0, 0))
             image.putpixel((451, 240), (0, 255, 0))
             image.save(command[-1] % index)
-        return subprocess.CompletedProcess(command, 0, b"", b"")
+        assert "-copyts" in command and select.endswith(",showinfo")
+        log = "[Parsed_showinfo_1] [info] config in time_base: 1/90000, frame_rate: 0/0\n"
+        log += "".join(
+            f"[Parsed_showinfo_1] [info] n: {n} pts: {probe['frames'][ordinal]['pts']} pts_time: 1\n"
+            for n, ordinal in enumerate(ordinals)
+        )
+        return subprocess.CompletedProcess(command, 0, b"", log.encode())
 
     monkeypatch.setattr(c.subprocess, "run", fake_run)
     out = tmp_path / "outputs" / "context"
@@ -173,6 +179,7 @@ def test_synthetic_extraction_preserves_full_frame_crop_identity_and_pts(tmp_pat
     assert {p.name: p.read_bytes() for p in root.iterdir()} == before
     for record in report["records"]:
         assert record["decoded_frames"] == 5
+        assert record["extraction"]["selected_pts"] == [90000, 99000, 314100]
         assert [frame["pts"] for frame in record["sampled_frames"]] == [90000, 99000, 314100]
         for frame in record["sampled_frames"]:
             assert frame["clip_seconds"] <= 2.5
@@ -207,3 +214,27 @@ def test_contact_sheet_pages_have_at_most_twelve_labeled_tiles(tmp_path):
     assert [len(page["tiles"]) for page in pages] == [12, 1]
     assert [page["size"] for page in pages] == [[1260, 1984], [1260, 496]]
     assert [tile["ordinal"] for page in pages for tile in page["tiles"]] == list(range(13))
+
+
+@pytest.mark.parametrize("problem", ["missing", "shifted", "reordered", "clock", "warning"])
+def test_extraction_pts_must_match_probe_without_warnings(problem):
+    rows = [{"pts": 1170}, {"pts": 10179}]
+    pts = [1170, 10179]
+    clock = "1/90000"
+    if problem == "missing":
+        pts.pop()
+    elif problem == "shifted":
+        pts = [0, 9009]
+    elif problem == "reordered":
+        pts.reverse()
+    elif problem == "clock":
+        clock = "1/1000"
+    log = f"[Parsed_showinfo_1] [info] config in time_base: {clock}, frame_rate: 0/0\n"
+    log += "".join(
+        f"[Parsed_showinfo_1] [info] n: {n} pts: {value} pts_time: 1\n"
+        for n, value in enumerate(pts)
+    )
+    if problem == "warning":
+        log += "[h264] [warning] damaged picture concealed\n"
+    with pytest.raises(ValueError):
+        c.verify_extracted_pts(log.encode(), rows, "1/90000")
