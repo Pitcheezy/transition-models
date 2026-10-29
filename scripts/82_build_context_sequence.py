@@ -3,9 +3,12 @@
 import argparse
 import base64
 import importlib.util
+import io
 import json
 import sys
 from pathlib import Path
+
+from PIL import Image
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
@@ -215,6 +218,22 @@ def evidence_complete(row):
     )
 
 
+def verify_crop_pixels(full_raw, crop_raw):
+    """Compare decoded pixels without resize; only RGB/RGBA sources are accepted.
+
+    RGB is promoted to opaque RGBA for comparison, preserving every color/alpha
+    channel. Palette/grayscale and other modes are rejected, not guessed.
+    Dimensions and PNG integrity were already checked by _image_snapshot.
+    """
+    with Image.open(io.BytesIO(full_raw)) as full, Image.open(io.BytesIO(crop_raw)) as crop:
+        if full.mode not in {"RGB", "RGBA"} or crop.mode not in {"RGB", "RGBA"}:
+            raise ValueError("crop pixel comparison requires RGB or RGBA PNG evidence")
+        expected = full.crop(tuple(CROP)).convert("RGBA")
+        actual = crop.convert("RGBA")
+        if expected.size != actual.size or expected.tobytes() != actual.tobytes():
+            raise ValueError("crop pixels differ from the fixed source rectangle")
+
+
 def frame_svg(raw, rows, *, crop=False):
     x, y, width, height = (450, 240, 210, 230) if crop else (0, 0, 1280, 720)
     parts = [
@@ -237,7 +256,9 @@ def render_html(report, rasters):
         '<!doctype html><html lang="ko"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>CV49c · 포수 문맥과 시간순 표본</title>',
         '<style>body{background:#101827;color:#e7eef9;font:16px system-ui;max-width:1300px;margin:auto;padding:24px}button,select{font:inherit;padding:9px;margin:4px}button[aria-pressed="true"]{outline:3px solid #00e5ff}.images{display:grid;grid-template-columns:3fr 1fr;gap:12px}.images svg{width:100%;max-height:650px;background:#060b13}.readings{display:grid;grid-template-columns:1fr 1fr;gap:20px}article{border:1px solid #64748b;padding:14px}[hidden]{display:none!important}p{line-height:1.6;overflow-wrap:anywhere}@media(max-width:700px){.images,.readings{grid-template-columns:1fr}}</style>',
         "<h1>포수 팔·손목·물체 관계 · 개발 검토</h1><p>처음 3장은 오식별 원인을 좁히는 진단 표본이었습니다. 이번에는 같은 3구에서 5장씩 고정했습니다. 사용자 판단 입력은 필요하지 않습니다. 시간순으로 팔·손목과 물체의 연결 근거 및 미해결 이유를 확인하세요.</p>",
+        f"<p>전체 {report['counts']['sampled_frames']}장 · 검증된 미트 0장 · 관계 기록 요건 충족 A {report['counts']['readers']['a']['evidence_complete_frames']}장 / B {report['counts']['readers']['b']['evidence_complete_frames']}장(정확도가 아님)</p>",
         "<p>A 청록 실선 / B 분홍 점선: 서로 별개의 AI 대략적 상자. 일치해도 검증된 미트·정확도·포수 목표·투수 의도가 아닙니다. 원본 PTS의 간격 표본이며 연속 추적이나 실제 움직임 검증이 아닙니다. 뒤 시점까지 본 사후 개발 검토입니다.</p>",
+        "<p>상자 좌표는 원본 1280×720의 정수 픽셀입니다. 왼쪽·위 경계는 포함하고 오른쪽·아래 경계는 제외합니다. 확대 영역은 원본 [450, 240, 660, 470]이며, 원본과 크롭의 픽셀 일치를 검사했습니다.</p>",
         '<label>투구 <select id="pitch">'
         + "".join(
             f'<option value="{i}">{xml(s["pitch_key"])}</option>'
@@ -277,7 +298,7 @@ def render_html(report, rasters):
                     else "관계 근거 미완성"
                 )
                 parts.append(
-                    f"<article><h3>{side.upper()} · {xml(author['reader'])} / {xml(author['model'])}</h3><p>{xml(details)}</p><p>{xml(completeness)}</p><p>{xml(reading['reason'])}</p><p>표본 간 관계: {xml(LABELS['temporal_relation'][seq['reading_sequences'][side]['temporal_relation']])}</p><p>{xml(seq['reading_sequences'][side]['sequence_note'])}</p></article>"
+                    f"<article><h3>{side.upper()} · {xml(author['reader'])}</h3><p>{xml(details)}</p><p>{xml(completeness)}</p><p>표본 간 관계: {xml(LABELS['temporal_relation'][seq['reading_sequences'][side]['temporal_relation']])}</p><details><summary>판독 원문·모델 정보</summary><p>모델: {xml(author['model'])}</p><p>{xml(reading['reason'])}</p><p>{xml(seq['reading_sequences'][side]['sequence_note'])}</p></details></article>"
                 )
             parts.append("</div></section>")
     parts.append("""<script>
@@ -303,6 +324,11 @@ def render_html(report, rasters):
 
 
 def build_package(manifest_path, reading_a_path, reading_b_path, output, *, private_root=None):
+    """Validate first, then write into a new directory under an existing private root.
+
+    An I/O failure leaves a partial new pack for inspection. comparison.json is
+    written before index.html; never remove or overwrite the partial directory.
+    """
     manifest_path, output = (
         overlay._without_links(Path(manifest_path)),
         overlay._without_links(Path(output)),
@@ -310,6 +336,8 @@ def build_package(manifest_path, reading_a_path, reading_b_path, output, *, priv
     allowed = overlay._without_links(
         Path(private_root) if private_root is not None else ROOT / "outputs"
     ).resolve()
+    if not allowed.is_dir():
+        raise ValueError("private output root must already exist as a directory")
     try:
         relative = output.resolve().relative_to(allowed)
     except ValueError as exc:
@@ -345,6 +373,7 @@ def build_package(manifest_path, reading_a_path, reading_b_path, output, *, priv
                         manifest_path.parent,
                     )
                 )
+            verify_crop_pixels(*images)
             rasters[(seq["pitch_key"], frame["frame_pts"])] = images
             rows = {
                 side: next(r for r in entry["frames"] if r["frame_pts"] == frame["frame_pts"])
@@ -411,9 +440,9 @@ def build_package(manifest_path, reading_a_path, reading_b_path, output, *, priv
     html = render_html(report, rasters)
     report["artifacts"] = [{"path": "index.html", "sha256": digest(html)}]
     encoded = (json.dumps(report, ensure_ascii=False, indent=2, allow_nan=False) + "\n").encode()
-    output.mkdir(parents=True)
-    (output / "index.html").write_bytes(html)
+    output.mkdir(parents=False)
     (output / "comparison.json").write_bytes(encoded)
+    (output / "index.html").write_bytes(html)
     return report
 
 

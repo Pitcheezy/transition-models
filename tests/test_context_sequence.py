@@ -86,6 +86,7 @@ def bundle(tmp_path):
         save(target, reading)
         readings.append(target)
     private = tmp_path / "outputs"
+    private.mkdir()
     return path, *readings, private / "cv49c_test", private
 
 
@@ -318,6 +319,9 @@ def test_frame_panels_keep_local_identity_and_escape_text(bundle):
     assert "&lt;script&gt;malicious()&lt;/script&gt;" in html
     assert "frame = 0; render();" in html
     assert "panel.hidden = !(Number(panel.dataset.sequence)" in html
+    assert html.count("<details><summary>판독 원문·모델 정보</summary>") == 30
+    assert "전체 15장 · 검증된 미트 0장" in html
+    assert "상자 좌표는 원본 1280×720의 정수 픽셀" in html
     assert report["artifacts"][0]["sha256"] == cli.digest((bundle[3] / "index.html").read_bytes())
 
 
@@ -333,3 +337,75 @@ def test_midpoint_selection_is_not_replaced_by_ascending_arbitrary_frames(bundle
     data["sequences"][0]["frames"][position]["sample_index"] = value
     with pytest.raises(ValueError, match="midpoint"):
         cli.validate_manifest(data)
+
+
+def update_image_binding(bundle, data):
+    save(bundle[0], data)
+    image_sha = data["sequences"][0]["frames"][0]["image_sha256"]
+    for side in (1, 2):
+        value = reading(bundle, side)
+        value["manifest_sha256"] = cli.digest(bundle[0].read_bytes())
+        value["sequences"][0]["frames"][0]["image_sha256"] = image_sha
+        save(bundle[side], value)
+
+
+@pytest.mark.parametrize("kind", ["wrong_source", "off_by_one"])
+def test_matching_hash_cannot_hide_wrong_source_crop(bundle, kind):
+    data = manifest(bundle)
+    frame = data["sequences"][0]["frames"][0]
+    full_path = bundle[0].parent / frame["image_path"]
+    crop_path = bundle[0].parent / frame["crop_path"]
+    if kind == "wrong_source":
+        Image.new("RGB", (210, 230), (255, 5, 30)).save(crop_path)
+    else:
+        full = Image.new("RGB", (1280, 720), (0, 0, 0))
+        full.putpixel((450, 240), (255, 0, 0))
+        full.save(full_path)
+        full.crop((451, 240, 661, 470)).save(crop_path)
+    frame["image_sha256"] = cli.digest(full_path.read_bytes())
+    frame["crop_sha256"] = cli.digest(crop_path.read_bytes())
+    update_image_binding(bundle, data)
+    with pytest.raises(ValueError, match="crop pixels"):
+        run(bundle)
+    assert not bundle[3].exists()
+
+
+@pytest.mark.parametrize("mode", ["RGBA", "L"])
+def test_crop_mode_policy_is_explicit(bundle, mode):
+    data = manifest(bundle)
+    frame = data["sequences"][0]["frames"][0]
+    path = bundle[0].parent / frame["crop_path"]
+    with Image.open(path) as image:
+        converted = image.convert(mode)
+    converted.save(path)
+    frame["crop_sha256"] = cli.digest(path.read_bytes())
+    update_image_binding(bundle, data)
+    if mode == "RGBA":
+        assert run(bundle)["verified_mitt"] is False
+    else:
+        with pytest.raises(ValueError, match="RGB or RGBA"):
+            run(bundle)
+
+
+def test_missing_private_root_is_not_created(bundle):
+    missing = bundle[4] / "not_created"
+    with pytest.raises(ValueError, match="already exist"):
+        cli.build_package(*bundle[:3], missing / "cv49c_test", private_root=missing)
+    assert not missing.exists()
+
+
+def test_write_failure_preserves_partial_pack_without_index(bundle, monkeypatch):
+    original_write = Path.write_bytes
+
+    def fail_index(path, raw):
+        if path == bundle[3] / "index.html":
+            raise OSError("simulated storage failure")
+        return original_write(path, raw)
+
+    monkeypatch.setattr(Path, "write_bytes", fail_index)
+    with pytest.raises(OSError, match="storage failure"):
+        run(bundle)
+    assert (bundle[3] / "comparison.json").is_file()
+    assert not (bundle[3] / "index.html").exists()
+    with pytest.raises(ValueError, match="new private"):
+        run(bundle)
