@@ -2,6 +2,8 @@
 
 ## 전시 정본 계획 실행 — 2026-10-28
 
+**CV49b 진행 — 2026-10-29:** Codex / `codex/exhibition-replay-1028` / 기준`ef35d19` / [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6486957342). 기존 두 가중치 SHA 일치·별도 GPU 환경 호환 확인. 과거 observer의 Faster R-CNN/0.5를 사전 선택하고 동일3장 원본·고정크롭6조건만 진단한다. 구현·검증·추론 전 고정·Fable 검토를 진행하며 기존v3·사람응답·평가잠금·팀원·Cloudflare는 보존한다. 아래는 직전 완료 기록이다.
+
 **CV49a 완료·수정 권한 반납:** Codex / `codex/exhibition-replay-1028` / 구현`d9915e2`·표시`ebaa80a`·입력보완`8fa5227` / 초안PR84(PR83 위, main 미통합). 같은대표3장 공간 지목을 비교했다. 미트3건은 불겹침2/일부겹침1, 맨손3건은 미해결. 새미트중심0·사람0. Python138·Ruff186·실제Chrome3장·Fable코드 분리2건/보완1건 승인. 기존v3/2구 기권·평가잠금·팀원·Cloudflare 고정. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6468006377)·[영수증](docs/results/exhibition_replay_20261028/object_reference_v1.json)·[규칙/재현](docs/CV_OBJECT_REFERENCE_PROTOCOL.md). 다음CV49b, 미착수. 최종head CI는 PR84에서 별도 확인한다. 아래 CV48d는 직전 완료 기록이다.
 
 목표·우선순위는 [PLAN.md](PLAN.md)를 먼저 읽는다. CV48d 완료·수정 권한 반납: Codex, `codex/exhibition-replay-1028`, 표시코드979403c·입력검사bc47867·PR84 (PR83 위, main 미통합). 기존 화면에 구간 요약·기권을 연결하고2구 대표점을 숨겼다. Python고유233·Node64·Chrome합성22/실제18·Fable고정검토2회승인. 새v3팩20파일, 기존v2불변. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6466133324)·[검사](docs/results/exhibition_replay_20261028/checks_v3.json). 최종head 원격CI는 PR84에서 확인한다. 다음CV49a 미트/맨손/보호대 식별 진단. 팀원 코드·Cloudflare·평가 잠금849844·사람검토 변경 없음.
