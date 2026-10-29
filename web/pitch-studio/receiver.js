@@ -85,20 +85,21 @@ function renderLocations(view) {
   for (let i = 0; i <= 4; i++) {
     const x = 60 + i * 50;
     shape("line", {x1:x, y1:18, x2:x, y2:268, class: i === 2 ? "location-zero" : "location-grid"});
-    shape("text", {x, y:290, class:"location-tick", "text-anchor":"middle"}, String(i-2));
+    shape("text", {x, y:306, class:"location-tick", "text-anchor":"middle"}, String(i-2));
   }
   for (let i = 0; i <= 5; i++) {
     const y = 268 - i * 50;
     shape("line", {x1:60, y1:y, x2:260, y2:y, class:"location-grid"});
-    shape("text", {x:48, y:y+4, class:"location-tick", "text-anchor":"end"}, String(i));
+    shape("text", {x:24, y:y+4, class:"location-tick", "text-anchor":"end"}, String(i));
   }
-  shape("text", {x:278,y:290,class:"location-tick"}, "x / ft");
+  shape("text", {x:278,y:306,class:"location-tick"}, "x / ft");
   shape("text", {x:8,y:12,class:"location-tick"}, "z / ft");
   // No jitter or clamping: shared recommendation coordinates retain all ranks.
   for (const group of model.groups) {
     const x = 60 + group.nx * 200, y = 18 + group.ny * 250;
-    shape("rect", {x:x-12,y:y-12,width:24,height:24,rx:3,class:"location-recommended"});
-    shape("text", {x,y:y+4,"text-anchor":"middle",class:"location-rank"}, group.label);
+    const marker = PitchReceiverLocation.marker(group);
+    shape("rect", {x:x-marker.width/2,y:y-12,width:marker.width,height:24,rx:3,class:"location-recommended"});
+    shape("text", {x,y:y+4,"text-anchor":"middle",class:"location-rank"}, marker.text);
   }
   if (model.actual?.status === "plottable") {
     const x = 60 + model.actual.nx * 200, y = 18 + model.actual.ny * 250;
@@ -113,7 +114,8 @@ function renderLocations(view) {
   if (!model.recommendations.length) textElement("li", "표시할 추천 위치가 없습니다.", values);
   if (model.actual) textElement("li", `실제 · ${model.actual.label}: ${description(model.actual)}`, values).className = "location-actual-value";
   put("location-state", model.revealed ? "실제 홈플레이트 통과 위치 · 포구 지점 아님" : "결과 공개 전 · 실제 공 위치 숨김");
-  svg.setAttribute("aria-label", `${model.pitch_id} · 포수 시점 위치 비교. ${values.textContent}. ${node("location-state").textContent}`);
+  const spokenRows = Array.from(values.children, (row) => row.textContent).join("; ");
+  svg.setAttribute("aria-label", `${model.pitch_id} · 포수 시점 위치 비교. ${spokenRows}. ${node("location-state").textContent}`);
 }
 function render() {
   if (!session) return;
@@ -172,7 +174,12 @@ function render() {
       ? "파일에 포함된 추천 후보"
       : "이 투구는 추천 미지원입니다.",
   );
-  renderLocations(view);
+  try {
+    renderLocations(view);
+  } catch (error) {
+    reportError(error, loadVersion);
+    return;
+  }
   const candidates = node("received-candidates");
   candidates.replaceChildren();
   for (const c of view.pre.candidates) {

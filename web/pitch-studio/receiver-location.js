@@ -75,5 +75,10 @@
     return { pitch_id: view.pitch_id, domain: { ...domain }, recommendations, groups, actual, revealed };
   }
 
-  return { build };
+  function marker(group) {
+    const text = group.label.length <= 7 ? group.label : `${group.ranks[0]}+${group.ranks.length - 1}`;
+    return { text, width: Math.max(24, 7 * text.length + 10) };
+  }
+
+  return { build, marker };
 });

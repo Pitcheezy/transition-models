@@ -6,15 +6,15 @@
     <title>받은 모델 결과 · Pitcheezy</title>
     <meta name="theme-color" content="#091811" />
     <link rel="stylesheet" href="product.css" />
-    <link rel="stylesheet" href="receiver.css?v=9" />
+    <link rel="stylesheet" href="receiver.css?v=10" />
     <script src="data.js" defer></script>
     <script src="receiver-contract.js?v=6" defer></script>
-    <script src="receiver-location.js?v=1" defer></script>
+    <script src="receiver-location.js?v=2" defer></script>
     <script src="receiver-sample.js" defer></script>
     <script src="receiver-demo-849843.js" defer></script>
     <script src="receiver-media.js?v=8" defer></script>
     <script src="receiver-video.js?v=8" defer></script>
-    <script src="receiver.js?v=9" defer></script>
+    <script src="receiver.js?v=10" defer></script>
   </head>
   <body>
     <a class="skip" href="#receiver">본문으로 이동</a>
@@ -279,12 +279,12 @@
             <p id="recommendation-status"></p>
             <figure id="location-comparison" class="location-comparison" hidden>
               <figcaption>추천 위치와 실제 공</figcaption>
-              <div class="location-legend"><span><i class="legend-recommendation" aria-hidden="true"></i>1–3 추천 순위</span><span><i class="legend-actual" aria-hidden="true"></i>실제 공 · 공개 후</span></div>
+              <div class="location-legend"><span><i class="legend-recommendation" aria-hidden="true"></i>추천 순위 · 겹친 위치는 묶음</span><span><i class="legend-actual" aria-hidden="true"></i>실제 공 · 공개 후</span></div>
               <p class="location-state">포수 시점 · 1ft 눈금 · 스트라이크존 아님</p>
-              <svg id="location-plot" viewBox="0 0 320 312" role="img" aria-label="투구 위치 비교"></svg>
-              <p id="location-state" class="location-state" role="status"></p>
+              <svg id="location-plot" viewBox="0 0 320 330" role="img" aria-label="투구 위치 비교"></svg>
+              <p id="location-state" class="location-state"></p>
               <ul id="location-values" class="location-values"></ul>
-              <details class="location-explanation"><summary>좌표와 표시 기준</summary><p>포수 시점: x 음수는 왼쪽, 양수는 오른쪽입니다. z는 지면 기준 높이이며 단위는 ft입니다. 격자는 1ft 눈금으로, 타자별 스트라이크존이나 판정 영역이 아닙니다.</p><p>추천은 과거 투구 분포의 근사 위치이고, 실제 공은 홈플레이트 통과 위치입니다. 실제 포구 지점은 제공되지 않습니다. 미트 가로 관측은 결과 아래에 별도로 표시하며 제구 오차로 계산하지 않습니다.</p></details>
+              <details class="location-explanation"><summary>좌표와 표시 기준</summary><p>포수 시점: x 음수는 왼쪽, 양수는 오른쪽입니다. z는 지면 기준 높이이며 단위는 ft입니다. 격자는 1ft 눈금으로, 타자별 스트라이크존이나 판정 영역이 아닙니다.</p><p>같은 위치의 추천은 1·3처럼 순위를 묶습니다. 숫자가 많으면 1+4처럼 첫 순위와 나머지 후보 수로 줄이며, 전체 순위와 수치는 위 목록에서 확인합니다.</p><p>추천은 과거 투구 분포의 근사 위치이고, 실제 공은 홈플레이트 통과 위치입니다. 실제 포구 지점은 제공되지 않습니다. 미트 가로 관측은 결과 아래에 별도로 표시하며 제구 오차로 계산하지 않습니다.</p></details>
             </figure>
             <div id="received-candidates"></div>
             <p class="receiver-note">

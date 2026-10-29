@@ -4,7 +4,7 @@ const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const path = require("node:path");
 const vm = require("node:vm");
-const { build } = require("../../web/pitch-studio/receiver-location.js");
+const { build, marker } = require("../../web/pitch-studio/receiver-location.js");
 const { createSession } = require("../../web/pitch-studio/receiver-contract.js");
 const fixture = require("../../web/pitch-studio/receiver-sample.js");
 const supplied = require("../../web/pitch-studio/receiver-demo-849843.js");
@@ -139,6 +139,25 @@ test("unsupported or missing recommendation status ignores accidentally retained
     const model = build(source);
     assert.deepEqual(model.recommendations, []);
     assert.deepEqual(model.groups, []);
+  }
+});
+
+test("crowded rank markers remain bounded and keep the full numeric rows", () => {
+  for (const count of [3, 10, 30]) {
+    const source = view();
+    source.pre.candidates = Array.from({length:count}, (_, i) => ({
+      ...source.pre.candidates[0], rank:i+1, target:{x:0,z:2},
+    }));
+    const model = build(source);
+    const group = model.groups[0];
+    const display = marker(group);
+    assert.equal(group.ranks.length, count);
+    assert.equal(model.recommendations.length, count);
+    assert.equal(display.text, count === 3 ? "1·2·3" : `1+${count-1}`);
+    assert.ok(display.width >= 7 * display.text.length + 10);
+    assert.ok(display.width <= 59);
+    assert.equal(group.nx, .5);
+    assert.equal(group.ny, .6);
   }
 });
 
