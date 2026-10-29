@@ -12,11 +12,16 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path, required=True)
     parser.add_argument("--out", type=Path, required=True)
+    parser.add_argument("--from-pa", type=int, default=1, choices=range(1, 6))
     parser.add_argument("--through-pa", type=int, default=1, choices=range(1, 6))
     parser.add_argument("--ffprobe", default="ffprobe")
     parser.add_argument("--ffmpeg", default="ffmpeg")
     args = parser.parse_args()
-    result = build_audit(args.root, args.out, args.ffprobe, args.ffmpeg, args.through_pa)
+    if args.from_pa > args.through_pa:
+        parser.error("--from-pa must not exceed --through-pa")
+    result = build_audit(
+        args.root, args.out, args.ffprobe, args.ffmpeg, args.through_pa, from_pa=args.from_pa
+    )
     print(
         f"849843: examined={result['examined']} decoded={result['decoded']}; semantic review pending"
     )

@@ -22,9 +22,13 @@ def digest(path):
         return hashlib.file_digest(stream, "sha256").hexdigest()
 
 
-def read_candidates(root, through_pa=1):
-    if type(through_pa) is not int or not 1 <= through_pa <= 5:
-        raise ValueError("investigation is limited to PA 1 through 5")
+def read_candidates(root, through_pa=1, *, from_pa=1):
+    if (
+        type(from_pa) is not int
+        or type(through_pa) is not int
+        or not 1 <= from_pa <= through_pa <= 5
+    ):
+        raise ValueError("investigation is limited to 1 <= from_pa <= through_pa <= 5")
     root = Path(root).resolve(strict=True)
     with sqlite3.connect((root / "registry.sqlite").as_uri() + "?mode=ro", uri=True) as conn:
         conn.row_factory = sqlite3.Row
@@ -34,9 +38,9 @@ def read_candidates(root, through_pa=1):
         rows = conn.execute(
             "SELECT p.play_id,p.game_pk,p.at_bat_number,p.pitch_number,p.pitcher_name,"
             "p.batter_name,c.status,c.file_path,c.file_sha256,c.bytes FROM pitches p "
-            "JOIN clips c USING(play_id) WHERE p.game_pk=? AND p.at_bat_number<=? "
+            "JOIN clips c USING(play_id) WHERE p.game_pk=? AND p.at_bat_number BETWEEN ? AND ? "
             "ORDER BY p.at_bat_number,p.pitch_number",
-            (GAME, through_pa),
+            (GAME, from_pa, through_pa),
         ).fetchall()
     if not rows:
         raise ValueError("no registered pitches in investigation")
@@ -193,7 +197,7 @@ def inspect_clip(root, row, destination, ffprobe, ffmpeg):
     }
 
 
-def build_audit(root, destination, ffprobe, ffmpeg, through_pa=1):
+def build_audit(root, destination, ffprobe, ffmpeg, through_pa=1, *, from_pa=1):
     from PIL import Image  # noqa: F401 -- fail before creating output if dependency is missing
 
     destination = Path(destination)
@@ -202,7 +206,7 @@ def build_audit(root, destination, ffprobe, ffmpeg, through_pa=1):
         raise ValueError("private images must stay outside docs and web")
     if destination.exists():
         raise ValueError("new output directory required; preserve previous evidence")
-    rows = read_candidates(root, through_pa)
+    rows = read_candidates(root, through_pa, from_pa=from_pa)
     destination.mkdir(parents=True)
     records = []
     for row in rows:
@@ -250,6 +254,9 @@ def build_audit(root, destination, ffprobe, ffmpeg, through_pa=1):
         "decoded": sum(r["decode_status"] == "decoded" for r in records),
         "records": records,
     }
+    if from_pa != 1:
+        # Missing from_pa continues to mean 1 in existing v1 evidence packs.
+        report["from_pa"] = from_pa
     (destination / "audit.json").write_text(
         json.dumps(report, ensure_ascii=False, indent=2, allow_nan=False) + "\n", encoding="utf-8"
     )
