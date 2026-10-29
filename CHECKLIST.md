@@ -2,6 +2,10 @@
 
 ## 전시 정본 계획 실행 — 2026-10-28
 
+**SITE-1 진행·수정 권한 선점 — 2026-10-29:** 사용자 우선순위 변경에 따라 사이트 동선을 먼저 완성한다. 우리Codex / `codex/site-first-1029` / 기준619a4e7(PR84위별도분기). 기존우리사이트 로컬홈·경기선택·이용안내 구성, Song관전본체재사용·계약유지. CV50b는보존/순서뒤로이동. 새CV추론·팀원코드수정·Cloudflare설정·공개배포없음. [합격기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6490620386).
+
+- [ ] SITE-1. 기존우리사이트 홈·경기선택·이용안내의로컬개편초안. 실제3구저장데모·준비중라이브구분, 형관전본체중복개발금지, 검증없는포스터수치/전체MLB지원/사건확률추가금지. 링크/모바일/기존미디어·결과공개회귀·다른모델검토. 로컬초안과공개배포구분. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-29 · Codex]`
+
 **CV50a 완료·수정 권한 반납 — 2026-10-29:** 우리 Codex / `codex/exhibition-replay-1028` / 사전고정`f768510`·코드`acedaed` / 초안PR84(main미통합). PA2 5구 SHA/크기일치·실제PTS2,086프레임·시각표본77장·준비문맥후보5구. 양쪽AI 첫후보5/5일치이나 손목판독불일치1·Claude투수/포수혼동1 제외·새미트점0. 관련Python90·Ruff192·Fable코드검토approve. [결과](docs/CV_PA2_FEASIBILITY_20261029.md)·[영수증](docs/results/exhibition_replay_20261028/pa2_feasibility_v1.json). 기존v3/잠금849844/사람보류/팀원/Cloudflare보존. 다음CV50b: 이5구를 기존재생화면에 연결, 미확인미트는점없이기권표시. 아래는 이전 완료 기록이다.
 
 **CV49c 완료·수정 권한 반납 — 2026-10-29:** 우리 Codex / `codex/exhibition-replay-1028` / 사전고정`669d378`·최종코드`91725bf` / 초안PR84(main미통합). 같은3구15장 문맥·시계열 진단과 현재프레임 비교화면 완료. 양쪽AI 관계요건충족0/15·새미트점0, 지목불일치/기권보존: **미트식별 해결 완료는 아님**. 관련189검사·Ruff192·Chrome15장/30SHA·Fable코드검토2회approve, 크롭픽셀결속 지적수정. [규칙/결과](docs/CV_CONTEXT_SEQUENCE_20261029.md)·[영수증](docs/results/exhibition_replay_20261028/context_sequence_v1.json)·[합격기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6488591949). 기존v2/v3 SHA4개·사람·잠금849844·팀원·Cloudflare불변. 다음CV50a PA2의5구 준비장면조사, 미착수. 최종head CI는 PR84에서별도확인. 아래 CV49b는 이전 완료 기록이다.

@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Pitcheezy에서 추천, 실제 투구, 영상 분석을 구분해서 읽는 방법." />
+  <meta name="theme-color" content="#102c24" />
+  <title>관전 가이드 · Pitcheezy</title>
+  <link rel="stylesheet" href="exhibition.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">본문으로 이동</a>
+  <header class="site-header">
+    <a class="site-brand" href="exhibition.html"><span class="brand-seal">P</span>PITCHEEZY</a>
+    <nav class="site-nav" aria-label="주요 메뉴">
+      <a href="exhibition.html">홈</a><a href="games.html">경기</a><a href="guide.html" aria-current="page">이용 안내</a><a href="report.html#validation">검증 기록</a>
+    </nav>
+  </header>
+  <main id="main" class="page-shell">
+    <section class="page-intro guide-intro">
+      <span class="eyebrow">A FAN’S GUIDE</span>
+      <h1>다음 공을 보고,<br />실제 선택을 이해하기.</h1>
+      <p>추천은 비교의 출발점입니다. 공 하나의 결과만으로 좋은 선택과 나쁜 선택을 단정하지 않습니다.</p>
+      <a class="button" href="receiver.html?demo=849843-pa1">실제 첫 타석으로 익히기 <span aria-hidden="true">↗</span></a>
+    </section>
+    <section class="guide-section" aria-labelledby="flow-title">
+      <div class="section-heading"><span class="eyebrow">01 / FOLLOW THE PITCH</span><h2 id="flow-title">한 구를 읽는 세 단계</h2></div>
+      <div class="guide-steps">
+        <article><span class="step-number">1</span><h3>던지기 전, 후보 확인</h3><p>이닝·카운트·주자·선수를 보고 추천 구종을 살펴봅니다. 자료가 지원되지 않는 상황은 미지원으로 표시합니다.</p></article>
+        <article><span class="step-number">2</span><h3>영상과 실제 결과 보기</h3><p>실제 투구를 재생한 뒤 구종·판정·공 위치를 공개합니다. 먼저 결과를 알고 추천을 평가하지 않도록 순서를 나눕니다.</p></article>
+        <article><span class="step-number">3</span><h3>차이를 비교하기</h3><p>추천 후보와 실제 구종·위치를 나란히 봅니다. 다른 공을 골랐을 때의 결과나 누구의 잘못인지를 확정하는 기능은 아닙니다.</p></article>
+      </div>
+    </section>
+    <section class="guide-section" aria-labelledby="numbers-title">
+      <div class="section-heading"><span class="eyebrow">02 / READ THE NUMBERS</span><h2 id="numbers-title">숫자의 뜻부터 정확하게</h2></div>
+      <dl class="guide-definitions">
+        <div><dt>구종 선택 비중</dt><dd>제공받은 추천 후보의 비중입니다. ‘스트라이크가 될 확률’이나 ‘타자를 잡을 확률’이 아닙니다. 상위 후보만 보여주면 합이 100%보다 작을 수 있습니다.</dd></div>
+        <div><dt>추천의 위치</dt><dd>현재 저장 데모에서는 과거 실제 투구 분포를 요약한 근사 위치입니다. 반드시 던져야 할 최적 지점이나 포수가 실제 요구한 위치로 읽지 않습니다.</dd></div>
+        <div><dt>실제 공의 위치</dt><dd>경기 기록의 가로 좌표와 지면 기준 높이입니다. 화면에 쓰는 방향·단위를 함께 확인합니다. 영상 속 픽셀 위치와 그대로 빼서 오차를 계산하지 않습니다.</dd></div>
+        <div><dt>제공되지 않는 값</dt><dd>현재 첫 타석 자료에는 볼·스트라이크·안타 등의 사건확률과 선택의 기대가치가 없습니다. 구종 비중이나 예시 숫자로 대신하지 않습니다.</dd></div>
+      </dl>
+    </section>
+    <section class="guide-section guide-split" aria-labelledby="mode-title">
+      <div><span class="eyebrow">03 / KNOW THE MODE</span><h2 id="mode-title">저장 경기와<br />실시간 관전</h2><p>현재 열 수 있는 첫 타석은 저장된 실제 경기 재생입니다. 경기 당시 실시간으로 예측했다는 뜻은 아닙니다.</p><a class="text-link" href="games.html">지금 볼 수 있는 경기 찾기 →</a></div>
+      <div class="guide-note"><h3>실시간 관전은 별도로 준비합니다</h3><p>최신 경기 정보를 받아 추천이 갱신되는 화면에서는 갱신 시각과 연결 상태를 함께 보여줘야 합니다. 연결이 끊겼거나 자료가 없을 때 과거 추천을 새 추천처럼 표시하지 않습니다.</p><p>모든 MLB 경기·선수를 지원한다고 아직 안내하지 않습니다.</p></div>
+    </section>
+    <section class="guide-section guide-split" aria-labelledby="cv-title">
+      <div><span class="eyebrow">OPTIONAL / VIDEO EVIDENCE</span><h2 id="cv-title">영상 분석은<br />근거가 있을 때 더합니다.</h2><p>추후에는 결과 공개 뒤 투구 전 포수 미트의 근거 프레임을 함께 봅니다. 미트가 가려지거나 손과 구분되지 않으면 표시를 보류합니다.</p></div>
+      <div class="guide-note"><h3>미트 위치와 투수 의도는 다릅니다</h3><p>미트 관측이 곧 투수의 목표를 뜻하지는 않습니다. CV가 없는 경기에서도 추천과 실제 결과를 비교하는 기본 관전은 계속 사용할 수 있도록 구성합니다.</p><a class="text-link" href="report.html#validation">기존 영상 판독 검증 기록 →</a></div>
+    </section>
+    <section class="guide-cta"><h2>이제 한 타석을 직접 보세요.</h2><a class="button" href="games.html">경기 선택하기 →</a></section>
+  </main>
+  <footer class="site-footer page-shell"><a class="site-brand" href="exhibition.html">PITCHEEZY</a><p class="footer-note">2026 소프트웨어학부 캡스톤 · 관전 보조 연구 서비스<br />MLB와 제휴한 공식 서비스가 아닙니다.</p><a href="report.html#validation">검증과 한계</a></footer>
+</body>
+</html>
