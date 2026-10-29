@@ -2,6 +2,8 @@
 
 ## 전시 정본 계획 실행 — 2026-10-28
 
+**SITE-1d 공개 준비 완료·Sites HTTP500으로 배포 미완료·수정 권한 반납 — 2026-10-29:** 사용자 공개 반영 승인. 제품 `2e5a80f` / 우리 `codex/site-first-1029` / PR85. gpt-6.1-terra 고정 검토 APPROVE·Node51·CI Ubuntu/macOS PASS. 공개33자산/manifest 포함34파일 archive 검사. Sites 로컬소스 `f3b97a2` 보존, 일반푸시3회 HTTP500으로 새 저장버전/배포 호출 없음·공개v9 유지. [근거·재개](docs/SITE_PUBLICATION_20261029.md)·[영수증](docs/results/site_publication_20261029/receipt.json). 다음 원격 소스 저장 복구 후 동일 고정본 공개; 전체71타석262구 연결 별도. 팀원·별도 Cloudflare 시험서버·DNS·권한·요금제 불변.
+
 **SITE-1c 로컬 구현·검사 완료, 최종 교차검토 대기·수정 권한 반납 — 2026-10-29:** 우리 Codex / `codex/site-first-1029` / [PR85](https://github.com/Pitcheezy/transition-models/pull/85). 기존 홈 디자인·영상 보존, 예시 확률/점수/교체판단의 제품 표시 제거, 실제 재생 진입과 고정 모델 근거 인용 완료. 사이트 회귀·미디어 SHA·체크리스트8·자산33파일 ZIP/참조·데스크톱/모바일 흐름 확인. 기존 응답·CV 기록·예시 원파일은 보존, 공개 배포 아님. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6491866436) · [기록](docs/SITE_FIRST_20261029.md). 새 변경은 Fable 전송/검토 전이며 기존2건 승인으로 확대하지 않았다. 다음은 고정 수정본 교차검토와 SITE-2 채택 빌드 인수. 팀원/Cloudflare 불변.
 
 - [!] SITE-1c. 예시 숫자의 제품 표시 차단·실제 추천 진입·모델 근거 인용 및 로컬 검사 완료. 기존 홈→경기/재생/안내, 모바일 폭·번들33자산 확인. 최종 다른 모델 검토와 공개 배포는 미완료. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-29 · Codex]`
