@@ -36,6 +36,7 @@ function clear() {
   node("source-details").replaceChildren();
   node("received-post").replaceChildren();
   node("received-candidates").replaceChildren();
+  renderLocations(null);
   for (const id of [
     "game-name",
     "pitch-identity",
@@ -64,6 +65,55 @@ function textElement(tag, text, parent) {
   e.textContent = text;
   parent.append(e);
   return e;
+}
+function renderLocations(view) {
+  const model = PitchReceiverLocation.build(view);
+  const wrapper = node("location-comparison"), svg = node("location-plot"), values = node("location-values");
+  wrapper.hidden = !model;
+  svg.replaceChildren();
+  values.replaceChildren();
+  put("location-state", "");
+  if (!model) { svg.setAttribute("aria-label", "투구 자료 없음"); return; }
+  const shape = (tag, attrs, text = "") => {
+    const element = document.createElementNS("http://www.w3.org/2000/svg", tag);
+    for (const [key, value] of Object.entries(attrs)) element.setAttribute(key, String(value));
+    element.textContent = text;
+    svg.append(element);
+    return element;
+  };
+  shape("rect", {x: 60, y: 18, width: 200, height: 250, class: "location-field"});
+  for (let i = 0; i <= 4; i++) {
+    const x = 60 + i * 50;
+    shape("line", {x1:x, y1:18, x2:x, y2:268, class: i === 2 ? "location-zero" : "location-grid"});
+    shape("text", {x, y:290, class:"location-tick", "text-anchor":"middle"}, String(i-2));
+  }
+  for (let i = 0; i <= 5; i++) {
+    const y = 268 - i * 50;
+    shape("line", {x1:60, y1:y, x2:260, y2:y, class:"location-grid"});
+    shape("text", {x:48, y:y+4, class:"location-tick", "text-anchor":"end"}, String(i));
+  }
+  shape("text", {x:278,y:290,class:"location-tick"}, "x / ft");
+  shape("text", {x:8,y:12,class:"location-tick"}, "z / ft");
+  // No jitter or clamping: shared recommendation coordinates retain all ranks.
+  for (const group of model.groups) {
+    const x = 60 + group.nx * 200, y = 18 + group.ny * 250;
+    shape("rect", {x:x-12,y:y-12,width:24,height:24,rx:3,class:"location-recommended"});
+    shape("text", {x,y:y+4,"text-anchor":"middle",class:"location-rank"}, group.label);
+  }
+  if (model.actual?.status === "plottable") {
+    const x = 60 + model.actual.nx * 200, y = 18 + model.actual.ny * 250;
+    shape("circle", {cx:x,cy:y,r:17,class:"location-actual-halo"});
+    shape("circle", {cx:x,cy:y,r:7,class:"location-actual"});
+  }
+  const description = (point) => {
+    if (point.status === "missing") return "좌표 미제공 · 점 없음";
+    return `x ${point.x.toFixed(2)} / z ${point.z.toFixed(2)} ft${point.status === "outside" ? " · 도표 범위 밖, 점 없음" : ""}`;
+  };
+  for (const point of model.recommendations) textElement("li", `${point.rank} · ${point.label}: ${description(point)}`, values);
+  if (!model.recommendations.length) textElement("li", "표시할 추천 위치가 없습니다.", values);
+  if (model.actual) textElement("li", `실제 · ${model.actual.label}: ${description(model.actual)}`, values).className = "location-actual-value";
+  put("location-state", model.revealed ? "실제 홈플레이트 통과 위치 · 포구 지점 아님" : "결과 공개 전 · 실제 공 위치 숨김");
+  svg.setAttribute("aria-label", `${model.pitch_id} · 포수 시점 위치 비교. ${values.textContent}. ${node("location-state").textContent}`);
 }
 function render() {
   if (!session) return;
@@ -122,6 +172,7 @@ function render() {
       ? "파일에 포함된 추천 후보"
       : "이 투구는 추천 미지원입니다.",
   );
+  renderLocations(view);
   const candidates = node("received-candidates");
   candidates.replaceChildren();
   for (const c of view.pre.candidates) {
@@ -165,6 +216,7 @@ function render() {
     `${a.pitch_label ?? "미제공"} / ${a.speed_mph === null ? "미제공" : `${a.speed_mph.toFixed(1)} mph`}`,
   );
   metric("공의 플레이트 x", a.x === null ? "미제공" : `${a.x.toFixed(2)} ft`);
+  metric("공의 플레이트 z (지면 기준 높이)", a.z === null ? "미제공" : `${a.z.toFixed(2)} ft`);
   const we = view.post.we;
   const percent = (value) =>
     value === null ? "미제공" : `${(value * 100).toFixed(1)}%`;
