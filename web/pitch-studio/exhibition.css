@@ -29,14 +29,12 @@ a:focus-visible, video:focus-visible, button:focus-visible, summary:focus-visibl
 .brand-seal { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 50%; background: var(--lime); color: var(--bg); font-size: 26px; }
 .brand-dot { color: var(--lime); font-size: 10px; margin: -12px 0 0 -4px; }
 .site-nav { display: flex; align-items: center; gap: 32px; font-size: 14px; font-weight: 650; }
-.site-nav a { padding: 10px 0; color: #bac7bb; border-bottom: 2px solid transparent; }
+.site-nav a { padding: 10px 0; color: #bac7bb; border-bottom: 2px solid transparent; white-space: nowrap; }
 .site-nav a[aria-current="page"], .site-nav a:hover { color: var(--ink); border-color: var(--lime); }
 .eyebrow { color: var(--lime); font-size: 11px; line-height: 1.5; font-weight: 750; letter-spacing: 2px; }
 .button { display: inline-flex; justify-content: space-between; align-items: center; gap: 36px; min-height: 54px; padding: 15px 22px; background: var(--lime); color: var(--bg); font-size: 15px; font-weight: 800; border: 1px solid var(--lime); border-radius: 3px; line-height: 1.4; }
 .button:hover { background: #e2ffae; border-color: #e2ffae; }
 .button > span { font-size: 23px; font-weight: 500; }
-.button-secondary { background: transparent; color: var(--ink); border-color: var(--line); }
-.button-secondary:hover { color: var(--bg); }
 .text-link { display: inline-flex; align-items: center; gap: 20px; font-size: 14px; font-weight: 700; text-underline-offset: 6px; }
 .text-link:hover { text-decoration: underline; }
 .text-link > span { font-size: 21px; font-weight: 400; }
@@ -54,7 +52,6 @@ a:focus-visible, video:focus-visible, button:focus-visible, summary:focus-visibl
 .film-caption { display: flex; justify-content: space-between; align-items: center; gap: 20px; padding-top: 24px; }
 .film-caption p { font-size: clamp(21px, 2.5vw, 34px); line-height: 1.4; letter-spacing: -.8px; color: var(--muted); }
 .film-caption strong { color: var(--ink); font-weight: 600; }
-.caption-mark { align-self: end; font-size: 52px; font-weight: 300; line-height: 1; color: var(--lime); }
 .play-path { border-top: 1px solid var(--line); padding-block: 61px 75px; }
 .section-heading { display: grid; grid-template-columns: 1fr auto; gap: 14px 28px; align-items: end; }
 .section-heading .eyebrow { grid-column: 1 / -1; }
@@ -79,6 +76,7 @@ a:focus-visible, video:focus-visible, button:focus-visible, summary:focus-visibl
 .game-kicker { font-size: 11px; letter-spacing: 1.6px; line-height: 1.6; font-weight: 750; }
 .featured-game h3 { margin-top: 12px; font-size: clamp(23px, 2.3vw, 32px); letter-spacing: -1px; line-height: 1.4; }
 .featured-game h3 span, .replay-game h3 span { font-weight: 400; color: #66805c; font-size: .75em; }
+.replay-game h3 span { color: var(--muted); }
 .game-date { margin-top: 12px; font-size: 12px; color: #5a6953; }
 .round-arrow { flex-shrink: 0; display: grid; place-items: center; border: 1px solid #93a187; border-radius: 50%; height: 48px; width: 48px; font-size: 27px; line-height: 1; }
 .featured-game:hover .round-arrow { background: var(--bg); color: var(--lime); border-color: var(--bg); }
@@ -170,7 +168,7 @@ a:focus-visible, video:focus-visible, button:focus-visible, summary:focus-visibl
   .site-brand { font-size: 22px; }
   .brand-seal { width: 33px; height: 33px; font-size: 24px; }
   .site-nav { width: 100%; justify-content: space-between; gap: 18px; font-size: 13px; }
-  .site-nav a { padding-block: 12px; }
+  .site-nav a { display: inline-flex; justify-content: center; align-items: center; min-width: 44px; min-height: 44px; padding: 12px 8px; }
   .home-hero { grid-template-columns: 1fr; gap: 37px; padding-block: 42px 46px; }
   .hero-copy h1 { font-size: clamp(57px, 10.5vw, 79px); line-height: 1.12; margin-block: 21px; }
   .hero-description { font-size: 17px; }
@@ -180,7 +178,6 @@ a:focus-visible, video:focus-visible, button:focus-visible, summary:focus-visibl
   .hero-film { padding-top: 0; }
   .film-caption { padding-top: 18px; }
   .film-caption p { font-size: 25px; }
-  .caption-mark { font-size: 41px; }
   .hero-film figcaption { padding-bottom: 15px; font-size: 10px; }
   .play-path { padding-block: 42px 48px; }
   .section-heading h2, .reading-note h2 { font-size: 28px; letter-spacing: -1.1px; }
@@ -233,7 +230,7 @@ a:focus-visible, video:focus-visible, button:focus-visible, summary:focus-visibl
   .hero-actions { align-items: start; flex-direction: column; gap: 17px; }
   .hero-actions .button { width: 100%; }
   .page-intro h1 { font-size: 34px; }
-  .site-nav { gap: 13px; }
+  .site-nav { gap: 6px; }
   .match-people { gap: 22px; }
   .match-people dd { font-size: 13px; }
   .footer-note { font-size: 10px; }
