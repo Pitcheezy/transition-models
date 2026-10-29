@@ -1,0 +1,24 @@
+{
+  "schema": "pitcheezy-glove-diagnostic-plan-v1",
+  "input_sha256": "8a0a24a3a29831eb04eb9e658bb6e5725032cd9a4bae1bb760b2881cf3e1c6e0",
+  "model_name": "fasterrcnn_mobilenet_v3_large_fpn",
+  "weights_sha256": "fb6a3cc702b1df54c18a44b26708cd083614211062d0c36d2ca7bf9270df3533",
+  "threshold": 0.5,
+  "device": "cuda",
+  "threads": 4,
+  "warmups": 0,
+  "passes": 1,
+  "code_files": {
+    "intent/local_glove_detector.py": "79ebcc9b1d989c1b566138831fd0c63a06a386c426d79889788c32e748d69aeb",
+    "scripts/80_diagnose_glove_candidates.py": "2c583b44ff8ca931119763974025ef64899fa415c6a81cd18d76ab32fd3625c3",
+    "src/data/object_reference.py": "a779dfb2ad4cb3b118f17c9e5afe2f3262d9616486ff4f9b42b526b9046845f8"
+  },
+  "expected_runtime": {
+    "torch": "2.6.0+cu124",
+    "torchvision": "0.21.0+cu124"
+  },
+  "readings_sha256": {
+    "codex": "109e671e860898fdcd1671e0861cc4bcc3ae6b793c8a3e46c00d7966e7b7a9e2",
+    "claude": "727db8ad21a30d55dbdf6825e049c7ae44e8d5270731dd5954f004a2e4c2925a"
+  }
+}

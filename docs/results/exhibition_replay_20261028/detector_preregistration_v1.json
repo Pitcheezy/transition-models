@@ -1,0 +1,100 @@
+{
+  "schema": "pitcheezy-glove-diagnostic-preregistration-v1",
+  "frozen_at_utc": "2026-10-29T03:24:59.593254+00:00",
+  "source_commit_before_plan": "e6caad5ae5b9a1f369965716341eb079fa1791a0",
+  "plan_sha256": "48aeb29d0c3c07913b1dc6273575b689cd036f9cf9a91f9afdf752bd18e3a32c",
+  "plan_path": "docs/results/exhibition_replay_20261028/detector_plan_v1.json",
+  "input_frames": [
+    {
+      "pitch_key": "849843:1:1",
+      "play_id": "f6d7a0f3-d111-3c6d-92cd-2b5a867ac931",
+      "clip_sha256": "78c7325e6d79afc13f2c1990262e2872483db907283c7571a6a2c468d0a7ca42",
+      "frame_pts": 191959,
+      "time_base": "1/90000",
+      "image": "p1.png",
+      "image_sha256": "aa9ec740c1b77b4f37bfc9d199e38e69ec9e44ccd50e34a7766ce4838e7c004e",
+      "width": 1280,
+      "height": 720,
+      "context_crop": [
+        450,
+        240,
+        660,
+        470
+      ]
+    },
+    {
+      "pitch_key": "849843:1:2",
+      "play_id": "aa3ecf43-5435-3238-aac7-5bfeef1cabe2",
+      "clip_sha256": "989cdc26ebe9c86d59720519827d3290cbc82984758cb180793e7c3e3353c4b2",
+      "frame_pts": 191908,
+      "time_base": "1/90000",
+      "image": "p2.png",
+      "image_sha256": "2b28164e50a2912ff229e406cc314a2dedc36e50c961599b48b197d513d28f58",
+      "width": 1280,
+      "height": 720,
+      "context_crop": [
+        450,
+        240,
+        660,
+        470
+      ]
+    },
+    {
+      "pitch_key": "849843:1:3",
+      "play_id": "f29b740f-f187-3089-b57a-3b55e8370c19",
+      "clip_sha256": "8e5fbfdd9172eadfb69e3316fbe97d592e7201e3d4ebac4fd1d6e17403420ce5",
+      "frame_pts": 190465,
+      "time_base": "1/90000",
+      "image": "p3.png",
+      "image_sha256": "fe8e984bf7163dfe6579263bde865fddd5fc0650f9a32d2215bb66b56ffc1a81",
+      "width": 1280,
+      "height": 720,
+      "context_crop": [
+        450,
+        240,
+        660,
+        470
+      ]
+    }
+  ],
+  "source_input_sha256": "8a0a24a3a29831eb04eb9e658bb6e5725032cd9a4bae1bb760b2881cf3e1c6e0",
+  "planned_predictions": 6,
+  "independent_frames": 3,
+  "selection_basis": "prior observer_preregister_v1.json, not performance on these frames",
+  "weights_inventory": [
+    {
+      "model_name": "fasterrcnn_mobilenet_v3_large_fpn",
+      "filename": "fasterrcnn_mobilenet_v3_large_fpn-fb6a3cc7.pth",
+      "bytes": 77844807,
+      "sha256": "fb6a3cc702b1df54c18a44b26708cd083614211062d0c36d2ca7bf9270df3533",
+      "prior_record_match": true,
+      "used_for_this_inference": true
+    },
+    {
+      "model_name": "ssdlite320_mobilenet_v3_large",
+      "filename": "ssdlite320_mobilenet_v3_large_coco-a79551df.pth",
+      "bytes": 14069355,
+      "sha256": "a79551df90c79834bcd3bb3845ef9d966b5449a3a9b2833ae8404778ca5d65d2",
+      "prior_record_match": true,
+      "used_for_this_inference": false
+    }
+  ],
+  "runtime_verified": {
+    "python": "3.12.12",
+    "torch": "2.6.0+cu124",
+    "torchvision": "0.21.0+cu124",
+    "pillow": "12.2.0",
+    "cuda_available": true,
+    "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU"
+  },
+  "default_environment_torchvision": "ModuleNotFoundError; compatible existing environment reused instead",
+  "automatic_downloads": 0,
+  "package_installs": 0,
+  "training": false,
+  "baseline_sha256": {
+    "outputs/exhibition_replay_pack_20261028_v3.zip": "b1ecf94b97788192aec396eacac8e18bf243df548f76dc33a34525dd84919671",
+    "outputs/exhibition_replay_pack_20261028_v2.zip": "f269ac511491ddd948d8e6872ebb57bf39348e1d885538f65db33e1cbe6b7b08",
+    "outputs/exhibition_replay_pack_20261028_v3/review-evidence.json": "85482d6e4c4aef0d9d27428452e574826d6e683474b895648a8d3d6f835746be",
+    "outputs/exhibition_replay_pack_20261028_v3/review.js": "2c4d71b02974834267d4f4fbda0357eb316824df29101caee8cc2b5b857acca2"
+  }
+}
