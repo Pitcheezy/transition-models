@@ -2,6 +2,8 @@
 
 ## 전시 정본 계획 실행 — 2026-10-28
 
+**CV49c 진행·수정 권한 선점 — 2026-10-29:** 우리 Codex / `codex/exhibition-replay-1028` / 기준`ede316b`(CI4개성공) / 초안PR84. 기존3구에서5장씩 사전고정, 팔·손목·장비 관계와 사후 시간순 표본 진단. [규칙](docs/CV_CONTEXT_SEQUENCE_20261029.md). 한 수정자·Claude Fable 교차검토, 기존v3/기권/사람/잠금849844/팀원/Cloudflare 보존. 아래 CV49b는 이전 완료 기록이다.
+
 **CV49b 완료·수정 권한 반납 — 2026-10-29:** Codex / `codex/exhibition-replay-1028` / 실행`e6caad5`·사전고정`bf575c9`·최종비교`f27576a` / 초안PR84(main 미통합). 기존가중치2종 SHA·GPU환경 확인, 동일3장×원본/고정크롭6회 오류0·0.5이상 후보0·낮은점수18상자. 새 미트점으로 채택하지 않았다. 관련161검사·Ruff186+신규4·Chrome6조건·Fable 실행/수정비교/결과해석 approve. 기존v2/v3 SHA4개불변·사람0·팀원/Cloudflare 미변경. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6486957342)·[결과](docs/CV_GLOVE_DIAGNOSTIC_20261029.md)·[영수증](docs/results/exhibition_replay_20261028/detector_diagnostic_v1.json). 다음CV49c 문맥·시계열 식별 실험, 미착수. 최종head CI는 PR84에서 별도 확인한다. 아래는 이전 완료 기록이다.
 
 **CV49a 완료·수정 권한 반납:** Codex / `codex/exhibition-replay-1028` / 구현`d9915e2`·표시`ebaa80a`·입력보완`8fa5227` / 초안PR84(PR83 위, main 미통합). 같은대표3장 공간 지목을 비교했다. 미트3건은 불겹침2/일부겹침1, 맨손3건은 미해결. 새미트중심0·사람0. Python138·Ruff186·실제Chrome3장·Fable코드 분리2건/보완1건 승인. 기존v3/2구 기권·평가잠금·팀원·Cloudflare 고정. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6468006377)·[영수증](docs/results/exhibition_replay_20261028/object_reference_v1.json)·[규칙/재현](docs/CV_OBJECT_REFERENCE_PROTOCOL.md). 다음CV49b, 미착수. 최종head CI는 PR84에서 별도 확인한다. 아래 CV48d는 직전 완료 기록이다.
