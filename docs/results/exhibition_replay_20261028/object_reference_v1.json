@@ -1,0 +1,370 @@
+{
+  "schema": "pitcheezy-object-reference-diagnostic-receipt-v1",
+  "date": "2026-10-28",
+  "evidence_kind": "offline_AI_development_not_ground_truth",
+  "protocol_commit": "e7080c5a68bb5df67e45ddfffaa5bb61b407cec0",
+  "implementation_commit": "8fa5227134172a4e49f7fd5888155784e598cef4",
+  "main_integrated": false,
+  "deployed": false,
+  "input_sha256": "8a0a24a3a29831eb04eb9e658bb6e5725032cd9a4bae1bb760b2881cf3e1c6e0",
+  "source_review_sha256_lf": "fbdd7262696e3f2592f48e4c05cec8c4cfb0746c92daaafbb0da19e1bd2c2755",
+  "source_interval_audit_sha256": "9865c81128ed8114b051b2650505ac326492bbca7460c57faaea9eaa35820d96",
+  "readers": {
+    "a": {
+      "reviewer_id": "codex_root",
+      "model": "GPT-6 (exact runtime model ID unavailable)",
+      "prior_exposure": "prior_development_context"
+    },
+    "b": {
+      "reviewer_id": "claude_fable_fresh",
+      "model": "claude-fable-5-1",
+      "prior_exposure": "fresh_prompt_no_peer_labels"
+    }
+  },
+  "readings_sha256": {
+    "a": "109e671e860898fdcd1671e0861cc4bcc3ae6b793c8a3e46c00d7966e7b7a9e2",
+    "b": "727db8ad21a30d55dbdf6825e049c7ae44e8d5270731dd5954f004a2e4c2925a"
+  },
+  "vision_calls": [
+    {
+      "pitch_key": "849843:1:1",
+      "model": "claude-fable-5-1",
+      "exit_code": 0,
+      "is_error": false,
+      "elapsed_seconds": 30.953,
+      "read_image_count": 2,
+      "raw_response_sha256": "fe60c0d6355f63316ba8865dd38d5ad2219d6c03b7c9027dcc02211ec54358c2"
+    },
+    {
+      "pitch_key": "849843:1:2",
+      "model": "claude-fable-5-1",
+      "exit_code": 0,
+      "is_error": false,
+      "elapsed_seconds": 36.687,
+      "read_image_count": 2,
+      "raw_response_sha256": "3299507df7a541cac600a454bb4ae40947b477fe1c6b2a57638d6f1eee32f569"
+    },
+    {
+      "pitch_key": "849843:1:3",
+      "model": "claude-fable-5-1",
+      "exit_code": 0,
+      "is_error": false,
+      "elapsed_seconds": 29.469,
+      "read_image_count": 2,
+      "raw_response_sha256": "ae32a064e69ef25ffc7a49256740c6a5e9dd639d8c551131f07a6a99c68d1601"
+    }
+  ],
+  "counts": {
+    "frames": 3,
+    "object_comparisons": 9,
+    "classifications": {
+      "located_pair_disjoint": 2,
+      "located_pair_with_overlap": 4,
+      "both_not_visible": 0,
+      "one_or_both_unresolved": 3
+    }
+  },
+  "frames": [
+    {
+      "pitch_key": "849843:1:1",
+      "play_id": "f6d7a0f3-d111-3c6d-92cd-2b5a867ac931",
+      "clip_sha256": "78c7325e6d79afc13f2c1990262e2872483db907283c7571a6a2c468d0a7ca42",
+      "frame_pts": 191959,
+      "time_base": "1/90000",
+      "image_sha256": "aa9ec740c1b77b4f37bfc9d199e38e69ec9e44ccd50e34a7766ce4838e7c004e",
+      "object_comparisons": [
+        {
+          "kind": "mitt",
+          "status_a": "located",
+          "status_b": "located",
+          "classification": "located_pair_disjoint",
+          "max_pair_iou": 0.0
+        },
+        {
+          "kind": "bare_hand",
+          "status_a": "unclear",
+          "status_b": "unclear",
+          "classification": "one_or_both_unresolved",
+          "max_pair_iou": null
+        },
+        {
+          "kind": "protective_gear",
+          "status_a": "located",
+          "status_b": "located",
+          "classification": "located_pair_with_overlap",
+          "max_pair_iou": 0.48612786489746684
+        }
+      ]
+    },
+    {
+      "pitch_key": "849843:1:2",
+      "play_id": "aa3ecf43-5435-3238-aac7-5bfeef1cabe2",
+      "clip_sha256": "989cdc26ebe9c86d59720519827d3290cbc82984758cb180793e7c3e3353c4b2",
+      "frame_pts": 191908,
+      "time_base": "1/90000",
+      "image_sha256": "2b28164e50a2912ff229e406cc314a2dedc36e50c961599b48b197d513d28f58",
+      "object_comparisons": [
+        {
+          "kind": "mitt",
+          "status_a": "located",
+          "status_b": "located",
+          "classification": "located_pair_with_overlap",
+          "max_pair_iou": 0.23342175066312998
+        },
+        {
+          "kind": "bare_hand",
+          "status_a": "unclear",
+          "status_b": "unclear",
+          "classification": "one_or_both_unresolved",
+          "max_pair_iou": null
+        },
+        {
+          "kind": "protective_gear",
+          "status_a": "located",
+          "status_b": "located",
+          "classification": "located_pair_with_overlap",
+          "max_pair_iou": 0.22875297855440826
+        }
+      ]
+    },
+    {
+      "pitch_key": "849843:1:3",
+      "play_id": "f29b740f-f187-3089-b57a-3b55e8370c19",
+      "clip_sha256": "8e5fbfdd9172eadfb69e3316fbe97d592e7201e3d4ebac4fd1d6e17403420ce5",
+      "frame_pts": 190465,
+      "time_base": "1/90000",
+      "image_sha256": "fe8e984bf7163dfe6579263bde865fddd5fc0650f9a32d2215bb66b56ffc1a81",
+      "object_comparisons": [
+        {
+          "kind": "mitt",
+          "status_a": "located",
+          "status_b": "located",
+          "classification": "located_pair_disjoint",
+          "max_pair_iou": 0.0
+        },
+        {
+          "kind": "bare_hand",
+          "status_a": "unclear",
+          "status_b": "unclear",
+          "classification": "one_or_both_unresolved",
+          "max_pair_iou": null
+        },
+        {
+          "kind": "protective_gear",
+          "status_a": "located",
+          "status_b": "located",
+          "classification": "located_pair_with_overlap",
+          "max_pair_iou": 0.5114213197969543
+        }
+      ]
+    }
+  ],
+  "new_mitt_centers": 0,
+  "independent_human_reviews": 0,
+  "validated_target_points": 0,
+  "human_accuracy": "unmeasured",
+  "reviewer_provenance": "Codex knew prior development; own response frozen first. Claude fresh separate calls saw only images and protocol, not peer labels. Reused development images are not independent evaluation.",
+  "comparison_sha256": "5c9f669f81836d280100d7a8fef7dbdaf2cc847dcbc7b2349c4577c7a171e6a2",
+  "overlay_artifacts": [
+    {
+      "path": "849843_1_1.svg",
+      "sha256": "7baefa0bdcdcf7f275d73fa2ff8fa9dbc500812d05646d91f129ff6774ac04d5"
+    },
+    {
+      "path": "849843_1_2.svg",
+      "sha256": "28bf32791bd1580f9d22a1b1cf0eaccbb827e13b815ab6e51d23b25fae74a453"
+    },
+    {
+      "path": "849843_1_3.svg",
+      "sha256": "8a468cbbbee25f40adaa2aa72a57b246335d3e38605b49b9525ee0116b463805"
+    }
+  ],
+  "browser": {
+    "browser": "155.0.8059.86",
+    "kind": "local_saved_SVG_render_not_service_or_human_evaluation",
+    "frames": [
+      {
+        "pitch_key": "849843:1:1",
+        "errors": [],
+        "images": 1,
+        "boxes": 8,
+        "hasLegend": true,
+        "hasCaution": true
+      },
+      {
+        "pitch_key": "849843:1:2",
+        "errors": [],
+        "images": 1,
+        "boxes": 7,
+        "hasLegend": true,
+        "hasCaution": true
+      },
+      {
+        "pitch_key": "849843:1:3",
+        "errors": [],
+        "images": 1,
+        "boxes": 7,
+        "hasLegend": true,
+        "hasCaution": true
+      }
+    ]
+  },
+  "browser_limitations": [
+    "initial native SVG document screenshot timed out; final same-SVG local HTML wrapper rendered",
+    "earlier render assertion used old legend string; corrected test only",
+    "3 final crop screenshots inspected by Codex; not human validation or actual Mac/iPhone"
+  ],
+  "checks": {
+    "python": "138 passed (111 core + 19 CLI + 8 checklist), 4.36s",
+    "lint": "ruff check and format,186 paths passed",
+    "commands": [
+      "python -m pytest tests/test_object_reference.py tests/test_object_reference_cli.py tests/test_checklist_model.py -q",
+      "python scripts/check_project.py --lint-only",
+      "python scripts/79_compare_object_references.py --input <PRIVATE>/input.json --reading-a <PRIVATE>/codex_reading.json --reading-b <PRIVATE>/claude_reading.json --out outputs/<FRESH_PRIVATE>"
+    ]
+  },
+  "code_reviews": [
+    {
+      "scope": "core",
+      "commit": "ebaa80a35498c3f418a7c3746b3fd8e16bf5f733",
+      "model": "claude-fable-5-1",
+      "verdict": "approve",
+      "tests_executed_by_reviewer": false,
+      "duration_ms": 58712,
+      "response_sha256": "c7582ca67e8ea14794d954a93ba5ed5adfa4c4e9a1c128f7f1afa1ee7caf8cea",
+      "findings": [
+        {
+          "severity": "low",
+          "file": "src/data/object_reference.py",
+          "line": 61,
+          "problem": "loads_json converts UnicodeDecodeError and JSONDecodeError to ValueError but not RecursionError. A snapshot within the 8 MiB limit consisting of deeply nested arrays (e.g. 100k '[') escapes as RecursionError instead of a clean validation rejection.",
+          "reproduction": "loads_json(b'[' * 100000 + b']' * 100000) -> RecursionError, not ValueError",
+          "fix": "Catch RecursionError alongside UnicodeDecodeError in loads_json and re-raise ValueError('JSON nesting too deep'), or pre-reject raw inputs whose bracket depth exceeds a small constant."
+        },
+        {
+          "severity": "low",
+          "file": "src/data/object_reference.py",
+          "line": 94,
+          "problem": "_text only rejects C0 controls (<32). DEL (0x7f), C1 controls (0x80-0x9f), bidi overrides, and zero-width characters pass, and leading/trailing whitespace is preserved. So reviewer_id 'x' vs 'x ' or 'x\\u200b' count as 'distinct reviewers', and reason text may carry invisible/bidi characters into the report.",
+          "reproduction": "compare_readings(m, sha, a, b) with a['reviewer_id']='claude', b['reviewer_id']='claude ' succeeds",
+          "fix": "Reject chars where unicodedata.category(c) in {'Cc','Cf','Cs','Co','Cn'} except \\n\\t, and compare reviewer_id after .strip() (or require value == value.strip())."
+        }
+      ]
+    },
+    {
+      "scope": "export",
+      "commit": "ebaa80a35498c3f418a7c3746b3fd8e16bf5f733",
+      "model": "claude-fable-5-1",
+      "verdict": "approve",
+      "tests_executed_by_reviewer": false,
+      "duration_ms": 89269,
+      "response_sha256": "4606875065e0891f63b46da34ed5cb815a336321c9273f207f4ee678bd552f15",
+      "findings": [
+        {
+          "severity": "medium",
+          "file": "scripts/79_compare_object_references.py",
+          "line": 171,
+          "problem": "Artifact name is derived from pitch_key with only ':' replaced. If validate_input does not restrict pitch_key to a filesystem-safe charset with uniqueness after ':'->'_' mapping, two frames can map to the same name and exports[name] silently overwrites the first SVG; artifacts list and comparison.json then omit a frame with no error. Separately, keys containing '/', '\\\\', '..', NUL, or Windows reserved stems (CON, NUL, COM1) would escape or fail at write time. Conditional on core validation not shown.",
+          "reproduction": "Manifest with pitch_keys 'g1:p1' and 'g1_p1' (if core accepts both) -> one SVG written, counts/report list two frames.",
+          "fix": "Before assignment: if name in exports: raise ValueError('duplicate artifact name'). Also assert pitch_key matches ^[A-Za-z0-9:_-]+$ locally (or document that core enforces it) so the write path cannot contain separators or reserved names."
+        },
+        {
+          "severity": "low",
+          "file": "scripts/79_compare_object_references.py",
+          "line": 33,
+          "problem": "_is_link falls back to False for junctions on Python < 3.12 (no Path.is_junction). Containment is still enforced by the resolve().relative_to checks on both image and destination, so this only weakens the stated 'no junction' policy, not containment.",
+          "reproduction": "Py3.11 on Windows: junction inside source dir pointing inside source dir is accepted.",
+          "fix": "Document minimum Python 3.12, or compare path.resolve() to path.absolute() per component as a fallback."
+        },
+        {
+          "severity": "low",
+          "file": "scripts/79_compare_object_references.py",
+          "line": 185,
+          "problem": "exports and base64 rasters for all frames are held in memory before writing; worst case ~43 MiB per frame SVG plus decoded pixels up to the PIL bomb threshold (~350 MB RGBA). Acceptable for a local 3-frame tool; noted only because the 32 MiB cap does not bound decoded size.",
+          "reproduction": "Three 32 MiB max-pixel PNGs.",
+          "fix": "Optional: lower Image.MAX_IMAGE_PIXELS to the manifest-declared width*height before open, which also rejects dimension mismatch earlier."
+        },
+        {
+          "severity": "info",
+          "file": "scripts/79_compare_object_references.py",
+          "line": 206,
+          "problem": "main catches ValueError/OSError only. KeyError from by_key lookup or a frame missing from report['frames'] would print a traceback. Not reachable if compare_readings enforces one-to-one frame identity as stated.",
+          "reproduction": "n/a under stated core contract",
+          "fix": "No change required; optionally catch KeyError with a 'report/manifest frame mismatch' message."
+        }
+      ]
+    },
+    {
+      "scope": "focused follow-up",
+      "commit": "8fa5227134172a4e49f7fd5888155784e598cef4",
+      "model": "claude-fable-5-1",
+      "verdict": "approve",
+      "tests_executed_by_reviewer": false,
+      "duration_ms": 39869,
+      "response_sha256": "07c18ca76c08838f588557185ec2b571945c9cd3ab0aca42f7f12ed7c21ccc50",
+      "findings": [
+        {
+          "id": "F1-recursion-fix",
+          "severity": "low",
+          "status": "resolved",
+          "assessment": "Catching RecursionError inside loads_json and re-raising ValueError('JSON nesting too deep') from exc converts the crash into the same bounded validation-failure class as the other JSON errors. CPython's C scanner (and the pure-Python fallback) both raise RecursionError for deep arrays, so the except clause is reached. The regression test is sound: 100_000-deep nesting far exceeds any default recursion limit, the anchored match pins the exact message, and the __cause__ assertion proves the chained path rather than an incidental ValueError. Assumptions: json.loads is inside the same try block as the UnicodeDecodeError handler (the diff shows it adjacent, consistent with that), and any pre-parse byte-size cap is above ~200 KB so the test input actually reaches the parser. The claimed passing run was not reproduced here."
+        },
+        {
+          "id": "F2-export-filename-collision",
+          "severity": "medium (conditional)",
+          "status": "resolved - not reachable",
+          "assessment": "The conditional finding assumed pitch_key could contain '_' or arbitrary text. _identity enforces fullmatch of [1-9][0-9]{0,10}:[1-9][0-9]{0,5}:[1-9][0-9]{0,5}: digits and exactly two colons only, no underscore, no path separators, no case-variant characters, and the first segment is pinned to game_pk. On that domain the mapping ':' -> '_' is injective: the output has exactly two underscores at the colon positions and digits elsewhere, so distinct inputs cannot collide and 'g1:p1'/'g1_p1' are both rejected at validation. validate_input additionally rejects duplicate pitch_key strings per manifest, and image names are deduplicated casefolded. Digits-only output also removes Windows case-insensitive and reserved-name concerns. Condition for closure: export only consumes frames that passed validate_input (or output derived from them). If export can be fed an unvalidated manifest, the finding reopens; stated as an assumption, not verified here."
+        },
+        {
+          "id": "F3-metadata-whitespace",
+          "severity": "low",
+          "status": "resolved - out of contract",
+          "assessment": "Metadata whitespace was never a model-identity control; identity is bound to the CLI receipt. Accepted as documented behaviour, not a defect."
+        },
+        {
+          "id": "F4-junction-containment-pre-3.12",
+          "severity": "low",
+          "status": "resolved - documented limitation",
+          "assessment": "No runtime junction ban is claimed for Python <3.12; the strict policy now requires 3.12. Acceptable provided the existing containment check still executes on all versions and the 3.12 requirement is stated where operators will see it. A sys.version_info guard would make this enforced rather than documented; optional, not blocking."
+        },
+        {
+          "id": "F5-memory-three-pngs",
+          "severity": "informational",
+          "status": "accepted limitation",
+          "assessment": "Holding three small PNGs in memory is bounded by the 32768x32768 and frame-count caps already validated; acceptable."
+        }
+      ]
+    }
+  ],
+  "first_code_review": {
+    "commit": "d9915e2a6c1d6f323314d4e454c336b951ed39bc",
+    "timeout_seconds": 240,
+    "verdict": null,
+    "cause": "full prompt did not complete within limit; no authentication/model failure established",
+    "recovery": "split core/export at fixed ebaa80a, medium effort; final focused follow-up after correction"
+  },
+  "preserved": {
+    "outputs/exhibition_replay_pack_20261028_v2.zip": "f269ac511491ddd948d8e6872ebb57bf39348e1d885538f65db33e1cbe6b7b08",
+    "outputs/exhibition_replay_pack_20261028_v3.zip": "b1ecf94b97788192aec396eacac8e18bf243df548f76dc33a34525dd84919671",
+    "outputs/exhibition_replay_pack_20261028_v3/review-evidence.json": "85482d6e4c4aef0d9d27428452e574826d6e683474b895648a8d3d6f835746be",
+    "outputs/exhibition_replay_pack_20261028_v3/review.js": "2c4d71b02974834267d4f4fbda0357eb316824df29101caee8cc2b5b857acca2"
+  },
+  "limitations": [
+    "Geometry overlap is not object identity or accuracy.",
+    "Three frames times three categories are nine comparisons, not nine independent samples.",
+    "Maximum gear pair IoU does not cover all gear boxes.",
+    "Metadata IDs are not authentication. Original CLI model receipt is kept privately.",
+    "No 80-frame repeat voting, new frames, training, evaluation-lock access or service output changes.",
+    "Existing v3 first/third pitch points remain old static candidates, not confirmed by this diagnosis.",
+    "private comparison files hold small set in memory; disk failure may leave partial new directory; Python3.12 required for explicit Windows junction rejection"
+  ],
+  "remote_ci_at_recording": {
+    "commit": "ebaa80a35498c3f418a7c3746b3fd8e16bf5f733",
+    "checks": "4/4 passed",
+    "links": [
+      "https://github.com/Pitcheezy/transition-models/actions/runs/40683524144",
+      "https://github.com/Pitcheezy/transition-models/actions/runs/40683524372"
+    ],
+    "later_head": "check PR84; not implied by this earlier run"
+  }
+}

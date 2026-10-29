@@ -41,10 +41,16 @@ def fetch_source(url, destination, limit_bytes=20_000_000):
 
 def media_urls(page):
     """Extract observed public MP4 URLs; no inferred URL patterns or stream bypasses."""
-    # An apostrophe may appear in a path, but in a query it is the closing quote of an attribute.
-    values = re.findall(r"""https://[^\s<>"\\]+\.mp4(?:\?[^\s<>"'\\]*)?""", page)
+    # Match quoted URLs with their own delimiter before the bare-URL fallback. A double-quoted
+    # path may contain an apostrophe, but adjacent single-quoted JS values must stay separate.
+    patterns = (
+        r'"(https://[^\s<>"\\]+\.mp4(?:\?[^\s<>"\\]*)?)"',
+        r"'(https://[^\s<>'\\]+\.mp4(?:\?[^\s<>'\\]*)?)'",
+        r"""(https://[^\s<>"\\]+\.mp4(?:\?[^\s<>"'\\]*)?)""",
+    )
     result = []
-    for value in values:
+    for match in re.finditer("|".join(patterns), page):
+        value = next(value for value in match.groups() if value is not None)
         value = html.unescape(value)
         try:
             validate_mlb_url(value)

@@ -1,0 +1,80 @@
+{
+  "schema": "pitcheezy-fixed-cross-review-v1",
+  "target": "a1b70e3267d7c0c17a76746f0536be6ed74f1261",
+  "author": "Codex / GPT-6 family; exact inherited model ID not exposed",
+  "reviewer_requested": "claude-fable-5-1",
+  "reviewer_reported_models": [
+    "claude-fable-5-1"
+  ],
+  "raw_sha256": "4a4abe6a907f353ad252cfead6376efba5eca6e527fc518a41419206368cee37",
+  "review": {
+    "verdict": "approve",
+    "target": "a1b70e3267d7c0c17a76746f0536be6ed74f1261",
+    "reviewer_model": "claude-fable-5-1",
+    "tests_run_by_reviewer": false,
+    "summary": "Both fixes are correct as diffed. Source/manifest files are now written only after every SQLite row insert of the game has been accepted inside the still-open transaction, and a raise from the destination pre-check rolls the transaction back, so invalid input leaves no DB row, manifest, or source. The MP4 extractor's three mutually exclusive alternatives (first char is \", ', or h) make quoted URLs self-delimiting while keeping apostrophes in double-quoted and bare paths. No blocking or regression-level bugs found.",
+    "findings": [
+      {
+        "severity": "low",
+        "file": "src/data/clip_registry.py",
+        "line": 316,
+        "title": "Rollback guarantee depends on the enclosing `with conn:` block, which is outside the hunk",
+        "detail": "`_keep_registration_files(files)` is placed at the indentation of the row loop, i.e. inside the transaction context. That is what makes a ValueError from the destination pre-check undo the games/pitches inserts. If that enclosing block is ever narrowed to the loop only, the 'no DB row on refused write' property silently disappears. The test `test_a_conflicting_source_writes_no_other_registration_files` pins this, so it is covered, but the dependency is worth a one-line comment next to the call."
+      },
+      {
+        "severity": "low",
+        "file": "src/data/clip_registry.py",
+        "line": 184,
+        "title": "Destination conflict check happens after the full insert loop instead of before it",
+        "detail": "The read-only half of `_keep_registration_files` (exists-with-different-bytes) could run before the pitch loop, next to the manifest/split check at line 215, so a stale conflicting source fails fast without first inserting every pitch and then rolling back. Not a correctness issue because of the rollback; purely ordering/cost. Also note the write transaction (and SQLite lock) is held across the file I/O."
+      },
+      {
+        "severity": "info",
+        "file": "src/data/clip_registry.py",
+        "line": 182,
+        "title": "Stale same-bytes files after a failed commit are tolerated; corrected inputs are not",
+        "detail": "If files are written and the commit then fails, re-running with identical bytes succeeds (write_once no-op). Re-running with corrected, different bytes is refused with 'refusing to overwrite different bytes' even though the DB has no row for the game, and the message does not tell the operator to remove the stale file. This matches pre-fix manifest behaviour and is within the explicitly disclaimed crash-atomicity scope; flagging only so the error text can mention the remedy if desired."
+      },
+      {
+        "severity": "info",
+        "file": "scripts/75_clip_registry.py",
+        "line": 103,
+        "title": "Per-game only: game N's files are frozen before game N+1's sources are fetched or validated",
+        "detail": "The loop fetches, registers and writes each game in turn. This matches the stated scope ('reject invalid per-game sources'), and the earlier game's registration is itself valid, so it is not a bug. The test name `test_cli_validates_every_source_before_saving_any` reads broader than what is guaranteed across games."
+      },
+      {
+        "severity": "info",
+        "file": "scripts/75_clip_registry.py",
+        "line": 71,
+        "title": "`keep_sources` removed; other callers not verifiable here",
+        "detail": "The only caller in the diff (CLI main and the updated test) was migrated. The untracked `scripts/76_audit_replay_clips.py` in the working tree was not reviewable; confirm it does not import `keep_sources` before merging."
+      },
+      {
+        "severity": "info",
+        "file": "src/data/mlb_sources.py",
+        "line": 47,
+        "title": "Single-quoted URL containing an unescaped apostrophe degrades gracefully",
+        "detail": "Pattern 2 cannot match `'https://x/o'neil.mp4'`; the scanner then falls through to the bare pattern at the `h` and returns `https://x/o'neil.mp4`, and the following `','https://x/b.mp4'` still parses as a separate candidate. For an apostrophe in a single-quoted *query* (`'...?t=o'neil'`) pattern 2 returns the truncated `?t=o`. Such input is invalid JS anyway, so this is acceptable, but it is the one asymmetry between the quoted forms worth knowing about."
+      },
+      {
+        "severity": "info",
+        "file": "src/data/mlb_sources.py",
+        "line": 52,
+        "title": "Alternation order is safe; no overlap or double counting",
+        "detail": "The three alternatives start with distinct literal characters (\", ', h), so at any position at most one can match and the order in the join is irrelevant. `finditer` is non-overlapping, so a quoted URL is never also reported via the bare pattern. Escaped JSON quotes (`\\\"`) are excluded by the `\\\\` in every class and correctly fall back to the bare match."
+      }
+    ],
+    "regression_check": {
+      "register_game_signature": "Positional parameters unchanged; `source_files` is keyword-only with default None, so existing callers and the 49 pre-existing tests are unaffected.",
+      "existing_game_path": "Previously wrote only the manifest; now also writes supplied sources after hash and destination checks. Same-bytes re-registration remains idempotent.",
+      "media_urls_old_behaviour": "Bare-URL semantics (apostrophe allowed in path, not in query) are preserved verbatim as pattern 3; the quoted patterns only add precision."
+    }
+  },
+  "reviewer_executed_tests": false,
+  "local_tests": {
+    "command": "python -B -m pytest -q tests/test_clip_registry.py tests/test_mlb_sources.py tests/test_mlb_video.py",
+    "passed": 49
+  },
+  "runtime_deployment": false,
+  "limit": "Read-only static review of supplied fixed diff. Exact author model ID unavailable; not a production approval."
+}

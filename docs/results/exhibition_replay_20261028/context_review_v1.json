@@ -1,0 +1,484 @@
+{
+  "schema": "pitcheezy-exhibition-context-review-v1",
+  "source_commit": "92a703e27e94f7f655d6d7a5125e9cc4f6515bd3",
+  "game_pk": 849843,
+  "audit_sha256": "593946bd488b233af91a850792b6dfa6ef8b45cef1037656b8ad4f1321551452",
+  "source_registry_sha256": "9555b95171a6232b849b74e4784edf62c210b7a64c72e8b84b5cf5ec48ead3b6",
+  "evidence_kind": "offline_AI_cross_reviewed_candidates_not_ground_truth",
+  "counts": {
+    "pitches": 3,
+    "sampled_frames": 78,
+    "candidate_points": 3,
+    "abstained_points": 0,
+    "independent_human_reviews": 0,
+    "validated_target_points": 0
+  },
+  "limitations": [
+    "0.1sec sampled visual stability, not all-frame automatic measurement",
+    "Repeated AI review is development evidence, not independent accuracy",
+    "Points are source raster pixels, not physical/plate coordinates or pitcher intent",
+    "Proposed point adjudication was informed and is not another blind label",
+    "First broad18sheet call timed out and yielded no accepted review"
+  ],
+  "records": [
+    {
+      "pitch_key": "849843:1:1",
+      "play_id": "f6d7a0f3-d111-3c6d-92cd-2b5a867ac931",
+      "clip_sha256": "78c7325e6d79afc13f2c1990262e2872483db907283c7571a6a2c468d0a7ca42",
+      "codex_independent": {
+        "representative_pts": 191959,
+        "approximate_center_px": [
+          566,
+          317
+        ],
+        "candidate_interval_pts": [
+          173842,
+          209977
+        ]
+      },
+      "claude_independent": {
+        "candidate_interval_pts": [
+          163332,
+          209977
+        ],
+        "representative_pts": 182950,
+        "approximate_center_px": [
+          562,
+          331
+        ],
+        "model": "claude-fable-5-1",
+        "read_image_calls": 4,
+        "raw_events_sha256": "07af5fc4dec4008bc90167b037538749e0d7767c874db2c6095477f593186258",
+        "format_note": "timeline object ended with ] instead of }; metadata transcribed from preserved raw response"
+      },
+      "overlap_candidate_interval_pts": [
+        173842,
+        209977
+      ],
+      "selected_frame": {
+        "ordinal": 125,
+        "pts": 191959,
+        "seconds": 2.132877777777778,
+        "clip_seconds": 2.119877777777778,
+        "full_frame": {
+          "path": "849843_1_1/frame_021.png",
+          "sha256": "aa9ec740c1b77b4f37bfc9d199e38e69ec9e44ccd50e34a7766ce4838e7c004e",
+          "size": [
+            1280,
+            720
+          ]
+        },
+        "image": "849843_1_1/frame_021.png",
+        "image_sha256": "aa9ec740c1b77b4f37bfc9d199e38e69ec9e44ccd50e34a7766ce4838e7c004e",
+        "image_size": [
+          1280,
+          720
+        ],
+        "context_crop": {
+          "path": "849843_1_1/crop_021.png",
+          "sha256": "1f48f64eb665727a3977a9a532b1c00bc8e3b34c0aff4f7849850d55b61bd8a8",
+          "size": [
+            210,
+            230
+          ],
+          "source_rectangle_xyxy": [
+            450,
+            240,
+            660,
+            470
+          ],
+          "full_frame_origin_xy": [
+            450,
+            240
+          ]
+        }
+      },
+      "final_point_px": [
+        566,
+        317
+      ],
+      "same_frame_followup": "accept_candidate; informed annotated-image review, not blind evaluation",
+      "identity_reason": "Broad brown leather pocket/rim in front of catcher mask/chest, continuous movement from lower glove, attached to catcher glove-side arm. Mask bars remain distinct above; other hand goes away toward protected leg/body. Not bare fingers, umpire or pitcher glove.",
+      "rejected_phase": "earlier low/resting or moving glove is not automatically a presented target",
+      "stability": "sampled visual estimate with residual movement; all-frame measurement pending"
+    },
+    {
+      "pitch_key": "849843:1:2",
+      "play_id": "aa3ecf43-5435-3238-aac7-5bfeef1cabe2",
+      "clip_sha256": "989cdc26ebe9c86d59720519827d3290cbc82984758cb180793e7c3e3353c4b2",
+      "codex_independent": {
+        "representative_pts": 191908,
+        "approximate_center_px": [
+          566,
+          333
+        ],
+        "candidate_interval_pts": [
+          173890,
+          209926
+        ]
+      },
+      "claude_independent": {
+        "candidate_interval_pts": [
+          164881,
+          224941
+        ],
+        "representative_pts": 200917,
+        "approximate_center_px": [
+          559,
+          341
+        ],
+        "model": "claude-fable-5-1",
+        "read_image_calls": 4,
+        "raw_events_sha256": "ceb4c913218d76b47a4d3e7437494a8956993ee31dca5837c4d3561f34dd368b",
+        "format_note": "selected fields transcribed; raw preserved"
+      },
+      "overlap_candidate_interval_pts": [
+        173890,
+        209926
+      ],
+      "selected_frame": {
+        "ordinal": 125,
+        "pts": 191908,
+        "seconds": 2.132311111111111,
+        "clip_seconds": 2.121311111111111,
+        "full_frame": {
+          "path": "849843_1_2/frame_021.png",
+          "sha256": "2b28164e50a2912ff229e406cc314a2dedc36e50c961599b48b197d513d28f58",
+          "size": [
+            1280,
+            720
+          ]
+        },
+        "image": "849843_1_2/frame_021.png",
+        "image_sha256": "2b28164e50a2912ff229e406cc314a2dedc36e50c961599b48b197d513d28f58",
+        "image_size": [
+          1280,
+          720
+        ],
+        "context_crop": {
+          "path": "849843_1_2/crop_021.png",
+          "sha256": "663628c56e099a7a63c75b93d905d2443cd1ca74951cacb1393fa5831a56c365",
+          "size": [
+            210,
+            230
+          ],
+          "source_rectangle_xyxy": [
+            450,
+            240,
+            660,
+            470
+          ],
+          "full_frame_origin_xy": [
+            450,
+            240
+          ]
+        }
+      },
+      "final_point_px": [
+        566,
+        333
+      ],
+      "same_frame_followup": "accept_candidate; informed annotated-image review, not blind evaluation",
+      "identity_reason": "Broad brown leather pocket/rim in front of catcher mask/chest, continuous movement from lower glove, attached to catcher glove-side arm. Mask bars remain distinct above; other hand goes away toward protected leg/body. Not bare fingers, umpire or pitcher glove.",
+      "rejected_phase": "earlier low/resting or moving glove is not automatically a presented target",
+      "stability": "sampled visual estimate with residual movement; all-frame measurement pending"
+    },
+    {
+      "pitch_key": "849843:1:3",
+      "play_id": "f29b740f-f187-3089-b57a-3b55e8370c19",
+      "clip_sha256": "8e5fbfdd9172eadfb69e3316fbe97d592e7201e3d4ebac4fd1d6e17403420ce5",
+      "codex_independent": {
+        "representative_pts": 190465,
+        "approximate_center_px": [
+          558,
+          325
+        ],
+        "candidate_interval_pts": [
+          163438,
+          217492
+        ]
+      },
+      "claude_independent": {
+        "candidate_interval_pts": [
+          163438,
+          225000
+        ],
+        "representative_pts": 190465,
+        "approximate_center_px": [
+          568,
+          330
+        ],
+        "model": "claude-fable-5-1",
+        "read_image_calls": 4,
+        "raw_events_sha256": "70cfbb1bcc0de3cd1f3e2115987cba668c1d70517c354f645c48f5144414fce9",
+        "format_note": "selected fields transcribed; raw preserved"
+      },
+      "overlap_candidate_interval_pts": [
+        163438,
+        208483
+      ],
+      "selected_frame": {
+        "ordinal": 124,
+        "pts": 190465,
+        "seconds": 2.116277777777778,
+        "clip_seconds": 2.116277777777778,
+        "full_frame": {
+          "path": "849843_1_3/frame_021.png",
+          "sha256": "fe8e984bf7163dfe6579263bde865fddd5fc0650f9a32d2215bb66b56ffc1a81",
+          "size": [
+            1280,
+            720
+          ]
+        },
+        "image": "849843_1_3/frame_021.png",
+        "image_sha256": "fe8e984bf7163dfe6579263bde865fddd5fc0650f9a32d2215bb66b56ffc1a81",
+        "image_size": [
+          1280,
+          720
+        ],
+        "context_crop": {
+          "path": "849843_1_3/crop_021.png",
+          "sha256": "2abc2884ed7f4d0e5b2eab2c4bbefdb66591de11589cdc02c151374848c211b6",
+          "size": [
+            210,
+            230
+          ],
+          "source_rectangle_xyxy": [
+            450,
+            240,
+            660,
+            470
+          ],
+          "full_frame_origin_xy": [
+            450,
+            240
+          ]
+        }
+      },
+      "final_point_px": [
+        558,
+        325
+      ],
+      "same_frame_followup": "accept_candidate; informed annotated-image review, not blind evaluation",
+      "identity_reason": "Broad brown leather pocket/rim in front of catcher mask/chest, continuous movement from lower glove, attached to catcher glove-side arm. Mask bars remain distinct above; other hand goes away toward protected leg/body. Not bare fingers, umpire or pitcher glove.",
+      "rejected_phase": "earlier low/resting or moving glove is not automatically a presented target",
+      "stability": "sampled visual estimate with residual movement; all-frame measurement pending"
+    }
+  ],
+  "package_sidecar": {
+    "schema": "pitcheezy-service-review-evidence-v2",
+    "game_pk": 849843,
+    "source_sha256": "df606a11c6db465c054252ef8d331aeb23aa21565b4960bd586f3dcf8f62f6b7",
+    "entries": [
+      {
+        "pitch_key": "849843:1:1",
+        "play_id": "f6d7a0f3-d111-3c6d-92cd-2b5a867ac931",
+        "clip_sha256": "78c7325e6d79afc13f2c1990262e2872483db907283c7571a6a2c468d0a7ca42",
+        "image": "evidence/849843_1_1.png",
+        "image_sha256": "aa9ec740c1b77b4f37bfc9d199e38e69ec9e44ccd50e34a7766ce4838e7c004e",
+        "frame_pts": 191959,
+        "clip_first_pts": 1170,
+        "release_lower_bound_pts": 224992,
+        "time_base": "1/90000",
+        "clip_seconds": 2.119877777777778,
+        "status": "candidate",
+        "reason": "포수·양손·미트 문맥을 두 AI가 검토한 개발용 후보입니다. 약0.1초 간격의 준비 구간 표본을 보고 선택했으며 모든 프레임의 정지·투수 의도·물리 좌표는 검증하지 않았습니다. 낮게 둔 자세와 올리는 중인 장면은 준비 위치로 채택하지 않았습니다.",
+        "image_width": 1280,
+        "image_height": 720,
+        "point": {
+          "x": 566,
+          "y": 317
+        },
+        "context_crop": [
+          450,
+          240,
+          660,
+          470
+        ]
+      },
+      {
+        "pitch_key": "849843:1:2",
+        "play_id": "aa3ecf43-5435-3238-aac7-5bfeef1cabe2",
+        "clip_sha256": "989cdc26ebe9c86d59720519827d3290cbc82984758cb180793e7c3e3353c4b2",
+        "image": "evidence/849843_1_2.png",
+        "image_sha256": "2b28164e50a2912ff229e406cc314a2dedc36e50c961599b48b197d513d28f58",
+        "frame_pts": 191908,
+        "clip_first_pts": 990,
+        "release_lower_bound_pts": 224941,
+        "time_base": "1/90000",
+        "clip_seconds": 2.121311111111111,
+        "status": "candidate",
+        "reason": "포수·양손·미트 문맥을 두 AI가 검토한 개발용 후보입니다. 약0.1초 간격의 준비 구간 표본을 보고 선택했으며 모든 프레임의 정지·투수 의도·물리 좌표는 검증하지 않았습니다. 낮게 둔 자세와 올리는 중인 장면은 준비 위치로 채택하지 않았습니다.",
+        "image_width": 1280,
+        "image_height": 720,
+        "point": {
+          "x": 566,
+          "y": 333
+        },
+        "context_crop": [
+          450,
+          240,
+          660,
+          470
+        ]
+      },
+      {
+        "pitch_key": "849843:1:3",
+        "play_id": "f29b740f-f187-3089-b57a-3b55e8370c19",
+        "clip_sha256": "8e5fbfdd9172eadfb69e3316fbe97d592e7201e3d4ebac4fd1d6e17403420ce5",
+        "image": "evidence/849843_1_3.png",
+        "image_sha256": "fe8e984bf7163dfe6579263bde865fddd5fc0650f9a32d2215bb66b56ffc1a81",
+        "frame_pts": 190465,
+        "clip_first_pts": 0,
+        "release_lower_bound_pts": 225000,
+        "time_base": "1/90000",
+        "clip_seconds": 2.116277777777778,
+        "status": "candidate",
+        "reason": "포수·양손·미트 문맥을 두 AI가 검토한 개발용 후보입니다. 약0.1초 간격의 준비 구간 표본을 보고 선택했으며 모든 프레임의 정지·투수 의도·물리 좌표는 검증하지 않았습니다. 낮게 둔 자세와 올리는 중인 장면은 준비 위치로 채택하지 않았습니다.",
+        "image_width": 1280,
+        "image_height": 720,
+        "point": {
+          "x": 558,
+          "y": 325
+        },
+        "context_crop": [
+          450,
+          240,
+          660,
+          470
+        ]
+      }
+    ]
+  },
+  "image_bindings": [
+    {
+      "image": "evidence/849843_1_1.png",
+      "source_image": "849843_1_1/frame_021.png",
+      "sha256": "aa9ec740c1b77b4f37bfc9d199e38e69ec9e44ccd50e34a7766ce4838e7c004e"
+    },
+    {
+      "image": "evidence/849843_1_2.png",
+      "source_image": "849843_1_2/frame_021.png",
+      "sha256": "2b28164e50a2912ff229e406cc314a2dedc36e50c961599b48b197d513d28f58"
+    },
+    {
+      "image": "evidence/849843_1_3.png",
+      "source_image": "849843_1_3/frame_021.png",
+      "sha256": "fe8e984bf7163dfe6579263bde865fddd5fc0650f9a32d2215bb66b56ffc1a81"
+    }
+  ],
+  "same_frame_review": {
+    "model": "claude-fable-5-1",
+    "raw_events_sha256": "c44d321bb92a0e6226f0a2fe4c0cc3caa2874008ea5861833f299c87b4f4175e",
+    "read_image_calls": 3,
+    "result": "three accept_candidate, no correction proposed",
+    "scope": "same-frame annotated crop check; no human accuracy or all-frame stability"
+  },
+  "previous_audit_sha256": "6854ab9bccf894bc7d586633840c39a3a59aaf1bcedf3cd6e656939d4cf9b287",
+  "extraction_pts_check": {
+    "frames_checked": 78,
+    "old_and_new_image_bytes_identical": true,
+    "method": "FFmpeg -copyts select,showinfo clock and ordered PTS matched to ffprobe",
+    "records": [
+      {
+        "pitch_key": "849843:1:1",
+        "time_base": "1/90000",
+        "selected_pts": [
+          1170,
+          10179,
+          19188,
+          28197,
+          37206,
+          46215,
+          55224,
+          64233,
+          73242,
+          82251,
+          91260,
+          100269,
+          109278,
+          118287,
+          127296,
+          136305,
+          145314,
+          154323,
+          163332,
+          173842,
+          182950,
+          191959,
+          200968,
+          209977,
+          218986,
+          224992
+        ],
+        "log_sha256": "e3ba3fa5f79f95bd44af0ba306f3b1c84466fd64b76d1b3a068426f324f42f0c"
+      },
+      {
+        "pitch_key": "849843:1:2",
+        "time_base": "1/90000",
+        "selected_pts": [
+          990,
+          11728,
+          20737,
+          29746,
+          38755,
+          47764,
+          56773,
+          65782,
+          74791,
+          83800,
+          92809,
+          101818,
+          110827,
+          119836,
+          128845,
+          137854,
+          146863,
+          155872,
+          164881,
+          173890,
+          182899,
+          191908,
+          200917,
+          209926,
+          218935,
+          224941
+        ],
+        "log_sha256": "a16316f3dab0464983b6083f38573b27fd77c0ff81c9c26d4c07a347adc6bc63"
+      },
+      {
+        "pitch_key": "849843:1:3",
+        "time_base": "1/90000",
+        "selected_pts": [
+          0,
+          9009,
+          18018,
+          28303,
+          37312,
+          46321,
+          55330,
+          64339,
+          73348,
+          82357,
+          91366,
+          100375,
+          109384,
+          118393,
+          127402,
+          136411,
+          145420,
+          154429,
+          163438,
+          172447,
+          181456,
+          190465,
+          199474,
+          208483,
+          217492,
+          225000
+        ],
+        "log_sha256": "e091bc79231b673aa3861e7de515ab5d8cb572c42be7c565be07e06adc816ef5"
+      }
+    ]
+  }
+}

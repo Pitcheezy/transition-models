@@ -1,0 +1,189 @@
+{
+  "schema": "pitcheezy-exhibition-feasibility-review-v1",
+  "source_commit": "e9948b971c3cd48c795325ebfa0a1f6ecaf8cf26",
+  "game_pk": 849843,
+  "scope": "PA1 only; PA2-5 metadata listed but no frames decoded",
+  "evidence_kind": "offline_decoder_measurement_plus_single_AI_visual_triage",
+  "reviewer": "Codex; exact runtime model ID not exposed",
+  "source_registry_sha256": "9555b95171a6232b849b74e4784edf62c210b7a64c72e8b84b5cf5ec48ead3b6",
+  "audit_sha256": "8298e8db97137e5d8fd406723375849a9a734bc9c80cc5fa40582956aa643447",
+  "counts": {
+    "pitches": 3,
+    "decoded": 3,
+    "decoded_frames": 1234,
+    "sampled_frames": 45,
+    "setup_scene_candidates": 3,
+    "confirmed_mitt_points": 0,
+    "point_abstentions": 3,
+    "independent_human_reviews": 0
+  },
+  "decision": "Continue with PA1. Do not inspect further PAs solely to find easier points.",
+  "records": [
+    {
+      "pitch_key": "849843:1:1",
+      "play_id": "f6d7a0f3-d111-3c6d-92cd-2b5a867ac931",
+      "clip_sha256": "78c7325e6d79afc13f2c1990262e2872483db907283c7571a6a2c468d0a7ca42",
+      "decoded_frames": 416,
+      "first_pts": 1170,
+      "last_pts": 627394,
+      "time_base": "1/90000",
+      "sampled_frames": 15,
+      "evidence_frame": {
+        "ordinal": 118,
+        "pts": 181448,
+        "seconds": 2.016088888888889,
+        "clip_seconds": 2.0030888888888887,
+        "image": "849843_1_1/frame_004.png",
+        "image_sha256": "78dd896827e65a44c29768559a1d62f87926ab9b568099c4c8a2348b269d1356",
+        "image_size": [
+          1280,
+          720
+        ]
+      },
+      "release_bracket_pts": [
+        226493,
+        271538
+      ],
+      "release_precision": "AI visual interval only, not exact release timing",
+      "camera": "center_field_view_in_sampled_pre_release_frames",
+      "setup_segment": "present_for_further_mitt_review",
+      "replay": "not_observed_in_0.5s_samples; short inserts not excluded",
+      "post_pitch_cut": "not_observed_in_samples",
+      "mitt_output": "abstained",
+      "reason": "mitt_center_and_stable_setup_not_yet_established"
+    },
+    {
+      "pitch_key": "849843:1:2",
+      "play_id": "aa3ecf43-5435-3238-aac7-5bfeef1cabe2",
+      "clip_sha256": "989cdc26ebe9c86d59720519827d3290cbc82984758cb180793e7c3e3353c4b2",
+      "decoded_frames": 406,
+      "first_pts": 990,
+      "last_pts": 612328,
+      "time_base": "1/90000",
+      "sampled_frames": 15,
+      "evidence_frame": {
+        "ordinal": 118,
+        "pts": 181397,
+        "seconds": 2.015522222222222,
+        "clip_seconds": 2.004522222222222,
+        "image": "849843_1_2/frame_004.png",
+        "image_sha256": "d70d9d26d3ff7d251cdd63ec9fc1d37354cc443b2a79c60efd26ec20cb11ab23",
+        "image_size": [
+          1280,
+          720
+        ]
+      },
+      "release_bracket_pts": [
+        226442,
+        271487
+      ],
+      "release_precision": "AI visual interval only, not exact release timing",
+      "camera": "center_field_view_in_sampled_pre_release_frames",
+      "setup_segment": "present_for_further_mitt_review",
+      "replay": "not_observed_in_0.5s_samples; short inserts not excluded",
+      "post_pitch_cut": "not_observed_in_samples",
+      "mitt_output": "abstained",
+      "reason": "mitt_center_and_stable_setup_not_yet_established"
+    },
+    {
+      "pitch_key": "849843:1:3",
+      "play_id": "f29b740f-f187-3089-b57a-3b55e8370c19",
+      "clip_sha256": "8e5fbfdd9172eadfb69e3316fbe97d592e7201e3d4ebac4fd1d6e17403420ce5",
+      "decoded_frames": 412,
+      "first_pts": 0,
+      "last_pts": 621396,
+      "time_base": "1/90000",
+      "sampled_frames": 15,
+      "evidence_frame": {
+        "ordinal": 118,
+        "pts": 181456,
+        "seconds": 2.0161777777777776,
+        "clip_seconds": 2.0161777777777776,
+        "image": "849843_1_3/frame_004.png",
+        "image_sha256": "9ad3d3868b95d1cb63830fe2fa284809917514799099cb8729b99fb76097782e",
+        "image_size": [
+          1280,
+          720
+        ]
+      },
+      "release_bracket_pts": [
+        226501,
+        271546
+      ],
+      "release_precision": "AI visual interval only, not exact release timing",
+      "camera": "center_field_view_in_sampled_pre_release_frames",
+      "setup_segment": "present_for_further_mitt_review",
+      "replay": "not_observed_in_0.5s_samples; short inserts not excluded",
+      "post_pitch_cut": "visible_between_5.019_and_5.520_clip_seconds",
+      "mitt_output": "abstained",
+      "reason": "mitt_center_and_stable_setup_not_yet_established"
+    }
+  ],
+  "package_sidecar": {
+    "schema": "pitcheezy-service-review-evidence-v1",
+    "game_pk": 849843,
+    "source_sha256": "df606a11c6db465c054252ef8d331aeb23aa21565b4960bd586f3dcf8f62f6b7",
+    "entries": [
+      {
+        "pitch_key": "849843:1:1",
+        "play_id": "f6d7a0f3-d111-3c6d-92cd-2b5a867ac931",
+        "clip_sha256": "78c7325e6d79afc13f2c1990262e2872483db907283c7571a6a2c468d0a7ca42",
+        "image": "evidence/849843_1_1.png",
+        "image_sha256": "78dd896827e65a44c29768559a1d62f87926ab9b568099c4c8a2348b269d1356",
+        "frame_pts": 181448,
+        "clip_first_pts": 1170,
+        "release_lower_bound_pts": 226493,
+        "time_base": "1/90000",
+        "clip_seconds": 2.0030888888888887,
+        "status": "abstained",
+        "reason": "투구 전 포수 장면 후보입니다. 미트 중심과 비교에 쓸 정지 순간은 아직 확정하지 않아 점 판독을 기권합니다. 이 사진은 기존 가로 추정값의 원본 프레임이 아닙니다."
+      },
+      {
+        "pitch_key": "849843:1:2",
+        "play_id": "aa3ecf43-5435-3238-aac7-5bfeef1cabe2",
+        "clip_sha256": "989cdc26ebe9c86d59720519827d3290cbc82984758cb180793e7c3e3353c4b2",
+        "image": "evidence/849843_1_2.png",
+        "image_sha256": "d70d9d26d3ff7d251cdd63ec9fc1d37354cc443b2a79c60efd26ec20cb11ab23",
+        "frame_pts": 181397,
+        "clip_first_pts": 990,
+        "release_lower_bound_pts": 226442,
+        "time_base": "1/90000",
+        "clip_seconds": 2.004522222222222,
+        "status": "abstained",
+        "reason": "투구 전 포수 장면 후보입니다. 미트 중심과 비교에 쓸 정지 순간은 아직 확정하지 않아 점 판독을 기권합니다. 이 사진은 기존 가로 추정값의 원본 프레임이 아닙니다."
+      },
+      {
+        "pitch_key": "849843:1:3",
+        "play_id": "f29b740f-f187-3089-b57a-3b55e8370c19",
+        "clip_sha256": "8e5fbfdd9172eadfb69e3316fbe97d592e7201e3d4ebac4fd1d6e17403420ce5",
+        "image": "evidence/849843_1_3.png",
+        "image_sha256": "9ad3d3868b95d1cb63830fe2fa284809917514799099cb8729b99fb76097782e",
+        "frame_pts": 181456,
+        "clip_first_pts": 0,
+        "release_lower_bound_pts": 226501,
+        "time_base": "1/90000",
+        "clip_seconds": 2.0161777777777776,
+        "status": "abstained",
+        "reason": "투구 전 포수 장면 후보입니다. 미트 중심과 비교에 쓸 정지 순간은 아직 확정하지 않아 점 판독을 기권합니다. 이 사진은 기존 가로 추정값의 원본 프레임이 아닙니다."
+      }
+    ]
+  },
+  "image_bindings": [
+    {
+      "image": "evidence/849843_1_1.png",
+      "source_image": "849843_1_1/frame_004.png",
+      "sha256": "78dd896827e65a44c29768559a1d62f87926ab9b568099c4c8a2348b269d1356"
+    },
+    {
+      "image": "evidence/849843_1_2.png",
+      "source_image": "849843_1_2/frame_004.png",
+      "sha256": "d70d9d26d3ff7d251cdd63ec9fc1d37354cc443b2a79c60efd26ec20cb11ab23"
+    },
+    {
+      "image": "evidence/849843_1_3.png",
+      "source_image": "849843_1_3/frame_004.png",
+      "sha256": "9ad3d3868b95d1cb63830fe2fa284809917514799099cb8729b99fb76097782e"
+    }
+  ],
+  "registry_code_base": "2774cd7e9a99e97ae55b9838723409966fc2b6c7"
+}

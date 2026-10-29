@@ -5,9 +5,11 @@ import http.client
 import importlib.util
 import io
 import json
+import struct
 import subprocess
 import sys
 import threading
+import zlib
 from copy import deepcopy
 from pathlib import Path
 
@@ -115,6 +117,94 @@ def test_snapshot_verifies_and_exposes_only_browser_files(package):
     assert snapshot["/media/synthetic.jpg"][1] == "image/jpeg"
     with pytest.raises(TypeError):
         snapshot["/receipt.json"] = (b"unsafe", "text/plain")
+
+
+def add_evidence(package, mutate=None):
+    image = b"synthetic PNG fixture; not a real observation"
+    (package / "evidence").mkdir()
+    (package / "evidence/frame.png").write_bytes(image)
+    clip = json.loads((package / "review-media.json").read_bytes())["clips"][0]
+    entry = {
+        "pitch_key": clip["pitch_key"],
+        "play_id": clip["play_id"],
+        "clip_sha256": clip["video_sha256"],
+        "image": "evidence/frame.png",
+        "image_sha256": sha(image),
+        "frame_pts": 15000,
+        "clip_first_pts": 0,
+        "release_lower_bound_pts": 90000,
+        "time_base": "1/90000",
+        "clip_seconds": 1 / 6,
+        "status": "abstained",
+        "reason": "synthetic: ambiguous hand",
+    }
+    evidence = {
+        "schema": server_module.EVIDENCE_SCHEMA,
+        "game_pk": 900001,
+        "source_sha256": "a" * 64,
+        "entries": [entry],
+    }
+    if mutate:
+        mutate(evidence)
+    write_json(package / "review-evidence.json", evidence)
+    receipt = json.loads((package / "receipt.json").read_bytes())
+    receipt["assets_sha256"].update(
+        {
+            "review-evidence.json": sha((package / "review-evidence.json").read_bytes()),
+            "evidence/frame.png": sha(image),
+        }
+    )
+    write_json(package / "receipt.json", receipt)
+
+
+def test_optional_evidence_is_bound_and_servable(package):
+    add_evidence(package)
+    snapshot = server_module.load_snapshot(package)
+    assert snapshot["/evidence/frame.png"][1] == "image/png"
+    assert "/review-evidence.json" in snapshot
+
+
+@pytest.mark.parametrize(
+    "field,value",
+    [
+        ("pitch_key", "900001:2:1"),
+        ("play_id", "wrong-play"),
+        ("clip_sha256", "b" * 64),
+        ("frame_pts", 90000),
+        ("frame_pts", True),
+        ("clip_seconds", 1.0),
+        ("release_lower_bound_pts", 900000),
+        ("time_base", "1/60"),
+        ("image", "../frame.png"),
+        ("image_sha256", "b" * 64),
+        ("reason", ""),
+        ("status", "verified"),
+        ("actual_result", "strike"),
+    ],
+)
+def test_evidence_bad_binding_and_future_frame_rejected(package, field, value):
+    add_evidence(package, lambda e: e["entries"][0].update({field: value}))
+    with pytest.raises(ValueError):
+        server_module.load_snapshot(package)
+
+
+def test_evidence_duplicate_rejected(package):
+    add_evidence(package, lambda e: e["entries"].append(dict(e["entries"][0])))
+    with pytest.raises(ValueError):
+        server_module.load_snapshot(package)
+
+
+def test_evidence_wrong_source_rejected(package):
+    add_evidence(package, lambda e: e.update(source_sha256="b" * 64))
+    with pytest.raises(ValueError):
+        server_module.load_snapshot(package)
+
+
+def test_evidence_image_tamper_rejected(package):
+    add_evidence(package)
+    (package / "evidence/frame.png").write_bytes(b"replaced")
+    with pytest.raises(ValueError):
+        server_module.load_snapshot(package)
 
 
 @pytest.mark.parametrize(
@@ -505,3 +595,224 @@ def test_unexpected_write_errors_are_not_silenced(package, fail_write):
     client = InterruptedClient("GET", "/media/synthetic.mp4", {}, fail_write, PermissionError)
     with pytest.raises(PermissionError, match="simulated client cancellation"):
         handler(client, ("127.0.0.1", 10000), None)
+
+
+def synthetic_png(width=32, height=24):
+    def chunk(kind, data):
+        return (
+            struct.pack(">I", len(data)) + kind + data + struct.pack(">I", zlib.crc32(kind + data))
+        )
+
+    header = struct.pack(">IIBBBBB", width, height, 8, 2, 0, 0, 0)
+    pixels = (b"\0" + b"\x80\x80\x80" * width) * height
+    return (
+        b"\x89PNG\r\n\x1a\n"
+        + chunk(b"IHDR", header)
+        + chunk(b"IDAT", zlib.compress(pixels))
+        + chunk(b"IEND", b"")
+    )
+
+
+def add_evidence_v2(package, mutate=None, image=None):
+    add_evidence(package)
+    image = synthetic_png() if image is None else image
+    (package / "evidence/frame.png").write_bytes(image)
+    path = package / "review-evidence.json"
+    evidence = json.loads(path.read_bytes())
+    evidence["schema"] = server_module.EVIDENCE_SCHEMA_V2
+    row = evidence["entries"][0]
+    row.update(
+        image_sha256=sha(image),
+        image_width=32,
+        image_height=24,
+        point={"x": 12.5, "y": 7.5},
+        context_crop=[4, 3, 28, 22],
+        status="candidate",
+    )
+    if mutate:
+        mutate(row)
+    write_json(path, evidence)
+    refresh_receipt(package)
+    return evidence
+
+
+def test_v2_candidate_and_abstained_geometry_preserve_exact_source_bytes(package):
+    evidence = add_evidence_v2(package)
+    snapshot = server_module.load_snapshot(package)
+    assert snapshot["/evidence/frame.png"][0] == synthetic_png()
+    row = evidence["entries"][0]
+    row.update(status="abstained", point=None)
+    write_json(package / "review-evidence.json", evidence)
+    refresh_receipt(package)
+    assert "/evidence/frame.png" in server_module.load_snapshot(package)
+
+
+@pytest.mark.parametrize(
+    "field,value",
+    [
+        ("image_width", 0),
+        ("image_width", True),
+        ("image_width", 8193),
+        ("image_height", 0.5),
+        ("image_height", 8193),
+        ("point", {"x": -1, "y": 7}),
+        ("point", {"x": 32, "y": 7}),
+        ("point", {"x": 12, "y": 24}),
+        ("point", {"x": True, "y": 7}),
+        ("point", {"x": float("nan"), "y": 7}),
+        ("point", {"x": 12, "y": float("inf")}),
+        ("point", {"x": 12, "y": 7, "setup_x_ft": 0}),
+        ("point", {"setup_x_ft": 0, "setup_z_ft": 2}),
+        ("point", [12, 7]),
+        ("context_crop", [0, 0, 33, 24]),
+        ("context_crop", [0, 0, 32, 25]),
+        ("context_crop", [10, 10, 9, 20]),
+        ("context_crop", [0, 0, 0, 20]),
+        ("context_crop", [-1, 0, 32, 24]),
+        ("context_crop", [0, 0, 32.0, 24]),
+        ("context_crop", [0, 0, 10, 5]),
+        ("context_crop", [0, 0, 32]),
+        ("status", "abstained"),
+    ],
+)
+def test_v2_bad_points_dimensions_and_crops_fail_closed(package, field, value):
+    add_evidence_v2(package, lambda row: row.update({field: value}))
+    with pytest.raises(ValueError):
+        server_module.load_snapshot(package)
+
+
+def test_v2_rejects_missing_geometry_and_legacy_inferred_coordinate_fields(package):
+    evidence = add_evidence_v2(package)
+    row = evidence["entries"][0]
+    del row["point"]
+    write_json(package / "review-evidence.json", evidence)
+    refresh_receipt(package)
+    with pytest.raises(ValueError, match="fields"):
+        server_module.load_snapshot(package)
+    row["point"] = None
+    row["setup_x_ft"] = 0
+    write_json(package / "review-evidence.json", evidence)
+    refresh_receipt(package)
+    with pytest.raises(ValueError, match="fields"):
+        server_module.load_snapshot(package)
+
+
+@pytest.mark.parametrize(
+    "image",
+    [
+        b"not a png",
+        synthetic_png(31, 24),
+        synthetic_png()[:29] + b"BAD!" + synthetic_png()[33:],
+    ],
+)
+def test_v2_png_header_and_declared_dimensions_must_match_even_with_fresh_hash(package, image):
+    add_evidence_v2(package, image=image)
+    with pytest.raises(ValueError, match="PNG"):
+        server_module.load_snapshot(package)
+
+
+def test_v2_image_byte_tamper_is_rejected_before_geometry(package):
+    add_evidence_v2(package)
+    (package / "evidence/frame.png").write_bytes(synthetic_png(31, 24))
+    with pytest.raises(ValueError, match="SHA"):
+        server_module.load_snapshot(package)
+
+
+def test_v1_remains_compatible_without_png_header_or_geometry(package):
+    add_evidence(package)
+    assert server_module.load_snapshot(package)["/evidence/frame.png"][0].startswith(
+        b"synthetic PNG"
+    )
+
+
+def add_evidence_v3(package, mutate=None, image=None):
+    evidence = add_evidence_v2(package, image=image)
+    evidence["schema"] = server_module.EVIDENCE_SCHEMA_V3
+    row = evidence["entries"][0]
+    row["interval_review"] = {
+        "source_sha256_lf": "e" * 64,
+        "lower_pts_inclusive": 14000,
+        "upper_pts_inclusive": 16000,
+        "decoded_frames": 3,
+        "supported_development_candidate": 2,
+        "identity_unresolved": 0,
+        "posture_unresolved": 1,
+        "representative_decision": "supported_development_candidate",
+    }
+    if mutate:
+        mutate(row)
+    write_json(package / "review-evidence.json", evidence)
+    refresh_receipt(package)
+    return evidence
+
+
+def test_v3_summary_and_static_candidate_are_served_with_original_png(package):
+    add_evidence_v3(package)
+    snapshot = server_module.load_snapshot(package)
+    assert snapshot["/evidence/frame.png"][0] == synthetic_png()
+    row = json.loads(snapshot["/review-evidence.json"][0])["entries"][0]
+    assert row["interval_review"]["decoded_frames"] == 3
+    assert row["point"] is not None
+
+
+@pytest.mark.parametrize(
+    "field,value",
+    [
+        ("source_sha256_lf", "not a hash"),
+        ("lower_pts_inclusive", 15001),
+        ("upper_pts_inclusive", 90000),
+        ("upper_pts_inclusive", 14999),
+        ("decoded_frames", 0),
+        ("decoded_frames", True),
+        ("decoded_frames", 4),
+        ("identity_unresolved", -1),
+        ("posture_unresolved", 0.5),
+        ("supported_development_candidate", 9007199254740992),
+        ("representative_decision", "verified"),
+        ("representative_decision", "identity_unresolved"),
+        ("unknown", 0),
+    ],
+)
+def test_v3_invalid_summary_is_rejected(package, field, value):
+    add_evidence_v3(package, lambda row: row["interval_review"].update({field: value}))
+    with pytest.raises(ValueError):
+        server_module.load_snapshot(package)
+
+
+@pytest.mark.parametrize("decision", ["identity_unresolved", "posture_unresolved"])
+def test_v3_unresolved_representative_cannot_retain_candidate_point(package, decision):
+    evidence = add_evidence_v3(package)
+    row = evidence["entries"][0]
+    summary = row["interval_review"]
+    summary.update(supported_development_candidate=0, identity_unresolved=0, posture_unresolved=0)
+    summary.update({decision: 3, "representative_decision": decision})
+    write_json(package / "review-evidence.json", evidence)
+    refresh_receipt(package)
+    with pytest.raises(ValueError, match="unresolved"):
+        server_module.load_snapshot(package)
+    row.update(status="abstained", point=None)
+    write_json(package / "review-evidence.json", evidence)
+    refresh_receipt(package)
+    assert "/review-evidence.json" in server_module.load_snapshot(package)
+
+
+@pytest.mark.parametrize("image", [b"not PNG", synthetic_png(31, 24)])
+def test_v3_keeps_png_integrity_checks(package, image):
+    add_evidence_v3(package, image=image)
+    with pytest.raises(ValueError, match="PNG"):
+        server_module.load_snapshot(package)
+
+
+def test_v3_summary_is_required_and_v2_cannot_silently_accept_it(package):
+    evidence = add_evidence_v3(package)
+    summary = evidence["entries"][0].pop("interval_review")
+    write_json(package / "review-evidence.json", evidence)
+    refresh_receipt(package)
+    with pytest.raises(ValueError, match="fields"):
+        server_module.load_snapshot(package)
+    evidence["entries"][0]["interval_review"] = summary
+    evidence["schema"] = server_module.EVIDENCE_SCHEMA_V2
+    write_json(package / "review-evidence.json", evidence)
+    refresh_receipt(package)
+    with pytest.raises(ValueError, match="fields"):
+        server_module.load_snapshot(package)

@@ -1,0 +1,114 @@
+{
+  "schema": "pitcheezy-interval-code-review-v1",
+  "writer": "Codex GPT-6 family; exact runtime identifier unavailable",
+  "claude_code_version": "2.1.310",
+  "scope": "Our fixed source/test diffs; no remote service, credentials, or teammate code",
+  "codex_pre_review": {
+    "target": "4b4147054bf751d9af7d1f1e87fc08cc15dcd0e2",
+    "finding": "Fixed intervals accepted re-registered replacement source if PTS matched",
+    "fixed_by": "2536ee951746b0f2f9c53f7d69e1cde55e452f8c"
+  },
+  "rounds": [
+    {
+      "target_commit": "2536ee951746b0f2f9c53f7d69e1cde55e452f8c",
+      "model": "claude-fable-5-1",
+      "process_exit_code": 0,
+      "duration_ms": 129828,
+      "raw_response_sha256": "5bd4b4beaa1be1b86561bc5247e577c1feab24fc97950113ada09d2c0e060db0",
+      "review": {
+        "verdict": "approve_with_minor_findings",
+        "findings": [
+          {
+            "severity": "P2",
+            "file": "tests/test_replay_interval.py",
+            "detail": "test_fixed_source_pins_match_cv48b_review_metadata pins play_id and clip_sha256 to docs/results/exhibition_replay_20261028/context_review_v1.json, but the INTERVALS constants (lower/upper PTS, expected count, representative PTS) are not cross-checked against that review file at all. A typo in any interval bound or representative PTS would pass every unit test (the synthetic index is generated from the constants themselves) and only be caught at runtime against real clips with a generic 'boundaries'/'count'/'representative' error. The representative PTS values (191959, 191908, 190465) are stated to be 'existing' frames from the review, so at minimum they can be asserted to appear in each review record's sampled_frames PTS list, and the bounds can be asserted to lie within [first_pts, last_pts] of the matching review record.",
+            "fix": "Extend test_fixed_source_pins_match_cv48b_review_metadata: for each review record r, assert INTERVALS[r['pitch_key']][3] in {f['pts'] for f in r['sampled_frames']} and r['first_pts'] <= lower < upper <= r['last_pts']."
+          },
+          {
+            "severity": "P2",
+            "file": "src/data/replay_interval.py",
+            "detail": "build_intervals rejects pin/SHA drift before mkdir, as required, but a per-clip interval failure (boundary/count/representative mismatch) is only detectable after the ffprobe pass inside extract_context. Because select_interval raises before folder.mkdir() for that clip but after earlier clips were fully decoded and written, a failure on clip 2 or 3 leaves a partial private output directory (clip folders, PNGs, logs) with no audit.json. private_destination then refuses that directory on rerun. This is not an integrity bug (nothing claims completeness without audit.json) but it is a concrete operational trap that the tests do not cover.",
+            "fix": "Either (a) wrap the records loop in try/except that removes `destination` on any failure before audit.json exists, or (b) at least add a test documenting that a mid-run interval mismatch leaves no audit.json and a non-reusable directory, and mention it in the script docstring."
+          },
+          {
+            "severity": "P2",
+            "file": "tests/test_replay_interval.py",
+            "detail": "test_build_rejects_wrong_game_and_eval_split_before_decoding uses match='development' for both the wrong-game case (game_pk 849844, split 'dev') and the eval_locked case. first_three's own message is 'exactly game 849843 PA 1 pitches 1, 2, 3 are required', which does not contain 'development', so the wrong-game branch passes only if read_candidates (replay_feasibility, not in the diff) raises a 'development'-worded error first. Reported as passing, so this is consistent today, but the test is coupled to a message in a module it does not exercise explicitly. Also, unlike the pin test, this test does not install a forbidden subprocess.run; it relies on the 'unused' binary name failing with a non-ValueError if rejection were late.",
+            "fix": "Use match='development|849843 PA 1' (or parametrize the expected message per case) and reuse the forbidden_decoder monkeypatch so a late rejection fails with the explicit 'before any decoder call' message rather than FileNotFoundError."
+          }
+        ],
+        "verified": [
+          "Check ordering in build_intervals: private_destination -> validate_crop -> root.resolve(strict) -> registry digest -> first_three -> (pin check, clip_file) per row -> destination.mkdir -> decode. play_id+SHA replacement is rejected before any mkdir or subprocess call; only read-only hashing of earlier rows happens first.",
+          "Pin check binds (play_id, file_sha256) from the registry row keyed by pitch_key; first_three already enforces pitch_key == '849843:1:{n}', and clip_file verifies on-disk bytes against registry file_sha256, so pin -> registry -> file is a complete chain.",
+          "select_interval: requires exact '1/90000' time_base string, non-empty rows, ordinal == list index, int (non-bool) pts, strictly increasing pts; selects inclusive [lower, upper]; requires both bounds to be actual decoded frames, exact count (24/25/31), and representative present; returns dict copies so extract_context's in-place raster annotations do not mutate the decoder index. Contiguity of the selection follows from ordinal==index plus strict pts ordering.",
+          "Default sampling preserved: extract_context uses select_frames when frame_selector is None; build_context is unchanged; the only edit to replay_context.py is the keyword-only selector hook.",
+          "showinfo/PTS binding reused unchanged: verify_extracted_pts still requires the single showinfo config time_base to equal the probed time_base and (n, pts) pairs to equal enumerate(selected frames); test fake_run asserts -copyts and ',showinfo' and emits matching log lines.",
+          "Synthetic index math: for all three keys span/(count-1) >= 1501 so generated pts are strictly increasing; representative replaces a non-boundary index within +-step/2 so ordering survives; sentinel frames 1170 and upper+1501 sit outside the interval, so chosen == rows[1:-1] and first_pts == 1170 hold; the +1 representative perturbation and del rows[2] cases cannot collide with boundaries for key 849843:1:1.",
+          "Report: expected_total_frames == 80 is the sum of INTERVALS counts and per-clip counts are enforced by the selector; evidence_kind and selection text make no visual, label, or accuracy claims; no 'point'/'label' fields are emitted per frame.",
+          "check_project.py QUALITY_PATHS additions reference the new/changed files consistently.",
+          "Not verifiable from the diff: replay_feasibility.decode_index/read_candidates/clip_file behavior and error messages; existence and field names (clip_sha256, sampled_frames) of docs/results/exhibition_replay_20261028/context_review_v1.json; project line-length limit for check_project (longest new line in replay_interval.py is 100 chars)."
+        ],
+        "tests_executed": false
+      }
+    },
+    {
+      "target_commit": "8e9e4eb62e131a8b6c5ecaf3ef6e1154b497e171",
+      "model": "claude-fable-5-1",
+      "process_exit_code": 0,
+      "duration_ms": 75793,
+      "raw_response_sha256": "69bb710d3cc8f1030e33224fd006c74b0019ce997202355a2bf9ef9dec750530",
+      "review": {
+        "verdict": "approve",
+        "remaining_p1_p2": [
+          {
+            "severity": "P2",
+            "file": "docs/results/exhibition_replay_20261028/interval_review_v1.json",
+            "detail": "Summary provenance names extraction_code_commit 4b41470 and source_pin_fix_commit 2536ee9 but has no field for 8e9e4eb. The claim 'extraction not repeated because selection/image generation unchanged' still holds at 8e9e4eb (the only src change is a docstring in build_intervals; select_interval and extract_context are untouched), but a reader of the summary alone cannot see that the audit_sha256 is still valid under current code.",
+            "fix": "Add a followup_fix_commit field (8e9e4eb...) with a one-line note: 'tests and docstring only; selection, decode and image generation unchanged; audit not regenerated'."
+          }
+        ],
+        "verified": [
+          "Finding 1 (interval/source metadata coupling) addressed: pin test now asserts [lower, upper] == overlap_candidate_interval_pts and representative == selected_frame.pts for every CV48b record, so an INTERVALS typo fails at unit-test time rather than at runtime. New test_fixed_counts_match_recorded_actual_interval_frames cross-checks pitch_key set, 80 total, per-key count, exact endpoints, and representative membership against the tracked interval record.",
+          "Summary arithmetic is internally consistent with INTERVALS: endpoint spans 36135/36036/45045 ticks give 0.4015/0.4004/0.5005 s; 23 gaps at ~1501.5 plus one 3102 gap equals 36135 for P1 (24 frames with the documented nonuniform gap), 24 and 30 uniform gaps match P2 and P3; max_pts_gap_seconds equals 3102/90000 and 1502/90000; counts 24+25+31 = 80 and 52+25+3 = 80.",
+          "Finding 2 (partial-directory preservation) addressed as intended: docstring states no-delete/no-overwrite and fresh-directory retry; new test shows failure on clip 2 leaves exactly the two partial markers, no audit.json, rerun refused by private_destination with 'fresh output directory', no further extract calls, registry bytes unchanged. Preservation, not cleanup, is the documented contract.",
+          "Finding 3 (wrong-game decoder refusal) addressed: forbidden decoder is installed on the subprocess module object (monkeypatch on context.subprocess.run patches the shared module, so it covers replay_feasibility too), match is now the specific '849843 must be a registered development game' message, and the parametrized wrong-game and eval_locked cases both reach that message before mkdir.",
+          "Check ordering from the prior review is unchanged; the only src edit is the docstring, so prior verification of select_interval, pin chain, showinfo/PTS binding, and default sampling carries over.",
+          "Not verifiable from the paste: the pasted summary shows per-record 'interval' and 'decoded_frames_in_interval' but no 'frames' array, which the new count test reads as row['frames'][i]['pts']; reported 51 passes implies the tracked file carries it and the paste elided it. Also not verifiable: that build_intervals references context.extract_context by module attribute (required for the mid-extraction monkeypatch), and that make_registry produces a flat root directory (required by the read_bytes snapshot)."
+        ],
+        "tests_executed": false
+      }
+    }
+  ],
+  "resolution": [
+    "Three initial test/documentation findings addressed by8e9e4eb; Fable final approved the fixes.",
+    "Final review still requested followup_fix_commit8e9e4eb metadata; added with note that decoder/selection/image generation are unchanged. No new code requires re-review.",
+    "Reviewer prose says23shortgaps plusone3102gap for24frames; actualaudit has23totalgaps:22short+one3102. Rawreview preserved; this arithmetic phrase is not adopted.",
+    "Fable did not execute tests or independently inspect the actual clips in code review."
+  ],
+  "final_disposition": "approve; final metadata followup applied; no unresolved code finding",
+  "local_checks": {
+    "command": "PYTHONUTF8=1 python -m pytest tests/test_replay_context.py tests/test_replay_interval.py tests/test_checklist_model.py -q",
+    "passed": 59,
+    "seconds": 8.41,
+    "new_interval_cases": 27,
+    "lint_command": "python scripts/check_project.py --lint-only",
+    "lint_paths": 180,
+    "format": "passed"
+  },
+  "actual_data_checks": {
+    "decoded_pts_matches": 80,
+    "image_sha_matches": 80,
+    "old_representative_image_sha_matches": 3,
+    "source_clip_pin_and_hash_matches": 3,
+    "source_registry_unchanged": true,
+    "old_private_pack_sha256": "f269ac511491ddd948d8e6872ebb57bf39348e1d885538f65db33e1cbe6b7b08"
+  },
+  "not_run": [
+    "new browser regression (UI/runtime unchanged)",
+    "human review",
+    "new detector training",
+    "physical accuracy evaluation",
+    "Cloudflare changes",
+    "teammate code access"
+  ]
+}

@@ -289,3 +289,247 @@ test("320px viewport has no horizontal document overflow before or after reveal"
       `${stage}: horizontal overflow ${JSON.stringify(widths)}`);
   }
 });
+
+function syntheticEvidence() {
+  const pitches = report.pitches.slice(0, 2);
+  const clips = pitches.map((pitch, index) => ({
+    pitch_key: pitch.key, play_id: "00000000-0000-0000-0000-00000000000" + (index + 1),
+    video: "media/synthetic-" + (index + 1) + ".mp4", poster: "media/synthetic-" + (index + 1) + ".jpg",
+    video_sha256: String(index + 1).repeat(64), poster_sha256: "c".repeat(64), duration_seconds: 5
+  }));
+  return {
+    media: { schema: "pitcheezy-service-review-media-v1", game_pk: report.game.game_pk,
+      source_sha256: report.source.sha256, clips },
+    evidence: { schema: "pitcheezy-service-review-evidence-v1", game_pk: report.game.game_pk,
+      source_sha256: report.source.sha256, entries: clips.map((clip, index) => ({
+        pitch_key: clip.pitch_key, play_id: clip.play_id, clip_sha256: clip.video_sha256,
+        image: "evidence/synthetic-" + (index + 1) + ".png", image_sha256: "e".repeat(64),
+        frame_pts: 138000, clip_first_pts: 3000, release_lower_bound_pts: 228000,
+        time_base: "1/90000", clip_seconds: 1.5, status: index ? "abstained" : "candidate",
+        reason: index ? "Synthetic occlusion; no accepted point." : "Synthetic candidate; no confirmed point."
+      })) }
+  };
+}
+
+async function evidencePage(t, mutate, brokenImage = false) {
+  const page = await withPage(t), data = syntheticEvidence(), requests = [];
+  if (mutate) mutate(data.evidence);
+  await page.route("**/review-media.json", route =>
+    route.fulfill({ json: data.media }));
+  await page.route("**/review-evidence.json", route =>
+    route.fulfill({ json: data.evidence }));
+  await page.route("**/media/synthetic-*", route =>
+    route.fulfill({ status: 404, body: "Synthetic test: playback is not under test." }));
+  await page.route("**/evidence/*.png", route => {
+    requests.push(new URL(route.request().url()).pathname);
+    return brokenImage ? route.fulfill({ status: 404, body: "Synthetic missing image." }) :
+      route.fulfill({ contentType: "image/png", body: Buffer.from(
+        "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+j5RkAAAAASUVORK5CYII=", "base64") });
+  });
+  await page.goto(origin, { waitUntil: "networkidle" });
+  await loaded(page);
+  return { page, requests };
+}
+
+async function evidenceHidden(page) {
+  assert.equal(await page.locator("#evidence-panel").isVisible(), false);
+  assert.equal(await page.locator("#evidence-content").textContent(), "");
+  assert.equal(await page.locator("#evidence-content img").count(), 0);
+}
+
+async function evidenceImageLoaded(page) {
+  await page.waitForFunction(() => {
+    const image = document.querySelector("#evidence-content img");
+    return image && image.complete && image.naturalWidth > 0;
+  });
+}
+
+test("optional synthetic evidence reveals after results; next pitch, stale image errors and PA changes stay isolated", async t => {
+  const { page, requests } = await evidencePage(t);
+  await evidenceHidden(page);
+  assert.deepEqual(requests, []);
+  await page.locator("#reveal-button").click();
+  await evidenceImageLoaded(page);
+  assert.match(await page.locator("#evidence-content").textContent(), /Synthetic candidate/);
+  const oldImage = await page.locator("#evidence-content img").elementHandle();
+  await page.locator("#next-pitch").click();
+  await evidenceHidden(page);
+  await hiddenResult(page);
+  await page.locator("#reveal-button").click();
+  await evidenceImageLoaded(page);
+  assert.match(await page.locator("#evidence-content").textContent(), /Synthetic occlusion/);
+  await oldImage.evaluate(image => image.dispatchEvent(new Event("error")));
+  assert.match(await page.locator("#evidence-content").textContent(), /Synthetic occlusion/);
+  assert.equal(await page.locator("#evidence-content img").getAttribute("src"), "evidence/synthetic-2.png");
+  const anotherPA = report.pitches.find(pitch => pitch.pa_key !== report.pitches[0].pa_key).pa_key;
+  await page.locator("#pa-select").selectOption(anotherPA);
+  await evidenceHidden(page);
+  await page.locator("#reveal-button").click();
+  assert.equal(await page.locator("#evidence-content img").count(), 0);
+});
+
+test("invalid synthetic sidecars fail closed without blocking report reveal", async t => {
+  for (const mutate of [
+    evidence => { evidence.entries[0].frame_pts = evidence.entries[0].release_lower_bound_pts; evidence.entries[0].clip_seconds = 2.5; },
+    evidence => { evidence.entries[0].image = "evidence/../unexpected.png"; },
+    evidence => { evidence.source_sha256 = "f".repeat(64); }
+  ]) {
+    const { page, requests } = await evidencePage(t, mutate);
+    await evidenceHidden(page);
+    await page.locator("#reveal-button").click();
+    assert.notEqual(await page.locator("#actual-content").textContent(), "");
+    assert.equal(await page.locator("#evidence-content img").count(), 0);
+    assert.deepEqual(requests, []);
+  }
+});
+
+test("failed report replacement clears displayed synthetic evidence and valid recovery starts hidden", async t => {
+  const { page } = await evidencePage(t);
+  await page.locator("#reveal-button").click();
+  await evidenceImageLoaded(page);
+  await upload(page, Buffer.from("not-json"));
+  await page.waitForFunction(() => document.getElementById("load-status").classList.contains("error"));
+  await evidenceHidden(page);
+  assert.equal(await page.locator("#actual-content").textContent(), "");
+  await upload(page, report);
+  await loaded(page);
+  await evidenceHidden(page);
+  await hiddenResult(page);
+});
+
+test("unreadable synthetic evidence image removes the image and keeps the result available", async t => {
+  const { page } = await evidencePage(t, null, true);
+  await page.locator("#reveal-button").click();
+  await page.waitForFunction(() => document.getElementById("evidence-content").textContent.includes("읽지 못했습니다"));
+  assert.equal(await page.locator("#evidence-content img").count(), 0);
+  assert.notEqual(await page.locator("#actual-content").textContent(), "");
+  assert.equal(await page.locator("#next-pitch").isDisabled(), false);
+});
+
+function asV2(evidence) {
+  evidence.schema = "pitcheezy-service-review-evidence-v2";
+  evidence.entries.forEach(entry => Object.assign(entry, {
+    image_width: 1, image_height: 1, context_crop: [0, 0, 1, 1],
+    point: entry.status === "candidate" ? { x: 0.5, y: 0.5 } : null
+  }));
+}
+
+test("v2 exact-image point and crop reveal together then disappear on next pitch", async t => {
+  const { page, requests } = await evidencePage(t, asV2);
+  await evidenceHidden(page); assert.deepEqual(requests, []);
+  await page.locator("#reveal-button").click();
+  await page.waitForSelector(".evidence-zoom .evidence-point");
+  assert.equal(await page.locator(".evidence-point").count(), 2);
+  assert.equal(await page.locator(".evidence-overlay").getAttribute("viewBox"), "0 0 1 1");
+  assert.equal(await page.locator(".evidence-zoom image").getAttribute("href"), "evidence/synthetic-1.png");
+  assert.match(await page.locator("#evidence-content").textContent(), /사람 검증 없음/);
+  const old = await page.locator("#evidence-content img").elementHandle();
+  await page.locator("#next-pitch").click();
+  await evidenceHidden(page); assert.equal(await page.locator(".evidence-point").count(), 0);
+  await page.locator("#reveal-button").click();
+  await page.waitForSelector(".evidence-zoom");
+  assert.equal(await page.locator(".evidence-point").count(), 0);
+  await old.evaluate(image => image.dispatchEvent(new Event("load")));
+  assert.equal(await page.locator(".evidence-point").count(), 0);
+  assert.match(await page.locator("#evidence-content").textContent(), /표시할 미트 후보점 없음/);
+  await upload(page, Buffer.from("not-json"));
+  await page.waitForFunction(() => document.getElementById("load-status").classList.contains("error"));
+  await evidenceHidden(page); assert.equal(await page.locator(".evidence-zoom").count(), 0);
+});
+
+test("v2 raster-size mismatch removes point and crop while keeping actual results", async t => {
+  const { page } = await evidencePage(t, evidence => { asV2(evidence); evidence.entries[0].image_width = 2; });
+  await page.locator("#reveal-button").click();
+  await page.waitForFunction(() => document.getElementById("evidence-content").textContent.includes("크기가 명세와 달라"));
+  assert.equal(await page.locator(".evidence-point, .evidence-zoom, #evidence-content img").count(), 0);
+  assert.notEqual(await page.locator("#actual-content").textContent(), "");
+});
+
+function asV3(evidence) {
+  asV2(evidence);
+  evidence.schema = "pitcheezy-service-review-evidence-v3";
+  evidence.entries.forEach((entry, index) => {
+    entry.interval_review = {
+      source_sha256_lf: "d".repeat(64), lower_pts_inclusive: 120000, upper_pts_inclusive: 156000,
+      decoded_frames: index ? 25 : 24, supported_development_candidate: index ? 0 : 24,
+      identity_unresolved: index ? 25 : 0, posture_unresolved: 0,
+      representative_decision: index ? "identity_unresolved" : "supported_development_candidate"
+    };
+  });
+}
+
+test("v3 interval summary reveals with results and an unresolved representative has no point", async t => {
+  const { page, requests } = await evidencePage(t, asV3);
+  await evidenceHidden(page);
+  assert.deepEqual(requests, []);
+  assert.equal(await page.locator(".evidence-interval-summary").count(), 0);
+  await page.locator("#reveal-button").click();
+  await page.waitForSelector(".evidence-zoom .evidence-point");
+  const summary = page.locator(".evidence-interval-summary");
+  assert.match(await summary.textContent(), /전체 24프레임 · 개발 후보 24 · 객체 식별 미해결 0 · 자세 판단 미해결 0/);
+  assert.match(await summary.textContent(), /정확도·연속 추적 결과 아님/);
+  assert.match(await summary.textContent(), /양끝 PTS 120000–156000 포함/);
+  assert.match(await page.locator("#evidence-content").textContent(), /이전 정지 이미지의 후보점/);
+  assert.match(await summary.textContent(), /추천 시점에 확보된 자료임을 검증하지 않았습니다/);
+  const old = await page.locator("#evidence-content img").elementHandle();
+  await page.locator("#next-pitch").click();
+  await evidenceHidden(page);
+  assert.equal(await page.locator(".evidence-interval-summary, .evidence-point").count(), 0);
+  await page.locator("#reveal-button").click();
+  await page.waitForSelector(".evidence-zoom");
+  assert.match(await summary.textContent(), /전체 25프레임 · 개발 후보 0 · 객체 식별 미해결 25 · 자세 판단 미해결 0/);
+  assert.match(await summary.textContent(), /기존 후보점은 이 화면에서 숨겼습니다/);
+  assert.equal(await page.locator(".evidence-point").count(), 0);
+  await old.evaluate(image => { image.dispatchEvent(new Event("load")); image.dispatchEvent(new Event("error")); });
+  assert.equal(await page.locator(".evidence-point").count(), 0);
+  assert.match(await summary.textContent(), /객체 식별 미해결 25/);
+  const anotherPA = report.pitches.find(pitch => pitch.pa_key !== report.pitches[0].pa_key).pa_key;
+  await page.locator("#pa-select").selectOption(anotherPA);
+  await evidenceHidden(page);
+  await page.locator("#reveal-button").click();
+  assert.equal(await page.locator(".evidence-interval-summary").count(), 0);
+});
+
+test("v3 mixed interval distinguishes representative point from unresolved frames and file failure clears both", async t => {
+  const { page } = await evidencePage(t, evidence => {
+    asV3(evidence);
+    Object.assign(evidence.entries[0].interval_review, {
+      decoded_frames: 31, supported_development_candidate: 28, posture_unresolved: 3
+    });
+  });
+  await page.locator("#reveal-button").click();
+  await page.waitForSelector(".evidence-zoom .evidence-point");
+  assert.match(await page.locator(".evidence-interval-summary").textContent(),
+    /전체 31프레임 · 개발 후보 28 · 객체 식별 미해결 0 · 자세 판단 미해결 3/);
+  assert.match(await page.locator(".evidence-interval-summary").textContent(), /미해결 프레임까지 확인된 것으로 해석하지 마세요/);
+  await upload(page, Buffer.from("not-json"));
+  await page.waitForFunction(() => document.getElementById("load-status").classList.contains("error"));
+  await evidenceHidden(page);
+  assert.equal(await page.locator(".evidence-interval-summary, .evidence-point").count(), 0);
+  await upload(page, report); await loaded(page); await evidenceHidden(page);
+  await hiddenResult(page);
+});
+
+test("v3 invalid summary fails closed and raster errors remove the whole interval summary", async t => {
+  for (const mutate of [
+    evidence => { asV3(evidence); evidence.entries[0].interval_review.identity_unresolved = 1; },
+    evidence => { asV3(evidence); evidence.entries[0].interval_review.upper_pts_inclusive = 228000; },
+    evidence => {
+      asV3(evidence);
+      Object.assign(evidence.entries[0].interval_review, {
+        supported_development_candidate: 0, identity_unresolved: 24, representative_decision: "identity_unresolved"
+      });
+    }
+  ]) {
+    const { page, requests } = await evidencePage(t, mutate);
+    await page.locator("#reveal-button").click();
+    assert.equal(await page.locator(".evidence-interval-summary, .evidence-point, #evidence-content img").count(), 0);
+    assert.deepEqual(requests, []);
+    assert.notEqual(await page.locator("#actual-content").textContent(), "");
+  }
+  const { page } = await evidencePage(t, evidence => { asV3(evidence); evidence.entries[0].image_width = 2; });
+  await page.locator("#reveal-button").click();
+  await page.waitForFunction(() => document.getElementById("evidence-content").textContent.includes("크기가 명세와 달라"));
+  assert.equal(await page.locator(".evidence-interval-summary, .evidence-point, .evidence-zoom").count(), 0);
+  assert.notEqual(await page.locator("#actual-content").textContent(), "");
+});

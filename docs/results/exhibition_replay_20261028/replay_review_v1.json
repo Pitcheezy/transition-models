@@ -1,0 +1,150 @@
+{
+  "schema": "pitcheezy-fixed-cross-review-v1",
+  "author": "Codex GPT-6 family; exact inherited model ID not exposed",
+  "scope": "local replay code, no operational deployment approval",
+  "reviews": [
+    {
+      "target": "e9948b971c3cd48c795325ebfa0a1f6ecaf8cf26",
+      "reviewer_models": [
+        "claude-fable-5-1"
+      ],
+      "raw_sha256": "67dc6a60bb32a6dc94b58f351b1e680c2d0bc94bb3cffa7ab23a56514cabe1c4",
+      "result": {
+        "verdict": "APPROVE_WITH_NOTES",
+        "summary": "No high-severity correctness, security, or data-leakage defect found in the diff. Reveal gating, source/clip/image SHA binding, decoded-PTS provenance, and v2/old-package compatibility hold as specified. Findings below are medium/low; two need confirmation during the ongoing browser inspection.",
+        "verified_properties": [
+          "Old packages without review-evidence.json pass load_snapshot unchanged (optional set is empty, asset-set equality is identical to before).",
+          "Evidence is bound server-side to source_sha256, game_pk, pitch_key in report, play_id and video_sha256 from the validated media manifest, and image bytes via receipt assets_sha256 plus per-asset SHA re-read in load_snapshot.",
+          "prepare_replay_evidence.py refuses output on any identity/SHA mismatch before mkdir; audit.json is only read. Path escape is checked on resolved source and target.",
+          "UI returns {hidden,null,''} before reveal and renders only after reveal; clearEvidence runs on every render, on load-coordinator clear, and next-pitch resets revealed=false. Reason text is inserted as text node (no HTML injection path visible).",
+          "Statuses limited to candidate/abstained; extra fields such as x/z/actual/result are rejected on both server and client. No probabilities or values are introduced.",
+          "PTS/seconds come from ffprobe frame.pts and ffmpeg select by decoded ordinal, not nominal fps; audit.json omits local paths, stderr and names."
+        ],
+        "findings": [
+          {
+            "severity": "medium",
+            "file": "web/service-review/review.js",
+            "line": "~683 (media manifest loader: `if (state) { prepareMedia(); render(); }`)",
+            "issue": "This path previously called prepareMedia() only. If render() itself (re)builds the media player or calls prepareMedia(), the added render() will bump the media controller sequence token and cancel/duplicate the in-flight clip load, or wipe currentVideo/currentMediaToken. Cannot be confirmed from the diff alone.",
+            "recommendation": "Confirm in browser inspection that clip load and 'play' button still work when the media manifest resolves after a report is loaded. If render() touches the media panel, call renderEvidence(viewFor(...)) instead of full render()."
+          },
+          {
+            "severity": "medium",
+            "file": "src/integration/service_review_server.py",
+            "line": "~395 (`MAX_FILE_BYTES if name in media_files else MAX_JSON_BYTES`)",
+            "issue": "Evidence PNGs are not in media_files, so they are read under the 5 MiB JSON limit. ffmpeg's lossless PNG of a 1080p broadcast frame commonly lands in the 3–7 MiB range, so real evidence images may be unservable. Builder uses MAX_INPUT_BYTES for the same read, so the failure is consistent and fail-closed, but the feature may not work on real frames.",
+            "recommendation": "Read evidence images under MAX_FILE_BYTES (and the matching limit in build_service_review._evidence), or document the PNG size ceiling."
+          },
+          {
+            "severity": "low",
+            "file": "scripts/build_service_review.py",
+            "line": "~180-184 (`claimed[name]` after `_evidence_files`)",
+            "issue": "`_evidence_files` returns `_relative_name(row['image'])` while `claimed` is keyed by the raw `row['image']`. If `_relative_name` normalizes (e.g. strips './' or backslashes), the lookup raises KeyError, which main() does not catch (traceback instead of 'error:'). Also such a normalized name would pass the server regex but be rejected by the browser regex, yielding 'unavailable'. Depends on `_relative_name` behavior not in the diff.",
+            "recommendation": "Key `claimed` by `_relative_name(image)` or require raw image to equal the normalized name."
+          },
+          {
+            "severity": "low",
+            "file": "src/data/replay_feasibility.py",
+            "line": "~201 (`\"reason\": type(exc).__name__`)",
+            "issue": "All ValueError codes ('clip_not_downloaded', 'clip_bytes_mismatch', 'decoded_image_count_mismatch', ...) collapse to 'ValueError', so audit.json cannot distinguish failure causes. Only CalledProcessError's str() could leak stderr; the ValueError codes are safe.",
+            "recommendation": "Record str(exc) for ValueError and the type name for subprocess/OS errors."
+          },
+          {
+            "severity": "low",
+            "file": "src/data/replay_feasibility.py",
+            "line": "~139-147 (`frame_%03d.png` + `sorted(folder.glob(...))` zipped with `selected`)",
+            "issue": "If more than 1000 frames are selected (clip >= ~500 s at 0.5 s sampling), %03d expands to 4 digits and lexical sort misorders files, binding image_sha256 to the wrong PTS. Unlikely for pitch clips but the pairing is by sort order, not by index.",
+            "recommendation": "Use %06d or pair by parsing the ordinal from the filename."
+          },
+          {
+            "severity": "low",
+            "file": "src/data/replay_feasibility.py",
+            "line": "~166-175 and ~56 (decode_index / build_audit except clause)",
+            "issue": "Malformed ffprobe JSON (missing 'time_base', non-dict frame, non-list frames) raises KeyError/TypeError/AttributeError, which build_audit does not catch. One bad clip aborts the whole run after the destination directory was created, so the next run needs a new directory. Also `from PIL import ...` ImportError is uncaught.",
+            "recommendation": "Catch (KeyError, TypeError, AttributeError) in build_audit, or validate the probe shape with ValueError."
+          },
+          {
+            "severity": "low",
+            "file": "src/integration/service_review_server.py / web/service-review/review.js",
+            "line": "~318 and ~252 (`time_base == \"1/90000\"` hard-coded)",
+            "issue": "The audit records the measured stream time base, but server and client only accept 1/90000 and divide by 90000. MP4 clips frequently carry other timescales (1/30000, 1/15360, etc.). Behavior is fail-closed (prepare passes through measured time_base and the server rejects), but evidence will be unusable for such clips.",
+            "recommendation": "Accept a validated 'num/den' and compute seconds from it, or confirm all development clips are 1/90000."
+          },
+          {
+            "severity": "low",
+            "file": "scripts/build_service_review.py",
+            "line": "~215 (`_evidence(evidence_dir, report, media)`)",
+            "issue": "With --evidence-dir but without --include-first-pa-video, media['clips'] is empty, so every entry fails 'lacks a matching clip' with a message that does not mention the missing video flag.",
+            "recommendation": "Raise an explicit AuditInputError when evidence_dir is set and include_video is False."
+          },
+          {
+            "severity": "low",
+            "file": "web/service-review/review.js",
+            "line": "~687 (`if (response.status !== 404)`)",
+            "issue": "For packages without evidence, any non-404 miss (403, or a 200 fallback page) sets evidenceError, so after reveal the panel says 'could not verify' instead of 'not provided'. Cosmetic, and mirrors the media manifest pattern.",
+            "recommendation": "Treat 403/410 like 404, or verify the local server returns 404 for unknown asset paths."
+          },
+          {
+            "severity": "info",
+            "file": "src/integration/service_review_server.py",
+            "line": "~399 (review-evidence.json served at load)",
+            "issue": "The sidecar (including pre-release 'reason' text) is downloaded before reveal; gating is display-only. This matches the existing design statement that the reveal button controls order, not access, and review-data.json already carries post-hoc data. No new leakage class.",
+            "recommendation": "None; keep the existing provenance notice."
+          }
+        ],
+        "not_verified": [
+          "`_relative_name`, `_Reader.read`, `_digest`, `integer`/`numeric`, `mediaBinding` and the body of `render()`/`prepareMedia()` are not in the diff; findings 1 and 3 depend on them.",
+          "Whether `math` is imported in service_review_server.py was inferred from the reported passing tests, not seen.",
+          "No tests were run by this review."
+        ]
+      },
+      "tests_executed_by_reviewer": false
+    },
+    {
+      "target": "973e90147069363e413625dd78b05aea1b39ab77",
+      "reviewer_models": [
+        "claude-fable-5-1"
+      ],
+      "raw_sha256": "92c52352c7f3ccb8bc805b703058e6ef5f6455edae208a0aa2f5fd3061a8b68f",
+      "result": {
+        "target": "973e90147069363e413625dd78b05aea1b39ab77",
+        "previous_review": "e9948b9 APPROVE_WITH_NOTES",
+        "verdict": "APPROVE",
+        "blocking_findings": [],
+        "diff_assessment": {
+          "build_review_evidence_guard": "Check for evidence_dir without include_video runs before _destination(output_dir) and _destination(zip_path), so no output is created on rejection. The new test asserts the target directory does not exist. Introduces no regression for callers that pass include_video=True.",
+          "decode_index_malformed_probe": "Every untrusted access is now guarded: non-dict probe, streams not a one-element list of dicts, time_base missing/non-string/zero-denominator (KeyError, TypeError, ValueError, ZeroDivisionError all caught, chained with from None), and frames not a list of dicts. A JSON null for frames fails the isinstance check and is classified. No new uncaught paths found. Fraction(True) is accepted as 1 but that is harmless.",
+          "numeric_image_sort": "Key int(p.stem.split('_')[-1]) is correct for frame_%d and zero-padded frame_%0Nd patterns. A non-numeric match would raise ValueError before the count check, but build_audit catches ValueError and would report the type name, so this is a correct failure rather than a crash. Not blocking.",
+          "pillow_preflight": "Local import in build_audit forces ImportError before destination handling. Local name Image is scoped to build_audit and does not shadow or affect inspect_clip. No behavioral change on the success path.",
+          "safe_reason_codes": "Allowlist approach is fail-closed. Any ValueError whose message is not in the known set, including json.JSONDecodeError and UnicodeDecodeError subclasses whose str() can contain data fragments, falls back to type(exc).__name__, which matches prior behavior. OSError and SubprocessError, including TimeoutExpired whose str() contains the command line, are never stringified. Both spellings invalid_time_base and invalid time base are listed, matching the two raise sites."
+        },
+        "non_blocking_notes": [
+          "known set is defined inside the except block and rebuilt per failure. Hoisting it to module scope would make it reusable by tests that assert the allowlist matches raise sites, but this is cosmetic.",
+          "test_evidence_without_video_is_rejected_before_output relies on include_video defaulting to False. The visible signature fragment does not show that default, so it was not verified here."
+        ],
+        "prior_notes_disposition_accepted": [
+          "render() does not prepareMedia; Chrome clip and synthetic tests cover playback/reset",
+          "_relative_name validates and returns original without normalizing",
+          "PNG 5 MiB ceiling documented and actual images fit",
+          "1/90000 timebase restriction intentional and verified against actual clips",
+          "404 optional path tested",
+          "no Cloudflare or teammate writes"
+        ],
+        "test_execution": "not performed; review is read-only"
+      },
+      "tests_executed_by_reviewer": false
+    }
+  ],
+  "disposition": {
+    "media_load": "actual3pitch and17synthetic Chrome tests passed; render does not rebuild player",
+    "png_ceiling": "intentional5MiB per evidence PNG; actual3images fit",
+    "path_normalization": "_relative_name validates and returns unchanged; main already catches KeyError",
+    "failure_reasons": "fixed path-free allowlist",
+    "numeric_image_order": "fixed integer suffix sorting",
+    "malformed_probe": "fixed schema validation and dependency preflight",
+    "time_base": "intentionally restricted1/90000; actual3clips measured",
+    "missing_video_flag": "fixed explicit pre-output error",
+    "404": "local server404 and optional absence covered",
+    "access_control": "display gating only; private report includes post-hoc data"
+  }
+}

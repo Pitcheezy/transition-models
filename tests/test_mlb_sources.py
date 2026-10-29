@@ -32,9 +32,23 @@ def test_single_quoted_attribute_does_not_leak_into_the_url():
     assert media_urls(page) == ["https://sporty-clips.mlb.com/a.mp4?t=1"]
 
 
-def test_an_apostrophe_in_the_path_is_kept():
-    page = """<source src="https://sporty-clips.mlb.com/o'neil.mp4">"""
+@pytest.mark.parametrize("wrapper", ['<source src="{}">', "{}"])
+def test_an_apostrophe_in_the_path_is_kept(wrapper):
+    page = wrapper.format("https://sporty-clips.mlb.com/o'neil.mp4")
     assert media_urls(page) == ["https://sporty-clips.mlb.com/o'neil.mp4"]
+
+
+@pytest.mark.parametrize("quote", ["'", '"'])
+def test_adjacent_quoted_urls_are_separate_candidates(quote):
+    urls = ["https://sporty-clips.mlb.com/a.mp4", "https://sporty-clips.mlb.com/b.mp4?t=1"]
+    page = "<script>var clips=[" + ",".join(quote + url + quote for url in urls) + "];</script>"
+    assert media_urls(page) == urls
+
+
+def test_double_quoted_url_keeps_apostrophes_without_swallowing_the_next_url():
+    urls = ["https://sporty-clips.mlb.com/o'neil.mp4?t='x'", "https://sporty-clips.mlb.com/b.mp4"]
+    page = f'''<script>var clips=["{urls[0]}",'{urls[1]}'];</script>'''
+    assert media_urls(page) == urls
 
 
 def test_no_invented_media_url():

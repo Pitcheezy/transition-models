@@ -1,0 +1,154 @@
+{
+  "schema": "pitcheezy-context-code-review-v1",
+  "writer": "Codex GPT-6 family; exact runtime identifier unavailable",
+  "reviewer": "claude-fable-5-1",
+  "claude_code_version": "2.1.310",
+  "scope": "our fixed diffs only; no remote service or private source credentials",
+  "rounds": [
+    {
+      "round": "initial",
+      "target_commit": "92a703e27e94f7f655d6d7a5125e9cc4f6515bd3",
+      "actual_models": [
+        "claude-fable-5-1"
+      ],
+      "raw_response_sha256": "0b0e98030d650045343b0dfd5540bf01dde5cad61fe36296a0fc66d1ba0b8e46",
+      "review": {
+        "verdict": "APPROVE_WITH_FOLLOWUPS",
+        "reviewer": "claude-fable-5-1",
+        "target": "92a703e27e94f7f655d6d7a5125e9cc4f6515bd3",
+        "prior": "a4f55e4",
+        "scope_confirmed": {
+          "public_contract_unchanged": true,
+          "v1_byte_compatible": true,
+          "v2_optional_internal_sidecar_only": true,
+          "point_only_on_static_source_raster": true,
+          "frame_budget_bounded": "3 clips x <=26 frames = <=78; select_frames raises above 26",
+          "tests_executed_by_reviewer": false
+        },
+        "p1": [],
+        "p2": [
+          {
+            "id": "P2-1",
+            "title": "PNG/geometry check in load_snapshot is gated fail-open on an unnormalized key",
+            "file": "src/integration/service_review_server.py",
+            "lines": "load_snapshot: evidence_rows = {row[\"image\"]: row ...}; later `if name in evidence_rows:`",
+            "detail": "Asset names come from _evidence_files via _relative_name(row[\"image\"]). The lookup map is keyed on the raw row[\"image\"]. If _relative_name performs any normalization (leading './', backslashes, case), the asset name will not be in evidence_rows and _check_evidence_image is silently skipped for that PNG. build_service_review.py has the same key mismatch but fails closed with KeyError, which is at least safe.",
+            "minimal_fix": "Gate on the validated set instead: `if name in evidence_files: _check_evidence_image(raw, evidence_rows[name], evidence_schema)` so a key mismatch raises rather than skips. Better: have _evidence_files return `{normalized_name: row}` and use that in both callers."
+          },
+          {
+            "id": "P2-2",
+            "title": "Wrong-frame risk: ffmpeg select ordinal is never cross-checked against the ffprobe PTS index",
+            "file": "src/data/replay_context.py",
+            "lines": "extract_context: expression = \"+\".join(f\"eq(n\\\\,{frame['ordinal']})\" ...); only count and dimensions are verified afterwards",
+            "detail": "Frame identity relies on the assumption that select's `n` (filtergraph input frame counter) equals the ordinal from ffprobe -show_frames. Both are presentation order from the same decoder, so this normally holds, but any divergence (decoder dropping a damaged frame before -xerror fires, differing decoder thread/error-concealment behaviour) would produce an image labeled with a PTS it does not have, and the audit, sheets, and sidecar would all agree on the wrong value. The synthetic test uses a fake ffmpeg so this is untested.",
+            "minimal_fix": "Append `,showinfo` to the -vf chain, run ffmpeg at `-v info`, parse the `Parsed_showinfo ... n:<k> pts:<p>` lines from stderr, require exactly len(frames) lines whose pts list equals [f['pts'] for f in frames], and reject any other non-showinfo stderr. Alternatively use image2 `-frame_pts 1` naming and compare filenames to expected PTS."
+          }
+        ],
+        "verified_ok": [
+          "select_frames: exact Fraction comparisons; nonzero origin handled; eligible[0] always rows[0]; boundary frame appended only when last chosen != last eligible; test arithmetic (500..2999 -> 26, 1e-18 time base, 90000/99000/314100) checks out by hand.",
+          "validate_crop and _evidence_geometry: `type(v) is int` excludes bool on both sides; JS integer()/Number.isInteger likewise; product bound 16777216 and 8192 cap consistent Python/JS.",
+          "Finite pixels: Python `type in (int,float)` + math.isfinite; JS finite(); NaN/Infinity/bool/extra keys/legacy setup_* keys rejected; point must lie inside both raster and crop; non-null point requires status candidate.",
+          "PNG IHDR: signature, length 13, type, CRC over raw[12:29] vs raw[29:33], IHDR width/height vs sidecar; SHA checked before header so tamper yields 'SHA' first. Deliberately not a full decoder; browser naturalWidth/Height is the second check.",
+          "v1: field set, status/reason checks and image handling unchanged; _check_evidence_image returns early for v1.",
+          "Reveal/reset/stale: load listener token-guarded and once:true; next-pitch re-render replaces content; stale image load event cannot inject markers; raster mismatch removes img, overlay and zoom while actual-content persists.",
+          "Point rendering: overlay viewBox = raster dims over a display:block img with height:auto (aspect preserved); zoom viewBox = crop in raster coords over <image> sized to raster. Nothing writes the point into mediaBinding or plotModel (test asserts).",
+          "private_destination rejects OUTPUT_ROOT itself, anything outside after resolve(), existing dirs and dangling symlinks; registry digest re-checked after extraction; clip_file re-verified after decode."
+        ],
+        "other_notes": [
+          "_evidence_geometry runs twice per v2 row (in _evidence_files and again in _check_evidence_image); harmless, could drop the second call.",
+          "extract_context indexes decoded['streams'][0] before any check; an empty streams list raises IndexError rather than ValueError (unless decode_index already guards it).",
+          "A failure mid-extraction leaves a partially populated destination; acceptable since a fresh directory is required, but the audit.json absence is the only signal.",
+          "Tests match 'development' and 'outside' messages that originate in replay_feasibility, outside this diff; cannot confirm the strings here.",
+          "Test fixture `with sqlite3.connect(...)` commits but does not close the connection; on Windows this can keep registry.sqlite open during later read_bytes/iterdir comparisons. Not observed failing, just fragile.",
+          "ffmpeg/ffprobe timeouts are 90s each; stderr-non-empty treated as error, so any benign warning from a real clip will abort the run (safe, possibly noisy).",
+          "Pillow paste auto-converts mode, so RGBA/gray decoded PNGs are fine on the RGB sheet; crop PNGs retain source mode.",
+          "Korean copy correctly states the point belongs to the static image, not the playing video or the plate, and that existing mitt-x estimates are a separate source."
+        ]
+      },
+      "reviewer_executed_tests": false
+    },
+    {
+      "round": "focused_followup",
+      "target_commit": "041f8542945410a433b5dac9ee4bc0c814980cfb",
+      "actual_models": [
+        "claude-fable-5-1"
+      ],
+      "raw_response_sha256": "9e229da7e1e4efc44f6dae8239ad8434d60248daf85f10a9da06a535532b69b1",
+      "review": {
+        "commit": "041f8542945410a433b5dac9ee4bc0c814980cfb",
+        "verdict": "approve",
+        "remaining_blockers": [],
+        "resolved": [
+          {
+            "id": "P2-2",
+            "status": "resolved",
+            "basis": "Frames are now bound by showinfo PTS, not select ordinal alone. -copyts keeps filter-input PTS in the stream clock, the config time_base must equal the probed one exactly, and (n, pts) must equal enumerate(frames) exactly. -loglevel level+info plus the [warning|error|fatal|panic] regex replaces the old '-v error + non-empty stderr' check, so concealment warnings are no longer silently dropped. Regex shapes match ffmpeg showinfo output ('n:%4d pts:%7s pts_time:%-7s'; 'config in time_base: %d/%d'); greedy [^\\n]* cannot mis-anchor on 'mean:' or 'duration:' because \\bn: requires a word boundary. Extra or duplicate config lines (filter reconfig) and NOPTS frames both fail closed."
+          }
+        ],
+        "false_positives": [
+          {
+            "id": "P2-1",
+            "status": "acknowledged_false_positive",
+            "basis": "_relative_name charset excludes '\\\\', ':', whitespace, '%', and non-ASCII, so no drive letters, ADS, UNC, or percent-encoding; empty segments, '.', '..', trailing dots, and Windows device stems are rejected; the string is returned unmodified so downstream fullmatch on 'evidence/...png' sees the same bytes. load_snapshot additionally pins the asset set to manifest-derived names and rejects casefold collisions. No concrete bypass."
+          }
+        ],
+        "non_blocking_observations": [
+          "audit.json 'extraction.log_sha256' is non-deterministic across re-runs: showinfo lines carry '@ 0x...' pointers and info-level progress/stats lines vary. Image SHAs are deterministic; the log hash is not. Consider -hide_banner -nostats, or hash only the parsed (n, pts, checksum) tuples.",
+          "The saved ffmpeg_showinfo.log now embeds absolute local paths (Input 'from ...', Output 'to ...') and the ffmpeg build banner. Acceptable for a private package, but new disclosure relative to ffprobe.json.",
+          "showinfo 'checksum'/'plane_checksum' of each raster is logged but not bound to the PNG sha256. Low value given lossless PNG in-process, but it is the one remaining unbound hop.",
+          "Any info-level line containing literal '[warning]' etc. (e.g. a clip filename) rejects the run. Fails closed; fine for the fixed three-clip scope.",
+          "Adversarial tests cover missing/shifted/reordered/clock/warning. Not covered: extra trailing observation, duplicate config lines, NOPTS. All fail closed by inspection.",
+          "PTS identity assumes decode_index rejects duplicate PTS within a clip; if it does not, two frames sharing a PTS would be indistinguishable to this check. Not verified from the supplied excerpt."
+        ],
+        "limitations": [
+          "Review is static, from the supplied diff and excerpts; no tools run, no tests executed by me.",
+          "Reported results (78/78 identical image SHAs, 78/78 PTS equal to ffprobe, 24 tests incl. 5 adversarial) are taken as the user's own measurements, not reproduced here.",
+          "decode_index, clip_file, _Reader, and the ffmpeg build in use were not supplied; conclusions about filter-input time_base equality rely on the user's real-run verification and standard ffmpeg.c behaviour."
+        ]
+      },
+      "reviewer_executed_tests": false
+    }
+  ],
+  "resolution": {
+    "P2-1": "false positive acknowledged; unsafe paths rejected, canonical string unchanged",
+    "P2-2": "fixed in041f854; actual78PTS matched,78PNG byte-identical;24focused tests passed"
+  },
+  "remaining_limits": [
+    "static model review is not independent runtime execution",
+    "private showinfo logs include local paths and nondeterministic pointer/progress text",
+    "not human accuracy, not a production approval"
+  ],
+  "ci_followup": {
+    "commit": "021514b94bb0db459bc5c2a1682cd826f13a98a8",
+    "actual_models": [
+      "claude-fable-5-1"
+    ],
+    "raw_response_sha256": "7378b8e3e2fad78b321521176c144171fbce0fbf75e3236fe36689e3312e0282",
+    "review": {
+      "verdict": "APPROVE",
+      "blockers": [],
+      "notes": [
+        "Expression `${{ runner.os == 'macOS' && 300 || 180 }}` is valid. The `runner` context is available inside `run` steps, `runner.os` reports `macOS` on macos-15, and the `&& ||` ternary idiom is safe here because 300 is truthy, so the fallback 180 only applies to non-macOS.",
+        "It matches the existing `if: runner.os == 'macOS'` check on the libomp step, so both branches use the same condition.",
+        "Ubuntu keeps the prior 180s value. Only macOS is widened to 300s, consistent with the stated scope.",
+        "No safety or test bypass: `permissions: contents: read`, `timeout-minutes: 25`, concurrency, matrix, `--cpu-only`, `uv sync --frozen`, the brew install, and the node syntax checks are all unchanged. No tests are skipped, deselected, or marked xfail by this diff.",
+        "300s gives roughly 120s of headroom over the observed 177s run, which covers the shutdown kill without approaching the 25-minute job timeout.",
+        "Unverified from the workflow alone: `scripts/check_project.py` must accept `--test-timeout` as a wrapper-level wall-clock limit that includes process shutdown, not a per-test pytest timeout. If it is per-test, the fix will not address the shutdown kill. Confirm with a quick read of that script before merging.",
+        "Minor: the macOS test wrapper will now also hide a genuine regression that pushes the suite from 177s toward 300s. Acceptable for a cleanup margin, but worth a follow-up to measure where the 177s is spent if it keeps growing."
+      ]
+    },
+    "wrapper_semantics_confirmed": "check_project.py process.wait(timeout=args.test_timeout), includes shutdown",
+    "prior_attempts": [
+      {
+        "run_id": 40651751620,
+        "attempt": 1,
+        "result": "timeout180 before full summary"
+      },
+      {
+        "run_id": 40651751620,
+        "attempt": 2,
+        "result": "2850passed/8skipped/2deselected/177.46sec printed, then process timeout180"
+      }
+    ]
+  }
+}

@@ -68,13 +68,6 @@ def feed_source(game_pk, feed_file, sleep=time.sleep):
     return data
 
 
-def keep_sources(root, game_pk, files):
-    """Write the validated source bytes only after every source of the game passed."""
-    folder = Path(root) / "sources" / str(game_pk)
-    for name, data in files.items():
-        reg.write_once(folder / name, data)
-
-
 def main():
     parser = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawTextHelpFormatter
@@ -109,9 +102,15 @@ def main():
         for game_pk, split in games.items():
             feed = feed_source(game_pk, feeds.get(game_pk))
             frame, statcast, name = statcast_source(game_pk, parquets.get(game_pk))
-            keep_sources(args.root, game_pk, {"feed.json": feed, name: statcast})
             counts = reg.register_game(
-                conn, args.root, game_pk, split, feed, frame, reg.sha256(statcast)
+                conn,
+                args.root,
+                game_pk,
+                split,
+                feed,
+                frame,
+                reg.sha256(statcast),
+                source_files={"feed.json": feed, name: statcast},
             )
             print(json.dumps({"game_pk": game_pk, "split": split, "counts": counts}))
     elif args.command == "clips":
