@@ -441,10 +441,18 @@ p {
 }
 .evidence-stats strong {
   font:
-    700 80px Impact,
+    700 clamp(38px, 4vw, 64px) Impact,
     "Arial Black",
     sans-serif;
-  letter-spacing: -3px;
+  letter-spacing: -1px;
+}
+.metric-source {
+  display: inline-block;
+  margin-top: 12px;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  font-size: 13px;
+  color: #304b37;
 }
 .evidence-stats em {
   font:
@@ -713,7 +721,7 @@ p {
     font-size: 32px;
   }
   .evidence-stats strong {
-    font-size: 70px;
+    font-size: clamp(30px, 9vw, 45px);
   }
   .closing {
     padding: 52px 20px;

@@ -7,14 +7,14 @@
   <meta name="theme-color" content="#091811" />
   <title>이용 안내 — Pitcheezy</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='16' fill='%23ceff78'/%3E%3Ctext x='8' y='24' font-family='Arial' font-weight='bold' font-size='24' fill='%23091811'%3EP%3C/text%3E%3C/svg%3E" />
-  <link rel="stylesheet" href="exhibition.css" />
+  <link rel="stylesheet" href="exhibition.css?v=2" />
 </head>
 <body>
   <a class="skip-link" href="#main">본문으로 이동</a>
   <header class="site-header">
-    <a class="site-brand" href="exhibition.html" aria-label="Pitcheezy 홈"><span class="brand-seal" aria-hidden="true">P</span>PITCHEEZY</a>
+    <a class="site-brand" href="index.html" aria-label="Pitcheezy 홈"><span class="brand-seal" aria-hidden="true">P</span>PITCHEEZY</a>
     <nav class="site-nav" aria-label="주요 메뉴">
-      <a href="exhibition.html">홈</a><a href="games.html">경기</a><a href="guide.html" aria-current="page">이용 안내</a><a href="report.html#validation">검증</a>
+      <a href="index.html">홈</a><a href="games.html">경기</a><a href="guide.html" aria-current="page">이용 안내</a><a href="report.html#validation">검증</a>
     </nav>
   </header>
   <main id="main" class="page-shell">
@@ -45,12 +45,24 @@
       <div><span class="eyebrow">03 / KNOW THE MODE</span><h2 id="mode-title">저장 경기와<br />실시간 관전</h2><p>현재 열 수 있는 첫 타석은 저장된 실제 경기 재생입니다. 경기 당시 실시간으로 예측했다는 뜻은 아닙니다.</p><a class="text-link" href="games.html">지금 볼 수 있는 경기 찾기 <span aria-hidden="true">→</span></a></div>
       <div class="guide-note"><h3>실시간 관전은 별도로 준비합니다</h3><p>최신 경기 정보를 받아 추천이 갱신되는 화면에서는 갱신 시각과 연결 상태를 함께 보여줘야 합니다. 연결이 끊겼거나 자료가 없을 때 과거 추천을 새 추천처럼 표시하지 않습니다.</p><p>모든 MLB 경기·선수를 지원한다고 아직 안내하지 않습니다.</p></div>
     </section>
+    <section id="model-evidence" class="guide-section" aria-labelledby="model-evidence-title">
+      <div class="section-heading"><span class="eyebrow">04 / MODEL EVIDENCE</span><h2 id="model-evidence-title">모델은 무엇을 확인했나요?</h2></div>
+      <p>결과 예측 모델은 상황과 후보 공에 따른 결과 확률을 계산하고, 추천 정책은 그 결과를 바탕으로 선택지를 비교합니다. 예측이 좋아졌다는 것과 추천을 따르면 실제로 더 유리하다는 것은 별도로 평가합니다.</p>
+      <p>현재 첫 타석 화면에는 저장된 추천 후보·선택 비중·근사 위치가 연결돼 있습니다. 모델 내부의 사건확률이나 선택별 기대가치는 이 자료에 포함되지 않아 표시하지 않습니다.</p>
+      <dl class="guide-definitions">
+        <div><dt>예측 비교 · NLL 0.0137 감소</dt><dd>2025년 개발 자료 311,721구에서 G0 모델을 단순 빈도 기준선과 비교했습니다. NLL은 실제로 일어난 결과에 얼마나 높은 확률을 주었는지 평가하는 점수이며, 낮을수록 좋습니다. 정확도가 몇 %라는 뜻이나 새 경기의 성능 보장은 아닙니다. 확률 보정 지표에서는 기준선이 더 좋았습니다. <a href="https://github.com/SongRoute/pitcheezy/blob/7a460cc0bf93f71ea52d3fc3acc6816b9ff3baf8/docs/reports/G0-whole-MLB-and-calibration-2026-09-27.md#L15">고정 평가 보고서</a></dd></div>
+        <div><dt>추천 계산 · 중앙값 0.13초</dt><dd>10월 2일 별도 라이브 리허설에서 계산 결정 275건을 측정한 기록입니다. 경기 정보 수신부터 화면 표시까지 걸린 전체 시간이나 모든 공의 고정 속도를 뜻하지 않습니다. 아래 월드시리즈 기록과 다른 시험입니다. <a href="https://github.com/SongRoute/pitcheezy/blob/7a460cc0bf93f71ea52d3fc3acc6816b9ff3baf8/results/checks/LIVE-rehearsal-849844.json#L160">리허설 집계</a></dd></div>
+        <div><dt>운영 기록 · 263구 수집, 지원 185구 중 180구 추천</dt><dd>월드시리즈 1차전의 비공개 자동 수집·기록에 관한 공급자 보고입니다. 전체 263구 중 지원 투수의 공은 185구였고, 그중 180구에 추천이 기록됐습니다. 공개 업로드는 꺼져 있었으며 공개 관람자는 0명이었습니다. 이 사이트가 그 경기를 공개 서비스했다는 뜻은 아닙니다. <a href="https://github.com/SongRoute/pitcheezy/issues/37#issuecomment-6385457013">운영 보고</a> · <a href="https://github.com/SongRoute/pitcheezy/issues/37#issuecomment-6464218359">추천 분모 확인</a></dd></div>
+        <div><dt>추천 효과 · −0.12~+0.09%p</dt><dd>2026년 184,288타석에서 구종 선택만 바꾸는 정책을 비교한, 타석당 수비팀 승리확률 차이의 경계입니다. 위치까지 바꾸는 추천의 효과는 평가하지 않았습니다. 범위에 0이 포함돼 추천이 더 낫다는 근거를 확인하지 못했습니다. +0.09%p만 떼어 향상 수치로 쓰지 않으며, 이 범위 자체가 95% 신뢰구간인 것도 아닙니다. 자료 누락과 평가 가정에 조건부인 결과입니다. <a href="https://github.com/SongRoute/pitcheezy/blob/813ce61c0621df2559615c23075bfae08a9df78a/results/MLB-2026-OPE-v1.json#L60">고정 정책 평가</a></dd></div>
+      </dl>
+      <p>위 수치는 연결된 보고서와 운영 기록을 인용했습니다. 현재 사이트에서 새로 측정한 결과가 아니며, 예측·계산 속도·추천 제공 수·추천 효과는 서로 다른 측정입니다.</p>
+    </section>
     <section class="guide-section guide-split" aria-labelledby="cv-title">
       <div><span class="eyebrow">OPTIONAL / VIDEO EVIDENCE</span><h2 id="cv-title">영상 분석은<br />근거가 있을 때 더합니다.</h2><p>추후에는 결과 공개 뒤 투구 전 포수 미트의 근거 프레임을 함께 봅니다. 미트가 가려지거나 손과 구분되지 않으면 표시를 보류합니다.</p></div>
       <div class="guide-note"><h3>미트 위치와 투수 의도는 다릅니다</h3><p>미트 관측이 곧 투수의 목표를 뜻하지는 않습니다. CV가 없는 경기에서도 추천과 실제 결과를 비교하는 기본 관전은 계속 사용할 수 있도록 구성합니다.</p><a class="text-link" href="report.html#validation">기존 영상 판독 검증 기록 <span aria-hidden="true">→</span></a></div>
     </section>
     <section class="guide-cta"><h2>이제 한 타석을 직접 보세요.</h2><a class="button" href="games.html">경기 선택하기 <span aria-hidden="true">→</span></a></section>
   </main>
-  <footer class="site-footer page-shell"><a class="site-brand" href="exhibition.html">PITCHEEZY</a><p class="footer-note">2026 소프트웨어학부 캡스톤 · 관전 보조 연구 서비스<br />MLB와 제휴한 공식 서비스가 아닙니다.</p><a class="text-link" href="report.html#validation">검증과 한계 <span aria-hidden="true">→</span></a></footer>
+  <footer class="site-footer page-shell"><a class="site-brand" href="index.html">PITCHEEZY</a><p class="footer-note">2026 소프트웨어학부 캡스톤 · 관전 보조 연구 서비스<br />MLB와 제휴한 공식 서비스가 아닙니다.</p><a class="text-link" href="report.html#validation">검증과 한계 <span aria-hidden="true">→</span></a></footer>
 </body>
 </html>

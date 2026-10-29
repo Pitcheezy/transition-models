@@ -1,4 +1,4 @@
-"""Check the static studio's illustrative contracts, local links and media hashes."""
+"""Check actual-replay pages, isolated legacy fixtures, links and media hashes."""
 
 import hashlib
 import json
@@ -55,6 +55,9 @@ def check():
             target = (page.parent / unquote(url.path)).resolve()
             assert target.is_relative_to(SITE.resolve()), f"Outside site: {ref}"
             assert target.exists(), f"Broken local reference: {page.name}: {ref}"
+            assert target.name not in {"preview-data.js", "studio.js", "studio.css"}, (
+                f"Legacy illustrative studio must not be linked by a product page: {page.name}: {ref}"
+            )
     manifest = json.loads(
         (ROOT / "docs/results/mlb_p0/pitch_studio_media_provenance_v1.json").read_bytes()
     )
@@ -125,7 +128,8 @@ def check():
     if receiver.returncode:
         raise RuntimeError(receiver.stdout + receiver.stderr)
     print("PASS: receiver and home playback regression checks")
-    print(f"PASS: {len(data['scenarios'])} illustrative distributions, HTML assets, media SHA256")
+    print(f"PASS: {len(data['scenarios'])} isolated legacy fixtures; no illustrative studio page dependency")
+    print("PASS: HTML assets and media SHA256")
 
 
 if __name__ == "__main__":

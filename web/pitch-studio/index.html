@@ -3,17 +3,17 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Pitcheezy — 한 구의 의도를 읽다</title>
+    <title>Pitcheezy — 다음 공, 무엇이 최선일까?</title>
     <meta
       name="description"
-      content="포수의 요구, 투수의 실행, 타자의 대응. 투구의 맥락을 읽는 야구 분석 서비스 콘셉트 데모."
+      content="팬을 위한 AI 야구 관전 보조. 실제 MLB 경기 영상에서 추천 구종·근사 위치와 실제 투구 결과를 비교합니다."
     />
     <meta name="theme-color" content="#091811" />
     <link
       rel="icon"
       href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23ceff78'/%3E%3Ctext x='8' y='25' font-family='Arial' font-weight='bold' font-size='25' fill='%23091811'%3EP%3C/text%3E%3C/svg%3E"
     />
-    <link rel="stylesheet" href="product.css" />
+    <link rel="stylesheet" href="product.css?v=11" />
     <script src="home.js?v=9" defer></script>
   </head>
   <body>
@@ -23,8 +23,8 @@
         ><span class="seal">P</span>PITCHEEZY<i>●</i></a
       >
       <nav aria-label="주요 메뉴">
-        <a href="#vision">서비스 소개</a
-        ><a href="report.html#validation">검증 기록</a
+        <a href="games.html">경기</a
+        ><a href="guide.html#model-evidence">모델과 근거</a
         ><a class="nav-cta" href="receiver.html?demo=849843-pa1">실제 첫 타석 보기</a>
       </nav>
     </header>
@@ -32,14 +32,13 @@
       <section class="hero">
         <div class="hero-copy">
           <span class="eyebrow">BEYOND THE BOX SCORE</span>
-          <h1>결과는 한 구.<br />이유는 그 안에.</h1>
+          <h1>다음 공,<br />무엇이 최선일까?</h1>
           <p>
-            포수의 요구에서 벤치의 선택까지.<br />야구의 다음 장면을 읽는 새로운
-            관점.
+            기록으로 계산한 추천과 실제 선택.<br />한 구에 담긴 경기 상황을 함께 읽습니다.
           </p>
           <a class="primary" href="receiver.html?demo=849843-pa1">실제 영상과 추천 보기</a
           ><span class="hero-demo">RECORDED GAME DEMO</span>
-          <p><a href="service.html">서비스 전체 구상 살펴보기</a></p>
+          <p><a href="guide.html">추천을 읽는 방법 알아보기 →</a></p>
         </div>
         <div class="film-stage">
           <video
@@ -72,7 +71,7 @@
             style="left: 44.609375%; top: 51.736111%"
             hidden
           >
-            <i></i><span>관측 미트 위치<b>−0.05 ft</b></span>
+            <i></i><span>미검토 AI 미트 가로 추정<b>−0.05 ft</b></span>
           </div>
           <div class="film-controls">
             <span id="film-mode" role="status">4투구 하이라이트 · 약 24초</span>
@@ -99,13 +98,13 @@
           ><span>2026.09.29 · NL 와일드카드 1차전</span>
           <p>마이클 킹 × 피트 크로암스트롱</p></a
         ><a href="report.html#validation" class="game-tile"
-          ><small>평가 경기 01</small>
+          ><small>CV 연구 자료 01</small>
           <div class="team-pair">PHI <i>@</i> ATL</div>
           <strong>필리스 · 브레이브스</strong
           ><span>2026.09.29 · NL 와일드카드 1차전</span>
           <p>Truist Park · 57장 평가</p></a
         ><a href="report.html#validation" class="game-tile"
-          ><small>평가 경기 02</small>
+          ><small>CV 연구 자료 02</small>
           <div class="team-pair">TB <i>@</i> PHI</div>
           <strong>레이스 · 필리스</strong><span>2026.09.26 · 정규시즌</span>
           <p>Citizens Bank Park · 29장 평가</p></a
@@ -114,83 +113,83 @@
       <section class="vision section-pad" id="vision">
         <div class="section-heading">
           <div>
-            <span class="eyebrow">ONE PITCH. FOUR PERSPECTIVES.</span>
+            <span class="eyebrow">FOLLOW THE PITCH</span>
             <h2>안타 한 개로,<br />모든 판단을 끝내지 않도록.</h2>
           </div>
           <p>
-            좋은 선택과 좋은 실행은 다를 수 있습니다.<br />목표는 결과 뒤에 숨은
-            판단의 근거를 보여주는 것.
+            경기 상황과 선택을 팬이 이해하도록.<br />추천을 먼저 보고, 실제 결과를 확인합니다.
           </p>
         </div>
         <div class="feature-grid">
-          <a href="service.html?phase=pre"
-            ><span>01 / PREDICT</span>
-            <h3>다음 공을 읽다.</h3>
-            <p>구종과 목표 위치, 스트라이크·파울·안타 확률을 한눈에.</p>
-            <b>투구 전 전략</b></a
-          ><a href="service.html?phase=post"
-            ><span>02 / EXECUTE</span>
-            <h3>의도와 실행을 나누다.</h3>
-            <p>요구한 곳에 던졌는지, 제구 이탈이 있었는지 확인.</p>
-            <b>투수의 실행</b></a
-          ><a href="service.html?phase=batter"
-            ><span>03 / RESPOND</span>
-            <h3>타격의 질을 보다.</h3>
-            <p>좋은 공을 공략했는지, 결과보다 대응의 질을 살펴보기.</p>
-            <b>타자의 대응</b></a
-          ><a href="service.html?phase=manager"
-            ><span>04 / DECIDE</span>
-            <h3>그때의 선택으로.</h3>
-            <p>투수 유지와 교체 대안을 당시 정보로 비교.</p>
-            <b>벤치의 판단</b></a
+          <a href="games.html"
+            ><span>01 / SELECT</span>
+            <h3>한 타석을 고르다.</h3>
+            <p>경기·선수·카운트를 확인하고 실제 경기 재생을 시작합니다.</p>
+            <b>경기 선택 →</b></a
+          ><a href="receiver.html?demo=849843-pa1"
+            ><span>02 / RECOMMEND</span>
+            <h3>다음 공의 후보.</h3>
+            <p>모델의 저장된 추천 구종과 과거 투구 분포의 근사 위치를 봅니다.</p>
+            <b>추천 후보 보기 →</b></a
+          ><a href="receiver.html?demo=849843-pa1"
+            ><span>03 / COMPARE</span>
+            <h3>추천과 실제 공.</h3>
+            <p>영상을 본 뒤 실제 구종·플레이트 통과 위치·판정을 나란히 비교합니다.</p>
+            <b>영상과 결과 보기 →</b></a
+          ><a href="guide.html#model-evidence"
+            ><span>04 / UNDERSTAND</span>
+            <h3>숫자의 근거까지.</h3>
+            <p>결과 예측의 평가와 추천 효과의 평가를 구분해 읽습니다.</p>
+            <b>모델 검증 기록 →</b></a
           >
         </div>
         <p class="concept-note">
-          완성형 서비스를 보여주는 콘셉트 화면입니다. 예측·평가 예시와 실제 관측
-          자료를 구분해 표시합니다.
+          현재 제공하는 첫 타석은 저장된 실제 경기 재생입니다. 추천 비중은 결과 확률이 아니며,
+          없는 확률이나 선수·감독 평가를 예시 숫자로 채우지 않습니다.
         </p>
       </section>
       <section class="evidence-preview">
         <div>
-          <span class="eyebrow">OBSERVATION COMES FIRST</span>
-          <h2>첫 번째 근거는,<br />포수의 미트입니다.</h2>
+          <span class="eyebrow">MODEL &amp; EVIDENCE</span>
+          <h2>추천의 뒤에는,<br />기록과 검증이 있습니다.</h2>
           <p>
-            AI가 읽은 위치를 사람의 표시와 비교했습니다.<br />좌표 출력과 기권을
-            함께 공개합니다.
+            MLB 투구 기록으로 결과 확률을 추정하고<br />후보 구종의 가치를 비교하는 추천 모델.
+            예측 성능과 실제 추천 효과를 따로 평가합니다.
           </p>
-          <a href="report.html#validation" class="text-link"
-            >검증 결과 자세히 보기</a
+          <a href="guide.html#model-evidence" class="text-link"
+            >평가 조건과 원문 확인하기 →</a
           >
         </div>
         <div class="evidence-stats">
           <div>
-            <strong>2.5<em>px</em></strong>
-            <p>AI·사람 공동 표시 58구<br />미트 점 차이 중앙값</p>
+            <strong>−0.0137</strong>
+            <p>빈도 기준선 대비 예측 오차(NLL) 감소<br />2025 개발 자료 311,721구</p>
+            <a class="metric-source" href="https://github.com/SongRoute/pitcheezy/blob/7a460cc0bf93f71ea52d3fc3acc6816b9ff3baf8/docs/reports/G0-whole-MLB-and-calibration-2026-09-27.md#L15">G0 개발 평가 원문 ↗</a>
           </div>
           <div>
-            <strong>58<em>/86</em></strong>
-            <p>평가 장면 중 AI 출력<br />나머지 28장 기권</p>
+            <strong>0.13<em>초</em></strong>
+            <p>추천 계산 시간 중앙값<br />별도 10/2 라이브 리허설</p>
+            <a class="metric-source" href="https://github.com/SongRoute/pitcheezy/blob/7a460cc0bf93f71ea52d3fc3acc6816b9ff3baf8/results/checks/LIVE-rehearsal-849844.json#L160">리허설 집계 원문 ↗</a>
           </div>
           <small
-            >같은 변환 기준 좌표 차이 중앙값 약 1.1인치.<br />물리 정확도나 투수
-            의도를 검증한 값은 아닙니다.</small
+            >개발 자료의 예측 개선과 별도 시험의 계산 시간입니다.
+            추천에 따른 승리확률 향상은 확인되지 않았으며, 화면까지의 전체 지연을 뜻하지 않습니다.</small
           >
         </div>
       </section>
       <section class="closing">
         <span class="eyebrow">YOUR NEXT PITCH, WITH CONTEXT</span>
         <h2>이제, 한 구를 직접 살펴보세요.</h2>
-        <a href="service.html" class="primary">분석 스튜디오 열기</a>
-        <p>실제 MLB 기록 · 영상 리플레이 · 최종 서비스 콘셉트</p>
+        <a href="games.html" class="primary">경기 선택하기</a>
+        <p>실제 MLB 기록 · 저장 추천 · 영상과 결과 비교</p>
       </section>
     </main>
     <footer class="product-footer">
       <a href="./" class="wordmark">PITCHEEZY<i>●</i></a>
       <p>
-        MLB 공식 투구 영상과 압축 경기 발췌로 구성한 하이라이트.<br />실시간
-        예측·투수/타자/감독 판정은 콘셉트 예시이며 실제 모델 출력이 아닙니다.
+        팬을 위한 AI 관전 보조 연구 서비스 · MLB 비제휴.<br />저장 경기 재생 제공 · 실시간 관전 연결 준비 중.
       </p>
-      <a href="report.html#story">프로젝트 방향</a>
+      <a href="report.html#validation">CV 연구 기록</a>
     </footer>
   </body>
 </html>

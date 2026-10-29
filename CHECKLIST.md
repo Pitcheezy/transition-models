@@ -2,6 +2,10 @@
 
 ## 전시 정본 계획 실행 — 2026-10-28
 
+**SITE-1c 로컬 구현·검사 완료, 최종 교차검토 대기·수정 권한 반납 — 2026-10-29:** 우리 Codex / `codex/site-first-1029` / [PR85](https://github.com/Pitcheezy/transition-models/pull/85). 기존 홈 디자인·영상 보존, 예시 확률/점수/교체판단의 제품 표시 제거, 실제 재생 진입과 고정 모델 근거 인용 완료. 사이트 회귀·미디어 SHA·체크리스트8·자산33파일 ZIP/참조·데스크톱/모바일 흐름 확인. 기존 응답·CV 기록·예시 원파일은 보존, 공개 배포 아님. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6491866436) · [기록](docs/SITE_FIRST_20261029.md). 새 변경은 Fable 전송/검토 전이며 기존2건 승인으로 확대하지 않았다. 다음은 고정 수정본 교차검토와 SITE-2 채택 빌드 인수. 팀원/Cloudflare 불변.
+
+- [!] SITE-1c. 예시 숫자의 제품 표시 차단·실제 추천 진입·모델 근거 인용 및 로컬 검사 완료. 기존 홈→경기/재생/안내, 모바일 폭·번들33자산 확인. 최종 다른 모델 검토와 공개 배포는 미완료. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-29 · Codex]`
+
 **SITE-1/SITE-1b 로컬 구현·검사 및 검토 지적 수정, 최종 재검토 대기·수정 권한 반납 — 2026-10-29:** 우리 Codex / `codex/site-first-1029` / [PR85](https://github.com/Pitcheezy/transition-models/pull/85)(PR84 위, main 미통합). 기존 홈을 보존하고 PC·모바일 공통 홈후보/경기/안내와 첫타석 영상 옆 추천·실제 플레이트 위치를 연결했다. 위치51검사(신규14)·전체사이트링크/미디어SHA/기존회귀·체크리스트8·Chrome실제3구 공개/숨김/전환/영상종료/자료초기화·좁은폭 확인. Fable 고정0be7fdd 및 eedf2f2 검토2건 수신·지적 수정. 마지막 수정 후 재검토는 미실행이며 최종 approve 아님. [구현·검토·재현](docs/SITE_FIRST_20261029.md) · [포스터 대조](docs/POSTER_REPO_AUDIT_20261029.md) · [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6491117506). 팀원 코드 읽기만·Cloudflare/공개Site 불변. 다음은 고정 변경분 재검토 후 SITE-2 채택 빌드 연결, CV50b는 후순위로 보존한다.
 
 - [!] SITE-1. 홈·경기선택·이용안내 로컬 초안과 검사 완료. Fable 고정0be7fdd 검토→수정→eedf2f2 재검토에서 기존 지적 해결 확인. 밝은 배경 대비 추가수정은 재검토 전이며 공개 배포와 구분. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-29 · Codex]`
