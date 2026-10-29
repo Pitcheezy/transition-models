@@ -2,6 +2,8 @@
 
 ## 전시 정본 계획 실행 — 2026-10-28
 
+**CV50a 진행·수정 권한 선점 — 2026-10-29:** 우리 Codex / `codex/exhibition-replay-1028` / 기준`055dd6a`(CI4/4성공) / 초안PR84. PA2의5구 원본결속·준비장면 적합성 조사, [규칙](docs/CV_PA2_FEASIBILITY_20261029.md). PA1재투표/잠금849844/사람보류/기존v3/팀원/Cloudflare 보존. 아래는 이전 완료 기록이다.
+
 **CV49c 완료·수정 권한 반납 — 2026-10-29:** 우리 Codex / `codex/exhibition-replay-1028` / 사전고정`669d378`·최종코드`91725bf` / 초안PR84(main미통합). 같은3구15장 문맥·시계열 진단과 현재프레임 비교화면 완료. 양쪽AI 관계요건충족0/15·새미트점0, 지목불일치/기권보존: **미트식별 해결 완료는 아님**. 관련189검사·Ruff192·Chrome15장/30SHA·Fable코드검토2회approve, 크롭픽셀결속 지적수정. [규칙/결과](docs/CV_CONTEXT_SEQUENCE_20261029.md)·[영수증](docs/results/exhibition_replay_20261028/context_sequence_v1.json)·[합격기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6488591949). 기존v2/v3 SHA4개·사람·잠금849844·팀원·Cloudflare불변. 다음CV50a PA2의5구 준비장면조사, 미착수. 최종head CI는 PR84에서별도확인. 아래 CV49b는 이전 완료 기록이다.
 
 **CV49b 완료·수정 권한 반납 — 2026-10-29:** Codex / `codex/exhibition-replay-1028` / 실행`e6caad5`·사전고정`bf575c9`·최종비교`f27576a` / 초안PR84(main 미통합). 기존가중치2종 SHA·GPU환경 확인, 동일3장×원본/고정크롭6회 오류0·0.5이상 후보0·낮은점수18상자. 새 미트점으로 채택하지 않았다. 관련161검사·Ruff186+신규4·Chrome6조건·Fable 실행/수정비교/결과해석 approve. 기존v2/v3 SHA4개불변·사람0·팀원/Cloudflare 미변경. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6486957342)·[결과](docs/CV_GLOVE_DIAGNOSTIC_20261029.md)·[영수증](docs/results/exhibition_replay_20261028/detector_diagnostic_v1.json). 다음CV49c 문맥·시계열 식별 실험, 미착수. 최종head CI는 PR84에서 별도 확인한다. 아래는 이전 완료 기록이다.

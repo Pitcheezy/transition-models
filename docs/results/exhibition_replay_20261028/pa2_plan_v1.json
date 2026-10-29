@@ -1,0 +1,72 @@
+{
+  "schema": "cv50a_preregistered_pa2_feasibility_v1",
+  "base_commit": "055dd6a7c76089587457e07a11b555eedf6bef31",
+  "game_pk": 849843,
+  "from_pa": 2,
+  "through_pa": 2,
+  "source_registry_sha256": "9555b95171a6232b849b74e4784edf62c210b7a64c72e8b84b5cf5ec48ead3b6",
+  "selection": {
+    "sampling_interval_seconds": 0.5,
+    "rule": "first decoded frame, next decoded frame >=0.5s afterprevious, include last; sourcePTS not nominalFPS",
+    "target_pitches": 5,
+    "frame_limit": 200,
+    "full_clip_sample_review": true,
+    "unclear_body_detail_followup": "at most one existing full PNG per pitch from earliest sampled setup candidate; no new frame extraction",
+    "stop_if": "count>200 or identity/SHA mismatch; preserve failed rows; do not widenrange"
+  },
+  "semantic_fields": [
+    "broadcast_center_view",
+    "setup_scene_visible",
+    "release_bracket",
+    "replay_seen_in_samples",
+    "arm_wrist_mitt_identification",
+    "suitability_for_next_detail"
+  ],
+  "limitations": [
+    "coarse samples can miss cuts/replay/motion; no exactrelease or continuous tracking claims",
+    "AI development evidence only; no humanlabel/accuracy/target/intent",
+    "candidateframe only; no newmittpoint or automaticdeployment"
+  ],
+  "clips": [
+    {
+      "pitch_key": "849843:2:1",
+      "play_id": "1c1ab752-42d2-378f-95dd-5f31131b3292",
+      "clip_sha256": "3512c9c339d9cf391ec64a69faefbb1315c55b20b9f9c7bbda6705d92602d540",
+      "bytes": 4722181,
+      "pitcher_name": "Michael King",
+      "batter_name": "Alex Bregman"
+    },
+    {
+      "pitch_key": "849843:2:2",
+      "play_id": "92a29047-1fd5-3b20-87be-6113e098b9eb",
+      "clip_sha256": "341acda8c95d393425be6b549e2e25717eaa17d6a879530240d003fab5faa85a",
+      "bytes": 3753090,
+      "pitcher_name": "Michael King",
+      "batter_name": "Alex Bregman"
+    },
+    {
+      "pitch_key": "849843:2:3",
+      "play_id": "3bac3ad5-7134-37f5-bef5-48536b2d606f",
+      "clip_sha256": "a15792be3c2ef6447b1c7623ec8797312c10202e90eed4facf6cc8f2925e3f4b",
+      "bytes": 4276468,
+      "pitcher_name": "Michael King",
+      "batter_name": "Alex Bregman"
+    },
+    {
+      "pitch_key": "849843:2:4",
+      "play_id": "1b8c2df7-d679-3ae4-814f-f5d61daf6126",
+      "clip_sha256": "c97347430b52bdb2e32d6cf83e5b6447ea09b3a026ab7d3b3a40d01e9a67ca15",
+      "bytes": 4325147,
+      "pitcher_name": "Michael King",
+      "batter_name": "Alex Bregman"
+    },
+    {
+      "pitch_key": "849843:2:5",
+      "play_id": "3c92dbfe-ade5-30a4-82e2-4a6e53bdfe38",
+      "clip_sha256": "81bd1e75c08096be8b601a862ccbf22d7b2f4d35307d3938a9fc0a6e253cf863",
+      "bytes": 3618268,
+      "pitcher_name": "Michael King",
+      "batter_name": "Alex Bregman"
+    }
+  ]
+}
