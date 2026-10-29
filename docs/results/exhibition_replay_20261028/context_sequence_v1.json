@@ -1,0 +1,300 @@
+{
+  "schema": "cv49c_context_sequence_receipt_v1",
+  "recorded_date_kst": "2026-10-29",
+  "evidence_kind": "reused_development_samples_offline_AI_not_independent_evaluation",
+  "base_commit": "ede316b0015886e986f4260cdfc74f083876ec58",
+  "preregistration_commit": "669d3785c8b5f9256bcce64b1791dbeecb7c8c1f",
+  "initial_code_commit": "0ed8dd7d490f00900fa6785630188975b76187d3",
+  "final_code_commit": "91725bf9e1d0de4d87d89199803cf5134653614b",
+  "claim_url": "https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6488591949",
+  "pr_url": "https://github.com/Pitcheezy/transition-models/pull/84",
+  "main_integrated": false,
+  "deployed": false,
+  "manifest_sha256": "8b28f13ed5f069fa3cd1cd52f57ee6489651f1261d9c04f81fe5b8dfc9a9d9ab",
+  "source_audit_sha256": "9865c81128ed8114b051b2650505ac326492bbca7460c57faaea9eaa35820d96",
+  "source_context_sha256": "99d0cb444d0360914067b90df877a00c731e6b89751fd541f543a3c17f3eb26f",
+  "sampling": {
+    "pitches": 3,
+    "unique_frames": 15,
+    "frames_per_pitch": 5,
+    "spans_seconds": [
+      0.4015,
+      0.4004,
+      0.5005
+    ],
+    "rule": "first_mid_representative_mid_last",
+    "continuous_tracking": false,
+    "root_view": "3contact sheets: full frames resized50%, fixed crops200%; original PNG bytes preserved",
+    "lookahead": "includes samples after representative; posthoc only",
+    "release_bound": "previous AI interval metadata, not exact measured release"
+  },
+  "source_checks": {
+    "identity_pts_bindings": 15,
+    "png_hashes": 30,
+    "pixel_exact_full_crop_pairs": 15,
+    "actual_png_bitdepths": [
+      8
+    ],
+    "actual_png_color_types": [
+      2
+    ],
+    "source_authority": "trusted frozen local manifest; not source authentication"
+  },
+  "reading_sha256": {
+    "a": "ed77d1096f5c4a9f021259ea2f5a5a32b445f6bba85f87add45aad17879d340a",
+    "b": "d9e9d232c3f75852708dacd75bde9261ad4fa338a31d1a0fa71e74e33e001fd0"
+  },
+  "codex_original_sha256": "f48c4e7fdaa7cda7d0260eff9d7fe6776ec5831eb25f24dced2dcc94f812a73f",
+  "codex_metadata_correction": "model string only; exact runtime ID unavailable; boxes/reasons unchanged",
+  "vision_calls": [
+    {
+      "pitch_key": "849843:1:1",
+      "actual_models": [
+        "claude-fable-5-1"
+      ],
+      "elapsed_seconds": 34.0,
+      "read_calls": 6,
+      "image_kinds": "one5-rowcontactsheet + five original crops",
+      "raw_response_sha256": "6e7ebf2e542634cfe32e255d955419a7aca696191fcae81a906c99168bd9e462",
+      "call_receipt_sha256": "6716c84c59ae7d2ed9322a23181f2ffd48f2613163c28fb1adbf6a08108e7da8"
+    },
+    {
+      "pitch_key": "849843:1:2",
+      "actual_models": [
+        "claude-fable-5-1"
+      ],
+      "elapsed_seconds": 33.5,
+      "read_calls": 6,
+      "image_kinds": "one5-rowcontactsheet + five original crops",
+      "raw_response_sha256": "5e5c2c1e948cb2f9667bcacc3ee0527a6c2fe8cdb420c83ffdf482ef2c56c6f2",
+      "call_receipt_sha256": "83ac333d7e25a740fe7b28820d7a41520dc3f85e023e44d3868becba22912583"
+    },
+    {
+      "pitch_key": "849843:1:3",
+      "actual_models": [
+        "claude-fable-5-1"
+      ],
+      "elapsed_seconds": 35.109,
+      "read_calls": 6,
+      "image_kinds": "one5-rowcontactsheet + five original crops",
+      "raw_response_sha256": "4ed3a0eda5f36a40830308b3917e3d8f41b5013feb408070fd92dc7b9180892d",
+      "call_receipt_sha256": "7dba965f7a76a3e124ef2465de3c625d858347a45ba8ded8de8d80dd5c8229ec"
+    }
+  ],
+  "claude_initial_schema_rejected_responses": 3,
+  "claude_placeholder_hash_fields": 15,
+  "format_repair": {
+    "calls": 1,
+    "actual_model": "claude-fable-5-1",
+    "images_reopened": 0,
+    "visual_revotes": 0,
+    "raw_sha256": "1a982f3ce3a282086e9853491682a6d1f420abbf8b62b9abf0aa88a181a6be7e",
+    "corrections": [
+      "frozenPTS->actualSHA15 identity mappings",
+      "pitch2 9009ticks/90000=100.1ms, not9ms"
+    ],
+    "original_preserved": true
+  },
+  "counts": {
+    "sampled_frames": 15,
+    "verified_mitt": 0,
+    "readers": {
+      "a": {
+        "evidence_complete_frames": 0,
+        "unclear_candidate_frames": 1
+      },
+      "b": {
+        "evidence_complete_frames": 0,
+        "unclear_candidate_frames": 0
+      }
+    }
+  },
+  "reader_observations": {
+    "a": {
+      "owner": {
+        "catcher": 15
+      },
+      "arm_wrist_link": {
+        "occluded": 15
+      },
+      "candidate_type": {
+        "mitt_like": 14,
+        "unclear": 1
+      },
+      "attachment": {
+        "unclear": 15
+      },
+      "temporal_relation": {
+        "unclear": 2,
+        "changed_or_occluded": 1
+      },
+      "evidence_complete": 0,
+      "incomplete": 15
+    },
+    "b": {
+      "owner": {
+        "unclear": 5,
+        "catcher": 10
+      },
+      "arm_wrist_link": {
+        "occluded": 12,
+        "unclear": 3
+      },
+      "candidate_type": {
+        "mitt_like": 15
+      },
+      "attachment": {
+        "unclear": 15
+      },
+      "temporal_relation": {
+        "consistent_in_samples": 3
+      },
+      "evidence_complete": 0,
+      "incomplete": 15
+    }
+  },
+  "verified_mitt_points": 0,
+  "new_human_annotations": 0,
+  "human_accuracy": "unmeasured",
+  "comparison_sha256": "a25dbfcd27ab75e5f884ff1aef0e1d40465c8f67bde4f2b429f88c1cdc747036",
+  "comparison_html_sha256": "096063ac6f28ca50de3b6ed78936ac39eaed1155019ca02dc8427302c35d3084",
+  "browser": {
+    "chrome": "155.0.8059.86",
+    "actual_browser": "Windows Chrome desktop; mobile viewport only, not real phone",
+    "frames_checked": 15,
+    "pitch_reset_cases": 3,
+    "previous_cases": 3,
+    "last_button_cases": 3,
+    "original_raster_hash_checks": 30,
+    "unclear_A_last_has_no_box": true,
+    "mobile_overflow": false,
+    "page_errors": [],
+    "external_requests": 0,
+    "screenshots": 5
+  },
+  "tests": {
+    "command": "python -m pytest tests/test_context_sequence.py tests/test_object_reference.py tests/test_object_reference_cli.py tests/test_checklist_model.py -q",
+    "final_passed": 189,
+    "elapsed_seconds": 27.42,
+    "new_cli_tests": 51,
+    "lint_command": "python scripts/check_project.py --lint-only",
+    "lint_paths": 192,
+    "full_pytest_run": false
+  },
+  "code_reviews": [
+    {
+      "commit": "0ed8dd7d490f00900fa6785630188975b76187d3",
+      "actual_models": [
+        "claude-fable-5-1"
+      ],
+      "raw_response_sha256": "bf02e1bf477ab667e7670de548def3e8028b746af41adf729963c4c401d8e221",
+      "verdict": "approve",
+      "tests_executed": false,
+      "findings": [
+        {
+          "severity": "medium",
+          "file": "scripts/82_build_context_sequence.py",
+          "line": 226,
+          "problem": "The crop panel asserts source-coordinate alignment (viewBox '450 240 210 230' with boxes drawn in 1280x720 coords) but the builder never verifies that crop_path pixels equal the full frame cropped at CROP. _image_snapshot checks only hash and header dimensions, so a manifest-generator error (off-by-one crop, wrong frame paired with crop, stale crop from a different PTS) passes validation and renders misaligned overlays silently. This is a crop-to-frame binding gap, not generic hardening.",
+          "reproduction": "Build a manifest where crop_path is a 210x230 PNG taken from a different frame (or offset by 10px) with a correct crop_sha256. build_package succeeds; the crop panel shows both readers' boxes positioned over unrelated pixels while the full panel looks correct.",
+          "fix": "In build_package after both snapshots are loaded, decode the full PNG, crop to CROP, and compare pixel bytes (or a hash of the decoded RGB buffer) to the decoded crop PNG; raise ValueError('crop raster does not match frozen crop of frame') on mismatch. PIL is already a test dependency; if the script must stay PIL-free, document explicitly in the report (evidence_kind or a 'crop_correspondence_verified': false field) that crop alignment is asserted by the manifest, not checked."
+        },
+        {
+          "severity": "low",
+          "file": "scripts/82_build_context_sequence.py",
+          "line": 207,
+          "problem": "candidate_box is validated only as integer exclusive-edge within 1280x720. A reader that emitted crop-relative coordinates (0..210 x 0..230) passes validation and renders in the wrong place in both panels; nothing in the reading schema records the coordinate space.",
+          "reproduction": "Set candidate_box to [10, 20, 60, 80] in a reading. validate_reading accepts it; the box draws near the top-left of the full frame, far from the catcher region.",
+          "fix": "Minimal: keep schema, but state in the HTML caption that boxes are in full-frame 1280x720 coordinates. Stronger: require readings to carry 'coordinate_space': 'source_1280x720' as an exact-match field, or reject boxes with right <= 210 and bottom <= 230 as a crop-space heuristic only if that cannot occur legitimately."
+        },
+        {
+          "severity": "low",
+          "file": "scripts/82_build_context_sequence.py",
+          "line": 421,
+          "problem": "output.mkdir(parents=True) will also create a missing private root, and index.html is written before comparison.json, so a failure between the two writes leaves an output directory with index.html but no provenance record. Subsequent runs then refuse the directory as existing.",
+          "reproduction": "Simulate a write failure after index.html (e.g. disk full); output dir exists with one artifact and no comparison.json.",
+          "fix": "Use mkdir(parents=False) so the private root must pre-exist, and write comparison.json first or write both to temp names and rename at the end."
+        }
+      ]
+    },
+    {
+      "commit": "91725bf9e1d0de4d87d89199803cf5134653614b",
+      "actual_models": [
+        "claude-fable-5-1"
+      ],
+      "raw_response_sha256": "e9b3aa7018930a3ae1ed59c72a3296c691116860125b7319584f1847a9768aed",
+      "verdict": "approve",
+      "tests_executed": false,
+      "findings": [
+        {
+          "severity": "low",
+          "file": "scripts/82_build_context_sequence.py",
+          "line": 259,
+          "problem": "The summary line hardcodes '검증된 미트 0장' as a literal instead of deriving it from report['verified_mitt'] or a per-frame count. Today the invariant forces false, so the text is accurate, but the HTML claim is not bound to the data it sits next to, unlike the sampled_frames and evidence_complete counts on the same line.",
+          "reproduction": "Read-only: compare the f-string at this line with the adjacent counts, which are interpolated from report; the mitt figure is not.",
+          "fix": "Interpolate the value, e.g. compute verified = 0 if report['verified_mitt'] is False else the actual count, and assert in the test that the string equals the report-derived value rather than a literal."
+        },
+        {
+          "severity": "low",
+          "file": "scripts/82_build_context_sequence.py",
+          "line": 443,
+          "problem": "output.mkdir(parents=False) is correct for 'fresh only', but a nested output path whose intermediate directory does not exist now fails with FileNotFoundError after all validation and pixel checks have run, whereas the private-root check at line 339 fails early with a ValueError. Error class and timing are inconsistent; no safety impact because nothing is written before the failure.",
+          "reproduction": "Read-only: trace build_package with output = allowed/'missing_dir'/'pack'; relative_to succeeds, mkdir raises FileNotFoundError at the end.",
+          "fix": "After the relative_to check, add `if not output.parent.is_dir(): raise ValueError('output parent must already exist under the private root')` so the failure is early and typed like the other precondition errors."
+        },
+        {
+          "severity": "low",
+          "file": "scripts/82_build_context_sequence.py",
+          "line": 231,
+          "problem": "An RGB PNG carrying a tRNS chunk reports mode 'RGB' but convert('RGBA') applies the transparency, so a byte-identical crop saved without tRNS will be rejected as 'pixels differ'. Likewise 16-bit RGB sources are decoded to 8-bit by Pillow, so low-order-bit differences between full and crop are invisible to this check. Both are fail-closed or already covered by the SHA binding on the exact bytes; no false acceptance of a wrong rectangle is possible.",
+          "reproduction": "Read-only reasoning from Pillow PNG plugin behaviour; not triggered by the 15 inspected 8-bit RGB frames.",
+          "fix": "Optionally reject images with 'transparency' in full.info/crop.info and document that comparison is at 8-bit depth; otherwise leave as is."
+        },
+        {
+          "severity": "low",
+          "file": "tests/test_context_sequence.py",
+          "line": 322,
+          "problem": "The assertion `html.count(...) == 30` and `'전체 15장'` depend on the fixture shape (3 pitches × 5 frames × 2 readers) as magic numbers; a fixture change will break them without indicating why.",
+          "reproduction": "Read-only.",
+          "fix": "Derive expected values from report['counts']['sampled_frames'] * 2 and from the report string, keeping the intent of the assertion."
+        }
+      ]
+    }
+  ],
+  "review_resolution": {
+    "crop_binding_medium": "fixed91725bf; rejectwrongsource/offbyone crop evenmatchingSHA; actual15pairsverified",
+    "coordinate_caption_low": "explicitoriginal1280x720 convention, no heuristic rejection of legitimateboxes",
+    "partial_output_low": "existingroot/freshdirectchild only, writeprovenancefirst, preservepartialIOfailure",
+    "final_nested_directory_finding": "notreproduced: existing len(relative.parts)!=1 rejects beforeimage reads; observed output must be a new private outputs/cv49c_* directory",
+    "remaining_lows": "verified_mitt0 is intentional invariant,3x5 fixture size fixedbycontract; PNG compare8bit decodedRGBA only; actual30assets are8bitRGB"
+  },
+  "preserved_artifacts": [
+    {
+      "path": "outputs/exhibition_replay_pack_20261028_v3.zip",
+      "sha256": "b1ecf94b97788192aec396eacac8e18bf243df548f76dc33a34525dd84919671",
+      "unchanged": true
+    },
+    {
+      "path": "outputs/exhibition_replay_pack_20261028_v2.zip",
+      "sha256": "f269ac511491ddd948d8e6872ebb57bf39348e1d885538f65db33e1cbe6b7b08",
+      "unchanged": true
+    },
+    {
+      "path": "outputs/exhibition_replay_pack_20261028_v3/review-evidence.json",
+      "sha256": "85482d6e4c4aef0d9d27428452e574826d6e683474b895648a8d3d6f835746be",
+      "unchanged": true
+    },
+    {
+      "path": "outputs/exhibition_replay_pack_20261028_v3/review.js",
+      "sha256": "2c4d71b02974834267d4f4fbda0357eb316824df29101caee8cc2b5b857acca2",
+      "unchanged": true
+    }
+  ],
+  "new_detector_inference_calls": 0,
+  "new_training": 0,
+  "new_downloads": 0,
+  "protected_game_opened": false,
+  "teammate_repo_changed": false,
+  "cloudflare_changed": false,
+  "conclusion": "Contextual/time-sampled diagnosis and source-bound viewer complete; wrist identity not resolved for any15samples. AI box/owner/temporal disagreements retained. No improved detector accuracy or operational readiness claim."
+}
