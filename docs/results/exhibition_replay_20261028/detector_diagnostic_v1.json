@@ -1,0 +1,270 @@
+{
+  "schema": "pitcheezy-glove-diagnostic-receipt-v1",
+  "recorded_date_kst": "2026-10-29",
+  "evidence_kind": "offline development diagnosis; not independent human evaluation",
+  "base_commit": "ef35d191ddef277bbc2665e2f9373a2f723d9371",
+  "claim_commit": "c92c8b2",
+  "runner_commit": "e6caad5ae5b9a1f369965716341eb079fa1791a0",
+  "preregistration_commit": "bf575c99825ae2c6b2805b49ded34ee5bebb0bd7",
+  "comparison_final_commit": "f27576a070b8669c88dfede6369b8a9df203fdfa",
+  "pr_url": "https://github.com/Pitcheezy/transition-models/pull/84",
+  "main_integrated": false,
+  "deployed": false,
+  "plan_sha256": "48aeb29d0c3c07913b1dc6273575b689cd036f9cf9a91f9afdf752bd18e3a32c",
+  "run_sha256": "c494c9f6601ac60977ae65c845c3b5f335f58fe8ec07d9b59b1b01d7285d4c6e",
+  "comparison_sha256": "1080cc992026dcfc4d3d96e6c5019cfa52761895c373e29e45056d56669d1814",
+  "comparison_html_sha256": "38a3c96b48ead7088925c0571fb989f8dfae4cfceb6c9bbca9976de544548d82",
+  "comparison_v1_v2_geometry_identical": true,
+  "frames": 3,
+  "conditions": 6,
+  "actual_predict_calls": 6,
+  "warmups": 0,
+  "retries": 0,
+  "model_loads": 1,
+  "completed": 6,
+  "errors": 0,
+  "selected_candidates": 0,
+  "returned_below_threshold_glove_boxes": 18,
+  "frozen_checks_unchanged": 9,
+  "weights_inventory": [
+    {
+      "model_name": "fasterrcnn_mobilenet_v3_large_fpn",
+      "filename": "fasterrcnn_mobilenet_v3_large_fpn-fb6a3cc7.pth",
+      "bytes": 77844807,
+      "sha256": "fb6a3cc702b1df54c18a44b26708cd083614211062d0c36d2ca7bf9270df3533",
+      "prior_record_match": true,
+      "used_for_this_inference": true
+    },
+    {
+      "model_name": "ssdlite320_mobilenet_v3_large",
+      "filename": "ssdlite320_mobilenet_v3_large_coco-a79551df.pth",
+      "bytes": 14069355,
+      "sha256": "a79551df90c79834bcd3bb3845ef9d966b5449a3a9b2833ae8404778ca5d65d2",
+      "prior_record_match": true,
+      "used_for_this_inference": false
+    }
+  ],
+  "runtime": {
+    "python": "3.12.12",
+    "torch": "2.6.0+cu124",
+    "torchvision": "0.21.0+cu124",
+    "pillow": "12.2.0",
+    "cuda_available": true,
+    "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU"
+  },
+  "cases": [
+    {
+      "pitch_key": "849843:1:1",
+      "play_id": "f6d7a0f3-d111-3c6d-92cd-2b5a867ac931",
+      "frame_pts": 191959,
+      "time_base": "1/90000",
+      "image_sha256": "aa9ec740c1b77b4f37bfc9d199e38e69ec9e44ccd50e34a7766ce4838e7c004e",
+      "view": "full_frame",
+      "attempt_sha256": "f21bfd84d7a211551a0480d9993ebd07c03292b951ad3f6833fec42028b8d774",
+      "selection_status": "no_candidate",
+      "returned_glove_boxes": 4,
+      "above_threshold": 0,
+      "max_score": 0.3760487139225006,
+      "model_seconds": 1.5294689000584185
+    },
+    {
+      "pitch_key": "849843:1:1",
+      "play_id": "f6d7a0f3-d111-3c6d-92cd-2b5a867ac931",
+      "frame_pts": 191959,
+      "time_base": "1/90000",
+      "image_sha256": "aa9ec740c1b77b4f37bfc9d199e38e69ec9e44ccd50e34a7766ce4838e7c004e",
+      "view": "context_crop",
+      "attempt_sha256": "d1e3516f4cafe7eda83d7323acd93895d8619565949f854cfd257ceb936abe56",
+      "selection_status": "no_candidate",
+      "returned_glove_boxes": 1,
+      "above_threshold": 0,
+      "max_score": 0.2685830891132355,
+      "model_seconds": 0.07950700004585087
+    },
+    {
+      "pitch_key": "849843:1:2",
+      "play_id": "aa3ecf43-5435-3238-aac7-5bfeef1cabe2",
+      "frame_pts": 191908,
+      "time_base": "1/90000",
+      "image_sha256": "2b28164e50a2912ff229e406cc314a2dedc36e50c961599b48b197d513d28f58",
+      "view": "full_frame",
+      "attempt_sha256": "77cc3566095b3070bf932b0b98004d02330fb850284245d44d06e52d84e4271a",
+      "selection_status": "no_candidate",
+      "returned_glove_boxes": 2,
+      "above_threshold": 0,
+      "max_score": 0.28630194067955017,
+      "model_seconds": 0.024217199999839067
+    },
+    {
+      "pitch_key": "849843:1:2",
+      "play_id": "aa3ecf43-5435-3238-aac7-5bfeef1cabe2",
+      "frame_pts": 191908,
+      "time_base": "1/90000",
+      "image_sha256": "2b28164e50a2912ff229e406cc314a2dedc36e50c961599b48b197d513d28f58",
+      "view": "context_crop",
+      "attempt_sha256": "f215cad508caa621a173cd7cfa6a5e0122d678a285c88d1247685d860e47e1c4",
+      "selection_status": "no_candidate",
+      "returned_glove_boxes": 2,
+      "above_threshold": 0,
+      "max_score": 0.1754809319972992,
+      "model_seconds": 0.02078379993326962
+    },
+    {
+      "pitch_key": "849843:1:3",
+      "play_id": "f29b740f-f187-3089-b57a-3b55e8370c19",
+      "frame_pts": 190465,
+      "time_base": "1/90000",
+      "image_sha256": "fe8e984bf7163dfe6579263bde865fddd5fc0650f9a32d2215bb66b56ffc1a81",
+      "view": "full_frame",
+      "attempt_sha256": "410c7841ed1c480e7d51e266686b6d355a3eaf11414a707e518c88cea0d45442",
+      "selection_status": "no_candidate",
+      "returned_glove_boxes": 7,
+      "above_threshold": 0,
+      "max_score": 0.24157224595546722,
+      "model_seconds": 0.02497120015323162
+    },
+    {
+      "pitch_key": "849843:1:3",
+      "play_id": "f29b740f-f187-3089-b57a-3b55e8370c19",
+      "frame_pts": 190465,
+      "time_base": "1/90000",
+      "image_sha256": "fe8e984bf7163dfe6579263bde865fddd5fc0650f9a32d2215bb66b56ffc1a81",
+      "view": "context_crop",
+      "attempt_sha256": "1b4bb86a481b59b6e5bb839344bb095c0458952c2565c5e78bcbb4e006cd1628",
+      "selection_status": "no_candidate",
+      "returned_glove_boxes": 2,
+      "above_threshold": 0,
+      "max_score": 0.10828960686922073,
+      "model_seconds": 0.021698799915611744
+    }
+  ],
+  "browser": {
+    "cards": 3,
+    "overlays": 6,
+    "unique_scene_ids": 6,
+    "original_png_embeds": 6,
+    "external_requests": 0,
+    "page_errors": [],
+    "chrome": "155.0.8059.86",
+    "screenshots": 6
+  },
+  "browser_capture_note": "Initial off-viewport screenshot failed; same embedded SVG rendered in bounded local crop viewport. Original source images and predictions unchanged. Codex inspected six final rendered crops. Not a new object annotation or human review.",
+  "tests": {
+    "final_related_pytest": 161,
+    "elapsed_seconds": 27.47,
+    "comparison_regressions_before_fix": {
+      "new_failures": 17,
+      "existing_passes": 11
+    },
+    "comparison_regressions_after_fix": 30,
+    "lint_only_existing_paths": 186,
+    "new_files_ruff_pass": true,
+    "full_cpu_suite_executed": false
+  },
+  "review_process": [
+    {
+      "part": "runner",
+      "commit": "e6caad5ae5b9a1f369965716341eb079fa1791a0",
+      "actual_model_ids": [
+        "claude-fable-5-1"
+      ],
+      "raw_response_sha256": "7177e81e256233b7d2528279a2ff77387fa4be9e9e2a157b6a003de99e1dec44",
+      "verdict": "approve",
+      "tools_used": false,
+      "tests_executed": false,
+      "images_viewed": false
+    },
+    {
+      "part": "comparison_initial",
+      "commit": "2ba52d70b32ad2cc82eab41676ea4001a10b9599",
+      "actual_model_ids": [
+        "claude-fable-5-1"
+      ],
+      "raw_response_sha256": "2a1549e2a9eda570909eb23651c14cef116a0eafcd516f5c537c2f4a13350779",
+      "verdict": "request_changes",
+      "tools_used": false,
+      "tests_executed": false,
+      "images_viewed": false
+    },
+    {
+      "part": "comparison_final",
+      "commit": "f27576a070b8669c88dfede6369b8a9df203fdfa",
+      "actual_model_ids": [
+        "claude-fable-5-1"
+      ],
+      "raw_response_sha256": "39d2353bce6c9793b27f362ccdbdc08f1214e28f5526d31c8f7047487e48bab0",
+      "verdict": "approve",
+      "tools_used": false,
+      "tests_executed": false,
+      "images_viewed": false
+    },
+    {
+      "part": "result_interpretation",
+      "commit": null,
+      "actual_model_ids": [
+        "claude-fable-5-1"
+      ],
+      "raw_response_sha256": "a0691b4fa8950352c1843d63b659e30622fdcca5cc6435ec7cf07be1e040e54e",
+      "verdict": "approve",
+      "tools_used": false,
+      "tests_executed": false,
+      "images_viewed": false
+    }
+  ],
+  "review_resolution": {
+    "initial_comparison": "Crop containment, frozen weights/runtime, all required hash checks, missing score/typed label/crop presence fixed. Expanded SVG CSS and labels corrected. No re-inference.",
+    "runner_low_priority_remaining": [
+      "Malformed-CRC PNG may exit with traceback before output; current inputs valid.",
+      "Failure records save exception class but limited diagnostic detail; actual six calls completed.",
+      "CLI-relative paths mixed with absolute in private checks; commands record repository-root cwd."
+    ],
+    "final_comparison_low_priority_remaining": [
+      "Some scalar metadata equality accepts equal bool/int values; actual response types checked.",
+      "Standalone strict-XML export not promised; HTML Chrome rendering checked.",
+      "A/B names resolved through plan and documentation; reading SHA bindings retained."
+    ],
+    "not_actioned_findings": [
+      "Counter multiplicity is intentional: runner records each image/code check separately, including identical hashes. Actual 9 checks pass.",
+      "Hash role evidence trusts the locally pinned runner; it is not source authentication."
+    ],
+    "interpretation_note": "Review JSON wording 0/6 selection_status=no_candidate was a text typo. Actual no_candidate=6/6, selected_candidates=0/6. Five IoU cells were independently recomputed by Claude; images were not viewed by reviewer."
+  },
+  "preserved_artifacts": [
+    {
+      "path": "outputs/exhibition_replay_pack_20261028_v3.zip",
+      "sha256": "b1ecf94b97788192aec396eacac8e18bf243df548f76dc33a34525dd84919671",
+      "unchanged": true
+    },
+    {
+      "path": "outputs/exhibition_replay_pack_20261028_v2.zip",
+      "sha256": "f269ac511491ddd948d8e6872ebb57bf39348e1d885538f65db33e1cbe6b7b08",
+      "unchanged": true
+    },
+    {
+      "path": "outputs/exhibition_replay_pack_20261028_v3/review-evidence.json",
+      "sha256": "85482d6e4c4aef0d9d27428452e574826d6e683474b895648a8d3d6f835746be",
+      "unchanged": true
+    },
+    {
+      "path": "outputs/exhibition_replay_pack_20261028_v3/review.js",
+      "sha256": "2c4d71b02974834267d4f4fbda0357eb316824df29101caee8cc2b5b857acca2",
+      "unchanged": true
+    }
+  ],
+  "limitations": [
+    "One PA, three development frames under two conditions, no generalization/accuracy claim.",
+    "Both previous AI references remain unverified and disagree on mitt location for pitches1 and3.",
+    "Scores are not calibrated accuracy; IoU is geometry, not truth or ownership.",
+    "No adopted mitt center, intended target, physical error or timing validation.",
+    "Postprocessed glove outputs retained; not all internal proposals.",
+    "Model-call times exclude load and do not establish live throughput."
+  ],
+  "new_human_annotations": 0,
+  "new_training": false,
+  "new_downloads": 0,
+  "package_installs": 0,
+  "protected_game_opened": false,
+  "teammate_repo_changed": false,
+  "cloudflare_changed": false,
+  "conclusion": "Do not adopt this existing detector for automatic mitt points on these three frames; retain abstention and investigate contextual identity without lowering threshold to force output."
+}
