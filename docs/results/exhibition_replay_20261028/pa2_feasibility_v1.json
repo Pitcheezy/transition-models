@@ -1,0 +1,507 @@
+{
+  "schema": "cv50a_pa2_feasibility_receipt_v1",
+  "recorded_date_kst": "2026-10-29",
+  "evidence_kind": "offline_development_AI_readings_not_independent_human_evaluation",
+  "base_commit": "055dd6a7c76089587457e07a11b555eedf6bef31",
+  "preregistration_commit": "f76851049e9d5d24d4a5793354a6c4fbb2c5989c",
+  "code_commit": "acedaed5a5411351f54bdde2de6a2c7ce38a7280",
+  "claim_url": "https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6490090480",
+  "pr_url": "https://github.com/Pitcheezy/transition-models/pull/84",
+  "main_integrated": false,
+  "deployed": false,
+  "plan_sha256": "e1fb6c0160b422bf01fb934cc7e25e546db48d2bae79154374bfbb835f3baa52",
+  "audit_sha256": "81cf99a7e2940dd9ed2a29ed99037ab871f8284c3cd7242346fc9904d2ab9a04",
+  "registry_sha256": "9555b95171a6232b849b74e4784edf62c210b7a64c72e8b84b5cf5ec48ead3b6",
+  "root_initial_reading_sha256": "c1d87237afc7d3702caa2ccaf367faa7f6c832de79b6c17a9ccff7f09c5b3ae0",
+  "sampling": {
+    "pitches_examined": 5,
+    "pitches_decoded": 5,
+    "decoded_frames": 2086,
+    "unique_visual_samples": 77,
+    "max_visual_samples": 200,
+    "interval_seconds": 0.5,
+    "additional_detail_images": 5,
+    "detail_images_are_existing_samples": true,
+    "continuous_playback": false,
+    "first_last_included": true
+  },
+  "counts": {
+    "setup_context_candidates": 5,
+    "earliest_setup_index_agreement": 5,
+    "coarse_release_bracket_agreement": 3,
+    "coarse_release_bracket_disagreement": 2,
+    "claude_direct_wrist_claim": 1,
+    "claude_wrong_owner_object_description": 1,
+    "verified_mitt_points": 0,
+    "new_human_annotations": 0
+  },
+  "rows": [
+    {
+      "pitch_key": "849843:2:1",
+      "play_id": "1c1ab752-42d2-378f-95dd-5f31131b3292",
+      "clip_sha256": "3512c9c339d9cf391ec64a69faefbb1315c55b20b9f9c7bbda6705d92602d540",
+      "clip_bytes": 4722181,
+      "decoded_frames": 410,
+      "sampled_frames": 15,
+      "time_base": "1/90000",
+      "first_pts": 360,
+      "last_pts": 618301,
+      "earliest_setup_sample_index": 1,
+      "detail_pts": 45405,
+      "detail_clip_seconds": 0.5005,
+      "detail_image_sha256": "19132782e0f3217c0b926a271dc3232c8a09d97da3339bf38e5ff0b6eaee4d11",
+      "setup_scene_agreement": true,
+      "root_release_bracket_pts": [
+        226409,
+        271454
+      ],
+      "claude_release_bracket_pts": [
+        271454,
+        316499
+      ],
+      "release_bracket_agreement": false,
+      "release_status": "coarse_motion_only_exact_release_unverified",
+      "root_relation": "unverified",
+      "claude_relation": "unclear",
+      "claude_object_disposition": "retain_uncertain_relation",
+      "replay": "not_seen_in_samples_unseen_gaps_unknown",
+      "next_stage": "bind_existing_replay_then_bounded_catcher_context_detail",
+      "limits": [
+        "preparation_context_not_verified_target",
+        "no_verified_mitt_point",
+        "not_service_ready_without_binding_and_reveal_checks"
+      ],
+      "root_note": "처음은 투수 근접 화면이며 다음 표본부터 중앙 중계 화면. 포수 몸과 양쪽 팔 주변은 보이나 낮은 검은 물체와 맨손·장비를 손목까지 확정 연결하지 못함.",
+      "claude_note": "샘플1~3 투수 세트, 포수 크라우치, 타자 타석 확인(세트업 장면 가시). 샘플4 레그킥, 5 스트라이드, 6 팔 전방, 7 폴로스루로 거친 전환 구간 [6,7] 추정(공 분리 프레임 아님). 디테일(샘플1)에서 포수 좌측에 어두운 덩어리와 흰 사각 오버레이가 겹쳐 팔-손목-물체의 연속 경계를 다리/흉부 보호대와 구분 불가, 관계 미확인. 포수 크라우치만으로 타깃 제시 단정 불가. 0.5초 간격 샘플 한계, 릴리스 타이밍·거리·정확도 판단 없음. 샘플2~3 추가 디테일 검토 유용할 수 있음.",
+      "service_binding": {
+        "key_matches": 1,
+        "recommendation_status": "ready",
+        "candidates": 3,
+        "event_probabilities": null,
+        "expected_value": "not_provided",
+        "actual_pitch_type": "SL",
+        "actual_description": "ball",
+        "actual_event": null,
+        "x_ft": 1.1575235042903562,
+        "z_ft": 1.515570295613707,
+        "source_has_play_id": false,
+        "independent_service_play_id_match": "unavailable",
+        "setup_estimate": false
+      }
+    },
+    {
+      "pitch_key": "849843:2:2",
+      "play_id": "92a29047-1fd5-3b20-87be-6113e098b9eb",
+      "clip_sha256": "341acda8c95d393425be6b549e2e25717eaa17d6a879530240d003fab5faa85a",
+      "clip_bytes": 3753090,
+      "decoded_frames": 410,
+      "sampled_frames": 15,
+      "time_base": "1/90000",
+      "first_pts": 720,
+      "last_pts": 618346,
+      "earliest_setup_sample_index": 0,
+      "detail_pts": 720,
+      "detail_clip_seconds": 0.0,
+      "detail_image_sha256": "7446f70020170ebb913220dc658cab3f7543002d39d852b3954f737fe0c4abd8",
+      "setup_scene_agreement": true,
+      "root_release_bracket_pts": [
+        226454,
+        271499
+      ],
+      "claude_release_bracket_pts": [
+        226454,
+        271499
+      ],
+      "release_bracket_agreement": true,
+      "release_status": "coarse_motion_only_exact_release_unverified",
+      "root_relation": "unverified",
+      "claude_relation": "directly_visible",
+      "claude_object_disposition": "reader_disagreement_root_unverified_claude_direct",
+      "replay": "not_seen_in_samples_unseen_gaps_unknown",
+      "next_stage": "bind_existing_replay_then_bounded_catcher_context_detail",
+      "limits": [
+        "preparation_context_not_verified_target",
+        "no_verified_mitt_point",
+        "not_service_ready_without_binding_and_reveal_checks",
+        "wrist_link_disagreement_not_promoted"
+      ],
+      "root_note": "첫 표본부터 중앙 중계와 포수의 낮은 준비 자세가 보임. 중앙 낮은 물체 주변에 손·무릎 장비가 겹쳐 미트 부착 관계는 불확실. 끝부분은 타자 근접 화면.",
+      "claude_note": "detail(idx0): 포수 크라우치, 홈플레이트 뒤 중앙. 왼팔이 어깨에서 아래 왼쪽으로 연속적으로 내려가 지면 근처 어두운 둥근 물체로 이어지는 경계 확인. 흰색/연한 정강이 보호대(수직, 다리 앞)와 색·형태 구분됨. 다만 720p에서 포수 영역이 작아 손목 세부는 저해상도. 0~3 투수 세트, 4 다리 들기, 5 팔 코킹, 6 팔로스루(coarse bracket). 7~8 타자 스윙 후. 9~11 다음 투구 준비. 샘플 간 간격 미검사. 타깃 제시 여부·릴리스 정확 시점 판단 불가.",
+      "service_binding": {
+        "key_matches": 1,
+        "recommendation_status": "ready",
+        "candidates": 3,
+        "event_probabilities": null,
+        "expected_value": "not_provided",
+        "actual_pitch_type": "SL",
+        "actual_description": "ball",
+        "actual_event": null,
+        "x_ft": 0.5276487378474758,
+        "z_ft": 1.158810480883284,
+        "source_has_play_id": false,
+        "independent_service_play_id_match": "unavailable",
+        "setup_estimate": false
+      }
+    },
+    {
+      "pitch_key": "849843:2:3",
+      "play_id": "3bac3ad5-7134-37f5-bef5-48536b2d606f",
+      "clip_sha256": "a15792be3c2ef6447b1c7623ec8797312c10202e90eed4facf6cc8f2925e3f4b",
+      "clip_bytes": 4276468,
+      "decoded_frames": 432,
+      "sampled_frames": 16,
+      "time_base": "1/90000",
+      "first_pts": 1350,
+      "last_pts": 651367,
+      "earliest_setup_sample_index": 0,
+      "detail_pts": 1350,
+      "detail_clip_seconds": 0.0,
+      "detail_image_sha256": "bc3e5d14f0db5543b9212d8964cbef30cf5e48793cb61d0e60f55e1988f55674",
+      "setup_scene_agreement": true,
+      "root_release_bracket_pts": [
+        227944,
+        272989
+      ],
+      "claude_release_bracket_pts": [
+        227944,
+        272989
+      ],
+      "release_bracket_agreement": true,
+      "release_status": "coarse_motion_only_exact_release_unverified",
+      "root_relation": "unverified",
+      "claude_relation": "unclear",
+      "claude_object_disposition": "reject_claude_object_description_wrong_owner_pitcher",
+      "replay": "not_seen_in_samples_unseen_gaps_unknown",
+      "next_stage": "bind_existing_replay_then_bounded_catcher_context_detail",
+      "limits": [
+        "preparation_context_not_verified_target",
+        "no_verified_mitt_point",
+        "not_service_ready_without_binding_and_reveal_checks",
+        "claude_object_reason_describes_pitcher_not_catcher"
+      ],
+      "root_note": "첫 표본부터 중앙 중계. 가슴 앞 갈색 물체 후보가 보이지만 손목 경계와 맨손을 함께 확정하지 못함. 후반은 투수 근접 화면.",
+      "claude_note": "detail(샘플0): 투수 뒷모습 세트 자세, 포수 크라우치·타자 타석·심판 가시(타겟 제시 여부는 불명). 투수 상체 좌측 가슴/머리 높이에 어두운 글러브형 물체 있음이나 뒷모습이라 팔-손목-물체 경계가 머리·몸통에 가려져 연속 윤곽 확인 불가. 샘플3~4 레그킥, 5 스트라이드/팔 뒤, 6~7 팔로스루+타자 스윙으로 투구 전환은 5→6 사이. 0.5초 간격 샘플이라 정확 릴리스·공 위치·거리·정확도는 판단 불가.",
+      "service_binding": {
+        "key_matches": 1,
+        "recommendation_status": "ready",
+        "candidates": 3,
+        "event_probabilities": null,
+        "expected_value": "not_provided",
+        "actual_pitch_type": "SI",
+        "actual_description": "foul_tip",
+        "actual_event": null,
+        "x_ft": -0.5580176028796984,
+        "z_ft": 2.077491807463098,
+        "source_has_play_id": false,
+        "independent_service_play_id_match": "unavailable",
+        "setup_estimate": false
+      }
+    },
+    {
+      "pitch_key": "849843:2:4",
+      "play_id": "1b8c2df7-d679-3ae4-814f-f5d61daf6126",
+      "clip_sha256": "c97347430b52bdb2e32d6cf83e5b6447ea09b3a026ab7d3b3a40d01e9a67ca15",
+      "clip_bytes": 4325147,
+      "decoded_frames": 438,
+      "sampled_frames": 16,
+      "time_base": "1/90000",
+      "first_pts": 0,
+      "last_pts": 660397,
+      "earliest_setup_sample_index": 1,
+      "detail_pts": 46283,
+      "detail_clip_seconds": 0.5142555555555556,
+      "detail_image_sha256": "5eb672e05dd48299aa02b0494e41b3410662ae9afb908a25a3affe5c6cd0aae7",
+      "setup_scene_agreement": true,
+      "root_release_bracket_pts": [
+        226463,
+        271508
+      ],
+      "claude_release_bracket_pts": [
+        226463,
+        271508
+      ],
+      "release_bracket_agreement": true,
+      "release_status": "coarse_motion_only_exact_release_unverified",
+      "root_relation": "unverified",
+      "claude_relation": "unclear",
+      "claude_object_disposition": "retain_uncertain_relation",
+      "replay": "not_seen_in_samples_unseen_gaps_unknown",
+      "next_stage": "bind_existing_replay_then_bounded_catcher_context_detail",
+      "limits": [
+        "preparation_context_not_verified_target",
+        "no_verified_mitt_point",
+        "not_service_ready_without_binding_and_reveal_checks"
+      ],
+      "root_note": "첫 표본은 타자 근접 화면, 다음부터 중앙 중계. 포수 팔과 낮은 손/장비 주변을 볼 수 있으나 미트 연결은 불확실. 끝부분은 타자 근접 화면.",
+      "claude_note": "idx1(PTS46283): 투수 세트 자세, 포수 크라우치, 타자 타석 내 — 투구 전 준비 맥락 가시. idx5 팔 뒤(투구 전)→idx6 팔 전방 폴로스루로 거친 릴리스 브래킷. 리플레이 장면은 샘플 내 미관찰(부재 확정 아님). detail.png: 포수 좌측 무릎 사이 지면 근처에 어두운 둥근 글러브형 물체 있으나, 포수 크기 작고(약150px) 팔뚝-손목-물체 연속 경계가 정강이 보호대·허벅지와 구분 불가. 부착 관계·타깃 제시 여부 미확인. 후속 디테일(idx2~3) 검토 유용할 수 있음.",
+      "service_binding": {
+        "key_matches": 1,
+        "recommendation_status": "ready",
+        "candidates": 3,
+        "event_probabilities": null,
+        "expected_value": "not_provided",
+        "actual_pitch_type": "SI",
+        "actual_description": "called_strike",
+        "actual_event": null,
+        "x_ft": -0.06351353802515756,
+        "z_ft": 1.7997570341589146,
+        "source_has_play_id": false,
+        "independent_service_play_id_match": "unavailable",
+        "setup_estimate": false
+      }
+    },
+    {
+      "pitch_key": "849843:2:5",
+      "play_id": "3c92dbfe-ade5-30a4-82e2-4a6e53bdfe38",
+      "clip_sha256": "81bd1e75c08096be8b601a862ccbf22d7b2f4d35307d3938a9fc0a6e253cf863",
+      "clip_bytes": 3618268,
+      "decoded_frames": 396,
+      "sampled_frames": 15,
+      "time_base": "1/90000",
+      "first_pts": 900,
+      "last_pts": 597334,
+      "earliest_setup_sample_index": 0,
+      "detail_pts": 900,
+      "detail_clip_seconds": 0.0,
+      "detail_image_sha256": "53a38b7647c62c6ac489dfc150900f4a6e50ca5870ebed7e1feb870378831d2d",
+      "setup_scene_agreement": true,
+      "root_release_bracket_pts": [
+        226463,
+        271508
+      ],
+      "claude_release_bracket_pts": [
+        271508,
+        316553
+      ],
+      "release_bracket_agreement": false,
+      "release_status": "coarse_motion_only_exact_release_unverified",
+      "root_relation": "unverified",
+      "claude_relation": "unclear",
+      "claude_object_disposition": "retain_uncertain_relation",
+      "replay": "not_seen_in_samples_unseen_gaps_unknown",
+      "next_stage": "bind_existing_replay_then_bounded_catcher_context_detail",
+      "limits": [
+        "preparation_context_not_verified_target",
+        "no_verified_mitt_point",
+        "not_service_ready_without_binding_and_reveal_checks"
+      ],
+      "root_note": "첫 표본부터 중앙 중계. 포수 몸과 팔 주변은 보이지만 미트/손목 접합을 확정하지 못함. 후반 카메라는 투수 쪽으로 이동.",
+      "claude_note": "인덱스0~3 투수 세트자세, 포수 홈플레이트 뒤 크라우치, 타자 타석, 심판 가시. 크라우치는 타깃 제시의 증거가 아님. 인덱스4~5 레그킥, 6 암코킹(투구 전), 7~8 팔로스루·타자 스윙 → 조대 릴리스 브래킷[6,7], 공 분리 프레임 아님. detail(1280x720)에서 포수 신체 약100px, 심판과 중첩, 스트라이크존 오버레이가 겹쳐 팔-손목-물체 연속 경계를 식별 불가. 장갑형 형상 가능성은 있으나 다리/몸통 보호구와의 구분 및 부착 관계 미검증. 0.5초 간격 샘플 사이 구간 미검사.",
+      "service_binding": {
+        "key_matches": 1,
+        "recommendation_status": "ready",
+        "candidates": 3,
+        "event_probabilities": null,
+        "expected_value": "not_provided",
+        "actual_pitch_type": "ST",
+        "actual_description": "swinging_strike",
+        "actual_event": "strikeout",
+        "x_ft": 1.406461572261899,
+        "z_ft": 0.8898659557575319,
+        "source_has_play_id": false,
+        "independent_service_play_id_match": "unavailable",
+        "setup_estimate": false
+      }
+    }
+  ],
+  "vision_calls": [
+    {
+      "pitch_key": "849843:2:1",
+      "models": [
+        "claude-fable-5-1"
+      ],
+      "elapsed_seconds": 35.266,
+      "read_count": 2,
+      "inputs": "one_contact_sheet_and_one_preselected_full_image",
+      "post_read_copy_hashes": [
+        {
+          "name": "sheet.jpg",
+          "sha256": "a5080856c4a36be28306abe4361fcf994080add0ca3abeaebc7f4cb934142d9f",
+          "checked": "post_read_copy_vs_frozen_source"
+        },
+        {
+          "name": "detail.png",
+          "sha256": "19132782e0f3217c0b926a271dc3232c8a09d97da3339bf38e5ff0b6eaee4d11",
+          "checked": "post_read_copy_vs_frozen_source"
+        }
+      ],
+      "raw_response_sha256": "eb0d8f7cc84b4f4dd3661e33e2a16c3f16f02c5034f48f315be77e426950939e",
+      "receipt_sha256": "d913f86b14eb93eef42c8cf98421812e9f2c7430b22e87a47e1848065c00da77"
+    },
+    {
+      "pitch_key": "849843:2:2",
+      "models": [
+        "claude-fable-5-1"
+      ],
+      "elapsed_seconds": 34.688,
+      "read_count": 2,
+      "inputs": "one_contact_sheet_and_one_preselected_full_image",
+      "post_read_copy_hashes": [
+        {
+          "name": "sheet.jpg",
+          "sha256": "9894b1e56e6e6d5d663c6a301fb3d37cb353ecd75fa647021b2c110f52427c0d",
+          "checked": "post_read_copy_vs_frozen_source"
+        },
+        {
+          "name": "detail.png",
+          "sha256": "7446f70020170ebb913220dc658cab3f7543002d39d852b3954f737fe0c4abd8",
+          "checked": "post_read_copy_vs_frozen_source"
+        }
+      ],
+      "raw_response_sha256": "a043a80c26da0e718cc6febdfe3d013d73541774411c9cf633e1ef1a8fbe1222",
+      "receipt_sha256": "cc217bed9b91604e494207be181dfd624c54ae1a52e49666865aef44af5b6f20"
+    },
+    {
+      "pitch_key": "849843:2:3",
+      "models": [
+        "claude-fable-5-1"
+      ],
+      "elapsed_seconds": 26.594,
+      "read_count": 2,
+      "inputs": "one_contact_sheet_and_one_preselected_full_image",
+      "post_read_copy_hashes": [
+        {
+          "name": "sheet.jpg",
+          "sha256": "94a79b059dd54cf6c6bcb2e942a87eedfa4ebfea280f7d88115b2cdf403f78cc",
+          "checked": "post_read_copy_vs_frozen_source"
+        },
+        {
+          "name": "detail.png",
+          "sha256": "bc3e5d14f0db5543b9212d8964cbef30cf5e48793cb61d0e60f55e1988f55674",
+          "checked": "post_read_copy_vs_frozen_source"
+        }
+      ],
+      "raw_response_sha256": "e0552eacb1ace8ebfec94de1090529ed668228fae2b162255b909a8b40e2d700",
+      "receipt_sha256": "82ea997fa25e6f430bf145da2d9a5624fe973438addae9f9799e112903dab890"
+    },
+    {
+      "pitch_key": "849843:2:4",
+      "models": [
+        "claude-fable-5-1"
+      ],
+      "elapsed_seconds": 34.219,
+      "read_count": 2,
+      "inputs": "one_contact_sheet_and_one_preselected_full_image",
+      "post_read_copy_hashes": [
+        {
+          "name": "sheet.jpg",
+          "sha256": "6eb32bf06e9b2bbf487ad84068cf42e6ca2fa9199fa41097094ef8f9e1b14936",
+          "checked": "post_read_copy_vs_frozen_source"
+        },
+        {
+          "name": "detail.png",
+          "sha256": "5eb672e05dd48299aa02b0494e41b3410662ae9afb908a25a3affe5c6cd0aae7",
+          "checked": "post_read_copy_vs_frozen_source"
+        }
+      ],
+      "raw_response_sha256": "fa18125a64323bf298b84114fc9a2cd137cfd90d10ba7ca6f0a749ee738cb0a0",
+      "receipt_sha256": "bf2ff763dde9d38670cb94250200958accec40aba6f3b1a05450afe5ab9a88d7"
+    },
+    {
+      "pitch_key": "849843:2:5",
+      "models": [
+        "claude-fable-5-1"
+      ],
+      "elapsed_seconds": 28.188,
+      "read_count": 2,
+      "inputs": "one_contact_sheet_and_one_preselected_full_image",
+      "post_read_copy_hashes": [
+        {
+          "name": "sheet.jpg",
+          "sha256": "923a7ca369cd750f949c6da80b5eaa584b90aa61eeb12ae6ceb73c0e2b78f610",
+          "checked": "post_read_copy_vs_frozen_source"
+        },
+        {
+          "name": "detail.png",
+          "sha256": "53a38b7647c62c6ac489dfc150900f4a6e50ca5870ebed7e1feb870378831d2d",
+          "checked": "post_read_copy_vs_frozen_source"
+        }
+      ],
+      "raw_response_sha256": "420f2157356537a9c9302d8f80a4840f00ce5b5cab50f7a7100cd9f2717a60f9",
+      "receipt_sha256": "4edfc2759c008cc45c3ef4b5cdfae5e8c2a6370d309607f8184224a3fa878f42"
+    }
+  ],
+  "visual_review_limits": [
+    "Shared detailed frame selection; not fully independent selection.",
+    "Same development samples, not a held-out evaluation.",
+    "No majority vote or repeat image review.",
+    "Claude pitch3 object description rejected for wrong owner; unrelated setup-context fields retained.",
+    "A crouched catcher is not a verified presented target.",
+    "No replay observed in samples does not prove absence in unsampled intervals."
+  ],
+  "service_source": {
+    "path": "outputs/exhibition_replay_pack_20261028_v3/review-data.json",
+    "sha256": "154d9cd1cb166552db5975137e2ba431b9ab48f94fcfa6bdd05304f645427c80",
+    "binding": "unique pitch key, not list position",
+    "service_play_id_independent_match": "unavailable_field_absent",
+    "existing_media": "PA1_only_PA2_not_yet_connected",
+    "availability": "saved_asof_replay_not_verified_live_pre_pitch",
+    "recommendation_position": "historical_delivery_distribution_proxy_not_optimal_target",
+    "event_probabilities": "not_provided",
+    "expected_value": "not_provided"
+  },
+  "tests": {
+    "command": "python -m pytest tests/test_replay_feasibility.py tests/test_replay_context.py tests/test_replay_interval.py tests/test_checklist_model.py -q",
+    "passed": 90,
+    "elapsed_seconds": 11.31,
+    "lint_command": "python scripts/check_project.py --lint-only",
+    "lint_paths": 192,
+    "full_pytest_run": false,
+    "final_document_checklist_recheck_passed": 8,
+    "final_document_checklist_recheck_seconds": 2.35
+  },
+  "private_report": {
+    "path": "outputs/exhibition_replay_pa2_20261029_v1/index.html",
+    "sha256": "ddc2e3d519b6dd6471c592f25fe278ef8a45caf4118b3b2e7bd15478a481ca38",
+    "browser": {
+      "chrome": "155.0.8059.86",
+      "pitch_sections": 5,
+      "detail_toggles": 5,
+      "served_image_sha_checks": 10,
+      "external_requests": 0,
+      "page_errors": [],
+      "narrow_horizontal_overflow": false,
+      "real_phone_test": false
+    }
+  },
+  "code_review": {
+    "commit": "acedaed5a5411351f54bdde2de6a2c7ce38a7280",
+    "models": [
+      "claude-fable-5-1"
+    ],
+    "verdict": "approve",
+    "tests_executed": false,
+    "response_sha256": "eef2b8968bc2c31d2680045f451857e8096230fa6f9cd6f24313090fca77ae46",
+    "blocking_findings": 0,
+    "notes": "Optional error/help wording findings; no functional blocker. Default from_pa absence means1."
+  },
+  "preserved_artifacts": [
+    {
+      "path": "outputs/exhibition_replay_pack_20261028_v3.zip",
+      "sha256": "b1ecf94b97788192aec396eacac8e18bf243df548f76dc33a34525dd84919671",
+      "unchanged": true
+    },
+    {
+      "path": "outputs/exhibition_replay_pack_20261028_v2.zip",
+      "sha256": "f269ac511491ddd948d8e6872ebb57bf39348e1d885538f65db33e1cbe6b7b08",
+      "unchanged": true
+    },
+    {
+      "path": "outputs/exhibition_replay_pack_20261028_v3/review-evidence.json",
+      "sha256": "85482d6e4c4aef0d9d27428452e574826d6e683474b895648a8d3d6f835746be",
+      "unchanged": true
+    },
+    {
+      "path": "outputs/exhibition_replay_pack_20261028_v3/review.js",
+      "sha256": "2c4d71b02974834267d4f4fbda0357eb316824df29101caee8cc2b5b857acca2",
+      "unchanged": true
+    }
+  ],
+  "teammate_repo_changed": false,
+  "cloudflare_changed": false,
+  "protected_game_opened": false,
+  "new_training": 0,
+  "new_downloads": 0,
+  "human_accuracy": "unmeasured",
+  "conclusion": "PA2 five-pitch preparation-context investigation complete; five replay/detail candidates, zero verified mitt points. Next bind these five videos/evidence to existing replay with abstention and reveal/reset checks; do not claim mitt identification solved."
+}
