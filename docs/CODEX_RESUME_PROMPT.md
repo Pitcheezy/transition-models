@@ -7,6 +7,7 @@
 전체 경기 재생의 구현·재현·출처 경계는 [SITE-fullgame1](SITE_FULL_GAME_20261030.md)을 따른다.
 전체 경기 영상 후속은 [SITE-video1](SITE_GAME_VIDEO_20261030.md)을 따른다.
 영상 옆 추천·타석 간 순차 관전의 구현과 동기화 한계는 [SITE-watch1](SITE_WATCH_20261030.md)을 따른다.
+8페이지 점검·선택 공 동선·경기 투구 탐색·교수 시연은 [SITE-audit1](SITE_DEMO_AUDIT_20261030.md), 공식 서비스 비교와 신규 기능 우선순위는 [비교 조사](SITE_BENCHMARK_20261030.md)를 따른다.
 첫타석3구 도착시점 실제위치 공개·맞춤재생바는 [SITE-watch2](SITE_WATCH_TIMING_20261030.md)를 따른다.
 선택한 한 타석 이어보기·중단·타석 경계 기준은 [SITE-pa-sequence1](SITE_PA_SEQUENCE_20261030.md)을 따른다.
 타자 기록 존·전체 경기 진입·투구 URL/메뉴 기준은 [SITE-zone-nav1](SITE_ZONE_NAV_20261030.md)을 따른다.

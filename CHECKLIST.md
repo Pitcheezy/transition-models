@@ -2,7 +2,7 @@
 
 ## 전시 정본 계획 실행 — 2026-10-28
 
-**SITE-audit1 진행 중 — 2026-10-30:** Codex / `codex/site-first-1029` / 기준453cefb. 화요일 교수시연 전 전체 페이지/동선 감사. 합격: 관전/상세분석 역할명시·현재투구 링크보존·되감기 공개초기화·경기 투구탐색과클립시간 구분·추천/실제/참고존 의미 일치·핵심/보조페이지PC모바일점검·고정다른모델검토·기존Sites공개. 팀원/별도Cloudflare/평가잠금 불변.
+**SITE-audit1 공개 완료·수정 권한 반납 — 2026-10-30:** Codex / `codex/site-first-1029` / 제품b9efb3a·탭제목68942a1 / PR85(main미통합). 관전진입통일·현재투구링크보존·receiver되감기/재생/오류결과초기화·경기투구탐색바·고정점선참고존·오류복귀. Node164·checklist8·site검사·Chrome8페이지/390px·다른모델고정검토PASS. Sites소스a08f71dd·공개v17 성공(46자산+hosting). [점검·시연](docs/SITE_DEMO_AUDIT_20261030.md)·[영수증](docs/results/site_fullgame_20261030/demo-audit-receipt.json). 전체중계/전경기도착정밀동기화아님. 팀원·별도Cloudflare불변. 추가요청 [공식서비스 비교·개선제안](docs/SITE_BENCHMARK_20261030.md) 완료; 신규기능은미구현. 다음: 현재타석투구리본·간결한추천/실제카드·상황설명 우선, 이후현재경기필터.
 
 **SITE-watch2 공개 완료·수정 권한 반납 — 2026-10-30:** Codex / `codex/site-first-1029` / 제품58baee4 / PR85(main미통합). 첫타석3구 AI프레임구간상한(3.450856/3.466978/3.384211초)에서 실제위치 공개, 구종/판정은종료까지보류. 나머지258연결클립은종료기준. 맞춤진행바·사건마커·±3초·속도/소리/전체화면. Node318(관전32+시점23포함)·체크리스트8·실제Chrome공개도메인도착전후/로컬되감기·390/320px·다른모델 고정검토PASS. Sites소스e713e37c·공개v15성공. [기록](docs/SITE_WATCH_TIMING_20261030.md)·[영수증](docs/results/site_fullgame_20261030/watch-timing-receipt.json). 정확포구정답/사람검증/전경기정밀동기화아님. 팀원·별도Cloudflare불변. 다음: 첫5타석범위 내 미확인클립 사건시각 근거확장.
 
