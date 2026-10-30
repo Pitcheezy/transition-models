@@ -26,6 +26,7 @@
     target?.focus({preventScroll:true});
   }
   const view = () => session?.view();
+  const perspective = () => el("watch-perspective").value || "pitcher";
   const binding = () => `${generation}:${view()?.pitch_id}`;
   const clock = value => Number.isFinite(value) && value >= 0
     ? `${Math.floor(value / 60)}:${String(Math.floor(value % 60)).padStart(2, "0")}` : "—";
@@ -89,7 +90,7 @@
   }
   function stop(reason = "manual") { sequence?.stop(reason); }
   function controls() {
-    for(const id of ["watch-filter-pitcher","watch-filter-batter","watch-filter-count","watch-filter-clear","watch-show-recommendations","watch-show-actual","watch-show-mitt"]) el(id).disabled = !session;
+    for(const id of ["watch-filter-pitcher","watch-filter-batter","watch-filter-count","watch-filter-clear","watch-show-recommendations","watch-show-actual","watch-show-mitt","watch-perspective"]) el(id).disabled = !session;
     el("watch-game-scrub").disabled = !session;
     el("watch-pa").disabled = !session;
     el("watch-pitch").disabled = !session;
@@ -118,7 +119,10 @@
       },
     });
   function drawLocations(v) {
-    const svg = el("watch-location"), model = PitchReceiverLocation.build(v, zones[v.pitch_id] || null);
+    const direction = perspective(), info = PitchReceiverLocation.perspectiveInfo(direction);
+    const svg = el("watch-location"), model = PitchReceiverLocation.build(v, zones[v.pitch_id] || null, direction);
+    const ticks = PitchReceiverLocation.horizontalTicks(direction);
+    text("watch-perspective-note", info.description);
     const showRecommendations=el("watch-show-recommendations").checked;
     const showActual=el("watch-show-actual").checked;
     svg.replaceChildren();
@@ -131,7 +135,7 @@
     for(let i=0;i<=4;i++) {
       const x=60+i*50;
       shape("line",{x1:x,y1:18,x2:x,y2:268,class:i===2?"location-zero":"location-grid"});
-      shape("text",{x,y:297,class:"location-tick","text-anchor":"middle"},String(i-2));
+      shape("text",{x,y:297,class:"location-tick","text-anchor":"middle"},String(ticks[i]));
     }
     for(let i=0;i<=5;i++) {
       const y=268-i*50;
@@ -165,7 +169,7 @@
     const descriptions = showRecommendations?model.recommendations.map(p=>`${p.rank}위 ${p.label}: ${coordinate(p)}`):["추천 점 표시 꺼짐"];
     text("watch-coordinate-note", !showActual?"실제 공 표시 꺼짐 · 결과 카드는 공개 시점에 표시합니다.":model.actual ? `실제 ${coordinate(model.actual)} · 홈플레이트 통과 위치` : "현재 실제 공 위치 숨김 · 추천 근사 위치만 표시");
     if(showActual && model.actual) descriptions.push(`실제 ${resultReady?model.actual.label:"공 위치"}: ${coordinate(model.actual)}`);
-    svg.setAttribute("aria-label",`${v.pitch_id} · 포수 시점 · ${descriptions.join("; ")}`);
+    svg.setAttribute("aria-label",`${v.pitch_id} · ${info.label} · ${descriptions.join("; ")}`);
   }
   function renderMitt(v) {
     el("watch-mitt-panel").hidden=!el("watch-show-mitt").checked;
@@ -180,8 +184,11 @@
     if(observation.x < -2 || observation.x > 2){text("watch-mitt-status","받은 가로 추정이 표시 범위 밖입니다. 끝점으로 옮겨 그리지 않습니다.");return;}
     text("watch-mitt-status","받은 셋업 가로 추정 · 영상 프레임 대응 미검증");
     el("watch-mitt-axis").hidden=false;
-    el("watch-mitt-dot").style.left=`${(observation.x+2)*25}%`;
-    el("watch-mitt-axis").setAttribute("aria-label",`포수 시점 가로 추정 ${observation.x.toFixed(4)} ft. 높이·의도·제구 오차 아님`);
+    const direction=perspective(), info=PitchReceiverLocation.perspectiveInfo(direction);
+    el("watch-mitt-dot").style.left=`${PitchReceiverLocation.screenX(observation.x,direction)*100}%`;
+    text("watch-mitt-left",direction==="pitcher"?"+2 ft":"−2 ft");
+    text("watch-mitt-right",direction==="pitcher"?"−2 ft":"+2 ft");
+    el("watch-mitt-axis").setAttribute("aria-label",`${info.label} · 원본 x ${observation.x.toFixed(4)} ft. 높이·의도·제구 오차 아님`);
   }
   function renderContext(v) {
     if(!context)return;
@@ -391,7 +398,7 @@
   for(const [id,delta] of [["watch-filter-prev",-1],["watch-filter-next",1]])el(id).addEventListener("click",()=>{
     if(!session)return;filterPage=Math.max(0,filterPage+delta);renderFilters();
   });
-  for(const id of ["watch-show-recommendations","watch-show-actual","watch-show-mitt"])el(id).addEventListener("change",()=>{
+  for(const id of ["watch-show-recommendations","watch-show-actual","watch-show-mitt","watch-perspective"])el(id).addEventListener("change",()=>{
     if(session){drawLocations(view());renderMitt(view());}
   });
   el("watch-game-scrub").addEventListener("input",()=>{

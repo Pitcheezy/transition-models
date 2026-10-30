@@ -6,20 +6,20 @@
     <title>투구별 상세 분석 · Pitcheezy</title>
     <meta name="theme-color" content="#091811" />
     <link rel="stylesheet" href="product.css?v=19" />
-    <link rel="stylesheet" href="receiver.css?v=20" />
+    <link rel="stylesheet" href="receiver.css?v=21" />
     <script src="data.js" defer></script>
     <script src="receiver-contract.js?v=6" defer></script>
     <script src="receiver-fullgame.js?v=1" defer></script>
     <script src="receiver-game-media.js?v=1" defer></script>
     <script src="receiver-zones.js?v=1" defer></script>
     <script src="receiver-route.js?v=1" defer></script>
-    <script src="receiver-location.js?v=4" defer></script>
+    <script src="receiver-location.js?v=5" defer></script>
     <script src="receiver-sample.js" defer></script>
     <script src="receiver-demo-849843.js" defer></script>
     <script src="receiver-media.js?v=8" defer></script>
     <script src="receiver-video.js?v=audit16" defer></script>
     <script src="receiver-sequence.js?v=2" defer></script>
-    <script src="receiver.js?v=20" defer></script>
+    <script src="receiver.js?v=21" defer></script>
   </head>
   <body>
     <a class="skip" href="#receiver">본문으로 이동</a>
@@ -297,11 +297,14 @@
             <figure id="location-comparison" class="location-comparison" hidden>
               <figcaption>추천 위치와 실제 공</figcaption>
               <div class="location-legend"><span><i class="legend-recommendation" aria-hidden="true"></i>추천 순위 · 겹친 위치는 묶음</span><span><i class="legend-actual" aria-hidden="true"></i>실제 공 · 공개 후</span></div>
-              <p id="zone-status" class="location-state">포수 시점 · 기록 존 확인 중</p>
+              <label class="location-perspective" for="location-perspective">도표 방향<select id="location-perspective"><option value="pitcher" selected>중계 방향 · 투수 → 포수</option><option value="catcher">포수 시점 · 포수 → 투수</option></select></label>
+              <p id="location-perspective-note" class="location-direction-note">중앙 외야 영상과 같은 좌우 방향입니다. 좌표 숫자는 원본 포수 기준 x를 유지합니다.</p>
+              <p class="location-plane-note">주황 점은 홈플레이트 통과 위치이며, 미트가 잡은 지점은 아닙니다.</p>
+              <p id="zone-status" class="location-state">기록 존 확인 중</p>
               <svg id="location-plot" viewBox="0 0 320 330" role="img" aria-label="투구 위치 비교"></svg>
               <p id="location-state" class="location-state"></p>
               <ul id="location-values" class="location-values"></ul>
-              <details class="location-explanation"><summary>좌표와 표시 기준</summary><p>결과 공개 뒤 나타나는 흰 테두리와 9분할은 같은 투구의 Statcast 기록 상·하단 높이와 홈플레이트 폭 17인치로 그린 존입니다. 사후 기록을 재생에 표시하며 추천 모델의 투구 전 입력이라고 주장하지 않습니다. 공개 전이나 기록이 없을 때는 높이 1.5–3.5ft의 참고 존을 점선으로 표시합니다. 타자 기록이 아닌 표시용 예시입니다. 공의 반지름·심판 판정을 계산하는 경계는 아닙니다.</p><p>포수 시점: x 음수는 왼쪽, 양수는 오른쪽입니다. z는 지면 기준 높이이며 단위는 ft입니다. 바깥 격자는 1ft 눈금입니다.</p><p>같은 위치의 추천은 1·3처럼 순위를 묶습니다. 전체 순위와 수치는 위 목록에서 확인합니다.</p><p>추천은 과거 투구 분포의 근사 위치이고, 실제 공은 홈플레이트 통과 위치입니다. 실제 포구 지점은 제공되지 않습니다. 미트 가로 관측은 결과 아래에 별도로 표시하며 제구 오차로 계산하지 않습니다.</p></details>
+              <details class="location-explanation"><summary>좌표와 표시 기준</summary><p>결과 공개 뒤 나타나는 흰 테두리와 9분할은 같은 투구의 Statcast 기록 상·하단 높이와 홈플레이트 폭 17인치로 그린 존입니다. 사후 기록을 재생에 표시하며 추천 모델의 투구 전 입력이라고 주장하지 않습니다. 공개 전이나 기록이 없을 때는 높이 1.5–3.5ft의 참고 존을 점선으로 표시합니다. 타자 기록이 아닌 표시용 예시입니다. 공의 반지름·심판 판정을 계산하는 경계는 아닙니다.</p><p>좌표 숫자는 원본 포수 기준을 유지합니다. 중계 방향에서는 x 양수가 왼쪽, 음수가 오른쪽이며 포수 시점에서는 반대입니다. z는 지면 기준 높이이고 단위는 ft입니다. 바깥 격자는 1ft 눈금입니다. 좌우 방향만 맞추며 카메라 각도·영상 픽셀에 보정한 위치가 아닙니다.</p><p>같은 위치의 추천은 1·3처럼 순위를 묶습니다. 전체 순위와 수치는 위 목록에서 확인합니다.</p><p>추천은 과거 투구 분포의 근사 위치이고, 실제 공은 홈플레이트 통과 위치입니다. 실제 포구 지점은 제공되지 않습니다. 미트 가로 관측은 결과 아래에 별도로 표시하며 제구 오차로 계산하지 않습니다.</p></details>
             </figure>
             <div id="received-candidates"></div>
             <p class="receiver-note">

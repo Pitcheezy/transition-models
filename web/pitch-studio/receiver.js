@@ -8,6 +8,7 @@ let session = null,
 let gameMedia = null, excludedMedia = {}, mediaLoadNote = "";
 let gameZones = null, zoneLoadNote = "", currentMode = "file";
 const fullGame = () => session?.view().full_game === true;
+const locationPerspective = () => node("location-perspective").value || "pitcher";
 function observationFor(view) {
   return view.full_game
     ? PitchReceiverFullGame.observation(view)
@@ -133,7 +134,8 @@ function textElement(tag, text, parent) {
 }
 function renderLocations(view) {
   const zone = view?.full_game ? gameZones?.[view.pitch_id] ?? null : null;
-  const model = PitchReceiverLocation.build(view, zone);
+  const direction = locationPerspective(), info = PitchReceiverLocation.perspectiveInfo(direction);
+  const model = PitchReceiverLocation.build(view, zone, direction);
   const wrapper = node("location-comparison"), svg = node("location-plot"), values = node("location-values");
   wrapper.hidden = !model;
   svg.replaceChildren();
@@ -141,6 +143,8 @@ function renderLocations(view) {
   put("location-state", "");
   put("zone-status", "");
   if (!model) { svg.setAttribute("aria-label", "투구 자료 없음"); return; }
+  put("location-perspective-note", info.description);
+  const ticks = PitchReceiverLocation.horizontalTicks(direction);
   const shape = (tag, attrs, text = "") => {
     const element = document.createElementNS("http://www.w3.org/2000/svg", tag);
     for (const [key, value] of Object.entries(attrs)) element.setAttribute(key, String(value));
@@ -152,7 +156,7 @@ function renderLocations(view) {
   for (let i = 0; i <= 4; i++) {
     const x = 60 + i * 50;
     shape("line", {x1:x, y1:18, x2:x, y2:268, class: i === 2 ? "location-zero" : "location-grid"});
-    shape("text", {x, y:306, class:"location-tick", "text-anchor":"middle"}, String(i-2));
+    shape("text", {x, y:306, class:"location-tick", "text-anchor":"middle"}, String(ticks[i]));
   }
   for (let i = 0; i <= 5; i++) {
     const y = 268 - i * 50;
@@ -172,7 +176,7 @@ function renderLocations(view) {
     }
   }
   if (model.zone) {
-    put("zone-status", `포수 시점 · ${view.batter.name}의 기록 존 · 하단 ${model.zone.bottom.toFixed(2)} / 상단 ${model.zone.top.toFixed(2)} ft`);
+    put("zone-status", `${view.batter.name}의 기록 존 · 하단 ${model.zone.bottom.toFixed(2)} / 상단 ${model.zone.top.toFixed(2)} ft`);
   } else put("zone-status", `점선은 참고 존 · 높이 1.5–3.5ft 예시 · 타자 기록 아님. ${zone && !view.revealed ? "결과 공개 뒤 기록 존으로 바뀝니다." : zoneLoadNote || "타자 기록 존 미연결."}`);
   // No jitter or clamping: shared recommendation coordinates retain all ranks.
   for (const group of model.groups) {
@@ -195,7 +199,7 @@ function renderLocations(view) {
   if (model.actual) textElement("li", `실제 · ${model.actual.label}: ${description(model.actual)}`, values).className = "location-actual-value";
   put("location-state", model.revealed ? "실제 홈플레이트 통과 위치 · 포구 지점 아님" : "결과 공개 전 · 실제 공 위치 숨김");
   const spokenRows = Array.from(values.children, (row) => row.textContent).join("; ");
-  svg.setAttribute("aria-label", `${model.pitch_id} · 포수 시점 위치 비교. ${spokenRows}. ${node("location-state").textContent}`);
+  svg.setAttribute("aria-label", `${model.pitch_id} · ${info.label} 위치 비교. ${spokenRows}. ${node("location-state").textContent}`);
 }
 function render(preservePosition = false) {
   if (!session) return;
@@ -351,16 +355,16 @@ function render(preservePosition = false) {
     graphic.setAttribute("role", "img");
     graphic.setAttribute(
       "aria-label",
-      `포수 시점 미트 가로 위치 ${observation.x.toFixed(4)} ft. 높이와 투수 의도는 표시하지 않습니다.`,
+      `${PitchReceiverLocation.perspectiveInfo(locationPerspective()).label} · 원본 미트 x ${observation.x.toFixed(4)} ft. 높이와 투수 의도는 표시하지 않습니다.`,
     );
     const track = textElement("div", "", graphic);
     track.className = "mitt-track";
     const marker = textElement("span", "", track);
     marker.className = "mitt-dot";
-    marker.style.left = `${Math.max(0, Math.min(100, (observation.x + 2) * 25))}%`;
+    marker.style.left = `${PitchReceiverLocation.screenX(observation.x, locationPerspective()) * 100}%`;
     textElement(
       "div",
-      "−2 ft　← 포수 시점 · 0 · 가로 위치 →　+2 ft",
+      locationPerspective() === "pitcher" ? "+2 ft　← 중계 방향 · 0 →　−2 ft" : "−2 ft　← 포수 시점 · 0 →　+2 ft",
       graphic,
     ).className = "mitt-axis";
   }
@@ -766,6 +770,9 @@ node("raw-form").addEventListener("submit", async (event) => {
   } catch (error) {
     reportError(error, version);
   }
+});
+node("location-perspective").addEventListener("change", () => {
+  if (session) render(true);
 });
 node("reveal-pitch").addEventListener("click", () => {
   paSequence.stop();

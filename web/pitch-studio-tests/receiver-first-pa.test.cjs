@@ -143,6 +143,22 @@ test("receiver manual and native replay clear an already disclosed result", asyn
   }
 });
 
+test("receiver perspective matches watch default and preserves source, time and reveal state",async()=>{
+  const s=await receiverDom("?game=849843&pitch=849843%3A1%3A2");
+  s.video.currentTime=1.2;
+  await s.select("location-perspective","catcher");
+  assert.equal(s.video.currentTime,1.2);assert.equal(s.shapes("location-actual").length,0);
+  await s.fire("reveal-pitch");
+  const x=Number(s.shapes("location-actual")[0].getAttribute("cx"));
+  const result=s.get("received-post").textContent,src=s.video.getAttribute("src"),time=s.video.currentTime;
+  await s.select("location-perspective","pitcher");
+  const mirror=Number(s.shapes("location-actual")[0].getAttribute("cx"));
+  assert(Math.abs(x+mirror-320)<1e-9);
+  assert.equal(s.get("received-post").textContent,result);
+  assert.equal(s.video.getAttribute("src"),src);assert.equal(s.video.currentTime,time);
+  assert.match(s.get("location-plot").getAttribute("aria-label"),/투수 → 포수/);
+});
+
 test("receiver decoder failure clears disclosed results and interrupts continuation", async () => {
   const s = await receiverDom(); await s.fire("start-pa-sequence"); await s.end();
   assert.equal(s.timers.size, 1);

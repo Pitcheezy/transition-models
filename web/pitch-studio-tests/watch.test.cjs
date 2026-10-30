@@ -157,6 +157,49 @@ test("video end reveals only the current pitch result and recorded geometry", as
   assert.equal(s.shapes("reference-zone").length, 0);
 });
 
+test("view direction flips every point and ticks without seeking or disclosing a hidden result", async () => {
+  const s = await setup({search:"?game=849843&pitch=849843%3A1%3A2"});
+  const xs=()=>s.shapes("location-recommended").map(p=>Number(p.getAttribute("cx")));
+  const before=xs();
+  assert.match(s.get("watch-perspective-note").textContent,/중앙 외야/);
+  s.video.currentTime=1.2;
+  await s.select("watch-perspective","catcher");
+  assert.equal(s.video.currentTime,1.2);
+  assert.equal(s.shapes("location-actual").length,0);
+  xs().forEach((x,i)=>assert(Math.abs(x+before[i]-320)<1e-9));
+  assert.match(s.get("watch-location").getAttribute("aria-label"),/포수 시점/);
+  await s.click("watch-toggle");
+  await s.end();
+  const right=Number(s.shapes("location-actual")[0].getAttribute("cx"));
+  const source=s.video.getAttribute("src"),time=s.video.currentTime,result=s.get("watch-result").textContent;
+  assert(right>160);
+  await s.select("watch-perspective","pitcher");
+  const left=Number(s.shapes("location-actual")[0].getAttribute("cx"));
+  assert(left<160);assert(Math.abs(left+right-320)<1e-9);
+  assert.equal(s.video.currentTime,time);assert.equal(s.video.getAttribute("src"),source);
+  assert.equal(s.get("watch-result").textContent,result);
+  assert.match(s.get("watch-coordinate-note").textContent,/1\.28/);
+  assert.deepEqual(s.shapes("location-tick").slice(0,5).map(p=>p.textContent),["2","1","0","-1","-2"]);
+  await s.click("watch-prev");
+  assert.equal(s.shapes("location-actual").length,0);
+  assert.equal(s.get("watch-perspective").value,"pitcher");
+});
+
+test("optional mitt axis follows chosen view but never opens early",async()=>{
+  const s=await setup({search:"?game=849843&pitch=849843%3A1%3A3"});
+  await s.check("watch-show-mitt",true);
+  await s.select("watch-perspective","catcher");
+  assert.equal(s.get("watch-mitt-axis").hidden,true);
+  await s.click("watch-toggle");
+  await s.end();
+  const a=parseFloat(s.get("watch-mitt-dot").style.left),value=s.get("watch-mitt-value").textContent;
+  await s.select("watch-perspective","pitcher");
+  const b=parseFloat(s.get("watch-mitt-dot").style.left);
+  assert(Math.abs(a+b-100)<1e-9);assert.equal(s.get("watch-mitt-value").textContent,value);
+  assert.equal(s.get("watch-mitt-left").textContent,"+2 ft");
+  assert.equal(s.get("watch-mitt-right").textContent,"−2 ft");
+});
+
 test("native seek after disclosure hides the actual and zone without rewinding the user's position", async () => {
   const s = await setup(); await s.click("play-pitch-video"); await s.end();
   s.video.currentTime = 2.5; s.video.ended = false; s.video.emit("seeking"); await settle();

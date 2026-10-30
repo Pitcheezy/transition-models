@@ -12,7 +12,30 @@
   const object = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
   const label = (value, fallback) => typeof value === "string" && value.trim() ? value : fallback;
 
-  function position(value) {
+  function perspectiveInfo(perspective = "catcher") {
+    if (perspective === "pitcher") return {
+      label: "중계 방향 · 투수 → 포수",
+      description: "중앙 외야 영상과 같은 좌우 방향입니다. 원본 x는 왼쪽이 양수, 오른쪽이 음수입니다.",
+    };
+    if (perspective === "catcher") return {
+      label: "포수 시점 · 포수 → 투수",
+      description: "포수 뒤에서 투수를 보는 방향입니다. 중앙 외야 영상과 좌우가 반대이며, 원본 x는 오른쪽이 양수입니다.",
+    };
+    throw new TypeError("지원하지 않는 도표 시점입니다.");
+  }
+
+  // Only display direction changes. The source x value and its sign stay intact.
+  function screenX(x, perspective = "catcher") {
+    perspectiveInfo(perspective);
+    if (!finite(x) || x < domain.xMin || x > domain.xMax) return null;
+    return (perspective === "pitcher" ? domain.xMax - x : x - domain.xMin) / (domain.xMax - domain.xMin);
+  }
+  function horizontalTicks(perspective = "catcher") {
+    perspectiveInfo(perspective);
+    return perspective === "pitcher" ? [2, 1, 0, -1, -2] : [-2, -1, 0, 1, 2];
+  }
+
+  function position(value, perspective = "catcher") {
     const x = object(value) && finite(value.x) ? value.x : null;
     const z = object(value) && finite(value.z) ? value.z : null;
     if (x === null || z === null) return { x, z, status: "missing", nx: null, ny: null };
@@ -20,7 +43,7 @@
       return { x, z, status: "outside", nx: null, ny: null };
     return {
       x, z, status: "plottable",
-      nx: (x - domain.xMin) / (domain.xMax - domain.xMin),
+      nx: screenX(x, perspective),
       ny: (domain.zMax - z) / (domain.zMax - domain.zMin),
     };
   }
@@ -32,7 +55,8 @@
    * Identical plotted recommendations share a rank label without dropping rows.
    * null clears the chart; malformed current identity throws for the caller to clear.
    */
-  function build(view, recordedZone = null) {
+  function build(view, recordedZone = null, perspective = "catcher") {
+    perspectiveInfo(perspective);
     if (view == null) return null;
     if (!object(view) || typeof view.pitch_id !== "string" ||
         !/^[1-9][0-9]*:[1-9][0-9]*:[1-9][0-9]*$/.test(view.pitch_id))
@@ -47,7 +71,7 @@
       return {
         rank: candidate.rank,
         label: label(candidate.pitch_label, label(candidate.pitch_type, "추천 구종")),
-        ...position(candidate.target),
+        ...position(candidate.target, perspective),
       };
     });
 
@@ -70,7 +94,7 @@
     let actual = null;
     if (revealed && object(view.post?.actual)) actual = {
       label: label(view.post.actual.pitch_label, "실제 투구"),
-      ...position(view.post.actual),
+      ...position(view.post.actual, perspective),
     };
     let zone = null;
     if (revealed && recordedZone !== null) {
@@ -101,5 +125,5 @@
       nx:upperLeft.nx,ny:upperLeft.ny,nw:lowerRight.nx-upperLeft.nx,nh:lowerRight.ny-upperLeft.ny};
   }
 
-  return { build, marker, referenceZone };
+  return { build, marker, referenceZone, screenX, horizontalTicks, perspectiveInfo };
 });

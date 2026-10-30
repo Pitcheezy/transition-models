@@ -4,7 +4,7 @@ const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const path = require("node:path");
 const vm = require("node:vm");
-const { build, marker, referenceZone } = require("../../web/pitch-studio/receiver-location.js");
+const { build, marker, referenceZone, screenX, horizontalTicks, perspectiveInfo } = require("../../web/pitch-studio/receiver-location.js");
 const { createSession } = require("../../web/pitch-studio/receiver-contract.js");
 const fixture = require("../../web/pitch-studio/receiver-sample.js");
 const supplied = require("../../web/pitch-studio/receiver-demo-849843.js");
@@ -269,4 +269,136 @@ test("missing, inverted, nonfinite or out-of-view zone is never drawn as a valid
   for(const z of [{bottom:2,top:1},{bottom:null,top:3},{bottom:1,top:Infinity},{bottom:-1,top:3},{bottom:1,top:6}])
     assert.throws(()=>build({...view(),revealed:true},{...z,source:"statcast_record"}));
   assert.throws(()=>build({...view(),revealed:true},{bottom:1,top:3,source:"guess"}));
+});
+
+test("849843 second pitch is right in catcher view and left in pitcher view without changing its recorded position", () => {
+  const session = createSession(structuredClone(supplied.packet));
+  session.reveal(true);
+  assert.equal(session.next(), true);
+  session.reveal(true);
+  const source = session.view();
+  assert.equal(source.pitch_id, "849843:1:2");
+  assert.equal(source.post.actual.x, 1.282487876437138);
+  assert.equal(source.post.actual.z, 1.4800826426424478);
+  const catcher = build(source, null, "catcher");
+  const pitcher = build(source, null, "pitcher");
+  assert.ok(catcher.actual.nx > .5);
+  assert.ok(pitcher.actual.nx < .5);
+  assert.ok(Math.abs(catcher.actual.nx - .8206219691092845) < 1e-12);
+  assert.ok(Math.abs(pitcher.actual.nx - .1793780308907155) < 1e-12);
+  assert.equal(pitcher.actual.ny, catcher.actual.ny);
+  assert.equal(pitcher.actual.x, source.post.actual.x);
+  assert.equal(pitcher.actual.z, source.post.actual.z);
+  assert.deepEqual(build(source).actual, catcher.actual);
+});
+
+test("perspective changes mirror every recommendation and grouped rank while preserving frozen inputs", () => {
+  const session = createSession(structuredClone(supplied.packet));
+  session.reveal(true); session.next(); session.reveal(true);
+  const source = session.view(), before = structuredClone(source);
+  const freeze = value => {
+    if (value && typeof value === "object") {
+      Object.values(value).forEach(freeze);
+      Object.freeze(value);
+    }
+  };
+  freeze(source);
+  const catcher = build(source, null, "catcher"), pitcher = build(source, null, "pitcher");
+  assert.equal(pitcher.recommendations.length, 3);
+  assert.deepEqual(pitcher.recommendations.map(p => [p.rank, p.label, p.x, p.z, p.ny]),
+    catcher.recommendations.map(p => [p.rank, p.label, p.x, p.z, p.ny]));
+  for (let i = 0; i < catcher.recommendations.length; i++)
+    assert.ok(Math.abs(catcher.recommendations[i].nx + pitcher.recommendations[i].nx - 1) < 1e-12);
+  assert.deepEqual(pitcher.groups.map(p => [p.ranks, p.label, p.x, p.z, p.ny]),
+    catcher.groups.map(p => [p.ranks, p.label, p.x, p.z, p.ny]));
+  assert.deepEqual(pitcher.groups[0].ranks, [1, 3]);
+  for (let i = 0; i < catcher.groups.length; i++)
+    assert.ok(Math.abs(catcher.groups[i].nx + pitcher.groups[i].nx - 1) < 1e-12);
+  assert.deepEqual(source, before);
+  assert.deepEqual(build(source, null, "catcher"), catcher);
+});
+
+test("switching perspective never reads hidden actual or recorded-zone getters", () => {
+  const source = view();
+  Object.defineProperty(source, "post", { get() { throw new Error("hidden actual read"); } });
+  const recorded = {};
+  for (const key of ["source", "bottom", "top"])
+    Object.defineProperty(recorded, key, { get() { throw new Error("hidden zone read"); } });
+  for (const perspective of ["pitcher", "catcher", "pitcher"]) {
+    const result = build(source, recorded, perspective);
+    assert.equal(result.revealed, false);
+    assert.equal(result.actual, null);
+    assert.equal(result.zone, null);
+    assert.equal(result.recommendations[0].status, "plottable");
+  }
+});
+
+test("mirroring does not turn missing or outside coordinates into a visible edge point", () => {
+  for (const [x, z, status] of [
+    [null, 2, "missing"], [0, NaN, "missing"], [Infinity, 2, "missing"],
+    ["0", 2, "missing"], [-2.0001, 2, "outside"], [2.0001, 2, "outside"],
+    [0, -.0001, "outside"], [0, 5.0001, "outside"],
+  ]) {
+    const source = view();
+    source.revealed = true;
+    source.pre.candidates[0].target = { x, z };
+    source.post = { actual: { pitch_label: "시험", x, z } };
+    for (const perspective of ["catcher", "pitcher"]) {
+      const result = build(source, null, perspective);
+      for (const point of [result.recommendations[0], result.actual]) {
+        assert.equal(point.status, status);
+        assert.equal(point.nx, null);
+        assert.equal(point.ny, null);
+      }
+      assert.deepEqual(result.groups, []);
+    }
+  }
+});
+
+test("recorded zone retains positive width, height and bounds in both perspectives", () => {
+  const source = { ...view(), revealed: true };
+  const recorded = Object.freeze({ source: "statcast_record", bottom: 1.616190945, top: 3.202452428 });
+  const catcher = build(source, recorded, "catcher").zone;
+  const pitcher = build(source, recorded, "pitcher").zone;
+  for (const zone of [catcher, pitcher]) {
+    assert.ok(zone.nw > 0 && zone.nh > 0);
+    assert.ok(Math.abs(zone.nw * 4 - 17 / 12) < 1e-12);
+    assert.ok(Math.abs(zone.nh * 5 - (recorded.top - recorded.bottom)) < 1e-12);
+    assert.ok(Math.abs(zone.nx + zone.nw / 2 - .5) < 1e-12);
+    assert.equal(zone.bottom, recorded.bottom);
+    assert.equal(zone.top, recorded.top);
+  }
+  assert.ok(Math.abs(catcher.nx + pitcher.nx + catcher.nw - 1) < 1e-12);
+  assert.equal(pitcher.nw, catcher.nw);
+  assert.equal(pitcher.ny, catcher.ny);
+  assert.equal(pitcher.nh, catcher.nh);
+});
+
+test("horizontal axis helpers agree with the plot and reject invalid or outside mitt positions", () => {
+  assert.deepEqual(horizontalTicks(), [-2, -1, 0, 1, 2]);
+  assert.deepEqual(horizontalTicks("catcher"), [-2, -1, 0, 1, 2]);
+  assert.deepEqual(horizontalTicks("pitcher"), [2, 1, 0, -1, -2]);
+  for (const perspective of ["catcher", "pitcher"]) {
+    horizontalTicks(perspective).forEach((x, index) => assert.equal(screenX(x, perspective), index / 4));
+    assert.equal(screenX(0, perspective), .5);
+    for (const invalid of [null, undefined, NaN, Infinity, -Infinity, "0", false, -2.001, 2.001])
+      assert.equal(screenX(invalid, perspective), null);
+    const source = view();
+    source.pre.candidates[0].target = { x: 1.282487876437138, z: 2 };
+    assert.equal(build(source, null, perspective).recommendations[0].nx, screenX(1.282487876437138, perspective));
+    const info = perspectiveInfo(perspective);
+    assert.equal(typeof info.label, "string"); assert.ok(info.label.trim());
+    assert.equal(typeof info.description, "string"); assert.ok(info.description.trim());
+  }
+  assert.equal(screenX(-1), .25);
+  assert.notEqual(perspectiveInfo("catcher").label, perspectiveInfo("pitcher").label);
+});
+
+test("unknown perspectives fail explicitly instead of silently changing coordinate meaning", () => {
+  for (const perspective of ["", "broadcast", "Pitcher", null, false, 1]) {
+    assert.throws(() => build(view(), null, perspective));
+    assert.throws(() => screenX(0, perspective));
+    assert.throws(() => horizontalTicks(perspective));
+    assert.throws(() => perspectiveInfo(perspective));
+  }
 });
