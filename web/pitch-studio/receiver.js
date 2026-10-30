@@ -124,7 +124,9 @@ function renderLocations(view) {
       shape("line", {x1:x,y1:y+h*i/3,x2:x+w,y2:y+h*i/3,class:"strike-zone-division"});
     }
     put("zone-status", `포수 시점 · ${view.batter.name}의 기록 존 · 하단 ${model.zone.bottom.toFixed(2)} / 상단 ${model.zone.top.toFixed(2)} ft`);
-  } else put("zone-status", zoneLoadNote || "포수 시점 · 기록 존 미연결 · 1ft 좌표 격자만 표시");
+  } else put("zone-status", zone && !view.revealed
+    ? "포수 시점 · 결과 공개 뒤 타자 기록 존 표시 · 현재 1ft 좌표 격자"
+    : zoneLoadNote || "포수 시점 · 기록 존 미연결 · 1ft 좌표 격자만 표시");
   // No jitter or clamping: shared recommendation coordinates retain all ranks.
   for (const group of model.groups) {
     const x = 60 + group.nx * 200, y = 18 + group.ny * 250;

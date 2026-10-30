@@ -243,3 +243,14 @@ footer {
     white-space: normal;
   }
 }
+#view-validation .evidence-card {
+  min-width: 0;
+}
+#view-validation .table-wrap {
+  max-width: 100%;
+}
+@media (max-width: 1000px) {
+  #view-validation .evidence-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

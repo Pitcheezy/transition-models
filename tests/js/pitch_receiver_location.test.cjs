@@ -226,21 +226,25 @@ test("browser UMD export needs no document or network capability", () => {
   assert.equal(context.PitchReceiverLocation.build(view()).pitch_id, "900001:5:1");
 });
 
-test("recorded batter zone uses plate width, preserves coordinates and never reveals actual", () => {
+test("historical batter zone stays hidden until reveal and then uses exact plate width", () => {
   const v=view();
   Object.defineProperty(v,"post",{get(){throw new Error("future result");}});
   const z={bottom:1.616190945,top:3.202452428,source:"statcast_record"};
-  const result=build(v,z);
+  const hidden=build(v,z);
+  assert.equal(hidden.zone,null);
+  assert.equal(hidden.actual,null);
+  assert.deepEqual(hidden.recommendations,build(v).recommendations);
+  const revealed={...view(),revealed:true};
+  const result=build(revealed,z);
   assert.ok(Math.abs(result.zone.nw*4-17/12)<1e-12);
   assert.ok(Math.abs(result.zone.nh*5-(z.top-z.bottom))<1e-12);
-  assert.equal(result.actual,null);
-  assert.deepEqual(result.recommendations,build(v).recommendations);
+  assert.deepEqual(result.recommendations,build(revealed).recommendations);
   assert.equal(build(v).zone,null);
-  const other=build(v,{...z,bottom:1.5,top:3.1});
+  const other=build(revealed,{...z,bottom:1.5,top:3.1});
   assert.notEqual(result.zone.ny,other.zone.ny);
 });
 test("missing, inverted, nonfinite or out-of-view zone is never drawn as a valid boundary", () => {
   for(const z of [{bottom:2,top:1},{bottom:null,top:3},{bottom:1,top:Infinity},{bottom:-1,top:3},{bottom:1,top:6}])
-    assert.throws(()=>build(view(),{...z,source:"statcast_record"}));
-  assert.throws(()=>build(view(),{bottom:1,top:3,source:"guess"}));
+    assert.throws(()=>build({...view(),revealed:true},{...z,source:"statcast_record"}));
+  assert.throws(()=>build({...view(),revealed:true},{bottom:1,top:3,source:"guess"}));
 });

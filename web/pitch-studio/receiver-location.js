@@ -73,7 +73,7 @@
       ...position(view.post.actual),
     };
     let zone = null;
-    if (recordedZone !== null) {
+    if (revealed && recordedZone !== null) {
       if (!object(recordedZone) || recordedZone.source !== "statcast_record" ||
           !finite(recordedZone.bottom) || !finite(recordedZone.top) ||
           recordedZone.bottom < domain.zMin || recordedZone.top > domain.zMax ||
