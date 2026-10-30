@@ -397,10 +397,8 @@ async function loadFullGame() {
     const bytes = await response.arrayBuffer();
     if (bytes.byteLength > MAX_BYTES) throw new Error("경기 파일 크기 초과");
     const packet = JSON.parse(new TextDecoder("utf-8", {fatal:true}).decode(bytes));
-    const candidate = PitchReceiverFullGame.createSession(packet);
-    if (candidate.view().source.sha256 !== "df606a11c6db465c054252ef8d331aeb23aa21565b4960bd586f3dcf8f62f6b7")
-      throw new Error("영상과 연결할 수신 원문이 다릅니다.");
     const hash = await sha256(bytes);
+    const candidate = PitchReceiverFullGame.createVerifiedSession(packet, hash);
     if (version !== loadVersion) return;
     session = candidate;
     builtInDemo = true;

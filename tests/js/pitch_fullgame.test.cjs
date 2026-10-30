@@ -3,6 +3,19 @@ const test = require("node:test"), assert = require("node:assert/strict");
 const {validate,createSession,observation} = require("../../web/pitch-studio/receiver-fullgame.js");
 const fixture = require("../../web/pitch-studio/game-849843.json");
 const sample=()=>structuredClone(fixture);
+
+test("served asset bytes are pinned before a video-enabled session can be opened",()=>{
+  const fs=require("node:fs"),path=require("node:path"),crypto=require("node:crypto");
+  const {createVerifiedSession}=require("../../web/pitch-studio/receiver-fullgame.js");
+  const bytes=fs.readFileSync(path.join(__dirname,"../../web/pitch-studio/game-849843.json"));
+  const sha=data=>crypto.createHash("sha256").update(data).digest("hex");
+  assert.equal(createVerifiedSession(fixture,sha(bytes)).view().count,262);
+  const changed=sample();changed.pitches[0].pitcher.name="Different pitcher";
+  const changedBytes=Buffer.from(JSON.stringify(changed));
+  assert.equal(changed.source.sha256,fixture.source.sha256);
+  assert.throws(()=>createVerifiedSession(changed,sha(changedBytes)),/바이트/);
+  assert.throws(()=>createVerifiedSession(fixture,"0".repeat(64)),/바이트/);
+});
 test("actual archive contains 262 keyed pitches, 71 PAs, 246 recommendations and 16 unsupported",()=>{
   const s=createSession(fixture);
   assert.deepEqual(s.view().summary,{pitches:262,plate_appearances:71,ready:246,unsupported:16,missing:0});

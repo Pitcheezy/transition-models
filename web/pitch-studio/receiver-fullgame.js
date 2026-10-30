@@ -7,6 +7,7 @@
 })(typeof globalThis === "object" ? globalThis : this, function () {
   "use strict";
   const SCHEMA = "pitcheezy-static-game-v1";
+  const ASSET_SHA256 = "89e14e12e0f0a2ae2475aff16b8757486143f6a4586239434a1f8b0be6bb3c22";
   const copy = (value) => JSON.parse(JSON.stringify(value));
   const requireValue = (test, message) => { if (!test) throw new TypeError(message); };
   function fields(value, keys) {
@@ -137,5 +138,12 @@
     if (setup.status === "estimated" && typeof setup.x === "number" && Number.isFinite(setup.x)) return {status:"estimated",x:setup.x};
     return {status:"unavailable",x:null};
   }
-  return {validate,createSession,observation};
+  function createVerifiedSession(input, contentHash) {
+    requireValue(contentHash === ASSET_SHA256, "검토된 전체 경기 파일의 바이트와 다릅니다.");
+    const session = createSession(input), view = session.view();
+    requireValue(view.game.game_pk === 849843 && view.count === 262 && view.summary.plate_appearances === 71 && view.summary.ready === 246 && view.summary.unsupported === 16, "고정 경기 범위와 다릅니다.");
+    requireValue(view.source.sha256 === "df606a11c6db465c054252ef8d331aeb23aa21565b4960bd586f3dcf8f62f6b7", "영상과 연결할 수신 원문이 다릅니다.");
+    return session;
+  }
+  return {validate,createSession,createVerifiedSession,observation};
 });
