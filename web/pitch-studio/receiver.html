@@ -6,7 +6,7 @@
     <title>경기 전체 재생 · Pitcheezy</title>
     <meta name="theme-color" content="#091811" />
     <link rel="stylesheet" href="product.css?v=12" />
-    <link rel="stylesheet" href="receiver.css?v=12" />
+    <link rel="stylesheet" href="receiver.css?v=13" />
     <script src="data.js" defer></script>
     <script src="receiver-contract.js?v=6" defer></script>
     <script src="receiver-fullgame.js?v=1" defer></script>
@@ -17,8 +17,9 @@
     <script src="receiver-sample.js" defer></script>
     <script src="receiver-demo-849843.js" defer></script>
     <script src="receiver-media.js?v=8" defer></script>
-    <script src="receiver-video.js?v=video1-8" defer></script>
-    <script src="receiver.js?v=zone-nav-12" defer></script>
+    <script src="receiver-video.js?v=sequence-13" defer></script>
+    <script src="receiver-sequence.js?v=1" defer></script>
+    <script src="receiver.js?v=sequence-13" defer></script>
   </head>
   <body>
     <a class="skip" href="#receiver">본문으로 이동</a>
@@ -278,6 +279,12 @@
             <button id="video-next-pitch" class="secondary" hidden>다음 투구 보기</button>
           </div>
           <p id="pitch-video-status" role="status"></p>
+          <div id="pa-sequence-controls" class="pa-sequence-controls" hidden>
+            <div><strong>한 타석 이어보기</strong><p>현재 공부터 · 결과를 5초간 확인하고 다음 공 재생 · 타석 끝에서 정지</p></div>
+            <button id="start-pa-sequence" class="primary" type="button">이 타석 이어보기</button>
+            <button id="stop-pa-sequence" class="secondary" type="button" disabled>이어보기 멈추기</button>
+            <p id="pa-sequence-status" role="status">버튼을 눌러야 시작합니다. 투구 선택·탐색·영상 오류 시 자동 진행이 멈춥니다.</p>
+          </div>
           <p id="pitch-observation-note" class="observation-legend" hidden>초록 표시: 별도 정지 프레임에 저장된 AI 미트 중심 · 미검토 추정. 높이·투수 의도·제구 오차를 검증한 값이 아닙니다.</p>
           <p class="receiver-note">같은 투구 ID의 공식 클립과 추천을 묶었습니다. 클립 종료 시 결과를 공개하며, 정확한 릴리스·포구 순간에 맞춘 표시나 연속 중계는 아닙니다. 일부 클립에는 리플레이가 포함될 수 있습니다. 영상 오류가 나도 결과를 직접 공개할 수 있습니다.</p>
           <a id="pitch-video-source" class="source-link" target="_blank" rel="noopener noreferrer" hidden>이 투구의 MLB 공식 영상 출처</a>

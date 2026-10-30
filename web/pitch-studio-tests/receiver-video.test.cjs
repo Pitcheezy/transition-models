@@ -11,7 +11,7 @@ function element() {
     getAttribute: (name) => attrs[name], setAttribute: (name,value) => { attrs[name]=value; },
     removeAttribute: (name) => { delete attrs[name]; } };
 }
-function setup() {
+function setup(events = {}) {
   const video = Object.assign(element(), {
     paused: true, ended: false, currentTime: 0, error: null,
     pause() { this.paused = true; this.callbacks.pause?.(); },
@@ -21,7 +21,7 @@ function setup() {
   const elements = {video};
   for(const name of ["section","frame","missing","status","fallback","play","inspect","observationImage","marker","observationNote","sourceLink"]) elements[name]=element();
   const reveals = [];
-  const controller = create(elements, binding => reveals.push(binding), media);
+  const controller = create(elements, binding => reveals.push(binding), media, events);
   const update = (pitch=3, revealed=false, context=1, enabled=true, observationAllowed=true) =>
     controller.update({context,pitch_id:`849843:1:${pitch}`,revealed,enabled,observationAllowed});
   return {elements,video,callbacks:video.callbacks,reveals,update,controller,click:()=>elements.play.callbacks.click(),inspect:()=>elements.inspect.callbacks.click()};
@@ -144,4 +144,40 @@ test("queued old end while new clip is playing cannot reveal before actual end",
  // HTMLMediaElement.ended remains false on the new not-ended resource.
  s.callbacks.ended();assert.equal(s.reveals.length,0);
  s.video.ended=true;s.callbacks.ended();assert.deepEqual(s.reveals,['1:849843:1:2']);
+});
+
+test('sequence restart begins at zero and only ended reports completion',async()=>{
+ const ended=[], interrupts=[],s=setup({onEnded:k=>ended.push(k),onInterrupt:r=>interrupts.push(r)});
+ s.update(1);s.video.currentTime=3;
+ assert.equal(await s.controller.restart(),true);assert.equal(s.video.currentTime,0);
+ assert.deepEqual(interrupts,[]);assert.deepEqual(ended,[]);
+ s.video.ended=true;s.callbacks.ended();s.callbacks.ended();
+ assert.deepEqual(ended,['1:849843:1:1']);
+});
+test('native pause, seek, playback error and manual replay notify sequence cancellation',async()=>{
+ const interrupts=[],s=setup({onInterrupt:r=>interrupts.push(r)});
+ s.update(1);await s.controller.restart();s.video.pause();assert.equal(interrupts.pop(),'pause');
+ s.video.currentTime=2;s.callbacks.seeking();assert.equal(interrupts.pop(),'seek');
+ s.video.error={code:4};s.callbacks.error();assert.equal(interrupts.pop(),'error');
+ await s.click();assert.equal(interrupts.pop(),'manual');
+ s.video.paused=false;s.callbacks.play();assert.equal(interrupts.pop(),'manual');
+});
+test('programmatic rewind does not cancel but later user seek does',async()=>{
+ const interrupts=[],s=setup({onInterrupt:r=>interrupts.push(r)});
+ s.update(1);s.video.currentTime=4;await s.controller.restart();
+ s.callbacks.seeking();assert.deepEqual(interrupts,[]);s.callbacks.seeked();
+ s.callbacks.seeking();assert.deepEqual(interrupts,['seek']);
+});
+test('unavailable, rejected and late-replaced restart return false',async()=>{
+ const s=setup();assert.equal(await s.controller.restart(),false);
+ s.update(1);s.video.play=()=>Promise.reject(new Error('blocked'));
+ assert.equal(await s.controller.restart(),false);
+ let resolve;s.video.play=()=>new Promise(r=>{resolve=r;});const p=s.controller.restart();
+ s.update(2);resolve();assert.equal(await p,false);assert.equal(s.reveals.length,0);
+});
+
+test('starting an untouched clip does not create an unnecessary seek',async()=>{
+ const s=setup();s.update(1);let value=0,writes=0;
+ Object.defineProperty(s.video,'currentTime',{get:()=>value,set:v=>{value=v;writes++;}});
+ await s.controller.restart();assert.equal(writes,0);
 });

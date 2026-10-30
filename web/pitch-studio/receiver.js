@@ -25,12 +25,51 @@ const pitchVideo = PitchReceiverVideo.create({
   if (!session || !builtInDemo || binding !== `${loadVersion}:${session.view().pitch_id}`) return;
   session.reveal(true);
   render();
-}, window.PitchReceiverMedia);
+}, window.PitchReceiverMedia, {
+  onEnded: (binding) => paSequence.ended(binding),
+  onInterrupt: (reason) => { if (paSequence.isActive()) paSequence.stop(reason); },
+});
+function sequenceState() {
+  const view = session?.view();
+  const group = view?.full_game ? session.groups().find(g => g.pa === view.at_bat_number) : null;
+  const index = group?.keys.indexOf(view.pitch_id) ?? -1;
+  return {enabled: Boolean(builtInDemo && group), binding: `${loadVersion}:${view?.pitch_id}`,
+    pa: view?.at_bat_number, pitchId: view?.pitch_id, revealed: view?.revealed,
+    nextId: group?.keys[index + 1] || null, hasVideo: Boolean(gameMedia?.[view?.pitch_id])};
+}
+function renderSequenceControls() {
+  const state = sequenceState();
+  node("pa-sequence-controls").hidden = !state.enabled;
+  node("start-pa-sequence").disabled = paSequence.isActive() || !state.hasVideo;
+  node("stop-pa-sequence").disabled = !paSequence.isActive();
+}
+const paSequence = PitchReceiverSequence.create({
+  getState: sequenceState,
+  startClip: () => { session.reveal(false); render(); return pitchVideo.restart(); },
+  advance: (key) => { session.select(key); render(); rememberRoute(); },
+  onChange: ({phase, reason}) => {
+    renderSequenceControls();
+    const messages = {
+      complete: "이 타석의 마지막 공까지 봤습니다. 다음 타석은 직접 선택해 주세요.",
+      missing: "확인된 영상이 없어 이어보기를 멈췄습니다. 현재 공의 결과는 직접 공개할 수 있습니다.",
+      blocked: "자동 재생을 시작하지 못해 멈췄습니다. 재생 버튼으로 다시 확인해 주세요.",
+      error: "영상 오류로 이어보기를 멈췄습니다. 결과를 직접 공개하거나 다시 시작할 수 있습니다.",
+      pause: "영상 일시정지로 이어보기를 멈췄습니다.",
+      seek: "영상 탐색으로 이어보기를 멈췄습니다.",
+      hidden: "페이지를 벗어나 이어보기를 멈췄습니다.",
+    };
+    node("pa-sequence-status").textContent = phase === "waiting"
+      ? "결과 확인 중 · 5초 뒤 같은 타석의 다음 공을 재생합니다."
+      : phase === "playing" ? "한 타석 이어보기 중 · 현재 공의 추천을 확인하세요."
+      : messages[reason] || "이어보기 정지 · 현재 공부터 다시 시작할 수 있습니다.";
+  },
+});
 const MAX_BYTES = 5 * 1024 * 1024;
 const put = (id, text) => {
   node(id).textContent = text;
 };
 function clear() {
+  paSequence.stop();
   loadVersion++;
   session = null;
   builtInDemo = false;
@@ -53,6 +92,7 @@ function clear() {
   node("response-workspace").hidden = true;
   node("source-details").hidden = true;
   node("source-details").replaceChildren();
+  renderSequenceControls();
   node("received-post").replaceChildren();
   node("received-candidates").replaceChildren();
   renderLocations(null);
@@ -164,6 +204,7 @@ function render() {
   node("pitch-tabs").hidden = !builtInDemo;
   node("receiver-stage").classList.toggle("has-video", builtInDemo);
   renderNavigation(view);
+  renderSequenceControls();
   node("video-next-pitch").hidden = !builtInDemo || !view.can_next;
   put("video-next-pitch", "다음 투구 보기");
   node("response-workspace").hidden = false;
@@ -383,6 +424,7 @@ function rememberRoute(method = "push") {
     window.history[method === "replace" ? "replaceState" : "pushState"](null, "", `${window.location.pathname}${query}${window.location.hash}`);
 }
 function selectPitch(key) {
+  paSequence.stop();
   session.select(key);
   syncPaFilter();
   render();
@@ -547,6 +589,7 @@ node("inning-select").addEventListener("change", () => {
   if (group) selectPitch(group.keys[0]);
 });
 node("video-next-pitch").addEventListener("click", () => {
+  paSequence.stop();
   if (builtInDemo && session?.view().can_next) { session.next(); syncPaFilter(); render(); rememberRoute(); }
 });
 for (const link of document.querySelectorAll(".video-jump")) {
@@ -714,26 +757,31 @@ node("raw-form").addEventListener("submit", async (event) => {
   }
 });
 node("reveal-pitch").addEventListener("click", () => {
+  paSequence.stop();
   session?.reveal(true);
   render();
 });
 node("hide-pitch").addEventListener("click", () => {
+  paSequence.stop();
   session?.reveal(false);
   render();
 });
 node("next-pitch").addEventListener("click", () => {
+  paSequence.stop();
   session?.next();
   syncPaFilter();
   render();
   if (session) rememberRoute();
 });
 node("previous-pitch").addEventListener("click", () => {
+  paSequence.stop();
   session?.previous();
   syncPaFilter();
   render();
   if (session) rememberRoute();
 });
 async function restoreRoute() {
+  paSequence.stop();
   try {
     const route = PitchReceiverRoute.parse(window.location.search);
     if (route.mode === "file") {
@@ -750,4 +798,10 @@ async function restoreRoute() {
   } catch (error) { reportError(error, loadVersion); }
 }
 window.addEventListener("popstate", restoreRoute);
+node("start-pa-sequence").addEventListener("click", () => paSequence.start());
+node("stop-pa-sequence").addEventListener("click", () => { paSequence.stop(); pitchVideo.pause(); });
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden && paSequence.isActive()) { paSequence.stop("hidden"); pitchVideo.pause(); }
+});
+window.addEventListener("pagehide", () => { paSequence.stop("hidden"); pitchVideo.pause(); });
 restoreRoute();

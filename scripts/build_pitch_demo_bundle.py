@@ -34,6 +34,7 @@ SITE_FILES = (
     "receiver-location.js",
     "receiver-media.js",
     "receiver-video.js",
+    "receiver-sequence.js",
     "receiver-sample.js",
     "receiver.css",
     "receiver.html",

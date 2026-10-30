@@ -491,3 +491,10 @@
 .game-navigation select { width:100%; min-width:0; padding:12px; border:1px solid #779486; border-radius:6px; color:#f4fff5; background:#142d21; font:inherit; }
 .game-navigation p { grid-column:1/-1; color:#c6d8cc; margin:0; font-size:.85rem; line-height:1.7; }
 @media (max-width:600px) { .game-navigation {grid-template-columns:1fr;} }
+
+.pa-sequence-controls { display: flex; flex-wrap: wrap; align-items: center; gap: .7rem; margin-top: 1rem; padding: 1rem; border: 1px solid #48694d; border-radius: 12px; background: #0b2215; }
+.pa-sequence-controls[hidden] { display: none; }
+.pa-sequence-controls > div { flex: 1 1 220px; min-width: 0; }
+.pa-sequence-controls p { margin: .4rem 0 0; color: #c0d2c3; font-size: .88rem; line-height: 1.6; }
+.pa-sequence-controls > p { flex: 1 0 100%; }
+.pa-sequence-controls button { white-space: normal; }

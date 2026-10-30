@@ -1,12 +1,19 @@
 /* Verified per-pitch replay and a separately annotated still. No live tracking. */
 (function (root) {
   "use strict";
-  function create(elements, onReveal, media) {
+  function create(elements, onReveal, media, events = {}) {
     const { video, section, frame, missing, status, play, fallback,
       inspect, observationImage, marker, observationNote, sourceLink } = elements;
     let binding = null, active = false, generation = 0, failed = false;
     let revealed = false, started = false, inspecting = false, record = null;
     let canInspect = false;
+    let internalSeek = false;
+    let programmaticPlay = false;
+    function seekStart() {
+      if (video.currentTime === 0) return;
+      internalSeek = true;
+      try { video.currentTime = 0; } catch (_) { internalSeek = false; }
+    }
     function showMode() {
       video.hidden = inspecting || failed;
       fallback.hidden = inspecting || !failed || !record?.poster;
@@ -19,9 +26,10 @@
     function reset() {
       generation++;
       started = false;
+      programmaticPlay = false;
       inspecting = false;
       video.pause();
-      try { video.currentTime = 0; } catch (_) { /* Metadata may not be loaded yet. */ }
+      seekStart();
       play.textContent = "투구 영상 재생";
     }
     function update(state) {
@@ -84,23 +92,28 @@
       showMode();
     }
     async function toggle() {
-      if (!active) return;
+      if (!active) return false;
       if (!video.paused && !inspecting) { video.pause(); return; }
       const request = ++generation;
-      if (inspecting) { inspecting = false; video.currentTime = 0; }
+      if (inspecting) { inspecting = false; seekStart(); }
       if (failed) { failed = false; video.load(); }
       showMode();
-      if (video.ended) video.currentTime = 0;
+      if (video.ended) seekStart();
+      programmaticPlay = true;
       try { await video.play(); }
       catch (error) {
-        if (request !== generation || !active || inspecting) return;
-        if (error.name === "AbortError" && video.paused) return;
+        if (request !== generation || !active || inspecting) return false;
+        if (error.name === "AbortError" && video.paused) return false;
         status.textContent = "재생을 시작하지 못했습니다. 재생 버튼을 다시 눌러주세요.";
         play.textContent = "다시 재생 시도";
+        return false;
       }
+      finally { if (request === generation) programmaticPlay = false; }
+      return request === generation && active && !video.paused;
     }
     function inspectStill() {
       if (!canInspect) return;
+      events.onInterrupt?.("inspect");
       if (inspecting) { toggle(); return; }
       generation++;
       inspecting = true;
@@ -110,7 +123,7 @@
       play.textContent = "영상 다시 보기";
       status.textContent = "별도로 판독한 투구 전 정지 장면 · 초록 표시가 저장된 미트 중심입니다.";
     }
-    play.addEventListener("click", toggle);
+    play.addEventListener("click", () => { events.onInterrupt?.("manual"); return toggle(); });
     inspect.addEventListener("click", inspectStill);
     observationImage.addEventListener("load", showMode);
     observationImage.addEventListener("error", () => {
@@ -119,6 +132,7 @@
     });
     video.addEventListener("play", () => {
       if (!active || inspecting) { video.pause(); return; }
+      if (!programmaticPlay) events.onInterrupt?.("manual");
       started = true;
       play.textContent = "일시정지";
       status.textContent = `${record.pitch_number}구 영상 재생 중 · 재생 후 저장 결과를 표시합니다.`;
@@ -127,12 +141,20 @@
       if (!active || inspecting) video.pause();
     });
     video.addEventListener("pause", () => {
+      if (!video.paused) return; // Ignore a queued pause after a new play request.
       generation++;
+      if (active && started && !video.ended) events.onInterrupt?.("pause");
       if (active && !failed && !inspecting) {
         play.textContent = video.ended ? "영상 다시 보기" : "투구 영상 재생";
         if (!video.ended) status.textContent = `${record.pitch_number}구 영상 일시정지 · 재생 버튼으로 이어볼 수 있습니다.`;
       }
     });
+    video.addEventListener("seeking", () => {
+      if (internalSeek && video.currentTime === 0) return;
+      internalSeek = false;
+      if (active) events.onInterrupt?.("seek");
+    });
+    video.addEventListener("seeked", () => { internalSeek = false; });
     video.addEventListener("ended", () => {
       if (!active || inspecting || !started || !video.ended) return;
       started = false;
@@ -141,9 +163,11 @@
       if (binding !== completedBinding || !active) return;
       play.textContent = "영상 다시 보기";
       status.textContent = `${record.pitch_number}구 재생 완료 · 실제 결과 공개${canInspect ? " · 미트 판독 장면도 확인할 수 있습니다." : " · 추천과 실제 결과를 비교하세요."}`;
+      events.onEnded?.(completedBinding);
     });
     video.addEventListener("error", () => {
       if (!active || !video.error) return;
+      events.onInterrupt?.("error");
       failed = true;
       started = false;
       showMode();
@@ -153,7 +177,11 @@
         ? "영상 로딩 실패 · 확인된 정지 장면을 표시합니다. 다시 불러오거나 결과 공개를 사용할 수 있습니다."
         : "공식 영상을 불러오지 못했습니다. 다시 불러오거나 ‘현재 투구 결과 공개’로 추천과 실제 결과를 비교하세요.";
     });
-    return { update };
+    return { update, pause: () => video.pause(), restart: () => {
+      if (!active) return Promise.resolve(false);
+      reset();
+      return toggle();
+    } };
   }
   const api = { create };
   if (typeof module !== "undefined" && module.exports) module.exports = api;
