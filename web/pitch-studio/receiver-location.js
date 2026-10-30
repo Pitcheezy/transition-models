@@ -12,6 +12,7 @@
   const object = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
   const label = (value, fallback) => typeof value === "string" && value.trim() ? value : fallback;
 
+  // Keep the legacy API default; both product pages pass their selected view explicitly.
   function perspectiveInfo(perspective = "catcher") {
     if (perspective === "pitcher") return {
       label: "중계 방향 · 투수 → 포수",
@@ -103,6 +104,7 @@
           recordedZone.bottom < domain.zMin || recordedZone.top > domain.zMax ||
           recordedZone.bottom >= recordedZone.top) throw new TypeError("존 높이 자료가 올바르지 않습니다.");
       // Home-plate width: 17 inches. This outline does not classify umpire calls.
+      // Symmetric about x=0: retain left/right screen bounds in either perspective.
       const halfWidth = 17 / 24;
       const upperLeft = position({x:-halfWidth,z:recordedZone.top});
       const lowerRight = position({x:halfWidth,z:recordedZone.bottom});
@@ -118,6 +120,7 @@
   }
 
   // Schematic aid only. Never read the current batter's post-pitch zone here.
+  // As above, symmetry about x=0 makes these screen bounds perspective-invariant.
   function referenceZone() {
     const upperLeft = position({x: -17/24, z: 3.5});
     const lowerRight = position({x: 17/24, z: 1.5});

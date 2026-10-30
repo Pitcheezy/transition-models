@@ -349,7 +349,8 @@ function render(preservePosition = false) {
     view.full_game ? "받은 셋업 가로 추정 x" : "우리 저장 미트 x",
     observation.x === null ? "—" : `${observation.x.toFixed(4)} ft`,
   );
-  if (observation.x !== null && observation.x >= -2 && observation.x <= 2) {
+  const mittDisplayX = PitchReceiverLocation.screenX(observation.x, locationPerspective());
+  if (mittDisplayX !== null) {
     const graphic = textElement("div", "", post);
     graphic.className = "mitt-horizontal";
     graphic.setAttribute("role", "img");
@@ -361,7 +362,7 @@ function render(preservePosition = false) {
     track.className = "mitt-track";
     const marker = textElement("span", "", track);
     marker.className = "mitt-dot";
-    marker.style.left = `${PitchReceiverLocation.screenX(observation.x, locationPerspective()) * 100}%`;
+    marker.style.left = `${mittDisplayX * 100}%`;
     textElement(
       "div",
       locationPerspective() === "pitcher" ? "+2 ft　← 중계 방향 · 0 →　−2 ft" : "−2 ft　← 포수 시점 · 0 →　+2 ft",

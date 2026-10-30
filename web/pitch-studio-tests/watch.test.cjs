@@ -178,7 +178,8 @@ test("view direction flips every point and ticks without seeking or disclosing a
   assert(left<160);assert(Math.abs(left+right-320)<1e-9);
   assert.equal(s.video.currentTime,time);assert.equal(s.video.getAttribute("src"),source);
   assert.equal(s.get("watch-result").textContent,result);
-  assert.match(s.get("watch-coordinate-note").textContent,/1\.28/);
+  assert.match(s.get("watch-coordinate-note").textContent,/(?:^|[^\d.-])1\.28/);
+  assert.doesNotMatch(s.get("watch-coordinate-note").textContent,/-1\.28/);
   assert.deepEqual(s.shapes("location-tick").slice(0,5).map(p=>p.textContent),["2","1","0","-1","-2"]);
   await s.click("watch-prev");
   assert.equal(s.shapes("location-actual").length,0);
