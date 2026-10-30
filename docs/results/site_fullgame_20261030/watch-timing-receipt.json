@@ -1,0 +1,77 @@
+{
+  "schema": "pitcheezy-watch-timing-v1",
+  "task": "SITE-watch2",
+  "date": "2026-10-30",
+  "base_commit": "446d990",
+  "source_commit": "58baee4414a2ca7eb4106b93f1440c32fa52e5c4",
+  "acceptance": "https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6520196073",
+  "checks": {
+    "node": 318,
+    "watch_integration": 32,
+    "timing_validation": 23,
+    "checklist_python": 8,
+    "assets_and_existing_video_hashes": "PASS",
+    "local_browser": [
+      "Actual clip playback at half speed: location hidden at 3.219540, visible at 5.301590 before ended; outcome still hidden",
+      "Paused seek after event: dot and recorded zone shown; pitch type/outcome hidden",
+      "3-second rewind before event clears prior dot",
+      "PA4:1 unreviewed timestamp uses clip-end fallback label",
+      "390px and320px viewports no horizontal overflow"
+    ],
+    "public_browser": [
+      "Published v15 custom transport and 3.45s marker visible on pitcheezy.com",
+      "Actual playback at half-speed: dot0 at3.222234, dot1 at4.821753 with ended=false and pitch type/outcome hidden",
+      "FirstPA3clip automatic sequence completes at third clip ended, four DOM regions same pitch ID, boundary stops"
+    ],
+    "physical_mobile": "not_tested"
+  },
+  "review": {
+    "requested_model": "gpt-6.1-terra",
+    "runtime_model_id": "not_exposed",
+    "commit": "58baee4414a2ca7eb4106b93f1440c32fa52e5c4",
+    "result": "PASS",
+    "scope": "fixed read-only source diff, not human/Claude evaluation"
+  },
+  "timing": {
+    "pitch_ids": [
+      "849843:1:1",
+      "849843:1:2",
+      "849843:1:3"
+    ],
+    "display_upper_seconds": [
+      3.4508555555555556,
+      3.4669777777777777,
+      3.384211111111111
+    ],
+    "sidecar_sha256": "4126a81ced9ee934a406a7aee69a5798a82f6644e8f04cfd3cec088d947198c6",
+    "evidence": "watch-timing-evidence.json",
+    "basis": "MP4 PTS media timeline; conservative AI-reviewed upper bounds; third pitch plate_arrival, not resolved catch/contact"
+  },
+  "publication": {
+    "id": "appgdep_6ae46ff4bcd08191a06a1c991b6ebed3",
+    "project_id": "appgprj_6ac3665aa5048191ac2b5a012b2c7010",
+    "title": "Pitcheezy · 투구 관측 스튜디오",
+    "version_id": "appgprj_6ac3665aa5048191ac2b5a012b2c7010~appgver_054d12b3429881919a6995383354fd7a",
+    "type": "publish",
+    "status": "succeeded",
+    "url": "https://pitcheezy-pitch-studio.sritone723.chatgpt.site",
+    "has_mcp": false,
+    "screenshot_asset_pointer": null,
+    "provider_deployment_id": "site---6ac3665aa5048191ac2b5a012b2c7010",
+    "failure_message": null,
+    "env_set_revision": 0,
+    "updated_at": "2026-10-30T10:22:56.734405+00:00",
+    "source_commit": "e713e37c7f7f9e7d182a46eec0bde9914d0c73bf",
+    "version_number": 15,
+    "file_count": 47,
+    "archive_content_hash": "sha256:4470de92281dc594bec0573871897722cb478a975a328c4a4627081513fa707e",
+    "custom_domain": "https://pitcheezy.com/watch?game=849843"
+  },
+  "limits": [
+    "Only firstPA3 clips have earlier arrival display; remaining258 connected clips retain clip-end fallback.",
+    "Full pitch type, umpire call and batted-ball outcome are withheld until clip end.",
+    "Actual point is plate crossing, not catcher location or intention.",
+    "No live model, new CV point or independent human validation.",
+    "Teammate and separate Cloudflare trial unchanged; PR85 not merged main."
+  ]
+}
