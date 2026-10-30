@@ -238,6 +238,10 @@ a:focus-visible, video:focus-visible, button:focus-visible, summary:focus-visibl
 }
 
 /* Exhibition reading paths: current game and illustrated guide. */
+@media (max-width: 620px) {
+  .site-nav { gap: 4px; font-size: 12px; }
+  .site-nav a { padding-inline: 3px; }
+}
 .games-page .page-intro { padding-bottom: 42px; }
 .games-page .replay-game { gap: clamp(28px, 4vw, 58px); padding-top: 24px; }
 .games-page .replay-game-image { overflow: hidden; border: 1px solid #4a6150; border-radius: 14px; }

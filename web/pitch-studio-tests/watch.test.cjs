@@ -9,14 +9,19 @@ const site = path.join(__dirname, "../pitch-studio");
 const html = fs.readFileSync(path.join(site, "watch.html"), "utf8");
 const game = JSON.parse(fs.readFileSync(path.join(site, "game-849843.json")));
 
-function element(tag = "div") {
+function element(tag = "div", ownerDocument = null) {
   let ownText = "", value = "";
   const classes = new Set(), attributes = new Map(), listeners = new Map();
   const e = { tagName: tag.toUpperCase(), children: [], style: { setProperty(name, value) { this[name] = String(value); } }, hidden: false, disabled: false,
-    complete: true, naturalWidth: 1280, checked: false, dataset: {},
+    complete: true, naturalWidth: 1280, checked: false, dataset: {}, ownerDocument,
     classList: { toggle(name, force) { const on = force ?? !classes.has(name); on ? classes.add(name) : classes.delete(name); return on; }, contains: name => classes.has(name) },
     append(child) { this.children.push(child); },
-    replaceChildren(...items) { ownText = ""; this.children = items; },
+    contains(node) { return this === node || this.children.some(child => child.contains(node)); },
+    focus(options) { this.ownerDocument.activeElement = this; this.lastFocusOptions = options; },
+    replaceChildren(...items) {
+      if (this.ownerDocument && this.children.some(child => child.contains(this.ownerDocument.activeElement))) this.ownerDocument.activeElement = this.ownerDocument.body;
+      ownText = ""; this.children = items;
+    },
     setAttribute(name, val) { attributes.set(name, String(val)); },
     getAttribute(name) { return attributes.get(name) ?? null; },
     removeAttribute(name) { attributes.delete(name); },
@@ -24,7 +29,7 @@ function element(tag = "div") {
     emit(name) { for (const fn of [...(listeners.get(name) || [])]) fn({ target: e, type: name }); },
   };
   Object.defineProperties(e, {
-    textContent: { get() { return ownText + this.children.map(c => c.textContent).join(""); }, set(text) { ownText = String(text); this.children = []; } },
+    textContent: { get() { return ownText + this.children.map(c => c.textContent).join(""); }, set(text) { this.replaceChildren(); ownText = String(text); } },
     value: { get: () => value, set: v => { value = String(v); } },
     className: { get: () => [...classes].join(" "), set: v => { classes.clear(); for (const c of String(v).split(/\s+/)) if (c) classes.add(c); } },
   });
@@ -65,8 +70,11 @@ async function setup({ search = "?game=849843", missing = [], corrupt = [], scop
     cancelVideoFrameCallback(id) { if (frames.has(id)) cancelledFrames.push(frames.get(id)); frames.delete(id); },
   });
   const document = Object.assign(element(), { hidden: false, getElementById: get,
-    createElement: tag => element(tag), createElementNS: (_, tag) => element(tag) });
-  const reloads = [], window = element(), location = { search, pathname: "/watch.html", reload: () => reloads.push(true) };
+    createElement: tag => element(tag, document), createElementNS: (_, tag) => element(tag, document) });
+  document.body = element("body", document); document.activeElement = document.body;
+  for (const item of elements.values()) item.ownerDocument = document;
+  const reloads = [], replacements = [], window = element(), location = { search, pathname: "/watch.html", reload: () => reloads.push(true),
+    replace(url) { replacements.push(url); const next = new URL(url, "https://example.test/"); this.search = next.search; this.pathname = next.pathname; } };
   const historyCalls = [];
   const history = Object.fromEntries(["pushState", "replaceState"].map(method => [method, (_, title, url) => {
     const next = new URL(url, "https://example.test"); location.search = next.search; location.pathname = next.pathname;
@@ -120,7 +128,7 @@ async function setup({ search = "?game=849843", missing = [], corrupt = [], scop
     await settle(); return active.length;
   };
   const finishAsset = async file => { assert(held.has(file)); held.get(file)(); held.delete(file); await settle(); };
-  return { get, video, document, window, location, requests, timers, cancelledTimers, historyCalls, click, select, end, fireTimer, shapes, frames, cancelledFrames, showFrame, finishSeek, check, clickElement, reloads, signals, held, expireRequests, finishAsset };
+  return { get, video, document, window, location, requests, timers, cancelledTimers, historyCalls, click, select, end, fireTimer, shapes, frames, cancelledFrames, showFrame, finishSeek, check, clickElement, reloads, replacements, signals, held, expireRequests, finishAsset };
 }
 
 test("initial state joins the exact pitch, candidates and video but hides actual result and recorded zone", async () => {
@@ -387,9 +395,10 @@ test("allowed rates and mute state work independently of pitch result disclosure
     await s.select("watch-rate", rate); assert.equal(s.video.playbackRate, 1.25);
   }
   assert.equal(s.video.muted, true); await s.click("watch-mute");
-  assert.equal(s.video.muted, false); assert.equal(s.get("watch-mute").getAttribute("aria-pressed"), "false");
+  assert.equal(s.video.muted, false); assert.equal(s.get("watch-mute").getAttribute("aria-label"), "음소거");
   await s.click("watch-mute"); assert.equal(s.video.muted, true);
-  assert.equal(s.get("watch-mute").getAttribute("aria-pressed"), "true"); hiddenResult(s);
+  assert.equal(s.get("watch-mute").getAttribute("aria-label"), "소리 켜기");
+  assert.equal(s.get("watch-mute").getAttribute("aria-pressed"), null); hiddenResult(s);
 });
 
 test("decoder errors hide arrival and keep a custom retry available; excluded media disables transport", async () => {
@@ -704,7 +713,7 @@ test("optional loading cannot revive stale data after an invalid route clears th
   await s.finishAsset("game-849843-timing.json"); await settle(() => s.timers.size === 0);
   assert.equal(s.get("watch-candidates").children.length, 0); assert.equal(s.get("watch-start").disabled, true);
   assert.equal(s.video.getAttribute("src"), null); assert.equal(s.get("watch-history-list").children.length, 0);
-  assert.match(s.get("watch-load-status").textContent, /확인하지 못/);
+  assert.match(s.get("watch-load-status").textContent, /지원하지 않는 주소/);
 });
 
 test("a history change during core loading selects the current URL, not the stale initial pitch", async () => {
@@ -724,4 +733,76 @@ test("an invalid history change during core loading cannot display a valid but s
   await s.finishAsset("game-849843.json"); await settle(() => !s.get("watch-retry").hidden);
   assert.equal(s.requests.length, 1); assert.equal(s.get("watch-candidates").children.length, 0);
   assert.equal(s.video.getAttribute("src"), null); assert.equal(s.get("watch-start").disabled, true);
+});
+
+test("keyboard ribbon selection and arrival/end updates keep focus on the same pitch without scrolling", async () => {
+  const s = await setup();
+  const original = pitchButton(s, "watch-ribbon", "849843:1:2"); original.focus();
+  await s.clickElement(original);
+  assert.equal(s.document.activeElement, pitchButton(s, "watch-ribbon", "849843:1:2"));
+  assert.equal(s.document.activeElement.lastFocusOptions.preventScroll, true);
+  await s.click("watch-toggle");
+  const current = pitchButton(s, "watch-ribbon", "849843:1:2"); current.focus();
+  s.video.currentTime = 4; s.video.emit("timeupdate");
+  assert.equal(s.document.activeElement, pitchButton(s, "watch-ribbon", "849843:1:2"));
+  await s.end(); assert.equal(s.document.activeElement, pitchButton(s, "watch-ribbon", "849843:1:2"));
+});
+
+test("a keyboard filter selection retains its button focus through selection and result rendering", async () => {
+  const s = await setup(); const key = game.pitches[4].pitch_id;
+  const button = pitchButton(s, "watch-filter-results", key); button.focus();
+  await s.clickElement(button);
+  assert.equal(s.document.activeElement, pitchButton(s, "watch-filter-results", key));
+  assert.equal(selectedKey(s), key);
+  await s.click("watch-toggle"); await s.end();
+  assert.equal(s.document.activeElement, pitchButton(s, "watch-filter-results", key));
+});
+
+test("dragging a hidden-result scrubber preserves panel nodes and only the first rewind clears disclosed data", async () => {
+  const s = await setup(); let ribbon = s.get("watch-ribbon").children[0], candidates = s.get("watch-candidates").children[0];
+  for (const value of [100, 200, 300]) {
+    s.get("watch-scrub").value = value; s.get("watch-scrub").emit("input"); s.video.emit("seeking");
+    assert.equal(s.get("watch-ribbon").children[0], ribbon); assert.equal(s.get("watch-candidates").children[0], candidates);
+  }
+  await s.click("watch-toggle"); await s.end(); assert.equal(s.shapes("location-actual").length, 1);
+  s.video.ended = false; s.get("watch-scrub").value = 200; s.get("watch-scrub").emit("input");
+  assert.equal(s.shapes("location-actual").length, 0); hiddenResult(s);
+  ribbon = s.get("watch-ribbon").children[0]; candidates = s.get("watch-candidates").children[0];
+  for (const value of [250, 300]) {
+    s.get("watch-scrub").value = value; s.get("watch-scrub").emit("input"); s.video.emit("seeking");
+    assert.equal(s.get("watch-ribbon").children[0], ribbon); assert.equal(s.get("watch-candidates").children[0], candidates);
+  }
+});
+
+for (const search of ["?game=849844", "?game=849843&pitch=849843%3A999%3A1", "?game=849843&pitch=849843:1:1&pitch=849843:1:2"]) {
+  test(`invalid route recovery navigates to the supported first pitch instead of reloading ${search}`, async () => {
+    const s = await setup({ search });
+    assert.match(s.get("watch-retry").textContent, /첫 공/); assert.equal(s.get("watch-result").hidden, true);
+    await s.click("watch-retry");
+    assert.equal(s.replacements.length, 1); assert.equal(s.reloads.length, 0);
+    assert.equal(selectedKey(s), "849843:1:1"); assert.equal(new URLSearchParams(s.location.search).get("game"), "849843");
+  });
+}
+
+for (const reason of ["unsupported", "rejected"]) {
+  test(`fullscreen ${reason} feedback survives the next video tick in the live status area`, async () => {
+    const s = await setup();
+    if (reason === "rejected") s.get("pitch-video-section").requestFullscreen = async () => { throw new Error("synthetic browser denial"); };
+    await s.click("watch-fullscreen");
+    assert.match(s.get("pitch-video-status").textContent, /전체 화면/);
+    const feedback = s.get("pitch-video-status").textContent;
+    s.video.emit("timeupdate"); s.video.emit("volumechange");
+    assert.equal(s.get("pitch-video-status").textContent, feedback);
+    assert.doesNotMatch(s.get("watch-event-label").textContent, /전체 화면/);
+  });
+}
+
+test("pending media is announced as loading rather than as a failed or absent clip", async () => {
+  const s = await setup({ stalled: { "game-849843-media.json": "body" }, waitForReady: false });
+  await settle(() => s.held.has("game-849843-media.json") && s.timers.size === 1);
+  assert.match(s.get("pitch-video-status").textContent, /확인 중/);
+  assert.match(s.get("pitch-video-missing").textContent, /확인 중/);
+  assert.doesNotMatch(s.get("pitch-video-status").textContent + s.get("pitch-video-missing").textContent, /실패|못했|없습니다/);
+  await s.expireRequests(); await settle(() => /저장 경기 262구/.test(s.get("watch-load-status").textContent));
+  assert.match(s.get("pitch-video-missing").textContent, /불러오지 못/);
 });

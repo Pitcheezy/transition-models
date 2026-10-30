@@ -6,7 +6,7 @@ const path = require("node:path");
 const vm = require("node:vm");
 const source = fs.readFileSync(path.join(__dirname, "../../web/pitch-studio/home.js"), "utf8");
 
-function setup({ reduced = false, blocked = false, pending = false } = {}) {
+function setup({ reduced = false, blocked = false, pending = false, unsupported = false, networkState = 1 } = {}) {
   const elements = {};
   for (const id of ["hero-video", "hero-still", "hero-play", "film-mode", "source"]) {
     elements[id] = {
@@ -17,12 +17,12 @@ function setup({ reduced = false, blocked = false, pending = false } = {}) {
   }
   const film = elements["hero-video"];
   Object.assign(film, {
-    paused: true, error: null, calls: 0, loads: 0,
+    paused: true, error: null, calls: 0, loads: 0, networkState,
     querySelector() { return elements.source; },
     load() { this.error = null; this.loads++; },
     play() {
       this.calls++;
-      if (blocked) return Promise.reject(new Error("NotAllowedError"));
+      if (blocked || unsupported) return Promise.reject(Object.assign(new Error("play rejected"), {name: blocked ? "NotAllowedError" : "NotSupportedError"}));
       if (pending) return new Promise((resolve, reject) => { this.rejectPending = reject; });
       this.paused = false;
       this.emit("playing");
@@ -38,7 +38,7 @@ function setup({ reduced = false, blocked = false, pending = false } = {}) {
     location,
     window: { addEventListener(event, callback) { listeners[event] = callback; } },
   });
-  return { elements, film, location, listeners, allow: () => { blocked = false; } };
+  return { elements, film, location, listeners, allow: () => { blocked = false; unsupported = false; } };
 }
 const flush = () => new Promise((resolve) => setImmediate(resolve));
 
@@ -72,6 +72,19 @@ test("late autoplay rejection cannot replace the explicit media error", async ()
   await flush();
   assert.match(e["film-mode"].textContent,/영상 연결/);
   assert.equal(e["hero-still"].hidden,false);
+});
+
+test("missing source before script load and unsupported play recover with an explicit reload", async () => {
+  const {elements:e, film, allow} = setup({unsupported:true, networkState:3});
+  await flush();
+  assert.equal(film.loads,1);
+  assert.match(e["film-mode"].textContent,/영상 연결/);
+  assert.equal(e["hero-still"].hidden,false);
+  allow();
+  e["hero-play"].emit("click");
+  await flush();
+  assert.equal(film.loads,2);
+  assert.equal(film.paused,false);
 });
 
 test("media and source failures retain the still and reload on explicit retry", async () => {
