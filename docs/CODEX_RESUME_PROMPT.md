@@ -5,7 +5,9 @@
 [PLAN.md](../PLAN.md) → [CHECKLIST 상단](../CHECKLIST.md)을 먼저 읽는다.
 현재 목표·우선순위·담당은 두 정본을 따르고 아래 과거 대기/다음 지시로 되돌아가지 않는다.
 전체 경기 재생의 구현·재현·출처 경계는 [SITE-fullgame1](SITE_FULL_GAME_20261030.md)을 따른다.
-71타석·262구의 추천/결과와 영상 연결3구를 구분한다. 현재 상태·다음 단위는 CHECKLIST가 정본이다.
+전체 경기 영상 후속은 [SITE-video1](SITE_GAME_VIDEO_20261030.md)을 따른다.
+71타석·262구의 추천/결과, 영상261연결·1구종불일치 제외, 클립종료공개와 정밀포구동기화를 구분한다.
+현재 상태·다음 단위는 CHECKLIST가 정본이다.
 전시 계획 구현의 근거는 [첫 타석 재생 기록](EXHIBITION_REPLAY_20261028.md)에 있다.
 객체 지목을 비교할 때는 [공통 좌표·기권·재현 규칙](CV_OBJECT_REFERENCE_PROTOCOL.md)을 따른다.
 기존 검출기 재사용 근거·고정 입력·재현 명령은 [CV49b 진단](CV_GLOVE_DIAGNOSTIC_20261029.md)을 참고한다.

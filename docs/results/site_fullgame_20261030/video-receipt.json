@@ -1,0 +1,105 @@
+{
+  "schema": "pitcheezy-site-game-video-receipt-v1",
+  "date": "2026-10-30",
+  "product_commit": "12f0e9a953bdfbf7564ee25df15c86c8f75342d2",
+  "base_commit": "24953457a68a14f175b8d05d8a5f258c4bf6d11e",
+  "claim": "https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6515426299",
+  "counts": {
+    "game": 849843,
+    "plate_appearances": 71,
+    "pitches": 262,
+    "ready": 246,
+    "unsupported": 16,
+    "video": 261,
+    "local": 3,
+    "remote": 258,
+    "excluded": 1
+  },
+  "excluded": [
+    {
+      "pitch_id": "849843:69:2",
+      "registry_type": "SL",
+      "received_type": "FC",
+      "action": "video_excluded_originals_preserved"
+    }
+  ],
+  "manifest": {
+    "path": "web/pitch-studio/game-849843-media.json",
+    "bytes": 166436,
+    "sha256": "8680befcbd43b570b1cd2f708e1d767e0e4055a9850dda327ae871219df17e0a"
+  },
+  "registry": {
+    "read_only": true,
+    "sha256_before_and_after": "9555b95171a6232b849b74e4784edf62c210b7a64c72e8b84b5cf5ec48ead3b6",
+    "queried_game": 849843,
+    "archived_clips_checked": 262,
+    "network_downloads": 0
+  },
+  "checks": {
+    "node": 167,
+    "python": 56,
+    "site_assets": "PASS",
+    "lint": "192paths PASS",
+    "browser": "Windows Chrome remote PA2:1,PA41:1,PA71:6 ended disclosure; PA69:2 excluded/manual; PA3->4 reset; rapid switch; viewport390x844 no overflow",
+    "all_remote_clips_played": false,
+    "remote_current_sha_verified": false,
+    "public_browser": "pitcheezy.com/receiver?game=849843: coverage261/262, PA2:1 official remote video ended and matching result/plot disclosed",
+    "screenshot": "outputs/site_publication_20261030/public-video-v11.jpg"
+  },
+  "review": {
+    "configured_model": "gpt-6.1-terra",
+    "independent_runtime_identity": "not_exposed",
+    "commit": "12f0e9a953bdfbf7564ee25df15c86c8f75342d2",
+    "verdict": "APPROVE"
+  },
+  "publication": {
+    "source": "d487b393229d56bf8197556a756e60167a1522e4",
+    "saved": {
+      "id": "appgprj_6ac3665aa5048191ac2b5a012b2c7010~appgver_1f61fed444f8819187fdf839a021204d",
+      "project_id": "appgprj_6ac3665aa5048191ac2b5a012b2c7010",
+      "version_number": 11,
+      "source": {
+        "commit_sha": "d487b393229d56bf8197556a756e60167a1522e4"
+      },
+      "archive_storage": {
+        "archive_format": "tar",
+        "sediment_file_id": "file_000000009d408206b130f9740333bb0f",
+        "content_hash": "sha256:1e96053afbac8304e29e67c44ea1524fd925ab5f1aeb8cfec48fc10be266312a",
+        "size_bytes": 29972480,
+        "file_count": 38
+      },
+      "screenshot_url": null,
+      "deployment_id": null
+    },
+    "deployment": {
+      "id": "appgdep_6ae4272e55408191aea90e3919c558ce",
+      "project_id": "appgprj_6ac3665aa5048191ac2b5a012b2c7010",
+      "title": "Pitcheezy · 투구 관측 스튜디오",
+      "version_id": "appgprj_6ac3665aa5048191ac2b5a012b2c7010~appgver_1f61fed444f8819187fdf839a021204d",
+      "type": "publish",
+      "status": "succeeded",
+      "url": "https://pitcheezy-pitch-studio.sritone723.chatgpt.site",
+      "has_mcp": false,
+      "screenshot_asset_pointer": null,
+      "provider_deployment_id": "site---6ac3665aa5048191ac2b5a012b2c7010",
+      "failure_message": null,
+      "env_set_revision": 0,
+      "updated_at": "2026-10-30T05:12:27.592484+00:00"
+    },
+    "local_archive": {
+      "files": 38,
+      "bytes": 29003078,
+      "sha256": "bcc3e8a2930d4a97a0a6cb0988736f6ae3844af7d766215b6585699f92f77cd3"
+    }
+  },
+  "limits": {
+    "precise_release_catch_sync": false,
+    "live_inference": false,
+    "team_changes": false,
+    "separate_cloudflare_trial_changes": false,
+    "main_integrated": false
+  },
+  "ci": {
+    "status": "pending"
+  }
+}
