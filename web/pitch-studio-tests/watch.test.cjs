@@ -107,6 +107,8 @@ test("initial state joins the exact pitch, candidates and video but hides actual
   assert.match(s.get("watch-back-analysis").href, /pitch=849843%3A1%3A1/);
   assert.match(s.video.getAttribute("src"), /1-1-official\.mp4$/);
   assert.equal(s.shapes("strike-zone").length, 0); assert.equal(s.shapes("location-actual").length, 0);
+  assert.equal(s.shapes("reference-zone").length, 1);
+  assert.match(s.get("watch-zone-note").textContent, /참고/);
   assert.equal(s.get("watch-result").classList.contains("is-revealed"), false);
   assert.equal(s.get("watch-start").disabled, false);
   assert.equal(s.get("watch-pa").disabled, false); assert.equal(s.get("watch-pitch").disabled, false);
@@ -121,6 +123,7 @@ test("video end reveals only the current pitch result and recorded geometry", as
   assert.equal(s.get("watch-result").hidden, false);
   assert.equal(s.get("watch-result").classList.contains("is-revealed"), true);
   assert.equal(s.shapes("strike-zone").length, 1); assert.equal(s.shapes("location-actual").length, 1);
+  assert.equal(s.shapes("reference-zone").length, 0);
 });
 
 test("native seek after disclosure hides the actual and zone without rewinding the user's position", async () => {
@@ -174,10 +177,11 @@ for (const fault of ["missing", "corrupt"]) {
   });
 }
 
-test("missing zone does not invent a border while result and video remain available", async () => {
+test("missing recorded zone keeps only the labelled reference outline while result and video remain available", async () => {
   const s = await setup({ missing: ["game-849843-zones.json"] });
   await s.click("play-pitch-video"); await s.end();
   assert.equal(s.shapes("location-actual").length, 1); assert.equal(s.shapes("strike-zone").length, 0);
+  assert.equal(s.shapes("reference-zone").length, 1);
   assert.match(s.get("watch-zone-note").textContent, /미연결/);
 });
 
@@ -381,4 +385,60 @@ test("arrival alone never advances the game; the result countdown starts only on
   s.video.currentTime = event.upper_seconds; s.video.emit("timeupdate");
   assert.equal(s.shapes("location-actual").length, 1); assert.equal(s.timers.size, 0); hiddenResult(s);
   await s.end(); assert.equal(s.timers.size, 1); assert.equal(s.timers.values().next().value.delay, 5000);
+});
+
+test("game progress previews a different pitch without seeking the currently loaded clip", async () => {
+  const s = await setup(); await s.click("watch-start");
+  s.video.currentTime = 1.25;
+  const videoBefore = s.video.getAttribute("src"), identityBefore = s.get("watch-identity").textContent;
+  const previewBefore = s.get("watch-game-position").textContent;
+  s.get("watch-game-scrub").value = "4"; s.get("watch-game-scrub").emit("input");
+  assert.equal(s.video.paused, true); assert.equal(s.get("watch-stop").disabled, true);
+  assert.equal(s.video.currentTime, 1.25); assert.equal(s.video.getAttribute("src"), videoBefore);
+  assert.equal(s.get("watch-identity").textContent, identityBefore);
+  assert.notEqual(s.get("watch-game-position").textContent, previewBefore);
+  assert.equal(s.timers.size, 0);
+});
+
+test("committing game progress selects the exact pitch and resets the clip without autoplay or old results", async () => {
+  const s = await setup(); await s.click("watch-toggle"); await s.end();
+  await s.select("watch-game-scrub", "4");
+  const target = game.pitches[3].pitch_id;
+  assert.equal(target, "849843:2:1");
+  assert(s.get("watch-identity").textContent.includes(target));
+  assert.equal(s.get("watch-game-scrub").value, "4");
+  assert.equal(s.video.currentTime, 0); assert.equal(s.video.paused, true);
+  assert.equal(s.shapes("location-actual").length, 0); assert.equal(s.timers.size, 0);
+  assert.equal(s.get("watch-result").classList.contains("is-revealed"), false);
+  assert.equal(new URLSearchParams(s.location.search).get("pitch"), target);
+});
+
+test("game progress can select the excluded clip and final pitch without silently skipping either", async () => {
+  const s = await setup();
+  const excludedPosition = game.pitches.findIndex(row => row.pitch_id === "849843:69:2") + 1;
+  await s.select("watch-game-scrub", excludedPosition);
+  assert(s.get("watch-identity").textContent.includes("849843:69:2"));
+  assert.equal(s.video.getAttribute("src"), null); assert.equal(s.get("watch-start").disabled, true);
+  await s.select("watch-game-scrub", game.pitches.length);
+  assert(s.get("watch-identity").textContent.includes(game.pitches.at(-1).pitch_id));
+  assert.equal(s.get("watch-game-scrub").value, "262");
+  assert.equal(s.get("watch-next").disabled, true); assert.equal(s.video.paused, true);
+});
+
+test("invalid game-progress values cannot select or disclose another pitch", async () => {
+  const s = await setup();
+  for (const value of [0, -1, 263, 1.5, "NaN"]) {
+    await s.select("watch-game-scrub", value);
+    assert(s.get("watch-identity").textContent.includes("849843:1:1"));
+    assert.equal(s.video.currentTime, 0); assert.equal(s.shapes("location-actual").length, 0);
+  }
+});
+
+test("previous/next and restored URL keep game progress on the selected pitch", async () => {
+  const s = await setup();
+  assert.equal(s.get("watch-game-scrub").value, "1");
+  await s.click("watch-next"); assert.equal(s.get("watch-game-scrub").value, "2");
+  await s.click("watch-prev"); assert.equal(s.get("watch-game-scrub").value, "1");
+  s.location.search = "?game=849843&pitch=849843%3A2%3A1"; s.window.emit("popstate"); await settle();
+  assert.equal(s.get("watch-game-scrub").value, "4");
 });

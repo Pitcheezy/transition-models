@@ -71,6 +71,7 @@
   function hideResult() { resultReady=false;session.reveal(false);phase="추천 확인";render(true); }
   function stop(reason = "manual") { sequence?.stop(reason); }
   function controls() {
+    el("watch-game-scrub").disabled = !session;
     el("watch-pa").disabled = !session;
     el("watch-pitch").disabled = !session;
     el("watch-start").disabled = !session || !media[view().pitch_id] || sequenceActive;
@@ -87,6 +88,7 @@
       if (!session || completed !== binding()) return;
       resultReady=true;session.reveal(true); phase = "결과 공개"; render(true);
     }, {}, {
+      errorMessage: "영상을 불러오지 못했습니다. 다시 시도하거나 ‘이 공 상세 분석’에서 결과를 확인하세요.",
       onEnded: completed => sequence?.ended(completed),
       onInterrupt: reason => {
         if (!session) return;
@@ -117,12 +119,13 @@
     }
     shape("text",{x:270,y:297,class:"location-tick"},"x/ft");
     shape("text",{x:12,y:12,class:"location-tick"},"z/ft");
-    if(model.zone) {
-      const x=60+model.zone.nx*200,y=18+model.zone.ny*250,w=model.zone.nw*200,h=model.zone.nh*250;
-      shape("rect",{x,y,width:w,height:h,class:"strike-zone"});
+    const outline=model.zone || PitchReceiverLocation.referenceZone();
+    if(outline) {
+      const x=60+outline.nx*200,y=18+outline.ny*250,w=outline.nw*200,h=outline.nh*250;
+      shape("rect",{x,y,width:w,height:h,class:model.zone?"strike-zone":"reference-zone"});
       for(let i=1;i<3;i++) {
-        shape("line",{x1:x+w*i/3,y1:y,x2:x+w*i/3,y2:y+h,class:"strike-zone-division"});
-        shape("line",{x1:x,y1:y+h*i/3,x2:x+w,y2:y+h*i/3,class:"strike-zone-division"});
+        shape("line",{x1:x+w*i/3,y1:y,x2:x+w*i/3,y2:y+h,class:model.zone?"strike-zone-division":"reference-zone-division"});
+        shape("line",{x1:x,y1:y+h*i/3,x2:x+w,y2:y+h*i/3,class:model.zone?"strike-zone-division":"reference-zone-division"});
       }
     }
     for(const point of model.groups) {
@@ -136,7 +139,7 @@
       shape("circle",{cx,cy,r:7,class:"location-actual"});
     }
     text("watch-zone-note", model.zone ? `${v.batter.name} · 기록 존 ${model.zone.bottom.toFixed(2)}–${model.zone.top.toFixed(2)} ft`
-      : zoneNote || (timing()?"기록 존과 실제 공은 표시된 도착 시점에 공개합니다.":"도착 시점 미확인 · 기록 존과 실제 공은 클립 종료 뒤 표시합니다."));
+      : `점선은 참고 존 · 높이 1.5–3.5ft 예시 · 타자 기록 아님. ${zoneNote || (timing()?"기록 존과 실제 공은 표시된 도착 시점에 공개합니다.":"기록 존과 실제 공은 클립 종료 뒤 표시합니다.")}`);
     const coordinate = p => p.status === "missing" ? "좌표 미제공" : `x ${p.x.toFixed(2)} / z ${p.z.toFixed(2)} ft${p.status==="outside"?" · 도표 밖":""}`;
     const descriptions = model.recommendations.map(p=>`${p.rank}위 ${p.label}: ${coordinate(p)}`);
     text("watch-coordinate-note", model.actual ? `실제 ${coordinate(model.actual)} · 홈플레이트 통과 위치` : "현재 실제 공 위치 숨김 · 추천 근사 위치만 표시");
@@ -152,7 +155,8 @@
     text("watch-players",`${v.pitcher.name} → ${v.batter.name} · ${bases.length?bases.join("·"):"주자 없음"}`);
     text("watch-identity",`${v.at_bat_number}번째 타석 · ${v.pitch_number}구 · ${v.pitch_id} · ${v.position}/${v.count}구`);
     text("watch-phase",phase);
-    el("watch-back-analysis").href=`receiver.html?game=849843&pitch=${encodeURIComponent(v.pitch_id)}`;
+    for(const id of ["watch-back-analysis","watch-detail-current","watch-detail-footer"]) el(id).href=`receiver.html?game=849843&pitch=${encodeURIComponent(v.pitch_id)}`;
+    gamePosition(keys.indexOf(v.pitch_id),true);
     el("watch-pa").value=String(v.at_bat_number);
     const group=session.groups().find(g=>g.pa===v.at_bat_number);
     el("watch-pitch").replaceChildren();
@@ -187,6 +191,14 @@
   }
   function select(key,historyMode="push") {
     stop();cancelFrame();resultReady=false;session.select(key);phase="추천 확인";render(); remember(historyMode);
+  }
+  function gamePosition(index,commit=false) {
+    const key=keys[index];if(!key)return;
+    const [,pa,pitch]=key.split(":");
+    const label=`${index+1} / ${keys.length}구 · ${pa}번째 타석 ${pitch}구`;
+    text("watch-game-position",label);
+    el("watch-game-scrub").setAttribute("aria-valuetext",label);
+    if(commit){el("watch-game-scrub").max=String(keys.length);el("watch-game-scrub").value=String(index+1);}
   }
   function remember(mode="push") {
     const query=`?game=849843&pitch=${encodeURIComponent(view().pitch_id)}`;
@@ -226,6 +238,7 @@
     for(const id of ["watch-score","watch-players","watch-identity","watch-result","watch-coordinate-note","watch-zone-note"]) text(id,"");
     el("watch-location").replaceChildren();el("watch-candidates").replaceChildren();
     el("watch-pa").replaceChildren();el("watch-pitch").replaceChildren();
+    text("watch-game-position","경기 자료 미연결");
     text("watch-phase","자료 확인 실패");text("watch-load-status",`${error.message}. 경기 선택에서 다시 시작해 주세요.`);
   }
   function route() {
@@ -238,6 +251,18 @@
   el("watch-play-scope").addEventListener("change",()=>{stop();clip.pause();});
   el("watch-pa").addEventListener("change",()=>{if(session)select(session.groups().find(g=>g.pa===Number(el("watch-pa").value)).keys[0]);});
   el("watch-pitch").addEventListener("change",()=>{if(session)select(el("watch-pitch").value);});
+  el("watch-game-scrub").addEventListener("input",()=>{
+    if(!session)return;
+    stop("seek");clip.pause();
+    const value=Number(el("watch-game-scrub").value);
+    if(Number.isInteger(value)&&value>=1&&value<=keys.length)gamePosition(value-1);
+  });
+  el("watch-game-scrub").addEventListener("change",()=>{
+    if(!session)return;
+    const value=Number(el("watch-game-scrub").value);
+    if(Number.isInteger(value)&&value>=1&&value<=keys.length)select(keys[value-1]);
+    else gamePosition(keys.indexOf(view().pitch_id),true);
+  });
   for(const [id,delta] of [["watch-prev",-1],["watch-next",1]]) el(id).addEventListener("click",()=>{
     const key=keys[keys.indexOf(view()?.pitch_id)+delta];if(key&&session)select(key);
   });
@@ -281,8 +306,8 @@
         const received=PitchReceiverGameMedia.createVerifiedMedia(extra[0].value.packet,game.packet,extra[0].value.hash,window.PitchReceiverMedia||{});
         media=received.media;excluded=received.excluded;
       } catch (_) { /* No unverified media fallback. */ }
-      if(extra[1].status==="fulfilled") try {zones=PitchReceiverZones.createVerifiedZones(extra[1].value.packet,game.packet,extra[1].value.hash);}catch(_){zoneNote="기록 존 확인 실패 · 좌표 격자만 표시";}
-      else zoneNote="기록 존 미연결 · 좌표 격자만 표시";
+      if(extra[1].status==="fulfilled") try {zones=PitchReceiverZones.createVerifiedZones(extra[1].value.packet,game.packet,extra[1].value.hash);}catch(_){zoneNote="기록 존 확인 실패 · 참고 존만 표시";}
+      else zoneNote="기록 존 미연결 · 참고 존만 표시";
       if(extra[2].status==="fulfilled")try{timings=PitchWatchTiming.createVerifiedTiming(extra[2].value.packet,media,extra[2].value.hash);}catch(_){ /* Unverified timing must fall back to clip end. */ }
       keys=session.groups().flatMap(g=>g.keys);
       el("watch-pa").replaceChildren();

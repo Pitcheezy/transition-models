@@ -6,17 +6,17 @@
     <meta name="theme-color" content="#091811" />
     <title>저장 경기 관전 · Pitcheezy</title>
     <link rel="stylesheet" href="product.css?v=12" />
-    <link rel="stylesheet" href="receiver.css?v=13" />
-    <link rel="stylesheet" href="watch.css?v=2" />
+    <link rel="stylesheet" href="receiver.css?v=16" />
+    <link rel="stylesheet" href="watch.css?v=3" />
     <script src="receiver-fullgame.js?v=1" defer></script>
     <script src="receiver-game-media.js?v=1" defer></script>
     <script src="receiver-zones.js?v=1" defer></script>
-    <script src="receiver-location.js?v=3" defer></script>
+    <script src="receiver-location.js?v=4" defer></script>
     <script src="receiver-media.js?v=8" defer></script>
-    <script src="receiver-video.js?v=watch15" defer></script>
+    <script src="receiver-video.js?v=audit16" defer></script>
     <script src="receiver-sequence.js?v=2" defer></script>
     <script src="watch-timing.js?v=1" defer></script>
-    <script src="watch.js?v=2" defer></script>
+    <script src="watch.js?v=3" defer></script>
   </head>
   <body class="watch-page">
     <a class="skip" href="#watch-main">관전 화면으로 이동</a>
@@ -41,6 +41,11 @@
         </div>
         <div class="watch-navigation" aria-label="투구 이동"><button id="watch-prev" class="secondary" type="button" disabled>이전 공</button><button id="watch-next" class="secondary" type="button" disabled>다음 공</button></div>
       </div>
+      <section class="watch-game-timeline" aria-label="경기 전체 투구 선택">
+        <div><label for="watch-game-scrub">경기 탐색 <span>투구 단위</span></label><output id="watch-game-position" for="watch-game-scrub">경기 자료 확인 중</output></div>
+        <input id="watch-game-scrub" type="range" min="1" max="262" step="1" value="1" disabled />
+        <p>바를 놓으면 선택한 공의 영상 처음으로 이동합니다. 전체 중계 영상의 시간표는 아닙니다.</p>
+      </section>
       <div class="watch-stage">
         <section id="pitch-video-section" class="watch-video" aria-labelledby="watch-video-title">
           <div class="watch-panel-heading"><h2 id="watch-video-title">지금 보는 투구</h2><span id="watch-clock" class="watch-clock" aria-label="현재 클립 재생 시각">00:00 / 00:00</span></div>
@@ -52,6 +57,7 @@
           </div>
           <div id="pitch-video-missing" class="pitch-video-missing"><strong>이 투구의 확인된 영상이 없습니다.</strong><p>상세 분석에서 저장된 추천과 실제 결과를 확인할 수 있습니다. 없는 영상은 추정해서 채우지 않습니다.</p></div>
           <section id="watch-transport" class="watch-transport" aria-label="영상 재생 조작" hidden>
+            <p class="watch-transport-caption">현재 투구 영상 <span>초 단위</span></p>
             <div class="watch-timeline">
               <input id="watch-scrub" type="range" min="0" max="1000" step="1" value="0" aria-label="현재 투구 재생 위치" aria-valuetext="0초" disabled />
               <span id="watch-event-marker" class="watch-event-marker" aria-hidden="true" hidden></span>
@@ -80,6 +86,7 @@
           </div>
           <p id="watch-sequence-status" class="watch-sequence-status" role="status">현재 공부터 선택한 범위를 이어 봅니다. 결과 확인 뒤 다음 공으로 이동하며, 영상이 없는 투구에서는 멈춥니다.</p>
           <p id="pitch-video-status" class="watch-video-status" role="status"></p>
+          <a id="watch-detail-current" class="watch-detail-link" href="receiver.html?game=849843">이 공 상세 분석 →</a>
           <p id="pitch-observation-note" class="observation-legend" hidden>별도 정지 프레임의 미검토 AI 가로 위치 추정입니다.</p>
           <a id="pitch-video-source" class="source-link" target="_blank" rel="noopener noreferrer" hidden>MLB 공식 영상 출처</a>
         </section>
@@ -107,7 +114,8 @@
         <p>같은 투구 ID에 연결된 공식 클립과 저장된 추천을 함께 불러옵니다. 추천은 클립 시작 전에 표시합니다. 공 도착·접촉 시점이 확인된 투구는 해당 시점에 실제 공 위치를 표시하고, 나머지는 클립 종료 기준을 유지합니다. 판정·타구 결과는 클립 종료 후 공개합니다. 적용 기준은 재생바 아래에서 확인할 수 있습니다.</p>
         <p>다른 공으로 이동하면 이전 결과를 지웁니다. 저장된 발췌 영상의 재생이며 모든 투구의 정확한 릴리스·포구 프레임이 확인된 것은 아닙니다. 일부 영상에는 리플레이가 포함되며, 영상이 없거나 오류가 나면 자동 진행을 멈춥니다.</p>
         <p>추천 위치는 과거 실제 투구 분포의 근사입니다. 결과 뒤 보이는 존은 같은 투구에 기록된 높이를 사용하며, 투구 전 모델 입력 또는 심판 판정기를 뜻하지 않습니다. 포수 목표·투수 의도·제구 오차는 검증하지 않았습니다.</p>
-        <p><a href="guide.html#model-evidence">모델과 수치의 근거</a> · <a href="receiver.html?game=849843">자료·좌표 상세 분석</a></p>
+        <p>점선은 높이 1.5–3.5ft의 참고 존 예시이며 타자 기록이 아닙니다. 실제 기록 존이 공개되면 흰 실선으로 바뀝니다. 어느 경계도 심판 판정이나 제구 오차 계산에 사용하지 않습니다.</p>
+        <p><a href="guide.html#model-evidence">모델과 수치의 근거</a> · <a id="watch-detail-footer" href="receiver.html?game=849843">자료·좌표 상세 분석</a></p>
       </details>
     </main>
   </body>

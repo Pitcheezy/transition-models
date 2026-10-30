@@ -6,20 +6,20 @@
     <title>경기 전체 재생 · Pitcheezy</title>
     <meta name="theme-color" content="#091811" />
     <link rel="stylesheet" href="product.css?v=12" />
-    <link rel="stylesheet" href="receiver.css?v=13" />
+    <link rel="stylesheet" href="receiver.css?v=16" />
     <script src="data.js" defer></script>
     <script src="receiver-contract.js?v=6" defer></script>
     <script src="receiver-fullgame.js?v=1" defer></script>
     <script src="receiver-game-media.js?v=1" defer></script>
     <script src="receiver-zones.js?v=1" defer></script>
     <script src="receiver-route.js?v=1" defer></script>
-    <script src="receiver-location.js?v=3" defer></script>
+    <script src="receiver-location.js?v=4" defer></script>
     <script src="receiver-sample.js" defer></script>
     <script src="receiver-demo-849843.js" defer></script>
     <script src="receiver-media.js?v=8" defer></script>
-    <script src="receiver-video.js?v=watch14" defer></script>
+    <script src="receiver-video.js?v=audit16" defer></script>
     <script src="receiver-sequence.js?v=2" defer></script>
-    <script src="receiver.js?v=sequence-13" defer></script>
+    <script src="receiver.js?v=audit16" defer></script>
   </head>
   <body>
     <a class="skip" href="#receiver">본문으로 이동</a>
@@ -34,7 +34,7 @@
     <main id="receiver" class="receiver-main">
       <div class="receiver-heading">
         <span class="eyebrow">ONE GAME · EVERY PITCH</span>
-        <h1>한 경기,<br />262번의 선택.</h1>
+        <h1>한 경기,<br />투구별 상세 분석.</h1>
         <p>
           전달받은 추천·결과 파일을 확인하고, 같은 투구의 미트 관측과 나란히
           살펴봅니다.
@@ -53,7 +53,7 @@
           추천 246구·미지원 16구이며, 공식 영상 261구를 같은 투구 기록과 연결했습니다.
         </p>
         <button id="load-full-game" class="primary">경기 전체 열기</button>
-        <a class="primary" href="watch.html?game=849843">영상 중심 관전 모드</a>
+        <a id="receiver-watch-featured" class="primary" href="watch.html?game=849843" hidden>선택한 공 영상 관전 →</a>
         <button id="load-first-pa" class="secondary">
           첫 타석 영상부터 보기
         </button>
@@ -253,6 +253,7 @@
           미검토 AI 가로 위치 추정입니다.
         </p>
         <div class="receiver-controls">
+          <a id="receiver-watch-current" class="primary" href="watch.html?game=849843" hidden>이 공 영상 관전 →</a>
           <button id="previous-pitch" class="secondary">이전 투구</button
           ><button id="reveal-pitch" class="primary">현재 투구 결과 공개</button
           ><button id="hide-pitch" class="secondary">결과 다시 숨기기</button
@@ -301,7 +302,7 @@
               <svg id="location-plot" viewBox="0 0 320 330" role="img" aria-label="투구 위치 비교"></svg>
               <p id="location-state" class="location-state"></p>
               <ul id="location-values" class="location-values"></ul>
-              <details class="location-explanation"><summary>좌표와 표시 기준</summary><p>결과 공개 뒤 나타나는 흰 테두리와 9분할은 같은 투구의 Statcast 기록 상·하단 높이와 홈플레이트 폭 17인치로 그린 존입니다. 사후 기록을 재생에 표시하며 추천 모델의 투구 전 입력이라고 주장하지 않습니다. 존이 없으면 좌표 격자만 표시합니다. 공의 반지름·심판 판정을 계산하는 경계는 아닙니다.</p><p>포수 시점: x 음수는 왼쪽, 양수는 오른쪽입니다. z는 지면 기준 높이이며 단위는 ft입니다. 바깥 격자는 1ft 눈금입니다.</p><p>같은 위치의 추천은 1·3처럼 순위를 묶습니다. 전체 순위와 수치는 위 목록에서 확인합니다.</p><p>추천은 과거 투구 분포의 근사 위치이고, 실제 공은 홈플레이트 통과 위치입니다. 실제 포구 지점은 제공되지 않습니다. 미트 가로 관측은 결과 아래에 별도로 표시하며 제구 오차로 계산하지 않습니다.</p></details>
+              <details class="location-explanation"><summary>좌표와 표시 기준</summary><p>결과 공개 뒤 나타나는 흰 테두리와 9분할은 같은 투구의 Statcast 기록 상·하단 높이와 홈플레이트 폭 17인치로 그린 존입니다. 사후 기록을 재생에 표시하며 추천 모델의 투구 전 입력이라고 주장하지 않습니다. 공개 전이나 기록이 없을 때는 높이 1.5–3.5ft의 참고 존을 점선으로 표시합니다. 타자 기록이 아닌 표시용 예시입니다. 공의 반지름·심판 판정을 계산하는 경계는 아닙니다.</p><p>포수 시점: x 음수는 왼쪽, 양수는 오른쪽입니다. z는 지면 기준 높이이며 단위는 ft입니다. 바깥 격자는 1ft 눈금입니다.</p><p>같은 위치의 추천은 1·3처럼 순위를 묶습니다. 전체 순위와 수치는 위 목록에서 확인합니다.</p><p>추천은 과거 투구 분포의 근사 위치이고, 실제 공은 홈플레이트 통과 위치입니다. 실제 포구 지점은 제공되지 않습니다. 미트 가로 관측은 결과 아래에 별도로 표시하며 제구 오차로 계산하지 않습니다.</p></details>
             </figure>
             <div id="received-candidates"></div>
             <p class="receiver-note">

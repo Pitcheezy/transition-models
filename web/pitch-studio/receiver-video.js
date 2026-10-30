@@ -173,7 +173,7 @@
       showMode();
       if (inspecting) return;
       play.textContent = "영상 다시 불러오기";
-      status.textContent = record.poster
+      status.textContent = typeof events.errorMessage === "string" ? events.errorMessage : record.poster
         ? "영상 로딩 실패 · 확인된 정지 장면을 표시합니다. 다시 불러오거나 결과 공개를 사용할 수 있습니다."
         : "공식 영상을 불러오지 못했습니다. 다시 불러오거나 ‘현재 투구 결과 공개’로 추천과 실제 결과를 비교하세요.";
     });

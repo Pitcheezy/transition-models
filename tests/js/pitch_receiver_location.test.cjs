@@ -4,12 +4,34 @@ const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const path = require("node:path");
 const vm = require("node:vm");
-const { build, marker } = require("../../web/pitch-studio/receiver-location.js");
+const { build, marker, referenceZone } = require("../../web/pitch-studio/receiver-location.js");
 const { createSession } = require("../../web/pitch-studio/receiver-contract.js");
 const fixture = require("../../web/pitch-studio/receiver-sample.js");
 const supplied = require("../../web/pitch-studio/receiver-demo-849843.js");
 const sample = () => structuredClone(fixture);
 const view = () => createSession(sample()).view();
+
+test("reference outline is a fixed 17-inch guide, never a batter-specific recorded zone", () => {
+  const reference = referenceZone();
+  assert.equal(reference.bottom, 1.5); assert.equal(reference.top, 3.5);
+  assert.notEqual(reference.source, "statcast_record");
+  assert(Math.abs(reference.nw * 4 - 17 / 12) < 1e-12);
+  assert(Math.abs(reference.nx + reference.nw / 2 - 0.5) < 1e-12);
+  assert(Math.abs(reference.ny - 0.3) < 1e-12); assert(Math.abs(reference.nh - 0.4) < 1e-12);
+});
+
+test("reference geometry does not turn hidden recorded zone or actual result into pre-pitch data", () => {
+  const source = view();
+  Object.defineProperty(source, "post", { get() { throw new Error("post must remain unread"); } });
+  const recorded = { source: "statcast_record", bottom: 1.62, top: 3.41 };
+  const before = build(source, recorded);
+  assert.equal(before.zone, null); assert.equal(before.actual, null);
+  assert.equal(referenceZone().bottom, 1.5);
+  const session = createSession(sample()); session.reveal(true);
+  const after = build(session.view(), recorded);
+  assert.equal(after.zone.source, "statcast_record"); assert.equal(after.zone.bottom, 1.62);
+  assert.equal(after.zone.top, 3.41); assert.equal(referenceZone().top, 3.5);
+});
 
 test("validated pre-pitch view projects recommended positions without result or probabilities", () => {
   const source = view();

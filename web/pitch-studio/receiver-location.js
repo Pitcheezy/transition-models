@@ -93,5 +93,13 @@
     return { text, width: Math.max(24, 7 * text.length + 10) };
   }
 
-  return { build, marker };
+  // Schematic aid only. Never read the current batter's post-pitch zone here.
+  function referenceZone() {
+    const upperLeft = position({x: -17/24, z: 3.5});
+    const lowerRight = position({x: 17/24, z: 1.5});
+    return {source:"display_reference",bottom:1.5,top:3.5,
+      nx:upperLeft.nx,ny:upperLeft.ny,nw:lowerRight.nx-upperLeft.nx,nh:lowerRight.ny-upperLeft.ny};
+  }
+
+  return { build, marker, referenceZone };
 });

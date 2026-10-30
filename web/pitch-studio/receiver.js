@@ -27,7 +27,12 @@ const pitchVideo = PitchReceiverVideo.create({
   render();
 }, window.PitchReceiverMedia, {
   onEnded: (binding) => paSequence.ended(binding),
-  onInterrupt: (reason) => { if (paSequence.isActive()) paSequence.stop(reason); },
+  onInterrupt: (reason) => {
+    if (paSequence.isActive()) paSequence.stop(reason);
+    if (session && ["seek", "manual", "error"].includes(reason)) {
+      session.reveal(false); render(true);
+    }
+  },
 });
 function sequenceState() {
   const view = session?.view();
@@ -81,6 +86,7 @@ function clear() {
   excludedMedia = {};
   mediaLoadNote = "";
   pitchVideo.update(null);
+  for (const id of ["receiver-watch-current", "receiver-watch-featured"]) node(id).hidden = true;
   node("pitch-tabs").hidden = true;
   node("game-navigation").hidden = true;
   node("pa-select").replaceChildren();
@@ -155,18 +161,19 @@ function renderLocations(view) {
   }
   shape("text", {x:278,y:306,class:"location-tick"}, "x / ft");
   shape("text", {x:8,y:12,class:"location-tick"}, "z / ft");
-  if (model.zone) {
-    const x = 60 + model.zone.nx * 200, y = 18 + model.zone.ny * 250;
-    const w = model.zone.nw * 200, h = model.zone.nh * 250;
-    shape("rect", {x,y,width:w,height:h,class:"strike-zone"});
+  const outline = model.zone || PitchReceiverLocation.referenceZone();
+  if (outline) {
+    const x = 60 + outline.nx * 200, y = 18 + outline.ny * 250;
+    const w = outline.nw * 200, h = outline.nh * 250;
+    shape("rect", {x,y,width:w,height:h,class:model.zone ? "strike-zone" : "reference-zone"});
     for (let i=1;i<3;i++) {
-      shape("line", {x1:x+w*i/3,y1:y,x2:x+w*i/3,y2:y+h,class:"strike-zone-division"});
-      shape("line", {x1:x,y1:y+h*i/3,x2:x+w,y2:y+h*i/3,class:"strike-zone-division"});
+      shape("line", {x1:x+w*i/3,y1:y,x2:x+w*i/3,y2:y+h,class:model.zone ? "strike-zone-division" : "reference-zone-division"});
+      shape("line", {x1:x,y1:y+h*i/3,x2:x+w,y2:y+h*i/3,class:model.zone ? "strike-zone-division" : "reference-zone-division"});
     }
+  }
+  if (model.zone) {
     put("zone-status", `포수 시점 · ${view.batter.name}의 기록 존 · 하단 ${model.zone.bottom.toFixed(2)} / 상단 ${model.zone.top.toFixed(2)} ft`);
-  } else put("zone-status", zone && !view.revealed
-    ? "포수 시점 · 결과 공개 뒤 타자 기록 존 표시 · 현재 1ft 좌표 격자"
-    : zoneLoadNote || "포수 시점 · 기록 존 미연결 · 1ft 좌표 격자만 표시");
+  } else put("zone-status", `점선은 참고 존 · 높이 1.5–3.5ft 예시 · 타자 기록 아님. ${zone && !view.revealed ? "결과 공개 뒤 기록 존으로 바뀝니다." : zoneLoadNote || "타자 기록 존 미연결."}`);
   // No jitter or clamping: shared recommendation coordinates retain all ranks.
   for (const group of model.groups) {
     const x = 60 + group.nx * 200, y = 18 + group.ny * 250;
@@ -190,14 +197,18 @@ function renderLocations(view) {
   const spokenRows = Array.from(values.children, (row) => row.textContent).join("; ");
   svg.setAttribute("aria-label", `${model.pitch_id} · 포수 시점 위치 비교. ${spokenRows}. ${node("location-state").textContent}`);
 }
-function render() {
+function render(preservePosition = false) {
   if (!session) return;
   const view = session.view(),
     s = view.situation;
   const currentObservation = observationFor(view);
   pitchVideo.update({ context: loadVersion, pitch_id: view.pitch_id, revealed: view.revealed, enabled: builtInDemo,
     media: view.full_game ? gameMedia : null,
-    observationAllowed: !view.full_game && currentObservation?.status === "key_matched" });
+    observationAllowed: !view.full_game && currentObservation?.status === "key_matched", preservePosition });
+  for (const id of ["receiver-watch-current", "receiver-watch-featured"]) {
+    node(id).hidden = !view.full_game;
+    node(id).href = view.full_game ? `watch.html?game=849843&pitch=${encodeURIComponent(view.pitch_id)}` : "watch.html?game=849843";
+  }
   put("pitch-video-missing-reason", view.full_game && excludedMedia[view.pitch_id]
     ? "영상 등록부와 받은 경기 자료의 구종이 달라 영상 연결을 보류했습니다. 어느 기록도 임의로 수정하지 않았습니다."
     : "이 투구의 확인된 영상을 불러오지 못했습니다.");
