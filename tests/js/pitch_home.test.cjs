@@ -30,14 +30,27 @@ function setup({ reduced = false, blocked = false, pending = false } = {}) {
     },
     pause() { this.paused = true; this.emit("pause"); },
   });
+  const listeners = {};
+  const location = { hash: "", replaced: null, replace(value) { this.replaced = value; } };
   vm.runInNewContext(source, {
     document: { getElementById: (id) => elements[id] },
     matchMedia: () => ({ matches: reduced }),
-    location: { hash: "", replace() {} },
+    location,
+    window: { addEventListener(event, callback) { listeners[event] = callback; } },
   });
-  return { elements, film, allow: () => { blocked = false; } };
+  return { elements, film, location, listeners, allow: () => { blocked = false; } };
 }
 const flush = () => new Promise((resolve) => setImmediate(resolve));
+
+test("legacy analysis links open the full game, including later hash changes", () => {
+  const { location, listeners } = setup({ reduced: true });
+  location.hash = "#analysis";
+  listeners.hashchange();
+  assert.equal(location.replaced, "receiver.html?game=849843");
+  location.hash = "#validation";
+  listeners.hashchange();
+  assert.equal(location.replaced, "report.html#validation");
+});
 
 test("blocked autoplay leaves a working user-initiated retry", async () => {
   const { elements: e, film, allow } = setup({ blocked: true });

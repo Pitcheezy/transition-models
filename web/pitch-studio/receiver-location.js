@@ -32,7 +32,7 @@
    * Identical plotted recommendations share a rank label without dropping rows.
    * null clears the chart; malformed current identity throws for the caller to clear.
    */
-  function build(view) {
+  function build(view, recordedZone = null) {
     if (view == null) return null;
     if (!object(view) || typeof view.pitch_id !== "string" ||
         !/^[1-9][0-9]*:[1-9][0-9]*:[1-9][0-9]*$/.test(view.pitch_id))
@@ -72,7 +72,20 @@
       label: label(view.post.actual.pitch_label, "실제 투구"),
       ...position(view.post.actual),
     };
-    return { pitch_id: view.pitch_id, domain: { ...domain }, recommendations, groups, actual, revealed };
+    let zone = null;
+    if (recordedZone !== null) {
+      if (!object(recordedZone) || recordedZone.source !== "statcast_record" ||
+          !finite(recordedZone.bottom) || !finite(recordedZone.top) ||
+          recordedZone.bottom < domain.zMin || recordedZone.top > domain.zMax ||
+          recordedZone.bottom >= recordedZone.top) throw new TypeError("존 높이 자료가 올바르지 않습니다.");
+      // Home-plate width: 17 inches. This outline does not classify umpire calls.
+      const halfWidth = 17 / 24;
+      const upperLeft = position({x:-halfWidth,z:recordedZone.top});
+      const lowerRight = position({x:halfWidth,z:recordedZone.bottom});
+      zone = { ...recordedZone, nx:upperLeft.nx, ny:upperLeft.ny,
+        nw:lowerRight.nx-upperLeft.nx, nh:lowerRight.ny-upperLeft.ny };
+    }
+    return { pitch_id: view.pitch_id, domain: { ...domain }, recommendations, groups, actual, revealed, zone };
   }
 
   function marker(group) {

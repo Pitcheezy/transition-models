@@ -5,18 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>경기 전체 재생 · Pitcheezy</title>
     <meta name="theme-color" content="#091811" />
-    <link rel="stylesheet" href="product.css?v=11" />
-    <link rel="stylesheet" href="receiver.css?v=11" />
+    <link rel="stylesheet" href="product.css?v=12" />
+    <link rel="stylesheet" href="receiver.css?v=12" />
     <script src="data.js" defer></script>
     <script src="receiver-contract.js?v=6" defer></script>
     <script src="receiver-fullgame.js?v=1" defer></script>
     <script src="receiver-game-media.js?v=1" defer></script>
-    <script src="receiver-location.js?v=2" defer></script>
+    <script src="receiver-zones.js?v=1" defer></script>
+    <script src="receiver-route.js?v=1" defer></script>
+    <script src="receiver-location.js?v=3" defer></script>
     <script src="receiver-sample.js" defer></script>
     <script src="receiver-demo-849843.js" defer></script>
     <script src="receiver-media.js?v=8" defer></script>
     <script src="receiver-video.js?v=video1-8" defer></script>
-    <script src="receiver.js?v=video1-11" defer></script>
+    <script src="receiver.js?v=zone-nav-12" defer></script>
   </head>
   <body>
     <a class="skip" href="#receiver">본문으로 이동</a>
@@ -25,9 +27,7 @@
         ><span class="seal">P</span>PITCHEEZY<i>●</i></a
       >
       <nav aria-label="주요 메뉴">
-        <a href="games.html">경기 선택</a
-        ><a href="guide.html">이용 안내</a
-        ><a href="report.html#analysis">관측 기록</a>
+        <a href="index.html">홈</a><a href="games.html">경기</a><a href="guide.html">이용 안내</a><a href="guide.html#model-evidence">모델 근거</a><a href="report.html#validation">CV 연구 기록</a>
       </nav>
     </header>
     <main id="receiver" class="receiver-main">
@@ -40,7 +40,7 @@
         </p>
       </div>
       <section class="featured-pa" aria-labelledby="featured-title">
-        <span class="eyebrow">2026.09.29 · SAVED GAME REPLAY</span>
+        <span class="eyebrow">현지 2026.09.29 · 한국 09.30 · 저장 경기</span>
         <h2 id="featured-title">
           시카고 컵스 <span>@</span> 샌디에이고 파드리스
         </h2>
@@ -55,7 +55,7 @@
         <button id="load-first-pa" class="secondary">
           첫 타석 영상부터 보기
         </button>
-        <a class="video-jump" href="receiver.html?demo=849843-pa1&amp;pitch=3#response-workspace">3구 미트 관측으로 바로 가기</a>
+        <a href="report.html#analysis">별도 CV 연구 기록 보기</a>
         <p class="scientific-note">
           과거 경기 재생 · 검증 전 실험 추천입니다. 구종 비율은 사건확률이
           아닙니다. 추천 위치는 과거 실제 투구 분포의 근사이며, 미트 표시는
@@ -78,8 +78,10 @@
           <p>
             전체 경기 수신본의 실행 서버 커밋은 미확인입니다. 전체 경기와 별도 첫 타석 응답의 출처는 구별합니다. 경기 후 저장 자료이며 당시 실시간 사전 가용성을 검증한 것은 아닙니다.
           </p>
+          <p><a href="receiver.html?archive=first-pa&amp;pitch=849843%3A1%3A3">옛 첫 타석 수신본 확인 (별도 3구 자료)</a> · 현재 전체 경기와 다른 수신본을 보존한 자료입니다.</p>
         </details>
       </section>
+      <p id="replay-status" class="replay-status" role="status" aria-live="polite"></p>
       <details id="file-tools" class="import-tools">
         <summary>다른 응답 파일 열기 · 파일 검사 기록</summary>
         <section class="import-card" aria-labelledby="import-title">
@@ -287,11 +289,11 @@
             <figure id="location-comparison" class="location-comparison" hidden>
               <figcaption>추천 위치와 실제 공</figcaption>
               <div class="location-legend"><span><i class="legend-recommendation" aria-hidden="true"></i>추천 순위 · 겹친 위치는 묶음</span><span><i class="legend-actual" aria-hidden="true"></i>실제 공 · 공개 후</span></div>
-              <p class="location-state">포수 시점 · 1ft 눈금 · 스트라이크존 아님</p>
+              <p id="zone-status" class="location-state">포수 시점 · 기록 존 확인 중</p>
               <svg id="location-plot" viewBox="0 0 320 330" role="img" aria-label="투구 위치 비교"></svg>
               <p id="location-state" class="location-state"></p>
               <ul id="location-values" class="location-values"></ul>
-              <details class="location-explanation"><summary>좌표와 표시 기준</summary><p>포수 시점: x 음수는 왼쪽, 양수는 오른쪽입니다. z는 지면 기준 높이이며 단위는 ft입니다. 격자는 1ft 눈금으로, 타자별 스트라이크존이나 판정 영역이 아닙니다.</p><p>같은 위치의 추천은 1·3처럼 순위를 묶습니다. 숫자가 많으면 1+4처럼 첫 순위와 나머지 후보 수로 줄이며, 전체 순위와 수치는 위 목록에서 확인합니다.</p><p>추천은 과거 투구 분포의 근사 위치이고, 실제 공은 홈플레이트 통과 위치입니다. 실제 포구 지점은 제공되지 않습니다. 미트 가로 관측은 결과 아래에 별도로 표시하며 제구 오차로 계산하지 않습니다.</p></details>
+              <details class="location-explanation"><summary>좌표와 표시 기준</summary><p>흰 테두리와 9분할은 같은 투구의 Statcast 기록 상·하단 높이와 홈플레이트 폭 17인치로 그린 존입니다. 사후 기록을 재생에 표시하며 추천 모델의 투구 전 입력이라고 주장하지 않습니다. 존이 없으면 좌표 격자만 표시합니다. 공의 반지름·심판 판정을 계산하는 경계는 아닙니다.</p><p>포수 시점: x 음수는 왼쪽, 양수는 오른쪽입니다. z는 지면 기준 높이이며 단위는 ft입니다. 바깥 격자는 1ft 눈금입니다.</p><p>같은 위치의 추천은 1·3처럼 순위를 묶습니다. 전체 순위와 수치는 위 목록에서 확인합니다.</p><p>추천은 과거 투구 분포의 근사 위치이고, 실제 공은 홈플레이트 통과 위치입니다. 실제 포구 지점은 제공되지 않습니다. 미트 가로 관측은 결과 아래에 별도로 표시하며 제구 오차로 계산하지 않습니다.</p></details>
             </figure>
             <div id="received-candidates"></div>
             <p class="receiver-note">

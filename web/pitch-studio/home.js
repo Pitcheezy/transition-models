@@ -68,9 +68,13 @@ film.addEventListener("error", showMediaError);
 film.querySelector("source")?.addEventListener("error", showMediaError);
 setObservation(matchMedia("(prefers-reduced-motion: reduce)").matches);
 const oldViews = {
-  "#analysis": "service.html",
+  "#analysis": "receiver.html?game=849843",
   "#validation": "report.html#validation",
   "#story": "report.html#story",
 };
-if (Object.hasOwn(oldViews, location.hash))
-  location.replace(oldViews[location.hash]);
+function redirectOldView() {
+  if (Object.hasOwn(oldViews, location.hash))
+    location.replace(oldViews[location.hash]);
+}
+redirectOldView();
+window.addEventListener("hashchange", redirectOldView);

@@ -289,7 +289,7 @@ $("view-story").innerHTML = `
   <div class="vision-intro"><p class="eyebrow">THE QUESTION BEHIND THE PROJECT</p><h1 id="story-title">포수가 요구한 곳에,<br>공이 도착했는가.</h1><p>영상에서 읽은 미트 위치를 출발점으로,<br>투구의 목표와 실행을 구분해 분석합니다.</p><span class="evidence-tag">프로젝트 목표 · 현재 검증 완료를 뜻하지 않습니다</span></div>
   <div class="journey"><article><span class="journey-number">01</span><h2>위치를 관측한다</h2><p>포수 미트 위치를 판독하고, 좌표로 변환합니다. 불일치·판독 불가 장면은 기권합니다.</p><span class="journey-status ready">구현 · 개발 자료 검증</span></article><article><span class="journey-number">02</span><h2>목표를 확인한다</h2><p>쉬는 글러브와 실제로 요구한 목표를 구분합니다. 미트가 보인다는 것만으로 목표를 확정하지 않습니다.</p><span class="journey-status">추가 정의·검증 필요</span></article><article><span class="journey-number">03</span><h2>같은 기준으로 비교한다</h2><p>목표와 공의 위치를 같은 깊이·시점·좌표 기준으로 맞춘 뒤, 투구 수행의 차이를 평가합니다.</p><span class="journey-status">향후 분석 단계</span></article></div>
   <div class="project-summary"><div><p class="eyebrow">TODAY'S DEMO</p><h2>지금 보여드리는 것은<br>관측에서 검증까지의 흐름입니다.</h2><p>39구 기록 탐색, 공개 전후 표시, 27구 미트 좌표, 12구 기권 처리와 별도 두 경기의 사람 비교 결과를 확인할 수 있습니다.</p><button class="primary-button" data-open-view="analysis">투구 관측 열기</button></div><div class="next-work"><h3>다음 검증</h3><ol><li><strong>연속 영상의 시간순 처리</strong><span>한 타석에서 실제 판독과 입력·출력 시간을 계측합니다.</span></li><li><strong>새 영상과 독립 라벨러</strong><span>이미 검토한 자료를 벗어나 새로운 평가를 수행합니다.</span></li><li><strong>목표와 도착 위치의 기준 정합</strong><span>포수 요구 위치와 공의 도착 위치를 비교할 조건을 검증합니다.</span></li></ol></div></div>`;
-function setView(next) {
+function setView(next, { historyMode = "push" } = {}) {
   if (!["analysis", "validation", "story"].includes(next))
     throw new Error("지원하지 않는 화면입니다.");
   view = next;
@@ -302,8 +302,23 @@ function setView(next) {
     if (b.dataset.view === next) b.setAttribute("aria-current", "page");
     else b.removeAttribute("aria-current");
   }
-  history.replaceState(null, "", `#${next}`);
+  if (historyMode !== "none" && location.hash !== `#${next}`) {
+    const changeHistory = historyMode === "replace" ? "replaceState" : "pushState";
+    history[changeHistory](null, "", `#${next}`);
+  }
+  const titles = { analysis: "투구 관측", validation: "검증 리포트", story: "프로젝트 방향" };
+  document.title = `${titles[next]} · CV 연구 기록 — Pitcheezy`;
 }
+function viewFromLocation() {
+  const next = location.hash.slice(1);
+  return ["analysis", "validation", "story"].includes(next) ? next : null;
+}
+function syncViewFromLocation() {
+  const next = viewFromLocation();
+  if (next) setView(next, { historyMode: "none" });
+}
+window.addEventListener("hashchange", syncViewFromLocation);
+window.addEventListener("popstate", syncViewFromLocation);
 for (const b of document.querySelectorAll("[data-view]"))
   b.addEventListener("click", () => setView(b.dataset.view));
 for (const b of document.querySelectorAll("[data-open-view]"))
@@ -347,11 +362,7 @@ $("info-dialog").addEventListener("click", (e) => {
       $("info-dialog").close();
   }
 });
-setView(
-  ["analysis", "validation", "story"].includes(location.hash.slice(1))
-    ? location.hash.slice(1)
-    : "analysis",
-);
+setView(viewFromLocation() || "analysis", { historyMode: "replace" });
 
 // WebMCP mirrors visible actions; hidden pre-reveal coordinates stay out of readback.
 function stateSnapshot() {

@@ -2,6 +2,8 @@
 
 ## 전시 정본 계획 실행 — 2026-10-28
 
+**SITE-zone-nav1 진행 중 — 2026-10-30:** Codex / `codex/site-first-1029` / 기준9ca9fca / PR85. 기존849843 원본의 타자별 존262구를 별도 표시자료로 결합하고 9분할 존·전체 경기 진입·투구 URL 복원·공통 메뉴를 보완한다. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6516976749). Root는 재생 제어/표시/통합, 별도 수정자는 존 내보내기와 공통 페이지를 각각 담당한다. 고정 다른 모델 검토 후 기존 Sites 공개 범위에 반영. 팀원·별도 Cloudflare·원본/추천·평가잠금·사람보류 불변.
+
 **SITE-video1 공개 완료·수정 권한 반납 — 2026-10-30:** Codex / `codex/site-first-1029` / 제품12f0e9a / PR85. 849843 전체262구의 기존 공식 클립 대조, 영상261연결·69:2구종불일치1제외. 로컬첫3+공식원격258, 클립종료결과공개·전환초기화·오류수동비교·PC/모바일 확인. Node167·Python56·사이트/미디어SHA·lint 통과, 다른모델(gpt-6.1-terra 호출설정) 고정12f0e9a APPROVE. Sites소스d487b393·공개v11 성공, 공개PA2 실제재생/결과공개 확인. [기록](docs/SITE_GAME_VIDEO_20261030.md)·[영수증](docs/results/site_fullgame_20261030/video-receipt.json). 정확한릴리스/포구동기화·실시간추론·자동CV·main통합은 아니다. 팀원·별도Cloudflare·평가잠금·사람보류 보존. 다음: 제외1구 출처 확인 초안과 순차관전 동선 보완; 추가경기/모델묶음/채택화면은 별도대기.
 
 - [x] SITE-video1. 공식 영상과 저장 추천/결과의 투구별 연결, 불일치/오류 처리·검사·고정검토·공개v11 완료. 기존CV50b의PA2 5클립 연결 포함, 새로운미트점 없음. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-30 · Codex]`

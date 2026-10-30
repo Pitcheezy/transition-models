@@ -6,6 +6,7 @@ let session = null,
   rawFiles = [],
   builtInDemo = false;
 let gameMedia = null, excludedMedia = {}, mediaLoadNote = "";
+let gameZones = null, zoneLoadNote = "", currentMode = "file";
 const fullGame = () => session?.view().full_game === true;
 function observationFor(view) {
   return view.full_game
@@ -34,6 +35,10 @@ function clear() {
   session = null;
   builtInDemo = false;
   gameMedia = null;
+  gameZones = null;
+  zoneLoadNote = "";
+  currentMode = "file";
+  put("replay-status", "");
   excludedMedia = {};
   mediaLoadNote = "";
   pitchVideo.update(null);
@@ -81,12 +86,14 @@ function textElement(tag, text, parent) {
   return e;
 }
 function renderLocations(view) {
-  const model = PitchReceiverLocation.build(view);
+  const zone = view?.full_game ? gameZones?.[view.pitch_id] ?? null : null;
+  const model = PitchReceiverLocation.build(view, zone);
   const wrapper = node("location-comparison"), svg = node("location-plot"), values = node("location-values");
   wrapper.hidden = !model;
   svg.replaceChildren();
   values.replaceChildren();
   put("location-state", "");
+  put("zone-status", "");
   if (!model) { svg.setAttribute("aria-label", "투구 자료 없음"); return; }
   const shape = (tag, attrs, text = "") => {
     const element = document.createElementNS("http://www.w3.org/2000/svg", tag);
@@ -108,6 +115,16 @@ function renderLocations(view) {
   }
   shape("text", {x:278,y:306,class:"location-tick"}, "x / ft");
   shape("text", {x:8,y:12,class:"location-tick"}, "z / ft");
+  if (model.zone) {
+    const x = 60 + model.zone.nx * 200, y = 18 + model.zone.ny * 250;
+    const w = model.zone.nw * 200, h = model.zone.nh * 250;
+    shape("rect", {x,y,width:w,height:h,class:"strike-zone"});
+    for (let i=1;i<3;i++) {
+      shape("line", {x1:x+w*i/3,y1:y,x2:x+w*i/3,y2:y+h,class:"strike-zone-division"});
+      shape("line", {x1:x,y1:y+h*i/3,x2:x+w,y2:y+h*i/3,class:"strike-zone-division"});
+    }
+    put("zone-status", `포수 시점 · ${view.batter.name}의 기록 존 · 하단 ${model.zone.bottom.toFixed(2)} / 상단 ${model.zone.top.toFixed(2)} ft`);
+  } else put("zone-status", zoneLoadNote || "포수 시점 · 기록 존 미연결 · 1ft 좌표 격자만 표시");
   // No jitter or clamping: shared recommendation coordinates retain all ranks.
   for (const group of model.groups) {
     const x = 60 + group.nx * 200, y = 18 + group.ny * 250;
@@ -150,7 +167,7 @@ function render() {
   node("response-workspace").hidden = false;
   put(
     "source-badge",
-    view.source.kind === "synthetic"
+    currentMode === "archive" ? "옛 첫 타석 수신본 · 별도 3구 보관 자료" : view.source.kind === "synthetic"
       ? "합성 연결 테스트 · 실제 경기 아님"
       : "제공받은 모델 응답 · 검증 전 실험 추천",
   );
@@ -161,7 +178,7 @@ function render() {
   put("game-name", `${view.game.away_team} @ ${view.game.home_team}`);
   put(
     "pitch-identity",
-    `${view.game.date} · ${view.at_bat_number}번째 타석 · ${view.pitch_number}구 · 키 ${view.pitch_id}`,
+    `${builtInDemo ? "현지 2026-09-29 / 한국 09-30" : `${view.game.date} (파일 기준)`} · ${view.at_bat_number}번째 타석 · ${view.pitch_number}구 · 키 ${view.pitch_id}`,
   );
   const bases = [1, 2, 4].flatMap((bit, i) =>
     s.bases & bit ? [`${i + 1}루`] : [],
@@ -354,6 +371,20 @@ function reportError(error, version) {
   put("import-error", `검사 실패: ${error.message}`);
   node("import-error").hidden = false;
   node("file-tools").open = true;
+  put("replay-status", `자료 확인 실패: ${error.message} 위의 ‘경기 전체 열기’로 다시 시작할 수 있습니다.`);
+}
+
+function rememberRoute(method = "push") {
+  const key = builtInDemo ? session?.view().pitch_id : null;
+  const query = PitchReceiverRoute.query(currentMode, key);
+  if (window.location.search !== query)
+    window.history[method === "replace" ? "replaceState" : "pushState"](null, "", `${window.location.pathname}${query}${window.location.hash}`);
+}
+function selectPitch(key) {
+  session.select(key);
+  syncPaFilter();
+  render();
+  rememberRoute();
 }
 function renderNavigation(view) {
   node("game-navigation").hidden = !view.full_game;
@@ -394,11 +425,12 @@ function syncPaFilter() {
     fillPaOptions();
   }
 }
-async function loadFullGame() {
+async function loadFullGame(startKey = PitchReceiverRoute.FIRST, historyMode = "push") {
   resetRaw();
   clear();
   const version = loadVersion;
   put("import-status", "경기 전체 자료를 불러오는 중입니다.");
+  put("replay-status", "경기 자료·영상 목록·타자별 기록 존을 불러오는 중입니다.");
   try {
     const response = await fetch("game-849843.json?v=1", {credentials:"omit"});
     if (!response.ok) throw new Error("저장 경기 파일을 불러오지 못했습니다.");
@@ -407,7 +439,19 @@ async function loadFullGame() {
     const packet = JSON.parse(new TextDecoder("utf-8", {fatal:true}).decode(bytes));
     const hash = await sha256(bytes);
     const candidate = PitchReceiverFullGame.createVerifiedSession(packet, hash);
+    candidate.select(startKey);
     if (version !== loadVersion) return;
+    let zones = null, zoneNote = "";
+    try {
+      const zoneResponse = await fetch("game-849843-zones.json?v=1", {credentials:"omit"});
+      if (!zoneResponse.ok) throw new Error("기록 존 요청 실패");
+      const zoneBytes = await zoneResponse.arrayBuffer();
+      if (zoneBytes.byteLength > MAX_BYTES) throw new Error("기록 존 크기 초과");
+      zones = PitchReceiverZones.createVerifiedZones(JSON.parse(new TextDecoder("utf-8", {fatal:true}).decode(zoneBytes)), packet, await sha256(zoneBytes));
+    } catch (_) { zoneNote = "기록 존 자료 확인 실패 · 1ft 좌표 격자만 표시"; }
+    if (version !== loadVersion) return;
+    gameZones = zones;
+    zoneLoadNote = zoneNote;
     let verifiedMedia = null, mediaHash = null, loadNote = "";
     try {
       const mediaResponse = await fetch("game-849843-media.json?v=1", {credentials:"omit"});
@@ -425,6 +469,7 @@ async function loadFullGame() {
     excludedMedia = verifiedMedia?.excluded || {};
     mediaLoadNote = loadNote;
     session = candidate;
+    currentMode = "game";
     builtInDemo = true;
     const filter = node("inning-select");
     textElement("option", "전체 이닝", filter).value = "all";
@@ -444,12 +489,14 @@ async function loadFullGame() {
     if (verifiedMedia) textElement("div", `영상 연결 목록 SHA256: ${mediaHash} · 투구ID/선수/구종 대조 ${Object.keys(gameMedia).length}구, 불일치 제외 ${Object.keys(excludedMedia).length}구.`, info);
     textElement("div", "첫3구는 저장 영상, 나머지는 MLB 공식 영상 서버에서 선택한 클립만 읽습니다. 로컬 원본 SHA는 원격 서버의 현재 영상 바이트까지 보증하지 않습니다.", info);
     put("import-status", "849843 저장 경기 · 구조·투구 키 검사 통과");
+    put("replay-status", zoneNote || "기록 존 262구 연결 · 타석과 투구를 바꾸어도 같은 위치의 링크를 공유할 수 있습니다.");
     render();
+    rememberRoute(historyMode);
     node("file-tools").open = false;
     node("response-workspace").focus();
   } catch (error) { reportError(error, version); }
 }
-async function loadFirstPa(startPitch = 1) {
+async function loadFirstPa(startPitch = 1, historyMode = "push") {
   resetRaw();
   clear();
   const version = loadVersion;
@@ -464,43 +511,46 @@ async function loadFirstPa(startPitch = 1) {
     );
     if (version !== loadVersion) return;
     builtInDemo = true;
+    currentMode = "archive";
     if (Number.isInteger(startPitch) && startPitch >= 1 && startPitch <= 3) {
       for (let i = 1; i < startPitch; i++) { session.reveal(true); session.next(); }
       session.reveal(false);
     }
     render();
+    rememberRoute(historyMode);
+    put("replay-status", "옛 별도 수신본 3구입니다. ‘경기 전체 열기’를 누르면 71타석·262구 관전으로 이동합니다.");
     node("file-tools").open = false;
     node("response-workspace").focus();
   } catch (error) {
     reportError(error, version);
   }
 }
-node("load-first-pa").addEventListener("click", () => loadFirstPa());
-node("load-full-game").addEventListener("click", loadFullGame);
+node("load-first-pa").addEventListener("click", () => loadFullGame());
+node("load-full-game").addEventListener("click", () => loadFullGame());
 node("pitch-tabs").addEventListener("click", (event) => {
   const button = event.target.closest("button[data-key]");
   if (!button) return;
-  if (fullGame()) { session.select(button.dataset.key); render(); }
+  if (fullGame()) selectPitch(button.dataset.key);
   else loadFirstPa(Number(button.dataset.pitch));
 });
 node("pa-select").addEventListener("change", () => {
   if (!fullGame()) return;
   const group = session.groups().find(g => g.pa === Number(node("pa-select").value));
-  if (group) { session.select(group.keys[0]); render(); }
+  if (group) selectPitch(group.keys[0]);
 });
 node("inning-select").addEventListener("change", () => {
   if (!fullGame()) return;
   fillPaOptions(node("inning-select").value);
   const group = session.groups().find(g => g.pa === Number(node("pa-select").value));
-  if (group) { session.select(group.keys[0]); render(); }
+  if (group) selectPitch(group.keys[0]);
 });
 node("video-next-pitch").addEventListener("click", () => {
-  if (builtInDemo && session?.view().can_next) { session.next(); syncPaFilter(); render(); }
+  if (builtInDemo && session?.view().can_next) { session.next(); syncPaFilter(); render(); rememberRoute(); }
 });
 for (const link of document.querySelectorAll(".video-jump")) {
   link.addEventListener("click", (event) => {
     event.preventDefault();
-    loadFirstPa(3);
+    loadFullGame("849843:1:3");
   });
 }
 node("response-file").addEventListener("change", async (event) => {
@@ -515,6 +565,7 @@ node("response-file").addEventListener("change", async (event) => {
     const bytes = await file.arrayBuffer();
     const text = new TextDecoder("utf-8", { fatal: true }).decode(bytes);
     await openText(text, file.name, version, bytes);
+    if (version === loadVersion && session) rememberRoute();
   } catch (error) {
     reportError(error, version);
   }
@@ -529,6 +580,7 @@ node("try-sample").addEventListener("click", async () => {
       "합성 연결 검사 자료",
       version,
     );
+    if (version === loadVersion && session) rememberRoute();
   } catch (error) {
     reportError(error, version);
   }
@@ -563,6 +615,7 @@ node("download-prepared").addEventListener("click", () => {
 node("clear-import").addEventListener("click", () => {
   resetRaw();
   clear();
+  rememberRoute();
 });
 node("raw-form").addEventListener("input", clear);
 node("raw-form").addEventListener("change", clear);
@@ -653,6 +706,7 @@ node("raw-form").addEventListener("submit", async (event) => {
       undefined,
       originals,
     );
+    if (version === loadVersion && session) rememberRoute();
   } catch (error) {
     reportError(error, version);
   }
@@ -669,12 +723,29 @@ node("next-pitch").addEventListener("click", () => {
   session?.next();
   syncPaFilter();
   render();
+  if (session) rememberRoute();
 });
 node("previous-pitch").addEventListener("click", () => {
   session?.previous();
   syncPaFilter();
   render();
+  if (session) rememberRoute();
 });
-if (new URLSearchParams(window.location.search).get("demo") === "849843-pa1")
-  loadFirstPa(Number(new URLSearchParams(window.location.search).get("pitch")) || 1);
-else if (new URLSearchParams(window.location.search).get("game") === "849843") loadFullGame();
+async function restoreRoute() {
+  try {
+    const route = PitchReceiverRoute.parse(window.location.search);
+    if (route.mode === "file") {
+      clear();
+      node("file-tools").open = true;
+      put("replay-status", "파일은 주소에 저장되지 않습니다. 본인이 보관한 파일을 다시 선택해 주세요.");
+    } else if (route.mode === "game" && fullGame()) {
+      session.select(route.pitchId);
+      syncPaFilter();
+      render();
+      rememberRoute("replace");
+    } else if (route.mode === "game") await loadFullGame(route.pitchId, "replace");
+    else await loadFirstPa(Number(route.pitchId.split(":")[2]), "replace");
+  } catch (error) { reportError(error, loadVersion); }
+}
+window.addEventListener("popstate", restoreRoute);
+restoreRoute();
