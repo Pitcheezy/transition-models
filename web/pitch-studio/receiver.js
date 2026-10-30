@@ -5,6 +5,7 @@ let session = null,
   preparedEnvelope = null,
   rawFiles = [],
   builtInDemo = false;
+let gameMedia = null, excludedMedia = {}, mediaLoadNote = "";
 const fullGame = () => session?.view().full_game === true;
 function observationFor(view) {
   return view.full_game
@@ -32,6 +33,9 @@ function clear() {
   loadVersion++;
   session = null;
   builtInDemo = false;
+  gameMedia = null;
+  excludedMedia = {};
+  mediaLoadNote = "";
   pitchVideo.update(null);
   node("pitch-tabs").hidden = true;
   node("game-navigation").hidden = true;
@@ -133,7 +137,11 @@ function render() {
     s = view.situation;
   const currentObservation = observationFor(view);
   pitchVideo.update({ context: loadVersion, pitch_id: view.pitch_id, revealed: view.revealed, enabled: builtInDemo,
+    media: view.full_game ? gameMedia : null,
     observationAllowed: !view.full_game && currentObservation?.status === "key_matched" });
+  put("pitch-video-missing-reason", view.full_game && excludedMedia[view.pitch_id]
+    ? "영상 등록부와 받은 경기 자료의 구종이 달라 영상 연결을 보류했습니다. 어느 기록도 임의로 수정하지 않았습니다."
+    : "이 투구의 확인된 영상을 불러오지 못했습니다.");
   node("pitch-tabs").hidden = !builtInDemo;
   node("receiver-stage").classList.toggle("has-video", builtInDemo);
   renderNavigation(view);
@@ -349,11 +357,11 @@ function reportError(error, version) {
 }
 function renderNavigation(view) {
   node("game-navigation").hidden = !view.full_game;
-  put("video-coverage", view.full_game ? "영상 연결 3 / 262구" : "공식 영상 3 / 3구");
+  const videoCount = Object.keys(gameMedia || window.PitchReceiverMedia).length;
+  put("video-coverage", view.full_game ? `영상 연결 ${videoCount} / ${view.count}구` : "공식 영상 3 / 3구");
   if (view.full_game) {
-    put("video-coverage", "영상 연결 3 / 262구");
     node("pa-select").value = String(view.at_bat_number);
-    put("game-coverage", `전체 ${view.count}구 중 ${view.position}구 · 71타석 · 추천 246구 / 미지원 16구. 영상 미연결 투구도 결과를 공개할 수 있습니다.`);
+    put("game-coverage", `전체 ${view.count}구 중 ${view.position}구 · 71타석 · 추천 246구 / 미지원 16구. ${mediaLoadNote || "투구별 영상 종료 후 실제 결과 공개 · 영상 미연결 투구도 결과 비교 가능"}`);
   }
   const tabs = node("pitch-tabs");
   tabs.setAttribute("aria-label", "현재 타석 투구 선택");
@@ -400,6 +408,22 @@ async function loadFullGame() {
     const hash = await sha256(bytes);
     const candidate = PitchReceiverFullGame.createVerifiedSession(packet, hash);
     if (version !== loadVersion) return;
+    let verifiedMedia = null, mediaHash = null, loadNote = "";
+    try {
+      const mediaResponse = await fetch("game-849843-media.json?v=1", {credentials:"omit"});
+      if (!mediaResponse.ok) throw new Error("영상 목록 요청 실패");
+      const mediaBytes = await mediaResponse.arrayBuffer();
+      if (mediaBytes.byteLength > MAX_BYTES) throw new Error("영상 목록 크기 초과");
+      const mediaPacket = JSON.parse(new TextDecoder("utf-8", {fatal:true}).decode(mediaBytes));
+      mediaHash = await sha256(mediaBytes);
+      verifiedMedia = PitchReceiverGameMedia.createVerifiedMedia(mediaPacket, packet, mediaHash, window.PitchReceiverMedia);
+    } catch (_) {
+      loadNote = "전체 영상 목록 검사 실패 · 기존 첫3구 영상만 표시합니다. 추천·결과는 계속 비교할 수 있습니다.";
+    }
+    if (version !== loadVersion) return;
+    gameMedia = verifiedMedia?.media || null;
+    excludedMedia = verifiedMedia?.excluded || {};
+    mediaLoadNote = loadNote;
     session = candidate;
     builtInDemo = true;
     const filter = node("inning-select");
@@ -417,6 +441,8 @@ async function loadFullGame() {
     textElement("div", `공개용 선별 파일 SHA256: ${hash}`, info);
     textElement("div", `수신 원응답 SHA256: ${session.view().source.sha256}`, info);
     textElement("div", "경기 후 저장 응답의 재생입니다. 실행 서버 커밋·실시간 사전 가용성은 미확인입니다.", info);
+    if (verifiedMedia) textElement("div", `영상 연결 목록 SHA256: ${mediaHash} · 투구ID/선수/구종 대조 ${Object.keys(gameMedia).length}구, 불일치 제외 ${Object.keys(excludedMedia).length}구.`, info);
+    textElement("div", "첫3구는 저장 영상, 나머지는 MLB 공식 영상 서버에서 선택한 클립만 읽습니다. 로컬 원본 SHA는 원격 서버의 현재 영상 바이트까지 보증하지 않습니다.", info);
     put("import-status", "849843 저장 경기 · 구조·투구 키 검사 통과");
     render();
     node("file-tools").open = false;

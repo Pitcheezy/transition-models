@@ -10,12 +10,13 @@
     <script src="data.js" defer></script>
     <script src="receiver-contract.js?v=6" defer></script>
     <script src="receiver-fullgame.js?v=1" defer></script>
+    <script src="receiver-game-media.js?v=1" defer></script>
     <script src="receiver-location.js?v=2" defer></script>
     <script src="receiver-sample.js" defer></script>
     <script src="receiver-demo-849843.js" defer></script>
     <script src="receiver-media.js?v=8" defer></script>
-    <script src="receiver-video.js?v=8" defer></script>
-    <script src="receiver.js?v=11" defer></script>
+    <script src="receiver-video.js?v=video1-8" defer></script>
+    <script src="receiver.js?v=video1-11" defer></script>
   </head>
   <body>
     <a class="skip" href="#receiver">본문으로 이동</a>
@@ -48,7 +49,7 @@
         </p>
         <p>
           이닝과 타석을 골라 추천을 먼저 보고 실제 결과를 공개하세요.
-          추천 246구·미지원 16구이며, 영상은 첫 타석 3구에 연결되어 있습니다.
+          추천 246구·미지원 16구이며, 공식 영상 261구를 같은 투구 기록과 연결했습니다.
         </p>
         <button id="load-full-game" class="primary">경기 전체 열기</button>
         <button id="load-first-pa" class="secondary">
@@ -64,7 +65,7 @@
           <summary>이 자료의 범위와 버전</summary>
           <p>
             경기 전체 추천 제공률: 246 / 262구 (93.89%). 정확도가 아닙니다. 이
-            저장 응답의 71타석·262구를 연결했습니다. 영상 연결은 3구이며, 나머지 259구는 영상 없이 추천·결과를 볼 수 있습니다.
+            71타석·262구의 저장 추천과 결과를 연결했습니다. 공식 영상은 261구에 연결했으며, 기록이 다른 1구는 이유를 표시하고 제외했습니다.
           </p>
           <p>
             정책: ARM-B P3 (pitch type only), frozen &lt;=2025
@@ -260,7 +261,7 @@
             <span id="video-coverage" class="video-scope">공식 영상 3 / 3구</span>
           </div>
           <div id="pitch-video-missing" class="pitch-video-missing">
-            <p>이 투구의 영상은 아직 연결하지 않았습니다.</p>
+            <p id="pitch-video-missing-reason">이 투구의 확인된 영상이 없습니다.</p>
             <p>추천을 확인하고 ‘현재 투구 결과 공개’를 눌러 실제 구종·위치·결과를 비교하세요.</p>
           </div>
           <div id="pitch-video-frame" class="pitch-video-frame" hidden>
@@ -276,7 +277,7 @@
           </div>
           <p id="pitch-video-status" role="status"></p>
           <p id="pitch-observation-note" class="observation-legend" hidden>초록 표시: 별도 정지 프레임에 저장된 AI 미트 중심 · 미검토 추정. 높이·투수 의도·제구 오차를 검증한 값이 아닙니다.</p>
-          <p class="receiver-note">투구별 공식 클립입니다. 투구 사이의 연속 중계 영상은 아닙니다. 미트 표시는 3구의 별도 판독 정지 장면에서만 볼 수 있습니다.</p>
+          <p class="receiver-note">같은 투구 ID의 공식 클립과 추천을 묶었습니다. 클립 종료 시 결과를 공개하며, 정확한 릴리스·포구 순간에 맞춘 표시나 연속 중계는 아닙니다. 일부 클립에는 리플레이가 포함될 수 있습니다. 영상 오류가 나도 결과를 직접 공개할 수 있습니다.</p>
           <a id="pitch-video-source" class="source-link" target="_blank" rel="noopener noreferrer" hidden>이 투구의 MLB 공식 영상 출처</a>
         </section>
           <section class="receiver-panel recommendation-panel">

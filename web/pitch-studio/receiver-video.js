@@ -9,7 +9,7 @@
     let canInspect = false;
     function showMode() {
       video.hidden = inspecting || failed;
-      fallback.hidden = inspecting || !failed;
+      fallback.hidden = inspecting || !failed || !record?.poster;
       observationImage.hidden = !inspecting;
       marker.hidden = !(inspecting && canInspect && observationImage.complete && observationImage.naturalWidth > 0);
       observationNote.hidden = !inspecting;
@@ -34,7 +34,8 @@
         binding = next;
         failed = false;
       }
-      record = state?.enabled && Object.hasOwn(media, state.pitch_id) ? media[state.pitch_id] : null;
+      const catalogue = state?.media || media;
+      record = state?.enabled && Object.hasOwn(catalogue, state.pitch_id) ? catalogue[state.pitch_id] : null;
       active = Boolean(record);
       section.hidden = !state?.enabled;
       frame.hidden = !active;
@@ -46,10 +47,17 @@
       if (!canInspect) inspecting = false;
       sourceLink.hidden = !active || !revealed;
       if (active) {
-        video.setAttribute("aria-label", `첫 타석 ${record.pitch_number}구의 실제 투구 영상`);
-        video.setAttribute("poster", record.poster);
-        fallback.setAttribute("src", record.poster);
-        fallback.setAttribute("alt", `${record.pitch_number}구 투구 전 정지 장면 · 미트 주석 없음`);
+        const pa = record.at_bat_number || Number(record.pitch_id.split(":")[1]);
+        video.setAttribute("aria-label", `${pa}번째 타석 ${record.pitch_number}구의 실제 투구 영상`);
+        if (record.poster) {
+          video.setAttribute("poster", record.poster);
+          fallback.setAttribute("src", record.poster);
+          fallback.setAttribute("alt", `${pa}번째 타석 ${record.pitch_number}구의 저장 정지 장면 · 미트 주석 없음`);
+        } else {
+          video.removeAttribute("poster");
+          fallback.removeAttribute("src");
+          fallback.removeAttribute("alt");
+        }
         if (changed || video.getAttribute("src") !== record.video) {
           video.setAttribute("src", record.video);
           video.load();
@@ -62,10 +70,13 @@
         }
         sourceLink.href = record.page_url;
         if (changed || hiding) {
-          status.textContent = `${record.pitch_number}구 · 약 ${Math.round(record.duration_seconds)}초. 재생이 끝나면 저장된 결과를 공개합니다.`;
+          status.textContent = `${pa}번째 타석 ${record.pitch_number}구 · 약 ${Math.round(record.duration_seconds)}초. 클립이 끝나면 같은 투구의 저장 결과를 공개합니다.`;
         }
       } else {
         video.removeAttribute("src");
+        video.removeAttribute("poster");
+        fallback.removeAttribute("src");
+        observationImage.removeAttribute("src");
         video.load();
         sourceLink.removeAttribute("href");
         status.textContent = "이 자료에 대응하는 확인된 영상이 없습니다.";
@@ -125,9 +136,11 @@
     video.addEventListener("ended", () => {
       if (!active || inspecting || !started || !video.ended) return;
       started = false;
-      onReveal(binding);
+      const completedBinding = binding;
+      onReveal(completedBinding);
+      if (binding !== completedBinding || !active) return;
       play.textContent = "영상 다시 보기";
-      status.textContent = `${record.pitch_number}구 재생 완료 · 실제 결과 공개${canInspect ? " · 미트 판독 장면도 확인할 수 있습니다." : " · 이 투구의 미트 관측은 없습니다."}`;
+      status.textContent = `${record.pitch_number}구 재생 완료 · 실제 결과 공개${canInspect ? " · 미트 판독 장면도 확인할 수 있습니다." : " · 추천과 실제 결과를 비교하세요."}`;
     });
     video.addEventListener("error", () => {
       if (!active || !video.error) return;
@@ -136,7 +149,9 @@
       showMode();
       if (inspecting) return;
       play.textContent = "영상 다시 불러오기";
-      status.textContent = "영상 로딩 실패 · 확인된 정지 장면을 표시합니다. 다시 불러오거나 결과 공개를 사용할 수 있습니다.";
+      status.textContent = record.poster
+        ? "영상 로딩 실패 · 확인된 정지 장면을 표시합니다. 다시 불러오거나 결과 공개를 사용할 수 있습니다."
+        : "공식 영상을 불러오지 못했습니다. 다시 불러오거나 ‘현재 투구 결과 공개’로 추천과 실제 결과를 비교하세요.";
     });
     return { update };
   }

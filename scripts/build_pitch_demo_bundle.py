@@ -25,6 +25,8 @@ SITE_FILES = (
     "receiver-contract.js",
     "receiver-fullgame.js",
     "game-849843.json",
+    "game-849843-media.json",
+    "receiver-game-media.js",
     "receiver-demo-849843.js",
     "receiver-location.js",
     "receiver-media.js",

@@ -104,3 +104,44 @@ test("source links follow disclosure and clearing stops playback",async()=>{
   const s=setup();s.update(1);assert(s.elements.sourceLink.hidden);s.update(1,true);assert(!s.elements.sourceLink.hidden);
   await s.click();s.controller.update(null);s.video.ended=true;s.callbacks.ended();assert(s.elements.section.hidden);assert(s.video.paused);assert.equal(s.reveals.length,0);assert(s.elements.sourceLink.hidden);
 });
+
+test("whole-game remote clip clears previous poster and uses exact PA label",()=>{
+ const s=setup();s.update(3,true);s.inspect();
+ const id='849843:2:1', remote={pitch_id:id,at_bat_number:2,pitch_number:1,video:'https://sporty-clips.mlb.com/example.mp4',duration_seconds:7,page_url:'https://baseballsavant.mlb.com/sporty-videos?playId=example'};
+ s.controller.update({context:2,pitch_id:id,revealed:false,enabled:true,media:{[id]:remote}});
+ assert.equal(s.video.getAttribute('src'),remote.video);
+ assert.equal(s.video.getAttribute('poster'),undefined);
+ assert.equal(s.elements.fallback.getAttribute('src'),undefined);
+ assert(s.elements.marker.hidden);assert(s.elements.sourceLink.hidden);
+ assert.match(s.video.getAttribute('aria-label'),/2번째 타석 1구/);
+ s.video.error={code:4};s.callbacks.error();
+ assert(s.elements.fallback.hidden);assert.match(s.elements.status.textContent,/공식 영상을/);
+ assert.doesNotMatch(s.elements.status.textContent,/정지 장면을 표시/);
+ assert.equal(s.reveals.length,0);
+});
+
+test("remote clip ended binds only its exact pitch and new data context",async()=>{
+ const s=setup(),id='849843:71:6';
+ const remote={pitch_id:id,at_bat_number:71,pitch_number:6,video:'https://sporty-clips.mlb.com/final.mp4',duration_seconds:8,page_url:'https://baseballsavant.mlb.com/sporty-videos?playId=final'};
+ s.controller.update({context:7,pitch_id:id,revealed:false,enabled:true,media:{[id]:remote}});
+ await s.click();assert.equal(s.reveals.length,0);
+ s.video.ended=true;s.callbacks.ended();assert.deepEqual(s.reveals,['7:'+id]);
+ s.controller.update({context:8,pitch_id:id,revealed:false,enabled:true,media:{[id]:remote}});
+ s.video.ended=true;s.callbacks.ended();assert.equal(s.reveals.length,1);
+});
+
+test("excluded or missing remote mapping clears old video and poster",async()=>{
+ const s=setup();s.update(1);await s.click();
+ s.controller.update({context:1,pitch_id:'849843:69:2',revealed:false,enabled:true,media:{}});
+ assert(s.video.paused);assert.equal(s.video.getAttribute('src'),undefined);
+ assert.equal(s.video.getAttribute('poster'),undefined);assert(s.elements.frame.hidden);
+ assert(!s.elements.missing.hidden);assert(s.elements.play.hidden);
+ s.video.ended=true;s.callbacks.ended();assert.equal(s.reveals.length,0);
+});
+
+test("queued old end while new clip is playing cannot reveal before actual end",async()=>{
+ const s=setup();s.update(1);await s.click();s.update(2);await s.click();
+ // HTMLMediaElement.ended remains false on the new not-ended resource.
+ s.callbacks.ended();assert.equal(s.reveals.length,0);
+ s.video.ended=true;s.callbacks.ended();assert.deepEqual(s.reveals,['1:849843:1:2']);
+});
