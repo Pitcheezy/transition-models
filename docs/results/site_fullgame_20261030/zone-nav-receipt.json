@@ -1,0 +1,59 @@
+{
+  "schema": "pitcheezy-site-zone-navigation-v1",
+  "task": "SITE-zone-nav1",
+  "date": "2026-10-30",
+  "source_commit": "a33de5b1fc98282ee586b8d5dbc6b0ee089d74c4",
+  "base_commit": "9ca9fcaae826ef6d6d9d0c2af12e38c2359dee21",
+  "counts": {
+    "pitches": 262,
+    "batters": 20,
+    "plate_appearances": 71,
+    "zone_records": 262,
+    "video_linked": 261,
+    "video_excluded": 1
+  },
+  "hashes": {
+    "zones": "210fd6bac3a0fe6b89c0c066ed29dd9667f6ee5362d933e17329ebc23771ea8b",
+    "game": "89e14e12e0f0a2ae2475aff16b8757486143f6a4586239434a1f8b0be6bb3c22",
+    "media": "8680befcbd43b570b1cd2f708e1d767e0e4055a9850dda327ae871219df17e0a"
+  },
+  "review": {
+    "requested_model": "gpt-6.1-terra",
+    "runtime_model_id": "not_exposed",
+    "initial_commit": "7aec165",
+    "initial_findings": [
+      "historical_zone_before_reveal",
+      "unchanged_css_cache_versions"
+    ],
+    "final_commit": "a33de5b",
+    "decision": "PASS",
+    "independent_location_tests": 16
+  },
+  "checks": {
+    "python": 85,
+    "node": 224,
+    "source_id_join": "262/262",
+    "local_browser": "Windows Chrome; desktop and simulated viewport320/390",
+    "physical_mobile": "not_tested",
+    "public_browser": "custom domain: PA2:2 route, refresh, pre-hidden/post-zone+actual, mobile390",
+    "historical_zone_before_reveal": false
+  },
+  "publication": {
+    "project_id": "appgprj_6ac3665aa5048191ac2b5a012b2c7010",
+    "commit_sha": "207a7cbd0a6d9d75b8b970a242060e4f660f8ca5",
+    "version_number": 12,
+    "version_id": "appgprj_6ac3665aa5048191ac2b5a012b2c7010~appgver_4d86a09ddb008191804e190d53c98de6",
+    "deployment_id": "appgdep_6ae444335f348191a4ac403c37999405",
+    "status": "succeeded",
+    "url": "https://pitcheezy-pitch-studio.sritone723.chatgpt.site",
+    "custom_domain": "https://pitcheezy.com",
+    "file_count": 41,
+    "stored_archive_hash": "sha256:72a3a7c0bd3367c2a2f4064c3bb149f1d699a26a4f33ebb27c1be85f4677c20c"
+  },
+  "limits": [
+    "Historical recorded zone; not pre-pitch model input or umpire classifier.",
+    "No physical mitt-to-ball error, new CV prediction, real-time inference or new game.",
+    "Unchanged 849843:69:2 received FC vs registry SL: video excluded.",
+    "No Song repository or separate Cloudflare host changes; main not merged."
+  ]
+}

@@ -2,7 +2,9 @@
 
 ## 전시 정본 계획 실행 — 2026-10-28
 
-**SITE-zone-nav1 진행 중 — 2026-10-30:** Codex / `codex/site-first-1029` / 기준9ca9fca / PR85. 기존849843 원본의 타자별 존262구를 별도 표시자료로 결합하고 9분할 존·전체 경기 진입·투구 URL 복원·공통 메뉴를 보완한다. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6516976749). Root는 재생 제어/표시/통합, 별도 수정자는 존 내보내기와 공통 페이지를 각각 담당한다. 고정 다른 모델 검토 후 기존 Sites 공개 범위에 반영. 팀원·별도 Cloudflare·원본/추천·평가잠금·사람보류 불변.
+**SITE-zone-nav1 공개 완료·수정 권한 반납 — 2026-10-30:** Codex / `codex/site-first-1029` / 제품a33de5b / PR85(main미통합). 849843 존262구를 ID·선수·SHA 대조해 별도자료로 연결, 결과 공개 뒤 기록 높이/17인치폭/9분할 표시. 첫타석 진입을 전체경기로 통일·옛3구는archive구분, 선택투구URL/새로고침/이력·공통메뉴·모바일복귀·날짜/자료범위 보완. Python85·Node224·Chrome데스크톱/320/390px 확인. 다른모델(gpt-6.1-terra 호출설정) 지적2건 수정·a33de5b 재검토PASS. Sites소스207a7cbd·공개v12 성공/도메인재확인. [기록](docs/SITE_ZONE_NAV_20261030.md)·[영수증](docs/results/site_fullgame_20261030/zone-nav-receipt.json)·[합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6516976749). 원본/추천·팀원·별도Cloudflare·평가잠금·사람보류 불변. 다음: 사용자 관전 흐름 후속, 제외1구 출처/채택화면은 별도 조건.
+
+- [x] SITE-zone-nav1. 사후 기록 존262구·전체 경기 진입·투구 URL 복원·공통 메뉴·모바일 표 넘침 수정, 고정 다른모델검토·공개v12 완료. 실제휴대폰/실시간추론/자동CV/main통합은 아니다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-30 · Codex]`
 
 **SITE-video1 공개 완료·수정 권한 반납 — 2026-10-30:** Codex / `codex/site-first-1029` / 제품12f0e9a / PR85. 849843 전체262구의 기존 공식 클립 대조, 영상261연결·69:2구종불일치1제외. 로컬첫3+공식원격258, 클립종료결과공개·전환초기화·오류수동비교·PC/모바일 확인. Node167·Python56·사이트/미디어SHA·lint 통과, 다른모델(gpt-6.1-terra 호출설정) 고정12f0e9a APPROVE. Sites소스d487b393·공개v11 성공, 공개PA2 실제재생/결과공개 확인. [기록](docs/SITE_GAME_VIDEO_20261030.md)·[영수증](docs/results/site_fullgame_20261030/video-receipt.json). 정확한릴리스/포구동기화·실시간추론·자동CV·main통합은 아니다. 팀원·별도Cloudflare·평가잠금·사람보류 보존. 다음: 제외1구 출처 확인 초안과 순차관전 동선 보완; 추가경기/모델묶음/채택화면은 별도대기.
 
