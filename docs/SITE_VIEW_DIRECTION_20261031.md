@@ -12,9 +12,12 @@
 
 ## 검증
 
-- Node267 통과(공통 좌표25, 관전/상세 전환 회귀 포함).
+- Node269 통과(공통 좌표25, 관전/상세 전환·미트 경계 회귀 포함), 체크리스트8 통과.
 - 사이트 정적 검사/미디어 SHA 불변 통과.
-- 실제 Chrome 및 다른 모델 고정 검토/공개 결과는 완료 후 CHECKLIST와 영수증에 기록한다.
+- Windows Chrome에서 관전/상세의 같은 2구를 공개하고 양 시점을 전환했다. SVG x 95.8756↔224.1244, 재생시각/결과 공개 상태 유지. 두 화면 390px에서 가로 넘침 없음. 실제 휴대폰 검사는 아니다.
+- 실제 Claude Fable 5.1: `2703aab` 검토 후 `8baefcd` 델타 APPROVE. 최초 미트 범위 밖 null 곱셈 지적은 기존 호출부 범위 가드 때문에 재현되지 않았다. 가드를 공통 표시 함수의 null 반환 검사로 통일하고 경계/이전점 제거 회귀를 추가했다. 전체 검토/후속 판단은 영수증에 보존한다.
+- 공개 Sites v21 성공, 소스 `76dd0887a09913aa7783a540b5c6104b2658261c`. 공개 2구에서 기본 중계 방향 왼쪽 실제 점·포수 시점 오른쪽 점·재생시각 보존, 3.829초로 되감은 뒤 실제 위치만 공개되고 전체 결과 숨김을 확인했다. 제품 `8baefcd`는 PR85 브랜치이며 main 통합과 구분한다.
+- [재현 영수증](results/site_fullgame_20261030/view-direction-receipt.json). 명령: `node --test web/pitch-studio-tests/*.test.cjs tests/js/pitch_receiver*.test.cjs tests/js/pitch_home.test.cjs`, `python scripts/check_pitch_studio.py`, `python -m pytest tests/test_checklist_model.py -q`(UTF-8·작업용 basetemp 사용).
 - 팀원 저장소·별도 Cloudflare 시험 서버·계약·받은 경기 원문은 변경하지 않는다.
 
 ## 추가 경기 조사(읽기 전용)

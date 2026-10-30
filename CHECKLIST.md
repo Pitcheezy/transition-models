@@ -2,7 +2,7 @@
 
 ## 전시 정본 계획 실행 — 2026-10-28
 
-**SITE-view1 진행 중 — 2026-10-31:** Codex / `codex/site-first-1029` / 기준f879002. 영상과 도표의 시점 차이를 정정한다. 원본 좌표/투구ID/공개시점 보존, 투수→포수 방향 기본과 포수시점 선택, 추천/실제/미트가로/눈금 일관성, plate≠포구 설명, 모바일/회귀/다른모델검토가 합격 기준. 팀원·별도Cloudflare 불변.
+**SITE-view1 공개 완료·수정 권한 반납 — 2026-10-31:** Codex / `codex/site-first-1029` / 제품8baefcd / PR85(main미통합). 관전·상세 기본을 중계 방향(투수→포수)으로 변경하고 포수시점 선택 추가. 추천/실제/미트가로/눈금 일관 변환, 원본좌표·투구ID·공개시점 보존, plate≠포구 명시. Node269·checklist8·사이트정적·Chrome관전/상세/390px·실제Claude Fable 고정검토/델타APPROVE. Sites소스76dd0887·공개v21 성공, 공개2구 재생·양시점/시각유지 확인. [범위](docs/SITE_VIEW_DIRECTION_20261031.md)·[영수증](docs/results/site_fullgame_20261030/view-direction-receipt.json). 팀원·별도Cloudflare 불변. 다음: 추가경기 완성추천 파일 수신/목록 일반화 또는 전체중계 사용가능원본/시각표 확보. 카메라보정·포구좌표검증 완료는 아님.
 
 **SITE-round1 공개 완료·수정 권한 반납 — 2026-10-30:** Codex / `codex/site-first-1029` / 제품2272398 / PR85(main미통합). 관전·상세추천 원형/범례/설명그림 일치, 좌표·겹친순위·공개시점불변. Node257·checklist8(기존Windows인코딩경고1)·사이트정적·Chrome관전/상세/390px·실제Claude Fable고정검토APPROVE. Sites소스af4ce505·공개v20성공, 공개원형마커확인. [전체중계조사](docs/SITE_FULL_VIDEO_SEARCH_20261030.md)·[영수증](docs/results/site_fullgame_20261030/round-markers-receipt.json). Song고정7a460cc0은압축39장면/기록지연조절; 전체영상/262구시각표미확보. Peacock공식2h41m페이지는발견했으나재생/원본파일미확인. 팀원·별도Cloudflare불변. 다음: 전체중계사용가능원본/시각표확보 또는현재261클립시연검수.
 
