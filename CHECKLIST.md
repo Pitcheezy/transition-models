@@ -2,7 +2,9 @@
 
 ## 전시 정본 계획 실행 — 2026-10-28
 
-**SITE-watch3 진행 중 — 2026-10-30:** Codex / `codex/site-first-1029` / 기준81ce5fc. 사용자 승인 여섯 기능: 영상옆큰비교·타석리본·상황한줄·선수/카운트필터·현재공이전투수통계·추천/실제/미트표시선택. 합격: 미래결과누출없음,ID연결/탐색/영상전환보존,현재경기표본N·평균단위명시,미트는결과종료후받은가로추정만·미제공상태명시,PC/모바일/다른모델검토/기존Sites공개. Root watch HTML/JS·기록, 분리파일1수정자. 팀원·별도Cloudflare·계약·평가잠금미변경.
+**SITE-watch3 공개 완료·수정 권한 반납 — 2026-10-30:** Codex / `codex/site-first-1029` / 제품040ca75 / PR85(main미통합). 승인 여섯 기능(영상옆비교·타석리본·상황한줄·선수/카운트검색·현재공이전동일투수통계·추천/실제/미트가로표시선택)을 기존관전 화면에 반영. Node229(관전47/context13)·site정적·checklist8(Windows출력인코딩경고1)·Chrome PC/390/320px·다른모델고정검토PASS. Sites소스de95dd5c·공개v18성공, 공개영상종료→미트x/실제결과·1구복귀숨김 확인. [기능·시연·한계](docs/SITE_WATCH_UX_20261030.md)·[영수증](docs/results/site_fullgame_20261030/watch-ux-receipt.json). 홈디자인/원본자료/팀원/별도Cloudflare불변. 미트는미검토x만, 영상근거/높이/의도/제구오차완료아님. 다음: 사용자관전검수·채택빌드/공동시험후속은별도조건, CV후속은PLAN범위.
+
+- [x] SITE-watch3. 관전 중심 여섯 기능·미래 결과 차단·같은 투구 연결·표본 통계·다른 모델 검토·기존 Sites 공개v18. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-30 · Codex]`
 
 **SITE-audit1 공개 완료·수정 권한 반납 — 2026-10-30:** Codex / `codex/site-first-1029` / 제품b9efb3a·탭제목68942a1 / PR85(main미통합). 관전진입통일·현재투구링크보존·receiver되감기/재생/오류결과초기화·경기투구탐색바·고정점선참고존·오류복귀. Node164·checklist8·site검사·Chrome8페이지/390px·다른모델고정검토PASS. Sites소스a08f71dd·공개v17 성공(46자산+hosting). [점검·시연](docs/SITE_DEMO_AUDIT_20261030.md)·[영수증](docs/results/site_fullgame_20261030/demo-audit-receipt.json). 전체중계/전경기도착정밀동기화아님. 팀원·별도Cloudflare불변. 추가요청 [공식서비스 비교·개선제안](docs/SITE_BENCHMARK_20261030.md) 완료; 신규기능은미구현. 다음: 현재타석투구리본·간결한추천/실제카드·상황설명 우선, 이후현재경기필터.
 

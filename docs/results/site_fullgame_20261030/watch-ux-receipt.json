@@ -1,0 +1,121 @@
+{
+  "task": "SITE-watch3",
+  "date": "2026-10-30",
+  "product_commit": "040ca752052023ab7d1d3e502417e5e96314f4d3",
+  "branch": "codex/site-first-1029",
+  "pull_request": 85,
+  "main_merged": false,
+  "features": [
+    "video_comparison_layout",
+    "same_pa_pitch_ribbon",
+    "current_situation_line",
+    "pitcher_batter_count_filters",
+    "same_pitcher_prior_pitch_statistics",
+    "recommendation_actual_mitt_x_layers"
+  ],
+  "tests": {
+    "node_related": {
+      "passed": 229,
+      "watch_integration": 47,
+      "new_watch_cases": 10,
+      "context": 13
+    },
+    "checklist": {
+      "passed": 8,
+      "warnings": [
+        "Windows subprocess output UTF-8 decoding thread warning"
+      ]
+    },
+    "site_static": "pass",
+    "browser": {
+      "engine": "Chrome",
+      "viewports": [
+        1440,
+        390,
+        320
+      ],
+      "observed": [
+        "filter_exact_selection",
+        "empty_filter_and_reset",
+        "pre_result_hidden",
+        "result_and_mitt_after_end",
+        "mitt_x_minus_0_0517",
+        "layer_toggle",
+        "first_pitch_clears_result_and_prior_stats",
+        "no_horizontal_overflow_with_filters_open_or_closed"
+      ],
+      "public_domain_verified": true,
+      "actual_mobile_device": false
+    }
+  },
+  "review": {
+    "fixed_commit": "040ca752052023ab7d1d3e502417e5e96314f4d3",
+    "configured_model": "gpt-6.1-terra",
+    "runtime_model_id": null,
+    "result": "PASS",
+    "p1_p2_findings": 0,
+    "scope": "read-only fixed diff"
+  },
+  "source": {
+    "project_id": "appgprj_6ac3665aa5048191ac2b5a012b2c7010",
+    "checkout_path": "C:\\Users\\zpfh1\\Projects\\transition-models\\outputs\\cv_followup_20261005\\pitcheezy-demo-site",
+    "commit_sha": "de95dd5c2ec4b8757ca0476e52cbd152abc3ca2c",
+    "archive": "C:/Users/zpfh1/.codex/worktrees/exhibition-replay-1028/transition-models/outputs/site_pa_sequence_20261030/site-watch3.tar.gz"
+  },
+  "saved_version": {
+    "id": "appgprj_6ac3665aa5048191ac2b5a012b2c7010~appgver_66bed0cc19888191af929fc370072368",
+    "project_id": "appgprj_6ac3665aa5048191ac2b5a012b2c7010",
+    "version_number": 18,
+    "source": {
+      "commit_sha": "de95dd5c2ec4b8757ca0476e52cbd152abc3ca2c"
+    },
+    "archive_storage": {
+      "archive_format": "tar",
+      "sediment_file_id": "file_00000000831c8206b102e81d65502666",
+      "content_hash": "sha256:3d709fb847714ccd3569e82eb7b3f371a126efbb0679dff12372aecde0e335f5",
+      "size_bytes": 30126080,
+      "file_count": 48
+    },
+    "screenshot_url": null,
+    "deployment_id": null
+  },
+  "deployment": {
+    "id": "appgdep_6ae47a6619c0819191b252193bbf42e5",
+    "project_id": "appgprj_6ac3665aa5048191ac2b5a012b2c7010",
+    "title": "Pitcheezy · 투구 관측 스튜디오",
+    "version_id": "appgprj_6ac3665aa5048191ac2b5a012b2c7010~appgver_66bed0cc19888191af929fc370072368",
+    "type": "publish",
+    "status": "succeeded",
+    "url": "https://pitcheezy-pitch-studio.sritone723.chatgpt.site",
+    "has_mcp": false,
+    "screenshot_asset_pointer": null,
+    "provider_deployment_id": "site---6ac3665aa5048191ac2b5a012b2c7010",
+    "failure_message": null,
+    "env_set_revision": 0,
+    "updated_at": "2026-10-30T11:07:30.905152+00:00"
+  },
+  "data": {
+    "game": 849843,
+    "pitches": 262,
+    "plate_appearances": 71,
+    "recommendation_ready": 246,
+    "unsupported": 16,
+    "videos": 261,
+    "arrival_timed_pitches": 3,
+    "other_clip_end_location": 258
+  },
+  "limits": [
+    "not continuous full-broadcast timeline",
+    "no live model execution",
+    "mitt is unreviewed supplied horizontal observation; clip frame binding, height and intent unverified",
+    "no physical control-error calculation",
+    "out-of-axis mitt DOM case unavailable in real packet"
+  ],
+  "unchanged": [
+    "homepage design",
+    "partner repository and API",
+    "separate Cloudflare trial settings",
+    "source data",
+    "locked evaluation data"
+  ]
+}

@@ -60,4 +60,4 @@ python -m pytest tests/test_checklist_model.py -q --basetemp outputs/site_pa_seq
 포수가 잡은 좌표가 아니다. 모델 선택 비중은 스트라이크/안타 사건확률이 아니다.
 
 다음 화면 구성 제안은 [공식 서비스 비교 조사](SITE_BENCHMARK_20261030.md)에 기록했다.
-신규기능은 미구현이며 우선순위는 한 타석 리본·간결한 영상옆 비교·상황설명·현재경기필터다.
+이 점검 당시 신규기능은 미구현이었다. 후속 사용자 승인 여섯 기능의 구현·검증 범위는 [SITE-watch3](SITE_WATCH_UX_20261030.md)를 따른다.
