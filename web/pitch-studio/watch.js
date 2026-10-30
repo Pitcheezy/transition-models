@@ -151,7 +151,7 @@
     }
     for(const point of showRecommendations?model.groups:[]) {
       const x=60+point.nx*200,y=18+point.ny*250,mark=PitchReceiverLocation.marker(point);
-      shape("rect",{x:x-mark.width/2,y:y-12,width:mark.width,height:24,rx:3,class:"location-recommended"});
+      shape("circle",{cx:x,cy:y,r:mark.width/2,class:"location-recommended"});
       shape("text",{x,y:y+4,"text-anchor":"middle",class:"location-rank"},mark.text);
     }
     if(showActual && model.actual?.status==="plottable") {

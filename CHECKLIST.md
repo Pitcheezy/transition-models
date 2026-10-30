@@ -2,6 +2,8 @@
 
 ## 전시 정본 계획 실행 — 2026-10-28
 
+**SITE-round1 진행 — 2026-10-30:** Codex / `codex/site-first-1029` / 기준c39b0b9. 추천 원형 마커·범례/설명그림 일치, 좌표/중복순위/공개시점 보존·검사·Claude 검토·브라우저·기존Sites반영. 전체중계/상대재생구현 읽기조사; 새타임라인 추정 없음. 팀원/별도Cloudflare 불변.
+
 **SITE-exhibit1 공개 완료·수정 권한 반납 — 2026-10-30:** Codex / `codex/site-first-1029` / 제품b0ab6e5 / PR85(main미통합). 공식로고5·기능SVG4·홈/경기/안내 시각화·관전로딩/오류/키보드복구를 반영. Node257·checklist8·사이트정적·Chrome1440/800/390/320px·실제Claude Fable5.1 설계/고정/수정본검토PASS. Sites소스f8078b0e·공개v19성공. [변경/검증/한계](docs/SITE_EXHIBITION_POLISH_20261030.md)·[영수증](docs/results/site_fullgame_20261030/exhibition-polish-receipt.json). 기존262구자료/팀원/별도Cloudflare/잠금자료불변. 미트는선택연구로분리, 검증완료로승격없음. 다음: 전체중계원본/시간표 확보 후 연속영상동기화; 사용자시연검수.
 
 **SITE-watch3 공개 완료·수정 권한 반납 — 2026-10-30:** Codex / `codex/site-first-1029` / 제품040ca75 / PR85(main미통합). 승인 여섯 기능(영상옆비교·타석리본·상황한줄·선수/카운트검색·현재공이전동일투수통계·추천/실제/미트가로표시선택)을 기존관전 화면에 반영. Node229(관전47/context13)·site정적·checklist8(Windows출력인코딩경고1)·Chrome PC/390/320px·다른모델고정검토PASS. Sites소스de95dd5c·공개v18성공, 공개영상종료→미트x/실제결과·1구복귀숨김 확인. [기능·시연·한계](docs/SITE_WATCH_UX_20261030.md)·[영수증](docs/results/site_fullgame_20261030/watch-ux-receipt.json). 홈디자인/원본자료/팀원/별도Cloudflare불변. 미트는미검토x만, 영상근거/높이/의도/제구오차완료아님. 다음: 사용자관전검수·채택빌드/공동시험후속은별도조건, CV후속은PLAN범위.

@@ -178,7 +178,7 @@ function renderLocations(view) {
   for (const group of model.groups) {
     const x = 60 + group.nx * 200, y = 18 + group.ny * 250;
     const marker = PitchReceiverLocation.marker(group);
-    shape("rect", {x:x-marker.width/2,y:y-12,width:marker.width,height:24,rx:3,class:"location-recommended"});
+    shape("circle", {cx:x,cy:y,r:marker.width/2,class:"location-recommended"});
     shape("text", {x,y:y+4,"text-anchor":"middle",class:"location-rank"}, marker.text);
   }
   if (model.actual?.status === "plottable") {
