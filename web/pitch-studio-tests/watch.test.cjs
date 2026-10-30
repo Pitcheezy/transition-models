@@ -39,7 +39,8 @@ async function settle(predicate = () => true) {
   throw new Error("Watch initialization did not settle");
 }
 
-async function setup({ search = "?game=849843", missing = [], corrupt = [], scope = "game", frameCallbacks = false } = {}) {
+async function setup({ search = "?game=849843", missing = [], corrupt = [], scope = "game", frameCallbacks = false,
+  stalled = {}, raw = {}, waitForReady = true } = {}) {
   const elements = new Map();
   for (const match of html.matchAll(/<([a-z][a-z0-9-]*)\b([^>]*\bid="([^"]+)"[^>]*)>/gi)) {
     const e = element(match[1]); e.hidden = /\bhidden\b/.test(match[2]); e.disabled = /\bdisabled\b/.test(match[2]);
@@ -65,30 +66,41 @@ async function setup({ search = "?game=849843", missing = [], corrupt = [], scop
   });
   const document = Object.assign(element(), { hidden: false, getElementById: get,
     createElement: tag => element(tag), createElementNS: (_, tag) => element(tag) });
-  const window = element(), location = { search, pathname: "/watch.html" };
+  const reloads = [], window = element(), location = { search, pathname: "/watch.html", reload: () => reloads.push(true) };
   const historyCalls = [];
   const history = Object.fromEntries(["pushState", "replaceState"].map(method => [method, (_, title, url) => {
     const next = new URL(url, "https://example.test"); location.search = next.search; location.pathname = next.pathname;
     historyCalls.push({ method, url });
   }]));
-  const timers = new Map(), cancelledTimers = [], requests = [];
+  const timers = new Map(), cancelledTimers = [], requests = [], signals = new Map(), held = new Map(), bodyFiles = new WeakMap();
+  const hold = (file, value) => new Promise(resolve => held.set(file, () => resolve(value)));
   let timerId = 0;
-  const context = vm.createContext({ document, location, history, console, crypto: webcrypto, TextDecoder, URLSearchParams,
+  const context = vm.createContext({ document, location, history, console, AbortController, TextDecoder, URLSearchParams,
+    crypto: { subtle: { digest: async (algorithm, bytes) => {
+      const digest = await webcrypto.subtle.digest(algorithm, bytes), file = bodyFiles.get(bytes);
+      return stalled[file] === "digest" ? hold(file, digest) : digest;
+    } } },
     setTimeout: (fn, delay) => { const id = ++timerId; timers.set(id, { fn, delay }); return id; },
     clearTimeout: id => { if (timers.has(id)) cancelledTimers.push(timers.get(id)); timers.delete(id); },
-    fetch: async name => {
+    fetch: async (name, options) => {
       const file = String(name).split("?")[0]; requests.push(file);
+      signals.set(file, options.signal);
       if (missing.includes(file) || !fs.existsSync(path.join(site, file))) return { ok: false };
-      let bytes = fs.readFileSync(path.join(site, file));
+      let bytes = raw[file] === undefined ? fs.readFileSync(path.join(site, file)) : Buffer.from(raw[file]);
       if (corrupt.includes(file)) bytes = Buffer.concat([bytes, Buffer.from(" ")]);
-      return { ok: true, arrayBuffer: async () => bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength) };
+      const response = { ok: true, arrayBuffer: async () => {
+        const body = bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength); bodyFiles.set(body, file);
+        return stalled[file] === "body" ? hold(file, body) : body;
+      } };
+      return stalled[file] === "headers" ? hold(file, response) : response;
     },
   });
   context.window = context;
   context.addEventListener = window.addEventListener.bind(window);
   for (const file of ["receiver-fullgame.js", "receiver-game-media.js", "receiver-zones.js", "receiver-location.js", "receiver-media.js", "receiver-video.js", "receiver-sequence.js", "watch-timing.js", "watch-context.js", "watch.js"])
     vm.runInContext(fs.readFileSync(path.join(site, file), "utf8"), context, { filename: file });
-  await settle(() => /저장 경기 262구|다시 시작해 주세요/.test(get("watch-load-status").textContent));
+  if (waitForReady) await settle(() => /저장 경기 262구|다시 시작해 주세요/.test(get("watch-load-status").textContent));
+  else await settle();
   const click = async id => { assert.equal(get(id).disabled, false, `${id} must be enabled`); get(id).emit("click"); await settle(); };
   const select = async (id, value) => { assert.equal(get(id).disabled, false, `${id} must be enabled`); get(id).value = value; get(id).emit("change"); await settle(); };
   const end = async () => { video.currentTime = video.duration; video.ended = true; video.paused = true; video.emit("pause"); video.emit("ended"); await settle(); };
@@ -101,7 +113,14 @@ async function setup({ search = "?game=849843", missing = [], corrupt = [], scop
   const finishSeek = async () => { video.seeking = false; video.emit("seeked"); await settle(); };
   const check = async (id, value) => { assert.equal(get(id).disabled, false, `${id} must be enabled`); get(id).checked = value; get(id).emit("change"); await settle(); };
   const clickElement = async button => { assert(button); assert.equal(button.disabled, false); button.emit("click"); await settle(); };
-  return { get, video, document, window, location, requests, timers, cancelledTimers, historyCalls, click, select, end, fireTimer, shapes, frames, cancelledFrames, showFrame, finishSeek, check, clickElement };
+  const expireRequests = async () => {
+    const active = [...timers].filter(([, entry]) => entry.delay === 10000);
+    assert(active.length > 0, "an asset deadline must be pending");
+    for (const [id, entry] of active) { timers.delete(id); entry.fn(); }
+    await settle(); return active.length;
+  };
+  const finishAsset = async file => { assert(held.has(file)); held.get(file)(); held.delete(file); await settle(); };
+  return { get, video, document, window, location, requests, timers, cancelledTimers, historyCalls, click, select, end, fireTimer, shapes, frames, cancelledFrames, showFrame, finishSeek, check, clickElement, reloads, signals, held, expireRequests, finishAsset };
 }
 
 test("initial state joins the exact pitch, candidates and video but hides actual result and recorded zone", async () => {
@@ -610,4 +629,99 @@ test("a failed route clears all new context and cannot restore prior data throug
   assert.doesNotMatch(s.get("watch-mitt-value").textContent, /-0\.05/);
   for (const id of ["watch-show-recommendations", "watch-show-actual", "watch-show-mitt"]) { s.get(id).checked = true; s.get(id).emit("change"); }
   assert.equal(s.get("watch-location").children.length, 0); assert.equal(s.get("watch-mitt-axis").hidden, true);
+});
+
+test("successful loading cancels all request deadlines and keeps retry hidden", async () => {
+  const s = await setup();
+  assert.equal(s.timers.size, 0); assert.equal(s.get("watch-retry").hidden, true);
+  assert.equal(s.reloads.length, 0); assert.equal(s.requests.length, 4);
+  assert.match(s.get("watch-load-status").textContent, /저장 경기 262구/);
+});
+
+for (const fault of ["missing", "corrupt", "malformed"]) {
+  test(`${fault} core data fails closed with a friendly message and a user-initiated retry`, async () => {
+    const s = await setup(fault === "malformed" ? { raw: { "game-849843.json": '{"synthetic-private-marker" nope' } }
+      : { [fault]: ["game-849843.json"] });
+    assert.equal(s.get("watch-start").disabled, true); assert.equal(s.get("watch-pa").disabled, true);
+    assert.equal(s.video.getAttribute("src"), null); assert.equal(s.get("watch-candidates").children.length, 0);
+    assert.equal(s.get("watch-location").children.length, 0); assert.equal(s.get("watch-retry").hidden, false);
+    assert.match(s.get("watch-load-status").textContent, /자료 다시 불러오기/);
+    assert.doesNotMatch(s.get("watch-load-status").textContent, /synthetic-private-marker|SyntaxError|JSON|SHA|TypeError/);
+    assert.equal(s.requests.length, 1); assert.equal(s.timers.size, 0); assert.equal(s.reloads.length, 0);
+    await s.click("watch-retry"); assert.equal(s.reloads.length, 1);
+    assert.equal(s.requests.length, 1, "retry asks the browser to reload; it does not launch an uncontrolled request loop");
+  });
+}
+
+for (const stage of ["headers", "body", "digest"]) {
+  test(`core ${stage} stall expires in one bounded deadline and a late response cannot restore the page`, async () => {
+    const s = await setup({ stalled: { "game-849843.json": stage }, waitForReady: false });
+    await settle(() => s.held.has("game-849843.json"));
+    assert.equal(s.timers.size, 1); assert.equal(s.get("watch-start").disabled, true);
+    await s.expireRequests(); await settle(() => !s.get("watch-retry").hidden);
+    assert.equal(s.signals.get("game-849843.json").aborted, true);
+    assert.equal(s.get("watch-candidates").children.length, 0); assert.equal(s.timers.size, 0);
+    await s.finishAsset("game-849843.json");
+    assert.equal(s.get("watch-candidates").children.length, 0); assert.equal(s.get("watch-pa").disabled, true);
+    assert.equal(s.requests.length, 1); assert.equal(s.reloads.length, 0);
+  });
+}
+
+test("stalled optional video mapping does not hide the verified game, change a user's selection, or load a late unchecked clip", async () => {
+  const s = await setup({ stalled: { "game-849843-media.json": "body" }, waitForReady: false });
+  await settle(() => s.held.has("game-849843-media.json") && s.timers.size === 1);
+  assert.match(s.get("watch-identity").textContent, /849843:1:1/);
+  assert.equal(s.get("watch-candidates").children.length, 3); assert.equal(s.get("watch-pa").disabled, false);
+  assert.equal(s.get("watch-start").disabled, true); assert.match(s.get("watch-load-status").textContent, /확인 중/);
+  await s.select("watch-pitch", "849843:1:3");
+  await s.expireRequests(); await settle(() => /저장 경기 262구/.test(s.get("watch-load-status").textContent));
+  assert.equal(selectedKey(s), "849843:1:3"); assert.equal(s.get("watch-candidates").children.length, 3);
+  assert.equal(s.get("watch-start").disabled, true); assert.equal(s.get("watch-retry").hidden, false);
+  assert.equal(s.signals.get("game-849843-media.json").aborted, true);
+  await s.finishAsset("game-849843-media.json");
+  assert.equal(s.video.getAttribute("src"), null); assert.equal(s.get("watch-start").disabled, true);
+  assert.equal(s.shapes("location-actual").length, 0); assert.equal(s.timers.size, 0);
+  await s.click("watch-retry"); assert.equal(s.reloads.length, 1); assert.equal(selectedKey(s), "849843:1:3");
+});
+
+test("a stalled zone request falls back to the labelled reference while verified video and results remain usable", async () => {
+  const s = await setup({ stalled: { "game-849843-zones.json": "headers" }, waitForReady: false });
+  await settle(() => s.held.has("game-849843-zones.json") && s.timers.size === 1);
+  await s.expireRequests(); await settle(() => /저장 경기 262구/.test(s.get("watch-load-status").textContent));
+  assert.equal(s.get("watch-start").disabled, false); assert.equal(s.get("watch-retry").hidden, false);
+  assert.match(s.get("watch-zone-note").textContent, /참고/);
+  await s.click("watch-toggle"); await s.end();
+  assert.equal(s.shapes("location-actual").length, 1); assert.equal(s.shapes("strike-zone").length, 0);
+  assert.equal(s.shapes("reference-zone").length, 1);
+  await s.finishAsset("game-849843-zones.json"); assert.equal(s.shapes("strike-zone").length, 0);
+});
+
+test("optional loading cannot revive stale data after an invalid route clears the verified game", async () => {
+  const s = await setup({ stalled: { "game-849843-timing.json": "body" }, waitForReady: false });
+  await settle(() => s.held.has("game-849843-timing.json") && s.timers.size === 1);
+  s.location.search = "?game=849844"; s.window.emit("popstate"); await settle();
+  assert.equal(s.get("watch-candidates").children.length, 0); assert.equal(s.get("watch-retry").hidden, false);
+  await s.finishAsset("game-849843-timing.json"); await settle(() => s.timers.size === 0);
+  assert.equal(s.get("watch-candidates").children.length, 0); assert.equal(s.get("watch-start").disabled, true);
+  assert.equal(s.video.getAttribute("src"), null); assert.equal(s.get("watch-history-list").children.length, 0);
+  assert.match(s.get("watch-load-status").textContent, /확인하지 못/);
+});
+
+test("a history change during core loading selects the current URL, not the stale initial pitch", async () => {
+  const s = await setup({ stalled: { "game-849843.json": "headers" }, waitForReady: false });
+  await settle(() => s.held.has("game-849843.json"));
+  s.location.search = "?game=849843&pitch=849843%3A2%3A1"; s.window.emit("popstate");
+  await s.finishAsset("game-849843.json");
+  await settle(() => /저장 경기 262구/.test(s.get("watch-load-status").textContent));
+  assert.equal(selectedKey(s), "849843:2:1"); assert.match(s.get("watch-identity").textContent, /849843:2:1/);
+  assert.equal(s.shapes("location-actual").length, 0); assert.equal(s.video.paused, true);
+});
+
+test("an invalid history change during core loading cannot display a valid but stale game", async () => {
+  const s = await setup({ stalled: { "game-849843.json": "headers" }, waitForReady: false });
+  await settle(() => s.held.has("game-849843.json"));
+  s.location.search = "?game=849844"; s.window.emit("popstate");
+  await s.finishAsset("game-849843.json"); await settle(() => !s.get("watch-retry").hidden);
+  assert.equal(s.requests.length, 1); assert.equal(s.get("watch-candidates").children.length, 0);
+  assert.equal(s.video.getAttribute("src"), null); assert.equal(s.get("watch-start").disabled, true);
 });

@@ -226,3 +226,30 @@
  .watch-boundaries { padding-inline:14px; }
 }
 @media (prefers-reduced-motion:reduce) { .watch-page *,.watch-page *::before,.watch-page *::after { scroll-behavior:auto!important; animation:none!important; transition:none!important; } }
+
+.watch-team-logo { vertical-align:middle; object-fit:contain; padding:4px; background:#f2f4e9; border-radius:50%; }
+.watch-match { padding:18px 22px; }
+.watch-score { margin-top:12px; }
+.watch-match-meta { margin-top:6px; }
+.watch-situation-line { margin-top:8px; }
+.watch-retry { margin:4px 0 10px; }
+.watch-explore { margin-top:22px; border:1px solid var(--watch-line); border-radius:12px; background:#10251c; }
+.watch-explore>summary { padding:17px 18px; cursor:pointer; color:#e2f3d4; font-weight:750; }
+.watch-explore>summary span { color:#b9cbb6; font-weight:400; font-size:13px; margin-left:10px; }
+.watch-explore>.watch-game-timeline,.watch-explore>.watch-filters { margin:0 15px 15px; }
+.watch-research { margin:0 18px 18px; border-top:1px solid #365243; color:#afc4b4; }
+.watch-research>summary { cursor:pointer; padding:16px 0; min-height:44px; }
+.watch-research-switch { display:flex; align-items:center; gap:9px; min-height:44px; margin-bottom:12px; }
+.watch-research-switch input { width:18px; height:18px; accent-color:#ceff78; }
+.watch-research #watch-mitt-panel { margin:0; }
+@media(max-width:800px) { .watch-stage { grid-template-areas:"video" "ribbon" "analysis" "history"; } }
+@media(max-width:620px) {
+ .watch-match { padding:15px; }
+ .watch-match h1 { font-size:21px; }
+ .watch-team-logo { width:28px; height:28px; }
+ .watch-date { font-size:12px; }
+ .watch-date span { display:inline; margin-left:6px; }
+ .watch-toolbar { flex-direction:row; flex-wrap:wrap; align-items:end; }
+ .watch-navigation { flex:1 1 100%; }
+ .watch-explore>summary span { display:block; margin:4px 0 0; }
+}

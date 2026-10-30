@@ -302,16 +302,27 @@
           :reason==="complete"?`${scope==="game"?"저장 경기":"현재 타석"} 관전을 마쳤습니다.`
           :reason==="missing"?"영상이 없는 투구에서 멈췄습니다. 다음 공은 직접 선택해 주세요."
           :reason==="blocked"?"재생이 차단돼 멈췄습니다. 재생 버튼으로 다시 시작해 주세요."
-          :"이어보기 정지 · 관전 시작을 누르면 현재 공부터 다시 시작합니다.");
+          :"이어보기 정지 · ‘이어보기 시작’을 누르면 현재 공부터 다시 시작합니다.");
       },
     });
   }
   async function asset(name) {
-    const response=await fetch(name,{credentials:"omit"});
-    if(!response.ok) throw new Error("저장 자료 요청 실패");
-    const bytes=await response.arrayBuffer();if(bytes.byteLength>5*1024*1024) throw new Error("자료 크기 초과");
-    const digest=await crypto.subtle.digest("SHA-256",bytes);
-    return {packet:JSON.parse(new TextDecoder("utf-8",{fatal:true}).decode(bytes)),hash:Array.from(new Uint8Array(digest),b=>b.toString(16).padStart(2,"0")).join("")};
+    const controller=new AbortController(), deadline=Date.now()+10000;
+    let timer;
+    const checkDeadline=()=>{if(controller.signal.aborted || Date.now()>=deadline)throw new Error("자료 확인 시간 초과");};
+    const timeout=new Promise((_,reject)=>{timer=setTimeout(()=>{
+      reject(new Error("자료 확인 시간 초과"));controller.abort();
+    },10000);});
+    const load=(async()=>{
+      const response=await fetch(name,{credentials:"omit",signal:controller.signal});
+      checkDeadline();if(!response.ok) throw new Error("저장 자료 요청 실패");
+      const bytes=await response.arrayBuffer();checkDeadline();
+      if(bytes.byteLength>5*1024*1024) throw new Error("자료 크기 초과");
+      const digest=await crypto.subtle.digest("SHA-256",bytes);checkDeadline();
+      const packet=JSON.parse(new TextDecoder("utf-8",{fatal:true}).decode(bytes));checkDeadline();
+      return {packet,hash:Array.from(new Uint8Array(digest),b=>b.toString(16).padStart(2,"0")).join("")};
+    })();
+    try{return await Promise.race([load,timeout]);}finally{clearTimeout(timer);}
   }
   function fail(error) {
     stop();cancelFrame();resultReady=false;clip.update(null);session=null;generation++;controls();transport();
@@ -326,13 +337,15 @@
     for(const id of ["watch-filter-pitcher","watch-filter-batter","watch-filter-count"])el(id).replaceChildren();
     el("watch-filter-prev").disabled=true;el("watch-filter-next").disabled=true;
     renderMitt(null);el("watch-mitt-panel").hidden=true;
-    text("watch-phase","자료 확인 실패");text("watch-load-status",`${error.message}. 경기 선택에서 다시 시작해 주세요.`);
+    el("watch-retry").hidden=false;
+    text("watch-phase","자료 확인 실패");text("watch-load-status","저장 경기 자료를 확인하지 못했습니다. ‘자료 다시 불러오기’를 누르거나 경기 선택에서 다시 시작해 주세요.");
   }
   function route() {
     const q=new URLSearchParams(location.search);
     if(q.getAll("game").length>1||q.getAll("pitch").length>1||q.has("game")&&q.get("game")!=="849843") throw new Error("지원하지 않는 경기 주소");
     return q.get("pitch")||"849843:1:1";
   }
+  el("watch-retry").addEventListener("click",()=>location.reload());
   el("watch-start").addEventListener("click",()=>{if(session){createSequence();sequence.start();}});
   el("watch-stop").addEventListener("click",()=>{stop();clip.pause();});
   el("watch-play-scope").addEventListener("change",()=>{stop();clip.pause();});
@@ -400,24 +413,33 @@
   window.addEventListener("popstate",()=>{if(session)try{select(route(),"replace");}catch(error){fail(error);}});
   (async()=>{
     try {
-      const first=route(),game=await asset("game-849843.json?v=1");
+      route();
+      const game=await asset("game-849843.json?v=1"),first=route();
       session=PitchReceiverFullGame.createVerifiedSession(game.packet,game.hash);session.select(first);
       context=PitchWatchContext.create(game.packet.pitches);
       metadata=new Map(game.packet.pitches.map(p=>[p.pitch_id,{pitch_id:p.pitch_id,at_bat_number:p.at_bat_number,pitch_number:p.pitch_number,situation:p.situation,pitcher:p.pitcher,batter:p.batter}]));
       initFilters();
-      const extra=await Promise.allSettled([asset("game-849843-media.json?v=1"),asset("game-849843-zones.json?v=1"),asset("game-849843-timing.json?v=1")]);
-      if(extra[0].status==="fulfilled") try {
-        const received=PitchReceiverGameMedia.createVerifiedMedia(extra[0].value.packet,game.packet,extra[0].value.hash,window.PitchReceiverMedia||{});
-        media=received.media;excluded=received.excluded;
-      } catch (_) { /* No unverified media fallback. */ }
-      if(extra[1].status==="fulfilled") try {zones=PitchReceiverZones.createVerifiedZones(extra[1].value.packet,game.packet,extra[1].value.hash);}catch(_){zoneNote="기록 존 확인 실패 · 참고 존만 표시";}
-      else zoneNote="기록 존 미연결 · 참고 존만 표시";
-      if(extra[2].status==="fulfilled")try{timings=PitchWatchTiming.createVerifiedTiming(extra[2].value.packet,media,extra[2].value.hash);}catch(_){ /* Unverified timing must fall back to clip end. */ }
       keys=session.groups().flatMap(g=>g.keys);
       el("watch-pa").replaceChildren();
       for(const group of session.groups()) append(el("watch-pa"),"option",`${group.inning}회 ${group.half==="Top"?"초":"말"} · PA${group.pa} · ${group.batter}`).value=group.pa;
       phase="추천 확인";render();remember("replace");video.controls=false;
-      text("watch-load-status",`저장 경기 262구 · 추천246/미지원16 · 영상${Object.keys(media).length}구 · 기록 자료 재생`);
+      text("watch-load-status","경기 자료 준비됨 · 영상·존 자료를 확인 중입니다. 투구를 먼저 살펴볼 수 있습니다.");
+      const loadGeneration=generation;
+      const extra=await Promise.allSettled([asset("game-849843-media.json?v=1"),asset("game-849843-zones.json?v=1"),asset("game-849843-timing.json?v=1")]);
+      if(!session || generation!==loadGeneration)return;
+      let incomplete=false;
+      if(extra[0].status==="fulfilled") try {
+        const received=PitchReceiverGameMedia.createVerifiedMedia(extra[0].value.packet,game.packet,extra[0].value.hash,window.PitchReceiverMedia||{});
+        media=received.media;excluded=received.excluded;
+      } catch (_) { incomplete=true; /* No unverified media fallback. */ }
+      else incomplete=true;
+      if(extra[1].status==="fulfilled") try {zones=PitchReceiverZones.createVerifiedZones(extra[1].value.packet,game.packet,extra[1].value.hash);}catch(_){incomplete=true;zoneNote="기록 존 확인 실패 · 참고 존만 표시";}
+      else {incomplete=true;zoneNote="기록 존 미연결 · 참고 존만 표시";}
+      if(extra[2].status==="fulfilled")try{timings=PitchWatchTiming.createVerifiedTiming(extra[2].value.packet,media,extra[2].value.hash);}catch(_){incomplete=true; /* Unverified timing must fall back to clip end. */ }
+      else incomplete=true;
+      render(true);
+      el("watch-retry").hidden=!incomplete;
+      text("watch-load-status",`저장 경기 262구 · 추천246/미지원16 · 영상${Object.keys(media).length}구 · 기록 자료 재생${incomplete?" · 일부 자료를 확인하지 못했습니다. ‘자료 다시 불러오기’로 재시도할 수 있습니다.":""}`);
     } catch(error){fail(error);}
   })();
 })();
