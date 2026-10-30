@@ -181,3 +181,10 @@ test('starting an untouched clip does not create an unnecessary seek',async()=>{
  Object.defineProperty(s.video,'currentTime',{get:()=>value,set:v=>{value=v;writes++;}});
  await s.controller.restart();assert.equal(writes,0);
 });
+
+test('watch seek hides results without rewinding the native video position',async()=>{
+ const s=setup();s.update(1,true);s.video.currentTime=3.2;
+ s.controller.update({context:1,pitch_id:'849843:1:1',revealed:false,enabled:true,preservePosition:true});
+ assert.equal(s.video.currentTime,3.2);assert(s.elements.sourceLink.hidden);
+ assert.equal(s.reveals.length,0);
+});

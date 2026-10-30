@@ -1,10 +1,10 @@
-/* Opt-in, one-plate-appearance replay. Results are never inferred here. */
+/* Opt-in recorded replay, bounded to one PA by default. Results are never inferred here. */
 (function (root) {
   "use strict";
   function create({ getState, startClip, advance, onChange,
-    schedule = setTimeout, cancel = clearTimeout, delayMs = 5000 }) {
+    schedule = setTimeout, cancel = clearTimeout, delayMs = 5000, scope = "pa" }) {
     if (![getState, startClip, advance, onChange, schedule, cancel].every(fn => typeof fn === "function")
-        || !Number.isFinite(delayMs) || delayMs < 0)
+        || !Number.isFinite(delayMs) || delayMs < 0 || !["pa", "game"].includes(scope))
       throw new TypeError("Invalid sequence controller options");
     let active = false, phase = "stopped", epoch = 0, timer = null, expected = null;
     function notify(reason) { onChange({ active, phase, reason }); }
@@ -26,11 +26,16 @@
     function valid(state) {
       const pitch = typeof state?.pitchId === "string" && /^(\d+):(\d+):(\d+)$/.exec(state.pitchId);
       const next = typeof state?.nextId === "string" && /^(\d+):(\d+):(\d+)$/.exec(state.nextId);
+      const pitchNumber = pitch && Number(pitch[3]);
+      const nextPa = next && Number(next[2]), nextNumber = next && Number(next[3]);
+      const samePaForward = next && next[2] === pitch?.[2] && nextNumber > pitchNumber;
+      const laterPa = scope === "game" && next && nextPa > state?.pa;
       return state?.enabled === true && typeof state.binding === "string" && state.binding.length > 0
-        && pitch && Number(pitch[2]) === state.pa && Number(pitch[3]) > 0
-        && Number.isInteger(state.pa) && state.pa > 0
-        && (state.nextId === null || (next && next[1] === pitch[1] && next[2] === pitch[2]
-          && Number(next[3]) > Number(pitch[3])));
+        && pitch && Number(pitch[2]) === state.pa && Number.isSafeInteger(pitchNumber) && pitchNumber > 0
+        && Number.isSafeInteger(state.pa) && state.pa > 0
+        && (state.nextId === null || (next && next[1] === pitch[1]
+          && Number.isSafeInteger(nextPa) && nextPa > 0
+          && Number.isSafeInteger(nextNumber) && nextNumber > 0 && (samePaForward || laterPa)));
     }
     function matches(state) {
       return active && valid(state) && expected && state.binding === expected.binding
@@ -86,7 +91,9 @@
         catch (_) { if (active && epoch === request) stop("changed"); return; }
         if (!active || epoch !== request) return;
         const next = read();
-        if (!valid(next) || next.pa !== completed.pa || next.pitchId !== completed.nextId
+        if (!valid(next) || (scope === "pa" && next.pa !== completed.pa)
+            || next.pitchId !== completed.nextId
+            || next.pitchId.split(":")[0] !== completed.pitchId.split(":")[0]
             || next.binding === completed.binding || next.revealed !== false) {
           stop("changed"); return;
         }

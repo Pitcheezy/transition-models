@@ -70,7 +70,7 @@
           video.setAttribute("src", record.video);
           video.load();
         }
-        if (hiding) { reset(); video.load(); }
+        if (hiding && !state?.preservePosition) { reset(); video.load(); }
         if (record.observation) {
           observationImage.setAttribute("src", record.observation.poster);
           marker.style.left = `${record.observation.x_pixels / record.observation.width * 100}%`;

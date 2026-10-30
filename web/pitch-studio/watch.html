@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#091811" />
+    <title>저장 경기 관전 · Pitcheezy</title>
+    <link rel="stylesheet" href="product.css?v=12" />
+    <link rel="stylesheet" href="receiver.css?v=13" />
+    <link rel="stylesheet" href="watch.css?v=1" />
+    <script src="receiver-fullgame.js?v=1" defer></script>
+    <script src="receiver-game-media.js?v=1" defer></script>
+    <script src="receiver-zones.js?v=1" defer></script>
+    <script src="receiver-location.js?v=3" defer></script>
+    <script src="receiver-media.js?v=8" defer></script>
+    <script src="receiver-video.js?v=watch14" defer></script>
+    <script src="receiver-sequence.js?v=2" defer></script>
+    <script src="watch.js?v=1" defer></script>
+  </head>
+  <body class="watch-page">
+    <a class="skip" href="#watch-main">관전 화면으로 이동</a>
+    <header class="watch-header">
+      <a href="index.html" class="wordmark" aria-label="Pitcheezy 홈"><span class="seal">P</span>PITCHEEZY<i>●</i></a>
+      <nav aria-label="관전 메뉴"><a href="games.html">경기 선택</a><a id="watch-back-analysis" href="receiver.html?game=849843">상세 분석</a></nav>
+    </header>
+    <main id="watch-main" class="watch-main">
+      <section class="watch-match" aria-labelledby="watch-title">
+        <div class="watch-match-heading">
+          <div><span class="watch-replay-badge"><i aria-hidden="true"></i>저장 경기 관전</span><h1 id="watch-title">시카고 컵스 <span>@</span> 샌디에이고 파드리스</h1></div>
+          <p class="watch-date">현지 2026.09.29 · 한국 09.30<br /><span>실시간 생중계 아님</span></p>
+        </div>
+        <div id="watch-score" class="watch-score" aria-label="현재 투구 전 경기 상황">경기 상황 확인 중</div>
+        <div class="watch-match-meta"><p id="watch-players">선수 정보 확인 중</p><p id="watch-identity">투구 자료 확인 중</p></div>
+      </section>
+      <p id="watch-load-status" class="watch-load-status" role="status">저장된 경기 자료를 불러오는 중입니다.</p>
+      <div class="watch-toolbar">
+        <div class="watch-selectors">
+          <label for="watch-pa">타석<select id="watch-pa" disabled><option>불러오는 중</option></select></label>
+          <label for="watch-pitch">투구<select id="watch-pitch" disabled><option>—</option></select></label>
+        </div>
+        <div class="watch-navigation" aria-label="투구 이동"><button id="watch-prev" class="secondary" type="button" disabled>이전 공</button><button id="watch-next" class="secondary" type="button" disabled>다음 공</button></div>
+      </div>
+      <div class="watch-stage">
+        <section id="pitch-video-section" class="watch-video" aria-labelledby="watch-video-title">
+          <div class="watch-panel-heading"><h2 id="watch-video-title">지금 보는 투구</h2><span id="watch-clock" class="watch-clock" aria-label="현재 클립 재생 시각">00:00 / 00:00</span></div>
+          <div id="pitch-video-frame" class="pitch-video-frame" hidden>
+            <video id="pitch-video" controls playsinline muted preload="metadata" aria-label="선택한 투구의 실제 영상"></video>
+            <img id="pitch-video-fallback" alt="현재 투구의 저장 정지 장면" hidden />
+            <img id="pitch-observation-image" alt="별도 판독 정지 장면" hidden />
+            <span id="pitch-observation-marker" class="observation-marker" aria-hidden="true" hidden></span>
+          </div>
+          <div id="pitch-video-missing" class="pitch-video-missing"><strong>이 투구의 확인된 영상이 없습니다.</strong><p>상세 분석에서 저장된 추천과 실제 결과를 확인할 수 있습니다. 없는 영상은 추정해서 채우지 않습니다.</p></div>
+          <div class="watch-playback-actions">
+            <label class="watch-playback-scope" for="watch-play-scope">이어볼 범위<select id="watch-play-scope"><option value="game" selected>경기 끝까지</option><option value="pa">현재 타석</option></select></label>
+            <button id="watch-start" class="primary" type="button" disabled>관전 시작</button>
+            <button id="watch-stop" class="secondary" type="button" disabled>멈추기</button>
+            <button id="play-pitch-video" class="secondary" type="button" hidden>투구 영상 재생</button>
+            <button id="inspect-pitch-mitt" class="secondary" type="button" hidden disabled>미트 판독 장면</button>
+          </div>
+          <p id="watch-sequence-status" class="watch-sequence-status" role="status">현재 공부터 선택한 범위를 이어 봅니다. 결과 확인 뒤 다음 공으로 이동하며, 영상이 없는 투구에서는 멈춥니다.</p>
+          <p id="pitch-video-status" class="watch-video-status" role="status"></p>
+          <p id="pitch-observation-note" class="observation-legend" hidden>별도 정지 프레임의 미검토 AI 가로 위치 추정입니다.</p>
+          <a id="pitch-video-source" class="source-link" target="_blank" rel="noopener noreferrer" hidden>MLB 공식 영상 출처</a>
+        </section>
+        <aside class="watch-analysis" aria-labelledby="watch-analysis-title">
+          <div class="watch-panel-heading"><h2 id="watch-analysis-title">같은 공, 함께 비교</h2><span id="watch-phase" class="watch-phase" role="status">추천 확인</span></div>
+          <div class="watch-analysis-grid">
+            <figure class="watch-location-card">
+              <figcaption>추천 위치와 실제 공</figcaption>
+              <div class="location-legend"><span><i class="legend-recommendation" aria-hidden="true"></i>추천 순위</span><span><i class="legend-actual" aria-hidden="true"></i>실제 공 · 종료 후</span></div>
+              <svg id="watch-location" viewBox="0 0 320 330" role="img" aria-label="현재 투구 위치 비교"></svg>
+              <p id="watch-zone-note" class="watch-zone-note">기록 존은 결과 공개 뒤 표시합니다.</p>
+              <p id="watch-coordinate-note" class="watch-coordinate-note">실제 공: 홈플레이트 통과 위치 · 포구 지점 아님</p>
+            </figure>
+            <section class="watch-recommendations" aria-labelledby="watch-candidates-title">
+              <h3 id="watch-candidates-title">이 공의 구종 추천</h3>
+              <div id="watch-candidates"><p>추천 자료 확인 중</p></div>
+              <p class="watch-probability-note">비율은 구종 선택 비중이며 스트라이크·안타 확률이 아닙니다.</p>
+            </section>
+          </div>
+          <section id="watch-result" class="watch-result" aria-label="현재 공의 실제 결과" hidden></section>
+        </aside>
+      </div>
+      <details class="watch-boundaries">
+        <summary>영상과 추천은 어떻게 맞추나요?</summary>
+        <p>같은 투구 ID에 연결된 공식 클립과 저장된 추천을 함께 불러옵니다. 추천은 클립 시작 전에, 실제 구종·공 위치·결과는 클립이 끝난 뒤 표시합니다. 다른 공으로 이동하면 이전 결과를 지웁니다.</p>
+        <p>클립 시작·종료에 맞춘 저장 경기 재생입니다. 정확한 릴리스·포구 순간의 프레임 동기화나 연속 중계는 아닙니다. 일부 영상에는 리플레이가 포함되며, 영상이 없거나 오류가 나면 자동 진행을 멈춥니다.</p>
+        <p>추천 위치는 과거 실제 투구 분포의 근사입니다. 결과 뒤 보이는 존은 같은 투구에 기록된 높이를 사용하며, 투구 전 모델 입력 또는 심판 판정기를 뜻하지 않습니다. 포수 목표·투수 의도·제구 오차는 검증하지 않았습니다.</p>
+        <p><a href="guide.html#model-evidence">모델과 수치의 근거</a> · <a href="receiver.html?game=849843">자료·좌표 상세 분석</a></p>
+      </details>
+    </main>
+  </body>
+</html>
