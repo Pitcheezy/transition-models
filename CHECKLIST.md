@@ -2,7 +2,7 @@
 
 ## 전시 정본 계획 실행 — 2026-10-28
 
-**SITE-round1 진행 — 2026-10-30:** Codex / `codex/site-first-1029` / 기준c39b0b9. 추천 원형 마커·범례/설명그림 일치, 좌표/중복순위/공개시점 보존·검사·Claude 검토·브라우저·기존Sites반영. 전체중계/상대재생구현 읽기조사; 새타임라인 추정 없음. 팀원/별도Cloudflare 불변.
+**SITE-round1 공개 완료·수정 권한 반납 — 2026-10-30:** Codex / `codex/site-first-1029` / 제품2272398 / PR85(main미통합). 관전·상세추천 원형/범례/설명그림 일치, 좌표·겹친순위·공개시점불변. Node257·checklist8(기존Windows인코딩경고1)·사이트정적·Chrome관전/상세/390px·실제Claude Fable고정검토APPROVE. Sites소스af4ce505·공개v20성공, 공개원형마커확인. [전체중계조사](docs/SITE_FULL_VIDEO_SEARCH_20261030.md)·[영수증](docs/results/site_fullgame_20261030/round-markers-receipt.json). Song고정7a460cc0은압축39장면/기록지연조절; 전체영상/262구시각표미확보. Peacock공식2h41m페이지는발견했으나재생/원본파일미확인. 팀원·별도Cloudflare불변. 다음: 전체중계사용가능원본/시각표확보 또는현재261클립시연검수.
 
 **SITE-exhibit1 공개 완료·수정 권한 반납 — 2026-10-30:** Codex / `codex/site-first-1029` / 제품b0ab6e5 / PR85(main미통합). 공식로고5·기능SVG4·홈/경기/안내 시각화·관전로딩/오류/키보드복구를 반영. Node257·checklist8·사이트정적·Chrome1440/800/390/320px·실제Claude Fable5.1 설계/고정/수정본검토PASS. Sites소스f8078b0e·공개v19성공. [변경/검증/한계](docs/SITE_EXHIBITION_POLISH_20261030.md)·[영수증](docs/results/site_fullgame_20261030/exhibition-polish-receipt.json). 기존262구자료/팀원/별도Cloudflare/잠금자료불변. 미트는선택연구로분리, 검증완료로승격없음. 다음: 전체중계원본/시간표 확보 후 연속영상동기화; 사용자시연검수.
 
