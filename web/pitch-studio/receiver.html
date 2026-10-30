@@ -3,54 +3,60 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>받은 모델 결과 · Pitcheezy</title>
+    <title>투구별 상세 분석 · Pitcheezy</title>
     <meta name="theme-color" content="#091811" />
-    <link rel="stylesheet" href="product.css" />
-    <link rel="stylesheet" href="receiver.css?v=8" />
+    <link rel="stylesheet" href="product.css?v=19" />
+    <link rel="stylesheet" href="receiver.css?v=21" />
     <script src="data.js" defer></script>
     <script src="receiver-contract.js?v=6" defer></script>
+    <script src="receiver-fullgame.js?v=1" defer></script>
+    <script src="receiver-game-media.js?v=1" defer></script>
+    <script src="receiver-zones.js?v=1" defer></script>
+    <script src="receiver-route.js?v=1" defer></script>
+    <script src="receiver-location.js?v=5" defer></script>
     <script src="receiver-sample.js" defer></script>
     <script src="receiver-demo-849843.js" defer></script>
     <script src="receiver-media.js?v=8" defer></script>
-    <script src="receiver-video.js?v=8" defer></script>
-    <script src="receiver.js?v=8" defer></script>
+    <script src="receiver-video.js?v=audit16" defer></script>
+    <script src="receiver-sequence.js?v=2" defer></script>
+    <script src="receiver.js?v=21" defer></script>
   </head>
   <body>
     <a class="skip" href="#receiver">본문으로 이동</a>
     <header class="product-header">
-      <a href="./" class="wordmark"
+      <a href="index.html" class="wordmark"
         ><span class="seal">P</span>PITCHEEZY<i>●</i></a
       >
       <nav aria-label="주요 메뉴">
-        <a href="service.html">분석 스튜디오</a
-        ><a href="report.html#analysis">관측 기록</a>
+        <a href="index.html">홈</a><a href="games.html">경기</a><a href="guide.html">이용 안내</a><a href="guide.html#model-evidence">모델 근거</a><a href="report.html#validation">CV 연구 기록</a>
       </nav>
     </header>
     <main id="receiver" class="receiver-main">
       <div class="receiver-heading">
-        <span class="eyebrow">ONE AT BAT · MODEL RESULTS</span>
-        <h1>첫 타석,<br />세 번의 선택.</h1>
+        <span class="eyebrow">ONE GAME · EVERY PITCH</span>
+        <h1>한 경기,<br />투구별 상세 분석.</h1>
         <p>
-          전달받은 추천·결과 파일을 확인하고, 같은 투구의 미트 관측과 나란히
-          살펴봅니다.
+          영상에서 궁금했던 공을 골라 추천 구종·근사 위치와 실제 경기 기록을 자세히 살펴봅니다.
         </p>
       </div>
       <section class="featured-pa" aria-labelledby="featured-title">
-        <span class="eyebrow">2026.09.29 · FIRST AT BAT</span>
+        <span class="eyebrow">현지 2026.09.29 · 한국 09.30 · 저장 경기</span>
         <h2 id="featured-title">
-          시카고 컵스 <span>@</span> 샌디에이고 파드리스
+          <img class="inline-team-logo" src="media/team-chc.svg" alt="" width="40" height="40" /> 시카고 컵스 <span>@</span> <img class="inline-team-logo" src="media/team-sd.svg" alt="" width="40" height="40" /> 샌디에이고 파드리스
         </h2>
         <p class="featured-matchup">
-          Michael King <span>vs</span> Pete Crow-Armstrong
+          71타석 <span>·</span> 저장된 실제 투구 262구
         </p>
         <p>
-          공식 투구 영상 세 구와 제공받은 모델 응답을 연결했습니다.
-          추천을 살펴보고, 실제 투구를 재생한 뒤 결과를 확인하세요.
+          이닝과 타석을 골라 추천을 먼저 보고 실제 결과를 공개하세요.
+          추천 246구·미지원 16구이며, 공식 영상 261구를 같은 투구 기록과 연결했습니다.
         </p>
-        <button id="load-first-pa" class="primary">
-          첫 타석 처음부터 보기
+        <button id="load-full-game" class="primary">경기 전체 열기</button>
+        <a id="receiver-watch-featured" class="primary" href="watch.html?game=849843" hidden>선택한 공 영상 관전 →</a>
+        <button id="load-first-pa" class="secondary">
+          첫 타석 영상부터 보기
         </button>
-        <a class="video-jump" href="receiver.html?demo=849843-pa1&amp;pitch=3#response-workspace">3구 미트 관측으로 바로 가기</a>
+        <a href="report.html#analysis">별도 CV 연구 기록 보기</a>
         <p class="scientific-note">
           과거 경기 재생 · 검증 전 실험 추천입니다. 구종 비율은 사건확률이
           아닙니다. 추천 위치는 과거 실제 투구 분포의 근사이며, 미트 표시는
@@ -60,22 +66,23 @@
           <summary>이 자료의 범위와 버전</summary>
           <p>
             경기 전체 추천 제공률: 246 / 262구 (93.89%). 정확도가 아닙니다. 이
-            화면에는 첫 타석 3구만 연결했습니다.
+            71타석·262구의 저장 추천과 결과를 연결했습니다. 공식 영상은 261구에 연결했으며, 기록이 다른 1구는 이유를 표시하고 제외했습니다.
           </p>
           <p>
             정책: ARM-B P3 (pitch type only), frozen &lt;=2025
             (ML-POLICY-VAL-v1).
           </p>
           <p>
-            자료 생성: 2026-09-30 17:48:53 KST<br />생성 코드 커밋:
+            별도 첫 타석 원응답의 자료 생성: 2026-09-30 17:48:53 KST<br />첫 타석 생성 코드 커밋:
             <code>2eb718ef13024ad2d98d28e248388db7f8dc1bc9</code>
           </p>
           <p>
-            실행 서버에 로드된 정확한 커밋: 미확인. 생성 버전과 서버 버전은
-            구별합니다.
+            전체 경기 수신본의 실행 서버 커밋은 미확인입니다. 전체 경기와 별도 첫 타석 응답의 출처는 구별합니다. 경기 후 저장 자료이며 당시 실시간 사전 가용성을 검증한 것은 아닙니다.
           </p>
+          <p><a href="receiver.html?archive=first-pa&amp;pitch=849843%3A1%3A3">옛 첫 타석 수신본 확인 (별도 3구 자료)</a> · 현재 전체 경기와 다른 수신본을 보존한 자료입니다.</p>
         </details>
       </section>
+      <p id="replay-status" class="replay-status" role="status" aria-live="polite"></p>
       <details id="file-tools" class="import-tools">
         <summary>다른 응답 파일 열기 · 파일 검사 기록</summary>
         <section class="import-card" aria-labelledby="import-title">
@@ -228,6 +235,11 @@
         <p id="pitch-identity"></p>
         <div id="current-situation" class="receiver-situation"></div>
         <p id="players" class="receiver-players"></p>
+        <div id="game-navigation" class="game-navigation" hidden>
+          <label>이닝 선택<select id="inning-select"></select></label>
+          <label>타석 선택<select id="pa-select"></select></label>
+          <p id="game-coverage" role="status"></p>
+        </div>
         <nav id="pitch-tabs" class="pitch-tabs" aria-label="첫 타석 투구 선택" hidden>
           <button type="button" data-pitch="1">1구</button>
           <button type="button" data-pitch="2">2구</button>
@@ -240,6 +252,7 @@
           미검토 AI 가로 위치 추정입니다.
         </p>
         <div class="receiver-controls">
+          <a id="receiver-watch-current" class="primary" href="watch.html?game=849843" hidden>이 공 영상 관전 →</a>
           <button id="previous-pitch" class="secondary">이전 투구</button
           ><button id="reveal-pitch" class="primary">현재 투구 결과 공개</button
           ><button id="hide-pitch" class="secondary">결과 다시 숨기기</button
@@ -249,11 +262,11 @@
         <section id="pitch-video-section" class="pitch-video-section" hidden aria-labelledby="pitch-video-title">
           <div class="pitch-video-heading">
             <div><span class="eyebrow">ACTUAL BROADCAST EXCERPT</span><h3 id="pitch-video-title">같은 투구, 실제 영상</h3></div>
-            <span class="video-scope">공식 영상 3 / 3구</span>
+            <span id="video-coverage" class="video-scope">공식 영상 3 / 3구</span>
           </div>
           <div id="pitch-video-missing" class="pitch-video-missing">
-            <p>이 투구의 영상은 아직 확보하지 못했습니다.</p>
-            <p>확인되지 않은 영상으로 대신하지 않습니다.</p>
+            <p id="pitch-video-missing-reason">이 투구의 확인된 영상이 없습니다.</p>
+            <p>추천을 확인하고 ‘현재 투구 결과 공개’를 눌러 실제 구종·위치·결과를 비교하세요.</p>
           </div>
           <div id="pitch-video-frame" class="pitch-video-frame" hidden>
             <video id="pitch-video" controls playsinline muted preload="metadata" aria-label="선택한 투구의 실제 영상"></video>
@@ -267,14 +280,32 @@
             <button id="video-next-pitch" class="secondary" hidden>다음 투구 보기</button>
           </div>
           <p id="pitch-video-status" role="status"></p>
+          <div id="pa-sequence-controls" class="pa-sequence-controls" hidden>
+            <div><strong>한 타석 이어보기</strong><p>현재 공부터 · 결과를 5초간 확인하고 다음 공 재생 · 타석 끝에서 정지</p></div>
+            <button id="start-pa-sequence" class="primary" type="button">이 타석 이어보기</button>
+            <button id="stop-pa-sequence" class="secondary" type="button" disabled>이어보기 멈추기</button>
+            <p id="pa-sequence-status" role="status">버튼을 눌러야 시작합니다. 투구 선택·탐색·영상 오류 시 자동 진행이 멈춥니다.</p>
+          </div>
           <p id="pitch-observation-note" class="observation-legend" hidden>초록 표시: 별도 정지 프레임에 저장된 AI 미트 중심 · 미검토 추정. 높이·투수 의도·제구 오차를 검증한 값이 아닙니다.</p>
-          <p class="receiver-note">투구별 공식 클립입니다. 투구 사이의 연속 중계 영상은 아닙니다. 미트 표시는 3구의 별도 판독 정지 장면에서만 볼 수 있습니다.</p>
+          <p class="receiver-note">같은 투구 ID의 공식 클립과 추천을 묶었습니다. 클립 종료 시 결과를 공개하며, 정확한 릴리스·포구 순간에 맞춘 표시나 연속 중계는 아닙니다. 일부 클립에는 리플레이가 포함될 수 있습니다. 영상 오류가 나도 결과를 직접 공개할 수 있습니다.</p>
           <a id="pitch-video-source" class="source-link" target="_blank" rel="noopener noreferrer" hidden>이 투구의 MLB 공식 영상 출처</a>
         </section>
           <section class="receiver-panel recommendation-panel">
             <span class="eyebrow">BEFORE THE PITCH</span>
             <h3>받은 구종 추천</h3>
             <p id="recommendation-status"></p>
+            <figure id="location-comparison" class="location-comparison" hidden>
+              <figcaption>추천 위치와 실제 공</figcaption>
+              <div class="location-legend"><span><i class="legend-recommendation" aria-hidden="true"></i>추천 순위 · 겹친 위치는 묶음</span><span><i class="legend-actual" aria-hidden="true"></i>실제 공 · 공개 후</span></div>
+              <label class="location-perspective" for="location-perspective">도표 방향<select id="location-perspective"><option value="pitcher" selected>중계 방향 · 투수 → 포수</option><option value="catcher">포수 시점 · 포수 → 투수</option></select></label>
+              <p id="location-perspective-note" class="location-direction-note">중앙 외야 영상과 같은 좌우 방향입니다. 원본 x는 왼쪽이 양수, 오른쪽이 음수입니다.</p>
+              <p class="location-plane-note">주황 점은 홈플레이트 통과 위치이며, 미트가 잡은 지점은 아닙니다.</p>
+              <p id="zone-status" class="location-state">기록 존 확인 중</p>
+              <svg id="location-plot" viewBox="0 0 320 330" role="img" aria-label="투구 위치 비교"></svg>
+              <p id="location-state" class="location-state"></p>
+              <ul id="location-values" class="location-values"></ul>
+              <details class="location-explanation"><summary>좌표와 표시 기준</summary><p>결과 공개 뒤 나타나는 흰 테두리와 9분할은 같은 투구의 Statcast 기록 상·하단 높이와 홈플레이트 폭 17인치로 그린 존입니다. 사후 기록을 재생에 표시하며 추천 모델의 투구 전 입력이라고 주장하지 않습니다. 공개 전이나 기록이 없을 때는 높이 1.5–3.5ft의 참고 존을 점선으로 표시합니다. 타자 기록이 아닌 표시용 예시입니다. 공의 반지름·심판 판정을 계산하는 경계는 아닙니다.</p><p>좌표 숫자는 원본 포수 기준을 유지합니다. 중계 방향에서는 x 양수가 왼쪽, 음수가 오른쪽이며 포수 시점에서는 반대입니다. z는 지면 기준 높이이고 단위는 ft입니다. 바깥 격자는 1ft 눈금입니다. 좌우 방향만 맞추며 카메라 각도·영상 픽셀에 보정한 위치가 아닙니다.</p><p>같은 위치의 추천은 1·3처럼 순위를 묶습니다. 전체 순위와 수치는 위 목록에서 확인합니다.</p><p>추천은 과거 투구 분포의 근사 위치이고, 실제 공은 홈플레이트 통과 위치입니다. 실제 포구 지점은 제공되지 않습니다. 미트 가로 관측은 결과 아래에 별도로 표시하며 제구 오차로 계산하지 않습니다.</p></details>
+            </figure>
             <div id="received-candidates"></div>
             <p class="receiver-note">
               표시 비율은 모델의 구종 선택 비율입니다. 상위 후보의 합이 100%

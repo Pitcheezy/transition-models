@@ -1,0 +1,27 @@
+# 영상과 위치 도표의 좌우 방향
+
+- 사용자 신고: `849843:1:2`의 영상에서는 포구가 왼쪽인데 실제 공 표시가 오른쪽.
+- 확인: 원본 실제 위치 x=+1.2824878764 ft, z=1.4800826426 ft. 포수 관점의 양수 x를 오른쪽에 그린 기존 계산은 해당 관점에서 맞다. 중앙 외야 영상은 반대편에서 포수를 바라보므로 영상 옆 비교에 시점 혼동이 있었다.
+- 근거: [MLB Statcast 정의](https://baseballsavant.mlb.com/csv-docs)의 plate_x/plate_z, [Alan Nathan Hawkeye 좌표계](https://baseball.physics.illinois.edu/HawkeyeSpinAnalysis-Part%20I-rev1.pdf) p.1. 2026 Statcast 설명은 플레이트 중앙면이며 실제 미트 포구면과 다르다.
+
+## 변경과 합격 기준
+
+관전과 상세 분석에서 기본을 ‘중계 방향 · 투수 → 포수’로 하고 ‘포수 시점 · 포수 → 투수’를 선택할 수 있게 한다. 추천·실제 공·선택 연구 미트 가로축은 같은 표시 변환을 쓴다. 원본 x/z와 추천 순위·구종·투구 ID는 변경하지 않는다. 중계 방향의 원본 x 눈금은 왼쪽부터 +2,+1,0,-1,-2이다. 높이와 존 폭은 변하지 않는다.
+
+주황 점은 플레이트 통과 위치이며 포구 좌표가 아니다. 좌우 전환은 카메라 각도/원근 보정·영상 픽셀 정합이 아니다. 리플레이가 다른 카메라 방향으로 바뀌어도 자동 추적/카메라 전환이라고 주장하지 않는다. 공개 전 결과/기록 존/미트 노출은 기존 시점을 유지한다. 시점 전환이 재생 시각·선택 투구·결과 공개 상태를 바꾸지 않는다.
+
+## 검증
+
+- Node269 통과(공통 좌표25, 관전/상세 전환·미트 경계 회귀 포함), 체크리스트8 통과.
+- 사이트 정적 검사/미디어 SHA 불변 통과.
+- Windows Chrome에서 관전/상세의 같은 2구를 공개하고 양 시점을 전환했다. SVG x 95.8756↔224.1244, 재생시각/결과 공개 상태 유지. 두 화면 390px에서 가로 넘침 없음. 실제 휴대폰 검사는 아니다.
+- 실제 Claude Fable 5.1: `2703aab` 검토 후 `8baefcd` 델타 APPROVE. 최초 미트 범위 밖 null 곱셈 지적은 기존 호출부 범위 가드 때문에 재현되지 않았다. 가드를 공통 표시 함수의 null 반환 검사로 통일하고 경계/이전점 제거 회귀를 추가했다. 전체 검토/후속 판단은 영수증에 보존한다.
+- 공개 Sites v21 성공, 소스 `76dd0887a09913aa7783a540b5c6104b2658261c`. 공개 2구에서 기본 중계 방향 왼쪽 실제 점·포수 시점 오른쪽 점·재생시각 보존, 3.829초로 되감은 뒤 실제 위치만 공개되고 전체 결과 숨김을 확인했다. 제품 `8baefcd`는 PR85 브랜치이며 main 통합과 구분한다.
+- [재현 영수증](results/site_fullgame_20261030/view-direction-receipt.json). 명령: `node --test web/pitch-studio-tests/*.test.cjs tests/js/pitch_receiver*.test.cjs tests/js/pitch_home.test.cjs`, `python scripts/check_pitch_studio.py`, `python -m pytest tests/test_checklist_model.py -q`(UTF-8·작업용 basetemp 사용).
+- 팀원 저장소·별도 Cloudflare 시험 서버·계약·받은 경기 원문은 변경하지 않는다.
+
+## 추가 경기 조사(읽기 전용)
+
+형 모델은 영상이 아닌 MLB feed 기록으로 경기별 추천을 생성한다. 우리 사이트가 한 경기인 것은 완전히 받은 추천 파일과 화면 경로가 849843에 고정되어 있기 때문이다. [고정 입력 코드](https://github.com/SongRoute/pitcheezy/blob/7a460cc0bf93f71ea52d3fc3acc6816b9ff3baf8/scripts/demo_precompute.py#L639).
+
+Song 운영 보고에는 WS G3 849804(발행294·추천274), G4 849803(발행367·추천301), G5 849799(투구255·추천원장 first199)가 있다. [G3/G4](https://github.com/SongRoute/pitcheezy/issues/37#issuecomment-6463768081), [G5](https://github.com/SongRoute/pitcheezy/issues/37#issuecomment-6487415521). 이 수치는 팀원 보고이며 우리가 받은 재생 파일 수/정확도가 아니다. 과거15경기 목록이나 영상5경기를 추천 연결15/5경기로 세지 않는다. 지원하지 않는 투수/이력/구종 조건에서는 기권한다. 다음 확장은 완료 추천·실제 결과 파일 수신→우리 경기 목록/로더 일반화→영상ID 연결 순서이고, 모델 가중치 수신은 필수가 아니다.

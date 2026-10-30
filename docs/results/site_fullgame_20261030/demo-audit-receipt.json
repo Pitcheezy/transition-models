@@ -1,0 +1,74 @@
+{
+  "task": "SITE-audit1",
+  "date": "2026-10-30",
+  "branch": "codex/site-first-1029",
+  "baseline": "453cefbdca64a568fbdad5b0ce677f51add1cc54",
+  "product": "b9efb3afd4f857ca21c635d85588c2b9c146db1d",
+  "title_followup": "68942a1",
+  "tests": {
+    "node": 164,
+    "checklist": 8,
+    "site_checker": "PASS",
+    "commands": [
+      "node --test web/pitch-studio-tests/*.test.cjs tests/js/pitch_receiver_location.test.cjs",
+      "python scripts/check_pitch_studio.py",
+      "python -m pytest tests/test_checklist_model.py -q --basetemp outputs/site_pa_sequence_20261030/pytest-audit1"
+    ]
+  },
+  "browser": {
+    "kind": "Windows Chrome",
+    "local_pages": 8,
+    "mobile_viewport_width": 390,
+    "overflow": false,
+    "checks": [
+      "watch ended result -> scrub Home actual hidden/reference zone shown",
+      "game range End selects 262nd pitch849843:71:6 at0 paused",
+      "detail link and back preserve selectedpitch",
+      "receiver manualreplay clears actual/recordedzone",
+      "public game range2->3 at0 paused and samepitchdetails",
+      "public assets queryv3 and referencezone"
+    ],
+    "physical_mobile": false,
+    "all261videos_played": false
+  },
+  "review": {
+    "configured_model": "gpt-6.1-terra",
+    "runtime_id": "not_exposed",
+    "fixed_commit": "b9efb3afd4f857ca21c635d85588c2b9c146db1d",
+    "result": "PASS",
+    "title_only_followup": "one HTML title, no executable change"
+  },
+  "publication": {
+    "id": "appgdep_6ae476c812308191a5c2685df4cb5961",
+    "project_id": "appgprj_6ac3665aa5048191ac2b5a012b2c7010",
+    "title": "Pitcheezy · 투구 관측 스튜디오",
+    "version_id": "appgprj_6ac3665aa5048191ac2b5a012b2c7010~appgver_9205f9a0d518819189dd0db0434c9edc",
+    "type": "publish",
+    "status": "succeeded",
+    "url": "https://pitcheezy-pitch-studio.sritone723.chatgpt.site",
+    "has_mcp": false,
+    "screenshot_asset_pointer": null,
+    "provider_deployment_id": "site---6ac3665aa5048191ac2b5a012b2c7010",
+    "failure_message": null,
+    "env_set_revision": 0,
+    "updated_at": "2026-10-30T10:52:05.254357+00:00",
+    "version_number": 17,
+    "source_commit": "a08f71ddb09529afa6266848b2d703cf762ed3cc",
+    "archive": {
+      "archive_format": "tar",
+      "sediment_file_id": "file_00000000efcc8206a3b4f107094975b9",
+      "content_hash": "sha256:d4681946a28c2b77a5a025c26a4dc1a4e735514b2a9157e99db14e6e1d70323c",
+      "size_bytes": 30105600,
+      "file_count": 47
+    },
+    "custom_domain": "https://pitcheezy.com/watch?game=849843"
+  },
+  "limits": [
+    "continuous broadcast not supplied; pitch-index and clip-seconds distinct",
+    "arrival firstPA3 only, remaining258 connected clips end-based",
+    "actual point plate crossing, not catch/intent",
+    "reference zone fixed1.5–3.5ft example, not batter record",
+    "teammate and separateCloudflare unchanged;PR85 not mergedmain"
+  ],
+  "research": "../../../docs/SITE_BENCHMARK_20261030.md"
+}

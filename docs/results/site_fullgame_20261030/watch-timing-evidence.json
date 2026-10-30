@@ -1,0 +1,142 @@
+{
+  "schema": "pitcheezy-watch-events-evidence-v1",
+  "game_pk": 849843,
+  "reviewer": "Codex subagent; runtime model ID not exposed",
+  "scope": "First PA3 clips only",
+  "human_review": false,
+  "records": [
+    {
+      "pitch_id": "849843:1:1",
+      "play_id": "f6d7a0f3-d111-3c6d-92cd-2b5a867ac931",
+      "video_sha256": "78c7325e6d79afc13f2c1990262e2872483db907283c7571a6a2c468d0a7ca42",
+      "event_kind": "catch",
+      "lower_seconds": 3.384122222222222,
+      "upper_seconds": 3.4508555555555556,
+      "method": "ai_frame_review",
+      "lower_ordinal": 200,
+      "upper_ordinal": 204,
+      "lower_pts": 304571,
+      "upper_pts": 310577,
+      "time_base": "1/90000",
+      "video_first_pts": 1170,
+      "format_start_time": 0,
+      "clock_basis": "MP4 media timeline PTS; no subtraction of first video PTS; audio and format start at zero",
+      "reason": "Separated white ball remains in front of mitt at lower bound; subsequent glove closure and disappearance after upper bound. Compression prevents claiming exact first-contact frame.",
+      "review_status": "root independently inspected late sheet and accepted conservative interval",
+      "evidence": [
+        {
+          "file": "p1-coarse.jpg",
+          "sha256": "e178003dc44aa88ec524d299b353fbdc2f69f3197bfb8f5f9abe80c99736bd29"
+        },
+        {
+          "file": "p1-fine.jpg",
+          "sha256": "6e1a3f2ebee5d39cdd2b5c195d0f9088fca75b33916ebe0e992c9e2ac51db375"
+        },
+        {
+          "file": "p1-focused.jpg",
+          "sha256": "ffb0fc13e01cc251ed18593970edc37d6f6d50808b58ebd185751167961e24cc"
+        },
+        {
+          "file": "p1-late.jpg",
+          "sha256": "5b017eea0de7da795986ac94596f0ee71d0af1313c8cda1f81b727ae788e5695"
+        }
+      ]
+    },
+    {
+      "pitch_id": "849843:1:2",
+      "play_id": "aa3ecf43-5435-3238-aac7-5bfeef1cabe2",
+      "video_sha256": "989cdc26ebe9c86d59720519827d3290cbc82984758cb180793e7c3e3353c4b2",
+      "event_kind": "catch",
+      "lower_seconds": 3.4169222222222224,
+      "upper_seconds": 3.4669777777777777,
+      "method": "ai_frame_review",
+      "lower_ordinal": 202,
+      "upper_ordinal": 205,
+      "lower_pts": 307523,
+      "upper_pts": 312028,
+      "time_base": "1/90000",
+      "video_first_pts": 990,
+      "format_start_time": 0,
+      "clock_basis": "MP4 media timeline PTS; no subtraction of first video PTS; audio and format start at zero",
+      "reason": "Low glove and moving bat overlap; white ball reaches low mitt and disappears within this 3-frame interval. Conservative upper bound used.",
+      "review_status": "root independently inspected late sheet and accepted conservative interval",
+      "evidence": [
+        {
+          "file": "p2-coarse.jpg",
+          "sha256": "1458a05115d0b80fee4cd72fc54413927bc378c2a0ab8475883e9e000e5748f2"
+        },
+        {
+          "file": "p2-fine.jpg",
+          "sha256": "6ea4c6835c060f3695f7c3dae2877443f990b030d2de03ebb3696206e244b167"
+        },
+        {
+          "file": "p2-focused.jpg",
+          "sha256": "b9b8df7fb518637d599c3f39cdc984f349f800f48930b497f8bfcee7e74a563b"
+        },
+        {
+          "file": "p2-late.jpg",
+          "sha256": "9c451569f4c92799f549bd9b14f25aa8deb8992ebd2905567c9c9c31290ff4f1"
+        }
+      ]
+    },
+    {
+      "pitch_id": "849843:1:3",
+      "play_id": "f29b740f-f187-3089-b57a-3b55e8370c19",
+      "video_sha256": "8e5fbfdd9172eadfb69e3316fbe97d592e7201e3d4ebac4fd1d6e17403420ce5",
+      "event_kind": "plate_arrival",
+      "lower_seconds": 3.3341666666666665,
+      "upper_seconds": 3.384211111111111,
+      "method": "ai_frame_review",
+      "lower_ordinal": 197,
+      "upper_ordinal": 200,
+      "lower_pts": 300075,
+      "upper_pts": 304579,
+      "time_base": "1/90000",
+      "video_first_pts": 0,
+      "format_start_time": 0,
+      "clock_basis": "MP4 media timeline PTS; no subtraction of first video PTS; audio and format start at zero",
+      "reason": "Foul-tip pitch: ball/bat/mitt overlap. Separate bat contact and catch instant not resolved, so plate_arrival with conservative after-arrival upper bound, not a verified catch/contact timestamp.",
+      "review_status": "root independently inspected late sheet and accepted conservative interval",
+      "evidence": [
+        {
+          "file": "p3-coarse.jpg",
+          "sha256": "cde0534c9a9df4e36022551aaa0012c5633facaa7ff6bd51b8379e639e571ff8"
+        },
+        {
+          "file": "p3-fine.jpg",
+          "sha256": "d996a3a29d1ac03480b4ec1b83fd7e6fbd14840d247e428171af9585cbcbe371"
+        },
+        {
+          "file": "p3-focused.jpg",
+          "sha256": "8dc019680ab36b54391f9bc27bbc464cddb72752884370f09f03d2007c4e6285"
+        },
+        {
+          "file": "p3-late.jpg",
+          "sha256": "69de157d132bce357ddc1afc3bbd3ffcb23e257e048fedf8a1ceb5e3ffcc9ab7"
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "Visual estimate interval, not exact physical catch time or validated accuracy.",
+    "P3 foul tip: cannot isolate contact vs catch; do not label catcher receipt confirmed.",
+    "No original clips or public JSON modified.",
+    "No files from evaluation-locked 849844 accessed."
+  ],
+  "review_status": "two_AI_visual_reviews_agree_on_conservative_intervals; no independent human assessment",
+  "reviewers": [
+    "Codex subagent arrival_timing_audit; runtime ID unexposed",
+    "Codex root; independent late-sheet inspection reported in team message"
+  ],
+  "initial_hypotheses_correction": {
+    "withdrawn_early_estimates_seconds": [
+      3.27,
+      3.33,
+      3.32
+    ],
+    "reason": "Early coarse/fine estimates confused a ball still visible before the glove with arrival. Root challenged them; every-frame later crops were inspected and final conservative bounds moved later. These are not preserved as accepted event timestamps."
+  },
+  "decode_method": "ffprobe selected v:0 frame pts/time_base; ffmpeg exact zero-based ordinal select with fps_mode passthrough; original PNG retained and fixed crop (430,265,660,445) enlarged2x for contact sheets",
+  "scope_exclusion": "PA4:1 not inspected; no registry root located within limited query; root requested stop at first3. Source video hashes all match prior immutable first_pa_media_v1 provenance.",
+  "sidecar_sha256": "4126a81ced9ee934a406a7aee69a5798a82f6644e8f04cfd3cec088d947198c6"
+}

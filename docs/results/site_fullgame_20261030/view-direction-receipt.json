@@ -1,0 +1,389 @@
+{
+  "task": "SITE-view1",
+  "date": "2026-10-31",
+  "product_commit": "8baefcddf5c43843b5dd9c1498108c16cb2c1611",
+  "branch": "codex/site-first-1029",
+  "pull_request": 85,
+  "main_merged": false,
+  "tests": {
+    "node": 269,
+    "checklist": 8,
+    "static": "pass",
+    "browser": {
+      "platform": "Windows Chrome",
+      "physical_mobile": false,
+      "viewport_390_no_horizontal_overflow": true,
+      "observed": [
+        "watch: source x+1.2824878764 shown left in pitcher view, right in catcher view",
+        "actual SVG cx:95.8756061781431 and224.12439382185687",
+        "watch perspective switch preserves currentTime6.829 and revealed state",
+        "receiver perspective switch preserves currentTime0 and revealed state",
+        "source coordinates and recommendation ranks unchanged",
+        "unrevealed result remains hidden; optional mitt axis follows perspective"
+      ],
+      "public_verified": {
+        "pitch_id": "849843:1:2",
+        "default": "pitcher",
+        "actual_x": 95.8756061781431,
+        "catcher_actual_x": 224.12439382185687,
+        "view_switch_time_seconds": 6.829,
+        "seek_time_seconds": 3.828999,
+        "seek_state": "actual location shown; full outcome hidden",
+        "screenshot_local": "outputs/site_view_20261031/public-pitch2.png",
+        "screenshot_sha256": "60d4bc6e0f09ae6a863cbfedb211e4dc3fd6e811ada4f45f5fb59c13ca907cc0"
+      }
+    }
+  },
+  "review": [
+    {
+      "fixed_commit": "2703aab3757894c20b8a3acbbbe2f3993d71df96",
+      "model": [
+        "claude-fable-5-1"
+      ],
+      "result": "**결론: 조건부 APPROVE.** 좌표 보존·대칭 반전·공개 전 숨김·재생 시간 유지는 코드와 테스트 모두 확인됩니다. 아래 1번만 머지 전 수정 또는 범위 보장 확인이 필요합니다.\n\n**수정 필요**\n\n1. **receiver 페이지 미트 점이 범위 밖일 때 왼쪽 끝에 그려집니다.** `web/pitch-studio/receiver.js:364`는 `screenX(...) * 100`을 그대로 쓰는데, 범위 밖이나 비정상 값이면 `screenX`가 `null`을 돌려주고 `null * 100`은 `0`이 됩니다. 이전 코드는 부호 방향 끝으로 clamp했지만, 지금은 부호와 무관하게 항상 0%입니다. 중계 방향에서 0%는 +2 ft 쪽이라 −2.5 ft 관측이 +2 쪽 끝점으로 보입니다. watch.js는 범위 밖이면 축을 숨기는 가드가 있으므로 receiver.js에도 같은 가드를 두거나, 호출 전에 관측값 범위가 보장됨을 확인해야 합니다. 이 경로는 receiver 페이지 DOM 테스트에서 다루지 않습니다.\n\n**권고 (비차단)**\n\n- **라이브러리 기본값과 제품 기본값이 다릅니다.** `receiver-location.js`의 `build`, `screenX`, `horizontalTicks`, `perspectiveInfo`는 기본이 `catcher`인데 두 HTML의 select 기본은 `pitcher`입니다. 인자를 빠뜨린 호출이 생기면 UI 라벨은 중계 방향인데 점은 포수 시점으로 그려지며 예외도 없습니다. 기본값을 제거해 필수 인자로 만드는 쪽을 권합니다.\n- **기록 존과 참고 존은 시점 인자 없이 계산됩니다.** `web/pitch-studio/receiver-location.js:107`과 `:122`는 `position()`을 포수 기준으로 호출합니다. 존이 좌우 대칭이라 현재는 결과가 같고 테스트도 중앙 정렬을 검증합니다. 다만 비대칭 존이 들어오면 중계 방향에서 조용히 틀어지므로 \"대칭 전제로 의도적으로 시점을 넘기지 않음\" 주석을 남기길 권합니다.\n- **select에 알 수 없는 값이 들어오면 render 전체가 예외로 중단됩니다.** DOM에서 `\"\"`는 `|| \"pitcher\"`로 흡수되지만 그 외 값은 `perspectiveInfo`가 throw하고, `renderLocations`나 `drawLocations`에 try/catch가 보이지 않습니다. 통제된 select라 위험은 낮으나 라이브러리와 DOM의 fallback 동작이 서로 다릅니다.\n- **watch 테스트의 원본 좌표 확인이 약합니다.** `/1\\.28/`는 `-1.28`도 통과시키므로 반전 후 숫자 부호가 바뀌지 않았음을 증명하지 못합니다. `/[^-]1\\.28/` 또는 정확한 문자열 비교로 강화하길 권합니다.\n- **HTML 기본 설명문이 라이브러리 설명과 문구가 다릅니다.** 렌더 시 덮어쓰므로 동작 문제는 없지만, 세션 로드 전 노출되는 문장이 나중과 달라집니다. 한쪽으로 통일하면 좋습니다.\n\n**확인된 사항**\n\n- 원본 `x`, `z`와 부호는 모든 점에서 그대로이고 `nx`만 반전됩니다. 동결 입력에 대한 불변성 테스트와 결정성 테스트가 있습니다.\n- 추천·묶음 순위·실제 공·눈금·미트 축이 같은 `screenX`와 `horizontalTicks`를 공유하며, 중계 방향 설명문의 \"양수가 왼쪽\"은 Statcast 포수 기준 x와 중앙 외야 카메라 관계에 맞습니다.\n- 시점 변경은 `revealed`가 아닐 때 `post`와 기록 존 getter를 읽지 않으며, 재생 시간·src·결과 텍스트·공개 상태를 바꾸지 않습니다. 시퀀스 중단이나 세대 재설정도 일어나지 않습니다.\n- 카메라 보정·포구 지점을 주장하지 않는 문구가 두 페이지에 모두 들어갔고, 캐시 버전은 receiver.css, receiver-location.js, receiver.js, watch.js 모두 올렸습니다.",
+      "seconds": 96.41,
+      "raw_receipt_sha256": "07c49bd8ab02cacf460d7a78418d8ed1c551cd82a8c4e22b164905dcfd9fe227"
+    },
+    {
+      "fixed_commit": "8baefcddf5c43843b5dd9c1498108c16cb2c1611",
+      "model": [
+        "claude-fable-5-1"
+      ],
+      "result": "**APPROVE**\n\n델타 검토 결과 차단 결함 없음.\n\n- `receiver.js:352-365` 가드가 `screenX` 단일 결과로 통합되어 null·NaN·±Infinity·범위 밖 입력에서 분기 전체(그래픽·트랙·점·축)가 생략되고, 분기 내부 `observation.x.toFixed(4)`도 안전해짐. 기존 호출부가 이미 범위 검사를 했다는 지적은 타당하며, 이번 변경은 버그 수정이 아니라 검사 지점 단일화로 이해함.\n- DOM 회귀 테스트가 실제 `receiver-location.js`를 로드하고 관측 결과만 치환하므로 `screenX` 실구현을 검증함. 양 시점의 정확한 끝점(−2→0/100, 2→100/0), 0→50, 비유효 입력 시 stale 마커 제거, `location-actual` 유지, `next-pitch` 후 정리까지 포함되어 이전 지적을 충족함.\n- 정적 note 문구는 기본 선택(pitcher)과 축 라벨 \"+2 ft ← … → −2 ft\"에 일치함. 시점 변경 시 JS가 `#location-perspective-note`를 갱신한다는 전제하에 문제 없음.\n\n비차단 메모:\n1. `watch.test.cjs:181` 정규식 `[^\\d.-]`는 ASCII 하이픈만 제외함. UI가 축 라벨에 U+2212(−)를 쓰므로, 좌표 note도 같은 문자를 쓰게 되면 음수 \"−1.28\"이 양수 검사를 통과함. `[^\\d.\\-\\u2212]` 및 `doesNotMatch(/[-\\u2212]1\\.28/)`가 더 엄격함.\n2. `assert.equal(x, raw)`는 클로저 변수 비교라 항상 참임. 원본값 불변은 aria-label 검사로 이미 보장되므로 제거해도 됨.\n3. 델타 밖이지만 제공된 블록 기준: `metric(...)`의 `observation.x === null ? \"—\" : toFixed(4)`는 NaN/Infinity면 \"NaN ft\"/\"Infinity ft\"를 표시함. 그래픽은 숨겨지지만 수치 줄은 남으므로, 같은 `Number.isFinite` 기준으로 맞추는 후속을 권장함.",
+      "seconds": 55.68,
+      "raw_receipt_sha256": "e511ab3d38fdeffe4ad381afa7f7a27cc0d9063395e4fbc7c0bc185bca27208c"
+    }
+  ],
+  "review_disposition": {
+    "initial_receiver_guard_finding": "not reproduced: existing caller already checked x!=-null and -2<=x<=2; unified around screenX return and added boundary DOM regressions",
+    "legacy_API_default": "catcher retained for compatibility; product pages explicitly pass selected perspective",
+    "unknown_select_value": "controlled two-option selector; library rejects unsupported perspectives",
+    "NaN_metric_note": "validated fullgame observation returns finite x or null; synthetic test stubs are not production data"
+  },
+  "sites": {
+    "source": {
+      "project_id": "appgprj_6ac3665aa5048191ac2b5a012b2c7010",
+      "checkout_path": "C:\\Users\\zpfh1\\.codex\\worktrees\\exhibition-replay-1028\\transition-models\\outputs\\site_source_view21",
+      "commit_sha": "76dd0887a09913aa7783a540b5c6104b2658261c",
+      "archive": "C:/Users/zpfh1/.codex/worktrees/exhibition-replay-1028/transition-models/outputs/site_view_20261031/site-view1.tar.gz"
+    },
+    "version": {
+      "id": "appgprj_6ac3665aa5048191ac2b5a012b2c7010~appgver_d209b9cd35c48191a1ebc2d5699ce807",
+      "project_id": "appgprj_6ac3665aa5048191ac2b5a012b2c7010",
+      "version_number": 21,
+      "source": {
+        "commit_sha": "76dd0887a09913aa7783a540b5c6104b2658261c"
+      },
+      "archive_storage": {
+        "archive_format": "tar",
+        "sediment_file_id": "file_000000008f6c8206bf3b50841b6e1bf2",
+        "content_hash": "sha256:63b7154f50aecf9b089e259acf68fb6d55491680ae3502f0006f9296e1f7c6b0",
+        "size_bytes": 30177280,
+        "file_count": 57
+      },
+      "screenshot_url": null,
+      "deployment_id": null
+    },
+    "deployment": {
+      "id": "appgdep_6ae4c017a5888191a04fea3988dbfc94",
+      "project_id": "appgprj_6ac3665aa5048191ac2b5a012b2c7010",
+      "title": "Pitcheezy · 투구 관측 스튜디오",
+      "version_id": "appgprj_6ac3665aa5048191ac2b5a012b2c7010~appgver_d209b9cd35c48191a1ebc2d5699ce807",
+      "type": "publish",
+      "status": "succeeded",
+      "url": "https://pitcheezy-pitch-studio.sritone723.chatgpt.site",
+      "has_mcp": false,
+      "screenshot_asset_pointer": null,
+      "provider_deployment_id": "site---6ac3665aa5048191ac2b5a012b2c7010",
+      "failure_message": null,
+      "env_set_revision": 0,
+      "updated_at": "2026-10-30T16:04:53.889438+00:00"
+    }
+  },
+  "artifact_sha256": "f070d225415e1283b5e9a48a8840ce2814db4203919f039223882e3a66c8114a",
+  "assets": [
+    {
+      "path": "app.js",
+      "bytes": 23827,
+      "sha256": "85968b2c737854fcc5343a6991feda22a9e5f34d008d91f5bf32fce121e26ed9"
+    },
+    {
+      "path": "data.js",
+      "bytes": 16272,
+      "sha256": "40965036fa9a1a91d4ef8dc282c9f0674dffc50bfc841b24bfb1dbda92239b3d"
+    },
+    {
+      "path": "home.js",
+      "bytes": 2335,
+      "sha256": "e476420c19bf3dbfaaf06462f423d64c8f7751758a2c5ac767f917b40db1566c"
+    },
+    {
+      "path": "index.html",
+      "bytes": 10543,
+      "sha256": "62029732c58b210512b56886d0a94da5b8ba915a3d612c37bc0735f53ac4e5f0"
+    },
+    {
+      "path": "exhibition.html",
+      "bytes": 6751,
+      "sha256": "529b69a774954d53844a3dde31356f6f6f2bc65cbf2eb19e33acd15a2b5bff4b"
+    },
+    {
+      "path": "exhibition.css",
+      "bytes": 24972,
+      "sha256": "5695d5e1339e715230245ee9e6f1db7b322c4ed75c6bb42236d735eb24a3c9de"
+    },
+    {
+      "path": "games.html",
+      "bytes": 7072,
+      "sha256": "6d5457be06d16c8a7170737cde0ee79d0b11af3c337bf4565a7ff2193a846871"
+    },
+    {
+      "path": "guide.html",
+      "bytes": 14965,
+      "sha256": "da8ddb58b7874927cccb2dd1acfbeebc7e3f32d0be3696c316a4cdde16a4acaf"
+    },
+    {
+      "path": "product.css",
+      "bytes": 17241,
+      "sha256": "327121dc38b7fc91816a9c259dbc26568b02881bf3ff090d11b729b37a99d915"
+    },
+    {
+      "path": "receiver-contract.js",
+      "bytes": 18187,
+      "sha256": "430d93f787f096320d07d9eb05da3d5748349ede3bf3293aded25a6be0f97718"
+    },
+    {
+      "path": "receiver-fullgame.js",
+      "bytes": 10983,
+      "sha256": "b17877fc5c667c34446a2f7c30f76ee1a9b4333c82be22402404c9ed4ee24e66"
+    },
+    {
+      "path": "game-849843.json",
+      "bytes": 594988,
+      "sha256": "89e14e12e0f0a2ae2475aff16b8757486143f6a4586239434a1f8b0be6bb3c22"
+    },
+    {
+      "path": "game-849843-media.json",
+      "bytes": 166436,
+      "sha256": "8680befcbd43b570b1cd2f708e1d767e0e4055a9850dda327ae871219df17e0a"
+    },
+    {
+      "path": "receiver-game-media.js",
+      "bytes": 6969,
+      "sha256": "ff44782dcbd42d4f049e4ffc7f4780fc21168473d2ec63fec52f5edb2d341b30"
+    },
+    {
+      "path": "receiver-zones.js",
+      "bytes": 4891,
+      "sha256": "db4ca97760084ab18a4977ab6fa8612ad2d096e369fe06db44ed77a85f363dd9"
+    },
+    {
+      "path": "receiver-route.js",
+      "bytes": 2007,
+      "sha256": "866dfc77458a9606b1186ee1bffe9daed58a3a95cb019269cc1d810d8ee0453d"
+    },
+    {
+      "path": "game-849843-zones.json",
+      "bytes": 42634,
+      "sha256": "210fd6bac3a0fe6b89c0c066ed29dd9667f6ee5362d933e17329ebc23771ea8b"
+    },
+    {
+      "path": "receiver-demo-849843.js",
+      "bytes": 11439,
+      "sha256": "2ce492bc3b7b132f338d5f45f916ef4a3888e74ee47913bdf8cc2d99d9171328"
+    },
+    {
+      "path": "receiver-location.js",
+      "bytes": 6460,
+      "sha256": "3014476476fd6745ebf4f8b3ebb658fc5cd9a68e8839e454094faca8c8d6d4ef"
+    },
+    {
+      "path": "receiver-media.js",
+      "bytes": 2233,
+      "sha256": "8464f7bfab057ccb309ed4a1ba38053efcabc8f92a440bae372950e7f8f70beb"
+    },
+    {
+      "path": "receiver-video.js",
+      "bytes": 9126,
+      "sha256": "8437bb551c2a77c602f9654b86c51b33f59adf313cf423067173088de882d65d"
+    },
+    {
+      "path": "receiver-sequence.js",
+      "bytes": 5155,
+      "sha256": "50f7674b11b72113e7b124473492746b645637c73e958fb3ea7ca4d82bfa78e2"
+    },
+    {
+      "path": "watch.html",
+      "bytes": 16674,
+      "sha256": "61eca03431736dfecd3e719f61c9082603e1c43255fce80b9f1da592f1899f8d"
+    },
+    {
+      "path": "watch.css",
+      "bytes": 22456,
+      "sha256": "5dda8814572c3725eb097ad383c861202cb73916e71bbd2e04a759b78b223542"
+    },
+    {
+      "path": "watch.js",
+      "bytes": 33368,
+      "sha256": "0eb8eb69897b454fa2be92a86173f72067a0a6e2a46d710046b9260076a7cbe2"
+    },
+    {
+      "path": "watch-timing.js",
+      "bytes": 2240,
+      "sha256": "7b901e192c296f634675b3c84fb80a9a51f7f1b6c83f2c20267c5c8500ee40de"
+    },
+    {
+      "path": "watch-context.js",
+      "bytes": 6049,
+      "sha256": "d0d361e25b451030385aec58d3f8cae7562c773f221fdba4b9c246c45da9758b"
+    },
+    {
+      "path": "game-849843-timing.json",
+      "bytes": 1146,
+      "sha256": "4126a81ced9ee934a406a7aee69a5798a82f6644e8f04cfd3cec088d947198c6"
+    },
+    {
+      "path": "receiver-sample.js",
+      "bytes": 2946,
+      "sha256": "62c0daa42b271d0da098e3c609ddf5e26f518c5c75a464623b06465ba3d716e9"
+    },
+    {
+      "path": "receiver.css",
+      "bytes": 14123,
+      "sha256": "cd1760b91e97b7c63e5ccd592400a9b124548ce4ceea2850c8d356358f30a24a"
+    },
+    {
+      "path": "receiver.html",
+      "bytes": 20435,
+      "sha256": "b3edca2b5e7d3a7aa2e99b9d1cf3a037edd3170870ab4a004fc90e9e485df34f"
+    },
+    {
+      "path": "receiver.js",
+      "bytes": 36543,
+      "sha256": "cb5f210a8db4588bd5a22d62428d3b38c91f3b2a3e8feebd349d94bed603f995"
+    },
+    {
+      "path": "report-theme.css",
+      "bytes": 4426,
+      "sha256": "8fd0af663da65392a0cea2e54a405bb439c7727f5822f251beffddefc400cf02"
+    },
+    {
+      "path": "report.html",
+      "bytes": 10206,
+      "sha256": "d5381de93cf452fe089ce6a58a952a2084f36d7db088984ea2be24467fc0f8b5"
+    },
+    {
+      "path": "service.html",
+      "bytes": 2289,
+      "sha256": "96749f84be6818d1ebc329a8218e823ac4503a26496caabb3fe168f4e09af7ba"
+    },
+    {
+      "path": "styles.css",
+      "bytes": 20956,
+      "sha256": "814ee56898526a661e904fdda8afb2e12e34de2bb14d0b3a4fcc2f4705929f54"
+    },
+    {
+      "path": "media/hero-849843-four-pitches-v1.mp4",
+      "bytes": 11571137,
+      "sha256": "f7aa424da1198f645a04d1554e22d2709d511fa5e1dc43ac65673e09b39b8c09"
+    },
+    {
+      "path": "media/team-chc.svg",
+      "bytes": 2321,
+      "sha256": "8fe99678c053859b50adbbe769aade0011ed6b2349962a9963dcc0b6db162aef"
+    },
+    {
+      "path": "media/team-sd.svg",
+      "bytes": 1286,
+      "sha256": "c0d5f92ef4a58f097c74aedebb9fd1ff4270217d45b75ef7aa6eeded115131da"
+    },
+    {
+      "path": "media/team-phi.svg",
+      "bytes": 2516,
+      "sha256": "465da43739de56c09d5f8ec3328be11e9318f53959cc05979d3ab3d0a547a3bb"
+    },
+    {
+      "path": "media/team-atl.svg",
+      "bytes": 2652,
+      "sha256": "11162237c379e6e6e54916ee4eebe4407961b4d37293b71b21868077d1bead0d"
+    },
+    {
+      "path": "media/team-tb.svg",
+      "bytes": 2639,
+      "sha256": "b50fd02140a8fe66e57eb5c421fc6847a52abfbc7469bc3099a49d1e09ff77fc"
+    },
+    {
+      "path": "media/feature-select.svg",
+      "bytes": 2627,
+      "sha256": "15693bd4150298704d12dc557c2f5659edd63ef686973dd030057eeef9d98ae7"
+    },
+    {
+      "path": "media/feature-recommend.svg",
+      "bytes": 2520,
+      "sha256": "89af7c1c1d33dcd91ebcf8e3764b9974dcc79241dc20aa620a38e8ebfb04caf6"
+    },
+    {
+      "path": "media/feature-compare.svg",
+      "bytes": 2474,
+      "sha256": "7be16252e0142074d8ed20f112c3cfff080490cb507079aa8e120139670aee68"
+    },
+    {
+      "path": "media/feature-evidence.svg",
+      "bytes": 2417,
+      "sha256": "f67fd465d4eae84371d5f0d6c9e86bda2f9e62fd678ba02ef49383594626a090"
+    },
+    {
+      "path": "media/pitch-849843-1-1-official.jpg",
+      "bytes": 188744,
+      "sha256": "cb996e01792960cf0e10a6a84689b06a4f6ae0b158802f997492aadc1fe8fcaa"
+    },
+    {
+      "path": "media/pitch-849843-1-1-official.mp4",
+      "bytes": 5139146,
+      "sha256": "78c7325e6d79afc13f2c1990262e2872483db907283c7571a6a2c468d0a7ca42"
+    },
+    {
+      "path": "media/pitch-849843-1-2-official.jpg",
+      "bytes": 183409,
+      "sha256": "90360e50aeb7a7f2202333fa67b2f5d09b3760af50bacf69eaa19d8a5be85f00"
+    },
+    {
+      "path": "media/pitch-849843-1-2-official.mp4",
+      "bytes": 3788892,
+      "sha256": "989cdc26ebe9c86d59720519827d3290cbc82984758cb180793e7c3e3353c4b2"
+    },
+    {
+      "path": "media/pitch-849843-1-3-official.jpg",
+      "bytes": 189102,
+      "sha256": "2fb66a6d84c1a41e1e14837b9cd6a32720c7f4c8f77af9b80bf9866ac9e15ac5"
+    },
+    {
+      "path": "media/pitch-849843-1-3-official.mp4",
+      "bytes": 4070010,
+      "sha256": "8e5fbfdd9172eadfb69e3316fbe97d592e7201e3d4ebac4fd1d6e17403420ce5"
+    },
+    {
+      "path": "media/pitch-849843-1-3.jpg",
+      "bytes": 174807,
+      "sha256": "7e85135f29934adf98ef0d2eac1992c6ecb20bfc41016b75bd212296c4def44c"
+    },
+    {
+      "path": "media/pitch-849843-1-3.mp4",
+      "bytes": 1683359,
+      "sha256": "393bc18339e8f64a3e8c70efb43df7412afb5eeb87faf7d707de4bd8a0eeb78d"
+    },
+    {
+      "path": "media/pitch-849843-2-5.jpg",
+      "bytes": 174445,
+      "sha256": "f0a5e613275d21f516f76d1dac3c0e12a222148ccd74c2609c872e7a7f2e8380"
+    },
+    {
+      "path": "media/pitch-849843-2-5.mp4",
+      "bytes": 1748441,
+      "sha256": "e523328fcdd06759f27b15e2e4c0a14e32e3a573552cddafbe6ca355557142ca"
+    }
+  ],
+  "data_changed": false,
+  "teammate_modified": false,
+  "cloudflare_test_infrastructure_changed": false
+}

@@ -1,4 +1,4 @@
-"""Check the static studio's illustrative contracts, local links and media hashes."""
+"""Check actual-replay pages, isolated legacy fixtures, links and media hashes."""
 
 import hashlib
 import json
@@ -55,6 +55,9 @@ def check():
             target = (page.parent / unquote(url.path)).resolve()
             assert target.is_relative_to(SITE.resolve()), f"Outside site: {ref}"
             assert target.exists(), f"Broken local reference: {page.name}: {ref}"
+            assert target.name not in {"preview-data.js", "studio.js", "studio.css"}, (
+                f"Legacy illustrative studio must not be linked by a product page: {page.name}: {ref}"
+            )
     manifest = json.loads(
         (ROOT / "docs/results/mlb_p0/pitch_studio_media_provenance_v1.json").read_bytes()
     )
@@ -112,10 +115,18 @@ def check():
             "node",
             "--test",
             str(ROOT / "tests/js/pitch_receiver.test.cjs"),
+            str(ROOT / "tests/js/pitch_receiver_location.test.cjs"),
+            str(ROOT / "tests/js/pitch_fullgame.test.cjs"),
+            str(ROOT / "tests/js/pitch_game_media.test.cjs"),
+            str(ROOT / "tests/js/pitch_zones.test.cjs"),
+            str(ROOT / "tests/js/pitch_receiver_route.test.cjs"),
             str(ROOT / "tests/js/pitch_home.test.cjs"),
             str(ROOT / "web/pitch-studio-tests/receiver-intake.test.cjs"),
             str(ROOT / "web/pitch-studio-tests/receiver-first-pa.test.cjs"),
             str(ROOT / "web/pitch-studio-tests/receiver-video.test.cjs"),
+            str(ROOT / "web/pitch-studio-tests/receiver-sequence.test.cjs"),
+            str(ROOT / "web/pitch-studio-tests/watch.test.cjs"),
+            str(ROOT / "web/pitch-studio-tests/watch-timing.test.cjs"),
         ],
         capture_output=True,
         text=True,
@@ -124,7 +135,8 @@ def check():
     if receiver.returncode:
         raise RuntimeError(receiver.stdout + receiver.stderr)
     print("PASS: receiver and home playback regression checks")
-    print(f"PASS: {len(data['scenarios'])} illustrative distributions, HTML assets, media SHA256")
+    print(f"PASS: {len(data['scenarios'])} isolated legacy fixtures; no illustrative studio page dependency")
+    print("PASS: HTML assets and media SHA256")
 
 
 if __name__ == "__main__":

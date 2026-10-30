@@ -417,6 +417,39 @@
 .recommendation-panel .received-candidate strong { font-size: 18px; }
 .recommendation-panel h3 { margin-top: 12px; }
 .receiver-results { margin-top: 22px; }
+.location-comparison { margin: 20px 0; padding: 16px 12px; border: 1px solid #46604a; background: #0a1c12; }
+.location-comparison figcaption { color: #edf5e8; font-size: 18px; font-weight: 750; }
+.location-legend { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-block: 12px; font-size: 12px; color: #d0ded0; }
+.location-legend span { display: inline-flex; align-items: center; gap: 7px; }
+.location-legend i { width: 12px; height: 12px; display: inline-block; }
+.location-perspective { display: grid; gap: 6px; margin-block: 12px; color: #d0ded0; font-size: 13px; }
+.location-perspective select { width: 100%; min-width: 0; min-height: 44px; padding: 9px; border: 1px solid #668266; border-radius: 8px; background: #153324; color: #edf5e8; font: inherit; }
+.location-perspective select:focus-visible { outline: 3px solid #ceff78; outline-offset: 2px; }
+.location-direction-note, .location-plane-note { margin: 8px 0; color: #bdcebf; font-size: 12px; line-height: 1.6; }
+.location-plane-note { color: #ffb49d; }
+.legend-recommendation { background: #ceff78; border-radius: 50%; }
+.legend-actual { background: #ff9e82; border-radius: 50%; }
+#location-plot { display: block; width: 100%; max-width: 360px; margin-inline: auto; overflow: visible; }
+.location-field { fill: #112a1c; }
+.location-grid { stroke: #294234; stroke-width: .6; }
+.location-zero { stroke: #47644e; stroke-width: .8; }
+.strike-zone { fill: #ffffff08; stroke: #f1f5ed; stroke-width: 2; }
+.strike-zone-division { stroke: #d5dfd1; stroke-width: .8; }
+.reference-zone { fill: #ffffff04; stroke: #b9cdb4; stroke-width: 1.6; stroke-dasharray: 5 4; }
+.reference-zone-division { stroke: #a5b79e; stroke-width: .7; stroke-dasharray: 3 4; }
+.replay-status { min-height: 1.7em; color: #ceff78; font-size: 14px; line-height: 1.7; }
+.location-tick { fill: #bdcebf; font: 12px "Segoe UI",sans-serif; }
+.location-recommended { fill: #ceff78; stroke: #ecffce; stroke-width: 1; }
+.location-rank { fill: #102313; font: bold 11px "Segoe UI",sans-serif; }
+.location-actual-halo { fill: none; stroke: #ff9e82; stroke-width: 2.5; }
+.location-actual { fill: #ff9e82; stroke: #0b2116; stroke-width: 2; }
+.location-state { font-size: 13px; line-height: 1.65; color: #c5d3c7; }
+.location-values { padding-left: 18px; color: #c5d3c7; font-size: 12px; line-height: 1.8; }
+.location-values li { margin-block: 4px; }
+.location-actual-value { color: #ffb49d; }
+.location-explanation { font-size: 12px; line-height: 1.8; color: #b8cdbb; }
+.location-explanation summary { cursor: pointer; padding-block: 10px; min-height: 44px; }
+.location-explanation p { font-size: 12px; }
 .pitch-tabs { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 20px; }
 .pitch-tabs button { cursor: pointer; min-height: 44px; padding: 10px 22px; border: 1px solid #46604a; color: #e3efd9; background: #163022; font: inherit; }
 .pitch-tabs button[aria-current] { background: #ceff78; color: #102313; border-color: #ceff78; font-weight: 700; }
@@ -458,3 +491,17 @@
     justify-content: center;
   }
 }
+/* Whole-game navigation shares the replay's desktop and mobile layout. */
+.game-navigation { display:grid; grid-template-columns:minmax(130px,1fr) minmax(220px,3fr); gap:12px; margin:20px 0; padding:18px; border:1px solid #496354; border-radius:12px; background:#12251b; }
+.game-navigation[hidden] { display:none; }
+.game-navigation label { display:grid; gap:8px; color:#eff8ef; font-size:.9rem; min-width:0; }
+.game-navigation select { width:100%; min-width:0; padding:12px; border:1px solid #779486; border-radius:6px; color:#f4fff5; background:#142d21; font:inherit; }
+.game-navigation p { grid-column:1/-1; color:#c6d8cc; margin:0; font-size:.85rem; line-height:1.7; }
+@media (max-width:600px) { .game-navigation {grid-template-columns:1fr;} }
+
+.pa-sequence-controls { display: flex; flex-wrap: wrap; align-items: center; gap: .7rem; margin-top: 1rem; padding: 1rem; border: 1px solid #48694d; border-radius: 12px; background: #0b2215; }
+.pa-sequence-controls[hidden] { display: none; }
+.pa-sequence-controls > div { flex: 1 1 220px; min-width: 0; }
+.pa-sequence-controls p { margin: .4rem 0 0; color: #c0d2c3; font-size: .88rem; line-height: 1.6; }
+.pa-sequence-controls > p { flex: 1 0 100%; }
+.pa-sequence-controls button { white-space: normal; }

@@ -1,0 +1,77 @@
+{
+  "task": "SITE-round1",
+  "date": "2026-10-30",
+  "product_commit": "22723982723f5c83dbcffde4cc963105093fb879",
+  "branch": "codex/site-first-1029",
+  "pull_request": 85,
+  "main_merged": false,
+  "features": [
+    "round recommendation markers on watch and receiver",
+    "round recommendation legends and explanatory SVGs",
+    "fixed-source full broadcast research"
+  ],
+  "tests": {
+    "node": 257,
+    "checklist": {
+      "passed": 8,
+      "warnings": [
+        "existing Windows subprocess UTF-8 decode warning"
+      ]
+    },
+    "static": "pass",
+    "browser": {
+      "platform": "Windows Chrome",
+      "widths": [
+        1440,
+        390
+      ],
+      "observed": [
+        "same centers and ranks 1·3/2 in both views",
+        "actual point hidden before playback",
+        "actual point and result after clip",
+        "rewind hides actual point and result",
+        "public watch.js?v=20 and circle DOM confirmed",
+        "public clip end: actual point shown with circular grouped ranks"
+      ],
+      "physical_mobile": false
+    }
+  },
+  "review": {
+    "model": "claude-fable-5-1",
+    "raw_receipt_sha256": "f9243ba6b2c2252a358a040480a031b28d06d14170d2af3d4bf696bfeb2afd29",
+    "seconds": 70.31,
+    "result": "APPROVE",
+    "nonblocking_notes": [
+      "Consider extra legend differentiation beyond color",
+      "Large imported rank groups may increase glyph height; current 3-candidate display and overflow checked"
+    ]
+  },
+  "full_video": {
+    "partner_commit": "7a460cc0bf93f71ea52d3fc3acc6816b9ff3baf8",
+    "partner_available": "condensed video with 39 releaseSeconds entries; same known source",
+    "official_full_replay_page": "https://www.peacocktv.com/sports/game-1-cubs-at-padres/0a6dbfb3-dfe6-34ec-9beb-d228d4dba9af",
+    "official_duration": "2h41m",
+    "playback_observed": false,
+    "source_file_acquired": false,
+    "full_game_timeline_acquired": false
+  },
+  "sites": {
+    "local_gzip_sha256": "9fb67537b9f47417e407c33769b9caaaca052de5dd5ad027d00c4302fad7c99f",
+    "source_commit": "af4ce5057ba25bb4d3f7c3732a81da32e27c8a12",
+    "version": 20,
+    "version_id": "appgprj_6ac3665aa5048191ac2b5a012b2c7010~appgver_1a7c7384d0f88191a078b7784309a48a",
+    "deployment_id": "appgdep_6ae4a0eda7788191a7ab98d0bfbef7d2",
+    "status": "succeeded",
+    "url": "https://pitcheezy-pitch-studio.sritone723.chatgpt.site",
+    "archive": {
+      "archive_format": "tar",
+      "sediment_file_id": "file_000000000f288206a411109d9cb5aaa8",
+      "content_hash": "sha256:8621c8ab67932e0973fc9a60b8cdf0e0563f13e9601b72dea5dc1ebc3c8ec805",
+      "size_bytes": 30177280,
+      "file_count": 57
+    }
+  },
+  "data_changed": false,
+  "teammate_modified": false,
+  "cloudflare_test_infrastructure_changed": false
+}

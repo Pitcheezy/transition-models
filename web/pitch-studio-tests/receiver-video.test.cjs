@@ -11,7 +11,7 @@ function element() {
     getAttribute: (name) => attrs[name], setAttribute: (name,value) => { attrs[name]=value; },
     removeAttribute: (name) => { delete attrs[name]; } };
 }
-function setup() {
+function setup(events = {}) {
   const video = Object.assign(element(), {
     paused: true, ended: false, currentTime: 0, error: null,
     pause() { this.paused = true; this.callbacks.pause?.(); },
@@ -21,7 +21,7 @@ function setup() {
   const elements = {video};
   for(const name of ["section","frame","missing","status","fallback","play","inspect","observationImage","marker","observationNote","sourceLink"]) elements[name]=element();
   const reveals = [];
-  const controller = create(elements, binding => reveals.push(binding), media);
+  const controller = create(elements, binding => reveals.push(binding), media, events);
   const update = (pitch=3, revealed=false, context=1, enabled=true, observationAllowed=true) =>
     controller.update({context,pitch_id:`849843:1:${pitch}`,revealed,enabled,observationAllowed});
   return {elements,video,callbacks:video.callbacks,reveals,update,controller,click:()=>elements.play.callbacks.click(),inspect:()=>elements.inspect.callbacks.click()};
@@ -103,4 +103,88 @@ test("media error fallback belongs to the current pitch and retry restores video
 test("source links follow disclosure and clearing stops playback",async()=>{
   const s=setup();s.update(1);assert(s.elements.sourceLink.hidden);s.update(1,true);assert(!s.elements.sourceLink.hidden);
   await s.click();s.controller.update(null);s.video.ended=true;s.callbacks.ended();assert(s.elements.section.hidden);assert(s.video.paused);assert.equal(s.reveals.length,0);assert(s.elements.sourceLink.hidden);
+});
+
+test("whole-game remote clip clears previous poster and uses exact PA label",()=>{
+ const s=setup();s.update(3,true);s.inspect();
+ const id='849843:2:1', remote={pitch_id:id,at_bat_number:2,pitch_number:1,video:'https://sporty-clips.mlb.com/example.mp4',duration_seconds:7,page_url:'https://baseballsavant.mlb.com/sporty-videos?playId=example'};
+ s.controller.update({context:2,pitch_id:id,revealed:false,enabled:true,media:{[id]:remote}});
+ assert.equal(s.video.getAttribute('src'),remote.video);
+ assert.equal(s.video.getAttribute('poster'),undefined);
+ assert.equal(s.elements.fallback.getAttribute('src'),undefined);
+ assert(s.elements.marker.hidden);assert(s.elements.sourceLink.hidden);
+ assert.match(s.video.getAttribute('aria-label'),/2번째 타석 1구/);
+ s.video.error={code:4};s.callbacks.error();
+ assert(s.elements.fallback.hidden);assert.match(s.elements.status.textContent,/공식 영상을/);
+ assert.doesNotMatch(s.elements.status.textContent,/정지 장면을 표시/);
+ assert.equal(s.reveals.length,0);
+});
+
+test("remote clip ended binds only its exact pitch and new data context",async()=>{
+ const s=setup(),id='849843:71:6';
+ const remote={pitch_id:id,at_bat_number:71,pitch_number:6,video:'https://sporty-clips.mlb.com/final.mp4',duration_seconds:8,page_url:'https://baseballsavant.mlb.com/sporty-videos?playId=final'};
+ s.controller.update({context:7,pitch_id:id,revealed:false,enabled:true,media:{[id]:remote}});
+ await s.click();assert.equal(s.reveals.length,0);
+ s.video.ended=true;s.callbacks.ended();assert.deepEqual(s.reveals,['7:'+id]);
+ s.controller.update({context:8,pitch_id:id,revealed:false,enabled:true,media:{[id]:remote}});
+ s.video.ended=true;s.callbacks.ended();assert.equal(s.reveals.length,1);
+});
+
+test("excluded or missing remote mapping clears old video and poster",async()=>{
+ const s=setup();s.update(1);await s.click();
+ s.controller.update({context:1,pitch_id:'849843:69:2',revealed:false,enabled:true,media:{}});
+ assert(s.video.paused);assert.equal(s.video.getAttribute('src'),undefined);
+ assert.equal(s.video.getAttribute('poster'),undefined);assert(s.elements.frame.hidden);
+ assert(!s.elements.missing.hidden);assert(s.elements.play.hidden);
+ s.video.ended=true;s.callbacks.ended();assert.equal(s.reveals.length,0);
+});
+
+test("queued old end while new clip is playing cannot reveal before actual end",async()=>{
+ const s=setup();s.update(1);await s.click();s.update(2);await s.click();
+ // HTMLMediaElement.ended remains false on the new not-ended resource.
+ s.callbacks.ended();assert.equal(s.reveals.length,0);
+ s.video.ended=true;s.callbacks.ended();assert.deepEqual(s.reveals,['1:849843:1:2']);
+});
+
+test('sequence restart begins at zero and only ended reports completion',async()=>{
+ const ended=[], interrupts=[],s=setup({onEnded:k=>ended.push(k),onInterrupt:r=>interrupts.push(r)});
+ s.update(1);s.video.currentTime=3;
+ assert.equal(await s.controller.restart(),true);assert.equal(s.video.currentTime,0);
+ assert.deepEqual(interrupts,[]);assert.deepEqual(ended,[]);
+ s.video.ended=true;s.callbacks.ended();s.callbacks.ended();
+ assert.deepEqual(ended,['1:849843:1:1']);
+});
+test('native pause, seek, playback error and manual replay notify sequence cancellation',async()=>{
+ const interrupts=[],s=setup({onInterrupt:r=>interrupts.push(r)});
+ s.update(1);await s.controller.restart();s.video.pause();assert.equal(interrupts.pop(),'pause');
+ s.video.currentTime=2;s.callbacks.seeking();assert.equal(interrupts.pop(),'seek');
+ s.video.error={code:4};s.callbacks.error();assert.equal(interrupts.pop(),'error');
+ await s.click();assert.equal(interrupts.pop(),'manual');
+ s.video.paused=false;s.callbacks.play();assert.equal(interrupts.pop(),'manual');
+});
+test('programmatic rewind does not cancel but later user seek does',async()=>{
+ const interrupts=[],s=setup({onInterrupt:r=>interrupts.push(r)});
+ s.update(1);s.video.currentTime=4;await s.controller.restart();
+ s.callbacks.seeking();assert.deepEqual(interrupts,[]);s.callbacks.seeked();
+ s.callbacks.seeking();assert.deepEqual(interrupts,['seek']);
+});
+test('unavailable, rejected and late-replaced restart return false',async()=>{
+ const s=setup();assert.equal(await s.controller.restart(),false);
+ s.update(1);s.video.play=()=>Promise.reject(new Error('blocked'));
+ assert.equal(await s.controller.restart(),false);
+ let resolve;s.video.play=()=>new Promise(r=>{resolve=r;});const p=s.controller.restart();
+ s.update(2);resolve();assert.equal(await p,false);assert.equal(s.reveals.length,0);
+});
+
+test('starting an untouched clip does not create an unnecessary seek',async()=>{
+ const s=setup();s.update(1);let value=0,writes=0;
+ Object.defineProperty(s.video,'currentTime',{get:()=>value,set:v=>{value=v;writes++;}});
+ await s.controller.restart();assert.equal(writes,0);
+});
+
+test('watch seek hides results without rewinding the native video position',async()=>{
+ const s=setup();s.update(1,true);s.video.currentTime=3.2;
+ s.controller.update({context:1,pitch_id:'849843:1:1',revealed:false,enabled:true,preservePosition:true});
+ assert.equal(s.video.currentTime,3.2);assert(s.elements.sourceLink.hidden);
+ assert.equal(s.reveals.length,0);
 });

@@ -2,6 +2,54 @@
 
 ## 전시 정본 계획 실행 — 2026-10-28
 
+**SITE-view1 공개 완료·수정 권한 반납 — 2026-10-31:** Codex / `codex/site-first-1029` / 제품8baefcd / PR85(main미통합). 관전·상세 기본을 중계 방향(투수→포수)으로 변경하고 포수시점 선택 추가. 추천/실제/미트가로/눈금 일관 변환, 원본좌표·투구ID·공개시점 보존, plate≠포구 명시. Node269·checklist8·사이트정적·Chrome관전/상세/390px·실제Claude Fable 고정검토/델타APPROVE. Sites소스76dd0887·공개v21 성공, 공개2구 재생·양시점/시각유지 확인. [범위](docs/SITE_VIEW_DIRECTION_20261031.md)·[영수증](docs/results/site_fullgame_20261030/view-direction-receipt.json). 팀원·별도Cloudflare 불변. 다음: 추가경기 완성추천 파일 수신/목록 일반화 또는 전체중계 사용가능원본/시각표 확보. 카메라보정·포구좌표검증 완료는 아님.
+
+**SITE-round1 공개 완료·수정 권한 반납 — 2026-10-30:** Codex / `codex/site-first-1029` / 제품2272398 / PR85(main미통합). 관전·상세추천 원형/범례/설명그림 일치, 좌표·겹친순위·공개시점불변. Node257·checklist8(기존Windows인코딩경고1)·사이트정적·Chrome관전/상세/390px·실제Claude Fable고정검토APPROVE. Sites소스af4ce505·공개v20성공, 공개원형마커확인. [전체중계조사](docs/SITE_FULL_VIDEO_SEARCH_20261030.md)·[영수증](docs/results/site_fullgame_20261030/round-markers-receipt.json). Song고정7a460cc0은압축39장면/기록지연조절; 전체영상/262구시각표미확보. Peacock공식2h41m페이지는발견했으나재생/원본파일미확인. 팀원·별도Cloudflare불변. 다음: 전체중계사용가능원본/시각표확보 또는현재261클립시연검수.
+
+**SITE-exhibit1 공개 완료·수정 권한 반납 — 2026-10-30:** Codex / `codex/site-first-1029` / 제품b0ab6e5 / PR85(main미통합). 공식로고5·기능SVG4·홈/경기/안내 시각화·관전로딩/오류/키보드복구를 반영. Node257·checklist8·사이트정적·Chrome1440/800/390/320px·실제Claude Fable5.1 설계/고정/수정본검토PASS. Sites소스f8078b0e·공개v19성공. [변경/검증/한계](docs/SITE_EXHIBITION_POLISH_20261030.md)·[영수증](docs/results/site_fullgame_20261030/exhibition-polish-receipt.json). 기존262구자료/팀원/별도Cloudflare/잠금자료불변. 미트는선택연구로분리, 검증완료로승격없음. 다음: 전체중계원본/시간표 확보 후 연속영상동기화; 사용자시연검수.
+
+**SITE-watch3 공개 완료·수정 권한 반납 — 2026-10-30:** Codex / `codex/site-first-1029` / 제품040ca75 / PR85(main미통합). 승인 여섯 기능(영상옆비교·타석리본·상황한줄·선수/카운트검색·현재공이전동일투수통계·추천/실제/미트가로표시선택)을 기존관전 화면에 반영. Node229(관전47/context13)·site정적·checklist8(Windows출력인코딩경고1)·Chrome PC/390/320px·다른모델고정검토PASS. Sites소스de95dd5c·공개v18성공, 공개영상종료→미트x/실제결과·1구복귀숨김 확인. [기능·시연·한계](docs/SITE_WATCH_UX_20261030.md)·[영수증](docs/results/site_fullgame_20261030/watch-ux-receipt.json). 홈디자인/원본자료/팀원/별도Cloudflare불변. 미트는미검토x만, 영상근거/높이/의도/제구오차완료아님. 다음: 사용자관전검수·채택빌드/공동시험후속은별도조건, CV후속은PLAN범위.
+
+- [x] SITE-watch3. 관전 중심 여섯 기능·미래 결과 차단·같은 투구 연결·표본 통계·다른 모델 검토·기존 Sites 공개v18. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-30 · Codex]`
+
+**SITE-audit1 공개 완료·수정 권한 반납 — 2026-10-30:** Codex / `codex/site-first-1029` / 제품b9efb3a·탭제목68942a1 / PR85(main미통합). 관전진입통일·현재투구링크보존·receiver되감기/재생/오류결과초기화·경기투구탐색바·고정점선참고존·오류복귀. Node164·checklist8·site검사·Chrome8페이지/390px·다른모델고정검토PASS. Sites소스a08f71dd·공개v17 성공(46자산+hosting). [점검·시연](docs/SITE_DEMO_AUDIT_20261030.md)·[영수증](docs/results/site_fullgame_20261030/demo-audit-receipt.json). 전체중계/전경기도착정밀동기화아님. 팀원·별도Cloudflare불변. 추가요청 [공식서비스 비교·개선제안](docs/SITE_BENCHMARK_20261030.md) 완료; 신규기능은미구현. 다음: 현재타석투구리본·간결한추천/실제카드·상황설명 우선, 이후현재경기필터.
+
+**SITE-watch2 공개 완료·수정 권한 반납 — 2026-10-30:** Codex / `codex/site-first-1029` / 제품58baee4 / PR85(main미통합). 첫타석3구 AI프레임구간상한(3.450856/3.466978/3.384211초)에서 실제위치 공개, 구종/판정은종료까지보류. 나머지258연결클립은종료기준. 맞춤진행바·사건마커·±3초·속도/소리/전체화면. Node318(관전32+시점23포함)·체크리스트8·실제Chrome공개도메인도착전후/로컬되감기·390/320px·다른모델 고정검토PASS. Sites소스e713e37c·공개v15성공. [기록](docs/SITE_WATCH_TIMING_20261030.md)·[영수증](docs/results/site_fullgame_20261030/watch-timing-receipt.json). 정확포구정답/사람검증/전경기정밀동기화아님. 팀원·별도Cloudflare불변. 다음: 첫5타석범위 내 미확인클립 사건시각 근거확장.
+
+- [x] SITE-watch2. 첫타석 공도착 위치표시·맞춤재생바·탐색/오류회귀·고정 다른모델 검토·기존Sites 공개v15. 실제 점은플레이트위치이며 포구좌표가아님. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-30 · Codex]`
+
+**SITE-watch1 공개 완료·수정 권한 반납 — 2026-10-30:** Codex / `codex/site-first-1029` / 제품fdc70e5 / PR85(main미통합). 영상 옆 추천·실제플레이트위치·결과를 같은투구ID로 연결, 클립종료공개→5초→다음공·현재타석/경기범위 선택. 탐색시각보존/결과숨김·전환초기화·누락영상정지. Node282(관전통합19)·체크리스트8·Chrome실제PA경계/390px·다른모델(gpt-6.1-terra 호출설정) 고정검토PASS. 제품CI Ubuntu/macOS모두성공(run41028500312). Sites소스c6fbc3dc·공개v14 성공, 공개첫타석3구종료·ID4영역일치 확인. [기록](docs/SITE_WATCH_20261030.md)·[영수증](docs/results/site_fullgame_20261030/watch-receipt.json). 동기화는클립시작/종료기준이며정밀릴리스/포구·실시간·자동CV완료아님. 팀원·별도Cloudflare불변. 다음: 대표클립사건시각 근거조사, SITE-2채택빌드/공동시험은별도조건.
+
+- [x] SITE-watch1. 저장 경기 관전 페이지·영상 옆 추천/실제 위치·타석 간 이어보기·누출/탐색/누락 검사·고정 다른모델 검토·공개v14 완료. 정확한 포구 순간 동기화와 실제 모바일 기기 검수는 미완료. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-30 · Codex]`
+
+**SITE-pa-sequence1 공개 완료·수정 권한 반납 — 2026-10-30:** Codex / `codex/site-first-1029` / 제품57d15fd / PR85(main미통합). 선택한현재공부터 클립종료→결과5초→같은타석 다음구·마지막구정지. 수동전환/정지/탐색/오류/페이지이탈 취소·늦은이벤트 무효화. Node255(순차/영상48)·체크리스트8·실제Chrome3클립/중단/390px/제외구 확인, 다른모델(gpt-6.1-terra 호출설정) 고정57d15fd PASS. Sites소스8174777d·공개v13 성공, 공개도메인첫타석3구완료 확인. [기록](docs/SITE_PA_SEQUENCE_20261030.md)·[영수증](docs/results/site_fullgame_20261030/pa-sequence-receipt.json). 이전a9ad2cd의Ubuntu/macOS CI(run41019359785)는모두성공. 팀원·별도Cloudflare 불변. 다음: 구체 관전 결함 검수 또는 채택빌드 수신 시SITE-2. 추가경기·실시간발행·공동시험최종합격은미완료,요금제/부하는11월유지.
+
+- [x] SITE-pa-sequence1. 한 타석 자동 이어보기·취소/오류/경계 검사·다른모델검토·공개v13 완료. 실제휴대폰/전체클립전수검수/새모델계산 완료는 아니다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-30 · Codex]`
+
+**SITE-zone-nav1 공개 완료·수정 권한 반납 — 2026-10-30:** Codex / `codex/site-first-1029` / 제품a33de5b / PR85(main미통합). 849843 존262구를 ID·선수·SHA 대조해 별도자료로 연결, 결과 공개 뒤 기록 높이/17인치폭/9분할 표시. 첫타석 진입을 전체경기로 통일·옛3구는archive구분, 선택투구URL/새로고침/이력·공통메뉴·모바일복귀·날짜/자료범위 보완. Python85·Node224·Chrome데스크톱/320/390px 확인. 다른모델(gpt-6.1-terra 호출설정) 지적2건 수정·a33de5b 재검토PASS. Sites소스207a7cbd·공개v12 성공/도메인재확인. [기록](docs/SITE_ZONE_NAV_20261030.md)·[영수증](docs/results/site_fullgame_20261030/zone-nav-receipt.json)·[합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6516976749). 원본/추천·팀원·별도Cloudflare·평가잠금·사람보류 불변. 다음: 사용자 관전 흐름 후속, 제외1구 출처/채택화면은 별도 조건.
+
+- [x] SITE-zone-nav1. 사후 기록 존262구·전체 경기 진입·투구 URL 복원·공통 메뉴·모바일 표 넘침 수정, 고정 다른모델검토·공개v12 완료. 실제휴대폰/실시간추론/자동CV/main통합은 아니다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-30 · Codex]`
+
+**SITE-video1 공개 완료·수정 권한 반납 — 2026-10-30:** Codex / `codex/site-first-1029` / 제품12f0e9a / PR85. 849843 전체262구의 기존 공식 클립 대조, 영상261연결·69:2구종불일치1제외. 로컬첫3+공식원격258, 클립종료결과공개·전환초기화·오류수동비교·PC/모바일 확인. Node167·Python56·사이트/미디어SHA·lint 통과, 다른모델(gpt-6.1-terra 호출설정) 고정12f0e9a APPROVE. Sites소스d487b393·공개v11 성공, 공개PA2 실제재생/결과공개 확인. [기록](docs/SITE_GAME_VIDEO_20261030.md)·[영수증](docs/results/site_fullgame_20261030/video-receipt.json). 정확한릴리스/포구동기화·실시간추론·자동CV·main통합은 아니다. 팀원·별도Cloudflare·평가잠금·사람보류 보존. 다음: 제외1구 출처 확인 초안과 순차관전 동선 보완; 추가경기/모델묶음/채택화면은 별도대기.
+
+- [x] SITE-video1. 공식 영상과 저장 추천/결과의 투구별 연결, 불일치/오류 처리·검사·고정검토·공개v11 완료. 기존CV50b의PA2 5클립 연결 포함, 새로운미트점 없음. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-30 · Codex]`
+
+**SITE-fullgame1 공개 완료·수정 권한 반납 — 2026-10-30:** 우리 Codex / `codex/site-first-1029` / PR85, 제품 `7d18fe1`. 받은849843의71타석·262구를 기존PC/모바일 사이트에 연결. 추천246/미지원16·영상3/미연결259, ID결합·공개전숨김·전환초기화·사건확률/WE미제공 유지. Node125·Python22·링크/미디어SHA·실제Chrome/모바일폭·다른모델(gpt-6.1-terra 호출설정) 재검토APPROVE. Sites원격저장복구→소스 `d6e89eb`→공개v10 성공, 공개도메인 전체목록/마지막구/영상종료공개 확인. [기록](docs/SITE_FULL_GAME_20261030.md)·[영수증](docs/results/site_fullgame_20261030/receipt.json). 원문ZIP·팀원·별도Cloudflare시험서버 불변. 다음은 CV50b 기존PA2 5클립 연결, SITE2 채택관전빌드는 별도. 아래10/29배포실패는 보존한 과거 기록.
+
+- [x] SITE-fullgame1. 저장 경기 전체 탐색·추천/결과 연결·출처/미제공 표시·검증·고정 검토·공개v10 완료. 전체 영상·자동CV·실시간연결 완료는 아니다. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6514813816). 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-30 · Codex]`
+
+**SITE-1d 공개 준비 완료·Sites HTTP500으로 배포 미완료·수정 권한 반납 — 2026-10-29:** 사용자 공개 반영 승인. 제품 `2e5a80f` / 우리 `codex/site-first-1029` / PR85. gpt-6.1-terra 고정 검토 APPROVE·Node51·CI Ubuntu/macOS PASS. 공개33자산/manifest 포함34파일 archive 검사. Sites 로컬소스 `f3b97a2` 보존, 일반푸시3회 HTTP500으로 새 저장버전/배포 호출 없음·공개v9 유지. [근거·재개](docs/SITE_PUBLICATION_20261029.md)·[영수증](docs/results/site_publication_20261029/receipt.json). 다음 원격 소스 저장 복구 후 동일 고정본 공개; 전체71타석262구 연결 별도. 팀원·별도 Cloudflare 시험서버·DNS·권한·요금제 불변.
+
+**SITE-1c 로컬 구현·검사 완료, 최종 교차검토 대기·수정 권한 반납 — 2026-10-29:** 우리 Codex / `codex/site-first-1029` / [PR85](https://github.com/Pitcheezy/transition-models/pull/85). 기존 홈 디자인·영상 보존, 예시 확률/점수/교체판단의 제품 표시 제거, 실제 재생 진입과 고정 모델 근거 인용 완료. 사이트 회귀·미디어 SHA·체크리스트8·자산33파일 ZIP/참조·데스크톱/모바일 흐름 확인. 기존 응답·CV 기록·예시 원파일은 보존, 공개 배포 아님. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6491866436) · [기록](docs/SITE_FIRST_20261029.md). 새 변경은 Fable 전송/검토 전이며 기존2건 승인으로 확대하지 않았다. 다음은 고정 수정본 교차검토와 SITE-2 채택 빌드 인수. 팀원/Cloudflare 불변.
+
+- [!] SITE-1c. 예시 숫자의 제품 표시 차단·실제 추천 진입·모델 근거 인용 및 로컬 검사 완료. 기존 홈→경기/재생/안내, 모바일 폭·번들33자산 확인. 최종 다른 모델 검토와 공개 배포는 미완료. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-29 · Codex]`
+
+**SITE-1/SITE-1b 로컬 구현·검사 및 검토 지적 수정, 최종 재검토 대기·수정 권한 반납 — 2026-10-29:** 우리 Codex / `codex/site-first-1029` / [PR85](https://github.com/Pitcheezy/transition-models/pull/85)(PR84 위, main 미통합). 기존 홈을 보존하고 PC·모바일 공통 홈후보/경기/안내와 첫타석 영상 옆 추천·실제 플레이트 위치를 연결했다. 위치51검사(신규14)·전체사이트링크/미디어SHA/기존회귀·체크리스트8·Chrome실제3구 공개/숨김/전환/영상종료/자료초기화·좁은폭 확인. Fable 고정0be7fdd 및 eedf2f2 검토2건 수신·지적 수정. 마지막 수정 후 재검토는 미실행이며 최종 approve 아님. [구현·검토·재현](docs/SITE_FIRST_20261029.md) · [포스터 대조](docs/POSTER_REPO_AUDIT_20261029.md) · [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6491117506). 팀원 코드 읽기만·Cloudflare/공개Site 불변. 다음은 고정 변경분 재검토 후 SITE-2 채택 빌드 연결, CV50b는 후순위로 보존한다.
+
+- [!] SITE-1. 홈·경기선택·이용안내 로컬 초안과 검사 완료. Fable 고정0be7fdd 검토→수정→eedf2f2 재검토에서 기존 지적 해결 확인. 밝은 배경 대비 추가수정은 재검토 전이며 공개 배포와 구분. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-29 · Codex]`
+- [!] SITE-1b. 기존 영상 옆 추천·실제 플레이트 위치 비교, 공개 전 숨김·같은 투구 ID·기권·초기화·반응형 구현 및 검사 완료. 포스터 고정 근거 대조와 권장 문구 기록. Fable eedf2f2 검토의 겹친순위·접근성·예외초기화 지적 수정 및51검사; 최종 재검토 대기. 실제 포구/미트2D·새 모델 계산·공개 배포 아님. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-29 · Codex]`
+- [ ] SITE-2. 채택할 Song 관전 빌드의 고정 커밋·파일 SHA·검토 기록을 기존 #38 흐름으로 인수하고 우리 페이지에서 로컬 연결한다. 경기 목록→관전, 미지원/확인 중/중단/안내/복구 상태를 검증한다. 모델·관전 본체 중복 구현, 상대 코드 수정, 실제 배포는 포함하지 않는다. 입력 대기이며 기존 v4.4를 최신 채택본으로 승격하지 않는다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-29 · Codex]`
+
 **CV50a 완료·수정 권한 반납 — 2026-10-29:** 우리 Codex / `codex/exhibition-replay-1028` / 사전고정`f768510`·코드`acedaed` / 초안PR84(main미통합). PA2 5구 SHA/크기일치·실제PTS2,086프레임·시각표본77장·준비문맥후보5구. 양쪽AI 첫후보5/5일치이나 손목판독불일치1·Claude투수/포수혼동1 제외·새미트점0. 관련Python90·Ruff192·Fable코드검토approve. [결과](docs/CV_PA2_FEASIBILITY_20261029.md)·[영수증](docs/results/exhibition_replay_20261028/pa2_feasibility_v1.json). 기존v3/잠금849844/사람보류/팀원/Cloudflare보존. 다음CV50b: 이5구를 기존재생화면에 연결, 미확인미트는점없이기권표시. 아래는 이전 완료 기록이다.
 
 **CV49c 완료·수정 권한 반납 — 2026-10-29:** 우리 Codex / `codex/exhibition-replay-1028` / 사전고정`669d378`·최종코드`91725bf` / 초안PR84(main미통합). 같은3구15장 문맥·시계열 진단과 현재프레임 비교화면 완료. 양쪽AI 관계요건충족0/15·새미트점0, 지목불일치/기권보존: **미트식별 해결 완료는 아님**. 관련189검사·Ruff192·Chrome15장/30SHA·Fable코드검토2회approve, 크롭픽셀결속 지적수정. [규칙/결과](docs/CV_CONTEXT_SEQUENCE_20261029.md)·[영수증](docs/results/exhibition_replay_20261028/context_sequence_v1.json)·[합격기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6488591949). 기존v2/v3 SHA4개·사람·잠금849844·팀원·Cloudflare불변. 다음CV50a PA2의5구 준비장면조사, 미착수. 최종head CI는 PR84에서별도확인. 아래 CV49b는 이전 완료 기록이다.

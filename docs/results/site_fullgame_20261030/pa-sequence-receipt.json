@@ -1,0 +1,63 @@
+{
+  "schema": "pitcheezy-site-pa-sequence-v1",
+  "task": "SITE-pa-sequence1",
+  "date": "2026-10-30",
+  "base_commit": "a9ad2cd2abad0a737f8d0c3d8e98155e14727dc7",
+  "source_commit": "57d15fde5ebfa3e6d95c9cf0332a4230c49359e9",
+  "acceptance": "https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6518428800",
+  "checks": {
+    "node": 255,
+    "sequence_video": 48,
+    "checklist_python": 8,
+    "site_assets_and_existing_media_hashes": "PASS",
+    "local_browser": [
+      "actual firstPA 3 clips sequentially; final pitch stops",
+      "stop during result wait stays on same pitch",
+      "manual pitch switch cancels and hides result",
+      "390px layout and start/stop",
+      "excluded69:2 button disabled with reason"
+    ],
+    "public_browser": "pitcheezy.com: actual firstPA3clips ended at 849843:1:3, results revealed, sequence stopped at PA boundary; screenshot saved locally",
+    "physical_mobile": "not_tested"
+  },
+  "review": {
+    "requested_model": "gpt-6.1-terra",
+    "runtime_model_id": "not_exposed",
+    "commit": "57d15fd",
+    "result": "PASS",
+    "independent_node_tests": 48
+  },
+  "publication": {
+    "id": "appgdep_6ae455f029e88191a57189727237c03c",
+    "project_id": "appgprj_6ac3665aa5048191ac2b5a012b2c7010",
+    "title": "Pitcheezy · 투구 관측 스튜디오",
+    "version_id": "appgprj_6ac3665aa5048191ac2b5a012b2c7010~appgver_9daa0cdf0d6c819195339c64004a6908",
+    "type": "publish",
+    "status": "succeeded",
+    "url": "https://pitcheezy-pitch-studio.sritone723.chatgpt.site",
+    "has_mcp": false,
+    "screenshot_asset_pointer": null,
+    "provider_deployment_id": "site---6ac3665aa5048191ac2b5a012b2c7010",
+    "failure_message": null,
+    "env_set_revision": 0,
+    "updated_at": "2026-10-30T08:32:02.749161+00:00",
+    "source_commit": "8174777d35e955726d5e1cfa2457bcb48a81e07a",
+    "version_number": 13,
+    "custom_domain": "https://pitcheezy.com",
+    "file_count": 42,
+    "archive_content_hash": "sha256:b5fe25d4b5da15189b2a34cc1f1fc7efe88a7548fbfbf49145da0817356babb9"
+  },
+  "limits": [
+    "Stored results; no new inference or live publishing.",
+    "No exact release/catch synchronization or continuous broadcast.",
+    "Missing or failed video stops; no automatic skipping.",
+    "Partner adopted UI and joint trial completion remain separate.",
+    "No teammate code or separate Cloudflare host change; main not merged."
+  ],
+  "prior_ci": {
+    "commit": "a9ad2cd2abad0a737f8d0c3d8e98155e14727dc7",
+    "run": 41019359785,
+    "ubuntu": "success",
+    "macos": "success"
+  }
+}

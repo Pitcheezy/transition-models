@@ -3,10 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Pitcheezy · 투구 관측 스튜디오</title>
+    <title>CV 연구 기록 — Pitcheezy</title>
     <meta
       name="description"
-      content="포수 미트와 공의 가로 위치를 살펴보고, AI 판독의 검증 결과를 확인하는 투구 분석 데모."
+      content="기존 39구 미트 관측과 별도 2경기·86장의 판독 평가를 보존한 CV 연구 기록. 현재 전체 경기 관전 및 추천 모델 평가와 구분합니다."
     />
     <meta name="theme-color" content="#10233f" />
     <link
@@ -15,28 +15,35 @@
       href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%232869f5'/%3E%3Cpath d='M10 25V8h8a6 6 0 0 1 0 12h-4v5m0-9h4a2 2 0 0 0 0-4h-4z' fill='white'/%3E%3C/svg%3E"
     />
     <link rel="stylesheet" href="styles.css" />
-    <link rel="stylesheet" href="report-theme.css" />
+    <link rel="stylesheet" href="report-theme.css?v=3" />
     <script src="data.js" defer></script>
-    <script src="app.js" defer></script>
+    <script src="app.js?v=2" defer></script>
   </head>
   <body>
     <a class="skip" href="#workspace">본문으로 이동</a>
-    <header class="header">
+    <header class="header report-header">
       <a class="brand" href="./" aria-label="Pitcheezy 홈"
         ><span class="brand-mark">P</span
         ><span
           >PITCHEEZY<span class="brand-caption">PITCH OBSERVATORY</span></span
         ></a
       >
-      <nav aria-label="주요 화면" class="tabs">
+      <nav aria-label="주요 메뉴" class="report-site-nav">
+        <a href="index.html">홈</a><a href="games.html">경기</a><a href="guide.html">이용 안내</a><a href="guide.html#model-evidence">모델 근거</a><a href="report.html#validation" aria-current="page">CV 연구 기록</a>
+      </nav>
+      <span class="demo-label"><a href="watch.html?game=849843">경기 관전으로 돌아가기</a></span>
+      <nav aria-label="CV 연구 기록" class="tabs report-tabs">
         <button class="nav-tab active" data-view="analysis" aria-current="page">
           투구 관측</button
         ><button class="nav-tab" data-view="validation">검증 리포트</button
         ><button class="nav-tab" data-view="story">프로젝트 방향</button>
       </nav>
-      <span class="demo-label"><a href="service.html">분석 스튜디오</a></span>
     </header>
     <main id="workspace">
+      <aside class="research-scope" aria-label="CV 연구 자료 범위">
+        <strong>별도로 보존한 CV 개발·검증 기록입니다.</strong>
+        <p>‘투구 관측’은 컵스 대 파드리스의 기존 39구 기록이며, ‘검증 리포트’는 다른 2경기의 86장 평가입니다. 현재 262구 전체 관전이나 추천 모델의 정확도 평가와는 다릅니다.</p>
+      </aside>
       <section
         id="view-analysis"
         class="view active"
@@ -47,7 +54,7 @@
             <p class="eyebrow">OBSERVE THE PITCH</p>
             <h1 id="analysis-title">미트와 공의 위치를 한눈에.</h1>
             <p class="subheading">
-              한 구씩 확인하는 포수 미트 판독과 투구 위치.
+              기존 개발 자료 39구의 포수 미트 판독과 투구 위치.
             </p>
           </div>
           <button class="quiet-button" id="guide-button">발표 가이드</button>
@@ -61,7 +68,7 @@
               </div>
               <span class="count-tag">39구</span>
             </div>
-            <p class="panel-desc">2026.09.29 · NL 와일드카드 1차전</p>
+            <p class="panel-desc">현지 2026.09.29 · 한국 09.30<br />NL 와일드카드 1차전</p>
             <label class="select-label" for="pitch-filter">표시 상태</label
             ><select id="pitch-filter">
               <option value="all">전체 39구</option>
