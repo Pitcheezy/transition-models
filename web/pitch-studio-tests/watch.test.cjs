@@ -13,7 +13,7 @@ function element(tag = "div") {
   let ownText = "", value = "";
   const classes = new Set(), attributes = new Map(), listeners = new Map();
   const e = { tagName: tag.toUpperCase(), children: [], style: { setProperty(name, value) { this[name] = String(value); } }, hidden: false, disabled: false,
-    complete: true, naturalWidth: 1280,
+    complete: true, naturalWidth: 1280, checked: false, dataset: {},
     classList: { toggle(name, force) { const on = force ?? !classes.has(name); on ? classes.add(name) : classes.delete(name); return on; }, contains: name => classes.has(name) },
     append(child) { this.children.push(child); },
     replaceChildren(...items) { ownText = ""; this.children = items; },
@@ -43,11 +43,13 @@ async function setup({ search = "?game=849843", missing = [], corrupt = [], scop
   const elements = new Map();
   for (const match of html.matchAll(/<([a-z][a-z0-9-]*)\b([^>]*\bid="([^"]+)"[^>]*)>/gi)) {
     const e = element(match[1]); e.hidden = /\bhidden\b/.test(match[2]); e.disabled = /\bdisabled\b/.test(match[2]);
+    e.checked = /\bchecked\b/.test(match[2]);
     elements.set(match[3], e);
   }
   const get = id => { const e = elements.get(id); if (!e) throw new Error(`Missing HTML element: ${id}`); return e; };
   get("watch-play-scope").value = scope;
   get("watch-rate").value = "1";
+  for (const id of ["watch-filter-pitcher", "watch-filter-batter", "watch-filter-count"]) if (elements.has(id)) get(id).value = "all";
   const video = get("pitch-video");
   Object.assign(video, { paused: true, ended: false, currentTime: 0, duration: 7, error: null,
     muted: true, seeking: false, readyState: 4, playbackRate: 1,
@@ -84,7 +86,7 @@ async function setup({ search = "?game=849843", missing = [], corrupt = [], scop
   });
   context.window = context;
   context.addEventListener = window.addEventListener.bind(window);
-  for (const file of ["receiver-fullgame.js", "receiver-game-media.js", "receiver-zones.js", "receiver-location.js", "receiver-media.js", "receiver-video.js", "receiver-sequence.js", "watch-timing.js", "watch.js"])
+  for (const file of ["receiver-fullgame.js", "receiver-game-media.js", "receiver-zones.js", "receiver-location.js", "receiver-media.js", "receiver-video.js", "receiver-sequence.js", "watch-timing.js", "watch-context.js", "watch.js"])
     vm.runInContext(fs.readFileSync(path.join(site, file), "utf8"), context, { filename: file });
   await settle(() => /저장 경기 262구|다시 시작해 주세요/.test(get("watch-load-status").textContent));
   const click = async id => { assert.equal(get(id).disabled, false, `${id} must be enabled`); get(id).emit("click"); await settle(); };
@@ -97,7 +99,9 @@ async function setup({ search = "?game=849843", missing = [], corrupt = [], scop
     const [id, fn] = frames.entries().next().value; frames.delete(id); fn(0, { mediaTime }); await settle();
   };
   const finishSeek = async () => { video.seeking = false; video.emit("seeked"); await settle(); };
-  return { get, video, document, window, location, requests, timers, cancelledTimers, historyCalls, click, select, end, fireTimer, shapes, frames, cancelledFrames, showFrame, finishSeek };
+  const check = async (id, value) => { assert.equal(get(id).disabled, false, `${id} must be enabled`); get(id).checked = value; get(id).emit("change"); await settle(); };
+  const clickElement = async button => { assert(button); assert.equal(button.disabled, false); button.emit("click"); await settle(); };
+  return { get, video, document, window, location, requests, timers, cancelledTimers, historyCalls, click, select, end, fireTimer, shapes, frames, cancelledFrames, showFrame, finishSeek, check, clickElement };
 }
 
 test("initial state joins the exact pitch, candidates and video but hides actual result and recorded zone", async () => {
@@ -441,4 +445,169 @@ test("previous/next and restored URL keep game progress on the selected pitch", 
   await s.click("watch-prev"); assert.equal(s.get("watch-game-scrub").value, "1");
   s.location.search = "?game=849843&pitch=849843%3A2%3A1"; s.window.emit("popstate"); await settle();
   assert.equal(s.get("watch-game-scrub").value, "4");
+});
+
+const descendants = root => root.children.flatMap(child => [child, ...descendants(child)]);
+const pitchButtons = root => descendants(root).filter(item => item.tagName === "BUTTON" && item.getAttribute("data-pitch-id"));
+const pitchButton = (s, container, key) => pitchButtons(s.get(container)).find(button => button.getAttribute("data-pitch-id") === key);
+const selectedKey = s => new URLSearchParams(s.location.search).get("pitch");
+
+test("PA ribbon reveals past pitches but withholds current and future outcomes until clip end", async () => {
+  const s = await setup(), event = firstTiming();
+  assert.deepEqual(pitchButtons(s.get("watch-ribbon")).map(button => button.getAttribute("data-pitch-id")),
+    game.pitches.slice(0, 3).map(row => row.pitch_id));
+  for (const row of game.pitches.slice(0, 3)) assert.match(pitchButton(s, "watch-ribbon", row.pitch_id).textContent, /결과 숨김/);
+  await s.click("watch-toggle"); s.video.currentTime = event.upper_seconds; s.video.emit("timeupdate");
+  assert.match(pitchButton(s, "watch-ribbon", "849843:1:1").textContent, /결과 숨김/);
+  await s.end(); assert.match(pitchButton(s, "watch-ribbon", "849843:1:1").textContent, /스트라이크/);
+  await s.clickElement(pitchButton(s, "watch-ribbon", "849843:1:2"));
+  assert.match(pitchButton(s, "watch-ribbon", "849843:1:1").textContent, /스트라이크/);
+  assert.match(pitchButton(s, "watch-ribbon", "849843:1:2").textContent, /결과 숨김/);
+  assert.match(pitchButton(s, "watch-ribbon", "849843:1:3").textContent, /결과 숨김/);
+  assert.equal(selectedKey(s), "849843:1:2"); assert.equal(s.video.paused, true); assert.equal(s.video.currentTime, 0);
+  assert.equal(s.shapes("location-actual").length, 0);
+  await s.clickElement(pitchButton(s, "watch-ribbon", "849843:1:1"));
+  for (const button of pitchButtons(s.get("watch-ribbon"))) assert.match(button.textContent, /결과 숨김/);
+});
+
+test("ribbon follows the selected PA and situation text changes with the selected pre-pitch state", async () => {
+  const s = await setup(); const firstLine = s.get("watch-situation-line").textContent;
+  assert(firstLine.length > 0); assert.equal(firstLine.includes("루킹 스트라이크"), false);
+  await s.select("watch-pa", "2");
+  assert.deepEqual(pitchButtons(s.get("watch-ribbon")).map(button => button.getAttribute("data-pitch-id")),
+    game.pitches.filter(row => row.at_bat_number === 2).map(row => row.pitch_id));
+  const row = game.pitches.find(row => row.situation.bases !== 0 && row.situation.balls > 0);
+  await s.select("watch-game-scrub", game.pitches.indexOf(row) + 1);
+  assert.notEqual(s.get("watch-situation-line").textContent, firstLine);
+  assert.doesNotMatch(s.get("watch-situation-line").textContent, /mph|파울|헛스윙|홈런|타구 결과/);
+  assert.equal(selectedKey(s), row.pitch_id);
+});
+
+test("filter results paginate the actual pitch IDs and expose metadata, never outcome or actual pitch type", async () => {
+  const s = await setup();
+  const ids = () => pitchButtons(s.get("watch-filter-results")).map(button => button.getAttribute("data-pitch-id"));
+  assert.deepEqual(ids(), game.pitches.slice(0, 12).map(row => row.pitch_id));
+  assert.equal(s.get("watch-filter-prev").disabled, true);
+  assert.doesNotMatch(s.get("watch-filter-results").textContent, /루킹|헛스윙|삼진|파울|안타|포심|싱커|mph/);
+  assert.match(pitchButtons(s.get("watch-filter-results"))[0].textContent, /0볼 0스트라이크/);
+  await s.click("watch-filter-next");
+  assert.deepEqual(ids(), game.pitches.slice(12, 24).map(row => row.pitch_id));
+  assert.equal(selectedKey(s), "849843:1:1");
+  await s.click("watch-filter-prev"); assert.deepEqual(ids(), game.pitches.slice(0, 12).map(row => row.pitch_id));
+});
+
+test("changing filters pauses continuation without selecting a different pitch; clicking a result binds exact ID", async () => {
+  const s = await setup(); await s.click("watch-start"); s.video.currentTime = 1.25;
+  const beforeSource = s.video.getAttribute("src");
+  const pitcher = game.pitches[0].pitcher.id, batter = game.pitches[0].batter.id;
+  await s.select("watch-filter-pitcher", pitcher);
+  assert.equal(s.video.paused, true); assert.equal(s.video.currentTime, 1.25); assert.equal(s.video.getAttribute("src"), beforeSource);
+  assert.equal(s.get("watch-stop").disabled, true); assert.equal(selectedKey(s), "849843:1:1");
+  await s.select("watch-filter-batter", batter); await s.select("watch-filter-count", "0-0");
+  const expected = game.pitches.filter(row => row.pitcher.id === pitcher && row.batter.id === batter && row.situation.balls === 0 && row.situation.strikes === 0);
+  assert.deepEqual(pitchButtons(s.get("watch-filter-results")).map(button => button.getAttribute("data-pitch-id")), expected.slice(0, 12).map(row => row.pitch_id));
+  const target = expected.at(-1); assert.notEqual(target.pitch_id, "849843:1:1");
+  await s.clickElement(pitchButton(s, "watch-filter-results", target.pitch_id));
+  assert.equal(selectedKey(s), target.pitch_id); assert.equal(s.video.currentTime, 0); assert.equal(s.video.paused, true);
+  assert.equal(s.shapes("location-actual").length, 0); assert.equal(s.get("watch-result").classList.contains("is-revealed"), false);
+  await s.click("watch-filter-clear");
+  for (const id of ["watch-filter-pitcher", "watch-filter-batter", "watch-filter-count"]) assert.equal(s.get(id).value, "all");
+  assert.equal(pitchButtons(s.get("watch-filter-results")).length, 12); assert.equal(selectedKey(s), target.pitch_id);
+});
+
+test("an impossible pitcher/batter pair produces an explicit empty filter without changing current data", async () => {
+  const s = await setup();
+  await s.select("watch-filter-pitcher", game.pitches[0].pitcher.id);
+  const opposingPitcherFirst = game.pitches.find(row => row.pitcher.id !== game.pitches[0].pitcher.id);
+  await s.select("watch-filter-batter", opposingPitcherFirst.batter.id);
+  assert.equal(pitchButtons(s.get("watch-filter-results")).length, 0);
+  assert.match(s.get("watch-filter-status").textContent, /0|없/);
+  assert.equal(s.get("watch-filter-next").disabled, true); assert.equal(s.get("watch-filter-prev").disabled, true);
+  assert.equal(selectedKey(s), "849843:1:1"); assert.equal(s.get("watch-candidates").children.length, 3);
+});
+
+test("pitcher history excludes other pitchers, current pitch, and future pitches even after the result is disclosed", async () => {
+  const s = await setup();
+  assert.match(s.get("watch-history-summary").textContent, /0구|0 구|표본\s*0|없/);
+  const opposingPitcherFirst = game.pitches.find(row => row.pitcher.id !== game.pitches[0].pitcher.id);
+  await s.select("watch-game-scrub", game.pitches.indexOf(opposingPitcherFirst) + 1);
+  assert.match(s.get("watch-history-summary").textContent, /0구|0 구|표본\s*0|없/);
+  const current = game.pitches.find(row => row.at_bat_number === 2 && row.pitch_number === 1);
+  await s.select("watch-game-scrub", game.pitches.indexOf(current) + 1);
+  assert.match(s.get("watch-history-summary").textContent, /3구|3 구|표본\s*3/);
+  const historyBefore = s.get("watch-history-list").textContent;
+  for (const row of game.pitches.slice(0, 3)) assert(historyBefore.includes(row.post.actual.pitch_label));
+  assert.match(historyBefore, /96\.3/); assert.match(historyBefore, /86\.4/); assert.match(historyBefore, /97\.6/);
+  assert.match(historyBefore, /mph/);
+  await s.click("watch-toggle"); await s.end();
+  assert.equal(s.get("watch-history-list").textContent, historyBefore);
+  await s.click("watch-next"); assert.match(s.get("watch-history-summary").textContent, /4구|4 구|표본\s*4/);
+});
+
+test("recommendation and actual layer toggles preserve playback and candidate text without leaking hidden actuals", async () => {
+  const s = await setup();
+  assert.equal(s.get("watch-show-recommendations").checked, true);
+  assert.equal(s.get("watch-show-actual").checked, true); assert.equal(s.get("watch-show-mitt").checked, false);
+  await s.click("watch-start"); s.video.currentTime = 1.25;
+  const candidates = s.get("watch-candidates").textContent;
+  await s.check("watch-show-recommendations", false);
+  assert.equal(s.shapes("location-recommended").length, 0); assert.equal(s.get("watch-candidates").textContent, candidates);
+  assert.equal(s.video.paused, false); assert.equal(s.video.currentTime, 1.25); assert.equal(s.get("watch-stop").disabled, false);
+  await s.check("watch-show-recommendations", true); assert(s.shapes("location-recommended").length > 0);
+  await s.check("watch-show-actual", false); await s.check("watch-show-actual", true);
+  assert.equal(s.shapes("location-actual").length, 0); hiddenResult(s);
+  await s.end(); const result = s.get("watch-result").textContent, time = s.video.currentTime;
+  await s.check("watch-show-actual", false);
+  assert.equal(s.shapes("location-actual").length, 0); assert.equal(s.shapes("location-actual-halo").length, 0);
+  assert.match(s.get("watch-coordinate-note").textContent, /숨김|꺼짐/);
+  assert.equal(s.get("watch-result").textContent, result); assert.equal(s.video.currentTime, time);
+  assert.equal(s.get("watch-result").classList.contains("is-revealed"), true);
+  await s.check("watch-show-actual", true); assert.equal(s.shapes("location-actual").length, 1);
+});
+
+test("mitt x is never exposed at arrival; only ended enables its separate horizontal observation", async () => {
+  const s = await setup({ search: "?game=849843&pitch=849843%3A1%3A3" });
+  assert.equal(s.get("watch-mitt-panel").hidden, true); await s.check("watch-show-mitt", true);
+  assert.equal(s.get("watch-mitt-axis").hidden, true);
+  assert.doesNotMatch(s.get("watch-mitt-value").textContent, /-0\.05/);
+  const event = JSON.parse(fs.readFileSync(path.join(site, "game-849843-timing.json"))).records.find(row => row.pitch_id === "849843:1:3");
+  await s.click("watch-toggle"); s.video.currentTime = event.upper_seconds; s.video.emit("timeupdate");
+  assert.equal(s.shapes("location-actual").length, 1); assert.equal(s.get("watch-mitt-axis").hidden, true);
+  assert.doesNotMatch(s.get("watch-mitt-value").textContent, /-0\.05/);
+  await s.end();
+  assert.equal(s.get("watch-mitt-panel").hidden, false); assert.equal(s.get("watch-mitt-axis").hidden, false);
+  assert.match(s.get("watch-mitt-value").textContent, /-0\.05/); assert.match(s.get("watch-mitt-value").textContent, /ft/);
+  assert.match(s.get("watch-mitt-status").textContent, /추정|미검토/);
+  assert.equal(descendants(s.get("watch-location")).includes(s.get("watch-mitt-dot")), false);
+  assert.equal(s.get("pitch-observation-image").hidden, true);
+  s.video.currentTime = 1; s.video.ended = false; s.video.emit("seeking"); await s.finishSeek();
+  assert.equal(s.get("watch-mitt-axis").hidden, true);
+  assert.doesNotMatch(s.get("watch-mitt-value").textContent, /-0\.05/);
+});
+
+test("missing and unavailable mitt observations never reuse an earlier estimated dot", async () => {
+  const s = await setup({ search: "?game=849843&pitch=849843%3A1%3A3" });
+  await s.check("watch-show-mitt", true); await s.click("watch-toggle"); await s.end();
+  assert.equal(s.get("watch-mitt-axis").hidden, false);
+  for (const [key, status] of [["849843:1:1", /없|미제공|연결/], ["849843:2:5", /불가|기권|사용할 수 없|미제공/]]) {
+    await s.select("watch-game-scrub", game.pitches.findIndex(row => row.pitch_id === key) + 1);
+    assert.equal(s.get("watch-mitt-axis").hidden, true);
+    await s.click("watch-toggle"); await s.end();
+    assert.match(s.get("watch-mitt-status").textContent, status);
+    assert.equal(s.get("watch-mitt-axis").hidden, true);
+    assert.doesNotMatch(s.get("watch-mitt-value").textContent, /-0\.05/);
+  }
+});
+
+test("a failed route clears all new context and cannot restore prior data through layer toggles", async () => {
+  const s = await setup({ search: "?game=849843&pitch=849843%3A1%3A3" });
+  await s.check("watch-show-mitt", true); await s.click("watch-toggle"); await s.end();
+  s.location.search = "?game=849844"; s.window.emit("popstate"); await settle();
+  assert.equal(s.get("watch-ribbon").children.length, 0); assert.equal(s.get("watch-filter-results").children.length, 0);
+  assert.equal(s.get("watch-history-list").children.length, 0); assert.equal(s.get("watch-situation-line").textContent, "");
+  assert.equal(s.get("watch-history-summary").textContent, "");
+  assert.equal(s.get("watch-mitt-axis").hidden, true);
+  assert.doesNotMatch(s.get("watch-mitt-value").textContent, /-0\.05/);
+  for (const id of ["watch-show-recommendations", "watch-show-actual", "watch-show-mitt"]) { s.get(id).checked = true; s.get(id).emit("change"); }
+  assert.equal(s.get("watch-location").children.length, 0); assert.equal(s.get("watch-mitt-axis").hidden, true);
 });

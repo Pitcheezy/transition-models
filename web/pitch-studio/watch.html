@@ -7,7 +7,7 @@
     <title>저장 경기 관전 · Pitcheezy</title>
     <link rel="stylesheet" href="product.css?v=12" />
     <link rel="stylesheet" href="receiver.css?v=16" />
-    <link rel="stylesheet" href="watch.css?v=3" />
+    <link rel="stylesheet" href="watch.css?v=4" />
     <script src="receiver-fullgame.js?v=1" defer></script>
     <script src="receiver-game-media.js?v=1" defer></script>
     <script src="receiver-zones.js?v=1" defer></script>
@@ -16,7 +16,8 @@
     <script src="receiver-video.js?v=audit16" defer></script>
     <script src="receiver-sequence.js?v=2" defer></script>
     <script src="watch-timing.js?v=1" defer></script>
-    <script src="watch.js?v=3" defer></script>
+    <script src="watch-context.js?v=1" defer></script>
+    <script src="watch.js?v=4" defer></script>
   </head>
   <body class="watch-page">
     <a class="skip" href="#watch-main">관전 화면으로 이동</a>
@@ -32,6 +33,7 @@
         </div>
         <div id="watch-score" class="watch-score" aria-label="현재 투구 전 경기 상황">경기 상황 확인 중</div>
         <div class="watch-match-meta"><p id="watch-players">선수 정보 확인 중</p><p id="watch-identity">투구 자료 확인 중</p></div>
+        <p id="watch-situation-line" class="watch-situation-line">지금 이 공의 상황을 확인합니다.</p>
       </section>
       <p id="watch-load-status" class="watch-load-status" role="status">저장된 경기 자료를 불러오는 중입니다.</p>
       <div class="watch-toolbar">
@@ -46,6 +48,19 @@
         <input id="watch-game-scrub" type="range" min="1" max="262" step="1" value="1" disabled />
         <p>바를 놓으면 선택한 공의 영상 처음으로 이동합니다. 전체 중계 영상의 시간표는 아닙니다.</p>
       </section>
+      <details class="watch-filters">
+        <summary>선수·카운트로 공 찾기 <span>현재 경기 안에서</span></summary>
+        <div class="watch-filter-fields">
+          <label for="watch-filter-pitcher">투수<select id="watch-filter-pitcher" disabled><option value="all">전체 투수</option></select></label>
+          <label for="watch-filter-batter">타자<select id="watch-filter-batter" disabled><option value="all">전체 타자</option></select></label>
+          <label for="watch-filter-count">볼카운트<select id="watch-filter-count" disabled><option value="all">전체 카운트</option></select></label>
+          <button id="watch-filter-clear" type="button" class="secondary" disabled>조건 초기화</button>
+        </div>
+        <p id="watch-filter-status" role="status">검색 자료 확인 중</p>
+        <div id="watch-filter-results" class="watch-filter-results"></div>
+        <div class="watch-filter-paging"><button id="watch-filter-prev" type="button" class="secondary" disabled>이전 목록</button><button id="watch-filter-next" type="button" class="secondary" disabled>다음 목록</button></div>
+        <p class="watch-filter-note">검색은 투구 전 상황 기준입니다. 이어보기는 선택한 공부터 타석·경기 순서로 진행합니다.</p>
+      </details>
       <div class="watch-stage">
         <section id="pitch-video-section" class="watch-video" aria-labelledby="watch-video-title">
           <div class="watch-panel-heading"><h2 id="watch-video-title">지금 보는 투구</h2><span id="watch-clock" class="watch-clock" aria-label="현재 클립 재생 시각">00:00 / 00:00</span></div>
@@ -92,13 +107,19 @@
         </section>
         <aside class="watch-analysis" aria-labelledby="watch-analysis-title">
           <div class="watch-panel-heading"><h2 id="watch-analysis-title">같은 공, 함께 비교</h2><span id="watch-phase" class="watch-phase" role="status">추천 확인</span></div>
+          <p id="watch-best-summary" class="watch-best-summary">받은 추천을 확인합니다.</p>
+          <fieldset class="watch-layer-controls"><legend>존 표시 선택</legend>
+            <label><input id="watch-show-recommendations" type="checkbox" checked />추천</label>
+            <label><input id="watch-show-actual" type="checkbox" checked />실제 공</label>
+            <label><input id="watch-show-mitt" type="checkbox" />미트 가로 관측</label>
+          </fieldset>
           <div class="watch-analysis-grid">
             <figure class="watch-location-card">
               <figcaption>추천 위치와 실제 공</figcaption>
               <div class="location-legend"><span><i class="legend-recommendation" aria-hidden="true"></i>추천 순위</span><span><i class="legend-actual" aria-hidden="true"></i>실제 공 · 도착 후</span></div>
               <svg id="watch-location" viewBox="0 0 320 330" role="img" aria-label="현재 투구 위치 비교"></svg>
               <p id="watch-zone-note" class="watch-zone-note">기록 존은 결과 공개 뒤 표시합니다.</p>
-              <p id="watch-coordinate-note" class="watch-coordinate-note">실제 공: 홈플레이트 통과 위치 · 포구 지점 아님</p>
+              <details class="watch-coordinate-details"><summary>좌표와 표시 의미</summary><p id="watch-coordinate-note" class="watch-coordinate-note">실제 공: 홈플레이트 통과 위치 · 포구 지점 아님</p><p>추천은 과거 투구 분포의 근사, 실제 공은 홈플레이트 통과 위치입니다. 미트와 측정 평면이 달라 거리 차이를 제구 오차로 계산하지 않습니다.</p></details>
             </figure>
             <section class="watch-recommendations" aria-labelledby="watch-candidates-title">
               <h3 id="watch-candidates-title">이 공의 구종 추천</h3>
@@ -107,7 +128,25 @@
             </section>
           </div>
           <section id="watch-result" class="watch-result" aria-label="현재 공의 실제 결과" hidden></section>
+          <section id="watch-mitt-panel" class="watch-mitt-panel" aria-labelledby="watch-mitt-title" hidden>
+            <h3 id="watch-mitt-title">별도 미트 가로 관측</h3>
+            <p id="watch-mitt-status" role="status">클립 종료 뒤 확인할 수 있습니다.</p>
+            <strong id="watch-mitt-value">—</strong>
+            <div id="watch-mitt-axis" class="watch-mitt-axis" role="img" aria-label="미트 가로 위치" hidden><div class="watch-mitt-track"><i id="watch-mitt-dot"></i></div><div class="watch-mitt-ticks"><span>−2 ft · 왼쪽</span><span>0</span><span>오른쪽 · +2 ft</span></div></div>
+            <p class="watch-mitt-caution">받은 응답의 미검토 AI 가로 추정입니다. 이 영상의 시각·미트 높이·투수 의도는 검증되지 않았습니다.</p>
+          </section>
         </aside>
+        <section class="watch-ribbon-card" aria-labelledby="watch-ribbon-title">
+          <div class="watch-panel-heading"><h2 id="watch-ribbon-title">이 타석의 투구 순서</h2><span>원하는 공을 눌러 이동</span></div>
+          <nav id="watch-ribbon" class="watch-ribbon" aria-label="타석 투구 리본"></nav>
+          <p>이전 공은 기록을 표시합니다. 현재 공과 이후 공의 결과는 영상이 끝날 때까지 숨깁니다.</p>
+        </section>
+        <section class="watch-history-card" aria-labelledby="watch-history-title">
+          <div class="watch-panel-heading"><h2 id="watch-history-title">이 투수의 앞선 선택</h2><span>현재 공 이전 · 이번 경기</span></div>
+          <p id="watch-history-summary">이전 투구 기록 확인 중</p>
+          <div id="watch-history-list" class="watch-history-list"></div>
+          <p class="watch-history-note">실제로 던진 구종의 빈도입니다. 모델 추천 비중·시즌 기록과는 다릅니다. 평균 구속은 기록이 있는 공만 계산합니다.</p>
+        </section>
       </div>
       <details class="watch-boundaries">
         <summary>영상과 추천은 어떻게 맞추나요?</summary>

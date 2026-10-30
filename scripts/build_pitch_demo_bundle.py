@@ -39,6 +39,7 @@ SITE_FILES = (
     "watch.css",
     "watch.js",
     "watch-timing.js",
+    "watch-context.js",
     "game-849843-timing.json",
     "receiver-sample.js",
     "receiver.css",
