@@ -5,6 +5,12 @@ let session = null,
   preparedEnvelope = null,
   rawFiles = [],
   builtInDemo = false;
+const fullGame = () => session?.view().full_game === true;
+function observationFor(view) {
+  return view.full_game
+    ? PitchReceiverFullGame.observation(view)
+    : PitchReceiver.observation(view, window.DEMO_DATA.pitches);
+}
 const pitchVideo = PitchReceiverVideo.create({
   video: node("pitch-video"), section: node("pitch-video-section"),
   frame: node("pitch-video-frame"), missing: node("pitch-video-missing"),
@@ -28,6 +34,10 @@ function clear() {
   builtInDemo = false;
   pitchVideo.update(null);
   node("pitch-tabs").hidden = true;
+  node("game-navigation").hidden = true;
+  node("pa-select").replaceChildren();
+  node("inning-select").replaceChildren();
+  put("game-coverage", "");
   node("receiver-stage").classList.remove("has-video");
   preparedEnvelope = null;
   node("download-prepared").disabled = true;
@@ -121,17 +131,14 @@ function render() {
   if (!session) return;
   const view = session.view(),
     s = view.situation;
-  const currentObservation = PitchReceiver.observation(view, window.DEMO_DATA.pitches);
+  const currentObservation = observationFor(view);
   pitchVideo.update({ context: loadVersion, pitch_id: view.pitch_id, revealed: view.revealed, enabled: builtInDemo,
-    observationAllowed: currentObservation?.status === "key_matched" });
+    observationAllowed: !view.full_game && currentObservation?.status === "key_matched" });
   node("pitch-tabs").hidden = !builtInDemo;
   node("receiver-stage").classList.toggle("has-video", builtInDemo);
-  for (const button of node("pitch-tabs").querySelectorAll("button")) {
-    if (Number(button.dataset.pitch) === view.pitch_number) button.setAttribute("aria-current", "step");
-    else button.removeAttribute("aria-current");
-  }
+  renderNavigation(view);
   node("video-next-pitch").hidden = !builtInDemo || !view.can_next;
-  put("video-next-pitch", `${view.pitch_number + 1}구 보기`);
+  put("video-next-pitch", "다음 투구 보기");
   node("response-workspace").hidden = false;
   put(
     "source-badge",
@@ -188,13 +195,14 @@ function render() {
     candidates.append(item);
     textElement(
       "strong",
-      `${c.rank}. ${c.pitch_label} · ${(c.selection_probability * 100).toFixed(1)}%`,
+      `${c.rank}. ${c.pitch_label} · ${c.selection_probability == null ? "비중 미제공" : `${(c.selection_probability * 100).toFixed(1)}%`}`,
       item,
     );
     const bar = document.createElement("progress");
     bar.className = "selection-bar";
     bar.max = 1;
     bar.value = c.selection_probability;
+    bar.hidden = c.selection_probability == null;
     bar.setAttribute("aria-label", `${c.pitch_label} 구종 선택 비율`);
     item.append(bar);
     textElement(
@@ -210,7 +218,7 @@ function render() {
   post.hidden = !view.revealed;
   node("post-placeholder").hidden = view.revealed;
   if (!view.revealed) return;
-  const a = view.post.actual,
+  const a = view.post?.actual ?? {},
     dl = document.createElement("dl");
   post.append(dl);
   const metric = (label, value) => {
@@ -218,45 +226,47 @@ function render() {
     textElement("dd", value, dl);
   };
   metric("공개된 결과", a.result_label ?? a.event_label ?? "미제공");
+  if (a.event_label) metric("타석 결과", a.event_label);
   metric(
     "실제 구종 / 구속",
-    `${a.pitch_label ?? "미제공"} / ${a.speed_mph === null ? "미제공" : `${a.speed_mph.toFixed(1)} mph`}`,
+    `${a.pitch_label ?? "미제공"} / ${a.speed_mph == null ? "미제공" : `${a.speed_mph.toFixed(1)} mph`}`,
   );
-  metric("공의 플레이트 x", a.x === null ? "미제공" : `${a.x.toFixed(2)} ft`);
-  metric("공의 플레이트 z (지면 기준 높이)", a.z === null ? "미제공" : `${a.z.toFixed(2)} ft`);
-  const we = view.post.we;
+  metric("공의 플레이트 x", a.x == null ? "미제공" : `${a.x.toFixed(2)} ft`);
+  metric("공의 플레이트 z (지면 기준 높이)", a.z == null ? "미제공" : `${a.z.toFixed(2)} ft`);
+  const we = view.post?.we ?? {};
   const percent = (value) =>
-    value === null ? "미제공" : `${(value * 100).toFixed(1)}%`;
+    value == null ? "미제공" : `${(value * 100).toFixed(1)}%`;
   metric(
     "홈팀 승리 기대 (전 → 후)",
     `${percent(we.home_before)} → ${percent(we.home_after)}`,
   );
   metric(
     "홈팀 승리 기대 변화",
-    we.home_delta === null
+    we.home_delta == null
       ? "미제공"
       : `${we.home_delta > 0 ? "+" : ""}${(we.home_delta * 100).toFixed(1)}%p`,
   );
   textElement(
     "p",
-    "투구 직전 → 다음 기록 직전 상태의 홈팀 승리 기대 근사입니다. 경기 마지막 기록은 최종 승패를 사용하며, 볼카운트는 반영하지 않습니다. 선수 책임이나 교체 효과를 뜻하지 않습니다.",
+    view.post?.we ? "투구 직전 → 다음 기록 직전 상태의 홈팀 승리 기대 근사입니다. 경기 마지막 기록은 최종 승패를 사용하며, 볼카운트는 반영하지 않습니다. 선수 책임이나 교체 효과를 뜻하지 않습니다." : "이 저장 응답에는 승리 기대와 사건확률이 제공되지 않았습니다.",
     post,
   ).className = "receiver-note";
-  const observation = PitchReceiver.observation(view, window.DEMO_DATA.pitches);
+  const observation = observationFor(view);
   const labels = {
     synthetic: "합성 자료에는 실제 관측을 연결하지 않습니다.",
     missing: "이 투구의 저장 관측이 없습니다.",
     conflict: "키·선수·구종 대조 불일치 · 좌표 표시 보류",
     unavailable: "기권 · 좌표 없음",
+    estimated: "같은 저장 응답의 미검토 AI 가로 위치 추정 · 영상 대응 미검증",
     key_matched: builtInDemo && view.pitch_id === "849843:1:3"
       ? "미검토 AI 가로 위치 추정 · 키·선수·구종·발췌 영상 대응 확인"
       : "미검토 AI 가로 위치 추정 · 키·선수·구종 일치 · 영상 대응 미검증",
   };
   metric(
-    "우리 저장 미트 x",
+    view.full_game ? "받은 셋업 가로 추정 x" : "우리 저장 미트 x",
     observation.x === null ? "—" : `${observation.x.toFixed(4)} ft`,
   );
-  if (observation.x !== null) {
+  if (observation.x !== null && observation.x >= -2 && observation.x <= 2) {
     const graphic = textElement("div", "", post);
     graphic.className = "mitt-horizontal";
     graphic.setAttribute("role", "img");
@@ -337,6 +347,84 @@ function reportError(error, version) {
   node("import-error").hidden = false;
   node("file-tools").open = true;
 }
+function renderNavigation(view) {
+  node("game-navigation").hidden = !view.full_game;
+  put("video-coverage", view.full_game ? "영상 연결 3 / 262구" : "공식 영상 3 / 3구");
+  if (view.full_game) {
+    put("video-coverage", "영상 연결 3 / 262구");
+    node("pa-select").value = String(view.at_bat_number);
+    put("game-coverage", `전체 ${view.count}구 중 ${view.position}구 · 71타석 · 추천 246구 / 미지원 16구. 영상 미연결 투구도 결과를 공개할 수 있습니다.`);
+  }
+  const tabs = node("pitch-tabs");
+  tabs.setAttribute("aria-label", "현재 타석 투구 선택");
+  tabs.replaceChildren();
+  const pitches = view.full_game
+    ? session.groups().find(g => g.pa === view.at_bat_number).pitches
+    : [1, 2, 3].map(n => ({key:`849843:1:${n}`, pitch_number:n}));
+  for (const pitch of pitches) {
+    const button = textElement("button", `${pitch.pitch_number}구`, tabs);
+    button.type = "button";
+    button.dataset.pitch = pitch.pitch_number;
+    button.dataset.key = pitch.key;
+    if (pitch.key === view.pitch_id) button.setAttribute("aria-current", "step");
+  }
+}
+function fillPaOptions(inning = "all") {
+  const select = node("pa-select");
+  select.replaceChildren();
+  for (const group of session.groups()) {
+    if (inning !== "all" && `${group.inning}-${group.half}` !== inning) continue;
+    const option = textElement("option", `${group.inning}회 ${group.half === "Top" ? "초" : "말"} · ${group.pa}번째 타석 · ${group.batter}`, select);
+    option.value = group.pa;
+  }
+}
+function syncPaFilter() {
+  if (!fullGame()) return;
+  const view = session.view(), filter = node("inning-select");
+  if (filter.value !== "all" && filter.value !== `${view.situation.inning}-${view.situation.half}`) {
+    filter.value = "all";
+    fillPaOptions();
+  }
+}
+async function loadFullGame() {
+  resetRaw();
+  clear();
+  const version = loadVersion;
+  put("import-status", "경기 전체 자료를 불러오는 중입니다.");
+  try {
+    const response = await fetch("game-849843.json?v=1", {credentials:"omit"});
+    if (!response.ok) throw new Error("저장 경기 파일을 불러오지 못했습니다.");
+    const bytes = await response.arrayBuffer();
+    if (bytes.byteLength > MAX_BYTES) throw new Error("경기 파일 크기 초과");
+    const packet = JSON.parse(new TextDecoder("utf-8", {fatal:true}).decode(bytes));
+    const candidate = PitchReceiverFullGame.createSession(packet);
+    if (candidate.view().source.sha256 !== "df606a11c6db465c054252ef8d331aeb23aa21565b4960bd586f3dcf8f62f6b7")
+      throw new Error("영상과 연결할 수신 원문이 다릅니다.");
+    const hash = await sha256(bytes);
+    if (version !== loadVersion) return;
+    session = candidate;
+    builtInDemo = true;
+    const filter = node("inning-select");
+    textElement("option", "전체 이닝", filter).value = "all";
+    const seen = new Set();
+    for (const group of session.groups()) {
+      const key = `${group.inning}-${group.half}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      textElement("option", `${group.inning}회 ${group.half === "Top" ? "초" : "말"}`, filter).value = key;
+    }
+    fillPaOptions();
+    const info = node("source-details");
+    info.hidden = false;
+    textElement("div", `공개용 선별 파일 SHA256: ${hash}`, info);
+    textElement("div", `수신 원응답 SHA256: ${session.view().source.sha256}`, info);
+    textElement("div", "경기 후 저장 응답의 재생입니다. 실행 서버 커밋·실시간 사전 가용성은 미확인입니다.", info);
+    put("import-status", "849843 저장 경기 · 구조·투구 키 검사 통과");
+    render();
+    node("file-tools").open = false;
+    node("response-workspace").focus();
+  } catch (error) { reportError(error, version); }
+}
 async function loadFirstPa(startPitch = 1) {
   resetRaw();
   clear();
@@ -364,11 +452,26 @@ async function loadFirstPa(startPitch = 1) {
   }
 }
 node("load-first-pa").addEventListener("click", () => loadFirstPa());
-for (const button of node("pitch-tabs").querySelectorAll("button")) {
-  button.addEventListener("click", () => loadFirstPa(Number(button.dataset.pitch)));
-}
+node("load-full-game").addEventListener("click", loadFullGame);
+node("pitch-tabs").addEventListener("click", (event) => {
+  const button = event.target.closest("button[data-key]");
+  if (!button) return;
+  if (fullGame()) { session.select(button.dataset.key); render(); }
+  else loadFirstPa(Number(button.dataset.pitch));
+});
+node("pa-select").addEventListener("change", () => {
+  if (!fullGame()) return;
+  const group = session.groups().find(g => g.pa === Number(node("pa-select").value));
+  if (group) { session.select(group.keys[0]); render(); }
+});
+node("inning-select").addEventListener("change", () => {
+  if (!fullGame()) return;
+  fillPaOptions(node("inning-select").value);
+  const group = session.groups().find(g => g.pa === Number(node("pa-select").value));
+  if (group) { session.select(group.keys[0]); render(); }
+});
 node("video-next-pitch").addEventListener("click", () => {
-  if (builtInDemo && session?.view().can_next) { session.next(); render(); }
+  if (builtInDemo && session?.view().can_next) { session.next(); syncPaFilter(); render(); }
 });
 for (const link of document.querySelectorAll(".video-jump")) {
   link.addEventListener("click", (event) => {
@@ -540,11 +643,14 @@ node("hide-pitch").addEventListener("click", () => {
 });
 node("next-pitch").addEventListener("click", () => {
   session?.next();
+  syncPaFilter();
   render();
 });
 node("previous-pitch").addEventListener("click", () => {
   session?.previous();
+  syncPaFilter();
   render();
 });
 if (new URLSearchParams(window.location.search).get("demo") === "849843-pa1")
   loadFirstPa(Number(new URLSearchParams(window.location.search).get("pitch")) || 1);
+else if (new URLSearchParams(window.location.search).get("game") === "849843") loadFullGame();

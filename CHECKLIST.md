@@ -2,6 +2,10 @@
 
 ## 전시 정본 계획 실행 — 2026-10-28
 
+**SITE-fullgame1 진행 중 — 2026-10-30:** 우리 Codex / `codex/site-first-1029`, 기준 `ceaf9ab`. 받은 849843의 71타석·262구를 기존 PC/모바일 재생 화면에 연결한다. 합격: 추천246/미지원16 재집계·ID 유일결합·공개 전 결과/setup 숨김·타석/투구 전환 초기화·영상3구/미연결259구 구분·관련 회귀·다른 모델 검토. 공개용 allowlist 자료만 선별하며 원문 ZIP·팀원·Cloudflare는 변경하지 않는다. GitHub 플러그인 board 댓글403은 우편 없음으로 취급하지 않으며 CLI 대체를 확인한다.
+
+- [ ] SITE-fullgame1. 저장 경기 전체 탐색·추천/결과 연결·출처/미제공 표시·검증·고정 검토. 공개 배포 성공은 별도 기록한다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-30 · Codex]`
+
 **SITE-1d 공개 준비 완료·Sites HTTP500으로 배포 미완료·수정 권한 반납 — 2026-10-29:** 사용자 공개 반영 승인. 제품 `2e5a80f` / 우리 `codex/site-first-1029` / PR85. gpt-6.1-terra 고정 검토 APPROVE·Node51·CI Ubuntu/macOS PASS. 공개33자산/manifest 포함34파일 archive 검사. Sites 로컬소스 `f3b97a2` 보존, 일반푸시3회 HTTP500으로 새 저장버전/배포 호출 없음·공개v9 유지. [근거·재개](docs/SITE_PUBLICATION_20261029.md)·[영수증](docs/results/site_publication_20261029/receipt.json). 다음 원격 소스 저장 복구 후 동일 고정본 공개; 전체71타석262구 연결 별도. 팀원·별도 Cloudflare 시험서버·DNS·권한·요금제 불변.
 
 **SITE-1c 로컬 구현·검사 완료, 최종 교차검토 대기·수정 권한 반납 — 2026-10-29:** 우리 Codex / `codex/site-first-1029` / [PR85](https://github.com/Pitcheezy/transition-models/pull/85). 기존 홈 디자인·영상 보존, 예시 확률/점수/교체판단의 제품 표시 제거, 실제 재생 진입과 고정 모델 근거 인용 완료. 사이트 회귀·미디어 SHA·체크리스트8·자산33파일 ZIP/참조·데스크톱/모바일 흐름 확인. 기존 응답·CV 기록·예시 원파일은 보존, 공개 배포 아님. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6491866436) · [기록](docs/SITE_FIRST_20261029.md). 새 변경은 Fable 전송/검토 전이며 기존2건 승인으로 확대하지 않았다. 다음은 고정 수정본 교차검토와 SITE-2 채택 빌드 인수. 팀원/Cloudflare 불변.

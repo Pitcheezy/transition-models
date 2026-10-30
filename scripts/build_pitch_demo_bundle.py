@@ -23,6 +23,8 @@ SITE_FILES = (
     "guide.html",
     "product.css",
     "receiver-contract.js",
+    "receiver-fullgame.js",
+    "game-849843.json",
     "receiver-demo-849843.js",
     "receiver-location.js",
     "receiver-media.js",

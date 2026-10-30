@@ -3,18 +3,19 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>받은 모델 결과 · Pitcheezy</title>
+    <title>경기 전체 재생 · Pitcheezy</title>
     <meta name="theme-color" content="#091811" />
     <link rel="stylesheet" href="product.css?v=11" />
-    <link rel="stylesheet" href="receiver.css?v=10" />
+    <link rel="stylesheet" href="receiver.css?v=11" />
     <script src="data.js" defer></script>
     <script src="receiver-contract.js?v=6" defer></script>
+    <script src="receiver-fullgame.js?v=1" defer></script>
     <script src="receiver-location.js?v=2" defer></script>
     <script src="receiver-sample.js" defer></script>
     <script src="receiver-demo-849843.js" defer></script>
     <script src="receiver-media.js?v=8" defer></script>
     <script src="receiver-video.js?v=8" defer></script>
-    <script src="receiver.js?v=10" defer></script>
+    <script src="receiver.js?v=11" defer></script>
   </head>
   <body>
     <a class="skip" href="#receiver">본문으로 이동</a>
@@ -30,27 +31,28 @@
     </header>
     <main id="receiver" class="receiver-main">
       <div class="receiver-heading">
-        <span class="eyebrow">ONE AT BAT · MODEL RESULTS</span>
-        <h1>첫 타석,<br />세 번의 선택.</h1>
+        <span class="eyebrow">ONE GAME · EVERY PITCH</span>
+        <h1>한 경기,<br />262번의 선택.</h1>
         <p>
           전달받은 추천·결과 파일을 확인하고, 같은 투구의 미트 관측과 나란히
           살펴봅니다.
         </p>
       </div>
       <section class="featured-pa" aria-labelledby="featured-title">
-        <span class="eyebrow">2026.09.29 · FIRST AT BAT</span>
+        <span class="eyebrow">2026.09.29 · SAVED GAME REPLAY</span>
         <h2 id="featured-title">
           시카고 컵스 <span>@</span> 샌디에이고 파드리스
         </h2>
         <p class="featured-matchup">
-          Michael King <span>vs</span> Pete Crow-Armstrong
+          71타석 <span>·</span> 저장된 실제 투구 262구
         </p>
         <p>
-          공식 투구 영상 세 구와 제공받은 모델 응답을 연결했습니다.
-          추천을 살펴보고, 실제 투구를 재생한 뒤 결과를 확인하세요.
+          이닝과 타석을 골라 추천을 먼저 보고 실제 결과를 공개하세요.
+          추천 246구·미지원 16구이며, 영상은 첫 타석 3구에 연결되어 있습니다.
         </p>
-        <button id="load-first-pa" class="primary">
-          첫 타석 처음부터 보기
+        <button id="load-full-game" class="primary">경기 전체 열기</button>
+        <button id="load-first-pa" class="secondary">
+          첫 타석 영상부터 보기
         </button>
         <a class="video-jump" href="receiver.html?demo=849843-pa1&amp;pitch=3#response-workspace">3구 미트 관측으로 바로 가기</a>
         <p class="scientific-note">
@@ -62,19 +64,18 @@
           <summary>이 자료의 범위와 버전</summary>
           <p>
             경기 전체 추천 제공률: 246 / 262구 (93.89%). 정확도가 아닙니다. 이
-            화면에는 첫 타석 3구만 연결했습니다.
+            저장 응답의 71타석·262구를 연결했습니다. 영상 연결은 3구이며, 나머지 259구는 영상 없이 추천·결과를 볼 수 있습니다.
           </p>
           <p>
             정책: ARM-B P3 (pitch type only), frozen &lt;=2025
             (ML-POLICY-VAL-v1).
           </p>
           <p>
-            자료 생성: 2026-09-30 17:48:53 KST<br />생성 코드 커밋:
+            별도 첫 타석 원응답의 자료 생성: 2026-09-30 17:48:53 KST<br />첫 타석 생성 코드 커밋:
             <code>2eb718ef13024ad2d98d28e248388db7f8dc1bc9</code>
           </p>
           <p>
-            실행 서버에 로드된 정확한 커밋: 미확인. 생성 버전과 서버 버전은
-            구별합니다.
+            전체 경기 수신본의 실행 서버 커밋은 미확인입니다. 전체 경기와 별도 첫 타석 응답의 출처는 구별합니다. 경기 후 저장 자료이며 당시 실시간 사전 가용성을 검증한 것은 아닙니다.
           </p>
         </details>
       </section>
@@ -230,6 +231,11 @@
         <p id="pitch-identity"></p>
         <div id="current-situation" class="receiver-situation"></div>
         <p id="players" class="receiver-players"></p>
+        <div id="game-navigation" class="game-navigation" hidden>
+          <label>이닝 선택<select id="inning-select"></select></label>
+          <label>타석 선택<select id="pa-select"></select></label>
+          <p id="game-coverage" role="status"></p>
+        </div>
         <nav id="pitch-tabs" class="pitch-tabs" aria-label="첫 타석 투구 선택" hidden>
           <button type="button" data-pitch="1">1구</button>
           <button type="button" data-pitch="2">2구</button>
@@ -251,11 +257,11 @@
         <section id="pitch-video-section" class="pitch-video-section" hidden aria-labelledby="pitch-video-title">
           <div class="pitch-video-heading">
             <div><span class="eyebrow">ACTUAL BROADCAST EXCERPT</span><h3 id="pitch-video-title">같은 투구, 실제 영상</h3></div>
-            <span class="video-scope">공식 영상 3 / 3구</span>
+            <span id="video-coverage" class="video-scope">공식 영상 3 / 3구</span>
           </div>
           <div id="pitch-video-missing" class="pitch-video-missing">
-            <p>이 투구의 영상은 아직 확보하지 못했습니다.</p>
-            <p>확인되지 않은 영상으로 대신하지 않습니다.</p>
+            <p>이 투구의 영상은 아직 연결하지 않았습니다.</p>
+            <p>추천을 확인하고 ‘현재 투구 결과 공개’를 눌러 실제 구종·위치·결과를 비교하세요.</p>
           </div>
           <div id="pitch-video-frame" class="pitch-video-frame" hidden>
             <video id="pitch-video" controls playsinline muted preload="metadata" aria-label="선택한 투구의 실제 영상"></video>

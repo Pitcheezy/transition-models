@@ -481,3 +481,10 @@
     justify-content: center;
   }
 }
+/* Whole-game navigation shares the replay's desktop and mobile layout. */
+.game-navigation { display:grid; grid-template-columns:minmax(130px,1fr) minmax(220px,3fr); gap:12px; margin:20px 0; padding:18px; border:1px solid #496354; border-radius:12px; background:#12251b; }
+.game-navigation[hidden] { display:none; }
+.game-navigation label { display:grid; gap:8px; color:#eff8ef; font-size:.9rem; min-width:0; }
+.game-navigation select { width:100%; min-width:0; padding:12px; border:1px solid #779486; border-radius:6px; color:#f4fff5; background:#142d21; font:inherit; }
+.game-navigation p { grid-column:1/-1; color:#c6d8cc; margin:0; font-size:.85rem; line-height:1.7; }
+@media (max-width:600px) { .game-navigation {grid-template-columns:1fr;} }

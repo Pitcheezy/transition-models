@@ -116,6 +116,7 @@ def check():
             "--test",
             str(ROOT / "tests/js/pitch_receiver.test.cjs"),
             str(ROOT / "tests/js/pitch_receiver_location.test.cjs"),
+            str(ROOT / "tests/js/pitch_fullgame.test.cjs"),
             str(ROOT / "tests/js/pitch_home.test.cjs"),
             str(ROOT / "web/pitch-studio-tests/receiver-intake.test.cjs"),
             str(ROOT / "web/pitch-studio-tests/receiver-first-pa.test.cjs"),
