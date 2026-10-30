@@ -1,0 +1,127 @@
+{
+  "schema": "pitcheezy-site-fullgame-receipt-v1",
+  "date": "2026-10-30",
+  "base_commit": "ceaf9ab8509fccdf607656cab2d20e292f5c99a4",
+  "product_commit": "7d18fe1de50115f76ae0efee8beb41fcc59a0e52",
+  "implementation_commit": "7551da0",
+  "game": {
+    "id": 849843,
+    "plate_appearances": 71,
+    "pitches": 262,
+    "ready": 246,
+    "unsupported": 16,
+    "missing": 0,
+    "video_linked": 3,
+    "video_unlinked": 259,
+    "setup": {
+      "estimated": 27,
+      "unavailable": 12,
+      "missing": 223
+    }
+  },
+  "input": {
+    "zip_sha256": "51af1e8861ac5e7294b185acb3f525fa2b421765152ff2a65abdbb2f92317546",
+    "report_sha256": "154d9cd1cb166552db5975137e2ba431b9ab48f94fcfa6bdd05304f645427c80",
+    "upstream_sha256": "df606a11c6db465c054252ef8d331aeb23aa21565b4960bd586f3dcf8f62f6b7"
+  },
+  "output": {
+    "path": "web/pitch-studio/game-849843.json",
+    "bytes": 594988,
+    "sha256": "89e14e12e0f0a2ae2475aff16b8757486143f6a4586239434a1f8b0be6bb3c22"
+  },
+  "tests": {
+    "node": 125,
+    "python": 22,
+    "check_pitch_studio": "PASS",
+    "media_hashes": "unchanged",
+    "archive": {
+      "files": 36,
+      "assets": 35,
+      "sha256": "2268cda4a92260295b1e5c1690a8122b26682d53cf261155e3fe5ecce2f4f3c9",
+      "bytes": 28962202
+    }
+  },
+  "review": {
+    "configured_model": "gpt-6.1-terra",
+    "model_evidence": "collaboration.spawn_agent model override; reviewer self-description only GPT-6",
+    "first_commit": "7551da0",
+    "finding": "P2 actual fetched asset bytes were not pinned",
+    "fixed_commit": "7d18fe1de50115f76ae0efee8beb41fcc59a0e52",
+    "verdict": "APPROVE",
+    "reviewer_node_tests": 30
+  },
+  "publication": {
+    "source_commit": "d6e89eb71715a169bf61a01390e980c2c6844cf2",
+    "saved": {
+      "id": "appgprj_6ac3665aa5048191ac2b5a012b2c7010~appgver_bfc071c253088191a12b9a136e0eec95",
+      "project_id": "appgprj_6ac3665aa5048191ac2b5a012b2c7010",
+      "version_number": 10,
+      "source": {
+        "commit_sha": "d6e89eb71715a169bf61a01390e980c2c6844cf2"
+      },
+      "archive_storage": {
+        "archive_format": "tar",
+        "sediment_file_id": "file_00000000f37c8206bb25e7a1c3b1d2af",
+        "content_hash": "sha256:236cfc82459b6a26b7ff4a28b0edd88920ad76256430e5f3cfe7256577acc79a",
+        "size_bytes": 29788160,
+        "file_count": 36
+      },
+      "screenshot_url": null,
+      "deployment_id": null
+    },
+    "deployment": {
+      "id": "appgdep_6ae41be6832c81918899fbb58eef093f",
+      "project_id": "appgprj_6ac3665aa5048191ac2b5a012b2c7010",
+      "title": "Pitcheezy · 투구 관측 스튜디오",
+      "version_id": "appgprj_6ac3665aa5048191ac2b5a012b2c7010~appgver_bfc071c253088191a12b9a136e0eec95",
+      "type": "publish",
+      "status": "succeeded",
+      "url": "https://pitcheezy-pitch-studio.sritone723.chatgpt.site",
+      "has_mcp": false,
+      "screenshot_asset_pointer": null,
+      "provider_deployment_id": "site---6ac3665aa5048191ac2b5a012b2c7010",
+      "failure_message": null,
+      "env_set_revision": 0,
+      "updated_at": "2026-10-30T04:24:20.045849+00:00"
+    },
+    "custom_domain_checked": "https://pitcheezy.com/receiver?game=849843"
+  },
+  "browser": {
+    "local": "Windows Chrome via cua_repl",
+    "mobile_viewport": {
+      "width": 390,
+      "height": 844,
+      "document_client_width": 375,
+      "document_scroll_width": 375,
+      "overflow": false
+    },
+    "checks": [
+      "71 PA options",
+      "pre-reveal post/actual dot hidden",
+      "first video ended reveals actual",
+      "PA2 resets post, has5pitch tabs, removes oldvideo src",
+      "no-video manual reveal",
+      "PA41 unsupported no candidate reuse",
+      "PA71 pitch6 final next disabled",
+      "inning1Top PA3end→PA4 resets filter and post",
+      "same-source setupx third pitch; separate firstPA still disabled in fullgame",
+      "old firstPA route/third-mitt controls preserved",
+      "public whole-game file loads and last pitch result visible",
+      "public first official video ended6.999s -> actual revealed; no media error"
+    ],
+    "not_measured": [
+      "actual mobile device",
+      "live inference availability",
+      "independent full official game completeness",
+      "human mitt accuracy",
+      "30-50 simultaneous visitors"
+    ]
+  },
+  "boundaries": {
+    "teammate_modified": false,
+    "cloudflare_trial_modified": false,
+    "live_publisher_connected": false,
+    "raw_private_zip_published": false,
+    "access_mode": "public preserved"
+  }
+}

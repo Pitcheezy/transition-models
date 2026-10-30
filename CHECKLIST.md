@@ -2,9 +2,9 @@
 
 ## 전시 정본 계획 실행 — 2026-10-28
 
-**SITE-fullgame1 진행 중 — 2026-10-30:** 우리 Codex / `codex/site-first-1029`, 기준 `ceaf9ab`. 받은 849843의 71타석·262구를 기존 PC/모바일 재생 화면에 연결한다. 합격: 추천246/미지원16 재집계·ID 유일결합·공개 전 결과/setup 숨김·타석/투구 전환 초기화·영상3구/미연결259구 구분·관련 회귀·다른 모델 검토. 공개용 allowlist 자료만 선별하며 원문 ZIP·팀원·Cloudflare는 변경하지 않는다. GitHub 플러그인 board 댓글403은 우편 없음으로 취급하지 않으며 CLI 대체를 확인한다.
+**SITE-fullgame1 공개 완료·수정 권한 반납 — 2026-10-30:** 우리 Codex / `codex/site-first-1029` / PR85, 제품 `7d18fe1`. 받은849843의71타석·262구를 기존PC/모바일 사이트에 연결. 추천246/미지원16·영상3/미연결259, ID결합·공개전숨김·전환초기화·사건확률/WE미제공 유지. Node125·Python22·링크/미디어SHA·실제Chrome/모바일폭·다른모델(gpt-6.1-terra 호출설정) 재검토APPROVE. Sites원격저장복구→소스 `d6e89eb`→공개v10 성공, 공개도메인 전체목록/마지막구/영상종료공개 확인. [기록](docs/SITE_FULL_GAME_20261030.md)·[영수증](docs/results/site_fullgame_20261030/receipt.json). 원문ZIP·팀원·별도Cloudflare시험서버 불변. 다음은 CV50b 기존PA2 5클립 연결, SITE2 채택관전빌드는 별도. 아래10/29배포실패는 보존한 과거 기록.
 
-- [ ] SITE-fullgame1. 저장 경기 전체 탐색·추천/결과 연결·출처/미제공 표시·검증·고정 검토. 공개 배포 성공은 별도 기록한다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-30 · Codex]`
+- [x] SITE-fullgame1. 저장 경기 전체 탐색·추천/결과 연결·출처/미제공 표시·검증·고정 검토·공개v10 완료. 전체 영상·자동CV·실시간연결 완료는 아니다. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6514813816). 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-30 · Codex]`
 
 **SITE-1d 공개 준비 완료·Sites HTTP500으로 배포 미완료·수정 권한 반납 — 2026-10-29:** 사용자 공개 반영 승인. 제품 `2e5a80f` / 우리 `codex/site-first-1029` / PR85. gpt-6.1-terra 고정 검토 APPROVE·Node51·CI Ubuntu/macOS PASS. 공개33자산/manifest 포함34파일 archive 검사. Sites 로컬소스 `f3b97a2` 보존, 일반푸시3회 HTTP500으로 새 저장버전/배포 호출 없음·공개v9 유지. [근거·재개](docs/SITE_PUBLICATION_20261029.md)·[영수증](docs/results/site_publication_20261029/receipt.json). 다음 원격 소스 저장 복구 후 동일 고정본 공개; 전체71타석262구 연결 별도. 팀원·별도 Cloudflare 시험서버·DNS·권한·요금제 불변.
 
