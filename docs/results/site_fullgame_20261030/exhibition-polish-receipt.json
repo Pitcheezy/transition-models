@@ -1,0 +1,440 @@
+{
+  "task": "SITE-exhibit1",
+  "date": "2026-10-30",
+  "product_commit": "b0ab6e55468a0b826ce3a4dff998921a1b1383cc",
+  "initial_product_commit": "f0fba2620ebb778eb8c8947362a507e4ffc05728",
+  "branch": "codex/site-first-1029",
+  "pull_request": 85,
+  "main_merged": false,
+  "features": [
+    "official team logos x5",
+    "original feature illustrations x4",
+    "first-PA exhibition entry",
+    "research separated from primary replay",
+    "bounded asset loading and manual recovery",
+    "keyboard focus and mobile layout fixes"
+  ],
+  "tests": {
+    "node": {
+      "passed": 257,
+      "watch": 68,
+      "home": 7
+    },
+    "checklist": {
+      "passed": 8,
+      "initial_attempt": "temp directory permission setup failure; workspace basetemp rerun passed"
+    },
+    "site_static": "pass",
+    "internal_references": {
+      "count": 77,
+      "missing": 0,
+      "fixed_commit": "f0fba262"
+    },
+    "browser": {
+      "engine": "Chrome",
+      "viewports": [
+        1440,
+        800,
+        390,
+        320
+      ],
+      "actual_mobile_device": false,
+      "observed": [
+        "8 page mobile DOM checks",
+        "no final horizontal overflow",
+        "5 logos and 4 illustrations loaded",
+        "first pitch playback/end/rewind resets results",
+        "invalid route restores first pitch",
+        "keyboard ribbon focus retained"
+      ],
+      "public_verified": true,
+      "public_observed": [
+        "normal custom domain homepage version19 after refresh",
+        "four feature images and eight logo instances loaded",
+        "games and guide assets loaded",
+        "first pitch video ended and actual result visible",
+        "rewind to zero hides result"
+      ]
+    }
+  },
+  "review": [
+    {
+      "phase": "design",
+      "returncode": 0,
+      "seconds": 54.74,
+      "runtime_models": [
+        "claude-fable-5-1"
+      ],
+      "raw_sha256": "83b2bf5c475a46d773068e64d86a1243d4c8cef0c7aa34e2a400f7ba1b6a741f",
+      "result": "completed; design findings"
+    },
+    {
+      "phase": "final",
+      "returncode": 0,
+      "seconds": 275.44,
+      "runtime_models": [
+        "claude-fable-5-1"
+      ],
+      "raw_sha256": "6df58d19c1bd4e69f0e661a010cc4b586c228c46536ec97466a87ffa8984a663",
+      "result": "conditional approval; six findings"
+    },
+    {
+      "phase": "recheck",
+      "returncode": 0,
+      "seconds": 222.33,
+      "runtime_models": [
+        "claude-fable-5-1"
+      ],
+      "raw_sha256": "d016c8b3b6413c32acf8524d374a421b5f167afe9c27c5226e880812a74f6bc1",
+      "result": "APPROVE"
+    }
+  ],
+  "assets": [
+    {
+      "path": "app.js",
+      "bytes": 23827,
+      "sha256": "85968b2c737854fcc5343a6991feda22a9e5f34d008d91f5bf32fce121e26ed9"
+    },
+    {
+      "path": "data.js",
+      "bytes": 16272,
+      "sha256": "40965036fa9a1a91d4ef8dc282c9f0674dffc50bfc841b24bfb1dbda92239b3d"
+    },
+    {
+      "path": "home.js",
+      "bytes": 2335,
+      "sha256": "e476420c19bf3dbfaaf06462f423d64c8f7751758a2c5ac767f917b40db1566c"
+    },
+    {
+      "path": "index.html",
+      "bytes": 10710,
+      "sha256": "88a63f7b5cf7e914033520650c8c2409e075ef35679e955edc971a21b9d9d8e1"
+    },
+    {
+      "path": "exhibition.html",
+      "bytes": 6751,
+      "sha256": "529b69a774954d53844a3dde31356f6f6f2bc65cbf2eb19e33acd15a2b5bff4b"
+    },
+    {
+      "path": "exhibition.css",
+      "bytes": 24972,
+      "sha256": "5695d5e1339e715230245ee9e6f1db7b322c4ed75c6bb42236d735eb24a3c9de"
+    },
+    {
+      "path": "games.html",
+      "bytes": 7072,
+      "sha256": "6d5457be06d16c8a7170737cde0ee79d0b11af3c337bf4565a7ff2193a846871"
+    },
+    {
+      "path": "guide.html",
+      "bytes": 15033,
+      "sha256": "472329952125b9f767dddb7e30d9520d961bc27dc9ab06af84d3effb46b1c744"
+    },
+    {
+      "path": "product.css",
+      "bytes": 17241,
+      "sha256": "327121dc38b7fc91816a9c259dbc26568b02881bf3ff090d11b729b37a99d915"
+    },
+    {
+      "path": "receiver-contract.js",
+      "bytes": 18187,
+      "sha256": "430d93f787f096320d07d9eb05da3d5748349ede3bf3293aded25a6be0f97718"
+    },
+    {
+      "path": "receiver-fullgame.js",
+      "bytes": 10983,
+      "sha256": "b17877fc5c667c34446a2f7c30f76ee1a9b4333c82be22402404c9ed4ee24e66"
+    },
+    {
+      "path": "game-849843.json",
+      "bytes": 594988,
+      "sha256": "89e14e12e0f0a2ae2475aff16b8757486143f6a4586239434a1f8b0be6bb3c22"
+    },
+    {
+      "path": "game-849843-media.json",
+      "bytes": 166436,
+      "sha256": "8680befcbd43b570b1cd2f708e1d767e0e4055a9850dda327ae871219df17e0a"
+    },
+    {
+      "path": "receiver-game-media.js",
+      "bytes": 6969,
+      "sha256": "ff44782dcbd42d4f049e4ffc7f4780fc21168473d2ec63fec52f5edb2d341b30"
+    },
+    {
+      "path": "receiver-zones.js",
+      "bytes": 4891,
+      "sha256": "db4ca97760084ab18a4977ab6fa8612ad2d096e369fe06db44ed77a85f363dd9"
+    },
+    {
+      "path": "receiver-route.js",
+      "bytes": 2007,
+      "sha256": "866dfc77458a9606b1186ee1bffe9daed58a3a95cb019269cc1d810d8ee0453d"
+    },
+    {
+      "path": "game-849843-zones.json",
+      "bytes": 42634,
+      "sha256": "210fd6bac3a0fe6b89c0c066ed29dd9667f6ee5362d933e17329ebc23771ea8b"
+    },
+    {
+      "path": "receiver-demo-849843.js",
+      "bytes": 11439,
+      "sha256": "2ce492bc3b7b132f338d5f45f916ef4a3888e74ee47913bdf8cc2d99d9171328"
+    },
+    {
+      "path": "receiver-location.js",
+      "bytes": 4921,
+      "sha256": "7ac99ddb9e9bc6b79034f3920e5c7235b71a57ce678f67093f3eadf84191c5b8"
+    },
+    {
+      "path": "receiver-media.js",
+      "bytes": 2233,
+      "sha256": "8464f7bfab057ccb309ed4a1ba38053efcabc8f92a440bae372950e7f8f70beb"
+    },
+    {
+      "path": "receiver-video.js",
+      "bytes": 9126,
+      "sha256": "8437bb551c2a77c602f9654b86c51b33f59adf313cf423067173088de882d65d"
+    },
+    {
+      "path": "receiver-sequence.js",
+      "bytes": 5155,
+      "sha256": "50f7674b11b72113e7b124473492746b645637c73e958fb3ea7ca4d82bfa78e2"
+    },
+    {
+      "path": "watch.html",
+      "bytes": 16106,
+      "sha256": "f48a1d84f4d6882efcc6ca5a7937b2e246f303419955eb4c039e28c52d2b308a"
+    },
+    {
+      "path": "watch.css",
+      "bytes": 22456,
+      "sha256": "5dda8814572c3725eb097ad383c861202cb73916e71bbd2e04a759b78b223542"
+    },
+    {
+      "path": "watch.js",
+      "bytes": 32788,
+      "sha256": "de2d99751ea47d8137e0f9d04d06576e1a58cd2571d07d501e5870517944a343"
+    },
+    {
+      "path": "watch-timing.js",
+      "bytes": 2240,
+      "sha256": "7b901e192c296f634675b3c84fb80a9a51f7f1b6c83f2c20267c5c8500ee40de"
+    },
+    {
+      "path": "watch-context.js",
+      "bytes": 6049,
+      "sha256": "d0d361e25b451030385aec58d3f8cae7562c773f221fdba4b9c246c45da9758b"
+    },
+    {
+      "path": "game-849843-timing.json",
+      "bytes": 1146,
+      "sha256": "4126a81ced9ee934a406a7aee69a5798a82f6644e8f04cfd3cec088d947198c6"
+    },
+    {
+      "path": "receiver-sample.js",
+      "bytes": 2946,
+      "sha256": "62c0daa42b271d0da098e3c609ddf5e26f518c5c75a464623b06465ba3d716e9"
+    },
+    {
+      "path": "receiver.css",
+      "bytes": 13569,
+      "sha256": "9b42d0ceae48ddd8bc6bcbbf87f5407e6fe88b84794592e8be890b1349e649d5"
+    },
+    {
+      "path": "receiver.html",
+      "bytes": 19967,
+      "sha256": "007cf387b4f93502c6f5111fbc8858c386596391e353309acf97ec5699325a78"
+    },
+    {
+      "path": "receiver.js",
+      "bytes": 36031,
+      "sha256": "21ab63c62d8db485d74f815772beee1cd229ba5f9560b28c5cf1245269c0465b"
+    },
+    {
+      "path": "report-theme.css",
+      "bytes": 4426,
+      "sha256": "8fd0af663da65392a0cea2e54a405bb439c7727f5822f251beffddefc400cf02"
+    },
+    {
+      "path": "report.html",
+      "bytes": 10206,
+      "sha256": "d5381de93cf452fe089ce6a58a952a2084f36d7db088984ea2be24467fc0f8b5"
+    },
+    {
+      "path": "service.html",
+      "bytes": 2289,
+      "sha256": "96749f84be6818d1ebc329a8218e823ac4503a26496caabb3fe168f4e09af7ba"
+    },
+    {
+      "path": "styles.css",
+      "bytes": 20956,
+      "sha256": "814ee56898526a661e904fdda8afb2e12e34de2bb14d0b3a4fcc2f4705929f54"
+    },
+    {
+      "path": "media/hero-849843-four-pitches-v1.mp4",
+      "bytes": 11571137,
+      "sha256": "f7aa424da1198f645a04d1554e22d2709d511fa5e1dc43ac65673e09b39b8c09"
+    },
+    {
+      "path": "media/team-chc.svg",
+      "bytes": 2321,
+      "sha256": "8fe99678c053859b50adbbe769aade0011ed6b2349962a9963dcc0b6db162aef",
+      "source_url": "https://www.mlbstatic.com/team-logos/112.svg"
+    },
+    {
+      "path": "media/team-sd.svg",
+      "bytes": 1286,
+      "sha256": "c0d5f92ef4a58f097c74aedebb9fd1ff4270217d45b75ef7aa6eeded115131da",
+      "source_url": "https://www.mlbstatic.com/team-logos/135.svg"
+    },
+    {
+      "path": "media/team-phi.svg",
+      "bytes": 2516,
+      "sha256": "465da43739de56c09d5f8ec3328be11e9318f53959cc05979d3ab3d0a547a3bb",
+      "source_url": "https://www.mlbstatic.com/team-logos/143.svg"
+    },
+    {
+      "path": "media/team-atl.svg",
+      "bytes": 2652,
+      "sha256": "11162237c379e6e6e54916ee4eebe4407961b4d37293b71b21868077d1bead0d",
+      "source_url": "https://www.mlbstatic.com/team-logos/144.svg"
+    },
+    {
+      "path": "media/team-tb.svg",
+      "bytes": 2639,
+      "sha256": "b50fd02140a8fe66e57eb5c421fc6847a52abfbc7469bc3099a49d1e09ff77fc",
+      "source_url": "https://www.mlbstatic.com/team-logos/139.svg"
+    },
+    {
+      "path": "media/feature-select.svg",
+      "bytes": 2627,
+      "sha256": "15693bd4150298704d12dc557c2f5659edd63ef686973dd030057eeef9d98ae7"
+    },
+    {
+      "path": "media/feature-recommend.svg",
+      "bytes": 2583,
+      "sha256": "5b6391c5417450f820da633ae6ff94c7841e9dad66af9083776e7dc56dca7cc6"
+    },
+    {
+      "path": "media/feature-compare.svg",
+      "bytes": 2518,
+      "sha256": "8b70e08c9395a5655b8e2163fe0b0dc9a62dda2593d00c6411a1ac49385e9c3e"
+    },
+    {
+      "path": "media/feature-evidence.svg",
+      "bytes": 2417,
+      "sha256": "f67fd465d4eae84371d5f0d6c9e86bda2f9e62fd678ba02ef49383594626a090"
+    },
+    {
+      "path": "media/pitch-849843-1-1-official.jpg",
+      "bytes": 188744,
+      "sha256": "cb996e01792960cf0e10a6a84689b06a4f6ae0b158802f997492aadc1fe8fcaa"
+    },
+    {
+      "path": "media/pitch-849843-1-1-official.mp4",
+      "bytes": 5139146,
+      "sha256": "78c7325e6d79afc13f2c1990262e2872483db907283c7571a6a2c468d0a7ca42"
+    },
+    {
+      "path": "media/pitch-849843-1-2-official.jpg",
+      "bytes": 183409,
+      "sha256": "90360e50aeb7a7f2202333fa67b2f5d09b3760af50bacf69eaa19d8a5be85f00"
+    },
+    {
+      "path": "media/pitch-849843-1-2-official.mp4",
+      "bytes": 3788892,
+      "sha256": "989cdc26ebe9c86d59720519827d3290cbc82984758cb180793e7c3e3353c4b2"
+    },
+    {
+      "path": "media/pitch-849843-1-3-official.jpg",
+      "bytes": 189102,
+      "sha256": "2fb66a6d84c1a41e1e14837b9cd6a32720c7f4c8f77af9b80bf9866ac9e15ac5"
+    },
+    {
+      "path": "media/pitch-849843-1-3-official.mp4",
+      "bytes": 4070010,
+      "sha256": "8e5fbfdd9172eadfb69e3316fbe97d592e7201e3d4ebac4fd1d6e17403420ce5"
+    },
+    {
+      "path": "media/pitch-849843-1-3.jpg",
+      "bytes": 174807,
+      "sha256": "7e85135f29934adf98ef0d2eac1992c6ecb20bfc41016b75bd212296c4def44c"
+    },
+    {
+      "path": "media/pitch-849843-1-3.mp4",
+      "bytes": 1683359,
+      "sha256": "393bc18339e8f64a3e8c70efb43df7412afb5eeb87faf7d707de4bd8a0eeb78d"
+    },
+    {
+      "path": "media/pitch-849843-2-5.jpg",
+      "bytes": 174445,
+      "sha256": "f0a5e613275d21f516f76d1dac3c0e12a222148ccd74c2609c872e7a7f2e8380"
+    },
+    {
+      "path": "media/pitch-849843-2-5.mp4",
+      "bytes": 1748441,
+      "sha256": "e523328fcdd06759f27b15e2e4c0a14e32e3a573552cddafbe6ca355557142ca"
+    }
+  ],
+  "publication": {
+    "source": {
+      "project_id": "appgprj_6ac3665aa5048191ac2b5a012b2c7010",
+      "checkout_path": "C:\\Users\\zpfh1\\Projects\\transition-models\\outputs\\cv_followup_20261005\\pitcheezy-demo-site",
+      "commit_sha": "f8078b0eca4cd2e3ce5e20662d46a58069866386",
+      "archive": "C:/Users/zpfh1/.codex/worktrees/exhibition-replay-1028/transition-models/outputs/site_pa_sequence_20261030/site-exhibit1.tar.gz"
+    },
+    "saved_version": {
+      "id": "appgprj_6ac3665aa5048191ac2b5a012b2c7010~appgver_2f2cf0483dbc8191852274719202b859",
+      "project_id": "appgprj_6ac3665aa5048191ac2b5a012b2c7010",
+      "version_number": 19,
+      "source": {
+        "commit_sha": "f8078b0eca4cd2e3ce5e20662d46a58069866386"
+      },
+      "archive_storage": {
+        "archive_format": "tar",
+        "sediment_file_id": "file_00000000d68082069c6ad8eacd17594f",
+        "content_hash": "sha256:35b5403f8dcf4e233e529961467899b774a8bfa06a5130b59dc09efffbff9109",
+        "size_bytes": 30177280,
+        "file_count": 57
+      },
+      "screenshot_url": null,
+      "deployment_id": null
+    },
+    "deployment": {
+      "id": "appgdep_6ae48e3f62bc8191a57ea6228d96d831",
+      "project_id": "appgprj_6ac3665aa5048191ac2b5a012b2c7010",
+      "title": "Pitcheezy · 투구 관측 스튜디오",
+      "version_id": "appgprj_6ac3665aa5048191ac2b5a012b2c7010~appgver_2f2cf0483dbc8191852274719202b859",
+      "type": "publish",
+      "status": "succeeded",
+      "url": "https://pitcheezy-pitch-studio.sritone723.chatgpt.site",
+      "has_mcp": false,
+      "screenshot_asset_pointer": null,
+      "provider_deployment_id": "site---6ac3665aa5048191ac2b5a012b2c7010",
+      "failure_message": null,
+      "env_set_revision": 0,
+      "updated_at": "2026-10-30T12:32:13.849115+00:00"
+    },
+    "propagation_note": "Initial custom-domain cached HTML was old; normal root returned v19 after refresh. No Cloudflare setting change."
+  },
+  "limits": [
+    "stored game replay; not live inference",
+    "261 clips; no verified continuous broadcast or full-game event timeline",
+    "first 3 arrival interval upper bounds only; remaining locations at clip end",
+    "mitt research is unreviewed horizontal estimate, not validated target/control-error",
+    "illustrations are conceptual UI guidance, not fabricated model outputs"
+  ],
+  "unchanged": [
+    "source game data",
+    "partner repository and API",
+    "separate Cloudflare trial infrastructure",
+    "locked evaluation and human-review holds"
+  ],
+  "review_attempts": [
+    {
+      "result": "DNS ENOTFOUND, no approval",
+      "seconds": 187.79,
+      "raw_sha256": "0afc7587591d7c2e9ba7508228a64092f37891613d0da85db2f5b74977064900"
+    }
+  ]
+}
