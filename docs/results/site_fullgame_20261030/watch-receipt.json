@@ -1,0 +1,65 @@
+{
+  "schema": "pitcheezy-site-watch-v1",
+  "task": "SITE-watch1",
+  "date": "2026-10-30",
+  "base_commit": "b526a274656f8d7e808c599a0dbd2657ab928013",
+  "source_commit": "fdc70e51505ace2c4d27dd702a9b8e7dbb60caa7",
+  "acceptance": "https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6518626070",
+  "checks": {
+    "node": 282,
+    "sequence": 33,
+    "video": 23,
+    "watch_integration": 19,
+    "checklist_python": 8,
+    "site_assets_and_existing_media_hashes": "PASS",
+    "local_browser": [
+      "Actual firstPA to PA2:2 progression",
+      "Video/candidates/location/result use identical pitch ID",
+      "Manual selection hides prior result",
+      "390px viewport: no horizontal overflow"
+    ],
+    "public_browser": "pitcheezy.com/watch?game=849843: actual firstPA3clips ended at 849843:1:3; native ended true, result fastball/strikeout/97.6mph, all four DOM pitch IDs match, sequence stops at PA boundary; screenshot saved locally",
+    "physical_mobile": "not_tested"
+  },
+  "review": {
+    "requested_model": "gpt-6.1-terra",
+    "runtime_model_id": "not_exposed",
+    "commit": "fdc70e5",
+    "result": "PASS",
+    "scope": "read-only fixed diff review, not human evaluation"
+  },
+  "ci": {
+    "commit": "fdc70e51505ace2c4d27dd702a9b8e7dbb60caa7",
+    "run": 41028500312,
+    "ubuntu": "success",
+    "macos": "success"
+  },
+  "publication": {
+    "id": "appgdep_6ae459d0ba708191a472e2fed73357e6",
+    "project_id": "appgprj_6ac3665aa5048191ac2b5a012b2c7010",
+    "title": "Pitcheezy · 투구 관측 스튜디오",
+    "version_id": "appgprj_6ac3665aa5048191ac2b5a012b2c7010~appgver_ea85697aa5ac8191b90a06589c182d94",
+    "type": "publish",
+    "status": "succeeded",
+    "url": "https://pitcheezy-pitch-studio.sritone723.chatgpt.site",
+    "has_mcp": false,
+    "screenshot_asset_pointer": null,
+    "provider_deployment_id": "site---6ac3665aa5048191ac2b5a012b2c7010",
+    "failure_message": null,
+    "env_set_revision": 0,
+    "updated_at": "2026-10-30T08:48:30.415937+00:00",
+    "source_commit": "c6fbc3dc18d2311bc7d06029d281dd338e767426",
+    "version_number": 14,
+    "custom_domain": "https://pitcheezy.com/watch?game=849843",
+    "file_count": 45,
+    "archive_content_hash": "sha256:e1425a75f825a28ee8a8544eb908e900c556380fa0a72a6b9992ac6f55ad78d3"
+  },
+  "limits": [
+    "Pitch-ID and clip-boundary synchronization only, no exact release/catch timestamp.",
+    "Stored results, not live inference or broadcast.",
+    "No new CV output or physical control error.",
+    "Missing 69:2 stops automatic sequence; manual navigation remains available.",
+    "Partner adopted UI, live publishing, joint trial remain separate.",
+    "No teammate or separate Cloudflare host changes; PR85 not merged main."
+  ]
+}
