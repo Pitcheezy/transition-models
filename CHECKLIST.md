@@ -2,7 +2,9 @@
 
 ## 전시 정본 계획 실행 — 2026-10-28
 
-**SITE-pa-sequence1 진행 중 — 2026-10-30:** Codex / `codex/site-first-1029` / 기준a9ad2cd. 사용자 선택 한 타석 이어보기: 클립 종료→결과5초→같은타석 다음구, 마지막구 정지. 수동전환/정지/탐색/오류/페이지이탈 취소·늦은이벤트 무효화 검사 후 고정 다른모델검토·기존Sites 공개반영. 우리 재생 코드/검사/문서만 수정한다. 팀원·별도Cloudflare 불변. 이전a9ad2cd의Ubuntu/macOS CI(run41019359785)는모두성공.
+**SITE-pa-sequence1 공개 완료·수정 권한 반납 — 2026-10-30:** Codex / `codex/site-first-1029` / 제품57d15fd / PR85(main미통합). 선택한현재공부터 클립종료→결과5초→같은타석 다음구·마지막구정지. 수동전환/정지/탐색/오류/페이지이탈 취소·늦은이벤트 무효화. Node255(순차/영상48)·체크리스트8·실제Chrome3클립/중단/390px/제외구 확인, 다른모델(gpt-6.1-terra 호출설정) 고정57d15fd PASS. Sites소스8174777d·공개v13 성공, 공개도메인첫타석3구완료 확인. [기록](docs/SITE_PA_SEQUENCE_20261030.md)·[영수증](docs/results/site_fullgame_20261030/pa-sequence-receipt.json). 이전a9ad2cd의Ubuntu/macOS CI(run41019359785)는모두성공. 팀원·별도Cloudflare 불변. 다음: 구체 관전 결함 검수 또는 채택빌드 수신 시SITE-2. 추가경기·실시간발행·공동시험최종합격은미완료,요금제/부하는11월유지.
+
+- [x] SITE-pa-sequence1. 한 타석 자동 이어보기·취소/오류/경계 검사·다른모델검토·공개v13 완료. 실제휴대폰/전체클립전수검수/새모델계산 완료는 아니다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-30 · Codex]`
 
 **SITE-zone-nav1 공개 완료·수정 권한 반납 — 2026-10-30:** Codex / `codex/site-first-1029` / 제품a33de5b / PR85(main미통합). 849843 존262구를 ID·선수·SHA 대조해 별도자료로 연결, 결과 공개 뒤 기록 높이/17인치폭/9분할 표시. 첫타석 진입을 전체경기로 통일·옛3구는archive구분, 선택투구URL/새로고침/이력·공통메뉴·모바일복귀·날짜/자료범위 보완. Python85·Node224·Chrome데스크톱/320/390px 확인. 다른모델(gpt-6.1-terra 호출설정) 지적2건 수정·a33de5b 재검토PASS. Sites소스207a7cbd·공개v12 성공/도메인재확인. [기록](docs/SITE_ZONE_NAV_20261030.md)·[영수증](docs/results/site_fullgame_20261030/zone-nav-receipt.json)·[합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6516976749). 원본/추천·팀원·별도Cloudflare·평가잠금·사람보류 불변. 다음: 사용자 관전 흐름 후속, 제외1구 출처/채택화면은 별도 조건.
 
