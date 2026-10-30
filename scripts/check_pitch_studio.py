@@ -126,6 +126,7 @@ def check():
             str(ROOT / "web/pitch-studio-tests/receiver-video.test.cjs"),
             str(ROOT / "web/pitch-studio-tests/receiver-sequence.test.cjs"),
             str(ROOT / "web/pitch-studio-tests/watch.test.cjs"),
+            str(ROOT / "web/pitch-studio-tests/watch-timing.test.cjs"),
         ],
         capture_output=True,
         text=True,

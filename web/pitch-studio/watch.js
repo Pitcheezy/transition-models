@@ -4,6 +4,7 @@
   const el = id => document.getElementById(id), video = el("pitch-video");
   let session = null, media = {}, zones = {}, excluded = {}, generation = 1;
   let keys = [], sequence = null, phase = "준비 중", zoneNote = "", sequenceActive = false;
+  let timings = {}, resultReady = false, frameRequest = null, frameEpoch = 0;
   const text = (id, value) => { el(id).textContent = value; };
   const append = (parent, tag, value, className) => {
     const item = document.createElement(tag); item.textContent = value;
@@ -18,7 +19,56 @@
     const row = media[view()?.pitch_id];
     text("watch-clock", row && video.getAttribute("src") === row.video
       ? `${clock(video.currentTime)} / ${clock(video.duration)} · 현재 투구 클립` : "영상 미연결");
+    transport();
   }
+  function timing() { return timings[view()?.pitch_id] || null; }
+  function transport() {
+    const row=media[view()?.pitch_id], duration=video.duration;
+    const ready=Boolean(row && video.getAttribute("src")===row.video && Number.isFinite(duration) && duration>0 && !video.error);
+    el("watch-transport").hidden=!row;
+    for(const id of ["watch-scrub","watch-toggle","watch-back","watch-forward","watch-rate","watch-mute","watch-fullscreen"]) el(id).disabled=!ready;
+    el("watch-toggle").disabled=!row;
+    const fraction=ready?Math.max(0,Math.min(1,video.currentTime/duration)):0;
+    const scrub=el("watch-scrub");scrub.value=String(Math.round(fraction*1000));
+    scrub.style.setProperty("--progress",`${fraction*100}%`);
+    scrub.setAttribute("aria-valuetext",`${clock(video.currentTime)} / ${clock(duration)}`);
+    text("watch-progress-time",`${clock(video.currentTime)} / ${clock(duration)}`);
+    text("watch-toggle",video.error?"↻ 다시 시도":video.paused?"▶ 재생":"Ⅱ 정지");
+    el("watch-toggle").setAttribute("aria-label",video.error?"영상 다시 불러오기":video.paused?"재생":"일시정지");
+    text("watch-mute",video.muted?"소리 켜기":"음소거");
+    el("watch-mute").setAttribute("aria-label",video.muted?"소리 켜기":"음소거");
+    el("watch-mute").setAttribute("aria-pressed",String(Boolean(video.muted)));
+    const event=timing(), valid=ready && event && event.upper_seconds<duration;
+    el("watch-event-marker").hidden=!valid;
+    if(valid) el("watch-event-marker").style.left=`${100*event.upper_seconds/duration}%`;
+    text("watch-event-label",valid?`◆ ${event.label} ${event.upper_seconds.toFixed(2)}초 · AI 프레임 확인 · 실제 위치 표시`
+      :"도착 시점 미확인 · 실제 위치는 클립 종료 후 표시");
+  }
+  function cancelFrame() {
+    frameEpoch++;
+    if(frameRequest!==null && video.cancelVideoFrameCallback) video.cancelVideoFrameCallback(frameRequest);
+    frameRequest=null;
+  }
+  function arrival(time) {
+    const row=media[view()?.pitch_id];
+    if(!session || resultReady || !row || video.error || video.seeking || video.getAttribute("src")!==row.video) return;
+    if(PitchWatchTiming.reached(timing(),time,video.duration) && !view().revealed) {
+      session.reveal(true);phase="실제 위치 공개";render(true);
+    }
+  }
+  function frames() {
+    cancelFrame();
+    if(!video.requestVideoFrameCallback) return;
+    const epoch=frameEpoch, id=binding();
+    const frame=(_,meta)=>{
+      frameRequest=null;
+      if(epoch!==frameEpoch || id!==binding() || video.paused) return;
+      arrival(meta.mediaTime);tick();
+      frameRequest=video.requestVideoFrameCallback(frame);
+    };
+    frameRequest=video.requestVideoFrameCallback(frame);
+  }
+  function hideResult() { resultReady=false;session.reveal(false);phase="추천 확인";render(true); }
   function stop(reason = "manual") { sequence?.stop(reason); }
   function controls() {
     el("watch-pa").disabled = !session;
@@ -35,15 +85,15 @@
     marker:el("pitch-observation-marker"),observationNote:el("pitch-observation-note"),
     sourceLink:el("pitch-video-source")}, completed => {
       if (!session || completed !== binding()) return;
-      session.reveal(true); phase = "결과 공개"; render(true);
+      resultReady=true;session.reveal(true); phase = "결과 공개"; render(true);
     }, {}, {
       onEnded: completed => sequence?.ended(completed),
       onInterrupt: reason => {
         if (!session) return;
         stop(reason);
         if (reason === "seek" || reason === "manual") {
-          session.reveal(false); phase = "추천 확인"; render(true);
-        } else if (reason === "error") { phase = "영상 오류 · 관전 정지"; text("watch-phase", phase); }
+          cancelFrame();hideResult();
+        } else if (reason === "error") { cancelFrame();hideResult();phase = "영상 오류 · 관전 정지"; text("watch-phase", phase); }
       },
     });
   function drawLocations(v) {
@@ -86,11 +136,11 @@
       shape("circle",{cx,cy,r:7,class:"location-actual"});
     }
     text("watch-zone-note", model.zone ? `${v.batter.name} · 기록 존 ${model.zone.bottom.toFixed(2)}–${model.zone.top.toFixed(2)} ft`
-      : zoneNote || "기록 존과 실제 공은 클립 종료 뒤 표시합니다.");
+      : zoneNote || (timing()?"기록 존과 실제 공은 표시된 도착 시점에 공개합니다.":"도착 시점 미확인 · 기록 존과 실제 공은 클립 종료 뒤 표시합니다."));
     const coordinate = p => p.status === "missing" ? "좌표 미제공" : `x ${p.x.toFixed(2)} / z ${p.z.toFixed(2)} ft${p.status==="outside"?" · 도표 밖":""}`;
     const descriptions = model.recommendations.map(p=>`${p.rank}위 ${p.label}: ${coordinate(p)}`);
     text("watch-coordinate-note", model.actual ? `실제 ${coordinate(model.actual)} · 홈플레이트 통과 위치` : "현재 실제 공 위치 숨김 · 추천 근사 위치만 표시");
-    if(model.actual) descriptions.push(`실제 ${model.actual.label}: ${coordinate(model.actual)}`);
+    if(model.actual) descriptions.push(`실제 ${resultReady?model.actual.label:"공 위치"}: ${coordinate(model.actual)}`);
     svg.setAttribute("aria-label",`${v.pitch_id} · 포수 시점 · ${descriptions.join("; ")}`);
   }
   function render(preservePosition=false) {
@@ -118,13 +168,17 @@
     }
     const a=v.post?.actual;
     el("watch-result").hidden=false;
-    text("watch-result",v.revealed && a
+    text("watch-result",resultReady && v.revealed && a
       ? `${a.pitch_label ?? "구종 미제공"} · ${a.result_label ?? a.event_label ?? "결과 미제공"}${a.speed_mph==null?"":` · ${a.speed_mph.toFixed(1)} mph`}${a.event_label && a.event_label!==a.result_label?` · ${a.event_label}`:""}`
-      : "영상이 끝나면 실제 구종·판정·위치를 공개합니다.");
-    el("watch-result").classList.toggle("is-revealed",v.revealed);
+      : v.revealed ? "실제 위치 공개 · 구종·판정·타구 결과는 클립 종료 후 공개합니다." : "실제 위치는 표시된 시점에, 구종·판정·타구 결과는 클립 종료 후 공개합니다.");
+    el("watch-result").classList.toggle("is-revealed",resultReady);
     drawLocations(v);
     clip.update({enabled:true,context:generation,pitch_id:v.pitch_id,revealed:v.revealed,media,
       observationAllowed:false,preservePosition});
+    el("play-pitch-video").hidden=true;
+    if(media[v.pitch_id] && !resultReady) text("pitch-video-status",timing()
+      ? `${v.pitch_number}구 · 공 도착 시점의 실제 위치를 먼저 표시하고 전체 결과는 클립 종료 후 공개합니다.`
+      : `${v.pitch_number}구 · 도착 시점 미확인. 클립 종료 뒤 저장 결과를 공개합니다.`);
     const missing=el("pitch-video-missing");
     missing.textContent=excluded[v.pitch_id]
       ? "구종 기록이 달라 영상을 연결하지 않았습니다. 다른 투구를 고르거나 상세 분석에서 결과를 확인하세요."
@@ -132,7 +186,7 @@
     controls();tick();
   }
   function select(key,historyMode="push") {
-    stop(); session.select(key);phase="추천 확인";render(); remember(historyMode);
+    stop();cancelFrame();resultReady=false;session.select(key);phase="추천 확인";render(); remember(historyMode);
   }
   function remember(mode="push") {
     const query=`?game=849843&pitch=${encodeURIComponent(view().pitch_id)}`;
@@ -147,8 +201,8 @@
         return {enabled:true,binding:binding(),pa:v.at_bat_number,pitchId:v.pitch_id,revealed:v.revealed,
           nextId:order[order.indexOf(v.pitch_id)+1]||null,hasVideo:Boolean(media[v.pitch_id])};
       },
-      startClip:()=>{session.reveal(false);phase="영상 재생";render();return clip.restart();},
-      advance:key=>{session.select(key);phase="추천 확인";render();remember("replace");},
+      startClip:()=>{cancelFrame();resultReady=false;session.reveal(false);phase="영상 재생";render();return clip.restart();},
+      advance:key=>{cancelFrame();resultReady=false;session.select(key);phase="추천 확인";render();remember("replace");},
       onChange:({active,phase:sequencePhase,reason})=>{
         sequenceActive=active;controls();
         text("watch-sequence-status",sequencePhase==="waiting"?"결과 확인 · 5초 뒤 다음 공으로 이어집니다."
@@ -168,7 +222,7 @@
     return {packet:JSON.parse(new TextDecoder("utf-8",{fatal:true}).decode(bytes)),hash:Array.from(new Uint8Array(digest),b=>b.toString(16).padStart(2,"0")).join("")};
   }
   function fail(error) {
-    stop();clip.update(null);session=null;generation++;controls();
+    stop();cancelFrame();resultReady=false;clip.update(null);session=null;generation++;controls();transport();
     for(const id of ["watch-score","watch-players","watch-identity","watch-result","watch-coordinate-note","watch-zone-note"]) text(id,"");
     el("watch-location").replaceChildren();el("watch-candidates").replaceChildren();
     el("watch-pa").replaceChildren();el("watch-pitch").replaceChildren();
@@ -190,8 +244,31 @@
   video.addEventListener("play",()=>{if(session){phase="영상 재생";text("watch-phase",phase);}});
   video.addEventListener("pause",()=>{if(session&&!video.ended&&video.paused){phase="일시정지";text("watch-phase",phase);}});
   video.addEventListener("waiting",()=>{if(session&&!video.paused)text("watch-phase","영상 불러오는 중 · 같은 투구 유지");});
-  video.addEventListener("playing",()=>{if(session)text("watch-phase","영상 재생");});
-  for(const event of ["timeupdate","loadedmetadata","emptied"]) video.addEventListener(event,tick);
+  video.addEventListener("playing",()=>{if(session){text("watch-phase",view().revealed?"실제 위치 공개":"영상 재생");frames();}});
+  video.addEventListener("timeupdate",()=>{if(!video.requestVideoFrameCallback && !video.paused)arrival(video.currentTime);tick();});
+  video.addEventListener("seeked",()=>{arrival(video.currentTime);tick();if(!video.paused)frames();});
+  for(const event of ["loadedmetadata","emptied","play","pause","volumechange","durationchange"]) video.addEventListener(event,tick);
+  function seek(time) {
+    if(!session || !Number.isFinite(video.duration) || video.duration<=0 || !Number.isFinite(time)) return;
+    stop("seek");cancelFrame();hideResult();
+    video.currentTime=Math.max(0,Math.min(video.duration,time));tick();
+  }
+  el("watch-toggle").addEventListener("click",()=>{stop("manual");if(session&&video.ended){cancelFrame();hideResult();}clip.toggle();});
+  el("watch-back").addEventListener("click",()=>seek(video.currentTime-3));
+  el("watch-forward").addEventListener("click",()=>seek(video.currentTime+3));
+  el("watch-scrub").addEventListener("input",()=>seek(Number(el("watch-scrub").value)*video.duration/1000));
+  el("watch-rate").addEventListener("change",()=>{
+    const rate=Number(el("watch-rate").value);if([0.5,0.75,1,1.25].includes(rate))video.playbackRate=rate;
+  });
+  el("watch-mute").addEventListener("click",()=>{video.muted=!video.muted;transport();});
+  el("watch-fullscreen").addEventListener("click",async()=>{
+    try {
+      if(document.fullscreenElement)await document.exitFullscreen();
+      else if(el("pitch-video-section").requestFullscreen)await el("pitch-video-section").requestFullscreen();
+      else if(video.webkitEnterFullscreen)video.webkitEnterFullscreen();
+      else text("watch-event-label","이 브라우저에서는 전체 화면을 지원하지 않습니다.");
+    }catch(_){text("watch-event-label","전체 화면을 열지 못했습니다. 현재 화면에서 재생할 수 있습니다.");}
+  });
   document.addEventListener("visibilitychange",()=>{if(document.hidden){stop();clip.pause();}});
   window.addEventListener("pagehide",()=>{stop();clip.pause();});
   window.addEventListener("popstate",()=>{if(session)try{select(route(),"replace");}catch(error){fail(error);}});
@@ -199,16 +276,18 @@
     try {
       const first=route(),game=await asset("game-849843.json?v=1");
       session=PitchReceiverFullGame.createVerifiedSession(game.packet,game.hash);session.select(first);
-      const extra=await Promise.allSettled([asset("game-849843-media.json?v=1"),asset("game-849843-zones.json?v=1")]);
+      const extra=await Promise.allSettled([asset("game-849843-media.json?v=1"),asset("game-849843-zones.json?v=1"),asset("game-849843-timing.json?v=1")]);
       if(extra[0].status==="fulfilled") try {
         const received=PitchReceiverGameMedia.createVerifiedMedia(extra[0].value.packet,game.packet,extra[0].value.hash,window.PitchReceiverMedia||{});
         media=received.media;excluded=received.excluded;
       } catch (_) { /* No unverified media fallback. */ }
       if(extra[1].status==="fulfilled") try {zones=PitchReceiverZones.createVerifiedZones(extra[1].value.packet,game.packet,extra[1].value.hash);}catch(_){zoneNote="기록 존 확인 실패 · 좌표 격자만 표시";}
       else zoneNote="기록 존 미연결 · 좌표 격자만 표시";
+      if(extra[2].status==="fulfilled")try{timings=PitchWatchTiming.createVerifiedTiming(extra[2].value.packet,media,extra[2].value.hash);}catch(_){ /* Unverified timing must fall back to clip end. */ }
       keys=session.groups().flatMap(g=>g.keys);
+      el("watch-pa").replaceChildren();
       for(const group of session.groups()) append(el("watch-pa"),"option",`${group.inning}회 ${group.half==="Top"?"초":"말"} · PA${group.pa} · ${group.batter}`).value=group.pa;
-      phase="추천 확인";render();remember("replace");
+      phase="추천 확인";render();remember("replace");video.controls=false;
       text("watch-load-status",`저장 경기 262구 · 추천246/미지원16 · 영상${Object.keys(media).length}구 · 기록 자료 재생`);
     } catch(error){fail(error);}
   })();
