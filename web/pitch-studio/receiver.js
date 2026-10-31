@@ -201,6 +201,22 @@ function renderLocations(view) {
   const spokenRows = Array.from(values.children, (row) => row.textContent).join("; ");
   svg.setAttribute("aria-label", `${model.pitch_id} · ${info.label} 위치 비교. ${spokenRows}. ${node("location-state").textContent}`);
 }
+let lastCatalogGame = null;
+function showGameHeader(entry) {
+  const title = node("featured-title"), teams = entry.title.split(" @ ");
+  title.replaceChildren();
+  for (const [index, code] of [entry.away, entry.home].entries()) {
+    if (index) textElement("span", " @ ", title);
+    const logo = document.createElement("img");
+    logo.className = "inline-team-logo";
+    for (const [name, value] of [["src", `media/team-${code.toLowerCase()}.svg`], ["alt", ""], ["width", "40"], ["height", "40"]]) logo.setAttribute(name, value);
+    title.append(logo);
+    textElement("span", ` ${teams[index]}`, title).className = "featured-team";
+  }
+  put("featured-date", `현지 ${entry.local_date} · 저장 경기`);
+  node("legacy-provenance").hidden = entry.game_pk !== 849843;
+  for (const id of ["scientific-note-featured", "scientific-note-stage"]) node(id).hidden = entry.source_kind === "official_record";
+}
 function render(preservePosition = false) {
   if (!session) return;
   const view = session.view(),
@@ -208,23 +224,19 @@ function render(preservePosition = false) {
   const currentObservation = observationFor(view);
   if(view.full_game){
     const entry=PitchGameCatalog.get(view.game.game_pk), summary=view.summary, auto=entry.non_pitch_ids.length;
-    const title=node("featured-title"), teams=entry.title.split(" @ ");
-    title.replaceChildren();
-    for (const [index, code] of [entry.away, entry.home].entries()) {
-      if (index) textElement("span", " @ ", title);
-      const logo=document.createElement("img");
-      logo.className="inline-team-logo";
-      for (const [name, value] of [["src",`media/team-${code.toLowerCase()}.svg`],["alt",""],["width","40"],["height","40"]]) logo.setAttribute(name, value);
-      title.append(logo);
-      textElement("span", ` ${teams[index]}`, title);
-    }
-    put("featured-date",`현지 ${entry.local_date} · 저장 경기`);
+    lastCatalogGame = entry;
+    showGameHeader(entry);
     put("featured-coverage",`${summary.plate_appearances}타석 · ${auto?`실제 투구 ${view.count-auto}구 + 자동 볼 ${auto}건`:`${view.count}구`}`);
     put("featured-description",summary.ready?`추천 ${summary.ready}구 · 미지원 ${summary.unsupported}구. 영상과 같은 공의 실제 기록을 비교하세요.`
       :"영상과 실제 구종·위치·결과를 확인하세요. 이 경기의 추천 파일은 아직 받지 못했습니다.");
-    node("legacy-provenance").hidden=entry.game_pk!==849843;
     for (const id of ["scientific-note-featured", "scientific-note-stage"]) node(id).hidden = view.source.kind === "official_record";
     document.title=`${entry.title} · 상세 분석 · Pitcheezy`;
+  } else if (currentMode !== "archive") {
+    // A sample or a chosen file is not one of the curated games: no team heading, no game notes.
+    put("featured-title", view.source.kind === "synthetic" ? "합성 연결 테스트 자료" : `${view.game.away_team} @ ${view.game.home_team}`);
+    put("featured-date", "저장 경기 자료");
+    node("legacy-provenance").hidden = true;
+    document.title = "투구별 상세 분석 · Pitcheezy";
   }
   pitchVideo.update({ context: loadVersion, pitch_id: view.pitch_id, revealed: view.revealed, enabled: builtInDemo,
     media: view.full_game ? gameMedia : null,
@@ -462,6 +474,7 @@ function reportError(error, version) {
     put("featured-title", "경기를 불러오지 못했습니다");
     put("featured-date", "저장 경기 자료");
     node("legacy-provenance").hidden = true;
+    for (const id of ["scientific-note-featured", "scientific-note-stage"]) node(id).hidden = true;
   }
 }
 
@@ -624,8 +637,9 @@ async function loadFirstPa(startPitch = 1, historyMode = "push") {
   }
 }
 function reopenSelectedGame(){
-  const id=session?.view().game?.game_pk || new URLSearchParams(window.location.search).get("game");
-  return loadFullGame(PitchGameCatalog.get(id)?.first_pitch || PitchReceiverRoute.FIRST);
+  const current = PitchGameCatalog.get(session?.view().game?.game_pk);
+  const fromAddress = PitchGameCatalog.get(new URLSearchParams(window.location.search).get("game"));
+  return loadFullGame((current || lastCatalogGame || fromAddress)?.first_pitch || PitchReceiverRoute.FIRST);
 }
 node("load-first-pa").addEventListener("click", reopenSelectedGame);
 node("load-full-game").addEventListener("click", reopenSelectedGame);
@@ -854,7 +868,11 @@ async function restoreRoute() {
       syncPaFilter();
       render();
       rememberRoute("replace");
-    } else if (route.mode === "game") await loadFullGame(route.pitchId, "replace");
+    } else if (route.mode === "game") {
+      const pending = PitchGameCatalog.get(route.pitchId.split(":")[0]);
+      if (pending) showGameHeader(pending);
+      await loadFullGame(route.pitchId, "replace");
+    }
     else await loadFirstPa(Number(route.pitchId.split(":")[2]), "replace");
   } catch (error) { reportError(error, loadVersion); }
 }

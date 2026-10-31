@@ -929,3 +929,16 @@ test('core load cannot substitute old game after address changes to a different 
   assert.equal(s.video.getAttribute('src'),null);
   assert.equal(s.get('watch-start').disabled,true);
 });
+test('watch filters and date use the same units and dates as the game cards',async()=>{
+  const s=await setup({search:'?game=823407&pitch=823407%3A1%3A1'});
+  assert.equal(s.get('watch-date').textContent,'현지 2026.09.26 · 한국 09.27 · 저장 경기 재생');
+  await s.select('watch-filter-batter','691406');
+  assert.match(s.get('watch-filter-status').textContent,/^16기록 일치/);
+  const c=await setup({search:'?game=849843&pitch=849843%3A1%3A1'});
+  assert.equal(c.get('watch-date').textContent,'현지 2026.09.29 · 한국 09.30 · 저장 경기 재생');
+});
+test('a pitch whose clip was withheld points to the detail page instead of promising a video end',async()=>{
+  const s=await setup({search:'?game=849843&pitch=849843%3A69%3A2'});
+  assert.equal(s.get('watch-result').textContent,'영상이 연결되지 않은 공입니다. 결과는 ‘이 공 상세 분석’에서 확인하세요.');
+  assert.equal(s.get('watch-result').classList.contains('is-revealed'),false);
+});

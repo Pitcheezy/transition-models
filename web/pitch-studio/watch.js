@@ -240,7 +240,7 @@
     const focused=focusedPitch("watch-filter-results");
     const matches=context.matchingKeys({pitcher:el("watch-filter-pitcher").value,batter:el("watch-filter-batter").value,count:el("watch-filter-count").value});
     const pages=Math.max(1,Math.ceil(matches.length/filterSize));filterPage=Math.min(filterPage,pages-1);
-    text("watch-filter-status",matches.length?`${matches.length}구 일치 · ${filterPage+1}/${pages}쪽${matches.includes(view().pitch_id)?"":" · 지금 보는 공은 조건 밖"}`:"조건에 맞는 투구가 없습니다. 조건을 바꾸거나 초기화하세요.");
+    text("watch-filter-status",matches.length?`${matches.length}${unitLabel()} 일치 · ${filterPage+1}/${pages}쪽${matches.includes(view().pitch_id)?"":" · 지금 보는 공은 조건 밖"}`:"조건에 맞는 투구가 없습니다. 조건을 바꾸거나 초기화하세요.");
     el("watch-filter-results").replaceChildren();
     for(const key of matches.slice(filterPage*filterSize,(filterPage+1)*filterSize)){
       const p=metadata.get(key),s=p.situation;
@@ -294,6 +294,7 @@
       ? `${a.pitch_label ?? "구종 미제공"} · ${a.result_label ?? a.event_label ?? "결과 미제공"}${a.speed_mph==null?"":` · ${a.speed_mph.toFixed(1)} mph`}${a.event_label && a.event_label!==a.result_label?` · ${a.event_label}`:""}`
       : v.revealed ? "실제 위치 공개 · 구종·판정·타구 결과는 클립 종료 후 공개합니다."
       : excluded[v.pitch_id]?.reason==="automatic_ball_no_video" ? "영상이 없는 기록입니다. ‘결과 보기’로 공개합니다."
+      : excluded[v.pitch_id] ? "영상이 연결되지 않은 공입니다. 결과는 ‘이 공 상세 분석’에서 확인하세요."
       : "실제 선택은 영상이 끝나면 공개합니다.");
     el("watch-result").classList.toggle("is-revealed",resultReady);
     drawLocations(v);
@@ -508,7 +509,7 @@
         logo.setAttribute("alt","");logo.setAttribute("width","36");logo.setAttribute("height","36");
         append(el("watch-title"),"span",` ${teams[index]}`);
       }
-      text("watch-date",`현지 ${gameEntry.local_date} · 저장 경기 재생`);
+      text("watch-date",`현지 ${gameEntry.local_date.replaceAll("-",".")} · 한국 ${gameEntry.date.slice(5).replace("-",".")} · 저장 경기 재생`);
       document.title=`${gameEntry.title} · 관전 · Pitcheezy`;
       context=PitchWatchContext.create(game.packet.pitches);
       metadata=new Map(game.packet.pitches.map(p=>[p.pitch_id,{pitch_id:p.pitch_id,at_bat_number:p.at_bat_number,pitch_number:p.pitch_number,situation:p.situation,pitcher:p.pitcher,batter:p.batter}]));

@@ -76,7 +76,7 @@ function domElement(tag = "div") {
   return element;
 }
 
-async function receiverDom(search = "?game=849843", { fullGameObservation } = {}) {
+async function receiverDom(search = "?game=849843", { fullGameObservation, failAsset, expectError = false } = {}) {
   const html = fs.readFileSync(path.join(site, "receiver.html"), "utf8"), elements = new Map();
   for (const match of html.matchAll(/<([a-z][a-z0-9-]*)\b([^>]*\bid="([^"]+)"[^>]*)>/gi)) {
     const element = domElement(match[1]); element.hidden = /\bhidden\b/.test(match[2]); element.disabled = /\bdisabled\b/.test(match[2]);
@@ -100,6 +100,7 @@ async function receiverDom(search = "?game=849843", { fullGameObservation } = {}
     TextDecoder, TextEncoder, URLSearchParams,
     setTimeout(fn) { const id = ++timerId; timers.set(id, fn); return id; }, clearTimeout: id => timers.delete(id),
     fetch: async name => {
+      if (failAsset && String(name).split("?")[0] === failAsset) return { ok: false, status: 404, arrayBuffer: async () => new ArrayBuffer(0) };
       const bytes = fs.readFileSync(path.join(site, String(name).split("?")[0]));
       return { ok: true, arrayBuffer: async () => bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength) };
     },
@@ -115,7 +116,7 @@ async function receiverDom(search = "?game=849843", { fullGameObservation } = {}
     if (!get("response-workspace").hidden || !get("import-error").hidden || search === "") break;
     await new Promise(resolve => setTimeout(resolve, 5));
   }
-  assert.equal(get("import-error").hidden, true, get("import-error").textContent);
+  if (!expectError) assert.equal(get("import-error").hidden, true, get("import-error").textContent);
   const fire = async (id, event = "click") => {
     assert.equal(get(id).disabled, false, `${id} must be enabled`);
     await Promise.all(get(id).emit(event)); await new Promise(resolve => setImmediate(resolve));
@@ -290,4 +291,26 @@ test('receiver header, dates, counts and notes describe the loaded game only',as
   assert.equal(c.get('featured-title').children.filter(child=>child.tagName==='IMG').length,2);
   assert.match(c.get('pitch-identity').textContent,/^현지 2026-09-29 · 한국 09-30 · /);
   assert.equal(c.get('scientific-note-featured').hidden,false);
+});
+
+test('a failed added game never shows the Cubs heading or the recommendation notes',async()=>{
+  const s=await receiverDom('?game=849845',{failAsset:'game-849845.json',expectError:true});
+  assert.equal(s.get('import-error').hidden,false);
+  assert.equal(s.get('featured-title').textContent,'경기를 불러오지 못했습니다');
+  assert.equal(s.get('legacy-provenance').hidden,true);
+  assert.equal(s.get('scientific-note-featured').hidden,true);
+  assert.equal(s.get('scientific-note-stage').hidden,true);
+});
+test('team names in the rebuilt heading keep full contrast; only the @ stays muted',async()=>{
+  const s=await receiverDom('?game=849845&pitch=849845%3A1%3A1');
+  const spans=s.get('featured-title').children.filter(child=>child.tagName==='SPAN');
+  assert.deepEqual(spans.map(span=>span.className),['featured-team','','featured-team']);
+});
+test('after the sample, opening the full game returns to the last real game',async()=>{
+  const s=await receiverDom('?game=849845&pitch=849845%3A1%3A1');
+  await s.fire('try-sample');
+  assert.equal(s.get('featured-title').textContent,'합성 연결 테스트 자료');
+  assert.equal(s.get('legacy-provenance').hidden,true);
+  await s.fire('load-full-game');
+  assert.match(s.get('import-status').textContent,/필라델피아 필리스 @ 애틀랜타 브레이브스/);
 });
