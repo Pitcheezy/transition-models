@@ -8,7 +8,8 @@
     <link rel="stylesheet" href="product.css?v=19" />
     <link rel="stylesheet" href="receiver.css?v=21" />
     <link rel="stylesheet" href="watch.css?v=19" />
-    <script src="receiver-fullgame.js?v=1" defer></script>
+    <script src="game-catalog.js?v=22" defer></script>
+    <script src="receiver-fullgame.js?v=22" defer></script>
     <script src="receiver-game-media.js?v=1" defer></script>
     <script src="receiver-zones.js?v=1" defer></script>
     <script src="receiver-location.js?v=5" defer></script>
@@ -17,7 +18,7 @@
     <script src="receiver-sequence.js?v=2" defer></script>
     <script src="watch-timing.js?v=1" defer></script>
     <script src="watch-context.js?v=1" defer></script>
-    <script src="watch.js?v=21" defer></script>
+    <script src="watch.js?v=22" defer></script>
   </head>
   <body class="watch-page">
     <a class="skip" href="#watch-main">관전 화면으로 이동</a>
@@ -29,7 +30,7 @@
       <section class="watch-match" aria-labelledby="watch-title">
         <div class="watch-match-heading">
           <div><span class="watch-replay-badge"><i aria-hidden="true"></i>저장 경기 관전</span><h1 id="watch-title"><img class="watch-team-logo" src="media/team-chc.svg" alt="" width="36" height="36" /> 시카고 컵스 <span>@</span> <img class="watch-team-logo" src="media/team-sd.svg" alt="" width="36" height="36" /> 샌디에이고 파드리스</h1></div>
-          <p class="watch-date">현지 2026.09.29 · 한국 09.30<br /><span>실시간 생중계 아님</span></p>
+          <p id="watch-date" class="watch-date">경기 날짜 확인 중 · 저장 경기 재생</p>
         </div>
         <div id="watch-score" class="watch-score" aria-label="현재 투구 전 경기 상황">경기 상황 확인 중</div>
         <div class="watch-match-meta"><p id="watch-players">선수 정보 확인 중</p><p id="watch-identity">투구 자료 확인 중</p></div>
@@ -134,7 +135,7 @@
           <p class="watch-history-note">실제로 던진 구종의 빈도입니다. 모델 추천 비중·시즌 기록과는 다릅니다. 평균 구속은 기록이 있는 공만 계산합니다.</p>
         </section>
       </div>
-      <details class="watch-explore"><summary>경기 전체에서 다른 공 찾기 <span>262구 · 선수 · 카운트</span></summary>
+      <details class="watch-explore"><summary>경기 전체에서 다른 공 찾기 <span id="watch-explore-count">선수 · 카운트</span></summary>
       <section class="watch-game-timeline" aria-label="경기 전체 투구 선택">
         <div><label for="watch-game-scrub">경기 탐색 <span>투구 단위</span></label><output id="watch-game-position" for="watch-game-scrub">경기 자료 확인 중</output></div>
         <input id="watch-game-scrub" type="range" min="1" max="262" step="1" value="1" disabled />

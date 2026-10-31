@@ -746,13 +746,15 @@ p {
 .scorebug-teams { display:flex; align-items:center; gap:9px; }
 .scorebug-teams img { object-fit:contain; background:#f2f4e9; padding:3px; border-radius:50%; }
 .film-controls .hero-scene-link { display:inline-flex; align-items:center; min-height:44px; color:#e8ffd1; border:1px solid #c2dab66b; background:#081910e8; padding:10px 15px; border-radius:3px; font-size:13px; }
-.game-strip { grid-template-columns:.7fr 1.25fr 1fr; gap:28px; align-items:start; }
+.game-strip { grid-template-columns:minmax(150px,.7fr) repeat(3,minmax(0,1fr)); gap:20px; align-items:stretch; }
 .strip-title>p { color:var(--muted); font-size:13px; margin-top:16px; }
-.playable-game { padding:22px 26px; border:1px solid #617b4d; border-radius:12px; background:linear-gradient(130deg,#213b24,#11251b); }
-.playable-game .team-pair { display:flex; align-items:center; gap:17px; margin:20px 0; }
-.playable-game .team-pair>span { display:flex; align-items:center; gap:10px; }
+.playable-game { min-width:0; padding:22px 20px; border:1px solid #617b4d; border-radius:12px; background:linear-gradient(130deg,#213b24,#11251b); }
+.playable-game .team-pair { display:flex; align-items:center; justify-content:space-between; gap:8px; margin:20px 0; font-size:30px; }
+.playable-game .team-pair>span { display:flex; flex-direction:column; align-items:center; gap:10px; }
 .playable-game .team-pair img { object-fit:contain; padding:7px; background:#eef1e6; border-radius:50%; }
 .tile-cta { display:block; color:var(--lime); font-size:14px; margin-top:20px; }
+.record-game { background:linear-gradient(130deg,#183126,#10241c); border-color:#435f51; }
+.recommendation-pending { display:inline-block; margin-top:8px; border:1px solid #738b78; border-radius:4px; padding:3px 7px; color:#e4e9db; font-size:11px; }
 .research-games { border-left:1px solid var(--line); padding-left:26px; }
 .research-games h3 { margin-top:10px; font-size:19px; }
 .research-games>p:not(.eyebrow) { color:var(--muted); font-size:13px; margin:10px 0 18px; }
@@ -768,7 +770,7 @@ p {
 .evidence-stats .metric-context { display:block; border:0; padding:0; margin-top:8px; font-size:12px; }
 .inline-team-logo { object-fit:contain; vertical-align:middle; padding:4px; border-radius:50%; background:#edf1e7; }
 @media(max-width:1100px) { .game-tile.playable-game:nth-child(2) { border:1px solid #617b4d; padding:22px 26px; } }
-@media(max-width:1100px) { .game-strip { grid-template-columns:1fr 1fr; } .strip-title { grid-column:1/-1; margin:0; } .strip-title h2 br { display:none; } .research-games { padding-left:20px; } }
+@media(max-width:1100px) { .game-strip { grid-template-columns:repeat(3,minmax(0,1fr)); } .strip-title { grid-column:1/-1; margin:0; } .strip-title h2 br { display:none; } .research-games { padding-left:20px; } }
 @media(max-width:620px) {
  .game-strip { grid-template-columns:minmax(0,1fr); gap:23px; }
  .game-tile.playable-game,.game-tile.playable-game:nth-child(2) { display:flex; padding:22px; border:1px solid #617b4d; }

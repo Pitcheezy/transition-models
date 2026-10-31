@@ -173,3 +173,12 @@ test("ambiguous duplicate keys and non-arrays are rejected", () => {
   assert.throws(() => context.create([pitch(0), pitch(0)]), /중복/);
   assert.throws(() => context.create(null), TypeError);
 });
+
+test('automatic balls are shown as records but excluded from actual pitch-type history',()=>{
+  const rows=[pitch(0),pitch(1,{post:actual(null,null,'automatic_ball',null)}),pitch(2)];
+  const model=context.create(rows);
+  assert.equal(model.prior(rows[2].pitch_id).total,1);
+  assert.equal(model.prior(rows[2].pitch_id).types[0].share,1);
+  assert.equal(model.ribbon(rows[1].pitch_id,false)[1].label,'결과 숨김');
+  assert.equal(model.ribbon(rows[1].pitch_id,true)[1].label,'자동 볼');
+});

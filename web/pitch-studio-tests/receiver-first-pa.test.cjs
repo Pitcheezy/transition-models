@@ -249,3 +249,28 @@ test("archive and imported sample cannot masquerade as the full-game watch data 
   for (const id of ["receiver-watch-current", "receiver-watch-featured"]) assert.equal(s.get(id).hidden, true);
   assert.equal(s.get("pitch-video").getAttribute("src"), null);
 });
+
+for(const gameId of [849845,823407]){
+  test(`receiver ${gameId} labels absent recommendations and preserves its route and reveal gate`,async()=>{
+    const s=await receiverDom(`?game=${gameId}`);
+    assert.match(s.get('source-badge').textContent,/공식 경기 기록/);
+    assert.match(s.get('recommendation-status').textContent,/추천 파일 미수신/);
+    assert.equal(s.get('legacy-provenance').hidden,true);
+    assert.equal(s.shapes('location-actual').length,0);
+    assert(s.get('receiver-watch-current').href.includes(`game=${gameId}`));
+    await s.fire('play-pitch-video');await s.end();
+    assert.equal(s.shapes('location-actual').length,1);
+    await s.fire('load-full-game');
+    assert(s.location.search.includes(`game=${gameId}`));
+    assert.equal(s.shapes('location-actual').length,0);
+  });
+}
+test('receiver automatic ball can reveal the record without inventing video or coordinates',async()=>{
+  const s=await receiverDom('?game=823407&pitch=823407%3A35%3A4');
+  assert.match(s.get('pitch-video-missing-reason').textContent,/자동 볼/);
+  assert.equal(s.video.getAttribute('src'),null);
+  await s.fire('reveal-pitch');
+  assert.equal(s.get('received-post').hidden,false);
+  assert.equal(s.shapes('location-actual').length,0);
+  assert.equal(s.get('received-post').textContent.includes('고의사구'),true);
+});

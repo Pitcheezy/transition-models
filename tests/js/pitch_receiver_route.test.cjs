@@ -28,7 +28,7 @@ test("explicit old archive and private file modes remain distinct", () => {
   assert.throws(()=>query("archive","849843:2:1"));
 });
 test("malformed, conflicting and different-game identities cannot select a pitch", () => {
-  for (const q of ["?game=849844","?pitch=849844:1:1","?pitch=849843:0:1","?pitch=849843:1:0","?pitch=NaN","?pitch=849843:1:1&pitch=849843:2:1","?archive=first-pa&pitch=849843:2:1","?archive=other"])
+  for (const q of ["?game=849844","?game=0849843","?game=849843&game=849843","?pitch=849844:1:1","?pitch=849843:0:1","?pitch=849843:1:0","?pitch=849843:1:101","?pitch=NaN","?pitch=","?pitch=849843:1:1&pitch=849843:2:1","?archive=first-pa&pitch=849843:2:1","?archive=other","?demo=unknown"])
     assert.throws(()=>parse(q), q);
   const session=createSession(game);
   assert.throws(()=>session.select(parse("?game=849843&pitch=849843:99:1").pitchId));
