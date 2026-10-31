@@ -76,7 +76,7 @@ function domElement(tag = "div") {
   return element;
 }
 
-async function receiverDom(search = "?game=849843", { fullGameObservation } = {}) {
+async function receiverDom(search = "?game=849843", { fullGameObservation, failAsset, expectError = false } = {}) {
   const html = fs.readFileSync(path.join(site, "receiver.html"), "utf8"), elements = new Map();
   for (const match of html.matchAll(/<([a-z][a-z0-9-]*)\b([^>]*\bid="([^"]+)"[^>]*)>/gi)) {
     const element = domElement(match[1]); element.hidden = /\bhidden\b/.test(match[2]); element.disabled = /\bdisabled\b/.test(match[2]);
@@ -100,6 +100,7 @@ async function receiverDom(search = "?game=849843", { fullGameObservation } = {}
     TextDecoder, TextEncoder, URLSearchParams,
     setTimeout(fn) { const id = ++timerId; timers.set(id, fn); return id; }, clearTimeout: id => timers.delete(id),
     fetch: async name => {
+      if (failAsset && String(name).split("?")[0] === failAsset) return { ok: false, status: 404, arrayBuffer: async () => new ArrayBuffer(0) };
       const bytes = fs.readFileSync(path.join(site, String(name).split("?")[0]));
       return { ok: true, arrayBuffer: async () => bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength) };
     },
@@ -115,7 +116,7 @@ async function receiverDom(search = "?game=849843", { fullGameObservation } = {}
     if (!get("response-workspace").hidden || !get("import-error").hidden || search === "") break;
     await new Promise(resolve => setTimeout(resolve, 5));
   }
-  assert.equal(get("import-error").hidden, true, get("import-error").textContent);
+  if (!expectError) assert.equal(get("import-error").hidden, true, get("import-error").textContent);
   const fire = async (id, event = "click") => {
     assert.equal(get(id).disabled, false, `${id} must be enabled`);
     await Promise.all(get(id).emit(event)); await new Promise(resolve => setImmediate(resolve));
@@ -248,4 +249,96 @@ test("archive and imported sample cannot masquerade as the full-game watch data 
   await s.fire("try-sample");
   for (const id of ["receiver-watch-current", "receiver-watch-featured"]) assert.equal(s.get(id).hidden, true);
   assert.equal(s.get("pitch-video").getAttribute("src"), null);
+});
+
+for(const gameId of [849845,823407]){
+  test(`receiver ${gameId} labels absent recommendations and preserves its route and reveal gate`,async()=>{
+    const s=await receiverDom(`?game=${gameId}`);
+    assert.match(s.get('source-badge').textContent,/공식 경기 기록/);
+    assert.match(s.get('recommendation-status').textContent,/추천 파일 미수신/);
+    assert.equal(s.get('legacy-provenance').hidden,true);
+    assert.equal(s.shapes('location-actual').length,0);
+    assert(s.get('receiver-watch-current').href.includes(`game=${gameId}`));
+    await s.fire('play-pitch-video');await s.end();
+    assert.equal(s.shapes('location-actual').length,1);
+    await s.fire('load-full-game');
+    assert(s.location.search.includes(`game=${gameId}`));
+    assert.equal(s.shapes('location-actual').length,0);
+  });
+}
+test('receiver automatic ball can reveal the record without inventing video or coordinates',async()=>{
+  const s=await receiverDom('?game=823407&pitch=823407%3A35%3A4');
+  assert.doesNotMatch(s.get('pitch-video-missing-reason').textContent,/자동 볼/);
+  assert.match(s.get('pitch-video-missing-reason').textContent,/투구 영상이 없습니다/);
+  assert.equal(s.video.getAttribute('src'),null);
+  await s.fire('reveal-pitch');
+  assert.equal(s.get('received-post').hidden,false);
+  assert.match(s.get('pitch-video-missing-reason').textContent,/자동 볼 기록/);
+  assert.equal(s.shapes('location-actual').length,0);
+  assert.equal(s.get('received-post').textContent.includes('고의사구'),true);
+});
+test('receiver header, dates, counts and notes describe the loaded game only',async()=>{
+  const s=await receiverDom('?game=823407&pitch=823407%3A1%3A1');
+  const title=s.get('featured-title');
+  assert.equal(title.children.filter(child=>child.tagName==='IMG').length,2);
+  assert.match(title.textContent,/탬파베이 레이스\s+@\s+필라델피아 필리스/);
+  assert.match(s.get('pitch-identity').textContent,/^현지 2026\.09\.26 · 한국 09\.27 · /);
+  assert.equal(s.get('featured-coverage').textContent,'88타석 · 실제 투구 355구 + 자동 볼 4건');
+  assert.match(s.get('video-coverage').textContent,/355 \/ 355구 \(자동 볼 4건 제외\)/);
+  assert.equal(s.get('scientific-note-featured').hidden,true);
+  assert.equal(s.get('scientific-note-stage').hidden,true);
+  const c=await receiverDom('?game=849843&pitch=849843%3A1%3A1');
+  assert.equal(c.get('featured-title').children.filter(child=>child.tagName==='IMG').length,2);
+  assert.match(c.get('pitch-identity').textContent,/^현지 2026\.09\.29 · 한국 09\.30 · /);
+  assert.equal(c.get('scientific-note-featured').hidden,false);
+});
+
+test('a failed added game never shows the Cubs heading or the recommendation notes',async()=>{
+  const s=await receiverDom('?game=849845',{failAsset:'game-849845.json',expectError:true});
+  assert.equal(s.get('import-error').hidden,false);
+  assert.equal(s.get('featured-title').textContent,'경기를 불러오지 못했습니다');
+  assert.equal(s.get('legacy-provenance').hidden,true);
+  assert.equal(s.get('scientific-note-featured').hidden,true);
+  assert.equal(s.get('scientific-note-stage').hidden,true);
+});
+test('team names in the rebuilt heading keep full contrast; only the @ stays muted',async()=>{
+  const s=await receiverDom('?game=849845&pitch=849845%3A1%3A1');
+  const spans=s.get('featured-title').children.filter(child=>child.tagName==='SPAN');
+  assert.deepEqual(spans.map(span=>span.className),['featured-team','','featured-team']);
+});
+test('after the sample, opening the full game returns to the last real game',async()=>{
+  const s=await receiverDom('?game=849845&pitch=849845%3A1%3A1');
+  await s.fire('try-sample');
+  assert.equal(s.get('featured-title').textContent,'합성 연결 테스트 자료');
+  assert.equal(s.get('legacy-provenance').hidden,true);
+  await s.fire('load-full-game');
+  assert.match(s.get('import-status').textContent,/필라델피아 필리스 @ 애틀랜타 브레이브스/);
+});
+test('the archive first plate appearance keeps its Korean heading, logos and provenance',async()=>{
+  const s=await receiverDom('?archive=first-pa&pitch=849843%3A1%3A3');
+  const title=s.get('featured-title');
+  assert.equal(title.children.filter(child=>child.tagName==='IMG').length,2);
+  assert.match(title.textContent,/시카고 컵스\s+@\s+샌디에이고 파드리스/);
+  assert.equal(s.get('legacy-provenance').hidden,false);
+  assert.equal(s.get('featured-date').textContent,'현지 2026.09.29 · 한국 09.30 · 저장 경기');
+  assert.equal(s.get('featured-coverage').textContent,'첫 타석 · 3구 · 공식 영상 3개');
+  assert.doesNotMatch(s.get('featured-description').textContent,/연결되지 않습니다/);
+  assert.match(s.get('pitch-identity').textContent,/^현지 2026\.09\.29 · 한국 09\.30 · /);
+});
+test('retrying after a different game fails reopens that game, not the previous one',async()=>{
+  const s=await receiverDom('?game=849845&pitch=849845%3A1%3A1',{failAsset:'game-823407.json'});
+  s.location.search='?game=823407&pitch=823407%3A1%3A1';
+  await Promise.all(s.events.emit('popstate')||[]);
+  for(let i=0;i<50&&s.get('import-error').hidden;i++) await new Promise(resolve=>setTimeout(resolve,5));
+  assert.equal(s.get('featured-title').textContent,'경기를 불러오지 못했습니다');
+  await s.fire('load-full-game');
+  for(let i=0;i<50&&s.get('import-error').hidden;i++) await new Promise(resolve=>setTimeout(resolve,5));
+  assert.equal(new URLSearchParams(s.location.search).get('game'),'823407');
+  assert.equal(s.get('featured-title').textContent,'경기를 불러오지 못했습니다');
+});
+test('the sample clears the previous game counts and notes',async()=>{
+  const s=await receiverDom('?game=849845&pitch=849845%3A1%3A1');
+  await s.fire('try-sample');
+  assert.equal(s.get('featured-coverage').textContent,'합성 자료 · 실제 경기 아님');
+  assert.equal(s.get('scientific-note-featured').hidden,true);
 });

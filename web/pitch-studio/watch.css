@@ -152,6 +152,7 @@
 .watch-pitch-chip.kind-strike { --chip-color:#ffae88; }
 .watch-pitch-chip.kind-foul { --chip-color:#edcc7b; }
 .watch-pitch-chip.kind-inplay { --chip-color:#bfaff3; }
+.watch-pitch-chip.kind-hbp { --chip-color:#f0a3c4; }
 .watch-pitch-chip.kind-hidden { --chip-color:#789580; }
 .watch-page .watch-pitch-chip:hover { background:#264a30; border-color:#b6d096; }
 .watch-page .watch-pitch-chip[aria-current="true"] { background:#d1ff85; border-color:#d1ff85; color:#10260f; box-shadow:0 0 0 2px #081b12,0 0 0 3px #c5f783; }
@@ -253,3 +254,6 @@
  .watch-navigation { flex:1 1 100%; }
  .watch-explore>summary span { display:block; margin:4px 0 0; }
 }
+/* Games without a recommendation file show the record view only. */
+.no-recommendations .needs-recommendation { display:none !important; }
+.watch-reveal-record { margin-top:10px; }

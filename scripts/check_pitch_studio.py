@@ -58,6 +58,49 @@ def check():
             assert target.name not in {"preview-data.js", "studio.js", "studio.css"}, (
                 f"Legacy illustrative studio must not be linked by a product page: {page.name}: {ref}"
             )
+    catalog = json.loads(
+        subprocess.check_output(
+            ["node", "-e", "console.log(JSON.stringify(require(process.argv[1]).list()))",
+             str(SITE / "game-catalog.js")]
+        )
+    )
+    assert {entry["game_pk"] for entry in catalog} == {849843, 849845, 823407}
+    game_links = Links()
+    game_links.feed((SITE / "games.html").read_text(encoding="utf-8"))
+    for entry in catalog:
+        game_id = entry["game_pk"]
+        for suffix, field in (("", "game_sha256"), ("-media", "media_sha256"),
+                              ("-zones", "zones_sha256")):
+            actual = (SITE / f"game-{game_id}{suffix}.json").read_bytes()
+            assert hashlib.sha256(actual).hexdigest() == entry[field], (
+                f"Catalog asset hash mismatch: {game_id}{suffix}"
+            )
+        packet = json.loads((SITE / f"game-{game_id}.json").read_bytes())
+        media = json.loads((SITE / f"game-{game_id}-media.json").read_bytes())
+        zones = json.loads((SITE / f"game-{game_id}-zones.json").read_bytes())
+        assert packet["game"]["game_pk"] == game_id
+        assert len(packet["pitches"]) == entry["pitches"]
+        assert len(media["records"]) == entry["media_count"]
+        assert len(media["records"]) + len(media["excluded"]) == entry["pitches"]
+        assert len(zones["pitches"]) == entry["zones_count"]
+        assert len({p["pitch_id"] for p in packet["pitches"]}) == entry["pitches"]
+        assert any(ref.startswith(f"watch.html?game={game_id}") for ref in game_links.references)
+        assert f"receiver.html?game={game_id}" in game_links.references
+        for status in ("ready", "unsupported", "missing"):
+            assert sum(p["pre"]["status"] == status for p in packet["pitches"]) == entry[status]
+        if game_id != 849843:
+            assert packet["source"]["kind"] == "official_record"
+            assert packet["source"]["model_id"] is None
+            assert entry["ready"] == entry["unsupported"] == 0
+            assert entry["missing"] == entry["pitches"]
+            assert all(
+                p["pre"]["provenance"] == "absent"
+                and p["pre"]["candidates"] == []
+                and p["pre"]["policy"] is None
+                and p["post"]["setup"] is None
+                for p in packet["pitches"]
+            )
+    print("PASS: three curated games, fixed asset hashes and explicit missing recommendations")
     manifest = json.loads(
         (ROOT / "docs/results/mlb_p0/pitch_studio_media_provenance_v1.json").read_bytes()
     )
@@ -117,6 +160,7 @@ def check():
             str(ROOT / "tests/js/pitch_receiver.test.cjs"),
             str(ROOT / "tests/js/pitch_receiver_location.test.cjs"),
             str(ROOT / "tests/js/pitch_fullgame.test.cjs"),
+            str(ROOT / "tests/js/pitch_game_catalog.test.cjs"),
             str(ROOT / "tests/js/pitch_game_media.test.cjs"),
             str(ROOT / "tests/js/pitch_zones.test.cjs"),
             str(ROOT / "tests/js/pitch_receiver_route.test.cjs"),

@@ -243,6 +243,19 @@ a:focus-visible, video:focus-visible, button:focus-visible, summary:focus-visibl
   .site-nav a { padding-inline: 3px; }
 }
 .games-page .page-intro { padding-bottom: 42px; }
+.game-availability { display:inline-flex; flex-wrap:wrap; gap:8px 13px; margin-top:12px; color:var(--lime); font-size:12px; font-weight:700; }
+.game-availability.records-only { color:#d9e5d4; }
+.game-availability > span { color:#aebdab; border-left:1px solid #667b66; padding-left:13px; }
+.games-page .matchup-cover { aspect-ratio:16/9; display:grid; place-items:center; background:linear-gradient(135deg,#253928,#102319); }
+.games-page .matchup-phi-atl { background:radial-gradient(ellipse at 16% 15%,#54343788,transparent 60%),linear-gradient(135deg,#203329,#10231c); }
+.games-page .matchup-tb-phi { background:radial-gradient(ellipse at 16% 15%,#24475caa,transparent 60%),linear-gradient(135deg,#203329,#10231c); }
+.matchup-logos { display:flex; justify-content:center; align-items:center; width:100%; gap:clamp(16px,3vw,44px); padding:65px 25px 70px; }
+.matchup-logos > span { display:flex; align-items:center; gap:12px; font-weight:900; font-size:clamp(24px,3vw,38px); }
+.games-page .matchup-logos img { width:clamp(50px,6vw,96px); height:clamp(50px,6vw,96px); aspect-ratio:1; object-fit:contain; padding:10px; border-radius:50%; background:#f4f4e8; }
+.matchup-logos > i { color:#a7bda8; font-style:normal; font-size:13px; }
+.guide-game-scope { margin-top:22px; padding:23px; border-left:3px solid var(--lime); border-radius:0 8px 8px 0; background:#142c1f; }
+.guide-game-scope h3 { font-size:19px; margin-bottom:8px; }
+.guide-game-scope .text-link { margin-top:15px; }
 .games-page .replay-game { gap: clamp(28px, 4vw, 58px); padding-top: 24px; }
 .games-page .replay-game-image { overflow: hidden; border: 1px solid #4a6150; border-radius: 14px; }
 .games-page .image-label { top: 16px; bottom: auto; border-radius: 4px; font-size: 12px; }

@@ -1,13 +1,12 @@
 /* Curated saved-game adapter. No fetching, inference, endpoint reconstruction or live claims. */
 (function (root, factory) {
   "use strict";
-  const api = factory();
+  const api = factory(typeof module === "object" && module.exports ? require("./game-catalog.js") : root.PitchGameCatalog);
   if (typeof module === "object" && module.exports) module.exports = api;
   else root.PitchReceiverFullGame = api;
-})(typeof globalThis === "object" ? globalThis : this, function () {
+})(typeof globalThis === "object" ? globalThis : this, function (catalog) {
   "use strict";
   const SCHEMA = "pitcheezy-static-game-v1";
-  const ASSET_SHA256 = "89e14e12e0f0a2ae2475aff16b8757486143f6a4586239434a1f8b0be6bb3c22";
   const copy = (value) => JSON.parse(JSON.stringify(value));
   const requireValue = (test, message) => { if (!test) throw new TypeError(message); };
   function fields(value, keys) {
@@ -32,10 +31,11 @@
     requireValue(input.schema === SCHEMA, "전체 경기 저장 자료 형식이 아닙니다.");
     const s = input.source;
     fields(s, ["kind", "sha256", "report_sha256", "revision", "exported_at", "model_id", "upstream_kind"]);
-    requireValue(s.kind === "provided_export" && s.upstream_kind === "archive", "저장 응답만 지원합니다.");
+    requireValue(["provided_export", "official_record"].includes(s.kind) && s.upstream_kind === "archive", "저장 응답만 지원합니다.");
     for (const hash of [s.sha256, s.report_sha256]) requireValue(typeof hash === "string" && /^[a-f0-9]{64}$/.test(hash), "자료 SHA가 필요합니다.");
     requireValue(s.revision === null && s.exported_at === null, "미확인 생성 버전을 채울 수 없습니다.");
-    text(s.model_id);
+    if (s.kind === "official_record") requireValue(s.model_id === null, "추천을 받지 않은 기록에 모델을 표시할 수 없습니다.");
+    else text(s.model_id);
     const game = input.game;
     fields(game, ["game_pk", "date", "away_team", "home_team"]); integer(game.game_pk, 1, 99999999999);
     text(game.away_team); text(game.home_team);
@@ -76,6 +76,7 @@
       }
       requireValue(mass <= 1 + 1e-6, "선택 비중 합이 1을 넘습니다.");
       fields(p.post, ["actual", "setup"]);
+      if (s.kind === "official_record") requireValue(rec.status === "missing" && rec.provenance === "absent" && rec.recorded_at === null && rec.policy === null && rec.candidates.length === 0 && p.post.setup === null, "공식 경기 기록에 미수신 추천·미트 추정을 채울 수 없습니다.");
       if (p.post.actual !== null) {
         const a = p.post.actual;
         fields(a, ["pitch_type", "pitch_label", "description", "result_label", "event", "event_label", "speed_mph", "x", "z"]);
@@ -139,10 +140,11 @@
     return {status:"unavailable",x:null};
   }
   function createVerifiedSession(input, contentHash) {
-    requireValue(contentHash === ASSET_SHA256, "검토된 전체 경기 파일의 바이트와 다릅니다.");
+    const entry = catalog.get(input?.game?.game_pk);
+    requireValue(entry && contentHash === entry.game_sha256, "검토된 전체 경기 파일의 바이트와 다릅니다.");
     const session = createSession(input), view = session.view();
-    requireValue(view.game.game_pk === 849843 && view.count === 262 && view.summary.plate_appearances === 71 && view.summary.ready === 246 && view.summary.unsupported === 16, "고정 경기 범위와 다릅니다.");
-    requireValue(view.source.sha256 === "df606a11c6db465c054252ef8d331aeb23aa21565b4960bd586f3dcf8f62f6b7", "영상과 연결할 수신 원문이 다릅니다.");
+    requireValue(view.count === entry.pitches && view.summary.plate_appearances === entry.plate_appearances && ["ready", "unsupported", "missing"].every(k => view.summary[k] === entry[k]), "고정 경기 범위와 다릅니다.");
+    requireValue(view.source.sha256 === entry.source_sha256 && view.source.kind === entry.source_kind, "영상과 연결할 수신 원문이 다릅니다.");
     return session;
   }
   return {validate,createSession,createVerifiedSession,observation};

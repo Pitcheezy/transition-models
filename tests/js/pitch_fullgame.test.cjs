@@ -3,6 +3,33 @@ const test = require("node:test"), assert = require("node:assert/strict");
 const {validate,createSession,observation} = require("../../web/pitch-studio/receiver-fullgame.js");
 const fixture = require("../../web/pitch-studio/game-849843.json");
 const sample=()=>structuredClone(fixture);
+function recordOnly() {
+  const data=sample();data.source.kind="official_record";data.source.model_id=null;
+  for(const row of data.pitches){
+    row.pre={status:"missing",provenance:"absent",recorded_at:null,policy:null,candidates:[]};
+    row.post.setup=null;
+  }
+  return data;
+}
+
+test("record-only sources expose no inferred model or unsupported-model claim",()=>{
+  const data=recordOnly(), s=createSession(data);
+  assert.deepEqual(s.view().summary,{pitches:262,plate_appearances:71,ready:0,unsupported:0,missing:262});
+  assert.equal(s.view().source.model_id,null);assert.equal(s.view().post,null);
+  s.reveal(true);assert.deepEqual(s.view().post.actual,data.pitches[0].post.actual);
+  assert.equal(s.view().post.setup,null);
+});
+for(const [name,mutate] of [
+  ["model name",d=>{d.source.model_id="copied model";}],
+  ["unsupported claim",d=>{d.pitches[0].pre.status="unsupported";}],
+  ["captured recommendation provenance",d=>{d.pitches[0].pre.provenance="captured_live";}],
+  ["recommendation timestamp",d=>{d.pitches[0].pre.recorded_at="2026-10-31T00:00:00Z";}],
+  ["policy",d=>{d.pitches[0].pre.policy={name:"copied policy",identity:null};}],
+  ["copied candidates",d=>{d.pitches[0].pre=structuredClone(fixture.pitches[0].pre);}],
+  ["copied mitt",d=>{d.pitches[0].post.setup={status:"estimated",x:0};}],
+]) test(`record-only rejects invented ${name}`,()=>{
+  const d=recordOnly();mutate(d);assert.throws(()=>validate(d));
+});
 
 test("served asset bytes are pinned before a video-enabled session can be opened",()=>{
   const fs=require("node:fs"),path=require("node:path"),crypto=require("node:crypto");

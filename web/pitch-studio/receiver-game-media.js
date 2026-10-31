@@ -1,13 +1,11 @@
 /* Pitch-ID media binding for the pinned saved game. No inference or remote-byte verification. */
 (function (root, factory) {
   "use strict";
-  const api = factory();
+  const api = factory(typeof module === "object" && module.exports ? require("./game-catalog.js") : root.PitchGameCatalog);
   if (typeof module === "object" && module.exports) module.exports = api;
   else root.PitchReceiverGameMedia = api;
-})(typeof globalThis === "object" ? globalThis : this, function () {
+})(typeof globalThis === "object" ? globalThis : this, function (catalog) {
   "use strict";
-  const GAME_SHA256 = "89e14e12e0f0a2ae2475aff16b8757486143f6a4586239434a1f8b0be6bb3c22";
-  const ASSET_SHA256 = "8680befcbd43b570b1cd2f708e1d767e0e4055a9850dda327ae871219df17e0a";
   const HASH = /^[a-f0-9]{64}$/;
   const UUID = /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/;
   const TYPE = /^[A-Z]{2}$/;
@@ -23,14 +21,15 @@
   }
   function validate(packet, game, baseMedia = {}) {
     fields(packet, ["schema", "game_pk", "game_sha256", "registry_sha256", "source_pitch_count", "records", "excluded"]);
-    requireValue(packet.schema === "pitcheezy-static-game-media-v1" && packet.game_pk === 849843, "대상 경기 영상 목록이 아닙니다.");
-    requireValue(packet.game_sha256 === GAME_SHA256 && HASH.test(packet.registry_sha256), "영상과 저장 경기의 출처가 다릅니다.");
+    const entry = catalog.get(packet.game_pk);
+    requireValue(packet.schema === "pitcheezy-static-game-media-v1" && entry, "대상 경기 영상 목록이 아닙니다.");
+    requireValue(packet.game_sha256 === entry.game_sha256 && HASH.test(packet.registry_sha256), "영상과 저장 경기의 출처가 다릅니다.");
     requireValue(game?.schema === "pitcheezy-static-game-v1" && game.game?.game_pk === packet.game_pk, "경기 자료가 일치하지 않습니다.");
-    requireValue(Array.isArray(game.pitches) && game.pitches.length === 262 && packet.source_pitch_count === 262, "전체 투구 수가 일치하지 않습니다.");
-    requireValue(Array.isArray(packet.records) && Array.isArray(packet.excluded) && packet.records.length + packet.excluded.length === 262, "영상과 제외 목록의 전체 투구 수가 다릅니다.");
+    requireValue(Array.isArray(game.pitches) && game.pitches.length === entry.pitches && packet.source_pitch_count === entry.pitches, "전체 투구 수가 일치하지 않습니다.");
+    requireValue(Array.isArray(packet.records) && Array.isArray(packet.excluded) && packet.records.length + packet.excluded.length === entry.pitches, "영상과 제외 목록의 전체 투구 수가 다릅니다.");
     const pitches = new Map();
     for (const pitch of game.pitches) {
-      requireValue(pitch.pitch_id === `849843:${pitch.at_bat_number}:${pitch.pitch_number}` && !pitches.has(pitch.pitch_id), "저장 경기 투구 키가 잘못됐습니다.");
+      requireValue(pitch.pitch_id === `${packet.game_pk}:${pitch.at_bat_number}:${pitch.pitch_number}` && !pitches.has(pitch.pitch_id), "저장 경기 투구 키가 잘못됐습니다.");
       pitches.set(pitch.pitch_id, pitch);
     }
     const seen = new Set(), plays = new Set(), media = Object.create(null), excluded = Object.create(null);
@@ -57,7 +56,12 @@
     for (const item of packet.excluded) {
       fields(item, ["pitch_id", "reason", "registry_pitch_type", "received_pitch_type"]);
       const pitch = take(item.pitch_id);
-      requireValue(item.reason === "pitch_type_mismatch" && TYPE.test(item.registry_pitch_type) && TYPE.test(item.received_pitch_type) && item.registry_pitch_type !== item.received_pitch_type && item.received_pitch_type === pitch.post?.actual?.pitch_type, "영상 제외 근거가 저장 결과와 다릅니다.");
+      const actual = pitch.post?.actual;
+      if (item.reason === "automatic_ball_no_video") {
+        requireValue(entry.non_pitch_ids.includes(item.pitch_id) && actual && actual.description === "automatic_ball" && ["pitch_type","x","z","speed_mph"].every(key => actual[key] === null) && item.registry_pitch_type === null && item.received_pitch_type === null, "자동 볼의 영상 제외 근거가 저장 결과와 다릅니다.");
+      } else {
+        requireValue(item.reason === "pitch_type_mismatch" && TYPE.test(item.registry_pitch_type) && TYPE.test(item.received_pitch_type) && item.registry_pitch_type !== item.received_pitch_type && item.received_pitch_type === actual?.pitch_type, "영상 제외 근거가 저장 결과와 다릅니다.");
+      }
       excluded[item.pitch_id] = copy(item);
     }
     requireValue(seen.size === pitches.size, "영상 목록에서 투구가 누락됐습니다.");
@@ -73,7 +77,8 @@
   // Caller must pass the game whose exact bytes already passed createVerifiedSession.
   // The manifest hash authenticates the shipped mapping, not current MLB response bytes.
   function createVerifiedMedia(packet, game, actualSha256, baseMedia = {}) {
-    requireValue(actualSha256 === ASSET_SHA256 && HASH.test(actualSha256), "영상 목록의 실제 바이트 SHA가 고정본과 다릅니다.");
+    const entry = catalog.get(packet?.game_pk);
+    requireValue(entry && actualSha256 === entry.media_sha256 && HASH.test(actualSha256), "영상 목록의 실제 바이트 SHA가 고정본과 다릅니다.");
     return validate(packet, game, baseMedia);
   }
   return Object.freeze({ validate, createVerifiedMedia });

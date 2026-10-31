@@ -10,12 +10,14 @@
   const countValue = row => `${row.situation.balls}-${row.situation.strikes}`;
   const unknownTypes = new Set(["unknown", "unk", "un", "na", "n/a"]);
   const results = new Map([
+    ["automatic_ball", "automatic"],
     ...["ball", "blocked_ball", "intent_ball", "pitchout"].map(code => [code, "ball"]),
     ...["called_strike", "swinging_strike", "swinging_strike_blocked", "foul_tip", "missed_bunt"].map(code => [code, "strike"]),
     ...["foul", "foul_bunt", "foul_pitchout"].map(code => [code, "foul"]),
     ...["hit_into_play", "hit_into_play_no_out", "hit_into_play_score"].map(code => [code, "inplay"]),
+    ["hit_by_pitch", "hbp"],
   ]);
-  const labels = { ball: "볼", strike: "스트라이크", foul: "파울", inplay: "인플레이", unknown: "결과 미제공", hidden: "결과 숨김" };
+  const labels = { automatic:"자동 볼", ball: "볼", strike: "스트라이크", foul: "파울", inplay: "인플레이", hbp: "몸에 맞는 공", unknown: "결과 미제공", hidden: "결과 숨김" };
 
   function create(input) {
     if (!Array.isArray(input)) throw new TypeError("검증된 투구 목록이 필요합니다.");
@@ -73,9 +75,10 @@
       for (const row of rows) {
         if (row.index >= selected.index) break;
         if (row.pitcher.id !== selected.pitcher.id) continue;
-        summary.total++;
         // Never inspect current/future post, another pitcher's post, or recommendation shares.
         const actual = row.post?.actual;
+        if(actual?.description === "automatic_ball" && actual.pitch_type === null && actual.speed_mph === null) continue;
+        summary.total++;
         const suppliedCode = typeof actual?.pitch_type === "string" ? actual.pitch_type.trim() : "";
         const code = !suppliedCode || unknownTypes.has(suppliedCode.toLowerCase()) ? "unknown" : suppliedCode;
         if (!types.has(code)) types.set(code, {

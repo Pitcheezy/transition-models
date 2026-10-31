@@ -2,6 +2,8 @@
 
 ## 전시 정본 계획 실행 — 2026-10-28
 
+**SITE-games2 로컬 완료·공개 대기 — 2026-10-31:** Codex 사용량 한도(10/31 01:45경, 11/4 16:04 재설정)로 사용자 요청에 따라 Claude Opus 5.5가 이어받음. 브랜치 `claude/site-games2-1031`, Codex 미커밋 작업을 바이트 그대로 `44fa79e`로 보존(Codex 폴더 불변). 849845·823407 관전·상세·경기 선택 추가, 추천은 미수신 표시. Claude 1차 검토(확인22) → `ba52191`·`6d1e5b8`·바이트 고정, Fable 5.1 2~4차 → `4a5322f`·`715d699`·**`47b7219` APPROVE**. Node424(연속2회)·records32·사이트정적 통과, 로컬 브라우저 확인. [기록·Codex 배포 지시문](docs/SITE_GAMES2_20261031.md). 남은 것: Sites 공개(Codex), 두 경기 추천 파일(형, [미발신 요청 초안](docs/mail_drafts/SITE-games2-recs-request-20261031.md)), 전체 중계 원본 없음. 팀원·별도Cloudflare·평가잠금849844 불변. 원래 기록: Codex / `codex/site-first-1029` / 기준25210bf / PR85.
+
 **SITE-view1 공개 완료·수정 권한 반납 — 2026-10-31:** Codex / `codex/site-first-1029` / 제품8baefcd / PR85(main미통합). 관전·상세 기본을 중계 방향(투수→포수)으로 변경하고 포수시점 선택 추가. 추천/실제/미트가로/눈금 일관 변환, 원본좌표·투구ID·공개시점 보존, plate≠포구 명시. Node269·checklist8·사이트정적·Chrome관전/상세/390px·실제Claude Fable 고정검토/델타APPROVE. Sites소스76dd0887·공개v21 성공, 공개2구 재생·양시점/시각유지 확인. [범위](docs/SITE_VIEW_DIRECTION_20261031.md)·[영수증](docs/results/site_fullgame_20261030/view-direction-receipt.json). 팀원·별도Cloudflare 불변. 다음: 추가경기 완성추천 파일 수신/목록 일반화 또는 전체중계 사용가능원본/시각표 확보. 카메라보정·포구좌표검증 완료는 아님.
 
 **SITE-round1 공개 완료·수정 권한 반납 — 2026-10-30:** Codex / `codex/site-first-1029` / 제품2272398 / PR85(main미통합). 관전·상세추천 원형/범례/설명그림 일치, 좌표·겹친순위·공개시점불변. Node257·checklist8(기존Windows인코딩경고1)·사이트정적·Chrome관전/상세/390px·실제Claude Fable고정검토APPROVE. Sites소스af4ce505·공개v20성공, 공개원형마커확인. [전체중계조사](docs/SITE_FULL_VIDEO_SEARCH_20261030.md)·[영수증](docs/results/site_fullgame_20261030/round-markers-receipt.json). Song고정7a460cc0은압축39장면/기록지연조절; 전체영상/262구시각표미확보. Peacock공식2h41m페이지는발견했으나재생/원본파일미확인. 팀원·별도Cloudflare불변. 다음: 전체중계사용가능원본/시각표확보 또는현재261클립시연검수.

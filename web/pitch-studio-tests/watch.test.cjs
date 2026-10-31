@@ -8,6 +8,7 @@ const { webcrypto } = require("node:crypto");
 const site = path.join(__dirname, "../pitch-studio");
 const html = fs.readFileSync(path.join(site, "watch.html"), "utf8");
 const game = JSON.parse(fs.readFileSync(path.join(site, "game-849843.json")));
+const catalog = require(path.join(site,"game-catalog.js"));
 
 function element(tag = "div", ownerDocument = null) {
   let ownText = "", value = "";
@@ -105,9 +106,9 @@ async function setup({ search = "?game=849843", missing = [], corrupt = [], scop
   });
   context.window = context;
   context.addEventListener = window.addEventListener.bind(window);
-  for (const file of ["receiver-fullgame.js", "receiver-game-media.js", "receiver-zones.js", "receiver-location.js", "receiver-media.js", "receiver-video.js", "receiver-sequence.js", "watch-timing.js", "watch-context.js", "watch.js"])
+  for (const file of ["game-catalog.js", "receiver-fullgame.js", "receiver-game-media.js", "receiver-zones.js", "receiver-location.js", "receiver-media.js", "receiver-video.js", "receiver-sequence.js", "watch-timing.js", "watch-context.js", "watch.js"])
     vm.runInContext(fs.readFileSync(path.join(site, file), "utf8"), context, { filename: file });
-  if (waitForReady) await settle(() => /저장 경기 262구|다시 시작해 주세요/.test(get("watch-load-status").textContent));
+  if (waitForReady) await settle(() => /저장 경기 \d+(?:구|개 기록)|다시 시작해 주세요/.test(get("watch-load-status").textContent));
   else await settle();
   const click = async id => { assert.equal(get(id).disabled, false, `${id} must be enabled`); get(id).emit("click"); await settle(); };
   const select = async (id, value) => { assert.equal(get(id).disabled, false, `${id} must be enabled`); get(id).value = value; get(id).emit("change"); await settle(); };
@@ -849,4 +850,95 @@ test("pending media is announced as loading rather than as a failed or absent cl
   assert.doesNotMatch(s.get("pitch-video-status").textContent + s.get("pitch-video-missing").textContent, /실패|못했|없습니다/);
   await s.expireRequests(); await settle(() => /저장 경기 262구/.test(s.get("watch-load-status").textContent));
   assert.match(s.get("pitch-video-missing").textContent, /불러오지 못/);
+});
+
+for(const gameId of [849845,823407]) {
+  test(`new recorded game ${gameId} uses its own teams/video/actual and never invents recommendations`,async()=>{
+    const entry=catalog.get(gameId), packet=JSON.parse(fs.readFileSync(path.join(site,`game-${gameId}.json`)));
+    const s=await setup({search:`?game=${gameId}`});
+    assert(s.get('watch-title').textContent.includes(entry.title.split(' @ ')[0]));
+    assert.match(s.get('watch-score').textContent,new RegExp(entry.away));
+    assert.match(s.get('watch-best-summary').textContent,/추천 자료 미제공/);
+    assert(!s.get('watch-best-summary').textContent.includes('미지원'));
+    assert.equal(s.shapes('location-recommended').length,0);
+    assert.equal(s.shapes('location-actual').length,0);
+    assert.match(s.video.getAttribute('src'),/^https:\/\/sporty-clips\.mlb\.com\//);
+    assert(!s.requests.some(file=>/timing|game-849843/.test(file)));
+    assert(s.get('watch-back-analysis').href.includes(`game=${gameId}`));
+    await s.click('watch-toggle');await s.end();
+    assert.equal(s.shapes('location-actual').length,1);
+    assert(s.get('watch-result').textContent.includes(packet.pitches[0].post.actual.result_label));
+    await s.click('watch-next');
+    assert.equal(s.shapes('location-actual').length,0);
+    assert(s.location.search.includes(`game=${gameId}`));
+    assert(s.get('watch-identity').textContent.includes(packet.pitches[1].pitch_id));
+  });
+}
+test('automatic ball hides its record until the visitor reveals it, then shows it with no clip or location',async()=>{
+  const s=await setup({search:'?game=823407&pitch=823407%3A35%3A1'});
+  assert.equal(s.video.getAttribute('src'),null);
+  const missing=s.get('pitch-video-missing');
+  assert.doesNotMatch(missing.textContent,/자동 볼/);
+  assert.doesNotMatch(s.get('watch-result').textContent,/자동 볼/);
+  assert.equal(s.get('watch-phase').textContent,'투구 전');
+  assert.equal(s.get('watch-start').disabled,true);
+  assert.equal(s.shapes('location-actual').length,0);
+  const button=missing.children.find(child=>child.textContent==='결과 보기');
+  assert(button,'a clip-less record offers its own reveal');
+  button.emit('click');
+  assert.match(missing.textContent,/자동 볼 기록/);
+  assert.match(s.get('watch-result').textContent,/^자동 볼 · 투구 없음/);
+  assert.equal(s.get('watch-result').classList.contains('is-revealed'),true);
+  assert.equal(s.shapes('location-actual').length,0);
+  assert(s.get('watch-detail-current').href.includes('823407%3A35%3A1'));
+});
+test('a game without recommendations hides recommendation controls and never says 추천 확인',async()=>{
+  const s=await setup({search:'?game=849845&pitch=849845%3A1%3A1'});
+  assert.equal(s.get('watch-main').classList.contains('no-recommendations'),true);
+  assert.equal(s.get('watch-phase').textContent,'투구 전');
+  const c=await setup({search:'?game=849843&pitch=849843%3A1%3A1'});
+  assert.equal(c.get('watch-main').classList.contains('no-recommendations'),false);
+  assert.equal(c.get('watch-phase').textContent,'추천 확인');
+});
+test('a game with automatic balls counts records, not pitches',async()=>{
+  const s=await setup({search:'?game=823407&pitch=823407%3A1%3A1'});
+  assert.match(s.get('watch-identity').textContent,/1\/359기록$/);
+  assert.match(s.get('watch-game-position').textContent,/^1 \/ 359기록/);
+  const c=await setup({search:'?game=849843&pitch=849843%3A1%3A1'});
+  assert.match(c.get('watch-identity').textContent,/1\/262구$/);
+});
+test('invalid pitch in an added game recovers to that game, not to another one',async()=>{
+  const s=await setup({search:'?game=823407&pitch=823407%3A89%3A1'});
+  assert.match(s.get('watch-retry').textContent,/첫 공/);
+  assert.equal(s.get('watch-title').textContent,'경기를 불러오지 못했습니다');
+  await s.click('watch-retry');
+  assert.equal(s.replacements.length,1);
+  assert.equal(new URLSearchParams(s.location.search).get('game'),'823407');
+  assert.equal(new URLSearchParams(s.location.search).get('pitch'),'823407:1:1');
+});
+test('mismatched game and pitch cannot load another game',async()=>{
+  const s=await setup({search:'?game=849845&pitch=849843%3A1%3A1'});
+  assert.equal(s.requests.length,0);
+  assert.equal(s.get('watch-start').disabled,true);
+});
+test('core load cannot substitute old game after address changes to a different game',async()=>{
+  const s=await setup({stalled:{'game-849843.json':'headers'},waitForReady:false});
+  s.location.search='?game=849845';s.window.emit('popstate');
+  await s.finishAsset('game-849843.json');
+  await settle(()=>s.get('watch-load-status').textContent.includes('다시 시작해 주세요'));
+  assert.equal(s.video.getAttribute('src'),null);
+  assert.equal(s.get('watch-start').disabled,true);
+});
+test('watch filters and date use the same units and dates as the game cards',async()=>{
+  const s=await setup({search:'?game=823407&pitch=823407%3A1%3A1'});
+  assert.equal(s.get('watch-date').textContent,'현지 2026.09.26 · 한국 09.27 · 저장 경기 재생');
+  await s.select('watch-filter-batter','691406');
+  assert.match(s.get('watch-filter-status').textContent,/^16기록 일치/);
+  const c=await setup({search:'?game=849843&pitch=849843%3A1%3A1'});
+  assert.equal(c.get('watch-date').textContent,'현지 2026.09.29 · 한국 09.30 · 저장 경기 재생');
+});
+test('a pitch whose clip was withheld points to the detail page instead of promising a video end',async()=>{
+  const s=await setup({search:'?game=849843&pitch=849843%3A69%3A2'});
+  assert.equal(s.get('watch-result').textContent,'영상이 연결되지 않은 공입니다. 결과는 ‘이 공 상세 분석’에서 확인하세요.');
+  assert.equal(s.get('watch-result').classList.contains('is-revealed'),false);
 });

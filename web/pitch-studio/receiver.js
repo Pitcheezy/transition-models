@@ -201,19 +201,58 @@ function renderLocations(view) {
   const spokenRows = Array.from(values.children, (row) => row.textContent).join("; ");
   svg.setAttribute("aria-label", `${model.pitch_id} · ${info.label} 위치 비교. ${spokenRows}. ${node("location-state").textContent}`);
 }
+let lastCatalogGame = null;
+function showGameHeader(entry) {
+  const title = node("featured-title"), teams = entry.title.split(" @ ");
+  title.replaceChildren();
+  for (const [index, code] of [entry.away, entry.home].entries()) {
+    if (index) textElement("span", " @ ", title);
+    const logo = document.createElement("img");
+    logo.className = "inline-team-logo";
+    for (const [name, value] of [["src", `media/team-${code.toLowerCase()}.svg`], ["alt", ""], ["width", "40"], ["height", "40"]]) logo.setAttribute(name, value);
+    title.append(logo);
+    textElement("span", ` ${teams[index]}`, title).className = "featured-team";
+  }
+  put("featured-date", `현지 ${entry.local_date.replaceAll("-", ".")} · 한국 ${entry.date.slice(5).replace("-", ".")} · 저장 경기`);
+  node("legacy-provenance").hidden = entry.game_pk !== 849843;
+  for (const id of ["scientific-note-featured", "scientific-note-stage"]) node(id).hidden = entry.source_kind === "official_record";
+}
 function render(preservePosition = false) {
   if (!session) return;
   const view = session.view(),
     s = view.situation;
   const currentObservation = observationFor(view);
+  if(view.full_game){
+    const entry=PitchGameCatalog.get(view.game.game_pk), summary=view.summary, auto=entry.non_pitch_ids.length;
+    lastCatalogGame = entry;
+    showGameHeader(entry);
+    put("featured-coverage",`${summary.plate_appearances}타석 · ${auto?`실제 투구 ${view.count-auto}구 + 자동 볼 ${auto}건`:`${view.count}구`}`);
+    put("featured-description",summary.ready?`추천 ${summary.ready}구 · 미지원 ${summary.unsupported}구. 영상과 같은 공의 실제 기록을 비교하세요.`
+      :"영상과 실제 구종·위치·결과를 확인하세요. 이 경기의 추천 파일은 아직 받지 못했습니다.");
+    for (const id of ["scientific-note-featured", "scientific-note-stage"]) node(id).hidden = view.source.kind === "official_record";
+    document.title=`${entry.title} · 상세 분석 · Pitcheezy`;
+  } else if (currentMode !== "archive") {
+    // A sample or a chosen file is not one of the curated games: no team heading, no game notes.
+    const synthetic = view.source.kind === "synthetic";
+    put("featured-title", synthetic ? "합성 연결 테스트 자료" : `${view.game.away_team} @ ${view.game.home_team}`);
+    put("featured-date", "저장 경기 자료");
+    put("featured-coverage", synthetic ? "합성 자료 · 실제 경기 아님" : "직접 고른 응답 파일");
+    put("featured-description", "이 자료는 실제 경기 영상과 연결되지 않습니다.");
+    node("legacy-provenance").hidden = true;
+    for (const id of ["scientific-note-featured", "scientific-note-stage"]) node(id).hidden = synthetic;
+    document.title = "투구별 상세 분석 · Pitcheezy";
+  }
   pitchVideo.update({ context: loadVersion, pitch_id: view.pitch_id, revealed: view.revealed, enabled: builtInDemo,
     media: view.full_game ? gameMedia : null,
     observationAllowed: !view.full_game && currentObservation?.status === "key_matched", preservePosition });
   for (const id of ["receiver-watch-current", "receiver-watch-featured"]) {
     node(id).hidden = !view.full_game;
-    node(id).href = view.full_game ? `watch.html?game=849843&pitch=${encodeURIComponent(view.pitch_id)}` : "watch.html?game=849843";
+    node(id).href = view.full_game ? `watch.html?game=${view.game.game_pk}&pitch=${encodeURIComponent(view.pitch_id)}` : "watch.html?game=849843";
   }
-  put("pitch-video-missing-reason", view.full_game && excludedMedia[view.pitch_id]
+  put("pitch-video-missing-reason", view.full_game && excludedMedia[view.pitch_id]?.reason==="automatic_ball_no_video"
+    ? view.revealed ? "자동 볼 기록입니다. 투수가 공을 던지지 않아 영상·위치가 없습니다."
+      : "이 기록에는 투구 영상이 없습니다. 결과를 공개하면 기록을 확인할 수 있습니다."
+    : view.full_game && excludedMedia[view.pitch_id]
     ? "영상 등록부와 받은 경기 자료의 구종이 달라 영상 연결을 보류했습니다. 어느 기록도 임의로 수정하지 않았습니다."
     : "이 투구의 확인된 영상을 불러오지 못했습니다.");
   node("pitch-tabs").hidden = !builtInDemo;
@@ -227,6 +266,7 @@ function render(preservePosition = false) {
     "source-badge",
     currentMode === "archive" ? "옛 첫 타석 수신본 · 별도 3구 보관 자료" : view.source.kind === "synthetic"
       ? "합성 연결 테스트 · 실제 경기 아님"
+      : view.source.kind === "official_record" ? "공식 경기 기록 · 추천 자료 미제공"
       : "제공받은 모델 응답 · 검증 전 실험 추천",
   );
   put(
@@ -236,7 +276,7 @@ function render(preservePosition = false) {
   put("game-name", `${view.game.away_team} @ ${view.game.home_team}`);
   put(
     "pitch-identity",
-    `${builtInDemo ? "현지 2026-09-29 / 한국 09-30" : `${view.game.date} (파일 기준)`} · ${view.at_bat_number}번째 타석 · ${view.pitch_number}구 · 키 ${view.pitch_id}`,
+    `${(view.full_game || currentMode === "archive") && PitchGameCatalog.get(view.game.game_pk) ? `현지 ${PitchGameCatalog.get(view.game.game_pk).local_date.replaceAll("-", ".")} · 한국 ${PitchGameCatalog.get(view.game.game_pk).date.slice(5).replace("-", ".")}` : `${view.game.date} (경기 기록 날짜)`} · ${view.at_bat_number}번째 타석 · ${view.pitch_number}구 · 키 ${view.pitch_id}`,
   );
   const bases = [1, 2, 4].flatMap((bit, i) =>
     s.bases & bit ? [`${i + 1}루`] : [],
@@ -262,6 +302,7 @@ function render(preservePosition = false) {
     "recommendation-status",
     view.pre.status === "ready"
       ? "파일에 포함된 추천 후보"
+      : view.pre.status === "missing" ? "추천 파일 미수신 · 실제 기록과 영상은 확인할 수 있습니다."
       : "이 투구는 추천 미지원입니다.",
   );
   try {
@@ -431,6 +472,14 @@ function reportError(error, version) {
   node("import-error").hidden = false;
   node("file-tools").open = true;
   put("replay-status", `자료 확인 실패: ${error.message} 위의 ‘경기 전체 열기’로 다시 시작할 수 있습니다.`);
+  const requested = new URLSearchParams(location.search).get("game");
+  if (requested && requested !== "849843") {
+    // Never leave the default Cubs–Padres heading or provenance on another game's address.
+    put("featured-title", "경기를 불러오지 못했습니다");
+    put("featured-date", "저장 경기 자료");
+    node("legacy-provenance").hidden = true;
+    for (const id of ["scientific-note-featured", "scientific-note-stage"]) node(id).hidden = true;
+  }
 }
 
 function rememberRoute(method = "push") {
@@ -449,10 +498,13 @@ function selectPitch(key) {
 function renderNavigation(view) {
   node("game-navigation").hidden = !view.full_game;
   const videoCount = Object.keys(gameMedia || window.PitchReceiverMedia).length;
-  put("video-coverage", view.full_game ? `영상 연결 ${videoCount} / ${view.count}구` : "공식 영상 3 / 3구");
+  const auto = view.full_game ? PitchGameCatalog.get(view.game.game_pk).non_pitch_ids.length : 0, unit = auto ? "기록" : "구";
+  put("video-coverage", view.full_game ? `영상 연결 ${videoCount} / ${view.count - auto}구${auto ? ` (자동 볼 ${auto}건 제외)` : ""}` : "공식 영상 3 / 3구");
   if (view.full_game) {
     node("pa-select").value = String(view.at_bat_number);
-    put("game-coverage", `전체 ${view.count}구 중 ${view.position}구 · 71타석 · 추천 246구 / 미지원 16구. ${mediaLoadNote || "투구별 영상 종료 후 실제 결과 공개 · 영상 미연결 투구도 결과 비교 가능"}`);
+    const s=view.summary;
+    const recommendation = s.ready || s.unsupported ? `추천 ${s.ready}구 / 미지원 ${s.unsupported}구 / 자료 미제공 ${s.missing}구` : "실제 기록 재생";
+    put("game-coverage", `전체 ${view.count}${unit} 중 ${view.position}번째 · ${s.plate_appearances}타석 · ${recommendation}. ${mediaLoadNote || "투구별 영상 종료 후 실제 결과 공개 · 영상 미연결 투구도 기록 확인 가능"}`);
   }
   const tabs = node("pitch-tabs");
   tabs.setAttribute("aria-label", "현재 타석 투구 선택");
@@ -492,7 +544,9 @@ async function loadFullGame(startKey = PitchReceiverRoute.FIRST, historyMode = "
   put("import-status", "경기 전체 자료를 불러오는 중입니다.");
   put("replay-status", "경기 자료·영상 목록·타자별 기록 존을 불러오는 중입니다.");
   try {
-    const response = await fetch("game-849843.json?v=1", {credentials:"omit"});
+    const entry=PitchGameCatalog.get(startKey.split(":")[0]);
+    if(!entry)throw new Error("지원하지 않는 경기입니다.");
+    const response = await fetch(`game-${entry.game_pk}.json?v=1`, {credentials:"omit"});
     if (!response.ok) throw new Error("저장 경기 파일을 불러오지 못했습니다.");
     const bytes = await response.arrayBuffer();
     if (bytes.byteLength > MAX_BYTES) throw new Error("경기 파일 크기 초과");
@@ -503,7 +557,7 @@ async function loadFullGame(startKey = PitchReceiverRoute.FIRST, historyMode = "
     if (version !== loadVersion) return;
     let zones = null, zoneNote = "";
     try {
-      const zoneResponse = await fetch("game-849843-zones.json?v=1", {credentials:"omit"});
+      const zoneResponse = await fetch(`game-${entry.game_pk}-zones.json?v=1`, {credentials:"omit"});
       if (!zoneResponse.ok) throw new Error("기록 존 요청 실패");
       const zoneBytes = await zoneResponse.arrayBuffer();
       if (zoneBytes.byteLength > MAX_BYTES) throw new Error("기록 존 크기 초과");
@@ -514,18 +568,18 @@ async function loadFullGame(startKey = PitchReceiverRoute.FIRST, historyMode = "
     zoneLoadNote = zoneNote;
     let verifiedMedia = null, mediaHash = null, loadNote = "";
     try {
-      const mediaResponse = await fetch("game-849843-media.json?v=1", {credentials:"omit"});
+      const mediaResponse = await fetch(`game-${entry.game_pk}-media.json?v=1`, {credentials:"omit"});
       if (!mediaResponse.ok) throw new Error("영상 목록 요청 실패");
       const mediaBytes = await mediaResponse.arrayBuffer();
       if (mediaBytes.byteLength > MAX_BYTES) throw new Error("영상 목록 크기 초과");
       const mediaPacket = JSON.parse(new TextDecoder("utf-8", {fatal:true}).decode(mediaBytes));
       mediaHash = await sha256(mediaBytes);
-      verifiedMedia = PitchReceiverGameMedia.createVerifiedMedia(mediaPacket, packet, mediaHash, window.PitchReceiverMedia);
+      verifiedMedia = PitchReceiverGameMedia.createVerifiedMedia(mediaPacket, packet, mediaHash,entry.game_pk===849843?window.PitchReceiverMedia:{});
     } catch (_) {
-      loadNote = "전체 영상 목록 검사 실패 · 기존 첫3구 영상만 표시합니다. 추천·결과는 계속 비교할 수 있습니다.";
+      loadNote = "전체 영상 목록 검사 실패 · 영상은 표시하지 않습니다. 저장된 투구 기록은 계속 확인할 수 있습니다.";
     }
     if (version !== loadVersion) return;
-    gameMedia = verifiedMedia?.media || null;
+    gameMedia = verifiedMedia?.media || {};
     excludedMedia = verifiedMedia?.excluded || {};
     mediaLoadNote = loadNote;
     session = candidate;
@@ -544,12 +598,13 @@ async function loadFullGame(startKey = PitchReceiverRoute.FIRST, historyMode = "
     const info = node("source-details");
     info.hidden = false;
     textElement("div", `공개용 선별 파일 SHA256: ${hash}`, info);
-    textElement("div", `수신 원응답 SHA256: ${session.view().source.sha256}`, info);
-    textElement("div", "경기 후 저장 응답의 재생입니다. 실행 서버 커밋·실시간 사전 가용성은 미확인입니다.", info);
-    if (verifiedMedia) textElement("div", `영상 연결 목록 SHA256: ${mediaHash} · 투구ID/선수/구종 대조 ${Object.keys(gameMedia).length}구, 불일치 제외 ${Object.keys(excludedMedia).length}구.`, info);
-    textElement("div", "첫3구는 저장 영상, 나머지는 MLB 공식 영상 서버에서 선택한 클립만 읽습니다. 로컬 원본 SHA는 원격 서버의 현재 영상 바이트까지 보증하지 않습니다.", info);
-    put("import-status", "849843 저장 경기 · 구조·투구 키 검사 통과");
-    put("replay-status", zoneNote || "기록 존 262구 연결 · 타석과 투구를 바꾸어도 같은 위치의 링크를 공유할 수 있습니다.");
+    textElement("div", `원본 자료 SHA256: ${session.view().source.sha256}`, info);
+    textElement("div", entry.ready?"경기 후 저장 응답의 재생입니다. 실행 서버 커밋·실시간 사전 가용성은 미확인입니다.":"공식 경기 기록의 재생입니다. 이 경기의 모델 추천 파일은 아직 받지 못했으며, 미지원 판정이나 추천을 생성하지 않았습니다.", info);
+    const reasons = Object.values(excludedMedia).map((item) => item.reason), autoBalls = reasons.filter((reason) => reason === "automatic_ball_no_video").length;
+    if (verifiedMedia) textElement("div", `영상 연결 목록 SHA256: ${mediaHash} · 투구ID/선수/구종 대조 ${Object.keys(gameMedia).length}구, 불일치 제외 ${reasons.length - autoBalls}구${autoBalls ? ` · 자동 볼(영상 없음) ${autoBalls}건` : ""}.`, info);
+    textElement("div", "MLB 공식 영상 서버에서 선택한 클립을 읽습니다. 컵스–파드리스 첫3구는 사이트의 저장 영상을 사용합니다. 로컬 원본 SHA는 원격 서버의 현재 영상 바이트까지 보증하지 않습니다.", info);
+    put("import-status", `${entry.title} · 구조·투구 키 검사 통과`);
+    put("replay-status", zoneNote || `기록 존 ${Object.keys(zones||{}).length}구 연결 · 타석과 투구를 바꾸어도 같은 위치의 링크를 공유할 수 있습니다.`);
     render();
     rememberRoute(historyMode);
     node("file-tools").open = false;
@@ -572,6 +627,10 @@ async function loadFirstPa(startPitch = 1, historyMode = "push") {
     if (version !== loadVersion) return;
     builtInDemo = true;
     currentMode = "archive";
+    // openText rendered once in file mode; the archive is the 849843 first plate appearance.
+    showGameHeader(PitchGameCatalog.get(849843));
+    put("featured-coverage", "첫 타석 · 3구 · 공식 영상 3개");
+    put("featured-description", "따로 받아 둔 첫 타석 수신본입니다. ‘경기 전체 열기’로 71타석·262구 관전으로 이동할 수 있습니다.");
     if (Number.isInteger(startPitch) && startPitch >= 1 && startPitch <= 3) {
       for (let i = 1; i < startPitch; i++) { session.reveal(true); session.next(); }
       session.reveal(false);
@@ -585,8 +644,14 @@ async function loadFirstPa(startPitch = 1, historyMode = "push") {
     reportError(error, version);
   }
 }
-node("load-first-pa").addEventListener("click", () => loadFullGame());
-node("load-full-game").addEventListener("click", () => loadFullGame());
+function reopenSelectedGame(){
+  const current = PitchGameCatalog.get(session?.view().game?.game_pk);
+  const fromAddress = PitchGameCatalog.get(new URLSearchParams(window.location.search).get("game"));
+  // The game named in the address wins, so a retry after a failed load retries that game.
+  return loadFullGame((current || fromAddress || lastCatalogGame)?.first_pitch || PitchReceiverRoute.FIRST);
+}
+node("load-first-pa").addEventListener("click", reopenSelectedGame);
+node("load-full-game").addEventListener("click", reopenSelectedGame);
 node("pitch-tabs").addEventListener("click", (event) => {
   const button = event.target.closest("button[data-key]");
   if (!button) return;
@@ -807,12 +872,16 @@ async function restoreRoute() {
       clear();
       node("file-tools").open = true;
       put("replay-status", "파일은 주소에 저장되지 않습니다. 본인이 보관한 파일을 다시 선택해 주세요.");
-    } else if (route.mode === "game" && fullGame()) {
+    } else if (route.mode === "game" && fullGame() && Number(route.pitchId.split(":")[0])===session.view().game.game_pk) {
       session.select(route.pitchId);
       syncPaFilter();
       render();
       rememberRoute("replace");
-    } else if (route.mode === "game") await loadFullGame(route.pitchId, "replace");
+    } else if (route.mode === "game") {
+      const pending = PitchGameCatalog.get(route.pitchId.split(":")[0]);
+      if (pending) showGameHeader(pending);
+      await loadFullGame(route.pitchId, "replace");
+    }
     else await loadFirstPa(Number(route.pitchId.split(":")[2]), "replace");
   } catch (error) { reportError(error, loadVersion); }
 }

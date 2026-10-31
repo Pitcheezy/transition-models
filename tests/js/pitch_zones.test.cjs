@@ -140,6 +140,7 @@ test("missing or changed actual byte hash prevents activation", () => {
 
 test("browser global exports the same verified API without CommonJS", () => {
   const context = vm.createContext({});
+  vm.runInContext(fs.readFileSync(path.join(__dirname, "../../web/pitch-studio/game-catalog.js"), "utf8"), context);
   const source = fs.readFileSync(path.join(__dirname, "../../web/pitch-studio/receiver-zones.js"), "utf8");
   vm.runInContext(source, context);
   const api = context.PitchReceiverZones;
