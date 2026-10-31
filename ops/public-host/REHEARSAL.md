@@ -115,3 +115,27 @@ python scripts/218_estimate_viewer_budget.py --examples
 30/50 가상 세션, 접근 문 ON, 임시 loopback Worker/R2만 사용한다. 5초 간격6슬롯·슬롯당2파일·각32KiB로 부하GET360/600건이며 준비 요청은 별도다. 마지막 예정 시작은25초다. 실제 사용자 브라우저·공용 CDN 용량 검사가 아니다. 지연500ms 초과/슬롯경계 초과/요청 실패는 중단하며 늦은 poll을 몰아 실행하지 않는다. 기존 closed-loop의 `--requests`/`--concurrency`/`--bytes`와 섞을 수 없다. 출력 경로는 실행 전에 확인하고 기존 파일을 덮어쓰지 않는다.
 
 [합격 조건·실측·예산·한계](../../docs/WS_EXHIBITION_CAPACITY_20261025.md)를 함께 읽는다. Free 일일 예산 계산은 Paid 월간 비용 추정과 별개이며 계정 잔량을 API로 읽거나 설정/요금제를 바꾸지 않는다.
+
+## 받은 전시 빌드의 우리 호스트 설치 리허설 — EXHIBIT-host1
+
+받은 전시 빌드(정적4파일 + v1자료)를 **우리 호스트 계약대로 나누어** 로컬 Worker에 설치하고 읽어 보는 리허설이다.
+정적4파일(index.html, favicon.svg, assets/index-*.js, assets/index-*.css)은 ASSETS binding으로, v1자료는 실제 인증 업로드 경로
+`/_publish`(첫 생성 `If-None-Match: *`)로 올려 발행 기록 형식으로 저장된 뒤 공개 `/v1`로 읽는다. site/ 전체를 ASSETS나 R2에 그대로 복사하지 않는다.
+입력은 인수 영수증(`pitcheezy-exhibition-intake-v1`)과 추출본 폴더이며, 모든 파일의 바이트 수·원본 SHA-256과 파일 집합이 영수증과 같아야 시작한다.
+분류에서 벗어난 파일, 정적 파일 수 불일치, 허용되지 않는 v1 키, 자료 수 불일치(`--expect-data`, 기본24)는 거부한다.
+받은 파일은 읽기만 하며 바이트로 올린다. 경기 파일 내용은 분석하지 않는다(평가 잠금 849844 포함).
+
+~~~text
+node ops/public-host/rehearse-exhibit-host.mjs --site <추출site> --receipt <intake-receipt.json> --out <새폴더> [--browser] [--access] [--playwright <playwright 모듈 경로>]
+node --test ops/public-host/tests/exhibit-host.test.mjs
+~~~
+
+`--out`은 없는 폴더여야 하고 영수증은 `<새폴더>/receipt.json`, 화면은 같은 폴더의 PNG다. 입력 검증·분류를 통과한 뒤에만 폴더와 런타임을 만든다.
+`--browser`는 설치된 Chrome(Playwright channel chrome, headless)으로 1440×900·390×844에서 `/?game=849843` 표시, 첫 투구 문구, 가로 넘침·페이지 오류 없음을 확인하고,
+실제 `/_notice` 스위치 ON→앱의 추천 목록 숨김·안내 문구, OFF→새로고침 없이 복원(각 최대40초 실시간 대기)을 본다. loopback 외 요청은 모두 차단한다.
+`--access`는 접근 문 ON으로 시작해 쿠키 없는 401, 로그인 화면 401, 실제 form 로그인 뒤 앱 표시와 `/v1` 읽기를 확인한다. 접속 코드는 출력·영수증에 넣지 않는다.
+날짜 목록에만 있고 파일이 없는 날짜의 `/?date=` 진입은 **관찰 기록**이며 합격 판정이 아니다.
+
+Node 검사는 합성 4+6 미니 빌드만 쓴다. 종료0은 모든 검사 통과, 1은 검사 실패(영수증 기록), 2는 입력/출력 거부다.
+이것은 Cloudflare가 아니다. 정적 파일 처리는 Node 흉내(정확한 경로·`/`·HTML 수용 미스→index.html)이고 CDN·TLS·실도메인·실기기·저장 로그 대조는 없다.
+안내 문구는 승인 전 개발용 문구다. 누락된 날짜 파일은 그대로 404다. 2026-11-01 두 실행(--browser 84/0, --browser --access 92/0)의 영수증은 Git 제외 로컬 폴더에 있다.

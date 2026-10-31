@@ -92,7 +92,7 @@ async function freeLoopbackPort() {
  * real D1 with the telemetry migration, telemetry and feedback ON, the edge stand-in above, and the
  * widget files served as assets. Collection needs https because COLLECTION_ORIGIN is https-only.
  */
-export async function startLocalHost({ signal, notice = true, access = null, collection = null } = {}) {
+export async function startLocalHost({ signal, notice = true, access = null, collection = null, assets = null } = {}) {
   const token = randomBytes(32).toString("base64url");
   // Separate ephemeral operator token for the emergency notice switch (never the publisher token).
   const noticeToken = randomBytes(32).toString("base64url");
@@ -122,7 +122,8 @@ export async function startLocalHost({ signal, notice = true, access = null, col
     bindings: { DATA_READ_ENABLED: "true", UPLOAD_ENABLED: "true", PUBLISH_TOKEN_SHA256: hash(token),
       ...(notice ? { NOTICE_TOKEN_SHA256: hash(noticeToken) } : {}), ...accessBindings, ...collectionBindings },
     serviceBindings: {
-      ASSETS: request => {
+      // `assets` lets a rehearsal install a real front end (EXHIBIT-host1); the fixture stays the default.
+      ASSETS: assets || (request => {
         const path = new URL(request.url).pathname;
         if (path === "/") return new Response(fixtureHtml, { headers: { "Content-Type": "text/html; charset=utf-8" } });
         if (path === "/fixture.mjs") return new Response(fixtureJs, { headers: { "Content-Type": "text/javascript" } });
@@ -131,7 +132,7 @@ export async function startLocalHost({ signal, notice = true, access = null, col
           return new Response(client[path.slice(1)], { headers: { "Content-Type": path.endsWith(".css") ? "text/css" : "text/javascript" } });
         }
         return new Response("not found", { status: 404 });
-      },
+      }),
     },
   };
   const mf = new Miniflare(collectionMode ? {
