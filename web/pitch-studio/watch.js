@@ -292,7 +292,9 @@
       ? `자동 볼 · 투구 없음${a.event_label?` · ${a.event_label}`:""}`
       : resultReady && v.revealed && a
       ? `${a.pitch_label ?? "구종 미제공"} · ${a.result_label ?? a.event_label ?? "결과 미제공"}${a.speed_mph==null?"":` · ${a.speed_mph.toFixed(1)} mph`}${a.event_label && a.event_label!==a.result_label?` · ${a.event_label}`:""}`
-      : v.revealed ? "실제 위치 공개 · 구종·판정·타구 결과는 클립 종료 후 공개합니다." : "실제 선택은 영상이 끝나면 공개합니다.");
+      : v.revealed ? "실제 위치 공개 · 구종·판정·타구 결과는 클립 종료 후 공개합니다."
+      : excluded[v.pitch_id]?.reason==="automatic_ball_no_video" ? "영상이 없는 기록입니다. ‘결과 보기’로 공개합니다."
+      : "실제 선택은 영상이 끝나면 공개합니다.");
     el("watch-result").classList.toggle("is-revealed",resultReady);
     drawLocations(v);
     clip.update({enabled:true,context:generation,pitch_id:v.pitch_id,revealed:v.revealed,media,
