@@ -2,14 +2,18 @@
 
 ## 현재 전시 준비 — 2026-11-01
 
-현재 공개 버전: Sites v21 / 소스 76dd0887a09913aa7783a540b5c6104b2658261c (마지막 확인 기록, 오늘 재배포 없음). 채택된 Song fba6b2ff는 로컬 인수 대상이며 공개 반영 아님.
+현재 공개 버전: Sites v21 / 소스 76dd0887a09913aa7783a540b5c6104b2658261c (마지막 확인 기록, 오늘 변경 없음). Song fba6b2ff는 로컬 인수 완료·일부 조건부이며 공개 반영 아님.
 
-- 담당 Codex / codex/exhibition-intake-1101 / main 4e6aba71487ffe0c2ce9dd6df658ca9db9da9953에서 분리. 기존 작업 폴더·Claude PR86 그대로 보존.
-- [x] EXHIBIT-intake1: 고정 ZIP·manifest 검증, 원본 추출·262투구 검증, 실제 로컬 브라우저 및 안내 상태 기록.
-- [x] EXHIBIT-clips1: 261클립·262투구 등록부·영상 전용 플레이어·실행기·비공개 ZIP·해시 검증.
-- [ ] EXHIBIT-review1: 고정 변경분을 다른 모델이 검토. 같은 모델 보조 검토는 구분.
-- [ ] EXHIBIT-host1: 시험 호스트 연결은 설명/승인 뒤. 실제 배포·도메인·PR 정리 미실행.
-- 기존 CV/추가 경기 신규 개발 중단, 기존 페이지 사용 보류·삭제 없음. 다음 재개 문서: docs/CLAUDE_EXHIBITION_RESUME.md.
+담당 Codex / codex/exhibition-intake-1101 / 기반main4e6aba7 / 제품4cec0f8008357e7881143102a3a6ac8be836dfc2. 기존site-first미커밋작업·Claude PR86·연구·공개사이트 보존. 수정 권한 반납.
+
+- [x] EXHIBIT-intake1. ZIP867682bytes·28파일 raw/LF SHA 일치,262구/71타석/246추천·16미지원. Chrome PC/390/320 및 안내 모의38확인 통과. 날짜23일중18일파일누락은 조건부. 〔모델: Fable 5.1〕
+- [x] EXHIBIT-clips1. 261클립·262행등록부·제외69:2 보존, 영상전용플레이어·Range실행기·비공개v2ZIP. Python57·Node29·Chrome14, ZIP CRC/270파일해시·별도압축해제·소스7파일일치. 〔모델: Fable 5.1〕
+- [x] EXHIBIT-review1. 다른모델 gpt-6.1-terra 정적검토/2차지적수정/4cec0f8 재검토PASS. Claude외부전송은자동검토거절로미실행. 〔모델: Fable 5.1〕
+- [ ] EXHIBIT-host1. 다음단위: 로컬 Worker에 정적4/v1자료 분리 인수계획과 날짜누락 대응 초안. 실제시험배포·접근설정·도메인전환은 사용자설명/승인범위 확인 뒤. 〔모델: Fable 5.1〕
+
+최종팩: outputs/exhibition_1101/pitcheezy-849843-clips-v2.zip (1313836394bytes, SHA15fa4f349f8b13f025482cbf58ac111f1c7a631faa29de1cc276b300430e6b7b), Git제외·미발신. v1도보존.
+[인수 보고](docs/EXHIBITION_LOCAL_ACCEPTANCE_20261101.md) / [검증 영수증](docs/results/exhibition_20261101/) / [Claude 재개](docs/CLAUDE_EXHIBITION_RESUME.md).
+실제Mac/iPhone·두모니터자동동기화·Cloudflare인수·도메인전환·PR정리·공동시험잔여는미완료. 새CV/경기추가중단, 기존페이지사용보류·삭제없음.
 
 아래 항목은 이전 main의 이력이며 위 최신 PLAN 및 사용자 결정이 우선한다.
 
