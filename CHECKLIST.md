@@ -14,7 +14,7 @@
 - [x] EXHIBIT-host1a. 로컬 Worker 인수(Cloudflare 아님): 우리 실제 gateway를 loopback Miniflare로 띄워 정적4는 ASSETS, v1자료24는 인증 업로드 경로로 올린 뒤 공개 /v1에서 24개 바이트 일치. 실제 안내 스위치ON→앱 추천 숨김·OFF→새로고침 없이 복원, 1440·390폭 Chrome. 84/0, 접근 코드 ON 92/0. Fable 5.1 작성·Opus 5.5 검토, ops 385검사 통과. 누락 날짜는 앱이 "이 날짜에는 경기가 없어요" 표시. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-11-01 · Claude]`
 - [ ] EXHIBIT-host1. 실제 시험 호스트 연결·도메인 전환: [실행 전 설명](docs/EXHIBIT_HOST_PLAN_20261101.md)의 사용자 결정 6건(도메인 구성·공개 범위·올릴 자료·안내 문구·요금제·형 회신) 대기. 결정 전 Cloudflare·DNS·Sites 변경 없음. 〔모델: Fable 5.1〕
 
-최종팩: D:/pitcheezy_exhibit_check/pitcheezy-849843-clips-v3.zip (1313843498bytes, SHA26f0b83d7403312c190f0c176fd4ffbaf452b1c953de896ffc74cf8926fe2baa, 제품 14d3db2 작업트리, 같은이름.receipt.json), Git제외·미발신. 이전 v2(outputs/exhibition_1101/pitcheezy-849843-clips-v2.zip, 1313836394bytes, SHA15fa4f34…)와 v1도 삭제하지 않고 보존.
+최종팩: D:/pitcheezy_exhibit_check/pitcheezy-849843-clips-v4.zip (1313843654bytes, SHA32f4377e9cf4e003efa54f49f7584ca2eb72eb362edd8e32c77e7f9a2d526f1c, 제품 1a64fba, 같은이름.receipt.json), Git제외·미발신. 새 폴더 추출·verify 270파일·Chrome 19/19. v3(26f0b83d…, Opus 재시작 포트 수정 전)·v2·v1은 전달 대상 아님, 삭제하지 않고 보존.
 [인수 보고](docs/EXHIBITION_LOCAL_ACCEPTANCE_20261101.md) / [검증 영수증](docs/results/exhibition_20261101/) / [Claude 재개](docs/CLAUDE_EXHIBITION_RESUME.md).
 실제Mac/iPhone·두모니터자동동기화·Cloudflare인수·도메인전환·PR정리·공동시험잔여는미완료. 새CV/경기추가중단, 기존페이지사용보류·삭제없음.
 

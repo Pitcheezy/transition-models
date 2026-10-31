@@ -5,7 +5,8 @@
 - 작업 폴더 `C:/Users/zpfh1/Projects/transition-models-exhibit-1101`, 브랜치 `claude/exhibit-host1-1101`(Codex `233ad17`에서 시작). Codex 폴더는 읽기만.
 - 완료: ①② 독립 재검증(받은 ZIP SHA·인수 재현, Python57·Node29, 팩 v2 SHA·270파일, 261클립을 형 경기 파일·팩 등록부·CV-47 등록부와 타석·구·선수·구종·SHA 대조 0불일치, 브라우저 이어재생·제외구 정지). 독립 추출본 `D:/pitcheezy_exhibit_check/clips-v2-claude`.
 - 완료: Codex 코드 Claude 교차 검토(확인 16건, CHECKLIST EXHIBIT-review2), 로컬 Worker 인수 `ops/public-host/rehearse-exhibit-host.mjs`(84/0, 접근 코드 92/0).
-- 진행 중: EXHIBIT-clips2 — 검토 지적 수정과 팩 v3(Fable 5.1 수정, Opus 검토). 검토 원본 정리: scratchpad review1.json(세션 밖에선 CHECKLIST 항목 참조).
+- 완료: EXHIBIT-clips2 — 검토 지적 16건 수정(Fable 5.1 수정, Opus 검토·재시작 포트 규칙 보정), 최종 팩 v4 `D:/pitcheezy_exhibit_check/pitcheezy-849843-clips-v4.zip`(SHA 32f4377e…), Chrome 19/19.
+- 다음(사용자 답 대기): 형 최종 빌드 읽기 전용 교차 검토, 입구 한 페이지 초안, PR 정리 순서표, 전시 운영표. ③④는 결정 6건 뒤.
 - 실행 전 설명: [docs/EXHIBIT_HOST_PLAN_20261101.md](EXHIBIT_HOST_PLAN_20261101.md). 형 회신 초안(미발신): [mail_drafts/EXHIBIT-song-reply-20261101.md](mail_drafts/EXHIBIT-song-reply-20261101.md).
 - 중단되면: `git -C <작업 폴더> status`로 미커밋 파일을 확인하고, 위 두 문서와 CHECKLIST 맨 위를 읽은 뒤 남은 단위만 이어간다. 실제 배포·도메인·형 발신은 사용자 승인 전 금지.
 
