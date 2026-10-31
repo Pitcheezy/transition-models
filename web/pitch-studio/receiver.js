@@ -213,7 +213,7 @@ function showGameHeader(entry) {
     title.append(logo);
     textElement("span", ` ${teams[index]}`, title).className = "featured-team";
   }
-  put("featured-date", `현지 ${entry.local_date} · 저장 경기`);
+  put("featured-date", `현지 ${entry.local_date.replaceAll("-", ".")} · 한국 ${entry.date.slice(5).replace("-", ".")} · 저장 경기`);
   node("legacy-provenance").hidden = entry.game_pk !== 849843;
   for (const id of ["scientific-note-featured", "scientific-note-stage"]) node(id).hidden = entry.source_kind === "official_record";
 }
@@ -233,9 +233,13 @@ function render(preservePosition = false) {
     document.title=`${entry.title} · 상세 분석 · Pitcheezy`;
   } else if (currentMode !== "archive") {
     // A sample or a chosen file is not one of the curated games: no team heading, no game notes.
-    put("featured-title", view.source.kind === "synthetic" ? "합성 연결 테스트 자료" : `${view.game.away_team} @ ${view.game.home_team}`);
+    const synthetic = view.source.kind === "synthetic";
+    put("featured-title", synthetic ? "합성 연결 테스트 자료" : `${view.game.away_team} @ ${view.game.home_team}`);
     put("featured-date", "저장 경기 자료");
+    put("featured-coverage", synthetic ? "합성 자료 · 실제 경기 아님" : "직접 고른 응답 파일");
+    put("featured-description", "이 자료는 실제 경기 영상과 연결되지 않습니다.");
     node("legacy-provenance").hidden = true;
+    for (const id of ["scientific-note-featured", "scientific-note-stage"]) node(id).hidden = synthetic;
     document.title = "투구별 상세 분석 · Pitcheezy";
   }
   pitchVideo.update({ context: loadVersion, pitch_id: view.pitch_id, revealed: view.revealed, enabled: builtInDemo,
@@ -272,7 +276,7 @@ function render(preservePosition = false) {
   put("game-name", `${view.game.away_team} @ ${view.game.home_team}`);
   put(
     "pitch-identity",
-    `${view.full_game ? `현지 ${PitchGameCatalog.get(view.game.game_pk).local_date} · 한국 ${view.game.date.slice(5)}` : `${view.game.date} (경기 기록 날짜)`} · ${view.at_bat_number}번째 타석 · ${view.pitch_number}구 · 키 ${view.pitch_id}`,
+    `${view.full_game ? `현지 ${PitchGameCatalog.get(view.game.game_pk).local_date.replaceAll("-", ".")} · 한국 ${view.game.date.slice(5).replace("-", ".")}` : `${view.game.date} (경기 기록 날짜)`} · ${view.at_bat_number}번째 타석 · ${view.pitch_number}구 · 키 ${view.pitch_id}`,
   );
   const bases = [1, 2, 4].flatMap((bit, i) =>
     s.bases & bit ? [`${i + 1}루`] : [],
@@ -623,6 +627,8 @@ async function loadFirstPa(startPitch = 1, historyMode = "push") {
     if (version !== loadVersion) return;
     builtInDemo = true;
     currentMode = "archive";
+    // openText rendered once in file mode; the archive is the 849843 first plate appearance.
+    showGameHeader(PitchGameCatalog.get(849843));
     if (Number.isInteger(startPitch) && startPitch >= 1 && startPitch <= 3) {
       for (let i = 1; i < startPitch; i++) { session.reveal(true); session.next(); }
       session.reveal(false);
@@ -639,7 +645,8 @@ async function loadFirstPa(startPitch = 1, historyMode = "push") {
 function reopenSelectedGame(){
   const current = PitchGameCatalog.get(session?.view().game?.game_pk);
   const fromAddress = PitchGameCatalog.get(new URLSearchParams(window.location.search).get("game"));
-  return loadFullGame((current || lastCatalogGame || fromAddress)?.first_pitch || PitchReceiverRoute.FIRST);
+  // The game named in the address wins, so a retry after a failed load retries that game.
+  return loadFullGame((current || fromAddress || lastCatalogGame)?.first_pitch || PitchReceiverRoute.FIRST);
 }
 node("load-first-pa").addEventListener("click", reopenSelectedGame);
 node("load-full-game").addEventListener("click", reopenSelectedGame);
