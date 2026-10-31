@@ -1,5 +1,10 @@
 # SmartPitch transition-models
 
+## 전시 재개 기준 — 2026-11-01
+
+PLAN.md → CHECKLIST.md 상단 → docs/COLLABORATION_PROTOCOL.md → docs/CLAUDE_EXHIBITION_RESUME.md 순서로 읽는다. 사용자는 Song 고정 빌드와 영상 전용 플레이어 방향을 채택했다. 기존 파일·worktree를 보존하며 CV/추가 경기 개발은 중단한다. 이번 실행은 우리 로컬 인수·전달팩 준비만이다. 팀원 저장소·실제 호스트·도메인 변경은 하지 않는다. 한 파일 한 수정자, 고정 변경분 다른 모델 검토를 유지한다.
+
+
 ## 현재 월드시리즈 운영 인계 — 2026-10-18
 
 현재 작업·수정 권한은 [CHECKLIST 상단](CHECKLIST.md), 검증 결과·남은 입력은

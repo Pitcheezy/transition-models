@@ -1,5 +1,19 @@
 # 남은 작업 체크리스트
 
+## 현재 전시 준비 — 2026-11-01
+
+현재 공개 버전: Sites v21 / 소스 76dd0887a09913aa7783a540b5c6104b2658261c (마지막 확인 기록, 오늘 재배포 없음). 채택된 Song fba6b2ff는 로컬 인수 대상이며 공개 반영 아님.
+
+- 담당 Codex / codex/exhibition-intake-1101 / main 4e6aba71487ffe0c2ce9dd6df658ca9db9da9953에서 분리. 기존 작업 폴더·Claude PR86 그대로 보존.
+- [ ] EXHIBIT-intake1: 고정 ZIP·manifest 검증, 원본 추출·262투구 검증, 실제 로컬 브라우저 및 안내 상태 기록.
+- [ ] EXHIBIT-clips1: 261클립·262투구 등록부·영상 전용 플레이어·실행기·비공개 ZIP·해시 검증.
+- [ ] EXHIBIT-review1: 고정 변경분을 다른 모델이 검토. 같은 모델 보조 검토는 구분.
+- [ ] EXHIBIT-host1: 시험 호스트 연결은 설명/승인 뒤. 실제 배포·도메인·PR 정리 미실행.
+- 기존 CV/추가 경기 신규 개발 중단, 기존 페이지 사용 보류·삭제 없음. 다음 재개 문서: docs/CLAUDE_EXHIBITION_RESUME.md.
+
+아래 항목은 이전 main의 이력이며 위 최신 PLAN 및 사용자 결정이 우선한다.
+
+
 ## PR63 병합·운영 증거 PR64 검토 — 2026-10-25
 
 - [x] H-main3. 사용자 승인으로 PR63 고정 `e09c9d2`의 코드 불변·최종CI8/8을 재확인하고 main `06aa6d0f3ad24a7e9f0649491f9887283d8f77d8`에 병합했다. [PR63](https://github.com/Pitcheezy/transition-models/pull/63). 실제 배포는 변경하지 않았다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-25 · Codex]`
