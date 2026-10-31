@@ -1,0 +1,14 @@
+{
+  // Home-only entry page for pitcheezy.com (SONG-REQ-1031 item 1). Static assets, no Worker code.
+  // Deploying this does NOT touch DNS. The custom domain is added separately, after approval (see README.md).
+  "$schema": "../public-host/node_modules/wrangler/config-schema.json",
+  "name": "pitcheezy-home",
+  "compatibility_date": "2026-07-30",
+  "workers_dev": false,
+  "preview_urls": false,
+  "assets": {
+    "directory": "../../web/pitch-studio-home",
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "none"
+  }
+}

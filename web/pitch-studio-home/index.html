@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pitcheezy — 다음 공, 무엇이 최선일까?</title>
+    <meta
+      name="description"
+      content="팬을 위한 AI 야구 관전 보조. 실제 MLB 경기 기록에서 추천 구종과 실제 투구 결과를 한 구씩 비교합니다."
+    />
+    <meta name="theme-color" content="#091811" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23ceff78'/%3E%3Ctext x='8' y='25' font-family='Arial' font-weight='bold' font-size='25' fill='%23091811'%3EP%3C/text%3E%3C/svg%3E"
+    />
+    <link rel="stylesheet" href="product.css?v=30" />
+    <style>
+      .home-steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+      .home-steps li{border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:22px 22px 24px;background:rgba(255,255,255,.03)}
+      .home-steps span{display:block;font-size:12px;letter-spacing:2px;color:#ceff78;margin-bottom:10px}
+      .home-steps h3{margin:0 0 8px;font-size:20px}
+      .home-steps p{margin:0;color:#b9c6b4;line-height:1.65}
+      @media (max-width: 760px){.home-steps{grid-template-columns:1fr}}
+    </style>
+    <script src="home.js?v=30" defer></script>
+  </head>
+  <body>
+    <a class="skip" href="#main">본문으로 이동</a>
+    <header class="product-header">
+      <a href="./" class="wordmark"
+        ><span class="seal">P</span>PITCHEEZY<i>●</i></a
+      >
+      <nav aria-label="주요 메뉴">
+        <a class="nav-cta" href="https://app.pitcheezy.com/?game=849843">서비스 열기</a>
+      </nav>
+    </header>
+    <main id="main">
+      <section class="hero">
+        <div class="hero-copy">
+          <span class="eyebrow">BEYOND THE BOX SCORE</span>
+          <h1>다음 공,<br />무엇이 최선일까?</h1>
+          <p>
+            기록으로 계산한 추천과 실제 선택.<br />한 구에 담긴 경기 상황을 함께 읽습니다.
+          </p>
+          <a class="primary" href="https://app.pitcheezy.com/?game=849843">서비스 열기</a
+          ><span class="hero-demo">2026 NL WILD CARD · GAME 1</span>
+        </div>
+        <div class="film-stage">
+          <video
+            id="hero-video"
+            autoplay
+            muted
+            loop
+            playsinline
+            preload="metadata"
+            poster="media/pitch-849843-1-1-official.jpg"
+            aria-label="컵스 대 파드리스의 서로 다른 네 투구를 이어 붙인 약 24초 무음 하이라이트"
+          >
+            <source src="media/hero-849843-four-pitches-v1.mp4" type="video/mp4" /></video
+          ><img
+            id="hero-still"
+            src="media/pitch-849843-1-1-official.jpg"
+            width="1280"
+            height="720"
+            alt="펫코 파크에서 투구를 준비하는 마이클 킹"
+            hidden
+          />
+          <div class="film-shade"></div>
+          <div class="scorebug">
+            <small>MLB · RECORDED</small><strong class="scorebug-teams"><img src="media/team-chc.svg" alt="" width="32" height="32" /> CHC <em>vs</em> SD <img src="media/team-sd.svg" alt="" width="32" height="32" /></strong
+            ><span>1회 초 · 4투구 하이라이트</span>
+          </div>
+          <div class="film-controls">
+            <span id="film-mode" role="status">4투구 하이라이트 · 약 24초</span>
+            <div class="film-buttons">
+              <button id="hero-play" type="button">영상 재생 ▶</button>
+            </div>
+          </div>
+        </div>
+        <div class="match-caption">
+          <span><b>2026 NL WILD CARD / GAME 1</b> 현지 2026.09.29 · 한국 09.30 · PETCO PARK</span
+          ><strong>시카고 컵스 @ 샌디에이고 파드리스</strong>
+        </div>
+      </section>
+      <section class="vision section-pad" id="about">
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow">HOW IT WORKS</span>
+            <h2>안타 한 개로,<br />모든 판단을 끝내지 않도록.</h2>
+          </div>
+          <p>
+            경기 상황과 선택을 팬이 이해하도록.<br />추천을 먼저 보고, 실제 결과를 확인합니다.
+          </p>
+        </div>
+        <ol class="home-steps">
+          <li>
+            <span>01 / SELECT</span>
+            <h3>한 타석을 고르다.</h3>
+            <p>저장된 경기의 타석과 공을 고르면, 그 공을 던지기 전의 경기 상황이 보입니다.</p>
+          </li>
+          <li>
+            <span>02 / RECOMMEND</span>
+            <h3>다음 공의 후보.</h3>
+            <p>모델이 투구 전에 저장해 둔 추천 구종 후보를 먼저 봅니다.</p>
+          </li>
+          <li>
+            <span>03 / COMPARE</span>
+            <h3>추천과 실제 공.</h3>
+            <p>실제 구종과 판정을 공개하고, 추천과 얼마나 달랐는지 한 구씩 비교합니다.</p>
+          </li>
+        </ol>
+        <p class="concept-note">
+          저장된 MLB 경기 기록으로 재생하는 관전 서비스입니다. 추천 비중은 구종 선택의 비중이며 결과 확률과 다릅니다.
+        </p>
+      </section>
+      <section class="closing">
+        <span class="eyebrow">YOUR NEXT PITCH, WITH CONTEXT</span>
+        <h2>이제, 한 구를 직접 살펴보세요.</h2>
+        <a href="https://app.pitcheezy.com/?game=849843" class="primary">서비스 열기</a>
+        <p>실제 MLB 기록 · 저장 추천 · 한 구씩 비교</p>
+      </section>
+    </main>
+    <footer class="product-footer">
+      <a href="./" class="wordmark">PITCHEEZY<i>●</i></a>
+      <p>
+        팬을 위한 AI 관전 보조 연구 서비스 · MLB 비제휴.<br />저장 경기 재생 제공 · 구단 로고는 각 구단 소유.
+      </p>
+      <a href="https://app.pitcheezy.com/?game=849843">서비스 열기</a>
+    </footer>
+  </body>
+</html>
