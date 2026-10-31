@@ -1,14 +1,24 @@
 "use strict";
 const {test} = require("node:test");
 const assert = require("node:assert/strict");
-const {validateRegistry,createState,transition:t} = require("../../web/clip-chain/core.js");
+const {validateRegistry,createState,transition:t,label,paLabel} = require("../../web/clip-chain/core.js");
 function fixture(){
  let n=0; const pitches=[];
+ // Partner data stores the bottom half as "Bot" (132 of 262 real rows); every other PA here is a bottom-half row.
  for(let pa=1;pa<=71;pa++)for(let pitch=1;pitch<=(pa<=49?4:3);pitch++){
    n++;const excluded=pa===69&&pitch===2;
-   pitches.push({pitch_key:`849843:${pa}:${pitch}`,game_pitch_number:n,pa_index:pa,pitch_number:pitch,inning:Math.ceil(pa/8),half:"Top",batter:"Batter",pitcher:"Pitcher",status:excluded?"excluded":"available",reason:excluded?"pitch_type_mismatch":null,src:excluded?null:`clips/${pa}_${pitch}_id.mp4`,bytes:excluded?null:100,sha256:excluded?null:"a".repeat(64),duration_s:excluded?null:6});
+   pitches.push({pitch_key:`849843:${pa}:${pitch}`,game_pitch_number:n,pa_index:pa,pitch_number:pitch,inning:Math.ceil(pa/8),half:pa%2?"Top":"Bot",batter:pa%2?"Batter":"Bottom Batter",pitcher:"Pitcher",status:excluded?"excluded":"available",reason:excluded?"pitch_type_mismatch":null,src:excluded?null:`clips/${pa}_${pitch}_id.mp4`,bytes:excluded?null:100,sha256:excluded?null:"a".repeat(64),duration_s:excluded?null:6});
  } return {schema:"clip-chain-v1",game_pk:849843,pitches};
 }
+test("labels follow monitor 1: inning/half (Song rule: Top→초, else→말), batter, N구; never PA index or Bot",()=>{
+ const r=fixture();const bot=r.pitches.find(p=>p.half==="Bot"),top=r.pitches.find(p=>p.half==="Top");
+ assert.equal(label(bot),"1회 말 · Bottom Batter · 1구");assert.equal(label(top),"1회 초 · Batter · 1구");
+ assert.equal(label({inning:9,half:"Top",batter:"Nico Hoerner",pitch_number:2,pa_index:69,game_pitch_number:252}),"9회 초 · Nico Hoerner · 2구");
+ assert.equal(paLabel({inning:9,half:"Top",batter:"Nico Hoerner",pa_index:69}),"9회 초 · Nico Hoerner");
+ for(const half of["Bot","Bottom","bottom","말",undefined,""])assert.equal(label({inning:4,half,batter:"Manny Machado",pitch_number:1,pa_index:6}),"4회 말 · Manny Machado · 1구");
+ for(const p of r.pitches){const text=label(p);assert.doesNotMatch(text,/\bBot\b|PA \d|\bTop\b/);assert.match(text,/^\d+회 (초|말) · .+ · \d+구$/);}
+ assert.equal(label({inning:1,half:"Top",batter:"",pitch_number:1}),"1회 초 · 타자 미표시 · 1구");
+});
 test("accepts complete261clip/262pitch registry and starts paused",()=>{const r=fixture();assert.equal(validateRegistry(r),r);assert.deepEqual(createState(r),{index:0,epoch:0,chain:false,mode:"paused"});});
 test("query selects exact ID and invalid ID fails rather than showing another pitch",()=>{const r=fixture();assert.equal(r.pitches[createState(r,"849843:2:3").index].pitch_key,"849843:2:3");assert.throws(()=>createState(r,"849843:999:1"));});
 for(const [name,mutate]of[

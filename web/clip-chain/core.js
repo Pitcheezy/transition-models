@@ -44,7 +44,11 @@
     }
     return state;
   }
-  const api = { validateRegistry, createState, transition };
+  // Monitor 1 (Song's app) shows inning/half, batter and the pitch number within the PA; it never shows PA index or game-wide pitch number.
+  function half(p) { return p.half === "Top" ? "초" : "말"; }
+  function paLabel(p) { return `${p.inning || "?"}회 ${half(p)} · ${p.batter || "타자 미표시"}`; }
+  function label(p) { return `${paLabel(p)} · ${p.pitch_number}구`; }
+  const api = { validateRegistry, createState, transition, label, paLabel };
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   else scope.ClipChain = api;
 })(typeof globalThis !== "undefined" ? globalThis : this);

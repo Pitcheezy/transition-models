@@ -167,6 +167,25 @@ def test_file_cannot_be_another_files_parent(tmp_path):
         inspect(write_zip(tmp_path, files), count=8)
 
 
+def test_date_file_counts_only_exact_games_json_directly_under_v1_games(tmp_path):
+    # The app fetches games/<date>.json; a stem match with another extension or depth is not a supplied date.
+    files = fixture_files()
+    files["v1/games/2026-10-01.txt"] = b"{}"
+    files["v1/games/old/2026-09-30.json"] = b"{}"
+    receipt, _ = inspect(write_zip(tmp_path, files), count=8)
+    assert receipt["catalogue"]["missing_date_files"] == ["2026-10-01"]
+    assert receipt["catalogue"]["supplied_date_files"] == 1
+    assert receipt["catalogue"]["unlisted_games_files"] == ["v1/games/2026-10-01.txt", "v1/games/old/2026-09-30.json"]
+
+
+def test_receipt_marks_source_commit_as_sender_declared(tmp_path):
+    receipt, _ = inspect(write_zip(tmp_path))
+    assert receipt["source_commit"] == mod.EXPECTED_COMMIT
+    assert receipt["source_commit_basis"] == "sender_declared_manifest_unverified"
+    assert receipt["declared_commit_dirty"] is False
+    assert any("sender's declaration" in line and "no rebuild" in line for line in receipt["limitations"])
+
+
 def test_malformed_manifest_row_rejected(tmp_path):
     raw = manifest(fixture_files())
     malformed = raw.replace(b"index.html\t", b"index.html\textra\t", 1)

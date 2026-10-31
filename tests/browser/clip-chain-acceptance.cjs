@@ -24,10 +24,40 @@ async function nearEnd(){await page.locator("video").evaluate(async v=>{if(v.rea
   assert.equal(await page.locator("#pa option").count(),71);return{pitches:262,plate_appearances:71};
  });
  await check("first three clips played completely in sequence",async()=>{
-  await page.evaluate(()=>{window.qaEnded=[];document.addEventListener("ended",e=>{if(e.target.tagName!=="VIDEO")return;window.qaEnded.push({key:document.querySelector("#pitch-key").textContent,time:e.target.currentTime,duration:e.target.duration});if(window.qaEnded.length===3)document.querySelector("#stop").click();},true);});
+  await page.evaluate(()=>{window.qaEnded=[];document.addEventListener("ended",e=>{if(e.target.tagName!=="VIDEO")return;window.qaEnded.push({key:document.querySelector("#pitch-key").textContent,time:e.target.currentTime,duration:e.target.duration,rate:e.target.playbackRate});if(window.qaEnded.length===3)document.querySelector("#stop").click();},true);});
   await page.locator("#speed").selectOption("2");await page.locator("#start").click();
   await page.waitForFunction(()=>window.qaEnded?.length===3,{},{timeout:90000});const ended=await page.evaluate(()=>window.qaEnded);
-  assert.deepEqual(ended.map(e=>e.key),["849843:1:1","849843:1:2","849843:1:3"]);for(const row of ended)assert.ok(Math.abs(row.time-row.duration)<.2);assert.equal(await page.locator("#stop").isDisabled(),true);return ended;
+  assert.deepEqual(ended.map(e=>e.key),["849843:1:1","849843:1:2","849843:1:3"]);for(const row of ended)assert.ok(Math.abs(row.time-row.duration)<.2);assert.equal(await page.locator("#stop").isDisabled(),true);
+  // The chosen speed must survive the chained clip replacement (the load algorithm resets playbackRate to defaultPlaybackRate).
+  assert.deepEqual(ended.map(e=>e.rate),[2,2,2]);return ended;
+ });
+ await check("selected speed carries into the next clip after 다음 공",async()=>{
+  await page.locator("#next").click();await page.waitForFunction(()=>document.querySelector("video")?.readyState>=1);
+  const rates=await page.locator("video").evaluate(v=>[v.playbackRate,v.defaultPlaybackRate]);assert.deepEqual(rates,[2,2]);assert.equal(await page.locator("#speed").inputValue(),"2");return{key:await page.locator("#pitch-key").textContent(),rates};
+ });
+ await check("labels carry monitor 1 cues: inning/half (Bot→말), batter, N구; no PA index",async()=>{
+  const half=p=>p.half==="Top"?"초":"말",labelOf=p=>`${p.inning}회 ${half(p)} · ${p.batter} · ${p.pitch_number}구`;
+  const bottom=manifest.pitches.findIndex(p=>p.half!=="Top");assert.ok(bottom>0);await select(bottom);
+  assert.equal(await page.locator("#identity").textContent(),labelOf(manifest.pitches[bottom]));assert.match(await page.locator("#identity").textContent(),/^\d+회 말 · /);
+  const paTexts=await page.locator("#pa option").evaluateAll(o=>o.map(x=>[x.value,x.textContent]));assert.equal(paTexts.length,71);
+  for(const [value,text]of paTexts){const first=manifest.pitches.find(p=>String(p.pa_index)===value);assert.equal(text,`${first.inning}회 ${half(first)} · ${first.batter}`);}
+  const globalTexts=await page.locator("#global option").evaluateAll(o=>o.map(x=>x.textContent));assert.equal(globalTexts.length,262);
+  globalTexts.forEach((text,i)=>{const p=manifest.pitches[i];assert.ok(text.startsWith(`${p.game_pitch_number} · ${labelOf(p)}`),text);});
+  for(const text of[...paTexts.map(x=>x[1]),...globalTexts])assert.doesNotMatch(text,/\bBot\b|PA \d/);
+  const copy=await page.evaluate(()=>document.querySelector(".intro small").textContent+" "+document.querySelector("aside").textContent);assert.match(copy,/이닝.*타자.*N구/s);assert.doesNotMatch(copy,/타석·구 번호/);
+  assert.equal(await page.locator("#pitch-key").textContent(),manifest.pitches[bottom].pitch_key);
+  return{bottom_half_example:manifest.pitches[bottom].pitch_key,identity:labelOf(manifest.pitches[bottom]),pa_options:paTexts.length,global_options:globalTexts.length};
+ });
+ await check("Space and arrows work right after a mouse click on 다음 공 / 이전 공",async()=>{
+  await select(5);await page.waitForFunction(()=>document.querySelector("video")?.readyState>=1);
+  await page.locator("#next").click();await page.waitForFunction(k=>document.querySelector("#pitch-key").textContent===k,manifest.pitches[6].pitch_key);
+  assert.notEqual(await page.evaluate(()=>document.activeElement?.id),"next");
+  await page.keyboard.press("Space");await page.waitForFunction(()=>!document.querySelector("video").paused);assert.equal(await page.locator("#pitch-key").textContent(),manifest.pitches[6].pitch_key);
+  await page.keyboard.press("Space");await page.waitForFunction(()=>document.querySelector("video").paused);
+  await page.keyboard.press("ArrowLeft");await page.waitForFunction(k=>document.querySelector("#pitch-key").textContent===k,manifest.pitches[5].pitch_key);
+  await page.locator("#prev").click();await page.waitForFunction(k=>document.querySelector("#pitch-key").textContent===k,manifest.pitches[4].pitch_key);
+  await page.keyboard.press("ArrowRight");await page.waitForFunction(k=>document.querySelector("#pitch-key").textContent===k,manifest.pitches[5].pitch_key);
+  assert.equal(await page.locator("video").evaluate(v=>v.paused),true);return{space_after_click_played_same_pitch:true,arrows_after_click_moved_one_pitch:true};
  });
  await check("manual selection rejects detached old-video ended/error",async()=>{
   await page.evaluate(()=>window.qaOldVideo=document.querySelector("video"));await select(3);const key=await page.locator("#pitch-key").textContent();
@@ -40,7 +70,19 @@ async function nearEnd(){await page.locator("video").evaluate(async v=>{if(v.rea
   const index=manifest.pitches.findIndex(p=>p.status==="excluded");await select(index-1);await nearEnd();await page.locator("#start").click();await page.waitForFunction(key=>document.querySelector("#pitch-key").textContent===key,manifest.pitches[index].pitch_key);assert.equal(await page.locator("video").count(),0);assert.equal(await page.locator("#start").isDisabled(),true);assert.equal(await page.locator("#stop").isDisabled(),true);assert.match(await page.locator("#status").textContent(),/제외/);return{excluded:manifest.pitches[index].pitch_key,seek_assisted:true};
  });
  await check("missing media error and explicit retry",async()=>{
-  const clip=new URL(manifest.pitches[0].src,origin).href;await page.route(clip,route=>route.abort());await select(0);await page.waitForFunction(()=>document.querySelector("#retry").hidden===false);assert.equal(await page.locator("#start").isDisabled(),true);await page.unroute(clip);await page.locator("#retry").click();await page.waitForFunction(()=>document.querySelector("video")?.readyState>=1);assert.equal(await page.locator("#retry").isHidden(),true);return{network_failure_injected:true};
+  const clip=new URL(manifest.pitches[0].src,origin).href;await page.route(clip,route=>route.abort());await select(0);await page.waitForFunction(()=>document.querySelector("#retry").hidden===false);assert.equal(await page.locator("#start").isDisabled(),true);
+  const errorText=await page.locator("#status").textContent();assert.match(errorText,/serve\.py 터미널/);assert.doesNotMatch(errorText,/파일을 확인/);
+  await page.locator("h1").click();await page.keyboard.press("Space");await page.waitForTimeout(300);assert.equal(await page.locator("#status").textContent(),errorText);// play() rejection must not replace the error text with the autoplay hint
+  await page.unroute(clip);await page.locator("#retry").click();await page.waitForFunction(()=>document.querySelector("video")?.readyState>=1);assert.equal(await page.locator("#retry").isHidden(),true);
+  assert.equal(await page.locator("video").evaluate(v=>v.playbackRate),2);return{network_failure_injected:true,error_text_points_to_server:true,speed_after_retry:2};
+ });
+ await check("stopping while the clip request is still pending keeps the stop status, not the autoplay hint",async()=>{
+  // pause() rejects the pending play() with AbortError; that is the operator's own stop, not an autoplay refusal.
+  const clip=new URL(manifest.pitches[2].src,origin).href;let release;const held=new Promise(resolve=>{release=resolve;});await page.route(clip,async route=>{await held;await route.continue().catch(()=>{});});// the browser may cancel a held media request after pause()
+  try{await select(2);await page.waitForFunction(()=>document.querySelector("video")&&document.querySelector("#retry").hidden);await page.locator("#start").click();await page.waitForTimeout(150);await page.locator("#stop").click();await page.waitForTimeout(500);
+   assert.doesNotMatch(await page.locator("#status").textContent(),/자동 재생이 허용되지/);assert.equal(await page.locator("#stop").isDisabled(),true);assert.equal(await page.locator("#start").isDisabled(),false);}
+  finally{release();await page.unroute(clip);}
+  await page.waitForFunction(()=>document.querySelector("video")?.readyState>=1);return{clip_request_held_during_start_then_stop:true};
  });
  await check("native seek cancels chain",async()=>{await page.locator("#start").click();await page.waitForFunction(()=>!document.querySelector("video").paused);await page.locator("video").evaluate(v=>{v.currentTime=1;});await page.waitForFunction(()=>document.querySelector("#stop").disabled);await page.locator("video").evaluate(v=>v.pause());});
  await check("persisted restoration resets same pitch paused; immediate start before metadata works (simulated lifecycle)",async()=>{
@@ -59,7 +101,21 @@ async function nearEnd(){await page.locator("video").evaluate(async v=>{if(v.rea
  await check("restart ended clip preserves chain mode",async()=>{await page.locator("#start").click();await page.waitForFunction(()=>!document.querySelector("video").paused);assert.equal(await page.locator("#stop").isDisabled(),false);await page.locator("#stop").click();});
  await check("desktop and phone layouts",async()=>{await select(1);await page.waitForFunction(()=>document.querySelector("video")?.readyState>=2);await page.locator("video").evaluate(v=>v.play());await page.waitForFunction(()=>document.querySelector("video").currentTime>.3);await page.locator("video").evaluate(v=>v.pause());for(const width of[1440,390,320]){await page.setViewportSize({width,height:width===1440?1050:844});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);await page.screenshot({path:path.join(output,`player-${width}.png`),fullPage:true});}return[1440,390,320];});
  await check("keyboard selection and direct URL target",async()=>{await page.locator("h1").click();await page.keyboard.press("ArrowRight");assert.equal(await page.locator("#global").inputValue(),"2");await page.goto(new URL("?pitch=849843%3A69%3A2",origin).href);await page.waitForFunction(()=>document.querySelector("#pitch-key").textContent==="849843:69:2");assert.equal(await page.locator("video").count(),0);});
- await check("unknown ID fails explicitly rather than silently changing pitch",async()=>{await page.goto(new URL("?pitch=849843%3A999%3A1",origin).href);await page.waitForFunction(()=>document.querySelector("#status").textContent.includes("등록되지 않은"));assert.equal(await page.locator("#global").isDisabled(),true);});
+ await check("unknown ?pitch= falls back to the first pitch with a visible notice; the player stays usable",async()=>{
+  await page.goto(new URL("?pitch=849843%3A999%3A1",origin).href);await page.waitForFunction(()=>document.querySelector("#status").textContent.includes("등록되지 않은"));
+  const status=await page.locator("#status").textContent();assert.match(status,/849843:999:1/);assert.doesNotMatch(status,/ZIP/);
+  assert.equal(await page.locator("#pitch-key").textContent(),manifest.pitches[0].pitch_key);assert.equal(await page.locator("#global").isDisabled(),false);assert.equal(await page.locator("#global option").count(),262);assert.equal(await page.locator("video").count(),1);
+  assert.equal(await page.evaluate(()=>new URLSearchParams(location.search).get("pitch")),manifest.pitches[0].pitch_key);return{status};
+ });
+ await check("전체 화면 covers the stage: identity and pitch key stay visible and survive clip replacement",async()=>{
+  await page.locator("h1").click();await page.locator("#full").click();await page.waitForFunction(()=>document.fullscreenElement?.id==="stage");
+  const visible=()=>page.evaluate(()=>["identity","pitch-key"].map(id=>{const el=document.getElementById(id),r=el.getBoundingClientRect(),hit=document.elementFromPoint(r.left+r.width/2,r.top+r.height/2);return{id,inViewport:r.width>0&&r.bottom<=innerHeight&&r.top>=0,hit:hit===el||el.contains(hit)||(hit&&hit.contains(el))};}));
+  const before=await visible();assert.deepEqual(before.map(x=>x.inViewport&&x.hit),[true,true]);const identityBefore=await page.locator("#identity").textContent();
+  await page.keyboard.press("ArrowRight");await page.waitForFunction(k=>document.querySelector("#pitch-key").textContent===k,manifest.pitches[1].pitch_key);
+  assert.equal(await page.evaluate(()=>document.fullscreenElement?.id),"stage");assert.notEqual(await page.locator("#identity").textContent(),identityBefore);
+  const after=await visible();assert.deepEqual(after.map(x=>x.inViewport&&x.hit),[true,true]);
+  await page.evaluate(()=>document.exitFullscreen());await page.waitForFunction(()=>!document.fullscreenElement);return{fullscreen_element:"stage",identity_visible_before_and_after_clip_replacement:true};
+ });
  await check("no external calls or unhandled page errors",async()=>{assert.deepEqual(receipt.external_requests,[]);assert.deepEqual(receipt.page_errors,[]);});
  receipt.passed=true;
  }catch(error){receipt.passed=false;receipt.error=String(error);if(page)await page.screenshot({path:path.join(output,"failure.png"),fullPage:true}).catch(()=>{});process.exitCode=1;}

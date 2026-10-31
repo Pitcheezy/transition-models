@@ -10,10 +10,11 @@
 - [x] EXHIBIT-clips1. 261클립·262행등록부·제외69:2 보존, 영상전용플레이어·Range실행기·비공개v2ZIP. Python57·Node29·Chrome14, ZIP CRC/270파일해시·별도압축해제·소스7파일일치. 〔모델: Fable 5.1〕
 - [x] EXHIBIT-review1. 다른모델 gpt-6.1-terra 정적검토/2차지적수정/4cec0f8 재검토PASS. Claude외부전송은자동검토거절로미실행. 〔모델: Fable 5.1〕
 - [x] EXHIBIT-review2. Claude 교차검토(Opus 5.5, 5관점·각 지적 반박검증, 26에이전트): Codex 233ad17에서 확인16건(중복1, P2 3·P3 12), 반박5건. 무결성 주장을 깨는 지적은 없음. 수정은 EXHIBIT-clips2. ①②는 Claude가 독립 재검증: 받은ZIP 인수 재현, 팩v2 SHA·270파일, 261클립을 형 경기파일·팩 등록부·CV-47 등록부와 타석·구·선수·구종·SHA 대조 0불일치. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-11-01 · Claude]`
+- [x] EXHIBIT-clips2. review2 확인16건(중복1) 전부 수정: 재생속도 클립간 유지, serve Content-Type 고정표·Windows 독점바인드(macOS/Linux는 재시작 시 포트 유지)·기본포트8741/사용중 폴백안내, verify OS메타데이터(.DS_Store·._*·__MACOSX) 경고통과·문제파일명 표시, 말 표기(Top외→말), 이닝(초/말)·타자·N구 맞춤 문구/목록(PA N 제거·투구ID 보조), 클릭 뒤 Space/화살표, play() AbortError/오류상태 무시·NotAllowedError만 안내, 서버확인 오류문구, 잘못된 ?pitch는 첫투구+상태안내, 전체화면=stage(식별줄 유지), README py -3/Mac/복구, intake 날짜파일 정확경로·source_commit 발신자선언 표기. Python83·Node30·Chrome19(v3 추출본, 8741) 통과, 14d3db2 원본에선 Python27·Node1·Chrome8 실패 확인. 등록부 262/261/69:2 불변. 실제 Mac/Finder·registry .js 재현은 미실시(단위검사로 대체). 〔모델: Fable 5.1〕 `[추가되었음 · 2026-11-01 · Claude]`
 - [x] EXHIBIT-host1a. 로컬 Worker 인수(Cloudflare 아님): 우리 실제 gateway를 loopback Miniflare로 띄워 정적4는 ASSETS, v1자료24는 인증 업로드 경로로 올린 뒤 공개 /v1에서 24개 바이트 일치. 실제 안내 스위치ON→앱 추천 숨김·OFF→새로고침 없이 복원, 1440·390폭 Chrome. 84/0, 접근 코드 ON 92/0. Fable 5.1 작성·Opus 5.5 검토, ops 385검사 통과. 누락 날짜는 앱이 "이 날짜에는 경기가 없어요" 표시. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-11-01 · Claude]`
 - [ ] EXHIBIT-host1. 실제 시험 호스트 연결·도메인 전환: [실행 전 설명](docs/EXHIBIT_HOST_PLAN_20261101.md)의 사용자 결정 6건(도메인 구성·공개 범위·올릴 자료·안내 문구·요금제·형 회신) 대기. 결정 전 Cloudflare·DNS·Sites 변경 없음. 〔모델: Fable 5.1〕
 
-최종팩: outputs/exhibition_1101/pitcheezy-849843-clips-v2.zip (1313836394bytes, SHA15fa4f349f8b13f025482cbf58ac111f1c7a631faa29de1cc276b300430e6b7b), Git제외·미발신. v1도보존.
+최종팩: D:/pitcheezy_exhibit_check/pitcheezy-849843-clips-v3.zip (1313843498bytes, SHA26f0b83d7403312c190f0c176fd4ffbaf452b1c953de896ffc74cf8926fe2baa, 제품 14d3db2 작업트리, 같은이름.receipt.json), Git제외·미발신. 이전 v2(outputs/exhibition_1101/pitcheezy-849843-clips-v2.zip, 1313836394bytes, SHA15fa4f34…)와 v1도 삭제하지 않고 보존.
 [인수 보고](docs/EXHIBITION_LOCAL_ACCEPTANCE_20261101.md) / [검증 영수증](docs/results/exhibition_20261101/) / [Claude 재개](docs/CLAUDE_EXHIBITION_RESUME.md).
 실제Mac/iPhone·두모니터자동동기화·Cloudflare인수·도메인전환·PR정리·공동시험잔여는미완료. 새CV/경기추가중단, 기존페이지사용보류·삭제없음.
 

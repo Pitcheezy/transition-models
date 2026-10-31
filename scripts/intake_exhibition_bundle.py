@@ -133,13 +133,18 @@ def inspect_bundle(archive: Path, *, expected_sha256: str = EXPECTED_SHA256,
     dates = json.loads(payloads["site/v1/dates.json"])["dates"]
     if not isinstance(dates, list) or any(not isinstance(d, str) or not re.fullmatch(r"\d{4}-\d{2}-\d{2}", d) for d in dates):
         raise IntakeError("invalid date catalogue")
-    available_dates = sorted(PurePosixPath(name).stem for name in actual_paths if name.startswith("v1/games/"))
+    # The app fetches exactly games/<date>.json, so only that path directly under v1/games counts as supplied.
+    available_dates = sorted(d for d in set(dates) if f"v1/games/{d}.json" in actual_paths)
     missing_dates = sorted(set(dates) - set(available_dates))
+    unlisted_games_files = sorted(name for name in actual_paths if name.startswith("v1/games/")
+                                  and name not in {f"v1/games/{d}.json" for d in dates})
     receipt = {
         "schema": "pitcheezy-exhibition-intake-v1",
         "evidence_kind": "offline_archive_integrity",
         "zip": {"bytes": len(raw), "sha256": digest(raw), "crc": "pass"},
         "source_commit": expected_commit,
+        "source_commit_basis": "sender_declared_manifest_unverified",
+        "declared_commit_dirty": manifest.get("commit_dirty"),
         "site_files": len(actual_paths),
         "site_bytes": sum(len(payloads["site/" + name]) for name in actual_paths),
         "manifest_raw_and_lf": "pass", "files": evidence,
@@ -147,8 +152,9 @@ def inspect_bundle(archive: Path, *, expected_sha256: str = EXPECTED_SHA256,
                  "recommendation_status": dict(statuses), "source": game.get("source"),
                  "next_present": game.get("next") is not None},
         "catalogue": {"advertised_dates": len(dates), "supplied_date_files": len(available_dates),
-                      "missing_date_files": missing_dates},
+                      "missing_date_files": missing_dates, "unlisted_games_files": unlisted_games_files},
         "limitations": [
+            "source_commit and the clean-tree flag are the sender's declaration in site/v1/manifest.json; no rebuild or source comparison was performed.",
             "Missing advertised date files require resolution or an agreed fixed-game entry before release.",
             "Only game 849843 was parsed semantically; locked game 849844 received byte/hash checks only.",
             "No browser, physical-device, Cloudflare, live-feed, or load test is implied by this receipt.",
@@ -185,7 +191,7 @@ def main() -> int:
         receipt, payloads = inspect_bundle(args.archive)
         if args.output is not None:
             extract_verified(payloads, receipt, args.output)
-        summary = {key: receipt[key] for key in ("zip", "source_commit", "site_files", "site_bytes", "game", "catalogue", "deployment_approved")}
+        summary = {key: receipt[key] for key in ("zip", "source_commit", "source_commit_basis", "site_files", "site_bytes", "game", "catalogue", "deployment_approved")}
         print(json.dumps(summary, ensure_ascii=False, indent=2))
         return 0
     except (IntakeError, zipfile.BadZipFile, UnicodeError, KeyError, TypeError, ValueError, OSError) as exc:
