@@ -52,7 +52,7 @@ SOURCES = {
     },
 }
 PITCH_LABELS = {
-    "FF": "포심 패스트볼",
+    "FF": "포심",
     "SI": "싱커",
     "FC": "커터",
     "SL": "슬라이더",
@@ -72,7 +72,7 @@ RESULT_LABELS = {
     "swinging_strike": "헛스윙",
     "swinging_strike_blocked": "헛스윙",
     "foul": "파울",
-    "foul_tip": "파울 팁",
+    "foul_tip": "파울팁",
     "foul_bunt": "번트 파울",
     "missed_bunt": "번트 헛스윙",
     "hit_into_play": "인플레이",
@@ -87,7 +87,7 @@ EVENT_LABELS = {
     "double": "2루타",
     "triple": "3루타",
     "home_run": "홈런",
-    "field_out": "아웃",
+    "field_out": "타구 아웃",
     "force_out": "포스 아웃",
     "grounded_into_double_play": "병살타",
     "double_play": "병살",
@@ -97,7 +97,21 @@ EVENT_LABELS = {
     "sac_fly": "희생 플라이",
     "sac_bunt": "희생 번트",
     "hit_by_pitch": "몸에 맞는 공",
+    **{
+        f"pickoff_caught_stealing_{b}": f"견제 도루 실패({n})"
+        for b, n in (("2b", "2루"), ("3b", "3루"), ("home", "홈"))
+    },
+    **{
+        f"caught_stealing_{b}": f"도루 실패({n})"
+        for b, n in (("2b", "2루"), ("3b", "3루"), ("home", "홈"))
+    },
+    **{f"pickoff_{b}": f"견제사({n})" for b, n in (("1b", "1루"), ("2b", "2루"), ("3b", "3루"))},
 }
+# A plate appearance can end on a base-running out after its last pitch. Statcast leaves that
+# row's events empty; the feed's completed play result names it. Only these outs qualify.
+NON_PITCH_ENDINGS = frozenset(
+    key for key in EVENT_LABELS if key.startswith(("pickoff_", "caught_stealing_"))
+)
 
 
 def digest(data):
@@ -233,6 +247,13 @@ def project_records(rows, feed, game_pk, feed_sha, registry_sha):
             ]
             require(len(automatic) == 1, "automatic_ball_not_corroborated")
         event = text_or_none(row["events"])
+        if (
+            event is None
+            and key == ends[pa]
+            and play.get("about", {}).get("isComplete") is True
+            and play["result"].get("eventType") in NON_PITCH_ENDINGS
+        ):
+            event = play["result"]["eventType"]
         require(event is None or key == ends[pa], "pa_result_before_terminal_record")
         require(event is None or event == play["result"]["eventType"], "feed_pa_result_mismatch")
         output.append(

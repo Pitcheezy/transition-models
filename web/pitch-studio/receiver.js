@@ -207,13 +207,23 @@ function render(preservePosition = false) {
     s = view.situation;
   const currentObservation = observationFor(view);
   if(view.full_game){
-    const entry=PitchGameCatalog.get(view.game.game_pk), summary=view.summary;
-    put("featured-title",entry.title);
+    const entry=PitchGameCatalog.get(view.game.game_pk), summary=view.summary, auto=entry.non_pitch_ids.length;
+    const title=node("featured-title"), teams=entry.title.split(" @ ");
+    title.replaceChildren();
+    for (const [index, code] of [entry.away, entry.home].entries()) {
+      if (index) textElement("span", " @ ", title);
+      const logo=document.createElement("img");
+      logo.className="inline-team-logo";
+      for (const [name, value] of [["src",`media/team-${code.toLowerCase()}.svg`],["alt",""],["width","40"],["height","40"]]) logo.setAttribute(name, value);
+      title.append(logo);
+      textElement("span", ` ${teams[index]}`, title);
+    }
     put("featured-date",`현지 ${entry.local_date} · 저장 경기`);
-    put("featured-coverage",`${summary.plate_appearances}타석 · ${view.count}개 투구 기록`);
+    put("featured-coverage",`${summary.plate_appearances}타석 · ${auto?`실제 투구 ${view.count-auto}구 + 자동 볼 ${auto}건`:`${view.count}구`}`);
     put("featured-description",summary.ready?`추천 ${summary.ready}구 · 미지원 ${summary.unsupported}구. 영상과 같은 공의 실제 기록을 비교하세요.`
       :"영상과 실제 구종·위치·결과를 확인하세요. 이 경기의 추천 파일은 아직 받지 못했습니다.");
     node("legacy-provenance").hidden=entry.game_pk!==849843;
+    for (const id of ["scientific-note-featured", "scientific-note-stage"]) node(id).hidden = view.source.kind === "official_record";
     document.title=`${entry.title} · 상세 분석 · Pitcheezy`;
   }
   pitchVideo.update({ context: loadVersion, pitch_id: view.pitch_id, revealed: view.revealed, enabled: builtInDemo,
@@ -224,7 +234,8 @@ function render(preservePosition = false) {
     node(id).href = view.full_game ? `watch.html?game=${view.game.game_pk}&pitch=${encodeURIComponent(view.pitch_id)}` : "watch.html?game=849843";
   }
   put("pitch-video-missing-reason", view.full_game && excludedMedia[view.pitch_id]?.reason==="automatic_ball_no_video"
-    ? "자동 볼 기록입니다. 실제로 던진 공의 영상·위치는 없습니다."
+    ? view.revealed ? "자동 볼 기록입니다. 투수가 공을 던지지 않아 영상·위치가 없습니다."
+      : "이 기록에는 투구 영상이 없습니다. 결과를 공개하면 기록을 확인할 수 있습니다."
     : view.full_game && excludedMedia[view.pitch_id]
     ? "영상 등록부와 받은 경기 자료의 구종이 달라 영상 연결을 보류했습니다. 어느 기록도 임의로 수정하지 않았습니다."
     : "이 투구의 확인된 영상을 불러오지 못했습니다.");
@@ -249,7 +260,7 @@ function render(preservePosition = false) {
   put("game-name", `${view.game.away_team} @ ${view.game.home_team}`);
   put(
     "pitch-identity",
-    `${view.game.date} (경기 기록 날짜) · ${view.at_bat_number}번째 타석 · ${view.pitch_number}구 · 키 ${view.pitch_id}`,
+    `${view.full_game ? `현지 ${PitchGameCatalog.get(view.game.game_pk).local_date} · 한국 ${view.game.date.slice(5)}` : `${view.game.date} (경기 기록 날짜)`} · ${view.at_bat_number}번째 타석 · ${view.pitch_number}구 · 키 ${view.pitch_id}`,
   );
   const bases = [1, 2, 4].flatMap((bit, i) =>
     s.bases & bit ? [`${i + 1}루`] : [],
@@ -445,6 +456,13 @@ function reportError(error, version) {
   node("import-error").hidden = false;
   node("file-tools").open = true;
   put("replay-status", `자료 확인 실패: ${error.message} 위의 ‘경기 전체 열기’로 다시 시작할 수 있습니다.`);
+  const requested = new URLSearchParams(location.search).get("game");
+  if (requested && requested !== "849843") {
+    // Never leave the default Cubs–Padres heading or provenance on another game's address.
+    put("featured-title", "경기를 불러오지 못했습니다");
+    put("featured-date", "저장 경기 자료");
+    node("legacy-provenance").hidden = true;
+  }
 }
 
 function rememberRoute(method = "push") {
@@ -463,11 +481,13 @@ function selectPitch(key) {
 function renderNavigation(view) {
   node("game-navigation").hidden = !view.full_game;
   const videoCount = Object.keys(gameMedia || window.PitchReceiverMedia).length;
-  put("video-coverage", view.full_game ? `영상 연결 ${videoCount} / ${view.count}구` : "공식 영상 3 / 3구");
+  const auto = view.full_game ? PitchGameCatalog.get(view.game.game_pk).non_pitch_ids.length : 0, unit = auto ? "기록" : "구";
+  put("video-coverage", view.full_game ? `영상 연결 ${videoCount} / ${view.count - auto}구${auto ? ` (자동 볼 ${auto}건 제외)` : ""}` : "공식 영상 3 / 3구");
   if (view.full_game) {
     node("pa-select").value = String(view.at_bat_number);
     const s=view.summary;
-    put("game-coverage", `전체 ${view.count}구 중 ${view.position}구 · ${s.plate_appearances}타석 · 추천 ${s.ready}구 / 미지원 ${s.unsupported}구 / 자료 미제공 ${s.missing}구. ${mediaLoadNote || "투구별 영상 종료 후 실제 결과 공개 · 영상 미연결 투구도 기록 확인 가능"}`);
+    const recommendation = s.ready || s.unsupported ? `추천 ${s.ready}구 / 미지원 ${s.unsupported}구 / 자료 미제공 ${s.missing}구` : "실제 기록 재생";
+    put("game-coverage", `전체 ${view.count}${unit} 중 ${view.position}번째 · ${s.plate_appearances}타석 · ${recommendation}. ${mediaLoadNote || "투구별 영상 종료 후 실제 결과 공개 · 영상 미연결 투구도 기록 확인 가능"}`);
   }
   const tabs = node("pitch-tabs");
   tabs.setAttribute("aria-label", "현재 타석 투구 선택");
@@ -563,7 +583,8 @@ async function loadFullGame(startKey = PitchReceiverRoute.FIRST, historyMode = "
     textElement("div", `공개용 선별 파일 SHA256: ${hash}`, info);
     textElement("div", `원본 자료 SHA256: ${session.view().source.sha256}`, info);
     textElement("div", entry.ready?"경기 후 저장 응답의 재생입니다. 실행 서버 커밋·실시간 사전 가용성은 미확인입니다.":"공식 경기 기록의 재생입니다. 이 경기의 모델 추천 파일은 아직 받지 못했으며, 미지원 판정이나 추천을 생성하지 않았습니다.", info);
-    if (verifiedMedia) textElement("div", `영상 연결 목록 SHA256: ${mediaHash} · 투구ID/선수/구종 대조 ${Object.keys(gameMedia).length}구, 불일치 제외 ${Object.keys(excludedMedia).length}구.`, info);
+    const reasons = Object.values(excludedMedia).map((item) => item.reason), autoBalls = reasons.filter((reason) => reason === "automatic_ball_no_video").length;
+    if (verifiedMedia) textElement("div", `영상 연결 목록 SHA256: ${mediaHash} · 투구ID/선수/구종 대조 ${Object.keys(gameMedia).length}구, 불일치 제외 ${reasons.length - autoBalls}구${autoBalls ? ` · 자동 볼(영상 없음) ${autoBalls}건` : ""}.`, info);
     textElement("div", "MLB 공식 영상 서버에서 선택한 클립을 읽습니다. 컵스–파드리스 첫3구는 사이트의 저장 영상을 사용합니다. 로컬 원본 SHA는 원격 서버의 현재 영상 바이트까지 보증하지 않습니다.", info);
     put("import-status", `${entry.title} · 구조·투구 키 검사 통과`);
     put("replay-status", zoneNote || `기록 존 ${Object.keys(zones||{}).length}구 연결 · 타석과 투구를 바꾸어도 같은 위치의 링크를 공유할 수 있습니다.`);

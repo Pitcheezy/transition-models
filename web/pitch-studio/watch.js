@@ -84,9 +84,15 @@
     };
     frameRequest=video.requestVideoFrameCallback(frame);
   }
+  function prePhase() { return session && view().pre.status==="missing" ? "투구 전" : "추천 확인"; }
+  function unitLabel() { return gameEntry && gameEntry.non_pitch_ids.length ? "기록" : "구"; }
+  function revealRecord(id) {
+    if(!session || view().pitch_id!==id || resultReady)return;
+    resultReady=true;session.reveal(true);phase="결과 공개";render(true);
+  }
   function hideResult() {
     const exposed=resultReady||view().revealed;
-    resultReady=false;session.reveal(false);phase="추천 확인";
+    resultReady=false;session.reveal(false);phase=prePhase();
     if(exposed)render(true);else text("watch-phase",phase);
   }
   function stop(reason = "manual") { sequence?.stop(reason); }
@@ -257,7 +263,7 @@
     text("watch-score",`${s.inning}회 ${s.half==="Top"?"초":"말"} · ${gameEntry.away} ${s.away_score} : ${s.home_score} ${gameEntry.home} · ${s.balls}B ${s.strikes}S · ${s.outs} OUT`);
     const bases=[1,2,4].flatMap((bit,i)=>s.bases&bit?[`${i+1}루`]:[]);
     text("watch-players",`${v.pitcher.name} → ${v.batter.name} · ${bases.length?bases.join("·"):"주자 없음"}`);
-    text("watch-identity",`${v.at_bat_number}번째 타석 · ${v.pitch_number}구 · ${v.pitch_id} · ${v.position}/${v.count}구`);
+    text("watch-identity",`${v.at_bat_number}번째 타석 · ${v.pitch_number}구 · ${v.pitch_id} · ${v.position}/${v.count}${unitLabel()}`);
     text("watch-phase",phase);
     renderContext(v);renderFilters();renderMitt(v);
     for(const id of ["watch-back-analysis","watch-detail-current","watch-detail-footer"]) el(id).href=`receiver.html?game=${v.game.game_pk}&pitch=${encodeURIComponent(v.pitch_id)}`;
@@ -282,7 +288,9 @@
     }
     const a=v.post?.actual;
     el("watch-result").hidden=false;
-    text("watch-result",resultReady && v.revealed && a
+    text("watch-result",resultReady && v.revealed && a && a.description==="automatic_ball"
+      ? `자동 볼 · 투구 없음${a.event_label?` · ${a.event_label}`:""}`
+      : resultReady && v.revealed && a
       ? `${a.pitch_label ?? "구종 미제공"} · ${a.result_label ?? a.event_label ?? "결과 미제공"}${a.speed_mph==null?"":` · ${a.speed_mph.toFixed(1)} mph`}${a.event_label && a.event_label!==a.result_label?` · ${a.event_label}`:""}`
       : v.revealed ? "실제 위치 공개 · 구종·판정·타구 결과는 클립 종료 후 공개합니다." : "실제 선택은 영상이 끝나면 공개합니다.");
     el("watch-result").classList.toggle("is-revealed",resultReady);
@@ -295,21 +303,35 @@
       ? `${v.pitch_number}구 · 공 도착 시점의 실제 위치를 먼저 표시하고 전체 결과는 클립 종료 후 공개합니다.`
       : `${v.pitch_number}구 · 도착 시점 미확인. 클립 종료 뒤 저장 결과를 공개합니다.`);
     const missing=el("pitch-video-missing");
-    if(extrasPending)text("pitch-video-status","영상 자료 확인 중 · 추천과 투구 순서를 먼저 살펴볼 수 있습니다.");
-    missing.textContent=extrasPending?"영상 자료 확인 중입니다. 잠시 기다려 주세요.":excluded[v.pitch_id]?.reason==="automatic_ball_no_video"
-      ?"자동 볼 기록입니다. 던진 공의 영상·위치는 없습니다. 상세 분석에서 기록을 확인하세요.":excluded[v.pitch_id]
+    if(extrasPending)text("pitch-video-status",v.pre.status==="missing"
+      ?"영상 자료 확인 중 · 투구 순서와 상황을 먼저 살펴볼 수 있습니다."
+      :"영상 자료 확인 중 · 추천과 투구 순서를 먼저 살펴볼 수 있습니다.");
+    if(!extrasPending && excluded[v.pitch_id]?.reason==="automatic_ball_no_video"){
+      // The record itself is the result, so nothing about it shows before the visitor reveals it.
+      missing.replaceChildren();
+      if(resultReady){
+        append(missing,"strong","자동 볼 기록");
+        append(missing,"p","투수가 공을 던지지 않고 볼이 선언된 기록입니다. 영상·투구 위치는 없습니다.");
+      }else{
+        append(missing,"strong","이 기록에는 투구 영상이 없습니다.");
+        append(missing,"p","‘결과 보기’를 누르면 기록된 결과를 공개합니다.");
+        const button=append(missing,"button","결과 보기","secondary watch-reveal-record");
+        button.type="button";button.id="watch-reveal-record";
+        button.addEventListener("click",()=>revealRecord(v.pitch_id));
+      }
+    } else missing.textContent=extrasPending?"영상 자료 확인 중입니다. 잠시 기다려 주세요.":excluded[v.pitch_id]
       ? "구종 기록이 달라 영상을 연결하지 않았습니다. 다른 투구를 고르거나 상세 분석에서 결과를 확인하세요."
       : "확인된 영상을 불러오지 못했습니다. 다른 투구를 고르거나 상세 분석에서 결과를 확인하세요.";
     controls();tick();
   }
   function select(key,historyMode="push") {
     if(!keys.includes(key))throw new WatchRouteError();
-    stop();cancelFrame();resultReady=false;session.select(key);phase="추천 확인";render(); remember(historyMode);
+    stop();cancelFrame();resultReady=false;session.select(key);phase=prePhase();render(); remember(historyMode);
   }
   function gamePosition(index,commit=false) {
     const key=keys[index];if(!key)return;
     const [,pa,pitch]=key.split(":");
-    const label=`${index+1} / ${keys.length}구 · ${pa}번째 타석 ${pitch}구`;
+    const label=`${index+1} / ${keys.length}${unitLabel()} · ${pa}번째 타석 ${pitch}구`;
     text("watch-game-position",label);
     el("watch-game-scrub").setAttribute("aria-valuetext",label);
     if(commit){el("watch-game-scrub").max=String(keys.length);el("watch-game-scrub").value=String(index+1);}
@@ -328,7 +350,7 @@
           nextId:order[order.indexOf(v.pitch_id)+1]||null,hasVideo:Boolean(media[v.pitch_id])};
       },
       startClip:()=>{cancelFrame();resultReady=false;session.reveal(false);phase="영상 재생";render();return clip.restart();},
-      advance:key=>{cancelFrame();resultReady=false;session.select(key);phase="추천 확인";render();remember("replace");},
+      advance:key=>{cancelFrame();resultReady=false;session.select(key);phase=prePhase();render();remember("replace");},
       onChange:({active,phase:sequencePhase,reason})=>{
         sequenceActive=active;controls();
         text("watch-sequence-status",sequencePhase==="waiting"?"결과 확인 · 5초 뒤 다음 공으로 이어집니다."
@@ -374,6 +396,8 @@
     for(const id of ["watch-filter-pitcher","watch-filter-batter","watch-filter-count"])el(id).replaceChildren();
     el("watch-filter-prev").disabled=true;el("watch-filter-next").disabled=true;
     renderMitt(null);el("watch-mitt-panel").hidden=true;
+    el("watch-title").replaceChildren();text("watch-title","경기를 불러오지 못했습니다");
+    text("watch-date","경기 선택에서 다시 고를 수 있습니다.");
     el("watch-retry").hidden=false;
     text("watch-retry",routeFailed?"첫 공으로 이동":"자료 다시 불러오기");
     text("watch-phase","자료 확인 실패");text("watch-load-status",routeFailed
@@ -388,8 +412,12 @@
     if(!new RegExp(`^${entry.game_pk}:[1-9][0-9]{0,2}:[1-9][0-9]?$`).test(key))throw new WatchRouteError();
     return key;
   }
-  el("watch-retry").addEventListener("click",()=>routeFailed
-    ?location.replace("watch.html?game=849843&pitch=849843%3A1%3A1"):location.reload());
+  el("watch-retry").addEventListener("click",()=>{
+    if(!routeFailed)return location.reload();
+    const requested=new URLSearchParams(location.search).getAll("game");
+    const entry=(requested.length===1&&PitchGameCatalog.get(requested[0]))||PitchGameCatalog.get("849843");
+    location.replace(`watch.html?game=${entry.game_pk}&pitch=${encodeURIComponent(entry.first_pitch)}`);
+  });
   el("watch-start").addEventListener("click",()=>{if(session){createSequence();sequence.start();}});
   el("watch-stop").addEventListener("click",()=>{stop();clip.pause();});
   el("watch-play-scope").addEventListener("change",()=>{stop();clip.pause();});
@@ -485,7 +513,8 @@
       initFilters();
       el("watch-pa").replaceChildren();
       for(const group of session.groups()) append(el("watch-pa"),"option",`${group.inning}회 ${group.half==="Top"?"초":"말"} · PA${group.pa} · ${group.batter}`).value=group.pa;
-      phase="추천 확인";extrasPending=true;render();remember("replace");video.controls=false;
+      phase=prePhase();extrasPending=true;render();remember("replace");video.controls=false;
+      el("watch-main").classList.toggle("no-recommendations",!gameEntry.ready);
       text("watch-load-status","경기 자료 준비됨 · 영상·존 자료를 확인 중입니다. 투구를 먼저 살펴볼 수 있습니다.");
       const loadGeneration=generation;
       const extra=await Promise.allSettled([asset(`game-${gameEntry.game_pk}-media.json?v=1`),asset(`game-${gameEntry.game_pk}-zones.json?v=1`),

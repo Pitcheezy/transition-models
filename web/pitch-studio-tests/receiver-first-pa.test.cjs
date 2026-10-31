@@ -267,10 +267,27 @@ for(const gameId of [849845,823407]){
 }
 test('receiver automatic ball can reveal the record without inventing video or coordinates',async()=>{
   const s=await receiverDom('?game=823407&pitch=823407%3A35%3A4');
-  assert.match(s.get('pitch-video-missing-reason').textContent,/자동 볼/);
+  assert.doesNotMatch(s.get('pitch-video-missing-reason').textContent,/자동 볼/);
+  assert.match(s.get('pitch-video-missing-reason').textContent,/투구 영상이 없습니다/);
   assert.equal(s.video.getAttribute('src'),null);
   await s.fire('reveal-pitch');
   assert.equal(s.get('received-post').hidden,false);
+  assert.match(s.get('pitch-video-missing-reason').textContent,/자동 볼 기록/);
   assert.equal(s.shapes('location-actual').length,0);
   assert.equal(s.get('received-post').textContent.includes('고의사구'),true);
+});
+test('receiver header, dates, counts and notes describe the loaded game only',async()=>{
+  const s=await receiverDom('?game=823407&pitch=823407%3A1%3A1');
+  const title=s.get('featured-title');
+  assert.equal(title.children.filter(child=>child.tagName==='IMG').length,2);
+  assert.match(title.textContent,/탬파베이 레이스\s+@\s+필라델피아 필리스/);
+  assert.match(s.get('pitch-identity').textContent,/^현지 2026-09-26 · 한국 09-27 · /);
+  assert.equal(s.get('featured-coverage').textContent,'88타석 · 실제 투구 355구 + 자동 볼 4건');
+  assert.match(s.get('video-coverage').textContent,/355 \/ 355구 \(자동 볼 4건 제외\)/);
+  assert.equal(s.get('scientific-note-featured').hidden,true);
+  assert.equal(s.get('scientific-note-stage').hidden,true);
+  const c=await receiverDom('?game=849843&pitch=849843%3A1%3A1');
+  assert.equal(c.get('featured-title').children.filter(child=>child.tagName==='IMG').length,2);
+  assert.match(c.get('pitch-identity').textContent,/^현지 2026-09-29 · 한국 09-30 · /);
+  assert.equal(c.get('scientific-note-featured').hidden,false);
 });

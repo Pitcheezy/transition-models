@@ -339,3 +339,36 @@ def test_pinned_archive_sha_is_checked_before_db_read(tmp_path):
     (tmp_path / "registry.sqlite").write_bytes(b"not the pinned registry")
     with pytest.raises(ValueError, match="registry_asset_changed"):
         EXPORT.export_game(tmp_path, 849845)
+
+
+def _pickoff_ending(source, complete=True, event_type="pickoff_caught_stealing_2b"):
+    rows, feed = copy.deepcopy(source[0]), copy.deepcopy(source[1])
+    rows[1]["description"], rows[1]["events"] = "swinging_strike", ""
+    play = feed["liveData"]["plays"]["allPlays"][0]
+    play["result"].update(eventType=event_type, event="Pickoff Caught Stealing 2B")
+    play["about"]["isComplete"] = complete
+    return EXPORT.project_records(rows, feed, feed["gamePk"], "a" * 64, "b" * 64)
+
+
+def test_a_base_running_out_after_the_last_pitch_ends_the_plate_appearance(source):
+    last = _pickoff_ending(source)["pitches"][1]["post"]["actual"]
+    assert last["event"] == "pickoff_caught_stealing_2b"
+    assert last["event_label"] == "견제 도루 실패(2루)"
+    assert last["result_label"] == "헛스윙"
+
+
+def test_only_completed_base_running_outs_fill_an_empty_ending(source):
+    assert _pickoff_ending(source, complete=False)["pitches"][1]["post"]["actual"]["event"] is None
+    with pytest.raises(ValueError):
+        # Any other feed result on an empty Statcast ending still disagrees with the record.
+        rows, feed = copy.deepcopy(source[0]), copy.deepcopy(source[1])
+        rows[1]["events"] = "strikeout"
+        EXPORT.project_records(rows, feed, feed["gamePk"], "a" * 64, "b" * 64)
+    other = _pickoff_ending(source, event_type="strikeout")["pitches"][1]["post"]["actual"]
+    assert other["event"] is None
+
+
+def test_labels_match_the_original_game_vocabulary():
+    assert EXPORT.PITCH_LABELS["FF"] == "포심"
+    assert EXPORT.RESULT_LABELS["foul_tip"] == "파울팁"
+    assert EXPORT.EVENT_LABELS["field_out"] == "타구 아웃"

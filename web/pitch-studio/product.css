@@ -769,8 +769,10 @@ p {
 .feature-grid p { line-height:1.85; }
 .evidence-stats .metric-context { display:block; border:0; padding:0; margin-top:8px; font-size:12px; }
 .inline-team-logo { object-fit:contain; vertical-align:middle; padding:4px; border-radius:50%; background:#edf1e7; }
-@media(max-width:1100px) { .game-tile.playable-game:nth-child(2) { border:1px solid #617b4d; padding:22px 26px; } }
+@media(max-width:1100px) { .game-tile.playable-game:nth-child(2) { border:1px solid #617b4d; padding:22px 20px; } }
 @media(max-width:1100px) { .game-strip { grid-template-columns:repeat(3,minmax(0,1fr)); } .strip-title { grid-column:1/-1; margin:0; } .strip-title h2 br { display:none; } .research-games { padding-left:20px; } }
+/* Three logo tiles need about 200px each; between phone and tablet use two columns. */
+@media(min-width:621px) and (max-width:780px) { .game-strip { grid-template-columns:repeat(2,minmax(0,1fr)); } }
 @media(max-width:620px) {
  .game-strip { grid-template-columns:minmax(0,1fr); gap:23px; }
  .game-tile.playable-game,.game-tile.playable-game:nth-child(2) { display:flex; padding:22px; border:1px solid #617b4d; }

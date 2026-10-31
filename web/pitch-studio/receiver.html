@@ -37,7 +37,7 @@
         <span class="eyebrow">ONE GAME · EVERY PITCH</span>
         <h1>궁금했던 그 공,<br />투구별 상세 분석.</h1>
         <p>
-          영상에서 궁금했던 공을 골라 추천 구종·근사 위치와 실제 경기 기록을 자세히 살펴봅니다.
+          영상에서 궁금했던 공을 골라 실제 경기 기록과, 추천이 있는 경기는 추천 구종·근사 위치까지 살펴봅니다.
         </p>
       </div>
       <section class="featured-pa" aria-labelledby="featured-title">
@@ -57,10 +57,10 @@
           첫 타석 영상부터 보기
         </button>
         <a href="report.html#analysis">별도 CV 연구 기록 보기</a>
-        <p class="scientific-note">
-          과거 경기 재생 · 검증 전 실험 추천입니다. 구종 비율은 사건확률이
-          아닙니다. 추천 위치는 과거 실제 투구 분포의 근사이며, 미트 표시는
-          미검토 AI 가로 위치 추정입니다.
+        <p id="scientific-note-featured" class="scientific-note">
+          과거 경기 재생 · 동결 모델이 남긴 저장 추천입니다. 구종 비율은 선택
+          비중이며 사건확률이 아닙니다. 추천 위치는 과거 실제 투구 분포의 근사이고,
+          미트 표시는 AI가 읽은 가로 위치(연구용)입니다.
         </p>
         <details id="legacy-provenance" class="demo-provenance">
           <summary>이 자료의 범위와 버전</summary>
@@ -246,10 +246,10 @@
           <button type="button" data-pitch="3">3구</button>
           <span>추천 확인 · 영상 재생 · 결과 공개</span>
         </nav>
-        <p class="scientific-note">
-          과거 경기 재생 · 검증 전 실험 추천입니다. 구종 비율은 사건확률이
-          아닙니다. 추천 위치는 과거 실제 투구 분포의 근사이며, 미트 표시는
-          미검토 AI 가로 위치 추정입니다.
+        <p id="scientific-note-stage" class="scientific-note">
+          과거 경기 재생 · 동결 모델이 남긴 저장 추천입니다. 구종 비율은 선택
+          비중이며 사건확률이 아닙니다. 추천 위치는 과거 실제 투구 분포의 근사이고,
+          미트 표시는 AI가 읽은 가로 위치(연구용)입니다.
         </p>
         <div class="receiver-controls">
           <a id="receiver-watch-current" class="primary" href="watch.html?game=849843" hidden>이 공 영상 관전 →</a>
@@ -287,7 +287,7 @@
             <p id="pa-sequence-status" role="status">버튼을 눌러야 시작합니다. 투구 선택·탐색·영상 오류 시 자동 진행이 멈춥니다.</p>
           </div>
           <p id="pitch-observation-note" class="observation-legend" hidden>초록 표시: 별도 정지 프레임에 저장된 AI 미트 중심 · 미검토 추정. 높이·투수 의도·제구 오차를 검증한 값이 아닙니다.</p>
-          <p class="receiver-note">같은 투구 ID의 공식 클립과 추천을 묶었습니다. 클립 종료 시 결과를 공개하며, 정확한 릴리스·포구 순간에 맞춘 표시나 연속 중계는 아닙니다. 일부 클립에는 리플레이가 포함될 수 있습니다. 영상 오류가 나도 결과를 직접 공개할 수 있습니다.</p>
+          <p class="receiver-note">같은 투구 ID의 공식 클립과 기록(추천이 있으면 추천도)을 묶었습니다. 클립 종료 시 결과를 공개하며, 정확한 릴리스·포구 순간에 맞춘 표시나 연속 중계는 아닙니다. 일부 클립에는 리플레이가 포함될 수 있습니다. 영상 오류가 나도 결과를 직접 공개할 수 있습니다.</p>
           <a id="pitch-video-source" class="source-link" target="_blank" rel="noopener noreferrer" hidden>이 투구의 MLB 공식 영상 출처</a>
         </section>
           <section class="receiver-panel recommendation-panel">
@@ -329,7 +329,7 @@
         </div>
       </section>
       <footer class="receiver-footer">
-        저장 응답과 투구 키로 연결한 발췌 영상 · 실시간 모델 추론·중계 자동 동기화 아님
+        투구 키로 연결한 공식 발췌 영상 · 실시간 모델 추론·중계 자동 동기화 아님
       </footer>
     </main>
   </body>

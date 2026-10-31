@@ -182,3 +182,13 @@ test('automatic balls are shown as records but excluded from actual pitch-type h
   assert.equal(model.ribbon(rows[1].pitch_id,false)[1].label,'결과 숨김');
   assert.equal(model.ribbon(rows[1].pitch_id,true)[1].label,'자동 볼');
 });
+
+test("hit by pitch is named in the ribbon once disclosed and hidden before", () => {
+  const rows = [pitch(0), pitch(1, { post: actual("SL", 80.3, "hit_by_pitch", "슬라이더") })];
+  const view = context.create(rows);
+  const shown = view.ribbon(rows[1].pitch_id, true).find(chip => chip.isCurrent);
+  assert.equal(shown.kind, "hbp");
+  assert.equal(shown.label, "몸에 맞는 공");
+  const hidden = view.ribbon(rows[1].pitch_id, false).find(chip => chip.isCurrent);
+  assert.equal(hidden.kind, "hidden");
+});
