@@ -321,6 +321,9 @@ test('the archive first plate appearance keeps its Korean heading, logos and pro
   assert.match(title.textContent,/시카고 컵스\s+@\s+샌디에이고 파드리스/);
   assert.equal(s.get('legacy-provenance').hidden,false);
   assert.equal(s.get('featured-date').textContent,'현지 2026.09.29 · 한국 09.30 · 저장 경기');
+  assert.equal(s.get('featured-coverage').textContent,'첫 타석 · 3구 · 공식 영상 3개');
+  assert.doesNotMatch(s.get('featured-description').textContent,/연결되지 않습니다/);
+  assert.match(s.get('pitch-identity').textContent,/^현지 2026\.09\.29 · 한국 09\.30 · /);
 });
 test('retrying after a different game fails reopens that game, not the previous one',async()=>{
   const s=await receiverDom('?game=849845&pitch=849845%3A1%3A1',{failAsset:'game-823407.json'});

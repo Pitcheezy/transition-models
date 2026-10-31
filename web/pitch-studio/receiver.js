@@ -276,7 +276,7 @@ function render(preservePosition = false) {
   put("game-name", `${view.game.away_team} @ ${view.game.home_team}`);
   put(
     "pitch-identity",
-    `${view.full_game ? `현지 ${PitchGameCatalog.get(view.game.game_pk).local_date.replaceAll("-", ".")} · 한국 ${view.game.date.slice(5).replace("-", ".")}` : `${view.game.date} (경기 기록 날짜)`} · ${view.at_bat_number}번째 타석 · ${view.pitch_number}구 · 키 ${view.pitch_id}`,
+    `${(view.full_game || currentMode === "archive") && PitchGameCatalog.get(view.game.game_pk) ? `현지 ${PitchGameCatalog.get(view.game.game_pk).local_date.replaceAll("-", ".")} · 한국 ${PitchGameCatalog.get(view.game.game_pk).date.slice(5).replace("-", ".")}` : `${view.game.date} (경기 기록 날짜)`} · ${view.at_bat_number}번째 타석 · ${view.pitch_number}구 · 키 ${view.pitch_id}`,
   );
   const bases = [1, 2, 4].flatMap((bit, i) =>
     s.bases & bit ? [`${i + 1}루`] : [],
@@ -629,6 +629,8 @@ async function loadFirstPa(startPitch = 1, historyMode = "push") {
     currentMode = "archive";
     // openText rendered once in file mode; the archive is the 849843 first plate appearance.
     showGameHeader(PitchGameCatalog.get(849843));
+    put("featured-coverage", "첫 타석 · 3구 · 공식 영상 3개");
+    put("featured-description", "따로 받아 둔 첫 타석 수신본입니다. ‘경기 전체 열기’로 71타석·262구 관전으로 이동할 수 있습니다.");
     if (Number.isInteger(startPitch) && startPitch >= 1 && startPitch <= 3) {
       for (let i = 1; i < startPitch; i++) { session.reveal(true); session.next(); }
       session.reveal(false);
