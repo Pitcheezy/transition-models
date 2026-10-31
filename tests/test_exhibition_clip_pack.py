@@ -4,6 +4,7 @@ import threading
 import urllib.error
 import urllib.request
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -224,3 +225,47 @@ def test_manifest_detects_extra_files(tmp_path):
     (tmp_path / "extra").write_text("no")
     with pytest.raises(ValueError, match="unexpected"):
         verify.verify(tmp_path)
+
+
+@pytest.mark.parametrize("disconnect", [ConnectionResetError, ConnectionAbortedError])
+def test_browser_disconnect_during_keepalive_is_quiet(monkeypatch, disconnect):
+    def aborted(_self):
+        raise disconnect("browser closed connection")
+
+    monkeypatch.setattr(serve.BaseHTTPRequestHandler, "handle", aborted)
+    handler = object.__new__(serve.Handler)
+    handler.close_connection = False
+    handler.handle()
+    assert handler.close_connection is True
+
+
+def test_keepalive_unrelated_error_is_not_hidden(monkeypatch):
+    def unexpected(_self):
+        raise ValueError("unexpected handler defect")
+
+    monkeypatch.setattr(serve.BaseHTTPRequestHandler, "handle", unexpected)
+    handler = object.__new__(serve.Handler)
+    with pytest.raises(ValueError, match="unexpected handler defect"):
+        handler.handle()
+
+
+def test_existing_receipt_refuses_build_before_any_output(tmp_path):
+    zip_path = tmp_path / "pack.zip"
+    receipt_path = zip_path.with_suffix(".receipt.json")
+    original = b"previous receipt must survive"
+    receipt_path.write_bytes(original)
+    args = SimpleNamespace(output=tmp_path / "new-output", zip=zip_path, source_commit=None)
+    with pytest.raises(ValueError, match="receipt"):
+        pack.build(args)
+    assert receipt_path.read_bytes() == original
+    assert not args.output.exists() and not zip_path.exists()
+
+
+def test_receipt_created_between_preflight_and_write_is_preserved(tmp_path):
+    receipt_path = tmp_path / "pack.receipt.json"
+    assert not receipt_path.exists()
+    original = b"receipt created by another process"
+    receipt_path.write_bytes(original)
+    with pytest.raises(FileExistsError):
+        pack.json_write(receipt_path, {"replacement": True}, exclusive=True)
+    assert receipt_path.read_bytes() == original

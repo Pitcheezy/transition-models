@@ -35,6 +35,13 @@ class Handler(BaseHTTPRequestHandler):
         self.root, self.files = root, files
         super().__init__(*args, **kwargs)
 
+    def handle(self):
+        try:
+            super().handle()
+        except (ConnectionResetError, ConnectionAbortedError):
+            # A browser may close keep-alive reads during seeks or tab shutdown.
+            self.close_connection = True
+
     def log_message(self, *_):
         pass
 

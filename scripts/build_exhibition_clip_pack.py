@@ -24,8 +24,9 @@ def sha(path):
     return h.hexdigest()
 
 
-def json_write(path, value):
-    path.write_text(json.dumps(value, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+def json_write(path, value, *, exclusive=False):
+    with path.open('x' if exclusive else 'w', encoding='utf-8', newline='\n') as stream:
+        stream.write(json.dumps(value, ensure_ascii=False, indent=2) + '\n')
 
 
 def unique(rows, field):
@@ -129,8 +130,9 @@ def build(args):
     output, zip_path = args.output.resolve(), args.zip.resolve()
     if args.source_commit and not re.fullmatch('[0-9a-f]{40}', args.source_commit):
         raise ValueError('source-commit must be a full base commit')
-    if output.exists() or zip_path.exists():
-        raise ValueError('refusing to overwrite an existing output or ZIP')
+    receipt_path = zip_path.with_suffix('.receipt.json')
+    if output.exists() or zip_path.exists() or receipt_path.exists():
+        raise ValueError('refusing to overwrite an existing output, ZIP or receipt')
     if zip_path.is_relative_to(output):
         raise ValueError('ZIP must be outside output folder')
     media_bytes = args.media.read_bytes()
@@ -199,7 +201,7 @@ def build(args):
                'builder_base_commit': args.source_commit, 'builder_source_status': 'working_tree_files_identified_by_manifest_hashes',
                'registry_unchanged': True, 'source_bundle_unchanged': sha(args.bundle) == EXPECTED_BUNDLE_SHA,
                'public_deployment': False, 'actual_device_test': 'not_measured'}
-    json_write(zip_path.with_suffix('.receipt.json'), receipt)
+    json_write(receipt_path, receipt, exclusive=True)
     print(json.dumps(receipt, ensure_ascii=False, indent=2))
 
 

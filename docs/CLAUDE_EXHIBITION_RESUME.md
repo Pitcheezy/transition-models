@@ -14,7 +14,7 @@
 
 - 받은 ZIP bundle-849843-fba6b2ff: 867682bytes, SHA af10293d5134219b7f750d00786366b93b0134c895519b939fd99a356d77a4bc. Song 소스 fba6b2ff846dcfa9afad9ea5df4204007e0604c1.
 - ZIP 원본은 사용자 첨부에 보존. 추출본/영상/브라우저 기록은 outputs/exhibition_1101/ (Git 제외).
-- 원본 미디어 등록부는 이전 site-first worktree의 web/pitch-studio/game-849843-media.json, 클립은 노트북 D:/pitcheezy_clips. 원본은 읽기만 한다.
+- 원본 미디어 등록부는 이전 site-first worktree의 web/pitch-studio/game-849843-media.json, 클립·첨부·런타임의 정확한 로컬 위치는 Git 제외 outputs/exhibition_1101/local-inputs.private.json. 원본은 읽기만 한다.
 - 849843:69:2는 구종 불일치로 제외. 262투구 중261영상. 잠금849844는 바이트 검사 외 열지 않는다.
 - 날짜 목록23개 대비 날짜 파일5개, 최종 빌드 재검토 미실시, 실제iPhone未검수, 자동 두모니터 동기화未구현은 기존 인수 쟁점이다.
 

@@ -32,6 +32,7 @@
   function transition(state, registry, event) {
     if (event.epoch !== undefined && event.epoch !== state.epoch) return state;
     if (event.type === "select") return select(state, registry, event.index);
+    if (event.type === "suspend") return { ...state, epoch: state.epoch + 1, chain: false, mode: state.mode === "unavailable" || state.mode === "error" ? state.mode : "paused" };
     if (event.type === "start") return registry.pitches[state.index].status === "available" && state.mode !== "error" ? (state.mode === "ended" ? select(state, registry, state.index, true) : { ...state, chain: true, mode: state.mode === "playing" ? "playing" : "pending" }) : state;
     if (event.type === "stop" || event.type === "pause" || event.type === "seek") return { ...state, chain: false, mode: state.mode === "unavailable" || state.mode === "error" ? state.mode : "paused" };
     if (event.type === "playing") return registry.pitches[state.index].status === "available" && state.mode !== "error" ? { ...state, mode: "playing" } : state;

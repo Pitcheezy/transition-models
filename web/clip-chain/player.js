@@ -1,7 +1,7 @@
 "use strict";
 (async function () {
   const $ = id => document.getElementById(id), api = window.ClipChain;
-  let registry, state, video = null, rate = 1;
+  let registry, state, video = null, rate = 1, suspendedTime = 0;
   const selectable = ["global", "pa", "pitch", "prev", "next", "speed", "full", "copy", "start", "stop"];
   const putStatus = text => { $("status").textContent = text; };
   function label(p) { return `${p.inning || "?"}회 ${p.half === "Top" || p.half === "top" || p.half === "초" ? "초" : p.half === "Bottom" || p.half === "bottom" || p.half === "말" ? "말" : p.half || ""} · PA ${p.pa_index} · ${p.pitch_number}구`; }
@@ -29,7 +29,7 @@
     try { await current.play(); }
     catch { if (epoch === state.epoch) { dispatch({type:"stop",epoch}); putStatus("자동 재생이 허용되지 않았습니다. 영상의 재생 버튼을 눌러 주세요."); } }
   }
-  function render() {
+  function render(restoreTime = 0) {
     const p = registry.pitches[state.index], epoch = state.epoch;
     const prior = video; video = null;
     // A fresh video node binds every media event to one immutable pitch generation.
@@ -46,6 +46,9 @@
       node.controls = true; node.playsInline = true; node.preload = "metadata"; node.playbackRate = rate;
       node.setAttribute("aria-label", `${label(p)} 공식 투구 클립`); node.src = p.src;
       const valid = () => epoch === state.epoch && video === node;
+      if (Number.isFinite(restoreTime) && restoreTime > 0) node.addEventListener("loadedmetadata", () => {
+        if (valid() && Number.isFinite(node.duration) && node.duration > 0) node.currentTime = Math.min(restoreTime, Math.max(0, node.duration - .001));
+      }, {once:true});
       node.addEventListener("playing", () => { if (valid()) dispatch({type:"playing",epoch}); });
       node.addEventListener("pause", () => { if (valid() && !node.ended) dispatch({type:"pause",epoch}); });
       node.addEventListener("seeking", () => { if (valid()) { dispatch({type:"seek",epoch}); if (!node.paused) dispatch({type:"playing",epoch}); } });
@@ -78,7 +81,17 @@
     $("full").addEventListener("click", async () => { try { if (document.fullscreenElement) await document.exitFullscreen(); else if ($("video-slot").requestFullscreen) await $("video-slot").requestFullscreen(); else if (video?.webkitEnterFullscreen) video.webkitEnterFullscreen(); else putStatus("영상의 전체 화면 버튼을 이용해 주세요."); } catch { putStatus("이 브라우저에서는 영상의 전체 화면 버튼을 이용해 주세요."); } });
     $("copy").addEventListener("click", async () => { try { await navigator.clipboard.writeText(registry.pitches[state.index].pitch_key); putStatus("현재 투구 ID를 복사했습니다."); } catch { putStatus(`복사가 허용되지 않았습니다. 이 ID를 직접 사용하세요: ${registry.pitches[state.index].pitch_key}`); } });
     document.addEventListener("keydown", e => { if (e.ctrlKey || e.altKey || e.metaKey || e.target.closest("input,select,textarea,button,a,video,[contenteditable]")) return; if (e.key === "ArrowLeft") { e.preventDefault(); choose(state.index - 1); } else if (e.key === "ArrowRight") { e.preventDefault(); choose(state.index + 1); } else if (e.code === "Space" && video) { e.preventDefault(); if (video.paused) void play(state.epoch); else video.pause(); } });
-    window.addEventListener("pagehide", () => { state = {...state,epoch:state.epoch+1,chain:false}; video?.pause(); });
+    window.addEventListener("pagehide", () => {
+      suspendedTime = video && Number.isFinite(video.currentTime) ? video.currentTime : 0;
+      state = api.transition(state, registry, {type:"suspend"}); video?.pause();
+    });
+    window.addEventListener("pageshow", event => {
+      if (!event.persisted) return;
+      // BFCache preserves old listeners too. Rebuild the video with a fresh
+      // generation, keep the selected pitch/time, and require an explicit play.
+      state = api.transition(state, registry, {type:"select",index:state.index});
+      render(suspendedTime);
+    });
     render();
   } catch (error) { selectable.forEach(id => { $(id).disabled = true; }); $("identity").textContent = "영상 플레이어를 시작할 수 없습니다"; $("video-slot").textContent = "전달팩을 다시 확인해 주세요."; putStatus(`${error.message} ZIP을 모두 풀고 serve.py로 실행하세요.`); }
 })();
