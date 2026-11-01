@@ -1,5 +1,9 @@
 # Codex 재개 프롬프트
 
+## 전시 재개 정본 — 2026-11-02
+
+최신 상태·수정 권한은 [CHECKLIST 상단](../CHECKLIST.md)만 갱신한다. 현재 실행 절차는 [EXHIBIT-host2 단계4 실행안](EXHIBIT_STAGE4_ACCEPTANCE_20261102.md), 직전 실제 업로드/회수는 [단계3 기록](EXHIBIT_STAGE3_EXECUTION_20261102.md)을 따른다. 아래10월 운영 상태는 당시 이력이며 현재 배포 상태로 사용하지 않는다.
+
 ## 재개 기준 — 2026-10-18
 
 현재 작업·수정 권한은 [CHECKLIST 상단](../CHECKLIST.md), 운영 결과·남은 조건은
