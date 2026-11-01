@@ -2,7 +2,7 @@
 
 ## 현재 전시 준비 — 2026-11-01
 
-**EXHIBIT-host2 사용자 실행 전 초기화 수정 — 2026-11-02:** 실제 읽기전용 사전검사에서 공식Wrangler가 preload를dist자식에 전달하는데 새가드가bin만 허용해 차단됨을 발견했다. 등록/PUT/서비스요청0이며 이전 검토 APPROVE는 철회. bin·dist 두고정경로와 각각SHA를 확인하고 그밖의경로는거부하도록 수정, productionpreload→공식부모→자식→가짜전송기 전경로회귀를 추가했다. Python19/Node8 통과, 수정본 실제 가드조회에서도a2574c2f/전체vars/OFF 일치. 최초입력·토큰보존/재생성0, 새v2입력·실행파일로준비했고 사용자직접등록은미시작이다. [수정/검사기록](docs/results/exhibition_20261101/stage3-registration-preparation.json). 다른모델수정본검토후사용자에게v2실행만안내, 아직10분창미시작.
+**EXHIBIT-host2 단계3 등록 도구 최종 검토 완료 — 2026-11-02:** 고정 `cc529525ecb923ebef297e333e2f58a3eb4eafb3`를 다른 모델 gpt-6.1-terra가 재검토해 APPROVE했다. 독립 Python19/Node8 통과(검토 환경의 기본 임시 폴더 권한 실패는 별도 쓰기 가능 폴더로 재실행). 공식 Wrangler 부모·자식의 두 정확한 경로와 SHA를 확인하며, 실제 preload→공식 부모→자식→가짜 GET/PUT 전체 경로 및 제3 경로/변조 SHA 거부를 검사했다. 이전 bin-only 오류와 29d9f8f APPROVE 철회 기록은 [영수증](docs/results/exhibition_20261101/stage3-registration-preparation.json)에 보존했다. 실제 수정 가드 읽기 조회에서도 a2574c2f·전체 vars·업로드 OFF 일치, 제한60회/60초에 예정 배치12회가 들어간다. 새 v2 등록 입력만 사용자에게 안내하며 임시 토큰은 재생성하지 않았다. 현재 원격 변경·비밀 PUT·서비스 요청0, 10분 창 미시작. 다음은 사용자 직접 임시 발행 열쇠 등록 → 새 버전 대조 → 승인 범위의 자료6 업로드·종료 회수다. Codex는 등록 도구 수정 권한을 반납하고 사용자 실행을 기다린다. 커밋 미push·형 회신 보류·현재 공개 앱/홈/영상 보존. 아래 준비/검토 대기는 당시 이력이다.
 
 **EXHIBIT-host2 단계3 등록 준비 — 2026-11-02:** 관리 읽기 조회에서 기존 버전a2574c2f 100%·정확비밀3개·vars/R2/D1/제한카운터/자산우선/호환일8항목 일치를 확인했다. OFF설정a7c4464e를 보존하고 UPLOAD_ENABLED만 바꾼 ON설정22ab3738 사본을 로컬검사했다. 승인된 임시토큰은 사용자전용ACL파일에 생성, 서버등록/업로드ON/서비스요청은0이다. 새 단일PUBLISH 등록·회수 도우미 Python18/Node7·체크리스트8·비공개입력dry-run 통과. [준비 근거](docs/results/exhibition_20261101/stage3-registration-preparation.json). 현재 다른모델 고정검토 대기, 사용자 직접등록 파일은 준비했으나 아직 실행 안내 전이다. 등록 뒤에만 새버전/창을 고정해 업로드하므로10분창은 시작하지 않았다. Codex 수정권한 유지·커밋 미push·형 회신 보류.
 
