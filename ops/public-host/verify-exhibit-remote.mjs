@@ -18,6 +18,7 @@ export const REQUEST_TIMEOUT_MS = 15000;
 export const TOTAL_DEADLINE_MS = 300000;
 const MAX_BODY_BYTES = 8 * 1024 * 1024;
 const DATA_CACHE_CONTROL = "no-store, no-transform";
+const SCOPED_EXCLUDED_PATHS = ["/v1/game/849844.json", "/v1/setup/849844.json", "/v1/games/2026-10-01.json"];
 const MIME = { html: /^text\/html\b/, svg: /^image\/svg\+xml\b/, js: /^(?:text|application)\/(?:x-)?(?:java|ecma)script\b/, css: /^text\/css\b/ };
 const fail = (code, path = null) => { throw Object.assign(new Error(code), path ? { path } : {}); };
 const need = (value, code, path = null) => { if (!value) fail(code, path); };
@@ -61,7 +62,9 @@ export async function verifyExhibitRemote({ target, prepared, game = EXHIBIT_GAM
   const { intake, files, classified } = prepared;
   const report = {
     schema: SCHEMA, evidence_kind: "remote_http_read_only", target: { kind: target.kind, origin_recorded: false },
-    source_commit: intake.source_commit, intake_zip_sha256: intake.zip?.sha256 ?? null, exhibit_game: String(game),
+    source_commit: intake.source_commit, source_commit_basis: intake.source_commit_basis ?? "sender_declared_unverified",
+    data_generation_commit: intake.data_generation_commit ?? null, data_generation_commit_basis: intake.data_generation_commit_basis ?? null,
+    intake_zip_sha256: intake.zip?.sha256 ?? null, exhibit_game: String(game),
     started_at: new Date().toISOString(), environment: { node: process.version, platform: process.platform, arch: process.arch },
     counts: { site_files: files.size, static: classified.static.length, data: classified.data.length, requests: 0, pass: 0, fail: 0 },
     access: { env_present: accessCode !== null, access_used: false, login_status: null, session_cookie_received: false },
@@ -83,7 +86,7 @@ export async function verifyExhibitRemote({ target, prepared, game = EXHIBIT_GAM
     if (value === null) return null;
     try { const u = new URL(value, origin); return u.origin === origin ? u.pathname + u.search : "<other-origin>"; } catch { return "<unparseable>"; }
   };
-  const send = async (method, path, { headers = {}, cookie = session, body = undefined } = {}) => {
+  const send = async (method, path, { headers = {}, cookie = session, body = undefined, readBody = true } = {}) => {
     const row = { method, path, status: null, redirect: false, error: null, bytes: null, headers: null };
     let response;
     report.counts.requests += 1;
@@ -96,6 +99,11 @@ export async function verifyExhibitRemote({ target, prepared, game = EXHIBIT_GAM
       const h = response.headers;
       row.headers = { content_type: h.get("Content-Type"), cache_control: h.get("Cache-Control"), etag_present: h.get("ETag") !== null,
         age: h.get("Age"), cf_cache_status: h.get("CF-Cache-Status"), notice: h.get(NOTICE_HEADER), access: h.get(ACCESS_HEADER), location: locationKind(h.get("Location")) };
+      if (!readBody) {
+        // Excluded evaluation data is checked by status only; never buffer, parse or hash its body.
+        if (response.body) await response.body.cancel();
+        return { row, bytes: null, response };
+      }
       const bytes = await readBounded(response, MAX_BODY_BYTES);
       row.bytes = bytes.length;
       return { row, bytes, response };
@@ -164,6 +172,19 @@ export async function verifyExhibitRemote({ target, prepared, game = EXHIBIT_GAM
       report.negative.missing_advertised_date = { date: missingDate, status: date.row.status, redirect: date.row.redirect, error: date.row.error };
       check("negative:missing_advertised_date_404", date.row.status === 404 && !date.row.redirect);
     } else report.negative.missing_advertised_date = { date: null, status: null, note: "receipt lists no missing date files" };
+
+    if (intake.profile === "exhibition-c47fe6cb") {
+      report.negative.excluded_paths = [];
+      for (const path of SCOPED_EXCLUDED_PATHS) {
+        const { row } = await send("GET", path, { readBody: false });
+        const entry = { path, status: row.status, redirect: row.redirect, error: row.error,
+          authenticated: report.access.access_used, body_checked: false };
+        entry.passed = check("negative:excluded_404:" + path,
+          entry.authenticated && row.status === 404 && !row.redirect && row.error === null,
+          { status: row.status, authenticated: entry.authenticated, error: row.error });
+        report.negative.excluded_paths.push(entry);
+      }
+    }
 
     const head = await send("HEAD", "/v1/manifest.json");
     report.head.manifest = { status: head.row.status, bytes: head.row.bytes, etag_present: head.row.headers?.etag_present ?? false,

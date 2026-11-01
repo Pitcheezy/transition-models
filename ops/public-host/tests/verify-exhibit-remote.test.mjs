@@ -28,7 +28,7 @@ function receiptFor(build) {
     zip: { bytes: 1, sha256: "b".repeat(64) }, catalogue: { advertised_dates: 2, supplied_date_files: 1, missing_date_files: ["2026-01-02"] },
     files: Object.entries(build).map(([path, text]) => ({ path, bytes: Buffer.byteLength(text), sha256_raw: hash(text) })) };
 }
-async function fixture(t, build = miniBuild()) {
+async function fixture(t, build = miniBuild(), receiptOverrides = {}) {
   const dir = await mkdtemp(join(tmpdir(), "pitcheezy-remote-test-"));
   t.after(() => rm(dir, { recursive: true, force: true }));
   const site = join(dir, "site");
@@ -38,13 +38,30 @@ async function fixture(t, build = miniBuild()) {
     await writeFile(full, text);
   }
   const receiptPath = join(dir, "intake-receipt.json");
-  await writeFile(receiptPath, JSON.stringify(receiptFor(build)));
+  await writeFile(receiptPath, JSON.stringify({ ...receiptFor(build), ...receiptOverrides }));
   return { dir, site, receiptPath, build };
 }
 /** Our real gateway in loopback Miniflare with the synthetic build installed the host-contract way (ASSETS + /_publish). */
-async function hostWithSite(t, { access = null, overrides = {} } = {}) {
-  const fx = await fixture(t);
-  const prepared = await prepareSite({ site: fx.site, receipt: fx.receiptPath, expectData: 6, game: "1" });
+async function hostWithSite(t, { access = null, overrides = {}, scoped = false, extraData = 0 } = {}) {
+  const build = miniBuild();
+  const game = scoped ? "849843" : "1";
+  for (let i = 0; i < extraData; i += 1) build[`v1/game/${i + 2}.json`] = JSON.stringify({ synthetic: true, game_pk: i + 2 });
+  const expectData = 6 + extraData;
+  if (scoped) {
+    for (const kind of ["game", "setup"]) {
+      build[`v1/${kind}/${game}.json`] = build[`v1/${kind}/1.json`];
+      delete build[`v1/${kind}/1.json`];
+    }
+    build["v1/games/2026-09-30.json"] = build["v1/games/2026-01-01.json"];
+    delete build["v1/games/2026-01-01.json"];
+    build["v1/dates.json"] = JSON.stringify({ synthetic: true, dates: ["2026-09-30"] });
+  }
+  const fx = await fixture(t, build, scoped ? {
+    profile: "exhibition-c47fe6cb", source_commit: "c".repeat(40), source_commit_basis: "sender_declared_provenance_unverified",
+    data_generation_commit: "d".repeat(40), data_generation_commit_basis: "sender_declared_manifest_unverified",
+    catalogue: { advertised_dates: 1, supplied_date_files: 1, missing_date_files: [] },
+  } : {});
+  const prepared = await prepareSite({ site: fx.site, receipt: fx.receiptPath, expectData, game });
   const host = await startLocalHost({ notice: true, access, assets: makeAssets(prepared.files, prepared.classified.static) });
   t.after(() => host.dispose());
   for (const key of prepared.classified.data) {
@@ -52,14 +69,14 @@ async function hostWithSite(t, { access = null, overrides = {} } = {}) {
     await put.arrayBuffer();
     assert.equal(put.status, 200, key);
   }
-  return { ...fx, host, prepared };
+  return { ...fx, host, prepared, game, expectData };
 }
 async function capture(stream, run) {
   const chunks = []; const original = stream.write;
   stream.write = chunk => { chunks.push(String(chunk)); return true; };
   try { return { code: await run(), text: chunks.join("") }; } finally { stream.write = original; }
 }
-const args = (origin, fx, out, extra = []) => ["--origin", origin, "--site", fx.site, "--receipt", fx.receiptPath, "--out", out, "--expect-data", "6", "--game", "1", "--allow-loopback", ...extra];
+const args = (origin, fx, out, extra = []) => ["--origin", origin, "--site", fx.site, "--receipt", fx.receiptPath, "--out", out, "--expect-data", String(fx.expectData ?? 6), "--game", fx.game ?? "1", "--allow-loopback", ...extra];
 const noLeak = text => assert.doesNotMatch(text, /127\.0\.0\.1|Bearer |pz_viewer=|PUBLISH_TOKEN|accessCodes/);
 
 test("origin rules: https exact origin only; loopback http only with the flag; refusals happen before any file is read", async (t) => {
@@ -226,4 +243,86 @@ test("redirects are never followed: a redirecting host fails; only /index.html -
   assert.equal(okReport.entry.root.equal_index, true);
   assert.equal(okReport.files.find(f => f.path === "assets/index-syn1.js").passed, true, "application/javascript is a JavaScript MIME type");
   noLeak(ok.text);
+});
+
+
+const SCOPED_EXCLUSIONS = ["/v1/game/849844.json", "/v1/setup/849844.json", "/v1/games/2026-10-01.json"];
+
+test("scoped profile: authenticated excluded game/setup/date are 404 and web/data provenance stays separate", { timeout: 50000 }, async (t) => {
+  const fx = await hostWithSite(t, { access: {}, scoped: true });
+  const out = join(fx.dir, "remote-scoped.json");
+  const run = await capture(process.stdout, () => main(args(fx.host.origin, fx, out), { PITCHEEZY_ACCESS_CODE: fx.host.accessCodes[0] }));
+  const report = JSON.parse(run.text);
+  assert.equal(run.code, 0, JSON.stringify(report.checks.filter(c => !c.passed)));
+  assert.equal(report.source_commit, "c".repeat(40));
+  assert.equal(report.source_commit_basis, "sender_declared_provenance_unverified");
+  assert.equal(report.data_generation_commit, "d".repeat(40));
+  assert.equal(report.data_generation_commit_basis, "sender_declared_manifest_unverified");
+  assert.equal(report.counts.requests, 1 + 6 + 4 + 2 + 1 + 3 + 1);
+  assert.equal(report.pass, 19);
+  assert.deepEqual(report.negative.excluded_paths.map(r => [r.path, r.status, r.authenticated, r.body_checked, r.passed]),
+    SCOPED_EXCLUSIONS.map(path => [path, 404, true, false, true]));
+  assert.deepEqual(JSON.parse(await readFile(out, "utf8")).negative.excluded_paths, report.negative.excluded_paths);
+  noLeak(run.text);
+});
+
+test("scoped profile: old game/setup/date remaining in storage fail even when every selected byte matches", { timeout: 50000 }, async (t) => {
+  const fx = await hostWithSite(t, { access: {}, scoped: true });
+  const marker = "synthetic-excluded-body-never-inspected";
+  for (const path of SCOPED_EXCLUSIONS) {
+    const put = await fx.host.publish(path, JSON.stringify({ synthetic: true, marker }));
+    await put.arrayBuffer();
+    assert.equal(put.status, 200);
+  }
+  const run = await capture(process.stdout, () => main(args(fx.host.origin, fx, join(fx.dir, "remote-leftovers.json")), { PITCHEEZY_ACCESS_CODE: fx.host.accessCodes[0] }));
+  const report = JSON.parse(run.text);
+  assert.equal(run.code, 1);
+  assert.ok(report.files.every(row => row.passed));
+  assert.deepEqual(report.negative.excluded_paths.map(r => [r.path, r.status, r.body_checked, r.passed]),
+    SCOPED_EXCLUSIONS.map(path => [path, 200, false, false]));
+  assert.deepEqual(report.checks.filter(c => !c.passed).map(c => c.name), SCOPED_EXCLUSIONS.map(path => "negative:excluded_404:" + path));
+  assert.equal(run.text.includes(marker), false);
+  noLeak(run.text);
+});
+
+test("scoped profile: missing authentication and active notice are not accepted as excluded 404s", { timeout: 50000 }, async (t) => {
+  const fx = await hostWithSite(t, { access: {}, scoped: true });
+  const locked = await capture(process.stdout, () => main(args(fx.host.origin, fx, join(fx.dir, "remote-scoped-locked.json")), {}));
+  const lockedReport = JSON.parse(locked.text);
+  assert.equal(locked.code, 1);
+  assert.deepEqual(lockedReport.negative.excluded_paths.map(r => [r.status, r.authenticated, r.passed]), [[401, false, false], [401, false, false], [401, false, false]]);
+  const on = await fx.host.setNotice({ active: true, operator: "local-test", reason: "synthetic scoped verification", message_id: "data_hold" });
+  await on.arrayBuffer();
+  assert.equal(on.status, 200);
+  const held = await capture(process.stdout, () => main(args(fx.host.origin, fx, join(fx.dir, "remote-scoped-notice.json")), { PITCHEEZY_ACCESS_CODE: fx.host.accessCodes[0] }));
+  const heldReport = JSON.parse(held.text);
+  assert.equal(held.code, 1);
+  assert.deepEqual(heldReport.negative.excluded_paths.map(r => [r.status, r.passed]), [[503, false], [503, false], [503, false]]);
+  noLeak(locked.text); noLeak(held.text);
+});
+
+
+test("legacy 24-data authenticated build keeps 35 checks and 35 requests without scoped exclusions", { timeout: 50000 }, async (t) => {
+  const fx = await hostWithSite(t, { access: {}, extraData: 18 });
+  const run = await capture(process.stdout, () => main(args(fx.host.origin, fx, join(fx.dir, "remote-legacy24.json"), ["--notice-check"]), { PITCHEEZY_ACCESS_CODE: fx.host.accessCodes[0] }));
+  const report = JSON.parse(run.text);
+  assert.equal(run.code, 0, JSON.stringify(report.checks.filter(c => !c.passed)));
+  assert.equal(report.pass, 35);
+  assert.equal(report.counts.requests, 35);
+  assert.equal(report.counts.data, 24);
+  assert.equal(report.negative.excluded_paths, undefined);
+  assert.equal(report.data_generation_commit, null);
+  assert.equal(report.data_generation_commit_basis, null);
+  noLeak(run.text);
+});
+
+test("scoped profile requires successful viewer login even if an ungated host returns 404", { timeout: 50000 }, async (t) => {
+  const fx = await hostWithSite(t, { scoped: true });
+  const run = await capture(process.stdout, () => main(args(fx.host.origin, fx, join(fx.dir, "remote-scoped-ungated.json")), {}));
+  const report = JSON.parse(run.text);
+  assert.equal(run.code, 1);
+  assert.ok(report.files.every(row => row.passed));
+  assert.deepEqual(report.negative.excluded_paths.map(r => [r.status, r.authenticated, r.passed]), [[404, false, false], [404, false, false], [404, false, false]]);
+  assert.deepEqual(report.checks.filter(c => !c.passed).map(c => c.name), SCOPED_EXCLUSIONS.map(path => "negative:excluded_404:" + path));
+  noLeak(run.text);
 });
