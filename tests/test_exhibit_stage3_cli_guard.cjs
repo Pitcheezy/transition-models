@@ -108,3 +108,56 @@ test('production preload without pinned stage3 manifest fails closed',()=>{
   const child=spawnSync(process.execPath,['--require',guard,'-e','process.stdout.write("unexpected")'],{encoding:'utf8',env:{SYSTEMROOT:process.env.SYSTEMROOT,WRANGLER_WRITE_LOGS:'false',PITCHEEZY_STAGE3_MANIFEST:path.join(os.tmpdir(),'no-stage3-manifest'),PITCHEEZY_STAGE3_MANIFEST_SHA256:'a'.repeat(64)}});
   assert.notEqual(child.status,0);assert.doesNotMatch(child.stdout,/unexpected/);assert.match(child.stderr,/stage3 guard initialization failed/);
 });
+
+test('production preload follows official bin to pinned dist for read and PUT, and rejects third entry or altered dist pin',()=>{
+  const tmp=fs.mkdtempSync(path.join(os.tmpdir(),'stage3-production-test-'));
+  try{
+    const root=path.resolve(__dirname,'..');
+    const hash=b=>require('node:crypto').createHash('sha256').update(b).digest('hex');
+    const config=path.join(tmp,'wrangler.json'),empty=path.join(tmp,'empty'),preload=path.join(tmp,'fake-dispatcher.cjs'),manifestFile=path.join(tmp,'manifest.json'),trace=path.join(tmp,'trace.jsonl');
+    const guard=path.join(root,'scripts/exhibit_stage3_cli_guard.cjs'),base=path.join(root,'scripts/exhibit_stage2_cli_guard.cjs');
+    const cli=path.join(root,'ops/public-host-tooling/node_modules/wrangler/bin/wrangler.js');
+    const dist=path.join(root,'ops/public-host-tooling/node_modules/wrangler/wrangler-dist/cli.js');
+    const undici=path.join(root,'ops/public-host-tooling/node_modules/undici');
+    fs.writeFileSync(config,JSON.stringify({name:worker,compatibility_date:'2026-01-01',workers_dev:false,preview_urls:false,vars:{UPLOAD_ENABLED:'false'}}));
+    fs.writeFileSync(empty,'');
+    const token=path.join(tmp,'token');fs.writeFileSync(token,'T'.repeat(43));
+    const m={schema:'pitcheezy-stage3-publisher-registration-v1',phase:'initial',repository_root:root,configuration_file:config,configuration_sha256:hash(fs.readFileSync(config)),node_executable:process.execPath,node_sha256:hash(fs.readFileSync(process.execPath)),guard_sha256:hash(fs.readFileSync(guard)),base_guard_sha256:hash(fs.readFileSync(base)),wrangler_sha256:hash(fs.readFileSync(cli)),wrangler_dist_sha256:hash(fs.readFileSync(dist)),account_id:account,worker_name:worker,expected_version:version,token_file:token,token_sha256:hash(fs.readFileSync(token)),empty_env_file:empty,output_directory:path.join(tmp,'unused-output')};
+    fs.writeFileSync(preload,`
+      const fs=require('node:fs');const u=require(${JSON.stringify(undici)});
+      const fake={dispatch(o,h){
+        let result;
+        const row={method:o.method,path:o.path,officialDistChild:process.argv[1].replace(/\\\\/g,'/').endsWith('/wrangler-dist/cli.js')};
+        if(o.method==='PUT'){
+          const body=JSON.parse(o.body.toString());row.name=body.name;row.digestMatches=body.text===${JSON.stringify(digest)};result={};
+        }else result={id:${JSON.stringify(version)},resources:{bindings:[{name:'UPLOAD_ENABLED',type:'plain_text',text:'false'}]}};
+        fs.appendFileSync(${JSON.stringify(trace)},JSON.stringify(row)+'\\n');
+        h.onConnect(()=>{});h.onHeaders(200,[Buffer.from('content-type'),Buffer.from('application/json')],()=>{},'OK');
+        h.onData(Buffer.from(JSON.stringify({success:true,errors:[],messages:[],result})));h.onComplete([]);return true;
+      }};
+      u.setGlobalDispatcher(fake);
+    `);
+    const env={SYSTEMROOT:process.env.SYSTEMROOT,WINDIR:process.env.WINDIR,USERPROFILE:tmp,APPDATA:tmp,LOCALAPPDATA:tmp,TEMP:tmp,TMP:tmp,PATH:path.dirname(process.execPath),CLOUDFLARE_API_TOKEN:'fake-test-only',CLOUDFLARE_ACCOUNT_ID:account,CI:'true',WRANGLER_WRITE_LOGS:'false',WRANGLER_SEND_METRICS:'false',WRANGLER_SEND_ERROR_REPORTS:'false',WRANGLER_LOG:'log',WRANGLER_LOG_SANITIZE:'true',CLOUDFLARE_LOAD_DEV_VARS_FROM_DOT_ENV:'false',NO_COLOR:'1',PITCHEEZY_STAGE3_MANIFEST:manifestFile};
+    function run(entry,args,input){
+      const raw=Buffer.from(JSON.stringify(m));fs.writeFileSync(manifestFile,raw);
+      return spawnSync(process.execPath,['--require',preload,'--require',guard,entry,...args,'--config',config,'--env-file',empty],{cwd:tmp,input,encoding:'utf8',timeout:30000,env:{...env,PITCHEEZY_STAGE3_MANIFEST_SHA256:hash(raw)}});
+    }
+    const read=run(cli,['versions','view',version,'--json']);
+    assert.equal(read.status,0,read.stdout+read.stderr);
+    assert.equal(JSON.parse(read.stdout).id,version);
+    const write=run(cli,['secret','put','PUBLISH_TOKEN_SHA256'],digest+'\n');
+    assert.equal(write.status,0,write.stdout+write.stderr);
+    assert.doesNotMatch(write.stdout+write.stderr,new RegExp(digest+'|fake-test-only'));
+    const rows=fs.readFileSync(trace,'utf8').trim().split('\n').map(JSON.parse);
+    assert.deepEqual(rows,[{method:'GET',path:prefix+'/versions/'+version,officialDistChild:true},{method:'PUT',path:prefix+'/secrets',officialDistChild:true,name:'PUBLISH_TOKEN_SHA256',digestMatches:true}]);
+    const third=path.join(tmp,'third.js');fs.writeFileSync(third,'process.stdout.write("unexpected-third")');
+    const refused=run(third,['versions','view',version,'--json']);
+    assert.notEqual(refused.status,0);assert.match(refused.stderr,/stage3 guard initialization failed/);assert.doesNotMatch(refused.stdout,/unexpected-third/);
+    m.wrangler_dist_sha256='0'.repeat(64);
+    const badPin=run(cli,['versions','view',version,'--json']);
+    assert.notEqual(badPin.status,0);assert.match(badPin.stderr,/stage3 guard initialization failed/);
+    assert.equal(fs.readFileSync(trace,'utf8').trim().split('\n').length,2);
+  }finally{
+    assert.equal(path.dirname(path.resolve(tmp)),path.resolve(os.tmpdir()));assert.ok(path.basename(tmp).startsWith('stage3-production-test-'));fs.rmSync(tmp,{recursive:true,force:true});
+  }
+});

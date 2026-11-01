@@ -72,9 +72,12 @@ function install() {
     if (sha(configBytes) !== m.configuration_sha256 || config.name !== m.worker_name || config.vars.UPLOAD_ENABLED !== 'false') throw new Error();
     const base = path.join(m.repository_root, 'scripts/exhibit_stage2_cli_guard.cjs');
     const cli = path.join(m.repository_root, 'ops/public-host-tooling/node_modules/wrangler/bin/wrangler.js');
-    if (sha(fs.readFileSync(__filename)) !== m.guard_sha256 || sha(fs.readFileSync(base)) !== m.base_guard_sha256 || sha(fs.readFileSync(cli)) !== m.wrangler_sha256) throw new Error();
+    const dist = path.join(path.dirname(cli), '../wrangler-dist/cli.js');
+    if (sha(fs.readFileSync(__filename)) !== m.guard_sha256 || sha(fs.readFileSync(base)) !== m.base_guard_sha256 || sha(fs.readFileSync(cli)) !== m.wrangler_sha256 || sha(fs.readFileSync(dist)) !== m.wrangler_dist_sha256) throw new Error();
     if (JSON.parse(fs.readFileSync(path.join(path.dirname(cli), '../package.json'))).version !== '4.151.0') throw new Error();
-    if (path.resolve(process.argv[1]) !== path.resolve(cli) || fs.readFileSync(m.empty_env_file).length !== 0) throw new Error();
+    // Official bin/wrangler.js inherits --require into its fixed wrangler-dist/cli.js child.
+    // Both package entries are hash-pinned; no third script is allowed.
+    if (![path.resolve(cli), path.resolve(dist)].includes(path.resolve(process.argv[1])) || fs.readFileSync(m.empty_env_file).length !== 0) throw new Error();
     const args = process.argv.slice(2), tail = ['--config',m.configuration_file,'--env-file',m.empty_env_file];
     let prefix, versionId = null, allowPut = false;
     if (args[0] === 'deployments' && args[1] === 'list') prefix = ['deployments','list','--json'];

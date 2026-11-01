@@ -16,7 +16,7 @@ HASH = re.compile(r"[a-f0-9]{64}\Z")
 UUID = re.compile(r"[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}\Z")
 BASE_NAMES = {"ACCESS_CODE_SHA256", "NOTICE_TOKEN_SHA256", "ACCESS_SESSION_SECRET"}
 NAME = "PUBLISH_TOKEN_SHA256"
-FIELDS = {"schema", "phase", "repository_root", "configuration_file", "configuration_sha256", "node_executable", "node_sha256", "guard_sha256", "base_guard_sha256", "wrangler_sha256", "account_id", "worker_name", "expected_version", "token_file", "token_sha256", "empty_env_file", "output_directory"}
+FIELDS = {"schema", "phase", "repository_root", "configuration_file", "configuration_sha256", "node_executable", "node_sha256", "guard_sha256", "base_guard_sha256", "wrangler_sha256", "wrangler_dist_sha256", "account_id", "worker_name", "expected_version", "token_file", "token_sha256", "empty_env_file", "output_directory"}
 
 
 def require(ok, code):
@@ -55,7 +55,8 @@ def load_inputs(manifest_path, manifest_sha):
     guard = root / "scripts/exhibit_stage3_cli_guard.cjs"
     base_guard = root / "scripts/exhibit_stage2_cli_guard.cjs"
     cli = root / "ops/public-host-tooling/node_modules/wrangler/bin/wrangler.js"
-    for path, pin in [(cfgpath,"configuration_sha256"),(node,"node_sha256"),(guard,"guard_sha256"),(base_guard,"base_guard_sha256"),(cli,"wrangler_sha256")]:
+    dist = cli.parent.parent / "wrangler-dist/cli.js"
+    for path, pin in [(cfgpath,"configuration_sha256"),(node,"node_sha256"),(guard,"guard_sha256"),(base_guard,"base_guard_sha256"),(cli,"wrangler_sha256"),(dist,"wrangler_dist_sha256")]:
         plain_path(str(path))
         require(HASH.fullmatch(m[pin] or "") and path.is_file() and file_sha(path) == m[pin], "pinned_file_changed")
     require(json.loads((cli.parent.parent / "package.json").read_text(encoding="utf-8"))["version"] == "4.151.0", "pinned_cli_version_mismatch")

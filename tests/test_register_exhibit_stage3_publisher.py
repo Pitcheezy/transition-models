@@ -16,6 +16,7 @@ def fixture(tmp_path):
     cli = root / 'ops/public-host-tooling/node_modules/wrangler/bin/wrangler.js'
     cli.parent.mkdir(parents=True)
     cli.write_bytes(b'// mock CLI never executed')
+    dist=cli.parent.parent/'wrangler-dist/cli.js';dist.parent.mkdir();dist.write_bytes(b'// mock CLI child never executed')
     (cli.parent.parent / 'package.json').write_text('{"version":"4.151.0"}')
     guard = root / 'scripts/exhibit_stage3_cli_guard.cjs'
     base = root / 'scripts/exhibit_stage2_cli_guard.cjs'
@@ -26,7 +27,7 @@ def fixture(tmp_path):
     node = tmp_path / 'node.exe'; node.write_bytes(b'fake node')
     empty = tmp_path / 'empty'; empty.write_bytes(b'')
     token = tmp_path / 'token'; token.write_bytes(b'T'*43)
-    m = {'schema':'pitcheezy-stage3-publisher-registration-v1','phase':'initial','repository_root':str(root),'configuration_file':str(config),'configuration_sha256':sha(config.read_bytes()),'node_executable':str(node),'node_sha256':sha(node.read_bytes()),'guard_sha256':sha(guard.read_bytes()),'base_guard_sha256':sha(base.read_bytes()),'wrangler_sha256':sha(cli.read_bytes()),'account_id':'a'*32,'worker_name':'unit-worker','expected_version':V0,'token_file':str(token),'token_sha256':sha(token.read_bytes()),'empty_env_file':str(empty),'output_directory':str(tmp_path/'out')}
+    m = {'schema':'pitcheezy-stage3-publisher-registration-v1','phase':'initial','repository_root':str(root),'configuration_file':str(config),'configuration_sha256':sha(config.read_bytes()),'node_executable':str(node),'node_sha256':sha(node.read_bytes()),'guard_sha256':sha(guard.read_bytes()),'base_guard_sha256':sha(base.read_bytes()),'wrangler_sha256':sha(cli.read_bytes()),'wrangler_dist_sha256':sha(dist.read_bytes()),'account_id':'a'*32,'worker_name':'unit-worker','expected_version':V0,'token_file':str(token),'token_sha256':sha(token.read_bytes()),'empty_env_file':str(empty),'output_directory':str(tmp_path/'out')}
     manifest = tmp_path / 'manifest.json'
     def pin():
         manifest.write_text(json.dumps(m), encoding='utf-8')
@@ -111,11 +112,11 @@ def test_default_dryrun_and_cancel_do_not_call_network_or_create_output(fixture,
     assert not Path(m['output_directory']).exists()
     assert 'Dry-run passed' in capsys.readouterr().out
 
-@pytest.mark.parametrize('changed',['manifest','configuration_file','node_executable','guard','base','cli','empty_env_file'])
+@pytest.mark.parametrize('changed',['manifest','configuration_file','node_executable','guard','base','cli','dist','empty_env_file'])
 def test_local_pin_changes_stop_before_any_command(fixture,changed):
     m,cfg,pin=fixture
     path,digest=pin()
-    targets={'manifest':Path(path),'configuration_file':Path(m['configuration_file']),'node_executable':Path(m['node_executable']),'guard':Path(m['repository_root'])/'scripts/exhibit_stage3_cli_guard.cjs','base':Path(m['repository_root'])/'scripts/exhibit_stage2_cli_guard.cjs','cli':Path(m['repository_root'])/'ops/public-host-tooling/node_modules/wrangler/bin/wrangler.js','empty_env_file':Path(m['empty_env_file'])}
+    targets={'manifest':Path(path),'configuration_file':Path(m['configuration_file']),'node_executable':Path(m['node_executable']),'guard':Path(m['repository_root'])/'scripts/exhibit_stage3_cli_guard.cjs','base':Path(m['repository_root'])/'scripts/exhibit_stage2_cli_guard.cjs','cli':Path(m['repository_root'])/'ops/public-host-tooling/node_modules/wrangler/bin/wrangler.js','dist':Path(m['repository_root'])/'ops/public-host-tooling/node_modules/wrangler/wrangler-dist/cli.js','empty_env_file':Path(m['empty_env_file'])}
     targets[changed].write_bytes(b'changed')
     cloud=FakeCloud(cfg)
     with pytest.raises(RuntimeError):op.register(path,digest,cloud)
