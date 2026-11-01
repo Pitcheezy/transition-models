@@ -49,7 +49,23 @@
   ],
   "legacy_scope_note": "no automatic server expiry; the temporary token can access all gateway-allowed v1 keys on this new server; the runner restricts itself to six pinned keys",
   "cross_model_review": {
-    "status": "pending_fixed_commit_review"
+    "status": "APPROVE",
+    "target_commit": "ca7722490c685304d11c8ade2eb2acf6fb775262",
+    "reviewer_model": "gpt-6.1-terra",
+    "model_evidence": "collaboration spawn model selection",
+    "code_blobs_match_fixed_commit": true,
+    "tests_passed": 14,
+    "tests_skipped": 1,
+    "tests_failed": 0,
+    "skip_reason": "reviewer Windows environment lacked symlink creation privilege; implementer run passed this check",
+    "command": "node --test ops/public-host/tests/exhibit-stage3-upload.test.mjs",
+    "network_requests": 0,
+    "private_inputs_read": false,
+    "findings": [],
+    "limits": [
+      "same output directory prevents rerun; no-new-folder rule is operational",
+      "server close and digest rotation remain operator actions; no automatic expiry"
+    ]
   },
   "remote_service_requests": 0,
   "new_credentials_created": 0,
