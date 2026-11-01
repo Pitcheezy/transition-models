@@ -2,6 +2,8 @@
 
 ## 현재 전시 준비 — 2026-11-01
 
+**EXHIBIT-access-copy1 로컬 선점 — Codex / claude/exhibit-host1-1101 / 기준390a1ab:** 사용자 iPhone 확인에서 남은 개발용 접속 문구를 발견했다. “초대받은 분은 접속 코드를 입력해 주세요.”로 교체하는 변경안을 준비한다. 합격 기준은 안내 문장·주석 외 인증/세션/헤더/접근 범위 불변, 기존 접근 회귀와 다른 모델 고정 검토다. 공개 문구와 실제 추가 배포는 변경안·복구 설명 뒤 사용자 결정이며 현재 서버는 아래6d652d4b를 유지한다. 로컬 기존 접근/안내 회귀36통과(실패0·종료0; Windows workerd WSARecv #64 종료 진단1건, 운영 오류 증거 아님). [착수](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6555705632).
+
 **현재 공개 버전 (2026-11-01 17:40 KST 배포 후 확인):** apex/www = Cloudflare 새 홈, 홈 HTML 소스 `986c6203f0820e0cb97ab9aa1b17181142e38206`·SHA `8fce362e133ee737b341b6ad4c436ebc3c82f2054588f28c2bc5cc237446c883`. 앱 = Song `fba6b2ff846dcfa9afad9ea5df4204007e0604c1` / host `c47643ace740d45898300b1f9f0d6e4184d8bd82` / 적용 버전 `6d652d4b-7d3c-4897-aefd-f37d0edce50c`. 접근 코드 ON·자료 읽기 ON·업로드/수집/피드백 OFF·안내 OFF(revision8). Sites v21·기존 코드·연구는 보존.
 
 **EXHIBIT-notice-deploy1 / reply1 완료 · phone1 실제 폰 일부 확인 · 수정 권한 반납 — Codex / claude/exhibit-host1-1101:** 사용자 승인으로 [준비된 #38 회신 1회 게시](https://github.com/SongRoute/pitcheezy/issues/38#issuecomment-6555601601)·원문 일치 확인. 검토 후보의 설정 검사·격리 dry-run·실제 배포 완료, 원격35/35(형 정적4·자료24 원본 일치), maintenance ON revision7→OFF revision8·감사 저장 확인. 기존 자격·vars/bindings·Logs100%저장 유지. 실제 브라우저 안내 문구·OFF 뒤 접속 화면 복귀, 홈 모바일390/320폭·영상·서비스 연결, 포스터 QR 원본 주소 확인. 사용자 iPhone Safari·Chrome 홈/서비스 접속 화면 확인, 개발용 입력 문구 잔존 지적. 카메라 스캔·홈 영상·코드 입력 뒤849843 동선은 미확인이다. [실행·리뷰·영수증](docs/EXHIBIT_NOTICE_DEPLOY_20261101.md).

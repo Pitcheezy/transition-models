@@ -181,7 +181,7 @@ function reply(request, status, body, extra = {}) {
   return new Response(request.method === "HEAD" || status === 204 ? null : JSON.stringify(body), { status, headers });
 }
 
-/** Development login page. The wording is a placeholder awaiting approval; no scripts, no external assets. */
+/** Invite-code login page; no scripts or external assets. */
 export function loginHtml(message = null) {
   const escape = s => s.replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   return '<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width">' +
@@ -189,7 +189,7 @@ export function loginHtml(message = null) {
     '<style>body{font-family:system-ui,sans-serif;margin:0;padding:24px 16px;color:#1b1b1b;background:#fafafa}' +
     'main{max-width:24rem;margin:0 auto}label{display:block;margin:12px 0 4px}input,button{font:inherit;padding:8px;width:100%;box-sizing:border-box}' +
     'button{margin-top:12px}p[role=alert]{color:#8a1c1c}small{color:#555}</style></head><body><main data-access-gate="on">' +
-    '<h1>접속 코드</h1><p>개발용 입력 화면(승인 전 문구): 초대받은 분만 볼 수 있습니다.</p>' +
+    '<h1>접속 코드</h1><p>초대받은 분은 접속 코드를 입력해 주세요.</p>' +
     (message ? '<p role="alert">' + escape(message) + "</p>" : "") +
     '<form method="post" action="' + ACCESS_ROUTE + '"><label for="code">접속 코드</label>' +
     '<input id="code" name="code" type="password" autocomplete="off" required minlength="8" maxlength="128">' +
