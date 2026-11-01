@@ -2,6 +2,7 @@
 
 import importlib.util
 import json
+import subprocess
 import sys
 from pathlib import Path
 
@@ -269,4 +270,33 @@ def test_duplicate_json_and_naive_times_are_rejected(tmp_path):
         logs.Sources().read(file, "synthetic-input")
     with pytest.raises(logs.InputError, match="timestamp_timezone_required"):
         logs.stamp("2026-11-02T00:00:00")
+
+
+@pytest.mark.parametrize("invalid_row", [[], "PRIVATE-ROW-CONTENT", None])
+@pytest.mark.parametrize("stage", [3, 4])
+def test_cli_malformed_record_shape_has_safe_stdout_no_stderr_and_preserves_inputs(tmp_path, stage, invalid_row):
+    if stage == 3:
+        root, receipt, events = stage3_fixture(tmp_path)
+        write(root / "closing-head.private.json", invalid_row)
+        arguments = ["--stage3", str(root), "--stage3-receipt", str(receipt)]
+        expected_error = "stage3_closing_record_invalid"
+    else:
+        root, events = stage4_fixture(tmp_path)
+        write(root / "browser" / "synthetic-001.private.json", invalid_row)
+        arguments = ["--stage4", str(root)]
+        expected_error = "synthetic_record_invalid"
+    export = write(tmp_path / "private-export.json", events)
+    originals = {file: file.read_bytes() for file in tmp_path.rglob("*.json")}
+    output = tmp_path / "sanitized.json"
+    result = subprocess.run(
+        [sys.executable, "-B", str(FILE), "--private-root", str(tmp_path), "--logs", str(export),
+         *arguments, "--output", str(output)],
+        capture_output=True, text=True, timeout=10, check=False,
+    )
+    assert result.returncode == 2
+    assert json.loads(result.stdout) == {"passed": False, "error": expected_error}
+    assert result.stderr == ""
+    assert str(tmp_path) not in result.stdout and "PRIVATE" not in result.stdout
+    assert not output.exists()
+    assert all(file.read_bytes() == original for file, original in originals.items())
 

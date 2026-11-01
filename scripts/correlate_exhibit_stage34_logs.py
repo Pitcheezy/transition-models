@@ -197,6 +197,7 @@ def load_stage3(directory, receipt_path, sources):
     # A partial run stays visibly incomplete rather than being promoted by a summary.
     need(len(rows) == 12, "stage3_upload_journal_incomplete")
     closing = sources.read(Path(directory) / "closing-head.private.json", "stage3-closing-head")
+    need(isinstance(closing, dict), "stage3_closing_record_invalid")
     need(closing.get("method") == "HEAD" and closing.get("path") == "/_publish/v1/health.json",
          "stage3_closing_target_invalid")
     rows.append(request("stage3-closing-001", closing, expected_version=off))
@@ -210,6 +211,7 @@ def load_stage4(directory, sources):
         rows.extend(journals(phase_dir, "stage4-" + phase, sources, browser=phase == "browser"))
         for number, file in enumerate(sorted(phase_dir.glob("synthetic-*.private.json")), 1):
             row = sources.read(file, f"stage4-{phase}-synthetic-{number:03d}")
+            need(isinstance(row, dict), "synthetic_record_invalid")
             need(row.get("remote_request") is False and
                  row.get("evidence_kind") == "browser_intercepted_synthetic_response", "synthetic_record_invalid")
             synthetic_count += 1
