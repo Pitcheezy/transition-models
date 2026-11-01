@@ -1,0 +1,70 @@
+{
+  "schema": "pitcheezy-scoped-storage-creation-v1",
+  "verified_at_utc": "2026-11-01T12:46:49.313338+00:00",
+  "evidence_kind": "actual_cloudflare_resource_creation_and_db_initialization",
+  "source_commit": "6449747472a3ef11a654df4518b7c6494786ff89",
+  "host_candidate_commit": "aa6f7ab7fe0664a8535a9bc8b9101abce385ea26",
+  "approval_scope": "one new R2 and D1, new DB initial migration only",
+  "account_verified_against_user_selected_account": true,
+  "preexisting_name_collision": false,
+  "new_r2_count": 1,
+  "new_d1_count": 1,
+  "existing_resource_identifiers_preserved": true,
+  "migration": {
+    "file": "0001_telemetry.sql",
+    "sha256": "479ded40208b893fe979b40f36db5ee0b55cb6bfa8b83c0e10f0af02fefc28b4",
+    "applied_count": 1,
+    "tables": [
+      "usage_sessions",
+      "feedback",
+      "telemetry_budget"
+    ],
+    "explicit_indexes": [
+      "sessions_expiry",
+      "sessions_day_game",
+      "feedback_expiry",
+      "feedback_day_game"
+    ],
+    "row_counts": {
+      "usage_sessions": 0,
+      "feedback": 0,
+      "telemetry_budget": 0
+    }
+  },
+  "r2_public_access_enabled": false,
+  "r2_custom_domains_count": 0,
+  "worker_deployments": 0,
+  "uploaded_files": 0,
+  "credential_changes": 0,
+  "route_changes": 0,
+  "partner_replies_sent": 0,
+  "cli": "wrangler 4.151.0",
+  "commands": [
+    "whoami",
+    "r2 bucket list",
+    "d1 list --json",
+    "r2 bucket create <new>",
+    "d1 create <new> --update-config=false",
+    "check_public_host_config.py <private-candidate>",
+    "d1 migrations apply <new> --remote --config <private-config>",
+    "d1 execute <new> --remote --json --command <read-only-schema-and-count-queries>",
+    "r2 bucket dev-url get <new>",
+    "r2 bucket domain list <new>"
+  ],
+  "limits": [
+    "Only new storage and initial schema were tested; candidate app is not deployed.",
+    "R2 object enumeration was not performed; no data uploads were executed.",
+    "No full schema/data comparison of the existing database or existing app traffic test was performed.",
+    "Actual request-rate, notice behavior and phone acceptance of the new candidate remain pending."
+  ],
+  "next_stage_local_preparation": {
+    "actual_created_resource_ids_configured": true,
+    "config_check": "pass",
+    "isolated_wranger_version": "4.151.0",
+    "dry_run_exit_code": 0,
+    "compiled_worker_sha256": "6d5e5c9e932a3842c7212ea21028ba13a72cfa002fb1c2c68a9ead1b1bc44767",
+    "compiled_worker_bytes": 53798,
+    "credentials_installed": false,
+    "worker_or_route_created": false
+  }
+}
