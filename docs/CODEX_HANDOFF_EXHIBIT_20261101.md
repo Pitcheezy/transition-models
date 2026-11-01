@@ -1,5 +1,7 @@
 # Codex 인계 — 전시 호스트·도메인·PR 정리 (2026-11-01, Claude 작성 · 11/1 14:40 KST 최종)
 
+**새 전시 범위 재개 — 11/1 후속:** PLAN → CHECKLIST 상단 → COLLABORATION_PROTOCOL → [전시 호스트 분리 감사](EXHIBIT_HANDOFF_REVIEW_20261101.md#전시-전용-호스트-분리-인계-재검토--2026-11-01) → [미발신 reply2](mail_drafts/EXHIBIT-song-reply2-20261101.md). 현재 단계/담당은 CHECKLIST만 정본이다. 아래 인계 프롬프트와24자료 실행서는 당시 이력이며 그대로 재실행하지 않는다. 실제 신규 자원·배포·발행·안내·앱Route·발신은 각각 승인 뒤다. 새 ZIP은 받기 전 형식/검사 합격을 추정하지 않는다. 버전ID·SHA는 공유 가능하지만 자원명·시험주소·계정·자격값은 공개하지 않는다. 사용자가 규칙 수정·커밋과 host 후보 aa6f7ab 채택을 승인했다. 신규 이름은 지정 비공개 메모/계획에 준비했으며 자원 생성·배포는 별도 승인이다. 옛 시험 Route는 코드ON 유지. #38 초안은 ZIP 검증 뒤 결과를 넣어 다시 보여 주고 발신 전 재확인한다. 실제 다음 단위·검증은 CHECKLIST 상단을 따른다.
+
 **11/1 후속 재개 안내:** apex 전환·승인된 #38 회신·안내 문구 배포를 완료했다. 아래 날짜별 프롬프트는 과거 인계 기록이다. [CHECKLIST 상단](../CHECKLIST.md)과 [실제 배포·QR·리뷰 증거](EXHIBIT_NOTICE_DEPLOY_20261101.md)에서 남은 항목만 확인하며, 완료된 발신·배포·도메인 전환을 반복하지 않는다. iPhone Safari·Chrome 홈/접속 화면은 사용자 확인됐고 인증 뒤 경기까지의 전체 동선은 미확인이다.
 
 **2026-11-01 사용자 재개 지시로 Codex가 이어받았다.** 11/4까지 기다린다는 문구는 작성 당시의 한도 기록이다. 사용자 결정(11/1 14:3x): **apex 전환(2번)부터 Codex에 넘긴다.** 상태 정본은 [CHECKLIST.md](../CHECKLIST.md) 맨 위, 형 요구 5항목의 실행 계획은 [EXHIBIT_SONG_REQ_PLAN_20261101.md](EXHIBIT_SONG_REQ_PLAN_20261101.md), 호스트 실행 결과·발견은 [EXHIBIT_HOST_DEPLOY_STEPS_20261101.md](EXHIBIT_HOST_DEPLOY_STEPS_20261101.md)("실행 결과"·"④ 진행")다. 맨 아래 5절이 **Codex 채팅에 붙여 넣을 프롬프트**다.

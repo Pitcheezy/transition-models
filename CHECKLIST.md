@@ -2,7 +2,18 @@
 
 ## 현재 전시 준비 — 2026-11-01
 
-**EXHIBIT-access-copy1 로컬 준비 완료·새 문구/추가 배포 승인 대기·수정 권한 반납 — Codex / claude/exhibit-host1-1101:** 사용자 iPhone에서 지적한 접속 화면의 개발용 문구를 “초대받은 분은 접속 코드를 입력해 주세요.”로 바꾸는 고정94afc1d를 준비했다. 문장·주석 외 인증/세션/헤더/접근 범위 불변, Node36·다른 모델 gpt-6.1-terra APPROVE·패키지/설정/격리dry-run·로컬 브라우저 확인 통과. 후보ZIP534926bytes·SHA cc9c6418…7850, 서버는 아래6d652d4b 유지. [후속 후보 근거](docs/EXHIBIT_NOTICE_DEPLOY_20261101.md#접속-화면-문구-후속-후보--exhibit-access-copy1-아직-미배포). [착수](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6555705632).
+**전시 범위 축소 결정 반영 완료 — Codex / claude/exhibit-host1-1101 / 후보 host aa6f7ab7fe0664a8535a9bc8b9101abce385ea26:** 사용자 규칙 수정·문서 커밋 승인과 네 결정을 반영했다. [이번 착수](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6556920007). 새 접속 문구 포함 후보 채택, 새 자원 이름3개·시험 주소·제한 카운터 이름은 지정 비공개 폴더에 준비(기존 기록과 중복 없음, 실제 계정 사용 가능 여부는 생성 전 확인), 옛 시험 Route는 코드ON 유지. 새 ZIP/RECEIPT 미수신이며 다음은 EXHIBIT-scope1. #38은 ZIP 검증 후 결과를 넣은 문안을 다시 보여 주며 지금 발신하지 않는다. 실제 공개 버전은 아래 기록을 유지하고 Cloudflare·팀원 코드·PR은 변경하지 않았다. 문서 작업은 이 커밋으로 정리하며 수정 권한을 반납한다. 검토23건 중 원문 번호18건만 확인돼 19~23 미확인을 유지한다.
+
+- [!] EXHIBIT-reply2. 범위 규칙·인계 감사·미발신 [회신 초안](docs/mail_drafts/EXHIBIT-song-reply2-20261101.md)을 준비했다. 사용자 규칙/커밋 승인은 완료. ZIP 수신·검증 뒤 manifest/health 질문을 실제 결과로 바꾸어 사용자에게 다시 보여 준 뒤 발신 승인을 받아 #38에1회 게시·원문 대조한다. 지금은 미발신이다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-11-01 · Codex]`
+- [ ] EXHIBIT-scope1. 새 ZIP182517bytes/SHA3c3b8006…와 RECEIPT 수신 뒤 안전 인수, 원본20파일/manifest19행 형식 확인·도구 확장 다른 모델 검토, 정적4/JSON6·262/71/246/16·날짜1/경기1·로컬 인증/안내 검사로 합격한다. 수신 전 검증 완료로 쓰지 않는다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-11-01 · Codex]`
+- [ ] EXHIBIT-host2. 승인된 새 Worker/R2/D1·제한 카운터 격리, migration·비밀4개 등록·설정검사·고정CLI, 업로드6개 후 OFF, 인증 후 정적/자료 바이트·제외 경기/날짜404·안내/복원·요청량·폰 지정 경기 확인. 각 원격 단계는 별도 승인, 기존 서버/24자료 불변. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-11-01 · Codex]`
+- [ ] EXHIBIT-switch1. host2 합격 뒤 승인된 app Route 대상만 교체, 공개 앱6자료/제외경기404/QR 동선·재로그인·이전 서버 보존 확인. 옛 비공개 시험 Route는 사용자 결정대로 접근 코드 ON으로 유지. 실제 app 연결 변경 승인은 별도다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-11-01 · Codex]`
+- [ ] EXHIBIT-review3. Song에 검토 base·범위를 확인한 뒤 웹c47fe6cb·자료cb1cfa8f·ZIP 전체SHA를 고정해 읽기 검토/격리 검사, 실제 검토 모델·명령·P1/P2/P3·미측정 기록. 원본/팀원 원격 변경과 자동 발신 없음. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-11-01 · Codex]`
+- [ ] EXHIBIT-logs2. 11/1 요청별 로그8단계는 사용자 대시보드 내보내기 뒤 적용 버전·method/path/status로 대조한다. Free 보관3일을 고려한 내부 확보기한11/3, 확보하지 못하면 미확인 유지. 10/26 누락2건을 새 로그로 대체하지 않는다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-11-01 · Codex]`
+- [ ] EXHIBIT-cleanup1. 임시 홈 시험 Route·AAAA만 제거하는 별도 승인안을 준비하고 사용자가 대시보드에서 처리한 뒤 apex/www/app/media 정상 확인. 운영 홈·앱·영상 주소/자료 삭제 금지. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-11-01 · Codex]`
+- [ ] EXHIBIT-public1. 11/21 리허설의 코드 없는 관람은 공개 대상·자료 범위 확인과 별도 승인 뒤 접근 제한 OFF 및 인증 없는 QR→지정 경기 검사로 합격한다. 일정 도달·문구 수정·호스트 교체만으로 자동 해제하지 않는다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-11-01 · Codex]`
+
+**직전 인계 — EXHIBIT-access-copy1 로컬 준비 완료·새 문구/추가 배포 승인 대기·수정 권한 반납 — Codex / claude/exhibit-host1-1101:** 사용자 iPhone에서 지적한 접속 화면의 개발용 문구를 “초대받은 분은 접속 코드를 입력해 주세요.”로 바꾸는 고정94afc1d를 준비했다. 문장·주석 외 인증/세션/헤더/접근 범위 불변, Node36·다른 모델 gpt-6.1-terra APPROVE·패키지/설정/격리dry-run·로컬 브라우저 확인 통과. 후보ZIP534926bytes·SHA cc9c6418…7850, 서버는 아래6d652d4b 유지. [후속 후보 근거](docs/EXHIBIT_NOTICE_DEPLOY_20261101.md#접속-화면-문구-후속-후보--exhibit-access-copy1-아직-미배포). [착수](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6555705632).
 
 **현재 공개 버전 (2026-11-01 17:40 KST 배포 후 확인):** apex/www = Cloudflare 새 홈, 홈 HTML 소스 `986c6203f0820e0cb97ab9aa1b17181142e38206`·SHA `8fce362e133ee737b341b6ad4c436ebc3c82f2054588f28c2bc5cc237446c883`. 앱 = Song `fba6b2ff846dcfa9afad9ea5df4204007e0604c1` / host `c47643ace740d45898300b1f9f0d6e4184d8bd82` / 적용 버전 `6d652d4b-7d3c-4897-aefd-f37d0edce50c`. 접근 코드 ON·자료 읽기 ON·업로드/수집/피드백 OFF·안내 OFF(revision8). Sites v21·기존 코드·연구는 보존.
 
