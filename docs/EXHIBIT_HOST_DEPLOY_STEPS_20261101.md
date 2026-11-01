@@ -1,9 +1,37 @@
 # 시험 호스트 ③ 실행 순서 — 운영자 명령 (2026-11-01, 실행 전)
 
-[실행 전 설명](EXHIBIT_HOST_PLAN_20261101.md)의 ③을 **실제로 돌릴 때** 치는 명령이다. 아직 하나도 실행하지 않았다.
+[실행 전 설명](EXHIBIT_HOST_PLAN_20261101.md)의 ③을 **실제로 돌릴 때** 치는 명령이다. **2026-11-01 실행 완료 — 결과와 발견은 아래 "실행 결과" 절.** 명령은 ④ 뒤 재검사·되돌리기용으로 그대로 둔다.
 전제: 사용자 결정(올릴 자료 24개 전부, 시험 단계 접근 코드 ON 유지)과 Cloudflare 로그인. 〔사용자만〕 표시는 Claude/Codex가 대신하지 않는 단계다(비밀·토큰·코드를 다루는 3·5·7단계 포함).
 명령은 저장소 루트의 **Windows PowerShell 5.1** 기준이다(`&&` 없음, 순차 실행은 `;`). `<후보>`·`<비공개>`·`<site>`·`<receipt>`는 Git 밖 로컬 경로다.
 `<시험호스트>`는 기존 시험 Worker에 이미 붙어 있는 시험용 하위 도메인의 https 출처이며 **이 문서 ③의 모든 명령(2·5·7단계)이 쓰는 대상**이다. `<앱호스트>`는 ④에서 정하는 공개 하위 도메인의 https 출처로 ④ 뒤에만 쓴다(7단계 재실행). 비밀값·버킷/DB 이름·출처는 문서·이슈·CHECKLIST에 쓰지 않는다.
+
+## 실행 결과 — 2026-11-01 (KST 낮)
+
+사용자가 로그인·비밀 등록·대시보드 변경을, Claude가 조회·설정 채움·배포·계획 생성·검사 실행을 맡았다. 호스트명·계정·버킷/DB·Worker 이름·코드·토큰은 적지 않는다.
+비식별 기록 [host-deploy-20261101.json](results/exhibition_20261101/host-deploy-20261101.json), 검사 영수증 [host-remote-verify-20261101.json](results/exhibition_20261101/host-remote-verify-20261101.json).
+
+| 단계 | 결과 | Worker 버전 |
+|---|---|---|
+| 1 | `whoami`·R2 1개·D1 1개 조회, 후보 4값 채움(세션 3600 = 기존 배포값 유지), 설정 검사 ok, 격리 프로필 dry-run 통과·원본 후보 불변 | V0(되돌리기 기준) `207c638d-5040-4ec3-ad92-0e2525f0272c` — 10/26 공동 합성 시험 뒤 상태(10/25 기록보다 뒤) |
+| 2 | 배포(자료 읽기 ON·업로드 OFF·접근 ON). `/`·`/v1/*`·정적 모두 401 + `X-Pitcheezy-Access: required`·no-store | `46cf3edc-53a2-440f-b7ec-3baaae802e89` |
+| 3 | 토큰 helper(파일 ACL 본인만) → 사용자 `secret put PUBLISH_TOKEN_SHA256` | `913b7f12-a7ac-4beb-a33d-ac8c2c1c0bd7` |
+| 4 | `--var UPLOAD_ENABLED:true`. `/_publish` HEAD(토큰 없음) 401 = 창 열림 | `dbe8837c-61a2-4f96-8ee7-53ed6a2d6845` |
+| 5a | HEAD 24: 없음 23, `v1/health.json` observed(10/16 합성 기록, ETag 확보) | — |
+| 5b | PUT 24/24 `stored`·200·SHA 일치(health는 If-Match로 교체) | — |
+| 6 | 덧씌움 없는 배포. `/_publish` 503, 게이트 401 유지. 토큰 파일 삭제 | `d4d707d7-47ec-4dfa-bc8b-af268bef40bc` |
+| 7 | 1차 33/35 — `entry:root_is_index`·`entry:query_game_is_index` 실패(발견 1). 사용자 대시보드 조치 뒤 2차 **35/35**(영수증 SHA `3ebdafab…`) | 접속 코드 교체 `42e265fd-b7f9-4c3a-b569-0aeb9059c81e`(현재 활성) |
+
+발견·문서와 달랐던 점:
+
+1. **Cloudflare Web Analytics 자동 설치가 HTML에 비콘을 끼워 넣었다.** 존 `pitcheezy.com`의 Web Analytics 사이트(한 달 전 생성, Automatic setup)가 하위 호스트의 `/`·`/?game=` 응답에 `static.cloudflareinsights.com/beacon.min.js`를 주입해 659→1026바이트가 됐다(`/index.html`은 307→`/`, 정적 JS/CSS·JSON은 무관). 홈 apex 응답에는 없었다. 사용자가 **Analytics & Logs → Web Analytics → `pitcheezy.com` Manage site → Disable → Update**로 끈 뒤 바이트 일치. ④ 홈 전환 뒤에도 이 설정이 Disable인지 다시 본다. 우리 gateway는 `no-transform`을 보내지 않으므로 지금은 설정에만 의존한다.
+2. **접속 코드 원문이 없었다.** 저장소·문서에는 digest만 있고 사용자도 보관본이 없어 새 16자 코드를 만들어(파일에만 저장·ACL 본인만·화면에는 digest) `ACCESS_CODE_SHA256`를 단일 digest로 교체했다. 옛 코드 세션은 모두 끝났다. **안내 운영자 토큰(`NOTICE_TOKEN_SHA256`)도 같은 상태**라 교체 전에는 안내 ON/OFF를 할 수 없다.
+3. `wrangler login`은 승인 코드를 약 2분만 기다린다(첫 시도는 시간 초과 → 재실행). 저장소 루트가 아닌 상위 폴더에서 치면 상대 경로가 깨져 절대 경로로 안내했다.
+4. `secret put`은 대화형 프롬프트 대신 PowerShell 파이프 `"<digest>" | node … secret put NAME --config …`로 넣었다(digest만, 토큰 원문 아님). Claude의 터미널 실행은 비밀 등록으로 차단되어 사용자가 직접 쳤다.
+5. PowerShell 5.1에서 `--if-match 'v1/health.json=\"<etag>\"'`처럼 **`\"` 이스케이프**가 필요하다(그냥 `"`는 node에 닿기 전에 벗겨진다). 생성된 계획의 `condition.if_match`가 따옴표 포함 ETag인지 확인한 뒤 실행했다.
+6. 5a·5b·7단계는 비공개 폴더의 `.ps1`(토큰·코드를 파일에서 읽고 `finally`로 환경 변수 제거)로 돌렸다. 영수증·계획·메모 원본은 Git 밖에 보관한다.
+7. 2·4·6단계 뒤 `<후보>/host/.wrangler`를 지우고 설정 검사를 다시 통과시켰다(설정 SHA `eed14187…` 불변).
+
+남은 ③ 꼬리: 8단계 비식별 로그 영수증(대시보드 Observability에 요청이 표시되는 것은 확인), 안내 ON→OFF(운영자 토큰 교체 뒤), 폰·PC 브라우저 확인(사용자), 형에게 주소·코드 비공개 전달.
 
 ## 0. 로컬에서 끝난 것 (2026-11-01)
 
@@ -161,6 +189,6 @@ Workers Logs(저장 ON)에서 버전 ID로 거르고 다음을 확인해 10/25 �
 - #38 회신은 [회신 초안](mail_drafts/EXHIBIT-song-reply-20261101.md)에 결과를 채운 뒤 **사용자 승인으로만** 발신. 초안에도 호스트명·코드·토큰은 쓰지 않는다. 포스터 QR은 `pitcheezy.com` 홈 → "서비스 열기" → 앱이 기준이다(앱 직행 QR은 형이 원할 때 최종 포스터에).
 - ④ 도메인 연결(`<앱호스트>` custom domain)은 별도 승인 단계이며 이 문서의 ③은 그 전까지 `<시험호스트>`에서 끝낸다. ④ 뒤 7단계를 `<앱호스트>`로 다시 실행한다.
 
-## 하지 않은 것
+## 하지 않은 것 (2026-11-01 실행 뒤 기준)
 
-Cloudflare 로그인·배포·업로드·비밀·DNS 변경 없음. Wrangler dry-run은 로컬 npm 캐시의 고정 4.151.0으로 홈 설정·앱 후보에 1회씩만 돌렸고(로그인·업로드 없음), 앱 후보 dry-run이 원본 후보 폴더에 남긴 `host/.wrangler`는 지웠다(설정 검사 재실행 결과 동일). 후보 폴더·ZIP·계획 폴더·토큰 파일은 모두 Git 밖. 이 문서의 통과 기준은 실제 실행 뒤 영수증으로만 채운다.
+DNS·custom domain·Sites 변경 없음(④). 8단계 비식별 로그 영수증, 안내 ON→OFF 시험, 브라우저 확인은 위 "남은 ③ 꼬리". 홈 설정(`ops/public-home`)은 dry-run만 했고 배포하지 않았다. 후보 폴더·ZIP·계획·영수증·메모는 Git 밖, 토큰 파일은 삭제했고 접속 코드 파일은 사용자 보관.
