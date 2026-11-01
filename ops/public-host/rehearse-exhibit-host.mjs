@@ -59,7 +59,8 @@ export async function runExhibitHostRehearsal({ site, receipt, out, browser = fa
     const missingDate = intake.catalogue.missing_date_files[0] ?? null;
     report = {
       schema: SCHEMA, evidence_kind: "loopback_miniflare_our_gateway", target: "ephemeral-loopback-miniflare",
-      source_commit: intake.source_commit, intake_zip_sha256: intake.zip?.sha256 ?? null, exhibit_game: String(game),
+      source_commit: intake.source_commit, source_commit_basis: intake.source_commit_basis ?? "sender_declared_unverified",
+      data_generation_commit: intake.data_generation_commit ?? null, data_generation_commit_basis: intake.data_generation_commit_basis ?? null, intake_zip_sha256: intake.zip?.sha256 ?? null, exhibit_game: String(game),
       environment: { node: process.version, platform: process.platform, arch: process.arch, miniflare: require("miniflare/package.json").version, browser: null },
       gateway_sha256: await sourceReceipt(),
       counts: { site_files: files.size, static: classified.static.length, data: classified.data.length,
