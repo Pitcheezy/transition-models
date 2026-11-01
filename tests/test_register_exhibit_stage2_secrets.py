@@ -182,3 +182,70 @@ def test_existing_start_guard_blocks_concurrent_execution(prepared):
     with pytest.raises(RuntimeError, match='already_started'):
         op.register(prepared, cloud)
     assert cloud.calls == []
+
+
+def stopped_before_any_secret(prepared):
+    log = Path(prepared['log_directory'])
+    log.mkdir()
+    (log / 'registration.started').write_text('original marker', encoding='utf-8')
+    (log / 'deployments-before.private.txt').write_text('original failed read', encoding='utf-8')
+    return log
+
+
+def test_explicit_resume_preserves_original_and_requires_remote_zero(prepared):
+    log = stopped_before_any_secret(prepared)
+    cloud = FakeCloud()
+    state = op.register(prepared, cloud, resume_before_secrets=True)
+    assert len(cloud.puts) == 3 and len(state['steps']) == 3
+    assert (log / 'registration.started').read_text() == 'original marker'
+    assert (log / 'deployments-before.private.txt').read_text() == 'original failed read'
+    assert (log / 'resume-before-secrets/deployments-before.private.txt').exists()
+
+
+def test_resume_remote_secret_prevents_all_puts_and_repeat(prepared):
+    stopped_before_any_secret(prepared)
+    cloud = FakeCloud()
+    cloud.names = ['ACCESS_CODE_SHA256']
+    with pytest.raises(RuntimeError, match='unexpected_secret_names'):
+        op.register(prepared, cloud, resume_before_secrets=True)
+    assert cloud.puts == []
+    cloud.names = []
+    with pytest.raises(RuntimeError, match='resume_already_started'):
+        op.register(prepared, cloud, resume_before_secrets=True)
+    assert cloud.puts == []
+
+
+def test_resume_changed_version_prevents_put(prepared):
+    stopped_before_any_secret(prepared)
+    cloud = FakeCloud()
+    cloud.version = 2
+    with pytest.raises(RuntimeError, match='active_version_changed'):
+        op.register(prepared, cloud, resume_before_secrets=True)
+    assert cloud.puts == []
+
+
+def test_resume_existing_put_record_refused_before_network(prepared):
+    log = stopped_before_any_secret(prepared)
+    (log / 'put-1.private.txt').write_text('{}')
+    cloud = FakeCloud()
+    with pytest.raises(RuntimeError, match='resume_has_possible_mutation'):
+        op.register(prepared, cloud, resume_before_secrets=True)
+    assert cloud.calls == []
+
+
+def test_read_error_output_is_never_saved(prepared):
+    def failed(*args, **kwargs):
+        return SimpleNamespace(returncode=1, stdout='fake reflected oauth token', stderr='fake reflected oauth token')
+    with pytest.raises(RuntimeError, match='command_failed'):
+        op.register(prepared, failed)
+    texts = ''.join(p.read_text() for p in Path(prepared['log_directory']).glob('*.txt'))
+    assert 'fake reflected oauth token' not in texts
+
+
+def test_resume_completed_journal_refused_without_claiming_new_success(prepared):
+    log = stopped_before_any_secret(prepared)
+    (log / 'registration.private.json').write_text(json.dumps({'initial_version':'v0', 'steps':[{'name':n, 'version':f'v{i+1}'} for i,n in enumerate(op.NAMES)], 'pending':None}), encoding='utf-8')
+    cloud = FakeCloud()
+    with pytest.raises(RuntimeError, match='resume_has_completed_journal'):
+        op.register(prepared, cloud, resume_before_secrets=True)
+    assert cloud.calls == []

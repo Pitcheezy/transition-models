@@ -13,7 +13,7 @@ import sys
 from datetime import datetime, timezone
 
 NAMES = ("ACCESS_CODE_SHA256", "NOTICE_TOKEN_SHA256", "ACCESS_SESSION_SECRET")
-EXPECTED_GUARD_SHA = "9a592f799ba65acc5ae36d59062cd2fe2e63a0542e488d92efad3fc5f2dd4faa"
+EXPECTED_GUARD_SHA = "6d97a5e6ca84093bdf03c750a0977d61b261a1f99432687b0c035aca4bd17577"
 EXPECTED_INITIAL_VERSION = "aeef75d8-7d43-4603-82c9-ebc408f184b2"
 EXPECTED_MANIFEST_SHA = "2f8ae745122b04e2d6eef025db0841de46f6f672407a0d8b6c00b85b502f5e6b"
 EXPECTED_MANIFEST_CONTENT_SHA = "d85eeb171d7609ec746915e37e0dc87a077e74b3ede979aa3bf9bf716b720307"
@@ -43,7 +43,7 @@ def credential_value(name, manifest):
     return hashlib.sha256(value.encode("utf-8")).hexdigest()
 
 
-def register(manifest, runner=None):
+def register(manifest, runner=None, *, resume_before_secrets=False):
     runner = runner or subprocess.run
     require(hashlib.sha256(json.dumps(manifest, sort_keys=True, separators=(",", ":")).encode()).hexdigest() == EXPECTED_MANIFEST_CONTENT_SHA, "manifest_content_changed")
     require(manifest["expected_initial_version"] == EXPECTED_INITIAL_VERSION, "initial_version_mismatch")
@@ -78,13 +78,29 @@ def register(manifest, runner=None):
     # Do not inherit API destinations, proxies, Node preload, credentials or CLI overrides.
     allowed = {"SYSTEMROOT", "WINDIR", "USERPROFILE", "APPDATA", "LOCALAPPDATA", "TEMP", "TMP", "HOMEDRIVE", "HOMEPATH"}
     if len(state["steps"]) == len(NAMES):
+        require(not resume_before_secrets, "resume_has_completed_journal")
         return state  # Completed run is read-only; never repeat registration.
     lockpath = log / "registration.started"
-    try:
-        fd = os.open(lockpath, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
-        os.close(fd)
-    except FileExistsError:
-        raise RuntimeError("registration_already_started_do_not_retry") from None
+    output_directory = log
+    if resume_before_secrets:
+        require(lockpath.exists(), "original_stop_marker_missing")
+        require(not statepath.exists() and not statepath.with_suffix(".pending").exists()
+                and not list(log.glob("put-*.private.txt")), "resume_has_possible_mutation")
+        # A separate exclusive marker preserves the original stop and permits one recovery only.
+        resume_lock = log / "registration.resume-before-secrets.started"
+        try:
+            fd = os.open(resume_lock, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+            os.close(fd)
+        except FileExistsError:
+            raise RuntimeError("resume_already_started_do_not_retry") from None
+        output_directory = log / "resume-before-secrets"
+        output_directory.mkdir(exist_ok=False)
+    else:
+        try:
+            fd = os.open(lockpath, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+            os.close(fd)
+        except FileExistsError:
+            raise RuntimeError("registration_already_started_do_not_retry") from None
     env = {key: value for key, value in os.environ.items() if key.upper() in allowed}
     env.update(CI="true", WRANGLER_SEND_METRICS="false", WRANGLER_SEND_ERROR_REPORTS="false",
                CLOUDFLARE_LOAD_DEV_VARS_FROM_DOT_ENV="false", NO_COLOR="1", CLOUDFLARE_ACCOUNT_ID=manifest["account_id"],
@@ -107,17 +123,40 @@ def register(manifest, runner=None):
                             capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=60)
         except Exception:
             raise RuntimeError("command_uncertain_do_not_retry") from None
-        # No mutation stdout/stderr is persisted, even if a provider echoes a partial value.
-        output = json.dumps({"returncode": result.returncode, "output_discarded": True}) if value is not None else result.stdout + "\n" + result.stderr
-        (log / (label + ".private.txt")).write_text(output, encoding="utf-8")
+        # Never retain raw command output: OAuth failures may include reflected credentials.
+        metadata = {"returncode": result.returncode, "raw_output_discarded": True}
+        clean = None
+        if result.returncode == 0 and value is None:
+            try:
+                parsed = json.loads(result.stdout)
+                require(isinstance(parsed, list), "metadata_invalid")
+                if args[:2] == ["deployments", "list"]:
+                    clean = [{"created_on": row["created_on"], "versions": [
+                        {"version_id": v["version_id"], "percentage": v["percentage"]}
+                        for v in row["versions"]]} for row in parsed]
+                elif args[:2] == ["secret", "list"]:
+                    clean = [{"name": row["name"]} for row in parsed]
+                else:
+                    raise ValueError()
+                metadata["result"] = clean
+            except (ValueError, TypeError, KeyError):
+                metadata["metadata_invalid"] = True
+        (output_directory / (label + ".private.txt")).write_text(json.dumps(metadata, indent=2), encoding="utf-8")
         require(result.returncode == 0, "command_failed_do_not_retry")
-        return result.stdout
+        if value is None:
+            require(clean is not None, "metadata_invalid")
+            return json.dumps(clean)
+        return ""
 
     version = latest_version(json.loads(call("deployments-before", ["deployments", "list", "--json"])))
     expected_version = state["steps"][-1]["version"] if state["steps"] else state["initial_version"]
     require(version == expected_version, "active_version_changed")
     existing = json.loads(call("secret-names-before", ["secret", "list", "--format", "json"]))
     require({row["name"] for row in existing} == {r["name"] for r in state["steps"]}, "unexpected_secret_names")
+    if resume_before_secrets:
+        require(version == EXPECTED_INITIAL_VERSION and existing == [], "resume_remote_not_pristine")
+        state["recovery"] = "one_explicit_resume_before_any_secret"
+        save()
     for index in range(len(state["steps"]), len(NAMES)):
         name = NAMES[index]
         value = credential_value(name, manifest)
@@ -142,6 +181,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--manifest", required=True)
     parser.add_argument("--register-secrets", action="store_true")
+    parser.add_argument("--resume-before-secrets", action="store_true")
     args = parser.parse_args()
     if not args.register_secrets:
         print("No changes made. User registration requires --register-secrets.")
@@ -150,7 +190,7 @@ def main():
         if input("Register only 3 approved secrets? Press Enter to continue, or type q to cancel: ").strip():
             print("Cancelled; no changes made.")
             return 0
-        result = register(json.loads(Path(args.manifest).read_text(encoding="utf-8-sig")))
+        result = register(json.loads(Path(args.manifest).read_text(encoding="utf-8-sig")), resume_before_secrets=args.resume_before_secrets)
         print("All 3 registered. No publisher token, route, upload, or Worker deployment performed.")
         print("Final version: " + result["steps"][-1]["version"])
         return 0
