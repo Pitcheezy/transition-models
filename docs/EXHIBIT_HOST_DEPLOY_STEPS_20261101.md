@@ -32,7 +32,16 @@
 6. 5a·5b·7단계는 비공개 폴더의 `.ps1`(토큰·코드를 파일에서 읽고 `finally`로 환경 변수 제거)로 돌렸다. 영수증·계획·메모 원본은 Git 밖에 보관한다.
 7. 2·4·6단계 뒤 `<후보>/host/.wrangler`를 지우고 설정 검사를 다시 통과시켰다(설정 SHA `eed14187…` 불변).
 
-남은 ③ 꼬리: 8단계 비식별 로그 영수증(사용자가 보낸 대시보드 Observability 캡처에 요청 목록이 보였을 뿐 영수증은 미작성), 폰에서 경기 화면(`?game=849843`) 직접 확인(iPhone Safari 로그인·날짜 목록·안내 화면은 확인됨), 형에게 주소·코드 비공개 전달.
+남은 ③ 꼬리: 8단계 비식별 로그 영수증(사용자가 보낸 대시보드 Observability 캡처에 요청 목록이 보였을 뿐 영수증은 미작성), 폰에서 경기 화면(`?game=849843`) 직접 확인(iPhone Safari 로그인·날짜 목록·안내 화면·다른 경기 화면은 확인됨), 형에게 주소·코드 비공개 전달.
+
+## ④ 진행 — 2026-11-01 오후
+
+| 단계 | 결과 |
+|---|---|
+| ④-a 앱 주소 | 대시보드의 Worker "Add Domain(custom domain)" 창이 하위 호스트명으로 존을 찾지 못해(새 존 등록·도메인 구매 흐름으로 빠짐) **DNS AAAA `app` → `100::` Proxied + Worker Route `app.pitcheezy.com/*`(fail closed)**로 연결했다. 설정 파일 `routes`는 설정 검사기가 `unsupported_or_missing_fields`로 거부하므로 도메인은 대시보드에서만 관리한다. 연결 뒤 `/`·`/v1/manifest.json`·정적 401 + `X-Pitcheezy-Access`. 검사기 **35/35**([영수증](results/exhibition_20261101/host-remote-verify-app-20261101.json), SHA `3853eaee…`). iPhone LTE: 접속 코드 → 경기 화면·추천·존 표시. 이 PC의 리졸버가 새 이름을 NXDOMAIN으로 부정 캐시해 검사기는 `dns.lookup`을 엣지 IP로 고정하는 검사 전용 preload로 돌렸다(운영 코드 아님). |
+| ④-b 홈 Worker | `ops/public-home/wrangler.jsonc`로 `pitcheezy-home` 배포(정적 9파일, 도메인 없음) → 임시 호스트(AAAA `100::` + Route)에서 홈 200, `_headers` 적용(nosniff·DENY·referrer), 비콘 없음, "서비스 열기" 링크, `/nope` 404. 임시 라우트를 처음엔 앱 Worker에 붙이는 실수가 있었고 옮겼다. |
+| ④-b 영상 | **Workers 정적 호스트는 Range 요청에 206이 아니라 200 전체(11.5MB)로 답하고 `Accept-Ranges`가 없다**(캐시 HIT에도 동일) → iPhone Safari 재생 불가 구조. 사용자 결정 A안: 전용 R2 버킷을 만들어 영상·포스터 2파일을 immutable 캐시로 올리고 R2 custom domain **`media.pitcheezy.com`**(TLS 최소 1.2, r2.dev 비활성)을 붙였다(초기화 중 약 10분간 403 `error code: 1014`). 이후 Range **206**·`Content-Range`·SHA 로컬 일치. `web/pitch-studio-home/index.html`의 `<source src>`만 media 호스트로 바꿔 재배포(`a4fe3d3f…`), 임시 호스트 HTML이 media 주소를 가리키는 것 확인, **iPhone Safari 영상 재생 확인(사용자)**. 포스터·정지 이미지·팀 로고는 정적 호스트에 그대로. |
+| ④-b apex | 미실행. 계획: `pitcheezy.com` A 레코드 2개(현재 DNS only, OpenAI Sites의 Cloudflare for SaaS)를 **Proxied로만 바꾸고** 홈 Worker에 Route `pitcheezy.com/*`(선택 `www` AAAA `100::` + Route). 되돌리기 = 라우트 삭제 + DNS only 원복(Sites·`_cf-custom-hostname`·`_openai-site-verification` TXT는 전시 뒤까지 유지). 전환 뒤 Web Analytics 자동 설치가 Disable인지 다시 본다. |
 
 ## 0. 로컬에서 끝난 것 (2026-11-01)
 
