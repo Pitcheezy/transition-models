@@ -2,7 +2,7 @@
 
 ## 현재 전시 준비 — 2026-11-01
 
-**EXHIBIT-access-copy1 로컬 선점 — Codex / claude/exhibit-host1-1101 / 기준390a1ab:** 사용자 iPhone 확인에서 남은 개발용 접속 문구를 발견했다. “초대받은 분은 접속 코드를 입력해 주세요.”로 교체하는 변경안을 준비한다. 합격 기준은 안내 문장·주석 외 인증/세션/헤더/접근 범위 불변, 기존 접근 회귀와 다른 모델 고정 검토다. 공개 문구와 실제 추가 배포는 변경안·복구 설명 뒤 사용자 결정이며 현재 서버는 아래6d652d4b를 유지한다. 로컬 기존 접근/안내 회귀36통과(실패0·종료0; Windows workerd WSARecv #64 종료 진단1건, 운영 오류 증거 아님). [착수](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6555705632).
+**EXHIBIT-access-copy1 로컬 준비 완료·새 문구/추가 배포 승인 대기·수정 권한 반납 — Codex / claude/exhibit-host1-1101:** 사용자 iPhone에서 지적한 접속 화면의 개발용 문구를 “초대받은 분은 접속 코드를 입력해 주세요.”로 바꾸는 고정94afc1d를 준비했다. 문장·주석 외 인증/세션/헤더/접근 범위 불변, Node36·다른 모델 gpt-6.1-terra APPROVE·패키지/설정/격리dry-run·로컬 브라우저 확인 통과. 후보ZIP534926bytes·SHA cc9c6418…7850, 서버는 아래6d652d4b 유지. [후속 후보 근거](docs/EXHIBIT_NOTICE_DEPLOY_20261101.md#접속-화면-문구-후속-후보--exhibit-access-copy1-아직-미배포). [착수](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6555705632).
 
 **현재 공개 버전 (2026-11-01 17:40 KST 배포 후 확인):** apex/www = Cloudflare 새 홈, 홈 HTML 소스 `986c6203f0820e0cb97ab9aa1b17181142e38206`·SHA `8fce362e133ee737b341b6ad4c436ebc3c82f2054588f28c2bc5cc237446c883`. 앱 = Song `fba6b2ff846dcfa9afad9ea5df4204007e0604c1` / host `c47643ace740d45898300b1f9f0d6e4184d8bd82` / 적용 버전 `6d652d4b-7d3c-4897-aefd-f37d0edce50c`. 접근 코드 ON·자료 읽기 ON·업로드/수집/피드백 OFF·안내 OFF(revision8). Sites v21·기존 코드·연구는 보존.
 

@@ -73,3 +73,13 @@ CHECKLIST 상단을 먼저 읽는다. #38 발신과 이 안내 배포를 반복�
 사용자: “iphone safari chrome에서 모두 열리는데 서비스열기를누르면 개발용 입력화면이라고 나오네.” 홈·서비스 진입까지의 실기기 확인으로 기록하며 코드 입력 뒤 경기·추천 확인 완료로 해석하지 않는다. 접속 화면 문구 수정안을 다음 로컬 단위로 준비한다.
 
 체크리스트8 passed, JSON 구문·필수 SHA 길이·현재 증거 상대링크·게시 원문 SHA 보존·diff 공백 검사 통과. 다른 모델 gpt-6.1-terra 최종 기록 검토 APPROVE. 기록 검토는 실제 서버·폰의 독립 재실행이 아니다.
+
+## 접속 화면 문구 후속 후보 — EXHIBIT-access-copy1 (아직 미배포)
+
+사용자 iPhone 보고에 따라 `access.mjs`의 주석과 안내 문장만 고정 `94afc1deb3a0955b928214b1f207de7194f8c083`에서 바꿨다. 제안 문구는 **“초대받은 분은 접속 코드를 입력해 주세요.”**다. 로그인·세션·접근 허용·헤더·폼 동작 변경은 없다. 하단의 이용 허가/개인 식별 설명은 그대로다.
+
+기존 접근/안내 회귀 `node --test --test-reporter=spec tests/access.test.mjs tests/notice.test.mjs tests/notice-client.test.mjs` 36통과. Windows workerd 종료 시 WSARecv #64 진단1건이 있었지만 실패0·종료0이며 실제 서버 오류가 아니다. 다른 모델 gpt-6.1-terra가 `390a1ab..94afc1d`를 읽기 검토하여 APPROVE했다.
+
+기존 배포본에서 형 정적4파일과 출처 메타데이터를 바이트 그대로 재사용해 새 후보를 만들었다. ZIP534926bytes·SHA `cc9c6418ccbaf7bd8a77b800aae1829aac37bc8f3aad02254694214910ee7850`, manifest SHA `1ff9ee5e53c108665ea93feae0f7c3fc3a98890c223b4f10a7bcdf39ba46c23a`. 기존 설정 SHA·클라이언트 설정 SHA가 앞선 배포와 같고 패키지/설정 검사를 통과했다. 고정 Wrangler4.151.0·빈 자격 프로필 dry-run 통과, 원래16개 파일 바이트 불변. 로컬 번들53798bytes·SHA `6d5e5c9e932a3842c7212ea21028ba13a72cfa002fb1c2c68a9ead1b1bc44767`.
+
+비밀값 없는 loopback 미리보기에서 제안 문구를 실제 브라우저로 확인했다. 사용자가 검토할 화면 캡처는 Git 밖에 저장했다. 새 공개 문구/추가 배포 승인 질문을 남겼으며, 답변 전 실제 서버는 `6d652d4b` 그대로다. 복구 대상도 현재 확인된 자격 교체 이후 버전 `6d652d4b`이며 이전 자격 버전은 사용하지 않는다.
