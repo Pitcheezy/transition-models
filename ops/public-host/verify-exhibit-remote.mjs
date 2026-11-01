@@ -52,7 +52,7 @@ async function readBounded(response, limit) {
   return Buffer.concat(chunks);
 }
 
-export async function verifyExhibitRemote({ target, prepared, game = EXHIBIT_GAME, noticeCheck = false, accessCode = null } = {}) {
+export async function verifyExhibitRemote({ target, prepared, game = EXHIBIT_GAME, noticeCheck = false, accessCode = null, fetchImpl = fetch } = {}) {
   const { origin } = target;
   const controller = new AbortController();
   const deadline = setTimeout(() => controller.abort(), TOTAL_DEADLINE_MS);
@@ -91,7 +91,7 @@ export async function verifyExhibitRemote({ target, prepared, game = EXHIBIT_GAM
     let response;
     report.counts.requests += 1;
     try {
-      response = await fetch(origin + path, { method, redirect: "manual", cache: "no-store", body,
+      response = await fetchImpl(origin + path, { method, redirect: "manual", cache: "no-store", body,
         headers: { ...(cookie ? { Cookie: cookie } : {}), ...headers },
         signal: AbortSignal.any([controller.signal, AbortSignal.timeout(REQUEST_TIMEOUT_MS)]) });
       row.status = response.status;
