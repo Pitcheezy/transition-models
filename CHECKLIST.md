@@ -2,6 +2,8 @@
 
 ## 현재 전시 준비 — 2026-11-01
 
+**EXHIBIT-apex1 사전 조회 완료·진행 중 — Codex / claude/exhibit-host1-1101 / 기준 3bedef2:** 사용자가 apex 전환을 승인했고 Sites 연결은 직접 해제하기로 했다. 17:04 KST 전후 실제 대시보드에서 정확한 apex/www Route·DNS Proxied·apex 포함 Universal 인증서 Active를 확인했다. 그러나 우리 존 Always Use HTTPS는 OFF이고 새 www 홈은 HTTP 200으로 열리므로 전환 전 HTTPS 이동 보완이 필요하다. 기존 apex HTTP 302를 새 호스트의 이동 보장으로 쓰지 않는다. 합격 기준: 새 apex 홈 SHA/보안 헤더·app/media 링크·비콘 없음, HTTP→HTTPS, media206, 앱401; 지정 경기 폰 QR는 별도 실기기 기록. HTTPS 설정 변경은 추가 범위 설명/승인 대기이며 아직 Sites 해제·DNS·Cloudflare 변경 없음. [새 관측과 다음 단계](docs/EXHIBIT_HANDOFF_REVIEW_20261101.md#apex-전환-사전-실측--2026-11-01-1704-kst).
+
 **EXHIBIT-handoff-review 완료·수정 권한 반납 — Codex / claude/exhibit-host1-1101 / 검토 기준 8db9a25 (2026-11-01):** Song 요구와 방향 일치, 원격 영수증 두 개의 35/35·v4 전체 SHA 일치 확인. 공개 조회는 apex 옛 홈200/www 새 홈200·로컬 바이트 일치/app401/media206/HTTP→HTTPS302. 복구 지시·활성 버전 출처·폰 복원 시간·옛 검사 경로·운영 문구 정정. 문서 2차 검토 PASS, 체크리스트8통과·새 상대링크 오류0·diff 검사 통과. [검토와 다음 승인 범위](docs/EXHIBIT_HANDOFF_REVIEW_20261101.md). Cloudflare 관리 화면 로그인·apex 전환 승인 대기. 운영 코드·형 빌드·Cloudflare·DNS·Sites·이슈·PR 변경 없음.
 
 현재 공개 버전: pitcheezy.com 홈 = Sites v21 / 소스 76dd0887a09913aa7783a540b5c6104b2658261c (오늘 변경 없음). **시험 호스트(비공개, 접근 코드 ON) 공개 버전·소스 커밋 (2026-11-01): Worker의 마지막 관리 조회 기록 버전 `feed4fc1-949d-4672-98fb-35f4ab00fdc3`(안내 토큰 교체 뒤; 현재 관리 API 재조회는 미실행, 이전 접속 코드 교체 버전은 `42e265fd…`) / host `f50020b` / 형 빌드 `fba6b2ff` / 배포 ZIP `790f3b88…` / 원격 검사 35/35.** Song fba6b2ff는 **`app.pitcheezy.com`**에 연결됨(같은 Worker, 접근 코드 ON, 11/21 OFF 예정). 홈: `www.pitcheezy.com`은 새 홈 Worker(영상은 `media.pitcheezy.com`), apex `pitcheezy.com`은 **아직 Sites 옛 홈**(SaaS custom hostname 때문, Codex 인계).

@@ -49,3 +49,19 @@ Cloudflare 공식 [O2O 설명](https://developers.cloudflare.com/cloudflare-for-
 ## 문서 정정 검증
 
 `python -B -m pytest tests/test_checklist_model.py -q -p no:cacheprovider`: 8 passed. `git diff --check` 통과. 변경 문서 10개에서 기준 커밋 대비 새로 생긴 상대 링크 오류 0. 과거 CHECKLIST의 기존 비정상 링크는 이번 범위에서 보존했다. 읽기 전용 보조 검토의 최종 delta 판정 PASS; 운영 코드 변경·새 배포·사용자 기기 검사로 확대하지 않는다.
+
+## apex 전환 사전 실측 — 2026-11-01 17:04 KST
+
+사용자가 전환을 승인했고, 연결 규칙·HTTPS 확인 뒤 Sites 도메인 연결은 직접 해제하기로 했다. 기준 HEAD `3bedef222cf1ff5ad8911d7e12376b68a75f8da8`, 시작 트리 clean. 이번 조회에서는 로그인된 채팅 내 브라우저의 대시보드를 사용했다. 앞 절의 로그인/승인 대기는 당시 상태다.
+
+- Workers Routes: `pitcheezy.com/*` 및 `www.pitcheezy.com/*`가 홈 Worker를 가리킨다. `*.pitcheezy.com/*`는 없다. 앱 Route는 별도로 유지되어 있다.
+- DNS: apex A 두 레코드와 www 레코드가 Proxied다. 값을 변경하지 않았다.
+- Edge Certificates: `pitcheezy.com`과 `*.pitcheezy.com`을 포함한 Universal 인증서 Active, 만료 표시 2027-01-03. TLS 1.3 ON. **Always Use HTTPS OFF**를 확인했다.
+- Sites 연결 목록: apex custom domain active·SSL active. 사이트/버전 21을 보존한다.
+- 인증 없는 유한 HTTP 조회 5회(urllib, 브라우저 User-Agent, 리다이렉트 자동 추적 안 함): `http://www.pitcheezy.com/` 200, 이동 없음; `http://pitcheezy.com/` 302→HTTPS; `https://www.pitcheezy.com/` 200·6133bytes·기존 새 홈 SHA 일치·DENY·app/media 링크 있음·비콘 없음; 앱 manifest401+접근문 required; media Range206(`bytes 0-1/11571137`).
+
+**판정:** 라우트와 인증서는 준비됐으나, 기존 apex의 HTTPS 리다이렉트는 Sites 동작일 수 있다. 새 www 호스트의 HTTP 200은 HTTPS 강제 이동이 아직 없다는 직접 근거다. Sites를 해제하기 전에 우리 존의 HTTPS 이동을 보완한다. 도메인 전체 Always Use HTTPS를 ON으로 하면 app/media를 포함한 같은 존의 HTTP 요청도 HTTPS로 이동하므로, 이 추가 설정 범위를 설명하고 승인을 받는다. 접근 코드/업로드/요금/인증서는 변경 대상이 아니다. 승인 전 설정 변경·Sites 해제는 미실행이다.
+
+설정 적용 뒤 HTTP→HTTPS와 HTTPS 정상 응답을 확인하고 사용자에게 Sites 연결만 해제하도록 안내한다. 최종 새 apex SHA 및 보안 헤더까지 확인하기 전 전환 완료로 기록하지 않는다. 보조 에이전트의 읽기 검토도 우리 존 인증서/HTTPS 이동 확인과 기존 복구안 유지를 지지했다. 같은 모델 추가 검토이며 코드 변경은 없다.
+
+기록 검사: diff 공백 검사 통과. 체크리스트 검사 첫 실행 8 passed/Windows 자식 프로세스 디코딩 경고 1; `PYTHONUTF8=1`, `PYTHONDONTWRITEBYTECODE=1`로 재실행 8 passed(경고 없음). 동작 코드 수정 없음.
