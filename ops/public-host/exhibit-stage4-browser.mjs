@@ -10,6 +10,8 @@ const READ_PATHS = new Set(["/", "/favicon.svg", "/assets/index-X1sSTTQ4.js", "/
   "/v1/games/2026-09-30.json", GAME, "/v1/setup/849843.json"]);
 const fail = code => { throw new Error(code); };
 const utc = () => new Date().toISOString();
+const FAILURE_CODES = new Set(["net::ERR_ABORTED", "net::ERR_CACHE_MISS", "net::ERR_FAILED", "net::ERR_TIMED_OUT",
+  "net::ERR_CONNECTION_CLOSED", "net::ERR_CONNECTION_RESET", "net::ERR_CONNECTION_REFUSED", "net::ERR_NAME_NOT_RESOLVED"]);
 
 export function browserRequestPath(origin, address, method) {
   let u; try { u = new URL(address); } catch { return null; }
@@ -18,6 +20,10 @@ export function browserRequestPath(origin, address, method) {
   if (!["GET", "HEAD"].includes(method) || !READ_PATHS.has(u.pathname)) return null;
   if (u.search && !(u.pathname === "/" && u.search === "?game=849843")) return null;
   return u.pathname + u.search;
+}
+
+export function isSyntheticNoticeErrorPath(path, method) {
+  return method === "GET" && [GAME, "/v1/health.json"].includes(path);
 }
 
 /** Only completed requests sent inside the normal observation window count as polling evidence. */
@@ -38,9 +44,10 @@ export function summarizeNormalBrowserRows(rows, firstNumber, lastNumber) {
 
 /** Private request ledger: credential values, bodies, headers and raw exceptions are never saved. */
 export class Stage4BrowserLedger {
-  constructor({ origin, outDir, maxRequests = 180, versionPin }) {
+  constructor({ origin, outDir, maxRequests = 180, versionPin, allowLoopback = false }) {
     let u; try { u = new URL(origin); } catch { fail("invalid_origin"); }
-    if (u.protocol !== "https:" || u.origin !== origin || u.username || u.password) fail("invalid_origin");
+    if (typeof allowLoopback !== "boolean" || (u.protocol !== "https:" && !(allowLoopback && u.protocol === "http:" && u.hostname === "127.0.0.1")) ||
+      u.origin !== origin || u.username || u.password) fail("invalid_origin");
     if (!Number.isSafeInteger(maxRequests) || maxRequests < 2 || maxRequests > 180) fail("invalid_budget");
     if (!/^[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$/.test(versionPin || "")) fail("invalid_version_pin");
     this.origin = origin; this.outDir = resolve(outDir); this.limit = maxRequests; this.versionPin = versionPin;
@@ -69,12 +76,26 @@ export class Stage4BrowserLedger {
     return row;
   }
   file(row, suffix) { return join(this.outDir, `request-${String(row.number).padStart(3, "0")}.${suffix}.private.json`); }
-  async finish(row, { status = null, ray = null, failed = false } = {}) {
+  async responseHeaders(row, { status, ray = null } = {}) {
+    row.response_header_status = Number.isInteger(status) && status >= 100 && status <= 599 ? status : null;
+    row.response_headers_at = utc();
+    row.response_header_cf_ray = typeof ray === "string" && /^[a-f0-9]{16,32}-[A-Z]{3}$/i.test(ray) ? ray : null;
+    await writeFile(this.file(row, "headers"), JSON.stringify({ number: row.number, response_headers_at: row.response_headers_at,
+      response_header_status: row.response_header_status, response_header_cf_ray: row.response_header_cf_ray }) + "\n", { flag: "wx", flush: true });
+    row.response_headers_recorded = true;
+  }
+  async finish(row, { status = null, ray = null, failed = false, failureCode = null } = {}) {
     if (row.state !== "started") return;
-    row.state = failed ? "transport_failed" : "completed"; row.finished_at = utc();
+    // Fetch may receive a complete bodyless 304 then the app aborts its controller in finally.
+    // Preserve that browser event; it is accepted only with the independently saved 304 header observation.
+    const bodyless304Abort = failed && failureCode === "net::ERR_ABORTED" && ["GET", "HEAD"].includes(row.method) &&
+      row.response_headers_recorded === true && row.response_header_status === 304;
+    row.state = failed && !bodyless304Abort ? "transport_failed" : "completed"; row.finished_at = utc();
+    if (bodyless304Abort) { status = 304; ray = row.response_header_cf_ray; row.completion_basis = "bodyless_304_headers_before_client_abort"; }
     row.status = Number.isInteger(status) && status >= 100 && status <= 599 ? status : null;
     row.cf_ray = typeof ray === "string" && /^[a-f0-9]{16,32}-[A-Z]{3}$/i.test(ray) ? ray : null;
-    if (failed) this.fatal ??= "browser_transport_failed";
+    if (failed) row.failure_code = FAILURE_CODES.has(failureCode) ? failureCode : "unclassified_browser_failure";
+    if (failed && !bodyless304Abort) this.fatal ??= "browser_transport_failed";
     try { await writeFile(this.file(row, "completed"), JSON.stringify(row) + "\n", { flag: "wx", flush: true }); }
     catch { this.fatal = "browser_ledger_write_failed"; fail(this.fatal); }
   }
@@ -82,17 +103,18 @@ export class Stage4BrowserLedger {
     return { requests: this.rows.length, limit: this.limit, reserve_for_logout: 1,
       completed: this.rows.filter(r => r.state === "completed").length,
       incomplete_or_failed: this.rows.filter(r => r.state !== "completed").length,
+      bodyless_304_client_abort: this.rows.filter(r => r.completion_basis === "bodyless_304_headers_before_client_abort").length,
       blocked: this.blocked, synthetic_responses: this.synthetic, fatal: this.fatal,
       version_pin: this.versionPin, version_evidence: "management_pin_not_server_event_proof" };
   }
 }
 
-export async function openStage4Browser({ browser, origin, accessCode, outDir, maxRequests = 180, versionPin }) {
+export async function openStage4Browser({ browser, origin, accessCode, outDir, maxRequests = 180, versionPin, allowLoopback = false }) {
   if (typeof accessCode !== "string" || !/^[^\s\p{Cc}]{8,128}$/u.test(accessCode)) fail("invalid_access_code");
-  const ledger = new Stage4BrowserLedger({ origin, outDir, maxRequests, versionPin });
+  const ledger = new Stage4BrowserLedger({ origin, outDir, maxRequests, versionPin, allowLoopback });
   await ledger.initialize();
   let context, page, loggedIn = false, authAttempted = false, closing = false, closed = false, synthetic = false;
-  let marker = null, syntheticBaseline = 0; const tickets = new WeakMap(); const pending = new Set(); const measurements = [];
+  let marker = null, syntheticBaseline = 0; const tickets = new WeakMap(); const headerTasks = new WeakMap(); const pending = new Set(); const measurements = [];
   const noteTask = promise => {
     pending.add(promise);
     promise.catch(() => { ledger.fatal ??= "browser_observer_failed"; }).finally(() => pending.delete(promise));
@@ -126,7 +148,7 @@ export async function openStage4Browser({ browser, origin, accessCode, outDir, m
   };
   const hidden = async () => page.evaluate(expectedMarker => ({
     hidden: document.querySelectorAll(".sv-reclist,.sv-atbat-toggle,svg").length === 0,
-    notice: document.body.innerText.includes("자료를 확인하고 있어요"),
+    notice: document.body.innerText.includes("서비스 점검 중이에요. 잠시 후 다시 확인해 주세요."),
     same_document: window.__pzStage4Marker === expectedMarker,
   }), marker);
   const waitFor = async (label, test, timeoutMs = 120000) => {
@@ -152,17 +174,26 @@ export async function openStage4Browser({ browser, origin, accessCode, outDir, m
   try {
     context = await browser.newContext({ viewport: { width: 390, height: 844 }, serviceWorkers: "block" });
     context.on("page", extra => { if (page && extra !== page) { ledger.fatal ??= "unexpected_extra_tab"; void extra.close().catch(() => {}); } });
+    context.on("response", response => {
+      const row = tickets.get(response.request()); if (!row) return;
+      const task = (async () => { await ledger.responseHeaders(row, { status: response.status(), ray: await response.headerValue("cf-ray") }); })();
+      headerTasks.set(response.request(), task); noteTask(task);
+    });
     context.on("requestfinished", request => {
       const row = tickets.get(request); if (!row) return;
       noteTask((async () => { const response = await request.response();
         await ledger.finish(row, { status: response?.status(), ray: await response?.headerValue("cf-ray"), failed: !response }); })());
     });
-    context.on("requestfailed", request => { const row = tickets.get(request); if (row) noteTask(ledger.finish(row, { failed: true })); });
+    context.on("requestfailed", request => { const row = tickets.get(request); if (row) noteTask((async () => {
+      await headerTasks.get(request); await ledger.finish(row, { failed: true, failureCode: request.failure()?.errorText });
+    })()); });
     await context.route("**/*", async route => {
       const request = route.request(), method = request.method();
       const path = browserRequestPath(origin, request.url(), method);
       try {
-        if (synthetic && path === GAME && method === "GET") {
+        // The received app stops at a health notice before reading game. Replace either next data read,
+        // otherwise a game-only synthetic error would never be observed while notice is active.
+        if (synthetic && isSyntheticNoticeErrorPath(path, method)) {
           ledger.synthetic++;
           await writeFile(join(ledger.outDir, `synthetic-${String(ledger.synthetic).padStart(3, "0")}.private.json`),
             JSON.stringify({ observed_at: utc(), method, path, status: 500, evidence_kind: "browser_intercepted_synthetic_response", remote_request: false }) + "\n", { flag: "wx", flush: true });
@@ -199,6 +230,7 @@ export async function openStage4Browser({ browser, origin, accessCode, outDir, m
     waitHidden: timeout => waitFor("notice_hidden", async () => { const v = await hidden(); return v.hidden && v.notice && v.same_document; }, timeout),
     waitRestored: timeout => waitFor("notice_restored", async () => (await page.locator(".sv-reclist").count()) > 0 &&
       await page.evaluate(expected => window.__pzStage4Marker === expected && document.body.innerText.includes("실제 투구 · 1구 · Pete Crow-Armstrong"), marker), timeout),
+    // Historical method name retained for the caller; both health/game reads are eligible and recorded by path.
     setSyntheticGameError: value => { if (typeof value !== "boolean") fail("invalid_synthetic_mode"); synthetic = value; syntheticBaseline = ledger.synthetic; },
     waitSyntheticGameError: async timeout => {
       await waitFor("synthetic_error_received", async () => ledger.synthetic > syntheticBaseline, timeout);

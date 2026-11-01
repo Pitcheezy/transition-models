@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
-import { browserRequestPath, Stage4BrowserLedger, summarizeNormalBrowserRows } from "../exhibit-stage4-browser.mjs";
+import { browserRequestPath, Stage4BrowserLedger, summarizeNormalBrowserRows, isSyntheticNoticeErrorPath } from "../exhibit-stage4-browser.mjs";
 
 const ORIGIN = "https://synthetic.invalid";
 const VERSION = "12345678-1234-1234-1234-123456789abc";
@@ -86,6 +86,9 @@ test("existing output refuses repeat run; invalid origin and enlarged budgets fa
   await assert.rejects(ledger.initialize(), /EEXIST/);
   assert.throws(() => new Stage4BrowserLedger({ origin: "http://synthetic.invalid", outDir: ledger.outDir, versionPin: VERSION }), /invalid_origin/);
   assert.throws(() => new Stage4BrowserLedger({ origin: ORIGIN, outDir: ledger.outDir, maxRequests: 181, versionPin: VERSION }), /invalid_budget/);
+  assert.throws(() => new Stage4BrowserLedger({ origin: "http://localhost:1234", outDir: ledger.outDir, versionPin: VERSION, allowLoopback: true }), /invalid_origin/);
+  assert.throws(() => new Stage4BrowserLedger({ origin: "http://synthetic.invalid", outDir: ledger.outDir, versionPin: VERSION, allowLoopback: true }), /invalid_origin/);
+  assert.doesNotThrow(() => new Stage4BrowserLedger({ origin: "http://127.0.0.1:1234", outDir: ledger.outDir, versionPin: VERSION, allowLoopback: true }));
 });
 
 test("normal polling requires completed game and health observations inside the sampling window", () => {
@@ -115,4 +118,36 @@ test("normal polling rejects failed/incomplete transport, notice/error responses
     const result = summarizeNormalBrowserRows([...baseline, { number: 3, method: "GET", path: "/v1/health.json", state }], 1, 3);
     assert.equal(result.passed, false); assert.equal(result.incomplete_or_failed, 1);
   }
+});
+
+test("GET 304 headers saved before client abort prove bodyless completion while retaining abort evidence", async t => {
+  const ledger = await fixture(t);
+  const row = await ledger.begin(ORIGIN + "/v1/health.json", "GET");
+  await ledger.responseHeaders(row, { status: 304, ray: "0123456789abcdef-HKG" });
+  await ledger.finish(row, { failed: true, failureCode: "net::ERR_ABORTED" });
+  assert.equal(row.state, "completed"); assert.equal(row.status, 304);
+  assert.equal(row.failure_code, "net::ERR_ABORTED");
+  assert.equal(row.completion_basis, "bodyless_304_headers_before_client_abort");
+  assert.equal(ledger.snapshot().fatal, null); assert.equal(ledger.snapshot().bodyless_304_client_abort, 1);
+});
+
+test("200 abort, missing 304 header proof, and non-abort transport errors stay failures", async t => {
+  const cases = [{ status: 200, code: "net::ERR_ABORTED" }, { status: null, code: "net::ERR_ABORTED" },
+    { status: 304, code: "net::ERR_CACHE_MISS" }];
+  for (const value of cases) {
+    const ledger = await fixture(t);
+    const row = await ledger.begin(ORIGIN + "/v1/health.json", "GET");
+    if (value.status !== null) await ledger.responseHeaders(row, { status: value.status });
+    await ledger.finish(row, { failed: true, failureCode: value.code });
+    assert.equal(row.state, "transport_failed"); assert.equal(row.completion_basis, undefined);
+    assert.equal(ledger.snapshot().fatal, "browser_transport_failed");
+  }
+});
+
+test("synthetic notice-followup error can reach health-first clients without affecting other paths or writes", () => {
+  assert.equal(isSyntheticNoticeErrorPath("/v1/health.json", "GET"), true);
+  assert.equal(isSyntheticNoticeErrorPath("/v1/game/849843.json", "GET"), true);
+  for (const [path, method] of [["/v1/manifest.json", "GET"], ["/_notice/v1/state", "GET"],
+    ["/_access/v1/session", "POST"], ["/v1/health.json", "PUT"], ["/v1/game/849844.json", "GET"]])
+    assert.equal(isSyntheticNoticeErrorPath(path, method), false);
 });

@@ -12,7 +12,7 @@ import { runStage4Notice } from './exhibit-stage4-notice.mjs';
 const require = createRequire(import.meta.url);
 export const STAGE4_BUDGET = Object.freeze({ read:24, browser:180, notice:8, total:212 });
 const fail = code => { throw new Error(code); };
-const codeOf = e => /^[a-z_]{1,80}$/.test(e?.message || '') ? e.message : 'stage4_failed';
+const codeOf = e => /^[a-z][a-z0-9_]{0,79}$/.test(e?.message || '') ? e.message : 'stage4_failed';
 const save = (path, value) => writeFile(path, JSON.stringify(value,null,2)+'\n',{flag:'wx'});
 export function validateStage4Plan(p) {
   if (!p || p.schema!=='pitcheezy-stage4-plan-v1' || typeof p.approved!=='boolean') fail('plan_invalid');
@@ -77,6 +77,7 @@ export async function main(args) {
       },
       onRestored:()=>view.waitRestored(p.observation_timeout_ms)});
     report.passed=report.notice.passed;
+    if(!report.notice.passed)report.failure=report.notice.failure??'notice_acceptance_failed';
   }catch(e){report.failure=codeOf(e);}
   finally{
     if(view){try{report.browser=await view.close();if(report.browser.fatal || !report.browser.logged_out || report.browser.incomplete_or_failed)report.passed=false;}

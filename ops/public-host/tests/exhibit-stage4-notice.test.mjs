@@ -7,7 +7,7 @@ import { runStage4Notice } from '../exhibit-stage4-notice.mjs';
 const origin = 'https://notice.example.test';
 const token = 'synthetic-notice-token-for-unit-tests-only-not-real';
 const versionPin = '5999cf0d-4f18-4d43-bcd6-320e04860369';
-function server({ lostOn=false, lostOff=false, conflict=false, initialOn=false, otherAfterLost=false }={}) {
+function server({ lostOn=false, lostOff=false, conflict=false, initialOn=false, otherAfterLost=false, auditMissing=false }={}) {
   let revision = initialOn ? 1 : 0, active=initialOn, etag=initialOn ? '"'+'1'.repeat(32)+'"' : null;
   const audit=[]; const calls=[];
   const fetchImpl=async (_url, init) => {
@@ -22,11 +22,11 @@ function server({ lostOn=false, lostOff=false, conflict=false, initialOn=false, 
       if ((lostOn&&active)||(lostOff&&!active)) throw new Error('secret-bearing-transport-error');
       headers.etag=etag;
       return new Response(JSON.stringify({active,message_id:'maintenance',revision,since:active?'2026-11-02T00:00:00.000Z':null,
-        change_id:'12345678-abcd-abcd-abcd-123456789012',audit_recorded:true}),{headers});
+        change_id:'12345678-abcd-abcd-abcd-123456789012',audit_recorded:!auditMissing}),{headers});
     }
     if(etag)headers.etag=etag;
     return new Response(JSON.stringify({state:{active,message_id:revision?'maintenance':null,revision,
-      since:active?'2026-11-02T00:00:00.000Z':null,etag},audit,audit_truncated:false,audit_unavailable:false,messages:{maintenance:'copy'}}),{headers});
+      since:active?'2026-11-02T00:00:00.000Z':null,etag},audit,audit_truncated:false,audit_unavailable:auditMissing&&revision>0,messages:{maintenance:'copy'}}),{headers});
   };
   return { fetchImpl,calls,get active(){return active;} };
 }
@@ -67,4 +67,9 @@ test('competing operator ownership or conditional conflict is not overwritten',a
 });
 test('initial active notice is refused with one read and no writes',async()=>{
   const {report,s}=await run({initialOn:true});assert.equal(report.passed,false);assert.deepEqual(s.calls,['GET']);
+});
+
+test('acknowledged ON with missing audit is conditionally closed but never accepted',async()=>{
+  const {report,s}=await run({auditMissing:true});assert.equal(report.passed,false);assert.equal(s.active,false);
+  assert.deepEqual(s.calls,['GET','PUT','GET','PUT','GET']);
 });
