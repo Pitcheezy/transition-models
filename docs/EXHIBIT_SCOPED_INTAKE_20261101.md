@@ -53,3 +53,15 @@ node ops/public-host/rehearse-exhibit-host.mjs --site <추출>/site --receipt <�
 별도 시험 호스트의 새 Worker/R2/D1·요청 제한 공간·자격을 준비하고 사용자에게 범위/복구를 설명한 뒤 원격 단계별 승인을 받는다. 정적4와 업로드API 입력6을 분리하고, 접근 제한ON·수집/피드백OFF·로그 저장을 유지한다. 실제 바이트·안내·인증·제외URL404·요청량·폰 지정 경기 동선이 통과한 뒤에만 app 연결 교체를 별도로 승인받는다. 기존 앱과24자료·홈·영상·연구는 보존한다.
 
 새 호스트·배포·DNS/Route·Cloudflare 설정 변경·#38 발신·PR상태 변경은 이번 단위에서0건이다. 최신 [회신 초안](mail_drafts/EXHIBIT-song-reply2-20261101.md)은 사용자에게 제시 후 발신 결정을 받는다. 로컬 시험 합격으로 접근 제한을 끄거나 실제 공동시험 합격을 기록하지 않는다.
+
+## 후속 소스 표본 검토 — 전체 검토는 미완료
+
+검토 도구에서 gpt-6.1-terra를 선택해 고정 웹 `c47fe6cb78479362e7250141da946814cc33bd31`의 읽기 전용 검토를 수행했다. 원래 프롬프트 대상32e79c2f와 새 후보를 혼동하지 않았다. 기준 `61be7a86fdea108caed975cdde98d63296be50ad` 대비 GitHub 비교가 반환한173파일 중 요청 범위91파일이며, 변경4파일의 전부 또는 일부와 기존 publish.ts 일부를 읽었다. 나머지87파일·실행 검증은 미완료다. API 반환 목록의 완전성도 독립 확인하지 않았다. 따라서 EXHIBIT-review3 전체 합격은 판정하지 않는다.
+
+정적 코드에서 **P2 후보**를 찾았다: API 모드의 완료 경기에서 안내503 → 자동 재시도404 → 서버 정상화 순서이면 자동 복원이 멈출 수 있다. `GameScreen.tsx`325–337의 완료 경기 pollMs=0과351–354의0/5xx 한정 재시도 때문에,282–287의 hold가416–427의 화면 차단으로 계속 남는 경로다. 실행 재현은 하지 않았다.
+
+이 경로는 현재 받은 **정적 전시 모드의 차단 근거가 아니다**. 같은 파일332–345는 자료가 있는 정적 모드에서 완료 경기의 auto/pinned 모두 polling을 유지하고,250–257은 hold 중 health만으로 조기 반환하지 않으며 game 본문을 요구한다. publish.ts17–45는 양수 polling 간격을 보장한다. 가시 탭·정상 타이머 전제이며, 우리 받은 정적 빌드의 안내/복원 로컬 검사는 앞 절의 별도 실측 근거다.
+
+고정 근거: [GameScreen](https://github.com/SongRoute/pitcheezy/blob/c47fe6cb78479362e7250141da946814cc33bd31/apps/observer/web/src/service/GameScreen.tsx#L250-L354), [publish 설정](https://github.com/SongRoute/pitcheezy/blob/c47fe6cb78479362e7250141da946814cc33bd31/apps/observer/web/src/service/publish.ts#L17-L45). 후속 회신 시 재현 미실시·API 모드 한정을 함께 전달한다. 사용자 지시에 따라 지금 발신하지 않았다.
+
+운영 ws_alert.py는 기준914줄→대상923줄,542–550의 ops_armb_off 규칙9줄 삽입 외 앞/뒤 바이트가 동일한 것을 메모리 비교했다. 이것으로 전체 알림·발행기 검토를 대체하지 않는다. 팀원 파일·프로세스·배포는 변경하지 않았다.

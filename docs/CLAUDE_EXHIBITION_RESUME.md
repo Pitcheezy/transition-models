@@ -6,6 +6,8 @@
 
 ## 현재 재개 위치
 
+새 호스트를 준비할 때는 [고정 후보·승인 단계별 실행서](EXHIBIT_SCOPED_HOST_PREPARATION_20261101.md)를 따른다. 합성 자원 설정을 실제 배포하지 않는다. HEAD6/PUT6 계획과 후보는 비공개로 보관하며 실제 생성·배포·발신 여부는 CHECKLIST만 정본이다.
+
 새 첨부 인수를 재개할 때는 [EXHIBIT-scope1 실제 검증 기록](EXHIBIT_SCOPED_INTAKE_20261101.md)과 그 안의 비공개 원본/최종 시험 경로를 먼저 확인한다. 이미 받은 c47fe6cb ZIP을 다시 요청하거나 fba6b2ff로 대체하지 않는다. 우리 도구 검토와 Song 앱 소스 검토·실제 서버 배포를 구별한다. 최신 상태/다음 단위는 CHECKLIST 상단만 갱신한다.
 
 PR 정리를 이어갈 때는 [고정head 사전 검토](EXHIBIT_PR_PREFLIGHT_20261101.md)를 먼저 읽는다. 옛 준비 문서만 main에 먼저 반영하거나 연구 브랜치를 삭제하지 않는다. PR 상태 변경·push는 해당 승인 범위를 확인하며 진행 상태는 CHECKLIST를 따른다.

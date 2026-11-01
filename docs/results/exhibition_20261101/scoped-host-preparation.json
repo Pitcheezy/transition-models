@@ -1,0 +1,137 @@
+{
+  "schema": "pitcheezy-scoped-host-preparation-v1",
+  "date": "2026-11-01",
+  "evidence_kind": "local_candidate_preparation_not_deployment",
+  "host_commit": "aa6f7ab7fe0664a8535a9bc8b9101abce385ea26",
+  "web_commit": "c47fe6cb78479362e7250141da946814cc33bd31",
+  "data_generation_commit": "cb1cfa8f759fd77adc75595316a389208c752dba",
+  "input_zip_sha256": "3c3b8006b892872bfff3423e2bd6ba49ea3de17ee92fbecef07e0b076bc8da51",
+  "candidate": {
+    "zip_bytes": 535848,
+    "zip_sha256": "14106af17d51f8d828a9dcd1846d35365808acf2037f47ec7584bb0a0367d7b8",
+    "payload_files": 16,
+    "payload_bytes": 530364,
+    "manifest_sha256": "9d530162bcbe5d578618500961aedc2322222e81a367ec1af861d64a0311d967",
+    "static_files": [
+      {
+        "path": "assets/index-X1sSTTQ4.js",
+        "bytes": 300041,
+        "sha256_raw": "e46d431a7495bf58efd0084b20af87642fea8e6544cf3ac76ef278223621c30c",
+        "sha256_lf_normalized": "e46d431a7495bf58efd0084b20af87642fea8e6544cf3ac76ef278223621c30c"
+      },
+      {
+        "path": "assets/index-ks_hu7Ji.css",
+        "bytes": 118449,
+        "sha256_raw": "292dd392a798d3ee52bd752857edeba50810f19eda4bbf234d4399b106e3bfc0",
+        "sha256_lf_normalized": "292dd392a798d3ee52bd752857edeba50810f19eda4bbf234d4399b106e3bfc0"
+      },
+      {
+        "path": "favicon.svg",
+        "bytes": 249,
+        "sha256_raw": "bbfd72e5d077bd545b2cf568e5267c6637598d5253746f5b395e0d5f3fb144d9",
+        "sha256_lf_normalized": "bbfd72e5d077bd545b2cf568e5267c6637598d5253746f5b395e0d5f3fb144d9"
+      },
+      {
+        "path": "index.html",
+        "bytes": 659,
+        "sha256_raw": "85616c4b2f49c5f9f0252bc9a687606fbbe6ce2e54253424bc956803db5a4289",
+        "sha256_lf_normalized": "85616c4b2f49c5f9f0252bc9a687606fbbe6ce2e54253424bc956803db5a4289"
+      }
+    ],
+    "data_files_separate_upload": [
+      {
+        "path": "v1/dates.json",
+        "bytes": 187,
+        "sha256_raw": "91bff0a3404dbf1e4b510eb07eb48a6a78fa519212380d3c585054caa9a6051a",
+        "sha256_lf_normalized": "91bff0a3404dbf1e4b510eb07eb48a6a78fa519212380d3c585054caa9a6051a"
+      },
+      {
+        "path": "v1/game/849843.json",
+        "bytes": 726729,
+        "sha256_raw": "056fcf13a08c1831a92383e0cf8e1782d201eae9b61e159e65d2c847b78c2ab6",
+        "sha256_lf_normalized": "056fcf13a08c1831a92383e0cf8e1782d201eae9b61e159e65d2c847b78c2ab6"
+      },
+      {
+        "path": "v1/games/2026-09-30.json",
+        "bytes": 1082,
+        "sha256_raw": "fa5edc0ebb53339cefb3ae389ca7c85a614af11f3f8a63ba9c4969a67e476a18",
+        "sha256_lf_normalized": "fa5edc0ebb53339cefb3ae389ca7c85a614af11f3f8a63ba9c4969a67e476a18"
+      },
+      {
+        "path": "v1/health.json",
+        "bytes": 399,
+        "sha256_raw": "c36faf56c3476c7161f4d7df0bad32d21d161c3cf647dfce363f0647395e935b",
+        "sha256_lf_normalized": "c36faf56c3476c7161f4d7df0bad32d21d161c3cf647dfce363f0647395e935b"
+      },
+      {
+        "path": "v1/manifest.json",
+        "bytes": 642,
+        "sha256_raw": "f4d0987efae2e5507df1871c12fc1440876839ff30770bae7dfd535825478216",
+        "sha256_lf_normalized": "f4d0987efae2e5507df1871c12fc1440876839ff30770bae7dfd535825478216"
+      },
+      {
+        "path": "v1/setup/849843.json",
+        "bytes": 10916,
+        "sha256_raw": "3a1508a9c36824f45323dfe103dc044c4f3e6f594ca0ed92134a9b5f73201170",
+        "sha256_lf_normalized": "3a1508a9c36824f45323dfe103dc044c4f3e6f594ca0ed92134a9b5f73201170"
+      }
+    ],
+    "check": "pass",
+    "config_check": "pass_with_synthetic_names_not_deployable"
+  },
+  "dry_run": {
+    "cli": "wrangler4.151.0",
+    "exit_code": 0,
+    "isolated_empty_home_verified": true,
+    "credentials_inherited": false,
+    "payload_files_preserved": 16,
+    "actual_deployment": false,
+    "limits": [
+      "synthetic resource identifiers; not ready for deployment",
+      "dry-run is not proof of zero network activity"
+    ],
+    "compiled_worker": {
+      "bytes": 53798,
+      "sha256": "6d5e5c9e932a3842c7212ea21028ba13a72cfa002fb1c2c68a9ead1b1bc44767"
+    }
+  },
+  "upload_plans": {
+    "head": 6,
+    "put": 6,
+    "origin_placeholder": true,
+    "credentials_present": false,
+    "first_create_only": true,
+    "actual_requests": 0,
+    "data_bytes": 739955
+  },
+  "verifier": {
+    "commit": "6fb9a540c2390b9cc9ff44b73636e77bccd71388",
+    "author": "Codex session (host2 preparation agent)",
+    "reviewer_model": "gpt-6.1-terra",
+    "reviewer_model_evidence": "spawn model selection",
+    "verdict": "APPROVE",
+    "P1_P2": 0,
+    "implementer_tests_passed": 12,
+    "independent_tests_passed": 10,
+    "scoped_expected_checks": 19,
+    "scoped_expected_requests": 18,
+    "with_notice_check_expected_requests": 19,
+    "legacy_checks_requests": 35,
+    "remote_executed": false,
+    "test_note": "Windows workerd WSARecv #64 on cancelled response bodies; checks passed"
+  },
+  "cloudflare_resources_created": 0,
+  "cloudflare_changes": 0,
+  "partner_replies_sent": 0,
+  "limitations": [
+    "Actual resource identifiers and provider database ID still need authorized creation and configuration.",
+    "Actual authentication, notice timing, physical phone, and request-rate measurements remain pending.",
+    "Different-model review is of our verifier, not a complete review of Song sources.",
+    "Byte hashes identify received files; they do not authenticate their source or rebuild equivalence."
+  ],
+  "runbook_review": {
+    "reviewer_model": "gpt-6.1-terra",
+    "result": "no concrete findings in approval boundary, request budget, rollback and privacy",
+    "network_executed": false
+  }
+}
