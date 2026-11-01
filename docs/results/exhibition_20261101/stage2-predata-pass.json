@@ -1,0 +1,190 @@
+{
+  "schema": "pitcheezy-stage2-predata-v1",
+  "started_utc": "2026-11-01T15:19:54.768758+00:00",
+  "finished_utc": "2026-11-01T15:20:05.168408+00:00",
+  "passed": true,
+  "expected_deployment_version": "a2574c2f-9b63-4cfd-b640-d9fdd4628f8e",
+  "version_basis": "management_readback_before_run_not_http_proof",
+  "request_limit": 15,
+  "source_files": [
+    {
+      "path": "/",
+      "bytes": 659,
+      "sha256": "85616c4b2f49c5f9f0252bc9a687606fbbe6ce2e54253424bc956803db5a4289"
+    },
+    {
+      "path": "/favicon.svg",
+      "bytes": 249,
+      "sha256": "bbfd72e5d077bd545b2cf568e5267c6637598d5253746f5b395e0d5f3fb144d9"
+    },
+    {
+      "path": "/assets/index-X1sSTTQ4.js",
+      "bytes": 300041,
+      "sha256": "e46d431a7495bf58efd0084b20af87642fea8e6544cf3ac76ef278223621c30c"
+    },
+    {
+      "path": "/assets/index-ks_hu7Ji.css",
+      "bytes": 118449,
+      "sha256": "292dd392a798d3ee52bd752857edeba50810f19eda4bbf234d4399b106e3bfc0"
+    },
+    {
+      "path": "/collection-settings.json",
+      "bytes": 108,
+      "sha256": "90c09614d495e310c08ba9f7a5e89a32ff6542306ffdfd1e1b9acf1d9c2a7eb3"
+    }
+  ],
+  "limitations": [
+    "No browser, data upload, notice switching, or public app migration.",
+    "Socket timeouts do not independently bound OS DNS resolution."
+  ],
+  "requests": [
+    {
+      "method": "GET",
+      "path": "/",
+      "started_utc": "2026-11-01T15:19:54.769372+00:00",
+      "finished_utc": "2026-11-01T15:19:55.610722+00:00",
+      "status": 401,
+      "response_bytes": 1016,
+      "response_sha256": null
+    },
+    {
+      "method": "GET",
+      "path": "/favicon.svg",
+      "started_utc": "2026-11-01T15:19:55.621589+00:00",
+      "finished_utc": "2026-11-01T15:19:56.333947+00:00",
+      "status": 401,
+      "response_bytes": 1016,
+      "response_sha256": null
+    },
+    {
+      "method": "GET",
+      "path": "/v1/manifest.json",
+      "started_utc": "2026-11-01T15:19:56.344148+00:00",
+      "finished_utc": "2026-11-01T15:19:56.667192+00:00",
+      "status": 401,
+      "response_bytes": 27,
+      "response_sha256": null
+    },
+    {
+      "method": "HEAD",
+      "path": "/_publish/v1/health.json",
+      "started_utc": "2026-11-01T15:19:56.677390+00:00",
+      "finished_utc": "2026-11-01T15:19:56.979758+00:00",
+      "status": 503,
+      "response_bytes": 0,
+      "response_sha256": null
+    },
+    {
+      "method": "GET",
+      "path": "/_access/v1/session",
+      "started_utc": "2026-11-01T15:19:56.994914+00:00",
+      "finished_utc": "2026-11-01T15:19:57.483042+00:00",
+      "status": 200,
+      "response_bytes": 41,
+      "response_sha256": null
+    },
+    {
+      "method": "GET",
+      "path": "/",
+      "started_utc": "2026-11-01T15:19:57.493454+00:00",
+      "finished_utc": "2026-11-01T15:19:57.663194+00:00",
+      "status": 301,
+      "response_bytes": 167,
+      "response_sha256": null
+    },
+    {
+      "method": "POST",
+      "path": "/_access/v1/session",
+      "started_utc": "2026-11-01T15:19:57.670769+00:00",
+      "finished_utc": "2026-11-01T15:19:57.948995+00:00",
+      "status": 200,
+      "response_bytes": 62,
+      "response_sha256": null
+    },
+    {
+      "method": "GET",
+      "path": "/",
+      "started_utc": "2026-11-01T15:19:57.958186+00:00",
+      "finished_utc": "2026-11-01T15:19:58.978955+00:00",
+      "status": 200,
+      "response_bytes": 659,
+      "response_sha256": "85616c4b2f49c5f9f0252bc9a687606fbbe6ce2e54253424bc956803db5a4289"
+    },
+    {
+      "method": "GET",
+      "path": "/favicon.svg",
+      "started_utc": "2026-11-01T15:19:58.990751+00:00",
+      "finished_utc": "2026-11-01T15:20:00.519616+00:00",
+      "status": 200,
+      "response_bytes": 249,
+      "response_sha256": "bbfd72e5d077bd545b2cf568e5267c6637598d5253746f5b395e0d5f3fb144d9"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-X1sSTTQ4.js",
+      "started_utc": "2026-11-01T15:20:00.528518+00:00",
+      "finished_utc": "2026-11-01T15:20:01.847198+00:00",
+      "status": 200,
+      "response_bytes": 300041,
+      "response_sha256": "e46d431a7495bf58efd0084b20af87642fea8e6544cf3ac76ef278223621c30c"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-ks_hu7Ji.css",
+      "started_utc": "2026-11-01T15:20:01.858772+00:00",
+      "finished_utc": "2026-11-01T15:20:03.169480+00:00",
+      "status": 200,
+      "response_bytes": 118449,
+      "response_sha256": "292dd392a798d3ee52bd752857edeba50810f19eda4bbf234d4399b106e3bfc0"
+    },
+    {
+      "method": "GET",
+      "path": "/collection-settings.json",
+      "started_utc": "2026-11-01T15:20:03.179040+00:00",
+      "finished_utc": "2026-11-01T15:20:04.073643+00:00",
+      "status": 200,
+      "response_bytes": 108,
+      "response_sha256": "90c09614d495e310c08ba9f7a5e89a32ff6542306ffdfd1e1b9acf1d9c2a7eb3"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/manifest.json",
+      "started_utc": "2026-11-01T15:20:04.084669+00:00",
+      "finished_utc": "2026-11-01T15:20:04.462246+00:00",
+      "status": 404,
+      "response_bytes": 21,
+      "response_sha256": null
+    },
+    {
+      "method": "GET",
+      "path": "/_notice/v1/state",
+      "started_utc": "2026-11-01T15:20:04.473271+00:00",
+      "finished_utc": "2026-11-01T15:20:04.863405+00:00",
+      "status": 401,
+      "response_bytes": 24,
+      "response_sha256": null
+    },
+    {
+      "method": "DELETE",
+      "path": "/_access/v1/session",
+      "started_utc": "2026-11-01T15:20:04.872678+00:00",
+      "finished_utc": "2026-11-01T15:20:05.158399+00:00",
+      "status": 204,
+      "response_bytes": 0,
+      "response_sha256": null
+    }
+  ],
+  "raw_receipt_sha256": "1d37bf933e175d4fb5ef3a2532d9bf39121353ba79a445e47bf61c11cab66d63",
+  "user_dns_and_route_creation_confirmation": true,
+  "retry_count": 0,
+  "redirect_follow_count": 0,
+  "private_origin_and_ray_ids": "retained_only_in_private_files",
+  "worker_log_export": "pending",
+  "worker_log_note": "HTTP redirect may be handled at the edge; client response receipts are not proof of persisted Worker logs.",
+  "cloudflare_setting_changes_by_checker": 0,
+  "publisher_token_created": false,
+  "data_uploads": 0,
+  "public_app_route_changed": false,
+  "account_plan_changed": false,
+  "source_build_byte_changes": false
+}
