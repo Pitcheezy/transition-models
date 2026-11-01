@@ -2,6 +2,10 @@
 
 ## 현재 전시 준비 — 2026-11-01
 
+**EXHIBIT-apex1 완료 / EXHIBIT-notice-copy1 로컬 수정 중 — Codex / claude/exhibit-host1-1101 / 기준 e8efc7f:** 17:22 KST 사용자의 Sites 도메인 연결 해제 후 apex/www 200·홈 6133bytes·소스 SHA 일치, HTTP→HTTPS301, media206, 앱401, 보류 페이지5개404 확인. 브라우저 홈 영상 재생 확인. Sites 연결 목록0이며 사이트 자체·기존 배포는 보존. [증거](docs/EXHIBIT_HANDOFF_REVIEW_20261101.md#apex-전환-완료--2026-11-01-1722-kst). 다음 로컬 합격 기준은 maintenance 승인 문구 반영·개발용 공통 설명 제거, 상태/헤더/인증/캐시/계약 불변, 관련 검사 및 다른 모델 고정 검토다. data_hold 문구는 미승인 초안으로 보존. 추가 배포·접근 확대·Song 발신·PR 병합/닫기 없음. [우리 board 착수](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6555496140).
+
+**현재 공개 버전 (17:22 KST 읽기 확인):** apex/www = Cloudflare 새 홈 / 홈 HTML 소스 `986c6203f0820e0cb97ab9aa1b17181142e38206` / HTML SHA `8fce362e133ee737b341b6ad4c436ebc3c82f2054588f28c2bc5cc237446c883`. 앱 `app.pitcheezy.com` = 기존 Song `fba6b2ff`, host `f50020b`, 마지막 관리 조회 버전 `feed4fc1-949d-4672-98fb-35f4ab00fdc3`(이번 관리 재조회 아님), 접근 코드 ON. Sites v21은 보존된 이전 배포이며 apex에서는 더 이상 제공하지 않는다. 아래 시간별 상태는 전환 전 이력이다.
+
 **EXHIBIT-apex1 HTTPS 보완 완료·Sites 해제 대기 — Codex / claude/exhibit-host1-1101 / 기준 b5aaeef:** 사용자가 apex 전환과 HTTPS 자동 전환 ON을 승인했다. 정확한 apex/www Route·DNS Proxied·apex 포함 Universal 인증서 Active 확인 뒤 Always Use HTTPS만 ON 적용. 17:09 KST HTTP www/app/media→301 HTTPS, apex→302 HTTPS; 새 www HTTPS200·6133bytes·SHA 불변, 앱401, media206 확인. Sites 연결은 사용자가 직접 해제하는 단계 대기이며 DNS·사이트·배포·자격 변경 없음. 합격 기준: 해제 후 새 apex 홈 SHA/보안 헤더·app/media 링크·비콘 없음, HTTP→HTTPS, media206, 앱401; 지정 경기 폰 QR는 별도 실기기 기록. [관측과 다음 단계](docs/EXHIBIT_HANDOFF_REVIEW_20261101.md#https-보완-적용--2026-11-01-1709-kst).
 
 **EXHIBIT-handoff-review 완료·수정 권한 반납 — Codex / claude/exhibit-host1-1101 / 검토 기준 8db9a25 (2026-11-01):** Song 요구와 방향 일치, 원격 영수증 두 개의 35/35·v4 전체 SHA 일치 확인. 공개 조회는 apex 옛 홈200/www 새 홈200·로컬 바이트 일치/app401/media206/HTTP→HTTPS302. 복구 지시·활성 버전 출처·폰 복원 시간·옛 검사 경로·운영 문구 정정. 문서 2차 검토 PASS, 체크리스트8통과·새 상대링크 오류0·diff 검사 통과. [검토와 다음 승인 범위](docs/EXHIBIT_HANDOFF_REVIEW_20261101.md). Cloudflare 관리 화면 로그인·apex 전환 승인 대기. 운영 코드·형 빌드·Cloudflare·DNS·Sites·이슈·PR 변경 없음.
@@ -25,7 +29,7 @@
 
 최종팩: D:/pitcheezy_exhibit_check/pitcheezy-849843-clips-v4.zip (1313843654bytes, SHA32f4377e9cf4e003efa54f49f7584ca2eb72eb362edd8e32c77e7f9a2d526f1c, 제품 1a64fba, 같은이름.receipt.json), Git제외·미발신. 새 폴더 추출·verify 270파일·Chrome 19/19. v3(26f0b83d…, Opus 재시작 포트 수정 전)·v2·v1은 전달 대상 아님, 삭제하지 않고 보존.
 [인수 보고](docs/EXHIBITION_LOCAL_ACCEPTANCE_20261101.md) / [검증 영수증](docs/results/exhibition_20261101/) / [Claude 재개](docs/CLAUDE_EXHIBITION_RESUME.md).
-실제 Mac 플레이어·iPhone의 849843 지정 경기/QR 전체 동선·두 모니터 자동 동기화·apex 전환·PR 정리·공동시험 잔여는 미완료(③ 시험 호스트 연결은 2026-11-01 완료, 안내 ON/OFF도 완료, 꼬리인 로그 영수증·폰 경기 화면 확인은 EXHIBIT-host1). 새CV/경기추가중단, 기존페이지사용보류·삭제없음.
+실제 Mac 플레이어·iPhone의 849843 지정 경기/QR 전체 동선·두 모니터 자동 동기화·PR 정리·공동시험 잔여는 미완료(③ 시험 호스트와 apex는 2026-11-01 완료, 안내 ON/OFF도 완료, 꼬리인 로그 영수증·폰 경기 화면 확인은 EXHIBIT-host1). 자동 동기화는 이번 전시의 필수 조건이 아니며 같은 투구 ID로 수동 맞춘다. 새CV/경기추가중단, 기존페이지사용보류·삭제없음.
 
 아래 항목은 이전 main의 이력이며 위 최신 PLAN 및 사용자 결정이 우선한다.
 

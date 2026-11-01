@@ -79,3 +79,32 @@ Cloudflare 공식 [O2O 설명](https://developers.cloudflare.com/cloudflare-for-
 - HTTPS media `Range: bytes=0-1` →206, `Content-Range: bytes 0-1/11571137`.
 
 사용자가 직접 Sites의 **pitcheezy.com 연결만 해제**하는 단계로 인계했다. 사이트·배포·DNS 삭제가 아니다. 해제 후 apex 본문 SHA까지 대조하기 전 전체 전환 완료로 기록하지 않는다. 변경 화면은 Git 밖의 로컬 캡처로 남겼으며 관리 API 감사 로그를 확보했다는 뜻은 아니다. 문제가 확인되면 이번 HTTPS 스위치를 원래 OFF로 되돌리는 범위이며, 앱의 과거 버전 롤백은 금지한다.
+
+## apex 전환 완료 — 2026-11-01 17:22 KST
+
+사용자가 맞춤 도메인 연결만 해제했다고 알렸다. Sites 연결 목록 실제 조회는 `items: []`였으며 추가 삭제 도구는 실행하지 않았다. 기존 사이트 자체와 배포 버전은 보존했다. 이 단위에서 DNS·Route·앱 설정·업로드·인증 자격을 바꾸지 않았다.
+
+인증 없는 GET 11회(08:22:09.959~12.921 UTC, urllib 브라우저 User-Agent, 자동 리다이렉트 미추적):
+
+- apex와 www: 200, 각각 6,133bytes. SHA-256 `8fce362e133ee737b341b6ad4c436ebc3c82f2054588f28c2bc5cc237446c883`, 로컬 `web/pitch-studio-home/index.html` 원본 바이트와 일치. 홈 HTML 마지막 변경 커밋 `986c6203f0820e0cb97ab9aa1b17181142e38206`.
+- 두 홈 모두 `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, 앱 지정 경기 링크와 media 영상 링크 있음, `cloudflareinsights` 없음.
+- HTTP apex: 301 → 같은 주소 HTTPS.
+- 앱 `/?game=849843`와 `/v1/manifest.json`: 모두 401, `X-Pitcheezy-Access: required`, `Cache-Control: no-store`. 접근 제한은 유지됐다. 인증 후 자료 바이트 검사는 Claude의 앞선 35/35 기록과 구별하며 이번에 반복하지 않았다.
+- media의 `Range: bytes=0-1`: 206, 실제 읽기2bytes, `Content-Range: bytes 0-1/11571137`, video/mp4.
+- 사용 보류한 watch.html·receiver.html·games.html·guide.html·report.html: 각404. 저장소의 원본 코드·연구·Sites 기존 배포 삭제를 뜻하지 않는다.
+
+별도 실제 브라우저에서 새 apex를 열었다. 제목·홈 한 페이지·서비스 링크를 확인했고, 영상은 media 주소, readyState4, paused=false, currentTime3.8782초/전체23.833333초, 오류 없음이었다. 화면 캡처는 Git 밖에 보존했다. 이는 PC 브라우저 확인이며 실제 폰 QR 전체 동선·261클립 전체 재생·두 모니터 자동 동기화·관리 API 감사 로그 확보를 의미하지 않는다.
+
+**판정:** apex의 새 홈 전환은 완료. 다음은 정정한 #38 초안의 발신 결정, 안내 문구 로컬 수정·검토, 잔여 로그 영수증·폰 QR 확인, PR 정리다. 형 저장소는 변경하지 않고 새 메시지도 발신하지 않았다. 같은 날 양쪽 board/mail 조회는 성공했고 새 운영 빌드 전달은 없었다. 우리 board 기록은 뒤처져 있어 [착수 댓글](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6555496140)로 현 단위를 추적했다(연결 도구 댓글쓰기403 뒤 인증된 gh로 성공).
+
+## 다음 로컬 단위 — EXHIBIT-notice-copy1
+
+11/1 채택한 maintenance 문구를 `잠시 자료를 확인하고 있어요. 곧 다시 보여 드릴게요.`로 반영하고 공통 HTML의 개발용 설명을 제거했다. 메시지 ID·JSON 구조·HTTP 상태/헤더·인증·캐시·스위치 처리 로직은 변경하지 않았다. `data_hold` 별도 문구는 아직 승인 전 초안이므로 변경하지 않았고 이번 배포 대상 안내 운영은 maintenance 기준이다. 운영 코드 원본은 Codex 작성, 다른 모델 고정 검토 전이며 실제 서버에는 배포하지 않았다.
+
+검사:
+
+- `node --test --test-reporter=spec tests/notice.test.mjs tests/access.test.mjs tests/notice-client.test.mjs tests/notice-cli.test.mjs tests/publish-scope.test.mjs` (`ops/public-host`): 53 passed. 로컬 workerd의 Windows 연결 종료 진단(WSARecv #64) 한 건이 출력됐지만 테스트 실패는0·종료0이었다. 운영 서버 오류로 해석하지 않는다.
+- `BROWSER_CHANNEL=chrome node --test --test-reporter=spec public-host-notice.test.cjs` (`tests/browser`): 2 passed. 열린 합성 화면→안내→뒤로/앞으로→복원, 직접 HTML/JSON/HEAD, 작은 화면 폭·스크립트 없음·자격 비노출을 확인했다. 최초 실행은 이 작업 폴더의 Playwright 미설치로 실패했고, 기존 lockfile에 맞춰 `npm ci --ignore-scripts --no-audit --no-fund` 후 설치된 Chrome에서 통과했다.
+- `PYTHONUTF8=1 PYTHONDONTWRITEBYTECODE=1 python -B -m pytest tests/test_checklist_model.py -q -p no:cacheprovider`: 8 passed. `git diff --check` 통과.
+
+시험은 모두 로컬 합성 자료이며 실제 Cloudflare 안내 ON/OFF 재실행이 아니다. 코드 검토·후보 구성 뒤 실제 배포에는 적용 범위·복구 설명과 사용자 승인이 필요하다. #38 초안은 미발신이며 PR 병합/닫기, 앱 공개 확대, 새 경기/CV는 수행하지 않았다.
