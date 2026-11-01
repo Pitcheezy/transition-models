@@ -1,0 +1,66 @@
+{
+  "schema": "pitcheezy-stage3-upload-preparation-v1",
+  "recorded_date_kst": "2026-11-02",
+  "evidence_kind": "local_preparation_and_mock_tests_not_remote_upload",
+  "base_commit": "407f39075d68a853b5945e238da34bf03bc89dc4",
+  "payload_source_receipt": "scoped-host-preparation.json",
+  "payload_files": 6,
+  "payload_bytes": 739955,
+  "payload_raw_hashes_matched": 6,
+  "prepared_manifest_sha256": "b71aa73916fffe5edbab569aba2ac8e73f7ed1cb42cea4f65e0f5da1fdca3e1e",
+  "prepared_manifest_approved": false,
+  "prepared_window_set": false,
+  "prepared_expected_version": "a2574c2f-9b63-4cfd-b640-d9fdd4628f8e",
+  "version_note": "preparation pin only; registration and upload ON change the deployment version; freeze a new manifest before execution",
+  "code_files": [
+    {
+      "path": "ops/public-host/exhibit-stage3-upload.mjs",
+      "sha256_raw": "16ea349a93487582556b4e0206df7514258672d6d064cc44fac494e1ca839dec"
+    },
+    {
+      "path": "ops/public-host/tests/exhibit-stage3-upload.test.mjs",
+      "sha256_raw": "37423ec48b9da995354efe2b69f366c54cf6d541a7ace1fb7bc1028d6064b3d8"
+    }
+  ],
+  "checks": {
+    "mock_tests_passed": 15,
+    "mock_tests_failed": 0,
+    "real_plan_dry_run": "passed",
+    "dry_run_prepared_operations": 12,
+    "dry_run_attempted_requests": 0
+  },
+  "commands": [
+    "node --test ops/public-host/tests/exhibit-stage3-upload.test.mjs",
+    "node ops/public-host/exhibit-stage3-upload.mjs --manifest <private-prepared-manifest> --manifest-sha256 <raw-sha>"
+  ],
+  "proposed_service_request_budget": {
+    "head_missing": 6,
+    "put_first_create": 6,
+    "after_upload_off_head": 1,
+    "maximum": 13,
+    "retries": 0,
+    "management_operations_separate": true
+  },
+  "approval_required": [
+    "new temporary publisher token and user secret registration",
+    "manual upload ON window at new trial only",
+    "HEAD6 then PUT6 plus OFF HEAD1",
+    "upload OFF and publisher digest replacement"
+  ],
+  "legacy_scope_note": "no automatic server expiry; the temporary token can access all gateway-allowed v1 keys on this new server; the runner restricts itself to six pinned keys",
+  "cross_model_review": {
+    "status": "pending_fixed_commit_review"
+  },
+  "remote_service_requests": 0,
+  "new_credentials_created": 0,
+  "cloudflare_changes": 0,
+  "partner_messages_sent": 0,
+  "git_pushes": 0,
+  "limits": [
+    "uploaded bytes/readback/notice/phone not measured here",
+    "operator must close upload and rotate digest; runner does not",
+    "30-second reserve is not a guarantee of remote cleanup time",
+    "old token 401 not tested by this planned OFF-first procedure",
+    "stage4 acceptance, public app route change, and access gate OFF need separate approval"
+  ]
+}

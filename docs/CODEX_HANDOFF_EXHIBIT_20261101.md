@@ -6,6 +6,8 @@
 
 **2026-11-01 사용자 재개 지시로 Codex가 이어받았다.** 11/4까지 기다린다는 문구는 작성 당시의 한도 기록이다. 사용자 결정(11/1 14:3x): **apex 전환(2번)부터 Codex에 넘긴다.** 상태 정본은 [CHECKLIST.md](../CHECKLIST.md) 맨 위, 형 요구 5항목의 실행 계획은 [EXHIBIT_SONG_REQ_PLAN_20261101.md](EXHIBIT_SONG_REQ_PLAN_20261101.md), 호스트 실행 결과·발견은 [EXHIBIT_HOST_DEPLOY_STEPS_20261101.md](EXHIBIT_HOST_DEPLOY_STEPS_20261101.md)("실행 결과"·"④ 진행")다. 맨 아래 5절이 **Codex 채팅에 붙여 넣을 프롬프트**다.
 
+**단계3 실행자 주의:** 자료 업로드는 [전시 전용 실행서 단계3](EXHIBIT_SCOPED_HOST_PREPARATION_20261101.md#승인-단계-3--자료6-최초-업로드)를 따른다. 기존 publisher-cli의 기본 재시도를 사용하지 않는다. 새 일회 실행기의 준비 manifest는 승인 false/시각 null이며 그대로 실행할 수 없다. 승인 뒤 토큰 등록·ON 적용·최종 버전/창 고정 → HEAD6/PUT6(각1회) → OFF/HEAD503 한 번 → digest 교체·관리 확인 순서다. 실제 승인/진행과 고정 검토는 CHECKLIST 상단을 확인한다. 새 폴더로 재시도·형 발신·app Route 변경은 별도다.
+
 ## 검토 후 재개 주의 — 2026-11-01
 
 **11/1 17:22 KST 후속:** 사용자 직접 Sites 도메인 해제 뒤 apex 전환을 실제 확인했다. 아래 14:34 상태·5절 붙여넣기 프롬프트는 인계 당시 기록이며 apex 전환을 다시 실행하지 않는다. [전환 증거](EXHIBIT_HANDOFF_REVIEW_20261101.md#apex-전환-완료--2026-11-01-1722-kst)와 CHECKLIST 맨 위가 현재 재개 기준이다. 추가 배포·발신·PR 병합/닫기는 각각 기존 승인 경계를 유지한다.
