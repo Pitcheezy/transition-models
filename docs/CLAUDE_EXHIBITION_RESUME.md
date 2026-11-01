@@ -6,6 +6,8 @@
 
 ## 현재 재개 위치
 
+PR 정리를 이어갈 때는 [고정head 사전 검토](EXHIBIT_PR_PREFLIGHT_20261101.md)를 먼저 읽는다. 옛 준비 문서만 main에 먼저 반영하거나 연구 브랜치를 삭제하지 않는다. PR 상태 변경·push는 해당 승인 범위를 확인하며 진행 상태는 CHECKLIST를 따른다.
+
 PLAN.md → CHECKLIST.md 맨 위를 먼저 읽는다. 11/1 17:22 KST 사용자 직접 Sites 도메인 해제 뒤 새 apex 홈의 바이트·HTTPS·영상·앱 접근 제한을 확인했다. 상세 증거는 [전환 검토 기록](EXHIBIT_HANDOFF_REVIEW_20261101.md#apex-전환-완료--2026-11-01-1722-kst)이며, 현재 수정자·완료 검사·다음 한 단위는 CHECKLIST만 정본이다. 아래 Claude 진행 기록과 최초 인수 종료 기록은 시점별 이력이다.
 
 ## Claude 진행 기록 (Codex 인계 전 이력)
