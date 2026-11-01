@@ -6,6 +6,8 @@
 
 ## 현재 재개 위치
 
+단계2는 [배포 영수증](results/exhibition_20261101/scoped-worker-deployed.json)·[등록 도구 검토](results/exhibition_20261101/stage2-registration-review.json)를 먼저 확인한다. 완료된 Worker 배포를 반복하지 않는다. 사용자 등록 완료 답변 뒤 비공개 등록 원장의3버전·최종 비밀 이름/vars/bindings를 읽어 확인하고, 사용자의 Logs/Web Analytics·DNS/Route 확인점으로 이어간다. 등록 실행기가 STOP 또는 시작 표식을 남겼으면 재실행하거나 비밀 등록 이전 버전으로 되돌리지 않는다. 일반 원격 검증기는 자료 업로드 뒤에만 사용하며 단계2는 `scripts/verify_exhibit_stage2_predata.py`의 고정15요청이다. DNS 생성 확인 전 실행 금지. 서비스HTTP 원장의 실제 실행 여부와 작업 담당은 CHECKLIST만 정본이며, 단계3 자료 업로드와 이후 전환은 별도 승인이다. 이번 기록은 미push로 유지한다.
+
 새 호스트를 준비할 때는 [고정 후보·승인 단계별 실행서](EXHIBIT_SCOPED_HOST_PREPARATION_20261101.md)를 따른다. 단계1 자원 생성 결과가 있으면 비공개 원장의 완료 영수증과 새 DB ID를 재조회하고 이어가며 같은 이름을 다시 만들지 않는다. 실제 상태는 CHECKLIST 최상단을 따른다. 합성 자원 설정을 실제 배포하지 않는다. HEAD6/PUT6 계획과 후보는 비공개로 보관하며 실제 생성·배포·발신 여부는 CHECKLIST만 정본이다.
 
 새 첨부 인수를 재개할 때는 [EXHIBIT-scope1 실제 검증 기록](EXHIBIT_SCOPED_INTAKE_20261101.md)과 그 안의 비공개 원본/최종 시험 경로를 먼저 확인한다. 이미 받은 c47fe6cb ZIP을 다시 요청하거나 fba6b2ff로 대체하지 않는다. 우리 도구 검토와 Song 앱 소스 검토·실제 서버 배포를 구별한다. 최신 상태/다음 단위는 CHECKLIST 상단만 갱신한다.
