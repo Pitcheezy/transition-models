@@ -306,9 +306,10 @@
     "NOTICE_TOKEN_SHA256 (helper, Windows ACL owner-only; plaintext held by the user for the exhibition switch)"
   ],
   "not_done": [
-    "step 8 de-identified log receipt (the user's dashboard screenshot of Observability events listed the requests; no receipt written)",
+    "apex switch of pitcheezy.com (handed to Codex; see step4.apex)",
+    "step 8 de-identified log receipt",
     "viewer check of the game screen (?game=849843) on the phone",
-    "step 4 domain switch (app host, home host)"
+    "#38 reply posting (draft final; user approval pending)"
   ],
   "private_artifacts": "outside Git: candidate folder, plans, receipts, notes; the viewer code file is held by the user",
   "notice_trial": {
@@ -332,5 +333,45 @@
     },
     "message_id": "maintenance (dev placeholder wording; the public wording is a pending human decision and a code change)"
   },
-  "browser_check": "iPhone Safari (user): viewer login, date list 2026-09-30 rendered with game cards; notice screen rendered during the ON window. Game screen via ?game=849843 not yet reported."
+  "browser_check": "iPhone Safari (user): viewer login, date list 2026-09-30 rendered with game cards; notice screen rendered during the ON window. Game screen via ?game=849843 not yet reported.",
+  "step4": {
+    "app_host": {
+      "hostname": "app.pitcheezy.com",
+      "method": "DNS AAAA 100:: proxied + Worker Route app.pitcheezy.com/* (fail closed) on the app Worker; the dashboard custom-domain dialog could not match the zone for a subdomain",
+      "remote_verify": {
+        "pass": 35,
+        "fail": 0,
+        "receipt": "host-remote-verify-app-20261101.json",
+        "receipt_sha256": "3853eaeee91941242ee72392f16fb1dfd2e2c4d0f350b41ac6390456e5b7a999",
+        "note": "run with a test-only dns.lookup preload because the local resolver negative-cached the new name"
+      },
+      "device_check": "iPhone Safari over LTE: access code, game screen, recommendations (user screenshot)"
+    },
+    "home_worker": {
+      "versions": [
+        "89a7a185-c26a-4172-a201-bd894b19fe44 (assets only, no domain)",
+        "a4fe3d3f-e852-4274-8764-80f086f82298 (video src -> media host)"
+      ],
+      "temp_host_checks": "200 html, _headers applied (nosniff, DENY, referrer strict-origin-when-cross-origin), no beacon, service link present, /nope 404",
+      "range_finding": "Workers static assets answered Range requests with 200 full body (11,571,137 B), no Accept-Ranges, also on CF-Cache-Status HIT -> iPhone Safari cannot play"
+    },
+    "media_host": {
+      "hostname": "media.pitcheezy.com",
+      "method": "dedicated R2 bucket custom domain (TLS min 1.2, r2.dev disabled); mp4 + poster uploaded with Cache-Control public, max-age=31536000, immutable",
+      "checks": "Range bytes=0-1 -> 206 Content-Range, served mp4 sha256 == local f7aa424d…, poster 200 Accept-Ranges; about 10 min of 403 error 1014 while initializing",
+      "device_check": "iPhone Safari over mobile data: hero video plays on the temp home host (user report)"
+    },
+    "www_host": {
+      "hostname": "www.pitcheezy.com",
+      "status": "serves the new home Worker (Route + AAAA 100:: proxied)"
+    },
+    "apex": {
+      "hostname": "pitcheezy.com",
+      "status_at_1434_kst": "still OpenAI Sites (old home): CF-Cache HIT, provider __cf_bm cookie, no Worker headers",
+      "attempted": "apex A records toggled to Proxied + Route pitcheezy.com/* on the home Worker",
+      "cause": "pitcheezy.com is a Cloudflare for SaaS custom hostname on the provider zone (_cf-custom-hostname TXT); O2O (customer zone first) only triggers with a proxied CNAME to the provider target, not with proxied A records",
+      "mistake_fixed": "wildcard routes *.pitcheezy.com/* and *home-test… had been added and captured media.pitcheezy.com (404 from the home Worker); deleted, media back to 206",
+      "handed_to_codex": "finish with (c) disconnect the domain in OpenAI Sites (rollback: reconnect + delete the route) or (b) proxied CNAME to the provider target"
+    }
+  }
 }

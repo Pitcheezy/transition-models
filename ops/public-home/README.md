@@ -7,6 +7,7 @@
 "서비스 열기"는 `https://app.pitcheezy.com/?game=849843`을 가리킨다(도메인 A안). 다른 주소로 정하면 index.html의 세 링크를 바꾼다.
 
 **2026-11-01 실행 결과:** `pitcheezy-home` Worker 배포 완료, 임시 호스트에서 홈·헤더·404 확인. **Workers 정적 호스트는 영상 Range 요청에 206이 아니라 200 전체로 답해**(아래 5단계의 우려가 실제 엣지에서 확인됨) iPhone Safari가 재생하지 못하므로, 영상(`hero-849843-four-pitches-v1.mp4`)과 포스터는 전용 R2 버킷 + custom domain **`media.pitcheezy.com`**(Range 206, `Cache-Control: public, max-age=31536000, immutable`)에서 내보내고 index.html의 `<source src>`만 그 주소로 바꿨다. iPhone Safari 재생 확인. 영상을 바꿀 때는 **새 파일명**으로 R2에 올리고 HTML 주소를 바꾼다(immutable 캐시). 도메인은 대시보드 Route(`pitcheezy.com/*`)로 붙인다 — 설정 파일 `routes`는 설정 검사 대상 밖이라 쓰지 않는다. 상세는 [③ 문서 "④ 진행"](../../docs/EXHIBIT_HOST_DEPLOY_STEPS_20261101.md).
+**apex 주의(11/1 발견):** `pitcheezy.com`은 OpenAI Sites가 Cloudflare for SaaS custom hostname으로 잡고 있어 A 레코드를 Proxied로 바꾸고 Route를 걸어도 우리 Worker가 돌지 않는다(O2O는 Proxied CNAME일 때만). 아래 6단계의 "레코드 교체"만으로는 부족하고, Sites에서 도메인 연결을 해제하거나 OpenAI의 CNAME 대상으로 Proxied CNAME을 써야 한다. `www.pitcheezy.com`은 Route만으로 새 홈이 나온다.
 **QR 경로:** 포스터 QR → `pitcheezy.com` 홈 → "서비스 열기" 한 번 → 앱. 기존 QR이 그대로 유효하다. 형이 원하면 최종 포스터에 앱 직행 QR을 넣을 수 있다(결정 전에는 홈 경유가 기준).
 
 ## 로컬 확인

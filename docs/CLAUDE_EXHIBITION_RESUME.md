@@ -10,7 +10,7 @@
 - 완료: ③ 준비 도구·배포 후보·[③ 명령 순서](EXHIBIT_HOST_DEPLOY_STEPS_20261101.md), Opus 검토 20건 수정(CHECKLIST EXHIBIT-host1b). Wrangler 4.151.0은 ops/public-host-tooling에 설치돼 있음.
 - 완료(11/1 낮): **③ 시험 호스트 실제 연결** — 사용자 로그인(고정 Wrangler `node ops/public-host-tooling/node_modules/wrangler/bin/wrangler.js login`, 2분 안에 승인) → 배포·토큰 교체·업로드 24개·업로드 OFF·접속 코드 교체 → 원격 검사 35/35. 버전·발견 7건은 [③ 명령 순서 "실행 결과"](EXHIBIT_HOST_DEPLOY_STEPS_20261101.md), CHECKLIST EXHIBIT-host1c. 호스트명·코드는 채팅과 사용자 파일에만 있다(Git 밖 보관: `D:/pitcheezy_exhibit_check/host-1101/`, 접속 코드는 사용자 비공개 폴더(Projects 밖)의 `access-code.txt`).
 - 완료(11/1 오후): ③-6 안내 ON/OFF 시험, ④-a `app.pitcheezy.com` 라우트·검사 35/35·iPhone 확인, ④-b 홈 Worker 배포·영상 R2 분리(`media.pitcheezy.com`, 정적 호스트 Range 미지원 때문)·iPhone 영상 확인. 결정: 안내 문구 채택, 클립팩 비공개 클라우드 링크, 모니터 2 = 이 노트북, #38은 ④ 뒤 발신. 상세는 [③ 문서 "④ 진행"](EXHIBIT_HOST_DEPLOY_STEPS_20261101.md).
-- 다음: ④-b apex 전환(사용자 승인·대시보드) → 홈 확인 → #38 발신(사용자 "보내") → 안내 문구 코드 변경(다른 모델 검토) → Codex 인계([인계 문서·프롬프트](CODEX_HANDOFF_EXHIBIT_20261101.md)).
+- 11/1 14:3x: apex 전환 1차 시도는 OpenAI Sites의 SaaS custom hostname 때문에 미완(`www`는 새 홈, apex는 옛 홈; 상세는 ③ 문서 "④ 진행"). **사용자 결정: 여기서부터 Codex에 인계** — [인계 문서·프롬프트](CODEX_HANDOFF_EXHIBIT_20261101.md) 5절을 Codex 채팅에 붙여 넣는다. 다음 순서: apex (c) → #38 발신 → PR 정리 → 안내 문구 코드 변경 → ③ 꼬리.
 - 실행 전 설명: [docs/EXHIBIT_HOST_PLAN_20261101.md](EXHIBIT_HOST_PLAN_20261101.md). 형 회신 초안(미발신): [mail_drafts/EXHIBIT-song-reply-20261101.md](mail_drafts/EXHIBIT-song-reply-20261101.md).
 - 중단되면: `git -C <작업 폴더> status`로 미커밋 파일을 확인하고, 위 두 문서와 CHECKLIST 맨 위를 읽은 뒤 남은 단위만 이어간다. 실제 배포·도메인·형 발신은 사용자 승인 전 금지.
 
