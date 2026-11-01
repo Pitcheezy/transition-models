@@ -20,8 +20,9 @@
 안내는 [관람 접근 문](ACCESS.md)보다 먼저 적용된다. 모든 안내 응답은 `Cache-Control: no-store`, `CDN-Cache-Control: no-store`, `Retry-After: 60`, `X-Robots-Tag: noindex`,
 `X-Pitcheezy-Notice: <문구 id>` 헤더를 가진다. 내부 사유·조작자·토큰은 어떤 공개 응답에도 나오지 않는다.
 
-문구는 코드의 고정 목록(`NOTICE_MESSAGES`)에서 **id로만** 고른다. 현재 두 id(`maintenance`, `data_hold`)의 텍스트는
-"개발용 안내 문구(승인 전)"로 시작하는 임시 문구다. 자유 입력 문구는 받지 않는다. 실제 공개 문구는 사람이 승인한 뒤 코드 변경으로 바꾼다.
+문구는 코드의 고정 목록(`NOTICE_MESSAGES`)에서 **id로만** 고른다. `maintenance`는 2026-11-01 사용자 채택 문구
+"잠시 자료를 확인하고 있어요. 곧 다시 보여 드릴게요."를 사용한다. `data_hold`는 여전히 "개발용 안내 문구(승인 전)"로 시작하는 초안이므로 전시용 안내에 사용하지 않는다.
+자유 입력 문구는 받지 않는다. 실제 배포 여부는 CHECKLIST 상단의 현재 공개 버전으로 확인한다.
 
 ## 상태 저장과 운영자 인증
 

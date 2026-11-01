@@ -1,5 +1,7 @@
 # Codex 인계 — 전시 호스트·도메인·PR 정리 (2026-11-01, Claude 작성 · 11/1 14:40 KST 최종)
 
+**11/1 후속 재개 안내:** apex 전환·승인된 #38 회신·안내 문구 배포를 완료했다. 아래 날짜별 프롬프트는 과거 인계 기록이다. [CHECKLIST 상단](../CHECKLIST.md)과 [실제 배포·QR·리뷰 증거](EXHIBIT_NOTICE_DEPLOY_20261101.md)에서 남은 항목만 확인하며, 완료된 발신·배포·도메인 전환을 반복하지 않는다. iPhone Safari·Chrome 홈/접속 화면은 사용자 확인됐고 인증 뒤 경기까지의 전체 동선은 미확인이다.
+
 **2026-11-01 사용자 재개 지시로 Codex가 이어받았다.** 11/4까지 기다린다는 문구는 작성 당시의 한도 기록이다. 사용자 결정(11/1 14:3x): **apex 전환(2번)부터 Codex에 넘긴다.** 상태 정본은 [CHECKLIST.md](../CHECKLIST.md) 맨 위, 형 요구 5항목의 실행 계획은 [EXHIBIT_SONG_REQ_PLAN_20261101.md](EXHIBIT_SONG_REQ_PLAN_20261101.md), 호스트 실행 결과·발견은 [EXHIBIT_HOST_DEPLOY_STEPS_20261101.md](EXHIBIT_HOST_DEPLOY_STEPS_20261101.md)("실행 결과"·"④ 진행")다. 맨 아래 5절이 **Codex 채팅에 붙여 넣을 프롬프트**다.
 
 ## 검토 후 재개 주의 — 2026-11-01
