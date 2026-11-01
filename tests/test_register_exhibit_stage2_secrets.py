@@ -56,6 +56,7 @@ class FakeCloud:
         assert kwargs["env"].get("CLOUDFLARE_API_TOKEN") is None
         assert kwargs["env"]["WRANGLER_LOG_SANITIZE"] == "true"
         assert kwargs["env"]["WRANGLER_WRITE_LOGS"] == "false"
+        assert kwargs["env"]["WRANGLER_LOG"] == "log"
         for key in ("CLOUDFLARE_API_BASE_URL", "CF_API_BASE_URL", "NODE_OPTIONS", "HTTPS_PROXY"):
             assert key not in kwargs["env"]
         if args[:2] == ["deployments", "list"]:

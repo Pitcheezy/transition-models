@@ -88,7 +88,7 @@ def register(manifest, runner=None):
     env = {key: value for key, value in os.environ.items() if key.upper() in allowed}
     env.update(CI="true", WRANGLER_SEND_METRICS="false", WRANGLER_SEND_ERROR_REPORTS="false",
                CLOUDFLARE_LOAD_DEV_VARS_FROM_DOT_ENV="false", NO_COLOR="1", CLOUDFLARE_ACCOUNT_ID=manifest["account_id"],
-               WRANGLER_LOG="warn", WRANGLER_LOG_SANITIZE="true", WRANGLER_WRITE_LOGS="false",
+               WRANGLER_LOG="log", WRANGLER_LOG_SANITIZE="true", WRANGLER_WRITE_LOGS="false",
                PITCHEEZY_STAGE2_MANIFEST=str(manifest_path), PATH=str(node.parent))
 
 
