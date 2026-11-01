@@ -1,0 +1,67 @@
+{
+  "schema": "pitcheezy-stage3-registration-preparation-v1",
+  "recorded_at_utc": "2026-11-01T15:54:23.932665+00:00",
+  "evidence_kind": "management_readback_and_local_preparation_not_registration_or_upload",
+  "user_approval": "stage3 six-file upload, temporary publisher capability, closure and rotation; user directly registers and rotates secret",
+  "base_commit": "835d608add799274f4e292cba685baf18f4d042c",
+  "management_current_version": "a2574c2f-9b63-4cfd-b640-d9fdd4628f8e",
+  "management_checks_passed": 8,
+  "active_percentage": 100,
+  "secret_names_exact": 3,
+  "publisher_secret_present": false,
+  "checks_basis": "read-only deployments list, versions view, secret names list; provider assets raw_run_worker_first=true/serve_directly=false",
+  "configurations": {
+    "off_sha256": "a7c4464ed07c29830a508b612c45baf00eb9faf60e4806d76fc50d35c5097b77",
+    "on_sha256": "22ab3738ed7b30ff9dcdee450027027a0bb57ad9e186f568777a0002e904ea7f",
+    "only_semantic_difference": "UPLOAD_ENABLED",
+    "local_checks_ok": true,
+    "standalone_checker_deployable": false,
+    "checker_limit": "ok confirms offline checks only; remote prerequisites separate"
+  },
+  "temporary_token": {
+    "created": true,
+    "owner_only_windows_acl_helper_passed": true,
+    "value_or_digest_in_public_record": false,
+    "registered": false
+  },
+  "registration_manifest_sha256": "95fca46ad5e89ace059d3cf8ff66b447b56eade99597bf349a8a953c131c6775",
+  "files": [
+    {
+      "path": "scripts/register_exhibit_stage3_publisher.py",
+      "sha256_raw": "5348429afc4a500072fc1c6b37c24f16e4356682221510d6b51436dcdbd559a0"
+    },
+    {
+      "path": "scripts/exhibit_stage3_cli_guard.cjs",
+      "sha256_raw": "027aafb49fcee98971d3a1f3f815c80094f94a2eec8d11a7e717515f091ca885"
+    },
+    {
+      "path": "tests/test_register_exhibit_stage3_publisher.py",
+      "sha256_raw": "af97c8961aca8d4bad42accc0543449245728ec2254d7a40dac381a8f0ff69c2"
+    },
+    {
+      "path": "tests/test_exhibit_stage3_cli_guard.cjs",
+      "sha256_raw": "60a6dfe587920779f5fa1a2077d9ccd7d420882d00c475a7f96ea9aeb0f2a031"
+    }
+  ],
+  "tests": {
+    "python_registration_passed": 18,
+    "checklist_passed": 8,
+    "node_guard_passed": 7,
+    "real_fixed_wrangler_to_fake_dispatcher_passed": true,
+    "private_registration_input_dry_run": "pass/no-network"
+  },
+  "cross_model_review": {
+    "status": "pending_fixed_commit_review"
+  },
+  "service_requests": 0,
+  "remote_mutations": 0,
+  "git_pushes": 0,
+  "partner_messages_sent": 0,
+  "limits": [
+    "user direct initial registration remains pending",
+    "upload window has not started",
+    "no stage3 data uploaded",
+    "current public app, home, media and access codes unchanged",
+    "rotation uses a separate output journal and latest OFF deployment pin; uncertain action must not be repeated"
+  ]
+}
