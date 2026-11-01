@@ -3,6 +3,9 @@
 ## 현재 전시 준비 — 2026-11-01
 
 
+**EXHIBIT-host2 주소 연결 전 확인점 완료 — 2026-11-02:** 사용자 추가 캡처의 pitcheezy.com 행에서 Web Analytics Disabled를 판독했다. [영수증](docs/results/exhibition_20261101/stage2-web-analytics-confirmed.json). 앞선 workers.dev/preview OFF·Route 없음·로그100%/호출/저장 ON 증거와 함께 대시보드 확인점을 완료했다. 다른 사이트는 작업 대상이 아니며 기록하지 않는다. 다음은 사용자가 비공개 계획의 정확한 시험 호스트에 AAAA100:: Proxied1개·새Worker Route1개를 추가하는 단계다. 기존 app/www/apex/media/옛 시험주소는 보존한다. 아직 생성 확인을 받지 않아 DNS조회/서비스HTTP0·검사 ready=false 유지. Mac에서는 노트북 D: 파일을 바로 열 수 없으므로 정확한 이름 전달 경로를 확인한 뒤 안내한다. 비공개 이름의 채팅 출력 금지·로컬커밋 미push·형 회신 보류 유지.
+
+
 **EXHIBIT-host2 대시보드 캡처 확인 — 2026-11-02:** 사용자 제공 두 캡처에서 workers.dev/Preview URL OFF, Custom Domains/Routes 없음, Logs ON·Invocation ON·Persist ON·Sampling100%, Traces/Issues OFF를 실제 판독했다. [비식별 캡처 확인 기록](docs/results/exhibition_20261101/stage2-dashboard-confirmed.json)에 이미지SHA만 연결하고 원본은 비공개 첨부로 보존한다. 이는 사용자 캡처 증거이며 실제 요청 로그 저장 검증은 아니다. 남은 확인점은 Web Analytics 자동 설치 Disabled 확인 한 가지다. 이후 사용자만 정확한 새 AAAA/Route를 추가하며, 생성 확인 전 DNS조회/서비스HTTP 금지·고정15요청 입력 ready=false 유지. 추가배포·등록·업로드·발신·push 없이 기록만 갱신한다. 아래 대시보드 전체 미확인 문장은 이전 이력이다.
 
 
