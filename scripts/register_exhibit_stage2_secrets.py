@@ -13,6 +13,10 @@ import sys
 from datetime import datetime, timezone
 
 NAMES = ("ACCESS_CODE_SHA256", "NOTICE_TOKEN_SHA256", "ACCESS_SESSION_SECRET")
+EXPECTED_GUARD_SHA = "9a592f799ba65acc5ae36d59062cd2fe2e63a0542e488d92efad3fc5f2dd4faa"
+EXPECTED_INITIAL_VERSION = "aeef75d8-7d43-4603-82c9-ebc408f184b2"
+EXPECTED_MANIFEST_SHA = "2f8ae745122b04e2d6eef025db0841de46f6f672407a0d8b6c00b85b502f5e6b"
+EXPECTED_MANIFEST_CONTENT_SHA = "d85eeb171d7609ec746915e37e0dc87a077e74b3ede979aa3bf9bf716b720307"
 EXPECTED_SHA = "a7c4464ed07c29830a508b612c45baf00eb9faf60e4806d76fc50d35c5097b77"
 
 
@@ -41,6 +45,10 @@ def credential_value(name, manifest):
 
 def register(manifest, runner=None):
     runner = runner or subprocess.run
+    require(hashlib.sha256(json.dumps(manifest, sort_keys=True, separators=(",", ":")).encode()).hexdigest() == EXPECTED_MANIFEST_CONTENT_SHA, "manifest_content_changed")
+    require(manifest["expected_initial_version"] == EXPECTED_INITIAL_VERSION, "initial_version_mismatch")
+    manifest_path = Path(manifest["log_directory"]).parent / "secret-registration-input.private.json"
+    require(hashlib.sha256(manifest_path.read_bytes()).hexdigest() == EXPECTED_MANIFEST_SHA, "manifest_file_changed")
     require(manifest["schema"] == "pitcheezy-stage2-secret-registration-private-v1", "manifest_invalid")
     cfgpath = Path(manifest["configuration_file"])
     cfgbytes = cfgpath.read_bytes()
@@ -56,6 +64,10 @@ def register(manifest, runner=None):
     require(Path(manifest["empty_env_file"]).read_bytes() == b"", "env_file_not_empty")
     log = Path(manifest["log_directory"])
     log.mkdir(exist_ok=True)
+    node = Path(manifest["node_executable"])
+    require(node.is_absolute() and node.is_file() and hashlib.sha256(node.read_bytes()).hexdigest() == manifest["node_sha256"], "node_pin_changed")
+    guard = root / "scripts/exhibit_stage2_cli_guard.cjs"
+    require(guard.is_file() and hashlib.sha256(guard.read_bytes()).hexdigest() == EXPECTED_GUARD_SHA, "request_guard_missing_or_changed")
     statepath = log / "registration.private.json"
     state = json.loads(statepath.read_text(encoding="utf-8")) if statepath.exists() else {
         "initial_version": manifest["expected_initial_version"], "steps": [], "pending": None
@@ -63,27 +75,40 @@ def register(manifest, runner=None):
     require(state["initial_version"] == manifest["expected_initial_version"], "journal_target_mismatch")
     require(state.get("pending") is None, "previous_step_uncertain_do_not_retry")
     require([r["name"] for r in state["steps"]] == list(NAMES[:len(state["steps"])]), "journal_order_invalid")
-    env = os.environ.copy()
-    # These commands use the approved Wrangler login, not user-inherited API tokens.
-    for key in ("CLOUDFLARE_API_TOKEN", "CLOUDFLARE_API_KEY", "CLOUDFLARE_EMAIL", "CF_API_TOKEN", "CF_API_KEY", "CF_EMAIL"):
-        env.pop(key, None)
+    # Do not inherit API destinations, proxies, Node preload, credentials or CLI overrides.
+    allowed = {"SYSTEMROOT", "WINDIR", "USERPROFILE", "APPDATA", "LOCALAPPDATA", "TEMP", "TMP", "HOMEDRIVE", "HOMEPATH"}
+    if len(state["steps"]) == len(NAMES):
+        return state  # Completed run is read-only; never repeat registration.
+    lockpath = log / "registration.started"
+    try:
+        fd = os.open(lockpath, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+        os.close(fd)
+    except FileExistsError:
+        raise RuntimeError("registration_already_started_do_not_retry") from None
+    env = {key: value for key, value in os.environ.items() if key.upper() in allowed}
     env.update(CI="true", WRANGLER_SEND_METRICS="false", WRANGLER_SEND_ERROR_REPORTS="false",
                CLOUDFLARE_LOAD_DEV_VARS_FROM_DOT_ENV="false", NO_COLOR="1", CLOUDFLARE_ACCOUNT_ID=manifest["account_id"],
-               WRANGLER_LOG="warn", WRANGLER_LOG_SANITIZE="true", WRANGLER_LOG_PATH=str(log / "wrangler-sanitized.private.log"))
+               WRANGLER_LOG="warn", WRANGLER_LOG_SANITIZE="true", WRANGLER_WRITE_LOGS="false",
+               PITCHEEZY_STAGE2_MANIFEST=str(manifest_path), PATH=str(node.parent))
+
 
     def save():
-        statepath.write_text(json.dumps(state, indent=2) + "\n", encoding="utf-8")
+        temporary = statepath.with_suffix(".pending")
+        with temporary.open("w", encoding="utf-8") as target:
+            target.write(json.dumps(state, indent=2) + "\n")
+            target.flush()
+            os.fsync(target.fileno())
+        os.replace(temporary, statepath)
 
     def call(label, args, value=None):
-        command = ["node", str(cli), *args, "--config", str(cfgpath), "--env-file", manifest["empty_env_file"]]
+        command = [str(node), "--require", str(guard), str(cli), *args, "--config", str(cfgpath), "--env-file", manifest["empty_env_file"]]
         try:
             result = runner(command, cwd=log, env=env, input=None if value is None else value + "\n",
                             capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=60)
         except Exception:
             raise RuntimeError("command_uncertain_do_not_retry") from None
-        output = result.stdout + "\n" + result.stderr
-        if value:
-            output = output.replace(value, "<redacted>")
+        # No mutation stdout/stderr is persisted, even if a provider echoes a partial value.
+        output = json.dumps({"returncode": result.returncode, "output_discarded": True}) if value is not None else result.stdout + "\n" + result.stderr
         (log / (label + ".private.txt")).write_text(output, encoding="utf-8")
         require(result.returncode == 0, "command_failed_do_not_retry")
         return result.stdout

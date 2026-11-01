@@ -22,11 +22,23 @@ def prepared(tmp_path, monkeypatch):
     (tmp_path / "access.txt").write_text("unit-access-code\n", encoding="utf-8")
     (tmp_path / "notice.txt").write_text("unit-notice-token\n", encoding="utf-8")
     monkeypatch.setattr(op.secrets, "token_urlsafe", lambda size: "s" * 43)
-    return {"schema": "pitcheezy-stage2-secret-registration-private-v1", "configuration_file": str(config),
+    guard = tmp_path / "scripts/exhibit_stage2_cli_guard.cjs"
+    guard.parent.mkdir()
+    guard.write_text("// mock only", encoding="utf-8")
+    monkeypatch.setattr(op, "EXPECTED_GUARD_SHA", hashlib.sha256(guard.read_bytes()).hexdigest())
+    node = tmp_path / "node.exe"
+    node.write_bytes(b"mock node")
+    manifest = {"schema": "pitcheezy-stage2-secret-registration-private-v1", "configuration_file": str(config),
             "expected_configuration_sha256": digest, "worker_name": "unit-test-only", "repository_root": str(tmp_path),
             "log_directory": str(tmp_path / "logs"), "account_id": "unit-account", "empty_env_file": str(tmp_path / "empty"),
             "access_code_file": str(tmp_path / "access.txt"), "notice_token_file": str(tmp_path / "notice.txt"),
-            "expected_initial_version": "v0"}
+            "expected_initial_version": "v0", "node_executable": str(node), "node_sha256": hashlib.sha256(node.read_bytes()).hexdigest()}
+    raw = json.dumps(manifest).encode()
+    (tmp_path / "secret-registration-input.private.json").write_bytes(raw)
+    monkeypatch.setattr(op, "EXPECTED_MANIFEST_SHA", hashlib.sha256(raw).hexdigest())
+    monkeypatch.setattr(op, "EXPECTED_MANIFEST_CONTENT_SHA", hashlib.sha256(json.dumps(manifest,sort_keys=True,separators=(",", ":")).encode()).hexdigest())
+    monkeypatch.setattr(op, "EXPECTED_INITIAL_VERSION", "v0")
+    return manifest
 
 
 class FakeCloud:
@@ -38,10 +50,14 @@ class FakeCloud:
         self.fail_after_put = False
 
     def __call__(self, command, **kwargs):
-        args = command[2:]
+        args = command[4:]
+        assert command[1] == "--require"
         self.calls.append((args, kwargs))
         assert kwargs["env"].get("CLOUDFLARE_API_TOKEN") is None
         assert kwargs["env"]["WRANGLER_LOG_SANITIZE"] == "true"
+        assert kwargs["env"]["WRANGLER_WRITE_LOGS"] == "false"
+        for key in ("CLOUDFLARE_API_BASE_URL", "CF_API_BASE_URL", "NODE_OPTIONS", "HTTPS_PROXY"):
+            assert key not in kwargs["env"]
         if args[:2] == ["deployments", "list"]:
             out = [{"created_on": "2026-11-01", "versions": [{"percentage": 100, "version_id": f"v{self.version}"}]}]
         elif args[:2] == ["secret", "list"]:
@@ -62,6 +78,8 @@ class FakeCloud:
 
 def test_exactly_three_stdin_secrets_and_versions_no_raw_logs(prepared, monkeypatch, capsys):
     monkeypatch.setenv("CLOUDFLARE_API_TOKEN", "not-inherited")
+    for key in ("CLOUDFLARE_API_BASE_URL", "CF_API_BASE_URL", "NODE_OPTIONS", "HTTPS_PROXY"):
+        monkeypatch.setenv(key, "not-inherited")
     cloud = FakeCloud()
     state = op.register(prepared, cloud)
     assert [n for n, _ in cloud.puts] == list(op.NAMES)
@@ -135,5 +153,31 @@ def test_nonempty_env_file_prevents_cli_calls(prepared):
     Path(prepared["empty_env_file"]).write_text("UNEXPECTED=1", encoding="utf-8")
     cloud = FakeCloud()
     with pytest.raises(RuntimeError, match="env_file_not_empty"):
+        op.register(prepared, cloud)
+    assert cloud.calls == []
+
+
+def test_manifest_account_tamper_blocks_cli(prepared):
+    prepared["account_id"] = "other-account"
+    cloud = FakeCloud()
+    with pytest.raises(RuntimeError, match="manifest_content_changed"):
+        op.register(prepared, cloud)
+    assert cloud.calls == []
+
+
+def test_node_binary_tamper_blocks_cli(prepared):
+    Path(prepared["node_executable"]).write_bytes(b"changed node")
+    cloud = FakeCloud()
+    with pytest.raises(RuntimeError, match="node_pin_changed"):
+        op.register(prepared, cloud)
+    assert cloud.calls == []
+
+
+def test_existing_start_guard_blocks_concurrent_execution(prepared):
+    log = Path(prepared["log_directory"])
+    log.mkdir()
+    (log / 'registration.started').write_text('', encoding='utf-8')
+    cloud = FakeCloud()
+    with pytest.raises(RuntimeError, match='already_started'):
         op.register(prepared, cloud)
     assert cloud.calls == []

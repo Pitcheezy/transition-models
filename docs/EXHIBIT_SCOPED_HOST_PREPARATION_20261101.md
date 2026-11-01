@@ -42,7 +42,7 @@ node ops/public-host-tooling/node_modules/wrangler/bin/wrangler.js d1 create <ne
 
 접근 코드 ON·자료 읽기 ON·업로드/이용기록/피드백 OFF·안내 OFF·로그100% 저장 유지. workers.dev/미리보기 OFF, Web Analytics 자동 삽입 Disable, 설정파일 routes 없음, 대시보드의 특정 시험 호스트 Route만 허용한다. 호스트 와일드카드는 금지한다. app/www/apex/media 연결은 옮기지 않는다.
 
-합격: 인증 없는3주소401·발행HEAD503·세션GET200(false)·HTTP301·로그인200·정적5개 원본SHA·인증manifest404·무토큰안내401·로그아웃200을 자동이동/재시도 없이15요청으로 확인한다. 정적5개는 형4개와 collection-settings.json이며 index는 루트에서 받는다. 자료가 없어 verify-exhibit-remote.mjs는 이 단계에서 쓰지 않는다. 비밀3개는 사용자 실행 도우미로 파일/파이프 입력하고 매 등록 버전을 기록한다. DNS 생성 확인 전에는 호스트를 조회하지 않는다. 로그 설정과 적용 버전을 기록한다. 실패 시 새 Worker만 중단 상태로 두고 기존 앱은 그대로 제공한다. 과거 자격이 든 버전으로 롤백하지 않는다.
+합격: 인증 없는3주소401·발행HEAD503·세션GET200(false)·HTTP301·로그인200·정적5개 원본SHA·인증manifest404·무토큰안내401·로그아웃204을 자동이동/재시도 없이15요청으로 확인한다. 정적5개는 형4개와 collection-settings.json이며 index는 루트에서 받는다. 자료가 없어 verify-exhibit-remote.mjs는 이 단계에서 쓰지 않는다. 비밀3개는 사용자 실행 도우미로 파일/파이프 입력하고 매 등록 버전을 기록한다. DNS 생성 확인 전에는 호스트를 조회하지 않는다. 로그 설정과 적용 버전을 기록한다. 실패 시 새 Worker만 중단 상태로 두고 기존 앱은 그대로 제공한다. 과거 자격이 든 버전으로 롤백하지 않는다.
 
 ## 승인 단계 3 — 자료6 최초 업로드
 
