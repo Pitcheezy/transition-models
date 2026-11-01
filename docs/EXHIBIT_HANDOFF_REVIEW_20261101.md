@@ -99,7 +99,7 @@ Cloudflare 공식 [O2O 설명](https://developers.cloudflare.com/cloudflare-for-
 
 ## 다음 로컬 단위 — EXHIBIT-notice-copy1
 
-11/1 채택한 maintenance 문구를 `잠시 자료를 확인하고 있어요. 곧 다시 보여 드릴게요.`로 반영하고 공통 HTML의 개발용 설명을 제거했다. 메시지 ID·JSON 구조·HTTP 상태/헤더·인증·캐시·스위치 처리 로직은 변경하지 않았다. `data_hold` 별도 문구는 아직 승인 전 초안이므로 변경하지 않았고 이번 배포 대상 안내 운영은 maintenance 기준이다. 운영 코드 원본은 Codex 작성, 다른 모델 고정 검토 전이며 실제 서버에는 배포하지 않았다.
+11/1 채택한 maintenance 문구를 `잠시 자료를 확인하고 있어요. 곧 다시 보여 드릴게요.`로 반영하고 공통 HTML의 개발용 설명을 제거했다. 메시지 ID·JSON 구조·HTTP 상태/헤더·인증·캐시·스위치 처리 로직은 변경하지 않았다. `data_hold` 별도 문구는 아직 승인 전 초안이므로 변경하지 않았고 이번 배포 대상 안내 운영은 maintenance 기준이다. 운영 코드 원본은 Codex 작성, 제품 커밋 `0885a5a7836b08e14e5ac01a37ce0725223e9300`. 실제 서버에는 배포하지 않았다.
 
 검사:
 
@@ -108,3 +108,20 @@ Cloudflare 공식 [O2O 설명](https://developers.cloudflare.com/cloudflare-for-
 - `PYTHONUTF8=1 PYTHONDONTWRITEBYTECODE=1 python -B -m pytest tests/test_checklist_model.py -q -p no:cacheprovider`: 8 passed. `git diff --check` 통과.
 
 시험은 모두 로컬 합성 자료이며 실제 Cloudflare 안내 ON/OFF 재실행이 아니다. 코드 검토·후보 구성 뒤 실제 배포에는 적용 범위·복구 설명과 사용자 승인이 필요하다. #38 초안은 미발신이며 PR 병합/닫기, 앱 공개 확대, 새 경기/CV는 수행하지 않았다.
+
+### 고정 검토와 오프라인 후보 완료
+
+다른 모델 `gpt-6.1-terra`가 기준 `e8efc7f4de44614b0bdf7d8456dc651e605ecdce`부터 제품 `0885a5a`까지 읽기 검토했다. 운영 코드 회귀는 발견하지 못했고, CHECKLIST와 인계 문서에 과거 apex 대기 문구가 현재 지시처럼 남은 P2를 제기했다. 문서 수정 `c47643ace740d45898300b1f9f0d6e4184d8bd82`를 재검토해 APPROVE. 검토자는 실제 Cloudflare 배포/로그를 독립 실행한 것이 아니다.
+
+`scripts/build_public_host_release.py build --mode candidate --host-commit c47643ace740d45898300b1f9f0d6e4184d8bd82 --frontend <기존 비공개 정적4파일 폴더> --provenance <기존 메타데이터 JSON> --output <새 후보 폴더>`와 `check <후보 폴더>/release.zip`을 실행했다. 원본·기존 후보를 덮어쓰지 않았다.
+
+- ZIP `release.zip`: 실제 파일 **535,003bytes**, SHA-256 `01b486601d5d5beb80806e555f0d5e41902ee0877caf5681fab9c8f40c5815ff`.
+- payload 16파일 **529,534bytes**, manifest 포함 ZIP 항목17개. payload 합과 압축 파일 크기를 구분한다.
+- manifest SHA-256 `2f3cc83d1f88e370146d83a2e283d9cf970c1a9bbf633e2d33e0bce4dea25a5c`.
+- 형 고정 빌드 `fba6b2ff846dcfa9afad9ea5df4204007e0604c1`의 정적4파일은 받은 원본과 바이트/SHA 모두 일치. `index.html` SHA `248860bda9fd9bc780ee9ab1598ccab58bbc9cff000c17ec5a31b22efe8d6c67`.
+- 기존 배포 소스 `f50020b` 대비 host payload 차이는 `notice.mjs`와 `package.json` 두 개다. 후자는 기존 Claude 작업의 `scripts.check`에 전시 도구4개의 구문 검사 명령을 더한 것으로 이번 변경이 아니다. 의존성·버전·실행 진입점 변경은 없다. 같은 다른 모델이 이 추가 baseline 대조도 읽기 확인해 APPROVE했으며 배포 검증/승인을 뜻하지 않는다.
+- **deployable=false**: 오프라인 바이트/manifest 검사만 통과했다. 실제 설정 채움·설정 검사·dry-run·배포 승인·원격 안내 재검사는 남는다. 기존 서버 설정과 자격을 조회/복사하거나 옛 자격 버전으로 롤백하지 않았다.
+
+다음 작업자는 CHECKLIST 상단부터 읽는다. 이 후보는 서버에 반영된 버전이 아니므로 공개 버전 한 줄을 후보 커밋으로 바꾸지 않는다. 미발신 #38 회신은 사용자 발신 결정 후, 실제 안내 배포는 적용 범위·복구 설명 후에 각각 진행한다.
+
+최종 기록 갱신 뒤 체크리스트8검사와 diff 공백 검사를 통과했다. 제품 코드는 고정 검토 이후 변경하지 않았다. 후보는 Git 밖 `D:/pitcheezy_exhibit_check/notice-copy-20261101/release.zip`에 보존했다. 이 로컬 경로에는 자격이 없으며 실제 배포용 설정/비밀은 포함하지 않는다.
