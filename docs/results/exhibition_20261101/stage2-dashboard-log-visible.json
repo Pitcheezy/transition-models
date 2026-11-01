@@ -1,0 +1,121 @@
+{
+  "schema": "pitcheezy-stage2-dashboard-visible-log-correlation-v1",
+  "recorded_at_utc": "2026-11-01T15:27:57.895287+00:00",
+  "basis": "User screenshot transcription, not exported server JSON. POST row method partly covered by popup; matching path/time/order supplies correlation, but raw export remains required.",
+  "visible_events": 14,
+  "dashboard_success_label": 13,
+  "dashboard_error_label": 1,
+  "client_requests": 15,
+  "matched_visible_rows": [
+    {
+      "method": "GET",
+      "path": "/",
+      "dashboard_timestamp_kst": "2026-11-02T00:19:55.552000+09:00",
+      "client_status": 401,
+      "timestamp_inside_client_request_interval": true
+    },
+    {
+      "method": "GET",
+      "path": "/favicon.svg",
+      "dashboard_timestamp_kst": "2026-11-02T00:19:56.291000+09:00",
+      "client_status": 401,
+      "timestamp_inside_client_request_interval": true
+    },
+    {
+      "method": "GET",
+      "path": "/v1/manifest.json",
+      "dashboard_timestamp_kst": "2026-11-02T00:19:56.603000+09:00",
+      "client_status": 401,
+      "timestamp_inside_client_request_interval": true
+    },
+    {
+      "method": "HEAD",
+      "path": "/_publish/v1/health.json",
+      "dashboard_timestamp_kst": "2026-11-02T00:19:56.937000+09:00",
+      "client_status": 503,
+      "timestamp_inside_client_request_interval": true
+    },
+    {
+      "method": "GET",
+      "path": "/_access/v1/session",
+      "dashboard_timestamp_kst": "2026-11-02T00:19:57.391000+09:00",
+      "client_status": 200,
+      "timestamp_inside_client_request_interval": true
+    },
+    {
+      "method": "POST",
+      "path": "/_access/v1/session",
+      "dashboard_timestamp_kst": "2026-11-02T00:19:57.906000+09:00",
+      "client_status": 200,
+      "timestamp_inside_client_request_interval": true
+    },
+    {
+      "method": "GET",
+      "path": "/",
+      "dashboard_timestamp_kst": "2026-11-02T00:19:58.931000+09:00",
+      "client_status": 200,
+      "timestamp_inside_client_request_interval": true
+    },
+    {
+      "method": "GET",
+      "path": "/favicon.svg",
+      "dashboard_timestamp_kst": "2026-11-02T00:20:00.157000+09:00",
+      "client_status": 200,
+      "timestamp_inside_client_request_interval": true
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-X1sSTTQ4.js",
+      "dashboard_timestamp_kst": "2026-11-02T00:20:01.625000+09:00",
+      "client_status": 200,
+      "timestamp_inside_client_request_interval": true
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-ks_hu7Ji.css",
+      "dashboard_timestamp_kst": "2026-11-02T00:20:02.997000+09:00",
+      "client_status": 200,
+      "timestamp_inside_client_request_interval": true
+    },
+    {
+      "method": "GET",
+      "path": "/collection-settings.json",
+      "dashboard_timestamp_kst": "2026-11-02T00:20:04.001000+09:00",
+      "client_status": 200,
+      "timestamp_inside_client_request_interval": true
+    },
+    {
+      "method": "GET",
+      "path": "/v1/manifest.json",
+      "dashboard_timestamp_kst": "2026-11-02T00:20:04.417000+09:00",
+      "client_status": 404,
+      "timestamp_inside_client_request_interval": true
+    },
+    {
+      "method": "GET",
+      "path": "/_notice/v1/state",
+      "dashboard_timestamp_kst": "2026-11-02T00:20:04.811000+09:00",
+      "client_status": 401,
+      "timestamp_inside_client_request_interval": true
+    },
+    {
+      "method": "DELETE",
+      "path": "/_access/v1/session",
+      "dashboard_timestamp_kst": "2026-11-02T00:20:05.112000+09:00",
+      "client_status": 204,
+      "timestamp_inside_client_request_interval": true
+    }
+  ],
+  "unlisted_client_request": {
+    "method": "GET",
+    "path": "/",
+    "status": 301,
+    "scheme": "http",
+    "interpretation": "No matching Worker row is visible; consistent with the HTTPS redirect being served at the edge, not independently proven here."
+  },
+  "server_status_and_version_per_event": "not_visible_not_yet_verified",
+  "red_row_interpretation": "Matches the intentional closed-upload HEAD request; client observed expected 503. Exception/outcome fields not yet inspected.",
+  "raw_export": "pending",
+  "additional_service_requests": 0,
+  "private_hostname_account_and_ray_ids": "omitted"
+}
