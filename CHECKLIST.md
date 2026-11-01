@@ -2,6 +2,8 @@
 
 ## 현재 전시 준비 — 2026-11-01
 
+**새 ZIP 전달 요청 — 2026-11-01:** 사용자 요청으로 관련 첨부·원격첨부·다운로드·우리 전시 폴더를 조회했고 새 c47fe6cb ZIP은 미발견, 이전 fba6b2ff ZIP867682bytes/SHA af10293d… 두 사본만 대조했다. 사용자가 재첨부한 파일도 같은 구버전이다. [Song #38의 비공개 전달 요청](https://github.com/SongRoute/pitcheezy/issues/38#issuecomment-6557076239)을1회 게시하고 원문 일치를 확인했다. 이는 파일 수신 확인 요청만이며 긴 EXHIBIT-reply2는 계속 ZIP 검증 뒤 문안 재제시·발신 승인 대기다. 이메일·카톡 전체 수신함을 조회한 것은 아니므로 다른 경로 미수신을 단정하지 않는다. 형 코드·Cloudflare·기존자료 변경 없음.
+
 **전시 범위 축소 결정 반영 완료 — Codex / claude/exhibit-host1-1101 / 후보 host aa6f7ab7fe0664a8535a9bc8b9101abce385ea26:** 사용자 규칙 수정·문서 커밋 승인과 네 결정을 반영했다. [이번 착수](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6556920007). 새 접속 문구 포함 후보 채택, 새 자원 이름3개·시험 주소·제한 카운터 이름은 지정 비공개 폴더에 준비(기존 기록과 중복 없음, 실제 계정 사용 가능 여부는 생성 전 확인), 옛 시험 Route는 코드ON 유지. 새 ZIP/RECEIPT 미수신이며 다음은 EXHIBIT-scope1. #38은 ZIP 검증 후 결과를 넣은 문안을 다시 보여 주며 지금 발신하지 않는다. 실제 공개 버전은 아래 기록을 유지하고 Cloudflare·팀원 코드·PR은 변경하지 않았다. 문서 작업은 이 커밋으로 정리하며 수정 권한을 반납한다. 검토23건 중 원문 번호18건만 확인돼 19~23 미확인을 유지한다.
 
 - [!] EXHIBIT-reply2. 범위 규칙·인계 감사·미발신 [회신 초안](docs/mail_drafts/EXHIBIT-song-reply2-20261101.md)을 준비했다. 사용자 규칙/커밋 승인은 완료. ZIP 수신·검증 뒤 manifest/health 질문을 실제 결과로 바꾸어 사용자에게 다시 보여 준 뒤 발신 승인을 받아 #38에1회 게시·원문 대조한다. 지금은 미발신이다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-11-01 · Codex]`
