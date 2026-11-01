@@ -175,3 +175,121 @@ def test_rotate_requires_null_token_fields(fixture):
 def test_split_deployment_rejected():
     with pytest.raises(RuntimeError,match='split'):
         op.latest_version([{'created_on':'2026-11-02T00:00:00Z','versions':[{'version_id':V0,'percentage':50},{'version_id':V1,'percentage':50}]}])
+
+CANARY = 'SECRET_CANARY_DO_NOT_LOG'
+
+
+def stopped_before_put(fixture, monkeypatch):
+    m,cfg,pin=fixture
+    prior=Path(m['output_directory'])
+    token=Path(m['token_file'])
+    original_read=Path.read_bytes
+    def denied(self):
+        if self == token:
+            raise PermissionError(13,CANARY,str(token))
+        return original_read(self)
+    cloud=FakeCloud(cfg)
+    path,digest=pin()
+    with monkeypatch.context() as scope:
+        scope.setattr(Path,'read_bytes',denied)
+        with pytest.raises(PermissionError):
+            op.register(path,digest,cloud)
+    assert cloud.puts==[]
+    state=json.loads((prior/'registration.private.json').read_text())
+    assert state['pending'] is None and not state['completed']
+    return prior
+
+
+def test_token_read_failure_records_safe_diagnostic_without_message_or_path(fixture,monkeypatch):
+    prior=stopped_before_put(fixture,monkeypatch)
+    diagnostic=json.loads((prior/'failure.private.json').read_text())
+    assert diagnostic=={'stage':'read_token_or_generate_rotation','exception_type':'PermissionError','errno':13,'winerror':None}
+    assert CANARY not in ''.join(p.read_text() for p in prior.iterdir() if p.is_file())
+
+
+def test_pending_state_write_failure_sends_no_put_and_safe_diagnostic(fixture,monkeypatch):
+    m,cfg,pin=fixture
+    real=op.write_json
+    def fail_pending(path,value,**kw):
+        if path.name=='state.pending.private.json' and value.get('pending')==op.NAME:
+            raise OSError(5,CANARY)
+        return real(path,value,**kw)
+    monkeypatch.setattr(op,'write_json',fail_pending)
+    cloud=FakeCloud(cfg)
+    with pytest.raises(OSError):op.register(*pin(),cloud)
+    assert cloud.puts==[]
+    prior=Path(m['output_directory'])
+    d=json.loads((prior/'failure.private.json').read_text())
+    assert d['stage']=='write_pending_put_state' and d['errno']==5 and d['exception_type']=='OSError'
+    assert CANARY not in ''.join(p.read_text() for p in prior.iterdir() if p.is_file())
+
+
+def test_execute_never_prompts_and_arbitrary_exception_text_is_not_printed(fixture,monkeypatch,capsys):
+    m,cfg,pin=fixture
+    monkeypatch.setattr('builtins.input',lambda prompt:pytest.fail('noninteractive execution prompted'))
+    cloud=FakeCloud(cfg)
+    monkeypatch.setattr(op.subprocess,'run',cloud)
+    path,digest=pin()
+    assert op.main(['--manifest',path,'--manifest-sha256',digest,'--execute'])==0
+    assert len(cloud.puts)==1
+    m['output_directory']=str(Path(m['output_directory']).with_name('other'))
+    path,digest=pin()
+    monkeypatch.setattr(op,'register',lambda *a,**kw:(_ for _ in ()).throw(RuntimeError(CANARY)))
+    assert op.main(['--manifest',path,'--manifest-sha256',digest,'--execute'])==2
+    text=capsys.readouterr().out
+    assert CANARY not in text and 'registration_failed_details_private' in text
+
+
+def test_explicit_resume_before_put_preserves_original_and_only_registers_once(fixture,monkeypatch):
+    m,cfg,pin=fixture
+    prior=stopped_before_put(fixture,monkeypatch)
+    before={p.name:sha(p.read_bytes()) for p in prior.iterdir()}
+    m['output_directory']=str(prior.with_name('resumed'))
+    cloud=FakeCloud(cfg)
+    state=op.register(*pin(),cloud,resume_before_put=str(prior))
+    assert state['completed'] and len(cloud.puts)==1
+    assert {p.name:sha(p.read_bytes()) for p in prior.iterdir()}==before
+    assert json.loads((Path(m['output_directory'])/'resume.private.json').read_text())['original_preserved'] is True
+    m['output_directory']=str(prior.with_name('another'))
+    new=FakeCloud(cfg)
+    with pytest.raises(RuntimeError,match='resume_already_started'):
+        op.register(*pin(),new,resume_before_put=str(prior))
+    assert new.calls==[]
+
+
+@pytest.mark.parametrize('change',['pending','put','after','temp_pending','manifest_pin','read_failed','vars_changed','completed','wrong_token_pin'])
+def test_resume_refuses_uncertain_or_mismatched_prior_without_network(fixture,monkeypatch,change):
+    m,cfg,pin=fixture
+    prior=stopped_before_put(fixture,monkeypatch)
+    if change in ['pending','completed']:
+        target=prior/'registration.private.json';v=json.loads(target.read_text());v['pending' if change=='pending' else 'completed']=op.NAME if change=='pending' else True;target.write_text(json.dumps(v))
+    elif change=='put':(prior/'put-publisher.private.json').write_text('{}')
+    elif change=='after':(prior/'deployments-after.private.json').write_text('{}')
+    elif change=='temp_pending':(prior/'state.pending.private.json').write_text('{}')
+    elif change=='manifest_pin':
+        target=prior/'started.private.json';v=json.loads(target.read_text());v['manifest_sha256']='0'*64;target.write_text(json.dumps(v))
+    elif change=='read_failed':
+        target=prior/'names-before.private.json';v=json.loads(target.read_text());v['returncode']=1;target.write_text(json.dumps(v))
+    elif change=='vars_changed':
+        target=prior/'version-before.private.json';v=json.loads(target.read_text());v['result']['vars']['UPLOAD_ENABLED']='true';target.write_text(json.dumps(v))
+    else:m['token_sha256']='0'*64
+    m['output_directory']=str(prior.with_name('resumed'))
+    cloud=FakeCloud(cfg)
+    with pytest.raises(RuntimeError):op.register(*pin(),cloud,resume_before_put=str(prior))
+    assert cloud.calls==[]
+
+
+def test_resume_rechecks_remote_state_before_put(fixture,monkeypatch):
+    m,cfg,pin=fixture
+    prior=stopped_before_put(fixture,monkeypatch)
+    m['output_directory']=str(prior.with_name('resumed'))
+    cloud=FakeCloud(cfg);cloud.names.add(op.NAME)
+    with pytest.raises(RuntimeError,match='unexpected_secret_names'):
+        op.register(*pin(),cloud,resume_before_put=str(prior))
+    assert cloud.puts==[] and len(cloud.calls)==3
+
+
+def test_interactive_and_automated_modes_mutually_exclusive(fixture):
+    m,cfg,pin=fixture;path,digest=pin()
+    with pytest.raises(SystemExit):op.main(['--manifest',path,'--manifest-sha256',digest,'--register','--execute'])
+    assert not Path(m['output_directory']).exists()
