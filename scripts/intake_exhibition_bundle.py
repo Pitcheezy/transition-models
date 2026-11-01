@@ -19,6 +19,22 @@ from pathlib import Path, PurePosixPath
 EXPECTED_SHA256 = "af10293d5134219b7f750d00786366b93b0134c895519b939fd99a356d77a4bc"
 EXPECTED_BYTES = 867682
 EXPECTED_COMMIT = "fba6b2ff846dcfa9afad9ea5df4204007e0604c1"
+LEGACY_PROFILE = "legacy-fba6b2ff"
+EXHIBITION_PROFILE = "exhibition-c47fe6cb"
+EXHIBITION_ROOT = "bundle-849843-main-c47fe6cb-20261101"
+EXHIBITION_SHA256 = "3c3b8006b892872bfff3423e2bd6ba49ea3de17ee92fbecef07e0b076bc8da51"
+EXHIBITION_BYTES = 182517
+EXHIBITION_WEB_COMMIT = "c47fe6cb78479362e7250141da946814cc33bd31"
+EXHIBITION_DATA_COMMIT = "cb1cfa8f759fd77adc75595316a389208c752dba"
+EXHIBITION_METADATA = frozenset({
+    "LOCAL-BROWSER.json", "PROVENANCE.json", "README.txt", "REPLACEMENT.txt",
+    "REVIEW.txt", "SITE-CHECK.txt", "TOOLS.json", "VALIDATION.json", "verify_bundle.py",
+})
+EXHIBITION_SITE_FILES = frozenset({
+    "assets/index-X1sSTTQ4.js", "assets/index-ks_hu7Ji.css", "favicon.svg", "index.html",
+    "v1/dates.json", "v1/game/849843.json", "v1/games/2026-09-30.json",
+    "v1/health.json", "v1/manifest.json", "v1/setup/849843.json",
+})
 MAX_EXPANDED_BYTES = 64 * 1024 * 1024
 MAX_FILES = 256
 
@@ -45,10 +61,28 @@ def safe_path(name: str, *, directory: bool = False) -> str:
     return PurePosixPath(name).as_posix()
 
 
-def inspect_bundle(archive: Path, *, expected_sha256: str = EXPECTED_SHA256,
-                   expected_bytes: int = EXPECTED_BYTES,
-                   expected_commit: str = EXPECTED_COMMIT,
-                   expected_site_files: int = 28) -> tuple[dict, dict[str, bytes]]:
+def inspect_bundle(archive: Path, *, profile: str = LEGACY_PROFILE,
+                   expected_sha256: str | None = None,
+                   expected_bytes: int | None = None,
+                   expected_commit: str | None = None,
+                   expected_site_files: int | None = None) -> tuple[dict, dict[str, bytes]]:
+    if profile not in (LEGACY_PROFILE, EXHIBITION_PROFILE):
+        raise IntakeError("unknown exhibition intake profile")
+    exhibition = profile == EXHIBITION_PROFILE
+    if expected_sha256 is None:
+        expected_sha256 = EXHIBITION_SHA256 if exhibition else EXPECTED_SHA256
+    if expected_bytes is None:
+        expected_bytes = EXHIBITION_BYTES if exhibition else EXPECTED_BYTES
+    if expected_commit is None:
+        expected_commit = EXHIBITION_WEB_COMMIT if exhibition else EXPECTED_COMMIT
+    if expected_site_files is None:
+        expected_site_files = len(EXHIBITION_SITE_FILES) if exhibition else 28
+    allowed_files = (EXHIBITION_METADATA | {"MANIFEST.tsv"}
+                     | {"site/" + name for name in EXHIBITION_SITE_FILES})
+    allowed_directories = {""} | {
+        parent.as_posix() for name in allowed_files for parent in PurePosixPath(name).parents
+        if parent.as_posix() != "."
+    }
     if archive.stat().st_size != expected_bytes:
         raise IntakeError("ZIP byte count does not match the delivery")
     raw = archive.read_bytes()
@@ -61,6 +95,8 @@ def inspect_bundle(archive: Path, *, expected_sha256: str = EXPECTED_SHA256,
             raise IntakeError("archive expansion limit exceeded")
         seen: set[str] = set()
         file_names = {safe_path(item.filename).casefold() for item in infos if not item.is_dir()}
+        # Validate every original path before stripping the delivery's root.
+        checked = []
         for item in infos:
             path = safe_path(item.filename, directory=item.is_dir())
             collision_key = path.casefold()
@@ -72,19 +108,33 @@ def inspect_bundle(archive: Path, *, expected_sha256: str = EXPECTED_SHA256,
             mode = item.external_attr >> 16
             if stat.S_ISLNK(mode) or (stat.S_IFMT(mode) not in (0, stat.S_IFREG, stat.S_IFDIR)):
                 raise IntakeError(f"non-regular archive member: {path}")
-            if not (path == "site" or path.startswith("site/")
-                    or path in ("MANIFEST.tsv", "TOOLS.txt")):
-                raise IntakeError(f"unexpected archive member: {path}")
             if item.flag_bits & 1:
                 raise IntakeError("encrypted members are not supported")
+            checked.append((item, path))
+        for item, path in checked:
+            if exhibition:
+                if path == EXHIBITION_ROOT and item.is_dir():
+                    continue
+                if not path.startswith(EXHIBITION_ROOT + "/"):
+                    raise IntakeError(f"unexpected archive root: {path}")
+                path = path.removeprefix(EXHIBITION_ROOT + "/")
+                allowed = allowed_directories if item.is_dir() else allowed_files
+                if path not in allowed:
+                    raise IntakeError(f"unexpected archive member: {path}")
+            elif not (path == "site" or path.startswith("site/")
+                      or path in ("MANIFEST.tsv", "TOOLS.txt")):
+                raise IntakeError(f"unexpected archive member: {path}")
             if not item.is_dir():
                 payloads[path] = bundle.read(item)  # ZIP CRC verified by zipfile.
         if bundle.testzip() is not None:
             raise IntakeError("ZIP CRC check failed")
-    if "MANIFEST.tsv" not in payloads or "TOOLS.txt" not in payloads:
+    if exhibition and set(payloads) != allowed_files:
+        raise IntakeError("exhibition bundle file set does not match the profile")
+    if not exhibition and ("MANIFEST.tsv" not in payloads or "TOOLS.txt" not in payloads):
         raise IntakeError("MANIFEST.tsv or TOOLS.txt is missing")
     reader = csv.DictReader(io.StringIO(payloads["MANIFEST.tsv"].decode("utf-8-sig")), delimiter="\t")
-    if reader.fieldnames != ["path", "bytes", "sha256_raw", "sha256_lf_normalized"]:
+    lf_column = "sha256_lf" if exhibition else "sha256_lf_normalized"
+    if reader.fieldnames != ["path", "bytes", "sha256_raw", lf_column]:
         raise IntakeError("unexpected manifest columns")
     rows = list(reader)
     manifest_paths: set[str] = set()
@@ -96,25 +146,36 @@ def inspect_bundle(archive: Path, *, expected_sha256: str = EXPECTED_SHA256,
         if path in manifest_paths:
             raise IntakeError(f"duplicate manifest path: {path}")
         manifest_paths.add(path)
-        content = payloads.get("site/" + path)
+        content = payloads.get(path if exhibition else "site/" + path)
         if content is None:
             raise IntakeError(f"manifest member missing: {path}")
         if (str(len(content)) != row["bytes"] or digest(content) != row["sha256_raw"]
                 or digest(content.replace(b"\r\n", b"\n").replace(b"\r", b"\n"))
-                != row["sha256_lf_normalized"]):
+                != row[lf_column]):
             raise IntakeError(f"manifest byte/hash mismatch: {path}")
         evidence.append({"path": path, "bytes": len(content), "sha256_raw": digest(content),
-                         "sha256_lf_normalized": row["sha256_lf_normalized"]})
+                         "sha256_lf_normalized": row[lf_column]})
     actual_paths = {name.removeprefix("site/") for name in payloads if name.startswith("site/")}
-    if actual_paths != manifest_paths or len(actual_paths) != expected_site_files:
+    expected_manifest_paths = set(payloads) - {"MANIFEST.tsv"} if exhibition else actual_paths
+    if expected_manifest_paths != manifest_paths or len(actual_paths) != expected_site_files:
         raise IntakeError("site file set does not exactly match the manifest/count")
     if "index.html" not in actual_paths:
         raise IntakeError("site index.html is missing")
     manifest = json.loads(payloads["site/v1/manifest.json"])
-    if manifest.get("commit") != expected_commit or manifest.get("commit_dirty") is not False:
+    data_commit = EXHIBITION_DATA_COMMIT if exhibition else expected_commit
+    if manifest.get("commit") != data_commit or manifest.get("commit_dirty") is not False:
         raise IntakeError("source commit or clean-tree assertion does not match")
     if manifest.get("contract") != "v1":
         raise IntakeError("unexpected publication contract")
+    if exhibition:
+        provenance = json.loads(payloads["PROVENANCE.json"])
+        tools = json.loads(payloads["TOOLS.json"])
+        if (provenance.get("web_build_source_commit") != expected_commit
+                or provenance.get("public_data_generation_source_commit") != data_commit
+                or provenance.get("v1_manifest_commit_observed") != data_commit
+                or tools.get("source_commit") != expected_commit
+                or provenance.get("release_id") != EXHIBITION_ROOT):
+            raise IntakeError("web/data provenance declarations do not match the profile")
     game = json.loads(payloads["site/v1/game/849843.json"])
     pitches = game["pitches"]
     keys = [p["key"] for p in pitches]
@@ -133,11 +194,24 @@ def inspect_bundle(archive: Path, *, expected_sha256: str = EXPECTED_SHA256,
     dates = json.loads(payloads["site/v1/dates.json"])["dates"]
     if not isinstance(dates, list) or any(not isinstance(d, str) or not re.fullmatch(r"\d{4}-\d{2}-\d{2}", d) for d in dates):
         raise IntakeError("invalid date catalogue")
+    if exhibition:
+        catalogue = json.loads(payloads["site/v1/games/2026-09-30.json"])
+        catalogue_games = catalogue.get("games", [])
+        if (dates != ["2026-09-30"] or manifest.get("live_dates") != dates
+                or catalogue.get("date") != "2026-09-30"
+                or len(catalogue_games) != 1
+                or catalogue_games[0].get("game_pk") != 849843
+                or catalogue_games[0].get("date_kst") != "2026-09-30"
+                or game.get("game", {}).get("game_pk") != 849843
+                or game.get("game", {}).get("date_kst") != "2026-09-30"):
+            raise IntakeError("exhibition catalogue must contain only 849843 on 2026-09-30")
     # The app fetches exactly games/<date>.json, so only that path directly under v1/games counts as supplied.
     available_dates = sorted(d for d in set(dates) if f"v1/games/{d}.json" in actual_paths)
     missing_dates = sorted(set(dates) - set(available_dates))
     unlisted_games_files = sorted(name for name in actual_paths if name.startswith("v1/games/")
                                   and name not in {f"v1/games/{d}.json" for d in dates})
+    site_evidence = [{**entry, "path": entry["path"].removeprefix("site/")}
+                     for entry in evidence if entry["path"].startswith("site/")] if exhibition else evidence
     receipt = {
         "schema": "pitcheezy-exhibition-intake-v1",
         "evidence_kind": "offline_archive_integrity",
@@ -147,7 +221,7 @@ def inspect_bundle(archive: Path, *, expected_sha256: str = EXPECTED_SHA256,
         "declared_commit_dirty": manifest.get("commit_dirty"),
         "site_files": len(actual_paths),
         "site_bytes": sum(len(payloads["site/" + name]) for name in actual_paths),
-        "manifest_raw_and_lf": "pass", "files": evidence,
+        "manifest_raw_and_lf": "pass", "files": site_evidence,
         "game": {"game_pk": 849843, "pitches": len(pitches), "plate_appearances": len(pa_keys),
                  "recommendation_status": dict(statuses), "source": game.get("source"),
                  "next_present": game.get("next") is not None},
@@ -164,6 +238,29 @@ def inspect_bundle(archive: Path, *, expected_sha256: str = EXPECTED_SHA256,
         ],
         "deployment_approved": False,
     }
+    if exhibition:
+        receipt.update({
+            "profile": profile,
+            "archive_root": EXHIBITION_ROOT,
+            "source_commit_basis": "sender_declared_provenance_unverified",
+            "data_generation_commit": data_commit,
+            "data_generation_commit_basis": "sender_declared_manifest_unverified",
+            "manifest_scope": "all_bundle_files_except_MANIFEST.tsv",
+            "manifest_entries": len(evidence),
+            "manifest_lf_rule": "CRLF to LF, then remaining CR to LF; originals unchanged",
+            "manifest_file": {"path": "MANIFEST.tsv", "bytes": len(payloads["MANIFEST.tsv"]),
+                              "sha256_raw": digest(payloads["MANIFEST.tsv"])},
+            "metadata_files": [entry for entry in evidence if not entry["path"].startswith("site/")],
+            "limitations": [
+                "Web source in PROVENANCE.json/TOOLS.json and data source in PROVENANCE.json/site/v1/manifest.json are sender declarations; no rebuild, source comparison, or provenance authentication was performed.",
+                "Receipt files are site-relative; metadata_files preserves all nine metadata manifest entries separately. The archive root is stripped only after full-path safety validation.",
+                "Only game 849843 and date 2026-09-30 are admitted by this profile; no other game was analysed.",
+                "Received verify_bundle.py was checked as bytes only and was not executed.",
+                "No browser, physical-device, Cloudflare, live-feed, or load test is implied by this receipt.",
+                "Sender review and validation reports are integrity-checked evidence files, not independently reproduced results.",
+                "Archive data and old health timestamps are not proof of live publisher operation.",
+            ],
+        })
     return receipt, payloads
 
 
@@ -185,13 +282,17 @@ def extract_verified(payloads: dict[str, bytes], receipt: dict, output: Path) ->
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("archive", type=Path)
+    parser.add_argument("--profile", choices=(LEGACY_PROFILE, EXHIBITION_PROFILE), default=LEGACY_PROFILE,
+                        help="Pinned sender format; legacy delivery remains the default")
     parser.add_argument("--output", type=Path, help="New private output directory; existing paths are refused")
     args = parser.parse_args()
     try:
-        receipt, payloads = inspect_bundle(args.archive)
+        receipt, payloads = inspect_bundle(args.archive, profile=args.profile)
         if args.output is not None:
             extract_verified(payloads, receipt, args.output)
         summary = {key: receipt[key] for key in ("zip", "source_commit", "source_commit_basis", "site_files", "site_bytes", "game", "catalogue", "deployment_approved")}
+        if "data_generation_commit" in receipt:
+            summary["data_generation_commit"] = receipt["data_generation_commit"]
         print(json.dumps(summary, ensure_ascii=False, indent=2))
         return 0
     except (IntakeError, zipfile.BadZipFile, UnicodeError, KeyError, TypeError, ValueError, OSError) as exc:

@@ -74,7 +74,7 @@ export async function runExhibitHostRehearsal({ site, receipt, out, browser = fa
         "Browser checks are headless installed Chrome at two viewports; no physical phones or Safari.",
         "Date files the build advertises but does not include stay missing (404 observed, not corrected).",
         "Partner files were read only and uploaded as bytes; game files were not analysed (849844 is evaluation-locked).",
-        "Notice wording is the unapproved development placeholder; the public wording is a human decision.",
+        "Notice checks use the current local host source wording; they do not change production wording or notice state.",
         "Loopback http uses the unprefixed viewer cookie without Secure; production https uses __Host- and Secure.",
       ],
     };
@@ -144,6 +144,15 @@ export async function runExhibitHostRehearsal({ site, receipt, out, browser = fa
     const absent = await get("/v1/game/999999.json"); await absent.arrayBuffer();
     report.negative.unknown_game_status = absent.status;
     check("negative:unknown_game_404", absent.status === 404);
+    // A fresh six-file exhibition store must not expose the old catalogue's removed entries.
+    if (classified.data.length === 6 && intake.catalogue.advertised_dates === 1) {
+      report.negative.excluded_paths = [];
+      for (const path of ["/v1/game/849845.json", "/v1/setup/849845.json", "/v1/games/2026-09-29.json"]) {
+        const excluded = await get(path); await excluded.arrayBuffer();
+        report.negative.excluded_paths.push({ path, status: excluded.status });
+        check("negative:excluded_404:" + path, excluded.status === 404, { status: excluded.status });
+      }
+    }
     if (missingDate) {
       const date = await get(`/v1/games/${missingDate}.json`); await date.arrayBuffer();
       report.negative.missing_advertised_date = { date: missingDate, status: date.status };
