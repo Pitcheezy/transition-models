@@ -65,3 +65,17 @@ Cloudflare 공식 [O2O 설명](https://developers.cloudflare.com/cloudflare-for-
 설정 적용 뒤 HTTP→HTTPS와 HTTPS 정상 응답을 확인하고 사용자에게 Sites 연결만 해제하도록 안내한다. 최종 새 apex SHA 및 보안 헤더까지 확인하기 전 전환 완료로 기록하지 않는다. 보조 에이전트의 읽기 검토도 우리 존 인증서/HTTPS 이동 확인과 기존 복구안 유지를 지지했다. 같은 모델 추가 검토이며 코드 변경은 없다.
 
 기록 검사: diff 공백 검사 통과. 체크리스트 검사 첫 실행 8 passed/Windows 자식 프로세스 디코딩 경고 1; `PYTHONUTF8=1`, `PYTHONDONTWRITEBYTECODE=1`로 재실행 8 passed(경고 없음). 동작 코드 수정 없음.
+
+## HTTPS 보완 적용 — 2026-11-01 17:09 KST
+
+사용자가 `HTTPS 자동 전환 ON 승인`으로 도메인 전체 HTTP 이동 설정을 승인했다. 로그인된 Cloudflare의 `Always Use HTTPS` 한 항목만 OFF→ON으로 바꾸고, 스위치 ON과 저장 시각 표시를 확인했다. DNS·인증서·앱 자격·업로드·요금·Sites 연결은 변경하지 않았다.
+
+인증 없는 GET 7회(08:09:10~11 UTC, 자동 리다이렉트 미추적):
+
+- HTTP www/app/media → 각 301, 같은 경로의 HTTPS Location.
+- HTTP apex →302 HTTPS(아직 기존 Sites 경로; 새 홈 전환 합격 근거가 아님).
+- HTTPS www →200, 6133bytes, SHA `8fce362e133ee737b341b6ad4c436ebc3c82f2054588f28c2bc5cc237446c883`, DENY, app/media 링크 있음·비콘 없음.
+- HTTPS 앱 manifest →401, `X-Pitcheezy-Access: required`.
+- HTTPS media `Range: bytes=0-1` →206, `Content-Range: bytes 0-1/11571137`.
+
+사용자가 직접 Sites의 **pitcheezy.com 연결만 해제**하는 단계로 인계했다. 사이트·배포·DNS 삭제가 아니다. 해제 후 apex 본문 SHA까지 대조하기 전 전체 전환 완료로 기록하지 않는다. 변경 화면은 Git 밖의 로컬 캡처로 남겼으며 관리 API 감사 로그를 확보했다는 뜻은 아니다. 문제가 확인되면 이번 HTTPS 스위치를 원래 OFF로 되돌리는 범위이며, 앱의 과거 버전 롤백은 금지한다.

@@ -2,7 +2,7 @@
 
 ## 현재 전시 준비 — 2026-11-01
 
-**EXHIBIT-apex1 사전 조회 완료·진행 중 — Codex / claude/exhibit-host1-1101 / 기준 3bedef2:** 사용자가 apex 전환을 승인했고 Sites 연결은 직접 해제하기로 했다. 17:04 KST 전후 실제 대시보드에서 정확한 apex/www Route·DNS Proxied·apex 포함 Universal 인증서 Active를 확인했다. 그러나 우리 존 Always Use HTTPS는 OFF이고 새 www 홈은 HTTP 200으로 열리므로 전환 전 HTTPS 이동 보완이 필요하다. 기존 apex HTTP 302를 새 호스트의 이동 보장으로 쓰지 않는다. 합격 기준: 새 apex 홈 SHA/보안 헤더·app/media 링크·비콘 없음, HTTP→HTTPS, media206, 앱401; 지정 경기 폰 QR는 별도 실기기 기록. HTTPS 설정 변경은 추가 범위 설명/승인 대기이며 아직 Sites 해제·DNS·Cloudflare 변경 없음. [새 관측과 다음 단계](docs/EXHIBIT_HANDOFF_REVIEW_20261101.md#apex-전환-사전-실측--2026-11-01-1704-kst).
+**EXHIBIT-apex1 HTTPS 보완 완료·Sites 해제 대기 — Codex / claude/exhibit-host1-1101 / 기준 b5aaeef:** 사용자가 apex 전환과 HTTPS 자동 전환 ON을 승인했다. 정확한 apex/www Route·DNS Proxied·apex 포함 Universal 인증서 Active 확인 뒤 Always Use HTTPS만 ON 적용. 17:09 KST HTTP www/app/media→301 HTTPS, apex→302 HTTPS; 새 www HTTPS200·6133bytes·SHA 불변, 앱401, media206 확인. Sites 연결은 사용자가 직접 해제하는 단계 대기이며 DNS·사이트·배포·자격 변경 없음. 합격 기준: 해제 후 새 apex 홈 SHA/보안 헤더·app/media 링크·비콘 없음, HTTP→HTTPS, media206, 앱401; 지정 경기 폰 QR는 별도 실기기 기록. [관측과 다음 단계](docs/EXHIBIT_HANDOFF_REVIEW_20261101.md#https-보완-적용--2026-11-01-1709-kst).
 
 **EXHIBIT-handoff-review 완료·수정 권한 반납 — Codex / claude/exhibit-host1-1101 / 검토 기준 8db9a25 (2026-11-01):** Song 요구와 방향 일치, 원격 영수증 두 개의 35/35·v4 전체 SHA 일치 확인. 공개 조회는 apex 옛 홈200/www 새 홈200·로컬 바이트 일치/app401/media206/HTTP→HTTPS302. 복구 지시·활성 버전 출처·폰 복원 시간·옛 검사 경로·운영 문구 정정. 문서 2차 검토 PASS, 체크리스트8통과·새 상대링크 오류0·diff 검사 통과. [검토와 다음 승인 범위](docs/EXHIBIT_HANDOFF_REVIEW_20261101.md). Cloudflare 관리 화면 로그인·apex 전환 승인 대기. 운영 코드·형 빌드·Cloudflare·DNS·Sites·이슈·PR 변경 없음.
 
