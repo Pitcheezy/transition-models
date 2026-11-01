@@ -1,4 +1,4 @@
-# 시험 호스트 ③ 실행 순서 — 운영자 명령 (2026-11-01, 실행 전)
+# 시험 호스트 ③ 실행 순서 — 운영자 명령 (2026-11-01 실행, 결과 포함)
 
 [실행 전 설명](EXHIBIT_HOST_PLAN_20261101.md)의 ③을 **실제로 돌릴 때** 치는 명령이다. **2026-11-01 실행 완료 — 결과와 발견은 아래 "실행 결과" 절.** 명령은 ④ 뒤 재검사·되돌리기용으로 그대로 둔다.
 전제: 사용자 결정(올릴 자료 24개 전부, 시험 단계 접근 코드 ON 유지)과 Cloudflare 로그인. 〔사용자만〕 표시는 Claude/Codex가 대신하지 않는 단계다(비밀·토큰·코드를 다루는 3·5·7단계 포함).
@@ -18,20 +18,21 @@
 | 4 | `--var UPLOAD_ENABLED:true`. `/_publish` HEAD(토큰 없음) 401 = 창 열림 | `dbe8837c-61a2-4f96-8ee7-53ed6a2d6845` |
 | 5a | HEAD 24: 없음 23, `v1/health.json` observed(10/16 합성 기록, ETag 확보) | — |
 | 5b | PUT 24/24 `stored`·200·SHA 일치(health는 If-Match로 교체) | — |
-| 6 | 덧씌움 없는 배포. `/_publish` 503, 게이트 401 유지. 토큰 파일 삭제 | `d4d707d7-47ec-4dfa-bc8b-af268bef40bc` |
-| 7 | 1차 33/35 — `entry:root_is_index`·`entry:query_game_is_index` 실패(발견 1). 사용자 대시보드 조치 뒤 2차 **35/35**(영수증 SHA `3ebdafab…`) | 접속 코드 교체 `42e265fd-b7f9-4c3a-b569-0aeb9059c81e`(현재 활성) |
+| 6 | 덧씌움 없는 배포. `/_publish` 503, 게이트 401 유지. 토큰 파일은 사용자가 삭제(Claude가 `Test-Path`로 부재 확인) | `d4d707d7-47ec-4dfa-bc8b-af268bef40bc` |
+| 7 | 1차 33/35 — `entry:root_is_index`·`entry:query_game_is_index` 실패(발견 1). 사용자 대시보드 조치 뒤 2차 **35/35**(영수증 SHA `3ebdafab…`) | 접속 코드 교체 `42e265fd-b7f9-4c3a-b569-0aeb9059c81e` |
+| ③-6 | 안내 운영자 토큰 교체(helper → 사용자 `secret put NOTICE_TOKEN_SHA256`) → `notice-cli` GET(active false, revision 4) → **ON 12:59:29.6 KST** applied(revision 5, 감사 기록; 공개 manifest 503 + `X-Pitcheezy-Notice: maintenance` 12:59:59; iPhone Safari에 개발용 안내 문구 표시) → **OFF 13:03:52.9** applied(revision 6; 13:04:15 공개 manifest 401 게이트로 복귀) | 안내 토큰 digest `feed4fc1-949d-4672-98fb-35f4ab00fdc3`(현재 활성) |
 
 발견·문서와 달랐던 점:
 
-1. **Cloudflare Web Analytics 자동 설치가 HTML에 비콘을 끼워 넣었다.** 존 `pitcheezy.com`의 Web Analytics 사이트(한 달 전 생성, Automatic setup)가 하위 호스트의 `/`·`/?game=` 응답에 `static.cloudflareinsights.com/beacon.min.js`를 주입해 659→1026바이트가 됐다(`/index.html`은 307→`/`, 정적 JS/CSS·JSON은 무관). 홈 apex 응답에는 없었다. 사용자가 **Analytics & Logs → Web Analytics → `pitcheezy.com` Manage site → Disable → Update**로 끈 뒤 바이트 일치. ④ 홈 전환 뒤에도 이 설정이 Disable인지 다시 본다. 우리 gateway는 `no-transform`을 보내지 않으므로 지금은 설정에만 의존한다.
-2. **접속 코드 원문이 없었다.** 저장소·문서에는 digest만 있고 사용자도 보관본이 없어 새 16자 코드를 만들어(파일에만 저장·ACL 본인만·화면에는 digest) `ACCESS_CODE_SHA256`를 단일 digest로 교체했다. 옛 코드 세션은 모두 끝났다. **안내 운영자 토큰(`NOTICE_TOKEN_SHA256`)도 같은 상태**라 교체 전에는 안내 ON/OFF를 할 수 없다.
+1. **Cloudflare Web Analytics 자동 설치가 HTML에 비콘을 끼워 넣었다.** 존 `pitcheezy.com`의 Web Analytics 사이트(한 달 전 생성, Automatic setup)가 하위 호스트의 `/`·`/?game=` 응답에 `static.cloudflareinsights.com/beacon.min.js`를 주입해 659→1026바이트가 됐다(`/index.html`은 307→`/`, 정적 JS/CSS·JSON은 무관). 홈 apex 응답에는 없었다. 사용자가 **Analytics & Logs → Web Analytics → `pitcheezy.com` Manage site → Disable → Update**로 끈 뒤 바이트 일치. ④ 홈 전환 뒤에도 이 설정이 Disable인지 다시 본다. 자료(`/v1`) 응답은 `no-store, no-transform`이지만 HTML·정적 응답은 `private, max-age=0`뿐이라 HTML은 지금 이 설정에만 의존한다.
+2. **접속 코드 원문이 없었다.** 저장소·문서에는 digest만 있고 사용자도 보관본이 없어 새 16자 코드를 만들어(파일에만 저장·ACL 본인만·화면에는 digest) `ACCESS_CODE_SHA256`를 단일 digest로 교체했다. 옛 코드로 연 세션은 설계상(코드 태그 불일치) 무효가 된다 — 별도로 관측하지는 않았다. **안내 운영자 토큰(`NOTICE_TOKEN_SHA256`)도 같은 상태**라 같은 방식으로 교체한 뒤 ③-6(안내 ON/OFF)을 돌렸다. 두 원문 파일은 사용자 비공개 폴더에만 있다(전시 당일 안내 전환에 필요).
 3. `wrangler login`은 승인 코드를 약 2분만 기다린다(첫 시도는 시간 초과 → 재실행). 저장소 루트가 아닌 상위 폴더에서 치면 상대 경로가 깨져 절대 경로로 안내했다.
 4. `secret put`은 대화형 프롬프트 대신 PowerShell 파이프 `"<digest>" | node … secret put NAME --config …`로 넣었다(digest만, 토큰 원문 아님). Claude의 터미널 실행은 비밀 등록으로 차단되어 사용자가 직접 쳤다.
 5. PowerShell 5.1에서 `--if-match 'v1/health.json=\"<etag>\"'`처럼 **`\"` 이스케이프**가 필요하다(그냥 `"`는 node에 닿기 전에 벗겨진다). 생성된 계획의 `condition.if_match`가 따옴표 포함 ETag인지 확인한 뒤 실행했다.
 6. 5a·5b·7단계는 비공개 폴더의 `.ps1`(토큰·코드를 파일에서 읽고 `finally`로 환경 변수 제거)로 돌렸다. 영수증·계획·메모 원본은 Git 밖에 보관한다.
 7. 2·4·6단계 뒤 `<후보>/host/.wrangler`를 지우고 설정 검사를 다시 통과시켰다(설정 SHA `eed14187…` 불변).
 
-남은 ③ 꼬리: 8단계 비식별 로그 영수증(대시보드 Observability에 요청이 표시되는 것은 확인), 안내 ON→OFF(운영자 토큰 교체 뒤), 폰·PC 브라우저 확인(사용자), 형에게 주소·코드 비공개 전달.
+남은 ③ 꼬리: 8단계 비식별 로그 영수증(사용자가 보낸 대시보드 Observability 캡처에 요청 목록이 보였을 뿐 영수증은 미작성), 폰에서 경기 화면(`?game=849843`) 직접 확인(iPhone Safari 로그인·날짜 목록·안내 화면은 확인됨), 형에게 주소·코드 비공개 전달.
 
 ## 0. 로컬에서 끝난 것 (2026-11-01)
 
@@ -45,7 +46,7 @@
 | Wrangler dry-run | 고정 Wrangler 4.151.0을 로컬 npm 캐시에서 설치(네트워크 없음). 홈 설정(`ops/public-home/wrangler.jsonc`) dry-run: 정적 9파일 읽음·바인딩 없음·통과. 앱 후보(`wrangler.deploy.json`, 자리표시자 그대로) dry-run: 변수 11개 읽음·통과. 둘 다 로그인·업로드 없음. 앱 후보 dry-run은 원본 후보 폴더에서 돌려 `host/.wrangler/tmp`가 생겼고 같은 날 지웠다(설정 검사 재실행: `invalid_bucket_name` 거부 그대로). 다음부터는 1단계 절차(복사본)로만 돌린다. |
 | R2 버킷 상태 | WS-stage4(10/16)가 넣은 **합성 22바이트 `v1/health.json`이 버킷에 남아 있다**([기록](results/ops/ws_stage4_20261016.json), `resources_retained`). 10/16 이후 버킷을 다시 조회하지 않았다. 5단계가 HEAD로 확인하고 If-Match로 교체한다. |
 
-남은 자리표시자(사용자가 채움): Worker `name`(기존 시험 Worker 이름), `r2_buckets[0].bucket_name`, `d1_databases[0].database_name`·`database_id`. `ACCESS_SESSION_SECONDS`는 예제값 43200이고 현재 배포는 3600(10/25 기록)이다 — 유지하려면 3600으로 바꾼 뒤 재검사한다.
+자리표시자(11/1에 채움, 값은 Git 밖 후보 폴더에만): Worker `name`(기존 시험 Worker 이름), `r2_buckets[0].bucket_name`, `d1_databases[0].database_name`·`database_id`. `ACCESS_SESSION_SECONDS`는 예제값 43200이었고 기존 배포값 3600으로 바꾼 뒤 재검사했다.
 
 ## 1. 후보 설정 채우기와 재검사 〔사용자만: 로그인·이름 조회〕
 
@@ -167,10 +168,10 @@ try {
 
 ## 8. 저장 로그 대조 〔사용자만: 대시보드〕
 
-Workers Logs(저장 ON)에서 버전 ID로 거르고 다음을 확인해 10/25 방식의 비식별 영수증(시각·method·path·status·version 5필드)으로 남긴다. 5단계 요청은 4단계 버전(V4), 7단계 요청은 6단계 버전(V6) 아래 있다.
+Workers Logs(저장 ON)에서 버전 ID로 거르고 다음을 확인해 10/25 방식의 비식별 영수증(시각·method·path·status·version 5필드)으로 남긴다. 5단계 요청은 4단계 버전(V4 `dbe8837c…`) 아래, 7단계 요청은 **접속 코드 교체 버전(`42e265fd…`)** 아래 있다 — 11/1에는 교체가 7단계보다 먼저였고, 6단계 버전(`d4d707d7…`) 아래에는 `/_publish` 503 확인 1~2건만 있다. 안내 토큰 교체 뒤의 요청(안내 ON/OFF 시험)은 그다음 버전 아래다.
 
 - 5단계(V4) `/_publish/v1/...`: HEAD 200 ×1(`v1/health.json`)·HEAD 404 ×23, PUT 200 ×24(health는 If-Match). 그 외 `/_publish` 요청 없음.
-- 7단계 검사기(V6, 접근 코드 ON·`--notice-check`) **정확히 35건**: POST `/_access/v1/session` 200 ×1, GET `/v1/manifest.json` 200 ×2(하나는 `--notice-check`), 그 외 자료 GET 200 ×23, GET `/favicon.svg`·`/assets/*.js`·`/assets/*.css` 200 ×3, GET `/index.html` 307(→`/`) 또는 200 ×1, GET `/` 200 ×2(하나는 `?game=849843`), 404 ×2(`/v1/game/999999.json`·목록에만 있는 날짜), HEAD `/v1/manifest.json` 200 ×1. `--notice-check` 없이는 34건.
+- 7단계 검사기 1회분(접근 코드 ON·`--notice-check`) **35건** — 11/1에는 검사기를 1차·2차 두 번 돌렸고 그 사이 본문 확인(로그인·`/`·`/?game=`·`/index.html`·로그아웃) 5건이 더 있다: POST `/_access/v1/session` 200 ×1, GET `/v1/manifest.json` 200 ×2(하나는 `--notice-check`), 그 외 자료 GET 200 ×23, GET `/favicon.svg`·`/assets/*.js`·`/assets/*.css` 200 ×3, GET `/index.html` 307(→`/`) 또는 200 ×1, GET `/` 200 ×2(하나는 `?game=849843`), 404 ×2(`/v1/game/999999.json`·목록에만 있는 날짜), HEAD `/v1/manifest.json` 200 ×1. `--notice-check` 없이는 34건.
 - 7단계 폰·PC 브라우저 확인(로그인·`/`·자료 폴링)과 안내 ON/OFF(`/_notice` PUT 2건)는 시각으로 구분한다. 접근 코드 없는 401이 있으면 누구 요청인지 기록한다. 원시 로그(IP·헤더)는 Git·이슈에 넣지 않는다.
 
 ## 9. 되돌리기
@@ -191,4 +192,4 @@ Workers Logs(저장 ON)에서 버전 ID로 거르고 다음을 확인해 10/25 �
 
 ## 하지 않은 것 (2026-11-01 실행 뒤 기준)
 
-DNS·custom domain·Sites 변경 없음(④). 8단계 비식별 로그 영수증, 안내 ON→OFF 시험, 브라우저 확인은 위 "남은 ③ 꼬리". 홈 설정(`ops/public-home`)은 dry-run만 했고 배포하지 않았다. 후보 폴더·ZIP·계획·영수증·메모는 Git 밖, 토큰 파일은 삭제했고 접속 코드 파일은 사용자 보관.
+DNS·custom domain·Sites 변경 없음(④). 8단계 비식별 로그 영수증과 폰 경기 화면 확인은 위 "남은 ③ 꼬리"(안내 ON→OFF 시험은 ③-6으로 완료). 홈 설정(`ops/public-home`)은 dry-run만 했고 배포하지 않았다. 후보 폴더·ZIP·계획·영수증·메모는 Git 밖, 토큰 파일은 삭제했고 접속 코드 파일은 사용자 보관.

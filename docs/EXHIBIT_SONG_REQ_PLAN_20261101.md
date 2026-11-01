@@ -17,8 +17,8 @@
 
 - **무엇을 남기나:** 영상(현재 hero 영상), 소개 문단, "서비스 열기" 버튼 1개. 수치 패널("추천의 뒤에는"), 경기 칸 3개, 경기·이용 안내·모델 근거·CV 기록 링크는 모두 뺀다.
 - **어떻게:** `web/pitch-studio-home/`(index.html + product.css + 영상·로고)를 새 폴더로 만든다. 기존 `web/pitch-studio/`의 watch·receiver·games·guide·report는 **Git에 그대로 두고 배포 대상에서만 뺀다**(형의 "삭제"와 사용자의 "보존"을 둘 다 만족).
-- **배포:** Sites는 Codex 도구로만 배포할 수 있다. Codex 한도 해제(11/4 16:04) 뒤 `web/pitch-studio-home/`만 올리면 다른 페이지는 공개에서 사라진다. "서비스 열기" 주소는 (2)의 도메인 결정 뒤 넣는다.
-- **대안:** 홈을 Cloudflare 정적 호스트로 옮기고 Sites를 완전히 내린다. Codex 의존이 없어지지만 pitcheezy.com DNS를 바꿔야 하므로 11/20 전엔 권하지 않는다.
+- **배포(11/1 사용자 결정으로 변경):** Sites를 기다리지 않고 홈을 **Cloudflare 정적 Worker(`ops/public-home`)로 옮긴다.** ④에서 `pitcheezy-home` 배포 → 임시 주소에서 iPhone Safari 영상(206) 확인 → apex `pitcheezy.com` custom domain 전환(DNS 레코드 백업). Sites는 전시(11/24) 뒤까지 롤백용으로 그대로 두고, 내리는 것은 Codex가 전시 뒤에 한다. "서비스 열기" 주소는 `https://app.pitcheezy.com/?game=849843`로 이미 넣었다.
+- **(이전 안)** Sites에 홈 폴더만 재배포(Codex 도구 필요, 11/4 이후) — 사용자가 11/1에 Cloudflare 이전으로 바꿨다.
 
 ## (2) 호스트 — 시험 배포, 도메인, #38 기록
 
@@ -32,7 +32,7 @@
 5. 검사: 공개 `/v1` 24개 바이트 = 원본 SHA, `/?game=849843` 첫 투구, 안내 ON→OFF 1회, 저장 로그 대조. (원격 바이트 검사 도구는 로컬 리허설 도구에 `--origin` 모드로 추가, 읽기 전용.)
 6. #38 기록: 결과·버전 ID·파일 SHA만. 비밀·비공개 주소 제외. **발신은 사용자 승인 뒤.**
 
-**④ 도메인(권장 A):** `app.pitcheezy.com` → 시험 Worker custom domain. `pitcheezy.com`은 Sites 홈 유지, "서비스 열기" → `https://app.pitcheezy.com/?game=849843`. 되돌리기는 custom domain 해제뿐. 기존 QR(pitcheezy.com)이 그대로 유효하다.
+**④ 도메인(권장 A, 11/1 갱신):** `app.pitcheezy.com` → 시험 Worker custom domain(되돌리기는 custom domain 해제). `pitcheezy.com`은 홈 한 페이지를 **Cloudflare 정적 Worker로 옮겨** apex를 전환(위 (1) 배포 참조; 되돌리기는 DNS 레코드를 Sites로 복구, Sites는 전시 뒤까지 유지), "서비스 열기" → `https://app.pitcheezy.com/?game=849843`. 기존 QR(pitcheezy.com)이 그대로 유효하다.
 **대안 B:** pitcheezy.com 전체를 Worker로. 홈을 같이 두려면 형 앱을 `/app/` 아래에 두고 gateway에 `/app/v1` 처리를 추가해야 한다(코드 변경 + 다른 모델 검토 + DNS 변경).
 
 **공개 범위:** 시험(11/11)까지 접근 코드 ON. 전시 리허설(11/21)부터 OFF(일반 공개, 관람객 폰 QR). 긴급 안내 문구는 공개 전 확정 필요(현재 "개발용 안내 문구(승인 전)").
