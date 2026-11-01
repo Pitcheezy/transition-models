@@ -91,7 +91,7 @@ node ops/public-host-tooling/node_modules/wrangler/bin/wrangler.js deploy --conf
 
 - 출력의 **버전 ID(V2)** 를 기록한다(CHECKLIST 맨 위 줄·#38 기록용. 호스트명·계정은 쓰지 않는다). 2·4·6단계는 `<후보>/host/.wrangler`를 다시 만들 수 있다 — 배포 뒤 지운다.
 - 기존 비밀 4개(`ACCESS_CODE_SHA256`, `ACCESS_SESSION_SECRET`, `NOTICE_TOKEN_SHA256`, `PUBLISH_TOKEN_SHA256`)는 배포가 유지한다(Wrangler keepSecrets). 새로 넣지 않는다.
-- 되돌리기: `node ops/public-host-tooling/node_modules/wrangler/bin/wrangler.js rollback <V0 버전 ID> --config <후보>/host/wrangler.deploy.json` — 1단계에 적은 ID를 명시한다(9절).
+- 현재 재사용할 때 V0로 되돌리지 않는다. V0는 11/1 자격 교체 전의 과거 기록이다. 복구는 9절의 자격 교체 이후 후보 확인·사용자 승인 절차를 따른다.
 - 배포 직후 확인(접근 코드 없이, 토큰·코드를 환경에 넣기 전): `<시험호스트>/` → 401 입력 화면, `<시험호스트>/v1/manifest.json` → 401 + `X-Pitcheezy-Access: required`(게이트 ON. manifest는 아직 없다). 이 응답이 우리 gateway임을 확인한 출처만 5·7단계에 쓴다. 대시보드 Settings에서 Logs가 켜져 있는지 본다.
 - **버킷에는 WS-stage4 합성 22바이트 `v1/health.json`이 남아 있다.** 이 시점부터 5단계 교체 전까지 접근 코드로 로그인한 사람(우리만)은 `<시험호스트>/v1/health.json`에서 그 합성 파일을 읽는다. 형 앱 자료가 아니다.
 
@@ -187,7 +187,7 @@ Workers Logs(저장 ON)에서 버전 ID로 거르고 다음을 확인해 10/25 �
 
 | 상황 | 조치 |
 |---|---|
-| 새 버전이 잘못됨 | `node ops/public-host-tooling/node_modules/wrangler/bin/wrangler.js rollback <버전 ID> --config <후보>/host/wrangler.deploy.json` — 1·2·6단계에 적은 버전 ID를 **항상 명시**한다. 3단계(`secret put`) 뒤에는 인자 없는 `rollback`을 쓰지 않는다: 직전 배포(예: 4단계 업로드 ON 버전)로 가서 업로드 창을 다시 열 수 있다. 프롬프트의 버전 ID가 적어 둔 것과 같은지 보고 확인한다. R2·D1 내용은 그대로지만 **롤백은 그 버전의 비밀·변수를 되살린다**(비밀이 바뀌었으면 Wrangler가 확인을 묻는다). 롤백 뒤 `UPLOAD_ENABLED`(`/_publish` PUT → 503)·`PUBLISH_TOKEN_SHA256`·`ACCESS_CODE_SHA256`을 다시 확인하고, 토큰·코드 회전 **이전** 버전으로는 되돌리지 않는다(옛 토큰·코드가 살아난다). |
+| 새 버전이 잘못됨 | `node ops/public-host-tooling/node_modules/wrangler/bin/wrangler.js rollback <버전 ID> --config <후보>/host/wrangler.deploy.json` — 현재 관리 화면에서 마지막 배포와 자격 교체 이력을 확인하고 **모든 자격 교체 이후이며 업로드 OFF인 승인된 후보 ID만** 명시한다. 이 문서의 V0·2·6단계 버전은 후속 자격 교체보다 앞서므로 복구 대상으로 사용하지 않는다. 적합한 후보가 없으면 현 자격을 보존한 수리 배포안을 준비하고 승인을 받는다. 3단계(`secret put`) 뒤에는 인자 없는 `rollback`을 쓰지 않는다: 직전 배포(예: 4단계 업로드 ON 버전)로 가서 업로드 창을 다시 열 수 있다. 프롬프트의 버전 ID가 적어 둔 것과 같은지 보고 확인한다. R2·D1 내용은 그대로지만 **롤백은 그 버전의 비밀·변수를 되살린다**(비밀이 바뀌었으면 Wrangler가 확인을 묻는다). 복구 뒤 업로드 OFF·접근 ON 설정과 승인된 유한 검사 결과를 확인한다. 비밀 원문을 조회·출력하지 않는다. `PUBLISH_TOKEN_SHA256`·`ACCESS_CODE_SHA256`·`NOTICE_TOKEN_SHA256`의 교체 이력을 대조하고, 토큰·코드 회전 **이전** 버전으로는 되돌리지 않는다(옛 토큰·코드가 살아난다). |
 | 자료를 숨겨야 함(긴급) | 안내 스위치 ON(`notice-cli`, 운영자 토큰) — 화면·자료 503. 또는 `DATA_READ_ENABLED:false`로 재배포. |
 | 올린 파일 회수 | 키별 HEAD 계획(`--head`)으로 현재 ETag → DELETE 계획(`if_match`) `--execute`(묘비 기록, 물리 삭제 아님). 업로드 창(4단계)이 열려 있어야 하고, 토큰 파일을 이미 지웠으면 3단계를 다시 해 새 토큰을 만든다. |
 | 토큰 회수 | 새 helper 실행 → `secret put PUBLISH_TOKEN_SHA256`(옛 토큰 즉시 무효) 또는 업로드 OFF 유지. 토큰 파일 폐기. |
@@ -201,4 +201,4 @@ Workers Logs(저장 ON)에서 버전 ID로 거르고 다음을 확인해 10/25 �
 
 ## 하지 않은 것 (2026-11-01 실행 뒤 기준)
 
-DNS·custom domain·Sites 변경 없음(④). 8단계 비식별 로그 영수증과 폰 경기 화면 확인은 위 "남은 ③ 꼬리"(안내 ON→OFF 시험은 ③-6으로 완료). 홈 설정(`ops/public-home`)은 dry-run만 했고 배포하지 않았다. 후보 폴더·ZIP·계획·영수증·메모는 Git 밖, 토큰 파일은 삭제했고 접속 코드 파일은 사용자 보관.
+④-a 앱 Route·④-b 홈 Worker/www·media R2는 위 오후 기록대로 실행됐다. apex의 Sites 연결 해제·전환은 미실행이다. 8단계 비식별 로그 영수증과 폰에서 849843 지정 경기/QR 전체 동선 기록은 남는다. iPhone 경기/추천과 홈 영상 확인은 사용자 보고가 있으나 지정 경기 ID·복원 지연 측정과 구분한다. 후보 폴더·ZIP·계획·영수증·메모는 Git 밖, 토큰 파일은 삭제했고 접속 코드 파일은 사용자 보관.

@@ -35,7 +35,7 @@
 | 클립 하나만 오류 | "다음 공 →"으로 넘어가고 끝나고 기록. |
 | 모니터 2 전체 화면에서 공 표시가 안 보임 | 플레이어의 "전체 화면" 버튼을 쓴다(영상 자체의 전체 화면 버튼은 공 정보를 가린다). |
 | 관람객 폰에서 추천이 안 보이고 "자료를 확인하고 있어요" | 안내 스위치가 켜진 상태다. 의도한 게 아니면 끈다(아래). |
-| 호스트 장애(자료 503, 화면 깨짐) | 운영자 토큰 보유자가 **안내 스위치 ON**(절차 ops/public-host/NOTICE.md, `notice-cli.mjs --plan … --execute`). 폰 화면은 추천을 숨기고 안내만 보여 준다. 원인 해결 뒤 OFF. 모니터 1·2는 로컬이라 계속 돈다. |
+| 호스트 장애(자료 503, 화면 깨짐) | 운영자 토큰 보유자가 **안내 스위치 ON**(절차 ops/public-host/NOTICE.md, `notice-cli.mjs --plan … --execute`). 폰 화면은 추천을 숨기고 안내만 보여 준다. 원인 해결 뒤 OFF. 모니터 2는 로컬이라 계속 쓸 수 있다. 모니터 1도 Song의 로컬 재생 경로로 준비한 경우에만 호스트 장애와 분리된다. 공개 앱을 쓰는 경우에는 함께 영향을 받으므로 리허설에서 로컬 대체 경로를 확인한다. |
 | 폰이 "접속 코드" 화면 | 접근 코드가 켜져 있다. 전시 중엔 꺼야 한다(Cloudflare 설정 `ACCESS_GATE_ENABLED=false`, 사용자 계정). |
 | 요청량 | Cloudflare 대시보드 Workers 요청 수를 점심·저녁에 확인. 무료 한도 하루 100,000. 화면 하나가 시간당 약 480요청이므로 열린 폰 200대·시간 정도까지 여유. 넘을 것 같으면 Paid($5/월)로 올린다(사용자 결정). |
 
@@ -49,7 +49,7 @@
 - [ ] 실제 전시 노트북에서 verify → serve → Chrome 재생, 전체 화면, 소리 설정(모니터 2는 무음 권장)
 - [ ] 두 모니터 같은 공 맞추기 3회(1회 초, 9회 초 제외구, 마지막 공)
 - [ ] 폰 2종(iPhone·Android)으로 QR → `pitcheezy.com` 홈 → "서비스 열기" → 서비스까지 (포스터 QR은 홈 경유가 기준)
-- [ ] iPhone Safari에서 홈 영상 재생 확인. 전제: apex 전환 전에 임시 시험 호스트명(또는 preview_urls 잠깐 ON)으로 `curl.exe -s -D - -o NUL -H "Range: bytes=0-1" https://<시험호스트명>/media/hero-849843-four-pitches-v1.mp4` → **206**을 확인했을 것([ops/public-home/README.md](../ops/public-home/README.md) 5단계). 200이면 mp4를 R2 custom domain에서 서비스하거나 사진만 둔다(home.js가 재생 실패 시 사진으로 전환). 실제 Cloudflare edge에서는 미검증.
+- [ ] iPhone Safari에서 전환된 apex 홈 영상 재생 확인. 실제 영상 주소 `https://media.pitcheezy.com/hero-849843-four-pitches-v1.mp4`에 `Range: bytes=0-1` 요청 → 206·Content-Range를 확인한다. 11/1 Claude 기록과 Codex 공개 응답 재조회에서 media 206을 확인했다. 홈 Worker의 옛 `/media/...` 경로는 합격 검사 대상이 아니다. 영상 실패 시 home.js가 미리보기 사진으로 전환한다. 임시 홈에서의 사용자 iPhone 재생 확인과 전환 후 QR 전체 동선 확인은 별개다.
 - [ ] 안내 스위치 ON→OFF 1회(폰 화면 확인), 접근 코드 OFF 확인
 - [ ] 서버 강제 종료 → 재시작 → 같은 주소 복구
 - [ ] 역할: 모니터 조작 1명, 호스트·폰 응대 1명, 형 연락 창구 1명

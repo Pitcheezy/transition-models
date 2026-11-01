@@ -14,7 +14,7 @@
 - 실행 전 설명: [docs/EXHIBIT_HOST_PLAN_20261101.md](EXHIBIT_HOST_PLAN_20261101.md). 형 회신 초안(미발신): [mail_drafts/EXHIBIT-song-reply-20261101.md](mail_drafts/EXHIBIT-song-reply-20261101.md).
 - 중단되면: `git -C <작업 폴더> status`로 미커밋 파일을 확인하고, 위 두 문서와 CHECKLIST 맨 위를 읽은 뒤 남은 단위만 이어간다. 실제 배포·도메인·형 발신은 사용자 승인 전 금지.
 
-먼저 PLAN.md와 CHECKLIST.md 상단을 읽는다. 현재 폴더는 codex/exhibition-intake-1101 전용 worktree이며 이전 site-first, Claude site-games2와 별개다. 기존 코드·연구·비공개 자료를 삭제하지 않는다. 팀원 저장소·도메인·Sites는 변경하지 않는다(우리 Cloudflare 시험 Worker는 11/1 사용자 승인으로 변경했고, 추가 변경은 매번 설명·승인 뒤).
+먼저 PLAN.md와 CHECKLIST.md 상단을 읽는다. 현재 지정 폴더는 C:/Users/zpfh1/Projects/transition-models-exhibit-1101, 브랜치는 claude/exhibit-host1-1101이다. 이전 Codex intake/site-first와 Claude site-games2 폴더는 읽기만 한다. 최신 진입은 CODEX_HANDOFF_EXHIBIT_20261101.md와 CHECKLIST 상단이다. 기존 코드·연구·비공개 자료를 삭제하지 않는다. 팀원 저장소·도메인·Sites는 변경하지 않는다(우리 Cloudflare 시험 Worker는 11/1 사용자 승인으로 변경했고, 추가 변경은 매번 설명·승인 뒤).
 
 현재 단계/합격 근거는 CHECKLIST.md가 정본이다. 아래는 재개 방법이다.
 
