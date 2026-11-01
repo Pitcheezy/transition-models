@@ -6,6 +6,8 @@
 
 ## 현재 재개 위치
 
+사용자 등록이 최초 조회에서 중단된 경우 [중단·복구 근거](results/exhibition_20261101/stage2-registration-stop.json)를 먼저 확인한다. 이전 registration.started와 오류로그는 보존하며 삭제하지 않는다. 검토된 --resume-before-secrets는 최초버전·비밀0·등록원장 부재를 다시 확인하는 사용자 일회 실행이다. 재개 표식 또는 pending이 생겼으면 이 복구를 반복하지 않는다.
+
 단계2는 [배포 영수증](results/exhibition_20261101/scoped-worker-deployed.json)·[등록 도구 검토](results/exhibition_20261101/stage2-registration-review.json)를 먼저 확인한다. 완료된 Worker 배포를 반복하지 않는다. 사용자 등록 완료 답변 뒤 비공개 등록 원장의3버전·최종 비밀 이름/vars/bindings를 읽어 확인하고, 사용자의 Logs/Web Analytics·DNS/Route 확인점으로 이어간다. 등록 실행기가 STOP 또는 시작 표식을 남겼으면 재실행하거나 비밀 등록 이전 버전으로 되돌리지 않는다. 일반 원격 검증기는 자료 업로드 뒤에만 사용하며 단계2는 `scripts/verify_exhibit_stage2_predata.py`의 고정15요청이다. DNS 생성 확인 전 실행 금지. 서비스HTTP 원장의 실제 실행 여부와 작업 담당은 CHECKLIST만 정본이며, 단계3 자료 업로드와 이후 전환은 별도 승인이다. 이번 기록은 미push로 유지한다.
 
 새 호스트를 준비할 때는 [고정 후보·승인 단계별 실행서](EXHIBIT_SCOPED_HOST_PREPARATION_20261101.md)를 따른다. 단계1 자원 생성 결과가 있으면 비공개 원장의 완료 영수증과 새 DB ID를 재조회하고 이어가며 같은 이름을 다시 만들지 않는다. 실제 상태는 CHECKLIST 최상단을 따른다. 합성 자원 설정을 실제 배포하지 않는다. HEAD6/PUT6 계획과 후보는 비공개로 보관하며 실제 생성·배포·발신 여부는 CHECKLIST만 정본이다.
