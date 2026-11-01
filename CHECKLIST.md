@@ -3,6 +3,9 @@
 ## 현재 전시 준비 — 2026-11-01
 
 
+**EXHIBIT-host2 대시보드 캡처 확인 — 2026-11-02:** 사용자 제공 두 캡처에서 workers.dev/Preview URL OFF, Custom Domains/Routes 없음, Logs ON·Invocation ON·Persist ON·Sampling100%, Traces/Issues OFF를 실제 판독했다. [비식별 캡처 확인 기록](docs/results/exhibition_20261101/stage2-dashboard-confirmed.json)에 이미지SHA만 연결하고 원본은 비공개 첨부로 보존한다. 이는 사용자 캡처 증거이며 실제 요청 로그 저장 검증은 아니다. 남은 확인점은 Web Analytics 자동 설치 Disabled 확인 한 가지다. 이후 사용자만 정확한 새 AAAA/Route를 추가하며, 생성 확인 전 DNS조회/서비스HTTP 금지·고정15요청 입력 ready=false 유지. 추가배포·등록·업로드·발신·push 없이 기록만 갱신한다. 아래 대시보드 전체 미확인 문장은 이전 이력이다.
+
+
 **EXHIBIT-host2 비밀3개 등록·관리 대조 완료 — 2026-11-02:** 사용자 직접 일회 복구 실행으로 ACCESS_CODE_SHA256 → NOTICE_TOKEN_SHA256 → ACCESS_SESSION_SECRET을 등록했다(등록 시각은 11/1 23:56 KST). 등록원장 pending 없음, 관리 secret list 정확히3개·발행토큰 없음, 최종 적용 버전 `a2574c2f-9b63-4cfd-b640-d9fdd4628f8e` 100%를 대조했다. 설정SHA `a7c4464ed07c29830a508b612c45baf00eb9faf60e4806d76fc50d35c5097b77`·변수11·ASSETS/R2/D1·제한카운터2·호환일·인증 우선 자산 처리 등13항목 통과. 제한카운터는 provider 반환 순서가 달라 이름 기준으로 대조했으며 실제 설정 차이는 없다. 최초배포+등록3회 버전과 영수증은 [등록 완료 기록](docs/results/exhibition_20261101/stage2-registration-complete.json)에 보존했다. 비밀 원문 읽기/발행토큰 생성/추가 배포/자료업로드/서비스HTTP는0이다. Codex / claude/exhibit-host1-1101은 기록을 마치고 대시보드 확인점 대기: 사용자 Logs100%·persist·workers.dev/preview OFF·Route없음·Analytics Disabled 확인 → 사용자 정확한 AAAA/Route 등록 → 고정15요청 인수. DNS 등록 확인 전 조회 금지, 등록 도구 재실행 금지. 다음 단계 자료6 업로드·안내·app전환은 별도 승인이다. 기록은 미push·형 회신 보류를 유지한다. 아래 등록 대기/중단 문장은 이전 이력이다.
 
 
