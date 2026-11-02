@@ -1,0 +1,109 @@
+{
+  "schema": "pitcheezy-stage5-dashboard-preflight-v1",
+  "recorded_at_utc": "2026-11-02T13:08:33.057917+00:00",
+  "status": "awaiting_user_edit_dialog_and_current_log_settings",
+  "public_origin": "https://app.pitcheezy.com",
+  "route_observation": {
+    "source": "user_supplied_current_dashboard_screenshot",
+    "rows_visible": 5,
+    "exact_app_pattern": "app.pitcheezy.com/*",
+    "matched_rows": 1,
+    "new_target_already_has_separate_trial_route": true,
+    "host_wildcard_visible": false,
+    "api_route_id": null,
+    "ui_identity": "unique_exact_pattern_and_current_target",
+    "changed": false
+  },
+  "management_cli_calls": 6,
+  "management_object_reads": 2,
+  "targets": {
+    "old": {
+      "version": "6d652d4b-7d3c-4897-aefd-f37d0edce50c",
+      "single_version_100_percent": true,
+      "expected_switches_match": true,
+      "switches": {
+        "ACCESS_GATE_ENABLED": "true",
+        "DATA_READ_ENABLED": "true",
+        "UPLOAD_ENABLED": "false",
+        "TELEMETRY_ENABLED": "false",
+        "FEEDBACK_ENABLED": "false"
+      },
+      "secret_names": [
+        "ACCESS_CODE_SHA256",
+        "ACCESS_SESSION_SECRET",
+        "NOTICE_TOKEN_SHA256",
+        "PUBLISH_TOKEN_SHA256"
+      ]
+    },
+    "new": {
+      "version": "5999cf0d-4f18-4d43-bcd6-320e04860369",
+      "single_version_100_percent": true,
+      "expected_switches_match": true,
+      "switches": {
+        "ACCESS_GATE_ENABLED": "true",
+        "DATA_READ_ENABLED": "true",
+        "UPLOAD_ENABLED": "false",
+        "TELEMETRY_ENABLED": "false",
+        "FEEDBACK_ENABLED": "false"
+      },
+      "secret_names": [
+        "ACCESS_CODE_SHA256",
+        "ACCESS_SESSION_SECRET",
+        "NOTICE_TOKEN_SHA256",
+        "PUBLISH_TOKEN_SHA256"
+      ]
+    }
+  },
+  "notice_states": {
+    "old": {
+      "active": false,
+      "revision": 8,
+      "updated_at": "2026-11-01T08:39:41.864Z",
+      "read_at_utc": "2026-11-02T13:06:26.443827+00:00"
+    },
+    "new": {
+      "active": false,
+      "revision": 2,
+      "updated_at": "2026-11-01T16:52:55.233Z",
+      "read_at_utc": "2026-11-02T13:06:29.010381+00:00"
+    }
+  },
+  "dry_runs": {
+    "cutover": {
+      "input_sha256": "ea50b37a0de7c20c95cef696ac863c83f26c3e897bc811d347c8ea6122f540e4",
+      "mode": "local_dry_run",
+      "passed": true,
+      "phase": "cutover",
+      "approved": false,
+      "service_requests": 0,
+      "files": 10,
+      "budget": {
+        "cutover": 24,
+        "rollback": 5,
+        "cycle": 29
+      }
+    },
+    "rollback": {
+      "input_sha256": "5cdd2f1ac5706a152de28a495c05d0d29a0e1111399119cddd36fe68778726e5",
+      "mode": "local_dry_run",
+      "passed": true,
+      "phase": "rollback",
+      "approved": false,
+      "service_requests": 0,
+      "files": 2,
+      "budget": {
+        "cutover": 24,
+        "rollback": 5,
+        "cycle": 29
+      }
+    }
+  },
+  "service_requests": 0,
+  "route_mutations": 0,
+  "dns_mutations": 0,
+  "deployments": 0,
+  "credential_mutations": 0,
+  "current_logging_settings": "not_freshly_verified",
+  "execution_window_created": false,
+  "actual_execution_started": false
+}
