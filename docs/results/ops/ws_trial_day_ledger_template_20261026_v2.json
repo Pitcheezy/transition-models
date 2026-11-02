@@ -1,0 +1,205 @@
+{
+  "schema": "pitcheezy-joint-trial-ledger-template-v2",
+  "status": "DRAFT_NOT_EXECUTABLE; exact runner rows, owners, caps and both GO required",
+  "supersedes_for_future_use": "ws_trial_day_ledger_template_20261026.json (retained historical v1)",
+  "window": {
+    "start_utc": null,
+    "end_utc": null,
+    "publish_expires_at_utc": null,
+    "minimum_expiry_margin_seconds_at_start": 180,
+    "single_writer": "Song runner",
+    "unused_key_and_key_plus_one_confirmed": false,
+    "scope_exact_key": null,
+    "stop_contact_confirmed": false,
+    "both_go_utc": null
+  },
+  "fixed_inputs": {
+    "runner_commit": null,
+    "runner_files_sha256": {},
+    "review_reference": null,
+    "host_runtime_commit": null,
+    "ui_commit": null,
+    "ui_index_sha256": null,
+    "main_version": null,
+    "cookie_valid_beyond_window": false
+  },
+  "request_fields": {
+    "owner": null,
+    "method": null,
+    "path_template": null,
+    "expected_status": null,
+    "expected_headers": {},
+    "actual_status": null,
+    "started_utc": null,
+    "completed_utc": null,
+    "cf_ray": null,
+    "etag": null,
+    "x_publish_deleted": null,
+    "cf_cache_status": null,
+    "age": null,
+    "date": null,
+    "server_event_utc": null,
+    "server_version": null,
+    "correlation": "not_run"
+  },
+  "header_allowlist": [
+    "CF-Ray",
+    "ETag",
+    "X-Publish-Deleted",
+    "CF-Cache-Status",
+    "Age",
+    "Date",
+    "Cache-Control",
+    "CDN-Cache-Control"
+  ],
+  "never_record_headers": [
+    "Authorization",
+    "Cookie",
+    "Set-Cookie"
+  ],
+  "phases": [
+    {
+      "id": "credential_setup",
+      "owner": "us",
+      "service_cap": null,
+      "requests": [],
+      "note": "Any login or owner probe counts separately before GO; A public GET also needs viewer cookie"
+    },
+    {
+      "id": "root_preflight",
+      "owner": "Song",
+      "service_cap": 1,
+      "requests": [
+        {
+          "method": "HEAD",
+          "path_template": "/",
+          "expected_status": 200
+        }
+      ],
+      "note": "Same no-User-Agent http.client and cookie as agreed; no exception inferred from this template"
+    },
+    {
+      "id": "scope_negative",
+      "owner": "Song",
+      "service_cap": 1,
+      "requests": [
+        {
+          "method": "HEAD",
+          "path_template": "/_publish/v1/game/<key-plus-one>.json",
+          "expected_status": 403
+        }
+      ],
+      "note": "If wrapper emits this automatically, do not add another host probe; agree whether inside or outside main cap"
+    },
+    {
+      "id": "main",
+      "owner": "Song",
+      "service_cap": null,
+      "duration_cap_seconds": null,
+      "requests": [],
+      "note": "Expand every HEAD/PUT/GET/DELETE row from reviewed runner, including negative/conditional calls. No 3..N collapsed row"
+    },
+    {
+      "id": "expired",
+      "owner": "Song",
+      "service_cap": 1,
+      "wait_for": "expiry passed; main stopped; no retries",
+      "requests": [
+        {
+          "method": "HEAD",
+          "path_template": "/_publish/v1/game/<key>.json",
+          "expected_status": 403
+        }
+      ]
+    },
+    {
+      "id": "revoked",
+      "owner": "Song",
+      "service_cap": 1,
+      "wait_for": "host confirms digest rotation version; upload still ON",
+      "requests": [
+        {
+          "method": "HEAD",
+          "path_template": "/_publish/v1/game/<key>.json",
+          "expected_status": 401
+        }
+      ]
+    },
+    {
+      "id": "off",
+      "owner": "Song",
+      "service_cap": 1,
+      "wait_for": "host confirms upload/read OFF version",
+      "requests": [
+        {
+          "method": "HEAD",
+          "path_template": "/_publish/v1/game/<key>.json",
+          "expected_status": 503
+        }
+      ]
+    },
+    {
+      "id": "viewer_revoke",
+      "owner": null,
+      "service_cap": null,
+      "requests": [],
+      "note": "Remove today viewer credential even without probe budget; HTTP401 is NOT_MEASURED unless separately agreed and run"
+    }
+  ],
+  "normal_cleanup_order": [
+    "expired_once",
+    "host_rotate_digest",
+    "revoked_once",
+    "host_upload_read_off",
+    "off_once",
+    "host_remove_scope_and_expiry",
+    "host_remove_trial_viewer_keep_owner_backup"
+  ],
+  "emergency_order": [
+    "host_upload_off_immediately",
+    "host_read_off_if_needed",
+    "host_revoke_and_cleanup",
+    "mark_unmeasured_probes; never_reenable_for_401"
+  ],
+  "followup_service_cap": 3,
+  "retries_per_phase": 0,
+  "followup_budget_transfer_between_phases": false,
+  "on_unknown_or_budget_exhausted": "STOP main; no retries. After STOP, only both-agreed cleanup probes with remaining reserved slots and stage signals may proceed. If scope, signal or budget is absent, make no service request and complete authorized management cleanup. Never transfer another phase slot",
+  "state_contract": {
+    "private_tombstone_HEAD": {
+      "status": 200,
+      "X-Publish-Deleted": "true",
+      "ETag": "deletion ETag"
+    },
+    "public_deleted_HEAD": {
+      "status": 404
+    }
+  },
+  "management_events": [],
+  "management_event_fields": [
+    "step",
+    "time_utc",
+    "version_before",
+    "version_after",
+    "receipt_sha256",
+    "settings_confirmed",
+    "service_request_count"
+  ],
+  "totals": {
+    "agreed_service_cap": null,
+    "actual_service_count": null,
+    "management_count": null
+  },
+  "reconciliation": {
+    "main_version_unchanged": null,
+    "approved_cleanup_version_chain": [],
+    "client_to_server_matches": [],
+    "unmatched_requests": []
+  },
+  "notes": [
+    "Private completed ledger only; do not paste credentials or origin",
+    "No notice/B requests unless explicitly added to cap before GO",
+    "Historical 18/120 and follow-up3 are not an automatic authorization for another window"
+  ],
+  "outcome": "NOT_RUN"
+}
