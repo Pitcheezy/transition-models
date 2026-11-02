@@ -22,6 +22,21 @@
 
 - [x] WS-trial2. 2026-10-26 공동시험 우리 측 준비 완료(10/26 20:45 KST, 문서만). [당일 준비](docs/WS_JOINT_TRIAL_DAY_20261026.md)·[영수증](docs/results/ops/ws_trial_day_20261026.json)·[원장 템플릿](docs/results/ops/ws_trial_day_ledger_template_20261026.json)·[미발신 초안](docs/mail_drafts/COLLAB-001-joint-trial-day-20261026.md). Codex 세션 관측 보고(19:59~20:04: 배포 d714e7fb 100%, 원격 worker.js SHA 3312fbff… 일치, 접근문ON·업로드/읽기/수집/피드백OFF, 기존 만료 경과, 오늘 로그 표본1건 저장 확인, 안내 로그12/13 불변)를 출처 구분해 기록. A(합성 전송·회수) 완료 기준·오늘용 설정안(단일 키 scope·절대 UTC 만료·새 digest 준비·창 후 회수)·요청 원장 템플릿·정상 종료/긴급 차단·중단 규칙, B(실제 경기 화면) 완료 기준·로컬 검사·대기 분리, 새 ZIP 인수 순서, 형에게 받을 최소 자료·사람 결정 최소 항목을 고정. Song board 18:45: e53b89a7 교체·결함3건 수정 보고(미검증)·10/27 14:00~17:00 제안(#38 미회신) — 창 확정은 사람 결정. 20:35 판단: A HOLD(절차·새 자격·scope/만료·원장 미확정), B 대기. Cloudflare 조회/변경·서비스 요청·배포·자격 등록·발신·운영 코드 변경 없음(교차검토 대상 없음). 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-26 · Claude]`
 
+## 공동시험 경로·호스트 현재 조회 — 2026-10-26
+
+사용자 확정(2026-10-26 KST): 최종 전시회는 **2026-11-24**, 공동 연결시험은 **시간 제약 없이 언제든 참여 가능**하다. 형이 제안할 구체 날짜·시각(KST)은 별도 확정하며, 이 참여 의사만으로 새 자격·접속·배포·실제 시작 GO를 승인한 것은 아니다.
+
+- [!] WS-ready1. 관리 API2회 현재 조회·GATE-06 PR64 병합 오기 정정·미발신 시험 경로 요청 초안·체크리스트8검사 완료. 사용자 승인 Claude 문서 검토1회는 OAuth만료401로 미완료이며, 새 공동시험 경로/창/양측GO도 대기. [근거](docs/WS_TRIAL_READINESS_20261026.md). 새 공동시험/접속/배포/발신 없음, 요금제·부하11월 보류. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-26 · Codex]`
+
+문서 작성·동일 모델 대조 완료·수정 권한 반납: 우리 Codex / `codex/ws-trial-readiness-1026` / 기준 main `4e6aba7`. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6400618334). 실제 작성·검토 모델은 검토 기록에 따로 남긴다.
+
+## PR64 병합·최종 발표 독립 준비 — 2026-10-25
+
+- [x] H-main4. 사용자 승인으로 PR64 head `2208b4f`의 기존 검토·최종 CI2/2 성공을 확인하고 main `4e6aba71487ffe0c2ce9dd6df658ca9db9da9953`에 병합했다. 실제 배포 변경은 없다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-25 · Codex]`
+- [x] P-final1. [발표 준비팩](docs/presentation/README.md)에 설명8주제·기존 포스터 참고 문안·질의응답12개·기여8범주·실행/대체 동선·검증 기록을 묶었다. 기존 사이트/스냅샷·체크리스트8 검사 및 앱 브라우저3구 재생/결과공개/미트 정지장면/숨김/수동공개 확인. 사용자 확인: 기존 포스터 있음·발표 제한시간 없음·PPT 불필요. 새 제작/학교 규격은 잔여 조건에서 제외한다. 새 팀원본/공동시험·최종기기/현장 설명은 미완료이며 최신 포스터 내용은 미검토다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-25 · Codex]`
+
+사용자 형식 확정 반영·검증 완료·수정 권한 반납: 우리 Codex / `codex/final-presentation-prep-1025` / 기준 main `4e6aba7`. [합격 기준](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6395109919). 팀원 코드/프로세스/배포·우리 Cloudflare 미변경, 요금제·동시접속 시험11월 보류. 아래 미병합 문구는 당시 이력이다.
+
 ## PR63 병합·운영 증거 PR64 검토 — 2026-10-25
 
 - [x] H-main3. 사용자 승인으로 PR63 고정 `e09c9d2`의 코드 불변·최종CI8/8을 재확인하고 main `06aa6d0f3ad24a7e9f0649491f9887283d8f77d8`에 병합했다. [PR63](https://github.com/Pitcheezy/transition-models/pull/63). 실제 배포는 변경하지 않았다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-25 · Codex]`
@@ -52,12 +67,12 @@
 ## 현재 협업 우선순위 — 2026-10-25
 
 - 본인 호스트 배포·접속·관람/발행 회수 완료와 실제 공동시험을 구별한다. [현재 순서·본인 결정](docs/WS_COLLAB_V1_ACTIONS.md)을 따른다. 새 전달본 → 로컬 인수 → 새 시험 창/권한/GO → 공동시험 순서이며 전시회 용량은11월 보류다.
-- [x] WS-publish4. 고정 runtime 배포·원격 바이트 일치·동일 발행 bearer HEAD404→회수401→업로드OFF503과 저장 로그3건을 대조했다. [PR64 고정 근거](https://github.com/Pitcheezy/transition-models/blob/abddb240a698e91923d14ef413e36081a4af5315/docs/WS_PUBLISHER_REVOCATION_20261025.md). 실제 파일 PUT/DELETE·만료 경계·Song 공동시험은 포함하지 않는다. PR64는 main 미병합이다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-25 · Codex]`
+- [x] WS-publish4. 고정 runtime 배포·원격 바이트 일치·동일 발행 bearer HEAD404→회수401→업로드OFF503과 저장 로그3건을 대조했다. [PR64 고정 근거](https://github.com/Pitcheezy/transition-models/blob/abddb240a698e91923d14ef413e36081a4af5315/docs/WS_PUBLISHER_REVOCATION_20261025.md). 실제 파일 PUT/DELETE·만료 경계·Song 공동시험은 포함하지 않는다. PR64는 사용자 승인 후 main `4e6aba7`에 병합됐다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-25 · Codex]`
 - [!] WS-notice3. 본인 안내ON/OFF·같은세션/본문복구·안내시험자격 회수 기능13요청 통과, 저장 로그12/13. OFF PUT1건은 재조회도 미확인으로 전체 증거 합격 대기다. [고정 기록](https://github.com/Pitcheezy/transition-models/blob/abddb240a698e91923d14ef413e36081a4af5315/docs/WS_NOTICE_TRIAL_20261025.md)·[재조회](docs/results/ops/ws_notice_log_recheck_20261025.json). 원래 요청 재실행으로 대체하지 않는다. 〔모델: Fable 5.1〕 `[추가되었음 · 2026-10-25 · Codex]`
 
 PR64 기존 착수 근거: [발행 시험](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6387400853), [안내 시험](https://github.com/Pitcheezy/transition-models/issues/3#issuecomment-6387602964). 중복 태스크를 새로 만들지 않고 위 WS-publish4·WS-notice3가 현재 상태를 유지한다.
 
-아래 날짜별 미완료·다음 작업 문구는 당시 이력이다. PR65는 main `e12ac00`, PR63은 main `06aa6d0`에 병합했고 PR64는 main 미병합이며, 증거 링크의 고정 커밋과 실제 배포 소스를 구별한다.
+아래 날짜별 미완료·다음 작업 문구는 당시 이력이다. PR65는 main `e12ac00`, PR63은 main `06aa6d0`, PR64는 main `4e6aba7`에 병합됐으며, 증거 링크의 고정 커밋과 실제 배포 소스를 구별한다.
 
 ## 전시회 30/50명 로컬 준비 · 로그 재조회 — 2026-10-25
 
