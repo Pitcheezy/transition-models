@@ -1,0 +1,62 @@
+{
+  "schema": "pitcheezy-stage5-preflight-v1",
+  "status": "partial_ui_access_pending",
+  "baseline_commit": "9a3f4b6",
+  "observed_at_utc": "2026-11-02T12:47:46.659046+00:00",
+  "public_origin": "https://app.pitcheezy.com",
+  "new_target": {
+    "version": "5999cf0d-4f18-4d43-bcd6-320e04860369",
+    "single_version_100_percent": true,
+    "expected_switches_match": true,
+    "switches": {
+      "ACCESS_GATE_ENABLED": "true",
+      "DATA_READ_ENABLED": "true",
+      "UPLOAD_ENABLED": "false",
+      "TELEMETRY_ENABLED": "false",
+      "FEEDBACK_ENABLED": "false"
+    },
+    "secret_names": [
+      "ACCESS_CODE_SHA256",
+      "ACCESS_SESSION_SECRET",
+      "NOTICE_TOKEN_SHA256",
+      "PUBLISH_TOKEN_SHA256"
+    ]
+  },
+  "source_zip_sha256": "3c3b8006b892872bfff3423e2bd6ba49ea3de17ee92fbecef07e0b076bc8da51",
+  "stage5_runtime_sha256": "64bbf3a7737a851a93504ca460be4f45e2356c6c0e58b675466dea47eaa26d4e",
+  "preparation_plan_approved": false,
+  "actual_execution_plan_created": false,
+  "not_yet_verified": [
+    "current_app_route_id_and_target",
+    "duplicate_or_overlapping_routes",
+    "old_target_current_version_and_settings",
+    "both_targets_current_notice_state",
+    "both_targets_current_logging_and_domains_configuration"
+  ],
+  "ui_observation": "computer_use_app_approval_timed_out",
+  "route_mutations": 0,
+  "dns_mutations": 0,
+  "deployments": 0,
+  "credential_mutations": 0,
+  "service_requests": 0,
+  "management_cli_calls": 3,
+  "raw_outputs": "private_only",
+  "credential_values_read_by_agent": false,
+  "next": "restore_ui_access_then_fresh_route_and_both_target_preflight_before_any_route_mutation",
+  "full_cutover_acceptance": "not_run",
+  "public_app_phone": "not_tested_after_cutover",
+  "stage5_server_logs": "not_generated",
+  "existing_trial_evidence": {
+    "stage3_server_events_matched": 13,
+    "stage4_server_events_matched": 120,
+    "missing": 0,
+    "duplicate": 0,
+    "mismatch": 0,
+    "iphone_safari": "user_confirmed",
+    "iphone_chrome": "user_confirmed"
+  },
+  "unrelated_evidence_not_closed": [
+    "2026-10-26_two_unmatched_requests",
+    "old_host1_log_tail"
+  ]
+}
