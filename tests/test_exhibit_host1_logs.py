@@ -5,8 +5,11 @@ import json
 import re
 import subprocess
 import sys
+import tempfile
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
+
+import pytest
 
 SCRIPT = Path(__file__).parents[1] / "scripts" / "summarize_exhibit_host1_logs.py"
 SPEC = importlib.util.spec_from_file_location("exhibit_host1_logs", SCRIPT)
@@ -458,9 +461,14 @@ def test_duplicate_ray_is_reported_and_fails_global_expectation(tmp_path):
 
 def test_expectations_file_outside_repo_is_rejected(tmp_path):
     export = Builder().full().write(tmp_path)
-    table = write(tmp_path / "expectations.json", tool.EXPECTATIONS)
-    code, summary, _ = run("--private-root", tmp_path / "private", "--logs", export, "--expectations", table,
-                           "--output", tmp_path / "r.json")
+    # pytest's tmp_path may sit inside the checkout (CI uses a basetemp under the repo), so the table goes to
+    # the system temp directory; if even that resolves inside the repo the premise is gone and the test skips.
+    with tempfile.TemporaryDirectory() as outside:
+        if Path(outside).resolve().is_relative_to(tool.REPO_ROOT):
+            pytest.skip("system temp directory is inside the repository; cannot stage an outside file")
+        table = write(Path(outside) / "expectations.json", tool.EXPECTATIONS)
+        code, summary, _ = run("--private-root", tmp_path / "private", "--logs", export, "--expectations", table,
+                               "--output", tmp_path / "r.json")
     assert code == 2 and summary == {"passed": False, "error": "expectations_outside_repo"}
 
 
