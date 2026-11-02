@@ -27,6 +27,20 @@ test("actual local Worker/R2 runtime: publish, conditional updates, withdrawal a
     await mf.ready;
     const call = (route, init) => mf.dispatchFetch("http://localhost" + route, init);
     const route = "/v1/game/123.json";
+    const privateHead = async (status, etag = null, deleted = null) => {
+      const started = Date.now();
+      const response = await call("/_publish" + route, { method: "HEAD", headers: { Authorization: "Bearer " + token } });
+      const finished = Date.now();
+      assert.equal(response.status, status);
+      assert.equal(response.headers.get("Cache-Control"), etag ? "no-store, no-transform" : "no-store");
+      assert.equal(response.headers.get("CDN-Cache-Control"), "no-store");
+      assert.equal(response.headers.get("Age"), "0");
+      const date = Date.parse(response.headers.get("Date"));
+      assert.ok(Number.isFinite(date) && date >= Math.floor(started / 1000) * 1000 && date <= finished);
+      assert.equal(response.headers.get("ETag"), etag);
+      assert.equal(response.headers.get("X-Publish-Deleted"), deleted);
+      assert.equal(await response.text(), "");
+    };
     const put = (body, condition) => call("/_publish" + route, {
       method: "PUT", body, headers: {
         Authorization: "Bearer " + token, "Content-Type": "application/json",
@@ -40,6 +54,7 @@ test("actual local Worker/R2 runtime: publish, conditional updates, withdrawal a
     let first;
     let tombstone;
     { // missing JSON is 404, reserved encoded paths never serve SPA
+      await privateHead(404);
       for (const p of [route, "/v1%2fgame/123.json", "/%76%31/game/123.json"]) {
         assert.equal((await call(p)).status, 404);
       }
@@ -49,6 +64,7 @@ test("actual local Worker/R2 runtime: publish, conditional updates, withdrawal a
       assert.equal(saved.status, 200, await saved.clone().text());
       assertProtectedEtag(saved);
       first = saved.headers.get("ETag");
+      await privateHead(200, first, "false");
       assert.match(first, /^"[a-f0-9]{32}"$/);
       assert.equal((await put(body, { "If-None-Match": "*" })).status, 412);
       const bucket = await mf.getR2Bucket("PUBLISH_BUCKET");
@@ -77,6 +93,9 @@ test("actual local Worker/R2 runtime: publish, conditional updates, withdrawal a
       assert.equal(response.status, 200);
       assertProtectedEtag(response);
       tombstone = response.headers.get("ETag");
+      assert.notEqual(tombstone, first);
+      // Deleted private metadata is HEAD 200 while its public route is HEAD 404.
+      await privateHead(200, tombstone, "true");
       assert.equal((await call(route)).status, 404);
       assert.equal((await call(route, { method: "HEAD" })).status, 404);
       assert.equal((await del(first)).status, 412);
@@ -86,6 +105,8 @@ test("actual local Worker/R2 runtime: publish, conditional updates, withdrawal a
       assert.equal(restored.status, 200);
       assertProtectedEtag(restored);
       assert.notEqual(restored.headers.get("ETag"), first);
+      assert.notEqual(restored.headers.get("ETag"), tombstone);
+      await privateHead(200, restored.headers.get("ETag"), "false");
       assert.equal((await del(first)).status, 412);
       assert.equal(await (await call(route)).text(), body);
     }

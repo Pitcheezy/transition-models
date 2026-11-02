@@ -1,0 +1,87 @@
+{
+  "schema": "pitcheezy-ws-trial3-local-validation-v1",
+  "unit": "WS-trial3",
+  "base_preparation_commit": "5ad28ed6556629ceee22991c9692b5369010cbfc",
+  "claim_commit": "a534806",
+  "source_branch": "codex/ws-trial-closeout-1026",
+  "changes": "documents and tests only; no production runtime, deployment, credentials or counterpart changes",
+  "node": {
+    "version": "24.1.0",
+    "miniflare": "4.20260730.0",
+    "command": "node --test ops/public-host/tests/worker.test.mjs ops/public-host/tests/runtime.test.mjs ops/public-host/tests/access.test.mjs",
+    "dependency_resolution": "existing locked Miniflare installation reused read-only through a Node registerHooks loader; no install or lockfile change",
+    "passed": 65,
+    "failed": 0,
+    "duration_ms": 5806.2543,
+    "baseline_readonly_audit": {
+      "passed": 48,
+      "new_reported_test_count_including_subtests": 17
+    },
+    "limitations": "synthetic unit/local Worker+R2 only; not Cloudflare cache or actual joint-trial acceptance"
+  },
+  "checklist": {
+    "command": "PYTHONUTF8=1 python -m pytest -q tests/test_checklist_model.py",
+    "passed": 8,
+    "failed": 0,
+    "environment_note": "Default Python313 lacked pytest; reused existing Python312 venv. Initial default-encoding run passed8 with one reader-thread Unicode warning; UTF8 run passed8 without warnings"
+  },
+  "doc_check": {
+    "command": "python outputs/validate_ws_trial3.py (local audit helper, not a shipped runtime)",
+    "relative_links_checked": 20,
+    "json_and_followup_ledger_invariants": "PASS",
+    "added_content_sensitive_pattern_scan": "PASS",
+    "not_a_complete_secret_detector": true
+  },
+  "runtime5_unchanged": [
+    "ops/public-host/worker.mjs",
+    "ops/public-host/gateway.mjs",
+    "ops/public-host/notice.mjs",
+    "ops/public-host/access.mjs",
+    "ops/public-host/telemetry.mjs"
+  ],
+  "historical_receipts_unchanged": {
+    "docs/results/ops/ws_trial_day_20261026.json": "5698b78d50a6545d492706acbd74646b90ec3c9394ffda512add00ba1982f9b4",
+    "docs/results/ops/ws_trial_day_ledger_template_20261026.json": "e924c700478bdc3151cbf91c581cfc59877f88a716a8c67ccc053e7b1e8d061e"
+  },
+  "file_sha256": {
+    "CHECKLIST.md": "19df9dbff3eacba9057e576e9370e5bb06860ac3f0c97674fa0a369d11ed35eb",
+    "docs/CODEX_RESUME_PROMPT.md": "ea08d688b58287ea63a8c7cd7819002e61714ca90739a3a3611519f39b4b2c0d",
+    "docs/WS_COLLAB_V1_ACTIONS.md": "7578bbd4dbdc602a8d958596f65d16bd2e83c7e8033de070aa1c73cda9b09a4b",
+    "docs/WS_JOINT_TRIAL_CLOSEOUT_20261026.md": "d1f559d3dc87fdf99d4ebd6081de061683589c82f6c1f24742fe8f87df4260f0",
+    "docs/WS_JOINT_TRIAL_DAY_20261026.md": "28051614efdd2c0c7d275ce3232742e56ac712cab351a4716d4afd8f16deaf29",
+    "docs/WS_OPERATIONS_HANDOFF.md": "0f640a5faa4506c1eea6dce9b82c996035f3203ba4691d3f9bbcd0a04620c460",
+    "docs/mail_drafts/COLLAB-001-joint-trial-day-20261026.md": "b8e4ccbd22436ffa90706ae51abc6ba290b966738cd69135da9b004c84b6a6b8",
+    "docs/results/ops/ws_joint_trial_closeout_20261026.json": "6be491408745fb6f1d517a28048630fb17358186d61f566f8ffd61eb0bf39db0",
+    "docs/results/ops/ws_trial_day_ledger_template_20261026_v2.json": "023658f3849d8f01dc843b61f88c1341807441bb42bb6fcaf35ac89c54ca915a",
+    "ops/public-host/tests/worker.test.mjs": "007e2a8931fc1bbe741ef322834246b44dd7f08c971d6f71d3b952480e9e75a5",
+    "ops/public-host/tests/runtime.test.mjs": "5b0af4142c3cda0dfb7a206f2f265c7b86daf9629bde593e965b1ceb15aae95b",
+    "ops/public-host/tests/access.test.mjs": "a4d36acb58a5ea6432f9696fa3d8d389b8f018cb65f9227398b5a1b3db636f79"
+  },
+  "hash_basis": "file_sha256 are local checkout raw bytes; file_lf_sha256 normalize CRLF to LF for cross-platform comparison",
+  "file_lf_sha256": {
+    "CHECKLIST.md": "5c7c9b17ac0f22cfca85ea904416ff991534a3ff457ace44e6734e87490c3c35",
+    "docs/CODEX_RESUME_PROMPT.md": "620379014956de154b06b3df90a130fe03bd1f7fb16bafe806cb03419f421272",
+    "docs/WS_COLLAB_V1_ACTIONS.md": "6dd9a5197f270575632db967657dc8a59df6a9de13fe0d99c7091e7355839a04",
+    "docs/WS_JOINT_TRIAL_CLOSEOUT_20261026.md": "d1f559d3dc87fdf99d4ebd6081de061683589c82f6c1f24742fe8f87df4260f0",
+    "docs/WS_JOINT_TRIAL_DAY_20261026.md": "c544df621fd682bea3eb4db39d6d089d562c990979cc3a925ee08fd7266b6e47",
+    "docs/WS_OPERATIONS_HANDOFF.md": "04762fcfe295a3d669c1e9a3b94181adbff0898841aea406494bd04d38aa1d03",
+    "docs/mail_drafts/COLLAB-001-joint-trial-day-20261026.md": "19ebf048276d0a91e50b1f31780e2803a5b50dbae600b3ac6b0e7d2562bf06e4",
+    "docs/results/ops/ws_joint_trial_closeout_20261026.json": "e7d5b2986989c937617e52e5b43c796c9fe9670ad9227fc3ead4f2b9a71fa7d2",
+    "docs/results/ops/ws_trial_day_ledger_template_20261026_v2.json": "e13b06174c4bf2bc66731e3eae510ec3ec8f87b9e1c6f7e23cd75a1bdecc9e3f",
+    "ops/public-host/tests/worker.test.mjs": "617b3362785dc61c1ec1f97b73183f856d29c225ff7b337d1420b7e127b59d45",
+    "ops/public-host/tests/runtime.test.mjs": "45dfbfbb2356632bdff65ba2e0b46fdd6dd53d88190a20766e93e52e679dfc8b",
+    "ops/public-host/tests/access.test.mjs": "e238bbbc618a779c9585663982cb146153b11cffcc783bbb2e8fd99334669757"
+  },
+  "review": {
+    "type": "additional same-model agent review; not the different-model operational-code gate",
+    "test_review": "PASS; no actionable defect, no rerun claimed",
+    "document_findings_fixed": [
+      "ledger missing vs unreceived wording",
+      "20:35 settings marked historical",
+      "STOP follow-up requires agreed scope/budget/signal",
+      "viewer revocation probe requires separate budget"
+    ]
+  },
+  "cloud_or_service_requests_this_unit": 0,
+  "production_code_changes": false
+}

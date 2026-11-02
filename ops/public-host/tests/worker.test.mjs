@@ -64,6 +64,60 @@ function assertProtectedEtag(response) {
   assert.equal(response.headers.get("CDN-Cache-Control"), "no-store");
 }
 
+// Local contract evidence only; this does not exercise a provider edge cache.
+test("private HEAD responses prohibit caching and never fall through to assets", async t => {
+  const scenarios = [
+    { name: "missing object", status: 404, heads: 1 },
+    { name: "live object", status: 200, heads: 1, deleted: "false", prepare: c => c.put() },
+    { name: "tombstone", status: 200, heads: 1, deleted: "true", prepare: async c => c.del((await c.put()).headers.get("ETag")) },
+    { name: "missing bearer", status: 401, authorization: "" },
+    { name: "wrong bearer", status: 401, authorization: "Bearer " + "x".repeat(64) },
+    { name: "outside scope", status: 403, configure: env => Object.assign(env, { PUBLISH_KEY_SCOPE: "v1/game/124.json", PUBLISH_EXPIRES_AT: new Date(Date.now() + 60000).toISOString() }) },
+    { name: "expired scope", status: 403, configure: env => Object.assign(env, { PUBLISH_KEY_SCOPE: path.slice(1), PUBLISH_EXPIRES_AT: "2000-01-01T00:00:00.000Z" }) },
+    { name: "incomplete scope", status: 503, configure: env => { env.PUBLISH_KEY_SCOPE = path.slice(1); } },
+    { name: "uploads disabled", status: 503, configure: env => { env.UPLOAD_ENABLED = "false"; } },
+    { name: "missing bucket", status: 503, configure: env => { delete env.PUBLISH_BUCKET; } },
+    { name: "R2 head failure", status: 503, heads: 1, configure: env => { env.PUBLISH_BUCKET.head = async () => { throw new Error("synthetic-provider-detail-must-not-leak"); }; } },
+    { name: "rate rejected", status: 429, configure: env => { env.PUBLISH_LIMITER.limit = async () => ({ success: false }); } },
+    { name: "limiter failure", status: 503, configure: env => { env.PUBLISH_LIMITER.limit = async () => { throw new Error("synthetic-limiter-error"); }; } },
+    { name: "private GET rejected", method: "GET", status: 405 },
+    { name: "unlisted path", route: "/_publish/v1/private.json", status: 404 },
+  ];
+  for (const scenario of scenarios) await t.test(scenario.name, async () => {
+    const context = await fixture();
+    const { env, call } = context;
+    let assets = 0, heads = 0;
+    env.ASSETS.fetch = async () => { assets++; return new Response("synthetic-static-asset"); };
+    const expected = await scenario.prepare?.(context);
+    scenario.configure?.(env);
+    if (env.PUBLISH_BUCKET) {
+      const original = env.PUBLISH_BUCKET.head.bind(env.PUBLISH_BUCKET);
+      env.PUBLISH_BUCKET.head = async key => { heads++; return original(key); };
+    }
+    const writes = env.PUBLISH_BUCKET?.writes;
+    const method = scenario.method || "HEAD";
+    const started = Date.now();
+    const response = await call(scenario.route || "/_publish" + path, {
+      method, headers: { Authorization: scenario.authorization ?? "Bearer " + TOKEN },
+    });
+    const finished = Date.now();
+    assert.equal(response.status, scenario.status);
+    assert.equal(response.headers.get("Cache-Control"), response.headers.has("ETag") ? "no-store, no-transform" : "no-store");
+    assert.equal(response.headers.get("CDN-Cache-Control"), "no-store");
+    assert.equal(response.headers.get("Age"), "0");
+    const date = Date.parse(response.headers.get("Date"));
+    assert.ok(Number.isFinite(date) && date >= Math.floor(started / 1000) * 1000 && date <= finished);
+    assert.equal(await response.text(), method === "HEAD" ? "" : '{"error":"method_not_allowed"}');
+    if (method === "GET") assert.equal(response.headers.get("Allow"), "PUT, DELETE, HEAD");
+    assert.equal(response.headers.get("Retry-After"), scenario.status === 429 ? "60" : null);
+    assert.equal(response.headers.get("X-Publish-Deleted"), scenario.deleted ?? null);
+    assert.equal(response.headers.get("ETag"), expected?.headers.get("ETag") ?? null);
+    assert.equal(assets, 0);
+    assert.equal(heads, scenario.heads ?? 0);
+    assert.equal(env.PUBLISH_BUCKET?.writes, writes);
+  });
+});
+
 test("date and file allowlist rejects temporary, private, encoded and impossible paths", () => {
   for (const valid of ["/v1/health.json", "/v1/manifest.json", "/v1/dates.json", path,
     "/v1/setup/123.json", "/v1/games/2024-02-29.json"]) assert.ok(permittedKey(valid), valid);
