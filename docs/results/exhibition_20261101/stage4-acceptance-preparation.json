@@ -1,0 +1,61 @@
+{
+  "schema": "pitcheezy-stage4-preparation-v1",
+  "date_kst": "2026-11-02",
+  "reviewed_commit": "ecf15678816de4ec9d89ef03b7f8f22cec2da9f0",
+  "source_sha256_git_blob_bytes": {
+    "ops/public-host/exhibit-stage4-transport.mjs": "1a61abf0be90c3ceb8305fe64931de4e11378915132d06592c0dce5b6d9d6ea6",
+    "ops/public-host/exhibit-stage4-read.mjs": "2457737ff92839482faeb7b5ec2955b076bcc894829d6d8944243419f9f846e6",
+    "ops/public-host/exhibit-stage4-browser.mjs": "208da45b166cc518dd103e1d153f475b2189764aead4d6d96820984651af1951",
+    "ops/public-host/exhibit-stage4-notice.mjs": "9559d10814385ac97510959cf3a6ecae67184b8848ab49f2ef3396616815b964",
+    "ops/public-host/run-exhibit-stage4.mjs": "31ca5a1598fc094192b52beafb9e77280a63d36f7828b018df6f2e0f219ecfd8",
+    "ops/public-host/rehearse-exhibit-stage4.mjs": "ca31138336e7e0d2e5d204a4f11b9dc1268aec3973e8d0d0219deef6914ce2af"
+  },
+  "candidate": {
+    "web_commit": "c47fe6cb78479362e7250141da946814cc33bd31",
+    "data_commit": "cb1cfa8f759fd77adc75595316a389208c752dba",
+    "zip_sha256": "3c3b8006b892872bfff3423e2bd6ba49ea3de17ee92fbecef07e0b076bc8da51"
+  },
+  "local_tests": {
+    "stage4_node_passed": 46,
+    "chrome_synthetic_integration_included": 1,
+    "checklist_python_passed": 8,
+    "existing_verifier_previously_passed": 10,
+    "dry_run_files": 10,
+    "dry_run_approved": false,
+    "dry_run_service_requests": 0
+  },
+  "review": {
+    "model": "gpt-6.1-terra",
+    "decision": "APPROVE",
+    "initial_commit": "b672808820331d48804e69dbcaeea2548ca6850d",
+    "initial_p2": "Missing actual new browser harness lifecycle coverage",
+    "p2_resolved": true,
+    "independently_passed": 45,
+    "chrome_integration": "Not rerun successfully: loopback EACCES in reviewer environment. Root 46/46 and received-build local report inspected, not independently reproduced."
+  },
+  "local_received_build_summary": "stage4-received-build-local.json",
+  "budget": {
+    "fixed_http": 24,
+    "single_browser": 180,
+    "notice": 8,
+    "total": 212
+  },
+  "remote_stage4_executed": false,
+  "approval_pending": true,
+  "deployment_changes": 0,
+  "partner_messages": 0,
+  "pushes": 0,
+  "remaining": [
+    "Explicit stage4 execution approval",
+    "Management settings/version recheck",
+    "Remote 600-second observation and notice cycle",
+    "Actual phone check",
+    "Stored server-log correlation for stage3 and stage4",
+    "Separate app Route migration approval"
+  ],
+  "limitations": [
+    "304 headers prove a bodyless response, not independent successful cached-body consumption; assess UI and polling separately.",
+    "No private receipt copied; only selected aggregates recorded.",
+    "Raw previous failures remain private and unchanged."
+  ]
+}

@@ -1,6 +1,10 @@
 # Codex 재개 프롬프트
 
-## 10/26 공동시험 종료 — 현재 우선 기록
+## 전시 재개 정본 — 2026-11-02
+
+최신 상태·수정 권한은 [CHECKLIST 상단](../CHECKLIST.md)만 갱신한다. 현재 실행 절차는 [EXHIBIT-host2 단계4 실행안](EXHIBIT_STAGE4_ACCEPTANCE_20261102.md), 직전 실제 업로드/회수는 [단계3 기록](EXHIBIT_STAGE3_EXECUTION_20261102.md)을 따른다. 아래10월 운영 상태는 당시 이력이며 현재 배포 상태로 사용하지 않는다.
+
+## 10/26 공동시험 종료 — 당시 우선 기록 (이력, 2026-11-03 main 병합분)
 
 실제 결과는 **STOPPED/미완**, [종료 보고](WS_JOINT_TRIAL_CLOSEOUT_20261026.md)와 [영수증](results/ops/ws_joint_trial_closeout_20261026.json)을 먼저 읽는다. 오늘 A는 Song이 기존 final2/v4.4(000e4ba0)를 선택해 실행했고 새ZIP은 필수 입력이 아니었다. 최신화면B/일반공개 합격과 구분한다.
 

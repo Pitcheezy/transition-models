@@ -1,0 +1,127 @@
+{
+  "schema": "pitcheezy.exhibit.stage4.remote-summary.v1",
+  "automatic_acceptance": "pass",
+  "overall_stage4": "pending_phone_and_server_logs",
+  "started_utc": "2026-11-01T16:42:28.641Z",
+  "finished_utc": "2026-11-01T16:52:59.018Z",
+  "web_source": "c47fe6cb78479362e7250141da946814cc33bd31",
+  "data_generation_source": "cb1cfa8f759fd77adc75595316a389208c752dba",
+  "delivery_zip_sha256": "3c3b8006b892872bfff3423e2bd6ba49ea3de17ee92fbecef07e0b076bc8da51",
+  "executed_tool_source": "ecf15678816de4ec9d89ef03b7f8f22cec2da9f0",
+  "tool_review_model": "gpt-6.1-terra",
+  "tool_review_verdict": "APPROVE",
+  "expected_version": "5999cf0d-4f18-4d43-bcd6-320e04860369",
+  "version_evidence": "management_before_and_after; per-request server version correlation pending",
+  "requests": {
+    "http": 24,
+    "browser": 91,
+    "notice": 5,
+    "total": 120,
+    "limit": 212,
+    "management_reads_separate": 6,
+    "remote_mutations": "notice_on_then_off_only",
+    "http_and_notice_retries": 0
+  },
+  "http": {
+    "checks_passed": 24,
+    "checks_failed": 0,
+    "original_verifier_checks_passed": 19,
+    "static_source_files_matched": 4,
+    "supplemental_settings_matched": true,
+    "data_files_matched": 6,
+    "excluded_paths_404": true,
+    "unauthenticated_reads_401": true,
+    "upload_off_head_503": true
+  },
+  "normal_visible_tab": {
+    "duration_ms": 600013,
+    "requests": 77,
+    "completed": 77,
+    "status_counts": {
+      "304": 77
+    },
+    "game_reads": 8,
+    "health_reads": 60,
+    "ui_visible_and_ready": true
+  },
+  "notice": {
+    "hidden_dom_wait_ms": 7685,
+    "restored_dom_wait_ms": 1559,
+    "synthetic_error_responses": 2,
+    "synthetic_error_kept_hidden": true,
+    "restored_without_reload": true,
+    "final_off_confirmed": true,
+    "timing_basis": "each DOM observation start; not PUT-to-UI propagation latency or upper bound"
+  },
+  "browser": {
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "real_phone": "not_tested",
+    "incomplete_or_failed": 0,
+    "bodyless_304_client_abort_events_preserved": 78,
+    "logout_confirmed": true,
+    "cache_scope": "instrumented single visible Chromium tab; browser routing disables HTTP cache"
+  },
+  "management": {
+    "before_passed": true,
+    "after_passed": true,
+    "version_unchanged": true,
+    "all_vars_match": true,
+    "resources_unchanged": true,
+    "secret_name_set_unchanged": true,
+    "upload_enabled": false,
+    "access_gate_enabled": true,
+    "data_read_enabled": true,
+    "telemetry_enabled": false,
+    "feedback_enabled": false
+  },
+  "client_journal_adapter": {
+    "requests": 120,
+    "complete": 120,
+    "with_ray": 120,
+    "synthetic_excluded": 2,
+    "server_logs_compared": false
+  },
+  "offline_log_tool": {
+    "source": "acc936b0ad39acb69325b9bae976f08e8203e166",
+    "review_model": "gpt-6.1-terra",
+    "verdict": "APPROVE",
+    "independent_tests_passed": 27,
+    "actual_server_log_correlation": "pending"
+  },
+  "preserved": {
+    "public_app_unchanged": true,
+    "home_unchanged": true,
+    "dns_routes_unchanged": true,
+    "credentials_unchanged": true,
+    "partner_repository_unchanged": true,
+    "delivery_build_bytes_unchanged": true
+  },
+  "pending": [
+    "actual_iPhone_Safari_and_Chrome",
+    "stage3_13_requests_stored_server_logs",
+    "stage4_120_requests_stored_server_logs",
+    "separate_app_route_switch_approval",
+    "separate_code_free_access_decision"
+  ],
+  "export_windows_kst": {
+    "stage3": "2026-11-02 01:12–01:15 +09:00",
+    "stage4": "2026-11-02 01:42–01:54 +09:00"
+  },
+  "local_final_regression": {
+    "log_tool_tests": 27,
+    "checklist_tests": 8,
+    "passed": 35,
+    "seconds": 6.13
+  },
+  "record_review": {
+    "model": "gpt-6.1-terra",
+    "method": "read_only_consistency_review",
+    "clarifications": [
+      "specified excluded paths only",
+      "normal observation asserts recommendation visibility, not continuous zone visibility"
+    ]
+  }
+}

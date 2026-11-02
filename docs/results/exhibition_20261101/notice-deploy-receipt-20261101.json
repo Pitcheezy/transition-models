@@ -1,0 +1,270 @@
+{
+  "schema": "pitcheezy-exhibit-notice-deployment-v1",
+  "evidence_kind": "actual_cloudflare_deployment_and_remote_checks",
+  "recorded_date_kst": "2026-11-01",
+  "host_commit": "c47643ace740d45898300b1f9f0d6e4184d8bd82",
+  "frontend_commit": "fba6b2ff846dcfa9afad9ea5df4204007e0604c1",
+  "version_id": "6d652d4b-7d3c-4897-aefd-f37d0edce50c",
+  "previous_credential_safe_version": "feed4fc1-949d-4672-98fb-35f4ab00fdc3",
+  "candidate": {
+    "bytes": 535003,
+    "sha256": "01b486601d5d5beb80806e555f0d5e41902ee0877caf5681fab9c8f40c5815ff",
+    "manifest_sha256": "2f3cc83d1f88e370146d83a2e283d9cf970c1a9bbf633e2d33e0bce4dea25a5c"
+  },
+  "local_dry_run_bundle": {
+    "bytes": 53847,
+    "sha256": "eb82b58cc07c09e8c556d68b52618185f4372186f6c0adce42acc755fb67de9b",
+    "remote_compiled_bytes_compared": false,
+    "wrangler_version": "4.151.0"
+  },
+  "preservation": {
+    "vars_equal": true,
+    "bindings_equal": true,
+    "runtime_metadata_equal": true,
+    "secret_binding_count": 4,
+    "secret_values_read": false,
+    "viewer_auth_still_works": true,
+    "notice_operator_auth_still_works": true,
+    "frontend_static_files_equal": 4,
+    "data_files_equal": 24,
+    "data_written": false,
+    "dns_changed": false,
+    "sites_changed": false,
+    "partner_code_changed": false
+  },
+  "final_settings": {
+    "access_gate": true,
+    "access_session_seconds": 3600,
+    "data_read": true,
+    "upload": false,
+    "telemetry": false,
+    "feedback": false,
+    "notice_active": false,
+    "notice_revision": 8
+  },
+  "dashboard_observed": {
+    "workers_logs_enabled": true,
+    "include_invocation": true,
+    "persist_logs": true,
+    "sampling_fraction": 1,
+    "traces_enabled": false,
+    "issues_enabled": false,
+    "runtime_cache_enabled": false
+  },
+  "remote_verify": {
+    "pass": 35,
+    "fail": 0,
+    "requests": 35,
+    "receipt_sha256": "2ae32644a16dd5f14d85f34668eef73805ef0aa9cc1f8d555bee7c7ed262a6c2"
+  },
+  "notice_receipts": {
+    "notice-on-receipt.json": {
+      "schema": "pitcheezy-notice-receipt-v1",
+      "method": "PUT",
+      "outcome": "applied",
+      "attempted": true,
+      "requests": 1,
+      "retries": 0,
+      "requested_active": true,
+      "requested_message_id": "maintenance",
+      "body_bytes": 164,
+      "http_status": 200,
+      "active": true,
+      "message_id": "maintenance",
+      "revision": 7,
+      "audit_recorded": true,
+      "snapshot_saved": false
+    },
+    "notice-on-query-receipt.json": {
+      "schema": "pitcheezy-notice-receipt-v1",
+      "method": "GET",
+      "outcome": "observed",
+      "attempted": true,
+      "requests": 1,
+      "retries": 0,
+      "http_status": 200,
+      "active": true,
+      "message_id": "maintenance",
+      "revision": 7,
+      "audit_unavailable": false,
+      "audit_truncated": false,
+      "snapshot_saved": true
+    },
+    "notice-off-receipt.json": {
+      "schema": "pitcheezy-notice-receipt-v1",
+      "method": "PUT",
+      "outcome": "applied",
+      "attempted": true,
+      "requests": 1,
+      "retries": 0,
+      "requested_active": false,
+      "requested_message_id": "maintenance",
+      "body_bytes": 175,
+      "http_status": 200,
+      "active": false,
+      "message_id": "maintenance",
+      "revision": 8,
+      "audit_recorded": true,
+      "snapshot_saved": false
+    },
+    "notice-off-query-receipt.json": {
+      "schema": "pitcheezy-notice-receipt-v1",
+      "method": "GET",
+      "outcome": "observed",
+      "attempted": true,
+      "requests": 1,
+      "retries": 0,
+      "http_status": 200,
+      "active": false,
+      "message_id": "maintenance",
+      "revision": 8,
+      "audit_unavailable": false,
+      "audit_truncated": false,
+      "snapshot_saved": true
+    },
+    "notice-http-on.json": [
+      {
+        "path": "/?game=849843",
+        "status": 503,
+        "notice": "maintenance",
+        "cache": "no-store",
+        "ray": "a539971ddf1a84ae-HKG",
+        "at": "2026-11-01T08:39:40.739Z",
+        "approved_message": true,
+        "dev_copy": false
+      },
+      {
+        "path": "/v1/manifest.json",
+        "status": 503,
+        "notice": "maintenance",
+        "cache": "no-store",
+        "ray": "a5399720cd5e7d2e-HKG",
+        "at": "2026-11-01T08:39:41.051Z",
+        "approved_message": true,
+        "dev_copy": false
+      }
+    ],
+    "notice-http-off.json": [
+      {
+        "method": "GET",
+        "path": "/",
+        "status": 401,
+        "access": "required",
+        "notice": null,
+        "cache": "no-store",
+        "ray": "a5399815aac9dbcf-HKG",
+        "at": "2026-11-01T08:40:20.271Z"
+      },
+      {
+        "method": "GET",
+        "path": "/v1/manifest.json",
+        "status": 401,
+        "access": "required",
+        "notice": null,
+        "cache": "no-store",
+        "ray": "a5399817683d854a-HKG",
+        "at": "2026-11-01T08:40:20.534Z"
+      },
+      {
+        "method": "HEAD",
+        "path": "/_publish/v1/health.json",
+        "status": 503,
+        "access": null,
+        "notice": null,
+        "cache": "no-store",
+        "ray": "a53998186bd8dbcf-HKG",
+        "at": "2026-11-01T08:40:20.631Z"
+      },
+      {
+        "path": "/_access/v1/session",
+        "method": "POST",
+        "status": 200,
+        "cookie_received": true
+      },
+      {
+        "path": "/?game=849843",
+        "status": 200,
+        "bytes": 659,
+        "sha_match": true,
+        "notice": null,
+        "ray": "a539981a6baff4fb-HKG",
+        "at": "2026-11-01T08:40:21.188Z"
+      },
+      {
+        "path": "/v1/manifest.json",
+        "status": 200,
+        "bytes": 642,
+        "sha_match": true,
+        "notice": null,
+        "ray": "a539981c79f8f4fb-HKG",
+        "at": "2026-11-01T08:40:21.314Z"
+      }
+    ]
+  },
+  "receipt_sha256": {
+    "notice-on-receipt.json": "3b8e3c914ffd0a0d892b54d7ade5b2ca1be81d71e323b18df9add4771a78af6f",
+    "notice-on-query-receipt.json": "20b1d56e2cae84754bd7a52218bb5852790665e8a2b2cdf9ea16e50bbe976445",
+    "notice-off-receipt.json": "4dc36d7bed275355e096cbdca9542e8401767ff6a12d0c477d2fe6c2ef4a3858",
+    "notice-off-query-receipt.json": "a61910395c141e267eb72bbf38bcd50ee8f2231e0f264c3697ab3b51a9a7c54a",
+    "notice-http-on.json": "9a0a5ce97842a9db9ba7d065d728992cc21b63f71ea16e963db7ce359f89d440",
+    "notice-http-off.json": "ade34c01f360af78acba06226c05a3352adde3f825d1af6840672517b1c5754a"
+  },
+  "published_reply": {
+    "url": "https://github.com/SongRoute/pitcheezy/issues/38#issuecomment-6555601601",
+    "body_sha256_utf8": "f487957f982b250a36415ef697e0e8e2442d2d913b65d14ca56fdd84a5c1703c",
+    "readback_equal": true
+  },
+  "poster_qr": {
+    "decoded_url": "https://pitcheezy.com",
+    "source_bytes": 22231258,
+    "source_sha256": "4ef2fe5b629dbe24d85f509165a0f99676dd72681f37105209b8ee4fa2b7ded9",
+    "method": "OpenCV QRCodeDetector.detectAndDecode",
+    "actual_phone_scan": "camera scan not explicitly confirmed; iPhone Safari/Chrome home and access gate reported"
+  },
+  "mobile_viewport_checks": [
+    {
+      "width": 390,
+      "height": 844,
+      "document_scroll_width": 375,
+      "video_ready_state": 4,
+      "video_paused": false,
+      "video_error": null
+    },
+    {
+      "width": 320,
+      "height": 740,
+      "document_scroll_width": 305,
+      "video_ready_state": 4,
+      "video_paused": false,
+      "video_error": null
+    }
+  ],
+  "mobile_service_link": {
+    "count": 4,
+    "all_destination": "https://app.pitcheezy.com/?game=849843",
+    "clicked_to_access_gate": true,
+    "viewport_reset": true
+  },
+  "limitations": [
+    "User reports iPhone Safari and Chrome open home and service access gate. Actual camera scan, home video and authenticated game display are not explicitly confirmed.",
+    "Request-level stored Workers Logs have not been fully reconciled; notice audit receipts are separate evidence.",
+    "Remote compiled worker bytes were not downloaded or hashed.",
+    "Direct notice HTML required reload after OFF; authenticated app automatic restoration timing is not measured here.",
+    "No actual 30/50-user load test, real-game publisher trial or access expansion.",
+    "Existing access-page development wording and unapproved data_hold wording remain separate follow-ups."
+  ],
+  "phone_user_report": {
+    "source": "user chat reply 2026-11-01",
+    "device": "iPhone",
+    "browsers": [
+      "Safari",
+      "Chrome"
+    ],
+    "home_opens": true,
+    "service_button_reaches_access_gate": true,
+    "observed_copy": "개발용 입력 화면",
+    "camera_scan_explicitly_confirmed": false,
+    "home_video_playback_explicitly_confirmed": false,
+    "authenticated_game_display_confirmed": false
+  }
+}

@@ -1,0 +1,102 @@
+{
+  "schema": "pitcheezy-stage5-confirmation-preparation-v1",
+  "recorded_date_kst": "2026-11-02",
+  "status": "local_preparation_pass_remote_not_executed",
+  "implementation_commit": "7ec2e69733cfc651435a3ca10aeabf4a794e7475",
+  "baseline_commit": "8d2bb32570833488d43db2a418a904efb722821d",
+  "files": [
+    {
+      "path": "ops/public-host/run-exhibit-stage5.mjs",
+      "git_blob_sha256": "3bddfb15e13141a249e876dda06021f18fc1f6dc75929e6f0de9c3562aefefb1",
+      "tested_worktree_raw_sha256": "64bbf3a7737a851a93504ca460be4f45e2356c6c0e58b675466dea47eaa26d4e"
+    },
+    {
+      "path": "ops/public-host/tests/run-exhibit-stage5.test.mjs",
+      "git_blob_sha256": "87a4afe66b9ca723bf4b329d059b437444790c5f0bc59b8852c960b5d57ebfe2",
+      "tested_worktree_raw_sha256": "43a58d793de38beba88b10b38a1d7d4a2f7086b66fe3cdf80f16292ba5eeea3d"
+    }
+  ],
+  "review": {
+    "decision": "APPROVE",
+    "target_commit": "7ec2e69733cfc651435a3ca10aeabf4a794e7475",
+    "author_model": "gpt-6.1-sol",
+    "reviewer_model": "gpt-6.1-terra",
+    "model_identity_basis": "explicit collaboration tool model selection",
+    "open_actionable_findings": 0,
+    "reviewer_synthetic_tests_passed": 39,
+    "scope": "fixed local source, dependencies, synthetic tests and documentation; no Cloudflare or private credentials"
+  },
+  "validation": {
+    "node_command": "node --test ops/public-host/tests/run-exhibit-stage5.test.mjs ops/public-host/tests/exhibit-stage4-read.test.mjs ops/public-host/tests/exhibit-stage4-transport.test.mjs ops/public-host/tests/run-exhibit-stage4.test.mjs",
+    "node_passed": 39,
+    "node_failed": 0,
+    "new_stage5_tests": 14,
+    "checklist_command": "python -B -m pytest -q -p no:cacheprovider tests/test_checklist_model.py",
+    "checklist_passed": 8,
+    "local_document_links": "pass",
+    "diff_check": "pass"
+  },
+  "local_artifact_dry_runs": [
+    {
+      "phase": "cutover",
+      "input_raw_sha256": "f6879027781569bcfa40439218bee00ee44d5fd70ca9589cbafb31d4b4f179a9",
+      "approved": false,
+      "passed": true,
+      "intake_files": 10,
+      "supplemental_collection_file": 1,
+      "service_requests": 0
+    },
+    {
+      "phase": "rollback",
+      "input_raw_sha256": "3d97af862dd48c2a6a53807cf818a883f67f6b58e7cf1a0bbaf66479756c05e7",
+      "approved": false,
+      "passed": true,
+      "intake_files": 2,
+      "service_requests": 0
+    }
+  ],
+  "dry_run_command": "node ops/public-host/run-exhibit-stage5.mjs --input <absolute-private-plan.json> --input-sha256 <raw-plan-sha256>",
+  "execution_directory_created": false,
+  "real_access_code_read": false,
+  "guards": {
+    "target": "https://app.pitcheezy.com",
+    "default_mode": "local_dry_run",
+    "execute_requires": [
+      "explicit human approval",
+      "approved input",
+      "raw input SHA",
+      "--execute",
+      "nonplaceholder management version",
+      "UTC window <= 15 minutes",
+      "new exclusive run directory"
+    ],
+    "request_budget": {
+      "cutover": 24,
+      "rollback": 5,
+      "cycle": 29,
+      "automatic_retries": 0
+    },
+    "rollback_requires": "same cycle with completed cutover report, positive dispatch count and matching input/version; separately approved rollback input",
+    "unknown_http_response": "retained as unknown; completed failed cutover may be followed by separately approved rollback confirmation; not a retry of the failed cutover",
+    "logout": "one reserved request after a valid session, also after window expiry",
+    "stage4_public_origin_refusal": "unchanged"
+  },
+  "actual_remote_actions": {
+    "service_requests": 0,
+    "cloudflare_changes": 0,
+    "route_or_dns_changes": 0,
+    "credential_changes": 0,
+    "notice_changes": 0,
+    "external_messages": 0,
+    "push": 0
+  },
+  "limitations": [
+    "Local preparation and synthetic testing only; no app Route switch.",
+    "Management version pin is not proof of actual request handling version.",
+    "Rollback check covers old HTML and manifest only, not the whole old application.",
+    "One-cycle exclusivity is local to the fixed run directory; intentionally selecting another directory is not globally prevented.",
+    "Real iPhone Safari/Chrome acceptance and stage3/4 stored-log correlation remain pending.",
+    "Prepared inputs have approved=false, null execution windows and placeholder versions; fresh approved copies are needed before execution.",
+    "No byte changes to Song files, runtime or deployed resources."
+  ]
+}

@@ -1,0 +1,94 @@
+{
+  "schema": "pitcheezy-stage3-registration-preparation-v1",
+  "recorded_at_utc": "2026-11-01T15:54:23.932665+00:00",
+  "evidence_kind": "management_readback_and_local_preparation_not_registration_or_upload",
+  "user_approval": "stage3 six-file upload, temporary publisher capability, closure and rotation; user directly registers and rotates secret",
+  "base_commit": "835d608add799274f4e292cba685baf18f4d042c",
+  "management_current_version": "a2574c2f-9b63-4cfd-b640-d9fdd4628f8e",
+  "management_checks_passed": 8,
+  "active_percentage": 100,
+  "secret_names_exact": 3,
+  "publisher_secret_present": false,
+  "checks_basis": "read-only deployments list, versions view, secret names list; provider assets raw_run_worker_first=true/serve_directly=false",
+  "configurations": {
+    "off_sha256": "a7c4464ed07c29830a508b612c45baf00eb9faf60e4806d76fc50d35c5097b77",
+    "on_sha256": "22ab3738ed7b30ff9dcdee450027027a0bb57ad9e186f568777a0002e904ea7f",
+    "only_semantic_difference": "UPLOAD_ENABLED",
+    "local_checks_ok": true,
+    "standalone_checker_deployable": false,
+    "checker_limit": "ok confirms offline checks only; remote prerequisites separate"
+  },
+  "temporary_token": {
+    "created": true,
+    "owner_only_windows_acl_helper_passed": true,
+    "value_or_digest_in_public_record": false,
+    "registered": false
+  },
+  "registration_manifest_sha256": "dc907a34454263910f4d3ea0a2415740874358a22677237d2d6bcb4d273903ec",
+  "files": [
+    {
+      "path": "scripts/register_exhibit_stage3_publisher.py",
+      "sha256_raw": "68bc33e2731619a9f7b69f2812a23d73756a2763fcaa0da57c6e4fb053cd6267"
+    },
+    {
+      "path": "scripts/exhibit_stage3_cli_guard.cjs",
+      "sha256_raw": "54eaa025b22689a21c82e041e3fd718eb2487c66cc36f67a4cd4f98ac20fd99a"
+    },
+    {
+      "path": "tests/test_register_exhibit_stage3_publisher.py",
+      "sha256_raw": "e8d0ff2b95f5bb204e98b9d446913b03ae4a6b0198c1b3ae61cd483a87dbddc4"
+    },
+    {
+      "path": "tests/test_exhibit_stage3_cli_guard.cjs",
+      "sha256_raw": "8d7f1c8e2f3895ad105ed3949918f1109559dcf5be6e906561238c043c8f9d3d"
+    }
+  ],
+  "tests": {
+    "python_registration_passed": 19,
+    "checklist_passed": 8,
+    "node_guard_passed": 8,
+    "real_fixed_wrangler_to_fake_dispatcher_passed": true,
+    "private_registration_input_dry_run": "pass/no-network",
+    "production_preload_bin_child_integration": "pass with fake GET/PUT; extra entry and modified dist rejected"
+  },
+  "cross_model_review": {
+    "status": "APPROVE",
+    "target_commit": "cc529525ecb923ebef297e333e2f58a3eb4eafb3",
+    "model": "gpt-6.1-terra",
+    "independent_tests": {
+      "python_passed": 19,
+      "node_passed": 8
+    },
+    "test_environment_note": "Initial Python attempt could not create default temporary directory; rerun with writable temporary directory passed.",
+    "scope": "Fixed four-file change; production preload to official bin/dist to fake GET/PUT, third entry and altered dist SHA rejection. No actual network or private input.",
+    "findings": "No remaining blocking findings in the fixed change."
+  },
+  "service_requests": 0,
+  "remote_mutations": 0,
+  "git_pushes": 0,
+  "partner_messages_sent": 0,
+  "limits": [
+    "user direct initial registration remains pending",
+    "upload window has not started",
+    "no stage3 data uploaded",
+    "current public app, home, media and access codes unchanged",
+    "rotation uses a separate output journal and latest OFF deployment pin; uncertain action must not be repeated"
+  ],
+  "production_preflight_fix": {
+    "prior_target_commit": "29d9f8f6a867fc3d55cf692dc49377240a86d4aa",
+    "prior_review": "APPROVE withdrawn after actual pre-user read-only initialization failure",
+    "cause": "official wrapper forwards preload to child; bin-only entry guard rejected official dist child",
+    "correction": "pin exact bin and dist entry paths and both raw SHA; test actual production preload parent-child chain",
+    "first_private_input_and_token_preserved": true,
+    "token_regenerated": false,
+    "secret_puts": 0,
+    "real_fixed_guard_read_only_version_query": "pass; current version and all vars match; upload OFF"
+  },
+  "review_recorded_at_utc": "2026-11-01T16:02:26.955133+00:00",
+  "publisher_rate_limit": {
+    "limit": 60,
+    "period_seconds": 60,
+    "planned_batch_requests": 12,
+    "batch_within_limit": true
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "schema": "pitcheezy-stage4-local-public-summary-v1",
+  "evidence_kind": "received_build_loopback_real_gateway",
+  "source_commit": "c47fe6cb78479362e7250141da946814cc33bd31",
+  "data_generation_commit": "cb1cfa8f759fd77adc75595316a389208c752dba",
+  "zip_sha256": "3c3b8006b892872bfff3423e2bd6ba49ea3de17ee92fbecef07e0b076bc8da51",
+  "passed": true,
+  "remote_service_requests": 0,
+  "real_phone": false,
+  "normal": {
+    "duration_ms": 75010,
+    "requests": 9,
+    "completed": 9,
+    "game_reads": 1,
+    "health_reads": 7,
+    "status_304": 9,
+    "incomplete_or_failed": 0
+  },
+  "notice": {
+    "local_management_requests": 5,
+    "hidden_observation_ms": 4592,
+    "restored_observation_ms": 1540,
+    "synthetic_error_hidden": true,
+    "same_document": true,
+    "final_off_confirmed": true
+  },
+  "browser": {
+    "requests": 22,
+    "synthetic_responses": 2,
+    "bodyless_304_client_abort": 10,
+    "incomplete_or_failed": 0,
+    "logout_status": 204
+  },
+  "cleanup": "local_host_stopped",
+  "limitations": [
+    "Local 75 seconds; remote 600-second sample remains unmeasured.",
+    "Observation waiting times are not end-to-end notice latency.",
+    "Chrome headless 390x844 is not a real phone.",
+    "Routing disables browser HTTP cache.",
+    "Raw private journals remain outside Git; this file contains selected result aggregates only."
+  ]
+}

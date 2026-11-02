@@ -1,0 +1,188 @@
+{
+  "schema": "pitcheezy-review3-c47-v1",
+  "date_kst": "2026-11-03",
+  "repository": "SongRoute/pitcheezy",
+  "target_commit": "c47fe6cb78479362e7250141da946814cc33bd31",
+  "base_commit": "61be7a86fdea108caed975cdde98d63296be50ad",
+  "zip_sha256": "3c3b8006b892872bfff3423e2bd6ba49ea3de17ee92fbecef07e0b076bc8da51",
+  "zip_note": "web build from c47fe6cb; the 6 public JSON files were declared by the sender as generated at cb1cfa8f759fd77adc75595316a389208c752dba",
+  "report": "docs/EXHIBIT_REVIEW3_C47_20261103.md",
+  "evidence_kind": "static_read_only_github_compare_review",
+  "teammate_code_executed": false,
+  "teammate_repo_written": false,
+  "scope": {
+    "compare_total_commits": 87,
+    "compare_total_files": 173,
+    "in_scope_files": 91,
+    "in_scope_filter": "apps/observer/** + scripts/publisher_replay.py",
+    "in_scope_added": 66,
+    "in_scope_modified": 25,
+    "in_scope_additions": 4856,
+    "in_scope_deletions": 1506,
+    "slices": [
+      "service-ui",
+      "preview-replay",
+      "backend-ops-contract",
+      "test-coverage"
+    ]
+  },
+  "files_without_api_patch": [
+    "apps/observer/web/src/preview/replay/game-849843.json",
+    "apps/observer/web/tests/fixtures/publish-ws-moments/849803/last-rec/v1/game/849803.json",
+    "apps/observer/web/tests/fixtures/publish-ws-moments/849803/mid-rec/v1/game/849803.json",
+    "apps/observer/web/tests/fixtures/publish-ws-moments/849803/reference-card/v1/game/849803.json",
+    "apps/observer/web/tests/fixtures/publish-ws/2026-10-24/v1/game/849805.json",
+    "apps/observer/web/tests/fixtures/publish-ws/2026-10-27/v1/game/849804.json",
+    "apps/observer/web/tests/fixtures/publish-ws/2026-10-28/v1/game/849803.json",
+    "scripts/publisher_replay.py"
+  ],
+  "files_without_api_patch_how_read": {
+    "apps/observer/web/src/preview/replay/game-849843.json": "full file at target, analysed with python -I (65 pitches, 20 PAs, asof_replay recs)",
+    "publish-ws-moments/849803 first/mid/last-rec game files": "read-only GitHub contents API at target",
+    "publish-ws-moments/849803/reference-card game file": "presence and 1-line added status from the compare listing only",
+    "publish-ws/2026-10-24|27|28 game files": "presence and 1-line added status from the compare listing only",
+    "scripts/publisher_replay.py": "full base and target files, local diff; mode 100644 both sides, blob 8520322b (71357 B) -> 620d2668 (79299 B)"
+  },
+  "counts": {
+    "p1_kept": 0,
+    "p2_kept": 6,
+    "p3_unverified": 15,
+    "kept": 6,
+    "dropped": 1
+  },
+  "kept": [
+    {
+      "id": "SVC-4",
+      "severity": "P2",
+      "file": "apps/observer/web/src/service/GameScreen.tsx",
+      "line": 354,
+      "exhibition_path": false,
+      "skeptics_refuted": 0,
+      "skeptic_severity": [
+        "P2",
+        "P2",
+        "P2"
+      ]
+    },
+    {
+      "id": "PREV-1",
+      "severity": "P2",
+      "file": "apps/observer/web/src/preview/replay/frames.ts",
+      "line": 115,
+      "exhibition_path": "only if monitor 1 shows the preview replay to fans (then P1)",
+      "skeptics_refuted": 0,
+      "skeptic_severity": [
+        "P2",
+        "P2",
+        "P2"
+      ]
+    },
+    {
+      "id": "PREV-2",
+      "severity": "P2",
+      "file": "apps/observer/web/src/preview/replay/control.ts",
+      "line": 41,
+      "exhibition_path": "only if monitor 1 runs the preview replay",
+      "skeptics_refuted": 1,
+      "skeptic_severity": [
+        "P3",
+        "P3",
+        "P2"
+      ]
+    },
+    {
+      "id": "PREV-3",
+      "severity": "P2",
+      "file": "apps/observer/web/src/preview/replay/install.ts",
+      "line": 54,
+      "exhibition_path": false,
+      "skeptics_refuted": 0,
+      "skeptic_severity": [
+        "P2",
+        "P2",
+        "P3"
+      ]
+    },
+    {
+      "id": "COV-1",
+      "severity": "P2",
+      "file": "apps/observer/web/tests/notice-hide-smoke.mjs",
+      "line": 150,
+      "exhibition_path": false,
+      "skeptics_refuted": 0,
+      "skeptic_severity": [
+        "P3",
+        "P3",
+        "P3"
+      ]
+    },
+    {
+      "id": "COV-3",
+      "severity": "P2",
+      "file": "apps/observer/web/tests/static-publish-smoke.mjs",
+      "line": 131,
+      "exhibition_path": false,
+      "skeptics_refuted": 1,
+      "skeptic_severity": [
+        "P3",
+        "P3",
+        "P3"
+      ]
+    }
+  ],
+  "dropped": [
+    {
+      "id": "COV-2",
+      "file": "apps/observer/web/tests/notice-hide-smoke.mjs",
+      "line": 143,
+      "skeptics_refuted": 3,
+      "reason": "notice screen is a status-independent early return (GameScreen.tsx:416); static pollMs equal for live and final; static-publish-smoke game-notice already covers final=true; redundant-coverage nit, no incorrect behaviour"
+    }
+  ],
+  "p3_unverified": [
+    "SVC-1",
+    "SVC-2",
+    "SVC-3",
+    "PREV-4",
+    "PREV-5",
+    "PREV-6",
+    "PREV-7",
+    "BE-1",
+    "BE-2",
+    "COV-4",
+    "COV-5",
+    "COV-6",
+    "COV-7",
+    "COV-8",
+    "COV-9"
+  ],
+  "p3_record_truncated_at": "none; the synthesizer input was cut at COV-8, and COV-8/COV-9 were restored by the orchestrator (Claude Fable 5.1) from the slice record",
+  "prior_observation": {
+    "claim": "API mode: finished game stuck after 503 notice -> auto-retry 404 -> server recovery",
+    "status": "confirmed_api_mode_only",
+    "lines": [
+      "GameScreen.tsx:332 pollMs 0 for final game outside static",
+      "GameScreen.tsx:354 retry only status 0 or >=500",
+      "GameScreen.tsx:357 missing backoff static only"
+    ],
+    "static_mode_affected": false,
+    "recorded_as": "SVC-4"
+  },
+  "ws_ops_silent_changes": "none: ws_alert.py differs from base only by the 9-line ops_armb_off insertion (542-550); ws_operate.py and other ops modules are not in the compare",
+  "verdict": "PASS_WITH_NOTES",
+  "verdict_sentence": "No kept P1 on the public static exhibition path; the six kept P2 findings sit in API mode, the preview replay bundle and test coverage, and PREV-1/2/3 must be handled or the replay kept operator-only if monitor 1 shows the preview to fans.",
+  "models": {
+    "slice_reviewers": "Claude agents selected with the 'opus' model option",
+    "skeptics": "Claude agents selected with the 'opus' model option, 3 per kept candidate, majority rule",
+    "orchestrator": "Claude Fable 5.1",
+    "note": "exact model IDs of the agents are not proven by this record; same-family assistance is not counted as a different-model review"
+  },
+  "limits": [
+    "static review only; no runtime, phone or host verification",
+    "test suites not executed; no build, install or browser rendering of teammate code",
+    "does not replace the teammate's own test results nor our own host acceptance",
+    "public 849843 game file is outside the compare; PREV-3 comparison used our read-only exhibition check copy",
+    "82 out-of-scope compare files not reviewed",
+    "P3 record handed to the writer was truncated at COV-8"
+  ]
+}

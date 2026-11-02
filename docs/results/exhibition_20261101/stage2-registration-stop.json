@@ -1,0 +1,32 @@
+{
+  "schema": "pitcheezy-stage2-registration-stop-v1",
+  "user_attempt_utc": "2026-11-01T14:49:10+00:00",
+  "stop_phase": "initial_deployments_read",
+  "initial_marker_preserved": true,
+  "journal_present": false,
+  "secret_put_record_present": false,
+  "related_active_processes": 0,
+  "active_version": "aeef75d8-7d43-4603-82c9-ebc408f184b2",
+  "active_percentage": 100,
+  "secret_count": 0,
+  "readback_basis": "Cloudflare management deployments list and secret list",
+  "cause": "request guard denied expired existing OAuth session refresh",
+  "automatic_registration_retry": false,
+  "service_http_requests": 0,
+  "remedy": "review existing-session refresh-only guard and explicit once-only pristine registration resume",
+  "fix_commit": "300762243933662383f0dafb71305669b3034f25",
+  "guard_sha256": "6d97a5e6ca84093bdf03c750a0977d61b261a1f99432687b0c035aca4bd17577",
+  "validation": {
+    "python_total": 36,
+    "registration_mock": 17,
+    "node_offline": 7,
+    "guarded_management_readback": "initial version unchanged, secrets zero"
+  },
+  "review": {
+    "helper_reviewer_configuration": "gpt-6.1-terra selected by tool; runtime self-report not exposed",
+    "helper_result": "APPROVE after completed-journal rejection fix",
+    "guard_author_configuration": "gpt-6.1-terra selected by tool",
+    "guard_review": "Codex read-only review and independent offline test execution"
+  },
+  "pending": "user executes explicit resume launcher; assistant has not executed registration"
+}

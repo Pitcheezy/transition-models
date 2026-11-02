@@ -1,0 +1,35 @@
+{
+  "schema": "pitcheezy-stage2-dashboard-screenshot-review-v1",
+  "recorded_at_utc": "2026-11-01T15:11:27.402692+00:00",
+  "basis": "User-provided screenshots visually inspected by Codex; no remote mutation or service request. Capture timestamp not independently verified.",
+  "evidence": [
+    {
+      "evidence": "worker_domains",
+      "sha256": "18bf7db15790b6768acb3a7446e4ce6ca4d9369cf91ef66564009bb752d0d0e5",
+      "bytes": 192302
+    },
+    {
+      "evidence": "worker_logging",
+      "sha256": "28cd03e4048c6078e55f8d9568e3c2e0aa43b0475ae5b6db469bcae2d3e7230f",
+      "bytes": 48958
+    }
+  ],
+  "observed": {
+    "workers_dev_enabled": false,
+    "preview_urls_enabled": false,
+    "custom_domains_and_routes_empty": true,
+    "logs_enabled": true,
+    "invocation_logs_enabled": true,
+    "persist_logs_enabled": true,
+    "logs_sampling_percent": 100,
+    "traces_enabled": false,
+    "issues_enabled": false
+  },
+  "web_analytics_auto_install": "pending_user_confirmation",
+  "live_log_persistence_test": "not_yet_performed",
+  "dns_and_route_creation": "pending_user_action_after_checkpoint",
+  "service_http_requests": 0,
+  "private_screenshots": "retained_in_user_attachments_not_committed",
+  "registration_evidence": "stage2-registration-complete.json",
+  "next": "Confirm Web Analytics Disabled, then user creates the exact planned AAAA and Route; only afterwards perform the fixed 15-request predata test."
+}

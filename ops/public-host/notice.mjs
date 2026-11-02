@@ -1,7 +1,7 @@
 /**
  * Emergency notice switch (WS-safe1). Our host-side state only; no Song screen, model or publisher code.
  * The switch is a private R2 object changed through an authenticated admin route. Nothing here deletes
- * data a browser already downloaded, and the placeholder texts are development copy awaiting approval.
+ * data a browser already downloaded. Public copy approval is recorded per message below.
  */
 const encoder = new TextEncoder();
 const SHA256 = /^[a-f0-9]{64}$/;
@@ -15,9 +15,9 @@ const STATE_SCHEMA = "pitcheezy-notice-state-v1";
 const AUDIT_SCHEMA = "pitcheezy-notice-audit-v1";
 const MAX_BODY = 2048;
 const MAX_AUDIT_LIST = 20;
-/** Development placeholder copy. The public wording is a human decision (WS-human1); ids are stable. */
+/** Maintenance copy approved for the exhibition on 2026-11-01; data_hold remains a draft. Ids are stable. */
 export const NOTICE_MESSAGES = Object.freeze({
-  maintenance: "개발용 안내 문구(승인 전): 서비스 점검 중입니다. 잠시 후 다시 확인해 주세요.",
+  maintenance: "잠시 자료를 확인하고 있어요. 곧 다시 보여 드릴게요.",
   data_hold: "개발용 안내 문구(승인 전): 자료 확인 중이라 화면을 잠시 내렸습니다.",
 });
 export class NoticeError extends Error {
@@ -255,7 +255,7 @@ export function noticeHtml(messageId) {
     '<style>body{font-family:system-ui,sans-serif;margin:0;padding:24px 16px;color:#1b1b1b;background:#fafafa}' +
     'main{max-width:36rem;margin:0 auto}h1{font-size:1.25rem}p{line-height:1.5}small{color:#555}</style></head>' +
     '<body><main data-notice-id="' + escape(messageId) + '"><h1>안내</h1><p>' + escape(text) + '</p>' +
-    '<p><small>개발용 안내 화면입니다. 실제 공개 문구와 전환은 담당자가 결정합니다.</small></p></main></body></html>';
+    '</main></body></html>';
 }
 export function noticeJson(messageId) {
   return { error: "service_notice", notice: { id: messageId, message: NOTICE_MESSAGES[messageId] || NOTICE_MESSAGES.maintenance } };

@@ -1,0 +1,64 @@
+{
+  "schema": "pitcheezy-exhibit-host-config-check-record-v1",
+  "evidence_kind": "offline_candidate_config_check",
+  "date": "2026-11-01",
+  "release": {
+    "bundle_sha256": "790f3b8804bf00ade655d2c78935d212a2062171474cb985600ff1a847a6f537",
+    "zip_bytes_on_disk": 535008,
+    "payload_bytes": 529539,
+    "files": 16,
+    "manifest_sha256": "5419efab48650780d44480ff30ee7c88a38722f1f98d005e797ffbfe84841b10",
+    "host_commit": "f50020b8aacf3bdd2ff47da80651b1d594c13098",
+    "frontend_commit": "fba6b2ff846dcfa9afad9ea5df4204007e0604c1",
+    "mode": "candidate",
+    "deployable": false,
+    "receipt": "host-release-candidate.json",
+    "build_check_exit": 0
+  },
+  "candidate_config": {
+    "path_in_candidate": "host/wrangler.deploy.json",
+    "config_sha256": "67b523983c750528385a0f3e36456326b205c7fd2303725a8f083cfc40c9fb06",
+    "client_settings_sha256": "337f6bb2e61b37f2d165c9160ee1bbc1f76c8f6e5f54505e4c0b935cd582f2a0",
+    "changes_from_wrangler_example": [
+      "assets.directory: ./public -> ../public (relative to host/)",
+      "vars.DATA_READ_ENABLED: false -> true",
+      "vars.UPLOAD_ENABLED: false (unchanged; upload window uses a deploy-time override)",
+      "vars.ACCESS_GATE_ENABLED: false -> true",
+      "observability: added explicit Logs 100% / invocation logs / persist, traces+issues off (CONFIG_CHECK.md: pinned Wrangler 4.151.0 disables observability when omitted; keeps the request-log storage switched on 2026-10-25)"
+    ],
+    "placeholders_left_for_the_user": [
+      "name (must be the existing trial Worker's name)",
+      "r2_buckets[0].bucket_name",
+      "d1_databases[0].database_name",
+      "d1_databases[0].database_id"
+    ],
+    "check_result": { "ok": false, "deployable": false, "error": "invalid_bucket_name", "exit": 2 },
+    "check_result_meaning": "Expected: the checker refuses replace-* placeholders by design. The user fills the real names at deploy time and re-runs the check; names are never committed."
+  },
+  "structure_check": {
+    "note": "Same files with the repository's synthetic offline identifiers from ops/public-host/examples/wrangler.offline.example.json; proves the structure, not an account.",
+    "config_sha256": "158bff009b34ff2a959dd160722226f27efc8754065ffdbb021f118c6d2c8da7",
+    "check_result": {
+      "ok": true,
+      "deployable": false,
+      "exit": 0,
+      "checks": [
+        "inventory_bytes",
+        "single_environment_config",
+        "package_paths",
+        "worker_first",
+        "private_endpoint_defaults",
+        "bindings_and_local_namespaces",
+        "collection_settings_match",
+        "cleanup_cron_present",
+        "observability_config"
+      ]
+    }
+  },
+  "provenance_note": "frontend.build_command is the schema's fixed [npm, run, build:public]; the partner's full line is `cd apps/observer/web && npm ci && npm run build:public`. tools: node v25.9.0, npm 11.12.1 (intake TOOLS.txt). contracts: public-publish v1 at the same partner commit.",
+  "not_done": [
+    "No Cloudflare login, deploy, upload, DNS or secret change.",
+    "The ZIP, extracted candidate folders and the filled config stay outside Git.",
+    "Wrangler dry-run: pinned 4.151.0 installed from the local npm cache (no login, no upload) was run once on the home config and once on this app candidate. The app dry-run ran on the original candidate folder and left host/.wrangler/tmp; that folder was removed on 2026-11-01 and this check re-run with the same result (invalid_bucket_name). Future dry-runs follow ops/public-host-tooling/README.md (byte copy, empty --env-file, isolated profile)."
+  ]
+}

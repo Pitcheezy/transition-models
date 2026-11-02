@@ -1,5 +1,10 @@
 # SmartPitch transition-models
 
+## 전시 재개 기준 — 2026-11-01
+
+PLAN.md → CHECKLIST.md 상단 → docs/COLLABORATION_PROTOCOL.md → docs/CLAUDE_EXHIBITION_RESUME.md 순서로 읽는다. 사용자는 Song 고정 빌드와 영상 전용 플레이어 방향을 채택했다. 기존 파일·worktree를 보존하며 CV/추가 경기 개발은 중단한다. 2026-11-01 사용자 결정은 전시 전용 Worker·버킷으로 849843 한 경기·2026-09-30 하루만 제공하는 방향이다. 로컬 인수·문서·후보 준비는 진행한다. apex 전환·maintenance 문구 배포는 완료 이력이며 반복하지 않는다. 새 자원 생성·각 배포·업로드·안내 ON/OFF·시험 호스트 연결·검증 뒤 app.pitcheezy.com Route 이동은 실행 직전 적용 범위와 되돌리기를 설명하고 각각 승인받는다. 팀원 저장소·프로세스·배포는 읽기만 한다. 그 밖의 호스트·도메인·DNS 변경과 접근 제한 OFF는 승인되지 않았다. 한 파일 한 수정자, 고정 변경분 다른 모델 검토를 유지한다.
+
+
 ## 현재 월드시리즈 운영 인계 — 2026-10-18
 
 현재 작업·수정 권한은 [CHECKLIST 상단](CHECKLIST.md), 검증 결과·남은 입력은

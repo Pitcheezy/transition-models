@@ -1,0 +1,766 @@
+{
+  "schema": "pitcheezy-stage5-server-log-correlation-v1",
+  "evidence_kind": "offline_client_and_exported_server_event_comparison",
+  "passed": true,
+  "matching_rule": "unique_response_ray_only_no_time_or_path_fallback",
+  "timestamp_tolerance_ms": 0,
+  "counts": {
+    "client_remote_requests": 24,
+    "synthetic_nonremote_excluded": 0,
+    "server_http_events": 26,
+    "server_nonhttp_excluded": 0,
+    "server_malformed_records": 0,
+    "server_unmatched_events": 2,
+    "duplicate_server_ray_groups": 0,
+    "duplicate_provider_request_id_groups": 0,
+    "client_results": {
+      "matched": 24
+    }
+  },
+  "source_integrity": [
+    {
+      "input": "stage5-cutover-001-completed",
+      "bytes": 405,
+      "sha256": "674526230d74cc4a80e4981e497eaedd5db11704cdf70aecac53e29f9613de91"
+    },
+    {
+      "input": "stage5-cutover-001-started",
+      "bytes": 348,
+      "sha256": "a387d8a06862a9ab5a273b37d1dbb3ea791c46dbb4350af142dcb926c7c2391b"
+    },
+    {
+      "input": "stage5-cutover-002-completed",
+      "bytes": 416,
+      "sha256": "228fa8cab4ef8e59bf3d584a23593941da890be22eae21892260dd276a1d6e20"
+    },
+    {
+      "input": "stage5-cutover-002-started",
+      "bytes": 359,
+      "sha256": "c153f275e6c55fb436ff72f3e8a318ca888fd6a073c6c470ecf6eeb26cb29300"
+    },
+    {
+      "input": "stage5-cutover-003-completed",
+      "bytes": 421,
+      "sha256": "32c52971c6d3f6524136dd040a1bfa606b4f6ed16b5af2277816f127e85bef15"
+    },
+    {
+      "input": "stage5-cutover-003-started",
+      "bytes": 364,
+      "sha256": "76dfa03c0548ae48f3ed61418d484b4ac93d01231a537e79bdbd502d4a82bdba"
+    },
+    {
+      "input": "stage5-cutover-004-completed",
+      "bytes": 429,
+      "sha256": "1801f3c634d68031281b178e3cd7649316cda6bda4ce9823a99d372c63c870dd"
+    },
+    {
+      "input": "stage5-cutover-004-started",
+      "bytes": 372,
+      "sha256": "fe19b02ffbd1981431eeb09cc9244d0ee1ffbf4e6ad4491fdaa13b7067ac7200"
+    },
+    {
+      "input": "stage5-cutover-005-completed",
+      "bytes": 424,
+      "sha256": "bed723574b96db2fa23729ae5215bb63fd08a07dbc9db10d7946aeae7f55aa4b"
+    },
+    {
+      "input": "stage5-cutover-005-started",
+      "bytes": 367,
+      "sha256": "9c4ad248b3c38b7b4f74fe60d62e47869547f9d23b7f9d615a46af7300166a4f"
+    },
+    {
+      "input": "stage5-cutover-006-completed",
+      "bytes": 425,
+      "sha256": "ad7c4ede63a0069208b20e95f5f8859585d5721c856c6564087acfa9a86810ff"
+    },
+    {
+      "input": "stage5-cutover-006-started",
+      "bytes": 368,
+      "sha256": "87de47801c949aeb307dd5ffed89aabecb5e44ac14cf5f8c2aba82c7ec374b5b"
+    },
+    {
+      "input": "stage5-cutover-007-completed",
+      "bytes": 424,
+      "sha256": "447fcadd5777b78fb57a383748f4c708e4b54a645d4d22b2025ee0178b731c10"
+    },
+    {
+      "input": "stage5-cutover-007-started",
+      "bytes": 367,
+      "sha256": "26fc9ee18c59e7d2acec1db74e45d29da69ab64f5d5f81aef2c34be6962cdce9"
+    },
+    {
+      "input": "stage5-cutover-008-completed",
+      "bytes": 429,
+      "sha256": "0089aee2543ed30330484193c2e63681610324a5ba7e07ad17ee866bbb916022"
+    },
+    {
+      "input": "stage5-cutover-008-started",
+      "bytes": 372,
+      "sha256": "665001248c99a623c194d5637facf53c50188ac9bb232b9edeb64b64550b9af0"
+    },
+    {
+      "input": "stage5-cutover-009-completed",
+      "bytes": 418,
+      "sha256": "488e03cb3bf128c0fec704e0c7eb7aa2a556fa37f06c78c0f31616e0b48e7438"
+    },
+    {
+      "input": "stage5-cutover-009-started",
+      "bytes": 361,
+      "sha256": "0a33a3e7c4ae207f24e528f13b24958bd403fbe52a56b82b33fb9c8a15e40a0e"
+    },
+    {
+      "input": "stage5-cutover-010-completed",
+      "bytes": 422,
+      "sha256": "e5c784aaaf9ac863b4494351f241558d2e24f4f8ee1b78d542efb5a3eb212897"
+    },
+    {
+      "input": "stage5-cutover-010-started",
+      "bytes": 365,
+      "sha256": "3f137f2a4cdbe5640a54f5a02b0ba8dde65711346708dd8075fdf4c5a5ee0218"
+    },
+    {
+      "input": "stage5-cutover-011-completed",
+      "bytes": 420,
+      "sha256": "d9788de9a0dcc373ca1393df31d00a4f086a87172380cad443f65662b17886f2"
+    },
+    {
+      "input": "stage5-cutover-011-started",
+      "bytes": 363,
+      "sha256": "67cc4a0baa181ff3737b7994bc5b55643b83207c5a847f61766bef85ed6a4b5d"
+    },
+    {
+      "input": "stage5-cutover-012-completed",
+      "bytes": 416,
+      "sha256": "9174e6d8cb7ed29368340d9a1ed957f6b390c9a4cc32de922d4181f3cb2d5a24"
+    },
+    {
+      "input": "stage5-cutover-012-started",
+      "bytes": 359,
+      "sha256": "4f31fc52a4d8b2ddc26cd5580115db14cff491784a30b1203fc7e2f635d0fc47"
+    },
+    {
+      "input": "stage5-cutover-013-completed",
+      "bytes": 417,
+      "sha256": "db7d6b5fc34254b3a44c28c91c50ad44cec22ff6a7ef13a906812ae488cb724c"
+    },
+    {
+      "input": "stage5-cutover-013-started",
+      "bytes": 360,
+      "sha256": "3b1eddca34a5ec424484519a765196a5da372e49b585a515e9d0c5fea8b38a7d"
+    },
+    {
+      "input": "stage5-cutover-014-completed",
+      "bytes": 430,
+      "sha256": "9a7fbf638409c6c841994a6fedea8ba01fd5562884246c6cc7684dc1b92c59cf"
+    },
+    {
+      "input": "stage5-cutover-014-started",
+      "bytes": 373,
+      "sha256": "5a503c042f0d7c438d2da6ce567da5b2dac5dc06e25851d25a71b8b1688a6432"
+    },
+    {
+      "input": "stage5-cutover-015-completed",
+      "bytes": 431,
+      "sha256": "4d21c5577262c817b541868a7819350f28dd8c3f3fd492173944231e04aa0e8b"
+    },
+    {
+      "input": "stage5-cutover-015-started",
+      "bytes": 374,
+      "sha256": "f565a370f08fc97702559eee710812031438a721141f91bc743218fda82c6678"
+    },
+    {
+      "input": "stage5-cutover-016-completed",
+      "bytes": 406,
+      "sha256": "0fddd67589619aaabfb3d1e7b175f88985420db5188e50dbc532547eebd2ba94"
+    },
+    {
+      "input": "stage5-cutover-016-started",
+      "bytes": 349,
+      "sha256": "cf8a15b47736950d70fe95d8516854ea6f572040931f5cd9e70367706bf5667f"
+    },
+    {
+      "input": "stage5-cutover-017-completed",
+      "bytes": 418,
+      "sha256": "75748de6820d03ccc7e03a06ecd6bc825ac9eedcb751f74ec131339210f5c62d"
+    },
+    {
+      "input": "stage5-cutover-017-started",
+      "bytes": 361,
+      "sha256": "33b23141ee92a3caf85edf2da79ccf9883a9651cacb52b0e4a90b38074e4aa18"
+    },
+    {
+      "input": "stage5-cutover-018-completed",
+      "bytes": 425,
+      "sha256": "c72b304fb5cfcb338a4522a7661b795edf6c78a3eceefeda134cfa78f8b1695f"
+    },
+    {
+      "input": "stage5-cutover-018-started",
+      "bytes": 368,
+      "sha256": "ee04728ceb271058e17f78a1db208d71cc062489f09f6880125193a0683c89e4"
+    },
+    {
+      "input": "stage5-cutover-019-completed",
+      "bytes": 425,
+      "sha256": "d1ea49d484bdadb35b3b246a6b9527914f9d90a186a7cb0a164c9a70faf16408"
+    },
+    {
+      "input": "stage5-cutover-019-started",
+      "bytes": 368,
+      "sha256": "0944faa964fbad060f2e214bfc0ace282b1a15b53b218c095aa3e4d196468120"
+    },
+    {
+      "input": "stage5-cutover-020-completed",
+      "bytes": 426,
+      "sha256": "432ca8c9228d552d01cb5446f27f80097ca2d38d519f892d4781e194fcf9a2c0"
+    },
+    {
+      "input": "stage5-cutover-020-started",
+      "bytes": 369,
+      "sha256": "77fde78a448f2c678de166a054874acefc08b502b6e73f99739d5f328ab71a5d"
+    },
+    {
+      "input": "stage5-cutover-021-completed",
+      "bytes": 430,
+      "sha256": "5d0d2347590692238fac584d372ea9a86fef3e10c9c7667d2ca9339e0ffe516a"
+    },
+    {
+      "input": "stage5-cutover-021-started",
+      "bytes": 373,
+      "sha256": "6b912bd88999a82ab308538334035ffd9ffeef6d9c5aab888d94229ab83f8874"
+    },
+    {
+      "input": "stage5-cutover-022-completed",
+      "bytes": 423,
+      "sha256": "ecbbac417da15bf8a1372fb99aec23274f0e019cf7df053fc9a77edc31145da6"
+    },
+    {
+      "input": "stage5-cutover-022-started",
+      "bytes": 366,
+      "sha256": "8cd8c1ba33a32d7a090921b2c5dde061ea2aa40763d5007f5eee3ea914ac9613"
+    },
+    {
+      "input": "stage5-cutover-023-completed",
+      "bytes": 430,
+      "sha256": "759dc22701ef4e560203a29f6a56bb36fff007b4436be720f7ed7efc1e0e8ac9"
+    },
+    {
+      "input": "stage5-cutover-023-started",
+      "bytes": 373,
+      "sha256": "b13134e24dc3eae2ba44de5f5ba21215a2e3833e5a2f6b24b99058310d246b7a"
+    },
+    {
+      "input": "stage5-cutover-024-completed",
+      "bytes": 426,
+      "sha256": "b5dfca47d1406a9a55ff3cc01780cd84de9da6481778a0dbfac6eca9d56419b2"
+    },
+    {
+      "input": "stage5-cutover-024-started",
+      "bytes": 369,
+      "sha256": "6b80229c38c4b8f5458d2b47142a2ce4063825637106eaf4f5eef3726ade36c1"
+    },
+    {
+      "input": "stage5-cycle",
+      "bytes": 238,
+      "sha256": "576ea23b60ee03dd0fa8a0f195c04b0ff688b4371a355fc15b836a896e2ae349"
+    },
+    {
+      "input": "stage5-result",
+      "bytes": 3700,
+      "sha256": "fb9f21c916d448c2772691201ff7112e86c38c25381ac00b9b7f904621a43c58"
+    },
+    {
+      "input": "server-export-001",
+      "bytes": 131330,
+      "sha256": "4d767bbaf0a0e30e4c4241f4915ae7772fea1a950c273c9f5b3049d700feaf89"
+    }
+  ],
+  "requests": [
+    {
+      "request": "stage5-cutover-001",
+      "expected_version": "5999cf0d-4f18-4d43-bcd6-320e04860369",
+      "version_expectation_source": "management_pin_not_server_evidence",
+      "server_version": "5999cf0d-4f18-4d43-bcd6-320e04860369",
+      "result": "matched",
+      "checks": {
+        "ray_fields_agree": true,
+        "unique_provider_request_id": true,
+        "method": true,
+        "path_and_query": true,
+        "status": true,
+        "version": true,
+        "utc_within_client_interval": true,
+        "outcome_ok": true,
+        "not_truncated": true
+      },
+      "problems": []
+    },
+    {
+      "request": "stage5-cutover-002",
+      "expected_version": "5999cf0d-4f18-4d43-bcd6-320e04860369",
+      "version_expectation_source": "management_pin_not_server_evidence",
+      "server_version": "5999cf0d-4f18-4d43-bcd6-320e04860369",
+      "result": "matched",
+      "checks": {
+        "ray_fields_agree": true,
+        "unique_provider_request_id": true,
+        "method": true,
+        "path_and_query": true,
+        "status": true,
+        "version": true,
+        "utc_within_client_interval": true,
+        "outcome_ok": true,
+        "not_truncated": true
+      },
+      "problems": []
+    },
+    {
+      "request": "stage5-cutover-003",
+      "expected_version": "5999cf0d-4f18-4d43-bcd6-320e04860369",
+      "version_expectation_source": "management_pin_not_server_evidence",
+      "server_version": "5999cf0d-4f18-4d43-bcd6-320e04860369",
+      "result": "matched",
+      "checks": {
+        "ray_fields_agree": true,
+        "unique_provider_request_id": true,
+        "method": true,
+        "path_and_query": true,
+        "status": true,
+        "version": true,
+        "utc_within_client_interval": true,
+        "outcome_ok": true,
+        "not_truncated": true
+      },
+      "problems": []
+    },
+    {
+      "request": "stage5-cutover-004",
+      "expected_version": "5999cf0d-4f18-4d43-bcd6-320e04860369",
+      "version_expectation_source": "management_pin_not_server_evidence",
+      "server_version": "5999cf0d-4f18-4d43-bcd6-320e04860369",
+      "result": "matched",
+      "checks": {
+        "ray_fields_agree": true,
+        "unique_provider_request_id": true,
+        "method": true,
+        "path_and_query": true,
+        "status": true,
+        "version": true,
+        "utc_within_client_interval": true,
+        "outcome_ok": true,
+        "not_truncated": true
+      },
+      "problems": []
+    },
+    {
+      "request": "stage5-cutover-005",
+      "expected_version": "5999cf0d-4f18-4d43-bcd6-320e04860369",
+      "version_expectation_source": "management_pin_not_server_evidence",
+      "server_version": "5999cf0d-4f18-4d43-bcd6-320e04860369",
+      "result": "matched",
+      "checks": {
+        "ray_fields_agree": true,
+        "unique_provider_request_id": true,
+        "method": true,
+        "path_and_query": true,
+        "status": true,
+        "version": true,
+        "utc_within_client_interval": true,
+        "outcome_ok": true,
+        "not_truncated": true
+      },
+      "problems": []
+    },
+    {
+      "request": "stage5-cutover-006",
+      "expected_version": "5999cf0d-4f18-4d43-bcd6-320e04860369",
+      "version_expectation_source": "management_pin_not_server_evidence",
+      "server_version": "5999cf0d-4f18-4d43-bcd6-320e04860369",
+      "result": "matched",
+      "checks": {
+        "ray_fields_agree": true,
+        "unique_provider_request_id": true,
+        "method": true,
+        "path_and_query": true,
+        "status": true,
+        "version": true,
+        "utc_within_client_interval": true,
+        "outcome_ok": true,
+        "not_truncated": true
+      },
+      "problems": []
+    },
+    {
+      "request": "stage5-cutover-007",
+      "expected_version": "5999cf0d-4f18-4d43-bcd6-320e04860369",
+      "version_expectation_source": "management_pin_not_server_evidence",
+      "server_version": "5999cf0d-4f18-4d43-bcd6-320e04860369",
+      "result": "matched",
+      "checks": {
+        "ray_fields_agree": true,
+        "unique_provider_request_id": true,
+        "method": true,
+        "path_and_query": true,
+        "status": true,
+        "version": true,
+        "utc_within_client_interval": true,
+        "outcome_ok": true,
+        "not_truncated": true
+      },
+      "problems": []
+    },
+    {
+      "request": "stage5-cutover-008",
+      "expected_version": "5999cf0d-4f18-4d43-bcd6-320e04860369",
+      "version_expectation_source": "management_pin_not_server_evidence",
+      "server_version": "5999cf0d-4f18-4d43-bcd6-320e04860369",
+      "result": "matched",
+      "checks": {
+        "ray_fields_agree": true,
+        "unique_provider_request_id": true,
+        "method": true,
+        "path_and_query": true,
+        "status": true,
+        "version": true,
+        "utc_within_client_interval": true,
+        "outcome_ok": true,
+        "not_truncated": true
+      },
+      "problems": []
+    },
+    {
+      "request": "stage5-cutover-009",
+      "expected_version": "5999cf0d-4f18-4d43-bcd6-320e04860369",
+      "version_expectation_source": "management_pin_not_server_evidence",
+      "server_version": "5999cf0d-4f18-4d43-bcd6-320e04860369",
+      "result": "matched",
+      "checks": {
+        "ray_fields_agree": true,
+        "unique_provider_request_id": true,
+        "method": true,
+        "path_and_query": true,
+        "status": true,
+        "version": true,
+        "utc_within_client_interval": true,
+        "outcome_ok": true,
+        "not_truncated": true
+      },
+      "problems": []
+    },
+    {
+      "request": "stage5-cutover-010",
+      "expected_version": "5999cf0d-4f18-4d43-bcd6-320e04860369",
+      "version_expectation_source": "management_pin_not_server_evidence",
+      "server_version": "5999cf0d-4f18-4d43-bcd6-320e04860369",
+      "result": "matched",
+      "checks": {
+        "ray_fields_agree": true,
+        "unique_provider_request_id": true,
+        "method": true,
+        "path_and_query": true,
+        "status": true,
+        "version": true,
+        "utc_within_client_interval": true,
+        "outcome_ok": true,
+        "not_truncated": true
+      },
+      "problems": []
+    },
+    {
+      "request": "stage5-cutover-011",
+      "expected_version": "5999cf0d-4f18-4d43-bcd6-320e04860369",
+      "version_expectation_source": "management_pin_not_server_evidence",
+      "server_version": "5999cf0d-4f18-4d43-bcd6-320e04860369",
+      "result": "matched",
+      "checks": {
+        "ray_fields_agree": true,
+        "unique_provider_request_id": true,
+        "method": true,
+        "path_and_query": true,
+        "status": true,
+        "version": true,
+        "utc_within_client_interval": true,
+        "outcome_ok": true,
+        "not_truncated": true
+      },
+      "problems": []
+    },
+    {
+      "request": "stage5-cutover-012",
+      "expected_version": "5999cf0d-4f18-4d43-bcd6-320e04860369",
+      "version_expectation_source": "management_pin_not_server_evidence",
+      "server_version": "5999cf0d-4f18-4d43-bcd6-320e04860369",
+      "result": "matched",
+      "checks": {
+        "ray_fields_agree": true,
+        "unique_provider_request_id": true,
+        "method": true,
+        "path_and_query": true,
+        "status": true,
+        "version": true,
+        "utc_within_client_interval": true,
+        "outcome_ok": true,
+        "not_truncated": true
+      },
+      "problems": []
+    },
+    {
+      "request": "stage5-cutover-013",
+      "expected_version": "5999cf0d-4f18-4d43-bcd6-320e04860369",
+      "version_expectation_source": "management_pin_not_server_evidence",
+      "server_version": "5999cf0d-4f18-4d43-bcd6-320e04860369",
+      "result": "matched",
+      "checks": {
+        "ray_fields_agree": true,
+        "unique_provider_request_id": true,
+        "method": true,
+        "path_and_query": true,
+        "status": true,
+        "version": true,
+        "utc_within_client_interval": true,
+        "outcome_ok": true,
+        "not_truncated": true
+      },
+      "problems": []
+    },
+    {
+      "request": "stage5-cutover-014",
+      "expected_version": "5999cf0d-4f18-4d43-bcd6-320e04860369",
+      "version_expectation_source": "management_pin_not_server_evidence",
+      "server_version": "5999cf0d-4f18-4d43-bcd6-320e04860369",
+      "result": "matched",
+      "checks": {
+        "ray_fields_agree": true,
+        "unique_provider_request_id": true,
+        "method": true,
+        "path_and_query": true,
+        "status": true,
+        "version": true,
+        "utc_within_client_interval": true,
+        "outcome_ok": true,
+        "not_truncated": true
+      },
+      "problems": []
+    },
+    {
+      "request": "stage5-cutover-015",
+      "expected_version": "5999cf0d-4f18-4d43-bcd6-320e04860369",
+      "version_expectation_source": "management_pin_not_server_evidence",
+      "server_version": "5999cf0d-4f18-4d43-bcd6-320e04860369",
+      "result": "matched",
+      "checks": {
+        "ray_fields_agree": true,
+        "unique_provider_request_id": true,
+        "method": true,
+        "path_and_query": true,
+        "status": true,
+        "version": true,
+        "utc_within_client_interval": true,
+        "outcome_ok": true,
+        "not_truncated": true
+      },
+      "problems": []
+    },
+    {
+      "request": "stage5-cutover-016",
+      "expected_version": "5999cf0d-4f18-4d43-bcd6-320e04860369",
+      "version_expectation_source": "management_pin_not_server_evidence",
+      "server_version": "5999cf0d-4f18-4d43-bcd6-320e04860369",
+      "result": "matched",
+      "checks": {
+        "ray_fields_agree": true,
+        "unique_provider_request_id": true,
+        "method": true,
+        "path_and_query": true,
+        "status": true,
+        "version": true,
+        "utc_within_client_interval": true,
+        "outcome_ok": true,
+        "not_truncated": true
+      },
+      "problems": []
+    },
+    {
+      "request": "stage5-cutover-017",
+      "expected_version": "5999cf0d-4f18-4d43-bcd6-320e04860369",
+      "version_expectation_source": "management_pin_not_server_evidence",
+      "server_version": "5999cf0d-4f18-4d43-bcd6-320e04860369",
+      "result": "matched",
+      "checks": {
+        "ray_fields_agree": true,
+        "unique_provider_request_id": true,
+        "method": true,
+        "path_and_query": true,
+        "status": true,
+        "version": true,
+        "utc_within_client_interval": true,
+        "outcome_ok": true,
+        "not_truncated": true
+      },
+      "problems": []
+    },
+    {
+      "request": "stage5-cutover-018",
+      "expected_version": "5999cf0d-4f18-4d43-bcd6-320e04860369",
+      "version_expectation_source": "management_pin_not_server_evidence",
+      "server_version": "5999cf0d-4f18-4d43-bcd6-320e04860369",
+      "result": "matched",
+      "checks": {
+        "ray_fields_agree": true,
+        "unique_provider_request_id": true,
+        "method": true,
+        "path_and_query": true,
+        "status": true,
+        "version": true,
+        "utc_within_client_interval": true,
+        "outcome_ok": true,
+        "not_truncated": true
+      },
+      "problems": []
+    },
+    {
+      "request": "stage5-cutover-019",
+      "expected_version": "5999cf0d-4f18-4d43-bcd6-320e04860369",
+      "version_expectation_source": "management_pin_not_server_evidence",
+      "server_version": "5999cf0d-4f18-4d43-bcd6-320e04860369",
+      "result": "matched",
+      "checks": {
+        "ray_fields_agree": true,
+        "unique_provider_request_id": true,
+        "method": true,
+        "path_and_query": true,
+        "status": true,
+        "version": true,
+        "utc_within_client_interval": true,
+        "outcome_ok": true,
+        "not_truncated": true
+      },
+      "problems": []
+    },
+    {
+      "request": "stage5-cutover-020",
+      "expected_version": "5999cf0d-4f18-4d43-bcd6-320e04860369",
+      "version_expectation_source": "management_pin_not_server_evidence",
+      "server_version": "5999cf0d-4f18-4d43-bcd6-320e04860369",
+      "result": "matched",
+      "checks": {
+        "ray_fields_agree": true,
+        "unique_provider_request_id": true,
+        "method": true,
+        "path_and_query": true,
+        "status": true,
+        "version": true,
+        "utc_within_client_interval": true,
+        "outcome_ok": true,
+        "not_truncated": true
+      },
+      "problems": []
+    },
+    {
+      "request": "stage5-cutover-021",
+      "expected_version": "5999cf0d-4f18-4d43-bcd6-320e04860369",
+      "version_expectation_source": "management_pin_not_server_evidence",
+      "server_version": "5999cf0d-4f18-4d43-bcd6-320e04860369",
+      "result": "matched",
+      "checks": {
+        "ray_fields_agree": true,
+        "unique_provider_request_id": true,
+        "method": true,
+        "path_and_query": true,
+        "status": true,
+        "version": true,
+        "utc_within_client_interval": true,
+        "outcome_ok": true,
+        "not_truncated": true
+      },
+      "problems": []
+    },
+    {
+      "request": "stage5-cutover-022",
+      "expected_version": "5999cf0d-4f18-4d43-bcd6-320e04860369",
+      "version_expectation_source": "management_pin_not_server_evidence",
+      "server_version": "5999cf0d-4f18-4d43-bcd6-320e04860369",
+      "result": "matched",
+      "checks": {
+        "ray_fields_agree": true,
+        "unique_provider_request_id": true,
+        "method": true,
+        "path_and_query": true,
+        "status": true,
+        "version": true,
+        "utc_within_client_interval": true,
+        "outcome_ok": true,
+        "not_truncated": true
+      },
+      "problems": []
+    },
+    {
+      "request": "stage5-cutover-023",
+      "expected_version": "5999cf0d-4f18-4d43-bcd6-320e04860369",
+      "version_expectation_source": "management_pin_not_server_evidence",
+      "server_version": "5999cf0d-4f18-4d43-bcd6-320e04860369",
+      "result": "matched",
+      "checks": {
+        "ray_fields_agree": true,
+        "unique_provider_request_id": true,
+        "method": true,
+        "path_and_query": true,
+        "status": true,
+        "version": true,
+        "utc_within_client_interval": true,
+        "outcome_ok": true,
+        "not_truncated": true
+      },
+      "problems": []
+    },
+    {
+      "request": "stage5-cutover-024",
+      "expected_version": "5999cf0d-4f18-4d43-bcd6-320e04860369",
+      "version_expectation_source": "management_pin_not_server_evidence",
+      "server_version": "5999cf0d-4f18-4d43-bcd6-320e04860369",
+      "result": "matched",
+      "checks": {
+        "ray_fields_agree": true,
+        "unique_provider_request_id": true,
+        "method": true,
+        "path_and_query": true,
+        "status": true,
+        "version": true,
+        "utc_within_client_interval": true,
+        "outcome_ok": true,
+        "not_truncated": true
+      },
+      "problems": []
+    }
+  ],
+  "limits": [
+    "client_version_pin_is_not_server_evidence_without_matching_event",
+    "does_not_prove_body_bytes_authentication_or_ui_acceptance",
+    "unmatched_extra_events_are_not_reassigned_to_client_requests",
+    "extra_events_such_as_user_phone_requests_are_counted_not_matched",
+    "management_version_pin_confirmed_only_per_matched_event"
+  ],
+  "ledger": {
+    "client_requests": 24,
+    "version_pin": "5999cf0d-4f18-4d43-bcd6-320e04860369",
+    "window_utc": {
+      "first_started": "2026-11-02T13:21:54.576Z",
+      "last_finished": "2026-11-02T13:22:01.417Z"
+    },
+    "method_counts": {
+      "DELETE": 1,
+      "GET": 20,
+      "HEAD": 2,
+      "POST": 1
+    },
+    "status_counts": {
+      "200": 14,
+      "204": 1,
+      "307": 1,
+      "401": 3,
+      "404": 4,
+      "503": 1
+    },
+    "distinct_paths": 18
+  },
+  "extra_server_events_not_reassigned": 2
+}

@@ -147,7 +147,7 @@ test("turning the notice on replaces page, asset, data and telemetry answers but
       else {
         assert.match(text, /<!doctype html>/);
         assert.ok(text.includes(NOTICE_MESSAGES.maintenance));
-        assert.doesNotMatch(text, /synthetic drill|ops-a|<script/);
+        assert.doesNotMatch(text, /synthetic drill|ops-a|<script|개발용|승인 전/);
       }
     }
   }
@@ -161,6 +161,7 @@ test("turning the notice on replaces page, asset, data and telemetry answers but
     const body = await r.json();
     assert.equal(body.error, "service_notice");
     assert.equal(body.notice.id, "maintenance");
+    assert.equal(body.notice.message, "잠시 자료를 확인하고 있어요. 곧 다시 보여 드릴게요.");
     assert.equal(JSON.stringify(body).includes("synthetic drill"), false);
   }
   assert.equal((await call(game, { method: "OPTIONS", headers: { Origin: "https://ui.example.test" } })).status, 204);

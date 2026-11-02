@@ -61,7 +61,9 @@ test("open screen, reload, direct files, back navigation and recovery around the
       assert.match(r.headers()["content-type"], /^text\/html/);
       assert.equal(r.headers()["cache-control"], "no-store");
       assert.equal(r.headers()["x-pitcheezy-notice"], "maintenance");
-      assert.match(await r.text(), /개발용 안내 문구/);
+      const noticeText = await r.text();
+      assert.ok(noticeText.includes("잠시 자료를 확인하고 있어요. 곧 다시 보여 드릴게요."));
+      assert.doesNotMatch(noticeText, /개발용|승인 전/);
     }
     const data = await page.request.get(host.origin + "/v1/game/123.json");
     assert.equal(data.status(), 503);

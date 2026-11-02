@@ -1,0 +1,704 @@
+{
+  "schema": "pitcheezy-exhibit-host-local-v1",
+  "evidence_kind": "loopback_miniflare_our_gateway",
+  "target": "ephemeral-loopback-miniflare",
+  "source_commit": "c47fe6cb78479362e7250141da946814cc33bd31",
+  "source_commit_basis": "sender_declared_provenance_unverified",
+  "data_generation_commit": "cb1cfa8f759fd77adc75595316a389208c752dba",
+  "data_generation_commit_basis": "sender_declared_manifest_unverified",
+  "intake_zip_sha256": "3c3b8006b892872bfff3423e2bd6ba49ea3de17ee92fbecef07e0b076bc8da51",
+  "exhibit_game": "849843",
+  "environment": {
+    "node": "v24.1.0",
+    "platform": "win32",
+    "arch": "x64",
+    "miniflare": "4.20260730.0",
+    "browser": "installed Chrome headless 155.0.8059.86 via Playwright 1.62.1"
+  },
+  "gateway_sha256": {
+    "worker.mjs": "9f3d818686bc6af847bf4c292658a1c71f22f4dd72f6282c8b00e84e0ca33d1b",
+    "gateway.mjs": "fbc1f5d652c124f6827d4065caaf62411f3eba0c311da747ad8473c5d71f7ca0",
+    "notice.mjs": "de20ea35bfef7fe0c0072bcc53bda46037b10ac64bdb6a073782a670595fb90b",
+    "access.mjs": "b4e1a9be86d23a8bfb1e4edb1d7e488aa2ac075f5cd8aa4b0827fcebc67ef751",
+    "telemetry.mjs": "545569404a68e8a5159984c3b328e4982c217247d1cd5af01e1831165ebf6739",
+    "rehearsal/local-host.mjs": "65140ad90876c0d51b895d92945cd0f53a233bc18511408d71eb858143c4d73f",
+    "exhibit-site.mjs": "3c40b75a039d5d5e811c97dceb07cfdb27465e1d0f0ba961d65fdcfa154c011a",
+    "rehearse-exhibit-host.mjs": "3913899723111672d0937d378837bb9413aa8ccadcb611adfa6cadb034fca6ac",
+    "package-lock.json": "55e30f2a196b6510da56126fb33cb912ab0ebbfe55047f358048027ba5484f91"
+  },
+  "counts": {
+    "site_files": 10,
+    "static": 4,
+    "data": 6,
+    "site_bytes": 1159353
+  },
+  "install": {
+    "static": "ASSETS binding (emulated static assets, SPA fallback)",
+    "data": "/_publish PUT, If-None-Match: *, pitcheezy-host-record-v1",
+    "upload_order": [
+      "setup",
+      "game",
+      "games",
+      "dates",
+      "manifest",
+      "health"
+    ]
+  },
+  "files": [
+    {
+      "path": "v1/setup/849843.json",
+      "kind": "data",
+      "bytes": 10916,
+      "sha256": "3a1508a9c36824f45323dfe103dc044c4f3e6f594ca0ed92134a9b5f73201170",
+      "upload_status": 200,
+      "etag_returned": true,
+      "stored_echo_sha256_equal": true,
+      "readback_status": 200,
+      "readback_equal": true,
+      "readback_content_type": "application/json; charset=utf-8",
+      "readback_etag_present": true
+    },
+    {
+      "path": "v1/game/849843.json",
+      "kind": "data",
+      "bytes": 726729,
+      "sha256": "056fcf13a08c1831a92383e0cf8e1782d201eae9b61e159e65d2c847b78c2ab6",
+      "upload_status": 200,
+      "etag_returned": true,
+      "stored_echo_sha256_equal": true,
+      "readback_status": 200,
+      "readback_equal": true,
+      "readback_content_type": "application/json; charset=utf-8",
+      "readback_etag_present": true
+    },
+    {
+      "path": "v1/games/2026-09-30.json",
+      "kind": "data",
+      "bytes": 1082,
+      "sha256": "fa5edc0ebb53339cefb3ae389ca7c85a614af11f3f8a63ba9c4969a67e476a18",
+      "upload_status": 200,
+      "etag_returned": true,
+      "stored_echo_sha256_equal": true,
+      "readback_status": 200,
+      "readback_equal": true,
+      "readback_content_type": "application/json; charset=utf-8",
+      "readback_etag_present": true
+    },
+    {
+      "path": "v1/dates.json",
+      "kind": "data",
+      "bytes": 187,
+      "sha256": "91bff0a3404dbf1e4b510eb07eb48a6a78fa519212380d3c585054caa9a6051a",
+      "upload_status": 200,
+      "etag_returned": true,
+      "stored_echo_sha256_equal": true,
+      "readback_status": 200,
+      "readback_equal": true,
+      "readback_content_type": "application/json; charset=utf-8",
+      "readback_etag_present": true
+    },
+    {
+      "path": "v1/manifest.json",
+      "kind": "data",
+      "bytes": 642,
+      "sha256": "f4d0987efae2e5507df1871c12fc1440876839ff30770bae7dfd535825478216",
+      "upload_status": 200,
+      "etag_returned": true,
+      "stored_echo_sha256_equal": true,
+      "readback_status": 200,
+      "readback_equal": true,
+      "readback_content_type": "application/json; charset=utf-8",
+      "readback_etag_present": true
+    },
+    {
+      "path": "v1/health.json",
+      "kind": "data",
+      "bytes": 399,
+      "sha256": "c36faf56c3476c7161f4d7df0bad32d21d161c3cf647dfce363f0647395e935b",
+      "upload_status": 200,
+      "etag_returned": true,
+      "stored_echo_sha256_equal": true,
+      "readback_status": 200,
+      "readback_equal": true,
+      "readback_content_type": "application/json; charset=utf-8",
+      "readback_etag_present": true
+    },
+    {
+      "path": "index.html",
+      "kind": "static",
+      "bytes": 659,
+      "sha256": "85616c4b2f49c5f9f0252bc9a687606fbbe6ce2e54253424bc956803db5a4289",
+      "upload_status": null,
+      "readback_status": 200,
+      "readback_equal": true,
+      "readback_content_type": "text/html; charset=utf-8"
+    },
+    {
+      "path": "favicon.svg",
+      "kind": "static",
+      "bytes": 249,
+      "sha256": "bbfd72e5d077bd545b2cf568e5267c6637598d5253746f5b395e0d5f3fb144d9",
+      "upload_status": null,
+      "readback_status": 200,
+      "readback_equal": true,
+      "readback_content_type": "image/svg+xml"
+    },
+    {
+      "path": "assets/index-X1sSTTQ4.js",
+      "kind": "static",
+      "bytes": 300041,
+      "sha256": "e46d431a7495bf58efd0084b20af87642fea8e6544cf3ac76ef278223621c30c",
+      "upload_status": null,
+      "readback_status": 200,
+      "readback_equal": true,
+      "readback_content_type": "text/javascript; charset=utf-8"
+    },
+    {
+      "path": "assets/index-ks_hu7Ji.css",
+      "kind": "static",
+      "bytes": 118449,
+      "sha256": "292dd392a798d3ee52bd752857edeba50810f19eda4bbf234d4399b106e3bfc0",
+      "upload_status": null,
+      "readback_status": 200,
+      "readback_equal": true,
+      "readback_content_type": "text/css; charset=utf-8"
+    }
+  ],
+  "static_emulation": {
+    "root_status": 200,
+    "spa_fallback_status": 200,
+    "unknown_asset_status": 404,
+    "query_entry_status": 200,
+    "note": "Node emulation of Cloudflare static assets; the gateway blocks /api, /_*, dotted segments and /v1 before ASSETS."
+  },
+  "negative": {
+    "unknown_game_status": 404,
+    "excluded_paths": [
+      {
+        "path": "/v1/game/849845.json",
+        "status": 404
+      },
+      {
+        "path": "/v1/setup/849845.json",
+        "status": 404
+      },
+      {
+        "path": "/v1/games/2026-09-29.json",
+        "status": 404
+      }
+    ],
+    "missing_advertised_date": {
+      "date": null,
+      "status": null,
+      "note": "receipt lists no missing date files"
+    },
+    "unauthenticated_put_status": 401,
+    "repeat_create_status": 412,
+    "without_cookie": {
+      "data_status": 401,
+      "page_status": 401,
+      "access_header": "required"
+    }
+  },
+  "notice": {
+    "on": {
+      "game_status": 503,
+      "game_notice_header": "data_hold",
+      "page_status": 503,
+      "page_content_type": "text/html; charset=utf-8",
+      "page_notice_header": "data_hold",
+      "first_503_after_ms": 5,
+      "memo_window_ms": 2000
+    },
+    "off": {
+      "game_status": 200,
+      "page_status": 200,
+      "first_200_after_ms": 19
+    }
+  },
+  "browser": {
+    "viewports": [
+      {
+        "viewport": "1440x900",
+        "entry_status": 200,
+        "reclist_rendered": true,
+        "first_pitch_text": true,
+        "horizontal_overflow": false,
+        "game_file_statuses": [
+          200
+        ],
+        "blocked_external_origins": [],
+        "notice_on": {
+          "hidden_after_ms": 9294,
+          "reclist_hidden": true,
+          "notice_text_shown": true
+        },
+        "notice_off": {
+          "restored_after_ms": 2613,
+          "same_document": true,
+          "first_pitch_text": true
+        },
+        "page_errors": []
+      },
+      {
+        "viewport": "390x844",
+        "entry_status": 200,
+        "reclist_rendered": true,
+        "first_pitch_text": true,
+        "horizontal_overflow": false,
+        "game_file_statuses": [
+          200
+        ],
+        "blocked_external_origins": [],
+        "notice_on": {
+          "hidden_after_ms": 10359,
+          "reclist_hidden": true,
+          "notice_text_shown": true
+        },
+        "notice_off": {
+          "restored_after_ms": 3685,
+          "same_document": true,
+          "first_pitch_text": true
+        },
+        "page_errors": []
+      }
+    ],
+    "notice": {
+      "message_id": "data_hold",
+      "wait_bound_ms": 40000,
+      "poll_note": "the partner app polls about every 10 s; real time, no clock mocking"
+    },
+    "missing_date_observation": null
+  },
+  "access": {
+    "browser": [
+      {
+        "viewport": "1440x900",
+        "login_page_status": 401,
+        "root_statuses_after_login": [
+          401,
+          200
+        ],
+        "cookie": {
+          "name": "pz_viewer",
+          "httpOnly": true,
+          "sameSite": "Strict",
+          "path": "/"
+        }
+      },
+      {
+        "viewport": "390x844",
+        "login_page_status": 401,
+        "root_statuses_after_login": [
+          401,
+          200
+        ],
+        "cookie": {
+          "name": "pz_viewer",
+          "httpOnly": true,
+          "sameSite": "Strict",
+          "path": "/"
+        }
+      }
+    ]
+  },
+  "checks": [
+    {
+      "name": "access:node_json_login",
+      "passed": true,
+      "detail": {
+        "status": 200
+      }
+    },
+    {
+      "name": "upload:v1/setup/849843.json",
+      "passed": true,
+      "detail": {
+        "status": 200
+      }
+    },
+    {
+      "name": "upload:v1/game/849843.json",
+      "passed": true,
+      "detail": {
+        "status": 200
+      }
+    },
+    {
+      "name": "upload:v1/games/2026-09-30.json",
+      "passed": true,
+      "detail": {
+        "status": 200
+      }
+    },
+    {
+      "name": "upload:v1/dates.json",
+      "passed": true,
+      "detail": {
+        "status": 200
+      }
+    },
+    {
+      "name": "upload:v1/manifest.json",
+      "passed": true,
+      "detail": {
+        "status": 200
+      }
+    },
+    {
+      "name": "upload:v1/health.json",
+      "passed": true,
+      "detail": {
+        "status": 200
+      }
+    },
+    {
+      "name": "readback:v1/setup/849843.json",
+      "passed": true,
+      "detail": {
+        "status": 200,
+        "bytes": 10916
+      }
+    },
+    {
+      "name": "readback:v1/game/849843.json",
+      "passed": true,
+      "detail": {
+        "status": 200,
+        "bytes": 726729
+      }
+    },
+    {
+      "name": "readback:v1/games/2026-09-30.json",
+      "passed": true,
+      "detail": {
+        "status": 200,
+        "bytes": 1082
+      }
+    },
+    {
+      "name": "readback:v1/dates.json",
+      "passed": true,
+      "detail": {
+        "status": 200,
+        "bytes": 187
+      }
+    },
+    {
+      "name": "readback:v1/manifest.json",
+      "passed": true,
+      "detail": {
+        "status": 200,
+        "bytes": 642
+      }
+    },
+    {
+      "name": "readback:v1/health.json",
+      "passed": true,
+      "detail": {
+        "status": 200,
+        "bytes": 399
+      }
+    },
+    {
+      "name": "static:index.html",
+      "passed": true,
+      "detail": {
+        "status": 200,
+        "content_type": "text/html; charset=utf-8"
+      }
+    },
+    {
+      "name": "static:favicon.svg",
+      "passed": true,
+      "detail": {
+        "status": 200,
+        "content_type": "image/svg+xml"
+      }
+    },
+    {
+      "name": "static:assets/index-X1sSTTQ4.js",
+      "passed": true,
+      "detail": {
+        "status": 200,
+        "content_type": "text/javascript; charset=utf-8"
+      }
+    },
+    {
+      "name": "static:assets/index-ks_hu7Ji.css",
+      "passed": true,
+      "detail": {
+        "status": 200,
+        "content_type": "text/css; charset=utf-8"
+      }
+    },
+    {
+      "name": "static:root_is_index",
+      "passed": true,
+      "detail": {
+        "status": 200
+      }
+    },
+    {
+      "name": "static:spa_fallback_serves_index",
+      "passed": true
+    },
+    {
+      "name": "static:unknown_asset_404",
+      "passed": true
+    },
+    {
+      "name": "static:query_entry_serves_index",
+      "passed": true
+    },
+    {
+      "name": "negative:unknown_game_404",
+      "passed": true
+    },
+    {
+      "name": "negative:excluded_404:/v1/game/849845.json",
+      "passed": true,
+      "detail": {
+        "status": 404
+      }
+    },
+    {
+      "name": "negative:excluded_404:/v1/setup/849845.json",
+      "passed": true,
+      "detail": {
+        "status": 404
+      }
+    },
+    {
+      "name": "negative:excluded_404:/v1/games/2026-09-29.json",
+      "passed": true,
+      "detail": {
+        "status": 404
+      }
+    },
+    {
+      "name": "negative:unauthenticated_put_401",
+      "passed": true
+    },
+    {
+      "name": "negative:repeat_create_412",
+      "passed": true
+    },
+    {
+      "name": "negative:repeat_create_keeps_bytes",
+      "passed": true
+    },
+    {
+      "name": "access:node_data_without_cookie_401",
+      "passed": true
+    },
+    {
+      "name": "access:node_page_without_cookie_login",
+      "passed": true
+    },
+    {
+      "name": "access:node_wrong_code_401",
+      "passed": true
+    },
+    {
+      "name": "notice:switch_on_200",
+      "passed": true,
+      "detail": {
+        "status": 200
+      }
+    },
+    {
+      "name": "notice:game_503_with_header",
+      "passed": true
+    },
+    {
+      "name": "notice:page_503_html",
+      "passed": true
+    },
+    {
+      "name": "notice:reason_not_leaked",
+      "passed": true
+    },
+    {
+      "name": "notice:switch_off_200",
+      "passed": true,
+      "detail": {
+        "status": 200
+      }
+    },
+    {
+      "name": "notice:game_200_bytes_restored",
+      "passed": true
+    },
+    {
+      "name": "notice:page_200_restored",
+      "passed": true
+    },
+    {
+      "name": "access:1440x900:root_401_login_page",
+      "passed": true,
+      "detail": {
+        "status": 401
+      }
+    },
+    {
+      "name": "access:1440x900:form_login_lands_on_app",
+      "passed": true,
+      "detail": {
+        "root_statuses": [
+          401,
+          200
+        ],
+        "cookie": {
+          "name": "pz_viewer",
+          "httpOnly": true,
+          "sameSite": "Strict",
+          "path": "/"
+        }
+      }
+    },
+    {
+      "name": "browser:1440x900:reclist_rendered",
+      "passed": true,
+      "detail": {
+        "entry_status": 200
+      }
+    },
+    {
+      "name": "browser:1440x900:first_pitch_text",
+      "passed": true
+    },
+    {
+      "name": "browser:1440x900:no_horizontal_overflow",
+      "passed": true
+    },
+    {
+      "name": "browser:1440x900:game_file_read_200",
+      "passed": true,
+      "detail": {
+        "statuses": [
+          200
+        ]
+      }
+    },
+    {
+      "name": "access:390x844:root_401_login_page",
+      "passed": true,
+      "detail": {
+        "status": 401
+      }
+    },
+    {
+      "name": "access:390x844:form_login_lands_on_app",
+      "passed": true,
+      "detail": {
+        "root_statuses": [
+          401,
+          200
+        ],
+        "cookie": {
+          "name": "pz_viewer",
+          "httpOnly": true,
+          "sameSite": "Strict",
+          "path": "/"
+        }
+      }
+    },
+    {
+      "name": "browser:390x844:reclist_rendered",
+      "passed": true,
+      "detail": {
+        "entry_status": 200
+      }
+    },
+    {
+      "name": "browser:390x844:first_pitch_text",
+      "passed": true
+    },
+    {
+      "name": "browser:390x844:no_horizontal_overflow",
+      "passed": true
+    },
+    {
+      "name": "browser:390x844:game_file_read_200",
+      "passed": true,
+      "detail": {
+        "statuses": [
+          200
+        ]
+      }
+    },
+    {
+      "name": "browser:notice_switch_on_200",
+      "passed": true,
+      "detail": {
+        "status": 200
+      }
+    },
+    {
+      "name": "browser:1440x900:notice_hides_and_shows_text",
+      "passed": true,
+      "detail": {
+        "waited_ms": 9229
+      }
+    },
+    {
+      "name": "browser:390x844:notice_hides_and_shows_text",
+      "passed": true,
+      "detail": {
+        "waited_ms": 1026
+      }
+    },
+    {
+      "name": "browser:notice_switch_off_200",
+      "passed": true,
+      "detail": {
+        "status": 200
+      }
+    },
+    {
+      "name": "browser:1440x900:restored_without_reload",
+      "passed": true,
+      "detail": {
+        "waited_ms": 2551
+      }
+    },
+    {
+      "name": "browser:1440x900:no_page_errors",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "browser:390x844:restored_without_reload",
+      "passed": true,
+      "detail": {
+        "waited_ms": 1021
+      }
+    },
+    {
+      "name": "browser:390x844:no_page_errors",
+      "passed": true,
+      "detail": []
+    }
+  ],
+  "passed": true,
+  "pass": 58,
+  "fail": 0,
+  "limitations": [
+    "Loopback Miniflare/workerd with our real worker/gateway/notice/access code; not Cloudflare, no CDN, no TLS, no real domain, no edge cache.",
+    "ASSETS is emulated in Node (exact path, '/' => index.html, HTML-accepting miss => index.html); Cloudflare asset headers/redirects are not emulated.",
+    "Browser checks are headless installed Chrome at two viewports; no physical phones or Safari.",
+    "Date files the build advertises but does not include stay missing (404 observed, not corrected).",
+    "Partner files were read only and uploaded as bytes; game files were not analysed (849844 is evaluation-locked).",
+    "Notice checks use the current local host source wording; they do not change production wording or notice state.",
+    "Loopback http uses the unprefixed viewer cookie without Secure; production https uses __Host- and Secure."
+  ],
+  "startup_ms": 400,
+  "browser_cleanup": {
+    "status": "complete"
+  },
+  "cleanup": {
+    "status": "complete"
+  },
+  "total_ms": 19324
+}
