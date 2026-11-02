@@ -1,6 +1,7 @@
 import importlib.util
 import json
 import mimetypes
+import socket
 import threading
 import urllib.error
 import urllib.request
@@ -290,7 +291,9 @@ def test_allowlisted_file_with_unknown_extension_is_not_served(tmp_path):
 
 def test_default_port_is_fixed_and_in_the_exhibition_range():
     assert 8700 <= serve.DEFAULT_PORT <= 8799
-    assert serve.Server.allow_reuse_address is False
+    # Windows binds exclusively (SO_EXCLUSIVEADDRUSE, no SO_REUSEADDR); macOS/Linux keep SO_REUSEADDR so an
+    # immediate restart does not lose the port to TIME_WAIT. The class decides by the socket constant.
+    assert serve.Server.allow_reuse_address is (not hasattr(socket, "SO_EXCLUSIVEADDRUSE"))
 
 
 def test_fixed_port_cannot_bind_over_a_listening_server(tmp_path):

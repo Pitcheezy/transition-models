@@ -1,0 +1,5787 @@
+{
+  "schema": "pitcheezy-host1-stage8-server-log-receipt-v1",
+  "evidence_kind": "offline_dashboard_export_count_correlation_no_rays",
+  "passed": true,
+  "source_integrity": [
+    {
+      "input": "server-export-001",
+      "bytes": 3497120,
+      "sha256": "7abe19622696f8082ab89a2e0f0d65bfd788c586fb586f211bd99bb3281970fc"
+    }
+  ],
+  "counts": {
+    "records": 700,
+    "http": 699,
+    "non_http": 1,
+    "malformed": 0,
+    "canceled_without_status": 12,
+    "duplicate_ray_groups": 0,
+    "duplicate_provider_request_id_groups": 0
+  },
+  "time_bounds_utc": {
+    "first": "2026-11-01T02:39:43.615Z",
+    "last": "2026-11-01T08:45:06.800Z"
+  },
+  "completeness": "unknown_export_may_be_capped",
+  "canceled_status_representation": "null_in_rows_canceled_in_keys",
+  "versions": {
+    "46cf3edc-53a2-440f-b7ec-3baaae802e89": {
+      "events": 5,
+      "first_utc": "2026-11-01T02:39:43.615Z",
+      "last_utc": "2026-11-01T02:39:46.167Z",
+      "by_method_status": {
+        "GET 401": 4,
+        "HEAD 401": 1
+      },
+      "by_path_class_status": {
+        "health 401": 1,
+        "manifest 401": 2,
+        "root 401": 1,
+        "static 401": 1
+      },
+      "outcomes": {
+        "ok": 5
+      }
+    },
+    "dbe8837c-61a2-4f96-8ee7-53ed6a2d6845": {
+      "events": 49,
+      "first_utc": "2026-11-01T02:48:26.890Z",
+      "last_utc": "2026-11-01T02:51:27.213Z",
+      "by_method_status": {
+        "HEAD 200": 1,
+        "HEAD 401": 1,
+        "HEAD 404": 23,
+        "PUT 200": 24
+      },
+      "by_path_class_status": {
+        "publish 200": 25,
+        "publish 401": 1,
+        "publish 404": 23
+      },
+      "outcomes": {
+        "ok": 49
+      }
+    },
+    "d4d707d7-47ec-4dfa-bc8b-af268bef40bc": {
+      "events": 2,
+      "first_utc": "2026-11-01T02:52:36.224Z",
+      "last_utc": "2026-11-01T02:52:36.558Z",
+      "by_method_status": {
+        "HEAD 401": 1,
+        "HEAD 503": 1
+      },
+      "by_path_class_status": {
+        "manifest 401": 1,
+        "publish 503": 1
+      },
+      "outcomes": {
+        "ok": 2
+      }
+    },
+    "42e265fd-b7f9-4c3a-b569-0aeb9059c81e": {
+      "events": 281,
+      "first_utc": "2026-11-01T03:05:39.619Z",
+      "last_utc": "2026-11-01T03:57:55.376Z",
+      "by_method_status": {
+        "DELETE 204": 1,
+        "GET 200": 97,
+        "GET 304": 100,
+        "GET 307": 3,
+        "GET 401": 8,
+        "GET 404": 57,
+        "GET canceled": 6,
+        "HEAD 200": 2,
+        "HEAD 401": 1,
+        "HEAD 503": 1,
+        "POST 200": 3,
+        "POST 303": 2
+      },
+      "by_path_class_status": {
+        "access 200": 3,
+        "access 204": 1,
+        "access 303": 2,
+        "data 200": 59,
+        "data 304": 5,
+        "data 404": 57,
+        "data canceled": 6,
+        "health 200": 7,
+        "health 304": 84,
+        "index 307": 3,
+        "manifest 200": 11,
+        "manifest 304": 5,
+        "manifest 401": 1,
+        "other 401": 2,
+        "publish 503": 1,
+        "root 200": 11,
+        "root 401": 3,
+        "static 200": 11,
+        "static 304": 6,
+        "static 401": 3
+      },
+      "outcomes": {
+        "canceled": 6,
+        "ok": 275
+      }
+    },
+    "feed4fc1-949d-4672-98fb-35f4ab00fdc3": {
+      "events": 288,
+      "first_utc": "2026-11-01T03:58:03.992Z",
+      "last_utc": "2026-11-01T08:35:32.014Z",
+      "by_method_status": {
+        "GET 200": 70,
+        "GET 304": 74,
+        "GET 307": 1,
+        "GET 401": 58,
+        "GET 404": 16,
+        "GET 503": 52,
+        "GET canceled": 6,
+        "HEAD 200": 1,
+        "HEAD 401": 5,
+        "POST 200": 1,
+        "POST 303": 2,
+        "PUT 200": 2
+      },
+      "by_path_class_status": {
+        "access 200": 1,
+        "access 303": 2,
+        "data 200": 32,
+        "data 304": 4,
+        "data 404": 16,
+        "data 503": 18,
+        "data canceled": 2,
+        "health 200": 8,
+        "health 304": 55,
+        "health 503": 21,
+        "health canceled": 4,
+        "index 307": 1,
+        "manifest 200": 10,
+        "manifest 304": 4,
+        "manifest 401": 10,
+        "manifest 503": 7,
+        "notice 200": 7,
+        "other 401": 4,
+        "other 503": 3,
+        "root 200": 9,
+        "root 401": 19,
+        "root 503": 3,
+        "static 200": 7,
+        "static 304": 11,
+        "static 401": 30
+      },
+      "outcomes": {
+        "canceled": 6,
+        "ok": 282
+      }
+    },
+    "6d652d4b-7d3c-4897-aefd-f37d0edce50c": {
+      "events": 74,
+      "first_utc": "2026-11-01T08:37:26.862Z",
+      "last_utc": "2026-11-01T08:45:06.800Z",
+      "by_method_status": {
+        "GET 200": 45,
+        "GET 307": 1,
+        "GET 401": 14,
+        "GET 404": 3,
+        "GET 503": 4,
+        "HEAD 200": 1,
+        "HEAD 503": 1,
+        "POST 200": 2,
+        "POST 303": 1,
+        "PUT 200": 2
+      },
+      "by_path_class_status": {
+        "access 200": 2,
+        "access 303": 1,
+        "data 200": 24,
+        "data 404": 3,
+        "health 200": 3,
+        "index 307": 1,
+        "manifest 200": 6,
+        "manifest 401": 1,
+        "manifest 503": 1,
+        "notice 200": 5,
+        "other 401": 5,
+        "other 503": 1,
+        "publish 503": 1,
+        "root 200": 5,
+        "root 401": 6,
+        "root 503": 2,
+        "static 200": 5,
+        "static 401": 2
+      },
+      "outcomes": {
+        "ok": 74
+      }
+    }
+  },
+  "status_401": {
+    "by_version": {
+      "46cf3edc-53a2-440f-b7ec-3baaae802e89": 5,
+      "dbe8837c-61a2-4f96-8ee7-53ed6a2d6845": 1,
+      "d4d707d7-47ec-4dfa-bc8b-af268bef40bc": 1,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e": 9,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3": 63,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c": 14
+    },
+    "total": 93,
+    "note": "unexplained_401s_recorded_not_attributed"
+  },
+  "outcome_ok_all": false,
+  "truncated_any": false,
+  "version_chain": {
+    "documented_prefixes_in_order": [
+      "46cf3edc",
+      "dbe8837c",
+      "d4d707d7",
+      "42e265fd",
+      "feed4fc1",
+      "6d652d4b"
+    ],
+    "undocumented_versions": 0,
+    "order_violations": 0
+  },
+  "expectations": [
+    {
+      "id": "a_step2_gate_401",
+      "version_prefix": "46cf3edc",
+      "description": "step 2 post-deploy: every HTTP event is 401 (gate ON, no session); at least 3; upload OFF (no publish answer other than 503); no notice PUT, no maintenance 503",
+      "version_match": "unique",
+      "passed": true,
+      "checks": [
+        {
+          "metric": "count",
+          "op": ">=",
+          "value": 3,
+          "observed": 5,
+          "passed": true
+        },
+        {
+          "metric": "count",
+          "status_not": [
+            401
+          ],
+          "op": "==",
+          "value": 0,
+          "observed": 0,
+          "passed": true
+        },
+        {
+          "metric": "count",
+          "path_class": "publish",
+          "status_not": [
+            503
+          ],
+          "op": "==",
+          "value": 0,
+          "observed": 0,
+          "passed": true
+        },
+        {
+          "metric": "count",
+          "path_class": "notice",
+          "method": "PUT",
+          "op": "==",
+          "value": 0,
+          "observed": 0,
+          "passed": true
+        },
+        {
+          "metric": "count",
+          "status": 503,
+          "path_class_not": [
+            "publish"
+          ],
+          "op": "==",
+          "value": 0,
+          "observed": 0,
+          "passed": true
+        }
+      ],
+      "version_events": 5,
+      "events_not_covered_by_checks_unattributed": 0,
+      "notice_put_interval_utc": null
+    },
+    {
+      "id": "b_step45_upload_window",
+      "version_prefix": "dbe8837c",
+      "description": "steps 4-5: publish HEAD 200 x1 (health), HEAD 404 x23, PUT 200 x24, HEAD 401 >=1 (window-open check), no other publish methods; no notice PUT, no maintenance 503",
+      "version_match": "unique",
+      "passed": true,
+      "checks": [
+        {
+          "metric": "count",
+          "path_class": "publish",
+          "method": "HEAD",
+          "status": 200,
+          "op": "==",
+          "value": 1,
+          "observed": 1,
+          "passed": true
+        },
+        {
+          "metric": "count",
+          "path_class": "publish",
+          "method": "HEAD",
+          "status": 404,
+          "op": "==",
+          "value": 23,
+          "observed": 23,
+          "passed": true
+        },
+        {
+          "metric": "count",
+          "path_class": "publish",
+          "method": "PUT",
+          "status": 200,
+          "op": "==",
+          "value": 24,
+          "observed": 24,
+          "passed": true
+        },
+        {
+          "metric": "count",
+          "path_class": "publish",
+          "method": "HEAD",
+          "status": 401,
+          "op": ">=",
+          "value": 1,
+          "observed": 1,
+          "passed": true
+        },
+        {
+          "metric": "count",
+          "path_class": "publish",
+          "method_not": [
+            "HEAD",
+            "PUT"
+          ],
+          "op": "==",
+          "value": 0,
+          "observed": 0,
+          "passed": true
+        },
+        {
+          "metric": "count",
+          "path_class": "notice",
+          "method": "PUT",
+          "op": "==",
+          "value": 0,
+          "observed": 0,
+          "passed": true
+        },
+        {
+          "metric": "count",
+          "status": 503,
+          "path_class_not": [
+            "publish"
+          ],
+          "op": "==",
+          "value": 0,
+          "observed": 0,
+          "passed": true
+        }
+      ],
+      "version_events": 49,
+      "events_not_covered_by_checks_unattributed": 0,
+      "notice_put_interval_utc": null
+    },
+    {
+      "id": "c_step6_upload_closed",
+      "version_prefix": "d4d707d7",
+      "description": "step 6: publish events are all 503 (1..2) and no publish 200; no notice PUT, no maintenance 503",
+      "version_match": "unique",
+      "passed": true,
+      "checks": [
+        {
+          "metric": "count",
+          "path_class": "publish",
+          "status": 503,
+          "op": "between",
+          "value": [
+            1,
+            2
+          ],
+          "observed": 1,
+          "passed": true
+        },
+        {
+          "metric": "count",
+          "path_class": "publish",
+          "status_not": [
+            503
+          ],
+          "op": "==",
+          "value": 0,
+          "observed": 0,
+          "passed": true
+        },
+        {
+          "metric": "count",
+          "path_class": "notice",
+          "method": "PUT",
+          "op": "==",
+          "value": 0,
+          "observed": 0,
+          "passed": true
+        },
+        {
+          "metric": "count",
+          "status": 503,
+          "path_class_not": [
+            "publish"
+          ],
+          "op": "==",
+          "value": 0,
+          "observed": 0,
+          "passed": true
+        }
+      ],
+      "version_events": 2,
+      "events_not_covered_by_checks_unattributed": 1,
+      "notice_put_interval_utc": null
+    },
+    {
+      "id": "d_step7_verifier_runs",
+      "version_prefix": "42e265fd",
+      "description": "step 7 (verifier run 1, body checks, run 2): minimum counts; the plan's 23 data files per run are 22 data + health here; events beyond the checks (phone/PC browser) are counted without attribution; upload stays OFF; no notice PUT, no maintenance 503",
+      "version_match": "unique",
+      "passed": true,
+      "checks": [
+        {
+          "metric": "count",
+          "path_class": "publish",
+          "status_not": [
+            503
+          ],
+          "op": "==",
+          "value": 0,
+          "observed": 0,
+          "passed": true
+        },
+        {
+          "metric": "count",
+          "path_class": "notice",
+          "method": "PUT",
+          "op": "==",
+          "value": 0,
+          "observed": 0,
+          "passed": true
+        },
+        {
+          "metric": "count",
+          "status": 503,
+          "path_class_not": [
+            "publish"
+          ],
+          "op": "==",
+          "value": 0,
+          "observed": 0,
+          "passed": true
+        },
+        {
+          "metric": "count",
+          "path_class": "access",
+          "method": "POST",
+          "status": 200,
+          "op": ">=",
+          "value": 1,
+          "observed": 3,
+          "passed": true
+        },
+        {
+          "metric": "count",
+          "path_class": "manifest",
+          "method": "GET",
+          "status": 200,
+          "op": ">=",
+          "value": 2,
+          "observed": 9,
+          "passed": true
+        },
+        {
+          "metric": "count",
+          "path_class": "data",
+          "method": "GET",
+          "status": 200,
+          "op": ">=",
+          "value": 44,
+          "observed": 59,
+          "passed": true
+        },
+        {
+          "metric": "count",
+          "path_class": "health",
+          "method": "GET",
+          "status": 200,
+          "op": ">=",
+          "value": 2,
+          "observed": 7,
+          "passed": true
+        },
+        {
+          "metric": "count",
+          "path_class": "static",
+          "method": "GET",
+          "status": 200,
+          "op": ">=",
+          "value": 6,
+          "observed": 11,
+          "passed": true
+        },
+        {
+          "metric": "count",
+          "path_class": "index",
+          "method": "GET",
+          "status": 307,
+          "op": ">=",
+          "value": 1,
+          "observed": 3,
+          "passed": true
+        },
+        {
+          "metric": "count",
+          "path_class": "root",
+          "method": "GET",
+          "status": 200,
+          "op": ">=",
+          "value": 4,
+          "observed": 11,
+          "passed": true
+        },
+        {
+          "metric": "count",
+          "path_class": "data",
+          "status": 404,
+          "op": ">=",
+          "value": 4,
+          "observed": 57,
+          "passed": true
+        },
+        {
+          "metric": "count",
+          "path_class": "manifest",
+          "method": "HEAD",
+          "status": 200,
+          "op": ">=",
+          "value": 2,
+          "observed": 2,
+          "passed": true
+        }
+      ],
+      "version_events": 281,
+      "events_not_covered_by_checks_unattributed": 119,
+      "notice_put_interval_utc": null
+    },
+    {
+      "id": "e_notice_trial_and_app_host_verify",
+      "version_prefix": "feed4fc1",
+      "description": "notice ON/OFF trial: exactly 2 notice PUTs, ON PUT within 3s of the documented 12:59:29.6 KST and OFF PUT within 3s of 13:03:52.9 KST (host-deploy notice_trial); every non-publish 503 lies between the ON PUT and the OFF PUT (+5s), at least one manifest 503 inside, and the manifest 401 gate is seen after the OFF PUT (documented 13:04:15 KST); upload stays OFF; app-host verifier run between 04:40Z and 04:55Z (22 data + health GET 200)",
+      "version_match": "unique",
+      "passed": true,
+      "checks": [
+        {
+          "metric": "count",
+          "path_class": "publish",
+          "status_not": [
+            503
+          ],
+          "op": "==",
+          "value": 0,
+          "observed": 0,
+          "passed": true
+        },
+        {
+          "metric": "count",
+          "path_class": "notice",
+          "method": "PUT",
+          "op": "==",
+          "value": 2,
+          "observed": 2,
+          "passed": true
+        },
+        {
+          "metric": "count",
+          "path_class": "notice",
+          "method": "PUT",
+          "window_utc": [
+            "2026-11-01T03:59:26Z",
+            "2026-11-01T03:59:33Z"
+          ],
+          "op": "==",
+          "value": 1,
+          "observed": 1,
+          "passed": true
+        },
+        {
+          "metric": "count",
+          "path_class": "notice",
+          "method": "PUT",
+          "window_utc": [
+            "2026-11-01T04:03:49Z",
+            "2026-11-01T04:03:56Z"
+          ],
+          "op": "==",
+          "value": 1,
+          "observed": 1,
+          "passed": true
+        },
+        {
+          "metric": "count",
+          "path_class": "notice",
+          "method": "GET",
+          "op": ">=",
+          "value": 1,
+          "observed": 5,
+          "passed": true
+        },
+        {
+          "metric": "count",
+          "status": 503,
+          "path_class_not": [
+            "publish"
+          ],
+          "notice_interval": {
+            "position": "outside",
+            "slack_seconds": 5
+          },
+          "op": "==",
+          "value": 0,
+          "observed": 0,
+          "passed": true
+        },
+        {
+          "metric": "count",
+          "path_class": "manifest",
+          "status": 503,
+          "notice_interval": {
+            "position": "inside",
+            "slack_seconds": 5
+          },
+          "op": ">=",
+          "value": 1,
+          "observed": 7,
+          "passed": true
+        },
+        {
+          "metric": "count",
+          "path_class": "manifest",
+          "status": 401,
+          "notice_interval": {
+            "position": "after",
+            "slack_seconds": 0
+          },
+          "window_utc": [
+            "2026-11-01T04:03:49Z",
+            "2026-11-01T04:05:00Z"
+          ],
+          "op": ">=",
+          "value": 1,
+          "observed": 1,
+          "passed": true
+        },
+        {
+          "metric": "count",
+          "path_class": "data",
+          "method": "GET",
+          "status": 200,
+          "window_utc": [
+            "2026-11-01T04:40:00Z",
+            "2026-11-01T04:55:00Z"
+          ],
+          "op": ">=",
+          "value": 22,
+          "observed": 22,
+          "passed": true
+        },
+        {
+          "metric": "count",
+          "path_class": "health",
+          "method": "GET",
+          "status": 200,
+          "window_utc": [
+            "2026-11-01T04:40:00Z",
+            "2026-11-01T04:55:00Z"
+          ],
+          "op": ">=",
+          "value": 1,
+          "observed": 1,
+          "passed": true
+        }
+      ],
+      "version_events": 288,
+      "events_not_covered_by_checks_unattributed": 250,
+      "notice_put_interval_utc": [
+        "2026-11-01T03:59:30.388Z",
+        "2026-11-01T04:03:54.329Z"
+      ]
+    },
+    {
+      "id": "f_maintenance_copy_deploy",
+      "version_prefix": "6d652d4b",
+      "description": "maintenance-copy deploy: remote verify (22 data + health GET 200); exactly 2 notice PUTs, the ON PUT after the documented verifier end (08:37:33Z) and before the client ON check (08:39:40.739Z), the OFF PUT between the last client ON check (08:39:41.051Z) and the client OFF check (08:40:20.271Z) (notice-deploy receipt); every non-publish 503 lies between the ON PUT and the OFF PUT (+5s), at least one manifest 503 inside, manifest 401 after the OFF PUT; upload stays OFF",
+      "version_match": "unique",
+      "passed": true,
+      "checks": [
+        {
+          "metric": "count",
+          "path_class": "publish",
+          "status_not": [
+            503
+          ],
+          "op": "==",
+          "value": 0,
+          "observed": 0,
+          "passed": true
+        },
+        {
+          "metric": "count",
+          "path_class": "data",
+          "method": "GET",
+          "status": 200,
+          "op": ">=",
+          "value": 22,
+          "observed": 24,
+          "passed": true
+        },
+        {
+          "metric": "count",
+          "path_class": "health",
+          "method": "GET",
+          "status": 200,
+          "op": ">=",
+          "value": 1,
+          "observed": 3,
+          "passed": true
+        },
+        {
+          "metric": "count",
+          "path_class": "notice",
+          "method": "PUT",
+          "op": "==",
+          "value": 2,
+          "observed": 2,
+          "passed": true
+        },
+        {
+          "metric": "count",
+          "path_class": "notice",
+          "method": "PUT",
+          "window_utc": [
+            "2026-11-01T08:37:33Z",
+            "2026-11-01T08:39:40.739Z"
+          ],
+          "op": "==",
+          "value": 1,
+          "observed": 1,
+          "passed": true
+        },
+        {
+          "metric": "count",
+          "path_class": "notice",
+          "method": "PUT",
+          "window_utc": [
+            "2026-11-01T08:39:41.051Z",
+            "2026-11-01T08:40:20.271Z"
+          ],
+          "op": "==",
+          "value": 1,
+          "observed": 1,
+          "passed": true
+        },
+        {
+          "metric": "count",
+          "status": 503,
+          "path_class_not": [
+            "publish"
+          ],
+          "notice_interval": {
+            "position": "outside",
+            "slack_seconds": 5
+          },
+          "op": "==",
+          "value": 0,
+          "observed": 0,
+          "passed": true
+        },
+        {
+          "metric": "count",
+          "path_class": "manifest",
+          "status": 503,
+          "notice_interval": {
+            "position": "inside",
+            "slack_seconds": 5
+          },
+          "op": ">=",
+          "value": 1,
+          "observed": 1,
+          "passed": true
+        },
+        {
+          "metric": "count",
+          "path_class": "manifest",
+          "status": 401,
+          "notice_interval": {
+            "position": "after",
+            "slack_seconds": 0
+          },
+          "op": ">=",
+          "value": 1,
+          "observed": 1,
+          "passed": true
+        }
+      ],
+      "version_events": 74,
+      "events_not_covered_by_checks_unattributed": 43,
+      "notice_put_interval_utc": [
+        "2026-11-01T08:39:20.447Z",
+        "2026-11-01T08:39:42.503Z"
+      ]
+    },
+    {
+      "id": "g_global_integrity",
+      "version_prefix": null,
+      "description": "whole export: no duplicate Ray groups, nothing truncated, no outcome other than ok/canceled; every Worker version is one of the six documented ones and their time ranges are disjoint and in chain order; 401 counts are listed per version, not attributed",
+      "version_match": "unique",
+      "passed": true,
+      "checks": [
+        {
+          "metric": "duplicate_ray_groups",
+          "op": "==",
+          "value": 0,
+          "observed": 0,
+          "passed": true
+        },
+        {
+          "metric": "truncated_events",
+          "op": "==",
+          "value": 0,
+          "observed": 0,
+          "passed": true
+        },
+        {
+          "metric": "unexpected_outcome_events",
+          "op": "==",
+          "value": 0,
+          "observed": 0,
+          "passed": true
+        },
+        {
+          "metric": "undocumented_versions",
+          "op": "==",
+          "value": 0,
+          "observed": 0,
+          "passed": true
+        },
+        {
+          "metric": "version_chain_order_violations",
+          "op": "==",
+          "value": 0,
+          "observed": 0,
+          "passed": true
+        }
+      ]
+    }
+  ],
+  "failed_expectations": [],
+  "rows": [
+    [
+      "2026-11-01T02:39:43.615Z",
+      "GET",
+      "/",
+      401,
+      "46cf3edc-53a2-440f-b7ec-3baaae802e89"
+    ],
+    [
+      "2026-11-01T02:39:44.519Z",
+      "GET",
+      "/v1/manifest.json",
+      401,
+      "46cf3edc-53a2-440f-b7ec-3baaae802e89"
+    ],
+    [
+      "2026-11-01T02:39:45.409Z",
+      "GET",
+      "/v1/health.json",
+      401,
+      "46cf3edc-53a2-440f-b7ec-3baaae802e89"
+    ],
+    [
+      "2026-11-01T02:39:45.757Z",
+      "GET",
+      "/favicon.svg",
+      401,
+      "46cf3edc-53a2-440f-b7ec-3baaae802e89"
+    ],
+    [
+      "2026-11-01T02:39:46.167Z",
+      "HEAD",
+      "/v1/manifest.json",
+      401,
+      "46cf3edc-53a2-440f-b7ec-3baaae802e89"
+    ],
+    [
+      "2026-11-01T02:48:26.890Z",
+      "HEAD",
+      "/_publish/v1/health.json",
+      401,
+      "dbe8837c-61a2-4f96-8ee7-53ed6a2d6845"
+    ],
+    [
+      "2026-11-01T02:48:59.610Z",
+      "HEAD",
+      "/_publish/v1/setup/849843.json",
+      404,
+      "dbe8837c-61a2-4f96-8ee7-53ed6a2d6845"
+    ],
+    [
+      "2026-11-01T02:49:00.771Z",
+      "HEAD",
+      "/_publish/v1/game/849823.json",
+      404,
+      "dbe8837c-61a2-4f96-8ee7-53ed6a2d6845"
+    ],
+    [
+      "2026-11-01T02:49:01.828Z",
+      "HEAD",
+      "/_publish/v1/game/849825.json",
+      404,
+      "dbe8837c-61a2-4f96-8ee7-53ed6a2d6845"
+    ],
+    [
+      "2026-11-01T02:49:02.393Z",
+      "HEAD",
+      "/_publish/v1/game/849828.json",
+      404,
+      "dbe8837c-61a2-4f96-8ee7-53ed6a2d6845"
+    ],
+    [
+      "2026-11-01T02:49:03.023Z",
+      "HEAD",
+      "/_publish/v1/game/849829.json",
+      404,
+      "dbe8837c-61a2-4f96-8ee7-53ed6a2d6845"
+    ],
+    [
+      "2026-11-01T02:49:03.565Z",
+      "HEAD",
+      "/_publish/v1/game/849830.json",
+      404,
+      "dbe8837c-61a2-4f96-8ee7-53ed6a2d6845"
+    ],
+    [
+      "2026-11-01T02:49:04.118Z",
+      "HEAD",
+      "/_publish/v1/game/849835.json",
+      404,
+      "dbe8837c-61a2-4f96-8ee7-53ed6a2d6845"
+    ],
+    [
+      "2026-11-01T02:49:04.759Z",
+      "HEAD",
+      "/_publish/v1/game/849841.json",
+      404,
+      "dbe8837c-61a2-4f96-8ee7-53ed6a2d6845"
+    ],
+    [
+      "2026-11-01T02:49:05.391Z",
+      "HEAD",
+      "/_publish/v1/game/849842.json",
+      404,
+      "dbe8837c-61a2-4f96-8ee7-53ed6a2d6845"
+    ],
+    [
+      "2026-11-01T02:49:05.993Z",
+      "HEAD",
+      "/_publish/v1/game/849843.json",
+      404,
+      "dbe8837c-61a2-4f96-8ee7-53ed6a2d6845"
+    ],
+    [
+      "2026-11-01T02:49:06.699Z",
+      "HEAD",
+      "/_publish/v1/game/849844.json",
+      404,
+      "dbe8837c-61a2-4f96-8ee7-53ed6a2d6845"
+    ],
+    [
+      "2026-11-01T02:49:07.281Z",
+      "HEAD",
+      "/_publish/v1/game/849845.json",
+      404,
+      "dbe8837c-61a2-4f96-8ee7-53ed6a2d6845"
+    ],
+    [
+      "2026-11-01T02:49:08.287Z",
+      "HEAD",
+      "/_publish/v1/game/849846.json",
+      404,
+      "dbe8837c-61a2-4f96-8ee7-53ed6a2d6845"
+    ],
+    [
+      "2026-11-01T02:49:08.954Z",
+      "HEAD",
+      "/_publish/v1/game/849848.json",
+      404,
+      "dbe8837c-61a2-4f96-8ee7-53ed6a2d6845"
+    ],
+    [
+      "2026-11-01T02:49:09.519Z",
+      "HEAD",
+      "/_publish/v1/game/849849.json",
+      404,
+      "dbe8837c-61a2-4f96-8ee7-53ed6a2d6845"
+    ],
+    [
+      "2026-11-01T02:49:10.019Z",
+      "HEAD",
+      "/_publish/v1/game/849851.json",
+      404,
+      "dbe8837c-61a2-4f96-8ee7-53ed6a2d6845"
+    ],
+    [
+      "2026-11-01T02:49:10.624Z",
+      "HEAD",
+      "/_publish/v1/games/2026-09-30.json",
+      404,
+      "dbe8837c-61a2-4f96-8ee7-53ed6a2d6845"
+    ],
+    [
+      "2026-11-01T02:49:11.186Z",
+      "HEAD",
+      "/_publish/v1/games/2026-10-01.json",
+      404,
+      "dbe8837c-61a2-4f96-8ee7-53ed6a2d6845"
+    ],
+    [
+      "2026-11-01T02:49:11.715Z",
+      "HEAD",
+      "/_publish/v1/games/2026-10-02.json",
+      404,
+      "dbe8837c-61a2-4f96-8ee7-53ed6a2d6845"
+    ],
+    [
+      "2026-11-01T02:49:12.353Z",
+      "HEAD",
+      "/_publish/v1/games/2026-10-04.json",
+      404,
+      "dbe8837c-61a2-4f96-8ee7-53ed6a2d6845"
+    ],
+    [
+      "2026-11-01T02:49:12.892Z",
+      "HEAD",
+      "/_publish/v1/games/2026-10-05.json",
+      404,
+      "dbe8837c-61a2-4f96-8ee7-53ed6a2d6845"
+    ],
+    [
+      "2026-11-01T02:49:13.403Z",
+      "HEAD",
+      "/_publish/v1/dates.json",
+      404,
+      "dbe8837c-61a2-4f96-8ee7-53ed6a2d6845"
+    ],
+    [
+      "2026-11-01T02:49:13.918Z",
+      "HEAD",
+      "/_publish/v1/manifest.json",
+      404,
+      "dbe8837c-61a2-4f96-8ee7-53ed6a2d6845"
+    ],
+    [
+      "2026-11-01T02:49:14.453Z",
+      "HEAD",
+      "/_publish/v1/health.json",
+      200,
+      "dbe8837c-61a2-4f96-8ee7-53ed6a2d6845"
+    ],
+    [
+      "2026-11-01T02:51:00.705Z",
+      "PUT",
+      "/_publish/v1/setup/849843.json",
+      200,
+      "dbe8837c-61a2-4f96-8ee7-53ed6a2d6845"
+    ],
+    [
+      "2026-11-01T02:51:01.926Z",
+      "PUT",
+      "/_publish/v1/game/849823.json",
+      200,
+      "dbe8837c-61a2-4f96-8ee7-53ed6a2d6845"
+    ],
+    [
+      "2026-11-01T02:51:03.554Z",
+      "PUT",
+      "/_publish/v1/game/849825.json",
+      200,
+      "dbe8837c-61a2-4f96-8ee7-53ed6a2d6845"
+    ],
+    [
+      "2026-11-01T02:51:05.072Z",
+      "PUT",
+      "/_publish/v1/game/849828.json",
+      200,
+      "dbe8837c-61a2-4f96-8ee7-53ed6a2d6845"
+    ],
+    [
+      "2026-11-01T02:51:06.448Z",
+      "PUT",
+      "/_publish/v1/game/849829.json",
+      200,
+      "dbe8837c-61a2-4f96-8ee7-53ed6a2d6845"
+    ],
+    [
+      "2026-11-01T02:51:07.933Z",
+      "PUT",
+      "/_publish/v1/game/849830.json",
+      200,
+      "dbe8837c-61a2-4f96-8ee7-53ed6a2d6845"
+    ],
+    [
+      "2026-11-01T02:51:09.024Z",
+      "PUT",
+      "/_publish/v1/game/849835.json",
+      200,
+      "dbe8837c-61a2-4f96-8ee7-53ed6a2d6845"
+    ],
+    [
+      "2026-11-01T02:51:10.402Z",
+      "PUT",
+      "/_publish/v1/game/849841.json",
+      200,
+      "dbe8837c-61a2-4f96-8ee7-53ed6a2d6845"
+    ],
+    [
+      "2026-11-01T02:51:11.637Z",
+      "PUT",
+      "/_publish/v1/game/849842.json",
+      200,
+      "dbe8837c-61a2-4f96-8ee7-53ed6a2d6845"
+    ],
+    [
+      "2026-11-01T02:51:13.046Z",
+      "PUT",
+      "/_publish/v1/game/849843.json",
+      200,
+      "dbe8837c-61a2-4f96-8ee7-53ed6a2d6845"
+    ],
+    [
+      "2026-11-01T02:51:14.559Z",
+      "PUT",
+      "/_publish/v1/game/849844.json",
+      200,
+      "dbe8837c-61a2-4f96-8ee7-53ed6a2d6845"
+    ],
+    [
+      "2026-11-01T02:51:15.678Z",
+      "PUT",
+      "/_publish/v1/game/849845.json",
+      200,
+      "dbe8837c-61a2-4f96-8ee7-53ed6a2d6845"
+    ],
+    [
+      "2026-11-01T02:51:16.929Z",
+      "PUT",
+      "/_publish/v1/game/849846.json",
+      200,
+      "dbe8837c-61a2-4f96-8ee7-53ed6a2d6845"
+    ],
+    [
+      "2026-11-01T02:51:18.396Z",
+      "PUT",
+      "/_publish/v1/game/849848.json",
+      200,
+      "dbe8837c-61a2-4f96-8ee7-53ed6a2d6845"
+    ],
+    [
+      "2026-11-01T02:51:19.805Z",
+      "PUT",
+      "/_publish/v1/game/849849.json",
+      200,
+      "dbe8837c-61a2-4f96-8ee7-53ed6a2d6845"
+    ],
+    [
+      "2026-11-01T02:51:20.952Z",
+      "PUT",
+      "/_publish/v1/game/849851.json",
+      200,
+      "dbe8837c-61a2-4f96-8ee7-53ed6a2d6845"
+    ],
+    [
+      "2026-11-01T02:51:21.710Z",
+      "PUT",
+      "/_publish/v1/games/2026-09-30.json",
+      200,
+      "dbe8837c-61a2-4f96-8ee7-53ed6a2d6845"
+    ],
+    [
+      "2026-11-01T02:51:22.481Z",
+      "PUT",
+      "/_publish/v1/games/2026-10-01.json",
+      200,
+      "dbe8837c-61a2-4f96-8ee7-53ed6a2d6845"
+    ],
+    [
+      "2026-11-01T02:51:23.227Z",
+      "PUT",
+      "/_publish/v1/games/2026-10-02.json",
+      200,
+      "dbe8837c-61a2-4f96-8ee7-53ed6a2d6845"
+    ],
+    [
+      "2026-11-01T02:51:24.008Z",
+      "PUT",
+      "/_publish/v1/games/2026-10-04.json",
+      200,
+      "dbe8837c-61a2-4f96-8ee7-53ed6a2d6845"
+    ],
+    [
+      "2026-11-01T02:51:24.912Z",
+      "PUT",
+      "/_publish/v1/games/2026-10-05.json",
+      200,
+      "dbe8837c-61a2-4f96-8ee7-53ed6a2d6845"
+    ],
+    [
+      "2026-11-01T02:51:25.642Z",
+      "PUT",
+      "/_publish/v1/dates.json",
+      200,
+      "dbe8837c-61a2-4f96-8ee7-53ed6a2d6845"
+    ],
+    [
+      "2026-11-01T02:51:26.461Z",
+      "PUT",
+      "/_publish/v1/manifest.json",
+      200,
+      "dbe8837c-61a2-4f96-8ee7-53ed6a2d6845"
+    ],
+    [
+      "2026-11-01T02:51:27.213Z",
+      "PUT",
+      "/_publish/v1/health.json",
+      200,
+      "dbe8837c-61a2-4f96-8ee7-53ed6a2d6845"
+    ],
+    [
+      "2026-11-01T02:52:36.224Z",
+      "HEAD",
+      "/_publish/v1/health.json",
+      503,
+      "d4d707d7-47ec-4dfa-bc8b-af268bef40bc"
+    ],
+    [
+      "2026-11-01T02:52:36.558Z",
+      "HEAD",
+      "/v1/manifest.json",
+      401,
+      "d4d707d7-47ec-4dfa-bc8b-af268bef40bc"
+    ],
+    [
+      "2026-11-01T03:05:39.619Z",
+      "HEAD",
+      "/v1/manifest.json",
+      401,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:05:39.985Z",
+      "HEAD",
+      "/_publish/v1/health.json",
+      503,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:05:57.744Z",
+      "POST",
+      "/_access/v1/session",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:05:57.991Z",
+      "GET",
+      "/v1/manifest.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:05:58.400Z",
+      "GET",
+      "/v1/setup/849843.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:05:58.923Z",
+      "GET",
+      "/v1/game/849823.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:05:59.439Z",
+      "GET",
+      "/v1/game/849825.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:06:00.062Z",
+      "GET",
+      "/v1/game/849828.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:06:00.811Z",
+      "GET",
+      "/v1/game/849829.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:06:01.409Z",
+      "GET",
+      "/v1/game/849830.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:06:01.720Z",
+      "GET",
+      "/v1/game/849835.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:06:02.008Z",
+      "GET",
+      "/v1/game/849841.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:06:02.308Z",
+      "GET",
+      "/v1/game/849842.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:06:02.826Z",
+      "GET",
+      "/v1/game/849843.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:06:03.288Z",
+      "GET",
+      "/v1/game/849844.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:06:03.821Z",
+      "GET",
+      "/v1/game/849845.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:06:04.149Z",
+      "GET",
+      "/v1/game/849846.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:06:04.533Z",
+      "GET",
+      "/v1/game/849848.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:06:05.088Z",
+      "GET",
+      "/v1/game/849849.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:06:05.739Z",
+      "GET",
+      "/v1/game/849851.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:06:05.957Z",
+      "GET",
+      "/v1/games/2026-09-30.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:06:06.227Z",
+      "GET",
+      "/v1/games/2026-10-01.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:06:06.448Z",
+      "GET",
+      "/v1/games/2026-10-02.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:06:06.689Z",
+      "GET",
+      "/v1/games/2026-10-04.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:06:06.878Z",
+      "GET",
+      "/v1/games/2026-10-05.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:06:07.248Z",
+      "GET",
+      "/v1/dates.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:06:07.337Z",
+      "GET",
+      "/v1/manifest.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:06:07.550Z",
+      "GET",
+      "/v1/health.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:06:07.614Z",
+      "GET",
+      "/index.html",
+      307,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:06:08.031Z",
+      "GET",
+      "/favicon.svg",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:06:08.818Z",
+      "GET",
+      "/assets/index-Dz7BMakV.js",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:06:09.365Z",
+      "GET",
+      "/assets/index-ks_hu7Ji.css",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:06:09.766Z",
+      "GET",
+      "/",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:06:09.839Z",
+      "GET",
+      "/?game=849843",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:06:09.926Z",
+      "GET",
+      "/v1/game/999999.json",
+      404,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:06:10.019Z",
+      "GET",
+      "/v1/games/2026-10-06.json",
+      404,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:06:10.154Z",
+      "HEAD",
+      "/v1/manifest.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:08:04.295Z",
+      "POST",
+      "/_access/v1/session",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:08:04.846Z",
+      "GET",
+      "/",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:08:04.997Z",
+      "GET",
+      "/?game=849843",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:08:05.064Z",
+      "GET",
+      "/index.html",
+      307,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:08:05.126Z",
+      "DELETE",
+      "/_access/v1/session",
+      204,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:16:01.869Z",
+      "GET",
+      "/",
+      401,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:36:29.097Z",
+      "POST",
+      "/_access/v1/session",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:36:29.436Z",
+      "GET",
+      "/v1/manifest.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:36:29.926Z",
+      "GET",
+      "/v1/setup/849843.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:36:30.127Z",
+      "GET",
+      "/v1/game/849823.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:36:30.767Z",
+      "GET",
+      "/v1/game/849825.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:36:31.259Z",
+      "GET",
+      "/v1/game/849828.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:36:31.523Z",
+      "GET",
+      "/v1/game/849829.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:36:31.885Z",
+      "GET",
+      "/v1/game/849830.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:36:32.233Z",
+      "GET",
+      "/v1/game/849835.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:36:32.504Z",
+      "GET",
+      "/v1/game/849841.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:36:32.834Z",
+      "GET",
+      "/v1/game/849842.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:36:33.136Z",
+      "GET",
+      "/v1/game/849843.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:36:33.374Z",
+      "GET",
+      "/v1/game/849844.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:36:33.597Z",
+      "GET",
+      "/v1/game/849845.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:36:33.900Z",
+      "GET",
+      "/v1/game/849846.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:36:34.219Z",
+      "GET",
+      "/v1/game/849848.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:36:34.676Z",
+      "GET",
+      "/v1/game/849849.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:36:34.987Z",
+      "GET",
+      "/v1/game/849851.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:36:35.212Z",
+      "GET",
+      "/v1/games/2026-09-30.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:36:35.407Z",
+      "GET",
+      "/v1/games/2026-10-01.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:36:35.587Z",
+      "GET",
+      "/v1/games/2026-10-02.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:36:35.756Z",
+      "GET",
+      "/v1/games/2026-10-04.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:36:35.996Z",
+      "GET",
+      "/v1/games/2026-10-05.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:36:36.260Z",
+      "GET",
+      "/v1/dates.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:36:36.447Z",
+      "GET",
+      "/v1/manifest.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:36:36.639Z",
+      "GET",
+      "/v1/health.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:36:36.818Z",
+      "GET",
+      "/index.html",
+      307,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:36:37.099Z",
+      "GET",
+      "/favicon.svg",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:36:37.476Z",
+      "GET",
+      "/assets/index-Dz7BMakV.js",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:36:37.847Z",
+      "GET",
+      "/assets/index-ks_hu7Ji.css",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:36:37.990Z",
+      "GET",
+      "/",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:36:38.103Z",
+      "GET",
+      "/?game=849843",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:36:38.376Z",
+      "GET",
+      "/v1/game/999999.json",
+      404,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:36:38.544Z",
+      "GET",
+      "/v1/games/2026-10-06.json",
+      404,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:36:38.703Z",
+      "HEAD",
+      "/v1/manifest.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:41:30.804Z",
+      "GET",
+      "/?game=849843",
+      401,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:41:31.115Z",
+      "GET",
+      "/favicon.ico",
+      401,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:41:57.477Z",
+      "POST",
+      "/_access/v1/session",
+      303,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:41:57.679Z",
+      "GET",
+      "/",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:41:57.799Z",
+      "GET",
+      "/assets/index-ks_hu7Ji.css",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:41:57.803Z",
+      "GET",
+      "/assets/index-Dz7BMakV.js",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:41:58.101Z",
+      "GET",
+      "/v1/dates.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:41:58.109Z",
+      "GET",
+      "/v1/manifest.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:41:58.117Z",
+      "GET",
+      "/favicon.svg",
+      401,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:41:58.299Z",
+      "GET",
+      "/v1/health.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:41:58.390Z",
+      "GET",
+      "/v1/games/2026-10-29.json",
+      404,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:42:08.441Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:42:08.547Z",
+      "GET",
+      "/v1/games/2026-10-28.json",
+      404,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:42:08.864Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:42:08.951Z",
+      "GET",
+      "/v1/games/2026-10-27.json",
+      null,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:42:09.012Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:42:09.117Z",
+      "GET",
+      "/v1/games/2026-10-25.json",
+      404,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:42:09.177Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:42:09.235Z",
+      "GET",
+      "/v1/games/2026-10-24.json",
+      null,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:42:09.284Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:42:09.366Z",
+      "GET",
+      "/v1/games/2026-10-20.json",
+      404,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:42:09.445Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:42:09.529Z",
+      "GET",
+      "/v1/games/2026-10-19.json",
+      404,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:42:09.575Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:42:09.678Z",
+      "GET",
+      "/v1/games/2026-10-18.json",
+      404,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:42:09.737Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:42:09.821Z",
+      "GET",
+      "/v1/games/2026-10-16.json",
+      404,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:42:09.877Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:42:09.958Z",
+      "GET",
+      "/v1/games/2026-10-15.json",
+      404,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:42:10.046Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:42:10.102Z",
+      "GET",
+      "/v1/games/2026-10-14.json",
+      null,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:42:10.163Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:42:10.264Z",
+      "GET",
+      "/v1/games/2026-10-13.json",
+      404,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:42:10.364Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:42:10.481Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:42:10.566Z",
+      "GET",
+      "/v1/games/2026-10-11.json",
+      404,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:42:10.640Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:42:10.736Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:42:10.817Z",
+      "GET",
+      "/v1/games/2026-10-08.json",
+      404,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:42:10.969Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:42:11.041Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:42:11.120Z",
+      "GET",
+      "/v1/games/2026-10-06.json",
+      404,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:42:11.191Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:42:11.277Z",
+      "GET",
+      "/v1/games/2026-10-05.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:42:11.338Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:42:11.423Z",
+      "GET",
+      "/v1/games/2026-10-04.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:42:11.490Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:42:11.579Z",
+      "GET",
+      "/v1/games/2026-10-02.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:42:11.640Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:42:11.736Z",
+      "GET",
+      "/v1/games/2026-10-01.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:42:11.796Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:42:11.881Z",
+      "GET",
+      "/v1/games/2026-09-30.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:54:31.328Z",
+      "GET",
+      "/v1/manifest.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:54:31.344Z",
+      "GET",
+      "/v1/dates.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:54:31.375Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:54:31.527Z",
+      "GET",
+      "/v1/games/2026-09-30.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:54:34.448Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:54:34.604Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:54:34.785Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:54:35.063Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:54:35.133Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:54:35.957Z",
+      "GET",
+      "/v1/games/2026-10-06.json",
+      404,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:54:42.494Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:54:42.567Z",
+      "GET",
+      "/v1/games/2026-10-07.json",
+      null,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:54:42.632Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:54:42.723Z",
+      "GET",
+      "/v1/games/2026-10-08.json",
+      404,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:54:42.807Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:54:42.883Z",
+      "GET",
+      "/v1/games/2026-10-09.json",
+      null,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:54:42.958Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:54:43.051Z",
+      "GET",
+      "/v1/games/2026-10-11.json",
+      404,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:54:44.946Z",
+      "GET",
+      "/?date=2026-10-11",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:54:45.054Z",
+      "GET",
+      "/assets/index-ks_hu7Ji.css",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:54:45.054Z",
+      "GET",
+      "/assets/index-Dz7BMakV.js",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:54:45.196Z",
+      "GET",
+      "/v1/dates.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:54:45.199Z",
+      "GET",
+      "/v1/manifest.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:54:45.202Z",
+      "GET",
+      "/v1/health.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:54:45.292Z",
+      "GET",
+      "/v1/games/2026-10-11.json",
+      404,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:54:45.361Z",
+      "GET",
+      "/favicon.svg",
+      401,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:54:46.473Z",
+      "GET",
+      "/?date=2026-10-11",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:54:46.554Z",
+      "GET",
+      "/assets/index-Dz7BMakV.js",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:54:46.558Z",
+      "GET",
+      "/assets/index-ks_hu7Ji.css",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:54:46.670Z",
+      "GET",
+      "/favicon.svg",
+      401,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:54:46.671Z",
+      "GET",
+      "/v1/health.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:54:46.678Z",
+      "GET",
+      "/v1/dates.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:54:46.683Z",
+      "GET",
+      "/v1/manifest.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:54:46.844Z",
+      "GET",
+      "/v1/games/2026-10-11.json",
+      404,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:54:57.782Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:54:57.939Z",
+      "GET",
+      "/v1/games/2026-10-11.json",
+      404,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:55:08.120Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:55:08.283Z",
+      "GET",
+      "/v1/games/2026-10-11.json",
+      404,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:55:18.426Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:55:18.696Z",
+      "GET",
+      "/v1/games/2026-10-11.json",
+      404,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:55:28.879Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:55:29.071Z",
+      "GET",
+      "/v1/games/2026-10-11.json",
+      404,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:55:33.787Z",
+      "GET",
+      "/?game=849843",
+      401,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:55:33.909Z",
+      "GET",
+      "/favicon.ico",
+      401,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:55:39.262Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:55:39.404Z",
+      "GET",
+      "/v1/games/2026-10-11.json",
+      404,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:55:42.359Z",
+      "POST",
+      "/_access/v1/session",
+      303,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:55:42.527Z",
+      "GET",
+      "/",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:55:42.646Z",
+      "GET",
+      "/assets/index-Dz7BMakV.js",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:55:42.649Z",
+      "GET",
+      "/assets/index-ks_hu7Ji.css",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:55:42.868Z",
+      "GET",
+      "/favicon.svg",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:55:42.887Z",
+      "GET",
+      "/v1/dates.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:55:42.897Z",
+      "GET",
+      "/v1/manifest.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:55:43.039Z",
+      "GET",
+      "/v1/health.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:55:43.157Z",
+      "GET",
+      "/v1/games/2026-10-29.json",
+      404,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:55:46.846Z",
+      "GET",
+      "/v1/manifest.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:55:46.850Z",
+      "GET",
+      "/v1/dates.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:55:49.588Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:55:49.748Z",
+      "GET",
+      "/v1/games/2026-10-11.json",
+      404,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:55:53.348Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:55:53.457Z",
+      "GET",
+      "/v1/games/2026-10-29.json",
+      404,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:55:59.868Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:55:59.993Z",
+      "GET",
+      "/v1/games/2026-10-11.json",
+      404,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:56:00.105Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:56:00.195Z",
+      "GET",
+      "/v1/games/2026-10-28.json",
+      404,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:56:00.476Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:56:00.582Z",
+      "GET",
+      "/v1/games/2026-10-27.json",
+      404,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:56:00.679Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:56:00.766Z",
+      "GET",
+      "/v1/games/2026-10-25.json",
+      404,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:56:00.823Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:56:00.914Z",
+      "GET",
+      "/v1/games/2026-10-24.json",
+      404,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:56:01.043Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:56:01.136Z",
+      "GET",
+      "/v1/games/2026-10-20.json",
+      404,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:56:01.187Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:56:01.277Z",
+      "GET",
+      "/v1/games/2026-10-19.json",
+      404,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:56:01.374Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:56:01.495Z",
+      "GET",
+      "/v1/games/2026-10-18.json",
+      404,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:56:01.549Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:56:01.635Z",
+      "GET",
+      "/v1/games/2026-10-16.json",
+      404,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:56:01.701Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:56:01.840Z",
+      "GET",
+      "/v1/games/2026-10-15.json",
+      404,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:56:01.931Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:56:02.017Z",
+      "GET",
+      "/v1/games/2026-10-14.json",
+      null,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:56:02.059Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:56:02.148Z",
+      "GET",
+      "/v1/games/2026-10-13.json",
+      404,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:56:02.250Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:56:02.337Z",
+      "GET",
+      "/v1/games/2026-10-12.json",
+      404,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:56:02.435Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:56:02.521Z",
+      "GET",
+      "/v1/games/2026-10-11.json",
+      404,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:56:02.601Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:56:02.690Z",
+      "GET",
+      "/v1/games/2026-10-09.json",
+      404,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:56:02.779Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:56:02.866Z",
+      "GET",
+      "/v1/games/2026-10-08.json",
+      404,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:56:02.968Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:56:03.059Z",
+      "GET",
+      "/v1/games/2026-10-07.json",
+      404,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:56:03.143Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:56:03.231Z",
+      "GET",
+      "/v1/games/2026-10-06.json",
+      404,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:56:03.375Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:56:03.474Z",
+      "GET",
+      "/v1/games/2026-10-05.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:56:03.511Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:56:03.609Z",
+      "GET",
+      "/v1/games/2026-10-04.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:56:03.675Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:56:03.774Z",
+      "GET",
+      "/v1/games/2026-10-02.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:56:03.858Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:56:03.967Z",
+      "GET",
+      "/v1/games/2026-10-01.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:56:04.041Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:56:04.136Z",
+      "GET",
+      "/v1/games/2026-09-30.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:56:05.008Z",
+      "GET",
+      "/?game=849845",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:56:05.107Z",
+      "GET",
+      "/assets/index-Dz7BMakV.js",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:56:05.109Z",
+      "GET",
+      "/assets/index-ks_hu7Ji.css",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:56:05.277Z",
+      "GET",
+      "/v1/health.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:56:05.285Z",
+      "GET",
+      "/v1/manifest.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:56:05.379Z",
+      "GET",
+      "/v1/game/849845.json",
+      200,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:56:10.141Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:56:10.341Z",
+      "GET",
+      "/v1/games/2026-10-11.json",
+      404,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:56:15.456Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:56:20.467Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:56:20.583Z",
+      "GET",
+      "/v1/games/2026-10-11.json",
+      404,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:56:25.413Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:56:30.760Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:56:31.029Z",
+      "GET",
+      "/v1/games/2026-10-11.json",
+      404,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:56:35.404Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:56:41.162Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:56:41.308Z",
+      "GET",
+      "/v1/games/2026-10-11.json",
+      404,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:56:45.403Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:56:47.213Z",
+      "GET",
+      "/v1/manifest.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:56:47.214Z",
+      "GET",
+      "/v1/dates.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:56:51.470Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:56:51.816Z",
+      "GET",
+      "/v1/games/2026-10-11.json",
+      404,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:56:55.403Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:57:02.025Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:57:02.227Z",
+      "GET",
+      "/v1/games/2026-10-11.json",
+      404,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:57:05.445Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:57:05.457Z",
+      "GET",
+      "/v1/manifest.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:57:12.420Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:57:12.595Z",
+      "GET",
+      "/v1/games/2026-10-11.json",
+      404,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:57:15.481Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:57:22.771Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:57:22.934Z",
+      "GET",
+      "/v1/games/2026-10-11.json",
+      404,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:57:25.397Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:57:33.047Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:57:33.134Z",
+      "GET",
+      "/v1/games/2026-10-11.json",
+      404,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:57:35.445Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:57:43.255Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:57:43.634Z",
+      "GET",
+      "/v1/games/2026-10-11.json",
+      404,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:57:45.407Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:57:47.959Z",
+      "GET",
+      "/v1/dates.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:57:47.960Z",
+      "GET",
+      "/v1/manifest.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:57:53.756Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:57:53.835Z",
+      "GET",
+      "/v1/games/2026-10-11.json",
+      404,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:57:55.376Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "42e265fd-b7f9-4c3a-b569-0aeb9059c81e"
+    ],
+    [
+      "2026-11-01T03:58:03.992Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T03:58:04.115Z",
+      "GET",
+      "/v1/games/2026-10-11.json",
+      404,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T03:58:05.568Z",
+      "GET",
+      "/v1/manifest.json",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T03:58:05.574Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T03:58:14.236Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T03:58:14.323Z",
+      "GET",
+      "/v1/games/2026-10-11.json",
+      404,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T03:58:15.377Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T03:58:24.446Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T03:58:24.531Z",
+      "GET",
+      "/v1/games/2026-10-11.json",
+      404,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T03:58:30.629Z",
+      "GET",
+      "/_notice/v1/state",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T03:58:34.659Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T03:58:34.846Z",
+      "GET",
+      "/v1/games/2026-10-11.json",
+      404,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T03:58:44.967Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T03:58:45.047Z",
+      "GET",
+      "/v1/games/2026-10-11.json",
+      404,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T03:58:48.165Z",
+      "GET",
+      "/v1/dates.json",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T03:58:48.172Z",
+      "GET",
+      "/v1/manifest.json",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T03:58:55.264Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T03:58:55.418Z",
+      "GET",
+      "/v1/games/2026-10-11.json",
+      404,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T03:59:05.533Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T03:59:05.613Z",
+      "GET",
+      "/v1/games/2026-10-11.json",
+      404,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T03:59:15.774Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T03:59:15.885Z",
+      "GET",
+      "/v1/games/2026-10-11.json",
+      404,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T03:59:26.014Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T03:59:26.161Z",
+      "GET",
+      "/v1/games/2026-10-11.json",
+      404,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T03:59:29.298Z",
+      "GET",
+      "/_notice/v1/state",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T03:59:30.388Z",
+      "PUT",
+      "/_notice/v1/state",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T03:59:31.219Z",
+      "GET",
+      "/_notice/v1/state",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T03:59:36.261Z",
+      "GET",
+      "/v1/health.json",
+      503,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T03:59:36.320Z",
+      "GET",
+      "/v1/games/2026-10-11.json",
+      503,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T03:59:46.429Z",
+      "GET",
+      "/v1/health.json",
+      503,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T03:59:46.488Z",
+      "GET",
+      "/v1/games/2026-10-11.json",
+      503,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T03:59:48.328Z",
+      "GET",
+      "/v1/dates.json",
+      503,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T03:59:48.330Z",
+      "GET",
+      "/v1/manifest.json",
+      503,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T03:59:56.580Z",
+      "GET",
+      "/v1/health.json",
+      503,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T03:59:56.639Z",
+      "GET",
+      "/v1/games/2026-10-11.json",
+      503,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T03:59:59.776Z",
+      "GET",
+      "/v1/manifest.json",
+      503,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:00:06.731Z",
+      "GET",
+      "/v1/health.json",
+      503,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:00:06.802Z",
+      "GET",
+      "/v1/games/2026-10-11.json",
+      503,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:00:16.953Z",
+      "GET",
+      "/v1/health.json",
+      503,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:00:17.715Z",
+      "GET",
+      "/v1/games/2026-10-11.json",
+      503,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:00:27.826Z",
+      "GET",
+      "/v1/health.json",
+      503,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:00:27.883Z",
+      "GET",
+      "/v1/games/2026-10-11.json",
+      503,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:00:35.054Z",
+      "GET",
+      "/v1/manifest.json",
+      503,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:00:35.068Z",
+      "GET",
+      "/v1/health.json",
+      503,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:00:36.970Z",
+      "GET",
+      "/v1/health.json",
+      503,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:00:37.985Z",
+      "GET",
+      "/v1/health.json",
+      503,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:00:38.068Z",
+      "GET",
+      "/v1/games/2026-10-11.json",
+      503,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:00:41.138Z",
+      "GET",
+      "/v1/health.json",
+      503,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:00:41.775Z",
+      "GET",
+      "/",
+      503,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:00:41.854Z",
+      "GET",
+      "/favicon.ico",
+      503,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:00:43.745Z",
+      "GET",
+      "/v1/health.json",
+      503,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:00:43.762Z",
+      "GET",
+      "/v1/manifest.json",
+      503,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:00:45.372Z",
+      "GET",
+      "/v1/health.json",
+      503,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:00:45.373Z",
+      "GET",
+      "/",
+      503,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:00:45.473Z",
+      "GET",
+      "/favicon.ico",
+      503,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:00:48.191Z",
+      "GET",
+      "/v1/health.json",
+      503,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:00:48.249Z",
+      "GET",
+      "/v1/games/2026-10-11.json",
+      503,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:00:48.419Z",
+      "GET",
+      "/v1/dates.json",
+      503,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:00:48.423Z",
+      "GET",
+      "/v1/manifest.json",
+      503,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:00:58.346Z",
+      "GET",
+      "/v1/health.json",
+      503,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:00:58.407Z",
+      "GET",
+      "/v1/games/2026-10-11.json",
+      503,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:01:08.500Z",
+      "GET",
+      "/v1/health.json",
+      503,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:01:08.560Z",
+      "GET",
+      "/v1/games/2026-10-11.json",
+      503,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:01:18.672Z",
+      "GET",
+      "/v1/health.json",
+      503,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:01:18.730Z",
+      "GET",
+      "/v1/games/2026-10-11.json",
+      503,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:01:28.830Z",
+      "GET",
+      "/v1/health.json",
+      503,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:01:28.897Z",
+      "GET",
+      "/v1/games/2026-10-11.json",
+      503,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:01:38.992Z",
+      "GET",
+      "/v1/health.json",
+      503,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:01:39.091Z",
+      "GET",
+      "/v1/games/2026-10-11.json",
+      503,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:01:48.539Z",
+      "GET",
+      "/v1/dates.json",
+      503,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:01:48.540Z",
+      "GET",
+      "/v1/manifest.json",
+      503,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:01:49.154Z",
+      "GET",
+      "/v1/health.json",
+      503,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:01:49.214Z",
+      "GET",
+      "/v1/games/2026-10-11.json",
+      503,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:01:49.669Z",
+      "GET",
+      "/v1/manifest.json",
+      503,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:01:49.671Z",
+      "GET",
+      "/v1/health.json",
+      503,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:01:51.157Z",
+      "GET",
+      "/",
+      503,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:01:51.236Z",
+      "GET",
+      "/favicon.ico",
+      503,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:01:59.329Z",
+      "GET",
+      "/v1/health.json",
+      503,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:01:59.388Z",
+      "GET",
+      "/v1/games/2026-10-11.json",
+      503,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:03:52.511Z",
+      "GET",
+      "/_notice/v1/state",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:03:54.329Z",
+      "PUT",
+      "/_notice/v1/state",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:03:55.624Z",
+      "GET",
+      "/_notice/v1/state",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:04:15.508Z",
+      "GET",
+      "/v1/manifest.json",
+      401,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:16:49.836Z",
+      "GET",
+      "/",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:16:49.920Z",
+      "GET",
+      "/assets/index-Dz7BMakV.js",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:16:49.950Z",
+      "GET",
+      "/assets/index-ks_hu7Ji.css",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:16:50.029Z",
+      "GET",
+      "/favicon.svg",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:16:50.107Z",
+      "GET",
+      "/v1/manifest.json",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:16:50.134Z",
+      "GET",
+      "/v1/dates.json",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:16:50.240Z",
+      "GET",
+      "/v1/health.json",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:16:50.365Z",
+      "GET",
+      "/v1/games/2026-10-29.json",
+      404,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:38:55.262Z",
+      "HEAD",
+      "/",
+      401,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:47:03.079Z",
+      "GET",
+      "/",
+      401,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:47:03.395Z",
+      "GET",
+      "/v1/manifest.json",
+      401,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:47:03.804Z",
+      "GET",
+      "/favicon.svg",
+      401,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:47:04.249Z",
+      "GET",
+      "/",
+      401,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:48:35.443Z",
+      "GET",
+      "/v1/manifest.json",
+      401,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:48:59.310Z",
+      "POST",
+      "/_access/v1/session",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:48:59.589Z",
+      "GET",
+      "/v1/manifest.json",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:49:00.023Z",
+      "GET",
+      "/v1/setup/849843.json",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:49:00.194Z",
+      "GET",
+      "/v1/game/849823.json",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:49:00.659Z",
+      "GET",
+      "/v1/game/849825.json",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:49:01.035Z",
+      "GET",
+      "/v1/game/849828.json",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:49:01.258Z",
+      "GET",
+      "/v1/game/849829.json",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:49:01.528Z",
+      "GET",
+      "/v1/game/849830.json",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:49:01.713Z",
+      "GET",
+      "/v1/game/849835.json",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:49:02.017Z",
+      "GET",
+      "/v1/game/849841.json",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:49:02.312Z",
+      "GET",
+      "/v1/game/849842.json",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:49:02.641Z",
+      "GET",
+      "/v1/game/849843.json",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:49:02.832Z",
+      "GET",
+      "/v1/game/849844.json",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:49:03.162Z",
+      "GET",
+      "/v1/game/849845.json",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:49:03.400Z",
+      "GET",
+      "/v1/game/849846.json",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:49:03.610Z",
+      "GET",
+      "/v1/game/849848.json",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:49:03.943Z",
+      "GET",
+      "/v1/game/849849.json",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:49:04.219Z",
+      "GET",
+      "/v1/game/849851.json",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:49:04.538Z",
+      "GET",
+      "/v1/games/2026-09-30.json",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:49:04.688Z",
+      "GET",
+      "/v1/games/2026-10-01.json",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:49:04.817Z",
+      "GET",
+      "/v1/games/2026-10-02.json",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:49:04.954Z",
+      "GET",
+      "/v1/games/2026-10-04.json",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:49:05.117Z",
+      "GET",
+      "/v1/games/2026-10-05.json",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:49:05.254Z",
+      "GET",
+      "/v1/dates.json",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:49:05.379Z",
+      "GET",
+      "/v1/manifest.json",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:49:05.520Z",
+      "GET",
+      "/v1/health.json",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:49:05.610Z",
+      "GET",
+      "/index.html",
+      307,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:49:05.671Z",
+      "GET",
+      "/favicon.svg",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:49:05.795Z",
+      "GET",
+      "/assets/index-Dz7BMakV.js",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:49:05.900Z",
+      "GET",
+      "/assets/index-ks_hu7Ji.css",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:49:05.995Z",
+      "GET",
+      "/",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:49:06.156Z",
+      "GET",
+      "/?game=849843",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:49:06.324Z",
+      "GET",
+      "/v1/game/999999.json",
+      404,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:49:06.550Z",
+      "GET",
+      "/v1/games/2026-10-06.json",
+      404,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:49:06.705Z",
+      "HEAD",
+      "/v1/manifest.json",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:52:40.057Z",
+      "GET",
+      "/",
+      401,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:52:40.479Z",
+      "HEAD",
+      "/v1/manifest.json",
+      401,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:55:09.278Z",
+      "GET",
+      "/",
+      401,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T04:55:11.186Z",
+      "GET",
+      "/",
+      401,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:01:32.766Z",
+      "GET",
+      "/assets/index-ks_hu7Ji.css",
+      401,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:03:29.126Z",
+      "GET",
+      "/?date=2026-10-11",
+      401,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:03:29.439Z",
+      "GET",
+      "/favicon.ico",
+      401,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:05:17.377Z",
+      "POST",
+      "/_access/v1/session",
+      303,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:05:17.633Z",
+      "GET",
+      "/",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:05:17.803Z",
+      "GET",
+      "/assets/index-ks_hu7Ji.css",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:05:17.804Z",
+      "GET",
+      "/assets/index-Dz7BMakV.js",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:05:18.190Z",
+      "GET",
+      "/v1/dates.json",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:05:18.212Z",
+      "GET",
+      "/v1/manifest.json",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:05:18.228Z",
+      "GET",
+      "/favicon.svg",
+      401,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:05:18.457Z",
+      "GET",
+      "/v1/health.json",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:05:18.654Z",
+      "GET",
+      "/v1/games/2026-10-29.json",
+      404,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:05:36.144Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:05:36.179Z",
+      "GET",
+      "/v1/manifest.json",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:05:36.183Z",
+      "GET",
+      "/v1/dates.json",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:05:36.317Z",
+      "GET",
+      "/v1/games/2026-10-29.json",
+      404,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:05:40.886Z",
+      "GET",
+      "/?game=849843",
+      401,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:05:41.267Z",
+      "GET",
+      "/favicon.ico",
+      401,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:05:53.623Z",
+      "POST",
+      "/_access/v1/session",
+      303,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:05:54.043Z",
+      "GET",
+      "/",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:05:54.323Z",
+      "GET",
+      "/assets/index-ks_hu7Ji.css",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:05:54.365Z",
+      "GET",
+      "/assets/index-Dz7BMakV.js",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:05:54.593Z",
+      "GET",
+      "/v1/manifest.json",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:05:54.594Z",
+      "GET",
+      "/v1/dates.json",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:05:54.693Z",
+      "GET",
+      "/favicon.svg",
+      401,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:05:54.896Z",
+      "GET",
+      "/v1/health.json",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:05:55.060Z",
+      "GET",
+      "/v1/games/2026-10-29.json",
+      404,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:05:56.070Z",
+      "GET",
+      "/v1/health.json",
+      null,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:05:56.274Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:05:56.406Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:05:56.563Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:05:56.740Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:05:56.937Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:05:57.070Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:05:57.243Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:05:57.404Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:05:57.555Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:05:57.738Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:05:57.947Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:05:58.100Z",
+      "GET",
+      "/v1/health.json",
+      null,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:05:58.257Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:05:58.426Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:05:58.601Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:05:58.795Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:05:58.973Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:05:59.154Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:05:59.311Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:05:59.502Z",
+      "GET",
+      "/v1/games/2026-10-02.json",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:05:59.647Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:05:59.828Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:00.020Z",
+      "GET",
+      "/v1/games/2026-09-30.json",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:01.293Z",
+      "GET",
+      "/?game=849845",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:01.415Z",
+      "GET",
+      "/assets/index-Dz7BMakV.js",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:01.420Z",
+      "GET",
+      "/assets/index-ks_hu7Ji.css",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:01.600Z",
+      "GET",
+      "/favicon.svg",
+      401,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:01.609Z",
+      "GET",
+      "/v1/manifest.json",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:01.612Z",
+      "GET",
+      "/v1/health.json",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:01.820Z",
+      "GET",
+      "/v1/game/849845.json",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:05.484Z",
+      "GET",
+      "/",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:05.575Z",
+      "GET",
+      "/assets/index-Dz7BMakV.js",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:05.578Z",
+      "GET",
+      "/assets/index-ks_hu7Ji.css",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:05.756Z",
+      "GET",
+      "/v1/dates.json",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:05.763Z",
+      "GET",
+      "/favicon.svg",
+      401,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:05.785Z",
+      "GET",
+      "/v1/manifest.json",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:05.947Z",
+      "GET",
+      "/v1/health.json",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:06.114Z",
+      "GET",
+      "/v1/games/2026-10-29.json",
+      404,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:15.045Z",
+      "GET",
+      "/v1/health.json",
+      null,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:15.047Z",
+      "GET",
+      "/favicon.svg",
+      401,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:15.137Z",
+      "GET",
+      "/favicon.svg",
+      401,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:15.176Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:15.244Z",
+      "GET",
+      "/favicon.svg",
+      401,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:15.320Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:15.400Z",
+      "GET",
+      "/favicon.svg",
+      401,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:15.528Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:15.567Z",
+      "GET",
+      "/favicon.svg",
+      401,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:15.644Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:15.719Z",
+      "GET",
+      "/favicon.svg",
+      401,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:15.803Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:15.862Z",
+      "GET",
+      "/favicon.svg",
+      401,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:15.949Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:16.060Z",
+      "GET",
+      "/favicon.svg",
+      401,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:16.151Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:16.220Z",
+      "GET",
+      "/favicon.svg",
+      401,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:16.293Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:16.384Z",
+      "GET",
+      "/favicon.svg",
+      401,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:16.471Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:16.516Z",
+      "GET",
+      "/favicon.svg",
+      401,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:16.591Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:16.686Z",
+      "GET",
+      "/favicon.svg",
+      401,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:16.770Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:16.858Z",
+      "GET",
+      "/favicon.svg",
+      401,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:16.945Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:17.075Z",
+      "GET",
+      "/favicon.svg",
+      401,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:17.105Z",
+      "GET",
+      "/v1/health.json",
+      null,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:17.193Z",
+      "GET",
+      "/favicon.svg",
+      401,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:17.275Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:17.357Z",
+      "GET",
+      "/favicon.svg",
+      401,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:17.438Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:17.510Z",
+      "GET",
+      "/v1/games/2026-10-07.json",
+      null,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:17.515Z",
+      "GET",
+      "/favicon.svg",
+      401,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:17.601Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:17.687Z",
+      "GET",
+      "/favicon.svg",
+      401,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:17.803Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:17.839Z",
+      "GET",
+      "/favicon.svg",
+      401,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:17.934Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:18.021Z",
+      "GET",
+      "/v1/games/2026-10-04.json",
+      null,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:18.048Z",
+      "GET",
+      "/favicon.svg",
+      401,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:18.124Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:18.198Z",
+      "GET",
+      "/favicon.svg",
+      401,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:18.299Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:18.359Z",
+      "GET",
+      "/favicon.svg",
+      401,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:18.465Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:18.643Z",
+      "GET",
+      "/v1/games/2026-09-30.json",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:29.029Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:29.439Z",
+      "GET",
+      "/v1/games/2026-09-30.json",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:39.849Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:40.242Z",
+      "GET",
+      "/v1/games/2026-09-30.json",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:41.590Z",
+      "GET",
+      "/?game=849845",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:41.782Z",
+      "GET",
+      "/assets/index-ks_hu7Ji.css",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:41.784Z",
+      "GET",
+      "/assets/index-Dz7BMakV.js",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:41.936Z",
+      "GET",
+      "/favicon.svg",
+      401,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:41.961Z",
+      "GET",
+      "/v1/manifest.json",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:41.972Z",
+      "GET",
+      "/v1/health.json",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:42.140Z",
+      "GET",
+      "/v1/game/849845.json",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:50.249Z",
+      "GET",
+      "/?game=849845",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:50.354Z",
+      "GET",
+      "/assets/index-Dz7BMakV.js",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:50.356Z",
+      "GET",
+      "/assets/index-ks_hu7Ji.css",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:50.531Z",
+      "GET",
+      "/favicon.svg",
+      401,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:50.537Z",
+      "GET",
+      "/v1/manifest.json",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:50.540Z",
+      "GET",
+      "/v1/health.json",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:06:50.716Z",
+      "GET",
+      "/v1/game/849845.json",
+      200,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:15:20.206Z",
+      "GET",
+      "/v1/manifest.json",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:15:20.651Z",
+      "GET",
+      "/v1/health.json",
+      304,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:24:20.912Z",
+      "HEAD",
+      "/v1/manifest.json",
+      401,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:34:04.716Z",
+      "HEAD",
+      "/v1/manifest.json",
+      401,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:44:10.819Z",
+      "GET",
+      "/v1/manifest.json",
+      401,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T05:51:27.508Z",
+      "GET",
+      "/",
+      401,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T06:14:53.834Z",
+      "GET",
+      "/?game=849843",
+      401,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T08:04:30.821Z",
+      "GET",
+      "/v1/manifest.json",
+      401,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T08:09:11.614Z",
+      "GET",
+      "/v1/manifest.json",
+      401,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T08:13:34.671Z",
+      "GET",
+      "/",
+      401,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T08:22:10.828Z",
+      "GET",
+      "/?game=849843",
+      401,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T08:22:11.244Z",
+      "GET",
+      "/v1/manifest.json",
+      401,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T08:34:23.860Z",
+      "GET",
+      "/",
+      401,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T08:35:30.735Z",
+      "HEAD",
+      "/?<stripped>",
+      401,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T08:35:30.740Z",
+      "GET",
+      "/?<stripped>",
+      401,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T08:35:30.741Z",
+      "GET",
+      "/?<stripped>",
+      401,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T08:35:30.746Z",
+      "GET",
+      "/?<stripped>",
+      401,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T08:35:30.831Z",
+      "GET",
+      "/favicon.ico",
+      401,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T08:35:31.091Z",
+      "GET",
+      "/?<stripped>",
+      401,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T08:35:31.164Z",
+      "GET",
+      "/favicon.ico?<stripped>",
+      401,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T08:35:32.014Z",
+      "GET",
+      "/?<stripped>",
+      401,
+      "feed4fc1-949d-4672-98fb-35f4ab00fdc3"
+    ],
+    [
+      "2026-11-01T08:37:26.862Z",
+      "POST",
+      "/_access/v1/session",
+      200,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:37:27.050Z",
+      "GET",
+      "/v1/manifest.json",
+      200,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:37:27.436Z",
+      "GET",
+      "/v1/setup/849843.json",
+      200,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:37:27.567Z",
+      "GET",
+      "/v1/game/849823.json",
+      200,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:37:28.055Z",
+      "GET",
+      "/v1/game/849825.json",
+      200,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:37:28.385Z",
+      "GET",
+      "/v1/game/849828.json",
+      200,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:37:28.668Z",
+      "GET",
+      "/v1/game/849829.json",
+      200,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:37:28.873Z",
+      "GET",
+      "/v1/game/849830.json",
+      200,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:37:29.116Z",
+      "GET",
+      "/v1/game/849835.json",
+      200,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:37:29.377Z",
+      "GET",
+      "/v1/game/849841.json",
+      200,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:37:29.613Z",
+      "GET",
+      "/v1/game/849842.json",
+      200,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:37:29.841Z",
+      "GET",
+      "/v1/game/849843.json",
+      200,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:37:30.081Z",
+      "GET",
+      "/v1/game/849844.json",
+      200,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:37:30.286Z",
+      "GET",
+      "/v1/game/849845.json",
+      200,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:37:30.526Z",
+      "GET",
+      "/v1/game/849846.json",
+      200,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:37:30.694Z",
+      "GET",
+      "/v1/game/849848.json",
+      200,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:37:30.844Z",
+      "GET",
+      "/v1/game/849849.json",
+      200,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:37:30.979Z",
+      "GET",
+      "/v1/game/849851.json",
+      200,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:37:31.303Z",
+      "GET",
+      "/v1/games/2026-09-30.json",
+      200,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:37:31.465Z",
+      "GET",
+      "/v1/games/2026-10-01.json",
+      200,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:37:31.615Z",
+      "GET",
+      "/v1/games/2026-10-02.json",
+      200,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:37:31.733Z",
+      "GET",
+      "/v1/games/2026-10-04.json",
+      200,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:37:31.850Z",
+      "GET",
+      "/v1/games/2026-10-05.json",
+      200,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:37:31.992Z",
+      "GET",
+      "/v1/dates.json",
+      200,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:37:32.095Z",
+      "GET",
+      "/v1/manifest.json",
+      200,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:37:32.240Z",
+      "GET",
+      "/v1/health.json",
+      200,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:37:32.309Z",
+      "GET",
+      "/index.html",
+      307,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:37:32.379Z",
+      "GET",
+      "/favicon.svg",
+      200,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:37:32.470Z",
+      "GET",
+      "/assets/index-Dz7BMakV.js",
+      200,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:37:32.577Z",
+      "GET",
+      "/assets/index-ks_hu7Ji.css",
+      200,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:37:32.669Z",
+      "GET",
+      "/",
+      200,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:37:32.771Z",
+      "GET",
+      "/?game=849843",
+      200,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:37:32.876Z",
+      "GET",
+      "/v1/game/999999.json",
+      404,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:37:33.001Z",
+      "GET",
+      "/v1/games/2026-10-06.json",
+      404,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:37:33.089Z",
+      "HEAD",
+      "/v1/manifest.json",
+      200,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:37:49.928Z",
+      "GET",
+      "/?<stripped>",
+      401,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:37:51.678Z",
+      "GET",
+      "/?game=849843",
+      401,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:37:53.356Z",
+      "GET",
+      "/favicon.ico",
+      401,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:38:41.882Z",
+      "GET",
+      "/_notice/v1/state",
+      200,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:39:20.447Z",
+      "PUT",
+      "/_notice/v1/state",
+      200,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:39:21.819Z",
+      "GET",
+      "/_notice/v1/state",
+      200,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:39:25.657Z",
+      "GET",
+      "/?game=849843",
+      503,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:39:26.293Z",
+      "GET",
+      "/favicon.ico",
+      503,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:39:40.627Z",
+      "GET",
+      "/?game=849843",
+      503,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:39:40.996Z",
+      "GET",
+      "/v1/manifest.json",
+      503,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:39:42.503Z",
+      "PUT",
+      "/_notice/v1/state",
+      200,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:39:43.528Z",
+      "GET",
+      "/_notice/v1/state",
+      200,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:40:20.208Z",
+      "GET",
+      "/",
+      401,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:40:20.481Z",
+      "GET",
+      "/v1/manifest.json",
+      401,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:40:20.573Z",
+      "HEAD",
+      "/_publish/v1/health.json",
+      503,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:40:20.674Z",
+      "POST",
+      "/_access/v1/session",
+      200,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:40:21.123Z",
+      "GET",
+      "/?game=849843",
+      200,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:40:21.261Z",
+      "GET",
+      "/v1/manifest.json",
+      200,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:42:51.723Z",
+      "GET",
+      "/?game=849843",
+      401,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:42:53.139Z",
+      "GET",
+      "/favicon.ico",
+      401,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:43:10.146Z",
+      "GET",
+      "/?game=849843",
+      401,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:43:11.536Z",
+      "GET",
+      "/favicon.ico",
+      401,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:44:15.060Z",
+      "GET",
+      "/?game=849843",
+      401,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:44:15.396Z",
+      "GET",
+      "/favicon.ico",
+      401,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:44:21.822Z",
+      "POST",
+      "/_access/v1/session",
+      303,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:44:22.026Z",
+      "GET",
+      "/",
+      200,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:44:22.170Z",
+      "GET",
+      "/assets/index-ks_hu7Ji.css",
+      200,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:44:22.172Z",
+      "GET",
+      "/assets/index-Dz7BMakV.js",
+      200,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:44:22.545Z",
+      "GET",
+      "/favicon.svg",
+      401,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:44:22.554Z",
+      "GET",
+      "/v1/dates.json",
+      200,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:44:22.568Z",
+      "GET",
+      "/v1/manifest.json",
+      200,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:44:22.715Z",
+      "GET",
+      "/v1/health.json",
+      200,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:44:22.830Z",
+      "GET",
+      "/v1/games/2026-10-29.json",
+      404,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:44:23.960Z",
+      "GET",
+      "/?game=849843",
+      200,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:44:24.101Z",
+      "GET",
+      "/favicon.svg",
+      401,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:44:24.170Z",
+      "GET",
+      "/v1/manifest.json",
+      200,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:44:24.172Z",
+      "GET",
+      "/v1/health.json",
+      200,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:44:24.294Z",
+      "GET",
+      "/v1/game/849843.json",
+      200,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ],
+    [
+      "2026-11-01T08:45:06.800Z",
+      "GET",
+      "/favicon.ico",
+      401,
+      "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+    ]
+  ],
+  "limits": [
+    "count_correlation_only_no_per_request_ray_matching",
+    "export_count_may_be_capped_by_dashboard_completeness_unknown",
+    "extra_events_are_counted_not_attributed",
+    "does_not_prove_body_bytes_authentication_or_ui_acceptance"
+  ]
+}
