@@ -1,0 +1,75 @@
+{
+  "schema": "pitcheezy-stage5-ready-v1",
+  "recorded_at_utc": "2026-11-02T13:17:19.623Z",
+  "window_start_utc": "2026-11-02T13:17:19.623Z",
+  "window_end_utc": "2026-11-02T13:32:19.623Z",
+  "status": "ready_waiting_user_save",
+  "public_origin": "https://app.pitcheezy.com",
+  "route_pattern": "app.pitcheezy.com/*",
+  "edit_dialog_source": "user_supplied_screenshot",
+  "expected_new_target_selected": true,
+  "request_limit_failure_mode": "leave_existing_unchanged",
+  "logging_evidence": {
+    "source": "user_report_in_chat",
+    "confirmed_both_targets": true,
+    "logs_enabled": true,
+    "invocation_logs": true,
+    "persist_logs": true,
+    "sampling_percent": 100,
+    "independent_current_dashboard_read": false
+  },
+  "version_pins": {
+    "cutover": "5999cf0d-4f18-4d43-bcd6-320e04860369",
+    "rollback": "6d652d4b-7d3c-4897-aefd-f37d0edce50c"
+  },
+  "version_basis": "management_read_preflight_2026-11-02T13:08:33Z",
+  "fixed_tool_sha256": "64bbf3a7737a851a93504ca460be4f45e2356c6c0e58b675466dea47eaa26d4e",
+  "dry_runs": {
+    "cutover": {
+      "input_sha256": "e35e78b43a5cc419b3fa1f738432fe3c2f7a7304e8c866ec9d954877ecfb6e06",
+      "mode": "local_dry_run",
+      "passed": true,
+      "phase": "cutover",
+      "approved": true,
+      "service_requests": 0,
+      "files": 10,
+      "budget": {
+        "cutover": 24,
+        "rollback": 5,
+        "cycle": 29
+      }
+    },
+    "rollback": {
+      "input_sha256": "d0d67aae9df203d7893dfe6b066928a84be8646fd50fbe423b4ea818b5383484",
+      "mode": "local_dry_run",
+      "passed": true,
+      "phase": "rollback",
+      "approved": true,
+      "service_requests": 0,
+      "files": 2,
+      "budget": {
+        "cutover": 24,
+        "rollback": 5,
+        "cycle": 29
+      }
+    }
+  },
+  "budget": {
+    "cutover": 24,
+    "rollback": 5,
+    "cycle": 29
+  },
+  "route_saved": false,
+  "actual_execution_started": false,
+  "service_requests": 0,
+  "credential_file_read": false,
+  "dns_mutations": 0,
+  "deployments": 0,
+  "credential_mutations": 0,
+  "next": "user_saves_existing_app_route_then_confirmation_within_window",
+  "read_only_receipt_review": {
+    "result": "APPROVE",
+    "scope": "public_receipt_consistency_only",
+    "private_inputs_or_credentials_read": false
+  }
+}

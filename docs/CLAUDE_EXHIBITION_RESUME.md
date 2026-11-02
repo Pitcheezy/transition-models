@@ -25,17 +25,17 @@ Claude, Pitcheezy 11/24 전시 준비를 이 상태에서 이어받아줘.
 
 사용자는 “이번 작업을 진행하고 끝난 뒤 Claude 인계 프롬프트를 만들라”고 지시했다. Codex는 기존 app Route 하나만 새 대상으로 옮기고 실패하면 옛 대상으로 복구하는 범위와 재로그인 필요를 설명했다. 이 범위의 전환을 이어가되, 예상 밖 대상·중복 Route·새 변경 필요는 따로 설명한다.
 
-사용자 노트북의 로그인된 대시보드와 Workers Routes 전체5행을 캡처로 확인했다. 다시 로그인할 필요는 없다. 자동 컴퓨터 도구는 현재 브라우저URL을 확실히 판별하지 못해 중단됐으므로 사용자가 직접 대시보드를 조작하고 Codex/Claude는 관리 읽기·검사·기록을 담당하는 방식으로 이어간다. 사용자에게 app 정확경로 행의 Edit만 열고 아직 Save는 누르지 않도록 안내했다.
+사용자 노트북의 로그인된 대시보드와 Workers Routes 전체5행을 캡처로 확인했다. 다시 로그인할 필요는 없다. 자동 컴퓨터 도구는 현재 브라우저URL을 확실히 판별하지 못해 중단됐으므로 사용자가 직접 대시보드를 조작하고 Codex/Claude는 관리 읽기·검사·기록을 담당하는 방식으로 이어간다. 사용자가 app 정확경로 편집창을 열고 새 대상을 선택한 캡처를 제공했다. Route 문자열은 그대로이며 Save는 아직 확인되지 않았다.
 
 **단계5 Route/DNS/배포/비밀 변경0·서비스 요청0이다.** 현재 app 정확경로 한 행이 기존 서버에, 별도 시험경로가 새 서버에 연결된 것을 사용자 전체표 캡처에서 확인했다. API Route ID는 확인하지 못했고 대시보드의 유일한 정확경로와 현재대상을 UI 식별자로 기록했다. 대상을 변경하기 전 편집창에서 같은 행인지 다시 확인한다.
 
-새 관리 조회6개에서 기존 버전 `6d652d4b-7d3c-4897-aefd-f37d0edce50c`와 새 버전 `5999cf0d-4f18-4d43-bcd6-320e04860369` 각각100%, 양쪽 접근/자료읽기ON·업로드/수집/피드백OFF·비밀이름4개를 확인했다. 관리 R2 객체 읽기2개로 양쪽 안내OFF도 확인했다. 버전 일치만으로 비버전 로그 설정까지 확인했다고 쓰지 않는다. **양쪽 현재 Workers Logs100%·Invocation·Persist의 사용자 화면 확인은 남아 있다.**
+새 관리 조회6개에서 기존 버전 `6d652d4b-7d3c-4897-aefd-f37d0edce50c`와 새 버전 `5999cf0d-4f18-4d43-bcd6-320e04860369` 각각100%, 양쪽 접근/자료읽기ON·업로드/수집/피드백OFF·비밀이름4개를 확인했다. 관리 R2 객체 읽기2개로 양쪽 안내OFF도 확인했다. 버전 일치만으로 비버전 로그 설정까지 확인했다고 쓰지 않는다. **사용자는 양쪽 Logs ON·Invocation/Persist 체크·Sampling100%를 확인했다고 답했다.** 이는 사용자 응답이며 자동 대시보드 재조회 증거는 아니다.
 
-근거는 docs/results/exhibition_20261101/stage5-dashboard-preflight-20261102.json이다. 비공개 원본·수동 Route 식별·양쪽 버전·안내OFF·전환/복구 준비 입력은 `D:/pitcheezy_exhibit_check/scope2-c47fe6cb-20261101/deployment-stage5-dashboard-preflight/`에 있다. 새 버전 핀으로 전환·복구 dry-run은 통과했으나 approved=false·UTC창null로 유지했고 실제 실행폴더나 자격 접근은 없다. 저장 직전에는 실제 새15분 창/입력SHA를 고정하고 dry-run 후 진행한다. 오래된창으로 실행하거나 아직 끝나지 않은 로그 설정 확인을 생략하지 않는다.
+근거는 docs/results/exhibition_20261101/stage5-dashboard-preflight-20261102.json이다. 비공개 원본·수동 Route 식별·양쪽 버전·안내OFF·전환/복구 준비 입력은 `D:/pitcheezy_exhibit_check/scope2-c47fe6cb-20261101/deployment-stage5-dashboard-preflight/`에 있다. 초기 approved=false·UTC창null 사본은 보존했다. 사용자 확인 뒤 새 승인 사본의 실제15분 창 2026-11-02T13:17:19.623Z~13:32:19.623Z와 전환/복구 입력SHA를 고정했고 양쪽 dry-run을 통과했다. 근거는 docs/results/exhibition_20261101/stage5-ready-20261102.json, 비공개 포인터는 같은 폴더의 active-inputs-131719.private.json이다. 서비스 요청·자격파일읽기·실행폴더 생성은0이다. 다음은 사용자 Save 확인 뒤 창 안에24요청 검사다. 창이 지났다면 실행하지 않고 미실행 여부부터 확인하여 새 입력 사본을 준비한다. 실행 시작/종료표식이 있으면 새 회차로 우회 재실행하지 않는다.
 
 ### 다음 한 단위 — app 연결 교체
 
-1. 대시보드 접근이 가능해지면 정확한 `app.pitcheezy.com/*` 기존 Route의 식별자·옛 대상·새 대상, 양쪽 현재 적용 버전·접근/안내/업로드/로그 설정을 새로 읽고 비공개 원장에 보존한다. 중복/겹침·예상 밖 대상이면 멈춘다. 오래된 단계4/이번 부분 조회를 실행 시점의 전체 사전 확인으로 대신하지 않는다.
+1. 저장 직전 영수증과 사용자 Save 여부부터 확인한다. 위 사전 확인 이후 다른 변경이 없고 실행 창 안이면 완료 확인을 반복하지 않는다. 새 세션/시간 경과/추가 변경이 있으면 정확한 `app.pitcheezy.com/*` 기존 Route의 식별자·옛 대상·새 대상, 양쪽 현재 적용 버전·접근/안내/업로드/로그 설정을 새로 읽고 비공개 원장에 보존한다. 중복/겹침·예상 밖 대상이면 멈춘다. 오래된 단계4/이번 부분 조회를 실행 시점의 전체 사전 확인으로 대신하지 않는다.
 2. 고정 검토 `7ec2e69733cfc651435a3ca10aeabf4a794e7475`의 `ops/public-host/run-exhibit-stage5.mjs`를 사용한다. 코드 SHA `64bbf3a7737a851a93504ca460be4f45e2356c6c0e58b675466dea47eaa26d4e`, 검사 SHA `43a58d793de38beba88b10b38a1d7d4a2f7086b66fe3cdf80f16292ba5eeea3d`는 이번 읽기 감사에서도 같았다. 다른 모델 검토와39검사 근거는 docs/results/exhibition_20261101/stage5-confirmation-preparation.json이다. 새 변경 없이 검사를 반복하지 않는다.
 3. 비공개 준비본은 `D:/pitcheezy_exhibit_check/scope2-c47fe6cb-20261101/deployment-stage5-preparation/`에 있다. approved=false·UTC null·버전0인 준비본은 보존한다. 실제 새 사본에 approved=true·현재 버전·최대15분 UTC 창·새 run_id·원본 입력 SHA를 고정한다. 정상24/복구5, 합계29요청 이내다. 실행 폴더 마지막 이름은 run_id와 같아야 한다. 전환·복구 입력의 로컬 dry-run 합격을 Route 변경 전에 확인한다.
 4. **대시보드에서 기존 app Route의 대상 한 개만 교체**한다. DNS/AAAA·Custom Domain·배포·비밀·홈/apex/www/media·옛 시험 Route는 바꾸지 않는다. 설정 파일 routes나 호스트 와일드카드는 금지다. 접근/자료읽기ON, 업로드/수집/피드백/안내OFF·로그 저장을 유지한다. 코드 없는 공개는 이번 범위가 아니다.
