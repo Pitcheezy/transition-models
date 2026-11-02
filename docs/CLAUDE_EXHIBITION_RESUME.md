@@ -4,12 +4,12 @@
 
 아래를 새 Claude 채팅에 전달한다. 현재 상태 정본은 CHECKLIST 상단이다. 이 절 이후 과거 단계별 인계는 당시 이력이며 재실행 지시가 아니다.
 
-Claude, Pitcheezy 11/24 전시 준비를 이어받아줘. **app Route 전환과24요청 검사는 끝났다. 공개 앱 iPhone 두 브라우저도 사용자 확인을 받았다. 다음은 저장 로그24건을 대조해 최종 인수를 닫는 일이다. 동일 시험을 반복하지 마.**
+Claude, Pitcheezy 11/24 전시 준비를 이어받아줘. **app Route 전환과24요청 검사는 끝났다. 공개 앱 iPhone 두 브라우저도 사용자 확인을 받았다. 다음은 저장 로그24건을 대조해 최종 인수를 닫는 일이다. 동일 시험을 반복하지 마.** 11/2 밤 Claude가 원장 사전 검증과 단계5 전용 실행기(`scripts/correlate_exhibit_stage5_logs.py`, 다른 모델 검토 완료)를 준비했지만 **export가 이 PC에 없어 실제 대조는 미실행**이다. 상세는 [단계5 결과 문서의 준비 절](EXHIBIT_STAGE5_RESULT_20261102.md#저장-로그-대조-준비--2026-11-02-밤-claude). 11/3 교수님 시연의 접속 코드 유지 판단은 같은 문서의 다음 절에 있고 사용자 결정 대기다.
 
 ### 위치·진입 순서
 
 - 작업 폴더 `C:/Users/zpfh1/Projects/transition-models-exhibit-1101`, 브랜치 `claude/exhibit-host1-1101`.
-- 먼저 실제 pwd·git status·git log -1을 확인한다. 직전 준비 커밋은 `5c95674`이며 전환 결과 기록은 그 이후다. 미커밋 변경과 기존 미추적 `outputs/exhibit_scope_preparation_20261101/`는 보존한다. 다른 작업자가 수정 중이면 같은 파일을 고치지 않는다.
+- 먼저 실제 pwd·git status·git log -1을 확인한다. 전환 결과 기록 커밋은 `e335974`이고 그 뒤에 Claude의 로그 대조 준비 커밋이 있다(현재 상태는 CHECKLIST 상단). 미커밋 변경과 기존 미추적 `outputs/exhibit_scope_preparation_20261101/`는 보존한다. 다른 작업자가 수정 중이면 같은 파일을 고치지 않는다.
 - PLAN.md → CHECKLIST.md 상단 → docs/COLLABORATION_PROTOCOL.md → docs/EXHIBIT_STAGE5_RESULT_20261102.md → docs/results/exhibition_20261101/stage5-cutover-client-result-20261102.json → docs/EXHIBIT_SCOPED_HOST_PREPARATION_20261101.md 단계5 순서로 읽는다.
 - 로컬 커밋은 미push 유지한다. 사용자 요청은 작업 후 인계이며 새 발신·push·PR 병합/닫기 승인이 아니다.
 
@@ -31,8 +31,8 @@ Claude, Pitcheezy 11/24 전시 준비를 이어받아줘. **app Route 전환과2
 ### 다음 한 단위 — 남은 증거 받기
 
 1. 공개 app iPhone Safari/Chrome은 **사용자 “Safari·Chrome 모두 정상” 응답으로 완료**했다. 질문 범위는 기존app탭 새로고침/같은코드 재로그인과 새비공개탭 홈→서비스열기→코드→9/30하루·추천/존·투구이동이다. 도구 관측은 아니며 상세 버전/정확 관측시각은 미제공이다. 다시 묻거나 시험 주소 확인으로 바꿔 쓰지 않는다.
-2. 새 서버 Observability **11/2 22:20~22:24 KST** JSON export를 위 server-log-exports/에 보존한다. Downloads 경로를 받으면 원본 유지·복사 전후SHA 확인. 사용자 폰 요청 등 추가행은 별도 집계하며 원본을24행으로 잘라내지 않는다.
-3. 오프라인 대조는 기존 scripts/correlate_exhibit_stage34_logs.py의 Sources·journals·correlate를 재사용한다. 단계5 CLI 옵션은 없으므로 --stage4로 억지 실행하지 않는다. cutover/requests에서 phase명 stage5-cutover로 journals를 읽어24개/시퀀스/완료/Ray/버전 확인 후, Sources.read로 원본export를 읽고 correlate(tolerance_ms=0)를 적용한다. 실패를 시간/경로 추정으로 메우지 않는다. 원본·비공개 연결 기록은 로컬 보존하고 공개 영수증에집계/파일SHA만 남긴다. 원격 추가요청0.
+2. 새 서버 Observability **11/2 22:20~22:24 KST** JSON export를 위 server-log-exports/에 보존한다. 11/2 밤 기준 이 PC(Downloads·Desktop·Documents·D:)에는 22:24 KST 이후 export가 없었다. Downloads 경로를 받으면 원본 유지·복사 전후SHA 확인. 사용자 폰 요청 등 추가행은 별도 집계하며 원본을24행으로 잘라내지 않는다.
+3. 오프라인 대조는 준비된 `scripts/correlate_exhibit_stage5_logs.py`로 1회만 한다(stage34 모듈의 Sources·journals·correlate 재사용, phase `stage5-cutover`, 고유 Ray·허용오차0·시간/경로 대체 없음). 명령은 `python -I -B scripts/correlate_exhibit_stage5_logs.py --private-root D:/pitcheezy_exhibit_check --round "<회차 폴더>" --logs "<회차>/server-log-exports/<export>.json" --output docs/results/exhibition_20261101/stage5-server-log-correlation-20261102.json`. 원장 사전 검증은 [영수증](results/exhibition_20261101/stage5-ledger-precheck-20261102.json)으로 끝났으니 반복하지 않는다. exit 1이면 영수증의 result/problems를 그대로 보고하고 추정으로 메우지 않는다. 실행기 코드를 바꾸면 다른 모델 재검토가 필요하다. 원본·비공개 연결 기록은 로컬 보존하고 공개 영수증에집계/파일SHA만 남긴다. 원격 추가요청0.
 4. 폰+24저장로그가 맞으면 CHECKLIST 정식 공개버전 줄·단계5 결과·인계·미발신reply2를 갱신하고 관련문서/영수증 검사 후 로컬 커밋한다. 아직 미확인이 있으면 그대로 남기고 전체완료로 쓰지 않는다. 오류면 구체증거를 먼저 보고하고 새로운 범위는 사용자 지시를 확인한다.
 
 ### 이후 남은 일·경계
