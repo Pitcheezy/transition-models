@@ -1,6 +1,6 @@
 # EXHIBIT-reply2 — 새 전시 묶음 시험 결과 회신 초안
 
-**미발신·요청 작업 완료 뒤 문안 재확인.** 현재 증거를 모아 둔 초안이며 발신 승인은 아니다. 상태 정본은 CHECKLIST다. 실제 폰·단계3/4 저장 서버 로그·앱 연결 교체·클립 수신 여부는 결과가 생긴 항목만 아래에 반영한다. 공개 댓글에는 시험 주소·자원명·개인 경로·접속 자격·원본 요청 로그를 넣지 않는다. 근거: [수신](../EXHIBIT_SCOPED_INTAKE_20261101.md), [자료 업로드](../EXHIBIT_STAGE3_EXECUTION_20261102.md), [자동 인수](../EXHIBIT_STAGE4_RESULT_20261102.md).
+**발신 완료 — 2026-11-02T14:43:46Z (23:43 KST).** 사용자 "보내자" 승인 뒤 아래 "회신" 절만 [SongRoute/pitcheezy#38 댓글 6580008880](https://github.com/SongRoute/pitcheezy/issues/38#issuecomment-6580008880)으로 1회 게시했고, 게시된 본문이 이 절과 바이트 동일함(SHA-256 `0fffbf8c81a8591648e50fed6af45080e4cd4b98653c815449cb9cc2991175cb`)을 API 응답으로 확인했다. 이후 문안 변경은 새 회신 단위다. 상태 정본은 CHECKLIST다. 실제 폰·단계3/4 저장 서버 로그·앱 연결 교체·클립 수신 여부는 결과가 생긴 항목만 아래에 반영한다. 공개 댓글에는 시험 주소·자원명·개인 경로·접속 자격·원본 요청 로그를 넣지 않는다. 근거: [수신](../EXHIBIT_SCOPED_INTAKE_20261101.md), [자료 업로드](../EXHIBIT_STAGE3_EXECUTION_20261102.md), [자동 인수](../EXHIBIT_STAGE4_RESULT_20261102.md).
 
 ## 회신
 
