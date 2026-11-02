@@ -1,0 +1,102 @@
+{
+  "schema": "pitcheezy-joint-trial-day-preparation-v1",
+  "unit": "WS-trial2",
+  "written_kst": "2026-10-26 20:40",
+  "base_main": "4e6aba71487ffe0c2ce9dd6df658ca9db9da9953",
+  "branch": "claude/ws-trial-prep-1026",
+  "author_model": "claude-fable-5-1",
+  "scope": "documents only; no Cloudflare query/change, no service request, no deployment, no credential registration, no partner code/process access, no outbound message",
+  "user_report": "joint trial with Song planned 2026-10-26 21:00 KST; latest ZIP not received; intends both synthetic transfer (A) and real game screen linkage (B); scope and end time unconfirmed",
+  "codex_session_observation_report": {
+    "source": "Codex session, reported to this chat by the user; not re-executed by Claude",
+    "time_kst": "2026-10-26 19:59-20:04",
+    "worker": "pitcheezy-ws-stage",
+    "active_version": "d714e7fb-20d4-4a80-9f29-695e44130955",
+    "traffic_share": "100%",
+    "remote_worker_js_bytes": 54114,
+    "remote_worker_js_sha256": "3312fbff2dac2a22b32e474392ee7eb107663c79e9749781810a681e5ee07cfd",
+    "remote_matches_reviewed_bundle": true,
+    "toggles": {
+      "access_gate": true,
+      "upload": false,
+      "data_read": false,
+      "telemetry": false,
+      "feedback": false
+    },
+    "publish_expires_at": "already expired",
+    "logs_dashboard": {
+      "logs": "ON",
+      "invocation_logs": "ON",
+      "persist": "ON",
+      "sampling": "100%"
+    },
+    "logs_api": {
+      "observability.enabled": false,
+      "logs.enabled": true,
+      "note": "both values kept; not treated as a logging failure; no setting changed"
+    },
+    "sample_request": {
+      "time_kst": "20:04",
+      "method": "GET",
+      "path": "/",
+      "status": 401,
+      "server_event_time_utc": "2026-10-26T11:04:09.180Z",
+      "request_id_method_path_status_version_matched": true
+    },
+    "notice_trial_logs": "12/13 unchanged; today's sample does not fill the old missing OFF PUT",
+    "changes_made": "none"
+  },
+  "boards_checked_kst_2030": {
+    "ours_3_last_comment": "2026-10-26T07:15:50Z (CV-37b follow-up) then WS-trial2 claim 6414981761",
+    "ours_18_last_comment": "2026-10-18T04:06:11Z (Song v4.2 receipt report)",
+    "song_35_last_comment": "2026-10-26T09:43:14Z DEPLOY-FIX-1026: live publishing worktree df2f41fa->e53b89a7, three ops defects fixed (Song report), upload off, joint trial proposed 10/27 14:00-17:00 (reply to #38 to be posted)",
+    "song_38_last_comment": "2026-10-25T17:28:27Z ours (schedule notice); no Song reply yet",
+    "pr68": "open, codex/ws-trial-readiness-1026 c45ec1c, not in main, written 2026-10-26 02:14 KST"
+  },
+  "git_boundaries": {
+    "worktrees_untouched": [
+      "claude/cv-ocr-view-1026 f15d314",
+      "claude/cv-track-reacquire-1026 0112f01",
+      "claude/cv-mitt-temporal-1025 5e90c19",
+      "codex/cv-frame-view-1026 360d3c4 (clean)",
+      "codex/cv-stationary-candidate-1026 c3f226f",
+      "codex/ws-trial-readiness-1026 c45ec1c (integrate-main folder)",
+      "codex/fix-point-label-alignment dad5522 (main checkout)"
+    ],
+    "new_worktree": "transition-models-ws-trial-prep-1026 from origin/main 4e6aba7"
+  },
+  "tooling_checked": {
+    "node": "v24.1.0",
+    "pinned_wrangler": "ops/public-host-tooling (4.151.0 lockfile; not run)",
+    "cloudflare_credentials_in_this_session": "none found (.env/.dev.vars/.wrangler absent); dashboard login exists only in the Codex session per its report",
+    "private_harness": "outputs/partner_final_20261021 present in the integrate-main folder only"
+  },
+  "files_written": {
+    "docs/WS_JOINT_TRIAL_DAY_20261026.md": "d4c5f40c8496c049a209cb66f417ebfed5610f529f4317faf28a5b9f92f65f70",
+    "docs/mail_drafts/COLLAB-001-joint-trial-day-20261026.md": "39781603a5e30849e9739b8996cc73449c08f6e89cb9783da303d1de581feebe",
+    "docs/results/ops/ws_trial_day_ledger_template_20261026.json": "6e63eb04480973dc94a1ccf64811b7c1bf2e47892dbca8410d9d4485e6e32bb2"
+  },
+  "decision_items_for_user": [
+    "window: today 21:00 KST vs Song board proposal 10/27 14:00-17:00; end time; A only or A+B",
+    "who generates/registers the new publish token digest (and viewer code for B) and by which means; this session has no Cloudflare credentials",
+    "scope of Song access (publish credential only / viewer code too)",
+    "accept a limited transfer trial while defects are unverified (3 reported fixed in e53b89a7 by Song; 2 ASTRA blockers without ACK)",
+    "both-side GO right before start"
+  ],
+  "minimum_inputs_from_song": [
+    "execution procedure: new fixed ZIP (SHA, manifest, commit, review) or e53b89a7-based procedure (files, SHA, commands, registration, defect handling)",
+    "trial game key, request order/count, time budget, stop contact",
+    "for B: latest screen bundle, game data, commit, SHA",
+    "after run: exit code, wrapper log, client ledger"
+  ],
+  "verdict_2035_kst": {
+    "A": "HOLD until procedure, credentials, scope/expiry registration and ledger are confirmed",
+    "B": "waiting for materials"
+  },
+  "checks": {
+    "checklist": "python -m pytest -q tests/test_checklist_model.py -> see commit message",
+    "links": "all relative links in the day document resolve",
+    "json": "both JSON files parse",
+    "secrets_scan": "no credential, address or private path found by pattern scan"
+  }
+}
