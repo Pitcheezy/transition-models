@@ -4,7 +4,7 @@
 
 아래를 새 Claude 채팅에 전달한다. 현재 상태 정본은 CHECKLIST 상단이다. 이 절 이후 과거 단계별 인계는 당시 이력이며 재실행 지시가 아니다.
 
-Claude, Pitcheezy 11/24 전시 준비를 이어받아줘. **app Route 전환과24요청 검사는 끝났다. 공개 앱 iPhone 두 브라우저도 사용자 확인을 받았다. 다음은 저장 로그24건을 대조해 최종 인수를 닫는 일이다. 동일 시험을 반복하지 마.** 11/2 밤 Claude가 원장 사전 검증과 단계5 전용 실행기(`scripts/correlate_exhibit_stage5_logs.py`, 다른 모델 검토 완료)를 준비했지만 **export가 이 PC에 없어 실제 대조는 미실행**이다. 상세는 [단계5 결과 문서의 준비 절](EXHIBIT_STAGE5_RESULT_20261102.md#저장-로그-대조-준비--2026-11-02-밤-claude). 11/3 교수님 시연의 접속 코드 유지 판단은 같은 문서의 다음 절에 있고 사용자 결정 대기다.
+Claude, Pitcheezy 11/24 전시 준비를 이어받아줘. **app Route 전환·24요청 검사·공개 앱 iPhone 두 브라우저 사용자 확인·저장 로그 24/24 대조가 11/2 밤에 모두 끝나 공개 app 전환 인수는 완료다. 동일 시험·대조를 반복하지 마.** 근거는 [단계5 결과 문서](EXHIBIT_STAGE5_RESULT_20261102.md#저장-로그-대조-완료--2026-11-02-밤-claude)와 [대조 영수증](results/exhibition_20261101/stage5-server-log-correlation-20261102.json). 실행기 `scripts/correlate_exhibit_stage5_logs.py`는 다른 모델 검토를 마쳤고 코드를 바꾸면 재검토가 필요하다. 11/3 교수님 시연의 접속 코드 유지 판단은 같은 문서 마지막 절에 있고 사용자 결정 대기다.
 
 ### 위치·진입 순서
 
@@ -28,12 +28,17 @@ Claude, Pitcheezy 11/24 전시 준비를 이어받아줘. **app Route 전환과2
 - 부모의 active-inputs-131719.private.json과 승인 입력2개는 이미 사용한 창(13:17:19.623Z~13:32:19.623Z)이다. **다른 폴더/새창으로 같은 시험을 반복하지 않는다.** 정상24/복구5 합계29원칙은 유지하되 현재 복구할 이유는 없다.
 - 사용자 안내는 회차의 stage5-followup.private.txt, 로그 폴더는 server-log-exports/. 비공개 호스트/계정/자원명/자격/Ray/원본로그를 Git·이슈·채팅에 쓰지 않는다. 공개호스트·버전UUID·SHA·비식별집계만 허용한다.
 
-### 다음 한 단위 — 남은 증거 받기
+### 완료된 증거 — 반복하지 말 것 (11/2 밤)
 
-1. 공개 app iPhone Safari/Chrome은 **사용자 “Safari·Chrome 모두 정상” 응답으로 완료**했다. 질문 범위는 기존app탭 새로고침/같은코드 재로그인과 새비공개탭 홈→서비스열기→코드→9/30하루·추천/존·투구이동이다. 도구 관측은 아니며 상세 버전/정확 관측시각은 미제공이다. 다시 묻거나 시험 주소 확인으로 바꿔 쓰지 않는다.
-2. 새 서버 Observability **11/2 22:20~22:24 KST** JSON export를 위 server-log-exports/에 보존한다. 11/2 밤 기준 이 PC(Downloads·Desktop·Documents·D:)에는 22:24 KST 이후 export가 없었다. Downloads 경로를 받으면 원본 유지·복사 전후SHA 확인. 사용자 폰 요청 등 추가행은 별도 집계하며 원본을24행으로 잘라내지 않는다.
-3. 오프라인 대조는 준비된 `scripts/correlate_exhibit_stage5_logs.py`로 1회만 한다(stage34 모듈의 Sources·journals·correlate 재사용, phase `stage5-cutover`, 고유 Ray·허용오차0·시간/경로 대체 없음). 명령은 `python -I -B scripts/correlate_exhibit_stage5_logs.py --private-root D:/pitcheezy_exhibit_check --round "<회차 폴더>" --logs "<회차>/server-log-exports/<export>.json" --output docs/results/exhibition_20261101/stage5-server-log-correlation-20261102.json`. 원장 사전 검증은 [영수증](results/exhibition_20261101/stage5-ledger-precheck-20261102.json)으로 끝났으니 반복하지 않는다. exit 1이면 영수증의 result/problems를 그대로 보고하고 추정으로 메우지 않는다. 실행기 코드를 바꾸면 다른 모델 재검토가 필요하다. 원본·비공개 연결 기록은 로컬 보존하고 공개 영수증에집계/파일SHA만 남긴다. 원격 추가요청0.
-4. 폰+24저장로그가 맞으면 CHECKLIST 정식 공개버전 줄·단계5 결과·인계·미발신reply2를 갱신하고 관련문서/영수증 검사 후 로컬 커밋한다. 아직 미확인이 있으면 그대로 남기고 전체완료로 쓰지 않는다. 오류면 구체증거를 먼저 보고하고 새로운 범위는 사용자 지시를 확인한다.
+1. 공개 app iPhone Safari/Chrome은 **사용자 “Safari·Chrome 모두 정상” 응답으로 완료**했다(기존app탭 새로고침/같은코드 재로그인, 새비공개탭 홈→서비스열기→코드→9/30하루·추천/존·투구이동). 도구 관측은 아니며 상세 버전/정확 관측시각은 미제공이다.
+2. 새 서버 Observability export(23:29 KST 생성, SHA `4d767bba…`)는 회차 server-log-exports/에 보존 복사했다. `scripts/correlate_exhibit_stage5_logs.py` 1회 실행으로 **서버 26행 중 원장24건 전부 matched**, 실제 서버 버전 5999cf0d, 추가2건(모바일 UA 정적 GET 401)은 집계만. [대조 영수증](results/exhibition_20261101/stage5-server-log-correlation-20261102.json), [원장 사전 검증](results/exhibition_20261101/stage5-ledger-precheck-20261102.json). 같은 export·명령을 다시 돌리지 않는다(출력 파일이 있으면 실행기가 거부한다).
+3. CHECKLIST 공개 버전 줄·단계5 결과·이 인계·미발신 reply2를 갱신했다.
+
+### 다음 한 단위
+
+- 사용자에게 갱신된 [reply2 문안](mail_drafts/EXHIBIT-song-reply2-20261101.md)을 보여 주고 발신 승인("보내")을 받은 뒤 #38에 1회 게시한다. 승인 전 발신 금지.
+- 그 뒤 독립 작업: 클립팩 v4 비공개 전달·형 수신 SHA 확인·모니터2 리허설, 11/1 8단계 로그 내보내기(11/3 기한), 임시 홈 시험 Route·AAAA 정리 승인안, PR 정리 건별 승인, 11/11 공동시험 시각·원장 확정.
+- 11/3 교수님 시연은 접속 코드 유지·발표 기기 사전 로그인·리허설 1회로 진행한다(사용자 결정).
 
 ### 이후 남은 일·경계
 
