@@ -6,6 +6,8 @@
 
 ## 현재 재개 위치
 
+JSON6의 [고정 공개 스키마 대조](results/exhibition_20261101/scoped-json-schema-validation.json)와 [포스터 알고리즘 제안](EXHIBIT_SONG_REQ_PLAN_20261101.md#포스터-데이터-흐름-보완-제안--2026-11-02-미발신)을 먼저 참고한다. 새 입력이나 결함 없이 같은 검사를 반복하지 않는다. 포스터는 팀원 검토 전 초안이며 원본 수정·발신은 하지 않았다.
+
 [단계4 실제 결과](EXHIBIT_STAGE4_RESULT_20261102.md)가 있으면 동일 원격 검사를 다시 돌리지 않는다. 실제 폰 응답·두 구간 저장 로그를 받은 뒤 `scripts/correlate_exhibit_stage34_logs.py`로 오프라인 대조한다. 사용자 확인을 대신하지 않는다. 기다리는 동안에는 [단계5 전환·복구 계획](EXHIBIT_SCOPED_HOST_PREPARATION_20261101.md#승인-단계-5--공개-앱-연결-교체)과 [두 모니터 운영표](EXHIBIT_OPERATIONS_20261101.md)의 독립 준비만 이어간다. 단계4 CLI의 공개 주소 거부를 해제하지 않는다. 별도 `run-exhibit-stage5.mjs`의 [고정 검토·로컬 준비 영수증](results/exhibition_20261101/stage5-confirmation-preparation.json)을 먼저 확인한다. 현재 실행 여부는 CHECKLIST에서만 확인한다. 기본 dry-run 입력은 승인false/버전자리표시자이며 실제 전환 승인이 아니다. 이전 단계4 실행기로 app을 검사하지 않는다. #38은 결과를 모은 뒤 문안을 다시 보여 주며, 지금 발신·push하지 않는다.
 
 단계3 완료 영수증이 있으면 발행 열쇠 등록·업로드를 다시 하지 않는다. 이후 전체 인수 준비/실행은 [단계4 유한 원장과 복구 계획](EXHIBIT_STAGE4_ACCEPTANCE_20261102.md)을 사용하고, 실제 승인·진행·완료 여부는 CHECKLIST 상단에서 확인한다. 준비용 approved=false와 로컬 검사를 원격 합격으로 취급하지 않는다.

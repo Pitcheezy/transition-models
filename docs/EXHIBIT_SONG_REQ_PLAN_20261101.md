@@ -60,6 +60,34 @@
 - **모니터 2 PC(결정):** 현재 Windows 노트북으로 결정했다. 이 PC에서 verify → serve → Chrome 재생 리허설을 진행한다. [운영표](EXHIBIT_OPERATIONS_20261101.md)의 첫 공·69:2 제외·마지막 공, 양쪽 정지와 같은 공 재개, 서버 재시작을 실제 두 모니터로 확인한다. 모니터1의 완료 경기 탐색과 움직이는 발행기 재생은 별개이므로 사용할 경로와 조작 담당도 확정한다.
 - **풀 중계(형 1순위):** 확보 못 함. MLB.TV 아카이브·SPOTV VOD 구매 여부는 사용자 결정. 확보하면 투구↔중계 시각 대응표가 필요하며 소요 시간은 미측정이다. 현재는 클립 체인을 준비하고, 풀 중계는 별도 결정으로 남긴다.
 
+## 포스터 데이터 흐름 보완 제안 — 2026-11-02 (미발신)
+
+교수님의 알고리즘 추가 의견에 대한 로컬 초안이다. 포스터·D01~D06 담당 강민과 모델 담당 Song에게 검토받을 제안이며, 원본 포스터를 수정하거나 발신하지 않았다. 현재 그림은 수집→서버→저장→호스팅을 설명하지만 추천 엔진 내부 계산을 보여 주지 않는다. 서버 영역의 추천 엔진 상자를 아래 흐름으로 펼치는 것을 권한다.
+
+**투구 전 경기 상황·이전 투구 → 결과 확률 추정 → 타석 시뮬레이션·가치 평가 → 구종 추천 → 참고 위치 표시.**
+
+- **결과 확률 추정:** 동결 G0의 5개 flatten-MLP로 10결과 확률을 계산하고, 확률 보정·빈도모델 혼합을 적용한다. 학습 지원이 있는 구종만 후보로 삼는다.
+- **타석 시뮬레이션·가치 평가:** 구종을 먼저 선택한 뒤 기준 정책을 따르는 제한된 Monte Carlo 타석 모의 진행으로 초기 수비팀의 타석 종료 승리확률 기대값을 근사한다. 무제한 탐색이나 최적 타석 DP가 아니다.
+- **구종 추천:** ARM-B P3가 위 기대값과 기준 구종 분포를 결합해 선택 비중을 산출하고 상위3개를 표시한다. 표시 비중은 그 구종의 성공확률이 아니다.
+- **참고 위치:** 추천한 각 구종의 과거 TRAIN 실제 투구 분포에 Gaussian 커널을 적용해 지원 조건을 만족하는 구역의 위치를 근사한다. 구종과 목표 위치의 공동 최적화가 아니며, 위치 자료가 부족하면 근사 불가로 남긴다.
+
+포스터 상자 안에는 각각 `MLP 앙상블·확률 보정`, `Monte Carlo·승리확률 기대값`, `ARM-B·구종 선택 비중`, `과거 투구 분포·위치 근사`처럼 짧게 쓴다. 공간이 좁으면 마지막 둘을 `추천 구종 + 참고 위치` 하나로 합치고 위치 근사라는 각주를 붙인다. 약어 풀이와 세부 수식은 본문 설명보다 작게 둔다.
+
+수식이 필요하면 소스의 지원 구종 집합에서 아래 관계를 쓴다. a는 **구종**, Q는 위의 제한된 타석 모의 진행으로 얻은 기준 정책 후속 기대값이다. 전체 경기의 최적 제어 또는 실제 승률 향상 입증으로 해석하지 않는다.
+
+```text
+π(a | s) ∝ π_ref(a | s) × exp(Q_ref(s, a) / τ)
+```
+
+**그림 연결 수정:** 과거 Statcast 자료는 `사전 학습·보정 → 고정 모델·분포`를 거쳐 추천 엔진으로 들어오는 점선 경로로 둔다. 경기 피드는 현재 상황 갱신 입력이다. 모델 산출 뒤 `JSON → 업로드 API → 우리 호스트 → 관람 화면`은 유지한다. 전시에서는 저장 경기 재생/완료 경기 탐색이므로 이를 실시간 재학습으로 표시하지 않는다. CV는 추천 모델에 넣는 입력으로 그리지 않고, 미트 관측의 근거·한계를 설명하는 별도 비교 영역으로 둔다.
+
+**근거와 범위:** 공개 확인 가능한 Song 고정 웹 소스 `c47fe6cb78479362e7250141da946814cc33bd31`의 관전용 `live_runtime_d110` 경로를 읽었다. 추천이나 새 모델을 실행하지 않았다. 자료 생성 선언 커밋 `cb1cfa8f759fd77adc75595316a389208c752dba`는 이번 공개 ref 조회가 실패하여 그 코드 자체의 동일성은 확인하지 못했다. 따라서 아래는 c47 코드 설명이며 받은 JSON 생성 전 과정을 재현했다는 증거가 아니다. 9/22 연구 스택·우리 옛 MLP/RE24/Value Iteration을 현재 관전 모델로 인용하지 않는다.
+
+- [동결 관전 경로](https://github.com/SongRoute/pitcheezy/blob/c47fe6cb78479362e7250141da946814cc33bd31/scripts/demo_precompute.py#L1): 사전 계산/저장 재생과 동결 runtime을 구분.
+- [G0 구조](https://github.com/SongRoute/pitcheezy/blob/c47fe6cb78479362e7250141da946814cc33bd31/apps/observer/live_runtime_d110/experiments/pitchmdp/pitchmdp/matrix_g0_whole.py#L19), [앙상블·확률 보정](https://github.com/SongRoute/pitcheezy/blob/c47fe6cb78479362e7250141da946814cc33bd31/apps/observer/live_runtime_d110/experiments/pitchmdp/pitchmdp/policy_artifacts.py#L489).
+- [시뮬레이터·WE](https://github.com/SongRoute/pitcheezy/blob/c47fe6cb78479362e7250141da946814cc33bd31/apps/observer/live_runtime_d110/experiments/pitchmdp/pitchmdp/rollout_policy.py#L218), [정책식·제한](https://github.com/SongRoute/pitcheezy/blob/c47fe6cb78479362e7250141da946814cc33bd31/apps/observer/live_runtime_d110/experiments/pitchmdp/pitchmdp/rollout_policy.py#L344), [실제 P3 연결](https://github.com/SongRoute/pitcheezy/blob/c47fe6cb78479362e7250141da946814cc33bd31/apps/observer/live_runtime_d110/experiments/pitchmdp/pitchmdp/policy_runtime.py#L542).
+- [상위 구종·별도 위치 근사](https://github.com/SongRoute/pitcheezy/blob/c47fe6cb78479362e7250141da946814cc33bd31/scripts/demo_precompute.py#L361).
+
 ## 남은 순서와 사람 결정
 
 1. 사용자 승인된 규칙과 host 후보 `aa6f7ab7fe0664a8535a9bc8b9101abce385ea26`를 기준으로 한다. 새 자원 이름은 비공개로 위임받아 준비하고, 옛 시험 Route는 접근 코드ON 유지. 실제 생성·배포·연결 변경은 별도 승인이다.
