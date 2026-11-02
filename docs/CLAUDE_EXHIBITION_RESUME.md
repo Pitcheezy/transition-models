@@ -1,57 +1,48 @@
-# Claude 전시 작업 인계 — 2026-11-01
+# Claude 전시 작업 인계 — 2026-11-02
 
 ## 2026-11-02 Claude 인계 프롬프트
 
-아래를 새 Claude 채팅의 재개 지시로 사용한다. 현재 상태의 정본은 CHECKLIST 상단이며, 이 절 뒤에 있는 단계별 과거 인계는 당시 이력이다.
+아래를 새 Claude 채팅에 전달한다. 현재 상태 정본은 CHECKLIST 상단이다. 이 절 이후 과거 단계별 인계는 당시 이력이며 재실행 지시가 아니다.
 
-Claude, Pitcheezy 11/24 전시 준비를 이 상태에서 이어받아줘.
+Claude, Pitcheezy 11/24 전시 준비를 이어받아줘. **app Route 전환과24요청 검사는 끝났다. 공개 앱 iPhone 두 브라우저도 사용자 확인을 받았다. 다음은 저장 로그24건을 대조해 최종 인수를 닫는 일이다. 동일 시험을 반복하지 마.**
 
-### 작업 위치와 먼저 읽을 것
+### 위치·진입 순서
 
-- 지정 폴더: `C:/Users/zpfh1/Projects/transition-models-exhibit-1101`
-- 브랜치: `claude/exhibit-host1-1101`. 직전 완료 기준 `9a3f4b6`; 이 인계와 부분 사전 확인은 그 뒤의 로컬 커밋에 있다. 실제 `git log -1`과 변경 상태를 먼저 확인한다. 사용자 지시로 아직 push하지 않는다.
-- PLAN.md → CHECKLIST.md 상단 → docs/COLLABORATION_PROTOCOL.md → 이 최신 절 → docs/EXHIBIT_SCOPED_HOST_PREPARATION_20261101.md의 단계5 → docs/results/exhibition_20261101/stage5-preflight-20261102.json 순서로 읽는다.
-- 다른 worktree·기존 미커밋 변경·원본·실행 프로세스를 보존한다. `outputs/exhibit_scope_preparation_20261101/` 미추적 폴더는 기존 자료다. 담당 확인 없이 같은 파일을 동시에 수정하지 않는다.
+- 작업 폴더 `C:/Users/zpfh1/Projects/transition-models-exhibit-1101`, 브랜치 `claude/exhibit-host1-1101`.
+- 먼저 실제 pwd·git status·git log -1을 확인한다. 직전 준비 커밋은 `5c95674`이며 전환 결과 기록은 그 이후다. 미커밋 변경과 기존 미추적 `outputs/exhibit_scope_preparation_20261101/`는 보존한다. 다른 작업자가 수정 중이면 같은 파일을 고치지 않는다.
+- PLAN.md → CHECKLIST.md 상단 → docs/COLLABORATION_PROTOCOL.md → docs/EXHIBIT_STAGE5_RESULT_20261102.md → docs/results/exhibition_20261101/stage5-cutover-client-result-20261102.json → docs/EXHIBIT_SCOPED_HOST_PREPARATION_20261101.md 단계5 순서로 읽는다.
+- 로컬 커밋은 미push 유지한다. 사용자 요청은 작업 후 인계이며 새 발신·push·PR 병합/닫기 승인이 아니다.
 
-### 이미 완료한 것 — 반복하지 말 것
+### 완료 — 반복하지 말 것
 
-- 새 시험 서버에 Song 웹 `c47fe6cb78479362e7250141da946814cc33bd31`과 자료6개를 별도로 올렸다. 자료 생성 소스는 전달자 선언 `cb1cfa8f759fd77adc75595316a389208c752dba`이며 그 ref 자체 확인과 웹 소스 확인은 구분한다.
-- 받은 ZIP은 182517bytes, SHA-256 `3c3b8006b892872bfff3423e2bd6ba49ea3de17ee92fbecef07e0b076bc8da51`. 정적4·JSON6, 849843 한 경기·2026-09-30 하루, 262구·추천246·미지원16이다. 형 원본 바이트는 변경하지 않는다.
-- 단계4 자동120/212요청·24/24판정, 10분 관찰, 안내ON→숨김→브라우저 합성 오류2건에서도 과거 추천 미노출→OFF복원→로그아웃을 완료했다. 업로드·수집·피드백OFF, 접근 제한ON이다.
-- 사용자는 iPhone Safari와 Chrome 모두 날짜 하루·추천/존·투구 이동을 확인했다. 이는 시험 주소의 사용자 관측이다. 기기/OS/브라우저 상세 버전과 실제 app 전환 뒤 검사는 별도다.
-- 다운로드 export2개는 원본 보존 복사·SHA 확인 후 단계3 13/13, 단계4 120/120이 Ray·방식·경로·status·시각·버전과 일치했다. 누락/중복/불일치0, 합성2건 제외다. 근거: docs/results/exhibition_20261101/stage34-server-log-correlation.json. 이 검사나 업로드·안내·10분 관찰을 반복하지 않는다.
+1. 새 전시 시험 서버에 Song c47 고정 빌드·JSON6을 올리고 별도 인수 완료. 웹 `c47fe6cb78479362e7250141da946814cc33bd31`, 자료생성 선언 `cb1cfa8f759fd77adc75595316a389208c752dba`를 구별한다. ZIP182517bytes, SHA `3c3b8006b892872bfff3423e2bd6ba49ea3de17ee92fbecef07e0b076bc8da51`. 형 원본 불변, 849843 한 경기·9/30 하루·262구/71타석·추천246/미지원16.
+2. 시험 호스트 자동120/212요청·24/24판정·600초관찰·안내ON숨김→브라우저 합성오류2건에도숨김→OFF복원·로그아웃 완료. 시험 주소의 iPhone Safari/Chrome도 사용자 확인. 업로드13건+인수120건 저장 로그133/133 일치·누락/중복/불일치0. 이 검사·폰·내보내기를 반복하지 않는다.
+3. 사용자 노트북 Cloudflare 대시보드의 전체Route5개에서 기존 app 정확경로1개와 새 시험 대상 확인. 자동 UI는 현재URL 식별 실패라 사용자 수동 조작으로 진행했다. 다시 로그인시키거나 Parsec 원인으로 확정하지 않는다. 사용자가 app 편집창의 새 대상 선택 캡처, 양쪽 Logs/Invocation/Persist ON·100% 확인, 마지막 Save 완료를 보고했다.
+4. app Route 한 개 저장 뒤 **2026-11-02 22:21:54.576~22:22:01.417 KST**에 검토된 단계5 실행을1회 완료: **24요청·24판정 통과, 재시도0, 복구0, 로그아웃204**. app에서 새 정적4/자료6/보조1 바이트, 비로그인401·업로드OFF503·제외3경로404 확인. 홈/apex/www/media·옛시험Route·DNS·배포·자격·형저장소 변경 없음. 공개app는 c47바이트 응답을 확인했지만 **공개app 폰 동선은 이후 사용자 “Safari·Chrome 모두 정상” 응답을 받았고, 요청별 저장로그 대조만 남는다.**
 
-### 이번 작업의 실제 중단점
+### 현재 핀과 비공개 기록
 
-사용자는 “이번 작업을 진행하고 끝난 뒤 Claude 인계 프롬프트를 만들라”고 지시했다. Codex는 기존 app Route 하나만 새 대상으로 옮기고 실패하면 옛 대상으로 복구하는 범위와 재로그인 필요를 설명했다. 이 범위의 전환을 이어가되, 예상 밖 대상·중복 Route·새 변경 필요는 따로 설명한다.
+- 새 관리 버전 `5999cf0d-4f18-4d43-bcd6-320e04860369`; 기존 `6d652d4b-7d3c-4897-aefd-f37d0edce50c`. 관리 핀은 요청별 실제 서버버전 증거가 아니다.
+- 도구 `ops/public-host/run-exhibit-stage5.mjs` 소스 `7ec2e69733cfc651435a3ca10aeabf4a794e7475`, SHA `64bbf3a7737a851a93504ca460be4f45e2356c6c0e58b675466dea47eaa26d4e`. 다른모델 검토+39검사 근거는 stage5-confirmation-preparation.json. 새 코드 변경 없이 다시 검사하지 않는다.
+- 실행 회차: `D:/pitcheezy_exhibit_check/scope2-c47fe6cb-20261101/deployment-stage5-dashboard-preflight/stage5-app-20261102/`. `cutover/result.private.json`, `cutover/requests/`, `cycle.private.json`, `route-save-and-client-result.private.json` 보존.
+- 부모의 active-inputs-131719.private.json과 승인 입력2개는 이미 사용한 창(13:17:19.623Z~13:32:19.623Z)이다. **다른 폴더/새창으로 같은 시험을 반복하지 않는다.** 정상24/복구5 합계29원칙은 유지하되 현재 복구할 이유는 없다.
+- 사용자 안내는 회차의 stage5-followup.private.txt, 로그 폴더는 server-log-exports/. 비공개 호스트/계정/자원명/자격/Ray/원본로그를 Git·이슈·채팅에 쓰지 않는다. 공개호스트·버전UUID·SHA·비식별집계만 허용한다.
 
-사용자 노트북의 로그인된 대시보드와 Workers Routes 전체5행을 캡처로 확인했다. 다시 로그인할 필요는 없다. 자동 컴퓨터 도구는 현재 브라우저URL을 확실히 판별하지 못해 중단됐으므로 사용자가 직접 대시보드를 조작하고 Codex/Claude는 관리 읽기·검사·기록을 담당하는 방식으로 이어간다. 사용자가 app 정확경로 편집창을 열고 새 대상을 선택한 캡처를 제공했다. Route 문자열은 그대로이며 Save는 아직 확인되지 않았다.
+### 다음 한 단위 — 남은 증거 받기
 
-**단계5 Route/DNS/배포/비밀 변경0·서비스 요청0이다.** 현재 app 정확경로 한 행이 기존 서버에, 별도 시험경로가 새 서버에 연결된 것을 사용자 전체표 캡처에서 확인했다. API Route ID는 확인하지 못했고 대시보드의 유일한 정확경로와 현재대상을 UI 식별자로 기록했다. 대상을 변경하기 전 편집창에서 같은 행인지 다시 확인한다.
+1. 공개 app iPhone Safari/Chrome은 **사용자 “Safari·Chrome 모두 정상” 응답으로 완료**했다. 질문 범위는 기존app탭 새로고침/같은코드 재로그인과 새비공개탭 홈→서비스열기→코드→9/30하루·추천/존·투구이동이다. 도구 관측은 아니며 상세 버전/정확 관측시각은 미제공이다. 다시 묻거나 시험 주소 확인으로 바꿔 쓰지 않는다.
+2. 새 서버 Observability **11/2 22:20~22:24 KST** JSON export를 위 server-log-exports/에 보존한다. Downloads 경로를 받으면 원본 유지·복사 전후SHA 확인. 사용자 폰 요청 등 추가행은 별도 집계하며 원본을24행으로 잘라내지 않는다.
+3. 오프라인 대조는 기존 scripts/correlate_exhibit_stage34_logs.py의 Sources·journals·correlate를 재사용한다. 단계5 CLI 옵션은 없으므로 --stage4로 억지 실행하지 않는다. cutover/requests에서 phase명 stage5-cutover로 journals를 읽어24개/시퀀스/완료/Ray/버전 확인 후, Sources.read로 원본export를 읽고 correlate(tolerance_ms=0)를 적용한다. 실패를 시간/경로 추정으로 메우지 않는다. 원본·비공개 연결 기록은 로컬 보존하고 공개 영수증에집계/파일SHA만 남긴다. 원격 추가요청0.
+4. 폰+24저장로그가 맞으면 CHECKLIST 정식 공개버전 줄·단계5 결과·인계·미발신reply2를 갱신하고 관련문서/영수증 검사 후 로컬 커밋한다. 아직 미확인이 있으면 그대로 남기고 전체완료로 쓰지 않는다. 오류면 구체증거를 먼저 보고하고 새로운 범위는 사용자 지시를 확인한다.
 
-새 관리 조회6개에서 기존 버전 `6d652d4b-7d3c-4897-aefd-f37d0edce50c`와 새 버전 `5999cf0d-4f18-4d43-bcd6-320e04860369` 각각100%, 양쪽 접근/자료읽기ON·업로드/수집/피드백OFF·비밀이름4개를 확인했다. 관리 R2 객체 읽기2개로 양쪽 안내OFF도 확인했다. 버전 일치만으로 비버전 로그 설정까지 확인했다고 쓰지 않는다. **사용자는 양쪽 Logs ON·Invocation/Persist 체크·Sampling100%를 확인했다고 답했다.** 이는 사용자 응답이며 자동 대시보드 재조회 증거는 아니다.
+### 이후 남은 일·경계
 
-근거는 docs/results/exhibition_20261101/stage5-dashboard-preflight-20261102.json이다. 비공개 원본·수동 Route 식별·양쪽 버전·안내OFF·전환/복구 준비 입력은 `D:/pitcheezy_exhibit_check/scope2-c47fe6cb-20261101/deployment-stage5-dashboard-preflight/`에 있다. 초기 approved=false·UTC창null 사본은 보존했다. 사용자 확인 뒤 새 승인 사본의 실제15분 창 2026-11-02T13:17:19.623Z~13:32:19.623Z와 전환/복구 입력SHA를 고정했고 양쪽 dry-run을 통과했다. 근거는 docs/results/exhibition_20261101/stage5-ready-20261102.json, 비공개 포인터는 같은 폴더의 active-inputs-131719.private.json이다. 서비스 요청·자격파일읽기·실행폴더 생성은0이다. 다음은 사용자 Save 확인 뒤 창 안에24요청 검사다. 창이 지났다면 실행하지 않고 미실행 여부부터 확인하여 새 입력 사본을 준비한다. 실행 시작/종료표식이 있으면 새 회차로 우회 재실행하지 않는다.
-
-### 다음 한 단위 — app 연결 교체
-
-1. 저장 직전 영수증과 사용자 Save 여부부터 확인한다. 위 사전 확인 이후 다른 변경이 없고 실행 창 안이면 완료 확인을 반복하지 않는다. 새 세션/시간 경과/추가 변경이 있으면 정확한 `app.pitcheezy.com/*` 기존 Route의 식별자·옛 대상·새 대상, 양쪽 현재 적용 버전·접근/안내/업로드/로그 설정을 새로 읽고 비공개 원장에 보존한다. 중복/겹침·예상 밖 대상이면 멈춘다. 오래된 단계4/이번 부분 조회를 실행 시점의 전체 사전 확인으로 대신하지 않는다.
-2. 고정 검토 `7ec2e69733cfc651435a3ca10aeabf4a794e7475`의 `ops/public-host/run-exhibit-stage5.mjs`를 사용한다. 코드 SHA `64bbf3a7737a851a93504ca460be4f45e2356c6c0e58b675466dea47eaa26d4e`, 검사 SHA `43a58d793de38beba88b10b38a1d7d4a2f7086b66fe3cdf80f16292ba5eeea3d`는 이번 읽기 감사에서도 같았다. 다른 모델 검토와39검사 근거는 docs/results/exhibition_20261101/stage5-confirmation-preparation.json이다. 새 변경 없이 검사를 반복하지 않는다.
-3. 비공개 준비본은 `D:/pitcheezy_exhibit_check/scope2-c47fe6cb-20261101/deployment-stage5-preparation/`에 있다. approved=false·UTC null·버전0인 준비본은 보존한다. 실제 새 사본에 approved=true·현재 버전·최대15분 UTC 창·새 run_id·원본 입력 SHA를 고정한다. 정상24/복구5, 합계29요청 이내다. 실행 폴더 마지막 이름은 run_id와 같아야 한다. 전환·복구 입력의 로컬 dry-run 합격을 Route 변경 전에 확인한다.
-4. **대시보드에서 기존 app Route의 대상 한 개만 교체**한다. DNS/AAAA·Custom Domain·배포·비밀·홈/apex/www/media·옛 시험 Route는 바꾸지 않는다. 설정 파일 routes나 호스트 와일드카드는 금지다. 접근/자료읽기ON, 업로드/수집/피드백/안내OFF·로그 저장을 유지한다. 코드 없는 공개는 이번 범위가 아니다.
-5. Route 적용 뒤 고정 실행기에 `--execute`를 붙여 최대24요청을 한 번 실행한다. 인자는 입력 파일 경로와 입력 SHA뿐이며 코드는 파일에서 읽는다. 기존 단계4 실행기의 app 거부를 풀거나 그 실행기로 대체하지 않는다. 코드·쿠키를 명령/채팅에 붙이지 않는다.
-6. 실패하면 일반 요청은 멈추고 세션이 있으면 예약 로그아웃만 수행한다. 준비한 옛 Route 대상으로 복구한다. 옛 현재 자격이 있는 버전을 유지하며 비밀 등록 전 버전으로 되돌리지 않는다. 옛 날짜·다른 경기 목록도 돌아오는 복구임을 기록한다. 완료 영수증/dispatch가 있는 회차에만 실제 전환 입력SHA·버전을 결속한 복구5요청을 허용한다. 미종료 회차를 재실행하거나 다른 폴더로 우회하지 않는다.
-7. 적용·HTTP 결과를 기록한다. **공개 app 폰/QR·단계5 저장 서버 로그가 남으면 그대로 미완료**로 쓴다. 기존 탭 새로고침/재로그인, 새 비공개 탭 접속 코드→849843 추천/존/투구 이동을 구분한다. 시험호스트 폰 확인이나 관리 버전 핀은 실제 app 폰/요청별 서버버전 증거를 대신하지 않는다.
-
-원본 관리 출력과 설정 포인터는 `D:/pitcheezy_exhibit_check/host-1101/deploy-private-notes.json` 및 `D:/pitcheezy_exhibit_check/scope2-c47fe6cb-20261101/` 아래에 있다. 이번 부분 조회는 `deployment-stage5-preflight/`에만 보존했다. 호스트명·계정·자원명/ID·자격·원본 로그는 Git/이슈/채팅에 옮기지 않는다. 허용 공개 호스트와 버전UUID·SHA·비식별 집계만 보고한다.
-
-### 전환 뒤 이어갈 일과 계속 보류할 것
-
-- 클립팩v4 비공개 전달·형 수신 SHA 확인, 두 모니터 리허설, 형 전체 소스 검토 범위/모델ID 확인, 11/11 저녁(대안11/12) 공동시험의 시각·유한 원장·양측GO를 준비한다. 클립과 관전 화면은 같은 투구 ID로 수동 맞추며 자동 동기화로 설명하지 않는다.
-- 새133건으로 10/26 미대조2건·옛host1 로그 꼬리를 닫지 않는다. 성능30/50명·요금/접근OFF·공개운영 완료도 별개다.
-- #38 reply2는 실제 결과를 모아 사용자에게 보여주며 지금 발신하지 않는다. push·PR 병합/닫기·비용·접근 제한OFF·임시 자원 삭제는 따로 승인 범위를 확인한다.
-- 팀원 저장소·프로세스·배포 변경, 기존 연구/페이지/worktree 삭제, 새CV·추가경기 개발은 하지 않는다. 형 원본 빌드 바이트 불변. 고정 Wrangler4.151.0만 사용하고 npx wrangler는 쓰지 않는다. Web Analytics Disabled 유지.
-- 11/20 기능 동결, 11/21~23 리허설, 11/24 전시. 종료 시 CHECKLIST에 실제 결과·근거·다음 한 단위를 적고 같은 커밋에 인계 연결을 갱신한다. 크레딧 잔량은 자동으로 알 수 없으므로 단위마다 기록한다.
+- 클립팩v4 비공개 전달/형 수신SHA 확인·모니터2 리허설. 두 화면은 같은투구ID로 수동맞춤이며 자동동기화로 설명하지 않는다.
+- 형 전체소스검토 범위/실제모델ID, 11/11저녁(대안11/12) 공동시험 시각·유한원장·양측GO, PR정리 계획은 별개다.
+- 10/26미대조2건·옛host1꼬리·30/50명용량·요금·접근OFF·공개운영GO는 이번24요청으로 완료하지 않는다.
+- 사용자 요청대로 형 작업 결과를 모아 회신초안을 보여 준다. 지금 #38발신·push·PR병합/닫기·비용·접근OFF·임시자원삭제는 하지 않는다.
+- 팀원저장소/프로세스/배포 변경, 기존연구/페이지/worktree삭제, 새CV/경기추가 금지. 형 바이트 고정. 고정Wrangler4.151.0만, 설정파일routes/호스트와일드카드 금지, WebAnalytics Disabled.
+- 11/20동결→11/21~23리허설→11/24전시. 매 단위 종료 시 완료기능·근거·남은조건·다음한단위를 CHECKLIST와 같은 커밋에 남긴다.
 
 ---
 

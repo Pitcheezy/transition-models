@@ -1,0 +1,99 @@
+{
+  "schema": "pitcheezy-stage5-cutover-client-result-v1",
+  "public_origin": "https://app.pitcheezy.com",
+  "status": "route_saved_client_and_user_phone_checks_passed_server_logs_pending",
+  "route_change_evidence": "user_save_confirmation_plus_expected_app_bytes",
+  "exact_route": "app.pitcheezy.com/*",
+  "source_commit": "c47fe6cb78479362e7250141da946814cc33bd31",
+  "data_generation_commit": "cb1cfa8f759fd77adc75595316a389208c752dba",
+  "zip_sha256": "3c3b8006b892872bfff3423e2bd6ba49ea3de17ee92fbecef07e0b076bc8da51",
+  "input_sha256": "e35e78b43a5cc419b3fa1f738432fe3c2f7a7304e8c866ec9d954877ecfb6e06",
+  "private_result_sha256": "fb9f21c916d448c2772691201ff7112e86c38c25381ac00b9b7f904621a43c58",
+  "tool_sha256": "64bbf3a7737a851a93504ca460be4f45e2356c6c0e58b675466dea47eaa26d4e",
+  "expected_version": "5999cf0d-4f18-4d43-bcd6-320e04860369",
+  "version_basis": "operator_management_pin_not_http_or_server_log_proof",
+  "passed": true,
+  "service_requests": 24,
+  "request_limit": 24,
+  "retry_count": 0,
+  "rollback_requests": 0,
+  "cycle_limit": 29,
+  "checks": {
+    "total": 24,
+    "passed": 24,
+    "failed": 0,
+    "verifier_pass": 19,
+    "verifier_fail": 0,
+    "collection_bytes_match": true
+  },
+  "http_status_counts": {
+    "401": 3,
+    "503": 1,
+    "200": 14,
+    "307": 1,
+    "404": 4,
+    "204": 1
+  },
+  "client_started_utc": "2026-11-02T13:21:54.576Z",
+  "client_finished_utc": "2026-11-02T13:22:01.417Z",
+  "duration_seconds": 6.841,
+  "logout": "confirmed_204",
+  "all_response_rays_recorded": true,
+  "scope": {
+    "static_files": 4,
+    "data_files": 6,
+    "collection_settings_files": 1,
+    "game": "849843",
+    "date": "2026-09-30",
+    "excluded_paths_checked": 3
+  },
+  "logging_evidence": "user_report_both_servers_logs_invocation_persist_on_100_percent",
+  "server_logs": "pending_export_and_correlation",
+  "phone_public_app": {
+    "status": "user_reported_pass",
+    "source": "chat_reply_to_public_app_flow_question",
+    "response": "Safari·Chrome 모두 정상",
+    "browsers": [
+      "iPhone Safari",
+      "iPhone Chrome"
+    ],
+    "requested_flows": [
+      "existing_app_tab_refresh_and_same_code_relogin",
+      "new_private_tab_home_service_code_date_game_recommendation_zone_pitch_navigation"
+    ],
+    "device_os_browser_versions": "not_provided",
+    "actual_observation_timestamp": "not_provided",
+    "tool_observed": false
+  },
+  "dns_changes": 0,
+  "deployments": 0,
+  "credential_changes": 0,
+  "access_gate": "ON_unauthenticated_401_confirmed",
+  "upload": "OFF_503_confirmed",
+  "notice": "OFF_management_preflight_no_change",
+  "collection": "telemetry_and_feedback_OFF",
+  "unmodified": [
+    "home",
+    "apex",
+    "www",
+    "media",
+    "old_trial_routes",
+    "old_resources",
+    "partner_repository"
+  ],
+  "limits": [
+    "management_version_pin_is_not_per_request_server_evidence",
+    "trial_phone_checks_do_not_replace_public_app_flow",
+    "no_new_notice_or_load_test",
+    "does_not_close_old_20261026_log_gaps"
+  ],
+  "export_window_kst": {
+    "from": "2026-11-02T22:20:00+09:00",
+    "to": "2026-11-02T22:24:00+09:00"
+  },
+  "read_only_receipt_review": {
+    "result": "APPROVE",
+    "scope": "public_receipt_consistency_only",
+    "private_inputs_or_credentials_read": false
+  }
+}
