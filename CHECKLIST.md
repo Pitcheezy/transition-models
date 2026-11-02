@@ -2,6 +2,10 @@
 
 ## 현재 전시 준비 — 2026-11-01
 
+**EXHIBIT-host2 iPhone 두 브라우저 확인 완료 — 2026-11-02:** Safari 선행 응답 뒤 사용자 후속 “both checked” 수신. [단계4 결과](docs/EXHIBIT_STAGE4_RESULT_20261102.md#112-사용자-실기기-확인--iphone-safari)에 Safari·Chrome 모두 날짜 하루·추천/존·투구 이동의 사용자 관측으로 반영했다. 버전·정확 시각·맥/Windows 확인은 미제공이며 도구 실측으로 쓰지 않는다. 미발신 reply2도 같은 범위로 갱신. 새 로그 보관 폴더0개·Downloads 기존 단계2 로그1개만 확인, **다음은 단계3/4 저장로그 수신·오프라인 대조 → app 전환 별도 승인**이다. 공개 QR 동선은 전환 뒤 별도. 서비스/Cloudflare/팀원/발신/push 변경0. 수정 권한 반납·로컬 커밋 미push. 아래 Safari만 확인/Chrome 대기 문구는 이전 응답 당시 이력이다.
+
+**EXHIBIT-host2 폰 후속 응답 반영 — 2026-11-02:** Codex / claude/exhibit-host1-1101 / 기준1d36e80. 합격 기준은 후속 원답 “both checked”를 앞선 Safari 확인과 연결해 iPhone Chrome까지 사용자 확인으로 기록하고 저장로그/앱전환은 미완료로 유지하는 것이다. 수정 범위는 CHECKLIST·기존 단계4 결과·미발신 reply2뿐이며 Root 단독수정. 원격 요청·설정·발신·push 없음.
+
 **EXHIBIT-host2 실제 폰 Safari 확인 수신 — 2026-11-02:** 사용자 원답 “하루 맞고 추천과 존이 보이고 투구이동이 가능하다”와 보충답 “Safari만”을 [단계4 결과](docs/EXHIBIT_STAGE4_RESULT_20261102.md#112-사용자-실기기-확인--iphone-safari)에 기록했다. 날짜 하루·추천/존·투구 이동의 사용자 관측이며 도구 실측·Chrome 합격·전체 인수 완료가 아니다. 기기/OS/브라우저 버전·정확 시각 미제공. 로그 보관 폴더0개, Downloads에는 이미 대조한 단계2 로그1개만 확인. **다음:** iPhone Chrome 응답 + 단계3/4 두 시간대 원본 로그 수신·오프라인대조, 이후 app 전환 별도 승인. Cloudflare/서비스/팀원/발신/push 변경0. 수정 권한 반납·로컬 커밋 미push. 아래 선점은 시작 당시 이력이다.
 
 **EXHIBIT-host2 실제 폰 응답 기록 선점 — 2026-11-02:** Codex / claude/exhibit-host1-1101 / 기준b4c467e. 합격 기준: 사용자 원답과 브라우저 보충답을 구분해 Safari 관측만 기록하고 Chrome·저장로그·전환을 완료 처리하지 않는다. Root가 CHECKLIST와 기존 단계4 결과 문서만 수정한다. 우리 board249댓글/6558616895 이후 새 선점 없음. 원격서비스/설정/발신/push 변경0.
