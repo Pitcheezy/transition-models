@@ -1,0 +1,503 @@
+/* Pitcheezy 관전 화면 시안(A 범위, 로컬 데모, 배포 아님). 기준 폭 390px, 320~430px 대응. 외부 자원 0.
+   네이버 중계 탭에서 참고한 것은 배치 순서(점수 띠, 메인 그림, 이닝 탭, 타석 카드)와 조작 흐름뿐이며 색, 그림, 아이콘, 실루엣은 전부 여기서 새로 그렸다(NOTES.md).
+   2차(2026-11-06): 라이트가 기본(:root), 다크는 [data-theme="dark"]로 재도출(반전 아님, 색상(hue) 고정). 색 리터럴은 아래 두 토큰 블록에만 있다.
+   3차(2026-11-09, 사용자 요청 "요즘 유행하는 디자인으로"): 카드(벤토) 배치 + 떠 있는 알약형 탭 + 어두운 점수판 타일 + 유리(반투명) 고정 띠로 다시 그렸다.
+     - 구조(HTML id·클래스, relay.js가 만드는 DOM)는 그대로이고 index.html에는 데스크톱 2열용 묶음(.stage, .feed)만 추가했다.
+     - 3D 타자(.zone-row, .bat3d, --wide3d)의 기하는 11/8 측정값 그대로다: 390px에서 행 358px, 캔버스 260×267px. 넓은 화면에서는 행을 398px(430px 폰과 같음)로 묶어 더 커지지 않게 한다.
+     - 데스크톱(Mac 등, 960px 이상): 왼쪽 열(조작·점수·존·추천)과 오른쪽 열(이닝 탭·타석 목록) 2열. 왼쪽 열은 목록을 내려도 아래쪽(존·추천)이 화면에 남는다(sticky bottom).
+   라임(--accent)은 채움에만 쓰고 글자, 테두리, 링은 --accent-ink(라이트에서 짙은 녹색)로 쓴다. 결과별 공, 스윙 연출은 .z-anim, .batband.swing. */
+:root {
+  color-scheme: light;
+  --bg: #eef3e8;
+  --bg-glow: #d9ffa3;
+  --bg-glow2: #ffffff;
+  --card: #ffffff;
+  --panel: #f1f5ec;
+  --ink: #0f2217;
+  --muted: #566b5d;
+  --line: #d9e3d3;
+  --hair: #0f22171a;
+  --accent: #ceff78;
+  --accent-ink: #2f6b12;
+  --on-accent: #0f2217;
+  --accent-soft: #e7f8c6;
+  --orange: #ffb782;
+  --orange-ink: #9a4a0f;
+  --on-orange: #2b1a0d;
+  --strike: #485d4f;
+  --on-strike: #f4f7ef;
+  --ball-fill: #ffffff;
+  --z-outside: #e4ece0;
+  --z-grid: #b9c8b2;
+  --batter-fill: #c9d6c2;
+  --batter-stroke: #5c7263;
+  --diamond-off: #d7e1d1;
+  --switch-off: #c9d4c2;
+  --switch-on: #4e7d22;
+  --knob: #ffffff;
+  --sticky-bg: #eef3e8e0;
+  --glass: #ffffffc4;
+  --glass-line: #ffffff;
+  --row-sel: #eef8dc;
+  --tap: #ceff7855;
+  --board-a: #11281c;
+  --board-b: #0a1a12;
+  --board-ink: #f4f7ef;
+  --board-muted: #b3c3b5;
+  --board-line: #f4f7ef2e;
+  --board-off: #f4f7ef24;
+  --chip1-a: #ddff9d;
+  --chip1-b: #c8f765;
+  --chip1-line: #b7ec4e;
+  --tab-on: #0f2217;
+  --on-tab: #f4f7ef;
+  --shadow-card: 0 1px 2px #0f22170a, 0 14px 36px -18px #0f221736;
+  --shadow-float: 0 10px 30px -12px #0f22174d, 0 1px 0 #ffffff inset;
+  --font-body: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard", "Segoe UI Variable Text", "Segoe UI", "Malgun Gothic", system-ui, sans-serif;
+  --font-display: -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", "Arial Black", system-ui, sans-serif;
+  --font-mark: "Arial Black", "Segoe UI", sans-serif;
+  --gutter: 16px;
+  --page-max: 430px;
+  --r-card: 20px;
+  --r-ctrl: 12px;
+  --r-pill: 999px;
+  --top-h: 64px; /* 떠 있는 탭(알약) 아래 끝: 8 + 48 + 8 */
+}
+[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #07130d;
+  --bg-glow: #1a3a20;
+  --bg-glow2: #07130d;
+  --card: #0f1f17;
+  --panel: #142a1f;
+  --ink: #f2f4e9;
+  --muted: #a5b6a8;
+  --line: #27392e;
+  --hair: #f2f4e914;
+  --accent: #ceff78;
+  --accent-ink: #ceff78;
+  --on-accent: #091811;
+  --accent-soft: #35502a;
+  --orange: #ffb782;
+  --orange-ink: #ffb782;
+  --on-orange: #2b1a0d;
+  --strike: #a5b6a8;
+  --on-strike: #091811;
+  --ball-fill: #0b1811;
+  --z-outside: #0b1811;
+  --z-grid: #3f5a48;
+  --batter-fill: #2a4433;
+  --batter-stroke: #6f8a76;
+  --diamond-off: #1b3024;
+  --switch-off: #22382b;
+  --switch-on: #4e7d22;
+  --knob: #f2f4e9;
+  --sticky-bg: #07130de6;
+  --glass: #0f1f17d9;
+  --glass-line: #ffffff14;
+  --row-sel: #1a3022;
+  --tap: #ceff7833;
+  --board-a: #17311f;
+  --board-b: #0b1c12;
+  --board-ink: #f4f7ef;
+  --board-muted: #b3c3b5;
+  --board-line: #f4f7ef2e;
+  --board-off: #f4f7ef24;
+  --chip1-a: #2f4a1c;
+  --chip1-b: #1a2c12;
+  --chip1-line: #ceff7866;
+  --tab-on: #ceff78;
+  --on-tab: #091811;
+  --shadow-card: 0 1px 2px #00000052, 0 16px 40px -20px #000000b3;
+  --shadow-float: 0 12px 32px -12px #000000b3, 0 1px 0 #ffffff14 inset;
+}
+html {
+  font-family: var(--font-body);
+  color: var(--ink);
+  background: var(--bg);
+  font-synthesis: none;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-padding-top: 124px;
+}
+* { box-sizing: border-box; }
+html, body { overflow-x: clip; }
+body {
+  margin: 0 auto;
+  max-width: var(--page-max);
+  min-height: 100vh;
+  font-size: 16px;
+  line-height: 1.5;
+  font-variant-numeric: tabular-nums;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+  /* 배경: 종이색 위에 왼쪽 위 라임 빛, 오른쪽 아래 흰 빛(다크에서는 짙은 녹색 빛). 고정(attachment)이라 스크롤해도 같은 자리 */
+  background:
+    radial-gradient(60% 40% at 0% 0%, var(--bg-glow) 0%, transparent 70%),
+    radial-gradient(50% 35% at 100% 100%, var(--bg-glow2) 0%, transparent 70%),
+    var(--bg);
+  background-attachment: fixed, fixed, scroll;
+}
+a { color: inherit; text-decoration: none; }
+button { font: inherit; cursor: pointer; border: 0; color: inherit; background: none; }
+button, a { touch-action: manipulation; -webkit-tap-highlight-color: var(--tap); }
+button:focus-visible, a:focus-visible { outline: 3px solid var(--accent-ink); outline-offset: 2px; }
+button:disabled { opacity: 0.4; cursor: default; }
+h1, h2, h3, p, figure, dl, dd { margin: 0; }
+[hidden] { display: none !important; }
+.skip { position: absolute; top: -70px; left: 16px; background: var(--accent); color: var(--on-accent); padding: 12px; z-index: 40; border-radius: var(--r-ctrl); }
+.skip:focus { top: 10px; }
+.sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; border: 0; }
+
+/* 공통 카드 모양 */
+.card, .auto-row, .pitch-panel, .pa-card, .team-card, .record > *, .chip, .rec-none {
+  background: var(--card); border: 1px solid var(--hair); border-radius: var(--r-card); box-shadow: var(--shadow-card);
+}
+
+/* ---------- 헤더 ---------- */
+.r-header {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  min-height: 60px; padding: 8px var(--gutter) 2px;
+}
+.wordmark { flex: none; font: 900 19px var(--font-mark); letter-spacing: -1px; display: inline-flex; align-items: center; gap: 8px; min-height: 44px; } /* 워드마크는 홈 데모(../mobile.css)와 같게 유지 */
+.wordmark i { font-style: normal; color: var(--accent-ink); font-size: 10px; align-self: flex-start; margin-left: -4px; }
+.seal { background: var(--accent); color: var(--on-accent); width: 30px; height: 30px; border-radius: 50%; font-size: 21px; display: grid; place-items: center; box-shadow: 0 6px 14px -6px #2f6b1266; }
+/* 태그는 두 줄("저장 경기 재생" / 팀)로 남는 폭만 쓴다(min-width 0). 좁은 폭에서는 셋째 줄까지 허용 */
+.r-tag { font-size: 12px; color: var(--muted); font-weight: 650; text-align: right; min-width: 0; margin-left: auto; line-height: 1.3; letter-spacing: 0.1px; }
+.r-tag-game { display: block; white-space: nowrap; color: var(--ink); }
+.theme-switch { flex: none; min-height: 40px; padding: 0 14px; border: 1px solid var(--hair); border-radius: var(--r-pill); background: var(--card); color: var(--accent-ink); font-size: 13px; font-weight: 700; white-space: nowrap; box-shadow: var(--shadow-card); transition: transform 0.12s; }
+.theme-switch::before { content: "☾ "; font-size: 12px; }
+[data-theme="dark"] .theme-switch::before { content: "☀ "; }
+.theme-switch:active { transform: scale(0.97); }
+
+/* ---------- 1. 상단 탭: 떠 있는 알약(섬) 모양, 스크롤해도 위에 남는다 ---------- */
+.toptabs {
+  position: sticky; top: 8px; z-index: 30;
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px;
+  margin: 8px var(--gutter) 0; padding: 4px;
+  background: var(--glass); -webkit-backdrop-filter: blur(14px) saturate(1.3); backdrop-filter: blur(14px) saturate(1.3);
+  border: 1px solid var(--glass-line); border-radius: var(--r-pill); box-shadow: var(--shadow-float);
+}
+.toptabs [role="tab"] {
+  min-height: 40px; font-size: 15px; font-weight: 700; color: var(--muted); border-radius: var(--r-pill);
+  transition: background 0.2s, color 0.2s;
+}
+.toptabs [role="tab"][aria-selected="true"] { color: var(--on-tab); background: var(--tab-on); box-shadow: 0 2px 8px -2px #0f221766; }
+.load-state { padding: 20px var(--gutter); color: var(--muted); font-size: 15px; }
+
+/* 중계 탭 본문: 카드 사이 간격 */
+#panel-relay { padding: 12px 0 0; }
+.stage, .feed { display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; align-content: start; } /* minmax(0,…): 이닝 탭 줄(가로 스크롤)의 내용 폭이 열을 넓히지 않게 */
+.stage { padding: 0 12px; }
+.feed { padding-top: 10px; }
+
+/* ---------- 2. 자동 진행, 투구 애니메이션 스위치: 두 장의 작은 카드가 나란히 ---------- */
+.controls { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.auto-row {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  padding: 10px 12px 10px 14px; min-width: 0;
+}
+.auto-text { display: grid; gap: 1px; min-width: 0; }
+.auto-label { font-size: 12px; color: var(--muted); font-weight: 650; }
+.auto-count { font-size: 14px; font-weight: 750; color: var(--ink); line-height: 1.3; }
+.switch {
+  flex: none; position: relative; width: 50px; height: 30px; margin: 4px 0; border-radius: var(--r-pill);
+  background: var(--switch-off); border: 1px solid var(--hair); padding: 0; transition: background 0.2s;
+}
+.switch::before { content: ""; position: absolute; inset: -8px -4px; } /* 터치 영역 44px */
+.switch .knob { position: absolute; top: 2px; left: 2px; width: 24px; height: 24px; border-radius: 50%; background: var(--knob); box-shadow: 0 2px 6px #0f22174d; transform: translateX(0); transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.switch[aria-checked="true"] { background: var(--switch-on); border-color: var(--switch-on); }
+.switch[aria-checked="true"] .knob { transform: translateX(20px); }
+
+/* ---------- 3. 점수판: 짙은 타일(라이트에서도), 화면에서 유일하게 큰 글자(디스플레이 글꼴)를 쓰는 곳 ---------- */
+.scorestrip {
+  --ink: var(--board-ink); --muted: var(--board-muted); --line: var(--board-line); --accent-ink: var(--accent); --diamond-off: var(--board-off); /* 타일 안에서만 토큰을 바꿔 아래 규칙은 그대로 쓴다 */
+  display: grid; grid-template-columns: auto 1fr; grid-template-areas: "main state" "who who" "note note";
+  align-items: center; column-gap: 14px; row-gap: 8px;
+  padding: 16px 18px 14px; border-radius: var(--r-card); color: var(--ink);
+  background: radial-gradient(120% 140% at 100% 0%, #ceff781f 0%, transparent 50%), linear-gradient(160deg, var(--board-a), var(--board-b));
+  box-shadow: var(--shadow-card), 0 0 0 1px #ffffff14 inset;
+}
+.score-main { grid-area: main; display: flex; align-items: center; gap: 8px; white-space: nowrap; }
+.score-main .team { font-size: 13px; font-weight: 800; color: var(--muted); letter-spacing: 0.4px; padding: 3px 8px; border: 1px solid var(--line); border-radius: var(--r-pill); }
+.score-main strong { font: 800 40px/1 var(--font-display); letter-spacing: -1.5px; color: var(--ink); }
+.score-main i { font-style: normal; font-size: 22px; color: var(--muted); margin: 0 -2px; }
+.score-state { grid-area: state; display: flex; align-items: center; justify-content: flex-end; gap: 14px; min-width: 0; }
+.score-state .inning { font-size: 15px; font-weight: 800; white-space: nowrap; padding: 4px 10px; background: #ffffff14; border-radius: var(--r-pill); }
+.count { display: grid; gap: 3px; }
+.c-row { display: flex; align-items: center; gap: 4px; font-size: 11px; line-height: 1; }
+.c-row b { width: 12px; color: var(--muted); font-weight: 800; }
+.c-row i { width: 9px; height: 9px; border-radius: 50%; border: 1.5px solid var(--muted); background: transparent; }
+.c-row i.on { background: var(--accent-ink); border-color: var(--accent-ink); box-shadow: 0 0 8px #ceff7880; } /* 켜진 점: 타일 안에서는 라임(어두운 바탕 위라 대비 충분) */
+.diamond { width: 44px; height: 44px; flex: none; }
+.diamond path { fill: var(--diamond-off); stroke: var(--muted); stroke-width: 1.2; }
+.diamond path.on { fill: var(--accent-ink); stroke: var(--accent-ink); }
+.diamond path.home { fill: none; stroke: var(--line); }
+.score-who { grid-area: who; display: flex; flex-wrap: wrap; gap: 2px 16px; font-size: 14px; padding-top: 6px; border-top: 1px solid var(--line); }
+.score-who small { color: var(--muted); font-size: 12px; }
+.score-who b { font-weight: 700; }
+.score-note { grid-area: note; font-size: 12px; color: var(--muted); line-height: 1.5; display: flex; flex-wrap: wrap; gap: 4px 8px; align-items: flex-start; }
+.score-note #w-ctx span { display: block; }
+.pill { display: inline-block; padding: 1px 8px; border: 1px solid var(--line); border-radius: var(--r-pill); color: var(--accent-ink); font-weight: 650; white-space: nowrap; }
+
+/* ---------- 4. 존 그림: 가로 폭 전체를 쓰는 무대(카드 아님). 3D 타자 캔버스가 양옆으로 넘칠 공간 ---------- */
+.zone-fig { --bg: var(--card); padding: 10px var(--gutter) 6px; margin: 0 -12px; overflow: hidden; } /* overflow: 3D 타자 캔버스가 열 밖으로 넘치되 가로 스크롤은 안 생기게(11/8). 음수 여백: .stage의 12px 안쪽 여백을 상쇄해 390px에서 행 358px 유지 */
+.zone-row { position: relative; display: grid; grid-template-columns: 40px minmax(0, 1fr) 40px; column-gap: 4px; align-items: center; max-width: 398px; margin-inline: auto; } /* 398px = 430px 폰에서의 행 폭. 더 넓은 화면에서도 3D 틀이 커지지 않게 */
+.zone { grid-column: 2; display: block; width: 100%; height: auto; max-height: 320px; filter: drop-shadow(0 10px 18px #0f22171f); }
+.batband { display: flex; align-items: center; justify-content: center; height: 100%; }
+.batband.left { grid-column: 1; }
+.batband.right { grid-column: 3; }
+.batter { height: 118px; width: auto; fill: var(--batter-fill); stroke: var(--batter-stroke); stroke-width: 1.5; stroke-linejoin: round; stroke-linecap: round; }
+.batter .bat { stroke: var(--muted); stroke-width: 2.5; transform-box: view-box; transform-origin: 34px 31px; } /* 손 위치(34,31)를 축으로 돈다. SVG 사용자 단위를 px로 쓰려면 view-box 기준이 필요 */
+.batband.left .batter { transform: scaleX(-1); } /* 좌타자: 같은 그림을 좌우로 뒤집어 방망이를 홈플레이트 반대쪽(화면 왼쪽)에. 스윙 keyframes도 그대로 뒤집힌다 */
+.batband.swing .bat { animation: swing 480ms cubic-bezier(0.2, 0.7, 0.2, 1) both; } /* 11/6 검토 D-F3: 팔로스루는 수평 근처(-120도)에서 멈추고, 되돌아오는 구간도 keyframes 안에 둬 점프 컷이 없다 */
+@keyframes swing {
+  0% { transform: rotate(0); }
+  30% { transform: rotate(-105deg); } /* 144ms, 공 도착 순간: 방망이가 플레이트 쪽으로 수평 */
+  45% { transform: rotate(-120deg); } /* 팔로스루 끝(끝점이 몸통 안으로 들어가지 않음) */
+  65% { transform: rotate(-120deg); }
+  100% { transform: rotate(0); } /* 자세로 되돌아옴 */
+}
+/* 3D 타자(2026-11-08 단위 3, 선택 사항): relay.js가 3D 준비 뒤 .zone-row에 has3d와 side-l/side-r를 붙인다. 그때만 서 있는 쪽 열을 100px(359px 이하 84px)로 넓히고
+   반대쪽 열은 0(배치 모의 B안). 그 밖(로딩 전, 실패, 모듈 미지원)에는 위 40px 열과 SVG 타자가 그대로다. .bat3d는 3D 캔버스 상자이고 SVG(.batter)와 같은 자리에 선다 */
+.zone-row.has3d.side-l { grid-template-columns: var(--wide3d, 100px) minmax(0, 1fr) 0; }
+.zone-row.has3d.side-r { grid-template-columns: 0 minmax(0, 1fr) var(--wide3d, 100px); }
+.bat3d { display: none; width: 100%; height: 100%; min-height: 200px; }
+.zone-row.has3d .batband .batter { display: none; }
+.zone-row.has3d .batband .bat3d { display: block; }
+/* 11/8 "스윙이 틀에 가림" 수정: 캔버스를 열(100px)보다 2.6배 넓게 두고 열 가운데에 맞춰 양옆으로 넘치게 한다(투명 배경, 터치는 통과). 배트가 존 앞을 지나가는 모습이 그대로 보이고
+   레이아웃(격자 열 폭)은 바뀌지 않는다. 밖으로 나간 부분은 .zone-fig의 overflow: hidden이 자른다. 카메라 zoom은 어댑터 HOST_VIEW 0.8(260×251px 틀에서 배트 끝 포함 14자세 가장자리 접촉 0, README 9.11) */
+.zone-row.has3d .batband { position: relative; }
+.zone-row.has3d .batband .bat3d { position: absolute; top: 0; bottom: 0; left: 50%; width: calc(var(--wide3d, 100px) * 2.6); min-height: 0; transform: translateX(-50%); pointer-events: none; z-index: 1; }
+.z-outside { fill: var(--z-outside); stroke: none; rx: 14px; }
+.z-box { fill: var(--card); stroke: var(--ink); stroke-width: 2; rx: 4px; }
+.z-grid { stroke: var(--z-grid); stroke-width: 1; }
+.z-rec rect { fill: var(--accent); stroke: var(--accent-ink); stroke-width: 2.5; }
+.z-rec text { font-weight: 800; font-size: 15px; font-family: var(--font-body); fill: var(--on-accent); }
+/* 순위 위계는 채움 톤만으로는 라이트에서 안 갈린다(라임/연라임/흰 1.0~1.1:1). 테두리 굵기 2.5 / 2 / 1.5와 3순위의 --muted 테두리로 구조적으로 구분(11/6 검토 D-F6) */
+.z-rec.r2 rect { fill: var(--accent-soft); stroke-width: 2; }
+.z-rec.r2 text { fill: var(--accent-ink); }
+.z-rec.r3 rect { fill: var(--ball-fill); stroke: var(--muted); stroke-width: 1.5; }
+.z-rec.r3 text { fill: var(--accent-ink); }
+.z-dot circle { stroke-width: 2; }
+.z-dot.ball circle { fill: var(--ball-fill); stroke: var(--muted); }
+.z-dot.strike circle { fill: var(--strike); stroke: var(--strike); }
+.z-dot.inplay circle { fill: var(--orange); stroke: var(--on-orange); stroke-width: 3; } /* 타격은 색 말고도 짙은 굵은 테두리로 구분(색각 보조) */
+.z-dot.unknown circle { fill: var(--line); stroke: var(--muted); }
+.z-dot text { font-weight: 700; font-size: 13px; font-family: var(--font-body); fill: var(--on-strike); }
+.z-dot.ball text, .z-dot.unknown text { fill: var(--ink); }
+.z-dot.inplay text { fill: var(--on-orange); }
+.z-dot .z-ring { fill: none; stroke: var(--accent-ink); stroke-width: 3; }
+.z-dot:not(.sel) { opacity: 0.9; } /* .78이면 라이트에서 스트라이크 원 숫자의 실효 대비가 3.6:1로 떨어져 .9로 올렸다(5.2:1) */
+.z-dot.out circle, .z-rec.out rect { stroke-dasharray: 4 3; }
+.z-arrow { fill: var(--muted); stroke: none; }
+.z-rec.out .z-arrow { fill: var(--accent-ink); }
+/* 결과별 연출 오버레이(aria-hidden). 공은 JS가 rAF로 cx, cy, r, opacity를 직접 움직인다. 포인터는 통과시켜 아래 표식의 title 툴팁이 살아 있게 한다(11/6 검토 C-F1) */
+.z-anim { pointer-events: none; }
+.z-ball { fill: var(--ball-fill); stroke: var(--ink); stroke-width: 2; }
+.z-ball.hit { fill: var(--orange); stroke: var(--on-orange); }
+.z-ball.foul { fill: var(--strike); stroke: var(--strike); }
+.z-caption rect { fill: var(--bg); stroke: var(--hair); stroke-width: 1; rx: 10px; }
+.z-caption text { font-weight: 700; font-size: 18px; font-family: var(--font-body); fill: var(--ink); } /* 그리기 단위: 320px 폭(배율 .766)에서 13.8px, 390px에서 17.2px (11/6 검토 D-F5) */
+.z-caption .z-cap-sub { font-weight: 600; font-size: 15px; fill: var(--muted); } /* 320px에서 11.5px */
+.z-caption.dim { opacity: 0.6; transition: opacity 0.4s; } /* 여섯 자리가 전부 표식과 겹칠 때만(이 경기 0회) 1.2초 뒤 흐리게 */
+.legend { margin-top: 8px; display: grid; gap: 3px; justify-items: center; font-size: 12px; color: var(--muted); line-height: 1.4; }
+.legend p { display: flex; flex-wrap: wrap; justify-content: center; gap: 2px 10px; }
+.legend span { display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
+.legend .k { width: 12px; height: 12px; border-radius: 50%; flex: none; display: inline-grid; place-items: center; font-size: 8px; font-weight: 800; font-style: normal; line-height: 1; }
+.legend .k.rec { border-radius: 3px; background: var(--accent); color: var(--on-accent); border: 1.5px solid var(--accent-ink); }
+.legend .k.rec.r2 { background: var(--accent-soft); color: var(--accent-ink); }
+.legend .k.rec.r3 { background: var(--ball-fill); color: var(--accent-ink); border-color: var(--muted); }
+.legend .k.rec + .k.rec { margin-left: -2px; }
+.legend .k.ball { border: 1.5px solid var(--muted); background: var(--ball-fill); }
+.legend .k.strike { background: var(--strike); }
+.legend .k.inplay { background: var(--orange); border: 2px solid var(--on-orange); }
+#legend-view { font-weight: 700; color: var(--ink); }
+.legend-note { font-size: 11px; text-align: center; max-width: 36em; }
+.legend .k.sel { border: 2.5px solid var(--accent-ink); background: transparent; }
+
+/* ---------- 5. 투구 패널(카드) ---------- */
+.pitch-panel { padding: 14px 16px 16px; display: grid; gap: 10px; }
+.pp-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.pp-head h2, .pp-sub { font-size: 16px; font-weight: 800; letter-spacing: -0.2px; }
+.pp-sub { margin-top: 6px; padding-top: 12px; border-top: 1px solid var(--line); }
+.pp-nav { display: flex; gap: 6px; }
+.pp-nav button { width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--hair); background: var(--panel); font-size: 24px; line-height: 1; color: var(--ink); transition: transform 0.12s, background 0.2s; }
+.pp-nav button:hover { background: var(--accent-soft); }
+.pp-nav button:active { transform: scale(0.94); }
+.chips { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.chip { display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto auto; column-gap: 8px; align-items: center; padding: 10px 10px 9px; border-radius: 16px; min-width: 0; box-shadow: none; border-color: var(--line); }
+.chip.r1 { background: linear-gradient(135deg, var(--chip1-a), var(--chip1-b)); border-color: var(--chip1-line); box-shadow: 0 10px 24px -14px #2f6b1280; }
+.chip .rk { grid-row: 1 / span 2; width: 26px; height: 26px; border-radius: 8px; display: grid; place-items: center; font-style: normal; font-weight: 800; font-size: 14px; background: var(--accent); color: var(--on-accent); border: 1.5px solid var(--accent-ink); }
+.chip.r1 .rk { background: var(--on-accent); color: var(--accent); border-color: var(--on-accent); }
+[data-theme="dark"] .chip.r1 .rk { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
+.chip.r2 .rk { background: var(--accent-soft); color: var(--accent-ink); }
+.chip.r3 .rk { background: var(--ball-fill); color: var(--accent-ink); border-color: var(--muted); }
+.chip-body { display: grid; min-width: 0; }
+.chip-body b { font-size: 15px; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.chip-body small { font-size: 11px; color: var(--muted); line-height: 1.3; } /* zone_label은 두 줄까지 허용(390px 칸 68px에서 '가운데 높이 오른쪽'이 잘리지 않게) */
+.chip.r1 .chip-body small { color: var(--ink); opacity: 0.75; }
+.chip .share { grid-column: 2; font-size: 13px; color: var(--accent-ink); font-weight: 800; font-variant-numeric: tabular-nums; }
+.chip.r1 .share { color: var(--ink); }
+[data-theme="dark"] .chip.r1 .share, [data-theme="dark"] .chip.r1 .chip-body small { color: var(--accent-ink); opacity: 1; }
+.rec-meta, .disc { font-size: 12px; color: var(--muted); line-height: 1.5; }
+.rec-none { padding: 10px 12px; border: 1px dashed var(--line); border-radius: var(--r-ctrl); font-size: 14px; color: var(--muted); box-shadow: none; background: var(--panel); }
+.rec-none b { color: var(--orange-ink); }
+.actual { display: grid; grid-template-columns: 5.5em 1fr; gap: 0; font-size: 15px; }
+.actual dt, .actual dd { padding: 8px 0; border-bottom: 1px solid var(--line); }
+.actual dt { color: var(--muted); }
+.actual dd { font-weight: 650; }
+.actual dt:last-of-type, .actual dd:last-of-type { border-bottom: 0; }
+
+/* ---------- 6. 이닝 탭: 유리 띠, 알약 ---------- */
+.intabs-wrap { position: sticky; top: var(--top-h); z-index: 20; background: var(--sticky-bg); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
+.intabs { display: flex; gap: 6px; overflow-x: auto; padding: 6px var(--gutter) 8px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+.intabs::-webkit-scrollbar { display: none; }
+.intabs [role="tab"] { flex: none; min-height: 40px; padding: 0 14px; border-radius: var(--r-pill); border: 1px solid var(--hair); font-size: 14px; font-weight: 700; color: var(--muted); background: var(--card); white-space: nowrap; box-shadow: var(--shadow-card); transition: background 0.2s, color 0.2s, transform 0.12s; }
+.intabs [role="tab"]:active { transform: scale(0.96); }
+.intabs [role="tab"][aria-selected="true"] { background: var(--tab-on); border-color: var(--tab-on); color: var(--on-tab); }
+
+/* ---------- 7. 타석 카드 ---------- */
+.pa-list { list-style: none; margin: 0; padding: 4px 12px 28px; display: grid; gap: 10px; }
+.half-head { font-size: 12px; color: var(--muted); font-weight: 750; letter-spacing: 0.2px; padding: 14px 6px 0; display: flex; align-items: center; gap: 10px; }
+.half-head::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+.pa-card { padding: 14px 14px 8px; transition: box-shadow 0.2s, transform 0.2s; }
+.pa-card.is-current { border-color: var(--accent-ink); box-shadow: 0 0 0 1.5px var(--accent-ink), var(--shadow-card); }
+.pa-head { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 8px; }
+.pa-order { font-size: 12px; font-weight: 800; color: var(--card); background: var(--muted); padding: 2px 8px; border-radius: var(--r-pill); }
+.pa-card.is-current .pa-order { background: var(--accent); color: var(--on-accent); }
+.pa-batter { font-size: 16px; font-weight: 800; letter-spacing: -0.2px; }
+.pa-sub { font-size: 12px; color: var(--muted); }
+.badge { margin-left: auto; font-size: 12px; font-weight: 800; padding: 3px 10px; border-radius: var(--r-pill); border: 1px solid var(--line); color: var(--ink); white-space: nowrap; background: var(--panel); }
+.badge.out { color: var(--muted); }
+.badge.hit { background: var(--orange); border-color: var(--orange); color: var(--on-orange); }
+.badge.onbase { background: var(--accent-soft); border-color: var(--accent-soft); color: var(--accent-ink); }
+.pa-result { font-size: 13px; color: var(--muted); margin-top: 6px; }
+.pa-score { font-size: 13px; color: var(--accent-ink); font-weight: 700; margin-top: 2px; }
+.pitch-rows { list-style: none; margin: 8px -6px 0; padding: 0; }
+.pitch-rows > li { border-top: 1px solid var(--line); }
+.prow { width: 100%; min-height: 44px; display: flex; align-items: center; gap: 10px; padding: 4px 8px; border-radius: 12px; text-align: left; font-size: 15px; transition: background 0.15s; }
+.prow:hover { background: var(--panel); }
+.prow[aria-pressed="true"] { background: var(--row-sel); box-shadow: inset 3px 0 0 var(--accent-ink); }
+.prow b { font-weight: 700; min-width: 4em; }
+.prow small { color: var(--muted); font-size: 13px; }
+.prow .res { margin-left: auto; font-weight: 600; color: var(--ink); white-space: nowrap; }
+.g1 { flex: none; display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; font-style: normal; font-size: 12px; font-weight: 800; line-height: 1; border: 2px solid var(--muted); background: var(--ball-fill); color: var(--ink); }
+.g1.strike { background: var(--strike); border-color: var(--strike); color: var(--on-strike); }
+.g1.inplay { background: var(--orange); border-color: var(--on-orange); color: var(--on-orange); }
+.g1.unknown { background: var(--line); }
+.prow[aria-pressed="true"] .g1 { box-shadow: 0 0 0 2px var(--accent-ink); }
+
+/* ---------- 라인업, 기록 탭 ---------- */
+.panel-note { padding: 14px calc(var(--gutter) + 4px) 0; font-size: 13px; color: var(--muted); line-height: 1.55; }
+.lineup { display: grid; gap: 12px; padding: 12px 12px 28px; }
+.team-card { padding: 14px 16px 16px; }
+.team-card h2 { font-size: 17px; font-weight: 800; display: flex; align-items: baseline; gap: 6px; flex-wrap: wrap; }
+.team-card h2 .abbr { color: var(--accent-ink); }
+.team-card h2 small { font-size: 12px; color: var(--muted); font-weight: 600; }
+.order { list-style: none; margin: 8px 0 0; padding: 0; }
+.order li { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 8px; min-height: 40px; padding: 6px 0; border-top: 1px solid var(--line); font-size: 15px; }
+.order .num { width: 2.6em; color: var(--muted); font-weight: 700; }
+.order .name b { font-weight: 700; }
+.order .name small { color: var(--muted); font-size: 12px; }
+.order .sub { flex-basis: 100%; padding-left: calc(2.6em + 8px); font-size: 13px; color: var(--orange-ink); }
+.pitchers { margin-top: 10px; font-size: 13px; color: var(--muted); line-height: 1.6; border-top: 1px solid var(--line); padding-top: 8px; }
+.pitchers b { color: var(--ink); }
+.pitchers .probable { display: block; }
+.record { padding: 12px 12px 28px; display: grid; gap: 10px; }
+.record > * { padding: 14px 16px; }
+.game-meta { font-size: 14px; line-height: 1.55; }
+.game-meta span { display: block; }
+.game-meta .final { font-weight: 800; font-size: 16px; }
+.table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.linescore { border-collapse: collapse; width: 100%; min-width: 360px; font-size: 14px; }
+.linescore caption { caption-side: bottom; text-align: left; font-size: 12px; color: var(--muted); padding-top: 8px; }
+.linescore th, .linescore td { padding: 8px 4px; text-align: center; border-bottom: 1px solid var(--line); min-width: 24px; }
+.linescore th { color: var(--muted); font-weight: 700; }
+.linescore th[scope="row"] { text-align: left; color: var(--accent-ink); font-weight: 800; }
+.linescore .tot { border-left: 1px solid var(--line); font-weight: 800; }
+.linescore td.tot:first-of-type, .linescore th.tot:first-of-type { border-left-width: 2px; }
+.score-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; font-size: 14px; }
+.score-list li { padding: 8px 0; border-bottom: 1px solid var(--line); line-height: 1.5; }
+.score-list li:last-child { border-bottom: 0; }
+.score-list b { color: var(--accent-ink); }
+.link-btn { min-height: 44px; padding: 0 10px; color: var(--accent-ink); font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
+
+/* ---------- 8. 하단 안내 ---------- */
+.r-footer { display: grid; gap: 10px; padding: 22px calc(var(--gutter) + 4px) 36px; border-top: 1px solid var(--line); }
+.r-footer p { font-size: 13px; line-height: 1.7; color: var(--muted); }
+.foot-meta { display: grid; grid-template-columns: auto 1fr; gap: 2px 10px; font-size: 12px; line-height: 1.5; color: var(--muted); overflow-wrap: anywhere; }
+.foot-meta dt { font-weight: 700; }
+.footer-link { display: inline-flex; align-items: center; min-height: 44px; font-size: 16px; font-weight: 650; color: var(--accent-ink); }
+
+/* ---------- 폭 대응 ---------- */
+@media (max-width: 429px) {
+  /* 점수판 윗줄: 390px에서 점수 156 + 상황 160 = 330px로 여유 0이라 배율 2 캡처에서 이닝 알약이 SD 알약에 닿았다 → 숫자 36px·간격 6/10px로 약 20px 여유 */
+  .score-main { gap: 6px; }
+  .score-main strong { font-size: 36px; }
+  .score-state { gap: 10px; }
+}
+@media (max-width: 389px) {
+  /* 점수판 윗줄: 390px에서 점수(156px)+상황(160px)이 딱 맞고 그 아래(360px 측정: 상황 칸 130px)에서는 이닝 알약이 숫자 위로 겹친다 → 상황 줄을 점수 아래로 내린다 */
+  .scorestrip { grid-template-columns: 1fr; grid-template-areas: "main" "state" "who" "note"; row-gap: 10px; }
+  .score-state { justify-content: space-between; }
+  /* 추천 칩: 3열이면 칸이 50~67px뿐이라 구종, 위치가 잘린다. 1열로 쌓고 한 줄에 순위, 구종, 위치, 비중 */
+  .chips { grid-template-columns: 1fr; gap: 6px; }
+  .chip { grid-template-columns: auto minmax(0, 1fr) auto; grid-template-rows: auto; column-gap: 8px; padding: 7px 12px 7px 8px; min-height: 44px; }
+  .chip .rk { grid-row: auto; }
+  .chip-body { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 8px; }
+  .chip-body b, .chip-body small { white-space: normal; overflow: visible; text-overflow: clip; }
+  .chip-body small { font-size: 13px; }
+  .chip .share { grid-column: 3; font-size: 14px; }
+}
+@media (max-width: 359px) {
+  /* 헤더: 320px에서 태그 칸이 43px뿐이라 세 줄이 됐다(측정). 워드마크 17px·도장 26px, 테마 버튼 아이콘 생략으로 약 28px를 돌려줘 두 줄로 */
+  .r-tag { font-size: 11px; }
+  .wordmark { font-size: 17px; gap: 6px; }
+  .seal { width: 26px; height: 26px; font-size: 18px; }
+  .theme-switch { padding: 0 10px; font-size: 12px; }
+  .theme-switch::before, [data-theme="dark"] .theme-switch::before { content: none; }
+  .score-main strong { font-size: 34px; }
+  .score-state { gap: 8px; }
+  .zone-row { grid-template-columns: 32px minmax(0, 1fr) 32px; --wide3d: 84px; }
+  .batter { height: 100px; }
+  .prow b { min-width: 3.4em; }
+  .actual { grid-template-columns: 5em 1fr; font-size: 14px; }
+  .controls { grid-template-columns: 1fr; gap: 8px; }
+}
+@media (min-width: 600px) {
+  :root { --page-max: 560px; }
+}
+/* 데스크톱·노트북(Mac 포함), 960px 이상: 2열. 왼쪽 조작·점수·존·추천, 오른쪽 이닝 탭·타석 목록. 헤더는 유리 띠로 위에 고정되고 탭 알약은 그 가운데 떠 있다 */
+@media (min-width: 960px) {
+  :root { --page-max: 1180px; --top-h: 72px; }
+  html { scroll-padding-top: 140px; }
+  body { max-width: none; }
+  .r-header {
+    position: sticky; top: 0; z-index: 31; min-height: 64px; padding: 8px 24px;
+    background: var(--sticky-bg); -webkit-backdrop-filter: blur(14px) saturate(1.3); backdrop-filter: blur(14px) saturate(1.3);
+    border-bottom: 1px solid var(--hair);
+  }
+  .r-header .wordmark { font-size: 21px; }
+  .r-header .r-tag { margin-left: auto; }
+  /* 탭 알약을 헤더 띠 가운데에 겹쳐 올린다(DOM은 헤더 다음). 알약 밖은 클릭이 헤더로 통과한다 */
+  .toptabs { margin: -56px auto 0; width: 380px; top: 8px; z-index: 32; pointer-events: none; }
+  .toptabs [role="tab"] { pointer-events: auto; }
+  main { max-width: var(--page-max); margin: 0 auto; padding: 0 12px; }
+  .load-state { padding: 24px 12px; }
+  #panel-relay { display: grid; grid-template-columns: minmax(380px, 460px) minmax(0, 1fr); gap: 20px 24px; align-items: start; padding-top: 20px; }
+  .stage { position: sticky; bottom: 16px; padding: 0; align-self: start; gap: 12px; } /* 목록을 길게 내려도 왼쪽 열의 아래쪽(존, 추천)은 화면에 남는다 */
+  .zone-fig { margin: 0; border-radius: var(--r-card); background: var(--card); border: 1px solid var(--hair); box-shadow: var(--shadow-card); padding: 14px 16px 10px; }
+  .feed { padding-top: 0; }
+  .intabs-wrap { border-radius: var(--r-card); }
+  .intabs { padding: 6px 4px 8px; }
+  .pa-list { padding: 6px 0 40px; }
+  .pa-card:hover { box-shadow: var(--shadow-card), 0 0 0 1px var(--line); }
+  #panel-lineup, #panel-record { max-width: 760px; margin: 0 auto; }
+  .lineup { grid-template-columns: 1fr 1fr; align-items: start; padding-top: 20px; }
+  .record { padding-top: 20px; }
+  .r-footer { max-width: var(--page-max); margin: 0 auto; padding: 26px 24px 40px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
+}

@@ -1,0 +1,86 @@
+{
+ "name": "v4demo",
+ "url": "http://localhost:8790/relay/v4.html?demo=1",
+ "width": 375,
+ "height": 812,
+ "dpr": 2,
+ "quality": 84,
+ "frameMs": 50,
+ "readyJs": "!!(window.PZRelay && window.PZRelay.state3D && window.PZRelay.state3D().attached && window.PZRelay.state3D().idleLoop)",
+ "prime": [
+  {
+   "js": "(() => { window.PZRelay.select(9); return \"sel 9\"; })()",
+   "waitMs": 4200
+  }
+ ],
+ "recordMs": 32300,
+ "actions": [
+  {
+   "at": 200,
+   "label": "Busch(좌타·컵스 원정 회색) 타구 아웃 → 옆걸음",
+   "js": "(() => { PZRelay.select(10); return \"10\"; })()"
+  },
+  {
+   "at": 4700,
+   "label": "Tatis Jr.(우타·샌디에이고 홈 흰색) 홈런 → 달리기",
+   "js": "(() => { PZRelay.select(11); return \"11\"; })()"
+  },
+  {
+   "at": 9200,
+   "label": "Merrill(좌타) 안타 → 달리기",
+   "js": "(() => { PZRelay.select(93); return \"93\"; })()"
+  },
+  {
+   "at": 13700,
+   "label": "Bregman(우타) 헛스윙 삼진 → 옆걸음",
+   "js": "(() => { PZRelay.select(7); return \"7\"; })()"
+  },
+  {
+   "at": 18200,
+   "label": "아래 메뉴 선수 → 타자",
+   "js": "(() => { document.querySelector(\"[data-sheet=player]\").click(); return PZRelay.sheet(); })()"
+  },
+  {
+   "at": 19700,
+   "label": "선수 → 투수 탭",
+   "js": "(() => { document.querySelector(\"[data-fk=tab-pitcher]\").click(); return \"pt\"; })()"
+  },
+  {
+   "at": 21300,
+   "label": "아래 메뉴 구종",
+   "js": "(() => { document.querySelector(\".sh-close\").click(); document.querySelector(\"[data-sheet=mix]\").click(); return PZRelay.sheet(); })()"
+  },
+  {
+   "at": 22900,
+   "label": "아래 메뉴 기록 → 문자 로그",
+   "js": "(() => { document.querySelector(\".sh-close\").click(); document.querySelector(\"[data-sheet=record]\").click(); return PZRelay.sheet(); })()"
+  },
+  {
+   "at": 24400,
+   "label": "기록 → 박스",
+   "js": "(() => { document.querySelector(\"[data-fk=seg-box]\").click(); return \"box\"; })()"
+  },
+  {
+   "at": 25900,
+   "label": "자세히(추천 표·위치·추적값)",
+   "js": "(() => { document.querySelector(\".sh-close\").click(); document.getElementById(\"btn-detail\").click(); return PZRelay.sheet(); })()"
+  },
+  {
+   "at": 27500,
+   "label": "자세히 안에서 › 다음 공",
+   "js": "(() => { document.querySelector(\"[data-fk=next]\").click(); return document.getElementById(\"sh-title\").textContent; })()"
+  },
+  {
+   "at": 29000,
+   "label": "머리 이닝별 점수 → 이닝별 기록",
+   "js": "(() => { document.querySelector(\".sh-close\").click(); document.getElementById(\"hd-ls\").click(); return PZRelay.sheet(); })()"
+  },
+  {
+   "at": 30500,
+   "label": "머리 이닝 → 타석 선택",
+   "js": "(() => { document.querySelector(\".sh-close\").click(); document.getElementById(\"hd-state\").click(); return PZRelay.sheet(); })()"
+  }
+ ],
+ "outDir": "frames/v4demo",
+ "port": 9343
+}

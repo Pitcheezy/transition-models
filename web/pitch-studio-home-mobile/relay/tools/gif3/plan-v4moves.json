@@ -1,0 +1,56 @@
+{
+ "name": "v4moves",
+ "url": "http://localhost:8790/relay/v4.html?rec=1",
+ "width": 375,
+ "height": 812,
+ "dpr": 2,
+ "quality": 82,
+ "frameMs": 50,
+ "readyJs": "!!(window.PZRelay && window.PZRelay.state3D && window.PZRelay.state3D().attached && window.PZRelay.state3D().idleLoop)",
+ "prime": [
+  {
+   "js": "(() => { window.PZRelay.select(6); return \"sel 6\"; })()",
+   "waitMs": 4200
+  }
+ ],
+ "recordMs": 31800,
+ "actions": [
+  {
+   "at": 200,
+   "label": "step7",
+   "js": "(() => { window.PZRelay.select(7); const s = window.PZRelay.state3D(); return JSON.stringify({ i: 7, exit: window.PZRelay.exitOf(7), kind: s.kind }); })()"
+  },
+  {
+   "at": 4700,
+   "label": "step11",
+   "js": "(() => { window.PZRelay.select(11); const s = window.PZRelay.state3D(); return JSON.stringify({ i: 11, exit: window.PZRelay.exitOf(11), kind: s.kind }); })()"
+  },
+  {
+   "at": 9200,
+   "label": "step93",
+   "js": "(() => { window.PZRelay.select(93); const s = window.PZRelay.state3D(); return JSON.stringify({ i: 93, exit: window.PZRelay.exitOf(93), kind: s.kind }); })()"
+  },
+  {
+   "at": 13700,
+   "label": "step21",
+   "js": "(() => { window.PZRelay.select(21); const s = window.PZRelay.state3D(); return JSON.stringify({ i: 21, exit: window.PZRelay.exitOf(21), kind: s.kind }); })()"
+  },
+  {
+   "at": 18200,
+   "label": "step70",
+   "js": "(() => { window.PZRelay.select(70); const s = window.PZRelay.state3D(); return JSON.stringify({ i: 70, exit: window.PZRelay.exitOf(70), kind: s.kind }); })()"
+  },
+  {
+   "at": 22700,
+   "label": "step242",
+   "js": "(() => { window.PZRelay.select(242); const s = window.PZRelay.state3D(); return JSON.stringify({ i: 242, exit: window.PZRelay.exitOf(242), kind: s.kind }); })()"
+  },
+  {
+   "at": 27200,
+   "label": "step12",
+   "js": "(() => { window.PZRelay.select(12); const s = window.PZRelay.state3D(); return JSON.stringify({ i: 12, exit: window.PZRelay.exitOf(12), kind: s.kind }); })()"
+  }
+ ],
+ "outDir": "frames/v4moves",
+ "port": 9341
+}

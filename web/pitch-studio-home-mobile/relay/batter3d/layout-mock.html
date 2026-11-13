@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="ko" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>타자 열 폭 모의 배치</title>
+    <meta name="robots" content="noindex" />
+    <!-- 모의 배치 전용 페이지. 기존 relay.css를 읽기만 하고(링크), relay.js와 경기 자료는 쓰지 않는다. 호스트 화면에는 적용하지 않는다. -->
+    <link rel="stylesheet" href="../relay.css" />
+    <style>
+      body { padding-bottom: 40px; }
+      .mock-head { padding: 10px var(--gutter); border-bottom: 1px solid var(--line); display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+      .mock-head h1 { font-size: 15px; margin: 0; }
+      .mock-head button { font: inherit; padding: 4px 10px; border: 1px solid var(--muted); border-radius: var(--r-ctrl); background: var(--panel); color: var(--ink); }
+      .case { margin-top: 10px; }
+      .case h2 { font-size: 13px; margin: 0; padding: 6px var(--gutter) 2px; color: var(--muted); font-weight: 650; }
+      .case .read { font-size: 12px; color: var(--muted); padding: 2px var(--gutter) 8px; font-variant-numeric: tabular-nums; }
+      /* 3D 자리 표시: 사람 비율(폭 1 : 높이 2.5)의 점선 상자와 큰 실루엣. 실제 3D 캔버스는 이 상자 크기로 들어간다 */
+      .slot3d { position: relative; display: flex; align-items: flex-end; justify-content: center; width: 100%; height: 100%; min-height: 200px; border: 1px dashed var(--muted); border-radius: 6px; box-sizing: border-box; }
+      .slot3d .batter { height: 92%; }
+      .slot3d small { position: absolute; top: 2px; left: 4px; font-size: 10px; color: var(--muted); }
+      /* 안 B: 서 있는 쪽만 넓힌다. 반대쪽 열은 0 */
+      .zone-row.one-side { grid-template-columns: var(--wide, 88px) minmax(0, 1fr) 0; }
+      .zone-row.one-side.right { grid-template-columns: 0 minmax(0, 1fr) var(--wide, 88px); }
+      /* 안 C: 양쪽 다 넓힌다(비교용, 채택 안 함) */
+      .zone-row.both-wide { grid-template-columns: var(--wide, 88px) minmax(0, 1fr) var(--wide, 88px); }
+      @media (max-width: 359px) { .zone-row.one-side, .zone-row.one-side.right, .zone-row.both-wide { --wide: 72px; } }
+    </style>
+  </head>
+  <body>
+    <div class="mock-head">
+      <h1>타자 열 폭 모의 배치 (호스트 미적용)</h1>
+      <button type="button" id="theme">어둡게</button>
+      <span id="vw" class="read"></span>
+    </div>
+
+    <!-- 공통 존 그림: relay.js zoneWindow와 같은 창 크기(viewBox -141 -400 282 301). 점과 네모는 모양 확인용 자리표시 -->
+    <template id="zone-tpl">
+      <svg class="zone" viewBox="-141 -400 282 301" preserveAspectRatio="xMidYMid meet" role="img" aria-label="존 자리표시">
+        <rect class="z-outside" x="-125" y="-384" width="250" height="269" />
+        <rect class="z-box" x="-83" y="-339" width="166" height="179" />
+        <line class="z-grid" x1="-27.7" x2="-27.7" y1="-339" y2="-160" /><line class="z-grid" x1="27.7" x2="27.7" y1="-339" y2="-160" />
+        <line class="z-grid" x1="-83" x2="83" y1="-279.3" y2="-279.3" /><line class="z-grid" x1="-83" x2="83" y1="-219.7" y2="-219.7" />
+        <g class="z-rec r1"><rect x="-64" y="-264" width="28" height="28" rx="5" /><text x="-50" y="-245" text-anchor="middle">1</text></g>
+        <g class="z-rec r2"><rect x="20" y="-318" width="28" height="28" rx="5" /><text x="34" y="-299" text-anchor="middle">2</text></g>
+        <g class="z-dot ball"><circle cx="-95" cy="-180" r="11" /><text x="-95" y="-175.5" text-anchor="middle">1</text></g>
+        <g class="z-dot strike sel"><circle cx="40" cy="-240" r="11" /><circle class="z-ring" cx="40" cy="-240" r="15" /><text x="40" y="-235.5" text-anchor="middle">2</text></g>
+      </svg>
+    </template>
+    <template id="svg-batter">
+      <svg class="batter" viewBox="0 0 44 110" aria-hidden="true">
+        <circle cx="22" cy="13" r="9" />
+        <path d="M12 27 h20 q4 0 4 4 l-2 32 h-6 l-1 40 h-7 l-1-34 -1 34 h-7 l-1-40 h-6 l-2-32 q0-4 4-4z" />
+        <line class="bat" x1="34" y1="31" x2="43" y2="2" />
+      </svg>
+    </template>
+
+    <section class="case" data-case="A">
+      <h2>A. 지금 호스트: 40px 열 두 개(320px 미만 32px), SVG 실루엣</h2>
+      <figure class="zone-fig"><div class="zone-row" data-side="L">
+        <div class="batband left" data-fill="svg"></div>
+        <div data-fill="zone"></div>
+        <div class="batband right" hidden></div>
+      </div></figure>
+      <p class="read" data-read></p>
+    </section>
+
+    <section class="case" data-case="B">
+      <h2>B. 제안: 서 있는 쪽만 88px(320px 미만 72px), 반대쪽 0. 좌타</h2>
+      <figure class="zone-fig"><div class="zone-row one-side" data-side="L">
+        <div class="batband left" data-fill="slot"></div>
+        <div data-fill="zone"></div>
+        <div class="batband right" hidden></div>
+      </div></figure>
+      <p class="read" data-read></p>
+    </section>
+
+    <section class="case" data-case="B2">
+      <h2>B. 같은 안, 우타(오른쪽 열만 88px)</h2>
+      <figure class="zone-fig"><div class="zone-row one-side right" data-side="R">
+        <div class="batband left" hidden></div>
+        <div data-fill="zone"></div>
+        <div class="batband right" data-fill="slot"></div>
+      </div></figure>
+      <p class="read" data-read></p>
+    </section>
+
+    <section class="case" data-case="C">
+      <h2>C. 비교용(채택 안 함): 양쪽 다 88px</h2>
+      <figure class="zone-fig"><div class="zone-row both-wide" data-side="L">
+        <div class="batband left" data-fill="slot"></div>
+        <div data-fill="zone"></div>
+        <div class="batband right" data-fill="slot"></div>
+      </div></figure>
+      <p class="read" data-read></p>
+    </section>
+
+    <script>
+      (function () {
+        const zoneT = document.getElementById("zone-tpl"), batT = document.getElementById("svg-batter");
+        for (const el of document.querySelectorAll('[data-fill="zone"]')) el.replaceWith(zoneT.content.firstElementChild.cloneNode(true));
+        for (const el of document.querySelectorAll('[data-fill="svg"]')) el.append(batT.content.firstElementChild.cloneNode(true));
+        for (const el of document.querySelectorAll('[data-fill="slot"]')) {
+          const box = document.createElement("div"); box.className = "slot3d";
+          const tag = document.createElement("small"); tag.textContent = "3D 자리";
+          box.append(tag, batT.content.firstElementChild.cloneNode(true)); el.append(box);
+        }
+        function measure() {
+          document.getElementById("vw").textContent = `화면 폭 ${window.innerWidth}px`;
+          for (const sec of document.querySelectorAll(".case")) {
+            const zone = sec.querySelector(".zone").getBoundingClientRect();
+            const box = sec.querySelector(".z-box").getBoundingClientRect();
+            const slot = sec.querySelector(".slot3d, .batband:not([hidden])");
+            const sr = slot ? slot.getBoundingClientRect() : { width: 0, height: 0 };
+            sec.querySelector("[data-read]").textContent =
+              `존 그림 ${Math.round(zone.width)}×${Math.round(zone.height)}px, 스트라이크 박스 ${Math.round(box.width)}×${Math.round(box.height)}px, 타자 자리 ${Math.round(sr.width)}×${Math.round(sr.height)}px`;
+          }
+        }
+        for (const sec of document.querySelectorAll(".case")) { // 3D 자리 높이를 존 그림 높이에 맞춘다(실제 캔버스도 같은 규칙)
+          const slots = sec.querySelectorAll(".slot3d"), z = sec.querySelector(".zone");
+          const fit = () => { const h = z.getBoundingClientRect().height; for (const s of slots) s.style.height = h + "px"; };
+          fit(); window.addEventListener("resize", fit);
+        }
+        measure(); window.addEventListener("resize", () => requestAnimationFrame(measure));
+        document.getElementById("theme").addEventListener("click", () => {
+          const d = document.documentElement.dataset.theme === "dark"; document.documentElement.dataset.theme = d ? "light" : "dark";
+          document.getElementById("theme").textContent = d ? "어둡게" : "밝게";
+        });
+      })();
+    </script>
+  </body>
+</html>

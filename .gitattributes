@@ -16,3 +16,19 @@ docs/handoff/operational_bundle_delivery_v1.json -text whitespace=blank-at-eol,b
 
 # The upload dry-run example is bound to its exact payload SHA256 on every OS.
 ops/public-host/examples/publish-payload.json -text
+
+# Colour-theme files whose SHA-256 is posted for the teammate: keep exact bytes.
+web/pitch-studio-home-mobile/relay/tools/songskin/theme-only/index.html -text
+web/pitch-studio-home-mobile/relay/tools/songskin/theme-only/pz/pz-theme.css -text
+
+# Colour + 3D batter files whose SHA-256 is listed in relay/tools/songskin/README.md: keep exact bytes.
+web/pitch-studio-home-mobile/relay/tools/songskin/index.html -text
+web/pitch-studio-home-mobile/relay/tools/songskin/pz-theme.css -text
+web/pitch-studio-home-mobile/relay/tools/songskin/pz-batter.js -text
+web/pitch-studio-home-mobile/relay/batter3d/batter3d.js -text
+web/pitch-studio-home-mobile/relay/batter3d/vendor/three.module.js -text
+web/pitch-studio-home-mobile/relay/batter3d/vendor/three.core.js -text
+web/pitch-studio-home-mobile/relay/batter3d/vendor/addons/loaders/GLTFLoader.js -text
+web/pitch-studio-home-mobile/relay/batter3d/vendor/addons/utils/BufferGeometryUtils.js -text
+web/pitch-studio-home-mobile/relay/batter3d/vendor/addons/utils/SkeletonUtils.js -text
+web/pitch-studio-home-mobile/relay/batter3d/assets/batter-indexed.meta.json -text

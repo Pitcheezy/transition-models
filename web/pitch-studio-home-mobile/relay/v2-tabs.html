@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Pitcheezy 중계 v2-tabs, Song 틀 + 3D 타자 + Pitcheezy 색, 토글은 Song 탭 양식 (저장 경기 849843)</title>
+    <meta
+      name="description"
+      content="로컬 데모 v2-tabs(처음 이름 v3; 11/9 17시 사용자가 V3를 "Song 빌드 + 색 + 캐릭터"로 정의해 이름을 바꿈) = v2(Song 고정 빌드 c47fe6cb의 경기 화면 틀 + 3D 타자)에 Pitcheezy 색을 기본으로 켜고, 카드 아래 조작(자동 진행·투구 애니메이션·색)을 Song 앱 선수 시트의 탭(.sv-tabs) 양식으로 바꾼 시안. 틀·비율은 v2와 같고 relay.js도 같다."
+    />
+    <meta name="theme-color" content="#091811" />
+    <meta name="robots" content="noindex" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23ceff78'/%3E%3Ctext x='8' y='25' font-family='Arial' font-weight='bold' font-size='25' fill='%23091811'%3EP%3C/text%3E%3C/svg%3E"
+    />
+    <!-- v2-tabs(2026-11-09; 처음 이름 v3): 사용자 요청 "v2에 토글 스위치를 v0 버전과 똑같이 맞춘 V3, 색깔 반영한".
+         v0(Song 앱 c47fe6cb)에는 켜고 끄는 스위치가 없다. 공개 화면에서 보이는 토글은 선수 시트의 '타자 | 투수' 탭(.sv-tabs) 하나라
+         자동 진행·투구 애니메이션 스위치와 색 선택을 그 양식(아래 머리선, 칸 46px·글자 16px 700, 고른 칸 잉크색 + 3px 밑줄)으로 바꿨다. 값은 relay-v2-tabs.css 머리말.
+         대안 ?toggle=pill 은 Song 번들 CSS에만 있고 공개 화면에는 안 그려지는 알약 분할 버튼(.chart-tabs) 값.
+         색은 Pitcheezy 색(v2의 ?palette=pz)을 기본으로 켠다(?palette=song 이면 Song 색). 틀(기하)·섹션 순서·하단 탭은 v2와 같고, relay.js는 v1·v2와 공유(dataset.v2 분기 그대로). -->
+    <script>
+      (function () {
+        document.documentElement.dataset.theme = "light"; document.documentElement.dataset.v2 = "1"; document.documentElement.dataset.v2tabs = "1";
+        var pal = "pz", q = null; // v3 기본 = Pitcheezy 색, 토글 = v0 탭 양식
+        try { q = new URLSearchParams(location.search); } catch (e) {}
+        if (q && q.get("palette") === "song") pal = "";
+        if (pal) document.documentElement.dataset.palette = pal;
+        if (q && q.get("toggle") === "pill") document.documentElement.dataset.toggle = "pill";
+      })();
+    </script>
+    <link rel="stylesheet" href="relay-v2.css?v=2" />
+    <link rel="stylesheet" href="relay-v2-tabs.css?v=2" />
+    <script src="relay.js" defer></script>
+    <script type="importmap">{ "imports": { "three": "./batter3d/vendor/three.module.js", "three/addons/": "./batter3d/vendor/addons/" } }</script>
+    <script type="module" src="batter3d-host.js"></script>
+  </head>
+  <body>
+    <a class="skip" href="#main">본문으로 이동</a>
+
+    <!-- Song 헤더 1행(44px): 뒤로 가기 자리에 홈 링크, 가운데 점수 대신 워드마크, 오른쪽 태그 -->
+    <header class="r-header">
+      <a href="../index.html" class="wordmark" aria-label="홈 화면으로"><span class="seal">P</span>PITCHEEZY</a>
+      <span class="r-tag" id="hdr-tag">저장 경기 재생</span>
+      <button type="button" id="theme-switch" class="theme-switch" aria-label="어둡게, 지금은 밝은 화면" hidden>어둡게</button>
+    </header>
+
+    <main id="main">
+      <p id="load-state" class="load-state" role="status">경기 자료를 불러오는 중입니다 (data/849843.json)</p>
+
+      <section id="panel-relay" role="tabpanel" aria-labelledby="tab-relay" hidden>
+        <!-- Song 헤더 2행(60px): 이닝/상황(왼쪽) + 라인스코어 자리(오른쪽, 여기서는 점수·카운트·주자) -->
+        <section class="scorestrip" aria-label="이 공을 던지기 전 상황">
+          <div class="score-main">
+            <span class="team" id="s-away-abbr"></span>
+            <strong id="s-away">0</strong><i aria-hidden="true">:</i><strong id="s-home">0</strong>
+            <span class="team" id="s-home-abbr"></span>
+          </div>
+          <div class="score-state">
+            <span class="inning" id="s-inning"></span>
+            <div class="count" id="s-count" role="group" aria-label="볼, 스트라이크, 아웃 (이 공 던지기 전)"></div>
+            <svg class="diamond" viewBox="0 0 40 40" role="img" aria-labelledby="diamond-title">
+              <title id="diamond-title">주자</title>
+              <path id="d-2" d="M20 4 l6 6 -6 6 -6 -6z" />
+              <path id="d-3" d="M6 18 l6 6 -6 6 -6 -6z" />
+              <path id="d-1" d="M34 18 l6 6 -6 6 -6 -6z" />
+              <path class="home" d="M17 31 h6 v3 l-3 3 -3 -3z" />
+            </svg>
+          </div>
+          <div class="score-who">
+            <span><small>투수</small> <b id="w-pitcher"></b></span>
+            <span><small>타자</small> <b id="w-batter"></b></span>
+          </div>
+          <p class="score-note"><span class="pill">이 공 던지기 전</span> <span id="w-ctx"></span></p>
+        </section>
+
+        <!-- Song 흰 카드(.sv-stage): 존 행 216px → 범례 → 추천 → 실제 투구 → 이번 타석 -->
+        <div class="layout">
+          <div class="stage">
+            <figure class="zone-fig">
+              <div class="zone-row">
+                <div class="batband left" id="bat-left" hidden aria-hidden="true">
+                  <svg class="batter" viewBox="0 0 40 100"><circle cx="20" cy="12" r="8" /><path d="M10 26h20l3 34h-7l-2 36h-6l-1-30-1 30h-6l-2-36H7z" /><line class="bat" x1="10" y1="30" x2="2" y2="4" /></svg>
+                </div>
+                <svg id="zone" class="zone" role="img" aria-label="스트라이크존 (자료 로딩 전)"></svg>
+                <div class="batband right" id="bat-right" hidden aria-hidden="true">
+                  <svg class="batter" viewBox="0 0 40 100"><circle cx="20" cy="12" r="8" /><path d="M10 26h20l3 34h-7l-2 36h-6l-1-30-1 30h-6l-2-36H7z" /><line class="bat" x1="10" y1="30" x2="2" y2="4" /></svg>
+                </div>
+              </div>
+              <figcaption class="legend">
+                <p>
+                  <span><i class="k rec r1">1</i><i class="k rec r2">2</i><i class="k rec r3">3</i>추천</span>
+                  <span><i class="k ball"></i>볼</span>
+                  <span><i class="k strike"></i>스트라이크·파울</span>
+                  <span><i class="k inplay"></i>타격</span>
+                  <span><i class="k sel"></i>선택 투구</span>
+                </p>
+                <p id="legend-view">투수 시점</p>
+                <p class="legend-note">칩과 위치 행의 왼쪽, 오른쪽은 포수 기준입니다. 그림은 투수 시점이라 좌우가 반대입니다.</p>
+                <p class="legend-note">공의 움직임은 도착 위치와 결과로 만든 연출이고, 실제 궤적 자료가 아닙니다.</p>
+              </figcaption>
+            </figure>
+
+            <section class="pitch-panel" aria-labelledby="pp-title">
+              <div class="pp-head">
+                <h2 id="pp-title">던지기 전 추천</h2>
+                <div class="pp-nav">
+                  <button type="button" id="btn-prev" aria-label="이전 투구">‹</button>
+                  <button type="button" id="btn-next" aria-label="다음 투구">›</button>
+                </div>
+              </div>
+              <div id="pp-recs" class="recs"></div>
+              <p class="disc" id="pp-disc">그 공을 던지기 전 정보만으로 계산한 추천입니다. 정책 선택 비중은 성공 확률이 아닙니다. 위치는 과거 투구 분포의 대략 위치라 참고용입니다.</p>
+              <h2 class="pp-sub">실제 투구</h2>
+              <dl id="pp-actual" class="actual"></dl>
+            </section>
+
+            <nav class="intabs-wrap" aria-label="이닝 선택">
+              <div class="intabs" role="tablist" id="intabs"></div>
+            </nav>
+            <div id="pa-panel" role="tabpanel" aria-labelledby="intab-score">
+              <h2 class="atbat-title">이번 타석</h2>
+              <ol id="pa-list" class="pa-list" role="list" aria-label="타석 목록"></ol>
+            </div>
+          </div>
+
+          <!-- v3: 조작 세 줄을 Song 카드 한 장(흰 바탕, 줄 사이 1px 구분선, 줄 56px)에 두고, 토글은 v0 선수 시트의 '타자 | 투수' 탭(.sv-tabs) 양식(꺼짐 | 켜짐).
+               id(auto-switch·auto-count·auto-status·anim-switch·anim-state)와 role=switch·aria-checked는 v1·v2와 같아 relay.js를 바꾸지 않는다(고른 칸 다시 누르기 무시만 아래 인라인 스크립트). Song 틀 요소의 위치는 바뀌지 않는다 -->
+          <section class="controls settings" aria-label="보기 설정">
+            <div class="auto-row">
+              <div class="auto-text">
+                <span class="auto-label">자동 진행</span>
+                <span id="auto-count" class="auto-count" aria-hidden="true">꺼짐</span>
+                <span id="auto-status" class="sr-only" role="status" aria-live="polite">자동 진행 꺼짐</span>
+              </div>
+              <button type="button" id="auto-switch" class="switch seg2" role="switch" aria-checked="false" aria-label="자동 진행 (10초마다 다음 투구)"><span class="knob" aria-hidden="true"></span></button>
+            </div>
+            <div class="auto-row">
+              <div class="auto-text">
+                <span class="auto-label">투구 애니메이션</span>
+                <span id="anim-state" class="auto-count">켜짐</span>
+              </div>
+              <button type="button" id="anim-switch" class="switch seg2" role="switch" aria-checked="true" aria-label="투구 애니메이션 (공의 비행과 스윙 연출)"><span class="knob" aria-hidden="true"></span></button>
+            </div>
+            <div class="auto-row palette-row">
+              <div class="auto-text">
+                <span class="auto-label">색</span>
+                <span id="palette-state" class="auto-count">Pitcheezy 색</span>
+              </div>
+              <div class="seg" id="palette-seg" role="radiogroup" aria-label="색 변형">
+                <button type="button" role="radio" aria-checked="false" data-palette="">Song 색</button>
+                <button type="button" role="radio" aria-checked="true" data-palette="pz">Pitcheezy 색</button>
+              </div>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section id="panel-lineup" role="tabpanel" aria-labelledby="tab-lineup" hidden>
+        <p class="panel-note">타석 기록(pas)에서 도출한 타순입니다. 첫 등장 선수를 선발로, 같은 타순에 뒤에 나온 선수를 '교체'로 표시합니다. 공식 라인업 카드가 아닙니다.</p>
+        <div id="lineup-root" class="lineup"></div>
+      </section>
+
+      <section id="panel-record" role="tabpanel" aria-labelledby="tab-record" hidden>
+        <div id="record-root" class="record"></div>
+      </section>
+
+      <footer class="r-footer">
+        <p>Song 발행 파일(c47)로 완료 경기를 다시 재생합니다. 추천은 그 공을 던지기 전 정보만으로 계산했고, 위치는 참고용입니다. 정책 선택 비중은 성공 확률이 아닙니다.</p>
+        <dl id="foot-meta" class="foot-meta"></dl>
+      </footer>
+    </main>
+
+    <!-- Song 하단 탭(.sv-bottom-nav, 52px 버튼): 우리 화면 3개를 같은 바에. relay.js는 .toptabs 안의 [role=tab]을 쓴다 -->
+    <nav class="toptabs bottom-nav" role="tablist" aria-label="화면 선택">
+      <button type="button" role="tab" id="tab-relay" aria-selected="true" aria-controls="panel-relay" data-view="relay">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v16H4zM4 9.3h16M4 14.7h16M9.3 4v16M14.7 4v16" /></svg>중계
+      </button>
+      <button type="button" role="tab" id="tab-lineup" aria-selected="false" aria-controls="panel-lineup" tabindex="-1" data-view="lineup">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4.5 20.5c.8-3.9 3.8-6 7.5-6s6.7 2.1 7.5 6" /></svg>라인업
+      </button>
+      <button type="button" role="tab" id="tab-record" aria-selected="false" aria-controls="panel-record" tabindex="-1" data-view="record">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11M4.5 6h.01M4.5 12h.01M4.5 18h.01" /></svg>기록
+      </button>
+    </nav>
+    <script>
+      /* v3 탭 모양 스위치(검토 지적 반영): role=switch 버튼 하나를 '꺼짐 | 켜짐' 두 칸으로 그리므로, v0 탭처럼 이미 고른 칸을 눌렀을 때는 아무 일도 없어야 한다.
+         relay.js는 어떤 클릭이든 뒤집으므로(버튼 리스너), 문서 캡처 단계에서 '고른 쪽 절반' 클릭만 삼킨다. 키보드(Space/Enter, e.detail 0)는 그대로 뒤집는다(role=switch 관례). */
+      document.addEventListener("click", function (e) {
+        var sw = e.target && e.target.closest ? e.target.closest("#auto-switch, #anim-switch") : null;
+        if (!sw || e.detail === 0) return;
+        var r = sw.getBoundingClientRect(), onHalf = e.clientX >= r.left + r.width / 2, isOn = sw.getAttribute("aria-checked") === "true";
+        if (onHalf === isOn) { e.stopPropagation(); e.preventDefault(); }
+      }, true);
+      /* v3 색 분할 버튼: data-palette를 바꾸고 눌린 칸·상태 글을 맞춘다(저장하지 않음). 키보드는 radiogroup 관례대로 좌우 화살표 */
+      (function () {
+        var seg = document.getElementById("palette-seg"), state = document.getElementById("palette-state");
+        if (!seg) return;
+        var btns = Array.prototype.slice.call(seg.querySelectorAll("[role=radio]"));
+        function apply(val, focus) {
+          if (val) document.documentElement.dataset.palette = val; else delete document.documentElement.dataset.palette;
+          btns.forEach(function (b) { var on = (b.getAttribute("data-palette") || "") === val; b.setAttribute("aria-checked", on ? "true" : "false"); b.tabIndex = on ? 0 : -1; if (on && focus) b.focus(); });
+          if (state) state.textContent = val === "pz" ? "Pitcheezy 색" : "Song 색";
+        }
+        apply(document.documentElement.dataset.palette || "", false);
+        btns.forEach(function (b, i) {
+          b.addEventListener("click", function () { apply(b.getAttribute("data-palette") || "", false); });
+          b.addEventListener("keydown", function (e) {
+            if (e.key !== "ArrowLeft" && e.key !== "ArrowRight" && e.key !== "ArrowUp" && e.key !== "ArrowDown") return;
+            e.preventDefault(); var n = btns[(i + (e.key === "ArrowLeft" || e.key === "ArrowUp" ? btns.length - 1 : 1)) % btns.length]; apply(n.getAttribute("data-palette") || "", true);
+          });
+        });
+      })();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,163 @@
+{
+  "generatedAt": "2026-11-08T09:41:29.540Z",
+  "output": {
+    "name": "batter-indexed",
+    "glb": "batter-indexed.glb",
+    "meta": "batter-indexed.meta.json",
+    "glbBytes": 2727816,
+    "glbSha256": "4b744d1cb01c815356020c83d40a0124c1f1b17b260f3b9229aeab7a51ac34db"
+  },
+  "source": {
+    "tool": "relay/batter3d/tools/fbx-to-glb.html + three.js 0.187.0 FBXLoader/GLTFExporter",
+    "files": [
+      {
+        "name": "Baseball_Hit.fbx",
+        "sha256": "f395f753a1aae3f96d7101702c1c41d79d9b3ee0c4717898ee6320a4038c197b"
+      },
+      {
+        "name": "Baseball_Hit_1.fbx",
+        "sha256": "f33d2ff20816ca17f573db006e1e365cc31bd17f169a492ccce5c83e0ba229eb"
+      },
+      {
+        "name": "Baseball_Hit_2.fbx",
+        "sha256": "6e16c8a2cbd5ef05191a3cf3226f72e8d79399fd1bfb95801b7650da76771f79"
+      },
+      {
+        "name": "Baseball_Strike.fbx",
+        "sha256": "f6e1d54f8c46bc9c5b2957f8c6a81f58aa5a2ee59e6ead578faf8392cbb80420"
+      }
+    ],
+    "license": "Adobe Mixamo FAQ: royalty free for personal, commercial, and non-profit projects (2026-11-08 확인). 원본 단독 재배포 금지로 취급"
+  },
+  "character": {
+    "from": "Baseball_Hit.fbx",
+    "meshes": [
+      "Beta_Surface",
+      "Beta_Joints"
+    ],
+    "triangles": 49112,
+    "vertices": 28374,
+    "bones": 129,
+    "sizeUnits": [
+      180.51320648368494,
+      180.92343626296747,
+      32.069837625265215
+    ],
+    "floorY": -0.035115025115814956,
+    "rootScale": 1
+  },
+  "indexing": {
+    "enabled": true,
+    "meshes": [
+      {
+        "name": "Beta_Surface",
+        "before": 84816,
+        "after": 15901,
+        "indexType": "Uint16",
+        "attributes": [
+          "position",
+          "skinIndex",
+          "skinWeight",
+          "normal",
+          "uv"
+        ],
+        "check": "일치",
+        "mergeVerticesRef": 15901,
+        "ms": 87,
+        "note": null
+      },
+      {
+        "name": "Beta_Joints",
+        "before": 62520,
+        "after": 12473,
+        "indexType": "Uint16",
+        "attributes": [
+          "position",
+          "skinIndex",
+          "skinWeight",
+          "normal",
+          "uv"
+        ],
+        "check": "일치",
+        "mergeVerticesRef": 12473,
+        "ms": 57,
+        "note": null
+      }
+    ]
+  },
+  "fps": 30,
+  "clips": {
+    "idle": {
+      "duration": 0.03333333507180214,
+      "tracks": 53,
+      "contactTime": null,
+      "contactFrac": null,
+      "contactBy": null
+    },
+    "contact": {
+      "duration": 3.9000000953674316,
+      "tracks": 53,
+      "contactTime": 1.405625,
+      "contactFrac": 0.360417,
+      "contactBy": "batTipSpeed",
+      "contactNote": "연출 기준 시점 추정(배트 끝 속도 최대, 클립 앞 70% 안, 240표본 구간 중점). 실제 공 접촉 시각이 아니다"
+    },
+    "contact_hit": {
+      "duration": 3.9000000953674316,
+      "tracks": 53,
+      "contactTime": 1.4375,
+      "contactFrac": 0.36858973457654964,
+      "contactBy": "handSpeed"
+    },
+    "contact_hit1": {
+      "duration": 2.9000000953674316,
+      "tracks": 53,
+      "contactTime": 1.3625,
+      "contactFrac": 0.469827570756466,
+      "contactBy": "handSpeed"
+    },
+    "contact_hit2": {
+      "duration": 1.9666666984558105,
+      "tracks": 53,
+      "contactTime": 1.1041666666666667,
+      "contactFrac": 0.5614406688909908,
+      "contactBy": "handSpeed"
+    },
+    "miss": {
+      "duration": 6.933333396911621,
+      "tracks": 53,
+      "contactTime": 1.198889,
+      "contactFrac": 0.172917,
+      "contactBy": "batTipSpeed",
+      "contactNote": "연출 기준 시점 추정(배트 끝 속도 최대, 클립 앞 70% 안, 240표본 구간 중점). 실제 공 접촉 시각이 아니다"
+    }
+  },
+  "contactSource": "Baseball_Hit",
+  "contactNote": "clips[*].contactTime/contactFrac은 '연출 기준 시점 추정'(스윙을 호스트 비행 시간에 맞출 기준점)이며 실제 공 접촉 시각이 아니다. 변환기는 손 속도 최대(handSpeed), 데모는 배트 끝 속도 최대(batTipSpeed)로 같은 시각·같은 클립 길이에서 둘을 함께 쓴다",
+  "bat": {
+    "enabled": true,
+    "bone": "LeftHand",
+    "lengthRatio": 0.48,
+    "radiusRatio": 0.016,
+    "position": [
+      0,
+      0,
+      0
+    ],
+    "rotationDeg": [
+      0,
+      0,
+      0
+    ],
+    "handleRatio": 0.1,
+    "note": "아래 손(우타자의 왼손) 뼈 기준 로컬 위치·회전. 위 손은 팔로스루에서 놓는다. 데모 조절 패널에서 맞춘 값으로 갱신한다(비율은 캐릭터 키 대비)"
+  },
+  "view": {
+    "yawDeg": 0,
+    "azimuthDeg": 28,
+    "elevationDeg": 9,
+    "zoom": 1,
+    "targetY": 0.5
+  },
+  "tunedAt": "2026-11-08T09:43:49.625Z"
+}

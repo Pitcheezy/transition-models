@@ -1,0 +1,135 @@
+{
+ "schema": "pitcheezy-exhibit-deploy-record-v1",
+ "date_kst": "2026-11-09",
+ "approved_by_user": "11/9 18시 채팅: '배포 v3로 하자 … 코드 off 시키자'",
+ "operator": "Claude Opus 5.5 (이 세션), Wrangler 4.151.0 고정본, 노트북 OAuth 로그인 유지 상태(사용자 조작 없음)",
+ "before": {
+  "version_id": "5999cf0d-4f18-4d43-bcd6-320e04860369",
+  "access_gate": true,
+  "public": "Song c47fe6cb 정적 4"
+ },
+ "steps": [
+  {
+   "label": "A 접속 코드 OFF(화면 그대로)",
+   "started_utc": "2026-11-09T09:00:12Z",
+   "ended_utc": "2026-11-09T09:00:25Z",
+   "version_id": "55087f55-688f-4fd8-a59a-fa45ebeaaaf2",
+   "config_sha256": "d85b69978d9aec5f66f26bc080be1c381ff25e22b6260d284f67fdc2ec04bd29",
+   "change": "vars ACCESS_GATE_ENABLED true→false, public/collection-settings.json accessGate true→false (검사기 일치 규칙)",
+   "verify": "쿠키 없이 / · /?game=849843 200(index 85616c4b), /v1/manifest.json 200(f4d0987e), /v1/game/849843.json 200(056fcf13), X-Pitcheezy-Access 헤더 없음"
+  },
+  {
+   "label": "B V3 화면",
+   "started_utc": "2026-11-09T09:00:59Z",
+   "ended_utc": "2026-11-09T09:01:11Z",
+   "version_id": "c222a454-c36d-4406-b411-1f7f06b0d5dc",
+   "config_sha256": "d85b69978d9aec5f66f26bc080be1c381ff25e22b6260d284f67fdc2ec04bd29",
+   "release_manifest_sha256": "7a83990d4301bc4517c4772c560cc70ba81e131c8060cd30e29e1c428fd62151",
+   "change": "public = Song c47fe6cb 정적 3(바이트 동일) + index.html(태그 3개·theme-color) + pz/ 10(테마 CSS, 3D 호스트, batter3d 모듈, three r187 vendor 5, batter-ctl glb·meta); 코드·설정·비밀 변경 0",
+   "verify": "공개 15파일 라이브 바이트 일치(15/15; /index.html은 Cloudflare가 / 로 307, / 본문 = index.html 66c51841), /v1/* 200, 업로드 HEAD 503; 헤드리스 Chrome 375px 실주소 녹화: 3D 연결(batter-ctl, 클립 6), 네 공 take/miss/contact/hit 재생, 콘솔 오류 0, 목록 화면 테마 적용·3D 없음"
+  }
+ ],
+ "checker": "scripts/check_public_host_config.py: A ok. B는 공개 확장자 허용 목록에 .glb가 없어 forbidden_public_file → 이번 검사에서만 .glb를 더해(저장소 코드 변경 없음) 나머지 검사 전부 ok. 허용 목록 갱신은 별도 단위(다른 모델 검토 필요).",
+ "rollback": {
+  "to_A_gate_off_song_screen": "wrangler rollback 55087f55-688f-4fd8-a59a-fa45ebeaaaf2 --config <B-v3 후보>/host/wrangler.deploy.json",
+  "to_before_gate_on": "wrangler rollback 5999cf0d-4f18-4d43-bcd6-320e04860369 (비밀 교체 이후 버전이라 사용 가능)"
+ },
+ "public_files": [
+  {
+   "path": "assets/index-X1sSTTQ4.js",
+   "bytes": 300041,
+   "sha256": "e46d431a7495bf58efd0084b20af87642fea8e6544cf3ac76ef278223621c30c",
+   "live_bytes_equal": true
+  },
+  {
+   "path": "assets/index-ks_hu7Ji.css",
+   "bytes": 118449,
+   "sha256": "292dd392a798d3ee52bd752857edeba50810f19eda4bbf234d4399b106e3bfc0",
+   "live_bytes_equal": true
+  },
+  {
+   "path": "collection-settings.json",
+   "bytes": 103,
+   "sha256": "6f465da3ec857aa7e8dfd538c9132ef8aa76c1c4bff850ba3d67356246567fc3",
+   "live_bytes_equal": true
+  },
+  {
+   "path": "favicon.svg",
+   "bytes": 249,
+   "sha256": "bbfd72e5d077bd545b2cf568e5267c6637598d5253746f5b395e0d5f3fb144d9",
+   "live_bytes_equal": true
+  },
+  {
+   "path": "index.html",
+   "bytes": 926,
+   "sha256": "66c518417f29409a348cbb06a65266916766f4889dc4512df4a9b704ac6d1bde",
+   "live_bytes_equal": true
+  },
+  {
+   "path": "pz/batter3d/assets/batter-ctl.glb",
+   "bytes": 3212124,
+   "sha256": "c56571c4f831473baa54f3c6e921393309fe287bf69d6803c5c4fe8fd1f67890",
+   "live_bytes_equal": true
+  },
+  {
+   "path": "pz/batter3d/assets/batter-ctl.meta.json",
+   "bytes": 12860,
+   "sha256": "804cceda43eb971691b87eadd46a6a16b2ffefd5e94e03d57283a2b8aae7271c",
+   "live_bytes_equal": true
+  },
+  {
+   "path": "pz/batter3d/batter3d.js",
+   "bytes": 28713,
+   "sha256": "cd57caed8dac8fc2448442a68700e218168c6d71d00c8acd0995691b2f1d1ddd",
+   "live_bytes_equal": true
+  },
+  {
+   "path": "pz/batter3d/vendor/addons/loaders/GLTFLoader.js",
+   "bytes": 119861,
+   "sha256": "532ac726e120039acbcd6cf54328c57acbf7b438176afaa6951257126d11bff1",
+   "live_bytes_equal": true
+  },
+  {
+   "path": "pz/batter3d/vendor/addons/utils/BufferGeometryUtils.js",
+   "bytes": 39153,
+   "sha256": "7bda2a8ba836b2bcf67cb938d4b9e1bb5d1b1bc616817103ed858c0b58296ce7",
+   "live_bytes_equal": true
+  },
+  {
+   "path": "pz/batter3d/vendor/addons/utils/SkeletonUtils.js",
+   "bytes": 11535,
+   "sha256": "b1632a703206c3d830de9fcbe515696770d04b71a15ee6b50afa6d2c3298c86f",
+   "live_bytes_equal": true
+  },
+  {
+   "path": "pz/batter3d/vendor/three.core.js",
+   "bytes": 1474799,
+   "sha256": "613e370f76638fdef83926642bf256dc9615684922de1ce1f63a8583e5d78578",
+   "live_bytes_equal": true
+  },
+  {
+   "path": "pz/batter3d/vendor/three.module.js",
+   "bytes": 658900,
+   "sha256": "104f56145899722094556490d787aae0617cc2fc3382f31df02d724ea1aee341",
+   "live_bytes_equal": true
+  },
+  {
+   "path": "pz/pz-batter.js",
+   "bytes": 12007,
+   "sha256": "795c7abd6636ebcdbc5f9848903c373920f7d696d05179c80784693da8400476",
+   "live_bytes_equal": true
+  },
+  {
+   "path": "pz/pz-theme.css",
+   "bytes": 5483,
+   "sha256": "94b79728cfdf2a2df1cedb28319e0e8ca813c69b216a907d225a7939f6fdc463",
+   "live_bytes_equal": true
+  }
+ ],
+ "not_done": [
+  "Song 알림·동의(사용자 결정)",
+  "실기기(iPhone Safari) 확인",
+  "GPT(다른 모델) 코드 검토",
+  "검사기 .glb 허용 목록 갱신"
+ ]
+}

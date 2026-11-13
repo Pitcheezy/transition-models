@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>중계 화면 v1 · v2 나란히 비교 (로컬)</title>
+    <meta name="robots" content="noindex" />
+    <!-- 로컬 비교 페이지(2026-11-09). 같은 출처의 v1(index.html)과 v2(v2.html)를 390×844 틀에 나란히 띄우고, 위 버튼으로 두 화면을 같은 투구로 넘긴다.
+         Song(형)에게 두 시안을 함께 보여 주기 위한 것. 배포 대상 아님. -->
+    <style>
+      :root { color-scheme: dark; --bg: #091811; --panel: #11241b; --ink: #f2f4e9; --muted: #a5b6a8; --line: #304438; --lime: #ceff78; }
+      * { box-sizing: border-box; }
+      body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.5 "Segoe UI", "Malgun Gothic", -apple-system, sans-serif; }
+      header { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; padding: 12px 16px; border-bottom: 1px solid var(--line); background: var(--panel); position: sticky; top: 0; z-index: 2; }
+      h1 { margin: 0; font-size: 16px; font-weight: 800; }
+      .note { color: var(--muted); font-size: 13px; }
+      .btns { display: flex; gap: 6px; margin-left: auto; }
+      button { font: inherit; font-weight: 700; padding: 8px 14px; border-radius: 999px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); cursor: pointer; }
+      button.primary { background: var(--lime); color: #112318; border-color: var(--lime); }
+      main { display: flex; justify-content: center; gap: 28px; padding: 18px 16px 32px; flex-wrap: wrap; }
+      figure { margin: 0; display: grid; gap: 8px; justify-items: center; }
+      figcaption { font-size: 14px; color: var(--muted); }
+      figcaption b { color: var(--ink); }
+      iframe { width: 390px; height: 844px; border: 1px solid var(--line); border-radius: 22px; background: #fff; display: block; }
+      @media (max-width: 860px) { iframe { width: min(390px, 92vw); height: calc(min(390px, 92vw) * 844 / 390); } }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>중계 화면 v1 · v2 비교</h1>
+      <span class="note">v0 = 지금 배포된 Song 앱 화면(여기 없음). 왼쪽 v1 = 우리 디자인(카드·알약 탭), 오른쪽 v2 = v0 틀 그대로 + 3D 타자. 둘 다 같은 자료(849843)·같은 3D 모델.</span>
+      <div class="btns">
+        <button type="button" data-act="prev" aria-label="둘 다 이전 투구">‹ 이전</button>
+        <button type="button" class="primary" data-act="next" aria-label="둘 다 다음 투구">다음 투구 ›</button>
+        <button type="button" data-act="reload">처음으로</button>
+      </div>
+    </header>
+    <main>
+      <figure>
+        <iframe id="f1" src="./index.html?batter3d=batter-ctl&theme=light&v=cmp1" title="v1 중계 화면"></iframe>
+        <figcaption><b>v1</b> · index.html + relay.css (디자인 3차)</figcaption>
+      </figure>
+      <figure>
+        <iframe id="f2" src="./v2.html?batter3d=batter-ctl&v=cmp1" title="v2 중계 화면(Song 틀)"></iframe>
+        <figcaption><b>v2</b> · v2.html + relay-v2.css (Song 틀 + 3D 타자)</figcaption>
+      </figure>
+    </main>
+    <script>
+      (function () {
+        var frames = [document.getElementById("f1"), document.getElementById("f2")];
+        function both(id) { frames.forEach(function (f) { try { var b = f.contentWindow.document.getElementById(id); if (b) b.click(); } catch (e) { /* 아직 로딩 중 */ } }); }
+        document.querySelectorAll("[data-act]").forEach(function (btn) {
+          btn.addEventListener("click", function () {
+            var act = btn.getAttribute("data-act");
+            if (act === "next") both("btn-next");
+            else if (act === "prev") both("btn-prev");
+            else if (act === "reload") frames.forEach(function (f) { f.contentWindow.location.reload(); });
+          });
+        });
+      })();
+    </script>
+  </body>
+</html>
