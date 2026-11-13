@@ -1,0 +1,165 @@
+{
+ "schema": "pitcheezy-exhibit-rollback-v1",
+ "what": "공개 앱 주소(app.pitcheezy.com)를 Song 고정 빌드 c47fe6cb + 접속 코드 ON 버전으로 되돌림",
+ "approval": "사용자 채팅 승인 2026-11-12: \"앱주소의 형의 원래 화면과 접속코드 켠 상태로 되돌리고 되돌렸는지 확인하고 회신을 보내\"",
+ "executed_by": "Claude Fable 5.2 (노트북, 유지된 Wrangler 로그인), wrangler 4.151.0 rollback",
+ "started_utc": "2026-11-12T06:29:34Z",
+ "ended_utc": "2026-11-12T06:29:37Z",
+ "ended_kst": "2026-11-12 15:29:37",
+ "from_version": "e28b0617-2797-4b6b-9015-3247c82a2e2f (V4, 접속 코드 OFF)",
+ "to_version": "5999cf0d-4f18-4d43-bcd6-320e04860369 (2026-11-01T16:13:40Z 생성, 11/2 22:21 KST 공개 앱 주소 연결 때 24/24 인수한 버전)",
+ "to_version_settings_read_before": {
+  "ACCESS_GATE_ENABLED": "true",
+  "DATA_READ_ENABLED": "true",
+  "UPLOAD_ENABLED": "false"
+ },
+ "first_successful_rollback": true,
+ "before": {
+  "screen_title": "Pitcheezy 중계",
+  "screen_bytes": 10322,
+  "data_equal_6": true,
+  "upload_head": 503
+ },
+ "after_deployment_status": "활성 배포 = 5999cf0d 100% (deployments status, 2026-11-12T06:29:37Z 생성)",
+ "after_no_cookie_checks": [
+  {
+   "path": "/",
+   "method": "GET",
+   "status": 401,
+   "bytes": 1016,
+   "access_header": "required",
+   "has_code_form": true,
+   "json_error": null
+  },
+  {
+   "path": "/?game=849843",
+   "method": "GET",
+   "status": 401,
+   "bytes": 1016,
+   "access_header": "required",
+   "has_code_form": true,
+   "json_error": null
+  },
+  {
+   "path": "/index.html",
+   "method": "GET",
+   "status": 401,
+   "bytes": 1016,
+   "access_header": "required",
+   "has_code_form": true,
+   "json_error": null
+  },
+  {
+   "path": "/assets/index-X1sSTTQ4.js",
+   "method": "GET",
+   "status": 401,
+   "bytes": 1016,
+   "access_header": "required",
+   "has_code_form": true,
+   "json_error": null
+  },
+  {
+   "path": "/assets/index-ks_hu7Ji.css",
+   "method": "GET",
+   "status": 401,
+   "bytes": 1016,
+   "access_header": "required",
+   "has_code_form": true,
+   "json_error": null
+  },
+  {
+   "path": "/favicon.svg",
+   "method": "GET",
+   "status": 401,
+   "bytes": 1016,
+   "access_header": "required",
+   "has_code_form": true,
+   "json_error": null
+  },
+  {
+   "path": "/v1/manifest.json",
+   "method": "GET",
+   "status": 401,
+   "bytes": 27,
+   "access_header": "required",
+   "has_code_form": false,
+   "json_error": "access_required"
+  },
+  {
+   "path": "/v1/game/849843.json",
+   "method": "GET",
+   "status": 401,
+   "bytes": 27,
+   "access_header": "required",
+   "has_code_form": false,
+   "json_error": "access_required"
+  },
+  {
+   "path": "/v1/health.json",
+   "method": "GET",
+   "status": 401,
+   "bytes": 27,
+   "access_header": "required",
+   "has_code_form": false,
+   "json_error": "access_required"
+  },
+  {
+   "path": "/v1/game/849845.json",
+   "method": "GET",
+   "status": 401,
+   "bytes": 27,
+   "access_header": "required",
+   "has_code_form": false,
+   "json_error": "access_required"
+  },
+  {
+   "path": "/relay-v4.js",
+   "method": "GET",
+   "status": 401,
+   "bytes": 1016,
+   "access_header": "required",
+   "has_code_form": true,
+   "json_error": null
+  },
+  {
+   "path": "/batter3d/assets/batter-ctl-v4.glb",
+   "method": "HEAD",
+   "status": 401,
+   "bytes": 0,
+   "access_header": "required",
+   "has_code_form": false,
+   "json_error": null
+  },
+  {
+   "path": "/pz/pz-theme.css",
+   "method": "GET",
+   "status": 401,
+   "bytes": 1016,
+   "access_header": "required",
+   "has_code_form": true,
+   "json_error": null
+  },
+  {
+   "path": "/_publish/v1/health.json",
+   "method": "HEAD",
+   "status": 503,
+   "bytes": 0,
+   "access_header": null,
+   "has_code_form": false,
+   "json_error": null
+  }
+ ],
+ "after_checked_utc": "2026-11-12T06:30:00Z",
+ "verified": [
+  "활성 버전이 5999cf0d임",
+  "세션 없는 요청은 화면·자산 경로에서 코드 입력 화면(401, 1016 B), /v1 경로에서 JSON 401 access_required",
+  "업로드 HEAD 503",
+  "V4 파일과 3D 모델 파일 경로도 401(세션 없이 받을 수 없음)"
+ ],
+ "not_verified": [
+  "코드를 넣은 뒤의 화면과 파일 바이트(index.html 659 B, assets 2개, 자료 6개): 이 세션은 접속 코드를 입력하지 않는다. 사용자나 Song이 코드로 열어 확인해야 한다",
+  "Song이 지금 유효한 접속 코드를 갖고 있는지"
+ ],
+ "rollback_of_this": "wrangler rollback e28b0617-2797-4b6b-9015-3247c82a2e2f (V4·코드 OFF) 또는 55087f55-688f-4fd8-a59a-fa45ebeaaaf2 (c47·코드 OFF), 같은 설정 파일. 각각 사용자 승인 필요",
+ "private_logs": "D:/pitcheezy_exhibit_check/rollback-20261112/*.private.log (이름 포함, Git 밖)"
+}

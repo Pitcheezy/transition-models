@@ -1,0 +1,134 @@
+{
+ "schema": "pitcheezy-exhibit-deploy-record-v1",
+ "date_kst": "2026-11-10",
+ "approved_by_user": "11/10 채팅: 'v4로 배포버전 바꾸자'(V4 화면 캡처 첨부)",
+ "operator": "Claude Opus 5.5 (이 세션), Wrangler 4.151.0 고정본(ops/public-host-tooling), 노트북 OAuth 로그인 유지 상태(사용자 조작 없음)",
+ "before": {
+  "version_id": "c222a454-c36d-4406-b411-1f7f06b0d5dc",
+  "public": "V3 = Song c47fe6cb 정적 + pz 테마 + 3D(batter-ctl)",
+  "access_gate": false
+ },
+ "steps": [
+  {
+   "label": "C V4 화면",
+   "started_utc": "2026-11-10T09:24:26Z",
+   "ended_utc": "2026-11-10T09:24:38Z",
+   "version_id": "e28b0617-2797-4b6b-9015-3247c82a2e2f",
+   "config_sha256": "d85b69978d9aec5f66f26bc080be1c381ff25e22b6260d284f67fdc2ec04bd29",
+   "release_manifest_sha256": "2469e189dc8184eade7b835d2aedc32d3b13e21dc7afab66664de8f738c5c140",
+   "change": "public = relay V4 13파일(index.html은 v4.html에서 제목·설명·숨긴 뒤로 자리만 바꿈; relay-v4.js는 자료 주소 ./data/849843.json → ./v1/game/849843.json 한 곳만; 그 밖은 원본 바이트) + collection-settings.json(V3와 같음). host·설정·비밀 변경 0(host/ 12파일·설정 SHA가 V3 후보와 같음). 빌드 relay/tools/build-public-v4.mjs.",
+   "verify": "공개 13파일 라이브 바이트 일치(12/12 + index.html은 / 와 /?game=849843 본문으로 일치), /v1/manifest.json·/v1/game/849843.json 200(자료 056fcf13, V4가 이 경로를 읽음), 업로드 HEAD 503, 접속 코드 헤더 없음; 브라우저(앱 안 Chromium 375×812) 실주소 /?game=849843: 262구 선택, 3D batter-ctl-v4 붙음, 26구 '실책 출루', 요청 12개 전부 200, 콘솔 오류 0"
+  }
+ ],
+ "precheck": {
+  "workflow": "같은 모델 Workflow 9 에이전트(실행·꾸러미·로컬 Worker 3영역 + 지적별 반박 검증) — GPT(다른 모델) 검토 대체 아님",
+  "result": "검사 항목 전부 통과(262구×시트 전부 텍스트·읽기 이름이 개발 화면과 같음 — 제목·뒤로만 다름, 375/320/812 콘솔 0, 로컬 Worker(wrangler dev --local, 계정 접촉 없음)로 / 와 /?game=849843 = V4).",
+  "findings_applied": [
+   "자료를 정적 사본으로 두면 호스트 자료 스위치(DATA_READ_ENABLED·삭제 표시)가 화면에 안 먹음 → 공개본은 /v1/game/849843.json을 읽도록 바꿔 배포(로컬 v1 모형 서버로 확인: 262구·3D·콘솔 0, 자료 없으면 '불러오지 못했어요' 화면)",
+   "빌드 도구가 검사 전에 public/을 지우고 경로 보호가 약함 → 임시 폴더에 만들고 검사 뒤 교체, git 작업 트리 안 거부, 조립된 후보는 --replace일 때만"
+  ],
+  "findings_open": [
+   "깊은 경로(/foo/bar)에서는 상대 주소라 화면이 깨짐 — V3와 같고 방문객 링크는 / 와 /?game= 뿐(선택: <base href='/'>)",
+   "/v1 자료는 no-transform이라 압축 없이 727 kB(V3도 같음); 느린 망에서 3D 내려받기와 겹침(선택: 자료 먼저 받기)",
+   "V4 원본 파일이 미커밋(커밋은 사용자 결정) — 배포한 원본 사본은 D:/pitcheezy_exhibit_check/v4-deploy-20261110/source/"
+  ]
+ },
+ "checker": "scripts/check_public_host_config.py(check_release_config): ok. 이번 실행에서만 두 가지 허용(저장소 코드 변경 없음) — 공개 확장자 .glb, 프런트엔드 선언 Pitcheezy/transition-models(검사기는 SongRoute/pitcheezy 빌드만 받음). 허용 목록 갱신은 별도 단위(다른 모델 검토 필요).",
+ "rollback": {
+  "to_V3": "node ops/public-host-tooling/node_modules/wrangler/bin/wrangler.js rollback c222a454-c36d-4406-b411-1f7f06b0d5dc --config <C-v4 후보>/host/wrangler.deploy.json --message \"back to V3\"",
+  "to_gate_off_song_screen": "… rollback 55087f55-688f-4fd8-a59a-fa45ebeaaaf2 (같은 --config)"
+ },
+ "notes": [
+  "자료 스위치: V4도 /v1을 읽으므로 DATA_READ_ENABLED=false·삭제 표시·안내(notice) 스위치가 V3 때처럼 화면에 적용된다.",
+  "뒤로(←): 공개 경기가 하나라 갈 곳이 없어 자리만 남기고 숨김(보이지 않고, 포커스·읽기 대상 아님).",
+  "robots noindex: V4 index.html에 있음(V3에는 없었음) — 검색 노출 안 됨."
+ ],
+ "public_files": [
+  {
+   "path": "batter3d/assets/batter-ctl-v4.glb",
+   "bytes": 3450628,
+   "sha256": "90762a42b8f8042dd98e09bc6db99c33b4988e86f36fd3255b01521c0b8cdff5",
+   "live_bytes_equal": true
+  },
+  {
+   "path": "batter3d/assets/batter-ctl-v4.meta.json",
+   "bytes": 15234,
+   "sha256": "0d604cd390783c358058761b64eaa7dabe267f3412a4761e08e08125b4cbad02",
+   "live_bytes_equal": true
+  },
+  {
+   "path": "batter3d/batter3d.js",
+   "bytes": 36440,
+   "sha256": "66a3664c954e9ba33e449b7868300642fa1853e9c29b1a88284e102f3e8b75d0",
+   "live_bytes_equal": true
+  },
+  {
+   "path": "batter3d/vendor/addons/loaders/GLTFLoader.js",
+   "bytes": 119861,
+   "sha256": "532ac726e120039acbcd6cf54328c57acbf7b438176afaa6951257126d11bff1",
+   "live_bytes_equal": true
+  },
+  {
+   "path": "batter3d/vendor/addons/utils/BufferGeometryUtils.js",
+   "bytes": 39153,
+   "sha256": "7bda2a8ba836b2bcf67cb938d4b9e1bb5d1b1bc616817103ed858c0b58296ce7",
+   "live_bytes_equal": true
+  },
+  {
+   "path": "batter3d/vendor/addons/utils/SkeletonUtils.js",
+   "bytes": 11535,
+   "sha256": "b1632a703206c3d830de9fcbe515696770d04b71a15ee6b50afa6d2c3298c86f",
+   "live_bytes_equal": true
+  },
+  {
+   "path": "batter3d/vendor/three.core.js",
+   "bytes": 1474799,
+   "sha256": "613e370f76638fdef83926642bf256dc9615684922de1ce1f63a8583e5d78578",
+   "live_bytes_equal": true
+  },
+  {
+   "path": "batter3d/vendor/three.module.js",
+   "bytes": 658900,
+   "sha256": "104f56145899722094556490d787aae0617cc2fc3382f31df02d724ea1aee341",
+   "live_bytes_equal": true
+  },
+  {
+   "path": "batter3d-host.js",
+   "bytes": 13414,
+   "sha256": "58e8fd62d33ecf3448ea213d46dba4dff7715975f7ba48ce04744d5f67d4d334",
+   "live_bytes_equal": true
+  },
+  {
+   "path": "collection-settings.json",
+   "bytes": 103,
+   "sha256": "6f465da3ec857aa7e8dfd538c9132ef8aa76c1c4bff850ba3d67356246567fc3",
+   "live_bytes_equal": true
+  },
+  {
+   "path": "index.html",
+   "bytes": 10322,
+   "sha256": "7a6721bada8526a111a41e9b238e51eec7816523a5442db4055c50c444f69bfd",
+   "live_bytes_equal": true
+  },
+  {
+   "path": "relay-v4.css",
+   "bytes": 38019,
+   "sha256": "8317912e44e9bcea8fa28d93f88c2fc9fdbafde7188080c431ff35fc5ed727fc",
+   "live_bytes_equal": true
+  },
+  {
+   "path": "relay-v4.js",
+   "bytes": 114979,
+   "sha256": "02996574d7c05b06f732d2a799a8cdd7ed9b52ef3c723eb08320d0e034754343",
+   "live_bytes_equal": true
+  }
+ ],
+ "not_done": [
+  "Song 알림(사용자)",
+  "실기기(iPhone Safari) 확인",
+  "GPT(다른 모델) 코드 검토",
+  "3D 모델 관련 확인(비공개 기록)",
+  "V4 원본 커밋(사용자 결정)",
+  "검사기 .glb·프런트엔드 선언 허용 갱신"
+ ]
+}
