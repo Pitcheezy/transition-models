@@ -1,0 +1,450 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Mixamo FBX 검사와 glb 변환</title>
+    <meta name="robots" content="noindex" />
+    <!-- 개발 도구. Mixamo FBX(With Skin) 4개를 로컬 자산 서버(127.0.0.1:8794)에서 읽어 검사하고,
+         캐릭터 1개 + 클립(idle, contact, contact_hit, contact_hit1, contact_hit2, miss)을 glb 하나로 묶어 build/<출력 이름>.glb 와 .meta.json 으로 저장한다.
+         외부 네트워크 요청 없음. 호스트(relay) 코드와 무관.
+         단위 2(11/8): 출력 이름 지정(기본 batter-indexed, 기존 batter.glb는 덮어쓰지 않음), 모든 속성이 비트 단위로 같은 정점만 합치는 인덱스화,
+         저장 응답 실패 시 즉시 중단, 저장 뒤 다시 읽어 SHA-256 대조. 삼각형 감축·압축은 하지 않는다.
+         단위 4(11/9): '캐릭터 종류' 선택. ctl = 외부 구매 타자 모델(산출물은 Git에 넣지 않음):
+         ANIM_*.fbx 4개(각각 스킨 메시+뼈 68+클립 1, 30 fps) + SM_A-Pose_with_baseball.fbx(배트 메시의 출처). 뼈 이름을 모듈 규약(Hips, LeftHand …)으로 바꾸고,
+         TGA 텍스처는 미리 만든 PNG로 돌려 읽고, Phong 재질을 Standard(PBR)로 바꾸며, 전부 1.0인 정점 색을 지우고, 실제 배트 메시를 손 뼈 아래 'Bat' 노드로 이식한다(모듈 원통 배트 끔).
+         meta.play(연출 기준 시점·재생 끝)를 넣어 호스트 어댑터가 모델별 구간을 읽는다. -->
+    <style>
+      :root { color-scheme: light; font-family: "Malgun Gothic", "Segoe UI", system-ui, sans-serif; }
+      body { margin: 0; padding: 12px 16px; background: #f4f7ef; color: #0f2217; }
+      h1 { font-size: 16px; margin: 0 0 8px; }
+      button { font: inherit; padding: 6px 12px; margin: 0 6px 6px 0; border: 1px solid #4f6457; border-radius: 8px; background: #e8eee0; color: #0f2217; }
+      button:disabled { opacity: .5; }
+      label { font-size: 13px; margin-right: 10px; }
+      input[type=text] { font: inherit; font-size: 13px; padding: 2px 6px; }
+      pre { font-size: 12px; line-height: 1.45; white-space: pre-wrap; background: #e8eee0; border-radius: 8px; padding: 10px; max-height: 60vh; overflow: auto; }
+      canvas { display: block; width: 320px; height: 320px; background: #dfe8d6; border-radius: 8px; }
+      .row { display: flex; gap: 16px; align-items: flex-start; flex-wrap: wrap; }
+    </style>
+    <script type="importmap">
+      { "imports": { "three": "../vendor/three.module.js", "three/addons/": "../vendor/addons/" } }
+    </script>
+  </head>
+  <body>
+    <h1>Mixamo FBX 검사와 glb 변환 (로컬 도구)</h1>
+    <div>
+      <label>캐릭터 종류 <select id="profile"><option value="mixamo" selected>Mixamo 마네킹/캐릭터(파일 4개)</option><option value="ctl">외부 구매 타자 모델(파일 5개)</option></select></label>
+      <label>자산 서버 <input id="base" type="text" value="http://127.0.0.1:8794" size="26" /></label>
+      <label>입력 폴더 <input id="srcDir" type="text" value="mixamo" size="18" pattern="[A-Za-z0-9_\-\/]+" /> (자산 서버 아래, 예: mixamo/remy — 캐릭터별 하위 폴더에 같은 4개 파일 이름으로 둔다)</label>
+      <label id="contactPickWrap">접촉 스윙으로 쓸 파일
+        <select id="contactPick"><option value="Baseball_Hit">Baseball_Hit</option><option value="Baseball_Hit_1">Baseball_Hit_1</option><option value="Baseball_Hit_2">Baseball_Hit_2</option></select>
+      </label>
+    </div>
+    <div>
+      <label>출력 이름 <input id="outName" type="text" value="batter-indexed" size="18" pattern="[A-Za-z0-9_\-]+" /> (build/이름.glb, 이름.meta.json)</label>
+      <label><input id="doIndex" type="checkbox" checked /> 인덱스화(POSITION·NORMAL·TEXCOORD·JOINTS·WEIGHTS 전부 같은 정점만 합침)</label>
+      <label><input id="allowOverwrite" type="checkbox" /> 기존 파일 덮어쓰기 허용(기본 꺼짐: 기존 결과물 보존)</label>
+    </div>
+    <div>
+      <label>텍스처 최대 변 <select id="texMax"><option value="0">원본 그대로</option><option value="1024" selected>1024 px</option><option value="512">512 px</option></select></label>
+      <label>텍스처 형식 <select id="texMime"><option value="image/png">PNG(무손실, 큼)</option><option value="image/webp" selected>WebP(EXT_texture_webp, 작음)</option><option value="image/jpeg">JPEG(알파 없음)</option></select></label>
+      (사람형 캐릭터처럼 텍스처가 있는 FBX에만 영향. 마네킹(텍스처 0)은 무관)
+    </div>
+    <div>
+      <button id="inspect" type="button">1. 검사(입력 폴더의 파일 4개 읽기)</button>
+      <button id="build" type="button" disabled>2. glb 만들고 저장 → 다시 읽어 SHA 대조</button>
+      <button id="verify" type="button" disabled>3. 저장한 glb 다시 읽어 확인</button>
+    </div>
+    <div class="row">
+      <canvas id="view" width="640" height="640"></canvas>
+      <pre id="log">대기 중</pre>
+    </div>
+    <script type="module">
+      import * as THREE from "three";
+      import { FBXLoader } from "three/addons/loaders/FBXLoader.js";
+      import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+      import { GLTFExporter } from "three/addons/exporters/GLTFExporter.js";
+      import * as BufferGeometryUtils from "three/addons/utils/BufferGeometryUtils.js";
+
+      const FILES = ["Baseball_Hit", "Baseball_Hit_1", "Baseball_Hit_2", "Baseball_Strike"];
+      const $ = (id) => document.getElementById(id);
+      const SHA = { // 2026-11-08 sha256sum 출력(D:\pitcheezy_assets\mixamo)
+        Baseball_Hit: "f395f753a1aae3f96d7101702c1c41d79d9b3ee0c4717898ee6320a4038c197b",
+        Baseball_Hit_1: "f33d2ff20816ca17f573db006e1e365cc31bd17f169a492ccce5c83e0ba229eb",
+        Baseball_Hit_2: "6e16c8a2cbd5ef05191a3cf3226f72e8d79399fd1bfb95801b7650da76771f79",
+        Baseball_Strike: "f6e1d54f8c46bc9c5b2957f8c6a81f58aa5a2ee59e6ead578faf8392cbb80420",
+      };
+      const PROFILES = {
+        mixamo: { files: FILES, required: ["Baseball_Hit", "Baseball_Strike"], charFile: "Baseball_Hit", srcDir: "mixamo", outName: "batter-indexed",
+          license: "Adobe Mixamo FAQ: royalty free for personal, commercial, and non-profit projects (2026-11-08 확인). 원본 단독 재배포 금지로 취급" },
+        ctl: { files: ["ANIM_Hit_Ball", "ANIM_Missing_Ball", "ANIM_Idle", "ANIM_Prepare_To_Batting", "SM_A-Pose_with_baseball"], required: ["ANIM_Hit_Ball", "ANIM_Missing_Ball", "ANIM_Idle", "SM_A-Pose_with_baseball"],
+          charFile: "ANIM_Hit_Ball", srcDir: "unity/ctl", outName: "batter-ctl",
+          clipMap: { ANIM_Hit_Ball: "contact", ANIM_Missing_Ball: "miss", ANIM_Idle: "idle", ANIM_Prepare_To_Batting: "prepare" },
+          // 모듈(batter3d.js)이 이름 끝으로 찾는 역할 뼈. 나머지 뼈 이름은 그대로 둔다(spine_03·neck_01은 원본부터 같은 이름이 둘씩 있음 → 트랙은 첫 번째에만 묶인다, README 참고)
+          boneMap: { Pelvis: "Hips", head: "Head", Hand_L: "LeftHand", Hand_R: "RightHand", index_01_l: "LeftHandIndex1", pinky_01_l: "LeftHandPinky1", index_01_r: "RightHandIndex1", pinky_01_r: "RightHandPinky1", Foot_L: "LeftFoot", Foot_R: "RightFoot", ball_l: "LeftToeBase", ball_r: "RightToeBase" },
+          bat: { from: "SM_A-Pose_with_baseball", mesh: "Baseball_Bat", bone: "Dummy_Baseball_Bat" },
+          // 호스트 재생 끝(초). contact: 원본 2.1667 s 중 1.9 s부터 1루로 달리며 왼발이 들려(11/9 Node·데모 21표본 측정) 두 발이 땅에 있는 팔로스루 끝 1.85 s에서 멈춘다. miss: 원본 끝(타격 자세로 복귀)
+          playEnd: { contact: 1.85, take: 2.6, hit: 2.9 }, playCue: { take: 0.3, hit: 1.443958 }, // hit 1.443958 = 데모 배트 끝 속도 최대(k 0.497917, 240표본 구간 중점) 측정값 — 생성값 = 배포값(임시값 1.7은 검토 2차 지적으로 교체)
+          // 안 치는 공(볼·스트라이크·블록) 반응 'take'(2026-11-09): Mixamo 'Baseball Step Out'(Without Skin)을 tools/retarget-mixamo.mjs로 이 뼈대에 옮긴 클립(JSON, 대상 원래 뼈 이름). Node 측정: 0.5~1.0 s 배트 내림, 1.25~2.0 s 왼발이 타석 밖(+x 65 cm)으로, 2.5 s부터 서서 쉼 → 호스트 재생 0.3~2.6 s
+          // 안타·홈런 타격 'hit'(2026-11-09): Mixamo 'Baseball Hit'(변형 5, Without Skin, 2.9 s)을 같은 도구로 옮긴 클립. 타격 뒤 1루 쪽(-x = 틀의 존 쪽)으로 달려 나간다(Node 측정: 골반 2.0 s -27 cm, 2.5 s -45 cm, 2.9 s -134 cm). playCue.hit는 데모 배트 끝 속도 측정값(assets 메타와 같은 값; 다시 빌드해도 같은 cue)
+          extraClips: [{ file: "take.clip.json", name: "take", retargeted: "Mixamo Baseball_Step_Out.fbx(Without Skin)" }, { file: "hit.clip.json", name: "hit", retargeted: "Mixamo Baseball_Hit_5.fbx(Without Skin)" }],
+          tga2png: true, standardMaterials: true, dropVertexColors: true, optimizeTracks: true, mergeGroups: true,
+          license: "외부 구매 모델(사용 조건은 비공개 기록). 원본·변환본은 Git에 넣지 않는다" },
+      };
+      const prof = () => PROFILES[$("profile").value] || PROFILES.mixamo;
+      const TEX_SLOTS = ["map", "normalMap", "roughnessMap", "metalnessMap", "specularMap", "emissiveMap", "alphaMap", "aoMap", "bumpMap"];
+      const logEl = $("log"); const lines = [];
+      const log = (s) => { lines.push(s); logEl.textContent = lines.join("\n"); console.log(s); };
+      const fmt = (v, d = 3) => (typeof v === "number" ? v.toFixed(d) : String(v));
+      const MB = (n) => (n / 1048576).toFixed(3) + " MB";
+      async function sha256(buf) { const h = await crypto.subtle.digest("SHA-256", buf); return [...new Uint8Array(h)].map((b) => b.toString(16).padStart(2, "0")).join(""); }
+
+      // 작은 미리보기(검사 확인용)
+      const canvas = $("view");
+      const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true }); renderer.setPixelRatio(Math.min(2, devicePixelRatio));
+      const scene = new THREE.Scene();
+      scene.add(new THREE.HemisphereLight(0xffffff, 0x667766, 1.2));
+      const dir = new THREE.DirectionalLight(0xffffff, 1.6); dir.position.set(2, 4, 3); scene.add(dir);
+      const camera = new THREE.PerspectiveCamera(30, 1, 0.01, 100);
+      let preview = null, previewMixer = null, previewAction = null, lastT = performance.now();
+      function frame(now) { const dt = (now - lastT) / 1000; lastT = now; if (previewMixer) previewMixer.update(dt); renderer.render(scene, camera); requestAnimationFrame(frame); }
+      requestAnimationFrame(frame);
+
+      const loaded = {}; // name -> { group, clip, meshes, bones, bbox }
+      let character = null, meta = null, lastBuild = null;
+      const origGeo = new Map(); // mesh → 원본(인덱스 없는) geometry. userData가 아니라 Map에 둔다(아래 설명)
+
+      function describe(group) {
+        const meshes = [], bones = [];
+        group.traverse((o) => { if (o.isSkinnedMesh || o.isMesh) meshes.push(o); if (o.isBone) bones.push(o); });
+        const tri = meshes.reduce((n, m) => { const g = m.geometry; return n + (g.index ? g.index.count : g.attributes.position.count) / 3; }, 0);
+        const verts = meshes.reduce((n, m) => n + m.geometry.attributes.position.count, 0);
+        const box = new THREE.Box3().setFromObject(group); const size = new THREE.Vector3(); box.getSize(size);
+        return { meshes, bones, tri, verts, box, size };
+      }
+      function longestClip(clips) { return clips.reduce((a, b) => (!a || b.duration > a.duration ? b : a), null); }
+
+      /** 손 중점(골반 기준) 속도가 최대인 시각 = 연출 기준 시점 추정(실제 공 접촉 아님). 데모의 배트 끝 속도 기준 추정이 이 값을 덮어쓴다.
+       *  속도는 두 표본 사이 구간값이므로 시각은 구간 중점으로 둔다. contactTime과 contactFrac은 같은 시각·같은 클립 길이에서 나온다 */
+      function handSpeedCue(group, clip) {
+        const mixer = new THREE.AnimationMixer(group); const act = mixer.clipAction(clip); act.setLoop(THREE.LoopOnce, 1); act.clampWhenFinished = true; act.play(); // 반복 재생이면 끝에서 0으로 되감겨 속도가 튄다
+        // FBXLoader는 노드 이름에서 콜론을 지운다(mixamorig:RightHand → mixamorigRightHand). 끝 글자로 찾는다
+        const find = (suffix) => { let hit = null; group.traverse((o) => { if (!hit && o.isBone && o.name.endsWith(suffix)) hit = o; }); return hit; };
+        const lh = find("LeftHand"), rh = find("RightHand"), hips = find("Hips");
+        if (!lh || !rh || !hips) return { contactTime: null, contactFrac: null, note: "손/골반 뼈 없음" };
+        const step = 1 / 120, N = Math.floor((clip.duration - 1e-3) / step), p = new THREE.Vector3(), q = new THREE.Vector3(), h = new THREE.Vector3();
+        let prev = null, best = { speed: -1, t: 0 }, samples = 0;
+        for (let i = 0; i <= N; i++) {
+          const t = i * step; act.time = t; mixer.update(0); group.updateMatrixWorld(true);
+          lh.getWorldPosition(p); rh.getWorldPosition(q); p.add(q).multiplyScalar(0.5); hips.getWorldPosition(h); p.sub(h); // 골반 기준 상대 위치(이동 제거)
+          if (prev) { const s = p.distanceTo(prev) / step; samples++; if (s > best.speed) best = { speed: s, t: t - step / 2 }; }
+          prev = p.clone();
+        }
+        mixer.stopAllAction(); mixer.uncacheClip(clip); mixer.setTime(0);
+        return { contactTime: best.t, contactFrac: best.t / clip.duration, peakSpeed: best.speed, samples, contactBy: "handSpeed" };
+      }
+
+      /** 모든 속성(위치·법선·UV·관절·가중치 …)이 비트 단위로 같은 정점만 하나로 합쳐 인덱스를 만든다. 허용 오차 없음, 삼각형 수 불변 */
+      function indexExact(geometry) {
+        if (geometry.index) return { geometry, before: geometry.attributes.position.count, after: geometry.attributes.position.count, note: "이미 인덱스 있음" };
+        if (Object.keys(geometry.morphAttributes || {}).length) return { geometry, note: "morph 속성 있어 건너뜀" };
+        const names = Object.keys(geometry.attributes), attrs = names.map((n) => geometry.attributes[n]);
+        const count = attrs[0].count;
+        const views = attrs.map((a) => { const arr = a.array; return arr instanceof Float32Array ? new Uint32Array(arr.buffer, arr.byteOffset, arr.length) : arr; });
+        const map = new Map(), remap = new Uint32Array(count), srcIndex = []; let next = 0;
+        for (let i = 0; i < count; i++) {
+          let key = "";
+          for (let a = 0; a < attrs.length; a++) { const sz = attrs[a].itemSize, v = views[a], base = i * sz; for (let c = 0; c < sz; c++) key += v[base + c] + ","; key += "|"; }
+          let j = map.get(key); if (j === undefined) { j = next++; map.set(key, j); srcIndex.push(i); } remap[i] = j;
+        }
+        const g = new THREE.BufferGeometry();
+        for (let a = 0; a < attrs.length; a++) {
+          const src = attrs[a], sz = src.itemSize, Arr = src.array.constructor, out = new Arr(next * sz);
+          for (let j = 0; j < next; j++) { const i = srcIndex[j]; for (let c = 0; c < sz; c++) out[j * sz + c] = src.array[i * sz + c]; }
+          g.setAttribute(names[a], new THREE.BufferAttribute(out, sz, src.normalized));
+        }
+        const indexType = next > 65535 ? "Uint32" : "Uint16";
+        g.setIndex(new THREE.BufferAttribute(indexType === "Uint16" ? new Uint16Array(remap) : remap, 1));
+        g.groups = geometry.groups.map((x) => ({ ...x })); g.name = geometry.name;
+        return { geometry: g, before: count, after: next, indexType, attributes: names };
+      }
+      /** 인덱스화 결과 검증: 인덱스를 풀어 원본과 삼각형별로 비트 단위 비교 */
+      function verifyIndexed(orig, idx) {
+        const names = Object.keys(orig.attributes); const n = orig.attributes.position.count; if (idx.index.count !== n) return `정점 참조 수 다름 ${idx.index.count} vs ${n}`;
+        for (const name of names) {
+          const a = orig.attributes[name], b = idx.attributes[name]; if (!b || a.itemSize !== b.itemSize) return `${name} 속성 없음/크기 다름`;
+          const av = a.array instanceof Float32Array ? new Uint32Array(a.array.buffer, a.array.byteOffset, a.array.length) : a.array;
+          const bv = b.array instanceof Float32Array ? new Uint32Array(b.array.buffer, b.array.byteOffset, b.array.length) : b.array;
+          for (let i = 0; i < n; i++) { const j = idx.index.getX(i); for (let c = 0; c < a.itemSize; c++) if (av[i * a.itemSize + c] !== bv[j * a.itemSize + c]) return `${name} 정점 ${i} 성분 ${c} 불일치`; }
+        }
+        return "일치";
+      }
+
+      const fileSha = {}; // name → 이번에 읽은 FBX의 SHA-256(입력 폴더가 바뀌어도 메타에 실제 값이 들어가게; 위 SHA 상수는 기존 마네킹 파일의 기록값)
+      let srcDirUsed = "mixamo";
+      /** 재질의 텍스처 목록(검사 로그·메타용): 종류, 크기, 출처(embedded blob/data 또는 외부 URL) */
+      function textureList(meshes) {
+        const out = []; const seen = new Set();
+        meshes.forEach((m) => (Array.isArray(m.material) ? m.material : [m.material]).forEach((mm) => { for (const k of ["map", "normalMap", "roughnessMap", "metalnessMap", "specularMap", "emissiveMap", "alphaMap", "aoMap", "bumpMap"]) { const t = mm[k]; if (!t || seen.has(t)) continue; seen.add(t); const img = t.image; const src = img && img.src ? (img.src.startsWith("blob:") ? "embedded(blob)" : img.src.startsWith("data:") ? "embedded(data)" : img.src.split("/").pop()) : "no-image"; out.push({ material: mm.name, slot: k, width: img ? img.width || img.naturalWidth || 0 : 0, height: img ? img.height || img.naturalHeight || 0 : 0, source: src, transparent: !!mm.transparent, alphaTest: mm.alphaTest || 0 }); } }));
+        return out;
+      }
+      async function inspect() {
+        lines.length = 0; $("build").disabled = true; $("verify").disabled = true;
+        const base = $("base").value.replace(/\/$/, "");
+        const srcDir = $("srcDir").value.trim().replace(/^\/+|\/+$/g, ""); if (!/^[A-Za-z0-9_\-/]+$/.test(srcDir)) { log("입력 폴더는 영문·숫자·_·-·/ 만"); return; }
+        srcDirUsed = srcDir;
+        const P = prof();
+        const manager = new THREE.LoadingManager();
+        if (P.tga2png) manager.setURLModifier((u) => u.replace(/\.tga(\?.*)?$/i, ".png")); // FBX가 가리키는 .tga를 같은 이름의 .png(미리 변환해 둔 사본)로
+        const loader = new FBXLoader(manager);
+        for (const name of P.files) {
+          const url = `${base}/${srcDir}/${name}.fbx`;
+          const t0 = performance.now();
+          let group;
+          try {
+            const r = await fetch(url, { cache: "no-store" }); if (!r.ok) throw new Error(`HTTP ${r.status}`);
+            const buf = await r.arrayBuffer(); fileSha[name] = await sha256(buf);
+            group = loader.parse(buf, `${base}/${srcDir}/`); // 두 번째 인자: 외부 텍스처 파일이 있을 때의 기준 경로(내장 텍스처는 blob으로 바로 만들어짐)
+          } catch (e) { log(`${name}: 읽기 실패 ${e && e.message ? e.message : e}`); continue; }
+          if (P.boneMap) { const r = renameBones(group, P.boneMap); log(`${name}: 뼈 이름 ${r.length}개를 모듈 규약으로 (${r.join(" ")})`); }
+          log(`${name}: SHA-256 ${fileSha[name].slice(0, 16)}… ${SHA[name] ? (SHA[name] === fileSha[name] ? "(기존 마네킹 파일과 동일)" : "(기존 기록과 다른 파일 = 새 캐릭터/클립)") : ""}`);
+          const d = describe(group), clip = longestClip(group.animations || []);
+          const fps = clip ? Math.round(1 / Math.min(...clip.tracks.filter((tr) => tr.times.length > 1).map((tr) => tr.times[1] - tr.times[0]).filter((x) => x > 0))) : null;
+          const cue = clip ? handSpeedCue(group, clip) : null;
+          loaded[name] = { group, clip, ...d, fps, cue };
+          log(`${name}: ${fmt((performance.now() - t0) / 1000, 2)}s 읽음 | 메시 ${d.meshes.length}(${d.meshes.map((m) => m.name + (m.isSkinnedMesh ? ":skin" : "") + (m.geometry.index ? ":indexed" : ":non-indexed")).join(", ")}) 삼각형 ${Math.round(d.tri)} 정점 ${d.verts} | 뼈 ${d.bones.length} | 크기 ${fmt(d.size.x, 1)}×${fmt(d.size.y, 1)}×${fmt(d.size.z, 1)} 단위(바닥 y ${fmt(d.box.min.y, 1)}) | 루트 scale ${fmt(group.scale.y, 3)}`);
+          log(`   클립 ${group.animations.length}개: ${group.animations.map((c) => `${c.name} ${fmt(c.duration, 2)}s/${c.tracks.length}트랙`).join("; ")} | 추정 fps ${fps}`);
+          if (cue) log(`   연출 기준 시점 추정(손 속도 최대, 실제 접촉 아님): t=${fmt(cue.contactTime, 3)}s, 진행률 ${fmt(cue.contactFrac, 3)} (속도 ${fmt(cue.peakSpeed, 1)} 단위/s, 표본 ${cue.samples})`);
+          const mats = new Set(); d.meshes.forEach((m) => (Array.isArray(m.material) ? m.material : [m.material]).forEach((mm) => mats.add(`${mm.name}:${mm.type}${mm.map ? "+map" : ""}`)));
+          log(`   재질: ${[...mats].join(", ")} | 속성: ${d.meshes.map((m) => Object.entries(m.geometry.attributes).map(([k, a]) => `${k}×${a.itemSize}:${a.array.constructor.name}`).join(" ")).join(" / ")}`);
+          const tex = textureList(d.meshes);
+          log(`   텍스처 ${tex.length}개${tex.length ? ": " + tex.map((t) => `${t.material}.${t.slot} ${t.width}×${t.height} ${t.source}${t.transparent ? " transparent" : ""}${t.alphaTest ? " alphaTest " + t.alphaTest : ""}`).join("; ") : "(마네킹형)"}`);
+        }
+        for (const x of P.extraClips || []) { // 미리 옮겨 둔 클립(JSON, three.js AnimationClip.toJSON). 트랙 이름은 대상 원래 뼈 이름 → boneMap으로 모듈 규약으로
+          const url = `${base}/${srcDir}/${x.file}`;
+          try {
+            const r = await fetch(url, { cache: "no-store" }); if (!r.ok) throw new Error(`HTTP ${r.status}`);
+            const buf = await r.arrayBuffer(); fileSha[x.file] = await sha256(buf);
+            const clip = THREE.AnimationClip.parse(JSON.parse(new TextDecoder().decode(buf)));
+            if (P.boneMap) for (const t of clip.tracks) { const i = t.name.indexOf("."); if (i < 0) continue; const node = t.name.slice(0, i); if (P.boneMap[node]) t.name = P.boneMap[node] + t.name.slice(i); }
+            loaded[x.name] = { clip, extra: x, fps: 30, cue: null };
+            log(`${x.file}: SHA-256 ${fileSha[x.file].slice(0, 16)}… 클립 ${clip.name} ${fmt(clip.duration, 2)}s/${clip.tracks.length}트랙 → '${x.name}'`);
+          } catch (e) { log(`${x.file}: 읽기 실패 ${e && e.message ? e.message : e} (이 클립 없이 진행)`); }
+        }
+        const first = loaded[P.files[0]];
+        if (first) {
+          if (preview) scene.remove(preview);
+          preview = first.group; scene.add(preview);
+          const c = new THREE.Vector3(); first.box.getCenter(c); const h = first.size.y;
+          camera.position.set(c.x + h * 1.2, c.y + h * 0.3, c.z + h * 2.2); camera.lookAt(c); camera.near = h * 0.01; camera.far = h * 20; camera.updateProjectionMatrix();
+          previewMixer = new THREE.AnimationMixer(preview); previewAction = previewMixer.clipAction(first.clip); previewAction.play();
+          log(`미리보기: ${P.files[0]} 재생 중`);
+        }
+        $("build").disabled = !P.required.every((n) => loaded[n]);
+      }
+
+      function stripAnimations(group) { group.animations = []; return group; }
+      function renamedClip(clip, name) { const c = clip.clone(); c.name = name; return c; }
+      /** 뼈 이름을 모듈 규약(Mixamo식 역할 이름)으로 바꾼다: 뼈 노드와 애니메이션 트랙 이름 둘 다 */
+      function renameBones(group, map) {
+        const done = [];
+        group.traverse((o) => { if (o.isBone && map[o.name]) { done.push(`${o.name}→${map[o.name]}`); o.name = map[o.name]; } });
+        for (const clip of group.animations || []) for (const t of clip.tracks) { const i = t.name.indexOf("."); if (i < 0) continue; const node = t.name.slice(0, i); if (map[node]) t.name = map[node] + t.name.slice(i); }
+        return done;
+      }
+      const ROUGH = { M_Skin: 0.7, M_Clothes: 0.85, M_Eyes: 0.25, M_Corneas: 0.05, M_Helmet: 0.35, M_Baseball_Bat: 0.55 };
+      /** FBX Phong → glTF PBR(Standard). 색은 흰색(텍스처 밝기 그대로), 금속성 0, 거칠기는 재질 이름별 표(추정값). 투명(각막 opacity 0.1)은 유지 */
+      function toStandard(m) {
+        if (!m || m.isMeshStandardMaterial) return m;
+        const s = new THREE.MeshStandardMaterial({ name: m.name, color: 0xffffff, map: m.map || null, normalMap: m.normalMap || null, metalness: 0, roughness: ROUGH[m.name] ?? 0.7, transparent: !!m.transparent, opacity: m.opacity, side: m.side });
+        if (m.normalMap && m.normalScale) s.normalScale.copy(m.normalScale);
+        return s;
+      }
+      /** 실제 배트 이식: 출처(A-pose) 파일의 배트 스킨 메시(가중치 1, 더미 뼈 하나)를 더미 뼈 로컬 공간으로 굽고, 캐릭터의 같은 손 뼈 아래 'Bat' 노드(더미의 로컬 변환 그대로)로 단다.
+       *  스킨 식(현재 자세): 메시로컬 = bindInv · (더미W · boneInverse) · bind · 정점 → 월드 = 메시W · 그것 → 더미 로컬 = 더미W⁻¹ · 월드. 끝(BatTip)·손잡이끝(BatKnob) 표지를 추가한다 */
+      function graftBat(charGroup, srcGroup, P) {
+        srcGroup.updateMatrixWorld(true);
+        const dummy = srcGroup.getObjectByName(P.bat.bone), mesh = srcGroup.getObjectByName(P.bat.mesh);
+        if (!dummy || !mesh || !dummy.parent || !mesh.isSkinnedMesh) throw new Error(`출처에 ${P.bat.bone}/${P.bat.mesh} 없음`);
+        const handName = dummy.parent.name, hand = charGroup.getObjectByName(handName); if (!hand) throw new Error(`캐릭터에 손 뼈 ${handName} 없음`);
+        for (const prev of hand.children.filter((o) => o.name === "Bat")) { hand.remove(prev); prev.traverse((o) => { if (o.geometry) o.geometry.dispose(); }); } // 재빌드 멱등: 검사 없이 다시 빌드해도 배트가 겹쳐 두 개 들어가지 않게(11/9 독립 검토 지적)
+        const sk = mesh.skeleton, bi = sk.bones.indexOf(dummy); if (bi < 0) throw new Error("배트가 더미 뼈에 바인딩되어 있지 않음");
+        const M = new THREE.Matrix4().copy(dummy.matrixWorld).invert().multiply(mesh.matrixWorld).multiply(mesh.bindMatrixInverse).multiply(dummy.matrixWorld).multiply(sk.boneInverses[bi]).multiply(mesh.bindMatrix);
+        const g = mesh.geometry.clone(); g.deleteAttribute("skinIndex"); g.deleteAttribute("skinWeight"); if (g.attributes.color) g.deleteAttribute("color"); g.applyMatrix4(M); g.computeBoundingBox();
+        const bb = g.boundingBox, size = new THREE.Vector3(); bb.getSize(size);
+        const axis = size.x >= size.y && size.x >= size.z ? "x" : size.y >= size.z ? "y" : "z";
+        const center = bb.getCenter(new THREE.Vector3()), a = center.clone(), b = center.clone(); a[axis] = bb.min[axis]; b[axis] = bb.max[axis];
+        const knobEnd = a.length() <= b.length() ? a : b, tipEnd = knobEnd === a ? b : a; // 더미 원점(손) 가까운 끝이 손잡이끝
+        const holder = new THREE.Object3D(); holder.name = "Bat"; holder.position.copy(dummy.position); holder.quaternion.copy(dummy.quaternion); holder.scale.copy(dummy.scale);
+        const bm = new THREE.Mesh(g, toStandard(Array.isArray(mesh.material) ? mesh.material[0] : mesh.material)); bm.name = P.bat.mesh; bm.frustumCulled = false; holder.add(bm);
+        const tip = new THREE.Object3D(); tip.name = "BatTip"; tip.position.copy(tipEnd); const knob = new THREE.Object3D(); knob.name = "BatKnob"; knob.position.copy(knobEnd); holder.add(tip, knob);
+        hand.add(holder); hand.updateMatrixWorld(true);
+        return { from: P.bat.from + ".fbx", mesh: P.bat.mesh, hand: handName, local: dummy.position.toArray(), quaternion: dummy.quaternion.toArray(), length: size[axis], axis, tip: tipEnd.toArray(), knob: knobEnd.toArray(), vertices: g.attributes.position.count };
+      }
+      /** 같은 재질의 그룹(재질 인덱스 구간)을 하나로 모은다: 요소 순서를 재질별로 재배열해 그룹 수 = 재질 수(glTF primitive 수). 삼각형은 통째로 옮기므로 내용 불변.
+       *  (ctl Body는 46개 구간/재질 4개라 그대로 내보내면 primitive 46개 = 드로콜 46) */
+      function mergeGroupsByMaterial(geometry) {
+        const groups = geometry.groups; if (!groups || groups.length <= 1) return { geometry, before: groups ? groups.length : 0, after: groups ? groups.length : 0 };
+        const byMat = new Map(); for (const g of groups) { if (!byMat.has(g.materialIndex)) byMat.set(g.materialIndex, []); byMat.get(g.materialIndex).push(g); }
+        if (byMat.size === groups.length) return { geometry, before: groups.length, after: groups.length };
+        const order = [], newGroups = []; let start = 0;
+        for (const [mi, gs] of [...byMat.entries()].sort((a, b) => a[0] - b[0])) { let count = 0; for (const g of gs) { for (let i = g.start; i < g.start + g.count; i++) order.push(i); count += g.count; } newGroups.push({ start, count, materialIndex: mi }); start += count; }
+        const out = new THREE.BufferGeometry();
+        if (geometry.index) { const src = geometry.index.array, idx = new src.constructor(order.length); for (let i = 0; i < order.length; i++) idx[i] = src[order[i]]; out.setIndex(new THREE.BufferAttribute(idx, 1)); for (const [n, a] of Object.entries(geometry.attributes)) out.setAttribute(n, a.clone()); }
+        else for (const [n, a] of Object.entries(geometry.attributes)) { const sz = a.itemSize, arr = new a.array.constructor(order.length * sz); for (let i = 0; i < order.length; i++) for (let c = 0; c < sz; c++) arr[i * sz + c] = a.array[order[i] * sz + c]; out.setAttribute(n, new THREE.BufferAttribute(arr, sz, a.normalized)); }
+        out.groups = newGroups; out.name = geometry.name;
+        return { geometry: out, before: groups.length, after: newGroups.length, elements: order.length };
+      }
+      /** 트랙 최적화(연속 같은 키 제거). 마지막 키가 사라져 클립 길이가 줄면(glTF는 길이를 키 시각으로 되읽음) 원본을 쓴다 */
+      function optimizedOrSame(c) {
+        const o = c.clone(); o.optimize();
+        const last = Math.max(...o.tracks.map((t) => t.times[t.times.length - 1]));
+        return last >= c.duration - 1e-4 ? o : c;
+      }
+      /** 파일 존재 확인(build/ 목록 조회, 404 콘솔 소음 없음). 확인 자체가 실패하면 '있다'로 취급해 덮어쓰기를 막는다(안전한 쪽으로) */
+      async function exists(base, fileName) { try { const r = await fetch(`${base}/build/`, { cache: "no-store" }); if (!r.ok) return true; const list = await r.json(); return Array.isArray(list) ? list.includes(fileName) : true; } catch (e) { return true; } }
+      async function postOrAbort(url, body, headers) {
+        let r; try { r = await fetch(url, { method: "POST", body, headers }); } catch (e) { throw new Error(`저장 요청 실패 ${url}: ${e && e.message || e}`); }
+        const text = await r.text(); if (!r.ok) throw new Error(`저장 응답 실패 ${r.status} ${url}: ${text}`);
+        return text;
+      }
+
+      async function build() {
+        $("build").disabled = true;
+        try {
+          const base = $("base").value.replace(/\/$/, "");
+          const name = $("outName").value.trim(); if (!/^[A-Za-z0-9_-]+$/.test(name)) { log("출력 이름은 영문·숫자·_·- 만"); return; }
+          const glbUrl = `${base}/build/${name}.glb`, metaUrl = `${base}/build/${name}.meta.json`;
+          if (!$("allowOverwrite").checked) { for (const f of [`${name}.glb`, `${name}.meta.json`]) if (await exists(base, f)) { log(`중단: build/${f} 가 이미 있다. 기존 결과물은 보존한다(다른 출력 이름을 쓰거나 덮어쓰기 허용을 켤 것)`); return; } }
+          const pick = $("contactPick").value, doIndex = $("doIndex").checked;
+          const P = prof();
+          const charSrc = loaded[P.charFile]; if (!charSrc) { log(`중단: 캐릭터 파일 ${P.charFile} 없음`); return; } // 캐릭터(메시+뼈대)는 이 파일에서
+          if (previewMixer) { previewMixer.stopAllAction(); previewMixer = null; }
+          character = charSrc.group; stripAnimations(character);
+          const fps = charSrc.fps || 30;
+          const clips = [], clipSrc = new Map(); // 클립 → 출처(연출 기준 시점 기록용)
+          let contactSrc = charSrc, batInfo = null;
+          if (P.clipMap) { // 사람형 캐릭터(ctl): 파일마다 클립 하나, 이름만 모듈 규약으로. idle은 ANIM_Idle 전체(모듈은 시간 0만 씀)
+            for (const [file, cname] of Object.entries(P.clipMap)) { const src = loaded[file]; if (!src || !src.clip) continue; let c = renamedClip(src.clip, cname); if (P.optimizeTracks) c = optimizedOrSame(c); clips.push(c); clipSrc.set(c, src); }
+            for (const x of P.extraClips || []) { const src = loaded[x.name]; if (!src || !src.clip) { log(`주의: 추가 클립 ${x.name}(${x.file}) 없음 → 빼고 만든다`); continue; } let c = renamedClip(src.clip, x.name); if (P.optimizeTracks) c = optimizedOrSame(c); clips.push(c); clipSrc.set(c, src); }
+            contactSrc = loaded.ANIM_Hit_Ball || charSrc;
+          } else {
+            contactSrc = loaded[pick] || loaded.Baseball_Hit;
+            // idle: 접촉 스윙의 첫 두 프레임(정지 자세). 모듈은 시간 0만 쓴다
+            const idle = THREE.AnimationUtils.subclip(contactSrc.clip, "idle", 0, 2, fps); clips.push(idle);
+            const c0 = renamedClip(contactSrc.clip, "contact"); clips.push(c0); clipSrc.set(c0, contactSrc);
+            for (const [n, cname] of [["Baseball_Hit", "contact_hit"], ["Baseball_Hit_1", "contact_hit1"], ["Baseball_Hit_2", "contact_hit2"]]) if (loaded[n]) { const c = renamedClip(loaded[n].clip, cname); clips.push(c); clipSrc.set(c, loaded[n]); }
+            const cm = renamedClip(loaded.Baseball_Strike.clip, "miss"); clips.push(cm); clipSrc.set(cm, loaded.Baseball_Strike);
+          }
+          if (P.boneMap) for (const m of charSrc.meshes) { if (!/^Mesh_/.test(m.name)) { m.name = "Mesh_" + m.name; } } // 메시 노드 이름이 뼈 이름(Head)과 겹치면 GLTFLoader가 뒤의 것을 Head_1로 바꿔 모듈이 머리 뼈를 못 찾는다(11/9 발견)
+          if (P.dropVertexColors) for (const m of charSrc.meshes) { for (const g of [m.geometry, origGeo.get(m)]) if (g && g.attributes.color) { g.deleteAttribute("color"); log(`${m.name}: 정점 색 속성 제거(원본 전부 1.0)`); } }
+          if (P.mergeGroups) for (const m of charSrc.meshes) { const orig = origGeo.get(m) || m.geometry; const r = mergeGroupsByMaterial(orig); if (r.geometry !== orig) { origGeo.set(m, r.geometry); if (m.geometry !== orig) m.geometry.dispose(); m.geometry = r.geometry; log(`${m.name}: 재질 그룹 ${r.before} → ${r.after} (요소 ${r.elements})`); } }
+          if (P.standardMaterials) for (const m of charSrc.meshes) m.material = Array.isArray(m.material) ? m.material.map(toStandard) : toStandard(m.material);
+          // 인덱스화(원본 geometry는 별도 Map에 보관해 되돌릴 수 있게. userData에 넣으면 GLTFExporter가 extras로 JSON 직렬화해 파일이 수십 MB로 커진다 — 11/8 첫 빌드 27.9 MB 원인)
+          const indexing = { enabled: doIndex, meshes: [] };
+          for (const m of charSrc.meshes) {
+            if (!origGeo.has(m)) origGeo.set(m, m.geometry);
+            const orig = origGeo.get(m);
+            if (doIndex) {
+              const t0 = performance.now(); const r = indexExact(orig); const ms = performance.now() - t0;
+              const check = r.geometry !== orig ? verifyIndexed(orig, r.geometry) : "변경 없음";
+              const mv = r.geometry !== orig ? BufferGeometryUtils.mergeVertices(orig, 1e-6).attributes.position.count : null; // 참고: three mergeVertices(허용 오차 1e-6)의 결과 정점 수
+              if (m.geometry !== orig && m.geometry !== r.geometry) m.geometry.dispose();
+              m.geometry = r.geometry;
+              indexing.meshes.push({ name: m.name, before: r.before, after: r.after, indexType: r.indexType || null, attributes: r.attributes || null, check, mergeVerticesRef: mv, ms: Math.round(ms), note: r.note || null });
+              log(`인덱스화 ${m.name}: 정점 ${r.before} → ${r.after} (${r.indexType || "-"}, ${Math.round(ms)} ms) 되풀기 대조 ${check} | 참고 mergeVertices(1e-6) ${mv}`);
+              if (check !== "일치" && check !== "변경 없음") { log("중단: 인덱스화 대조 실패"); return; }
+            } else { if (m.geometry !== orig) { m.geometry.dispose(); m.geometry = orig; } indexing.meshes.push({ name: m.name, before: orig.attributes.position.count, after: orig.attributes.position.count, note: "인덱스화 안 함" }); }
+          }
+          character.traverse((o) => { if (o.isMesh || o.isSkinnedMesh) { o.frustumCulled = false; } });
+          // 텍스처(사람형 캐릭터): 내보내기 형식·최대 변. GLTFExporter는 texture.userData.mimeType(png/webp/jpeg)과 options.maxTextureSize를 읽는다. 마네킹(텍스처 0)은 영향 없음
+          const texMax = Number($("texMax").value) || Infinity, texMime = $("texMime").value;
+          const textures = textureList(charSrc.meshes);
+          const texSet = new Set(); charSrc.meshes.forEach((m) => (Array.isArray(m.material) ? m.material : [m.material]).forEach((mm) => { for (const k of ["map", "normalMap", "roughnessMap", "metalnessMap", "specularMap", "emissiveMap", "alphaMap", "aoMap", "bumpMap"]) if (mm[k]) texSet.add(mm[k]); }));
+          for (const t of texSet) t.userData.mimeType = texMime === "image/png" ? undefined : texMime;
+          if (textures.length) log(`텍스처 ${textures.length}개 → 최대 변 ${texMax === Infinity ? "원본" : texMax + " px"}, 형식 ${texMime}${texMime === "image/jpeg" && textures.some((t) => t.transparent || t.alphaTest) ? " (주의: 투명 재질이 있는데 JPEG는 알파가 없다)" : ""}`);
+          const d = describe(character); // 배트 이식 전(키·바닥 = 캐릭터 몸만)
+          if (P.bat && loaded[P.bat.from]) {
+            if (character.getObjectByName("Bat")) { // 이전 빌드의 배트가 남아 있으면 떼어낸 뒤 몸만 다시 잰다(위 describe가 배트를 포함했을 수 있음)
+              for (const prev of [...character.children, ...character.getObjectByName("Bat").parent.children].filter((o) => o.name === "Bat")) { prev.parent.remove(prev); prev.traverse((o) => { if (o.geometry) o.geometry.dispose(); }); }
+              Object.assign(d, describe(character)); log("이전 빌드의 배트를 떼어내고 몸만 다시 쟀다");
+            }
+            try { batInfo = graftBat(character, loaded[P.bat.from].group, P); } catch (e) { log(`중단: 배트 이식 실패 ${e && e.message || e}`); return; }
+            log(`배트 이식: ${P.bat.mesh}(${batInfo.vertices} 정점) → ${batInfo.hand} 아래 'Bat'(손 기준 위치 ${batInfo.local.map((x) => fmt(x, 2)).join(",")}), 길이 ${fmt(batInfo.length, 1)} 단위(${batInfo.axis}축), 끝 ${batInfo.tip.map((x) => fmt(x, 1)).join(",")} 손잡이끝 ${batInfo.knob.map((x) => fmt(x, 1)).join(",")}`);
+          }
+          const dAll = describe(character), texturesFinal = textureList(dAll.meshes);
+          character.traverse((o) => { if (o.isMesh) (Array.isArray(o.material) ? o.material : [o.material]).forEach((mm) => { for (const k of TEX_SLOTS) if (mm[k]) mm[k].userData.mimeType = texMime === "image/png" ? undefined : texMime; }); });
+          meta = {
+            generatedAt: new Date().toISOString(),
+            output: { name, glb: `${name}.glb`, meta: `${name}.meta.json` },
+            source: { tool: "relay/batter3d/tools/fbx-to-glb.html + three.js 0.187.0 FBXLoader/GLTFExporter", profile: $("profile").value, dir: srcDirUsed, files: [...P.files.map((n) => ({ name: n + ".fbx", sha256: fileSha[n] || null, sameAsMannequin: SHA[n] ? SHA[n] === fileSha[n] : null })), ...(P.extraClips || []).filter((x) => loaded[x.name]).map((x) => ({ name: x.file, sha256: fileSha[x.file] || null, retargeted: (x.retargeted || "Mixamo(Without Skin)") + " → tools/retarget-mixamo.mjs(월드 회전 변화량 + 휴식 자세 방향 정렬)" }))], license: P.license },
+            character: { from: P.charFile + ".fbx", meshes: charSrc.meshes.map((m) => m.name), triangles: Math.round(d.tri), vertices: d.verts, bones: charSrc.bones.length, boneMap: P.boneMap || null, sizeUnits: [charSrc.size.x, charSrc.size.y, charSrc.size.z], floorY: charSrc.box.min.y, boundsMin: [charSrc.box.min.x, charSrc.box.min.y, charSrc.box.min.z], rootScale: character.scale.y, propTriangles: Math.round(dAll.tri - d.tri), textures: texturesFinal.map((t) => ({ material: t.material, slot: t.slot, width: t.width, height: t.height, source: t.source, transparent: t.transparent, alphaTest: t.alphaTest })), textureExport: texturesFinal.length ? { maxSize: texMax === Infinity ? null : texMax, mimeType: texMime } : null },
+            indexing,
+            fps,
+            clips: {},
+            contactSource: P.clipMap ? "ANIM_Hit_Ball" : pick,
+            contactNote: "clips[*].contactTime/contactFrac은 '연출 기준 시점 추정'(스윙을 호스트 비행 시간에 맞출 기준점)이며 실제 공 접촉 시각이 아니다. 변환기는 손 속도 최대(handSpeed), 데모는 배트 끝 속도 최대(batTipSpeed)로 같은 시각·같은 클립 길이에서 둘을 함께 쓴다",
+            bat: batInfo ? { enabled: false, embedded: batInfo, note: "glb 안에 실제 배트 메시를 손 뼈 아래 'Bat' 노드로 넣었다(출처 A-pose 파일의 더미 뼈 로컬 변환 그대로). 모듈의 원통 배트는 끈다(enabled false). BatTip/BatKnob 표지는 배트 끝 속도 측정용" }
+              : { bone: "LeftHand", lengthRatio: 0.48, radiusRatio: 0.016, handleRatio: 0.1, position: [0, 0, 0], rotationDeg: [0, 0, 0], note: "아래 손(우타자의 왼손) 뼈 기준 로컬 위치·회전. 위 손은 팔로스루에서 놓는다. 데모 조절 패널에서 맞춘 값으로 갱신한다(비율은 캐릭터 키 대비)" },
+          };
+          for (const c of clips) {
+            const src = clipSrc.get(c) || null;
+            const cue = c.name === "idle" || c.name === "prepare" || !src || src.extra ? null : src.cue;
+            meta.clips[c.name] = { duration: c.duration, tracks: c.tracks.length, contactTime: cue ? cue.contactTime : null, contactFrac: cue ? cue.contactFrac : null, contactBy: cue ? cue.contactBy : null };
+            if (src && src.extra) meta.clips[c.name].source = { file: src.extra.file, sha256: fileSha[src.extra.file] || null, note: `${src.extra.retargeted || "Mixamo(Without Skin)"}을 tools/retarget-mixamo.mjs로 옮긴 클립(${fmt(c.duration, 2)} s). 재생 구간은 play.${c.name}` }; // 항목별 출처(독립 검토: take 문구가 hit에도 붙었음)
+          }
+          if (P.clipMap) { // 호스트 재생 구간(어댑터 resolvePlay가 읽음): 기준 시점은 손 속도 추정(데모의 batTipSpeed로 갱신 가능), 끝은 P.playEnd(contact 1.85 s: 그 뒤는 1루 달리기) 또는 클립 끝(miss: 타격 자세로 복귀 — 11/9 Node 측정)
+            const cc = meta.clips.contact, mm = meta.clips.miss;
+            const endOf = (name, c) => (P.playEnd && Number.isFinite(P.playEnd[name]) ? Math.min(P.playEnd[name], c.duration) : c.duration);
+            if (cc && mm && cc.contactTime != null && mm.contactTime != null) meta.play = { contact: { clip: "contact", cue: cc.contactTime, end: endOf("contact", cc) }, miss: { clip: "miss", cue: mm.contactTime, end: endOf("miss", mm) }, note: "cue = 연출 기준 시점 추정(손 속도 최대; 데모의 배트 끝 속도 측정으로 갱신, 실제 접촉 아님), end = 재생 끝(프로필 playEnd가 있으면 그 값, 없으면 원본 클립 끝)" };
+            if (meta.play && meta.clips.take) meta.play.take = { clip: "take", cue: P.playCue && Number.isFinite(P.playCue.take) ? Math.min(P.playCue.take, meta.clips.take.duration) : 0, end: endOf("take", meta.clips.take), note: "안 치는 공 반응: cue = 재생 시작 시각(공 도착 + 어댑터 지연 뒤), end = 재생 끝. 선택 사항 — 없으면 어댑터 react()가 null을 돌려 호스트는 전처럼 아무 동작 없음" };
+            if (meta.play && meta.clips.hit) meta.play.hit = { clip: "hit", cue: P.playCue && Number.isFinite(P.playCue.hit) ? Math.min(P.playCue.hit, meta.clips.hit.duration) : 0, end: endOf("hit", meta.clips.hit), note: "안타·홈런 타격(치고 1루 쪽으로 달려 나감): cue = 연출 기준 시점(프로필 playCue 임시값 → 데모 배트 끝 속도 측정으로 갱신, 실제 접촉 아님), end = 재생 끝. 선택 사항 — 없으면 어댑터 swing('hit')가 contact로 대체" };
+          }
+          log(`glb 만들기 ${name}: 클립 ${clips.map((c) => `${c.name}(${fmt(c.duration, 2)}s)`).join(", ")} | 삼각형 ${Math.round(d.tri)} 정점 ${d.verts}`);
+          const exporter = new GLTFExporter();
+          let glb;
+          try { glb = await exporter.parseAsync(character, { binary: true, animations: clips, onlyVisible: false, trs: false, includeCustomExtensions: false, maxTextureSize: texMax }); }
+          catch (e) { log(`내보내기 실패: ${e && e.message ? e.message : e}`); return; }
+          const glbSha = await sha256(glb);
+          meta.output.glbBytes = glb.byteLength; meta.output.glbSha256 = glbSha;
+          const metaText = JSON.stringify(meta, null, 2), metaBytes = new TextEncoder().encode(metaText), metaSha = await sha256(metaBytes);
+          log(`glb ${glb.byteLength.toLocaleString()} bytes (${MB(glb.byteLength)}) SHA-256 ${glbSha} | meta ${metaBytes.length} bytes SHA-256 ${metaSha}`);
+          // 저장: 응답이 실패면 즉시 중단(메타도 저장하지 않음)
+          log(`저장 ${name}.glb: ${await postOrAbort(glbUrl, glb)}`);
+          log(`저장 ${name}.meta.json: ${await postOrAbort(metaUrl, metaText, { "Content-Type": "application/json" })}`);
+          // 다시 읽어 해시 대조
+          const back1 = await (await fetch(`${glbUrl}?t=${Date.now()}`, { cache: "no-store" })).arrayBuffer();
+          const back2 = await (await fetch(`${metaUrl}?t=${Date.now()}`, { cache: "no-store" })).arrayBuffer();
+          const back1Sha = await sha256(back1), back2Sha = await sha256(back2);
+          const okGlb = back1.byteLength === glb.byteLength && back1Sha === glbSha, okMeta = back2.byteLength === metaBytes.length && back2Sha === metaSha;
+          lastBuild = { name, glbBytes: glb.byteLength, glbSha256: glbSha, metaBytes: metaBytes.length, metaSha256: metaSha, readBack: { glbBytes: back1.byteLength, glbSha256: back1Sha, metaBytes: back2.byteLength, metaSha256: back2Sha }, verified: okGlb && okMeta, indexing };
+          log(`다시 읽어 대조: glb ${okGlb ? "일치" : "불일치"} (${back1.byteLength.toLocaleString()} bytes, ${back1Sha.slice(0, 16)}…) | meta ${okMeta ? "일치" : "불일치"} (${back2.byteLength} bytes, ${back2Sha.slice(0, 16)}…)`);
+          if (!(okGlb && okMeta)) { log("중단: 저장된 파일이 보낸 것과 다르다"); return; }
+          $("verify").disabled = false;
+        } finally { $("build").disabled = false; }
+      }
+
+      async function verify() {
+        const base = $("base").value.replace(/\/$/, ""), name = $("outName").value.trim();
+        const url = `${base}/build/${name}.glb?t=${Date.now()}`;
+        const buf = await (await fetch(url, { cache: "no-store" })).arrayBuffer(); const sha = await sha256(buf);
+        const gltf = await new GLTFLoader().parseAsync(buf, "");
+        const d = describe(gltf.scene);
+        log(`다시 읽음 ${name}.glb: ${buf.byteLength.toLocaleString()} bytes SHA-256 ${sha}${lastBuild && lastBuild.name === name ? (sha === lastBuild.glbSha256 ? " (만든 것과 일치)" : " (만든 것과 불일치!)") : ""} | 메시 ${d.meshes.length}(${d.meshes.map((m) => m.name + (m.geometry.index ? ":indexed" : ":non-indexed")).join(", ")}) 삼각형 ${Math.round(d.tri)} 정점 ${d.verts} 뼈 ${d.bones.length} 크기 ${fmt(d.size.x, 2)}×${fmt(d.size.y, 2)}×${fmt(d.size.z, 2)} | 클립 ${gltf.animations.map((c) => `${c.name} ${fmt(c.duration, 2)}s/${c.tracks.length}`).join("; ")}`);
+        if (preview) scene.remove(preview);
+        preview = gltf.scene; scene.add(preview);
+        const c = new THREE.Vector3(); d.box.getCenter(c); const h = d.size.y;
+        camera.position.set(c.x + h * 1.2, c.y + h * 0.3, c.z + h * 2.2); camera.lookAt(c); camera.near = h * 0.01; camera.far = h * 20; camera.updateProjectionMatrix();
+        previewMixer = new THREE.AnimationMixer(preview); previewMixer.clipAction(gltf.animations.find((x) => x.name === "miss") || gltf.animations[0]).play();
+        window.__pz = { gltf, meta, lastBuild };
+      }
+
+      function applyProfileUI() { const P = prof(); $("srcDir").value = P.srcDir; $("outName").value = P.outName; $("contactPickWrap").hidden = !!P.clipMap; for (const k of Object.keys(loaded)) delete loaded[k]; $("build").disabled = true; $("verify").disabled = true; lines.length = 0; log(`캐릭터 종류 ${$("profile").value}: 파일 ${P.files.join(", ")} (필수 ${P.required.join(", ")})`); }
+      $("profile").addEventListener("change", applyProfileUI);
+      $("inspect").addEventListener("click", () => inspect().catch((e) => log("오류: " + (e && e.stack || e))));
+      $("build").addEventListener("click", () => build().catch((e) => log("중단(오류): " + (e && e.message || e))));
+      $("verify").addEventListener("click", () => verify().catch((e) => log("오류: " + (e && e.stack || e))));
+      window.__pzTool = { inspect, build, verify, loaded: () => loaded, meta: () => meta, lastBuild: () => lastBuild };
+    </script>
+  </body>
+</html>

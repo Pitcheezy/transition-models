@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="ko" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>3D 타자 독립 데모</title>
+    <meta name="robots" content="noindex" />
+    <!-- 독립 데모(로컬 시안). 호스트(relay)의 신호를 흉내 내서 타자 외형과 동작만 확인한다.
+         공·존·비행시간·결과 공개는 없다. 진행률 k는 이 페이지의 슬라이더나 '호스트 run 흉내' 버튼이 준다(모듈에는 시계가 없다).
+         기존 relay.css는 색 토큰을 쓰려고 읽기만 한다. 자산(glb, meta)은 로컬 자산 서버(127.0.0.1:8794)에서 읽는다.
+         ?model=이름 으로 build/이름.glb 를 고른다(기본 batter). 단위 2(11/8): 기존/후보 비교, WebGL 실패 흉내, 배트 재생성 누수 검사, 발바닥(메시) 검증 추가. -->
+    <link rel="stylesheet" href="../relay.css" />
+    <style>
+      body { padding: 10px var(--gutter) 40px; }
+      h1 { font-size: 15px; margin: 0 0 6px; }
+      .bar { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; margin: 6px 0; font-size: 13px; }
+      .bar button, .bar select, .bar input[type=number], .bar input[type=text] { font: inherit; font-size: 13px; padding: 4px 8px; border: 1px solid var(--muted); border-radius: var(--r-ctrl); background: var(--panel); color: var(--ink); }
+      .bar button[aria-pressed="true"] { background: var(--accent); color: var(--on-accent); border-color: var(--accent-ink); }
+      .bar input[type=range] { width: 220px; }
+      .stage-wrap { display: flex; gap: 14px; align-items: flex-start; flex-wrap: wrap; }
+      .frames { display: flex; flex-direction: column; gap: 8px; }
+      /* 모의 배치 B안과 같은 틀: 패널 배경 위에 타자 열(폭 가변) */
+      .frame { background: var(--panel); border: 1px solid var(--line); border-radius: var(--r-card); padding: 10px; display: grid; grid-template-columns: var(--col, 88px) minmax(0, 1fr); gap: 4px; width: 100%; max-width: 390px; box-sizing: border-box; position: relative; }
+      .frame.right { grid-template-columns: minmax(0, 1fr) var(--col, 88px); }
+      .frame .zone-ph { height: var(--h, 280px); background: var(--z-outside); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 12px; }
+      .frame.right .zone-ph { order: 0; } .frame.right .stage { order: 1; }
+      .frame .tag { position: absolute; left: 12px; top: 4px; font-size: 11px; color: var(--muted); }
+      .stage { height: var(--h, 280px); width: 100%; position: relative; }
+      .stage canvas { position: absolute; inset: 0; }
+      #frame2 { display: none; } #frame2.on { display: grid; }
+      .adj { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 4px 12px; font-size: 12px; max-width: 760px; }
+      .adj label { display: flex; align-items: center; gap: 6px; }
+      .adj input[type=range] { flex: 1; }
+      .adj output { width: 48px; text-align: right; font-variant-numeric: tabular-nums; }
+      pre { font-size: 12px; line-height: 1.4; white-space: pre-wrap; background: var(--panel); border-radius: 8px; padding: 8px; max-height: 44vh; overflow: auto; }
+      details { margin-top: 8px; } summary { cursor: pointer; font-size: 13px; }
+      #hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; left: -9999px; }
+    </style>
+    <script type="importmap">
+      { "imports": { "three": "./vendor/three.module.js", "three/addons/": "./vendor/addons/" } }
+    </script>
+  </head>
+  <body>
+    <h1>3D 타자 독립 데모 (호스트 미연결, 로컬 시안)</h1>
+    <div class="bar">
+      <span>자산</span>
+      <select id="model" title="build/ 안의 glb. 바꾸면 페이지를 다시 읽는다"></select>
+      <span>타석</span>
+      <button type="button" data-side="R" aria-pressed="true">우타</button>
+      <button type="button" data-side="L" aria-pressed="false">좌타</button>
+      <span>화면</span>
+      <button type="button" id="theme">어둡게</button>
+      <span>열 폭</span>
+      <select id="col"><option value="88">88px (제안, 390px)</option><option value="72">72px (제안, 320px)</option><option value="40">40px (지금 호스트)</option><option value="120">120px</option><option value="260">260px (검사용 크게)</option></select>
+      <span>높이</span>
+      <select id="hgt"><option value="280">280</option><option value="222">222</option><option value="360">360</option></select>
+    </div>
+    <div class="bar">
+      <span>동작</span>
+      <select id="kind"><option value="contact">contact (타격)</option><option value="miss">miss (헛스윙)</option><option value="take">take (안 치는 공 반응, 사람형만)</option><option value="hit">hit (안타·홈런: 치고 달려 나감, 사람형만)</option><option value="contact_hit1">contact_hit1 (타격 대안 1)</option><option value="contact_hit2">contact_hit2 (타격 대안 2)</option></select>
+      <label>진행률 k <input type="range" id="k" min="0" max="1000" value="0" /> <output id="kout">0.000</output></label>
+      <button type="button" id="reset">reset (idle)</button>
+      <button type="button" id="toContact">연출 기준 시점으로</button>
+      <button type="button" id="run480">호스트 run 흉내 480ms</button>
+      <button type="button" id="run960">960ms</button>
+      <button type="button" id="runReal">실제 길이</button>
+    </div>
+    <div class="stage-wrap">
+      <div class="frames">
+        <div class="frame" id="frame" style="--col: 88px; --h: 280px;">
+          <span class="tag" id="tag1"></span>
+          <div id="stage" class="stage"></div>
+          <div class="zone-ph">존 자리(그리지 않음)</div>
+        </div>
+        <div class="frame" id="frame2" style="--col: 88px; --h: 280px;">
+          <span class="tag" id="tag2"></span>
+          <div id="stage2" class="stage"></div>
+          <div class="zone-ph">비교 대상</div>
+        </div>
+      </div>
+      <div>
+        <div class="bar">
+          <button type="button" id="state">상태</button>
+          <button type="button" id="sweep">스윙 전 구간 표본(발 뼈·발바닥·손·배트)</button>
+          <button type="button" id="soleFull">발바닥 전체 정점 검증(느림)</button>
+          <button type="button" id="exc">메서드 예외 검사</button>
+          <button type="button" id="initFail">WebGL 실패 흉내</button>
+          <button type="button" id="batLeak">배트 재생성 누수 검사</button>
+          <button type="button" id="estContact">연출 기준 시점 추정(배트 끝 속도 최대)</button>
+          <button type="button" id="saveMeta">조절값을 메타에 저장</button>
+          <span id="errs">콘솔 오류 0</span>
+        </div>
+        <div class="bar">
+          <span>비교 대상</span>
+          <select id="cmp"></select>
+          <button type="button" id="compare">기존/후보 비교(좌우×타격/헛스윙×중간/끝 + reset)</button>
+        </div>
+        <details open><summary>조절(카메라·배트). 값은 메타로 저장할 수 있다(기존 batter 메타는 보존, 후보 메타에만 저장)</summary>
+          <div class="adj" id="adj"></div>
+        </details>
+        <pre id="log">자산 읽는 중</pre>
+      </div>
+    </div>
+    <div id="hidden" aria-hidden="true"></div>
+    <script type="module">
+      import { createBatter3D } from "./batter3d.js";
+      const $ = (id) => document.getElementById(id);
+      const logEl = $("log"); const lines = [];
+      const log = (s) => { lines.push(String(s)); if (lines.length > 120) lines.shift(); logEl.textContent = lines.join("\n"); };
+      let errCount = 0; const bumpErr = () => { errCount++; $("errs").textContent = `콘솔 오류 ${errCount}`; };
+      window.addEventListener("error", bumpErr); window.addEventListener("unhandledrejection", bumpErr);
+      const r6 = (x) => Math.round(x * 1e6) / 1e6;
+
+      const params = new URLSearchParams(location.search);
+      const assetsBase = params.get("assets") || "http://127.0.0.1:8794/build/";
+      const modelName = params.get("model") || "batter";
+      let bat = null, bat2 = null, meta = {}, kind = "contact", runId = 0;
+
+      const stage = $("stage"), frame = $("frame"), stage2 = $("stage2"), frame2 = $("frame2");
+      function applyFrame() { for (const f of [frame, frame2]) { f.style.setProperty("--col", $("col").value + "px"); f.style.setProperty("--h", $("hgt").value + "px"); f.classList.toggle("right", currentSide() === "R"); } bat && bat.resize(); bat2 && bat2.resize(); }
+      function currentSide() { return document.querySelector('[data-side][aria-pressed="true"]').dataset.side; }
+      function setK(k) { $("k").value = Math.round(k * 1000); $("kout").value = k.toFixed(3); bat && bat.setSwing(kind, k); bat2 && bat2.setSwing(kind, k); }
+      function contactFrac(kd = kind, m = meta) { const c = m.clips && m.clips[kd]; return c && Number.isFinite(c.contactFrac) ? c.contactFrac : 0.5; }
+      function duration() { const c = meta.clips && meta.clips[kind]; return c && c.duration ? c.duration * 1000 : 1000; }
+      /** 호스트 run() 흉내: 이 페이지의 rAF가 시계다. 모듈은 k만 받는다 */
+      function runLike(ms) {
+        const id = ++runId, t0 = performance.now();
+        const step = (now) => { if (id !== runId) return; const k = Math.min(1, (now - t0) / ms); setK(k); if (k < 1) requestAnimationFrame(step); else { bat && bat.reset(); bat2 && bat2.reset(); $("k").value = 0; $("kout").value = "0.000"; log(`run 흉내 ${ms}ms 끝, reset`); } };
+        requestAnimationFrame(step);
+      }
+
+      // 조절 패널
+      const ADJ = [
+        ["view", "yawDeg", -180, 180, 1], ["view", "azimuthDeg", -90, 90, 1], ["view", "elevationDeg", -20, 45, 1], ["view", "zoom", 0.5, 2, 0.01], ["view", "targetY", 0.3, 0.7, 0.01],
+        ["bat", "position.0", -20, 20, 0.5], ["bat", "position.1", -20, 20, 0.5], ["bat", "position.2", -20, 20, 0.5],
+        ["bat", "rotationDeg.0", -180, 180, 1], ["bat", "rotationDeg.1", -180, 180, 1], ["bat", "rotationDeg.2", -180, 180, 1],
+        ["bat", "lengthRatio", 0.3, 0.6, 0.005], ["bat", "radiusRatio", 0.008, 0.03, 0.001], ["bat", "handleRatio", 0.05, 0.3, 0.01],
+      ];
+      function getPath(obj, path) { return path.split(".").reduce((o, k) => (o == null ? undefined : o[k]), obj); }
+      function setPath(obj, path, v) { const ks = path.split("."); const last = ks.pop(); const o = ks.reduce((o, k) => o[k], obj); o[last] = v; }
+      function buildAdj() {
+        const st = bat.getState(); const box = $("adj"); box.textContent = "";
+        for (const [group, path, min, max, step] of ADJ) {
+          const cur = getPath(st[group], path);
+          const label = document.createElement("label"); label.textContent = `${group}.${path} `;
+          const inp = document.createElement("input"); inp.type = "range"; inp.min = min; inp.max = max; inp.step = step; inp.value = cur;
+          const out = document.createElement("output"); out.value = Number(cur).toFixed(step < 0.1 ? 3 : 1);
+          inp.addEventListener("input", () => { const v = Number(inp.value); out.value = v.toFixed(step < 0.1 ? 3 : 1); const s = bat.getState(); const obj = s[group]; setPath(obj, path, v); if (group === "view") bat.setView(obj); else bat.setBat(obj); });
+          label.append(inp, out); box.append(label);
+        }
+      }
+
+      async function listModels() {
+        try { const r = await fetch(assetsBase, { cache: "no-store" }); const list = r.ok ? await r.json() : []; return list.filter((n) => /\.glb$/i.test(n)).map((n) => n.replace(/\.glb$/i, "")); } catch (e) { return [modelName]; }
+      }
+      async function init() {
+        applyFrame();
+        const models = await listModels(); if (!models.includes(modelName)) models.unshift(modelName);
+        for (const n of models) { const o = document.createElement("option"); o.value = n; o.textContent = n === "batter" ? "batter (기존)" : n + " (후보)"; o.selected = n === modelName; $("model").append(o); const o2 = o.cloneNode(true); o2.selected = false; $("cmp").append(o2); }
+        const other = models.find((n) => n !== modelName); if (other) $("cmp").value = other;
+        $("tag1").textContent = modelName;
+        try {
+          bat = await createBatter3D(stage, { assetsBase, modelName, theme: document.documentElement.dataset.theme, side: currentSide() });
+          meta = bat.meta || {};
+          if (!bat.ok) { log(`모듈 생성은 됐지만 ok=false(mode ${bat.mode}): ` + bat.getState().error); return; }
+          log(`자산 ${modelName}.glb 읽음: 클립 ${JSON.stringify(bat.getState().clips)} | 뼈 ${bat.getState().bones.join(",")} | 모델 높이 단위 ${bat.getState().unitHeight.toFixed(1)} | gpu ${JSON.stringify(bat.getState().gpu)}`);
+          log(`메타 연출 기준 시점(contactFrac): ${JSON.stringify(Object.fromEntries(Object.entries(meta.clips || {}).map(([n, c]) => [n, c.contactFrac == null ? null : Number(c.contactFrac.toFixed(4))])))}`);
+          buildAdj(); bat.reset();
+        } catch (e) { log("자산 읽기 실패(호스트라면 SVG 타자 유지): " + (e && e.message || e)); }
+      }
+      init();
+
+      $("model").addEventListener("change", () => { const u = new URL(location.href); u.searchParams.set("model", $("model").value); location.href = u.toString(); });
+      for (const b of document.querySelectorAll("[data-side]")) b.addEventListener("click", () => { for (const x of document.querySelectorAll("[data-side]")) x.setAttribute("aria-pressed", x === b ? "true" : "false"); applyFrame(); bat && bat.setSide(b.dataset.side); bat2 && bat2.setSide(b.dataset.side); });
+      $("theme").addEventListener("click", () => { const d = document.documentElement.dataset.theme === "dark"; document.documentElement.dataset.theme = d ? "light" : "dark"; $("theme").textContent = d ? "어둡게" : "밝게"; bat && bat.setTheme(d ? "light" : "dark"); bat2 && bat2.setTheme(d ? "light" : "dark"); });
+      $("col").addEventListener("change", applyFrame); $("hgt").addEventListener("change", applyFrame);
+      $("kind").addEventListener("change", () => { kind = $("kind").value; if (bat && !bat.getState().clips[kind]) log(`${kind} 클립이 ${modelName}에 없어 contact로 대체된다(표본·추정도 contact 기준)`); setK(Number($("k").value) / 1000); });
+      $("k").addEventListener("input", () => { runId++; setK(Number($("k").value) / 1000); });
+      $("reset").addEventListener("click", () => { runId++; bat && bat.reset(); bat2 && bat2.reset(); $("k").value = 0; $("kout").value = "0.000"; });
+      $("toContact").addEventListener("click", () => { runId++; setK(contactFrac()); });
+      $("run480").addEventListener("click", () => runLike(480)); $("run960").addEventListener("click", () => runLike(960)); $("runReal").addEventListener("click", () => runLike(duration()));
+      $("state").addEventListener("click", () => log(JSON.stringify(bat ? bat.getState() : null)));
+
+      /** 스윙 전 구간 표본: 발 뼈(관절) 최저 y와 메시 최저점(발바닥, 바인딩 자세 낮은 8% 정점) 둘 다 */
+      $("sweep").addEventListener("click", () => {
+        if (!bat) return; const rows = []; let minBone = Infinity, maxBone = -Infinity, minSole = Infinity, gaps = [], soleN = 0;
+        const t0 = performance.now();
+        for (let i = 0; i <= 20; i++) { const k = i / 20; const s = bat.sample(kind, k, { sole: true }); if (!s.ok) continue; const feet = [s.leftFoot, s.rightFoot, s.leftToe, s.rightToe].filter(Boolean).map((v) => v[1]); minBone = Math.min(minBone, ...feet); maxBone = Math.max(maxBone, ...feet); if (s.sole) { minSole = Math.min(minSole, s.sole.minY); soleN = s.sole.vertices; } if (s.handGap != null) gaps.push(s.handGap); rows.push(`k=${k.toFixed(2)} 발뼈y[${feet.map((v) => v.toFixed(3)).join(",")}] 발바닥y ${s.sole ? s.sole.minY.toFixed(4) : "-"} 손간격 ${s.handGap} 배트끝 ${s.batTip ? s.batTip.join(",") : "-"}`); }
+        bat.reset(); $("k").value = 0; $("kout").value = "0.000";
+        log(`[${modelName} ${kind}] 21표본 ${(performance.now() - t0).toFixed(0)} ms: 발 뼈(관절) 최저 y ${minBone.toFixed(3)} m, 최고 y ${maxBone.toFixed(3)} m | 발바닥(메시 최저점, 후보 정점 ${soleN}개) 최저 y ${minSole.toFixed(4)} m (바닥 0, 음수면 바닥 아래) | 손 간격 ${Math.min(...gaps).toFixed(3)}~${Math.max(...gaps).toFixed(3)} m`);
+        for (const r of rows) log("  " + r);
+      });
+      /** 발바닥 전체 정점 검증: 후보 정점(8%)만 본 값과 전체 정점을 본 값이 같은지, k 0 / 연출 기준 / 1 에서 확인 */
+      $("soleFull").addEventListener("click", () => {
+        if (!bat) return; const t0 = performance.now(); const out = [];
+        for (const kd of ["contact", "miss"]) for (const k of [0, contactFrac(kd), 1]) { const a = bat.sample(kd, k, { sole: true }); const b = bat.sample(kd, k, { sole: true, soleFull: true }); out.push(`${kd} k=${k.toFixed(3)}: 후보정점 ${a.sole.minY.toFixed(4)} (${a.sole.vertices}개) / 전체정점 ${b.sole.minY.toFixed(4)} (${b.sole.vertices}개) ${a.sole.minY === b.sole.minY ? "일치" : "불일치"}`); }
+        bat.reset(); $("k").value = 0; $("kout").value = "0.000";
+        log(`[${modelName}] 발바닥 전체 정점 검증 ${(performance.now() - t0).toFixed(0)} ms`); for (const r of out) log("  " + r);
+      });
+      $("exc").addEventListener("click", () => {
+        if (!bat) return; let thrown = 0; const t = (f) => { try { f(); } catch (e) { thrown++; } };
+        t(() => bat.setSwing("nope", NaN)); t(() => bat.setSwing("miss", 5)); t(() => bat.setSwing("contact", -1)); t(() => bat.setSide("x")); t(() => bat.setTheme(1)); t(() => bat.setView(null)); t(() => bat.setBat(null)); t(() => bat.resize()); t(() => bat.getState()); t(() => bat.sample("miss", 2, { sole: true }));
+        const okBefore = bat.ok; stage.style.display = "none"; t(() => bat.resize()); stage.style.display = ""; t(() => bat.resize());
+        log(`예외 검사(생존 중): 던진 예외 ${thrown}, ok ${okBefore} → ${bat.ok}. dispose 검사는 콘솔에서 __pz.dispose() 로 따로 한다(화면이 사라진다)`);
+        bat.reset();
+      });
+      /** WebGL 초기화 실패 흉내: getContext가 null을 돌려주게 잠시 바꾸고 두 번째 인스턴스를 만든다 → ok=false, mode init-failed. 그 뒤 모든 메서드·getState·sample 호출이 예외 없이 끝나야 한다 */
+      $("initFail").addEventListener("click", async () => {
+        const proto = HTMLCanvasElement.prototype, orig = proto.getContext;
+        proto.getContext = function (type, ...rest) { return /webgl/i.test(String(type)) ? null : orig.call(this, type, ...rest); };
+        let b = null, thrown = 0, created = "실패";
+        const t = (f) => { try { f(); } catch (e) { thrown++; console.warn("initFail 검사 예외", e); } };
+        try { b = await createBatter3D($("hidden"), { assetsBase, modelName }); created = `ok=${b.ok} mode=${b.mode}`; }
+        catch (e) { created = "createBatter3D reject: " + (e && e.message || e); }
+        finally { proto.getContext = orig; }
+        if (b) {
+          let st = null; t(() => { st = b.getState(); }); t(() => b.setSwing("contact", 0.5)); t(() => b.reset()); t(() => b.resize()); t(() => b.setSide("L")); t(() => b.setTheme("dark")); t(() => b.setView({ zoom: 2 })); t(() => b.setBat({ enabled: false })); t(() => b.sample("miss", 0.5, { sole: true })); t(() => b.dispose()); t(() => b.getState());
+          log(`WebGL 실패 흉내: ${created}; 메서드·getState·sample 11회 호출 예외 ${thrown}; getState → ${JSON.stringify(st)}; 캔버스 잔류 ${$("hidden").childElementCount}`);
+        } else log(`WebGL 실패 흉내: ${created}`);
+      });
+      /** 배트 재생성 누수 검사: setBat 60회 뒤 렌더러가 보유한 geometry 수·프로그램 수가 늘지 않아야 한다 */
+      $("batLeak").addEventListener("click", () => {
+        if (!bat) return; const before = bat.getState(); const p0 = JSON.parse(JSON.stringify(before.bat));
+        for (let i = 0; i < 60; i++) bat.setBat({ lengthRatio: 0.4 + (i % 10) * 0.01, radiusRatio: 0.012 + (i % 5) * 0.001, rotationDeg: [i % 7, 0, 0] });
+        bat.setBat(p0);
+        const after = bat.getState();
+        log(`배트 재생성 60회: gpu geometries ${before.gpu.geometries} → ${after.gpu.geometries}, programs ${before.gpu.programs} → ${after.gpu.programs}, textures ${before.gpu.textures} → ${after.gpu.textures}, 배트 부품 ${after.batParts}, ok ${after.ok} (geometries·programs가 같아야 누수 없음)`);
+      });
+      /** 연출 기준 시점 추정: 배트 끝의 속도가 최대인 시각(클립 앞 70% 안). 실제 공 접촉 시각이 아니라 호스트가 스윙을 맞출 '연출용 기준점'이다.
+       *  contactFrac(진행률)과 contactTime(초)을 같은 표본·같은 클립 길이에서 함께 갱신한다. 속도는 두 표본 사이 구간값이므로 구간 중점에 둔다 */
+      $("estContact").addEventListener("click", () => {
+        if (!bat) return; const N = 240; let prev = null, best = { v: -1, k: 0 }, series = 0;
+        if (kind === "take") { log(`[${modelName} take] take의 cue는 재생 시작 시각(meta.play.take, 변환기 profile playCue)이라 배트 끝 속도로 추정하지 않는다`); return; } // 11/9 독립 검토: 반응 클립의 cue는 동기점이 아니다
+        if (!bat.getState().clips[kind]) { log(`[${modelName} ${kind}] 이 모델에 ${kind} 클립이 없다(setSwing은 contact로 대체) → 추정하지 않는다`); return; }
+        const dur = bat.getState().clips[kind];
+        for (let i = 0; i <= N; i++) { const k = i / N; const s = bat.sample(kind, k); if (!s.ok || !s.batTip) continue; if (prev) { const v = Math.hypot(s.batTip[0] - prev[0], s.batTip[1] - prev[1], s.batTip[2] - prev[2]) * N; const kMid = (i - 0.5) / N; series++; if (kMid <= 0.7 && v > best.v) best = { v, k: kMid }; } prev = s.batTip; }
+        bat.reset(); $("k").value = 0; $("kout").value = "0.000";
+        meta.clips = meta.clips || {};
+        if (!(best.v >= 0)) { log(`[${modelName} ${kind}] 배트 끝 표본이 없어 기준 시점을 쓰지 않는다(원통 배트도 glb 표지도 없음)`); return; } // 표본 0이면 k=0을 메타에 쓰지 않는다(11/9 독립 검토 지적)
+        meta.clips[kind] = { ...(meta.clips[kind] || {}), duration: dur, contactFrac: r6(best.k), contactTime: r6(best.k * dur), contactBy: "batTipSpeed", contactNote: "연출 기준 시점 추정(배트 끝 속도 최대, 클립 앞 70% 안, 240표본 구간 중점). 실제 공 접촉 시각이 아니다" };
+        if (meta.play && meta.play[kind] && meta.play[kind].clip === kind) meta.play[kind].cue = r6(best.k * dur); // 호스트 재생 구간(meta.play)도 같은 기준 시점으로(11/9 사람형 캐릭터)
+        log(`[${modelName} ${kind}] 연출 기준 시점 추정: k=${best.k.toFixed(4)}, t=${(best.k * dur).toFixed(4)} s / ${dur.toFixed(4)} s (배트 끝 상대 속도 ${best.v.toFixed(1)} m/클립, 표본 ${series}). 메타에 반영(저장 버튼으로 서버에 기록)`);
+        setK(best.k);
+      });
+      $("saveMeta").addEventListener("click", async () => {
+        if (!bat) return;
+        if (modelName === "batter") { log("기존 batter.meta.json은 보존한다(저장 안 함). 후보 모델(?model=…)에서 저장할 수 있다"); return; }
+        const st = bat.getState(); const m = { ...meta, view: st.view, bat: st.bat, tunedAt: new Date().toISOString() };
+        const r = await fetch(assetsBase.replace(/\/$/, "") + `/${modelName}.meta.json`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(m, null, 2) });
+        log(`메타 저장 ${modelName}.meta.json ${r.status}: ${await r.text()}`); if (r.ok) meta = m;
+      });
+
+      /* ---------- 기존/후보 비교 ---------- */
+      function readPixels(b) { const gl = b.renderer.getContext(); const w = gl.drawingBufferWidth, h = gl.drawingBufferHeight; const buf = new Uint8Array(w * h * 4); gl.readPixels(0, 0, w, h, gl.RGBA, gl.UNSIGNED_BYTE, buf); return { w, h, buf }; }
+      function diffPixels(a, b) {
+        if (a.w !== b.w || a.h !== b.h) return { same: false, note: `크기 다름 ${a.w}×${a.h} vs ${b.w}×${b.h}` };
+        let any = 0, over8 = 0, maxd = 0; for (let i = 0; i < a.buf.length; i += 4) { let d = 0; for (let c = 0; c < 4; c++) d = Math.max(d, Math.abs(a.buf[i + c] - b.buf[i + c])); if (d > 0) any++; if (d > 8) over8++; if (d > maxd) maxd = d; }
+        return { pixels: a.w * a.h, any, over8, maxd };
+      }
+      function boneDiff(s1, s2) { let m = 0; for (const key of ["leftFoot", "rightFoot", "leftToe", "rightToe", "leftHand", "rightHand", "head", "batTip", "batKnob"]) if (s1[key] && s2[key]) for (let i = 0; i < 3; i++) m = Math.max(m, Math.abs(s1[key][i] - s2[key][i])); return m; }
+      async function ensureBat2(name) {
+        if (bat2 && bat2.name === name && bat2.ok) return bat2;
+        if (bat2) { bat2.dispose(); bat2 = null; }
+        frame2.classList.add("on"); $("tag2").textContent = name; applyFrame();
+        bat2 = await createBatter3D(stage2, { assetsBase, modelName: name, theme: document.documentElement.dataset.theme, side: currentSide() }); bat2.name = name;
+        applyFrame(); return bat2;
+      }
+      async function compare() {
+        const other = $("cmp").value; if (!bat || !other || other === modelName) { log("비교 대상이 비었거나 현재 모델과 같다"); return; }
+        try { await ensureBat2(other); } catch (e) { log("비교 대상 읽기 실패: " + (e && e.message || e)); return; }
+        const m2 = bat2.meta || {}; const rows = []; let worstPx = 0, worstBone = 0;
+        log(`비교 ${modelName}(위) vs ${other}(아래): 클립 길이 ${JSON.stringify(bat.getState().clips)} / ${JSON.stringify(bat2.getState().clips)} | 연출 기준 시점 ${JSON.stringify(Object.fromEntries(["contact", "miss"].map((kd) => [kd, [contactFrac(kd), contactFrac(kd, m2)]])))}`);
+        const sideNow = currentSide();
+        for (const side of ["R", "L"]) {
+          bat.setSide(side); bat2.setSide(side);
+          for (const kd of ["contact", "miss"]) for (const k of [contactFrac(kd), 1]) {
+            const s1 = bat.sample(kd, k), s2 = bat2.sample(kd, k);
+            const px = diffPixels(readPixels(bat), readPixels(bat2)), bd = boneDiff(s1, s2);
+            worstPx = Math.max(worstPx, px.any || 0); worstBone = Math.max(worstBone, bd);
+            rows.push(`${side === "R" ? "우타" : "좌타"} ${kd} k=${k.toFixed(3)}${k === 1 ? "(끝)" : "(중간·연출 기준)"}: 픽셀 차 ${px.any}/${px.pixels} (8 초과 ${px.over8}, 최대 ${px.maxd}) | 뼈·배트 위치 최대 차 ${bd.toFixed(3)} m`);
+          }
+          bat.reset(); bat2.reset(); const px = diffPixels(readPixels(bat), readPixels(bat2)); worstPx = Math.max(worstPx, px.any || 0);
+          rows.push(`${side === "R" ? "우타" : "좌타"} reset(idle): 픽셀 차 ${px.any}/${px.pixels} (8 초과 ${px.over8}, 최대 ${px.maxd}) | kind ${bat.getState().kind}/${bat2.getState().kind} k ${bat.getState().k}/${bat2.getState().k}`);
+        }
+        // 대조군: 일부러 다른 자세(위는 접촉 자세, 아래는 idle)를 비교해 픽셀 차가 0보다 커야 측정 자체가 유효하다(빈 버퍼끼리 0이 나오는 경우를 배제)
+        bat.setSide("R"); bat2.setSide("R"); bat.setSwing("contact", contactFrac("contact")); bat2.reset();
+        const ctrl = diffPixels(readPixels(bat), readPixels(bat2));
+        rows.push(`대조군(위 contact 연출 기준 vs 아래 idle, 달라야 정상): 픽셀 차 ${ctrl.any}/${ctrl.pixels} (8 초과 ${ctrl.over8}, 최대 ${ctrl.maxd}) → 측정 ${ctrl.any > 0 ? "유효" : "무효(빈 버퍼 의심)"}`);
+        bat.setSide(sideNow); bat2.setSide(sideNow); bat.reset(); bat2.reset(); $("k").value = 0; $("kout").value = "0.000";
+        for (const r of rows) log("  " + r);
+        log(`비교 끝: 픽셀 차 최대 ${worstPx}, 뼈·배트 위치 최대 차 ${worstBone.toFixed(3)} m, 대조군 픽셀 차 ${ctrl.any}, gpu ${JSON.stringify(bat.getState().gpu)} / ${JSON.stringify(bat2.getState().gpu)}`);
+      }
+      $("compare").addEventListener("click", () => compare().catch((e) => log("비교 오류: " + (e && e.stack || e))));
+
+      window.__pz = {
+        get bat() { return bat; }, get bat2() { return bat2; }, setK, runLike, meta: () => meta, compare, ensureBat2, readPixels, diffPixels,
+        setBoth(side, kd, k) { for (const x of document.querySelectorAll("[data-side]")) x.setAttribute("aria-pressed", x.dataset.side === side ? "true" : "false"); applyFrame(); bat && bat.setSide(side); bat2 && bat2.setSide(side); if (kd == null) { bat && bat.reset(); bat2 && bat2.reset(); } else { kind = kd; $("kind").value = kd; setK(k); } },
+        dispose: () => { if (bat) { bat.dispose(); let thrown = 0; const t = (f) => { try { f(); } catch (e) { thrown++; } }; t(() => bat.setSwing("miss", 0.5)); t(() => bat.reset()); t(() => bat.resize()); t(() => bat.setSide("L")); t(() => bat.setTheme("dark")); t(() => bat.dispose()); t(() => bat.getState()); t(() => bat.sample("miss", 0.5, { sole: true })); log(`dispose 뒤 호출 8번: 던진 예외 ${thrown}, ok ${bat.ok}, mode ${bat.mode}, getState ${JSON.stringify(bat.getState())}`); } },
+      };
+    </script>
+  </body>
+</html>

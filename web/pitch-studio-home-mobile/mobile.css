@@ -1,0 +1,509 @@
+/* Pitcheezy 모바일 전용 홈 (데모, 배포 아님)
+   기준 폭 390px, 320~430px 대응. 테마 토큰·글꼴은 web/pitch-studio-home/product.css 그대로.
+   외부 자원 없음. 데스크톱 창에서 열면 430px 열로 가운데 정렬되어 폰 폭 그대로 보인다. */
+:root {
+  color-scheme: dark;
+  --bg: #091811;
+  --panel: #11241b;
+  --ink: #f2f4e9;
+  --muted: #a5b6a8;
+  --lime: #ceff78;
+  --line: #304438;
+  --orange: #ffb782;
+  --gutter: 16px;
+  --phone-max: 430px;
+  --bar-h: 132px; /* 고정 바 높이 기본값. mobile.js가 실제 높이로 갱신 */
+  font-family: "Segoe UI", "Malgun Gothic", sans-serif;
+  color: var(--ink);
+  background: var(--bg);
+  font-synthesis: none;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+* {
+  box-sizing: border-box;
+}
+html {
+  background: var(--bg);
+  /* 키보드 초점이 간 요소가 고정 바 뒤로 스크롤되지 않게 (WCAG 2.4.11) */
+  scroll-padding-bottom: calc(var(--bar-h) + 12px);
+}
+body {
+  margin: 0 auto;
+  max-width: var(--phone-max);
+  min-height: 100vh;
+  font-size: 17px;
+  line-height: 1.6;
+  overflow-x: hidden;
+  padding-bottom: calc(var(--bar-h) + 12px);
+  word-break: keep-all; /* 한국어를 음절 중간이 아니라 어절 단위로 줄바꿈 */
+  overflow-wrap: break-word;
+}
+a {
+  color: inherit;
+  text-decoration: none;
+}
+button {
+  font: inherit;
+  cursor: pointer;
+  border: 0;
+}
+button,
+a {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: #ceff7833;
+}
+button:focus-visible,
+a:focus-visible {
+  outline: 3px solid var(--lime);
+  outline-offset: 4px;
+}
+h1,
+h2,
+h3,
+p,
+figure {
+  margin: 0;
+}
+h1,
+h2 {
+  text-wrap: balance;
+}
+[hidden] {
+  display: none !important;
+}
+.skip {
+  position: absolute;
+  top: -70px;
+  left: 16px;
+  background: var(--lime);
+  color: var(--bg);
+  padding: 12px;
+  z-index: 30;
+}
+.skip:focus {
+  top: 10px;
+}
+.eyebrow {
+  display: block;
+  font-size: 12px;
+  letter-spacing: 1.8px;
+  color: var(--lime);
+  font-weight: 650;
+}
+
+/* ---------- 1. header ---------- */
+.m-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 60px;
+  padding: 8px var(--gutter);
+  border-bottom: 1px solid var(--line);
+}
+.wordmark {
+  font:
+    900 22px "Arial Black",
+    sans-serif;
+  letter-spacing: -1px;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 44px;
+}
+.wordmark i {
+  font-style: normal;
+  color: var(--lime);
+  font-size: 11px;
+  align-self: flex-start;
+  margin-left: -5px;
+}
+.seal {
+  background: var(--lime);
+  color: var(--bg);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 25px;
+  display: grid;
+  place-items: center;
+}
+.m-header-tag {
+  font-size: 12px;
+  letter-spacing: 1.6px;
+  color: var(--muted);
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+/* ---------- 2. hero: 영상 ---------- */
+.film-stage {
+  position: relative;
+  aspect-ratio: 1 / 1; /* 세로 화면용 정사각 무대. 16:9 원본은 가운데-왼쪽(투수·포수 축) 기준으로 잘라 채운다 */
+  max-height: 52vh;
+  max-height: 52svh;
+  background: #12261c;
+  overflow: hidden;
+}
+.film-stage > video,
+.film-stage > img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 16% 50%;
+}
+.film-shade {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(0deg, #06130fd6, transparent 40%),
+    linear-gradient(180deg, #06130f8c, transparent 32%);
+  pointer-events: none;
+}
+.scorebug {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: grid;
+  gap: 1px;
+  padding: 7px 10px;
+  background: #081a11d9;
+  border: 1px solid #aabfa344;
+  border-radius: 4px;
+}
+.scorebug small {
+  font-size: 11px;
+  letter-spacing: 1.6px;
+  color: var(--lime);
+}
+.scorebug strong {
+  font:
+    800 19px "Arial Black",
+    sans-serif;
+  letter-spacing: 0.3px;
+}
+.scorebug-teams {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.scorebug-teams img {
+  object-fit: contain;
+  background: #f2f4e9;
+  padding: 2px;
+  border-radius: 50%;
+}
+.scorebug em {
+  font:
+    400 12px "Segoe UI",
+    sans-serif;
+  color: var(--muted);
+}
+.scorebug > span {
+  font-size: 12px;
+}
+.film-controls {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 8px;
+}
+.film-controls > span {
+  font-size: 13px;
+  line-height: 1.4;
+  background: #071710c9;
+  padding: 6px 9px;
+  border-radius: 3px;
+  max-width: 62%;
+}
+.film-controls button {
+  flex-shrink: 0;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0 16px;
+  color: #fff;
+  border: 1px solid #c2dab66b;
+  background: #081910d9;
+  border-radius: 4px;
+  font-size: 15px;
+  font-weight: 650;
+}
+.film-controls button:active {
+  background: #142e20;
+}
+
+/* ---------- 2. hero: 제목·소개 ---------- */
+.hero-copy {
+  padding: 26px var(--gutter) 22px;
+}
+.hero h1 {
+  font-size: clamp(32px, 9.2vw, 40px);
+  line-height: 1.2;
+  letter-spacing: -1.5px;
+  font-weight: 850;
+  margin: 12px 0 16px;
+}
+.hero-copy p {
+  font-size: 17px;
+  line-height: 1.7;
+  color: #deeadf;
+}
+.hero-copy p + p {
+  margin-top: 2px;
+}
+.hero-demo {
+  display: block;
+  margin-top: 18px;
+  font-size: 12px;
+  letter-spacing: 1.8px;
+  color: #c5d0c2;
+}
+.match-caption {
+  background: #dfebd5;
+  color: #15291b;
+  display: grid;
+  gap: 2px;
+  padding: 14px var(--gutter);
+}
+.match-caption b {
+  font-size: 12px;
+  letter-spacing: 0.8px;
+}
+.match-caption strong {
+  font-size: 16px;
+}
+.match-caption span {
+  font-size: 14px;
+  color: #3d5a43;
+}
+
+/* ---------- 3. 고정 하단 CTA 바 ---------- */
+.cta-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: 0 auto;
+  max-width: var(--phone-max);
+  z-index: 20;
+  padding: 12px var(--gutter) calc(12px + env(safe-area-inset-bottom, 0px));
+  background: #0b1d14f2;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid var(--line);
+  display: grid;
+  gap: 10px;
+}
+.cta-note {
+  font-size: 16px;
+  line-height: 1.4;
+  text-align: center;
+  color: #e3edda;
+}
+.cta-note span {
+  color: var(--muted);
+}
+.primary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 56px;
+  background: var(--lime);
+  color: #112318;
+  font-size: 18px;
+  font-weight: 800;
+  border-radius: 4px;
+}
+.primary:active {
+  background: #e0ffab;
+}
+
+/* ---------- 4. 3단계 설명 ---------- */
+.steps {
+  padding: 40px var(--gutter) 8px;
+}
+.steps h2,
+.closing h2 {
+  font-size: clamp(26px, 7.2vw, 31px);
+  line-height: 1.3;
+  letter-spacing: -1px;
+  margin: 12px 0 14px;
+}
+.steps .lead {
+  font-size: 17px;
+  line-height: 1.7;
+  color: var(--muted);
+}
+.home-steps {
+  list-style: none;
+  margin: 24px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 16px;
+}
+.home-steps li {
+  border: 1px solid #2e4a38;
+  border-radius: 16px;
+  background: #10251a;
+  overflow: hidden;
+}
+.home-steps figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: #091811;
+}
+/* 꼬리표는 그림 위에 겹치지 않고 그림 바로 아래 띠로 둔다(SVG 제목을 가리지 않도록) */
+.home-steps figcaption {
+  font-size: 12px;
+  line-height: 1.5;
+  color: #d5e3d1;
+  background: #071710;
+  border-top: 1px solid #34543e;
+  border-bottom: 1px solid #34543e;
+  padding: 5px 18px;
+  letter-spacing: 0.3px;
+}
+.step-body {
+  padding: 16px 18px 20px;
+}
+.step-body > span {
+  display: block;
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: var(--lime);
+  font-weight: 650;
+  margin-bottom: 6px;
+}
+.step-body h3 {
+  font-size: 21px;
+  letter-spacing: -0.5px;
+  margin-bottom: 8px;
+}
+.step-body p {
+  font-size: 16px;
+  line-height: 1.7;
+  color: #b9c6b4;
+}
+.concept-note {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--muted);
+  margin-top: 18px;
+}
+
+/* ---------- 5. closing ---------- */
+.closing {
+  padding: 48px var(--gutter) 40px;
+  text-align: center;
+}
+.closing p {
+  font-size: 16px;
+  color: var(--muted);
+}
+.closing-hint {
+  margin-top: 10px;
+  color: #c5d0c2;
+}
+
+/* ---------- 6. footer ---------- */
+.m-footer {
+  display: grid;
+  gap: 12px;
+  padding: 26px var(--gutter) 30px;
+  border-top: 1px solid var(--line);
+}
+.m-footer .wordmark {
+  font-size: 19px; /* min-height 44px는 .wordmark 공통 규칙 그대로 (탭 대상 44px) */
+}
+.m-footer p {
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--muted);
+}
+.footer-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-size: 16px;
+  font-weight: 650;
+  color: var(--lime);
+}
+
+/* ---------- 폭 대응 ---------- */
+@media (max-width: 359px) {
+  /* 워드마크(약 183px) + 간격 + 'MLB · RECORDED'(약 115px) ≈ 310px > 내용 폭 288px → 라벨을 숨긴다.
+     같은 글자가 영상 위 scorebug에 있으므로 정보 손실은 없다. (글꼴 지표 계산, 추정) */
+  .m-header-tag {
+    display: none;
+  }
+  .hero h1 {
+    letter-spacing: -1.2px;
+  }
+  .steps h2,
+  .closing h2 {
+    font-size: 24px; /* 26px이면 '모든 판단을 끝내지 않도록.'(약 299px)이 288px를 넘어 3줄이 됨 (계산, 추정) */
+  }
+  .scorebug {
+    padding: 5px 8px;
+  }
+  .scorebug strong {
+    font-size: 16px;
+  }
+  .scorebug-teams img {
+    width: 20px;
+    height: 20px;
+  }
+  .film-controls > span {
+    font-size: 12px;
+    max-width: 58%;
+  }
+  .film-controls button {
+    padding: 0 12px;
+    font-size: 14px;
+  }
+}
+@media (max-height: 700px) {
+  /* 낮은 화면(도구막대가 보이는 iOS Safari 390×844 ≈ 664px, 375×667 SE ≈ 548px, 추정): 첫 화면에서
+     h1이 고정 바 뒤로 들어가지 않게 영상 무대를 줄이고 안내 문구를 14px로 내려 한 줄을 유지한다.
+     비율 값은 계산(추정)이며 실기기 측정 뒤 조정한다(DESIGN §4·§6). */
+  .film-stage {
+    max-height: 44vh;
+    max-height: 44svh;
+  }
+  .hero-copy {
+    padding-top: 20px;
+  }
+  .cta-note {
+    font-size: 14px;
+  }
+}
+@media (max-height: 600px) {
+  /* 375×667 SE(가시 약 548px)·320×568(약 460px) 추정값 기준 */
+  .film-stage {
+    max-height: 34vh;
+    max-height: 34svh;
+  }
+}
+@media (min-width: 431px) {
+  /* 데스크톱 창에서 열었을 때: 폰 폭 열로 보여 준다 */
+  body {
+    border-inline: 1px solid var(--line);
+  }
+  .cta-bar {
+    border-inline: 1px solid var(--line);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
